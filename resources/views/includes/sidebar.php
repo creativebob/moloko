@@ -59,7 +59,7 @@
       </li>
       <li><a href="#" data-link="37"><div class="icon-settings sprite"></div><span>Настройки</span></a>
         <ul class="menu vertical">
-          <li><a href="/user" data-link="41">Новый пользователь</a></li>
+          <li><a href="/users" data-link="41">Пользователи</a></li>
           <li><a href="/cities" data-link="42">Города</a></li>
           <li><a href="/table" data-link="44">Таблица</a></li>
         </ul>
