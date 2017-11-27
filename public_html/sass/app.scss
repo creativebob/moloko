@@ -1,0 +1,2005 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+@import "compass/reset";
+@import "compass/css3";
+@import "compass/layout";
+@import "compass/typography";
+@import "compass/utilities";
+
+// Подключаем шрифты
+
+// PFDinDisplayPro
+@font-face {
+  font-family: 'PFDinDisplayPro-Light';
+  font-style: normal;
+  src: url(fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf) format('truetype');
+};
+@font-face {
+  font-family: 'PFDinDisplayPro-Med';
+  font-style: normal;
+  src: url(fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf) format('truetype');
+};
+@font-face {
+  font-family: 'PFDinDisplayPro-Reg';
+  font-style: normal;
+  src: url(fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf) format('truetype');
+};
+@font-face {
+  font-family: 'PFDinDisplayPro-Thin';
+  font-style: normal;
+  src: url(fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf) format('truetype');
+};
+
+// PFDinTextPro
+@font-face {
+  font-family: 'PFDinTextPro-Regular';
+  font-style: normal;
+  src: url(fonts/DinTextPro/PFDinTextPro-Regular.ttf) format('truetype');
+};
+
+// DinTextCondensedPro
+@font-face {
+  font-family: 'PFDinTextCondPro-Regular';
+  font-style: normal;
+  src: url(fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf) format('truetype');
+};
+
+// SegoeUI
+@font-face {
+  font-family: 'SegoeUIBold';
+  font-style: normal;
+  src: url(fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf) format('truetype');
+};
+@font-face {
+  font-family: 'SegoeUIItalic';
+  font-style: italic;
+  src: url(fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf) format('truetype');
+};
+@font-face {
+  font-family: 'SegoeUILight';
+  font-style: normal;
+  src: url(fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf) format('truetype');
+};
+@font-face {
+  font-family: 'SegoeUISemiLight';
+  font-style: normal;
+  src: url(fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf) format('truetype');
+};
+@font-face {
+  font-family: 'SegoeUIRegular';
+  font-style: normal;
+  src: url(fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf) format('truetype');
+};
+@font-face {
+  font-family: 'SegoeUISemiBold';
+  font-style: normal;
+  src: url(fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf) format('truetype');
+};
+
+// Переменные
+
+// Шрифты
+// PFDinDisplay
+$PFDDPL: "PFDinDisplayPro-Light";
+$PFDDPM: "PFDinDisplayPro-Med";
+$PFDDPR: "PFDinDisplayPro-Reg";
+$PFDDPT: "PFDinDisplayPro-Thin";
+
+// PFDinTextPro
+$PFDTPR: "PFDinTextPro-Regular";
+
+// PFDinTextCondensedPro
+$PFDTCPR: "PFDinTextCondPro-Regular";
+
+// SegoeUI
+$SUIB: "SegoeUIBold";
+$SUII: "SegoeUIItalic";
+$SUIL: "SegoeUILight";
+$SUISL: "SegoeUISemiLight";
+$SUIR: "SegoeUIRegular";
+$SUISB: "SegoeUISemiBold";
+
+
+// Цвета
+$mars-red: #ff0000;
+$white: #ffffff;
+$black: #000000;
+$body-bg-color: #eeeeee;
+
+// Страница входа
+$index-input-border-color: #c2c2c2;
+$index-forgot-color: #1880b1;
+
+// Header
+$header-border: #dcdcdc;
+
+  // Меню профиля/выхода
+  $header-profile-bg-color: #ffffff;
+  $header-profile-color: #444444;
+  $header-profile-hover-bg-color: #eee;
+  $header-profile-border-color: #d0d0d0;
+
+// Сайдбар
+$sidebar-bg-color: #333333; // Основной бекграунд элементов
+$sidebar-font-color: #bdbdbd;
+$sidebar-hover-color: #ffffff;
+$sidebar-active-color: #ff5454;
+$sidebar-bot-menu-bg-color: #242424;
+$sidebar-li-border-top: #2b2b2b;
+$sidebar-li-border-bot: #3f3f3f;
+
+// Менеджер задач
+$task-manager-tabs-bg-color: #333333;
+$task-manager-tabs-color: #9c9c9c;
+$task-manager-tabs-active-bg-color: #4a4a4a;
+$task-manager-tabs-active-color: #ffffff;
+$task-manager-tabs-content-color: #cccccc;
+$task-manager-tabs-date-color: #b5daff;
+$task-manager-tabs-hr-color: #4a4a4a;
+$task-manager-tabs-set-color: #888888;
+$task-manager_tabs-name-lead-color: #74b1f5;
+$task-manager-tabs-button-bg-color: #ae4747;
+
+// Хлебные крошки
+$breadcrumbs-bg-color: #ffffff;
+$breadcrumbs-color: #888888;
+$breadcrumbs-a-color: #5190ff;
+$breadcrumbs-border-color: #dcdcdc;
+
+// Контент
+$content-bg-color: #eeeeee;
+
+// Инпуты
+$content-input-color: #666666;
+$content-input-border-color: #999999;
+$content-input-focus-border-color: #333333;
+
+  // Список (accordion menu)
+  $content-list-item-bg-color: #494949;
+  $content-list-item-color: #ffffff;
+  $content-list-item-li-bg-color: #ffffff;
+  $content-list-item-li-color: #000000;
+  $content-list-item-nested-border-bottom-color: #dddddd;
+  $content-list-item-active-bg-color: #ae4747;
+
+
+  // Tabs (Несколько вкладок)
+  $content-tabs-active-bg-color: #ac4747;
+  $content-tabs-active-color: #ffffff;
+  $content-tabs-fieldset-border-color: #b3b3b3;
+
+  // Таблица в контенте
+  $content-table-bg-color: #f6f6f6;
+  $content-table-td-border: #eeeeee;
+  $content-table-deleted-color: #646464;
+  $content-table-active-border-color-blue: #5190ff;
+
+  // Таблица поиска
+  $content-table-search-td-border-color: #dadada;
+  $content-table-search-td-color: #5190ff;
+
+// Footer  
+$footer-color: #bdbdbd;
+$footer-num-color: #ffffff;
+
+// Меняем умолчания фонды
+// Выпадающий список
+$dropdown-width: 14rem;
+
+// Общие настройки шрифта
+html {
+  font-family: $SUISL;
+  font-size: 16px;
+}
+body {
+  background-color: $body-bg-color;
+}
+
+html, body {
+  height: 100%;
+}
+
+#wrapper {
+  // border: 2px solid red;
+}
+
+.el, .el * {
+  /* Свойства изменение которых необходимо отслеживать */
+  transition-property: width, height, padding, margin;
+
+  /* Устанавливаем "незаметную для глаза" длительность перехода */
+  transition-duration: 1ms;
+}
+
+.noadd {
+  .aa {
+    display: none !important;
+  }
+}
+.noedit {
+  .ae {
+    display: none !important;
+  }
+}
+.nodel {
+  .ad {
+    display: none !important;
+  }
+}
+// Блокировка, чтоб не прыгало ничего при прогрузке страницы
+.block-refresh {
+
+  .title-bar {
+    display: none;
+  }
+  ul {
+    height: 0;
+    overflow: hidden;
+  }
+  .task-manager .task-active {
+    width: 240px;
+  }
+  .breadcrumbs {
+    height: 36px;
+  }
+  .content {
+    display: none;
+  }
+}
+
+
+
+.sidebar .expand{
+  width: 240px;
+}
+
+// Меняем выпадающий список профиля
+.dropdown-pane {
+  width: 222px;
+}
+// Меняем стандартные чекбоксы и радиобуттоны
+// Скрываем стандартный инпут
+input[type=checkbox], input[type=radio] {
+  display:none;
+}
+// Убираем от инпута отступы фонды
+[type='checkbox'] + label, [type='radio'] + label {
+  margin: 0;
+}
+// Ставим наши чекбоксы
+.checkbox {
+  label {
+    span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+  label:before {
+    display: inline-block;
+    vertical-align: middle;
+    width: 32px;
+    height: 32px;
+    background: url(sprites/sprite_menu.png) no-repeat;
+    background-position: 0px -480px;
+    content: '';
+  }
+  input[type=checkbox]:checked + label:before {
+    background-position: -32px -480px;
+  }
+}
+:indeterminate + label:before { // Неопределенное состояние
+  background-position: -64px -480px;
+}
+// Чекбокс (Выделить все)
+.checkbox-th {
+  label:before {
+    display: inline-block;
+    vertical-align: middle;
+    width: 32px;
+    height: 32px;
+    background: url(sprites/sprite_menu.png) no-repeat;
+    background-position: 0px -416px;
+    content: '';
+  }
+  input[type=checkbox]:checked + label:before {
+    background-position: -32px -416px;
+  } 
+}
+:indeterminate + label:before { // Неопределенное состояние
+  background-position: -64px -416px;
+}
+// Ставим наш радиобуттон
+.radiobutton {
+  label {
+    display: inline-block;
+    span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+  label:before {
+    display: inline-block;
+    vertical-align: middle;
+    width: 32px;
+    height: 32px;
+    background: url(sprites/sprite_menu.png) no-repeat;
+    background-position: 0px -576px;
+    content: '';
+  }
+  input[type=radio]:checked + label:before {
+    background-position: -32px -576px;
+  }
+}
+// Убираем насильно отступы
+// .clean-pad-left {
+//   padding-left: 0 !important;
+// }
+// .clean-pad-right {
+//   padding-right: 0 !important;
+// }
+// Спрайты
+.sprite {
+  display: inline-block;
+  vertical-align: middle;
+  width: 32px;
+  height: 32px;
+  background: url(sprites/sprite_menu.png) no-repeat;
+}
+.sprite-16 {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  background: url(sprites/sprite_16.png) no-repeat;
+}
+.input-icon {
+  position: relative;
+
+  .sprite-input {
+    
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+  }
+}
+
+// Страница входа
+.enter-page {
+  background-color: $white;
+}
+.enter {
+  max-width: 15rem;
+  margin: 10rem auto 0 auto;
+  font-family: $SUISL;
+  font-size: 0.75rem;
+
+  .logo {
+    display: block;
+    margin: 0 auto 2rem auto;
+  }
+
+  input {
+    border: none;
+    border-bottom: 1px solid $index-input-border-color;
+    height: 2rem;
+    padding-left: 2rem;
+    box-shadow: none;
+  }
+  .input-icon {
+
+    .sprite-input {
+      top: 8px;
+      left: 8px;
+      opacity: 0.5;
+      transition: 0.5s ease opacity;
+    }
+    .icon-login {
+      background: url(img/user_name.svg) no-repeat;
+      // background-position: 0px 0px;
+    }
+    .icon-password {
+      background: url(img/password.svg) no-repeat;
+      // background-position: 0px -16px;
+    }
+  }
+  input:focus {
+    border: none;
+    border-bottom: 1px solid $black;
+    outline: none;
+    box-shadow: none;
+  }
+  input:focus + .sprite-input {
+    opacity: 1;
+  }
+  .button {
+    width: 100%;
+    text-transform: uppercase;
+    font-family: $SUISB;
+    font-size: 0.75rem;
+    background-color: $sidebar-bg-color;
+    margin-top: 1rem;
+    margin-bottom: 0.4rem;
+
+  }
+  .button:hover {
+    background-color: $black;
+  }
+  .remember {
+    margin-left: -8px;
+  }
+  .forgot {
+    display: block;
+    margin-top: 0.8rem;
+    color: $index-forgot-color;
+    text-decoration: underline;
+    font-size: 0.7rem;
+  }
+  .forgot:hover {
+    text-decoration: none;
+  }
+}
+// Шапка
+.header-z-index {
+  z-index: 98;
+}
+.header {
+  background-color: $sidebar-bg-color;
+  border-bottom: 1px solid $header-border;
+  padding: 0.4rem 1.2rem;
+  height: 38px;
+  position: relative;
+  z-index: 98;
+
+  // Хедер левая сторона
+  .left-head {
+    margin: auto 0;
+
+    h1 {
+      text-transform: uppercase;
+      color: $white;
+      font-weight: bold;
+      font-size: 1rem;
+      font-family: $SUISB;
+      display: inline-block;
+      vertical-align: middle;
+
+      span {
+        color: $mars-red;
+      }
+    }
+  }
+  // Хедер правая сторона
+  .right-head {
+    text-align: right;
+
+    ul {
+      background-color: $sidebar-bg-color; // Убираем стандартный бекграунд фонды
+      float: right;
+
+      li {
+        float: left;
+        margin-right: 1rem;
+
+        a {
+          display: block;
+          color: $white;
+          font-size: 0.8rem;
+
+
+          span {
+            margin-right: 1rem;
+          }
+          img {
+            vertical-align: middle;
+            width: 25px;
+            height: 25px;
+          }
+        }
+      }
+    } 
+    // Обнуляем фондовские умолчания
+    .dropdown-pane {
+      width: 14rem;
+      padding: 0;
+      
+    }
+    .profile-head {
+      border: 1px solid $header-profile-border-color;
+      box-sizing: border-box;
+      width: 14rem;
+      // z-index: 50;
+
+      ul {
+        background-color: $header-profile-bg-color;
+        color: $header-profile-color;
+        float: left;
+        text-align: left;
+        width: 100%;
+
+        li {
+          margin: 0;
+
+          hr {
+            margin: 0.2rem 0;
+            color: $header-profile-border-color;
+          }
+          a {
+            color: $header-profile-color;
+            padding: 0.7rem 2.8rem;
+          }
+          a:hover {
+            background-color: $header-profile-hover-bg-color;
+          }
+        }
+      }
+    }
+    .profile-list {
+      display: block !important;
+    }
+  } 
+}
+// Сайдбар
+.sidebar {
+  font-family: $PFDDPR;
+  text-align: left;
+  background-color: $sidebar-bg-color;
+  position: fixed;
+  height: 100%;
+  color: $sidebar-font-color;
+  box-shadow: 0 0 5px 0 rgba(0,0,0,.35);
+  z-index: 97;
+
+  a {
+    color: #eeeeee;
+    font-weight: light;
+    font-size: 1rem;
+  }
+  // Убираем настройки фонды для ссылки в меню по умолчанию
+  .menu a {
+    display: inline;
+    padding: 0;
+  }
+  // Создаем наш стиль элементов списка в главной навигации, и в меню внизу
+  .nav>ul>li  {
+    border-top: 1px solid $sidebar-li-border-bot;
+    border-bottom: 1px solid $sidebar-li-border-top;
+    padding: 0.4rem 0.5rem;
+    text-transform: uppercase;
+    width: 100%;
+
+    a {
+      color: #eeeeee;
+      font-weight: light;
+      font-size: 0.75rem;
+      display: block;
+      box-sizing: border-box;
+      width: 210px;
+
+      span {
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+    .active, .active:hover {
+      color: $sidebar-active-color !important;
+
+      span {
+        color: $white;
+      }
+    }
+    .active::after {
+      display: block;
+      border-color: $sidebar-active-color transparent transparent !important;
+      right: 0rem;
+    }
+    a:hover {
+      color: $sidebar-hover-color;
+    }
+  }
+
+  // Главная навигация
+  .nav {
+    height: auto;
+    overflow: hidden;
+    overflow-y: scroll;
+    margin-left: 0.5rem;
+    margin-top: 40px;
+    margin-bottom: 82px;
+
+    >ul>li {
+
+      >ul {
+        margin-left: 3rem;
+
+        li {
+          border-bottom: none;
+          text-transform: none;
+          font-family: $SUIL;
+
+          a {
+            padding: 0.4rem 1rem 0.4rem 0;
+            font-size: 0.7rem;
+            line-height: 1;
+          }
+          a:after {
+            display: block;
+          }
+        }
+      }
+    }
+    // Убираем стандартные стрелочки аккордеонов Foundation
+    .accordion-menu>li a::after {
+      display: none;
+    }
+    .accordion-menu li>ul li a::after {
+      display: block;
+      border-color: $sidebar-font-color transparent transparent;
+      right: 0rem;
+    }
+  }
+  // Меню внизу (кнопка)
+  .gen-menu-bot {
+    position: absolute;
+    bottom: 38px;
+    height: 44px;
+    width: 100%;
+    
+    #sidebar-button {
+      display: block;
+      height: 100%;
+
+      
+      background-color: $sidebar-bot-menu-bg-color;
+      border-top: 1px solid $sidebar-li-border-bot;
+      border-bottom: 1px solid $sidebar-li-border-top;
+      cursor: pointer;
+         
+      #cursor {
+        display: block;
+        width: 32px;
+        height: 32px;
+        margin: 5px auto 0 auto;
+      }
+    }
+  }
+  .sprite {
+    margin-right: 1rem;
+  }
+  .icon-mcc {
+    background-position: -96px 0px;
+  }
+  .icon-sale {
+    background-position: -96px -32px;
+  }
+  .icon-finance {
+    background-position: -96px -64px;
+  }
+  .icon-production {
+    background-position: -96px -96px;
+  }
+  .icon-marketing {
+    background-position:  -96px -128px;
+  }
+  .icon-study {
+    background-position:  -96px -160px;
+  }
+  .icon-guide {
+    background-position:  -96px -192px;
+  }
+  .icon-chatbot {
+    background-position:  -96px -256px;
+  }
+  .icon-settings {
+    background-position:  -96px -224px;
+  }
+  .icon-arrow-forward {
+    background-position: -160px -288px;
+  }
+  .icon-arrow-back {
+    background-position: -96px -288px;
+  }
+  // Спрайты на сайдбар в активном состоянии
+  .nav > ul > li > .active , .gen-menu-bot > li > .active {
+    .icon-mcc {
+      background-position: -160px 0px;
+    }
+    .icon-sale {
+      background-position: -160px -32px;
+    }
+    .icon-finance {
+      background-position: -160px -64px;
+    }
+    .icon-production {
+      background-position: -160px -96px;
+    }
+    .icon-marketing {
+      background-position: -160px -128px;
+    }
+    .icon-study {
+      background-position: -160px -160px;
+    }
+    .icon-guide {
+      background-position: -160px -192px;
+    }
+    .icon-chatbot {
+      background-position: -160px -256px;
+    }
+    .icon-settings {
+      background-position: -160px -224px;
+    }
+  }
+  // Скролл в сайбаре по умолчанию
+  .nav::-webkit-scrollbar {
+    width:0.5rem;
+  }
+  // Скролл в сайбаре при наведении
+  .nav:hover {
+    overflow-y: scroll;
+  }
+  .nav:hover::-webkit-scrollbar {
+    width:0.5rem;
+  }
+  .nav:hover::-webkit-scrollbar-thumb {
+    border-width:1px 1px 1px 2px;
+    border-color: #777;
+    background-color: #aaa;
+    border-radius: 0.2rem;
+  }
+  .nav:hover::-webkit-scrollbar-thumb:hover {
+    border-width: 1px 1px 1px 2px;
+    border-color: #555;
+    background-color: #777;
+  }
+  //Скрол для мозилы вроде
+  scrollbar[orient="vertical"] {
+  max-width:10px !important;
+  }
+  scrollbar[orient="vertical"] > scrollbarbutton {
+  max-height:10px !important;
+  } 
+  thumb[orient="vertical"] {
+  max-width:10px !important;
+  }
+}
+// Менеджер задач
+.task-manager {
+  position: fixed;
+  right: 0;
+  width: 240px;
+  height: 100%;
+  margin-bottom: 48px;
+  background-color: $sidebar-bg-color;
+  z-index: 50;
+  padding: 20px;
+  display: block;
+  margin-right: -240px;
+
+    // Tabs в менеджере задач
+  .tabs-wrap {
+    font-family: $SUISL;
+
+    //Обнуляем фонду, в активном состоянии
+    .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
+      background-color: $task-manager-tabs-active-bg-color;
+      color: $task-manager-tabs-active-color;
+    }
+    //Меню с заголовками
+    .tabs-list {
+      margin-bottom: 2rem;
+
+      // Обнуляем фонду
+      border: none;
+      background: none;
+
+      li {
+        border: 1px solid $task-manager-tabs-active-bg-color;
+        background-color: $task-manager-tabs-bg-color;
+        width: 50%;
+
+        a {
+          color: $task-manager-tabs-color;
+          padding: 5px 15px;
+          font-size: 0.8rem;
+
+          // Обнуляем фонду
+          outline: none;
+        }
+        .is-active {
+          a{
+            background-color: $content-tabs-active-color;
+          }
+        }
+      }
+    }
+    //Контент tabs
+    .tabs-content {
+      margin-top: 1.4rem;
+
+      // Обнуляем фонду
+      border: none;
+      background: none;
+
+      .tabs-panel {
+        background: none;
+        padding: 0;
+
+        .task-head {
+          display: block;
+          margin-bottom: 1rem;
+          float: none;
+          height: 1rem;
+          overflow: hidden;
+            
+            div {
+              padding: 0 3px;
+              display: inline-block;
+              vertical-align: middle;
+              float: left;
+            }
+
+          .icon-task {
+            margin: -2px 0 0 -2px;
+            background-position: -48px -32px;
+            opacity: 0.6;
+          }
+         
+          .task-date {
+            font-family: $SUISB;
+            font-size: 0.7rem;
+            color: $task-manager-tabs-content-color;
+            padding-right: 6px;
+          }
+
+          .task-hr {
+            // max-width: auto;
+            // min-width: 20%;
+           
+            
+          }
+          hr {
+            border: none;
+            border-bottom: 1px solid $task-manager-tabs-hr-color;
+
+            // Обнуляем фонду
+            margin: 6px 3px;
+            overflow: hidden;
+            clear: none;
+
+            }
+          .task-count{
+            font-family: $SUISL;
+            font-size: 0.7rem;
+            color: $white;
+            float: right;
+            padding-left: 6px;
+          }      
+        }
+        .task-content {
+          margin-top: 1rem;
+          font-family: $SUISL;
+          color: $task-manager-tabs-content-color;
+          font-size: 0.8rem;
+          line-height: 1.4;
+
+          .task-content-head {
+            font-family: $SUISB;
+            font-size: 1rem;
+            margin-bottom: 0.4rem;
+          }
+          .task-time {
+            font-family: $PFDDPL;
+            color: $task-manager-tabs-date-color;
+            margin-right: 0.4rem;
+          }
+          .task-set {
+            font-family: $PFDDPL;
+            color: $task-manager-tabs-set-color;
+          }
+
+          .task-target {
+            margin-top: 0.6rem;
+
+          }
+          .task-list {
+            margin: 1rem 0 0 0;
+
+            .task-data {
+              color: $task-manager-tabs-set-color;
+            }
+            .task-name-lead {
+              color: $task-manager_tabs-name-lead-color;
+            }
+          }
+          .task-button {
+            font-family: $SUIR;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-top: 1rem;
+            background-color: $task-manager-tabs-button-bg-color;
+            width: 100%;
+            border: none;
+          }
+          .task-button:hover {
+            background-color: red;
+          }
+        }
+
+
+      }
+    }
+  }
+
+}
+.task-active {
+  margin-right: 0;
+}
+// Хлебные крошки
+.breadcrumbs {
+  margin: 0; // Обнуляем класс фонды
+  background-color: $breadcrumbs-bg-color;
+  padding: 12px 20px;
+  height: auto;
+  border-bottom: 1px solid $breadcrumbs-border-color;
+
+  li {
+    text-transform: none; // Обнуляем класс фонды
+    color: $breadcrumbs-color;
+    font-family: $PFDTPR;
+    font-size: 0.8rem;
+    line-height: 1;
+  }
+  a {
+    color: $breadcrumbs-a-color;
+  }
+}
+// Инпуты (вынесены за контент т.к. модальное окно образуется за контентом)
+.inputs {
+  label {
+    font-size: 0.875rem;
+    color: $content-input-color;
+
+    input {
+      margin-top: 0.25rem;
+      margin-bottom: 0.85rem;
+      height: 26px;
+      color: $content-input-color;
+      background-color: $white;
+      font-size: 0.8rem;
+      padding: 5px 12px;
+      border: 1px solid $content-input-border-color;
+      box-shadow: none;
+    }
+    // Сообщение об ошибке в инпутах
+    .is-invalid-input:not(:focus) {
+      border-color: #cc4b37;
+      background-color: #f9ecea;
+    }
+    select {
+      margin-top: 0.25rem;
+      margin-bottom: 0.7rem;
+      height: 26px;
+      background-color: $white;
+      font-size: 0.8rem;
+      border: 1px solid $content-input-border-color;
+      padding: 4px 4px 3px 16px;
+
+      // Меняем положение стрелочки фонды
+      background-position: 100% center;
+    }
+    input:focus, select:focus {
+      border: 1px solid $content-input-focus-border-color;
+    }
+  }
+}
+// Переопределяем модалку фонды
+.reveal {
+  padding: 0;
+  border: 1px solid $black;
+  border-radius: 0;
+  background-color: $white;
+
+  .modal-title {
+    text-align: center;
+    height: 3rem;
+    background-color: $sidebar-bg-color;
+
+    h5 {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      margin: 1.125rem;
+      font-weight: normal;
+      color: $white;
+    }
+  }
+
+  .modal-content {
+    padding: 2rem;
+  }
+  .modal-button {
+    margin-top: 3rem;
+    width: 100%;
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.5rem;
+    cursor: pointer;
+
+  }
+ .icon-close-modal {
+    background-position: 0px -608px;
+  }  
+  .icon-close-modal:hover {
+    background-position: -32px -608px;
+  }  
+}
+// Таблица поиска в модалке
+.table-content-search {
+
+  caption {
+    font-family: $PFDDPL;
+    font-size: 0.8rem;
+    font-weight: normal;
+    color: $content-input-color;
+    padding: 0;
+    margin: 0.6rem 0 1rem 0;
+
+  }
+  
+  tbody {
+
+    // Убираем стандарнтый бордер и бекграунд фонды
+    border: none;
+    background: none;
+
+    // Убираем выделение каждой четной строки
+    tr:nth-child(even) {
+      border-bottom: 0;
+      background-color: $content-table-bg-color;
+    }
+
+    td {
+      font-family: $SUISL;
+      font-size: 0.8rem;
+      border-bottom: 1px solid $content-table-search-td-border-color;
+      line-height: 1;
+      padding: 0.4rem 0;
+
+      a {
+        color: $content-table-search-td-color;
+      }
+     
+
+    }
+    .icon-delete {
+      background-position: -32px -512px;
+    }  
+    .icon-delete:hover {
+      background-position: 0px -512px;
+    } 
+  }
+}
+// Основной контент
+.content {
+  padding: 30px 20px 44px 20px;
+  height: 100%;
+  z-index: 60;
+  // width: 100%;
+
+  // Обнуляем бекграунд фонды
+  .top-bar, .top-bar ul {
+    background-color: $content-bg-color;
+  }
+  // Заголовки контента
+  #head-sticky {
+    z-index: 30;
+  }
+  .head-content {
+    padding: 1rem 10px;
+    z-index: 50;
+    // width: 100%;
+    transition: width 0.3s ease;
+    
+
+    // Левая сторона
+    .header-content {
+      text-transform: uppercase;
+      font-family: $PFDTCPR;
+      font-size: 1.8rem;
+      float: left;
+    }
+    .icon-add {
+      background-position: 0px -384px;
+      opacity: 0.2;
+      margin-left: 1rem;
+      // z-index: 10;
+    }
+    .icon-add:hover {
+      background-position: 0px -384px;
+      opacity: 1;
+    }
+    // Правая сторона
+    .icon-filter {
+      background-position: 0px -352px;
+      float: left;
+      margin-right: 0.4rem;
+    }
+    .active-filter {
+      background-position: -64px -352px;
+
+    }
+     .icon-filter:hover {
+      background-position: -32px -352px;
+    }
+    // обнуляем отступ фонды от кнопок и инпутов
+    [type='search'], button {
+      margin: 0;
+    }
+    .search-field {
+      border-radius: 0.2rem;
+      width: 9rem;
+      height: 2rem;
+      float: left;
+      font-family: $PFDDPT;
+      padding: 0 0.8rem;
+    }
+    .icon-search {
+      background-position: 0px -448px;
+    }
+    .icon-search:hover {
+      background-position: -32px -448px;
+      background-color: $content-bg-color;
+    }
+    .icon-search:focus {
+      background-color: $content-bg-color;
+    }
+  }
+  .filters {
+    display: none;
+    background-color: $content-bg-color;
+    z-index: 1;
+    // overflow: hidden;
+    // transition: 1s;
+
+
+    .fieldset-filters {
+      border: 1px solid  $content-tabs-fieldset-border-color;
+      padding: 1rem 0.6rem 1.4rem;
+
+      legend {
+        font-family: $PFDDPM;
+        padding: 0 1rem;
+      }
+    }
+  }
+  // .filters-active {
+  //   height: 60px;
+  //   overflow: visible;
+    
+  // }
+  // Tabs в контенте
+  .tabs-wrap {
+    padding: 0 10px;
+    font-family: $PFDDPL;
+
+    //Обнуляем фонду, в активном состоянии
+    .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
+      background-color: $content-tabs-active-bg-color;
+      color: $content-tabs-active-color;
+    }
+    //Меню с заголовками
+    .tabs-list {
+      margin-bottom: 2rem;
+
+      // Обнуляем фонду
+      border: none;
+      background: none;
+
+      li {
+        border: 1px solid $content-bg-color;
+        background-color: $white;
+
+        a {
+          color: $black;
+          padding: 5px 20px;
+          font-size: 0.875rem;
+
+          // Обнуляем фонду
+          outline: none;
+        }
+        .is-active {
+          a{
+            background-color: $content-tabs-active-color;
+          }
+        }
+      }
+    }
+    //Контент tabs
+    .tabs-content {
+      margin: 0 -15px;
+
+      // Обнуляем фонду
+      border: none;
+      background: none;
+
+      .tabs-panel {
+        background: none;
+        padding: 0;
+      }
+    }
+    .tabs-margin-top {
+      margin-top: 2rem;
+    }
+    .checkbox {
+
+      label {
+        margin-left: -7px;
+      }
+      #company-checkbox+label {
+        margin-bottom: 1rem;
+      }
+    }
+    .radiobutton {
+      color: $content-input-color;
+
+      label {
+        margin-left: -8px;
+        margin-right: 8px;
+      }
+    }
+    .fieldset-access {
+      border: 1px solid  $content-tabs-fieldset-border-color;
+      padding: 1rem 2rem 2rem;
+
+      legend {
+        font-family: $PFDDPM;
+        padding: 0 1rem;
+      }
+    }
+  }
+  // Список (accordion menu) в контенте
+  .content-list {
+    outline: none;
+
+    .is-accordion-submenu-parent:not(.has-submenu-toggle) > a::after {
+      display: none;
+    }
+    .icon-list {
+      display: block;
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      margin-top: 0;
+      transition: 0.2s ease opacity;
+      cursor: pointer;
+
+      li {
+        display: inline-block;
+        width: 32px;
+      }
+    }
+    
+    .icon-list:focus {
+      outline-color: none;
+    }
+
+    .number {
+      font-size: 0.7rem;
+      margin-left: 0.6rem;
+      padding: 6px 12px;
+      border-radius: 0.3rem;
+      opacity: 0;
+      transition: 0.3s ease opacity;
+    }
+    // Первые элементы списка (Шапки)
+    .first-item {
+      background-color: $content-list-item-bg-color;
+      margin-bottom: 2px;
+      position: relative;
+
+      // Ссылка в первом элементе списка
+      .first-link {
+        font-family: $PFDDPL;
+        font-size: 1rem;
+        color: $content-list-item-color;
+        padding: 8px;
+        
+        .icon-open {
+          background-position: -96px -704px;
+          margin-right: 0.5rem;
+          width: 32px;
+          height: 32px;
+        }
+        span {
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+      .icon-list {
+        opacity: 0;
+        right: 2rem;
+
+        li {
+          padding: 8px 0;
+          
+          .icon-list-add {
+            background-position: -128px -768px; 
+          }
+          .icon-list-add:hover {
+            background-position: -96px -768px; 
+          }
+          .icon-list-edit {
+            background-position: -96px -800px; 
+          }
+          .icon-list-edit:hover {
+            background-position: -128px -800px; 
+          }
+          .icon-list-delete {
+            background-position: -96px -512px; 
+          }
+          .icon-list-delete:hover {
+            background-position: -128px -512px;
+          }
+        }
+      }
+    }
+    // Активные первые элементы списка (Шапки)
+    .first-active {
+      background-color: $content-list-item-active-bg-color;
+
+      .first-link {
+        background-color: $content-list-item-active-bg-color;
+
+        .icon-open {
+          background-position: -128px -704px;
+        }
+        .number {
+          background: rgba(255, 255, 255, 0.1);
+          opacity: 1;
+        }
+      }
+      .icon-list {
+        opacity: 1;
+        z-index: 5;
+        right: 2rem;
+
+        li {
+          padding: 8px 0;
+
+          .sprite:focus {
+            outline: none;
+          }
+          .icon-list-add {
+            background-position: -128px -768px; 
+          }
+          .icon-list-add:hover {
+            background-position: -96px -768px; 
+          }
+          .icon-list-edit {
+            background-position: -96px -800px; 
+          }
+          .icon-list-edit:hover {
+            background-position: -128px -800px; 
+          }
+          .icon-list-delete {
+            background-position: -96px -512px; 
+          }
+          .icon-list-delete:hover {
+            background-position: -128px -512px;
+          }
+        }
+      }
+    }
+    // Средний список
+    .medium {
+
+      // Средние элементы списка
+      .medium-item {
+        background-color: $content-list-item-li-bg-color;
+        position: relative;
+        padding-left: 2rem;
+
+        .icon-list {
+          right: 2rem;
+          opacity: 1;
+          
+
+          li {
+            padding: 0;
+
+            .icon-list-add {
+              background-position: 0px -768px; 
+            }
+            .icon-list-add:hover {
+              background-position: -32px -768px; 
+            }
+            .icon-list-edit {
+              background-position: 0px -800px; 
+            }
+            .icon-list-edit:hover {
+              background-position: -32px -800px; 
+            }
+            .icon-list-delete {
+              background-position: 0px -512px; 
+            }
+            .icon-list-delete:hover {
+              background-position: -32px -512px;
+            }
+          }
+        }
+        .medium-link {
+          font-family: $SUISL;
+          font-size: 0.8rem;
+          color: $content-list-item-li-color;
+          padding: 0 0 0 8px;
+
+          .list-title {
+
+            span {
+              display: inline-block;
+              vertical-align: middle;
+            }
+          }
+          .icon-open {
+            background-position: 0px -704px;
+            opacity: 0.6;
+          }
+        }
+        // Активные средние элементы списка
+        .medium-active {
+          width: 80%;
+
+          .icon-open {
+            background-position: -32px -704px;
+          }
+          .list-title {
+            .number {
+              background: rgba(0, 0, 0, 0.2);
+              opacity: 1;
+            }
+          }
+        }
+        // Средний элемент не имеющий вложенного списка
+        .medium-as-last {
+          position: relative;
+          margin: 0 1.8rem 0 2rem;
+          display: block;
+          // border-bottom: 1px solid $content-list-item-nested-border-bottom-color;
+          font-family: $SUISB;
+          font-size: 0.8rem;
+          color: $content-list-item-li-color;
+          padding: 10px 0 10px 12px;
+
+          .icon-list {
+            transition: 0.2s ease opacity;
+            opacity: 0;
+            right: 0.2rem;
+          }
+        } 
+        .medium-as-last:hover {
+          // cursor: pointer;
+
+          .icon-list {
+            
+            opacity: 1;
+
+            li {
+              padding: 0;
+
+              .icon-list-add {
+                background-position: 0px -768px; 
+              }
+              .icon-list-add:hover {
+                background-position: -64px -768px; 
+              }
+              .icon-list-edit {
+                background-position: 0px -800px; 
+              }
+              .icon-list-edit:hover {
+                background-position: -32px -800px; 
+              }
+              .icon-list-delete {
+                background-position: 0px -512px; 
+              }
+              .icon-list-delete:hover {
+                background-position: -32px -512px;
+              }
+            }
+          }
+        }
+      }
+      
+      .nested {
+        margin-left: -8px;
+      }
+    }
+    // Конечный список
+    .last {
+      border-left: 2px solid $content-list-item-active-bg-color;
+      border-right: 2px solid $content-list-item-active-bg-color;
+      overflow: hidden;
+
+      // Обнуляем отступ фонды
+      margin-left: 0;
+
+      // Элементы конечного списка
+      .last-item {
+      
+        .last-link {
+          position: relative;
+          margin: 0 1.8rem 0 2.5rem;
+          border-bottom: 1px solid $content-list-item-nested-border-bottom-color;
+          font-family: $SUISB;
+          font-size: 0.8rem;
+          padding: 10px 1.4rem;
+          color: $content-list-item-li-color;
+
+          .icon-list {
+            right: 0.1rem;
+            opacity: 0;
+
+            li {
+              padding: 0;
+            }
+          }
+        }
+        .last-link:hover {
+
+          .icon-list {
+            opacity: 1;
+            
+            li {
+              
+              .icon-list-add {
+                background-position: 0px -768px; 
+              }
+              .icon-list-add:hover {
+                background-position: -64px -768px; 
+              }
+              .icon-list-edit {
+                background-position: 0px -800px; 
+              }
+              .icon-list-edit:hover {
+                background-position: -32px -800px; 
+              }
+              .icon-list-delete {
+                background-position: 0px -512px; 
+              }
+              .icon-list-delete:hover {
+                background-position: -32px -512px;
+              }
+            }
+          }
+        }
+      }
+      .last-item:last-child {
+        .last-link {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+  // Таблица в контенте
+  .table-content {
+    .is-stuck {
+       background-color: $body-bg-color; 
+      tr {
+        display: block;
+
+      //   th {
+      //     display: block;
+      //     float: left;
+      //   }
+      }
+    }
+  }
+
+
+  .table-content {
+    border-collapse: separate;
+    width: 100%;
+
+    td.details-control {
+      background: url('../resources/details_open.png') no-repeat center center;
+      cursor: pointer;
+    }
+    tr.shown td.details-control {
+      background: url('../resources/details_close.png') no-repeat center center;
+    }
+
+
+    .td-checkbox, .td-drop, .td-delete {
+      width: 32px;
+      // max-width: 32px !important;
+    }
+    // Убираем стандарнтый бордер и бекграунд фонды
+    thead, tbody, tfoot {
+        border: none;
+        background-color: $content-table-bg-color;
+    }
+    // Отступ между tbody
+    .tbody-margin {
+      height: 1rem;
+      background-color: $content-bg-color;
+    }
+    // Убираем отступы
+    thead th, tbody td {
+      padding: 4px;
+    }
+    .td-checkbox, .td-delete {
+      padding: 0;
+    }
+    // Стилизуем thead
+    thead {
+      // width: 100%;
+
+
+      th {
+        font-family: $PFDDPM;
+        font-size: 0.8rem;
+        font-weight: normal;
+        background-color: $content-bg-color;
+        line-height: 0.8;
+
+        // Ставим картинку градиент = 10пх вниз, и делаем под нее отступ
+        padding-bottom: 5px;
+        background-image: url(img/table-th-border-gradient.jpg);
+        background-repeat: repeat-x;
+        background-position: bottom;
+
+        .icon-drop {
+          opacity: 0;
+        }
+      }
+      th:hover {
+        cursor: pointer;
+      }
+      th:focus {
+        outline: none;
+      }
+      .td-drop {
+        width: 32px;
+        padding: 0;
+      }
+    }
+    // Стилизуем tbody
+    tbody {
+      overflow-x: hidden;
+      // Убираем выделение каждой четной строки
+      tr:nth-child(even) {
+        border-bottom: 0;
+        background-color: $content-table-bg-color;
+      }
+      tr:hover {
+        .icon-drop {
+          opacity: 0.3;
+          transition: 0.5s;
+        }
+        .icon-drop:hover {
+          opacity: 0.6;
+        }
+
+      }
+      .td-drop {
+        width: 32px;
+        padding: 0;
+      }
+      td {
+        font-family: $SUISL;
+        font-size: 0.8rem;
+        border-top: 1px solid $content-table-td-border;
+        border-bottom: 1px solid $content-table-td-border;
+        line-height: 1;
+      }
+
+      .icon-drop {
+        background-position: 0px -832px;
+        opacity: 0;
+        cursor: pointer;
+      }
+      
+      .icon-delete {
+        background-position: 0px -512px;
+      }  
+      .icon-delete:hover {
+        background-position: -32px -512px;
+      } 
+    }
+    // Активная таблица (схлапывающаяся)
+    .active {
+
+      // Ярлычок для схлапывания
+      tr:first-child {
+        
+        td {
+          text-align: right;
+          padding: 0;
+          background-color: $body-bg-color;
+          border: none;
+
+          a {
+            background-color: $content-table-active-border-color-blue;
+            color: white;
+            padding: 0 16px;
+            display: inline-block;
+
+            .icon-search-table-close {
+              background-position: -38px -678px;
+              margin-right: 1rem;
+              width: 20px;
+              height: 20px;
+            }
+            span {
+              display: inline-block;
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+      // Сама таблица
+      tr:nth-child(2) {
+        td{
+          border-top: 2px solid $content-table-active-border-color-blue;
+        }
+      }
+      tr:last-child {
+        td {
+          border-bottom: 2px solid $content-table-active-border-color-blue;
+        }
+      }
+      tr:not(.tr-close) {
+        td:first-child {
+          border-left: 2px solid $content-table-active-border-color-blue;
+        }
+        td:last-child {
+          border-right: 2px solid $content-table-active-border-color-blue;
+        }
+      }
+    } 
+    // Таблица в схлопнутом состоянии
+    .tr-border {
+
+      tr:first-child {
+        td {
+          border-bottom: 4px solid $content-table-active-border-color-blue;
+          a {
+            .icon-search-table-close {
+              background-position: -6px -678px;  
+            }
+          }
+        }
+      }
+
+      tr:not(.tr-close) {
+
+        td {
+          line-height: 0;
+          padding: 0;
+          visibility: hidden;
+          // display: block;
+          height: 0;
+          // transition: height ease 1s;
+          // transition: line-height ease 1s;
+          label, a {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+  // Pagination
+  #pagination {
+    
+    margin-top: 1rem;
+
+    // Левая сторона
+    .pagination-head {
+
+      .pagination-title {
+        font-size: 0.8rem;
+      }
+      .pagination {
+        margin-top: 0.4rem;
+      }
+    }
+    // Правая сторона
+    .right {
+    text-align: right;
+
+      a {
+        color: $content-table-deleted-color;
+
+        .icon-deleted {
+          background-position: 0px -544px;
+          
+        }
+      }
+      a:hover {
+        .icon-deleted {
+          background-position: -32px -544px;
+        }
+      }
+    }
+  }
+}
+
+.footer {
+  background-color: $sidebar-bg-color;
+  padding: 6px 0 6px 240px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 96;
+
+
+  .right {
+    text-align: right;
+
+    li {
+      display: inline;
+      font-family: $SUISB;
+      font-size: 0.6rem;
+      color: $footer-color;
+      text-transform: uppercase;
+      padding: 10px 0;
+      margin-right: 2rem;
+
+      span {
+        font-family: $SUIB;
+        color: $footer-num-color;
+      }
+    }
+    .foot-drop {
+      padding: 0;
+
+      .icon-footer {
+        background-position: -96px -736px;
+      }
+      .icon-footer:hover {
+        background-position: -128px -736px;
+      }
+    }
+    .active-foot-drop {
+      .icon-footer {
+        background-position: -160px -736px;
+      }
+    }
+  }
+  .foot-options {
+    background-color: $sidebar-bg-color;
+    border: none;
+
+    span {
+      font-family: $SUIR;
+      font-size: 0.7rem;
+      color: $footer-num-color; 
+    }
+  }
+}
+
+// Мобильное расширение
+@media screen and (min-width: 1px) and (max-width: 639px) {
+  .enter {
+    margin: 2rem auto 2rem auto;
+  }
+  #wrapper {
+    margin-left: 0;
+
+  }
+  // Хеадер
+  .header {
+    height: auto;
+
+    .title-bar {
+      width: 2.5rem;
+      float: left;
+      padding: 0;
+      background: $sidebar-bg-color;
+    }
+    h1 {
+      margin-left: 0.25rem;
+    }
+    ul {
+      li {
+        span {
+          display: none;
+        }
+      }
+    }  
+  }
+  // Раздвигаем сайдбар на всю ширину
+  .sidebar {
+    position: fixed;
+    width: 100%;
+    display: block;
+
+    .nav {
+      margin-top: 0;
+      height: 100%;
+      padding-bottom: 3rem;
+    }
+    .gen-menu-bot {
+      display: none;
+    }
+  }
+  // Менеджер задач
+  .task-active {
+
+    width: 100%;
+  }
+  .task-manager {
+    margin-bottom: 0;
+  }
+  // Хлебные крошки
+  .breadcrumbs {
+    display: none;
+  }
+
+  .content {
+    padding: 30px 0 20px 0;
+
+    // .head-content {
+    //   text-align: center;
+
+    //   .top-bar-left, .top-bar-right {
+    //     display: inline;
+    //   }
+    // }
+
+    .tabs-wrap {
+
+     .tabs-content {
+        margin: 0; 
+        padding: 0 0.7rem;
+      }
+      .fieldset-access {
+        padding: 1rem 0.6rem;
+      }
+    }
+    // Блочим элементы добавления/редактирования/удаления
+    .content-list {
+      .first-active {
+        .icon-list {
+          opacity: 0;
+          display: none;
+          z-index: -1;
+        }
+      }
+      .medium {
+        .medium-item {
+          .icon-list {
+            opacity: 0;
+            display: none;
+            z-index: -1;
+          }
+        }
+      } 
+    }
+  }
+
+
+    // Активные первые элементы списка (Шапки)
+    .first-active {
+
+      .first-link {
+        -webkit-touch-action: cross-slide-x;
+      }
+ 
+    }
+  
+
+
+  .footer {
+    display: none;
+  }
+}
