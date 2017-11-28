@@ -549,22 +549,22 @@ $(function() {
     var lenCity = city.length;
     // Если символов больше 2 - делаем запрос
     if(lenCity > 3){
-      // alert($('#city').val());
-      $.ajax({
-        url: "get-city",
-        type: "POST",
-        data: "/" $('#city').val(),
-        success: function(date){
-          if(date.length > 2){
-            // Удаляем содержимое UL
-            $('#city').html('');
-            // Вставляем новое содержимое из поиска
-            $('#city').html(date);
-            // Удаляем содержимое UL
-            $('#city').css('display', 'block');
-          } 
-        }
-      });
+      alert($('#city').val());
+      // $.ajax({
+      //   url: "get-city",
+      //   type: "POST",
+      //   data: "/" $('#city').val(),
+      //   success: function(date){
+      //     if(date.length > 2){
+      //       // Удаляем содержимое UL
+      //       $('#city').html('');
+      //       // Вставляем новое содержимое из поиска
+      //       $('#city').html(date);
+      //       // Удаляем содержимое UL
+      //       $('#city').css('display', 'block');
+      //     } 
+      //   }
+      // });
     } else {
       // Удаляем содержимое UL
       // $('#city').html('');
