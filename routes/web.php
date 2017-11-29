@@ -21,6 +21,9 @@ Auth::routes();
 Route::get('/user', 'UserController@show');
 Route::post('/user', 'UserController@create');
 
+Route::get('page', 'PageController@create');
+
+
 Route::get('users', function () {
     return view('users');
 });

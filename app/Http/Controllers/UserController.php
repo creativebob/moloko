@@ -65,8 +65,8 @@ class UserController extends Controller
     	$user->first_name =   $request->first_name;
     	$user->second_name = $request->second_name;
     	$user->patronymic = $request->patronymic;
-		$user->sex = $request->sex;
-		$user->birthday = $request->birthday;
+		  $user->sex = $request->sex;
+	 	  $user->birthday = $request->birthday;
 
     	$user->phone = cleanPhone($request->phone);
     	$user->extra_phone = cleanPhone($request->extra_phone);
@@ -78,9 +78,9 @@ class UserController extends Controller
     	$user->company_name = $request->company_name;
     	$user->inn = $request->inn;
     	$user->kpp = $request->kpp;
-        $user->account_settlement = $request->account_settlement;
-      	$user->account_correspondent = $request->account_correspondent;
-        $user->bank = $request->bank;
+      $user->account_settlement = $request->account_settlement;
+      $user->account_correspondent = $request->account_correspondent;
+      $user->bank = $request->bank;
 
     	$user->passport_address = $request->passport_address;
     	$user->passport_number = $request->passport_number;
