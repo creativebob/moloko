@@ -347,6 +347,10 @@ input[type=checkbox], input[type=radio] {
   width: 32px;
   height: 32px;
   background: url(sprites/sprite_menu.png) no-repeat;
+
+  :focus {
+    outline: none;
+  }
 }
 .sprite-16 {
   display: inline-block;
@@ -354,6 +358,10 @@ input[type=checkbox], input[type=radio] {
   width: 16px;
   height: 16px;
   background: url(sprites/sprite_16.png) no-repeat;
+
+  :focus {
+    outline: none;
+  }
 }
 .input-icon {
   position: relative;
@@ -1005,6 +1013,7 @@ input[type=checkbox], input[type=radio] {
   border: 1px solid $black;
   border-radius: 0;
   background-color: $white;
+  width: 800px;
 
   .modal-title {
     text-align: center;

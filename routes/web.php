@@ -17,18 +17,25 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::any('/user', 'UserController@show');
+Route::any('user', 'UserController@show');
 
-Route::get('users', function () {
-    return view('users');
-});
 
-Route::get('table', function () {
+
+Route::get('/table', function () {
     return view('table');
 });
 
-Route::get('/cities', function () {
-    return view('cities');
+Route::get('/users', function () {
+    return view('users');
 });
 
-Route::post('get-city/{city}', 'GetCityController@show');
+
+// Страница со списком населенных пунктов
+Route::get('/cities', 'CitiesController@show');
+Route::post('/cities', 'CitiesController@create');
+
+// Получаем данные из vk
+Route::post('/get-region', 'CitiesController@get_vk_region');
+
+Route::any('/get-city', 'CityController@get_vk_city');
+
