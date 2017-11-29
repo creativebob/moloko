@@ -396,25 +396,19 @@
     </div>
   </div>
   <div class="grid-x grid-padding-x modal-content inputs">
-    <div class="small-10 medium-4 cell">
-      <label>Область
-        <input type="text" name="" required>
+    <div class="small-10 medium-5 cell">
+      <label>Название населенного пункта
+        <input type="text" name="city" id="city" required>
         <span class="form-error">Уж постарайтесь, придумайте что-нибудь!</span>
       </label>
       <label>Район
-        <input type="text" name="" required>
-        <span class="form-error">Уж постарайтесь, придумайте что-нибудь!</span>
+        <input type="text" name="area">
+      </label>
+      <label>Область
+        <input type="text" name="region">
       </label>
     </div>
-    <div class="small-12 medium-8 cell">
-      <div class="grid-x grid-padding-x">
-        <div class="small-10 medium-8 cell">
-          <label>Название населенного пункта
-            <input type="text" name="" required>
-            <span class="form-error">Уж постарайтесь, придумайте что-нибудь!</span>
-          </label>
-        </div>
-      </div>
+    <div class="small-12 medium-7 cell">
       <table class="table-content-search">
         <caption>Результаты поиска в сторонней базе данных:</caption>
         <tbody>
@@ -435,11 +429,11 @@
           </tr>
         </tbody>
       </table>
-      <div class="grid-x ">
-        <div class="small-6 small-centered cell">
-          <a href="#" class="button modal-button">Сохранить</a>
-        </div>
-      </div>
+    </div>
+  </div>
+  <div class="grid-x align-center">
+    <div class="small-6 medium-4 cell">
+      <a href="#" class="button modal-button">Сохранить</a>
     </div>
   </div>
   <div data-close class="icon-close-modal sprite close-modal"></div> 
@@ -507,7 +501,6 @@
 @section('scripts')
 <script type="text/javascript">
 $(function() {
-
   // Присваиваем при клике на первый элемент списка активный класс
   $('.first-link').bind('click', function() {
     if ($(this).parent('.first-item').hasClass('first-active')) {
@@ -547,6 +540,47 @@ $(function() {
       $(active).children('a').addClass('medium-active');
     };
   });
+
+  // Работа с добавлением города по ajax
+  $('#city').keyup(function() {
+    // Получаем фрагмент текста
+    var city = $('#city').val();
+    // Смотрим сколько символов
+    var lenCity = city.length;
+    // Если символов больше 2 - делаем запрос
+    if(lenCity > 3){
+      // alert($('#city').val());
+      $.ajax({
+        url: "get-city",
+        type: "POST",
+        data: "/" $('#city').val(),
+        success: function(date){
+          if(date.length > 2){
+            // Удаляем содержимое UL
+            $('#city').html('');
+            // Вставляем новое содержимое из поиска
+            $('#city').html(date);
+            // Удаляем содержимое UL
+            $('#city').css('display', 'block');
+          } 
+        }
+      });
+    } else {
+      // Удаляем содержимое UL
+      // $('#city').html('');
+      // // Удаляем содержимое UL
+      // $('#city').css('display', 'none');
+  
+    }
+
+
+  });
+
+
+
+  
+
+
 });
 </script>
 @endsection

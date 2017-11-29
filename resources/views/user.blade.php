@@ -20,8 +20,6 @@
 @endsection
  
 
-
-
 @section('content')
 <div class="grid-x tabs-wrap">
   <div class="small-12 cell">
@@ -184,7 +182,7 @@
         </div>
       </div>
     </div>
-    <div class="small-12 medium-4 medium-offset-1 large-6 cell">
+    <div class="small-12 medium-4 medium-offset-1 large-4 large-offset-3 cell">
       <fieldset class="fieldset-access">
         <legend>Настройка доступа</legend>
         <div class="grid-x grid-padding-x"> 

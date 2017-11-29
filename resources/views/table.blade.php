@@ -1,8 +1,8 @@
 @extends('layouts.app')
  
 @section('inhead')
-  <script type="text/javascript" src="js/tablesorter/jquery.tablesorter.js"></script>
-  <script src="js/jquery-ui.js"></script>
+{{-- Скрипты таблиц в шапке --}}
+  @include('includes.table-inhead')
 @endsection
 
 @section('title', 'Страницы')
