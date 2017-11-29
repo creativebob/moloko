@@ -19,7 +19,7 @@ Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
 
-Route::any('/user', 'UserController@show');
+Route::get('/user', 'UserController@show');
 
 Route::get('table', function () {
     return view('table');
@@ -28,3 +28,5 @@ Route::get('table', function () {
 Route::get('/cities', function () {
     return view('cities');
 });
+
+Route::post('/user', 'UserController@create');

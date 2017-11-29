@@ -18,6 +18,12 @@ class LoginController extends Controller
     |
     */
 
+    public function username()
+    {
+      return 'login';
+    }
+
+
     use AuthenticatesUsers;
 
     /**
@@ -37,4 +43,6 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+
 }

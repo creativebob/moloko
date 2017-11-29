@@ -32,7 +32,7 @@
     </ul>
   </div>
 </div>
-<form action="zagol.php" method="POST" data-abide novalidate>
+<form action="/user" method="POST" data-abide novalidate>
   {{ csrf_field() }}
   <div class="grid-x tabs-wrap inputs">
     <div class="small-12 medium-7 large-5 cell tabs-margin-top">
@@ -42,7 +42,7 @@
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Короткое имя
-                <input type="text" name="" autocomplete="off">
+                <input type="text" name="nickname" autocomplete="off">
               </label>
             </div>
           </div>
@@ -55,7 +55,7 @@
             </div>
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                <input class="phone-field" type="text" name="phone" maxlength="17" class="phone_field" pattern="8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}" autocomplete="off" required>
+                <input class="phone-field" type="text" name="extra_phone" maxlength="17" class="phone_field" pattern="8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}" autocomplete="off" required>
                 <span class="form-error">Введите все символы телефонного номера!</span>
               </label>
             </div>
@@ -63,19 +63,19 @@
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
               <label>Почта
-                <input type="text" name="" autocomplete="off">
+                <input type="text" name="email" autocomplete="off">
               </label>
               <label>Телеграм ID
-                <input type="text" name="" autocomplete="off">
+                <input type="text" name="telegram_id" autocomplete="off">
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label class="input-icon">Город
-                <input type="text" name="" autocomplete="off">
+                <input type="text" name="id_city" autocomplete="off">
                 <div class="sprite-input icon-password"></div>
               </label>
               <label>Адрес
-                <input type="text" name="" autocomplete="off">
+                <input type="text" name="address" autocomplete="off">
               </label>
             </div>
           </div>
@@ -85,52 +85,52 @@
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Фамилия
-                <input type="text" name="" autocomplete="off">
+                <input type="text" name="first_name" autocomplete="off">
               </label>
               <label>Имя
-                <input type="text" name="" autocomplete="off">
+                <input type="text" name="second_name" autocomplete="off">
               </label>
               <label>Отчество
-                <input type="text" name="" autocomplete="off">
+                <input type="text" name="patronymic" autocomplete="off">
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-5 medium-4 cell">
               <label>Дата рождения
-                <input type="text" name="" class="date-field" pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}">
+                <input type="text" name="birthday" class="date-field" pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}">
               </label>
             </div>
             <div class="small-6 small-offset-1 medium-6 medium-offset-2 cell radiobutton">Пол<br>
-              <input type="radio" name="sex" id="woman" checked>
-              <label for="woman"><span>Женский</span></label>
-              <input type="radio" name="sex" id="man">
+              <input type="radio" name="sex" id="man" value="1" checked>
               <label for="man"><span>Мужской</span></label>
+              <input type="radio" name="sex" id="woman" value="0">
+              <label for="woman"><span>Женский</span></label>
             </div>
           </div>
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Паспорт (серия, номер)
-                <input class="passport-field" type="text" name="" maxlength="13" pattern="[0-9]{2} [0-9]{2} №[0-9]{6}" autocomplete="off">
+                <input class="passport-field" type="text" name="number_passport" maxlength="13" pattern="[0-9]{2} [0-9]{2} №[0-9]{6}" autocomplete="off">
               </label>
             </div>
             <div class="small-5 medium-6 cell">
               <label>Когда выдан
-                <input type="text" name="" class="date-field" pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}" autocomplete="off">
+                <input type="text" name="date_passport" class="date-field" pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}" autocomplete="off">
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-12 cell">
               <label>Кем выдан
-                <input type="text" name="" autocomplete="off">
+                <input type="text" name="released_passport" autocomplete="off">
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Адрес
-                <input type="text" name="" autocomplete="off">
+                <input type="text" name="address_passport" autocomplete="off">
               </label>
             </div>
           </div>
@@ -139,45 +139,45 @@
         <div class="tabs-panel" id="content-panel-3">
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 cell checkbox">
-              <input type="checkbox" name="" id="company-checkbox" checked>
+              <input type="checkbox" name="orgform_status" id="company-checkbox" value="1">
               <label for="company-checkbox"><span>Представитель компании</span></label>
             </div>
           </div>
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Название компании
-                <input type="text" name="">
+                <input type="text" name="company_name">
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>ИНН
-                <input class="inn-field" type="text" name="" maxlength="12" pattern="[0-9]{12}" autocomplete="off">
+                <input class="inn-field" type="text" name="inn" maxlength="12" pattern="[0-9]{12}" autocomplete="off">
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>КПП
-                <input class="kpp-field" type="text" name="" maxlength="9" pattern="[0-9]{9}" autocomplete="off">
+                <input class="kpp-field" type="text" name="kpp" maxlength="9" pattern="[0-9]{9}" autocomplete="off">
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-12 cell">
               <label>Банк
-                <input type="text" name="" autocomplete="off">
+                <input type="text" name="bank" autocomplete="off">
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Р/С
-                <input class="account-field" type="text" name="" maxlength="20" pattern="[0-9]{20}" autocomplete="off">
+                <input class="account-field" type="text" name="settlement_account" maxlength="20" pattern="[0-9]{20}" autocomplete="off">
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>К/С
-                <input class="account-field" type="text" name="" maxlength="20" pattern="[0-9]{20}" autocomplete="off">
+                <input class="account-field" type="text" name="correspondent_account" maxlength="20" pattern="[0-9]{20}" autocomplete="off">
               </label>
             </div>
           </div>
@@ -190,9 +190,9 @@
         <div class="grid-x grid-padding-x"> 
           <div class="small-12 cell">
             <label>Статус пользователя
-              <select>
-                <option>Клиент</option>
-                <option>Сотрудник</option>
+              <select name="contragent_status">
+                <option value="0">Клиент</option>
+                <option value="1">Сотрудник</option>
               </select>
             </label>
           </div>
@@ -204,7 +204,7 @@
               <span class="form-error">Обязательно нужно логиниться!</span>
             </label>
             <label>Пароль
-              <input type="password" class="password" maxlength="30" id="password" required>
+              <input type="password" class="password" maxlength="30" id="password" name="password" required>
               <span class="form-error">Введите пароль и повторите его, ну а что поделать, меняем ведь данные!</span>
             </label>
             <label>Пароль повторно
@@ -216,7 +216,7 @@
         <div class="grid-x grid-padding-x"> 
           <div class="small-12 cell tabs-margin-top">
             <label>Уровень доступа
-              <select>
+              <select name="group_users_id">
                 <option>Лол1</option>
                 <option>Лол2</option>
                 <option>Лол3</option>
@@ -228,13 +228,13 @@
           </div>
           <div class="small-12 cell">
             <label>Область доступа
-              <select>
+              <select name="group_filials_id">
                 <option>Лол</option>
               </select>
             </label>
           </div>
           <div class="small-12 cell checkbox">
-            <input type="checkbox" name="" id="access">
+            <input type="checkbox" name="block_access" id="access" value="1">
             <label for="access"><span>Блокировать доступ</span></label>
           </div>
         </div>
