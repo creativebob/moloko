@@ -2,11 +2,23 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+
+    public function setBirthdayAttribute($value) {
+        $date_parts = explode('.', $value);
+        $this->attributes['birthday'] = $date_parts[0].'-'.$date_parts[1].'-'.$date_parts[2];
+    }
+
+    public function setPassportDateAttribute($value) {
+        $date_parts = explode('.', $value);
+        $this->attributes['birthday'] = $date_parts[0].'-'.$date_parts[1].'-'.$date_parts[2];
+    }
+
     use Notifiable;
 
     /**
@@ -24,7 +36,7 @@ class User extends Authenticatable
         'second_name', 
         'patronymic', 
         'sex', 
-        'birthday' , 
+        'birthday', 
 
         'phone', 
         'extra_phone', 
