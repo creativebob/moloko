@@ -37,6 +37,6 @@ Route::resources([
 ]);
 
 // Получаем области и города из vk
-Route::post('/region', 'RegionController@get_vk_region');
 Route::post('/city', 'CityController@get_vk_city');
+Route::post('/region', 'RegionController@get_vk_region');
 

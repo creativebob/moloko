@@ -48,7 +48,7 @@
           <li><div class="icon-list-edit sprite" data-open="region-edit"></div></li>
           <li><div class="icon-list-delete sprite" data-open="region-del"></div></li>
         </ul>
-        <a data-list="{{ $data->region_id }}" class="first-link">
+        <a data-list="{{ $data->id }}" class="first-link">
           <div class="list-title">
             <div class="icon-open sprite"></div>
             <span>{{ $data->region_name }}</span><span class="number">4</span>
@@ -411,6 +411,7 @@
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
         <input type="hidden" name="region_vk_external_id" id="region-id-field">
+        <input type="hidden" name="region_database" id="region-database" value="0">
       </div>
       <div class="small-12 medium-8 cell">
         <table class="table-content-search">
@@ -567,51 +568,20 @@
 
 @section('scripts')
 <script type="text/javascript">
-// При клике на регион в модальном окне заполняем инпуты
-function regionAdd (a) {
-  var itemId = $(a).closest('tr').data('tr');
-  var regionId = $('[data-region-vk-external-id="' + itemId + '"]').html();
-  var regionName = $('[data-region-name="' + itemId + '"]').html();
-  $('#region-id-field').val(regionId);
-  $('#region-name-field').val(regionName);
-
-  if($('#region-id-field').val() != '') {
-    $('#submit-region').prop('disabled', false);
-  };
-};
-// При клике на город в модальном окне заполняем инпуты
-function cityAdd (a) {
-  var itemId = $(a).closest('tr').data('tr');
-  var cityId = $('[data-city-id="' + itemId + '"]').data('city-vk-external-id');
-  var cityName = $('[data-city-id="' + itemId + '"]').html();
-  var areaName = $('[data-area-id="' + itemId + '"]').html();
-  var regionName = $('[data-region-id="' + itemId + '"]').html();
-  $('#city-id-field').val(cityId);
-  $('#city-name-field').val(cityName);
-  $('#area-name').val(areaName);
-  $('#region-name').val(regionName);
-
-  if($('#city-id-field').val() != '') {
-    $('#submit-city').prop('disabled', false);
-  };
-};
-// function contentMenuFirstItemClick () {
-// };
-
 $(function() {
   // Присваиваем при клике на первый элемент списка активный класс
-  $('.first-link').click(function() {
+  $(document).on('click', '.first-link', function() {
     if ($(this).parent('.first-item').hasClass('first-active')) {
-    $(this).parent('.first-item').removeClass('first-active');
-    $('.medium-active').removeClass('medium-active');
-  } else {
-    $('.content-list .first-active').removeClass('first-active');
-    $(this).parent('.first-item').addClass('first-active');
-    $('.medium-active').removeClass('medium-active');
-  };
+      $(this).parent('.first-item').removeClass('first-active');
+      $('.medium-active').removeClass('medium-active');
+    } else {
+      $('.content-list .first-active').removeClass('first-active');
+      $(this).parent('.first-item').addClass('first-active');
+      $('.medium-active').removeClass('medium-active');
+    };
   });
   // Отслеживаем плюсики во вложенных элементах
-  $('.medium-link').click(function() {
+  $(document).on('click', '.medium-link', function() {
     console.log('Видим клик по среднему пункту');
     var link = $(this).data('list-link');
     if ($('[data-list-link="' + link + '"]').hasClass('medium-active')) {
@@ -640,6 +610,7 @@ $(function() {
 
   // Отображение области по ajax через api vk
   $('#region-name-field').keyup(function() {
+    // Блокируем кнопку
     $('#submit-region').prop('disabled', true);
     // Получаем фрагмент текста
     var region = $('#region-name-field').val();
@@ -654,7 +625,7 @@ $(function() {
         },
         url: "/region",
         type: "POST",
-        data: "region=" + region,
+        data: {region: $('#region-name-field').val()},
         success: function (date) {
           var result = $.parseJSON(date);
           var count = result.response.count;
@@ -664,7 +635,7 @@ $(function() {
             $('#tbody-region-add>tr').remove();
             // Перебираем циклом
             for (var i = 0; i < count; i++) {
-              data = data + "<tr data-tr=\"" + i + "\"><td><a onClick=\"regionAdd(this);\" data-region-vk-external-id=\"" + i + "\">" + result.response.items[i].id + "</a></td><td><a onClick=\"regionAdd(this);\" data-region-name=\"" + i + "\">" + result.response.items[i].title + "</a></td></tr>";
+              data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"region-add\" data-region-vk-external-id=\"" + i + "\">" + result.response.items[i].id + "</a></td><td><a class=\"region-add\" data-region-name=\"" + i + "\">" + result.response.items[i].title + "</a></td></tr>";
             };
             // Выводим пришедшие данные на страницу
             $('#tbody-region-add').append(data);
@@ -675,13 +646,49 @@ $(function() {
     if (lenRegion <= 3) {
       // Удаляем все значения, если символов меньше 3х
       $('#tbody-region-add>tr').remove();
+      $('.region-error').remove();
       $('#region-id-field').val('');
     };
   });
+  // При клике на регион в модальном окне заполняем инпуты
+  $(document).on('click', '.region-add', function() {
+    var itemId = $(this).closest('tr').data('tr');
+    var regionId = $('[data-region-vk-external-id="' + itemId + '"]').html();
+    var regionName = $('[data-region-name="' + itemId + '"]').html();
+    $('#region-id-field').val(regionId);
+    $('#region-name-field').val(regionName);
+
+    if($('#region-id-field').val() != '') {
+      var region = {region_name:$('#region-name-field').val(), region_database:$('#region-database').val()};
+      // Ajax
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: "/regions",
+        type: "POST",
+        data: region,
+        success: function (data) {
+          var result = $.parseJSON(data);
+
+          // alert(result.error_status);
+
+          if (result.error_status == 1) {
+            var error = "<div class=\"region-error\" >" + result.error_message +"</div>";
+            $('#region-name-field').after(error);
+          };
+          if (result.error_status == 0) {
+            $('#region-database').val(1);
+            $('#submit-region').prop('disabled', false);
+          };
+        }
+      });
+    };
+  });
   // Сохранияем область в базу и отображаем на странице по ajax   
-  $('#submit-region').click(function (e) {
+  $('#submit-region').click(function (event) {
     //чтобы не перезагружалась форма
-    e.preventDefault(); 
+    event.preventDefault(); 
     // Дергаем все данные формы
     var formRegion = $('#form-region').serialize();
     // var region = {region_vk_external_id: $('#region-id-field').val(), region_name:$('#region-name-field').val()};
@@ -696,17 +703,17 @@ $(function() {
       data: formRegion,
       success: function (data) {
         var result = $.parseJSON(data);
-        // alert(data);
-        // $('#content-list>li:last').after(data);
 
-          result = "<li class=\"first-item\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\"></div></li><li><div class=\"icon-list-edit sprite\" data-open=\"region-edit\"></div></li><li><div class=\"icon-list-delete sprite\" data-open=\"region-del\"></div></li></ul><a onclick=\"contentMenuFirstItemClick (this);\" data-list=\"\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span>" + result.region_name + "</span><span class=\"number\">4</span></div></a></li>";
-          // Выводим пришедшие данные на страницу
-          $('#content-list>li:last').after(result);
-          $('#content-list').foundation('_destroy');
-          var elem = new Foundation.AccordionMenu($('#content-list'));
+        result = "<li class=\"first-item\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\"></div></li><li><div class=\"icon-list-edit sprite\" data-open=\"region-edit\"></div></li><li><div class=\"icon-list-delete sprite\" data-open=\"region-del\"></div></li></ul><a data-list=\"" + result.region_id + "\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span>" + result.region_name + "</span><span class=\"number\">4</span></div></a></li>";
+
+        // Выводим пришедшие данные на страницу
+        $('#content-list>li:last').after(result);
+        $('#content-list').foundation('_destroy');
+        var elem = new Foundation.AccordionMenu($('#content-list'));
       }
     });
   });
+
   // Отображение города по ajax через api vk
   $('#city-name-field').keyup(function() {
     $('#submit-city').prop('disabled', true);
@@ -733,7 +740,7 @@ $(function() {
             $('#tbody-city-add>tr').remove();
             // Перебираем циклом
             for (var i = 0; i < count; i++) {
-              data = data + "<tr data-tr=\"" + i + "\"><td><a onClick=\"cityAdd(this);\" data-city-id=\"" + i + "\" data-city-vk-external-id=\"" + result.response.items[i].id + "\">" + result.response.items[i].title + "</a></td><td><a onClick=\"cityAdd(this);\" data-area-id=\"" + i + "\">" + result.response.items[i].area + "</a></td><td><a onClick=\"cityAdd(this);\" data-region-id=\"" + i + "\">" + result.response.items[i].region + "</a></td></tr>";
+              data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"city-add\" data-city-id=\"" + i + "\" data-city-vk-external-id=\"" + result.response.items[i].id + "\">" + result.response.items[i].title + "</a></td><td><a class=\"city-add\" data-area-id=\"" + i + "\">" + result.response.items[i].area + "</a></td><td><a class=\"city-add\" data-region-id=\"" + i + "\">" + result.response.items[i].region + "</a></td></tr>";
             };
             $('#tbody-city-add').append(data);
           };
@@ -748,25 +755,37 @@ $(function() {
       $('#region-name').val('');
     };
   });
+  // При клике на город в модальном окне заполняем инпуты
+  $(document).on('click', '.city-add', function() {
+    var itemId = $(this).closest('tr').data('tr');
+    var cityId = $('[data-city-id="' + itemId + '"]').data('city-vk-external-id');
+    var cityName = $('[data-city-id="' + itemId + '"]').html();
+    var areaName = $('[data-area-id="' + itemId + '"]').html();
+    var regionName = $('[data-region-id="' + itemId + '"]').html();
+    $('#city-id-field').val(cityId);
+    $('#city-name-field').val(cityName);
+    $('#area-name').val(areaName);
+    $('#region-name').val(regionName);
 
-          // $count = $result->response->count;
-          // $data = "";
+    if($('#city-id-field').val() != '') {
+      $('#submit-city').prop('disabled', false);
+    };
+  });
 
-          // for (var i=0; i < count; i++) { 
-          // $
-          // }
-          // if(date.length > 2){
-          //   // Удаляем содержимое UL
-          //   $('#city').html('');
-          //   // Вставляем новое содержимое из поиска
-          //   $('#city').html(date);
-          //   // Удаляем содержимое UL
-          //   $('#city').css('display', 'block');
-          // } 
+    // $count = $result->response->count;
+    // $data = "";
 
-  
-
+    // for (var i=0; i < count; i++) { 
+    // $
+    // }
+    // if(date.length > 2){
+    //   // Удаляем содержимое UL
+    //   $('#city').html('');
+    //   // Вставляем новое содержимое из поиска
+    //   $('#city').html(date);
+    //   // Удаляем содержимое UL
+    //   $('#city').css('display', 'block');
+    // } 
 });
-
 </script>
 @endsection
