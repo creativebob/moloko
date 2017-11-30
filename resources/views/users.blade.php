@@ -47,29 +47,29 @@
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-surname">Фамилия</th>
-          <th class="td-name">Имя</th>
-          <th class="td-phone">Телефон</th>
-          <th class="td-status">Статус</th>
           <th class="td-login">Логин</th>
-          <th class="td-access">Доступ</th>
-          <th class="td-access-level">Уровень доступа</th>
+          <th class="td-second-name">Пользователь</th>
+<!--           <th class="td-first-name">Имя</th> -->
+          <th class="td-phone">Телефон</th>
+          <th class="td-contragent-status">Статус</th>
+          <th class="td-access-block">Доступ</th>
+          <th class="td-group-users-id">Уровень доступа</th>
           <th class="td-delete"></th>
         </tr>
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
 
         @foreach($users as $user)
-        <tr>
+        <tr id="{{ $user->id }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check1"><label class="label-check" for="check1"></label></td>
-          <td class="td-surname">{{ $user->second_name }}</td>
-          <td class="td-name">{{ $user->first_name }}</td>
-          <td class="td-phone">{{ $user->phone }}</td>
-          <td class="td-status">{{ $user->contragen_status }}</td>
+          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $user->id }}"><label class="label-check" for="check-{{ $user->id }}"></label></td>
           <td class="td-login">{{ $user->login }}</td>
-          <td class="td-access">{{ $user->access_block }}</td>
-          <td class="td-access-level">Уровень доступа</td>
+          <td class="td-second-name">{{ $user->second_name . " " . $user->first_name}}</td>
+<!--           <td class="td-first-name">{{ $user->first_name }}</td> -->
+          <td class="td-phone">{{ $user->phone }}</td>
+          <td class="td-contragent-status">{{ $user->contragen_status }}</td>
+          <td class="td-access-block">{{ $user->access_block }}</td>
+          <td class="td-group-users-id">Уровень доступа</td>
           <td class="td-delete"><a class="icon-delete sprite"></a></td>
         </tr>
         @endforeach

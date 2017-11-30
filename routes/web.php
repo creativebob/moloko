@@ -17,10 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/user', 'UserController@show');
-Route::post('/user', 'UserController@create');
-
-Route::get('/users', 'UsersController@show');
+Route::resource('/users', 'UserController');
 
 Route::get('/page', 'PageController@create');
 

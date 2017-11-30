@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('css/foundation.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/foundation.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -40,7 +40,7 @@
           <div class="small-5 right-head cell">
             <ul>
               <li><a id="task-toggle"><img src="img/header/alert.png"></a></li>
-              <li><a data-toggle="profile"><span>Сотруднег намба 1</span><img src="img/header/avatar.png"></a></li>
+              <li><a data-toggle="profile"><span>{{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }}</span><img src="img/header/avatar.png"></a></li>
             </ul>
             <div class="dropdown-pane profile-head" id="profile" data-dropdown data-position="bottom" data-alignment="right" data-v-offset="10" data-h-offset="-30" data-close-on-click="true">
               <ul class="menu vertical">
@@ -126,9 +126,9 @@
       </div>
     </footer>
     {{-- Скрипты --}}
-    <script src="js/vendor/what-input.js"></script>
-    <script src="js/vendor/foundation.js"></script>
-    <script src="js/app.js"></script>
+    <script src="/js/vendor/what-input.js"></script>
+    <script src="/js/vendor/foundation.js"></script>
+    <script src="/js/app.js"></script>
 
     <!-- Наши скрипты -->
     <script type="text/javascript">
