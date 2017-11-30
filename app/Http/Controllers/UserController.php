@@ -59,7 +59,7 @@ class UserController extends Controller
 
     	$user->login = $request->login;
     	$user->email = $request->email;
-    	$user->password = $request->password;
+    	$user->password = bcrypt($request->password);
     	$user->nickname = $request->nickname;
 
     	$user->first_name =   $request->first_name;
@@ -93,7 +93,8 @@ class UserController extends Controller
     	$user->block_access = $request->block_access;
 
 		$user->save();
-		return view('users');
+
+		return redirect('users');
     }
 
 }

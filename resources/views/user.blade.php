@@ -109,26 +109,26 @@
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Паспорт (серия, номер)
-                <input class="passport-field" type="text" name="number_passport" maxlength="13" pattern="[0-9]{2} [0-9]{2} №[0-9]{6}" autocomplete="off">
+                <input class="passport-field" type="text" name="passport_number" maxlength="13" pattern="[0-9]{2} [0-9]{2} №[0-9]{6}" autocomplete="off">
               </label>
             </div>
             <div class="small-5 medium-6 cell">
               <label>Когда выдан
-                <input type="text" name="date_passport" class="date-field" pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}" autocomplete="off">
+                <input type="text" name="passport_date" class="date-field" pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}" autocomplete="off">
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-12 cell">
               <label>Кем выдан
-                <input type="text" name="released_passport" autocomplete="off">
+                <input type="text" name="passport_released" autocomplete="off">
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Адрес
-                <input type="text" name="address_passport" autocomplete="off">
+                <input type="text" name="passport_address" autocomplete="off">
               </label>
             </div>
           </div>
@@ -170,12 +170,12 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Р/С
-                <input class="account-field" type="text" name="settlement_account" maxlength="20" pattern="[0-9]{20}" autocomplete="off">
+                <input class="account-field" type="text" name="account_settlement" maxlength="20" pattern="[0-9]{20}" autocomplete="off">
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>К/С
-                <input class="account-field" type="text" name="correspondent_account" maxlength="20" pattern="[0-9]{20}" autocomplete="off">
+                <input class="account-field" type="text" name="account_correspondent" maxlength="20" pattern="[0-9]{20}" autocomplete="off">
               </label>
             </div>
           </div>
@@ -232,7 +232,7 @@
             </label>
           </div>
           <div class="small-12 cell checkbox">
-            <input type="checkbox" name="block_access" id="access" value="1">
+            <input type="checkbox" name="access_block" id="access" value="1">
             <label for="access"><span>Блокировать доступ</span></label>
           </div>
         </div>

@@ -36,20 +36,27 @@ class User extends Authenticatable
         'company_name', 
         'inn', 
         'kpp', 
-        'settlement_account', 
-        'correspondent_account', 
+        'account_settlement', 
+        'account_correspondent', 
         'bank', 
 
-        'number_passport', 
-        'released_passport', 
-        'date_passport', 
-        'address_passport', 
+        'passport_number', 
+        'passport_released', 
+        'passport_date', 
+        'passport_address', 
 
         'contragent_status', 
         'lead_id', 
         'employee_id', 
-        'block_access', 
+        'access_block', 
     ];
+
+
+    public function setAddressAttribute($value){
+        $d = $value . " г. Иркутск";
+        return $value;
+    }
+
 
     /**
      * The attributes that should be hidden for arrays.

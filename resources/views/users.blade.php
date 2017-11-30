@@ -58,18 +58,21 @@
         </tr>
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
+
+        @foreach($users as $user)
         <tr>
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check1"><label class="label-check" for="check1"></label></td>
-          <td class="td-surname">Фамилия</td>
-          <td class="td-name">Имя</td>
-          <td class="td-phone">Телефон</td>
-          <td class="td-status">Статус</td>
-          <td class="td-login">Логин</td>
-          <td class="td-access">Доступ</td>
+          <td class="td-surname">{{ $user->second_name }}</td>
+          <td class="td-name">{{ $user->first_name }}</td>
+          <td class="td-phone">{{ $user->phone }}</td>
+          <td class="td-status">{{ $user->contragen_status }}</td>
+          <td class="td-login">{{ $user->login }}</td>
+          <td class="td-access">{{ $user->access_block }}</td>
           <td class="td-access-level">Уровень доступа</td>
           <td class="td-delete"><a class="icon-delete sprite"></a></td>
         </tr>
+        @endforeach
       </tbody>
     </table>
   </div>

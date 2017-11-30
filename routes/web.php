@@ -17,13 +17,15 @@ Route::get('/', function () {
 
 Auth::routes();
 
-
 Route::get('/user', 'UserController@show');
 Route::post('/user', 'UserController@create');
 
-Route::get('users', function () {
-    return view('users');
-});
+
+Route::get('/users', 'UsersController@show');
+
+// Route::get('users', function () {
+//     return view('users');
+// });
 
 Route::get('table', function () {
     return view('table');
@@ -32,7 +34,6 @@ Route::get('table', function () {
 Route::get('/cities', function () {
     return view('cities');
 });
-
 
 Route::post('get-city/{city}', 'GetCityController@show');
 

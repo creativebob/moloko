@@ -41,10 +41,9 @@ class UpdateUsersTable extends Migration
             $table->string('bank', 40)->nullable()->comment('Название банка')->after('account_correspondent');
 
             $table->integer('passport_number')->nullable()->unique()->unsigned()->comment('Номер паспорта')->after('bank');
-            $table->date('passport_date')->nullable()->comment('Дата рождения')->after('passport_number');
+            $table->date('passport_date')->nullable()->comment('Дата выдачи паспорта')->after('passport_number');
             $table->string('passport_released', 30)->nullable()->comment('Кем выдан паспорт')->after('passport_date');
             $table->string('passport_address', 40)->nullable()->comment('Адрес прописки')->after('passport_released');
-
 
             $table->integer('contragent_status')->nullable()->unsigned()->comment('Сотрудник 1 или Клиент 0')->after('passport_address');
             $table->integer('lead_id')->nullable()->unsigned()->comment('Id лида')->after('contragent_status');
