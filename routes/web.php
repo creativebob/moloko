@@ -30,12 +30,13 @@ Route::get('/users', function () {
 });
 
 
-// Страница со списком населенных пунктов
-Route::get('/cities', 'CitiesController@show');
-Route::post('/cities', 'CitiesController@create');
+// Контроллер для отображения населенных пунктов и областей
+Route::resources([
+    '/cities' => 'CityController',
+    '/regions' => 'RegionController'
+]);
 
-// Получаем данные из vk
-Route::post('/get-region', 'CitiesController@get_vk_region');
-
-Route::any('/get-city', 'CityController@get_vk_city');
+// Получаем области и города из vk
+Route::post('/region', 'RegionController@get_vk_region');
+Route::post('/city', 'CityController@get_vk_city');
 

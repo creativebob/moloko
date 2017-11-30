@@ -11,22 +11,22 @@ use Illuminate\Support\Facades\DB;
 class CitiesController extends Controller
 {
   // Отображаем данные с бд
-	public function show()
+	public function index()
 	{
 
-		$regions = Area::join('regions', 'areas.region_id', '=', 'regions.id')
-	            ->select('areas.id as area_id', 'areas.area_name', 'regions.id as region_id', 'regions.region_name')
-	            ->get();
 
-	 //  dd($dates);
+		// dd($data);
 
+		// $dates = Area::join('regions', 'areas.region_id', '=', 'regions.id')
+	 //            ->select('areas.id as area_id', 'areas.area_name', 'regions.id as region_id', 'regions.region_name')
+	 //            ->get();
 
-		// $areas = Region::all();
-		// foreach ($areas as $area) {
-		// 	echo $area->$region_name;
-		// }
+		$dates = Region::all();
+		return view('cities', compact('dates'));	
 
-		dd($regions);
+    // foreach ($dates as $data) {
+    // 	echo "Id: ".$data->region_id.", название области: ".$data->region_name."\r\nId района: ".$data->area_id.", название района: ".$data->area_name."\r\n";
+    // }
 		
 		// $regions = DB::table('regions')->get();
 
@@ -60,22 +60,7 @@ class CitiesController extends Controller
 		// return view('cities', compact('areas'));
   }
 
-  // Добавляем запись в бд
-  public function create(Request $request)
-	{
-		
-		$region = new Region;
-
-    $region->region_name = $request->region_name;
-    $region->region_code = $request->region_code;
-    $region->region_vk_external_id = $request->region_vk_external_id;
-
-    $region->save();
-
-    return redirect('/cities');
-  }
-
- 	// Получаем сторонние данные по области (из vk)
+  // Получаем сторонние данные по области (из vk)
   public function get_vk_region(Request $request)
 	{
 	 	$region = $request->region;
@@ -89,10 +74,33 @@ class CitiesController extends Controller
 		$result = (file_get_contents('https://api.vk.com/method/database.getRegions?'. $get_params));
 		echo $result;
   }
+
+  // Добавляем регион в бд
+  public function create_region(Request $request)
+	{
+		// $region = new Region;
+
+  //   $region->region_name = $request->region_name;
+  //   $region->region_code = $request->region_code;
+  //   $region->region_vk_external_id = $request->region_vk_external_id;
+
+  //   $region->save();
+
+		$region->region_name = $request->region_name;
+    $region->region_code = $request->region_code;
+    $region->region_vk_external_id = $request->region_vk_external_id;
+
+    $region = "рабит";
+    echo $region;
+
+    // return redirect('/cities');
+  }
+
+ 	
   // Получаем сторонние данные по городу и району (из vk)
   public function get_vk_city(Request $request)
 	{
-	 	$city = $request->input('city');
+	 	$city = $request->city;
 		$request_params = [
 		'country_id' => '1',
 		'q' => $city,
@@ -102,6 +110,7 @@ class CitiesController extends Controller
 		];
 		$get_params = http_build_query($request_params);
 		$result = (file_get_contents('https://api.vk.com/method/database.getCities?'. $get_params));
+
 		echo $result;
   }
 }
