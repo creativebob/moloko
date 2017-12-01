@@ -39,8 +39,8 @@
           </div>
           <div class="small-5 right-head cell">
             <ul>
-              <li><a id="task-toggle"><img src="img/header/alert.png"></a></li>
-              <li><a data-toggle="profile"><span>Лол</span><img src="img/header/avatar.png"></a></li>
+              <li><a id="task-toggle"><img src="/img/header/alert.png"></a></li>
+              <li><a data-toggle="profile"><span>Лол</span><img src="/img/header/avatar.png"></a></li>
             </ul>
             <div class="dropdown-pane profile-head" id="profile" data-dropdown data-position="bottom" data-alignment="right" data-v-offset="10" data-h-offset="-30" data-close-on-click="true">
               <ul class="menu vertical">

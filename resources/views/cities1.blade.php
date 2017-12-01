@@ -21,7 +21,7 @@
       </div>
     </div>
     {{-- Блок фильтров --}}
-    <div class="grid-x">
+	  <div class="grid-x">
       <div class="small-12 cell filters" id="filters">
         <fieldset class="fieldset-filters">
           <legend>Фильтрация</legend>

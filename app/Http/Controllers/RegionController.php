@@ -29,8 +29,7 @@ class RegionController extends Controller
   }
 
   /**
-   * Store a newly created resource in storage.
-   * Добавляем регион в бд
+   * Добавляем регион в бд.
    *
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
@@ -48,14 +47,13 @@ class RegionController extends Controller
           'error_message' => 'Такая область уже существует в базе!',
           'error_status' => 1
         ];
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
       } else {
         $result = [
           'region_database' => 1,
           'error_status' => 0
         ];
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
       }
+      echo json_encode($result, JSON_UNESCAPED_UNICODE);
     };
     // Если область не найдена, то меняем значение на 1, пишем в базу и отдаем результат
     if ($region_database == 1) {
@@ -114,17 +112,35 @@ class RegionController extends Controller
   }
 
   /**
-   * Remove the specified resource from storage.
+   * Удаляем регион из бд.
    *
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
   public function destroy($id)
   {
-      //
+    $region = Region::destroy($id);
+
+    if ($region){
+    $data = [
+      'status'=> 1,
+      'msg' => 'Успешно удалено'
+    ];
+    } else {
+      $data = [
+      'status' => 0,
+      'msg' => 'Произошла ошибка'
+    ];
+    };
+    echo json_encode($data, JSON_UNESCAPED_UNICODE);
+
   }
 
-  // Получаем сторонние данные по области (из vk)
+
+  /**
+   * Получаем сторонние данные по области (из vk).
+   *
+   */
   public function get_vk_region(Request $request)
   {
     // Log::info('Передача области: '.$request->region);

@@ -3,9 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Area extends Model
 {
+	use SoftDeletes;
+  /**
+   * Атрибуты, которые должны быть преобразованы в даты.
+   *
+   * @var array
+   */
+  protected $dates = ['deleted_at'];
   protected $fillable = [
     'area_name',
     'region_id',

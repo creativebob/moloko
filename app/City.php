@@ -3,16 +3,26 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class City extends Model
 {
-    protected $fillable = [
-        'city_name',
-        'city_region',
-        'city_area',
-        'city_code',
-        'city_vk_external_id',
-    ];
+
+	use SoftDeletes;
+  /**
+   * Атрибуты, которые должны быть преобразованы в даты.
+   *
+   * @var array
+   */
+  protected $dates = ['deleted_at'];
+	protected $table = 'cities';
+  protected $fillable = [
+      'city_name',
+      'region_id',
+      'area_id',
+      'city_code',
+      'city_vk_external_id',
+  ];
 
   /**
   * Получаем район данного города.

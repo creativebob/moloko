@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 
 use App\Region;
+use App\Area;
+use App\City;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -19,23 +22,33 @@ class CityController extends Controller
       
       // dd($data);
 
-      // $dates = Area::join('regions', 'areas.region_id', '=', 'regions.id')
-    //            ->select('areas.id as area_id', 'areas.area_name', 'regions.id as region_id', 'regions.region_name')
-    //            ->get();
+    // $data = Region::select('id', 'region_name')
+    //         ->join('cities', 'areas.city_id', '=', 'cities.id')
+    //         ->join('cities',)
+    //         ->get();
+    $regions = Region::all();
+    $areas = Area::all();
+    $cities = City::all();
+    return view('cities', ['regions' => $regions, 'areas' => $areas, 'cities' => $cities]); 
 
-    $dates = Region::all();
-    return view('cities', compact('dates'));    
+
+    // $data = City::with('area.region')->get();
+    // dd($data);
+    // return view('cities', compact('data'));  
+    // $deleted_regions = Region::onlyTrashed()
+    //             ->count();
+    // return view('cities', compact('data'));    
 
     // foreach ($dates as $data) {
-    //  echo "Id: ".$data->region_id.", название области: ".$data->region_name."\r\nId района: ".$data->area_id.", название района: ".$data->area_name."\r\n";
+    //  echo "Id: ".$data->city_id.", название области: ".$data->city_name."\r\nId района: ".$data->area_id.", название района: ".$data->area_name."\r\n";
     // }
         
-        // $regions = DB::table('regions')->get();
+        // $cities = DB::table('cities')->get();
 
-        // foreach ($regions as $region)
+        // foreach ($cities as $city)
         // {
-        //     var_dump($region->region_name);
-        //     var_dump($region->area_name);
+        //     var_dump($city->city_name);
+        //     var_dump($city->area_name);
         // }
       // return view('cities', compact('dates'));
                 // echo $dates[1]->area_id;
@@ -59,7 +72,100 @@ class CityController extends Controller
    */
   public function store(Request $request)
   {
-      //
+    $city_database = $request->city_database;
+    // По умолчанию значение 0
+    if ($city_database == 0) {
+      // Проверка города и района в нашей базе данных
+      $city_name = $request->city_name;
+      $cities = City::where('city_name', '=', $city_name)->count();
+      if ($cities > 0) {
+        $result = [
+          'error_message' => 'Такой город уже существует в базе!',
+          'error_status' => 1
+        ];
+      } else {
+        $result = [
+          'city_database' => 1,
+          'error_status' => 0
+        ];
+      }
+      echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    };
+    // Если город не найден, то меняем значение на 1, пишем в базу и отдаем результат
+    if ($city_database == 1) {
+
+      $region_name = $request->region_name;
+      $area_name = $request->area_name;
+      $city_name = $request->city_name;
+
+      // Смотрим область
+      $region = Region::where('region_name', '=', $region_name)->first();
+      if ($region) {
+        // Если существует, берем id существующей
+        $region_id = $region->id;
+      } else {
+        // Записываем новую область
+        $region = new Region;
+
+        $region->region_name = $region_name;
+
+        $region->save();
+
+        // Берем id записанной области
+        $region_id = $region->id;
+
+        // return redirect()->action(
+        //    'RegionController@get_vk_region', ['region' => $region_name]
+        // );
+      };
+
+      // Смотрим район
+      $area = Area::where('area_name', '=', $area_name)->first();
+      if ($area) {
+        // Если существует, берем id существующей
+        $area_id = $area->id;
+      } else {
+        // Записываем новый район
+        $area = new Area;
+
+        $area->area_name = $area_name;
+        $area->region_id = $region_id;
+
+        $area->save();
+
+        // Берем id записанного района
+        $area_id = $area->id;
+      };
+      // Записываем город, его наличие в базе мы проверили ранее
+      $city = new City;
+
+      $city->city_name = $city_name;
+      $city->city_code = $request->city_code;
+      $city->area_id = $area_id;
+      $city->city_vk_external_id = $request->city_vk_external_id;
+
+      $city->save();
+
+      $city_id = $city->id;
+      
+      // $city = [
+      //   'city_id' => $city_id,
+      //   'city_name' => $city->city_name,
+      //   'city_vk_external_id' => $city->city_vk_external_id
+      // ];
+
+      $data = [
+        'region_id' => $region_id,
+        'region_name' => $region_name,
+        'area_id' => $area_id,
+        'area_name' => $area_name,
+        'city_id' => $city_id,
+        'city_name' => $city_name
+      ];
+
+    
+      echo json_encode($data, JSON_UNESCAPED_UNICODE);
+    };
   }
 
   /**
