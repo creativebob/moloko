@@ -63,8 +63,8 @@
         <tr id="{{ $user->id }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $user->id }}"><label class="label-check" for="check-{{ $user->id }}"></label></td>
-          <td class="td-login">{{ $user->login }}</td>
-          <td class="td-second-name">{{ $user->second_name . " " . $user->first_name}}</td>
+          <td class="td-login"><a href="users/{{ $user->id }}">{{ $user->login }}</a></td>
+          <td class="td-second-name">{{ $user->second_name . " " . $user->first_name . " (". $user->nickname . ")"}}</td>
 <!--           <td class="td-first-name">{{ $user->first_name }}</td> -->
           <td class="td-phone">{{ $user->phone }}</td>
           <td class="td-contragent-status">{{ $user->contragen_status }}</td>

@@ -10,14 +10,47 @@ class User extends Authenticatable
 {
 
     public function setBirthdayAttribute($value) {
-        $date_parts = explode('.', $value);
-        $this->attributes['birthday'] = $date_parts[0].'-'.$date_parts[1].'-'.$date_parts[2];
+        if($value == Null){
+            return $value;
+        } else 
+            {
+                $date_parts = explode('.', $value);
+                $this->attributes['birthday'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+            };
     }
 
     public function setPassportDateAttribute($value) {
-        $date_parts = explode('.', $value);
-        $this->attributes['birthday'] = $date_parts[0].'-'.$date_parts[1].'-'.$date_parts[2];
+        if($value == Null){
+            return $value;
+        } else 
+            {
+                $date_parts = explode('.', $value);
+                $this->attributes['passport_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+            };
     }
+
+    public function getBirthdayAttribute($value) {
+        if($value == Null){
+            return $value;
+        } else 
+            {
+                $date_parts = explode('-', $value);
+                $value = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+                return $value;
+            };
+    }
+
+    public function getPassportDateAttribute($value) {
+        if($value == Null){
+            return $value;
+        } else 
+            {
+                $date_parts = explode('-', $value);
+                $value = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+                return $value;
+            };
+    }
+
 
     public function getPhoneAttribute($value) {
         
@@ -87,14 +120,10 @@ class User extends Authenticatable
         'lead_id', 
         'employee_id', 
         'access_block', 
+        'group_users_id', 
+        'group_filials_id', 
+
     ];
-
-
-    public function setAddressAttribute($value){
-        $d = $value . " г. Иркутск";
-        return $value;
-    }
-
 
     /**
      * The attributes that should be hidden for arrays.
