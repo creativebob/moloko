@@ -51,6 +51,24 @@ class User extends Authenticatable
             };
     }
 
+    // public function getContragentStatusAttribute($value) {
+    //     if($value == 1){
+    //         $value = "Сотрудник";
+    //     } elseif($value == 2) {
+    //         $value = "Клиент";
+    //     };
+    //     return $value;
+    // }
+
+    // public function setAccessBlockAttribute($value) {
+    //     if($value == Null){
+    //         $value = "Открыт";
+    //     } elseif($value == 1) {
+    //         $value = "Заблокирован";
+    //     };
+    //     return $value;
+    // }
+
 
     public function getPhoneAttribute($value) {
         

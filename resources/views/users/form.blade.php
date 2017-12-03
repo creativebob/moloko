@@ -1,39 +1,13 @@
-@extends('layouts.app')
-
-@section('inhead')
-	<link rel="stylesheet" href="/js/pickmeup/css/pickmeup.css">
-	<script type="text/javascript" src="/js/pickmeup/js/jquery.js"></script>
-	<script type="text/javascript" src="/js/pickmeup/js/jquery.pickmeup.js"></script>
-	<script type="text/javascript" src="/js/pickmeup/js/demo.js"></script>
-@endsection
-
-@section('title', 'Новый пользователь')
-
-@section('title-content')
-	<div class="top-bar head-content">
-    <div class="top-bar-left">
-       <h2 class="header-content">НОВЫЙ ПОЛЬЗОВАТЕЛЬ</h2>
-    </div>
-    <div class="top-bar-right">
+  <div class="grid-x tabs-wrap">
+    <div class="small-12 cell">
+      <ul class="tabs-list" data-tabs id="tabs">
+        <li class="tabs-title is-active"><a href="#content-panel-1" aria-selected="true">Учетные данные</a></li>
+        <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Персональные данные</a></li>
+        <li class="tabs-title"><a data-tabs-target="content-panel-3" href="#content-panel-3">Представитель компании</a></li>
+      </ul>
     </div>
   </div>
-@endsection
 
-@section('content')
-<div class="grid-x tabs-wrap">
-  <div class="small-12 cell">
-    <ul class="tabs-list" data-tabs id="tabs">
-      <li class="tabs-title is-active"><a href="#content-panel-1" aria-selected="true">Учетные данные</a></li>
-      <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Персональные данные</a></li>
-      <li class="tabs-title"><a data-tabs-target="content-panel-3" href="#content-panel-3">Представитель компании</a></li>
-    </ul>
-  </div>
-</div>
-
-{{ Form::model($users, ['route' => ['users.update', $users->id], 'data-abide', 'novalidate']) }}
-<!-- <form action="/user" method="POST" data-abide novalidate> -->
-  {{ csrf_field() }}
-  {{ method_field('PATCH') }}
   <div class="grid-x tabs-wrap inputs">
     <div class="small-12 medium-7 large-5 cell tabs-margin-top">
       <div class="tabs-content" data-tabs-content="tabs">
@@ -41,12 +15,28 @@
         <div class="tabs-panel is-active" id="content-panel-1">
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
-              <label>Короткое имя
-                {{ Form::text('nickname', $users->nickname, ['class'=>'nickname-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'required']) }}
+              <label>Фамилия
+              {{ Form::text('first_name', $users->first_name, ['class'=>'first-name-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+              </label>
+              <label>Имя
+              {{ Form::text('second_name', $users->second_name, ['class'=>'second-name-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+              </label>
+              <label>Отчество
+              {{ Form::text('patronymic', $users->patronymic, ['class'=>'patronymic-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
-          <div class="grid-x grid-padding-x">
+
+
+<!--           <div class="grid-x grid-padding-x">
+            <div class="small-12 medium-6 cell">
+              <label>Короткое имя
+                {{ Form::text('nickname', $users->nickname, ['class'=>'nickname-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'required', $param]) }}
+              </label>
+            </div>
+          </div> -->
+
+          <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
               <label>Телефон
                 {{ Form::text('phone', $users->phone, ['class'=>'phone-field', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off', 'required']) }}
@@ -86,19 +76,6 @@
         <!-- Персональные данные -->
         <div class="tabs-panel" id="content-panel-2">
           <div class="grid-x grid-padding-x">
-            <div class="small-12 medium-6 cell">
-              <label>Имя
-              {{ Form::text('second_name', $users->second_name, ['class'=>'second-name-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
-              </label>
-              <label>Фамилия
-              {{ Form::text('first_name', $users->first_name, ['class'=>'first-name-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
-              </label>
-              <label>Отчество
-              {{ Form::text('patronymic', $users->patronymic, ['class'=>'patronymic-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
-              </label>
-            </div>
-          </div>
-          <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-5 medium-4 cell">
               <label>Дата рождения
               {{ Form::text('birthday', $users->birthday, ['class'=>'birthday-field date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
@@ -142,11 +119,11 @@
         <div class="tabs-panel" id="content-panel-3">
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 cell checkbox">
-              {{ Form::checkbox('orgform_status', 0, false, ['id'=>'orgform-status-checkbox']) }}
+              {{ Form::checkbox('orgform_status', 1, $users->orgform_status==1, ['id'=>'orgform-status-checkbox']) }}
               <label for="orgform-status-checkbox"><span>Представитель компании</span></label>
             </div>
           </div>
-          <div class="grid-x grid-padding-x"> 
+          <div class="grid-x grid-padding-x tabs-margin-top"> 
             <div class="small-12 medium-6 cell">
               <label>Название компании
               {{ Form::text('company_name', $users->company_name, ['class'=>'company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
@@ -193,7 +170,7 @@
         <div class="grid-x grid-padding-x"> 
           <div class="small-12 cell">
             <label>Статус пользователя
-              {{ Form::select('contragent_status', ['1' => 'Клиент', '2' => 'Сотрудник']) }}
+              {{ Form::select('contragent_status', [ '1' => 'Сотрудник', '2' => 'Клиент']) }}
             </label>
           </div>
         </div>
@@ -225,45 +202,14 @@
             </label>
           </div>
           <div class="small-12 cell checkbox">
-              {{ Form::checkbox('access_block', 0, false, ['id'=>'access-block-checkbox']) }}
+              {{ Form::checkbox('access_block', 1, $users->access_block == 1, ['id'=>'access-block-checkbox']) }}
             <label for="access-block-checkbox"><span>Блокировать доступ</span></label>
           </div>
         </div>
       </fieldset> 
     </div>
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-      {{ Form::submit('Сохранить', ['class'=>'button']) }}
+      {{ Form::submit($submitButtonText, ['class'=>'button']) }}
     </div>
   </div>
-
-{{ Form::close() }}
-
-@endsection
-
-@section('scripts')
-<script type="text/javascript" src="/js/jquery.inputmask.min.js"></script>
-<script type="text/javascript">
-
-  $(function() {
-    // Определяем маски для полей
-    $('.passport-number-field').mask('00 00 №000000');
-    $('.phone-field').mask('8 (000) 000-00-00');
-    $('.inn-field').mask('000000000000');
-    $('.kpp-field').mask('000000000');
-    $('.account-correspondent-field').mask('00000000000000000000');
-    $('.account-settlement-field').mask('00000000000000000000');
-    $('.birthday-field').mask('00.00.0000');
-    $('.passport-date-field').mask('00.00.0000');
-
-  });
-
-  // Прикручиваем календарь
-  $('.date-field').pickmeup({
-    position : "bottom",
-    hide_on_select : true
-  });
-  
-</script>
-@endsection
-
 

@@ -14,7 +14,7 @@
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
 	      <h2 class="header-content">Пользователи системы</h2>
-	      <a href="/user" class="icon-add sprite"></a>
+	      <a href="/users/create" class="icon-add sprite"></a>
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -47,10 +47,11 @@
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-login">Логин</th>
           <th class="td-second-name">Пользователь</th>
+          <th class="td-login">Логин</th>
 <!--           <th class="td-first-name">Имя</th> -->
           <th class="td-phone">Телефон</th>
+          <th class="td-email">Почта</th>
           <th class="td-contragent-status">Статус</th>
           <th class="td-access-block">Доступ</th>
           <th class="td-group-users-id">Уровень доступа</th>
@@ -63,11 +64,12 @@
         <tr id="{{ $user->id }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $user->id }}"><label class="label-check" for="check-{{ $user->id }}"></label></td>
-          <td class="td-login"><a href="users/{{ $user->id }}">{{ $user->login }}</a></td>
-          <td class="td-second-name">{{ $user->second_name . " " . $user->first_name . " (". $user->nickname . ")"}}</td>
+          <td class="td-second-name">{{ link_to_route('users.edit', $user->second_name . " " . $user->first_name . " (". $user->nickname . ")", [$user->id]) }} </td>
+          <td class="td-login">{{ $user->login }}</td>
 <!--           <td class="td-first-name">{{ $user->first_name }}</td> -->
           <td class="td-phone">{{ $user->phone }}</td>
-          <td class="td-contragent-status">{{ $user->contragen_status }}</td>
+          <td class="td-email">{{ $user->email }}</td>
+          <td class="td-contragent-status">{{ $user->contragent_status }}</td>
           <td class="td-access-block">{{ $user->access_block }}</td>
           <td class="td-group-users-id">Уровень доступа</td>
           <td class="td-delete"><a class="icon-delete sprite"></a></td>
@@ -77,79 +79,12 @@
     </table>
   </div>
 </div>
+
 {{-- Pagination --}}
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
-    <span class="pagination-title">Кол-во записей: 3</span>
-    <ul class="pagination" role="navigation" aria-label="Pagination">
-      <li class="current">1</li>
-      <li><a href="#" aria-label="Page 2">2</a></li>
-      <li><a href="#" aria-label="Page 3">3</a></li>
-      <li><a href="#" aria-label="Page 4">4</a></li>
-      <li class="ellipsis" aria-hidden="true"></li>
-      <li><a href="#" aria-label="Page 12">12</a></li>
-      <li><a href="#" aria-label="Page 13">13</a></li>
-    </ul>
-  </div>
-  <div class="small-6 cell">
-    <div class="right">
-      <a href="#" data-open="modal"><div class="sprite icon-deleted"></div>6</a>
-    </div>
-    <div class="reveal" id="modal" data-reveal>
-      <div class="grid-x">
-        <div class="small-12 cell modal-title">
-          <h5>ДОБАВЛЕНИЕ НАСЕЛЕННОГО ПУНКТА</h5>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x modal-content inputs">
-        <div class="small-10 medium-4 cell">
-          <label>Область
-            <input type="text" name="" required>
-            <span class="form-error">Уж постарайтесь, придумайте что-нибудь!</span>
-          </label>
-          <label>Район
-            <input type="text" name="" required>
-            <span class="form-error">Уж постарайтесь, придумайте что-нибудь!</span>
-          </label>
-        </div>
-        <div class="small-12 medium-8 cell">
-          <div class="grid-x grid-padding-x">
-            <div class="small-10 medium-8 cell">
-              <label>Название населенного пункта
-                <input type="text" name="" required>
-                <span class="form-error">Уж постарайтесь, придумайте что-нибудь!</span>
-              </label>
-            </div>
-          </div>
-          <table class="table-content-search">
-            <caption>Результаты поиска в сторонней базе данных:</caption>
-            <tbody>
-              <tr>
-                <td><a href="#">Кимильтей</a></td>
-                <td><a href="#">Куйтунский район</a></td>
-                <td><a href="#">Иркутская область</a></td>
-              </tr>
-              <tr>
-                <td><a href="#">Кимильтей</a></td>
-                <td><a href="#">Куйтунский район</a></td>
-                <td><a href="#">Иркутская область</a></td>
-              </tr>
-              <tr>
-                <td><a href="#">Кимильтей</a></td>
-                <td><a href="#">Куйтунский район</a></td>
-                <td><a href="#">Иркутская область</a></td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="grid-x ">
-            <div class="small-6 small-centered cell">
-              <a href="#" class="button modal-button">Сохранить</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-close class="icon-close-modal sprite close-modal"></div>
-    </div>
+    <span class="pagination-title">Кол-во записей: {{ $users->count() }}</span>
+    {{ $users->links() }}
   </div>
 </div>
 @endsection

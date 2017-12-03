@@ -11,8 +11,8 @@ class UserController extends Controller
     //
     public function index()
     {
-    	$users = User::get();
-    	return view('users', compact('users'));
+    	$users = User::paginate(30);
+    	return view('users.index', compact('users'));
     }
 
     public function store(Request $request)
@@ -27,8 +27,8 @@ class UserController extends Controller
     	$user->first_name =   $request->first_name;
     	$user->second_name = $request->second_name;
     	$user->patronymic = $request->patronymic;
-		$user->sex = $request->sex;
-	 	$user->birthday = $request->birthday;
+		  $user->sex = $request->sex;
+	   	$user->birthday = $request->birthday;
 
     	$user->phone = cleanPhone($request->phone);
 
@@ -44,9 +44,9 @@ class UserController extends Controller
     	$user->company_name = $request->company_name;
     	$user->inn = $request->inn;
     	$user->kpp = $request->kpp;
-      	$user->account_settlement = $request->account_settlement;
-     	 $user->account_correspondent = $request->account_correspondent;
-      	$user->bank = $request->bank;
+      $user->account_settlement = $request->account_settlement;
+     	$user->account_correspondent = $request->account_correspondent;
+      $user->bank = $request->bank;
 
     	$user->passport_address = $request->passport_address;
     	$user->passport_number = $request->passport_number;
@@ -71,7 +71,8 @@ class UserController extends Controller
     //
     public function create()
     {
-    	return view('user');
+      $users = new User;
+    	return view('users.create', compact('users'));
     }
 
     public function update(Request $request, $id)
@@ -87,8 +88,8 @@ class UserController extends Controller
     	$user->first_name =   $request->first_name;
     	$user->second_name = $request->second_name;
     	$user->patronymic = $request->patronymic;
-		$user->sex = $request->sex;
-	 	$user->birthday = $request->birthday;
+		  $user->sex = $request->sex;
+	 	 $user->birthday = $request->birthday;
 
     	$user->phone = cleanPhone($request->phone);
 
@@ -104,9 +105,9 @@ class UserController extends Controller
     	$user->company_name = $request->company_name;
     	$user->inn = $request->inn;
     	$user->kpp = $request->kpp;
-      	$user->account_settlement = $request->account_settlement;
+      $user->account_settlement = $request->account_settlement;
      	$user->account_correspondent = $request->account_correspondent;
-      	$user->bank = $request->bank;
+      $user->bank = $request->bank;
 
     	$user->passport_address = $request->passport_address;
     	$user->passport_number = $request->passport_number;
@@ -130,7 +131,14 @@ class UserController extends Controller
     public function show($id)
     {
     	$users = User::findOrFail($id);
-    	return view('user', compact('users'));
+    	return view('users.show', compact('users'));
     }
+
+    public function edit($id)
+    {
+      $users = User::findOrFail($id);
+      return view('users.edit', compact('users'));
+    }
+
 
 }
