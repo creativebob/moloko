@@ -366,8 +366,7 @@ input[type=checkbox], input[type=radio] {
 .input-icon {
   position: relative;
 
-  .sprite-input {
-    
+  .sprite-input-left {
     display: inline-block;
     vertical-align: middle;
     width: 16px;
@@ -376,6 +375,20 @@ input[type=checkbox], input[type=radio] {
     top: 0;
     left: 0;
     opacity: 0.5;
+  }
+  .sprite-input-right {
+    
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0.5;
+  }
+  .loading {
+    display: none;
   }
 }
 
@@ -403,7 +416,7 @@ input[type=checkbox], input[type=radio] {
   }
   .input-icon {
 
-    .sprite-input {
+    .sprite-input-left {
       top: 8px;
       left: 8px;
       opacity: 0.5;
@@ -424,7 +437,7 @@ input[type=checkbox], input[type=radio] {
     outline: none;
     box-shadow: none;
   }
-  input:focus + .sprite-input {
+  input:focus + .sprite-input-left {
     opacity: 1;
   }
   .button {
@@ -1051,6 +1064,20 @@ input[type=checkbox], input[type=radio] {
   .icon-close-modal:hover {
     background-position: -32px -608px;
   }  
+
+  .input-icon {
+
+    .sprite-input-right {
+      top: 23px;
+      right: 8px;
+      opacity: 0.5;
+      transition: 0.5s ease opacity;
+    }
+    .icon-loading {
+      background: url(img/loading.svg) no-repeat;
+      // background-position: 0px 0px;
+    }
+  }
 }
 // Таблица поиска в модалке
 .table-content-search {

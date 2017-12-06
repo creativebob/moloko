@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class City extends Model
 {
-
 	use SoftDeletes;
   /**
    * Атрибуты, которые должны быть преобразованы в даты.
@@ -23,7 +22,6 @@ class City extends Model
       'city_code',
       'city_vk_external_id',
   ];
-
   /**
   * Получаем район данного города.
   */
@@ -33,7 +31,6 @@ class City extends Model
   }
   // *
   // * Получаем область данного города.
-  
   public function region()
   {
     return $this->belongsTo('App\Region');

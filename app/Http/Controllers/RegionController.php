@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Region;
+use App\Area;
+use App\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -41,10 +43,10 @@ class RegionController extends Controller
     if ($region_database == 0) {
       // Проверка области в нашей базе данных
       $region_name = $request->region_name;
-      $regions = Region::where('region_name', '=', $region_name)->count();
-      if ($regions > 0) {
+      $regions = Region::where('region_name', '=', $region_name)->first();
+      if ($regions) {
         $result = [
-          'error_message' => 'Такая область уже существует в базе!',
+          'error_message' => 'Область уже добавлена в нашу базу!',
           'error_status' => 1
         ];
       } else {
@@ -119,21 +121,36 @@ class RegionController extends Controller
    */
   public function destroy($id)
   {
-    $region = Region::destroy($id);
 
-    if ($region){
-    $data = [
-      'status'=> 1,
-      'msg' => 'Успешно удалено'
-    ];
-    } else {
+    // Проверяем содержит ли район вложенные населнные пункты
+    $cities = City::where('region_id', '=', $id)->first();
+    $areas = Area::where('region_id', '=', $id)->first();
+    if ($cities || $areas) {
+      // Если содержит, то даем сообщенеи об ошибке
       $data = [
-      'status' => 0,
-      'msg' => 'Произошла ошибка'
-    ];
+        'status' => 0,
+        'msg' => 'Данная область содержит населенные пункты, удаление невозможно'
+      ];
+    } else {
+      // Если нет, мягко удаляем
+      $region = Region::destroy($id);
+
+      if ($region){
+        $data = [
+          'status'=> 1,
+          'type' => 'regions',
+          'id' => $id,
+          'msg' => 'Успешно удалено'
+        ];
+      } else {
+        // В случае непредвиденной ошибки
+        $data = [
+          'status' => 0,
+          'msg' => 'Произошла непредвиденная ошибка, попробуйте перезагрузить страницу и попробуйте еще раз'
+        ];
+      };
     };
     echo json_encode($data, JSON_UNESCAPED_UNICODE);
-
   }
 
 

@@ -19,8 +19,6 @@ class Region extends Model
     'region_code',
     'region_vk_external_id',
   ];
-
-
   /**
    * Получаем районы и города области.
    */

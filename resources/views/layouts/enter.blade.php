@@ -18,12 +18,12 @@
           {{ csrf_field() }}
           <label class="input-icon">
             <input type="text" name="email" placeholder="Логин" maxlength="25" autocomplete="off" required>
-            <div class="sprite-input icon-login"></div>
+            <div class="sprite-input-left icon-login"></div>
             <span class="form-error">Обязательно нужно логиниться!</span>
           </label>
           <label class="input-icon">
             <input type="password" name="password" placeholder="Пароль" maxlength="25" autocomplete="off" required>
-            <div class="sprite-input icon-password"></div>
+            <div class="sprite-input-left icon-password"></div>
             <span class="form-error">И пароль не помешает вовсе!</span>
           </label>
           <button class="button" type="submit" value="Submit">Войти</button>

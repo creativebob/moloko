@@ -41,372 +41,88 @@
 <div class="grid-x">
   <div class="small-12 cell">
     <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
+
       @if(!empty($regions))
-        @foreach ($regions as $region) 
-        <li class="first-item" id="{{ $region->id }}">
+        @foreach ($regions as $region)      
+
+        <li class="first-item parent-item" id="regions-{{ $region->id }}" data-name="{{ $region->region_name }}">
           <ul class="icon-list">
-            <li><div class="icon-list-add sprite city-add" data-open="city-add" data-id="{{ $region->id }}"></div></li>
-            <li><div class="icon-list-edit sprite region-edit" data-open="region-edit" data-id="{{ $region->id }}"></div></li>
-            <li><div class="icon-list-delete sprite region-delete" data-open="region-del" data-id="{{ $region->id }}"></div></li>
+            <li><div class="icon-list-add sprite city-add" data-open="city-add"></div></li>
+            {{-- <li><div class="icon-list-edit sprite region-edit" data-open="region-edit"></div></li> --}}
+            <li>
+
+            @if($region->areas_count + $region->cities_count == 0)  
+              <div class="icon-list-delete sprite" data-open="item-delete"></div>
+            @endif
+
+            </li>
           </ul>
           <a data-list="{{ $region->id }}" class="first-link">
             <div class="list-title">
               <div class="icon-open sprite"></div>
-              <span class="first-item-name">{{ $region->region_name }}</span><span class="number">{{ $areas->count() }}</span>
+              <span class="first-item-name">{{ $region->region_name }}</span><span class="number">{{ $region->areas_count + $region->cities_count }}</span>
             </div>
           </a>
-          <ul class="menu vertical medium accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
-            @if(!empty($areas))
+          @if(!empty($areas))
+            <ul class="menu vertical medium accordion-menu medium-list" data-accordion-menu data-allow-all-closed data-multi-open="false">
               @foreach ($areas as $area)
                 @if($region->id == $area->region_id)
-                  <li class="medium-item">
+                  <li class="medium-item parent-item" id="areas-{{ $area->id }}" data-name="{{ $area->area_name }}">
                     <a class="medium-link" data-list-link="{{ $area->id }}">
                       <div class="list-title">
                         <div class="icon-open sprite"></div>
-                        <span>{{ $area->area_name }}</span><span class="number">{{ $cities->where($area->region_id, '=', $region->id)->count() }}</span>
+                        <span>{{ $area->area_name }}</span><span class="number">{{ $area->cities_count }}</span>
                       </div>
                     </a>
-                    <ul class="icon-list">
-                      <li><div class="icon-list-add sprite" data-open="add"></div></li>
-                      <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                      <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                    </ul>
+                    <ul class="icon-list" data-id="{{ $area->id }}" data-name="{{ $area->city_name }}">
+                      {{-- <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
+                      <li> --}}
 
+                      @if($area->cities_count == 0)
+                        <div class="icon-list-delete sprite" data-open="item-delete"></div>
+                      @endif
+                      </li>
+                    </ul>
                     @if(!empty($cities))
-                      @foreach ($cities as $city)
-                        @if($area->id == $city->area_id)
-                          <ul class="menu vertical nested last">
-                            <li class="last-item">
-                              <div class="last-link">{{ $city->city_name }}
+                      <ul class="menu vertical nested last">
+                        @foreach ($cities as $city)
+                          @if($area->id == $city->area_id)
+                            <li class="last-item parent-item" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
+                              <div class="last-link city-del" data-id="{{ $city->city_id }}">{{ $city->city_name }}
                                 <ul class="icon-list">
-                                  <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                                  <li><div class="icon-list-delete sprite" data-open="del"></div></li>
+                                  {{-- <li><div class="icon-list-edit sprite" data-open="edit"></div></li> --}}
+                                  <li><div class="icon-list-delete sprite" data-open="item-delete" data-type="cities"></div></li>
                                 </ul>
                               </div>
                             </li>
-                          </ul>
-                        @endif
-                      @endforeach
+                          @endif
+                        @endforeach
+                      </ul>
                     @endif
-
                   </li>
                 @endif
               @endforeach
-            @endif
-          </ul>
+              @if(!empty($cities))
+            @foreach ($cities as $city)
+              @if($region->id == $city->region_id)
+                <li class="medium-item parent-item" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
+                  <div class="medium-as-last">{{ $city->city_name }}
+                    <ul class="icon-list" data-id="{{ $city->id }}" data-name="{{ $city->city_name }}">
+                      {{-- <li><div class="icon-list-edit sprite" data-open="city-edit"></div></li> --}}
+                      <li><div class="icon-list-delete sprite" data-open="item-delete" data-type="cities"></div></li>
+                    </ul>
+                  </div>
+                </li>
+              @endif
+            @endforeach
+          @endif
+            </ul>
+          @endif
         </li>
+
         @endforeach
       @endif
 
-
-
-      <li class="first-item">
-        <ul class="icon-list">
-          <li><div class="icon-list-add sprite" data-open="add"></div></li>
-          <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-          <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-        </ul>
-        <a data-list="0" class="first-link">
-          <div class="list-title">
-            <div class="icon-open sprite"></div>
-            <span>Тестовая область</span><span class="number">4</span>
-          </div>
-        </a>
-        <ul class="menu vertical medium accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
-          <li class="medium-item">
-            <a class="medium-link" data-list-link="3">
-              <div class="list-title">
-                <div class="icon-open sprite"></div>
-                <span>Ангарский район</span><span class="number">10</span>
-              </div>
-            </a>
-            <ul class="icon-list">
-              <li><div class="icon-list-add sprite" data-open="add"></div></li>
-              <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-              <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-            </ul>
-          </li>
-          <li class="medium-item">
-            <a class="medium-link" data-list-link="4">
-              <div class="list-title">
-                <div class="icon-open sprite"></div>
-                <span>Зиминский район</span><span class="number">2</span>
-              </div>
-            </a>
-            <ul class="icon-list">
-              <li><div class="icon-list-add sprite" data-open="add"></div></li>
-              <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-              <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-            </ul>
-            <!-- Начало вложенного списка в середине -->
-
-            <ul class="menu vertical medium nested accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
-              <li class="medium-item">
-                <a class="medium-link" data-list-link="5">
-                  <div class="list-title">
-                    <div class="icon-open sprite"></div>
-                    <span>Ангарский район</span><span class="number">10</span>
-                  </div>
-                </a>
-                <ul class="icon-list">
-                  <li><div class="icon-list-add sprite" data-open="add"></div></li>
-                  <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                  <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                </ul>
-              </li>
-              <li class="medium-item">
-                <a class="medium-link" data-list-link="6">
-                  <div class="list-title">
-                    <div class="icon-open sprite"></div>
-                    <span>Куйтунский район</span><span class="number">1</span>
-                  </div>
-                </a>
-                <ul class="icon-list">
-                  <li><div class="icon-list-add sprite" data-open="add"></div></li>
-                  <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                  <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                </ul>
-                <ul class="menu vertical nested last">
-                  <li class="last-item">
-                    <a class="last-link">Березовка
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  <li class="last-item">
-                    <a class="last-link">Уян
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  <li class="last-item">
-                    <a class="last-link">Сосновка
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  <li class="last-item">
-                    <a class="last-link">Кимильтей
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  <li class="last-item">
-                    <a class="last-link">Осиновка
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  <li class="last-item">
-                    <a class="last-link">Андрюшино
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  <li class="last-item">
-                    <a class="last-link">Хаихта
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  <li class="last-item">
-                    <a class="last-link">Хаихта
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  <li class="last-item">
-                    <a class="last-link">Хаихта
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  <li class="last-item">
-                    <a class="last-link">Хаихта
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  <li class="last-item">
-                    <a class="last-link">Хаихта
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  <li class="last-item">
-                    <a class="last-link">Хаихта
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  <li class="last-item">
-                    <a class="last-link">Хаихта
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  <li class="last-item">
-                    <a class="last-link">Хаихта
-                      <ul class="icon-list">
-                        <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                        <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                      </ul>
-                    </a>
-                  </li>
-                  
-                </ul>
-              </li>
-              <li class="medium-item">
-                <div class="medium-as-last">Иркутск
-                  <ul class="icon-list">
-                  <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                  <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                </ul>
-                </div>
-              </li>
-              <li class="medium-item">
-                <div class="medium-as-last">Ангарск
-                  <ul class="icon-list">
-                  <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                  <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                </ul>
-                </div>
-              </li>
-              <li class="medium-item">
-                <div class="medium-as-last">Усть-Илимск
-                  <ul class="icon-list">
-                  <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                  <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                </ul>
-                </div>
-              </li>
-            </ul>
-
-            <!-- Конец вложенного списка в середине -->
-          </li>
-          <li class="medium-item">
-            <a href="#" class="medium-link" data-list-link="7">
-              <div class="list-title">
-                <div class="icon-open sprite"></div>
-                <span>Куйтунский район</span><span class="number">1</span>
-              </div>
-            </a>
-            <ul class="icon-list">
-              <li><div class="icon-list-add sprite" data-open="add"></div></li>
-              <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-              <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-            </ul>
-            <ul class="menu vertical nested last">
-              <li class="last-item">
-                <div class="last-link">Березовка
-                  <ul class="icon-list">
-                    <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                    <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                  </ul>
-                </div>
-              </li>
-              <li class="last-item">
-                <div class="last-link">Уян
-                  <ul class="icon-list">
-                    <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                    <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                  </ul>
-                </div>
-              </li>
-              <li class="last-item">
-                <div class="last-link">Сосновка
-                  <ul class="icon-list">
-                    <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                    <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                  </ul>
-                </div>
-              </li>
-              <li class="last-item">
-                <div class="last-link">Кимильтей
-                  <ul class="icon-list">
-                    <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                    <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                  </ul>
-                </div>
-              </li>
-              <li class="last-item">
-                <div class="last-link">Осиновка
-                  <ul class="icon-list">
-                    <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                    <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                  </ul>
-                </div>
-              </li>
-              <li class="last-item">
-                <div class="last-link">Андрюшино
-                  <ul class="icon-list">
-                    <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                    <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                  </ul>
-                </div>
-              </li>
-              <li class="last-item">
-                <div class="last-link">Хаихта
-                  <ul class="icon-list">
-                    <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                    <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-                  </ul>
-                </div>
-              </li>
-            </ul>
-          </li>
-          <li class="medium-item">
-            <div class="medium-as-last">Иркутск
-              <ul class="icon-list">
-                <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-              </ul>
-            </div>
-          </li>
-          <li class="medium-item">
-            <div class="medium-as-last">Ангарск
-              <ul class="icon-list">
-                <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-              </ul>
-            </div>
-          </li>
-          <li class="medium-item">
-            <div class="medium-as-last">Усть-Илимск
-              <ul class="icon-list">
-                <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                <li><div class="icon-list-delete sprite" data-open="del"></div></li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </li>
     </ul>
   </div>
 </div>
@@ -436,8 +152,9 @@
     {{ csrf_field() }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 medium-4 cell">
-        <label>Название области
+        <label class="input-icon">Название области
           <input type="text" name="region_name" id="region-name-field" autocomplete="off" required>
+          <div class="sprite-input-right icon-loading loading"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
         <input type="hidden" name="region_vk_external_id" id="region-id-field">
@@ -457,7 +174,7 @@
       </div>
     </div>
   </form>
-  <div data-close class="icon-close-modal sprite close-modal"></div> 
+  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 {{-- Конец модалки добавления области --}}
 
@@ -496,30 +213,7 @@
 </div>
 {{-- Конец модалки редактирования области --}}
 
-{{-- Модалка удаления области --}}
-<div class="reveal" id="region-del" data-reveal>
-  <div class="grid-x">
-    <div class="small-12 cell modal-title">
-      <h5>удаление области</h5>
-    </div>
-  </div>
-  <div class="grid-x align-center modal-content ">
-    <div class="small-10 medium-4 cell">
-      <p>Удаляем <span class="title-delete"></span>, вы уверены?</p>
-    </div>
-  </div>
 
-  <div class="grid-x align-center grid-padding-x">
-    <div class="small-6 medium-4 cell">
-      <button data-close class="button modal-button" id="delete-region" type="submit">Удалить</button>
-    </div>
-    <div class="small-6 medium-4 cell">
-      <button data-close class="button modal-button" id="save-region" type="submit">Отменить</button>
-    </div>
-  </div>
-  <div data-close class="icon-close-modal sprite close-modal"></div> 
-</div>
-{{-- Конец модалки удаления области --}}
 
 {{-- Модалка добавления города и района --}}
 <div class="reveal" id="city-add" data-reveal>
@@ -528,20 +222,25 @@
       <h5>ДОБАВЛЕНИЕ НАСЕЛЕННОГО ПУНКТА</h5>
     </div>
   </div>
-  <form id="form-city-add">
-    {{ csrf_field() }}
+  {!! Form::open(['url' => '/cities', 'id' => 'form-city-add']) !!}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 medium-4 cell">
-        <label>Название населенного пункта
-          <input type="text" name="city_name" id="city-name-field" required>
+        <label class="input-icon">Название населенного пункта
+          <input type="text" name="city_name" id="city-name-field" autocomplete="off" required>
+          <div class="sprite-input-right icon-loading loading"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
         </label>
         <label>Район
-          <input type="text" name="area_name" id="area-name">
+          <input type="text" name="area_name" id="area-name" readonly>
         </label>
         <label>Область
-          <input type="text" name="region_name" id="region-name">
+          <input type="text" name="region_name" id="region-name" readonly>
         </label>
+        <div class="small-12 cell checkbox">
+          <input type="checkbox" name="search_all" id="search-all-checkbox" class="search-checkbox">
+          <label for="search-all-checkbox"><span class="search-checkbox">Искать везде</span></label>
+        </div>
+        
         <input type="hidden" name="city_vk_external_id" id="city-id-field">
         <input type="hidden" name="city_database" id="city-database" value="0">
       </div>
@@ -558,8 +257,8 @@
         <button data-close class="button modal-button" id="submit-city-add" type="submit" disabled>Сохранить</button>
       </div>
     </div>
-  </form>
-  <div data-close class="icon-close-modal sprite close-modal"></div> 
+  {!! Form::close() !!}
+  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 {{-- Конец модалки добавления города и района --}}
 
@@ -620,6 +319,34 @@
   <div data-close class="icon-close-modal sprite close-modal"></div> 
 </div>
 {{-- Конец модалки редактирования --}}
+
+
+{{-- Модалка удаления --}}
+<div class="reveal" id="item-delete" data-reveal>
+  <div class="grid-x">
+    <div class="small-12 cell modal-title">
+      <h5>удаление области</h5>
+    </div>
+  </div>
+  <div class="grid-x align-center modal-content ">
+    <div class="small-10 medium-4 cell">
+      <p>Удаляем "<span class="title-delete"></span>", вы уверены?</p>
+    </div>
+  </div>
+
+  <div class="grid-x align-center grid-padding-x">
+    <div class="small-6 medium-4 cell">
+      <button data-close class="button modal-button delete-button" type="submit">Удалить</button>
+    </div>
+    <div class="small-6 medium-4 cell">
+      <button data-close class="button modal-button" id="save-button" type="submit">Отменить</button>
+    </div>
+  </div>
+  <div data-close class="icon-close-modal sprite close-modal"></div> 
+</div>
+{{-- Конец модалки удаления --}}
+
+
 @endsection
 
 @section('scripts')
@@ -664,6 +391,109 @@ $(function() {
     };
   });
 
+  // Функция получения городов из вк или с фильтром по нашей базе
+  function getCityVk () {  
+    $('#submit-city-add').prop('disabled', true);
+    $('#city-database').val(0);
+    // Получаем фрагмент текста
+    var city = {city:$('#city-name-field').val(), checkbox:$('#search-all-checkbox').prop('checked')};
+    // Смотрим сколько символов
+    var lenCity = $('#city-name-field').val().length;
+    // Если символов больше 2 - делаем запрос
+    if(lenCity > 2){
+      // Сам ajax запрос
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: "/city",
+        type: "POST",
+        data: city,
+        beforeSend: function () {
+          $('.icon-loading').removeClass('loading');
+        },
+        success: function(date){
+          $('.icon-loading').addClass('loading');
+          // Удаляем все значения чтобы вписать новые
+          $('#tbody-city-add>tr').remove();
+          var result = $.parseJSON(date);
+          var data = '';
+          
+          if ($('#search-all-checkbox').prop('checked') == true) {
+            var countRes = result.response.count;
+            if (countRes == 0) {
+              data = "<tr><td>Ничего не найдено...</td></tr>";
+            };
+            if (countRes > 0) {
+              // Перебираем циклом
+              for (var i = 0; i < countRes; i++) {
+              // Если области нет
+              if (result.response.items[i].region == undefined) {
+                var regionName = '';
+              } else {
+                var regionName = result.response.items[i].region;
+              };
+              // Если района нет
+              if (result.response.items[i].area == undefined) {
+                var areaName = '';
+              } else {
+                var areaName = result.response.items[i].area;
+              };
+              // Формируем содержимое
+              data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"city-add\" data-city-id=\"" + i + "\" data-city-vk-external-id=\"" + result.response.items[i].id + "\">" + result.response.items[i].title + "</a></td><td><a class=\"city-add\" data-area-id=\"" + i + "\" data-area-name=\"" + result.response.items[i].area + "\">" + areaName + "</a></td><td><a class=\"city-add\" data-region-id=\"" + i + "\" data-region-name=\"" + result.response.items[i].region + "\">" + regionName + "</a></td></tr>";
+              };
+            };
+          }; 
+          if ($('#search-all-checkbox').prop('checked') == false) {
+            if (result.count == 0) {
+              data = "<tr><td>Ничего не найдено...</td></tr>";
+            } else {
+              var countRes = result.region.length;
+              // alert(result.region);
+              if (countRes == 0) {
+                data = "<tr><td>Ничего не найдено...</td></tr>";
+              };
+              if (countRes > 0) {
+                // Перебираем циклом
+                for (var i = 0; i < countRes; i++) {
+                  // Если области нет
+                  if (result.region[i] == null) {
+                    var regionName = '';
+                  } else {
+                    var regionName = result.region[i];
+                  };
+                  // Если района нет
+                  if (result.area[i] == null) {
+                    var areaName = '';
+                  } else {
+                    var areaName = result.area[i];
+                  };
+                  // Формируем содержимое
+                  data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"city-add\" data-city-id=\"" + i + "\" data-city-vk-external-id=\"" + result.id[i] + "\">" + result.title[i] + "</a></td><td><a class=\"city-add\" data-area-id=\"" + i + "\" data-area-name=\"" + result.area[i] +"\">"+ areaName +"</a></td><td><a class=\"city-add\" data-region-id=\"" + i + "\" data-region-name=\"" + result.region[i] + "\">" + regionName + "</a></td></tr>";
+                };
+              };
+            }
+          };
+          // Вставляем
+          $('#tbody-city-add').append(data);
+        }
+      });
+    };
+    if (lenCity <= 2) {
+      // Удаляем все значения, если символов меньше 3х
+      $('#tbody-city-add>tr').remove();
+      $('#city-id-field').val('');
+      $('#area-name').val('');
+      $('#region-name').val('');
+      $('.city-error').remove();
+    };
+  };
+  // Функция появления окна с ошибкой
+  function showError (msg) {
+    var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
+    return error;
+  };
+
   // Отображение области по ajax через api vk
   $('#region-name-field').keyup(function() {
     // Блокируем кнопку
@@ -683,27 +513,34 @@ $(function() {
         url: "/region",
         type: "POST",
         data: {region: $('#region-name-field').val()},
-        success: function (date) {
+        beforeSend: function () {
+          $('.icon-loading').removeClass('loading');
+        },
+        success: function(date){
+          $('.icon-loading').addClass('loading');
+          // Удаляем все значения чтобы вписать новые
+          $('#tbody-region-add>tr').remove();
           var result = $.parseJSON(date);
           var count = result.response.count;
           var data = '';
-          if (count >= 1) {
-            // Удаляем все значения чтобы вписать новые
-            $('#tbody-region-add>tr').remove();
+          if (count == 0) {
+            data = "<tr><td>Ничего не найдено...</td></tr>";
+          };
+          if (count > 0) {
             // Перебираем циклом
             for (var i = 0; i < count; i++) {
               data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"region-add\" data-region-vk-external-id=\"" + i + "\">" + result.response.items[i].id + "</a></td><td><a class=\"region-add\" data-region-name=\"" + i + "\">" + result.response.items[i].title + "</a></td></tr>";
             };
-            // Выводим пришедшие данные на страницу
-            $('#tbody-region-add').append(data);
           };
+          // Выводим пришедшие данные на страницу
+          $('#tbody-region-add').append(data);
         }
       });
     };
     if (lenRegion <= 3) {
       // Удаляем все значения, если символов меньше 3х
       $('#tbody-region-add>tr').remove();
-      $('.region-error').remove();
+      $('.item-error').remove();
       $('#region-id-field').val('');
     };
   });
@@ -731,7 +568,7 @@ $(function() {
           // alert(result.error_status);
 
           if (result.error_status == 1) {
-            var error = "<div class=\"region-error\" >" + result.error_message +"</div>";
+            var error = showError (result.error_message);
             $('#region-name-field').after(error);
           };
           if (result.error_status == 0) {
@@ -761,10 +598,10 @@ $(function() {
       success: function (data) {
         var result = $.parseJSON(data);
 
-        result = "<li class=\"first-item\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\" data-id=\"" + result.region_id + "\"></div></li><li><div class=\"icon-list-edit sprite\" data-open=\"region-edit\" data-id=\"" + result.region_id + "\"></div></li><li><div class=\"icon-list-delete sprite\" data-open=\"region-del\" data-id=\"" + result.region_id + "\"></div></li></ul><a data-list=\"" + result.region_id + "\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span>" + result.region_name + "</span><span class=\"number\">4</span></div></a></li>";
+        result = "<li class=\"first-item parent-item\" id=\"regions-" + result.region_id +"-" + result.region_name + "\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\"></div></li><li><div class=\"icon-list-edit sprite\" data-open=\"region-edit\"></div></li><li><div class=\"icon-list-delete sprite\" data-open=\"region-del\"></div></li></ul><a data-list=\"" + result.region_id + "\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span>" + result.region_name + "</span><span class=\"number\">0</span></div></a></li>";
 
         // Выводим пришедшие данные на страницу
-        $('#content-list>li:last').after(result);
+        $('#content-list').append(result);
         $('#content-list').foundation('_destroy');
         var elem = new Foundation.AccordionMenu($('#content-list'));
         // Обнуляем модалку
@@ -776,78 +613,16 @@ $(function() {
       }
     });
   });
-  // Мягкое удаление области
-  $(document).on('click', '.region-delete', function() {
-    var id = $(this).data('id');
-    var name = $(this).closest('.first-item').find('.first-item-name').text();
-    $('.title-delete').text(name);
-    $('#delete-region').attr('data-reg-id', id);
-  });
-  // Подтверждение удаления и само удаление
-  $(document).on('click', '#delete-region', function() {
-      var id = $(this).data('reg-id');
-      // Ajax
-      $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/regions/' + id,
-        type: "DELETE",
-        data: {'id': id},
-
-        success: function (data) {
-          var result = $.parseJSON(data);
-          if (result.status == 1) {
-            $('#content-list>li#' + id).remove();
-          } else {
-            alert(reuslt.msg);
-          };
-        }
-      });
-  });
-
+  
   // Отображение города по ajax через api vk
   $('#city-name-field').keyup(function() {
-    $('#submit-city-add').prop('disabled', true);
-    $('#city-database').val(0);
-    // Получаем фрагмент текста
-    var city = $('#city-name-field').val();
-    // Смотрим сколько символов
-    var lenCity = city.length;
-    // Если символов больше 2 - делаем запрос
-    if(lenCity > 2){
-      // Сам ajax запрос
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "/city",
-        type: "POST",
-        data: "city=" + city,
-        success: function(date){
-          var result = $.parseJSON(date);
-          var count = result.response.count;
-          var data = '';
-          if (count >= 1) {
-            // Удаляем все значения чтобы вписать новые
-            $('#tbody-city-add>tr').remove();
-            // Перебираем циклом
-            for (var i = 0; i < count; i++) {
-              data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"city-add\" data-city-id=\"" + i + "\" data-city-vk-external-id=\"" + result.response.items[i].id + "\">" + result.response.items[i].title + "</a></td><td><a class=\"city-add\" data-area-id=\"" + i + "\">" + result.response.items[i].area + "</a></td><td><a class=\"city-add\" data-region-id=\"" + i + "\">" + result.response.items[i].region + "</a></td></tr>";
-            };
-            $('#tbody-city-add').append(data);
-          };
-        }
-      });
-    };
-    if (lenCity <= 2) {
-      // Удаляем все значения, если символов меньше 3х
-      $('#tbody-city-add>tr').remove();
-      $('#city-id-field').val('');
-      $('#area-name').val('');
-      $('#region-name').val('');
-    };
+    getCityVk ();
   });
+  // Оптравляем запрос при клике на чекбокс
+  $(document).on('click', '.search-checkbox', function() {
+    getCityVk ();
+  });
+
   // При клике на город в модальном окне заполняем инпуты
   $(document).on('click', '.city-add', function() {
     var itemId = $(this).closest('tr').data('tr');
@@ -860,11 +635,8 @@ $(function() {
     $('#area-name').val(areaName);
     $('#region-name').val(regionName);
 
-    // if($('#city-id-field').val() != '') {
-    //   $('#submit-city-add').prop('disabled', false);
-    // };
     if($('#city-id-field').val() != '') {
-      var city = {region_name:$('#city-name-field').val(), region_database:$('#city-database').val()};
+      var city = {city_name:$('#city-name-field').val(), city_database:$('#city-database').val()};
       // Ajax
       $.ajax({
         headers: {
@@ -876,54 +648,92 @@ $(function() {
         success: function (data) {
           var result = $.parseJSON(data);
 
-          // alert(result.error_status);
-
           if (result.error_status == 1) {
-            var error = "<div class=\"city-error\" >" + result.error_message +"</div>";
+            var error = showError (result.error_message);
             $('#city-name-field').after(error);
+            $('#city-database').val(0);
           };
           if (result.error_status == 0) {
             $('#city-database').val(1);
+            $('.item-error').remove();
             $('#submit-city-add').prop('disabled', false);
           };
         }
       });
     };
   });
-  // Сохраняем город и район в базу и отображаем на странице по ajax   
-  $('#submit-city-add').click(function (event) {
-    //чтобы не перезагружалась форма
-    event.preventDefault(); 
-    // Дергаем все данные формы
-    var formCity = $('#form-city-add').serialize();
-    // alert(formCity);
+
+  // При закрытии модалки очищаем поля
+  $(document).on('click', '.add-item', function() {
+    $('#tbody-city-add>tr').remove();
+    $('#city-id-field').val('');
+    $('#city-name-field').val('');
+    $('#area-name').val('');
+    $('#region-name').val('');
+    $('.item-error').remove();
+    $('#tbody-region-add>tr').remove();
+    $('.region-error').remove();
+    $('#region-id-field').val('');
+    $('#region-name-field').val('');
+  });
+
+  // Мягкое удаление
+  $(document).on('click', '[data-open="item-delete"]', function() {
+    // находим описание сущности, id и название удаляемого элемента в родителе
+    var parent = $(this).closest('.parent-item');
+    var type = parent.attr('id').split('-')[0];
+    var id = parent.attr('id').split('-')[1];
+    var name = parent.data('name');
+
+    $('.title-delete').text(name);
+    $('.delete-button').attr('id', 'del-' + type + '-' + id);
+  });
+  // Подтверждение удаления и само удаление
+  $(document).on('click', '.delete-button', function() {
+    var type = $(this).attr('id').split('-')[1];
+    var id = $(this).attr('id').split('-')[2];
     // Ajax
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/cities",
-      type: "POST",
-      data: formCity,
+      url: '/' + type + '/' + id,
+      type: "DELETE",
+      data: {'id': id},
       success: function (data) {
         var result = $.parseJSON(data);
-        alert(result.city_id);
-
-        // result = "<li class=\"first-item\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\" data-id=\"" + result.region_id + "\"></div></li><li><div class=\"icon-list-edit sprite\" data-open=\"region-edit\" data-id=\"" + result.region_id + "\"></div></li><li><div class=\"icon-list-delete sprite\" data-open=\"region-del\" data-id=\"" + result.region_id + "\"></div></li></ul><a data-list=\"" + result.region_id + "\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span>" + result.region_name + "</span><span class=\"number\">4</span></div></a></li>";
-
-        // // Выводим пришедшие данные на страницу
-        // $('#content-list>li:last').after(result);
-        // $('#content-list').foundation('_destroy');
-        // var elem = new Foundation.AccordionMenu($('#content-list'));
-        // // Обнуляем модалку
-        // $('#region-name-field').val('');
-        // $('#region-id-field').val('');
-        // $('#region-database').val(0);
-        // $('#submit-city-add').prop('disabled', true);
-        // $('#tbody-city-add>tr').remove();
+        if (result.status == 1) {
+          $('#' + result.type + '-' + result.id).remove();
+          $('.delete-button').removeAttr('id');
+        } else {
+          alert(result.msg);
+        };
       }
     });
   });
+
+  
+  @if(!empty($data))
+  if ({{ $data != null }})  {
+
+    if({{ $data['area_id'] }} == 0) {
+      var cityId = $('#cities-{{ $data['city_id'] }}').closest('.medium-list');
+      $('#regions-' + {{ $data['region_id'] }}).addClass('first-active').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
+    } else {
+      var cityId = $('#cities-{{ $data['city_id'] }}').closest('.last');
+      var areaId = cityId.parents('.medium-list');
+      var areaActive = cityId.parents('.medium-item').find('.medium-link').addClass('medium-active');
+      var regionId = areaId.closest('.first-item').addClass('first-active');
+      areaId.closest('.first-item').find('.icon-list:first-child').attr('aria-hidden', 'false').css('display', 'block');  
+      $('#content-list').foundation('down', areaId);
+      cityId.parents('.medium-item').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
+       
+    };
+    $('#content-list').foundation('down', cityId);
+    
+   
+  }
+  @endif
 });
 </script>
 @endsection

@@ -18,7 +18,6 @@ class Area extends Model
     'area_name',
     'region_id',
   ];
-
   /**
   * Получаем область данного района.
   */
@@ -26,7 +25,6 @@ class Area extends Model
   {
     return $this->belongsTo('App\Region');
   }
-
   /**
   * Получаем города района.
   */

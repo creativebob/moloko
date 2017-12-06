@@ -15,7 +15,7 @@ class CreateCitiesTable extends Migration
     {
         Schema::create('cities', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('city_name', 30)->unique()->index()->comment('Название населенного пункта');
+            $table->string('city_name', 60)->unique()->index()->comment('Название населенного пункта');
             $table->integer('area_id')->unsigned()->nullable()->comment('Район населенного пункта');
             $table->foreign('area_id')->references('id')->on('areas');
             $table->integer('region_id')->unsigned()->nullable()->comment('Область населенного пункта');
