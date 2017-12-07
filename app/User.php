@@ -4,10 +4,40 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+
+    use Notifiable;
+    use SoftDeletes;
+
+
+    // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
+
+    // Фильтрация по статусу пользователя: клиент или сотрудник
+    public function scopeСontragent($query, $contragent_status)
+    {
+        if($contragent_status == "all"){
+            return $query;
+            } else {
+            return $query->where('contragent_status', '=', $contragent_status); 
+        }
+    }
+
+    // Фильтрация по блокировке доступа: 
+    public function scopeAccessBlock($query, $access_block)
+    {
+        if($access_block == "all"){
+            return $query;
+            } else {
+            return $query->where('access_block', '=', $access_block); 
+        }
+    }
+
+    // КОНЕЦ БЛОКА ОПИСАНИЯ ФИЛЬТРОВ
+
 
     public function setBirthdayAttribute($value) {
         if($value == Null){
@@ -35,7 +65,7 @@ class User extends Authenticatable
         } else 
             {
                 $date_parts = explode('-', $value);
-                $value = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+                $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
                 return $value;
             };
     }
@@ -46,7 +76,7 @@ class User extends Authenticatable
         } else 
             {
                 $date_parts = explode('-', $value);
-                $value = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+                $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
                 return $value;
             };
     }
@@ -96,13 +126,15 @@ class User extends Authenticatable
         return $result;
     }
 
-    use Notifiable;
+
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
+    protected $dates = ['deleted_at'];
+
     protected $fillable = [
         'login', 
         'email', 
@@ -142,6 +174,8 @@ class User extends Authenticatable
         'group_filials_id', 
 
     ];
+
+
 
     /**
      * The attributes that should be hidden for arrays.

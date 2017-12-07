@@ -2,7 +2,15 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
+use App\User;
+use App\Page;
+use App\Access;
+use App\Policies\UserPolicy;
+use App\Policies\PagePolicy;
+use App\Policies\AccessPolicy;
+
+use Illuminate\Support\Facades\Gate as GateContract;
+// use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -14,6 +22,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy',
+        // Page::class => PagePolicy::class,
+        User::class => UserPolicy::class,
+        Access::class => AccessPolicy::class,
     ];
 
     /**
@@ -21,10 +32,22 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
+    // public function boot()
+    // {
+
+    //     $this->registerPolicies();
+
+    //     Gate::define('index-user', function ($user, $access) {
+    //     return  $result = $access->where(['right_action' => 'view-user'])->count() == 1;
+
+    //     });
+
+    // }
+
     public function boot()
     {
-        $this->registerPolicies();
-
-        //
+      $this->registerPolicies();
     }
+
 }

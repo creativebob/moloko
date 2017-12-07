@@ -26,11 +26,28 @@
 	  <div class="grid-x">
       <div class="small-12 cell filters" id="filters">
         <fieldset class="fieldset-filters">
+
+          {{ Form::open(['route' => 'users.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
+
           <legend>Фильтрация</legend>
-          <div>lol</div>
-          <div>lol</div>
-          <div>lol</div>
-          <div>lol</div>
+            <div class="grid-x grid-padding-x"> 
+              <div class="small-6 cell">
+                <label>Статус пользователя
+                  {{ Form::select('contragent_status', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
+                </label>
+              </div>
+              <div class="small-6 cell">
+                <label>Блокировка доступа
+                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
+                </label>
+              </div>
+              <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
+               {{ Form::submit('Фильтрация', ['class'=>'button']) }}
+              </div>
+            </div>
+
+          {{ Form::close() }}
+
         </fieldset>
       </div>
     </div>
@@ -39,6 +56,7 @@
 @endsection
  
 @section('content')
+
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
@@ -59,22 +77,24 @@
         </tr>
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
-
+      @if(!empty($users))
         @foreach($users as $user)
         <tr id="{{ $user->id }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $user->id }}"><label class="label-check" for="check-{{ $user->id }}"></label></td>
           <td class="td-second-name">{{ link_to_route('users.edit', $user->second_name . " " . $user->first_name . " (". $user->nickname . ")", [$user->id]) }} </td>
-          <td class="td-login">{{ $user->login }}</td>
+          <td class="td-login">{{ $user->login }} </td>
 <!--           <td class="td-first-name">{{ $user->first_name }}</td> -->
           <td class="td-phone">{{ $user->phone }}</td>
           <td class="td-email">{{ $user->email }}</td>
           <td class="td-contragent-status">{{ $user->contragent_status }}</td>
           <td class="td-access-block">{{ $user->access_block }}</td>
-          <td class="td-group-users-id">Уровень доступа</td>
-          <td class="td-delete"><a class="icon-delete sprite"></a></td>
+          <td class="td-group-users-id"></td>
+          <td class="td-delete"><a class="icon-delete sprite"></a></td>       
+          <!-- <td class="td-delete">{{ link_to_route('users.destroy', " " , [$user->id], ['class'=>'icon-delete sprite']) }}</td> -->
         </tr>
         @endforeach
+      @endif
       </tbody>
     </table>
   </div>
@@ -148,8 +168,33 @@ $(function() {
       console.log('Видим клик по главному, ставим его положение всем = ' + this.checked);
     };
   };
+
   console.log('Завершение функции чекбоксов');
   console.log('-----');
+
+
+$(document).on('click', '.td-delete', function() {
+      var id = $(this).parent('tr').attr('id');
+      // Ajax
+      $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/users/' + id,
+        type: "DELETE",
+        data: {'id': id},
+
+        success: function (data) {
+          var result = $.parseJSON(data);
+          if (result.status == 1) {
+            $('.tbody-width>tr#' + id).remove();
+          } else {
+            alert(reuslt.msg);
+          };
+        }
+      });
+  });
+
 });
 
 
@@ -158,6 +203,7 @@ $(window).scroll(function () {
     fixedThead ();
   };
 });
+
 
     </script>
 @endsection

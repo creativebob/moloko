@@ -2,17 +2,71 @@
 
 namespace App\Http\Controllers;
 
+
 use App\User;
+use App\Access;
+use App\Policies\UserPolicy;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
-    //
-    public function index()
+
+    public function destroy($id)
     {
-    	$users = User::paginate(30);
-    	return view('users.index', compact('users'));
+		$user = User::destroy($id);
+	    if ($user){
+	    $data = [
+	      'status'=> 1,
+	      'msg' => 'Успешно удалено'
+	    ];
+	    } else {
+	      $data = [
+	      'status' => 0,
+	      'msg' => 'Произошла ошибка'
+	    ];
+	    };
+	    echo json_encode($data, JSON_UNESCAPED_UNICODE);
+
+      	Log::info('Удалили запись' . $id);
+    }
+
+    //
+    public function index(Request $request)
+    {
+
+		if (Auth::user()->can('index', Auth::user())) {
+
+	    	if($request->contragent_status){
+	    		$users = User::Сontragent($request->contragent_status)->AccessBlock($request->access_block)->paginate(30);
+	    		return view('users.index', compact('users'));
+	    	} else {
+	    		$users = User::paginate(30);
+	    		return view('users.index', compact('users'), compact('access'));
+	    	}
+
+	 		} else {
+		    	abort(403, 'Просмотр запрещено!');
+		    };
+
+
+   //  	if (Gate::denies('index-user', $access)) {
+
+
+	  //   	if($request->contragent_status){
+	  //   		$users = User::Сontragent($request->contragent_status)->AccessBlock($request->access_block)->paginate(30);
+	  //   		return view('users.index', compact('users'));
+	  //   	} else {
+	  //   		$users = User::paginate(30);
+	  //   		return view('users.index', compact('users'), compact('access'));
+	  //   	}
+
+ 		// } else {
+	  //   	abort(403, 'Просмотр запрещено!');
+	  //   };
     }
 
     public function store(Request $request)
@@ -44,9 +98,9 @@ class UserController extends Controller
     	$user->company_name = $request->company_name;
     	$user->inn = $request->inn;
     	$user->kpp = $request->kpp;
-      $user->account_settlement = $request->account_settlement;
+      	$user->account_settlement = $request->account_settlement;
      	$user->account_correspondent = $request->account_correspondent;
-      $user->bank = $request->bank;
+      	$user->bank = $request->bank;
 
     	$user->passport_address = $request->passport_address;
     	$user->passport_number = $request->passport_number;
@@ -61,8 +115,6 @@ class UserController extends Controller
     	$user->group_users_id = $request->group_users_id;
     	$user->group_filials_id = $request->group_filials_id;
 
-    	
-
 		$user->save();
 
 		return redirect('users');
@@ -71,7 +123,7 @@ class UserController extends Controller
     //
     public function create()
     {
-      $users = new User;
+    	$users = new User;
     	return view('users.create', compact('users'));
     }
 
@@ -79,6 +131,7 @@ class UserController extends Controller
     {
 
     	$user = User::findOrFail($id);
+    	$access = new Access;
 
     	$user->login = $request->login;
     	$user->email = $request->email;
@@ -88,8 +141,8 @@ class UserController extends Controller
     	$user->first_name =   $request->first_name;
     	$user->second_name = $request->second_name;
     	$user->patronymic = $request->patronymic;
-		  $user->sex = $request->sex;
-	 	 $user->birthday = $request->birthday;
+		$user->sex = $request->sex;
+	 	$user->birthday = $request->birthday;
 
     	$user->phone = cleanPhone($request->phone);
 
@@ -105,9 +158,9 @@ class UserController extends Controller
     	$user->company_name = $request->company_name;
     	$user->inn = $request->inn;
     	$user->kpp = $request->kpp;
-      $user->account_settlement = $request->account_settlement;
+     	$user->account_settlement = $request->account_settlement;
      	$user->account_correspondent = $request->account_correspondent;
-      $user->bank = $request->bank;
+      	$user->bank = $request->bank;
 
     	$user->passport_address = $request->passport_address;
     	$user->passport_number = $request->passport_number;
@@ -126,6 +179,7 @@ class UserController extends Controller
  
 		return redirect('users');
     	// $users = User::all();
+
     }
 
     public function show($id)
@@ -134,9 +188,11 @@ class UserController extends Controller
     	return view('users.show', compact('users'));
     }
 
+
     public function edit($id)
     {
       $users = User::findOrFail($id);
+      Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
       return view('users.edit', compact('users'));
     }
 

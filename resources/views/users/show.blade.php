@@ -1,12 +1,12 @@
 @extends('layouts.app')
 @include('users.inhead')
 
-@section('title', 'Редактировать пользователя')
+@section('title', 'Просмотр пользователя')
 
 @section('title-content')
 	<div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">РЕДАКТИРОВАТЬ ПОЛЬЗОВАТЕЛЯ</h2>
+       <h2 class="header-content">ПРОСМОТР ПОЛЬЗОВАТЕЛЯ</h2>
     </div>
     <div class="top-bar-right">
     </div>

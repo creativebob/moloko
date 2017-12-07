@@ -19,6 +19,7 @@
   {{ method_field('PATCH') }}
 
     @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param' => ''])
+    
   {{ Form::close() }}
 
 @endsection

@@ -38,7 +38,7 @@ class UpdateUsersTable extends Migration
             $table->bigInteger('kpp')->nullable()->unsigned()->comment('КПП')->after('inn');
             $table->bigInteger('account_settlement')->nullable()->unsigned()->comment('Расчетный счет')->after('kpp');
             $table->bigInteger('account_correspondent')->nullable()->unsigned()->comment('Корреспондентский счет')->after('account_settlement');
-            $table->string('bank', 40)->nullable()->comment('Название банка')->after('account_correspondent');
+            $table->string('bank', 60)->nullable()->comment('Название банка')->after('account_correspondent');
 
             $table->string('passport_number')->nullable()->unique()->comment('Номер паспорта')->after('bank');
             $table->date('passport_date')->nullable()->comment('Дата выдачи паспорта')->after('passport_number');
@@ -50,10 +50,15 @@ class UpdateUsersTable extends Migration
             // $table->foreign('lead_id')->references('lead_id')->on('leads');
             $table->integer('employee_id')->nullable()->unsigned()->comment('Id сотрудника')->after('lead_id');
             // $table->foreign('employee_id')->references('employee_id')->on('employees');
-            $table->integer('access_block')->nullable()->unsigned()->comment('Доступ открыт 0 или Блокирован 1')->after('employee_id');
+            $table->integer('access_block')->nullable()->unsigned()->comment('Доступ открыт 0 или Блокирован 1')->default('0')->after('employee_id');
 
             $table->integer('group_users_id')->nullable()->unsigned()->comment('Группа доступа по функционалу')->after('access_block');
+            $table->foreign('group_users_id')->references('id')->on('access_groups');
+
             $table->integer('group_filials_id')->nullable()->unsigned()->comment('Группа доступа по филиалу')->after('group_users_id');
+            $table->foreign('group_filials_id')->references('id')->on('access_groups');
+
+            $table->softDeletes();
 
         });
     }

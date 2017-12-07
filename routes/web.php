@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::resource('/users', 'UserController');
+Route::resource('/users', 'UserController')->middleware('auth');
 
 Route::get('/page', 'PageController@create');
 
