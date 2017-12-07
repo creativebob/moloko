@@ -40,104 +40,97 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
+    @if(!empty($regions))
     <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
-
-      @if(!empty($regions))
-        @foreach ($regions as $region)      
-
-        <li class="first-item parent-item" id="regions-{{ $region->id }}" data-name="{{ $region->region_name }}">
-          <ul class="icon-list">
-            <li><div class="icon-list-add sprite city-add" data-open="city-add"></div></li>
-            {{-- <li><div class="icon-list-edit sprite region-edit" data-open="region-edit"></div></li> --}}
-            <li>
-
-            @if($region->areas_count + $region->cities_count == 0)  
-              <div class="icon-list-delete sprite" data-open="item-delete"></div>
-            @endif
-
-            </li>
-          </ul>
-          <a data-list="{{ $region->id }}" class="first-link">
-            <div class="list-title">
-              <div class="icon-open sprite"></div>
-              <span class="first-item-name">{{ $region->region_name }}</span><span class="number">{{ $region->areas_count + $region->cities_count }}</span>
-            </div>
-          </a>
-          @if(!empty($areas))
-            <ul class="menu vertical medium accordion-menu medium-list" data-accordion-menu data-allow-all-closed data-multi-open="false">
-              @foreach ($areas as $area)
-                @if($region->id == $area->region_id)
-                  <li class="medium-item parent-item" id="areas-{{ $area->id }}" data-name="{{ $area->area_name }}">
-                    <a class="medium-link" data-list-link="{{ $area->id }}">
-                      <div class="list-title">
-                        <div class="icon-open sprite"></div>
-                        <span>{{ $area->area_name }}</span><span class="number">{{ $area->cities_count }}</span>
-                      </div>
-                    </a>
-                    <ul class="icon-list" data-id="{{ $area->id }}" data-name="{{ $area->city_name }}">
-                      {{-- <li><div class="icon-list-edit sprite" data-open="edit"></div></li>
-                      <li> --}}
-
-                      @if($area->cities_count == 0)
-                        <div class="icon-list-delete sprite" data-open="item-delete"></div>
-                      @endif
-                      </li>
-                    </ul>
-                    @if(!empty($cities))
-                      <ul class="menu vertical nested last">
-                        @foreach ($cities as $city)
-                          @if($area->id == $city->area_id)
-                            <li class="last-item parent-item" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
-                              <div class="last-link city-del" data-id="{{ $city->city_id }}">{{ $city->city_name }}
-                                <ul class="icon-list">
-                                  {{-- <li><div class="icon-list-edit sprite" data-open="edit"></div></li> --}}
-                                  <li><div class="icon-list-delete sprite" data-open="item-delete" data-type="cities"></div></li>
-                                </ul>
-                              </div>
-                            </li>
-                          @endif
-                        @endforeach
-                      </ul>
-                    @endif
-                  </li>
+      @foreach ($regions as $region)      
+      <li class="first-item parent" id="regions-{{ $region->id }}" data-name="{{ $region->region_name }}">
+        <ul class="icon-list">
+          <li><div class="icon-list-add sprite" data-open="city-add"></div></li>
+          {{-- <li><div class="icon-list-edit sprite" data-open="region-edit"></div></li> --}}
+          <li>
+          @if($region->areas_count + $region->cities_count == 0)  
+            <div class="icon-list-delete sprite" data-open="item-delete"></div>
+          @endif
+          </li>
+        </ul>
+        <a data-list="{{ $region->id }}" class="first-link">
+          <div class="list-title">
+            <div class="icon-open sprite"></div>
+            <span class="first-item-name">{{ $region->region_name }}</span>
+            <span class="number">{{ $region->areas_count + $region->cities_count }}</span>
+          </div>
+        </a>
+        @if(!empty($areas))
+        <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
+          @foreach ($areas as $area)
+            @if($region->id == $area->region_id)
+            <li class="medium-item parent" id="areas-{{ $area->id }}" data-name="{{ $area->area_name }}">
+              <a class="medium-link">
+                <div class="list-title">
+                  <div class="icon-open sprite"></div>
+                  <span>{{ $area->area_name }}</span>
+                  <span class="number">{{ $area->cities_count }}</span>
+                </div>
+              </a>
+              <ul class="icon-list">
+                <li>
+                @if($area->cities_count == 0)
+                  <div class="icon-list-delete sprite" data-open="item-delete"></div>
                 @endif
-              @endforeach
+                </li>
+              </ul>
               @if(!empty($cities))
+              <ul class="menu vertical nested last">
+                @foreach ($cities as $city)
+                  @if($area->id == $city->area_id)
+                  <li class="last-item parent" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
+                    <div class="last-link">{{ $city->city_name }}
+                      <ul class="icon-list">
+                        <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
+                      </ul>
+                    </div>
+                  </li>
+                  @endif
+                @endforeach
+              </ul>
+              @endif
+            </li>
+            @endif
+          @endforeach
+          @if(!empty($cities))
             @foreach ($cities as $city)
               @if($region->id == $city->region_id)
-                <li class="medium-item parent-item" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
-                  <div class="medium-as-last">{{ $city->city_name }}
-                    <ul class="icon-list" data-id="{{ $city->id }}" data-name="{{ $city->city_name }}">
-                      {{-- <li><div class="icon-list-edit sprite" data-open="city-edit"></div></li> --}}
-                      <li><div class="icon-list-delete sprite" data-open="item-delete" data-type="cities"></div></li>
-                    </ul>
-                  </div>
-                </li>
+              <li class="medium-item parent" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
+                <div class="medium-as-last">{{ $city->city_name }}
+                  <ul class="icon-list">
+                    <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
+                  </ul>
+                </div>
+              </li>
               @endif
             @endforeach
           @endif
-            </ul>
-          @endif
-        </li>
-
-        @endforeach
-      @endif
-
+        </ul>
+        @endif
+      </li>
+      @endforeach
     </ul>
+    @endif
+
+
+
   </div>
 </div>
-{{-- Pagination --}}
 
 
+{{-- Pagination 
 <div class="grid-x" id="pagination">
   <div class="small-12 cell">
     <div class="right">
-
       <a href="#"><div class="sprite icon-deleted"></div></a>
-
     </div>
   </div>
-</div>
+</div> --}}
 @endsection
 
 @section('modals')
@@ -154,7 +147,7 @@
       <div class="small-10 medium-4 cell">
         <label class="input-icon">Название области
           <input type="text" name="region_name" id="region-name-field" autocomplete="off" required>
-          <div class="sprite-input-right icon-loading loading"></div>
+          <div class="sprite-input-right icon-load load"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
         <input type="hidden" name="region_vk_external_id" id="region-id-field">
@@ -227,7 +220,7 @@
       <div class="small-10 medium-4 cell">
         <label class="input-icon">Название населенного пункта
           <input type="text" name="city_name" id="city-name-field" autocomplete="off" required>
-          <div class="sprite-input-right icon-loading loading"></div>
+          <div class="sprite-input-right icon-load load"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
         </label>
         <label>Район
@@ -237,7 +230,7 @@
           <input type="text" name="region_name" id="region-name" readonly>
         </label>
         <div class="small-12 cell checkbox">
-          <input type="checkbox" name="search_all" id="search-all-checkbox" class="search-checkbox">
+          <input type="checkbox" name="search_all" id="search-all-checkbox">
           <label for="search-all-checkbox"><span class="search-checkbox">Искать везде</span></label>
         </div>
         
@@ -345,8 +338,6 @@
   <div data-close class="icon-close-modal sprite close-modal"></div> 
 </div>
 {{-- Конец модалки удаления --}}
-
-
 @endsection
 
 @section('scripts')
@@ -366,28 +357,22 @@ $(function() {
   // Отслеживаем плюсики во вложенных элементах
   $(document).on('click', '.medium-link', function() {
     console.log('Видим клик по среднему пункту');
-    var link = $(this).data('list-link');
-    if ($('[data-list-link="' + link + '"]').hasClass('medium-active')) {
+    if ($(this).hasClass('medium-active')) {
       $(".medium-active").removeClass('medium-active');
       console.log('Видим что имеет medium-active');
-      $('[data-list-link="' + link + '"]').removeClass('medium-active')
+      $(this).removeClass('medium-active');
+      $(this).closest('.parent').attr('aria-expanded', 'false');
+      var target = $(this).closest('.parent').find('.last');
+      $('#content-list').foundation('toggle', target);
     } else {
       $(".medium-active").removeClass('medium-active');
-      console.log('Видим что имеет не medium-active');
-      $('[data-list-link="' + link + '"]').addClass('medium-active');
+      console.log('Видим что не имеет medium-active');
+      $(this).addClass('medium-active');
     };
-    // Если пустое меню то закрываем остальные
-    // if (($(this).next('ul').is('.last')) || ($(this).next('ul').is('.medium'))) {
-    // // Непонятно почему в условии ($(this).next('ul').is('.last') == false) || ($(this).next('ul').is('.medium') == false) не отрабатывает
-    // } else {
-    //   console.log('Видим что пустой список и нужно нужно сворачивать остальные');
-    //   $(this).parent('li').parent('.medium').foundation('hideAll');
-    // };
     // Перебираем родителей и посвечиваем их
-    var parents = $('.medium-link[data-list-link="' + link + '"]').parents('.medium');
+    var parents = $(this).parents('.medium-list');
     for (var i = 0; i < parents.length; i++) {
-      var active = $(parents[i]).parent('li');
-      $(active).children('a').addClass('medium-active');
+      $(parents[i]).parent('li').children('a').addClass('medium-active');
     };
   });
 
@@ -410,10 +395,10 @@ $(function() {
         type: "POST",
         data: city,
         beforeSend: function () {
-          $('.icon-loading').removeClass('loading');
+          $('.icon-load').removeClass('load');
         },
         success: function(date){
-          $('.icon-loading').addClass('loading');
+          $('.icon-load').addClass('load');
           // Удаляем все значения чтобы вписать новые
           $('#tbody-city-add>tr').remove();
           var result = $.parseJSON(date);
@@ -490,7 +475,7 @@ $(function() {
   };
   // Функция появления окна с ошибкой
   function showError (msg) {
-    var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
+    var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
     return error;
   };
 
@@ -514,10 +499,10 @@ $(function() {
         type: "POST",
         data: {region: $('#region-name-field').val()},
         beforeSend: function () {
-          $('.icon-loading').removeClass('loading');
+          $('.icon-load').removeClass('load');
         },
         success: function(date){
-          $('.icon-loading').addClass('loading');
+          $('.icon-load').addClass('load');
           // Удаляем все значения чтобы вписать новые
           $('#tbody-region-add>tr').remove();
           var result = $.parseJSON(date);
@@ -598,12 +583,10 @@ $(function() {
       success: function (data) {
         var result = $.parseJSON(data);
 
-        result = "<li class=\"first-item parent-item\" id=\"regions-" + result.region_id +"-" + result.region_name + "\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\"></div></li><li><div class=\"icon-list-edit sprite\" data-open=\"region-edit\"></div></li><li><div class=\"icon-list-delete sprite\" data-open=\"region-del\"></div></li></ul><a data-list=\"" + result.region_id + "\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span>" + result.region_name + "</span><span class=\"number\">0</span></div></a></li>";
+        result = "<li class=\"first-item parent\" id=\"regions-" + result.region_id +"-" + result.region_name + "\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\"></div></li><li><div class=\"icon-list-delete sprite\" data-open=\"region-del\"></div></li></ul><a data-list=\"" + result.region_id + "\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span>" + result.region_name + "</span><span class=\"number\">0</span></div></a></li>";
 
         // Выводим пришедшие данные на страницу
         $('#content-list').append(result);
-        $('#content-list').foundation('_destroy');
-        var elem = new Foundation.AccordionMenu($('#content-list'));
         // Обнуляем модалку
         $('#region-name-field').val('');
         $('#region-id-field').val('');
@@ -619,7 +602,7 @@ $(function() {
     getCityVk ();
   });
   // Оптравляем запрос при клике на чекбокс
-  $(document).on('click', '.search-checkbox', function() {
+  $(document).on('change', '#search-all-checkbox', function() {
     getCityVk ();
   });
 
@@ -636,7 +619,7 @@ $(function() {
     $('#region-name').val(regionName);
 
     if($('#city-id-field').val() != '') {
-      var city = {city_name:$('#city-name-field').val(), city_database:$('#city-database').val()};
+      var city = {city_name:$('#city-name-field').val(), city_database:$('#city-database').val(), area_name:$('#area-name').val()};
       // Ajax
       $.ajax({
         headers: {
@@ -647,7 +630,6 @@ $(function() {
         data: city,
         success: function (data) {
           var result = $.parseJSON(data);
-
           if (result.error_status == 1) {
             var error = showError (result.error_message);
             $('#city-name-field').after(error);
@@ -662,7 +644,6 @@ $(function() {
       });
     };
   });
-
   // При закрытии модалки очищаем поля
   $(document).on('click', '.add-item', function() {
     $('#tbody-city-add>tr').remove();
@@ -672,19 +653,27 @@ $(function() {
     $('#region-name').val('');
     $('.item-error').remove();
     $('#tbody-region-add>tr').remove();
-    $('.region-error').remove();
     $('#region-id-field').val('');
     $('#region-name-field').val('');
+  });
+  // При закрытии окна с ошибкой очищаем модалку
+  $(document).on('click', '.error-close', function() {
+    $('.item-error').remove();
+    $('#tbody-city-add>tr').remove();
+    $('#tbody-region-add>tr').remove();
+    $('#city-name-field').val('');
+    $('#region-name-field').val('');
+    $('#area-name').val('');
+    $('#region-name').val('');
   });
 
   // Мягкое удаление
   $(document).on('click', '[data-open="item-delete"]', function() {
     // находим описание сущности, id и название удаляемого элемента в родителе
-    var parent = $(this).closest('.parent-item');
+    var parent = $(this).closest('.parent');
     var type = parent.attr('id').split('-')[0];
     var id = parent.attr('id').split('-')[1];
     var name = parent.data('name');
-
     $('.title-delete').text(name);
     $('.delete-button').attr('id', 'del-' + type + '-' + id);
   });
@@ -712,26 +701,25 @@ $(function() {
     });
   });
 
-  
+  // Открываем меню и подменю, если только что добавили населенный пункт
   @if(!empty($data))
   if ({{ $data != null }})  {
-
+    // Если у города нет региона
     if({{ $data['area_id'] }} == 0) {
-      var cityId = $('#cities-{{ $data['city_id'] }}').closest('.medium-list');
+      // Находим средние элементы
+      var lastItem = $('#cities-{{ $data['city_id'] }}').closest('.medium-list');
       $('#regions-' + {{ $data['region_id'] }}).addClass('first-active').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
     } else {
-      var cityId = $('#cities-{{ $data['city_id'] }}').closest('.last');
-      var areaId = cityId.parents('.medium-list');
-      var areaActive = cityId.parents('.medium-item').find('.medium-link').addClass('medium-active');
-      var regionId = areaId.closest('.first-item').addClass('first-active');
-      areaId.closest('.first-item').find('.icon-list:first-child').attr('aria-hidden', 'false').css('display', 'block');  
-      $('#content-list').foundation('down', areaId);
-      cityId.parents('.medium-item').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
-       
+      var lastItem = $('#cities-{{ $data['city_id'] }}').closest('.last');
+      var mediumItem = lastItem.parents('.medium-list');
+      var areaActive = lastItem.parents('.medium-item').find('.medium-link').addClass('medium-active');
+      $('#regions-' + {{ $data['region_id'] }}).addClass('first-active').find('.icon-list:first-child').attr('aria-hidden', 'false').css('display', 'block');
+      lastItem.parents('.medium-item').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
+      // Открываем аккордионы
+      $('#content-list').foundation('down', mediumItem);
     };
-    $('#content-list').foundation('down', cityId);
-    
-   
+    // Открываем аккордионы
+    $('#content-list').foundation('down', lastItem);
   }
   @endif
 });

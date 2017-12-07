@@ -26,9 +26,15 @@ class CityController extends Controller
     //         ->join('cities', 'areas.city_id', '=', 'cities.id')
     //         ->join('cities',)
     //         ->get();
+    // $regions = Region::withCount('areas', 'cities')->get();
+    // $areas = Area::withCount('cities')->get();
+    // $cities = City::all();
+
     $regions = Region::withCount('areas', 'cities')->get();
-    $areas = Area::withCount('cities')->get();
-    $cities = City::all();
+    $areas = Area::withCount('cities')->orderBy('area_name')->get();
+    $cities = City::orderBy('city_name')->get();
+
+
 
     return view('cities', ['regions' => $regions, 'areas' => $areas, 'cities' => $cities]); 
 
@@ -77,17 +83,46 @@ class CityController extends Controller
     // По умолчанию значение 0
     if ($city_database == 0) {
       // Проверка города и района в нашей базе данных
+      $area_name = $request->area_name;
       $city_name = $request->city_name;
-      $cities = City::where('city_name', '=', $city_name)->first();
-      if ($cities) {
-        $result = [
-          'error_message' => 'Населенный пункт уже добавлен в нашу базу!',
-          'error_status' => 1
-        ];
+
+      // если город без района
+      if ($area_name == null) {
+        $cities = City::where('city_name', $city_name)->first();
+        if ($cities) {
+          $result = [
+            'error_message' => 'Населенный пункт уже добавлен в нашу базу!',
+            'error_status' => 1
+          ];
+        } else {
+          $result = [
+            'error_status' => 0
+          ];
+        };
       } else {
-        $result = [
-          'error_status' => 0
-        ];
+      // Если город с районом
+        $areas = Area::where('area_name', $area_name)->first();
+        // $areas = Area::with('cities')->where(['area_name' => $area_name, 'city_name' => $city_name])->first();
+        // Если район существует
+        if ($areas) {
+          $cities = City::where(['city_name' => $city_name, 'area_id' => $areas->id])->first();
+          // Если в районе существует город, даем ошибку
+          if ($cities) {
+            $result = [
+              'error_message' => 'Населенный пункт уже добавлен в нашу базу!',
+              'error_status' => 1
+            ];
+          } else {
+            $result = [
+              'error_status' => 0
+            ];
+          };
+        } else {
+          // Если района нет, то записываем
+          $result = [
+            'error_status' => 0
+          ];
+        };
       }
       echo json_encode($result, JSON_UNESCAPED_UNICODE);
     };
@@ -220,8 +255,6 @@ class CityController extends Controller
   public function destroy($id)
   {
     $city = City::destroy($id);
-    // $city = true;
-
     if ($city) {
       $data = [
         'status' => 1,

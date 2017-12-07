@@ -15,13 +15,13 @@ class CreateCitiesTable extends Migration
     {
         Schema::create('cities', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('city_name', 60)->unique()->index()->comment('Название населенного пункта');
+            $table->string('city_name', 60)->index()->comment('Название населенного пункта');
             $table->integer('area_id')->unsigned()->nullable()->comment('Район населенного пункта');
             $table->foreign('area_id')->references('id')->on('areas');
             $table->integer('region_id')->unsigned()->nullable()->comment('Область населенного пункта');
             $table->foreign('region_id')->references('id')->on('regions');
             $table->integer('city_code')->unsigned()->nullable()->comment('Код населенного пункта');
-            $table->integer('city_vk_external_id')->unsigned()->nullable()->comment('Внешний Id (из базы vk)');
+            $table->integer('city_vk_external_id')->unique()->unsigned()->nullable()->comment('Внешний Id (из базы vk)');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -387,7 +387,7 @@ input[type=checkbox], input[type=radio] {
     right: 0;
     opacity: 0.5;
   }
-  .loading {
+  .load {
     display: none;
   }
 }
@@ -1437,7 +1437,7 @@ input[type=checkbox], input[type=radio] {
       }
     }
     // Средний список
-    .medium {
+    .medium-list {
 
       // Средние элементы списка
       .medium-item {
@@ -2011,7 +2011,7 @@ input[type=checkbox], input[type=radio] {
           z-index: -1;
         }
       }
-      .medium {
+      .medium-list {
         .medium-item {
           .icon-list {
             opacity: 0;

@@ -331,7 +331,7 @@ input[type=checkbox], input[type=radio] {
   opacity: 0.5;
 }
 /* line 390, ../sass/app.scss */
-.input-icon .loading {
+.input-icon .load {
   display: none;
 }
 
@@ -1404,76 +1404,76 @@ input[type=checkbox], input[type=radio] {
   background-position: -128px -512px;
 }
 /* line 1443, ../sass/app.scss */
-.content .content-list .medium .medium-item {
+.content .content-list .medium-list .medium-item {
   background-color: #ffffff;
   position: relative;
   padding-left: 2rem;
 }
 /* line 1448, ../sass/app.scss */
-.content .content-list .medium .medium-item .icon-list {
+.content .content-list .medium-list .medium-item .icon-list {
   right: 2rem;
   opacity: 1;
 }
 /* line 1453, ../sass/app.scss */
-.content .content-list .medium .medium-item .icon-list li {
+.content .content-list .medium-list .medium-item .icon-list li {
   padding: 0;
 }
 /* line 1456, ../sass/app.scss */
-.content .content-list .medium .medium-item .icon-list li .icon-list-add {
+.content .content-list .medium-list .medium-item .icon-list li .icon-list-add {
   background-position: 0px -768px;
 }
 /* line 1459, ../sass/app.scss */
-.content .content-list .medium .medium-item .icon-list li .icon-list-add:hover {
+.content .content-list .medium-list .medium-item .icon-list li .icon-list-add:hover {
   background-position: -32px -768px;
 }
 /* line 1462, ../sass/app.scss */
-.content .content-list .medium .medium-item .icon-list li .icon-list-edit {
+.content .content-list .medium-list .medium-item .icon-list li .icon-list-edit {
   background-position: 0px -800px;
 }
 /* line 1465, ../sass/app.scss */
-.content .content-list .medium .medium-item .icon-list li .icon-list-edit:hover {
+.content .content-list .medium-list .medium-item .icon-list li .icon-list-edit:hover {
   background-position: -32px -800px;
 }
 /* line 1468, ../sass/app.scss */
-.content .content-list .medium .medium-item .icon-list li .icon-list-delete {
+.content .content-list .medium-list .medium-item .icon-list li .icon-list-delete {
   background-position: 0px -512px;
 }
 /* line 1471, ../sass/app.scss */
-.content .content-list .medium .medium-item .icon-list li .icon-list-delete:hover {
+.content .content-list .medium-list .medium-item .icon-list li .icon-list-delete:hover {
   background-position: -32px -512px;
 }
 /* line 1476, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-link {
+.content .content-list .medium-list .medium-item .medium-link {
   font-family: "SegoeUISemiLight";
   font-size: 0.8rem;
   color: #000000;
   padding: 0 0 0 8px;
 }
 /* line 1484, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-link .list-title span {
+.content .content-list .medium-list .medium-item .medium-link .list-title span {
   display: inline-block;
   vertical-align: middle;
 }
 /* line 1489, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-link .icon-open {
+.content .content-list .medium-list .medium-item .medium-link .icon-open {
   background-position: 0px -704px;
   opacity: 0.6;
 }
 /* line 1495, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-active {
+.content .content-list .medium-list .medium-item .medium-active {
   width: 80%;
 }
 /* line 1498, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-active .icon-open {
+.content .content-list .medium-list .medium-item .medium-active .icon-open {
   background-position: -32px -704px;
 }
 /* line 1502, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-active .list-title .number {
+.content .content-list .medium-list .medium-item .medium-active .list-title .number {
   background: rgba(0, 0, 0, 0.2);
   opacity: 1;
 }
 /* line 1509, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-as-last {
+.content .content-list .medium-list .medium-item .medium-as-last {
   position: relative;
   margin: 0 1.8rem 0 2rem;
   display: block;
@@ -1483,45 +1483,45 @@ input[type=checkbox], input[type=radio] {
   padding: 10px 0 10px 12px;
 }
 /* line 1519, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-as-last .icon-list {
+.content .content-list .medium-list .medium-item .medium-as-last .icon-list {
   transition: 0.2s ease opacity;
   opacity: 0;
   right: 0.2rem;
 }
 /* line 1528, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-as-last:hover .icon-list {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list {
   opacity: 1;
 }
 /* line 1532, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-as-last:hover .icon-list li {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li {
   padding: 0;
 }
 /* line 1535, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-as-last:hover .icon-list li .icon-list-add {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-add {
   background-position: 0px -768px;
 }
 /* line 1538, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-as-last:hover .icon-list li .icon-list-add:hover {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-add:hover {
   background-position: -64px -768px;
 }
 /* line 1541, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-as-last:hover .icon-list li .icon-list-edit {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-edit {
   background-position: 0px -800px;
 }
 /* line 1544, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-as-last:hover .icon-list li .icon-list-edit:hover {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-edit:hover {
   background-position: -32px -800px;
 }
 /* line 1547, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-as-last:hover .icon-list li .icon-list-delete {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-delete {
   background-position: 0px -512px;
 }
 /* line 1550, ../sass/app.scss */
-.content .content-list .medium .medium-item .medium-as-last:hover .icon-list li .icon-list-delete:hover {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-delete:hover {
   background-position: -32px -512px;
 }
 /* line 1558, ../sass/app.scss */
-.content .content-list .medium .nested {
+.content .content-list .medium-list .nested {
   margin-left: -8px;
 }
 /* line 1563, ../sass/app.scss */
@@ -1929,7 +1929,7 @@ input[type=checkbox], input[type=radio] {
     z-index: -1;
   }
   /* line 2016, ../sass/app.scss */
-  .content .content-list .medium .medium-item .icon-list {
+  .content .content-list .medium-list .medium-item .icon-list {
     opacity: 0;
     display: none;
     z-index: -1;
