@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Access;
+use App\Access_group;
+
 use App\Policies\UserPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -34,12 +35,12 @@ class UserController extends Controller
       	Log::info('Удалили запись' . $id);
     }
 
-    //
+
     public function index(Request $request)
     {
-
 		if (Auth::user()->can('index', Auth::user())) {
 
+            // Проверка на статус пользователя: должен быть сотрудником - 1
 	    	if($request->contragent_status){
 	    		$users = User::Сontragent($request->contragent_status)->AccessBlock($request->access_block)->paginate(30);
 	    		return view('users.index', compact('users'));
@@ -48,29 +49,16 @@ class UserController extends Controller
 	    		return view('users.index', compact('users'), compact('access'));
 	    	}
 
+
+
 	 		} else {
 		    	abort(403, 'Просмотр запрещено!');
 		    };
-
-
-   //  	if (Gate::denies('index-user', $access)) {
-
-
-	  //   	if($request->contragent_status){
-	  //   		$users = User::Сontragent($request->contragent_status)->AccessBlock($request->access_block)->paginate(30);
-	  //   		return view('users.index', compact('users'));
-	  //   	} else {
-	  //   		$users = User::paginate(30);
-	  //   		return view('users.index', compact('users'), compact('access'));
-	  //   	}
-
- 		// } else {
-	  //   	abort(403, 'Просмотр запрещено!');
-	  //   };
     }
 
     public function store(Request $request)
     {
+        if(Auth::user()->can('create', Auth::user())){
     	$user = new User;
 
     	$user->login = $request->login;
@@ -116,15 +104,24 @@ class UserController extends Controller
     	$user->group_filials_id = $request->group_filials_id;
 
 		$user->save();
-
 		return redirect('users');
+
+        } else {
+            abort(403, 'Запись невозможна - недостаточно прав!');
+        }
+
+
     }
 
     //
     public function create()
     {
     	$users = new User;
-    	return view('users.create', compact('users'));
+        $access_groups_list = Access_group::where('category_right_id', '1')->pluck('access_group_name', 'id');
+        $access_filials_list = Access_group::where('category_right_id', '2')->pluck('access_group_name', 'id');
+        $access_groups = new Access_group;
+
+    	return view('users.create', compact('users', 'access_groups', 'access_groups_list', 'access_filials_list'));
     }
 
     public function update(Request $request, $id)
@@ -184,16 +181,25 @@ class UserController extends Controller
 
     public function show($id)
     {
+        $access_groups_list = Access_group::where('category_right_id', '1')->pluck('access_group_name', 'id');
+        $access_filials_list = Access_group::where('category_right_id', '2')->pluck('access_group_name', 'id');
+        $access_groups = new Access_group;
+
     	$users = User::findOrFail($id);
-    	return view('users.show', compact('users'));
+    	return view('users.show', compact('users', 'access_groups', 'access_groups_list', 'access_filials_list'));
     }
 
 
     public function edit($id)
     {
-      $users = User::findOrFail($id);
-      Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
-      return view('users.edit', compact('users'));
+
+        $access_groups_list = Access_group::where('category_right_id', '1')->pluck('access_group_name', 'id');
+        $access_filials_list = Access_group::where('category_right_id', '2')->pluck('access_group_name', 'id');
+        $access_groups = new Access_group;
+
+        $users = User::findOrFail($id);
+         Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
+         return view('users.edit', compact('users', 'access_groups', 'access_groups_list', 'access_filials_list'));
     }
 
 

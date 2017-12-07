@@ -19,7 +19,7 @@ class UsersTableSeeder extends Seeder
 	        	'nickname' => 'creativebob', 
 	        	'phone' => '89041248598', 
 	        	'group_users_id' => 1, 
-	        	'group_filials_id' => 2, 
+	        	'group_filials_id' => 5, 
 	        	'contragent_status' => 1, 
 	        	'access_block' => 0, 
         	] 

@@ -23,7 +23,7 @@ class UserPolicy
     {
         $current_access = Auth::user()->group_users_id;
         $access = Access::where(['access_group_id' => $current_access]);
-        return $result = $access->where(['right_action' => 'view-user'])->count() == "1";
+        return $result = $access->where(['right_action' => 'index-user'])->count() == "1";
     }
 
 
@@ -47,7 +47,9 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        //
+        $current_access = Auth::user()->group_users_id;
+        $access = Access::where(['access_group_id' => $current_access]);
+        return $result = $access->where(['right_action' => 'create-user'])->count() == "1";
     }
 
     /**
@@ -61,8 +63,8 @@ class UserPolicy
     {
 
 
-        return $user()->where(['access_group_id' => $user()->group_users_id, 'right_action' => 'update-user']) == $model()->where(['access_group_id' => $model()->group_users_id, 'right_action' => 'update-user']);
-        // return $user->contragent_status == '1';
+        // return $user()->where(['access_group_id' => $user()->group_users_id, 'right_action' => 'update-user']) == $model()->where(['access_group_id' => $model()->group_users_id, 'right_action' => 'update-user']);
+        return $user->contragent_status == '1';
     }
 
     /**

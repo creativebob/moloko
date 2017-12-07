@@ -16,6 +16,7 @@ class RightsTableSeeder extends Seeder
         	['right_name' => 'Редактирование пользователя', 'right_action' => 'update-user', 'category_right_id' => 1], 
         	['right_name' => 'Просмотр пользователя', 'right_action' => 'view-user', 'category_right_id' => 1], 
         	['right_name' => 'Удаление пользователя', 'right_action' => 'delete-user', 'category_right_id' => 1], 	
+            ['right_name' => 'Просмотр списка пользователей', 'right_action' => 'index-user', 'category_right_id' => 1], 
         ]);
     }
 }

@@ -193,12 +193,12 @@
         <div class="grid-x grid-padding-x">
           <div class="small-12 cell tabs-margin-top">
             <label>Уровень доступа
-              {{ Form::select('group_users_id', ['1' => 'Менеджер', '2' => 'Администратор']) }}
+              {{ Form::select('group_users_id', $access_groups_list, $users->group_users_id) }}
             </label>
           </div>
           <div class="small-12 cell">
             <label>Область доступа
-              {{ Form::select('group_filials_id', ['1' => 'Иркутск', '2' => 'Улан-Удэ']) }}
+              {{ Form::select('group_filials_id', $access_filials_list, $users->group_filials_id) }}
             </label>
           </div>
           <div class="small-12 cell checkbox">

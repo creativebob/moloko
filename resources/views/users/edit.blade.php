@@ -18,7 +18,7 @@
   {{ Form::model($users, ['route' => ['users.update', $users->id], 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
-    @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param' => ''])
+    @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>''])
     
   {{ Form::close() }}
 

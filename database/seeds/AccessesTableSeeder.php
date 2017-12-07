@@ -16,6 +16,7 @@ class AccessesTableSeeder extends Seeder
         	['right_action' => 'update-user', 'access_group_id' => 1], 
         	['right_action' => 'view-user', 'access_group_id' => 1], 
         	['right_action' => 'delete-user', 'access_group_id' => 1], 
+            ['right_action' => 'index-user', 'access_group_id' => 1], 
         ]);
     }
 }
