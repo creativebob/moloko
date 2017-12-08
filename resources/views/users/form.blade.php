@@ -1,3 +1,7 @@
+
+
+
+
   <div class="grid-x tabs-wrap">
     <div class="small-12 cell">
       <ul class="tabs-list" data-tabs id="tabs">
@@ -11,6 +15,24 @@
   <div class="grid-x tabs-wrap inputs">
     <div class="small-12 medium-7 large-5 cell tabs-margin-top">
       <div class="tabs-content" data-tabs-content="tabs">
+
+
+      @if ($errors->any())
+
+  <div class="alert callout" data-closable>
+  <h5>Неправильный формат данных:</h5>
+  <ul>
+      @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+      @endforeach
+  </ul>
+  <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+      @endif
+
         <!-- Учетные данные -->
         <div class="tabs-panel is-active" id="content-panel-1">
           <div class="grid-x grid-padding-x">
@@ -157,7 +179,7 @@
             </div>
             <div class="small-12 medium-6 cell">
               <label>К/С
-              {{ Form::text('account_correspondent', $users->account_correspondent, ['class'=>'account-correspondent-field', 'maxlength'=>'30', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
+              {{ Form::text('account_correspondent', $users->account_correspondent, ['class'=>'account-correspondent-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>

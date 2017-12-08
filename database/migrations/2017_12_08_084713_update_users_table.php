@@ -36,8 +36,8 @@ class UpdateUsersTable extends Migration
             $table->string('company_name', 40)->nullable()->index()->comment('Имя компании')->after('orgform_status');
             $table->bigInteger('inn')->nullable()->unsigned()->comment('ИНН')->after('company_name');
             $table->bigInteger('kpp')->nullable()->unsigned()->comment('КПП')->after('inn');
-            $table->bigInteger('account_settlement')->nullable()->unsigned()->comment('Расчетный счет')->after('kpp');
-            $table->bigInteger('account_correspondent')->nullable()->unsigned()->comment('Корреспондентский счет')->after('account_settlement');
+            $table->string('account_settlement', 20)->nullable()->comment('Расчетный счет')->after('kpp');
+            $table->string('account_correspondent', 20)->nullable()->comment('Корреспондентский счет')->after('account_settlement');
             $table->string('bank', 60)->nullable()->comment('Название банка')->after('account_correspondent');
 
             $table->string('passport_number')->nullable()->unique()->comment('Номер паспорта')->after('bank');
