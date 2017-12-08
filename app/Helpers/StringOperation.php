@@ -35,6 +35,10 @@
             $result = "Номер не указан";
         };
 
+        if(strlen($value) == 0){
+            $result = NULL;
+        };
+
         return $result;
     }
 

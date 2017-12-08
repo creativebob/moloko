@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Access;
 use App\Access_group;
+use App\Http\Requests\UpdateUser;
 
 use App\Policies\UserPolicy;
 use Illuminate\Http\Request;
@@ -124,7 +125,7 @@ class UserController extends Controller
     	return view('users.create', compact('users', 'access_groups', 'access_groups_list', 'access_filials_list'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateUser $request, $id)
     {
 
     	$user = User::findOrFail($id);
@@ -143,9 +144,9 @@ class UserController extends Controller
 
     	$user->phone = cleanPhone($request->phone);
 
-    	if(($request->extra_phone != Null)&&($request->extra_phone != "")){
+    	if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
     		$user->extra_phone = cleanPhone($request->extra_phone);
-    	};
+    	} else {$user->extra_phone = NULL;};
 
     	$user->telegram_id = $request->telegram_id;
     	$user->city_id = $request->city_id;
