@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\User;
 
 class UsersTableSeeder extends Seeder
 {
@@ -12,16 +11,31 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $user = new Region;
 
-	    $user->name = 'Makc_Berluskone';
-	    $user->email = 'makc_berluskone@mail.ru';
-	    $user->remember_token = 'WSGQtPXIBDZMIWVC4xxmcaRLeSifmIi9it9MNWBeUUXnrre5lroD1VWXQmA4';
-	    $user->created_at = '2017-11-29 06:02:50';
-	    $user->updated_at = '2017-11-29 06:02:50';
-	    $user->password = bcrypt(123456);
-
-	    $user->save();
+        DB::table('users')->insert([
+        	[
+	        	'login' => 'creativebob', 
+	        	'email' => 'creativebob@mail.ru', 
+	        	'password' => bcrypt('111111'), 
+	        	'nickname' => 'creativebob', 
+	        	'phone' => '89041248598', 
+	        	'group_users_id' => 1, 
+	        	'group_filials_id' => 5, 
+	        	'contragent_status' => 1, 
+	        	'access_block' => 0, 
+        	],
+        	[
+	        	'login' => 'makc_berluskone', 
+	        	'email' => 'makc_berluskone@mail.ru', 
+	        	'password' => bcrypt('123456'), 
+	        	'nickname' => 'Makc_Berluskone', 
+	        	'phone' => '89025687585', 
+	        	'group_users_id' => 1, 
+	        	'group_filials_id' => 5, 
+	        	'contragent_status' => 1, 
+	        	'access_block' => 0, 
+        	],
+        ]);
 
     }
 }

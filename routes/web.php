@@ -17,17 +17,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::any('user', 'UserController@show');
 
+Route::resource('/users', 'UserController')->middleware('auth');
 
+Route::get('/page', 'PageController@create');
 
-Route::get('/table', function () {
-  return view('table');
-});
-
-Route::get('/users', function () {
-  return view('users');
-});
 
 
 // Контроллер для отображения населенных пунктов и областей
@@ -43,3 +37,4 @@ Route::post('/region', 'RegionController@get_vk_region');
 
 Route::get('/current_city/{region}/{area}/{city}', 'CityController@current_city')->name('current_city');
 
+// Конец блока с населенными пунктами
