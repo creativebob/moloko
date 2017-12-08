@@ -26,25 +26,25 @@ class UpdateUser extends FormRequest
         return [
 
             'login' => 'required|string|max:255', 
-            'email' => 'required|string|email|max:255', 
+            // 'email' => 'required|string|email|max:255', 
             // 'password' => 'required|string|min:6|confirmed',
 
             // 'nickname' => 'required', 
-            'first_name' => 'alpha|string|max:255', 
-            'second_name' => 'alpha|string|max:255', 
-            'patronymic' => 'alpha|string|max:255', 
+            // 'first_name' => 'alpha|string|max:255', 
+            // 'second_name' => 'alpha|string|max:255', 
+            // 'patronymic' => 'alpha|string|max:255', 
 
-            'sex' => 'required', 
-            'birthday' => 'date|after:01.01.1940', 
+            // 'sex' => 'required', 
+            // 'birthday' => 'date|after:01.01.1940', 
 
-            'phone' => 'string|max:17|required', 
-            'extra_phone' => 'string|max:17|nullable', 
-            'telegram_id' => 'integer|nullable', 
-            'city_id' => 'integer|nullable', 
-            'address' => 'string|max:255|nullable', 
+            // 'phone' => 'string|max:17|required', 
+            // 'extra_phone' => 'string|max:17|nullable', 
+            // 'telegram_id' => 'integer|nullable', 
+            // 'city_id' => 'integer|nullable', 
+            // 'address' => 'string|max:255|nullable', 
 
-            'orgform_status' => 'boolean', 
-            'company_name' => 'alpha|string|max:255', 
+            // 'orgform_status' => 'boolean', 
+            // 'company_name' => 'alpha|string|max:255', 
             // 'inn' => 'required', 
             // 'kpp' => 'required', 
             // 'account_settlement' => 'required', 

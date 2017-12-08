@@ -20,14 +20,3 @@ Auth::routes();
 Route::resource('/users', 'UserController')->middleware('auth');
 
 Route::get('/page', 'PageController@create');
-
-Route::get('table', function () {
-    return view('table');
-});
-
-Route::get('/cities', function () {
-    return view('cities');
-});
-
-Route::post('get-city/{city}', 'GetCityController@show');
-

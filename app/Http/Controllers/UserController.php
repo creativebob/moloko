@@ -57,7 +57,7 @@ class UserController extends Controller
 		    };
     }
 
-    public function store(Request $request)
+    public function store(UpdateUser $request)
     {
         if(Auth::user()->can('create', Auth::user())){
     	$user = new User;
