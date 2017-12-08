@@ -60,8 +60,8 @@
       <li><a href="#" data-link="37"><div class="icon-settings sprite"></div><span>Настройки</span></a>
         <ul class="menu vertical">
           <li><a href="/users" data-link="41">Пользователи</a></li>
-          <li><a href="/cities" data-link="42">Города</a></li>
-          <li><a href="/table" data-link="44">Таблица</a></li>
+          <li><a href="/cities" data-link="42">Населенные пункты</a></li>
+          <li><a href="/filials" data-link="44">Филиалы</a></li>
         </ul>
       </li>
     </ul>

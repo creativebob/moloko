@@ -2,7 +2,7 @@
 <div class="reveal" id="item-delete-ajax" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>удаление области</h5>
+      <h5>удаление</h5>
     </div>
   </div>
   <div class="grid-x align-center modal-content ">

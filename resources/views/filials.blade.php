@@ -4,15 +4,15 @@
 
 @endsection
 
-@section('title', 'Населенные пункты')
+@section('title', 'Филиалы')
 
 @section('title-content')
 <div data-sticky-container id="head-content">
   <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-options="stickyOn: small;" data-top-anchor="head-content:top">
     <div class="top-bar head-content">
       <div class="top-bar-left">
-        <h2 class="header-content">НАСЕЛЕННЫЕ ПУНКТЫ</h2>
-        <a class="icon-add sprite" data-open="region-add"></a>
+        <h2 class="header-content">Филиалы</h2>
+        <a class="icon-add sprite" data-open="filial-add"></a>
       </div>
       <div class="top-bar-right">
         <a class="icon-filter sprite"></a>
@@ -40,78 +40,27 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    @if(!empty($regions))
+    @if(!empty($filials))
     <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
-      @foreach ($regions as $region)      
-      <li class="first-item parent" id="regions-{{ $region->id }}" data-name="{{ $region->region_name }}">
+      @foreach ($filials as $filial)      
+      <li class="first-item parent" id="filials-{{ $filial->id }}" data-name="{{ $filial->filial_name }}">
         <ul class="icon-list">
-          <li><div class="icon-list-add sprite" data-open="city-add"></div></li>
-          {{-- <li><div class="icon-list-edit sprite" data-open="region-edit"></div></li> --}}
+          <li><div class="icon-list-add sprite" data-open="department-add"></div></li>
+          <li><div class="icon-list-edit sprite" data-open="filial-edit"></div></li>
           <li>
-          @if($region->areas_count + $region->cities_count == 0)  
+          @if($filial->departments_count == 0)  
             <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
           @endif
           </li>
         </ul>
-        <a data-list="{{ $region->id }}" class="first-link">
+        <a data-list="{{ $filial->id }}" class="first-link">
           <div class="list-title">
             <div class="icon-open sprite"></div>
-            <span class="first-item-name">{{ $region->region_name }}</span>
-            <span class="number">{{ $region->areas_count + $region->cities_count }}</span>
+            <span class="first-item-name">{{ $filial->filial_name }}</span>
+            <span class="number">{{ $filial->departments_count }}</span>
           </div>
         </a>
-        @if(!empty($areas))
-        <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
-          @foreach ($areas as $area)
-            @if($region->id == $area->region_id)
-            <li class="medium-item parent" id="areas-{{ $area->id }}" data-name="{{ $area->area_name }}">
-              <a class="medium-link">
-                <div class="list-title">
-                  <div class="icon-open sprite"></div>
-                  <span>{{ $area->area_name }}</span>
-                  <span class="number">{{ $area->cities_count }}</span>
-                </div>
-              </a>
-              <ul class="icon-list">
-                <li>
-                @if($area->cities_count == 0)
-                  <div class="icon-list-delete sprite" data-open="item-delete"></div>
-                @endif
-                </li>
-              </ul>
-              @if(!empty($cities))
-              <ul class="menu vertical nested last-list">
-                @foreach ($cities as $city)
-                  @if($area->id == $city->area_id)
-                  <li class="last-item parent" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
-                    <div class="last-link">{{ $city->city_name }}
-                      <ul class="icon-list">
-                        <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
-                      </ul>
-                    </div>
-                  </li>
-                  @endif
-                @endforeach
-              </ul>
-              @endif
-            </li>
-            @endif
-          @endforeach
-          @if(!empty($cities))
-            @foreach ($cities as $city)
-              @if($region->id == $city->region_id)
-              <li class="medium-item parent" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
-                <div class="medium-as-last">{{ $city->city_name }}
-                  <ul class="icon-list">
-                    <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
-                  </ul>
-                </div>
-              </li>
-              @endif
-            @endforeach
-          @endif
-        </ul>
-        @endif
+
       </li>
       @endforeach
     </ul>
@@ -121,41 +70,45 @@
 @endsection
 
 @section('modals')
-{{-- Модалка добавления области --}}
-<div class="reveal" id="region-add" data-reveal>
+{{-- Модалка добавления филиала --}}
+<div class="reveal" id="filial-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>ДОБАВЛЕНИЕ Области</h5>
+      <h5>ДОБАВЛЕНИЕ филиала</h5>
     </div>
   </div>
-  {{ Form::open(['id' => 'form-region-add']) }}
+  {{ Form::open(['id' => 'form-filial-add']) }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 medium-4 cell">
-        <label class="input-icon">Название области
-          <input type="text" name="region_name" id="region-name-field" autocomplete="off" required>
+        <label class="input-icon">Введите город
+          {{ Form::text('city_name', $value = null, ['id'=>'city-name-field', 'autocomplete'=>'off', 'required']) }}
           <div class="sprite-input-right icon-load load"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
-        <input type="hidden" name="region_vk_external_id" id="region-id-field">
-        <input type="hidden" name="region_database" id="region-database" value="0">
+        </label>
+        <label>Название филиала
+           {{ Form::text('filial_name', $value = null, ['id'=>'filial-name-field', 'autocomplete'=>'off', 'required']) }}
+        </label>
+        <input type="hidden" name="city_id" id="city-id-field">
+        <input type="hidden" name="filial_database" id="filial-database" value="0">
       </div>
       <div class="small-12 medium-8 cell">
         <table class="table-content-search">
-          <caption>Результаты поиска в сторонней базе данных:</caption>
-          <tbody id="tbody-region-add">
+          <caption>Результаты поиска в нашей базе данных:</caption>
+          <tbody id="tbody-filial-add">
           </tbody>
         </table>
       </div>
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        <button data-close class="button modal-button" id="submit-region-add" type="submit" disabled>Сохранить</button>
+        <button data-close class="button modal-button" id="submit-filial-add" type="submit" disabled>Сохранить</button>
       </div>
     </div>
   {{ Form::close() }}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
-{{-- Конец модалки добавления области --}}
+{{-- Конец модалки добавления филиала --}}
 
 {{-- Модалка редактирования области --}}
 <div class="reveal" id="region-edit" data-reveal>
@@ -187,7 +140,7 @@
         <button class="button modal-button" id="submit-region-add" type="submit" disabled>Сохранить</button>
       </div>
     </div>
-  {!! Form::close() !!}
+  </form>
   <div data-close class="icon-close-modal sprite close-modal"></div> 
 </div>
 {{-- Конец модалки редактирования области --}}
@@ -301,7 +254,7 @@
 <div class="reveal" id="item-delete" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>удаление</h5>
+      <h5>удаление области</h5>
     </div>
   </div>
   <div class="grid-x align-center modal-content ">
@@ -312,10 +265,10 @@
 
   <div class="grid-x align-center grid-padding-x">
     <div class="small-6 medium-4 cell">
-      {{ Form::open(['id' => 'form-item-del']) }}
+      {!! Form::open(['id' => 'form-item-del']) !!}
       {{ method_field('DELETE') }}
         <button data-close class="button modal-button delete-button" type="submit">Удалить</button>
-      {{ Form::close() }}
+      {!! Form::close() !!}
     </div>
     <div class="small-6 medium-4 cell">
       <button data-close class="button modal-button" id="save-button" type="submit">Отменить</button>
@@ -470,53 +423,56 @@ $(function() {
   };
 
   // Отображение области по ajax через api vk
-  $('#region-name-field').keyup(function() {
+  $('#city-name-field').keyup(function() {
     // Блокируем кнопку
-    $('#submit-region-add').prop('disabled', true);
-    $('#region-database').val(0);
+    $('#submit-filial-add').prop('disabled', true);
+    $('#filial-database').val(0);
     // Получаем фрагмент текста
-    var region = $('#region-name-field').val();
+    var city = $('#city-name-field').val();
     // Смотрим сколько символов
-    var lenRegion = region.length;
+    var lenCity = city.length;
     // Если символов больше 3 - делаем запрос
-    if (lenRegion > 3) {
+    if (lenCity > 3) {
       // Сам ajax запрос
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/region",
+        url: "/filials",
         type: "POST",
-        data: {region: $('#region-name-field').val()},
+        data: {city: $('#city-name-field').val()},
         beforeSend: function () {
           $('.icon-load').removeClass('load');
         },
         success: function(date){
           $('.icon-load').addClass('load');
           // Удаляем все значения чтобы вписать новые
-          $('#tbody-region-add>tr').remove();
+          $('#tbody-filial-add>tr').remove();
           var result = $.parseJSON(date);
-          var count = result.response.count;
           var data = '';
-          if (count == 0) {
-            data = "<tr><td>Ничего не найдено...</td></tr>";
-          };
-          if (count > 0) {
-            // Перебираем циклом
-            for (var i = 0; i < count; i++) {
-              data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"region-add\" data-region-vk-external-id=\"" + i + "\">" + result.response.items[i].id + "</a></td><td><a class=\"region-add\" data-region-name=\"" + i + "\">" + result.response.items[i].title + "</a></td></tr>";
-            };
-          };
+          alert(result.cities);
+          // if (result.error_status == 0) {
+          //   // Перебираем циклом
+
+          //   var myArray = result.cities;
+          //   $.each(myArray, function(index, value) {
+          //       console.log("INDEX: " + index + " VALUE: " + value);
+          //     data = data + "<tr data-tr=\"" +  + "\"><td><a class=\"region-add\" data-region-vk-external-id=\"" +  + "\">" + myArray.id + "</a></td><td><a class=\"region-add\" data-region-name=\"" +  + "\">" + myArray.city_name + "</a></td></tr>";
+          //   });   
+          // };
+          // if (result.error_status == 1) {
+          //   data = "<tr><td>Ничего не найдено...</td></tr>";
+          // };
           // Выводим пришедшие данные на страницу
-          $('#tbody-region-add').append(data);
+          $('#tbody-filial-add').append(data);
         }
       });
     };
-    if (lenRegion <= 3) {
+    if (lenCity <= 3) {
       // Удаляем все значения, если символов меньше 3х
-      $('#tbody-region-add>tr').remove();
+      $('#tbody-filial-add>tr').remove();
       $('.item-error').remove();
-      $('#region-id-field').val('');
+      // $('#city-name-field').val('');
     };
   });
   // При клике на регион в модальном окне заполняем инпуты
