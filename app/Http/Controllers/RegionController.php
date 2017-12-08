@@ -121,11 +121,13 @@ class RegionController extends Controller
    */
   public function destroy($id)
   {
-
-    // Проверяем содержит ли район вложенные населнные пункты
-    $cities = City::where('region_id', '=', $id)->first();
-    $areas = Area::where('region_id', '=', $id)->first();
-    if ($cities || $areas) {
+    // Удаляем ajax
+    // Проверяем содержит ли район вложенные населенные пункты
+    // $regions = Region::whereId($id)->first();
+    $cities = City::whereRegion_id($id)->first();
+    $areas = Area::whereRegion_id($id)->first();
+    // if ($regions->areas->cities || $regions->cities) {
+    if ($areas || $cities) {
       // Если содержит, то даем сообщенеи об ошибке
       $data = [
         'status' => 0,

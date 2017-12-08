@@ -208,7 +208,7 @@ class CityController extends Controller
         $city_id = $city->id;
 
       };
-       return Redirect('current_city/'.$region_id.'/'.$area_id.'/'.$city_id);
+      return Redirect('current_city/'.$region_id.'/'.$area_id.'/'.$city_id);
     };
   }
 
@@ -253,22 +253,30 @@ class CityController extends Controller
    * @return \Illuminate\Http\Response
    */
   public function destroy($id)
-  {
+  { 
+    // Удаляем город с обновлением
+    // Находим область и район города
+    $del_city = City::whereId($id)->first();
+    
+    
+    if (isset($del_city->area->id)) {
+      $area_id = $del_city->area->id;
+      $region_id = $del_city->area->region->id;
+    } else {
+      $area_id = 0;
+      $region_id = $del_city->region->id;
+    }
     $city = City::destroy($id);
+    // $city = true;
     if ($city) {
-      $data = [
-        'status' => 1,
-        'type' => 'cities',
-        'id' => $id,
-        'msg' => 'Успешно удалено'
-      ];
+      return Redirect('current_city/'.$region_id.'/'.$area_id.'/0');
     } else {
       $data = [
         'status' => 0,
         'msg' => 'Произошла ошибка'
       ];
-    };
-    echo json_encode($data, JSON_UNESCAPED_UNICODE);
+      echo 'произошла ошибка';
+    };    
   }
 
   // Получаем список городов из базы вк
@@ -337,8 +345,8 @@ class CityController extends Controller
   public function current_city($region, $area, $city)
   {
     $regions = Region::withCount('areas', 'cities')->get();
-    $areas = Area::withCount('cities')->get();
-    $cities = City::all();
+    $areas = Area::withCount('cities')->orderBy('area_name')->get();
+    $cities = City::orderBy('city_name')->get();
     $data = [
       'region_id' => $region,
       'area_id' => $area,

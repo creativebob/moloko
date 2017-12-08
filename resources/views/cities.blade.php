@@ -4,7 +4,7 @@
 
 @endsection
 
-@section('title', 'Страницы')
+@section('title', 'Населенные пункты')
 
 @section('title-content')
 <div data-sticky-container id="head-content">
@@ -49,7 +49,7 @@
           {{-- <li><div class="icon-list-edit sprite" data-open="region-edit"></div></li> --}}
           <li>
           @if($region->areas_count + $region->cities_count == 0)  
-            <div class="icon-list-delete sprite" data-open="item-delete"></div>
+            <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
           @endif
           </li>
         </ul>
@@ -80,7 +80,7 @@
                 </li>
               </ul>
               @if(!empty($cities))
-              <ul class="menu vertical nested last">
+              <ul class="menu vertical nested last-list">
                 @foreach ($cities as $city)
                   @if($area->id == $city->area_id)
                   <li class="last-item parent" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
@@ -116,21 +116,8 @@
       @endforeach
     </ul>
     @endif
-
-
-
   </div>
 </div>
-
-
-{{-- Pagination 
-<div class="grid-x" id="pagination">
-  <div class="small-12 cell">
-    <div class="right">
-      <a href="#"><div class="sprite icon-deleted"></div></a>
-    </div>
-  </div>
-</div> --}}
 @endsection
 
 @section('modals')
@@ -205,8 +192,6 @@
   <div data-close class="icon-close-modal sprite close-modal"></div> 
 </div>
 {{-- Конец модалки редактирования области --}}
-
-
 
 {{-- Модалка добавления города и района --}}
 <div class="reveal" id="city-add" data-reveal>
@@ -313,8 +298,7 @@
 </div>
 {{-- Конец модалки редактирования --}}
 
-
-{{-- Модалка удаления --}}
+{{-- Модалка удаления с refresh --}}
 <div class="reveal" id="item-delete" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
@@ -329,7 +313,10 @@
 
   <div class="grid-x align-center grid-padding-x">
     <div class="small-6 medium-4 cell">
-      <button data-close class="button modal-button delete-button" type="submit">Удалить</button>
+      {!! Form::open(['id' => 'form-item-del']) !!}
+      {{ method_field('DELETE') }}
+        <button data-close class="button modal-button delete-button" type="submit">Удалить</button>
+      {!! Form::close() !!}
     </div>
     <div class="small-6 medium-4 cell">
       <button data-close class="button modal-button" id="save-button" type="submit">Отменить</button>
@@ -337,7 +324,11 @@
   </div>
   <div data-close class="icon-close-modal sprite close-modal"></div> 
 </div>
-{{-- Конец модалки удаления --}}
+{{-- Конец модалки удаления с refresh --}}
+
+{{-- Модалка удаления ajax --}}
+@include('includes.modals.modal-delete-ajax')
+
 @endsection
 
 @section('scripts')
@@ -362,7 +353,7 @@ $(function() {
       console.log('Видим что имеет medium-active');
       $(this).removeClass('medium-active');
       $(this).closest('.parent').attr('aria-expanded', 'false');
-      var target = $(this).closest('.parent').find('.last');
+      var target = $(this).closest('.parent').find('.last-list');
       $('#content-list').foundation('toggle', target);
     } else {
       $(".medium-active").removeClass('medium-active');
@@ -583,7 +574,7 @@ $(function() {
       success: function (data) {
         var result = $.parseJSON(data);
 
-        result = "<li class=\"first-item parent\" id=\"regions-" + result.region_id +"-" + result.region_name + "\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\"></div></li><li><div class=\"icon-list-delete sprite\" data-open=\"region-del\"></div></li></ul><a data-list=\"" + result.region_id + "\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span>" + result.region_name + "</span><span class=\"number\">0</span></div></a></li>";
+        result = "<li class=\"first-item parent\" id=\"regions-" + result.region_id + "\" data-name=\"" + result.region_name + "\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\"></div></li><li><div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div></li></ul><a data-list=\"" + result.region_id +"\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"first-item-name\">" + result.region_name + "</span><span class=\"number\">0</span></div></a>";
 
         // Выводим пришедшие данные на страницу
         $('#content-list').append(result);
@@ -667,7 +658,7 @@ $(function() {
     $('#region-name').val('');
   });
 
-  // Мягкое удаление
+  // Мягкое удаление с refresh
   $(document).on('click', '[data-open="item-delete"]', function() {
     // находим описание сущности, id и название удаляемого элемента в родителе
     var parent = $(this).closest('.parent');
@@ -676,52 +667,66 @@ $(function() {
     var name = parent.data('name');
     $('.title-delete').text(name);
     $('.delete-button').attr('id', 'del-' + type + '-' + id);
-  });
-  // Подтверждение удаления и само удаление
-  $(document).on('click', '.delete-button', function() {
-    var type = $(this).attr('id').split('-')[1];
-    var id = $(this).attr('id').split('-')[2];
-    // Ajax
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/' + type + '/' + id,
-      type: "DELETE",
-      data: {'id': id},
-      success: function (data) {
-        var result = $.parseJSON(data);
-        if (result.status == 1) {
-          $('#' + result.type + '-' + result.id).remove();
-          $('.delete-button').removeAttr('id');
-        } else {
-          alert(result.msg);
-        };
-      }
-    });
+    $('#form-item-del').attr('action', '/' + type + '/' + id);
   });
 
   // Открываем меню и подменю, если только что добавили населенный пункт
   @if(!empty($data))
   if ({{ $data != null }})  {
-    // Если у города нет региона
-    if({{ $data['area_id'] }} == 0) {
-      // Находим средние элементы
-      var lastItem = $('#cities-{{ $data['city_id'] }}').closest('.medium-list');
-      $('#regions-' + {{ $data['region_id'] }}).addClass('first-active').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
-    } else {
-      var lastItem = $('#cities-{{ $data['city_id'] }}').closest('.last');
-      var mediumItem = lastItem.parents('.medium-list');
-      var areaActive = lastItem.parents('.medium-item').find('.medium-link').addClass('medium-active');
-      $('#regions-' + {{ $data['region_id'] }}).addClass('first-active').find('.icon-list:first-child').attr('aria-hidden', 'false').css('display', 'block');
-      lastItem.parents('.medium-item').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
-      // Открываем аккордионы
-      $('#content-list').foundation('down', mediumItem);
-    };
+
+    // Общие правила
+    // Подсвечиваем область
+    $('#regions-' + {{ $data['region_id'] }}).addClass('first-active').find('.icon-list:first-child').attr('aria-hidden', 'false').css('display', 'block');
+    // Открываем область
+    var firstItem = $('#regions-' + {{ $data['region_id'] }}).find('.medium-list');
     // Открываем аккордионы
-    $('#content-list').foundation('down', lastItem);
+    $('#content-list').foundation('down', firstItem);
+
+    // Если удален город, имеющий район
+    if (({{ $data['city_id'] }} == 0) && ({{ $data['area_id'] }} !== 0)) {
+      // Подсвечиваем ссылку
+      $('#areas-{{ $data['area_id'] }}').find('.medium-link').addClass('medium-active');
+      // Открываем меню удаления в середине
+       $('#areas-{{ $data['area_id'] }}').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
+
+      // Находим средние элементы
+      var lastItem = $('#areas-{{ $data['area_id'] }}').find('.last-list');
+      $('#content-list').foundation('down', lastItem);
+    };
+
+
+    // Если удален город, не имеющий район
+    if (({{ $data['area_id'] }} == 0)  && ({{ $data['city_id'] }} !== 0)) {
+    };
+
+
+    // Если удален район, не имеющий городов
+    if(({{ $data['area_id'] }} == 0) && ({{ $data['city_id'] }} == 0)) { 
+
+    };
+
+    // Если добавили город с районом
+    if (({{ $data['city_id'] }} !== 0) && ({{ $data['area_id'] }} !== 0)) {
+      // Подсвечиваем ссылку
+      $('#areas-{{ $data['area_id'] }}').find('.medium-link').addClass('medium-active');
+      // Находим средние элементы
+      var lastItem = $('#areas-{{ $data['area_id'] }}').find('.last-list');
+      $('#content-list').foundation('down', lastItem);
+    };
+  
+      // Перебираем родителей и посвечиваем их
+  //   var parents = $(this).parents('.medium-list');
+  //   for (var i = 0; i < parents.length; i++) {
+  //     $(parents[i]).parent('li').children('a').addClass('medium-active');
+  //   };
+  // });
+        
   }
   @endif
 });
 </script>
+
+{{-- Скрипт модалки удаления ajax --}}
+@include('includes.modals.modal-delete-ajax-script')
+
 @endsection

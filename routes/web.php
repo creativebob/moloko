@@ -41,5 +41,5 @@ Route::resources([
 Route::post('/city', 'CityController@get_vk_city');
 Route::post('/region', 'RegionController@get_vk_region');
 
-Route::get('current_city/{region}/{area}/{city}', 'CityController@current_city')->name('current_city');
+Route::get('/current_city/{region}/{area}/{city}', 'CityController@current_city')->name('current_city');
 

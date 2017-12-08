@@ -1560,7 +1560,7 @@ input[type=checkbox], input[type=radio] {
       }
     }
     // Конечный список
-    .last {
+    .last-list {
       border-left: 2px solid $content-list-item-active-bg-color;
       border-right: 2px solid $content-list-item-active-bg-color;
       overflow: hidden;

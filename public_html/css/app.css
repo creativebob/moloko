@@ -1525,14 +1525,14 @@ input[type=checkbox], input[type=radio] {
   margin-left: -8px;
 }
 /* line 1563, ../sass/app.scss */
-.content .content-list .last {
+.content .content-list .last-list {
   border-left: 2px solid #ae4747;
   border-right: 2px solid #ae4747;
   overflow: hidden;
   margin-left: 0;
 }
 /* line 1574, ../sass/app.scss */
-.content .content-list .last .last-item .last-link {
+.content .content-list .last-list .last-item .last-link {
   position: relative;
   margin: 0 1.8rem 0 2.5rem;
   border-bottom: 1px solid #dddddd;
@@ -1542,44 +1542,44 @@ input[type=checkbox], input[type=radio] {
   color: #000000;
 }
 /* line 1583, ../sass/app.scss */
-.content .content-list .last .last-item .last-link .icon-list {
+.content .content-list .last-list .last-item .last-link .icon-list {
   right: 0.1rem;
   opacity: 0;
 }
 /* line 1587, ../sass/app.scss */
-.content .content-list .last .last-item .last-link .icon-list li {
+.content .content-list .last-list .last-item .last-link .icon-list li {
   padding: 0;
 }
 /* line 1594, ../sass/app.scss */
-.content .content-list .last .last-item .last-link:hover .icon-list {
+.content .content-list .last-list .last-item .last-link:hover .icon-list {
   opacity: 1;
 }
 /* line 1599, ../sass/app.scss */
-.content .content-list .last .last-item .last-link:hover .icon-list li .icon-list-add {
+.content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-add {
   background-position: 0px -768px;
 }
 /* line 1602, ../sass/app.scss */
-.content .content-list .last .last-item .last-link:hover .icon-list li .icon-list-add:hover {
+.content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-add:hover {
   background-position: -64px -768px;
 }
 /* line 1605, ../sass/app.scss */
-.content .content-list .last .last-item .last-link:hover .icon-list li .icon-list-edit {
+.content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-edit {
   background-position: 0px -800px;
 }
 /* line 1608, ../sass/app.scss */
-.content .content-list .last .last-item .last-link:hover .icon-list li .icon-list-edit:hover {
+.content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-edit:hover {
   background-position: -32px -800px;
 }
 /* line 1611, ../sass/app.scss */
-.content .content-list .last .last-item .last-link:hover .icon-list li .icon-list-delete {
+.content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-delete {
   background-position: 0px -512px;
 }
 /* line 1614, ../sass/app.scss */
-.content .content-list .last .last-item .last-link:hover .icon-list li .icon-list-delete:hover {
+.content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-delete:hover {
   background-position: -32px -512px;
 }
 /* line 1622, ../sass/app.scss */
-.content .content-list .last .last-item:last-child .last-link {
+.content .content-list .last-list .last-item:last-child .last-link {
   border-bottom: none;
 }
 /* line 1630, ../sass/app.scss */

@@ -83,32 +83,20 @@ class AreaController extends Controller
      */
     public function destroy($id)
     {
-      // Проверяем содержит ли район вложенные населнные пункты
-      $cities = City::where('area_id', '=', $id)->first();
-      if ($cities) {
-        // Если содержит, то даем сообщенеи об ошибке
+      // Удаляем с обновлением
+      // Находим область и район города
+      $del_area = Area::whereId($id)->first();
+      $region_id = $del_area->region->id;
+      
+      $area = Area::destroy($id);
+      if ($area) {
+        return Redirect('current_city/'.$region_id.'/0/0');
+      } else {
         $data = [
           'status' => 0,
-          'msg' => 'Данный район содержит населенные пункты, удаление невозможно'
+          'msg' => 'Произошла ошибка'
         ];
-      } else {
-        // Если нет, мягко удаляем
-        $area = Area::destroy($id);
-        if ($area) {
-          $data = [
-            'status'=> 1,
-            'type' => 'areas',
-            'id' => $id,
-            'msg' => 'Успешно удалено'
-          ];
-        } else {
-          // В случае непредвиденной ошибки
-          $data = [
-            'status' => 0,
-            'msg' => 'Произошла непредвиденная ошибка, попробуйте перезагрузить страницу и попробуйте еще раз'
-          ];
-        };
+        echo 'произошла ошибка';
       };
-      echo json_encode($data, JSON_UNESCAPED_UNICODE);
     }
 }
