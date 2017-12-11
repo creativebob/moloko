@@ -41,8 +41,4 @@ Route::get('/current_city/{region}/{area}/{city}', 'CityController@current_city'
 
 
 // Контроллеры для отображения должностей и филиалов
-Route::resources([
-	'/positions' => 'PositionController',
-	'/departmens' => 'DepartmentController',
-  	'/filials' => 'FilialController'
-]);
+Route::resource('/departments', 'DepartmentController');

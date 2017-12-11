@@ -15,15 +15,10 @@ class Department extends Model
    */
   protected $dates = ['deleted_at'];
   protected $fillable = [
-    'department_name',
     'city_id',
+    'department_name',
+    'department_address',
+    'department_phone',
+    'department_parent_id',
   ];
-  /**
-  * Получаем филиал данного отдела.
-  */
-  public function filial()
-  {
-    return $this->belongsTo('App\Filial');
-  }
-
 }

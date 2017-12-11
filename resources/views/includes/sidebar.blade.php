@@ -61,7 +61,7 @@
         <ul class="menu vertical">
           <li><a href="/users" data-link="41">Пользователи</a></li>
           <li><a href="/cities" data-link="42">Населенные пункты</a></li>
-          <li><a href="/filials" data-link="44">Филиалы</a></li>
+          <li><a href="/departments" data-link="44">Филиалы</a></li>
         </ul>
       </li>
     </ul>
