@@ -73,8 +73,8 @@ class UpdateUser extends FormRequest
             // 'employee_id' => 'required', 
 
             'access_block' => 'boolean|nullable', 
-            'group_users_id' => 'integer|required', 
-            'group_filials_id' => 'integer|required', 
+            'group_action_id' => 'integer|required', 
+            'group_locality_id' => 'integer|required', 
 
         ];
     }

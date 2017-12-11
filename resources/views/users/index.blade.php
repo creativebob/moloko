@@ -73,6 +73,7 @@
           <th class="td-contragent-status">Статус</th>
           <th class="td-access-block">Доступ</th>
           <th class="td-group-users-id">Уровень доступа</th>
+          <th class="td-group-users-id">Локализация</th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -87,9 +88,10 @@
 <!--           <td class="td-first-name">{{ $user->first_name }}</td> -->
           <td class="td-phone">{{ $user->phone }}</td>
           <td class="td-email">{{ $user->email }}</td>
-          <td class="td-contragent-status">{{ $user->contragent_status }}</td>
-          <td class="td-access-block">{{ $user->access_block }}</td>
-          <td class="td-group-users-id"></td>
+          <td class="td-contragent-status">{{ decor_contragent_status($user->contragent_status) }}</td>
+          <td class="td-access-block">{{ decor_access_block($user->access_block) }}</td>
+          <td class="td-group_action_id">{{ $user->group_action->access_group_name }}</td>
+          <td class="td-group_locality_id">{{ $user->group_locality->access_group_name }}</td>
           <td class="td-delete"><a class="icon-delete sprite"></a></td>       
           <!-- <td class="td-delete">{{ link_to_route('users.destroy', " " , [$user->id], ['class'=>'icon-delete sprite']) }}</td> -->
         </tr>

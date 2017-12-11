@@ -7,11 +7,25 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+
 class User extends Authenticatable
 {
 
     use Notifiable;
     use SoftDeletes;
+
+  /**
+   * Получить запись с именем группы доступа
+   */
+  public function group_action()
+  {
+    return $this->BelongsTo('App\Access_group', 'group_action_id');
+  }
+
+  public function group_locality()
+  {
+    return $this->BelongsTo('App\Access_group', 'group_locality_id');
+  }
 
 
     // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
@@ -154,12 +168,12 @@ class User extends Authenticatable
         'address', 
 
         'orgform_status', 
-        'company_name', 
-        'inn', 
-        'kpp', 
-        'account_settlement', 
-        'account_correspondent', 
-        'bank', 
+        // 'company_name', 
+        'user_inn', 
+        // 'kpp', 
+        // 'account_settlement', 
+        // 'account_correspondent', 
+        // 'bank', 
 
         'passport_number', 
         'passport_released', 
@@ -170,8 +184,8 @@ class User extends Authenticatable
         'lead_id', 
         'employee_id', 
         'access_block', 
-        'group_users_id', 
-        'group_filials_id', 
+        'group_action_id', 
+        'group_locality_id', 
 
     ];
 

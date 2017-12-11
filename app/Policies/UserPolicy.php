@@ -21,7 +21,7 @@ class UserPolicy
      */
     public function index(User $user)
     {
-        $current_access = Auth::user()->group_users_id;
+        $current_access = Auth::user()->group_action_id;
         $access = Access::where(['access_group_id' => $current_access]);
         return $result = $access->where(['right_action' => 'index-user'])->count() == "1";
     }
@@ -47,7 +47,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        $current_access = Auth::user()->group_users_id;
+        $current_access = Auth::user()->group_action_id;
         $access = Access::where(['access_group_id' => $current_access]);
         return $result = $access->where(['right_action' => 'create-user'])->count() == "1";
     }

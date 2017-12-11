@@ -139,10 +139,10 @@
         </div>
         <!-- Представитель компании -->
         <div class="tabs-panel" id="content-panel-3">
-          <div class="grid-x grid-padding-x"> 
+          <div class="grid-x grid-padding-x">
             <div class="small-12 cell checkbox">
               {{ Form::checkbox('orgform_status', 1, $users->orgform_status==1, ['id'=>'orgform-status-checkbox']) }}
-              <label for="orgform-status-checkbox"><span>Представитель компании</span></label>
+              <label for="orgform-status-checkbox"><span>Директор компании (Юридическое лицо)</span></label>
             </div>
           </div>
           <div class="grid-x grid-padding-x tabs-margin-top"> 
@@ -215,12 +215,12 @@
         <div class="grid-x grid-padding-x">
           <div class="small-12 cell tabs-margin-top">
             <label>Уровень доступа
-              {{ Form::select('group_users_id', $access_groups_list, $users->group_users_id) }}
+              {{ Form::select('group_action_id', $access_action_list, $users->group_action_id) }}
             </label>
           </div>
           <div class="small-12 cell">
             <label>Область доступа
-              {{ Form::select('group_filials_id', $access_filials_list, $users->group_filials_id) }}
+              {{ Form::select('group_locality_id', $access_locality_list, $users->group_locality_id) }}
             </label>
           </div>
           <div class="small-12 cell checkbox">

@@ -1,5 +1,17 @@
 <?php
 
+    function decor_access_block($access_block) {
+        if($access_block == 1){$result = "Блокирован";} else {$result = "Открыт";};
+        return $result;
+    };
+
+    function decor_contragent_status($contragent_status) {
+        if($contragent_status == 1){$result = "Сотрудник";} 
+        elseif($contragent_status == 2){$result = "Клиент";} 
+        else {$result = "Статус не определен";};
+        return $result;
+    };
+
 	function cleanPhone($str) {
 		$ptn = "/[^0-9]/";
 		$rpltxt = "";
