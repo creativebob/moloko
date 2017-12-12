@@ -30,8 +30,10 @@ class UsersTableSeeder extends Seeder
 	        	'password' => bcrypt('123456'), 
 	        	'nickname' => 'Makc_Berluskone', 
 	        	'phone' => '89025687585', 
+
 	        	'group_action_id' => 1, 
 	        	'group_locality_id' => 5, 
+
 	        	'contragent_status' => 1, 
 	        	'access_block' => 0, 
         	],
