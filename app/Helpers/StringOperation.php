@@ -28,9 +28,9 @@
         
         if(strlen($value) == 11 ){
             if(mb_substr($value, 0, 4) == "8395"){
-                $rest1 = mb_substr($value, 5/2, 2); // возвращает "abcd"
-                $rest2 = mb_substr($value, 7/2, 2); // возвращает "abcd"
-                $rest3 = mb_substr($value, 9/2, 2); // возвращает "abcd"
+                $rest1 = mb_substr($value, 5, 2); // возвращает "abcd"
+                $rest2 = mb_substr($value, 7, 2); // возвращает "abcd"
+                $rest3 = mb_substr($value, 9, 2); // возвращает "abcd"
                 $result = $rest1."-".$rest2."-".$rest3;
             } else {
                 // $value = strtolower($value, "UTF-8");

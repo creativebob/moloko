@@ -16,7 +16,15 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id');
             $table->string('company_name', 40)->nullable()->index()->comment('Имя компании');
-            $table->bigInteger('company_inn')->nullable()->unsigned()->comment('ИНН');
+
+            $table->bigInteger('company_phone')->unique()->nullable()->comment('Телефон компании');
+            $table->bigInteger('company_extra_phone')->nullable()->comment('Дополнительный телефон');
+
+            $table->integer('city_id')->nullable()->unsigned()->comment('Id города');
+            // $table->foreign('city_id')->references('id')->on('cities');        
+            $table->string('company_address', 60)->nullable()->comment('Адрес компании');
+
+            $table->bigInteger('company_inn')->nullable()->unsigned()->comment('ИНН компании');
             $table->bigInteger('kpp')->nullable()->unsigned()->comment('КПП');
             $table->string('account_settlement', 20)->nullable()->comment('Расчетный счет');
             $table->string('account_correspondent', 20)->nullable()->comment('Корреспондентский счет');
@@ -26,6 +34,7 @@ class CreateCompaniesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
+
         });
     }
 

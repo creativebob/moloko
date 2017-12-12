@@ -32,8 +32,6 @@ class CreateRightsTable extends Migration
      */
     public function down()
     {
-        Schema::table('rights', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('rights');
     }
 }

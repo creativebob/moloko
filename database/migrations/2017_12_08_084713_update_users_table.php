@@ -29,7 +29,10 @@ class UpdateUsersTable extends Migration
             $table->bigInteger('phone')->unique()->nullable()->comment('Телефон')->after('birthday');
             $table->bigInteger('extra_phone')->nullable()->comment('Дополнительный телефон')->after('phone');
             $table->bigInteger('telegram_id')->unsigned()->unique()->nullable()->comment('ID Telegram')->after('extra_phone');
+
             $table->integer('city_id')->nullable()->unsigned()->comment('Id города')->after('telegram_id');
+            // $table->foreign('city_id')->references('id')->on('cities');
+
             $table->string('address', 60)->nullable()->comment('Адрес')->after('city_id');
 
             $table->integer('orgform_status')->nullable()->comment('Представляет компанию 1 или частное лицо 0')->after('address');
@@ -49,14 +52,21 @@ class UpdateUsersTable extends Migration
             $table->integer('access_block')->nullable()->unsigned()->comment('Доступ открыт 0 или Блокирован 1')->default('0')->after('employee_id');
 
             $table->integer('group_action_id')->nullable()->unsigned()->comment('Группа доступа по функционалу')->after('access_block');
-            $table->foreign('group_action_id')->references('id')->on('access_groups');
 
             $table->integer('group_locality_id')->nullable()->unsigned()->comment('Группа доступа по филиалу')->after('group_action_id');
-            $table->foreign('group_locality_id')->references('id')->on('access_groups');
+
 
             $table->softDeletes();
 
         });
+
+        Schema::table('users', function(Blueprint $table) {
+
+            $table->foreign('group_action_id')->references('id')->on('access_groups');
+            $table->foreign('group_locality_id')->references('id')->on('access_groups');
+
+        });
+
     }
 
     /**
@@ -95,8 +105,13 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('employee_id');
             $table->dropColumn('access_block');
 
-            $table->dropColumn('group_action_id');
-            $table->dropColumn('group_locality_id');          
+            $table->dropForeign('users_group_action_id_foreign'); 
+            $table->dropForeign('users_group_locality_id_foreign');
+
+            // $table->dropColumn('group_action_id');
+            // $table->dropColumn('group_locality_id');  
+
+
 
         });
 

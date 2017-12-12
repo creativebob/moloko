@@ -50,15 +50,6 @@ class UpdateUser extends FormRequest
             'company_name' => 'alpha|string|max:255|required_if:orgform_status, 1|nullable', 
 
             'inn' => 'max:12|nullable', 
-            'kpp' => 'max:255|nullable', 
-
-            'account_settlement' => 'string|nullable', 
-            'account_correspondent' => 'string|nullable', 
-
-            // Вариант если требуеться в обязательном порядке всем организациям указывать платежные реквизиты
-            // 'account_settlement' => 'string|required_if:orgform_status, 1|nullable', 
-            // 'account_correspondent' => 'string|required_if:orgform_status, 1|nullable', 
-
 
             'bank' => 'required_if:orgform_status,1|nullable', 
 

@@ -19,6 +19,7 @@ Auth::routes();
 
 
 Route::resource('/users', 'UserController')->middleware('auth');
+Route::resource('/companies', 'CompanyController')->middleware('auth');
 
 Route::get('/page', 'PageController@create');
 
