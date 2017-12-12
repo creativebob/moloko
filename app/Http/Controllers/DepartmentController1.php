@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Department;
 use App\City;
+use Menu as LavMenu;
 use Illuminate\Http\Request;
 // use Department as LavMenu;
 
@@ -18,10 +19,39 @@ class DepartmentController extends Controller
    */
   public function index()
   {
-    $departments = Department::all();
+    $departments_db = Department::all();
+    $departments = $this->buildMenu($departments_db);
+    // dd($departments);
     return view('departments', compact('departments'));
   }
-
+  /*
+  * Формирование пунктов меню используя расширение
+  * https://github.com/lavary/laravel-menu#installation
+  */
+  public function buildMenu ($departments)
+  {
+    // dd(LavMenu::class);
+    // dd($departments);
+    $mBuilder = LavMenu::make('Departments', function($m) use ($departments){
+      foreach($departments as $department){
+        /*
+         * Для родительского пункта меню формируем элемент меню в корне
+         * и с помощью метода id присваиваем каждому пункту идентификатор
+         */
+        if($department->department_parent_id == null){
+            $m->add($department->department_name, $department->filial_status)->id($department->id);
+        }else {
+          //иначе формируем дочерний пункт меню
+          //ищем для текущего дочернего пункта меню в объекте меню ($m)
+          //id родительского пункта (из БД)
+          if($m->find($department->department_parent_id)){
+            $m->find($department->department_parent_id)->add($department->department_name, $department->filial_status)->id($department->id);
+         }
+        }
+      }
+    });
+    return $mBuilder;
+  }
 
   /**
    * Show the form for creating a new resource.

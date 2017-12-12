@@ -15,10 +15,13 @@ class Department extends Model
    */
   protected $dates = ['deleted_at'];
   protected $fillable = [
+  	'company_id',
     'city_id',
     'department_name',
     'department_address',
     'department_phone',
     'department_parent_id',
+    'filial_status',
+    'filial_id',
   ];
 }

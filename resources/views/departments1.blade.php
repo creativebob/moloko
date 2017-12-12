@@ -46,8 +46,9 @@
 
     @if($departments)
     <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
-      @each('departments-list', $departments, 'department')
-    </ul>
+       <!--$menu->roots() - получаем только родительские элементы меню-->
+        @include('departments-list', ['departments'=>$departments->roots()])
+        </ul>
     @endif
 
 

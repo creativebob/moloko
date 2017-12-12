@@ -42,3 +42,6 @@ Route::get('/current_city/{region}/{area}/{city}', 'CityController@current_city'
 
 // Контроллеры для отображения должностей и филиалов
 Route::resource('/departments', 'DepartmentController');
+
+// Текущий добавленный/удаленный отдел
+Route::get('/current_department/{parent}/{department}/{position}', 'DepartmentController@current_department')->name('current_department');
