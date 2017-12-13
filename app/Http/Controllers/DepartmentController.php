@@ -18,8 +18,35 @@ class DepartmentController extends Controller
    */
   public function index()
   {
-    $departments = Department::all();
+    $departments_db = Department::all()->toArray();
+
+    // dd($departments_db);
+    //Создаем масив где ключ массива является ID меню
+    $departments_id = [];
+    foreach ($departments_db as $department) {
+      $departments_id[$department['id']] = $department;
+    };
+
+    // dd($departments_id);
+
+    //Функция построения дерева из массива от Tommy Lacroix
+    $departments = [];
+    foreach ($departments_id as $id => &$node) {   
+      //Если нет вложений
+      if (!$node['department_parent_id']){
+        $departments[$id] = &$node;
+
+        }else{ 
+      //Если есть потомки то перебераем массив
+            // $departments_id[$node['parent']]['childs'][$id] = &$node;
+          // $departments_id[$node['parent']]['childs'][$department] = &$node;
+
+          $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
+      }
+    };
     return view('departments', compact('departments'));
+    // dd($departments);
+
   }
 
 

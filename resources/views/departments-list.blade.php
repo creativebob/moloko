@@ -1,23 +1,7 @@
 
-<li class="first-item parent" id="departments-{{ $department->id }}" data-name="{{ $department->department_name }}">
-  @if (count($project['children']) > 0)
-      <ul>
-      @foreach($project['children'] as $project)
-          @include('partials.project', $project)
-      @endforeach
-      </ul>
-  @endif
-
-
-
-<!--Шаблон для вывода меню с использованием рекурсии-->
-@foreach($departments as $department)
-
-@if($department->url() == 'http://crmsystem/1')
-  <!--Добавляем класс active для активного пункта меню-->
-  <li class="first-item parent" id="departments-{{ $department->id }}" data-name="{{ $department->title }}">
-    <!-- метод url() получает ссылку на пункт меню (указана вторым параметром
-    при создании объекта LavMenu)-->
+@if($department['filial_status'] == 1)
+  <!-- Если родитель -->
+  <li class="first-item parent" id="departments-{{ $department['id'] }}" data-name="{{ $department['department_name'] }}">
     <ul class="icon-list">
       <li><div class="icon-list-add sprite" data-open="department-add"></div></li>
       <li><div class="icon-list-edit sprite" data-open="filial-edit"></div></li>
@@ -26,33 +10,48 @@
     <a data-list="" class="first-link">
       <div class="list-title">
         <div class="icon-open sprite"></div>
-        <span class="first-item-name">{{ $department->title }}</span>
-        <span class="number"></span>
+        <span class="first-item-name">{{ $department['department_name'] }}</span>
+        <span class="number">
+        @if (isset($department['children']))
+          {{ count($department['children']) }}
+        @else
+          0
+        @endif
+        </span>
       </div>
     </a>
 @else
-  <li class="medium-item parent" id="departments-{{ $department->id }}" data-name="{{ $department->title }}">
+  <!-- Если вложенный -->
+  <li class="medium-item parent" id="departments-{{ $department['id'] }}" data-name="{{ $department['department_name'] }}">
     <a class="medium-link">
       <div class="list-title">
         <div class="icon-open sprite"></div>
-        <span>{{ $department->title }}</span>
-        <span class="number"></span>
+        <span>{{ $department['department_name'] }}</span>
+        <span class="number">
+        @if (isset($department['children']))
+          {{ count($department['children']) }}
+        @else
+          0
+        @endif</span>
       </div>
     </a>
     <ul class="icon-list"><li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
       <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
     </ul>
  @endif
-  <!--Формируем дочерние пункты меню
-  метод haschildren() проверяет наличие дочерних пунктов меню-->
-  @if($department->hasChildren())
+
+ @if (isset($department['children']))
     <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
-      <!--метод children() возвращает дочерние пункты меню для текущего пункта-->
-      @include(env('THEME').'.departments-list', ['departments'=>$department->children()])
+    @foreach($department['children'] as $department)
+      @include('departments-list', $department)
+    @endforeach
     </ul>
   @endif
-  </li>
-@endforeach
+
+</li>
+
+
+
 
  
 
