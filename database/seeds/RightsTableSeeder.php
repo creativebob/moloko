@@ -17,6 +17,12 @@ class RightsTableSeeder extends Seeder
         	['right_name' => 'Просмотр пользователя', 'right_action' => 'view-user', 'category_right_id' => 1], 
         	['right_name' => 'Удаление пользователя', 'right_action' => 'delete-user', 'category_right_id' => 1], 	
             ['right_name' => 'Просмотр списка пользователей', 'right_action' => 'index-user', 'category_right_id' => 1], 
+
+            ['right_name' => 'Добавление компании', 'right_action' => 'create-company', 'category_right_id' => 1], 
+            ['right_name' => 'Редактирование компании', 'right_action' => 'update-company', 'category_right_id' => 1], 
+            ['right_name' => 'Просмотр компании', 'right_action' => 'view-company', 'category_right_id' => 1], 
+            ['right_name' => 'Удаление компании', 'right_action' => 'delete-company', 'category_right_id' => 1],   
+            ['right_name' => 'Просмотр списка компаний', 'right_action' => 'index-company', 'category_right_id' => 1], 
         ]);
     }
 }

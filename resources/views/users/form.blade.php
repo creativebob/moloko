@@ -192,7 +192,7 @@
         <div class="grid-x grid-padding-x"> 
           <div class="small-12 cell">
             <label>Статус пользователя
-              {{ Form::select('contragent_status', [ '1' => 'Сотрудник', '2' => 'Клиент']) }}
+              {{ Form::select('user_type', [ '1' => 'Сотрудник', '2' => 'Клиент']) }}
             </label>
           </div>
         </div>
