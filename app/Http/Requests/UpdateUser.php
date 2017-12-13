@@ -58,7 +58,7 @@ class UpdateUser extends FormRequest
             'passport_date' => 'date|after:01.01.1970|before:today|nullable', 
             'passport_address' => 'string|max:255|nullable', 
 
-            'contragent_status' => 'required', 
+            'user_type' => 'required', 
 
             // 'lead_id' => 'required', 
             // 'employee_id' => 'required', 

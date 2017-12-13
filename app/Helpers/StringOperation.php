@@ -5,9 +5,9 @@
         return $result;
     };
 
-    function decor_contragent_status($contragent_status) {
-        if($contragent_status == 1){$result = "Сотрудник";} 
-        elseif($contragent_status == 2){$result = "Клиент";} 
+    function decor_user_type($user_type) {
+        if($user_type == 1){$result = "Сотрудник";} 
+        elseif($user_type == 2){$result = "Клиент";} 
         else {$result = "Статус не определен";};
         return $result;
     };

@@ -33,7 +33,7 @@
             <div class="grid-x grid-padding-x"> 
               <div class="small-6 cell">
                 <label>Статус пользователя
-                  {{ Form::select('contragent_status', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
+                  {{ Form::select('user_type', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
                 </label>
               </div>
               <div class="small-6 cell">
@@ -88,7 +88,7 @@
 <!--           <td class="td-first-name">{{ $user->first_name }}</td> -->
           <td class="td-phone">{{ $user->phone }}</td>
           <td class="td-email">{{ $user->email }}</td>
-          <td class="td-contragent-status">{{ decor_contragent_status($user->contragent_status) }}</td>
+          <td class="td-contragent-status">{{ decor_user_type($user->user_type) }}</td>
           <td class="td-access-block">{{ decor_access_block($user->access_block) }}</td>
           <td class="td-group_action_id">{{ $user->group_action->access_group_name }}</td>
           <td class="td-group_locality_id">{{ $user->group_locality->access_group_name }}</td>

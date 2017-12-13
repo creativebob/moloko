@@ -31,7 +31,7 @@ class CreateCompaniesTable extends Migration
             $table->string('bank', 60)->nullable()->comment('Название банка');
 
             $table->integer('user_id')->nullable()->unsigned()->comment('Директор компании');
-            $table->foreign('user_id')->references('id')->on('users');
+            // $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
 

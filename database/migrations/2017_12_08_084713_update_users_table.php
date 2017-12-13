@@ -43,19 +43,19 @@ class UpdateUsersTable extends Migration
             $table->string('passport_released', 60)->nullable()->comment('Кем выдан паспорт')->after('passport_date');
             $table->string('passport_address', 60)->nullable()->comment('Адрес прописки')->after('passport_released');
 
-            $table->integer('contragent_status')->nullable()->unsigned()->comment('Сотрудник 1 или Клиент 0')->after('passport_address');
+            $table->integer('user_type')->nullable()->unsigned()->comment('Сотрудник 1 или Клиент 0')->after('passport_address');
 
-            $table->integer('lead_id')->nullable()->unsigned()->comment('Id лида')->after('contragent_status');
+            $table->integer('lead_id')->nullable()->unsigned()->comment('Id лида')->after('user_type');
             // $table->foreign('lead_id')->references('lead_id')->on('leads');
             $table->integer('employee_id')->nullable()->unsigned()->comment('Id сотрудника')->after('lead_id');
             // $table->foreign('employee_id')->references('employee_id')->on('employees');
             $table->integer('access_block')->nullable()->unsigned()->comment('Доступ открыт 0 или Блокирован 1')->default('0')->after('employee_id');
 
             $table->integer('group_action_id')->nullable()->unsigned()->comment('Группа доступа по функционалу')->after('access_block');
-
             $table->integer('group_locality_id')->nullable()->unsigned()->comment('Группа доступа по филиалу')->after('group_action_id');
+            // $table->integer('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('group_locality_id');
 
-
+            $table->integer('god')->nullable()->unsigned()->comment('Божественное право')->default('0')->after('group_locality_id');
             $table->softDeletes();
 
         });
@@ -64,7 +64,7 @@ class UpdateUsersTable extends Migration
 
             $table->foreign('group_action_id')->references('id')->on('access_groups');
             $table->foreign('group_locality_id')->references('id')->on('access_groups');
-
+            // $table->foreign('company_id')->references('id')->on('companies');
         });
 
     }
@@ -100,13 +100,14 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('passport_released');
             $table->dropColumn('passport_address');
 
-            $table->dropColumn('contragent_status');
+            $table->dropColumn('user_type');
             $table->dropColumn('lead_id');
             $table->dropColumn('employee_id');
             $table->dropColumn('access_block');
 
             $table->dropForeign('users_group_action_id_foreign'); 
             $table->dropForeign('users_group_locality_id_foreign');
+            // $table->dropForeign('users_company_id_foreign');
 
             // $table->dropColumn('group_action_id');
             // $table->dropColumn('group_locality_id');  
