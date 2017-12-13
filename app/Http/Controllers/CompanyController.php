@@ -9,7 +9,7 @@ use App\Company;
 // Модели которые отвечают за работу с правами + политики
 use App\Access;
 use App\Access_group;
-use App\Policies\UserPolicy;
+use App\Policies\CompanyPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,6 +45,8 @@ class CompanyController extends Controller
     {
         $this->authorize('create', Company::class);
 
+        $company = new Company;
+        return view('companies.create', compact('company'));   
 
     }
 
@@ -57,6 +59,27 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Company::class);
+
+        $company = new Company;
+        $company->company_name = $request->company_name;
+        $company->company_phone = cleanPhone($request->company_phone);
+
+        if(($request->company_extra_phone != NULL)&&($request->company_extra_phone != "")){
+            $company->company_extra_phone = cleanPhone($request->company_extra_phone);
+        } else {$company->company_extra_phone = NULL;};
+
+        $company->city_id = $request->city_id;
+        $company->company_address = $request->company_address;
+
+        $company->company_inn = $request->inn;
+        $company->kpp = $request->kpp;
+        $company->account_settlement = $request->account_settlement;
+        $company->account_correspondent = $request->account_correspondent;
+
+        $company->save();
+
+        return redirect('companies');
+
     }
 
     /**
@@ -70,7 +93,7 @@ class CompanyController extends Controller
         $company = Company::findOrFail($id);
         $this->authorize('view', $company);
 
-        return view('companies.show', compact('companies'));
+        return view('companies.show', compact('company'));
     }
 
     /**
@@ -96,8 +119,8 @@ class CompanyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $companies = Company::findOrFail($id);
-        $this->authorize('update', $companies);
+        $company = Company::findOrFail($id);
+        $this->authorize('update', $company);
 
         $company->company_name = $request->company_name;
         $company->company_phone = cleanPhone($request->company_phone);

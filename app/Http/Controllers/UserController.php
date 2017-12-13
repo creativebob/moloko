@@ -75,8 +75,6 @@ class UserController extends Controller
     	$user->group_locality_id = $request->group_locality_id;
         $user->save();
 
-        $user_id = $user->id;
-
         // Создаем компанию под пользователя
         // Если стоит отметка о том, что нужно создать компанию.
         if($user->orgform_status == '1'){
@@ -101,6 +99,7 @@ class UserController extends Controller
             };
 
         } else{
+
         // Когда отметки нет
          
         };
@@ -114,12 +113,12 @@ class UserController extends Controller
     {
         $this->authorize('create', User::class);
 
-    	$users = new User;
+    	$user = new User;
         $access_action_list = Access_group::where('category_right_id', '1')->pluck('access_group_name', 'id');
         $access_locality_list = Access_group::where('category_right_id', '2')->pluck('access_group_name', 'id');
         $access_groups = new Access_group;
 
-    	return view('users.create', compact('users', 'access_groups', 'access_action_list', 'access_locality_list'));
+    	return view('users.create', compact('user', 'access_groups', 'access_action_list', 'access_locality_list'));
     }
 
     public function update(UpdateUser $request, $id)
@@ -150,12 +149,14 @@ class UserController extends Controller
     	$user->address = $request->address;
 
     	$user->orgform_status = $request->orgform_status;
-    	// $user->company_name = $request->company_name;
+
     	$user->user_inn = $request->inn;
-    	// $user->kpp = $request->kpp;
-     // 	$user->account_settlement = $request->account_settlement;
-     // 	$user->account_correspondent = $request->account_correspondent;
-     //  	$user->bank = $request->bank;
+
+    // $user->company_name = $request->company_name;
+    // $user->kpp = $request->kpp;
+    // $user->account_settlement = $request->account_settlement;
+    // $user->account_correspondent = $request->account_correspondent;
+    // $user->bank = $request->bank;
 
     	$user->passport_address = $request->passport_address;
     	$user->passport_number = $request->passport_number;
@@ -186,8 +187,7 @@ class UserController extends Controller
         $access_locality_list = Access_group::where('category_right_id', '2')->pluck('access_group_name', 'id');
         $access_groups = new Access_group;
 
-    	$users = User::findOrFail($id);
-    	return view('users.show', compact('users', 'access_groups', 'access_action_list', 'access_locality_list'));
+    	return view('users.show', compact('user', 'access_groups', 'access_action_list', 'access_locality_list'));
     }
 
     public function edit($id)
@@ -200,9 +200,8 @@ class UserController extends Controller
         $access_locality_list = Access_group::where('category_right_id', '2')->pluck('access_group_name', 'id');
         $access_groups = new Access_group;
 
-        $users = User::findOrFail($id);
          Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
-         return view('users.edit', compact('users', 'access_groups', 'access_action_list', 'access_locality_list'));
+         return view('users.edit', compact('user', 'access_groups', 'access_action_list', 'access_locality_list'));
     }
 
 

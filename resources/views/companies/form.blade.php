@@ -38,7 +38,7 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Название компании
-              {{ Form::text('company_name', $companies->company_name, ['class'=>'company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+              {{ Form::text('company_name', $company->company_name, ['class'=>'company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
@@ -47,19 +47,19 @@
 
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                {{ Form::text('company_phone', $companies->company_phone, ['class'=>'phone-field company-phone', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off', 'required']) }}
+                {{ Form::text('company_phone', $company->company_phone, ['class'=>'phone-field company-phone', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off', 'required']) }}
                 <span class="form-error">Введите все символы телефонного номера!</span>
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                {{ Form::text('company_extra_phone', $companies->company_extra_phone, ['class'=>'phone-field company-extra-phone', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off']) }}
+                {{ Form::text('company_extra_phone', $company->company_extra_phone, ['class'=>'phone-field company-extra-phone', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off']) }}
                 <span class="form-error">Введите все символы телефонного номера!</span>
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Почта
-                {{ Form::text('email', $companies->company_email, ['class'=>'email-field company-email-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+                {{ Form::text('email', $company->company_email, ['class'=>'email-field company-email-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
                 <span class="form-error">Укажите почту</span>
               </label>
               <label>Пустой слот
@@ -73,7 +73,7 @@
                 <div class="sprite-input icon-password"></div>
               </label>
               <label>Адрес
-              {{ Form::text('company_address', $companies->company_address, ['class'=>'company-address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+              {{ Form::text('company_address', $company->company_address, ['class'=>'company-address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
               </label>
             </div>
 
@@ -81,7 +81,7 @@
 
           <div class="grid-x grid-padding-x">
             <div class="small-12 cell checkbox">
-              {{ Form::checkbox('orgform_status', 1, $companies->orgform_status==1, ['id'=>'orgform-status-checkbox']) }}
+              {{ Form::checkbox('orgform_status', 1, $company->orgform_status==1, ['id'=>'orgform-status-checkbox']) }}
               <label for="orgform-status-checkbox"><span>Директор компании (Юридическое лицо)</span></label>
             </div>
           </div>
@@ -93,32 +93,32 @@
             <div class="grid-x grid-padding-x"> 
               <div class="small-12 medium-6 cell">
                 <label>ИНН
-                {{ Form::text('inn', $companies->company_inn, ['class'=>'company_inn-field', 'maxlength'=>'10', 'pattern'=>'[0-9]{10}', 'autocomplete'=>'off']) }}
+                {{ Form::text('inn', $company->company_inn, ['class'=>'company_inn-field', 'maxlength'=>'10', 'pattern'=>'[0-9]{10}', 'autocomplete'=>'off']) }}
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
                 <label>КПП
-                {{ Form::text('kpp', $companies->kpp, ['class'=>'kpp-field', 'maxlength'=>'9', 'pattern'=>'[0-9]{9}', 'autocomplete'=>'off']) }}
+                {{ Form::text('kpp', $company->kpp, ['class'=>'kpp-field', 'maxlength'=>'9', 'pattern'=>'[0-9]{9}', 'autocomplete'=>'off']) }}
                 </label>
               </div>
               <div class="small-12 medium-12 cell">
                 <label>Банк
-                {{ Form::text('bank', $companies->bank, ['class'=>'bank-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+                {{ Form::text('bank', $company->bank, ['class'=>'bank-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
                 <label>Р/С
-                {{ Form::text('account_settlement', $companies->account_settlement, ['class'=>'account-settlement-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
+                {{ Form::text('account_settlement', $company->account_settlement, ['class'=>'account-settlement-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
                 <label>К/С
-                {{ Form::text('account_correspondent', $companies->account_correspondent, ['class'=>'account-correspondent-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
+                {{ Form::text('account_correspondent', $company->account_correspondent, ['class'=>'account-correspondent-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
                 <label>ИНН
-                {{ Form::text('user_id', $companies->user_id, ['class'=>'company_inn-field', 'maxlength'=>'10', 'autocomplete'=>'off']) }}
+                {{ Form::text('user_id', $company->user_id, ['class'=>'company_inn-field', 'maxlength'=>'10', 'autocomplete'=>'off']) }}
                 </label>
               </div>
             </div>

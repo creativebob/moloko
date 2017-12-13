@@ -15,7 +15,7 @@
 
 @section('content')
 
-  {{ Form::model($users, ['route' => ['users.update', $users->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($user, ['route' => ['users.update', $user->id], 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
     @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param' => 'readonly'])
   {{ Form::close() }}

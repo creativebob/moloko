@@ -38,13 +38,13 @@
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Фамилия
-              {{ Form::text('first_name', $users->first_name, ['class'=>'first-name-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+              {{ Form::text('first_name', $user->first_name, ['class'=>'first-name-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
               </label>
               <label>Имя
-              {{ Form::text('second_name', $users->second_name, ['class'=>'second-name-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+              {{ Form::text('second_name', $user->second_name, ['class'=>'second-name-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
               </label>
               <label>Отчество
-              {{ Form::text('patronymic', $users->patronymic, ['class'=>'patronymic-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+              {{ Form::text('patronymic', $user->patronymic, ['class'=>'patronymic-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
@@ -53,7 +53,7 @@
 <!--           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Короткое имя
-                {{ Form::text('nickname', $users->nickname, ['class'=>'nickname-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'required', $param]) }}
+                {{ Form::text('nickname', $user->nickname, ['class'=>'nickname-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'required', $param]) }}
               </label>
             </div>
           </div> -->
@@ -61,13 +61,13 @@
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                {{ Form::text('phone', $users->phone, ['class'=>'phone-field', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off', 'required']) }}
+                {{ Form::text('phone', $user->phone, ['class'=>'phone-field', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off', 'required']) }}
                 <span class="form-error">Введите все символы телефонного номера!</span>
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                {{ Form::text('extra_phone', $users->extra_phone, ['class'=>'phone-field', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off']) }}
+                {{ Form::text('extra_phone', $user->extra_phone, ['class'=>'phone-field', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off']) }}
                 <span class="form-error">Введите все символы телефонного номера!</span>
               </label>
             </div>
@@ -75,11 +75,11 @@
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
               <label>Почта
-                {{ Form::text('email', $users->email, ['class'=>'email-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+                {{ Form::text('email', $user->email, ['class'=>'email-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
                 <span class="form-error">Укажите почту</span>
               </label>
               <label>Телеграм ID
-                {{ Form::text('telegram_id', $users->telegram_id, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
+                {{ Form::text('telegram_id', $user->telegram_id, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
                 <span class="form-error">Укажите номер Telegram</span>
               </label>
               
@@ -90,7 +90,7 @@
                 <div class="sprite-input icon-password"></div>
               </label>
               <label>Адрес
-              {{ Form::text('address', $users->address, ['class'=>'address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+              {{ Form::text('address', $user->address, ['class'=>'address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
@@ -100,7 +100,7 @@
           <div class="grid-x grid-padding-x">
             <div class="small-5 medium-4 cell">
               <label>Дата рождения
-              {{ Form::text('birthday', $users->birthday, ['class'=>'birthday-field date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+              {{ Form::text('birthday', $user->birthday, ['class'=>'birthday-field date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
               </label>
             </div>
             <div class="small-6 small-offset-1 medium-6 medium-offset-2 cell radiobutton">Пол<br>
@@ -113,26 +113,26 @@
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Паспорт (серия, номер)
-              {{ Form::text('passport_number', $users->passport_number, ['class'=>'passport-number-field', 'pattern'=>'[0-9]{2} [0-9]{2} №[0-9]{6}', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+              {{ Form::text('passport_number', $user->passport_number, ['class'=>'passport-number-field', 'pattern'=>'[0-9]{2} [0-9]{2} №[0-9]{6}', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
               </label>
             </div>
             <div class="small-5 medium-6 cell">
               <label>Когда выдан
-              {{ Form::text('passport_date', $users->passport_date, ['class'=>'passport-date-field date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+              {{ Form::text('passport_date', $user->passport_date, ['class'=>'passport-date-field date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-12 cell">
               <label>Кем выдан
-              {{ Form::text('passport_released', $users->passport_released, ['class'=>'passport-released-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+              {{ Form::text('passport_released', $user->passport_released, ['class'=>'passport-released-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Адрес прописки
-              {{ Form::text('passport_address', $users->passport_address, ['class'=>'passport-address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+              {{ Form::text('passport_address', $user->passport_address, ['class'=>'passport-address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
@@ -141,45 +141,45 @@
         <div class="tabs-panel" id="content-panel-3">
           <div class="grid-x grid-padding-x">
             <div class="small-12 cell checkbox">
-              {{ Form::checkbox('orgform_status', 1, $users->orgform_status==1, ['id'=>'orgform-status-checkbox']) }}
+              {{ Form::checkbox('orgform_status', 1, $user->orgform_status==1, ['id'=>'orgform-status-checkbox']) }}
               <label for="orgform-status-checkbox"><span>Директор компании (Юридическое лицо)</span></label>
             </div>
           </div>
           <div class="grid-x grid-padding-x tabs-margin-top"> 
             <div class="small-12 medium-6 cell">
               <label>Название компании
-              {{ Form::text('company_name', $users->company_name, ['class'=>'company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+              {{ Form::text('company_name', $user->company_name, ['class'=>'company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>ИНН
-              {{ Form::text('inn', $users->inn, ['class'=>'inn-field', 'maxlength'=>'12', 'pattern'=>'[0-9]{12}', 'autocomplete'=>'off']) }}
+              {{ Form::text('inn', $user->inn, ['class'=>'inn-field', 'maxlength'=>'12', 'pattern'=>'[0-9]{12}', 'autocomplete'=>'off']) }}
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>КПП
-              {{ Form::text('kpp', $users->kpp, ['class'=>'kpp-field', 'maxlength'=>'9', 'pattern'=>'[0-9]{9}', 'autocomplete'=>'off']) }}
+              {{ Form::text('kpp', $user->kpp, ['class'=>'kpp-field', 'maxlength'=>'9', 'pattern'=>'[0-9]{9}', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-12 cell">
               <label>Банк
-              {{ Form::text('bank', $users->bank, ['class'=>'bank-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+              {{ Form::text('bank', $user->bank, ['class'=>'bank-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Р/С
-              {{ Form::text('account_settlement', $users->account_settlement, ['class'=>'account-settlement-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
+              {{ Form::text('account_settlement', $user->account_settlement, ['class'=>'account-settlement-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>К/С
-              {{ Form::text('account_correspondent', $users->account_correspondent, ['class'=>'account-correspondent-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
+              {{ Form::text('account_correspondent', $user->account_correspondent, ['class'=>'account-correspondent-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
@@ -199,7 +199,7 @@
         <div class="grid-x grid-padding-x"> 
           <div class="small-12 cell tabs-margin-top">
             <label>Логин
-              {{ Form::text('login', $users->login, ['class'=>'login-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'required']) }}
+              {{ Form::text('login', $user->login, ['class'=>'login-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'required']) }}
               <span class="form-error">Обязательно нужно логиниться!</span>
             </label>
             <label>Пароль
@@ -215,16 +215,16 @@
         <div class="grid-x grid-padding-x">
           <div class="small-12 cell tabs-margin-top">
             <label>Уровень доступа
-              {{ Form::select('group_action_id', $access_action_list, $users->group_action_id) }}
+              {{ Form::select('group_action_id', $access_action_list, $user->group_action_id) }}
             </label>
           </div>
           <div class="small-12 cell">
             <label>Область доступа
-              {{ Form::select('group_locality_id', $access_locality_list, $users->group_locality_id) }}
+              {{ Form::select('group_locality_id', $access_locality_list, $user->group_locality_id) }}
             </label>
           </div>
           <div class="small-12 cell checkbox">
-              {{ Form::checkbox('access_block', 1, $users->access_block == 1, ['id'=>'access-block-checkbox']) }}
+              {{ Form::checkbox('access_block', 1, $user->access_block == 1, ['id'=>'access-block-checkbox']) }}
             <label for="access-block-checkbox"><span>Блокировать доступ</span></label>
           </div>
         </div>
