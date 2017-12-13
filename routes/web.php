@@ -23,7 +23,9 @@ Route::resource('/companies', 'CompanyController')->middleware('auth');
 
 Route::get('/page', 'PageController@create');
 
-// Контроллер для отображения населенных пунктов и областей
+
+
+// Контроллеры для отображения населенных пунктов и областей
 Route::resources([
   '/cities' => 'CityController',
   '/areas' => 'AreaController',
@@ -34,6 +36,13 @@ Route::resources([
 Route::post('/city', 'CityController@get_vk_city');
 Route::post('/region', 'RegionController@get_vk_region');
 
+// Текущий добавленный/удаленный город
 Route::get('/current_city/{region}/{area}/{city}', 'CityController@current_city')->name('current_city');
-
 // Конец блока с населенными пунктами
+
+
+// Контроллеры для отображения должностей и филиалов
+Route::resource('/departments', 'DepartmentController');
+
+// Текущий добавленный/удаленный отдел
+Route::get('/current_department/{parent}/{department}/{position}', 'DepartmentController@current_department')->name('current_department');

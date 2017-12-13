@@ -128,8 +128,7 @@
       <h5>ДОБАВЛЕНИЕ Области</h5>
     </div>
   </div>
-  <form id="form-region-add">
-    {{ csrf_field() }}
+  {{ Form::open(['id' => 'form-region-add']) }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 medium-4 cell">
         <label class="input-icon">Название области
@@ -153,7 +152,7 @@
         <button data-close class="button modal-button" id="submit-region-add" type="submit" disabled>Сохранить</button>
       </div>
     </div>
-  </form>
+  {{ Form::close() }}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 {{-- Конец модалки добавления области --}}
@@ -188,7 +187,7 @@
         <button class="button modal-button" id="submit-region-add" type="submit" disabled>Сохранить</button>
       </div>
     </div>
-  </form>
+  {!! Form::close() !!}
   <div data-close class="icon-close-modal sprite close-modal"></div> 
 </div>
 {{-- Конец модалки редактирования области --}}
@@ -200,7 +199,7 @@
       <h5>ДОБАВЛЕНИЕ НАСЕЛЕННОГО ПУНКТА</h5>
     </div>
   </div>
-  {!! Form::open(['url' => '/cities', 'id' => 'form-city-add']) !!}
+  {{ Form::open(['url' => '/cities', 'id' => 'form-city-add']) }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 medium-4 cell">
         <label class="input-icon">Название населенного пункта
@@ -235,7 +234,7 @@
         <button data-close class="button modal-button" id="submit-city-add" type="submit" disabled>Сохранить</button>
       </div>
     </div>
-  {!! Form::close() !!}
+  {{ Form::close() }}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 {{-- Конец модалки добавления города и района --}}
@@ -302,7 +301,7 @@
 <div class="reveal" id="item-delete" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>удаление области</h5>
+      <h5>удаление</h5>
     </div>
   </div>
   <div class="grid-x align-center modal-content ">
@@ -313,10 +312,10 @@
 
   <div class="grid-x align-center grid-padding-x">
     <div class="small-6 medium-4 cell">
-      {!! Form::open(['id' => 'form-item-del']) !!}
+      {{ Form::open(['id' => 'form-item-del']) }}
       {{ method_field('DELETE') }}
         <button data-close class="button modal-button delete-button" type="submit">Удалить</button>
-      {!! Form::close() !!}
+      {{ Form::close() }}
     </div>
     <div class="small-6 medium-4 cell">
       <button data-close class="button modal-button" id="save-button" type="submit">Отменить</button>

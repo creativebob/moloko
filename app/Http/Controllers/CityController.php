@@ -19,46 +19,12 @@ class CityController extends Controller
    */
   public function index()
   {
-      
-      // dd($data);
-
-    // $data = Region::select('id', 'region_name')
-    //         ->join('cities', 'areas.city_id', '=', 'cities.id')
-    //         ->join('cities',)
-    //         ->get();
-    // $regions = Region::withCount('areas', 'cities')->get();
-    // $areas = Area::withCount('cities')->get();
-    // $cities = City::all();
 
     $regions = Region::withCount('areas', 'cities')->get();
     $areas = Area::withCount('cities')->orderBy('area_name')->get();
     $cities = City::orderBy('city_name')->get();
 
-
-
-    return view('cities', ['regions' => $regions, 'areas' => $areas, 'cities' => $cities]); 
-
-
-    // $data = City::with('area.region')->get();
-    // dd($data);
-    // return view('cities', compact('data'));  
-    // $deleted_regions = Region::onlyTrashed()
-    //             ->count();
-    // return view('cities', compact('data'));    
-
-    // foreach ($dates as $data) {
-    //  echo "Id: ".$data->city_id.", название области: ".$data->city_name."\r\nId района: ".$data->area_id.", название района: ".$data->area_name."\r\n";
-    // }
-        
-        // $cities = DB::table('cities')->get();
-
-        // foreach ($cities as $city)
-        // {
-        //     var_dump($city->city_name);
-        //     var_dump($city->area_name);
-        // }
-      // return view('cities', compact('dates'));
-                // echo $dates[1]->area_id;
+    return view('cities', compact('regions', 'areas', 'cities')); 
   }
 
   /**
