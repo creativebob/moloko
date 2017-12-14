@@ -5,9 +5,13 @@ namespace App\Providers;
 use App\User;
 use App\Page;
 use App\Access;
+use App\Company;
+
 use App\Policies\UserPolicy;
 use App\Policies\PagePolicy;
 use App\Policies\AccessPolicy;
+use App\Policies\CompanyPolicy;
+
 
 use Illuminate\Support\Facades\Gate as GateContract;
 // use Illuminate\Support\Facades\Gate;
@@ -25,6 +29,7 @@ class AuthServiceProvider extends ServiceProvider
         // Page::class => PagePolicy::class,
         User::class => UserPolicy::class,
         Access::class => AccessPolicy::class,
+        Company::class => CompanyPolicy::class,
     ];
 
     /**

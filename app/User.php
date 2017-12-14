@@ -31,12 +31,12 @@ class User extends Authenticatable
     // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
 
     // Фильтрация по статусу пользователя: клиент или сотрудник
-    public function scopeСontragent($query, $contragent_status)
+    public function scopeСontragent($query, $user_type)
     {
-        if($contragent_status == "all"){
+        if($user_type == "all"){
             return $query;
             } else {
-            return $query->where('contragent_status', '=', $contragent_status); 
+            return $query->where('user_type', '=', $user_type); 
         }
     }
 
@@ -180,7 +180,7 @@ class User extends Authenticatable
         'passport_date', 
         'passport_address', 
 
-        'contragent_status', 
+        'user_type', 
         'lead_id', 
         'employee_id', 
         'access_block', 

@@ -81,7 +81,7 @@
           <td class="td-company-name">{{ link_to_route('companies.edit', $company->company_name, [$company->id]) }} </td>
           <td class="td-company-address">{{ $company->company_address }} </td>
           <td class="td-company-phone">{{ decorPhone($company->company_phone) }} </td>
-          <td class="td-user_id">{{ $company->user_info->first_name . " " . $company->user_info->second_name }} </td>
+          <td class="td-user_id">{{ $company->user_info->first_name or ' ... ' }} {{ $company->user_info->second_name or ' ... ' }} </td>
 
           <td class="td-delete"><a class="icon-delete sprite"></a></td>       
         </tr>
