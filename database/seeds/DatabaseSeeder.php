@@ -28,6 +28,13 @@ class DatabaseSeeder extends Seeder
             // Пользователи и компании
     		$this->call(UsersTableSeeder::class);
             $this->call(CompaniesTableSeeder::class);
+
+            // Сайты, страницы
+            $this->call(SitesTableSeeder::class);
+            $this->call(PagesTableSeeder::class);
+
+            // Должности
+            $this->call(PositionsTableSeeder::class);
             
     }
 }

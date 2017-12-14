@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Department;
 use App\City;
+use App\Position;
 use Illuminate\Http\Request;
 // use Department as LavMenu;
 
@@ -19,34 +20,26 @@ class DepartmentController extends Controller
   public function index()
   {
     $departments_db = Department::all()->toArray();
-
-    // dd($departments_db);
     //Создаем масив где ключ массива является ID меню
     $departments_id = [];
     foreach ($departments_db as $department) {
       $departments_id[$department['id']] = $department;
     };
-
-    // dd($departments_id);
-
     //Функция построения дерева из массива от Tommy Lacroix
     $departments = [];
     foreach ($departments_id as $id => &$node) {   
       //Если нет вложений
       if (!$node['department_parent_id']){
         $departments[$id] = &$node;
-
-        }else{ 
+      } else { 
       //Если есть потомки то перебераем массив
-            // $departments_id[$node['parent']]['childs'][$id] = &$node;
-          // $departments_id[$node['parent']]['childs'][$department] = &$node;
-
-          $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
+        $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
       }
     };
-    return view('departments', compact('departments'));
-    // dd($departments);
+    $positions = Position::all()->pluck('position_name', 'id');
+    return view('departments', compact('departments', 'positions'));
 
+    // dd($positions);
   }
 
 
@@ -135,7 +128,7 @@ class DepartmentController extends Controller
     };
     // Пишем отделы
     if (isset($request->department_database)) {
-      if ($request->department_database == 2) {
+      if ($request->department_database == 0) {
         // Проверка отдела в нашей базе данных
         $department_name = $request->department_name;
         $filial_id = $request->filial_id;
@@ -160,7 +153,7 @@ class DepartmentController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
       };
       // Если город не найден, то меняем значение на 1, пишем в базу и отдаем результат
-      if ($request->department_database == 3) {
+      if ($request->department_database == 1) {
 
         $department = new Department;
 
@@ -278,26 +271,33 @@ class DepartmentController extends Controller
   }
 
   // Получаем сторонние данные по 
-  public function current_department($parent, $department, $position)
+  public function current_department($parent, $depart, $position)
   {
-    // Получаем массив нашего меню из БД в виде массива
-    $departments = Department::all();
-    // Создаем масив где ключ массива является ID меню
-    $depart = [];
-    while($row = $departments->fetch_assoc()){
-      $depart[$row['id']] = $row;
+    $departments_db = Department::all()->toArray();
+    //Создаем масив где ключ массива является ID меню
+    $departments_id = [];
+    foreach ($departments_db as $department) {
+      $departments_id[$department['id']] = $department;
     };
-    
-    $tree = [];
-
-
+    //Функция построения дерева из массива от Tommy Lacroix
+    $departments = [];
+    foreach ($departments_id as $id => &$node) {   
+      //Если нет вложений
+      if (!$node['department_parent_id']){
+        $departments[$id] = &$node;
+      } else { 
+      //Если есть потомки то перебераем массив
+        $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
+      }
+    };
 
     $data = [
-      'parent_id' => $parent,
-      'department_id' => $department,
+      'filial_id' => $parent,
+      'department_id' => $depart,
       'position_id' => $position,
     ];
-    return view('departments', compact('depart', 'data', 'tree')); 
+    $positions = Position::all();
+    return view('departments', compact('departments','positions', 'data')); 
   }
 }
 

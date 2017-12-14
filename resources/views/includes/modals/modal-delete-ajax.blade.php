@@ -1,12 +1,12 @@
 ﻿{{-- Модалка удаления ajax --}}
-<div class="reveal" id="item-delete-ajax" data-reveal>
+<div class="reveal rev-small" id="item-delete-ajax" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>удаление</h5>
     </div>
   </div>
   <div class="grid-x align-center modal-content ">
-    <div class="small-10 medium-4 cell">
+    <div class="small-10 cell text-center">
       <p>Удаляем "<span class="title-delete"></span>", вы уверены?</p>
     </div>
   </div>

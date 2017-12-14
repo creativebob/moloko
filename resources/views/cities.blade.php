@@ -122,7 +122,7 @@
 
 @section('modals')
 {{-- Модалка добавления области --}}
-<div class="reveal" id="region-add" data-reveal>
+<div class="reveal rev-large" id="region-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>ДОБАВЛЕНИЕ Области</h5>
@@ -158,7 +158,7 @@
 {{-- Конец модалки добавления области --}}
 
 {{-- Модалка редактирования области --}}
-<div class="reveal" id="region-edit" data-reveal>
+<div class="reveal rev-large" id="region-edit" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>ДОБАВЛЕНИЕ Области</h5>
@@ -193,7 +193,7 @@
 {{-- Конец модалки редактирования области --}}
 
 {{-- Модалка добавления города и района --}}
-<div class="reveal" id="city-add" data-reveal>
+<div class="reveal rev-large" id="city-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>ДОБАВЛЕНИЕ НАСЕЛЕННОГО ПУНКТА</h5>
@@ -240,7 +240,7 @@
 {{-- Конец модалки добавления города и района --}}
 
 {{-- Модалка редактирования --}}
-<div class="reveal" id="edit" data-reveal>
+<div class="reveal rev-large" id="edit" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>РЕДАКТИРОВАНИЕ НАСЕЛЕННОГО ПУНКТА</h5>
@@ -298,14 +298,14 @@
 {{-- Конец модалки редактирования --}}
 
 {{-- Модалка удаления с refresh --}}
-<div class="reveal" id="item-delete" data-reveal>
+<div class="reveal rev-small" id="item-delete" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>удаление</h5>
     </div>
   </div>
   <div class="grid-x align-center modal-content ">
-    <div class="small-10 medium-4 cell">
+    <div class="small-10 cell text-center">
       <p>Удаляем "<span class="title-delete"></span>", вы уверены?</p>
     </div>
   </div>
@@ -333,39 +333,7 @@
 @section('scripts')
 <script type="text/javascript">
 $(function() {
-  // Присваиваем при клике на первый элемент списка активный класс
-  $(document).on('click', '.first-link', function() {
-    if ($(this).parent('.first-item').hasClass('first-active')) {
-      $(this).parent('.first-item').removeClass('first-active');
-      $('.medium-active').removeClass('medium-active');
-    } else {
-      $('.content-list .first-active').removeClass('first-active');
-      $(this).parent('.first-item').addClass('first-active');
-      $('.medium-active').removeClass('medium-active');
-    };
-  });
-  // Отслеживаем плюсики во вложенных элементах
-  $(document).on('click', '.medium-link', function() {
-    console.log('Видим клик по среднему пункту');
-    if ($(this).hasClass('medium-active')) {
-      $(".medium-active").removeClass('medium-active');
-      console.log('Видим что имеет medium-active');
-      $(this).removeClass('medium-active');
-      $(this).closest('.parent').attr('aria-expanded', 'false');
-      var target = $(this).closest('.parent').find('.last-list');
-      $('#content-list').foundation('toggle', target);
-    } else {
-      $(".medium-active").removeClass('medium-active');
-      console.log('Видим что не имеет medium-active');
-      $(this).addClass('medium-active');
-    };
-    // Перебираем родителей и посвечиваем их
-    var parents = $(this).parents('.medium-list');
-    for (var i = 0; i < parents.length; i++) {
-      $(parents[i]).parent('li').children('a').addClass('medium-active');
-    };
-  });
-
+ 
   // Функция получения городов из вк или с фильтром по нашей базе
   function getCityVk () {  
     $('#submit-city-add').prop('disabled', true);
@@ -724,6 +692,9 @@ $(function() {
   @endif
 });
 </script>
+
+{{-- Скрипт подсветки многоуровневого меню --}}
+@include('includes.multilevel-menu-active-scripts')
 
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.modals.modal-delete-ajax-script')

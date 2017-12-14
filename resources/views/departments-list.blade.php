@@ -5,7 +5,13 @@
     <ul class="icon-list">
       <li><div class="icon-list-add sprite" data-open="department-add"></div></li>
       <li><div class="icon-list-edit sprite" data-open="filial-edit"></div></li>
-      <li><div class="icon-list-delete sprite" data-open="item-delete-ajax"></div></li>
+      <li>
+        @if (isset($department['children']))
+          
+        @else
+          <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
+        @endif
+      </li>
     </ul>
     <a data-list="" class="first-link">
       <div class="list-title">
@@ -35,8 +41,15 @@
         @endif</span>
       </div>
     </a>
-    <ul class="icon-list"><li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
-      <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
+    <ul class="icon-list">
+      <li><div class="icon-list-add sprite" data-open="department-add"></div></li>
+      <li><div class="icon-list-edit sprite" data-open="department-edit"></div></li>
+      <li>
+        @if (isset($department['children']))
+          
+        @else
+          <div class="icon-list-delete sprite" data-open="item-delete"></div>
+        @endif</li>
     </ul>
  @endif
 

@@ -15,13 +15,15 @@ class CreatePagesTable extends Migration
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('page_name')->index()->comment('Псевдоним');
-            $table->integer('site_id')->comment('Id сайта');
+            $table->string('page_name')->index()->comment('Название страницы');
+            $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта');
+            $table->foreign('site_id')->references('id')->on('sites');
             $table->string('page_title')->comment('Title для страницы');
             $table->text('page_description')->comment('Description для страницы');
             $table->string('page_alias')->index()->comment('Алиас');
-            $table->date('mydate')->comment('Тестовая дата');
+            // $table->date('mydate')->comment('Тестовая дата');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
