@@ -18,7 +18,7 @@
           {{ csrf_field() }}
           <label class="input-icon">
             <input type="text" name="login" placeholder="Логин" maxlength="25" autocomplete="off" required>
-            <div class="sprite-input icon-login"></div>
+            <div class="sprite-input-left icon-login"></div>
             <span class="form-error">Обязательно нужно логиниться!</span>
           </label>
           <label class="input-icon">

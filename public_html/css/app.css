@@ -369,7 +369,7 @@ input[type=checkbox], input[type=radio] {
 }
 /* line 425, ../sass/app.scss */
 .enter .input-icon .icon-login {
-  background: url(img/user_name.svg) no-repeat;
+  background: url(img/login.svg) no-repeat;
 }
 /* line 429, ../sass/app.scss */
 .enter .input-icon .icon-password {
