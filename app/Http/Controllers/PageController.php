@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Page;
+use App\Site;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -13,7 +16,10 @@ class PageController extends Controller
      */
     public function index()
     {
-        //
+        $page_info = Page::wherePage_alias('/pages')->whereSite_id('1')->first();
+        $menu = Page::whereSite_id('1')->get();
+        $pages = Page::paginate(30);
+        return view('pages.index', compact('pages', 'page_info', 'menu'));
     }
 
     /**
@@ -22,8 +28,11 @@ class PageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        //
+    {   
+        $menu = Page::whereSite_id('1')->get();
+        $sites = Site::get()->pluck('site_name', 'id');
+        $page = new Page;
+        return view('pages.create', compact('page', 'menu', 'sites'));  
     }
 
     /**
@@ -34,7 +43,17 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $page = new Page;
+
+      $page->page_name = $request->page_name;
+      $page->page_title = $request->page_title;
+      $page->page_description = $request->page_description;
+      $page->page_alias = $request->page_alias;
+      $page->site_id = $request->site_id;
+      
+      $page->save();
+
+      return redirect('/pages');
     }
 
     /**
@@ -45,7 +64,11 @@ class PageController extends Controller
      */
     public function show($id)
     {
-        //
+      $page_info = Page::wherePage_alias('/pages')->whereSite_id('1')->first();
+      $menu = Page::whereSite_id('1')->get();
+      // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
+      $pages = Page::whereSite_id($id)->paginate(30);
+      return view('pages.index', compact('pages', 'page_info', 'menu'));
     }
 
     /**
@@ -56,7 +79,10 @@ class PageController extends Controller
      */
     public function edit($id)
     {
-        //
+      $page = Page::findOrFail($id);
+      $sites = Site::get()->pluck('site_name', 'id');
+      $menu = Page::whereSite_id('1')->get();
+      return view('pages.edit', compact('page', 'menu', 'sites'));
     }
 
     /**
@@ -68,7 +94,17 @@ class PageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      $page = Page::findOrFail($id);
+  
+      $page->page_name = $request->page_name;
+      $page->page_title = $request->page_title;
+      $page->page_description = $request->page_description;
+      $page->page_alias = $request->page_alias;
+      $page->site_id = $request->site_id;
+      
+      $page->save();
+
+      return redirect('/pages');
     }
 
     /**
@@ -78,7 +114,15 @@ class PageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    { 
+      $page = Page::find($id);
+      $site_id = $page->site_id;
+      // Удаляем страницу с обновлением
+      $page = Page::destroy($id);
+      if ($page) {
+        return Redirect('/pages/' . $site_id);
+      } else {
+        echo 'произошла ошибка';
+      }; 
     }
 }

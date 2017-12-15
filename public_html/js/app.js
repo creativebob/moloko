@@ -183,16 +183,8 @@ function fixedThead () {
   // console.log('Видим количество th в одной строке = ' + theadTh.length);
   if (tbodyTd.length == theadTh.length) {
     for (var i = 0; i < tbodyTd.length; i++) {
-
-
     	var thWidth = oldThWidth[i];
       var tdWidth = oldTdWidth[i];
-
-
-      
-
-
-
       if (tdWidth > thWidth) {
       	console.log('Старая ширина столбца = ' + tdWidth);
       	if (oldContentWidth != 0) {
@@ -234,7 +226,7 @@ function fixedThead () {
 
    	
   } else {
-    alert('Братиш, в thead ' + theadTh.length + ' столбцов, а в tbody ' + tbodyTd.length + '! Непорядок, поправь!')
+    // alert('Братиш, в thead ' + theadTh.length + ' столбцов, а в tbody ' + tbodyTd.length + '! Непорядок, поправь!');
   };
 
   

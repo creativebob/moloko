@@ -13,7 +13,7 @@
   <div class="sticky sticky-topbar" id="head-sticky" data-sticky-on="small" data-sticky data-margin-top="2.4" data-top-anchor="head-content:top">
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
-	      <h2 class="header-content">Список компани</h2>
+	      <h2 class="header-content">Список компаний</h2>
 	      <a href="/companies/create" class="icon-add sprite"></a>
 	    </div>
 	    <div class="top-bar-right">
@@ -75,7 +75,7 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($companies))
         @foreach($companies as $company)
-        <tr id="{{ $company->id }}">
+        <tr class="parent" id="companies-{{ $company->id }}" data-name="{{ $company->company_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $company->id }}"><label class="label-check" for="check-{{ $company->id }}"></label></td>
           <td class="td-company-name">{{ link_to_route('companies.edit', $company->company_name, [$company->id]) }} </td>
@@ -83,7 +83,7 @@
           <td class="td-company-phone">{{ decorPhone($company->company_phone) }} </td>
           <td class="td-user_id">{{ $company->user_info->first_name or ' ... ' }} {{ $company->user_info->second_name or ' ... ' }} </td>
 
-          <td class="td-delete"><a class="icon-delete sprite"></a></td>       
+          <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
         </tr>
         @endforeach
       @endif
@@ -101,101 +101,15 @@
 </div>
 @endsection
 
+@section('modals')
+{{-- Модалка удаления с refresh --}}
+@include('includes.modals.modal-delete')
+@endsection
+
 @section('scripts')
-<script type="text/javascript">
+{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+@include('includes.table-scripts')
 
-$(document).ready(function () {  
-  $("#table-content").tablesorter({ 
-  // передаем аргументы для заголовков и назначаем объект 
-    headers: { 
-      // работаем со второй колонкой (подсчет идет с нуля) 
-      0: { 
-      // запрет сортировки указанием свойства 
-      sorter: false 
-      }, 
-    // работаем со третьей колонкой (подсчет идет с нуля) 
-      1: { 
-    // запрещаем, использовав свойство 
-      sorter: false 
-      },
-    },
-    sortList: [[2,0]],
-    cssHeader: "thead-header"
-  });  
-}); 
-
-$(function() {
-  // Сортировка строк таблицы
-  // Оставляем ширину у вырванного из потока элемента
-  var fixHelper = function(e, ui) {
-    ui.children().each(function() {
-      $(this).width($(this).width());
-    });
-    return ui;
-  };
-  // Включаем перетаскивание
-  $("#table-content tbody").sortable({
-      helper: fixHelper, // ширина вырванного элемента
-      handle: 'td:first' // указываем за какой элемент можно тянуть
-  }).disableSelection();
-
-  // Чекбоксы
-  console.log('Запуск функции чекбоксов');
-  var checkboxes = document.querySelectorAll('input.table-check');
-  var checkall = document.getElementById('check-all');
-  console.log('Видим общее количество чекбоксов = ' + checkboxes.length);
-
-  for(var i=0; i<checkboxes.length; i++) {
-    checkboxes[i].onclick = function() {
-      var checkedCount = document.querySelectorAll('input.table-check:checked').length;
-      console.log('Берем выделенные чекбоксы  = ' + checkedCount);
-      checkall.checked = checkedCount > 0;
-      checkall.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
-      console.log('Ставим главному статус ' + checkall.checked + ' и меняем спрайт');
-    };
-  };
-  checkall.onclick = function() {
-    for(var i=0; i<checkboxes.length; i++) {
-      checkboxes[i].checked = this.checked;
-      console.log('Видим клик по главному, ставим его положение всем = ' + this.checked);
-    };
-  };
-
-  console.log('Завершение функции чекбоксов');
-  console.log('-----');
-
-
-$(document).on('click', '.td-delete', function() {
-      var id = $(this).parent('tr').attr('id');
-      // Ajax
-      $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/companies/' + id,
-        type: "DELETE",
-        data: {'id': id},
-
-        success: function (data) {
-          var result = $.parseJSON(data);
-          if (result.status == 1) {
-            $('.tbody-width>tr#' + id).remove();
-          } else {
-            alert(reuslt.msg);
-          };
-        }
-      });
-  });
-
-});
-
-
-$(window).scroll(function () {
-  if ($('#thead-sticky').hasClass('is-stuck')) {
-    fixedThead ();
-  };
-});
-
-
-    </script>
+{{-- Скрипт модалки удаления --}}
+@include('includes.modals.modal-delete-script')
 @endsection

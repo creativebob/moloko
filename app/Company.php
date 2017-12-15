@@ -29,4 +29,25 @@ class Company extends Model
         'user_id'
 
     ];
+  /**
+  * Получаем отделы компании.
+  */
+  public function departments()
+  {
+    return $this->hasMany('App\Department');
+  }
+  /**
+  * Получаем сайты компании.
+  */
+  public function sites()
+  {
+    return $this->hasMany('App\Site');
+  }
+  /**
+  * Получаем пользователей компании.
+  */
+  public function users()
+  {
+    return $this->hasMany('App\User');
+  }
 }

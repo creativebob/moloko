@@ -41,3 +41,9 @@ Route::get('/current_department/{parent}/{department}/{position}', 'DepartmentCo
 // Контроллер свободных должностей
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
 //Конец блока филиалов, отделов и должностей
+
+// Контроллер отображения сайтов 
+Route::resource('/sites', 'SiteController')->middleware('auth');
+// Контроллер отображения страниц 
+Route::resource('/pages', 'PageController')->middleware('auth');
+//Конец блока сайтов и страниц

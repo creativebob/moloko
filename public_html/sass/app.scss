@@ -1765,6 +1765,13 @@ input[type=checkbox], input[type=radio] {
         opacity: 0;
         cursor: pointer;
       }
+
+      .icon-edit {
+        background-position: -96px -800px; 
+      }  
+      .icon-edit:hover {
+        background-position: -128px -800px; 
+      } 
       
       .icon-delete {
         background-position: 0px -512px;

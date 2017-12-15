@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 // Модели для текущей работы
 use App\User;
 use App\Company;
+use App\Page;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Access;
@@ -32,7 +33,8 @@ class CompanyController extends Controller
         $this->authorize('index', Company::class);
 
         $companies = Company::paginate(30);
-        return view('companies.index', compact('companies'), compact('access'));
+        $menu = Page::get();
+        return view('companies.index', compact('companies', 'access', 'menu'));
 
     }
 
@@ -44,10 +46,9 @@ class CompanyController extends Controller
     public function create()
     {
         $this->authorize('create', Company::class);
-
+        $menu = Page::get();
         $company = new Company;
-        return view('companies.create', compact('company'));   
-
+        return view('companies.create', compact('company', 'menu'));   
     }
 
     /**
@@ -78,7 +79,7 @@ class CompanyController extends Controller
 
         $company->save();
 
-        return redirect('companies');
+        return redirect('/companies');
 
     }
 
@@ -92,8 +93,8 @@ class CompanyController extends Controller
     {
         $company = Company::findOrFail($id);
         $this->authorize('view', $company);
-
-        return view('companies.show', compact('company'));
+        $menu = Page::get();
+        return view('companies.show', compact('company', 'menu'));
     }
 
     /**
@@ -106,8 +107,8 @@ class CompanyController extends Controller
     {
         $company = Company::findOrFail($id);
         $this->authorize('update', $company);
-
-        return view('companies.show', compact('company'));
+        $menu = Page::get();
+        return view('companies.show', compact('company', 'menu'));
     }
 
     /**
@@ -155,19 +156,13 @@ class CompanyController extends Controller
         $company = User::findOrFail($id);
         $this->authorize('delete', $company);   
 
+        // Удаляем пользователя с обновлением
         $company = Company::destroy($id);
-        if ($company){
-        $data = [
-          'status'=> 1,
-          'msg' => 'Успешно удалено'
-        ];
+        if ($company) {
+          return Redirect('/companies');
         } else {
-          $data = [
-          'status' => 0,
-          'msg' => 'Произошла ошибка'
-        ];
-        };
-        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+          echo 'произошла ошибка';
+        }; 
 
         Log::info('Удалили запись из таблица Компании. ID: ' . $id);
     }

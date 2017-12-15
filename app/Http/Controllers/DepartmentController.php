@@ -43,8 +43,9 @@ class DepartmentController extends Controller
     $tree = Department::orderBy('department_parent_id')->get()->pluck('department_name', 'id');
     $employees = Employee::get();
     $positions = Position::get();
-    $pages = Page::wherePage_alias('/departments')->first();
-    return view('departments', compact('departments', 'positions', 'positions_list', 'tree', 'employees', 'pages'));
+    $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
+    $menu = Page::get();
+    return view('departments', compact('departments', 'positions', 'positions_list', 'tree', 'employees', 'page_info', 'pages', 'menu'));
     // dd($positions);
   }
 
@@ -193,7 +194,7 @@ class DepartmentController extends Controller
         if ($department) {
           $filial_id = $request->filial_id;
           $department_id = $department->id;
-           return Redirect('current_department/'.$filial_id.'/'.$department_id.'/0');
+           return Redirect('/current_department/'.$filial_id.'/'.$department_id.'/0');
         } else {
           $error = 'ошибка';
         };
@@ -274,7 +275,7 @@ class DepartmentController extends Controller
     };
     echo json_encode($data, JSON_UNESCAPED_UNICODE);
     // $depart =  Department::find($id);
-    // return Redirect('current_department/'.$depart->filial_id.'/'.$depart->department_parent_id.'/0');
+    // return Redirect('/current_department/'.$depart->filial_id.'/'.$depart->department_parent_id.'/0');
   }
 
   // Получаем сторонние данные по 
@@ -306,8 +307,9 @@ class DepartmentController extends Controller
     $tree = Department::all()->pluck('department_name', 'id');
     $employees = Employee::all();
     $positions = Position::get();
-    $pages = Page::wherePage_alias('/departments')->first();
-    return view('departments', compact('departments', 'positions', 'positions_list', 'data', 'tree', 'employees', 'pages')); 
+    $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
+    $menu = Page::get();
+    return view('departments', compact('departments', 'positions', 'positions_list', 'data', 'tree', 'employees', 'page_info', 'menu')); 
   }
 }
 

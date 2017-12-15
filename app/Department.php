@@ -25,10 +25,19 @@ class Department extends Model
     'filial_id',
   ];
   /**
+  * Получаем компанию.
+  */
+  public function company()
+  {
+    return $this->belongsTo('App\Company');
+  }
+  /**
    * Получаем должности.
    */
   public function employees()
   {
     return $this->hasMany('App\Employee');
   }
+
+
 }

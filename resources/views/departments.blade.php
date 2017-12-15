@@ -1,11 +1,11 @@
 @extends('layouts.app')
  
 @section('inhead')
-<meta name="description" content="{{ $pages->page_description }}" />
+<meta name="description" content="{{ $page_info->page_description }}" />
 @endsection
 
 @section('title')
-  {{ $pages->page_name }}
+  {{ $page_info->page_name }}
 @endsection
 
 @section('title-content')
@@ -13,7 +13,7 @@
   <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-options="stickyOn: small;" data-top-anchor="head-content:top">
     <div class="top-bar head-content">
       <div class="top-bar-left">
-        <h2 class="header-content">Филиалы</h2>
+        <h2 class="header-content">{{ $page_info->page_name }}</h2>
         <a class="icon-add sprite" data-open="filial-add"></a>
       </div>
       <div class="top-bar-right">
@@ -490,18 +490,6 @@ $(function() {
     $('#region-name').val('');
   });
 
-  // Мягкое удаление с refresh
-  $(document).on('click', '[data-open="item-delete"]', function() {
-    // находим описание сущности, id и название удаляемого элемента в родителе
-    var parent = $(this).closest('.parent');
-    var type = parent.attr('id').split('-')[0];
-    var id = parent.attr('id').split('-')[1];
-    var name = parent.data('name');
-    $('.title-delete').text(name);
-    $('.delete-button').attr('id', 'del-' + type + '-' + id);
-    $('#form-item-del').attr('action', '/' + type + '/' + id);
-  });
-
   // Открываем меню и подменю, если только что добавили населенный пункт
   // Открываем меню и подменю, если только что добавили населенный пункт
   @if(!empty($data))
@@ -551,5 +539,8 @@ $(function() {
 
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.modals.modal-delete-ajax-script')
+
+{{-- Скрипт модалки удаления ajax --}}
+@include('includes.modals.modal-delete-script')
 
 @endsection

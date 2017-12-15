@@ -6,7 +6,7 @@
 @section('title-content')
 	<div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">РЕДАКТИРОВАТЬ КОМПАНИЮ</h2>
+       <h2 class="header-content">РЕДАКТИРОВАТЬ страницу</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -15,14 +15,13 @@
 
 @section('content')
 
-  {{ Form::model($company, ['route' => ['companies.update', $company->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($page, ['route' => ['pages.update', $page->id], 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
-    @include('companies.form', ['submitButtonText' => 'Редактировать компанию', 'param'=>''])
+    @include('pages.form', ['submitButtonText' => 'Редактировать страницу', 'param'=>''])
     
   {{ Form::close() }}
 
 @endsection
-@include('companies.scripts')
 
 

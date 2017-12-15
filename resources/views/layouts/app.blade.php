@@ -11,7 +11,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- Add jQuery library --}}
-    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
+    <script type="text/javascript" src="/js/jquery.latest.min.js"></script>
     {{-- Transition --}}
     <style type="text/css">
     .title-bar {

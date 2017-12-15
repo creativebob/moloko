@@ -26,4 +26,11 @@ class Site extends Model
   {
     return $this->hasMany('App\Page');
   }
+  /**
+  * Получаем компанию.
+  */
+  public function company()
+  {
+    return $this->belongsTo('App\Company');
+  }
 }

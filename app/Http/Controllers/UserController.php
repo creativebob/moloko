@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Company;
+use App\Page;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Access;
@@ -27,7 +28,8 @@ class UserController extends Controller
         $this->authorize('index', User::class);
 
 	    $users = User::paginate(30);
-	    return view('users.index', compact('users'), compact('access'));
+        $menu = Page::get();
+	    return view('users.index', compact('users', 'access', 'menu'));
 	}
 
     public function store(UpdateUser $request)
@@ -117,8 +119,8 @@ class UserController extends Controller
         $access_action_list = Access_group::where('category_right_id', '1')->pluck('access_group_name', 'id');
         $access_locality_list = Access_group::where('category_right_id', '2')->pluck('access_group_name', 'id');
         $access_groups = new Access_group;
-
-    	return view('users.create', compact('user', 'access_groups', 'access_action_list', 'access_locality_list'));
+        $menu = Page::get();
+    	return view('users.create', compact('user', 'access_groups', 'access_action_list', 'access_locality_list', 'menu'));
     }
 
     public function update(UpdateUser $request, $id)
@@ -186,8 +188,8 @@ class UserController extends Controller
         $access_action_list = Access_group::where('category_right_id', '1')->pluck('access_group_name', 'id');
         $access_locality_list = Access_group::where('category_right_id', '2')->pluck('access_group_name', 'id');
         $access_groups = new Access_group;
-
-    	return view('users.show', compact('user', 'access_groups', 'access_action_list', 'access_locality_list'));
+        $menu = Page::get();
+    	return view('users.show', compact('user', 'access_groups', 'access_action_list', 'access_locality_list', 'menu'));
     }
 
     public function edit($id)
@@ -199,33 +201,21 @@ class UserController extends Controller
         $access_action_list = Access_group::where('category_right_id', '1')->pluck('access_group_name', 'id');
         $access_locality_list = Access_group::where('category_right_id', '2')->pluck('access_group_name', 'id');
         $access_groups = new Access_group;
-
+        $menu = Page::get();
          Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
-         return view('users.edit', compact('user', 'access_groups', 'access_action_list', 'access_locality_list'));
+         return view('users.edit', compact('user', 'access_groups', 'access_action_list', 'access_locality_list', 'menu'));
     }
 
 
     public function destroy($id)
     {
-
-        $user = User::findOrFail($id);
-        $this->authorize('delete', $user);   
-
+        // Удаляем пользователя с обновлением
         $user = User::destroy($id);
-        if ($user){
-        $data = [
-          'status'=> 1,
-          'msg' => 'Успешно удалено'
-        ];
+        if ($user) {
+          return Redirect('/users');
         } else {
-          $data = [
-          'status' => 0,
-          'msg' => 'Произошла ошибка'
-        ];
-        };
-        echo json_encode($data, JSON_UNESCAPED_UNICODE);
-
-        Log::info('Удалили запись' . $id);
+          echo 'произошла ошибка';
+        }; 
     }
 
 }

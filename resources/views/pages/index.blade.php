@@ -1,11 +1,14 @@
 @extends('layouts.app')
  
 @section('inhead')
+<meta name="description" content="{{ $page_info->page_description }}" />
 {{-- Скрипты таблиц в шапке --}}
   @include('includes.table-inhead')
 @endsection
 
-@section('title', 'Пользователи')
+@section('title')
+  {{ $page_info->page_name }}
+@endsection
 
 @section('title-content')
 {{-- Таблица --}}
@@ -13,8 +16,8 @@
   <div class="sticky sticky-topbar" id="head-sticky" data-sticky-on="small" data-sticky data-margin-top="2.4" data-top-anchor="head-content:top">
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
-	      <h2 class="header-content">Пользователи системы</h2>
-	      <a href="/users/create" class="icon-add sprite"></a>
+	      <h2 class="header-content">{{ $page_info->page_name }}</h2>
+	      <a href="/pages/create" class="icon-add sprite"></a>
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -27,13 +30,13 @@
       <div class="small-12 cell filters" id="filters">
         <fieldset class="fieldset-filters">
 
-          {{ Form::open(['route' => 'users.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
+          {{ Form::open(['route' => 'companies.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
 
           <legend>Фильтрация</legend>
             <div class="grid-x grid-padding-x"> 
               <div class="small-6 cell">
                 <label>Статус пользователя
-                  {{ Form::select('user_type', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
+                  {{ Form::select('contragent_status', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
                 </label>
               </div>
               <div class="small-6 cell">
@@ -65,35 +68,26 @@
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-second-name">Пользователь</th>
-          <th class="td-login">Логин</th>
-<!--           <th class="td-first-name">Имя</th> -->
-          <th class="td-phone">Телефон</th>
-          <th class="td-email">Почта</th>
-          <th class="td-contragent-status">Статус</th>
-          <th class="td-access-block">Доступ</th>
-          <th class="td-group-users-id">Уровень доступа</th>
-          <th class="td-group-users-id">Локализация</th>
+          <th class="td-page-name">Название страницы</th>
+          <th class="td-page-title">Заголовок</th>
+          <th class="td-page-description">Описание</th>
+          <th class="td-page-alias">Алиас</th>
+          <th class="td-site-id">Сайт</th>
           <th class="td-delete"></th>
         </tr>
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
-      @if(!empty($users))
-        @foreach($users as $user)
-        <tr class="parent" id="users-{{ $user->id }}" data-name="{{ $user->nickname }}">
+      @if(!empty($pages))
+        @foreach($pages as $page)
+        <tr class="parent" id="pages-{{ $page->id }}" data-name="{{ $page->page_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $user->id }}"><label class="label-check" for="check-{{ $user->id }}"></label></td>
-          <td class="td-second-name">{{ link_to_route('users.edit', $user->second_name . " " . $user->first_name . " (". $user->nickname . ")", [$user->id]) }} </td>
-          <td class="td-login">{{ $user->login }} </td>
-<!--           <td class="td-first-name">{{ $user->first_name }}</td> -->
-          <td class="td-phone">{{ $user->phone }}</td>
-          <td class="td-email">{{ $user->email }}</td>
-          <td class="td-contragent-status">{{ decor_user_type($user->user_type) }}</td>
-          <td class="td-access-block">{{ decor_access_block($user->access_block) }}</td>
-          <td class="td-group_action_id">{{ $user->group_action->access_group_name }}</td>
-          <td class="td-group_locality_id">{{ $user->group_locality->access_group_name }}</td>
+          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $page->id }}"><label class="label-check" for="check-{{ $page->id }}"></label></td>
+          <td class="td-page-name">{{ link_to_route('pages.edit', $page->page_name, [$page->id]) }} </td>
+          <td class="td-page-title">{{ $page->page_title }}</td>
+          <td class="td-page-description">{{ $page->page_description }}</td>
+          <td class="td-page-alias">{{ $page->page_alias }}</td>
+          <td class="td-site-id">{{ $page->site->site_name or ' ... ' }}</td>
           <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
-          <!-- <td class="td-delete">{{ link_to_route('users.destroy', " " , [$user->id], ['class'=>'icon-delete sprite']) }}</td> -->
         </tr>
         @endforeach
       @endif
@@ -105,8 +99,8 @@
 {{-- Pagination --}}
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
-    <span class="pagination-title">Кол-во записей: {{ $users->count() }}</span>
-    {{ $users->links() }}
+    <span class="pagination-title">Кол-во записей: {{ $pages->count() }}</span>
+    {{ $pages->links() }}
   </div>
 </div>
 @endsection

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Region;
 use App\Area;
 use App\City;
+use App\Page;
 
 // use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -23,8 +24,9 @@ class CityController extends Controller
     $regions = Region::withCount('areas', 'cities')->get();
     $areas = Area::withCount('cities')->orderBy('area_name')->get();
     $cities = City::orderBy('city_name')->get();
+    $menu = Page::get();
 
-    return view('cities', compact('regions', 'areas', 'cities')); 
+    return view('cities', compact('regions', 'areas', 'cities', 'menu')); 
   }
 
   /**
@@ -318,6 +320,7 @@ class CityController extends Controller
       'area_id' => $area,
       'city_id' => $city,
     ];
-    return view('cities', ['regions' => $regions, 'areas' => $areas, 'cities' => $cities, 'data' => $data]); 
+    $menu = Page::get();
+    return view('cities', compact('regions', 'areas', 'cities', 'data', 'menu')); 
   }
 }
