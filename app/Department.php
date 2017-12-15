@@ -24,4 +24,11 @@ class Department extends Model
     'filial_status',
     'filial_id',
   ];
+  /**
+   * Получаем должности.
+   */
+  public function employees()
+  {
+    return $this->hasMany('App\Employee');
+  }
 }

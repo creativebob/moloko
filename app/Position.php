@@ -20,4 +20,18 @@ class Position extends Model
     'direct_status',
     'company_id',
   ];
+  /**
+   * Получаем районы и города области.
+   */
+  public function page()
+  {
+    return $this->belongsTo('App\Page');
+  }
+  /**
+   * Получаем сотрудников должности.
+   */
+  public function employees()
+  {
+    return $this->hasMany('App\Employee');
+  }
 }

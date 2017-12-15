@@ -1,10 +1,12 @@
 @extends('layouts.app')
  
 @section('inhead')
-
+<meta name="description" content="{{ $pages->page_description }}" />
 @endsection
 
-@section('title', 'Филиалы')
+@section('title')
+  {{ $pages->page_name }}
+@endsection
 
 @section('title-content')
 <div data-sticky-container id="head-content">
@@ -42,9 +44,12 @@
   <div class="small-12 cell">
     <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
     @if($departments)
-      @each('departments-list', $departments, 'department')
+      @foreach ($departments as $department)
+        @include('departments-list')
+      @endforeach
     @endif
     </ul>
+
   </div>
 </div>
 @endsection
@@ -146,9 +151,17 @@
         {{ Form::open(['url' => '/departments', 'id' => 'form-department-add']) }}
           <div class="grid-x grid-padding-x modal-content inputs">
             <div class="small-10 small-offset-1 cell">
+              <label>Добавляем отдел в:
+                {{ Form::select('tree', $tree, null, ['id'=>'dep-tree-select']) }}
+              </label>
               <label>Название отдела
                 {{ Form::text('department_name', $value = null, ['id'=>'department-name-field', 'autocomplete'=>'off', 'required']) }}
                 <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
+              </label>
+              <label class="input-icon">Город
+                {{ Form::text('city_name', $value = null, ['id'=>'city-name-field', 'autocomplete'=>'off']) }}
+                <div class="sprite-input-right icon-success load">лол</div>
+                <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
               </label>
               <label>Адресс отдела
                 {{ Form::text('department_address', $value = null, ['id'=>'department-address-field', 'autocomplete'=>'off']) }}
@@ -157,8 +170,8 @@
                 {{ Form::text('department_phone', $value = null, ['id'=>'department-phone-field', 'autocomplete'=>'off', 'class'=>'phone-field']) }}
               </label>
               <input type="hidden" name="department_database" id="department-database" value="0">
-              <input type="hidden" name="filial_id" id="filial-id-field">
-              <input type="hidden" name="parent_id" id="parent-id-field">
+              <input type="hidden" name="filial_id" id="dep-filial-id-field">
+              <input type="hidden" name="parent_id" id="dep-parent-id-field">
             </div>
           </div>
           <div class="grid-x align-center">
@@ -170,12 +183,17 @@
       </div>
       <!-- Добавляем должность -->
       <div class="tabs-panel" id="add-position">
-        {{ Form::open(['url' => '/positions', 'id' => 'form-department-add']) }}
+        {{ Form::open(['url' => '/employees', 'id' => 'form-positions-add']) }}
           <div class="grid-x grid-padding-x modal-content inputs">
             <div class="small-10 small-offset-1 cell">
-              <label>Должность
-                {{ Form::select('position_id', $positions) }}
+              <label>Добавляем должность в:
+                {{ Form::select('tree', $tree, null, ['id'=>'pos-tree-select']) }}
               </label>
+              <label>Должность
+                {{ Form::select('position_id', $positions_list) }}
+              </label>
+              <input type="hidden" name="filial_id" id="pos-filial-id-field">
+              <input type="hidden" name="parent_id" id="pos-parent-id-field">
             </div>
           </div>
           <div class="grid-x align-center">
@@ -250,32 +268,7 @@
 {{-- Конец модалки отдела/должности --}}
 
 {{-- Модалка удаления с refresh --}}
-<div class="reveal" id="item-delete" data-reveal>
-  <div class="grid-x">
-    <div class="small-12 cell modal-title">
-      <h5>Удаление</h5>
-    </div>
-  </div>
-  <div class="grid-x align-center modal-content ">
-    <div class="small-10 medium-4 cell">
-      <p>Удаляем "<span class="title-delete"></span>", вы уверены?</p>
-    </div>
-  </div>
-
-  <div class="grid-x align-center grid-padding-x">
-    <div class="small-6 medium-4 cell">
-      {!! Form::open(['id' => 'form-item-del']) !!}
-      {{ method_field('DELETE') }}
-        {{ Form::submit('Удалить', ['data-close', 'class'=>'button modal-button delete-button']) }}
-      {!! Form::close() !!}
-    </div>
-    <div class="small-6 medium-4 cell">
-      <button data-close class="button modal-button" id="save-button" type="submit">Отменить</button>
-    </div>
-  </div>
-  <div data-close class="icon-close-modal sprite close-modal"></div> 
-</div>
-{{-- Конец модалки удаления с refresh --}}
+@include('includes.modals.modal-delete')
 
 {{-- Модалка удаления ajax --}}
 @include('includes.modals.modal-delete-ajax')
@@ -403,24 +396,25 @@ $(function() {
   $(document).on('click', '[data-open="department-add"]', function() {
     var parent = $(this).closest('.parent').attr('id').split('-')[1];
     var filial = $(this).closest('.first-item').attr('id').split('-')[1];
-    $('#filial-id-field').val(filial);
-    $('#parent-id-field').val(parent);
+    // Заполняем скрытые инпуты филиала и родителя
+    $('#dep-filial-id-field').val(filial);
+    $('#dep-parent-id-field').val(parent);
+    $('#pos-filial-id-field').val(filial);
+    $('#pos-parent-id-field').val(parent);
+    // Отмечам в какой пункт будем добавлять
+    $('#dep-tree-select>[value="' + parent + '"]').prop('selected', true);
+    $('#pos-tree-select>[value="' + parent + '"]').prop('selected', true);
   });
-  // При клике по радиокнопке блокируем/разблокируем отделы/должности
-  // $(document).on('click', '.radio', function() {
-  //   var parent = $(this).closest('.input-parent').data('name');
-  //   if (parent == 'positions') {
-  //     $('[data-name="positions"] select').prop('disabled', false);
-  //     $('[data-name="departments"] input').prop('disabled', true);
-  //     $('[data-name="departments"] input').val('');
-  //   } else {
-  //     $('[data-name="positions"] select').prop('disabled', true);
-  //     $('[data-name="departments"] input').prop('disabled', false);
-  //     $('[data-name="positions"] select>option:first').prop('selected', true);
-  //   };
+  // При смнене пункта меняем id родителя
+  $(document).on('change', '#dep-tree-select', function() {
+    var parent = $('#dep-tree-select>option:selected').val();
+    $('#dep-parent-id-field').val(parent);
+  });
+  $(document).on('change', '#pos-tree-select', function() {
+    var parent = $('#pos-tree-select>option:selected').val();
+    $('#pos-parent-id-field').val(parent);
+  });
 
-  // });
-  
   // Чекаем отдел в нашей бд
   $('#department-name-field').keyup(function() {
     // Блокируем кнопку
@@ -428,6 +422,9 @@ $(function() {
     $('#department-database').val(0);
     // Получаем фрагмент текста
     var department = $('#department-name-field').val();
+    // Первая буква отдела заглавная
+    department = department.charAt(0).toUpperCase() + department.substr(1);
+    // alert(department);
     // Смотрим сколько символов
     var lenDepartment = department.length;
     // Если символов больше 3 - делаем запрос
@@ -439,7 +436,7 @@ $(function() {
         },
         url: "/departments",
         type: "POST",
-        data: {department_name: $('#department-name-field').val(), filial_id: $('#filial-id-field').val(), department_database: $('#department-database').val()},
+        data: {department_name: department, filial_id: $('#filial-id-field').val(), department_database: $('#department-database').val()},
         beforeSend: function () {
           $('.icon-load').removeClass('load');
         },
@@ -470,10 +467,6 @@ $(function() {
     };
   });
 
-
-  
-
-  
   // При закрытии модалки очищаем поля
   $(document).on('click', '.add-item', function() {
     $('#tbody-city-add>tr').remove();
@@ -522,7 +515,7 @@ $(function() {
     // Открываем аккордионы
     $('#content-list').foundation('down', firstItem);
 
-    // Отображаем отдел и жилиал, без должностей
+    // Отображаем отдел и филиал, без должностей
     if (({{ $data['position_id'] }} == 0) && ({{ $data['department_id'] }} !== 0)) {
       // Подсвечиваем ссылку
       $('#departments-{{ $data['department_id'] }}').find('.medium-link').addClass('medium-active');
@@ -531,13 +524,22 @@ $(function() {
     };
 
     // 
-  
-      // Перебираем родителей и посвечиваем их
-  //   var parents = $(this).parents('.medium-list');
-  //   for (var i = 0; i < parents.length; i++) {
-  //     $(parents[i]).parent('li').children('a').addClass('medium-active');
-  //   };
+
+        // Перебираем родителей и посвечиваем их
+    // var parents = $('#departments-{{ $data['department_id'] }}').parents('.parent');
+    // for (var i = 0; i < parents.length; i++) {
+    //   $(parents[i]).find('.medium-link').addClass('medium-active');
+    //   $(parents[i]).find('.icon-list').css('display', 'block').attr('aria-hiden', 'false');
+    // };
   // });
+
+  // Перебираем родителей и посвечиваем их
+    // var parents = $(this).parents('.medium-list');
+    // for (var i = 0; i < parents.length; i++) {
+    //   $(parents[i]).parent('li').children('a').addClass('medium-active');
+    // };
+  
+  
         
   }
   @endif

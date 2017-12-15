@@ -14,7 +14,7 @@ class SitesTableSeeder extends Seeder
 		 DB::table('sites')->insert([
         	[
 
-		        'site_name' => 'CrmSystem',
+		        'site_name' => 'Crm System',
 		        'site_domen' => 'crmsystem.creativebob.ru',
 		        'company_id' => null,
 		        

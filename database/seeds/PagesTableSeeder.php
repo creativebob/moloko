@@ -13,12 +13,19 @@ class PagesTableSeeder extends Seeder
     {
 		 DB::table('pages')->insert([
         	[
-		        'page_name' => 'Первая',
+		        'page_name' => 'Населенные пункты',
                 'site_id' => '1',
-		        'page_title' => 'Первая',
-		        'page_description' => 'лололо',
-                'page_alias' => '/first',
+		        'page_title' => 'Населенные пункты',
+		        'page_description' => 'Области, районы и города',
+                'page_alias' => '/cities',
         	],
+            [
+                'page_name' => 'Филиалы',
+                'site_id' => '1',
+                'page_title' => 'Филиалы',
+                'page_description' => 'Филиалы, отделы и должности',
+                'page_alias' => '/departments',
+            ],
         ]);
     }
 }

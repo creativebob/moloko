@@ -23,10 +23,17 @@ class Page extends Model
     ];
 
   /**
-  * Получаем область данного района.
+  * Получаем сайт страницы.
   */
   public function site()
   {
     return $this->belongsTo('App\Site');
+  }
+  /**
+  * Получаем должность страницы.
+  */
+  public function position()
+  {
+    return $this->hasOne('App\Position');
   }
 }

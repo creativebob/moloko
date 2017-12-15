@@ -22,5 +22,19 @@ class Employee extends Model
     'date_employment',
     'date_dismissal',
   ];
+  /**
+  * Получаем отдел данной должности.
+  */
+  public function department()
+  {
+    return $this->belongsTo('App\Department');
+  }
+  /**
+  * Получаем должность.
+  */
+  public function position()
+  {
+    return $this->belongsTo('App\Position');
+  }
 
 }

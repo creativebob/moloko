@@ -7,7 +7,7 @@ use App\Region;
 use App\Area;
 use App\City;
 
-use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class CityController extends Controller

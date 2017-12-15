@@ -17,7 +17,7 @@ class CreateDepartmentsTable extends Migration
             $table->increments('id');
             $table->integer('company_id')->unsigned()->comment('Id компании, в которой находится отдел');
             $table->integer('city_id')->nullable()->unsigned()->comment('Id города, в котором находится отдел');
-            $table->string('department_name', 30)->unique()->index()->comment('Название отдела');
+            $table->string('department_name', 60)->index()->comment('Название отдела');
             $table->string('department_address', 100)->nullable()->comment('Адресс отдела');
             $table->bigInteger('department_phone')->nullable()->comment('Телефон отдела');
             $table->integer('department_parent_id')->unsigned()->nullable()->comment('Id отдела, в котором находится отдел');

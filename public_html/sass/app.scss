@@ -1349,6 +1349,10 @@ input[type=checkbox], input[type=radio] {
       opacity: 0;
       transition: 0.3s ease opacity;
     }
+    .link-recursion {
+      display: inline;
+      padding: 0;
+    }
     // Первые элементы списка (Шапки)
     .first-item {
       background-color: $content-list-item-bg-color;
