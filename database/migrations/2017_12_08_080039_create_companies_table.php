@@ -30,7 +30,10 @@ class CreateCompaniesTable extends Migration
             $table->string('account_correspondent', 20)->nullable()->comment('Корреспондентский счет');
             $table->string('bank', 60)->nullable()->comment('Название банка');
 
-            $table->integer('user_id')->nullable()->unsigned()->comment('Директор компании');
+            $table->integer('director_user_id')->nullable()->unsigned()->comment('Директор компании');
+            // $table->foreign('user_id')->references('id')->on('users');
+
+            $table->integer('admin_user_id')->nullable()->unsigned()->comment('Администратор компании');
             // $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();

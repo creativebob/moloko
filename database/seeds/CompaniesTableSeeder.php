@@ -24,7 +24,8 @@ class CompaniesTableSeeder extends Seeder
 		        // 'account_settlement' => '',
 		        // 'account_correspondent' => '',
 		        // 'bank' => '',
-		        'user_id' => '1',  
+		        'director_user_id' => '3',  
+                // 'admin_user_id' => '1',  
         	],
         ]);
     }

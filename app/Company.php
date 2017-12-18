@@ -9,7 +9,7 @@ class Company extends Model
 
 	public function user_info()
 	{
-		return $this->BelongsTo('App\User', 'user_id');
+		return $this->BelongsTo('App\User', 'director_user_id');
 	}
 
     protected $dates = ['deleted_at'];
@@ -26,7 +26,8 @@ class Company extends Model
         'account_settlement', 
         'account_correspondent', 
         'bank', 
-        'user_id'
+        'director_user_id', 
+        'admin_user_id'
 
     ];
   /**

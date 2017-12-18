@@ -53,9 +53,10 @@ class UpdateUsersTable extends Migration
 
             $table->integer('group_action_id')->nullable()->unsigned()->comment('Группа доступа по функционалу')->after('access_block');
             $table->integer('group_locality_id')->nullable()->unsigned()->comment('Группа доступа по филиалу')->after('group_action_id');
-            // $table->integer('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('group_locality_id');
 
-            $table->integer('god')->nullable()->unsigned()->comment('Божественное право')->default('0')->after('group_locality_id');
+            $table->integer('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('group_locality_id');
+
+            $table->integer('god')->nullable()->unsigned()->comment('Божественное право')->default('0')->after('company_id');
             $table->softDeletes();
 
         });
@@ -64,7 +65,7 @@ class UpdateUsersTable extends Migration
 
             $table->foreign('group_action_id')->references('id')->on('access_groups');
             $table->foreign('group_locality_id')->references('id')->on('access_groups');
-            // $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('company_id')->references('id')->on('companies');
         });
 
     }
@@ -104,9 +105,12 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('lead_id');
             $table->dropColumn('employee_id');
             $table->dropColumn('access_block');
+            $table->dropColumn('god');           
 
             $table->dropForeign('users_group_action_id_foreign'); 
             $table->dropForeign('users_group_locality_id_foreign');
+            $table->dropForeign('users_company_id_foreign');
+
             // $table->dropForeign('users_company_id_foreign');
 
             // $table->dropColumn('group_action_id');

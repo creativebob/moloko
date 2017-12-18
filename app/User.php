@@ -184,8 +184,10 @@ class User extends Authenticatable
         'lead_id', 
         'employee_id', 
         'access_block', 
+        'company_id', 
         'group_action_id', 
         'group_locality_id', 
+
 
     ];
 

@@ -23,6 +23,7 @@ class UsersTableSeeder extends Seeder
 	        	'group_locality_id' => 5, 
 	        	'user_type' => 1, 
 	        	'access_block' => 0, 
+	        	'company_id' => Null, 
 	        	'god' => 1, 
         	],
         	[
@@ -35,6 +36,7 @@ class UsersTableSeeder extends Seeder
 	        	'group_locality_id' => 5, 
 	        	'user_type' => 1, 
 	        	'access_block' => 0, 
+	        	'company_id' => Null, 
 	        	'god' => 1, 
         	],
         	[
@@ -47,6 +49,7 @@ class UsersTableSeeder extends Seeder
 	        	'group_locality_id' => 5, 
 	        	'user_type' => 1, 
 	        	'access_block' => 0, 
+	        	'company_id' => 1, 
 	        	'god' => 0, 
         	],
         ]);
