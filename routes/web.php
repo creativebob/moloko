@@ -17,9 +17,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
-
 Route::resource('/users', 'UserController')->middleware('auth');
 Route::resource('/companies', 'CompanyController')->middleware('auth');
+
+// Авторизуемся под выбранной компанией
+Route::get('/getauth/{id}/{company_id}', 'UserController@getauth')->middleware('auth')->name('users.getauth');
 
 Route::get('/page', 'PageController@create');
 

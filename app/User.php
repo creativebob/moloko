@@ -27,26 +27,21 @@ class User extends Authenticatable
     return $this->BelongsTo('App\Access_group', 'group_locality_id');
   }
 
-
     // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
 
     // Фильтрация по статусу пользователя: клиент или сотрудник
-    public function scopeСontragent($query, $user_type)
+    public function scopeUserType($query, $user_type)
     {
-        if($user_type == "all"){
-            return $query;
-            } else {
-            return $query->where('user_type', '=', $user_type); 
+        if(isset($user_type)){
+            if($user_type != "all"){return $query->where('user_type', '=', $user_type);}
         }
     }
 
     // Фильтрация по блокировке доступа: 
     public function scopeAccessBlock($query, $access_block)
     {
-        if($access_block == "all"){
-            return $query;
-            } else {
-            return $query->where('access_block', '=', $access_block); 
+        if(isset($access_block)){
+            if($access_block != "all"){return $query->where('access_block', '=', $access_block);}
         }
     }
 
@@ -187,7 +182,6 @@ class User extends Authenticatable
         'company_id', 
         'group_action_id', 
         'group_locality_id', 
-
 
     ];
 

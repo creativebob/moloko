@@ -33,7 +33,7 @@
             <div class="grid-x grid-padding-x"> 
               <div class="small-6 cell">
                 <label>Статус пользователя
-                  {{ Form::select('contragent_status', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
+                  {{ Form::select('user_type', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
                 </label>
               </div>
               <div class="small-6 cell">
@@ -66,6 +66,7 @@
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-company-name">Название компании</th>
+          <th class="td-getauth">Действие</th>
           <th class="td-company-address">Адрес</th>
           <th class="td-company-phone">Телефон</th>
           <th class="td-user_id">Руководитель</th>
@@ -75,10 +76,11 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($companies))
         @foreach($companies as $company)
-        <tr class="parent" id="companies-{{ $company->id }}" data-name="{{ $company->company_name }}">
+        <tr class="parent @if(Auth::user()->company_id == $company->id)active @endif" id="companies-{{ $company->id }}" data-name="{{ $company->company_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $company->id }}"><label class="label-check" for="check-{{ $company->id }}"></label></td>
           <td class="td-company-name">{{ link_to_route('companies.edit', $company->company_name, [$company->id]) }} </td>
+          <td class="td-getauth">@if(Auth::user()->company_id != $company->id) {{ link_to_route('users.getauth', 'Авторизоваться', ['id'=>Auth::user()->id, 'company_id'=>$company->id], ['class' => 'tiny button']) }} @endif</td>
           <td class="td-company-address">{{ $company->company_address }} </td>
           <td class="td-company-phone">{{ decorPhone($company->company_phone) }} </td>
           <td class="td-user_id">{{ $company->user_info->first_name or ' ... ' }} {{ $company->user_info->second_name or ' ... ' }} </td>

@@ -77,8 +77,10 @@ class CompanyController extends Controller
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
 
-        $company->save();
+        $company->director_user_id = Auth::user()->company_id;
 
+
+        $company->save();
         return redirect('/companies');
 
     }
@@ -107,6 +109,7 @@ class CompanyController extends Controller
     {
         $company = Company::findOrFail($id);
         $this->authorize('update', $company);
+
         $menu = Page::get();
         return view('companies.show', compact('company', 'menu'));
     }
@@ -138,7 +141,7 @@ class CompanyController extends Controller
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
         $company->bank = $request->bank;
-        $company->user_id = $request->user_id;
+        $company->director_user_id = Auth::user()->company_id;
 
         $company->save();
         return redirect('companies');
