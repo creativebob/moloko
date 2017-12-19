@@ -8,6 +8,7 @@ use App\Company;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateSite;
+use Illuminate\Support\Facades\Auth;
 
 class SiteController extends Controller
 {
@@ -18,10 +19,19 @@ class SiteController extends Controller
    */
   public function index()
   {
+    if (isset(Auth::user()->company_id)) {
+      // Если у пользователя есть компания
+      // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
+      $sites = Site::whereCompany_id(Auth::user()->company_id)->paginate(30);
+    } else {
+      if (Auth::user()->god == 1) {
+        // Если нет, то бог без компании
+        // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
+        $sites = Site::paginate(30);
+      };
+    };
     $page_info = Page::wherePage_alias('/sites')->whereSite_id('1')->first();
-    $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
-    $sites = Site::paginate(30);
-    $menu = Page::get();
+    $menu = Page::whereSite_id('1')->get();
     return view('sites', compact('sites', 'page_info', 'companies', 'menu'));
   }
 
@@ -47,7 +57,7 @@ class SiteController extends Controller
 
     $site->site_name = $request->site_name;
     $site->site_domen = $request->site_domen;
-    $site->company_id = $request->company_id;
+    $site->company_id = Auth::user()->company_id;
     
     $site->save();
 
@@ -94,7 +104,7 @@ class SiteController extends Controller
 
     $site->site_name = $request->site_name;
     $site->site_domen = $request->site_domen;
-    $site->company_id = $request->company_id;
+    $site->company_id = Auth::user()->company_id;
     
     $site->save();
 

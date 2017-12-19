@@ -38,6 +38,8 @@ Route::get('/current_city/{region}/{area}/{city}', 'CityController@current_city'
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
 // Текущий добавленный/удаленный отдел
 Route::get('/current_department/{parent}/{department}/{position}', 'DepartmentController@current_department')->middleware('auth');
+// Должности
+Route::resource('/positions', 'PositionController')->middleware('auth');
 // Контроллер свободных должностей
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
 //Конец блока филиалов, отделов и должностей

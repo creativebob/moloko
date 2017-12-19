@@ -175,19 +175,7 @@ class DepartmentController extends Controller
 
         $department->filial_id = $request->filial_id;
         $department->department_parent_id = $request->parent_id;
-        
-        // if($request->city_id == '') {
-        //   $request->city_id = null;
-        // } else {
-        //   $department->city_id = $request->city_id;
-        // };
-        // $department->city_id = null;
-        
-
-        
-        // $department->department_parent_id = $request->department_parent_id;
-        // $department->filial_status = 0;
-        
+              
 
         $department->save();
 

@@ -12,27 +12,27 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-            // Наполнение локализаций
-            $this->call(RegionsTableSeeder::class);
-            $this->call(AreasTableSeeder::class);
-            $this->call(CitiesTableSeeder::class);
+        // Наполнение локализаций
+        $this->call(RegionsTableSeeder::class);
+        $this->call(AreasTableSeeder::class);
+        $this->call(CitiesTableSeeder::class);
 
-            // Наполнение таблиц с правами
-            $this->call(CategotyRightTableSeeder::class);
-            $this->call(RightsTableSeeder::class);
-    		$this->call(AccessGroupsTableSeeder::class);
-            $this->call(AccessesTableSeeder::class);
+        // Наполнение таблиц с правами
+        $this->call(CategotyRightTableSeeder::class);
+        $this->call(RightsTableSeeder::class);
+		$this->call(AccessGroupsTableSeeder::class);
+        $this->call(AccessesTableSeeder::class);
 
-            // Пользователи и компании
-            $this->call(CompaniesTableSeeder::class);
-            $this->call(UsersTableSeeder::class);
+        // Пользователи и компании
+        $this->call(CompaniesTableSeeder::class);
+        $this->call(UsersTableSeeder::class);
 
-            // Сайты, страницы
-            $this->call(SitesTableSeeder::class);
-            $this->call(PagesTableSeeder::class);
+        // Сайты, страницы
+        $this->call(SitesTableSeeder::class);
+        $this->call(PagesTableSeeder::class);
 
-            // Должности
-            $this->call(PositionsTableSeeder::class);
+        // Должности
+        $this->call(PositionsTableSeeder::class);
             
     }
 }

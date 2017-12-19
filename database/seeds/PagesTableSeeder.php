@@ -62,6 +62,13 @@ class PagesTableSeeder extends Seeder
                 'page_description' => 'Должности компании',
                 'page_alias' => '/positions',
             ],
+            [
+                'page_name' => 'Главная',
+                'site_id' => '2',
+                'page_title' => 'Воротная компания "Марс"',
+                'page_description' => 'Откатные, секционые, распашные ворота.',
+                'page_alias' => '/index',
+            ],
         ]);
     }
 }

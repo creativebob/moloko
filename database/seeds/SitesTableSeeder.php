@@ -13,12 +13,17 @@ class SitesTableSeeder extends Seeder
     {
 		 DB::table('sites')->insert([
         	[
-
 		        'site_name' => 'Crm System',
 		        'site_domen' => 'crmsystem.creativebob.ru',
 		        'company_id' => null,
 		        
         	],
+            [
+                'site_name' => 'Ворота "Марс"',
+                'site_domen' => 'vorotamars.ru',
+                'company_id' => 1,
+                
+            ],
         ]);
     }
 }

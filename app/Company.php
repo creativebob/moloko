@@ -3,16 +3,23 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Company extends Model
 {
+  use SoftDeletes;
+  /**
+   * Атрибуты, которые должны быть преобразованы в даты.
+   *
+   * @var array
+   */
+  protected $dates = ['deleted_at'];
 
 	public function user_info()
 	{
 		return $this->BelongsTo('App\User', 'director_user_id');
 	}
 
-    protected $dates = ['deleted_at'];
 
     protected $fillable = [
 

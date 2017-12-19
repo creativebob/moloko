@@ -26,6 +26,16 @@ class Page extends Model
   	'page_alias', 
   ];
 
+  // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
+  // Фильтрация по статусу пользователя: клиент или сотрудник
+  public function scopeSiteId($query, $site_id)
+  {
+    if(isset($site_id)){
+      return $query->where('site_id', $site_id);
+    }
+  }
+  // КОНЕЦ БЛОКА ОПИСАНИЯ ФИЛЬТРОВ
+
   /**
   * Получаем сайт страницы.
   */
