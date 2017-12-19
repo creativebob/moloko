@@ -230,4 +230,14 @@ class UserController extends Controller
         return redirect('/companies');
     }
 
+    public function getgod()
+    {
+        $this->authorize('update', User::class); 
+        if(Auth::user()->god == 1){
+            $user = User::findOrFail(Auth::user()->id);
+            $user->company_id = null;
+            $user->save();
+        }
+        return redirect('/companies');
+    }
 }
