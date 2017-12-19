@@ -26,8 +26,8 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $this->authorize('index', User::class);
+	    $users = User::userType($request->user_type)->accessBlock($request->access_block)->paginate(30);
 
-	    $users = User::paginate(30);
         $menu = Page::get();
 	    return view('users.index', compact('users', 'access', 'menu'));
 	}
@@ -214,8 +214,30 @@ class UserController extends Controller
         if ($user) {
           return Redirect('/users');
         } else {
-          echo 'произошла ошибка';
+          echo 'Произошла ошибка';
         }; 
     }
 
+
+    public function getauth($id, $company_id)
+    {
+        $user = User::findOrFail($id);
+        $this->authorize('update', $user);
+
+        $user->company_id = $company_id;
+        $user->save();
+ 
+        return redirect('/companies');
+    }
+
+    public function getgod()
+    {
+        $this->authorize('update', User::class); 
+        if(Auth::user()->god == 1){
+            $user = User::findOrFail(Auth::user()->id);
+            $user->company_id = null;
+            $user->save();
+        }
+        return redirect('/companies');
+    }
 }

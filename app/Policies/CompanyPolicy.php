@@ -71,7 +71,13 @@ class CompanyPolicy
     {
         $current_access = Auth::user()->group_action_id;
         $access = Access::where(['access_group_id' => $current_access]);
-        return $result = $access->where(['right_action' => 'update-company'])->count() == "1";
+
+        if(Auth::user()->company_id == NULL) {
+            return false;
+        } else {
+            $result = $access->where(['right_action' => 'update-company'])->count() == "1";
+            return $result;
+        };
     }
 
     /**

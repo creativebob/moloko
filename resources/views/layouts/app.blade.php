@@ -41,7 +41,12 @@
           <div class="small-5 right-head cell">
             <ul>
               <li><a id="task-toggle"><img src="/img/header/alert.png"></a></li>
-              <li><a data-toggle="profile"><span>{{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }}</span><img src="/img/header/avatar.png"></a></li>
+              <li><a data-toggle="profile">
+                <span>
+                  @if(isset(Auth::user()->company_id))
+                    {{ Auth::user()->company->company_name}}  | 
+                  @endif
+                  {{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }}</span><img src="/img/header/avatar.png"></a></li>
             </ul>
             <div class="dropdown-pane profile-head" id="profile" data-dropdown data-position="bottom" data-alignment="right" data-v-offset="10" data-h-offset="-30" data-close-on-click="true">
               <ul class="menu vertical">
@@ -49,7 +54,12 @@
                 <li><a href="">Настройки</a></li>
                 <li><hr></li>
                 <li><a href="">Нужна помощь?</a></li>
+                <li>
+                  @if(isset(Auth::user()->company_id))
+                    {{ link_to_route('users.getgod', 'Выйти из компании', $value = Null) }} 
+                  @endif</li>
                 {{-- Кнопка выхода --}}
+
                 <li><a href="{{ route('logout') }}"
                     onclick="event.preventDefault();
                              document.getElementById('logout-form').submit();">
