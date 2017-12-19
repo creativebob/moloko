@@ -55,12 +55,19 @@ class PagesTableSeeder extends Seeder
                 'page_description' => 'Филиалы и отделы',
                 'page_alias' => '/departments',
             ],
-             [
+            [
                 'page_name' => 'Должности',
                 'site_id' => '1',
                 'page_title' => 'Должности',
                 'page_description' => 'Должности компании',
                 'page_alias' => '/positions',
+            ],
+            [
+                'page_name' => 'Тестовая страница дял должностей',
+                'site_id' => '1',
+                'page_title' => 'Страница должности',
+                'page_description' => 'Должность в компании',
+                'page_alias' => '/home',
             ],
             [
                 'page_name' => 'Главная',

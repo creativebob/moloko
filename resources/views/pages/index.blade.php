@@ -87,7 +87,11 @@
           <td class="td-page-description">{{ $page->page_description }}</td>
           <td class="td-page-alias">{{ $page->page_alias }}</td>
           <td class="td-site-id">{{ $page->site->site_name or ' ... ' }}</td>
-          <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
+          <td class="td-delete">
+            @if (isset($page->site->company_id))
+              <a class="icon-delete sprite" data-open="item-delete"></a>
+            @endif
+          </td>
         </tr>
         @endforeach
       @endif

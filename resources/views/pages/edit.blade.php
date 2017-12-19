@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @include('companies.inhead')
 
-@section('title', 'Редактировать пользователя')
+@section('title', 'Редактировать страницу')
 
 @section('title-content')
 	<div class="top-bar head-content">

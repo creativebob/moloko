@@ -39,20 +39,19 @@ class PageController extends Controller
       $menu = Page::whereSite_id(1)->get();
       return view('pages.index', compact('pages', 'page_info', 'menu'));
     }
-
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {   
-        $menu = Page::whereSite_id('1')->get();
-        $sites = Site::whereCompany_id(Auth::user()->company_id)->get()->pluck('site_name', 'id');
-        $page = new Page;
-        return view('pages.create', compact('page', 'menu', 'sites'));  
+      $sites = Site::whereCompany_id(Auth::user()->company_id)->get()->pluck('site_name', 'id');
+      $current_site = $request->session()->get('current_site');
+      $page = new Page;
+      $menu = Page::whereSite_id('1')->get();
+      return view('pages.create', compact('page', 'menu', 'sites', 'current_site'));  
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -71,7 +70,7 @@ class PageController extends Controller
       
       $page->save();
 
-      return redirect('/pages');
+      return redirect('/pages?site_id=' . $request->site_id);
     }
 
     /**
@@ -91,12 +90,13 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
       $page = Page::findOrFail($id);
-      $sites = Site::get()->pluck('site_name', 'id');
+      $sites = Site::whereCompany_id(Auth::user()->company_id)->get()->pluck('site_name', 'id');
       $menu = Page::whereSite_id('1')->get();
-      return view('pages.edit', compact('page', 'menu', 'sites'));
+      $current_site = $request->session()->get('current_site');
+      return view('pages.edit', compact('page', 'menu', 'sites', 'current_site'));
     }
 
     /**
@@ -118,7 +118,7 @@ class PageController extends Controller
       
       $page->save();
 
-      return redirect('/pages');
+      return redirect('/pages?site_id=' . $request->site_id);
     }
 
     /**

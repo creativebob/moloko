@@ -81,7 +81,11 @@
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $position->id }}"><label class="label-check" for="check-{{ $position->id }}"></label></td>
           <td class="td-position-name">{{ link_to_route('positions.edit', $position->position_name, [$position->id]) }} </td>
           <td class="td-position-page">Страница, куда отправляет должность</td>
-          <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
+          <td class="td-delete">
+            @if (isset($position->company_id))
+              <a class="icon-delete sprite" data-open="item-delete"></a>
+            @endif
+          </td>       
         </tr>
         @endforeach
       @endif

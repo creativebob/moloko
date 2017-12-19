@@ -27,7 +27,7 @@
     {{ Form::text('page_alias', $page->page_alias, ['class'=>'page-alias-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
     <label>Компания сайта:
-      {{ Form::select('site_id', $sites, $page->site_id, ['id'=>'site-select']) }}
+      {{ Form::select('site_id', $sites, $current_site, ['id'=>'site-select']) }}
     </label>
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">

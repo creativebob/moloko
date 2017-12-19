@@ -14,10 +14,12 @@
       </div>
     @endif
     <!-- Должность -->
-    <label>Название должноси
+    <label>Название должности
     {{ Form::text('position_name', $position->position_name, ['class'=>'position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
-
+    <label>Страница должности:
+      {{ Form::select('page_id', $pages, $position->page_id, ['id'=>'page-select']) }}
+    </label>
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
 

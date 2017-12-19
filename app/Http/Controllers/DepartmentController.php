@@ -117,7 +117,7 @@ class DepartmentController extends Controller
 
         $filial = new Department;
 
-        $filial->company_id = 1;
+        $filial->company_id = Auth::user()->company_id;
         $filial->city_id = $request->city_id;
         $filial->department_name = $request->filial_name;
         $filial->department_address = $request->filial_address;
@@ -162,7 +162,7 @@ class DepartmentController extends Controller
 
         $department = new Department;
 
-        $department->company_id = 1;
+        $department->company_id = Auth::user()->company_id;
         $department->department_name = $request->department_name;
         if($request->department_address == '') {
         } else {
