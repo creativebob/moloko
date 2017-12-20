@@ -33,6 +33,9 @@ class DatabaseSeeder extends Seeder
 
             // Должности
             $this->call(PositionsTableSeeder::class);
+
+            // Сущности
+            $this->call(EntitiesTableSeeder::class);
             
     }
 }

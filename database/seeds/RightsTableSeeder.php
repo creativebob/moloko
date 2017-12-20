@@ -23,6 +23,18 @@ class RightsTableSeeder extends Seeder
             ['right_name' => 'Просмотр компании', 'right_action' => 'view-company', 'category_right_id' => 1], 
             ['right_name' => 'Удаление компании', 'right_action' => 'delete-company', 'category_right_id' => 1],   
             ['right_name' => 'Просмотр списка компаний', 'right_action' => 'index-company', 'category_right_id' => 1], 
+
+            ['right_name' => 'Добавление правила', 'right_action' => 'create-right', 'category_right_id' => 1], 
+            ['right_name' => 'Редактирование правила', 'right_action' => 'update-right', 'category_right_id' => 1], 
+            ['right_name' => 'Просмотр правила', 'right_action' => 'view-right', 'category_right_id' => 1], 
+            ['right_name' => 'Удаление правила', 'right_action' => 'delete-right', 'category_right_id' => 1],   
+            ['right_name' => 'Просмотр списка правил', 'right_action' => 'index-right', 'category_right_id' => 1], 
+
+            ['right_name' => 'Добавление сущности', 'right_action' => 'create-entity', 'category_right_id' => 1], 
+            ['right_name' => 'Редактирование сущности', 'right_action' => 'update-entity', 'category_right_id' => 1], 
+            ['right_name' => 'Просмотр сущности', 'right_action' => 'view-entity', 'category_right_id' => 1], 
+            ['right_name' => 'Удаление сущности', 'right_action' => 'delete-entity', 'category_right_id' => 1],   
+            ['right_name' => 'Просмотр списка сущностей', 'right_action' => 'index-entity', 'category_right_id' => 1], 
         ]);
     }
 }

@@ -62,6 +62,20 @@ class PagesTableSeeder extends Seeder
                 'page_description' => 'Должности компании',
                 'page_alias' => '/positions',
             ],
+             [
+                'page_name' => 'Сущности',
+                'site_id' => '1',
+                'page_title' => 'Сущности',
+                'page_description' => 'Сущности системы',
+                'page_alias' => '/entities',
+            ],
+             [
+                'page_name' => 'Правила доступа',
+                'site_id' => '1',
+                'page_title' => 'Правила доступа зерегистрированные для системы',
+                'page_description' => 'Правила доступа',
+                'page_alias' => '/rights',
+            ],
         ]);
     }
 }
