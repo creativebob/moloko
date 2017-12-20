@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Position;
 use App\Page;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Policies\PositionPolicy;
 
 class PositionController extends Controller
 {
@@ -16,6 +18,8 @@ class PositionController extends Controller
      */
     public function index()
     {
+      // $this->authorize('index', Position::class);
+      // dd($b);
       if (isset(Auth::user()->company_id)) {
         // Если у пользователя есть компания
         $positions = Position::whereCompany_id(Auth::user()->company_id)
@@ -31,6 +35,9 @@ class PositionController extends Controller
       $page_info = Page::wherePage_alias('/positions')->whereSite_id('1')->first();
       $menu = Page::whereSite_id(1)->get();
       return view('positions.index', compact('positions', 'page_info', 'menu'));
+
+      // $user = Auth::user()->id;
+      // dd(User::find($user)->access_group->rights()->get());
     }
 
     /**
@@ -40,6 +47,7 @@ class PositionController extends Controller
      */
     public function create()
     {
+      $this->authorize('create', Position::class);
       $menu = Page::whereSite_id('1')->get();
       $pages = Page::whereSite_id('1')->pluck('page_name', 'id');
       $position = new Position;

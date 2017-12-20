@@ -1697,6 +1697,11 @@ input[type=checkbox], input[type=radio] {
     .td-checkbox, .td-delete {
       padding: 0;
     }
+    .td-getauth {
+      .button {
+        margin-bottom: 0;
+      }
+    }
     // Стилизуем thead
     thead {
       // width: 100%;

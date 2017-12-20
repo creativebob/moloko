@@ -12,4 +12,18 @@ class Right extends Model
 		'entity_type', 
 		'entity_id', 
     ];
+    /**
+	   * Роли, принадлежащие пользователю.
+	   */
+	  public function roles()
+	  {
+	    return $this->belongsToMany('App\Role');
+	  }
+	  /**
+	   *  Связь с таблицей прав.
+	   */
+	  public function access_groups()
+	  {
+	    return $this->belongsToMany('App\Access_group', 'accesses', 'access_group_id', 'id');
+	  }
 }

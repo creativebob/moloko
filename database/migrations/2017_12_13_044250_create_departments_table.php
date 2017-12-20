@@ -15,8 +15,10 @@ class CreateDepartmentsTable extends Migration
     {
         Schema::create('departments', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('company_id')->unsigned()->comment('Id компании, в которой находится отдел');
-            $table->integer('city_id')->nullable()->unsigned()->comment('Id города, в котором находится отдел');
+            $table->integer('company_id')->nullable()->unsigned()->comment('Id компании, в которой находится отдел');
+            $table->foreign('company_id')->references('id')->on('companies');
+            $table->integer('city_id')->nullable()->unsigned()->comment('Id города, в котором находится филиал/отдел');
+            $table->foreign('city_id')->references('id')->on('cities');
             $table->string('department_name', 60)->index()->comment('Название отдела');
             $table->string('department_address', 100)->nullable()->comment('Адресс отдела');
             $table->bigInteger('department_phone')->nullable()->comment('Телефон отдела');

@@ -6,11 +6,13 @@ use App\User;
 use App\Page;
 use App\Access;
 use App\Company;
+use App\Position;
 
 use App\Policies\UserPolicy;
 use App\Policies\PagePolicy;
 use App\Policies\AccessPolicy;
 use App\Policies\CompanyPolicy;
+use App\Policies\PositionPolicy;
 
 
 use Illuminate\Support\Facades\Gate as GateContract;
@@ -30,6 +32,7 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         Access::class => AccessPolicy::class,
         Company::class => CompanyPolicy::class,
+        Position::class => PositionPolicy::class,
     ];
 
     /**

@@ -510,5 +510,11 @@ $('.icon-filter').click(function() {
 //    checkFilter ();
 // });
 
+$.ajaxSetup({
+  error: function() {
+    alert('Ошибка при ajax запросе');
+  }
+});
+
 
 

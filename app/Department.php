@@ -38,6 +38,13 @@ class Department extends Model
   {
     return $this->hasMany('App\Employee');
   }
+  /**
+  * Получаем город.
+  */
+  public function city()
+  {
+    return $this->belongsTo('App\City');
+  }
 
 
 }

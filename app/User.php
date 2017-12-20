@@ -203,4 +203,11 @@ class User extends Authenticatable
   {
     return $this->belongsTo('App\Company');
   }
+   /**
+  * Получаем группу пользователя.
+  */
+  public function access_group()
+  {
+    return $this->belongsTo('App\Access_group', 'group_action_id');
+  }
 }

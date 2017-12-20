@@ -35,4 +35,11 @@ class City extends Model
   {
     return $this->belongsTo('App\Region');
   }
+  /**
+  * Получаем филиалы и отделы города.
+  */
+  public function departments()
+  {
+    return $this->hasMany('App\Department');
+  }
 }

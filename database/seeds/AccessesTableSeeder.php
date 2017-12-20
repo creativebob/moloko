@@ -23,6 +23,12 @@ class AccessesTableSeeder extends Seeder
             ['right_action' => 'view-company', 'access_group_id' => 1], 
             ['right_action' => 'delete-company', 'access_group_id' => 1], 
             ['right_action' => 'index-company', 'access_group_id' => 1],
+
+            ['right_action' => 'create-position', 'access_group_id' => 1], 
+            ['right_action' => 'update-position', 'access_group_id' => 1], 
+            ['right_action' => 'view-position', 'access_group_id' => 1], 
+            ['right_action' => 'delete-position', 'access_group_id' => 1], 
+            ['right_action' => 'index-position', 'access_group_id' => 1],
         ]);
     }
 }
