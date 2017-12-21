@@ -53,6 +53,14 @@ class RightsTableSeeder extends Seeder
             ['right_name' => 'Просмотр системных отделов', 'right_action' => 'system-department', 'category_right_id' => 1], 
             ['right_name' => 'Просмотр всех отделов', 'right_action' => 'get-departments', 'category_right_id' => 1], 
 
+            ['right_name' => 'Добавление группы', 'right_action' => 'create-role', 'category_right_id' => 1], 
+            ['right_name' => 'Редактирование группы', 'right_action' => 'update-role', 'category_right_id' => 1], 
+            ['right_name' => 'Просмотр группы', 'right_action' => 'view-role', 'category_right_id' => 1], 
+            ['right_name' => 'Удаление группы', 'right_action' => 'delete-role', 'category_right_id' => 1],   
+            ['right_name' => 'Просмотр списка групп', 'right_action' => 'index-role', 'category_right_id' => 1], 
+            ['right_name' => 'Просмотр системных групп', 'right_action' => 'system-role', 'category_right_id' => 1], 
+            ['right_name' => 'Просмотр всех групп', 'right_action' => 'get-roles', 'category_right_id' => 1], 
+
             ['right_name' => 'Просмотр всех филиалов', 'right_action' => '1', 'category_right_id' => 2], 
 
 

@@ -20,7 +20,6 @@ class RightRoleTableSeeder extends Seeder
             ['right_id' => 6, 'role_id' => 1], 
             ['right_id' => 7, 'role_id' => 1], 
 
-
             ['right_id' => 8, 'role_id' => 1], 
             ['right_id' => 9, 'role_id' => 1], 
             ['right_id' => 10, 'role_id' => 1], 
@@ -52,7 +51,16 @@ class RightRoleTableSeeder extends Seeder
             ['right_id' => 33, 'role_id' => 1],
             ['right_id' => 34, 'role_id' => 1], 
             ['right_id' => 35, 'role_id' => 1],
-            ['right_id' => 36, 'role_id' => 6],
+
+            ['right_id' => 36, 'role_id' => 1], 
+            ['right_id' => 37, 'role_id' => 1], 
+            ['right_id' => 38, 'role_id' => 1], 
+            ['right_id' => 39, 'role_id' => 1], 
+            ['right_id' => 40, 'role_id' => 1],
+            ['right_id' => 41, 'role_id' => 1], 
+            ['right_id' => 42, 'role_id' => 1],
+
+            ['right_id' => 43, 'role_id' => 6],
         ]);
     }
 }

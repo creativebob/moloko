@@ -16,6 +16,8 @@ class CreateRolesTable extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('role_name')->index()->unique()->comment('Имя категории пользователей');
+            $table->string('role_description')->index()->nullable()->comment('Описание категории');
+
             $table->integer('category_right_id')->nullable()->unsigned()->comment('Категория пользователей');
             $table->foreign('category_right_id')->references('id')->on('category_rights');
 
