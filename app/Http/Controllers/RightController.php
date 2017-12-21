@@ -8,8 +8,8 @@ use App\Page;
 use App\Entity;
 
 // Модели которые отвечают за работу с правами + политики
-use App\Access;
-use App\Access_group;
+use App\RightsRole;
+use App\Role;
 use App\Policies\RightPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
@@ -30,11 +30,11 @@ class RightController extends Controller
      */
     public function index()
     {
-        $n = new Right;
-        $this->authorize('index', $n);
+        $this->authorize('index', Right::class);
 
         $rights = Right::paginate(30);
         $menu = Page::get();
+
         return view('rights.index', compact('rights', 'menu'));
     }
 

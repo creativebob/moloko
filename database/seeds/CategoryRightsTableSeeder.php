@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class CategotyRightTableSeeder extends Seeder
+class CategoryRightsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,7 +13,8 @@ class CategotyRightTableSeeder extends Seeder
     {
         DB::table('category_rights')->insert([
         	['category_right_name' => 'Функциональные права'], 
-        	['category_right_name' => 'Филиальные права']
+        	['category_right_name' => 'Филиальные права'], 
+            ['category_right_name' => 'Авторские права']
         ]);
     }
 }

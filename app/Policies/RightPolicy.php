@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Right;
 use App\User;
-use App\Access;
+use App\RightsRole;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -20,11 +20,19 @@ class RightPolicy
     //     return $result;
     // }
 
-    public function index(User $user, Right $right)
+    public function index(User $user)
     {
-        $current_access = Auth::user()->group_action_id;
-        $access = Access::where(['access_group_id' => $current_access]);
-        return $result = $access->where(['right_action' => 'index-right'])->count() == "1";
+        foreach ($user->roles as $role) {
+            foreach ($role->rights as $right) {
+                // Перебор всех прав пользователя
+                if ($right->right_action == 'index-user') {$result = true; break;} else {$result = false;}
+            }
+        }
+
+        return $result;
+        // $current_access = Auth::user()->group_action_id;
+        // $access = Access::where(['access_group_id' => $current_access]);
+        // return $result = $access->where(['right_action' => 'index-right'])->count() == "1";
     }
 
     /**

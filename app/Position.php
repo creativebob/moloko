@@ -7,7 +7,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Position extends Model
 {
+
   use SoftDeletes;
+
+    // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
+
+    // Фильтрация для показа системных записей
+    public function scopeSystemItem($query, $system_item)
+    {
+        if(isset($system_item)){
+          return $query->where('system_item', '=', $system_item);
+        } else {return $query};
+    }
+  
+
   /**
    * Атрибуты, которые должны быть преобразованы в даты.
    *

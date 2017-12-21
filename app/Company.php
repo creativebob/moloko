@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Company extends Model
 {
@@ -13,7 +14,6 @@ class Company extends Model
 	}
 
     protected $dates = ['deleted_at'];
-
     protected $fillable = [
 
         'company_name', 
@@ -28,7 +28,6 @@ class Company extends Model
         'bank', 
         'director_user_id', 
         'admin_user_id'
-
     ];
   /**
   * Получаем отделы компании.

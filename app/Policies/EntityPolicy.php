@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\User;
 use App\Entity;
-use App\Access;
+use App\RightsRole;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;

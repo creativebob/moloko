@@ -8,8 +8,8 @@ use App\Entity;
 use App\Page;
 
 // Модели которые отвечают за работу с правами + политики
-use App\Access;
-use App\Access_group;
+use App\RightsRole;
+use App\Role;
 use App\Policies\EntityPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
