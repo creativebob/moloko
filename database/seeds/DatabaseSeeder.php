@@ -23,12 +23,8 @@ class DatabaseSeeder extends Seeder
             $this->call(AreasTableSeeder::class);
             $this->call(CitiesTableSeeder::class);
 
-            // Наполнение таблиц с правами
-            $this->call(CategoryRightsTableSeeder::class);
-            $this->call(RightsTableSeeder::class);
-    		$this->call(RolesTableSeeder::class);
-            $this->call(RightRoleTableSeeder::class);
-            $this->call(RoleUserTableSeeder::class);
+            // Филиалы / отделы
+            $this->call(DepartmentsTableSeeder::class);
 
             // Сайты, страницы
             $this->call(SitesTableSeeder::class);
@@ -36,6 +32,13 @@ class DatabaseSeeder extends Seeder
 
             // Должности
             $this->call(PositionsTableSeeder::class);
+
+            // Наполнение таблиц с правами
+            $this->call(CategoryRightsTableSeeder::class);
+            $this->call(RightsTableSeeder::class);
+    		$this->call(RolesTableSeeder::class);
+            $this->call(RightRoleTableSeeder::class);
+            $this->call(RoleUserTableSeeder::class);
 
             // Сущности
             $this->call(EntitiesTableSeeder::class);

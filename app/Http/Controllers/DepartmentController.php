@@ -23,51 +23,74 @@ class DepartmentController extends Controller
   public function index()
   {
 
-    if (isset(Auth::user()->company_id)) {
-      // Получаем данные из таблицы в массиве
-      $departments = Department::whereCompany_id(Auth::user()->company_id)
-                        ->get();
-      $tree = $departments->pluck('department_name', 'id');
-      $employees = Employee::get();
-      $positions = Position::whereCompany_id(Auth::user()->company_id)
-                        ->orWhereNull('company_id')
-                        ->get();
-      $positions_list = $positions->pluck('position_name', 'id');
-    } else {
-      // Если нет, то бог без компании
-        if (Auth::user()->god == 1) {
-          $departments = Department::get(); 
+
+// $this->authorize('index', User::class);
+        $user = Auth::user();
+        $others_item['user_id'] = $user->id;
+        $system_item = null;
+
+        // Смотрим права на простотр системных.
+         foreach ($user->roles as $role) {
+            foreach ($role->rights as $right) {
+                // Перебор всех прав пользователя
+                if ($right->category_right_id == 2) {$others_item[$right->right_action] = $right->right_action;};
+                if ($right->right_action == 'system-user') {$system_item = 1;};
+                if ($right->right_action == 'get-user23s') {$others_item['all'] = 'all';};
+            }
+        }
+
+        if (isset($user->company_id)) {
+            // Если у пользователя есть компания
+            $departments = Department::whereCompany_id($user->company_id)
+                    ->otherItem($others_item)
+                    ->systemItem($system_item) // Фильтр по системным записям
+                    ->get();
+
+                    $tree = $departments->pluck('department_name', 'id');
+                    $employees = Employee::get();
+                    $positions = Position::whereCompany_id(Auth::user()->company_id)
+                                      ->orWhereNull('company_id')
+                                      ->get();
+                    $positions_list = $positions->pluck('position_name', 'id');
+
+
+        } else {
+            // Если нет, то бог без компании
+            if ($user->god == 1) {
+              $departments = Department::get();
+
           $tree = $departments->pluck('department_name', 'id');
           $employees = Employee::all();
           $positions = Position::get();
           $positions_list = $positions->pluck('position_name', 'id');
+
+            };
+        }
+   
+        $departments_db = $departments->toArray();
+
+        //Создаем масив где ключ массива является ID меню
+        $departments_id = [];
+        foreach ($departments_db as $department) {
+          $departments_id[$department['id']] = $department;
         };
-    };
-
-    $departments_db = $departments->toArray();
-
-    //Создаем масив где ключ массива является ID меню
-    $departments_id = [];
-    foreach ($departments_db as $department) {
-      $departments_id[$department['id']] = $department;
-    };
-    //Функция построения дерева из массива от Tommy Lacroix
-    $departments_tree = [];
-    foreach ($departments_id as $id => &$node) {   
-      //Если нет вложений
-      if (!$node['department_parent_id']){
-        $departments_tree[$id] = &$node;
-      } else { 
-      //Если есть потомки то перебераем массив
-        $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
-      }
-    };
-    
-    
-    $menu = Page::whereSite_id(1)->get();
-    $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
-    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'tree', 'employees', 'page_info', 'pages', 'menu', 'departments'));
-    // dd($positions);
+        //Функция построения дерева из массива от Tommy Lacroix
+        $departments_tree = [];
+        foreach ($departments_id as $id => &$node) {   
+          //Если нет вложений
+          if (!$node['department_parent_id']){
+            $departments_tree[$id] = &$node;
+          } else { 
+          //Если есть потомки то перебераем массив
+            $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
+          }
+        };
+        
+        
+        $menu = Page::whereSite_id(1)->get();
+        $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
+        return view('departments', compact('departments_tree', 'positions', 'positions_list', 'tree', 'employees', 'page_info', 'pages', 'menu', 'departments'));
+        // dd($positions);
   }
 
 

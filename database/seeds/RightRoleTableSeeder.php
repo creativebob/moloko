@@ -52,9 +52,7 @@ class RightRoleTableSeeder extends Seeder
             ['right_id' => 33, 'role_id' => 1],
             ['right_id' => 34, 'role_id' => 1], 
             ['right_id' => 35, 'role_id' => 1],
-
-
-            ['category_right_name' => 'Филиальные права']
+            ['right_id' => 36, 'role_id' => 6],
         ]);
     }
 }
