@@ -27,7 +27,7 @@ class RightsTableSeeder extends Seeder
             ['right_name' => 'Удаление компании', 'right_action' => 'delete-company', 'category_right_id' => 1],   
             ['right_name' => 'Просмотр списка компаний', 'right_action' => 'index-company', 'category_right_id' => 1], 
             ['right_name' => 'Просмотр системных компаний', 'right_action' => 'system-company', 'category_right_id' => 1], 
-            ['right_name' => 'Просмотр всех пользователей', 'right_action' => 'get-companies', 'category_right_id' => 1], 
+            ['right_name' => 'Просмотр всех компаний', 'right_action' => 'get-companies', 'category_right_id' => 1], 
 
             ['right_name' => 'Добавление правила', 'right_action' => 'create-right', 'category_right_id' => 1], 
             ['right_name' => 'Редактирование правила', 'right_action' => 'update-right', 'category_right_id' => 1], 
@@ -54,6 +54,7 @@ class RightsTableSeeder extends Seeder
             ['right_name' => 'Просмотр всех отделов', 'right_action' => 'get-departments', 'category_right_id' => 1], 
 
             ['right_name' => 'Просмотр всех филиалов', 'right_action' => '1', 'category_right_id' => 2], 
+
 
         ]);
     }

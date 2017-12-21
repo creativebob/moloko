@@ -19,6 +19,9 @@ class CreateRolesTable extends Migration
             $table->integer('category_right_id')->nullable()->unsigned()->comment('Категория пользователей');
             $table->foreign('category_right_id')->references('id')->on('category_rights');
 
+            $table->integer('department_id')->nullable()->unsigned()->comment('ID филиала');
+            $table->foreign('department_id')->references('id')->on('departments');
+
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Page;
 use App\Site;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
@@ -14,27 +15,43 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $page_info = Page::wherePage_alias('/pages')->whereSite_id('1')->first();
-        $menu = Page::whereSite_id('1')->get();
-        $pages = Page::paginate(30);
-        return view('pages.index', compact('pages', 'page_info', 'menu'));
-    }
+    public function index(Request $request)
+    { 
+      if (isset(Auth::user()->company_id)) {
+        // Если у пользователя есть компания
+        $company_id = Auth::user()->company_id;
+        $pages = Page::whereHas('site', function ($query) {
+                  $query->whereCompany_id(Auth::user()->company_id);
+                })
+                ->with('site')
+                ->siteId($request->site_id)
+                ->paginate(30);
+      } else {
+        // Если нет, то бог без компании
+        if (Auth::user()->god == 1) {
+          $pages = Page::siteId($request->site_id)->paginate(30);
+        };
+      }
+      // Пишем сайт в сессию
+      session(['current_site' => $request->site_id]);
 
+      $page_info = Page::wherePage_alias('/pages')->whereSite_id('1')->first();
+      $menu = Page::whereSite_id(1)->get();
+      return view('pages.index', compact('pages', 'page_info', 'menu'));
+    }
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {   
-        $menu = Page::whereSite_id('1')->get();
-        $sites = Site::get()->pluck('site_name', 'id');
-        $page = new Page;
-        return view('pages.create', compact('page', 'menu', 'sites'));  
+      $sites = Site::whereCompany_id(Auth::user()->company_id)->get()->pluck('site_name', 'id');
+      $current_site = $request->session()->get('current_site');
+      $page = new Page;
+      $menu = Page::whereSite_id('1')->get();
+      return view('pages.create', compact('page', 'menu', 'sites', 'current_site'));  
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -53,7 +70,7 @@ class PageController extends Controller
       
       $page->save();
 
-      return redirect('/pages');
+      return redirect('/pages?site_id=' . $request->site_id);
     }
 
     /**
@@ -64,11 +81,7 @@ class PageController extends Controller
      */
     public function show($id)
     {
-      $page_info = Page::wherePage_alias('/pages')->whereSite_id('1')->first();
-      $menu = Page::whereSite_id('1')->get();
-      // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
-      $pages = Page::whereSite_id($id)->paginate(30);
-      return view('pages.index', compact('pages', 'page_info', 'menu'));
+      //
     }
 
     /**
@@ -77,12 +90,13 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
       $page = Page::findOrFail($id);
-      $sites = Site::get()->pluck('site_name', 'id');
+      $sites = Site::whereCompany_id(Auth::user()->company_id)->get()->pluck('site_name', 'id');
       $menu = Page::whereSite_id('1')->get();
-      return view('pages.edit', compact('page', 'menu', 'sites'));
+      $current_site = $request->session()->get('current_site');
+      return view('pages.edit', compact('page', 'menu', 'sites', 'current_site'));
     }
 
     /**
@@ -104,7 +118,7 @@ class PageController extends Controller
       
       $page->save();
 
-      return redirect('/pages');
+      return redirect('/pages?site_id=' . $request->site_id);
     }
 
     /**
@@ -120,7 +134,7 @@ class PageController extends Controller
       // Удаляем страницу с обновлением
       $page = Page::destroy($id);
       if ($page) {
-        return Redirect('/pages/' . $site_id);
+        return Redirect('/pages?site_id=' . $site_id);
       } else {
         echo 'произошла ошибка';
       }; 

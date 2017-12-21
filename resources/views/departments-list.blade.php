@@ -36,7 +36,7 @@
       <li><div class="icon-list-edit sprite" data-open="filial-edit"></div></li>
       <li>
         @if (!isset($department['children']))
-          <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
+          <div class="icon-list-delete sprite" data-open="item-delete"></div>
         @endif
       </li>
     </ul>

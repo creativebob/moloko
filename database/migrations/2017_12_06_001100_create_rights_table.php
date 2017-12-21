@@ -16,7 +16,7 @@ class CreateRightsTable extends Migration
         Schema::create('rights', function (Blueprint $table) {
             $table->increments('id');
             $table->string('right_name')->index()->unique()->comment('Простое имя правила для вывода');
-            $table->string('right_action')->index()->unique()->comment('Метод - сущность (через дефис)');
+            $table->string('right_action')->index()->comment('Метод - сущность (через дефис)');
             $table->integer('category_right_id')->nullable()->unsigned()->comment('Категория правила');
             $table->foreign('category_right_id')->references('id')->on('category_rights');
 

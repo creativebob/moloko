@@ -43,8 +43,8 @@
 <div class="grid-x">
   <div class="small-12 cell">
     <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
-    @if($departments)
-      @foreach ($departments as $department)
+    @if($departments_tree)
+      @foreach ($departments_tree as $department)
         @include('departments-list')
       @endforeach
     @endif
@@ -62,31 +62,31 @@
       <h5>ДОБАВЛЕНИЕ филиала</h5>
     </div>
   </div>
-  {{ Form::open(['id' => 'form-filial-add', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['url'=>'/departments', 'id' => 'form-filial-add', 'data-abide', 'novalidate']) }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label class="input-icon">Введите город
-          {{ Form::text('city_name', $value = null, ['id'=>'city-name-field', 'autocomplete'=>'off', 'required']) }}
+          {{ Form::text('city_name', $value = null, ['id'=>'city-name-field-add', 'autocomplete'=>'off', 'required']) }}
           <div class="sprite-input-right icon-success load">лол</div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
         </label>
         <label>Название филиала
-           {{ Form::text('filial_name', $value = null, ['id'=>'filial-name-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_name', $value = null, ['class'=>'filial-name-field', 'autocomplete'=>'off', 'required']) }}
         </label>
         <label>Адресс филиала
-           {{ Form::text('filial_address', $value = null, ['id'=>'filial-address-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_address', $value = null, ['class'=>'filial-address-field', 'autocomplete'=>'off', 'required']) }}
         </label>
         <label>Телефон филиала
-           {{ Form::text('filial_phone', $value = null, ['id'=>'filial-phone-field', 'autocomplete'=>'off', 'required', 'class'=>'phone-field']) }}
+           {{ Form::text('filial_phone', $value = null, ['class'=>'filial-phone-field phone-field', 'autocomplete'=>'off', 'required']) }}
         </label>
-        <input type="hidden" name="city_id" id="city-id-field">
-        <input type="hidden" name="filial_database" id="filial-database" value="0">
+        <input type="hidden" name="city_id" id="city-id-field-add">
+        <input type="hidden" name="filial_database" id="filial-database-add" value="0">
       </div>
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-filial-add']) }}
+        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-filial-add']) }}
       </div>
     </div>
   {{ Form::close() }}
@@ -95,41 +95,46 @@
 {{-- Конец модалки добавления филиала --}}
 
 {{-- Модалка редактирования филиала --}}
-<div class="reveal" id="region-edit" data-reveal>
+<div class="reveal" id="filial-edit" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>ДОБАВЛЕНИЕ Области</h5>
+      <h5>Редактирование филиала</h5>
     </div>
   </div>
-  <form action="/cities" method="post">
-    {{ csrf_field() }}
+  {{ Form::open(['id' => 'form-filial-edit', 'data-abide', 'novalidate']) }}
+  {{ method_field('PATCH') }}
     <div class="grid-x grid-padding-x modal-content inputs">
-      <div class="small-10 medium-4 cell">
-        <label>Название области
-          <input type="text" name="region_name" id="region-title-field" value="lol" autocomplete="off" required>
-          <span class="form-error">Уж постарайтесь, введните хотя бы 3 символа!</span>
+      <div class="small-10 small-offset-1 cell">
+         <label class="input-icon">Название города
+          {{ Form::text('city_name', $value = null, ['id'=>'city-name-field-edit', 'autocomplete'=>'off', 'required']) }}
+          <div class="sprite-input-right icon-success load">лол</div>
+          <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
-        <input type="hidden" name="region_vk_external_id" id="region-id-field" value="lol">
-      </div>
-      <div class="small-12 medium-8 cell">
-        <table class="table-content-search">
-          <caption>Результаты поиска в сторонней базе данных:</caption>
-          <tbody id="tbody-region-add">
-          </tbody>
-        </table>
+        </label>
+        <label>Название филиала
+           {{ Form::text('filial_name', $value = null, ['class'=>'filial-name-field', 'autocomplete'=>'off', 'required']) }}
+        </label>
+        <label>Адресс филиала
+           {{ Form::text('filial_address', $value = null, ['class'=>'filial-address-field', 'autocomplete'=>'off', 'required']) }}
+        </label>
+        <label>Телефон филиала
+           {{ Form::text('filial_phone', $value = null, ['class'=>'filial-phone-field phone-field', 'autocomplete'=>'off', 'required']) }}
+        </label>
+        <input type="hidden" name="city_id" id="city-id-field-edit">
+        <input type="hidden" name="filial_database" id="filial-database-edit" value="0">
       </div>
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        <button class="button modal-button" id="submit-region-add" type="submit" disabled>Сохранить</button>
+        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-filial-edit']) }}
       </div>
     </div>
-  </form>
-  <div data-close class="icon-close-modal sprite close-modal"></div> 
+  {{ Form::close() }}
+  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 {{-- Конец модалки редактирования филиала --}}
 
-{{-- Модалка добавления отдела/должности --}}
+{{-- Модалка добавления отдела --}}
 <div class="reveal" id="department-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
@@ -159,15 +164,15 @@
                 <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
               </label>
               <label class="input-icon">Город
-                {{ Form::text('city_name', $value = null, ['id'=>'city-name-field', 'autocomplete'=>'off']) }}
+                {{ Form::text('city_name', $value = null, ['class'=>'city-name-field', 'autocomplete'=>'off']) }}
                 <div class="sprite-input-right icon-success load">лол</div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
               </label>
               <label>Адресс отдела
-                {{ Form::text('department_address', $value = null, ['id'=>'department-address-field', 'autocomplete'=>'off']) }}
+                {{ Form::text('department_address', $value = null, ['class'=>'department-address-field', 'autocomplete'=>'off']) }}
               </label>
               <label>Телефон отдела
-                {{ Form::text('department_phone', $value = null, ['id'=>'department-phone-field', 'autocomplete'=>'off', 'class'=>'phone-field']) }}
+                {{ Form::text('department_phone', $value = null, ['class'=>'department-phone-field phone-field', 'autocomplete'=>'off']) }}
               </label>
               <input type="hidden" name="department_database" id="department-database" value="0">
               <input type="hidden" name="filial_id" id="dep-filial-id-field">
@@ -207,65 +212,52 @@
   </div>
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
-{{-- Конец модалки добавления отдела/должности --}}
+{{-- Конец модалки добавления отдела --}}
 
-{{-- Модалка редактирования отдела/должности --}}
-<div class="reveal" id="edit" data-reveal>
+{{-- Модалка редактирования отдела --}}
+<div class="reveal" id="department-edit" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>РЕДАКТИРОВАНИЕ НАСЕЛЕННОГО ПУНКТА</h5>
+      <h5>Редактирование отдела</h5>
     </div>
   </div>
-  <div class="grid-x grid-padding-x modal-content inputs">
-    <div class="small-10 medium-4 cell">
-      <label>Область
-        <input type="text" name="" required>
-        <span class="form-error">Уж постарайтесь, придумайте что-нибудь!</span>
-      </label>
-      <label>Район
-        <input type="text" name="" required>
-        <span class="form-error">Уж постарайтесь, придумайте что-нибудь!</span>
-      </label>
-    </div>
-    <div class="small-12 medium-8 cell">
-      <div class="grid-x grid-padding-x">
-        <div class="small-10 medium-8 cell">
-          <label>Название населенного пункта
-            <input type="text" name="" required>
-            <span class="form-error">Уж постарайтесь, придумайте что-нибудь!</span>
-          </label>
-        </div>
-      </div>
-      <table class="table-content-search">
-        <caption>Результаты поиска в сторонней базе данных:</caption>
-        <tbody id="tbody-content-search">
-          <tr>
-            <td><a href="#">Кимильтей</a></td>
-            <td><a href="#">Куйтунский район</a></td>
-            <td><a href="#">Иркутская область</a></td>
-          </tr>
-          <tr>
-            <td><a href="#">Кимильтей</a></td>
-            <td><a href="#">Куйтунский район</a></td>
-            <td><a href="#">Иркутская область</a></td>
-          </tr>
-          <tr>
-            <td><a href="#">Кимильтей</a></td>
-            <td><a href="#">Куйтунский район</a></td>
-            <td><a href="#">Иркутская область</a></td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="grid-x ">
-        <div class="small-6 small-centered cell">
-          <a href="#" class="button modal-button">Сохранить</a>
-        </div>
+  <!-- Редактируем отдел -->
+  {{ Form::open(['id' => 'form-department-edit']) }}
+  {{ method_field('PATCH') }}
+    <div class="grid-x grid-padding-x modal-content inputs">
+      <div class="small-10 small-offset-1 cell">
+        <label>Отдел находится в:
+          {{ Form::select('department_parent_id', $tree, null, ['id'=>'dep-select-edit']) }}
+        </label>
+        <label>Название отдела
+          {{ Form::text('department_name', $value = null, ['class'=>'department-name-field', 'autocomplete'=>'off', 'required']) }}
+          <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
+        </label>
+        <label class="input-icon">Город
+          {{ Form::text('city_name', $value = null, ['id'=>'dep-city-name-field-edit', 'autocomplete'=>'off']) }}
+          <div class="sprite-input-right icon-success load">лол</div>
+          <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
+        </label>
+        <label>Адресс отдела
+          {{ Form::text('department_address', $value = null, ['class'=>'department-address-field', 'autocomplete'=>'off']) }}
+        </label>
+        <label>Телефон отдела
+          {{ Form::text('department_phone', $value = null, ['class'=>'department-phone-field phone-field', 'autocomplete'=>'off']) }}
+        </label>
+        <input type="hidden" name="department_database" id="department-db-edit" value="0">
+        <input type="hidden" name="filial_id" id="dep-filial-id-field-edit">
+        <input type="hidden" name="city_id" id="dep-city-id-field-edit">
       </div>
     </div>
-  </div>
-  <div data-close class="icon-close-modal sprite close-modal"></div> 
+    <div class="grid-x align-center">
+      <div class="small-6 medium-4 cell">
+        {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-department-edit']) }}
+      </div>
+    </div>
+  {{ Form::close() }}
+  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
-{{-- Конец модалки отдела/должности --}}
+{{-- Конец модалки отдела --}}
 
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-delete')
@@ -285,14 +277,7 @@ $(function() {
     var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
     return error;
   };
-
-  // При добавлении филиала ищем город в нашей базе
-  $('#city-name-field').keyup(function() {
-    // Блокируем кнопку
-    $('#submit-filial-add').prop('disabled', true);
-    $('#filial-database').val(0);
-    // Получаем фрагмент текста
-    var city = $('#city-name-field').val();
+  function checkCity(city, filialDb) {
     // Смотрим сколько символов
     var lenCity = city.length;
     // Если символов больше 3 - делаем запрос
@@ -304,22 +289,23 @@ $(function() {
         },
         url: "/departments",
         type: "POST",
-        data: {city_name: $('#city-name-field').val(), filial_database: $('#filial-database').val()},
+        data: {city_name: city, filial_database: filialDb},
         beforeSend: function () {
           $('.icon-load').removeClass('load');
         },
         success: function(date){
           $('.icon-load').addClass('load');
           // Удаляем все значения чтобы вписать новые
-          $('#tbody-filial-add>tr').remove();
+          $('.table-over').remove();
           var result = $.parseJSON(date);
           var data = '';
-          // alert(result.error_status);
           if (result.error_status == 0) {
             // Перебираем циклом
+            data = "<table class=\"table-content-search table-over\"><tbody>";
             for (var i = 0; i < result.count; i++) {
-              data = data + "<table class=\"table-content-search table-over\"><tbody><tr data-tr=\"" + i + "\"><td><a class=\"city-add\" data-city-id=\"" + result.cities.city_id[i] + "\">" + result.cities.city_name[i] + "</a></td><td><a class=\"city-add\">" + result.cities.area_name[i] + "</a></td><td><a class=\"city-add\">" + result.cities.region_name[i] + "</a></td></tr></tbody><table>";
+              data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"city-add\" data-city-id=\"" + result.cities.city_id[i] + "\">" + result.cities.city_name[i] + "</a></td><td><a class=\"city-add\">" + result.cities.area_name[i] + "</a></td><td><a class=\"city-add\">" + result.cities.region_name[i] + "</a></td></tr>";
             };
+            data = data + "</tbody><table>";
           };
           if (result.error_status == 1) {
             data = "<table class=\"table-content-search table-over\"><tbody><tr><td>Населенный пункт не существует в нашей базе данных, добавьте его!</td></tr></tbody><table>";
@@ -335,60 +321,83 @@ $(function() {
       $('.item-error').remove();
       // $('#city-name-field').val('');
     };
+  };
+  // При добавлении филиала ищем город в нашей базе
+  $('#city-name-field-add').keyup(function() {
+    // Блокируем кнопку
+    $('#submit-filial-add').prop('disabled', true);
+    $('#filial-database-add').val(0);
+    // Получаем фрагмент текста
+    var city = $('#city-name-field-add').val();
+    var filialDb = $('#filial-database-add').val();
+    checkCity(city, filialDb);
   });
-  // При клике на город в модальном окне заполняем инпуты
-  $(document).on('click', '.city-add', function() {
+  // При клике на город в модальном окне добавления филиала заполняем инпуты
+  $(document).on('click', '#form-filial-add .city-add', function() {
     var cityId = $(this).closest('tr').find('a.city-add').data('city-id');
     var cityName = $(this).closest('tr').find('[data-city-id=' + cityId +']').html();
-    $('#city-id-field').val(cityId);
-    $('#city-name-field').val(cityName);
+    $('#city-id-field-add').val(cityId);
+    $('#city-name-field-add').val(cityName);
     $('.table-over').remove();
 
     $('#submit-filial-add').prop('disabled', false);
-    $('#filial-database').val(1);
+    $('#filial-database-add').val(1);
     $('.icon-success').removeClass('load');
 
-    if($('#city-id-field').val() != '') {
+    if($('#city-id-field-add').val() != '') {
 
     };
   });
-  // Сохраняем филиал в базу и отображаем на странице по ajax   
-  $('#submit-filial-add').click(function (event) {
-    //чтобы не перезагружалась форма
-    event.preventDefault(); 
-    // Дергаем все данные формы
-    var formFilial = $('#form-filial-add').serialize();
-    // var region = {region_vk_external_id: $('#region-id-field').val(), region_name:$('#region-name-field').val()};
-    // alert(formFilial);
-    // Ajax
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/departments",
-      type: "POST",
-      data: formFilial,
-      success: function (data) {
-        var result = $.parseJSON(data);
+  // Редактируем филиал
+  $(document).on('click', '[data-open="filial-edit"]', function() {
+    // Блокируем кнопку
+    $('#submit-filial-edit').prop('disabled', false);
+      // Получаем данные о филиале
+      var id = $(this).closest('.parent').attr('id').split('-')[1];
+      $('#form-filial-edit').attr('action', '/departments/' + id);
+      // Сам ajax запрос
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: "/departments/" + id + "/edit",
+        type: "GET",
+        success: function(date){
+          var result = $.parseJSON(date);
+          $('#city-name-field-edit').val(result.city_name);
+          $('.filial-name-field').val(result.filial_name);
+          $('.filial-address-field').val(result.filial_address);
+          $('.filial-phone-field').val(result.filial_phone);
+          $('#city-id-field-edit').val(result.city_id);
+          $('#filial-database-edit').val(1);
+        }
+      });
+  });
+  // При редактировании города филиала  
+  $('#city-name-field-edit').keyup(function() {
+    // Блокируем кнопку
+    $('#submit-filial-edit').prop('disabled', true);
+    $('#filial-database-edit').val(0);
+    // Получаем фрагмент текста
+    var city = $('#city-name-field-edit').val();
+    var filialDb = $('#filial-database-edit').val();
+    checkCity(city, filialDb);
+  });
+  // При клике на город в модальном окне редактирования филиала заполняем инпуты
+  $(document).on('click', '#form-filial-edit .city-add', function() {
+    var cityId = $(this).closest('tr').find('a.city-add').data('city-id');
+    var cityName = $(this).closest('tr').find('[data-city-id=' + cityId +']').html();
+    $('#city-id-field-edit').val(cityId);
+    $('#city-name-field-edit').val(cityName);
+    $('.table-over').remove();
 
-        result = "<li class=\"first-item parent\" id=\"departments-" + result.filial_id + "\" data-name=\"" + result.filial_name + "\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"department-add\"></div></li><li><div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div></li></ul><a data-list=\"" + result.filial_id +"\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"first-item-name\">" + result.filial_name + "</span><span class=\"number\">0</span></div></a>";
+    $('#submit-filial-edit').prop('disabled', false);
+    $('#filial-database-edit').val(1);
+    $('.icon-success').removeClass('load');
 
-        // Выводим пришедшие данные на страницу
-        $('#content-list').append(result);
-        // Обнуляем модалку
-        $('#city-name-field').val('');
-        $('#filial-name-field').val('');
+    if($('#city-id-field-edit').val() != '') {
 
-        $('#filial-name-field').val('');
-        $('#filial-address-field').val('');
-        $('#filial-phone-field').val('');
-
-        $('.icon-success').addClass('load');
-        $('#filial-database').val(0);
-        $('#submit-filial-add').prop('disabled', true);
-        $('#tbody-filial-add>tr').remove();
-      }
-    });
+    };
   });
 
   // Добавление отдела или должности
@@ -404,6 +413,37 @@ $(function() {
     // Отмечам в какой пункт будем добавлять
     $('#dep-tree-select>[value="' + parent + '"]').prop('selected', true);
     $('#pos-tree-select>[value="' + parent + '"]').prop('selected', true);
+  });
+  // Редактируем отдел
+  $(document).on('click', '[data-open="department-edit"]', function() {
+    var id = $(this).closest('.parent').attr('id').split('-')[1];
+    // Отмечам в какой пункт будем добавлять
+    // $('#dep-select-edit>[value="' + id + '"]').prop('selected', true);
+    // Блокируем кнопку
+    $('#submit-department-edit').prop('disabled', false);
+      // Получаем данные о филиале
+      $('#form-department-edit').attr('action', '/departments/' + id);
+      // Сам ajax запрос
+      // alert(id);
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: "/departments/" + id + "/edit",
+        type: "GET",
+        success: function(date){
+          var result = $.parseJSON(date);
+          // alert(result);
+          $('#dep-city-name-field-edit').val(result.city_name);
+          $('.department-name-field').val(result.department_name);
+          $('.department-address-field').val(result.filial_address);
+          $('.department-phone-field').val(result.filial_phone);
+          $('#dep-city-id-field-edit').val(result.city_id);
+          $('#department-db-edit').val(1);
+          $('#dep-filial-id-field-edit').val(result.filial_id);
+          $('#depaprment-parent-id>[value="' + result.department_parent_id + '"]').prop('selected', true);
+        }
+      });
   });
   // При смнене пункта меняем id родителя
   $(document).on('change', '#dep-tree-select', function() {
@@ -468,16 +508,15 @@ $(function() {
   });
 
   // При закрытии модалки очищаем поля
-  $(document).on('click', '.add-item', function() {
-    $('#tbody-city-add>tr').remove();
-    $('#city-id-field').val('');
-    $('#city-name-field').val('');
-    $('#area-name').val('');
-    $('#region-name').val('');
-    $('.item-error').remove();
-    $('#tbody-region-add>tr').remove();
-    $('#region-id-field').val('');
-    $('#region-name-field').val('');
+  $(document).on('click', '.close-modal', function() {
+    $('#city-name-field-add').val('');
+    $('#city-name-field-edit').val('');
+    $('.filial-name-field').val('');
+    $('.filial-address-field').val('');
+    $('.filial-phone-field').val('');
+    $('.city-id-field').val('');
+    $('.table-over').val('');
+    
   });
   // При закрытии окна с ошибкой очищаем модалку
   $(document).on('click', '.error-close', function() {
@@ -490,7 +529,6 @@ $(function() {
     $('#region-name').val('');
   });
 
-  // Открываем меню и подменю, если только что добавили населенный пункт
   // Открываем меню и подменю, если только что добавили населенный пункт
   @if(!empty($data))
   if ({{ $data != null }})  {

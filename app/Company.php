@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Company extends Model
 {
+  use SoftDeletes;
+  /**
+   * Атрибуты, которые должны быть преобразованы в даты.
+   *
+   * @var array
+   */
 
 	public function user_info()
 	{

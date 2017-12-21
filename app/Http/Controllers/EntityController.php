@@ -32,7 +32,7 @@ class EntityController extends Controller
     public function index()
     {
         $model = new Entity;
-        $this->authorize('index', $model);
+        // $this->authorize('index', $model);
 
         $entities = Entity::paginate(30);
         $menu = Page::get();
@@ -46,7 +46,7 @@ class EntityController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Entity::class);
+        // $this->authorize('create', Entity::class);
 
         $entity = new Entity;
         $menu = Page::get();

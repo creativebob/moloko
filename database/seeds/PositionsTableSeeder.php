@@ -13,21 +13,21 @@ class PositionsTableSeeder extends Seeder
     {
         DB::table('positions')->insert([
         	[
-		        'position_name' => 'Менеджер',
+		        'position_name' => 'Директор',
                 'page_id' => '1',
 		        'direction_status' => null,
-		        'company_id' => 1,
+		        'company_id' => null,
         	],
+            [
+                'position_name' => 'Менеджер',
+                'page_id' => '1',
+                'direction_status' => '1',
+                'company_id' => null,
+            ],
         	[
 		        'position_name' => 'Web-разработчик',
                 'page_id' => '1',
 		        'direction_status' => null,
-		        'company_id' => 1,
-        	],
-        	[
-		        'position_name' => 'Директор',
-                'page_id' => '1',
-		        'direction_status' => '1',
 		        'company_id' => 1,
         	],
         ]);

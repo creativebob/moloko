@@ -1,12 +1,12 @@
 @extends('layouts.app')
 @include('companies.inhead')
 
-@section('title', 'Редактировать пользователя')
+@section('title', 'Редактировать страницу')
 
 @section('title-content')
 	<div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">РЕДАКТИРОВАТЬ страницу</h2>
+       <h2 class="header-content">РЕДАКТИРОВАТЬ страницу "{{ $page->page_name }}"</h2>
     </div>
     <div class="top-bar-right">
     </div>

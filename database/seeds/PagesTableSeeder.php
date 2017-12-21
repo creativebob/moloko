@@ -55,7 +55,7 @@ class PagesTableSeeder extends Seeder
                 'page_description' => 'Филиалы и отделы',
                 'page_alias' => '/departments',
             ],
-             [
+            [
                 'page_name' => 'Должности',
                 'site_id' => '1',
                 'page_title' => 'Должности',
@@ -75,6 +75,20 @@ class PagesTableSeeder extends Seeder
                 'page_title' => 'Правила доступа зерегистрированные для системы',
                 'page_description' => 'Правила доступа',
                 'page_alias' => '/rights',
+            ],
+            [
+                'page_name' => 'Тестовая страница для должностей',
+                'site_id' => '1',
+                'page_title' => 'Страница должности',
+                'page_description' => 'Должность в компании',
+                'page_alias' => '/home',
+            ],
+            [
+                'page_name' => 'Главная',
+                'site_id' => '2',
+                'page_title' => 'Воротная компания "Марс"',
+                'page_description' => 'Откатные, секционые, распашные ворота.',
+                'page_alias' => '/index',
             ],
         ]);
     }

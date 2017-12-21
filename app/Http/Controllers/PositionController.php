@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Position;
+use App\Page;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Policies\PositionPolicy;
 
 class PositionController extends Controller
 {
@@ -13,7 +18,26 @@ class PositionController extends Controller
      */
     public function index()
     {
-        //
+      // $this->authorize('index', Position::class);
+      // dd($b);
+      if (isset(Auth::user()->company_id)) {
+        // Если у пользователя есть компания
+        $positions = Position::whereCompany_id(Auth::user()->company_id)
+                ->orWhereNull('company_id')
+                ->paginate(30);
+      } else {
+        // Если нет, то бог без компании
+        if (Auth::user()->god == 1) {
+          $positions = Position::paginate(30);
+        };
+      }
+
+      $page_info = Page::wherePage_alias('/positions')->whereSite_id('1')->first();
+      $menu = Page::whereSite_id(1)->get();
+      return view('positions.index', compact('positions', 'page_info', 'menu'));
+
+      // $user = Auth::user()->id;
+      // dd(User::find($user)->access_group->rights()->get());
     }
 
     /**
@@ -23,7 +47,11 @@ class PositionController extends Controller
      */
     public function create()
     {
-        //
+      $this->authorize('create', Position::class);
+      $menu = Page::whereSite_id('1')->get();
+      $pages = Page::whereSite_id('1')->pluck('page_name', 'id');
+      $position = new Position;
+      return view('positions.create', compact('position', 'pages', 'menu'));  
     }
 
     /**
@@ -34,7 +62,19 @@ class PositionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $position = new Position;
+
+      $position->position_name = $request->position_name;
+      $position->page_id = $request->page_id;
+      $position->company_id = Auth::user()->company_id;
+      
+      $position->save();
+
+      if ($position) {
+        return Redirect('/positions');
+      } else {
+        $error = 'ошибка';
+      };
     }
 
     /**
@@ -54,9 +94,13 @@ class PositionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        //
+      $position = Position::findOrFail($id);
+      // $sites = Site::whereCompany_id(Auth::user()->company_id)->get()->pluck('site_name', 'id');
+      $pages = Page::whereSite_id('1')->pluck('page_name', 'id');
+      $menu = Page::whereSite_id('1')->get();
+      return view('positions.edit', compact('position', 'menu', 'pages'));
     }
 
     /**
@@ -68,7 +112,32 @@ class PositionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+      $position = Position::findOrFail($id);
+
+      $position->position_name = $request->position_name;
+      $position->page_id = $request->page_id;
+      $position->company_id = Auth::user()->company_id;
+      
+      $position->save();
+
+      if ($position) {
+        return Redirect('/positions');
+      } else {
+        $error = 'ошибка';
+      };
+
+      $page = Page::findOrFail($id);
+  
+      $page->page_name = $request->page_name;
+      $page->page_title = $request->page_title;
+      $page->page_description = $request->page_description;
+      $page->page_alias = $request->page_alias;
+      $page->site_id = $request->site_id;
+      
+      $page->save();
+
+      return redirect('/pages?site_id=' . $request->site_id);
     }
 
     /**
@@ -79,6 +148,12 @@ class PositionController extends Controller
      */
     public function destroy($id)
     {
-        //
+      // Удаляем страницу с обновлением
+      $position = Position::destroy($id);
+      if ($position) {
+        return Redirect('/positions');
+      } else {
+        echo 'произошла ошибка';
+      }; 
     }
 }

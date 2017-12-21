@@ -30,7 +30,7 @@ class RightController extends Controller
      */
     public function index()
     {
-        $this->authorize('index', Right::class);
+        // $this->authorize('index', Right::class);
 
         $rights = Right::paginate(30);
         $menu = Page::get();
@@ -45,7 +45,7 @@ class RightController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Right::class);
+        // $this->authorize('create', Right::class);
         $menu = Page::get();
         $right = new Right;
         $entity_list = Entity::get()->pluck('entity_name', 'id');

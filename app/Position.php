@@ -17,7 +17,7 @@ class Position extends Model
     {
         if(isset($system_item)){
           return $query->where('system_item', '=', $system_item);
-        } else {return $query};
+        } else {return $query;};
     }
   
 

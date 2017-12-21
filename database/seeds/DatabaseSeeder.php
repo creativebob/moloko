@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
 
 
+
             // Пользователи и компании
             $this->call(CompaniesTableSeeder::class);
             $this->call(UsersTableSeeder::class);
@@ -38,6 +39,7 @@ class DatabaseSeeder extends Seeder
 
             // Сущности
             $this->call(EntitiesTableSeeder::class);
+
             
     }
 }
