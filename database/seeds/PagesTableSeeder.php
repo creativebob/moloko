@@ -84,6 +84,13 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => '/rights',
             ],
             [
+                'page_name' => 'Сотрудники',
+                'site_id' => '1',
+                'page_title' => 'Сотрудники',
+                'page_description' => 'Сотрудники компании',
+                'page_alias' => '/employees',
+            ],
+            [
                 'page_name' => 'Тестовая страница для должностей',
                 'site_id' => '1',
                 'page_title' => 'Страница должности',

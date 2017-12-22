@@ -12,8 +12,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-
-
             // Пользователи и компании
             $this->call(CompaniesTableSeeder::class);
             $this->call(UsersTableSeeder::class);
@@ -43,6 +41,8 @@ class DatabaseSeeder extends Seeder
             // Сущности
             $this->call(EntitiesTableSeeder::class);
 
+            // Сотрудники
+            $this->call(EmployeesTableSeeder::class);
             
     }
 }

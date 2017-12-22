@@ -7,6 +7,7 @@ use App\City;
 use App\Position;
 use App\Employee;
 use App\Page;
+use App\Right;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 // use Department as LavMenu;
@@ -25,73 +26,67 @@ class DepartmentController extends Controller
 
 
 // $this->authorize('index', User::class);
-        $user = Auth::user();
-        $others_item['user_id'] = $user->id;
-        $system_item = null;
 
-        // Смотрим права на простотр системных.
-         foreach ($user->roles as $role) {
-            foreach ($role->rights as $right) {
-                // Перебор всех прав пользователя
-                if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;}; // Массив авторов
-                if ($right->category_right_id == 2) {$others_item[$right->right_action] = $right->right_action;}; // Массив филиалов
-                if ($right->right_action == 'system-user') {$system_item = 1;};
-                if ($right->right_action == 'get-users') {$others_item['all'] = 'all';};
-            }
-        }
+    $user = Auth::user();
+    $others_item['user_id'] = $user->id;
+    $system_item = null;
 
-        if (isset($user->company_id)) {
-            // Если у пользователя есть компания
-            $departments = Department::whereCompany_id($user->company_id)
-                    ->otherItem($others_item)
-                    ->systemItem($system_item) // Фильтр по системным записям
-                    ->get();
+    // Смотрим права на простотр системных.
+    //  foreach ($user->roles as $role) {
+    //     foreach ($role->rights as $right) {
+    //         // Перебор всех прав пользователя
+    //         if ($right->category_right_id == 2) {$others_item[$right->right_action] = $right->right_action;};
+    //         if ($right->right_action == 'system-user') {$system_item = 1;};
+    //         if ($right->right_action == 'get-user23s') {$others_item['all'] = 'all';};
+    //     }
+    // ->otherItem($others_item)
+    // }
 
-                    $tree = $departments->pluck('department_name', 'id');
-                    $employees = Employee::get();
-                    $positions = Position::whereCompany_id(Auth::user()->company_id)
-                                      ->orWhereNull('company_id')
-                                      ->get();
-                    $positions_list = $positions->pluck('position_name', 'id');
+    if (isset($user->company_id)) {
+      // Если у пользователя есть компания
+      $departments = Department::whereCompany_id($user->company_id)
+              
+              ->systemItem($system_item) // Фильтр по системным записям
+              ->get();
+      $employees = Employee::whereCompany_id($user->company_id)->get();
+      $positions = Position::whereCompany_id($user->company_id)
+                        ->orWhereNull('company_id')
+                        ->get();
+    } else {
+      // Если нет, то бог без компании
+      if ($user->god == 1) {
+        $departments = Department::get();
+        $employees = Employee::get();
+        $positions = Position::get();
+      };
+    }
+    // dd($departments);
 
+    $departments_db = $departments->toArray();
 
-        } else {
-            // Если нет, то бог без компании
-            if ($user->god == 1) {
-              $departments = Department::get();
-
-          $tree = $departments->pluck('department_name', 'id');
-          $employees = Employee::all();
-          $positions = Position::get();
-          $positions_list = $positions->pluck('position_name', 'id');
-
-            };
-        }
-   
-        $departments_db = $departments->toArray();
-
-        //Создаем масив где ключ массива является ID меню
-        $departments_id = [];
-        foreach ($departments_db as $department) {
-          $departments_id[$department['id']] = $department;
-        };
-        //Функция построения дерева из массива от Tommy Lacroix
-        $departments_tree = [];
-        foreach ($departments_id as $id => &$node) {   
-          //Если нет вложений
-          if (!$node['department_parent_id']){
-            $departments_tree[$id] = &$node;
-          } else { 
-          //Если есть потомки то перебераем массив
-            $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
-          }
-        };
-        
-        
-        $menu = Page::whereSite_id(1)->get();
-        $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
-        return view('departments', compact('departments_tree', 'positions', 'positions_list', 'tree', 'employees', 'page_info', 'pages', 'menu', 'departments'));
-        // dd($positions);
+    //Создаем масив где ключ массива является ID меню
+    $departments_id = [];
+    foreach ($departments_db as $department) {
+      $departments_id[$department['id']] = $department;
+    };
+    //Функция построения дерева из массива от Tommy Lacroix
+    $departments_tree = [];
+    foreach ($departments_id as $id => &$node) {   
+      //Если нет вложений
+      if (!$node['department_parent_id']){
+        $departments_tree[$id] = &$node;
+      } else { 
+      //Если есть потомки то перебераем массив
+        $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
+      }
+    };
+    
+    $tree = $departments->pluck('department_name', 'id');
+    $positions_list = $positions->pluck('position_name', 'id');
+    $menu = Page::whereSite_id(1)->get();
+    $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
+    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'tree', 'employees', 'page_info', 'pages', 'menu', 'departments'));
+    // dd($positions);
   }
 
 
@@ -113,6 +108,8 @@ class DepartmentController extends Controller
    */
   public function store(Request $request)
   {
+    $user = Auth::user();
+
     // Пишем филиал
     if (isset($request->filial_database)) {
       // По умолчанию значение 0
@@ -161,17 +158,35 @@ class DepartmentController extends Controller
 
         $filial = new Department;
 
-        $filial->company_id = Auth::user()->company_id;
+        $filial->company_id = $user->company_id;
         $filial->city_id = $request->city_id;
         $filial->department_name = $request->filial_name;
         $filial->department_address = $request->filial_address;
         $filial->department_phone = cleanPhone($request->filial_phone);
         $filial->filial_status = 1;
+        $filial->author_id = $user->id;
 
         $filial->save();
+
+        if ($filial) {
+          $right = new Right;
+
+          $right->right_name = $filial->department_name;
+          $right->right_action = $filial->id;
+          $right->category_right_id = 2;
+          $right->author_id = $user->id;
+
+          $right->save();
+
+          if ($right) {
+            return Redirect('/current_department/'.$filial->id.'/0/0');
+          } else {
+             echo 'Ошибка записи правила';
+          };
+        } else {
+          echo 'Ошибка записи филиала';
+        };
         
-        
-        return Redirect('/current_department/'.$filial->id.'/0/0');
       };
     };
     // Пишем отделы
@@ -216,16 +231,30 @@ class DepartmentController extends Controller
 
         $department->filial_id = $request->filial_id;
         $department->department_parent_id = $request->parent_id;
+        $department->author_id = $user->id;
               
 
         $department->save();
 
         if ($department) {
-          $filial_id = $request->filial_id;
-          $department_id = $department->id;
-           return Redirect('/current_department/'.$filial_id.'/'.$department_id.'/0');
+          $right = new Right;
+
+          $right->right_name = $department->department_name;
+          $right->right_action = $department->id;
+          $right->category_right_id = 2;
+          $right->author_id = $user->id;
+
+          $right->save();
+
+          if ($right) {
+            $filial_id = $department->filial_id;
+            $department_id = $department->id;
+            return Redirect('/current_department/'.$filial_id.'/'.$department_id.'/0');
+          } else {
+             echo 'Ошибка записи правила';
+          };
         } else {
-          $error = 'ошибка';
+          echo 'Ошибка записи филиала';
         };
       };
     };

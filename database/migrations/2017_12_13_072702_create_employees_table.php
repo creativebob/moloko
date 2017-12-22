@@ -15,6 +15,8 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
             $table->integer('user_id')->unsigned()->nullable()->comment('Id пользователя');
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('position_id')->unsigned()->nullable()->comment('Id должности');

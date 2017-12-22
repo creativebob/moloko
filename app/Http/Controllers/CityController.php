@@ -10,6 +10,7 @@ use App\Page;
 
 // use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CityController extends Controller
 {
@@ -47,6 +48,8 @@ class CityController extends Controller
    */
   public function store(Request $request)
   {
+    
+
     $city_database = $request->city_database;
     // По умолчанию значение 0
     if ($city_database == 0) {
@@ -97,6 +100,8 @@ class CityController extends Controller
     // Если город не найден, то меняем значение на 1, пишем в базу и отдаем результат
     if ($city_database == 1) {
 
+      $user = Auth::user();
+
       $region_name = $request->region_name;
       $area_name = $request->area_name;
       $city_name = $request->city_name;
@@ -137,6 +142,7 @@ class CityController extends Controller
 
           $area->area_name = $area_name;
           $area->region_id = $region_id;
+          $area->author_id = $user->id;
 
           $area->save();
 
@@ -170,6 +176,7 @@ class CityController extends Controller
         $city->city_code = $request->city_code;
         $city->area_id = $area_id;
         $city->city_vk_external_id = $request->city_vk_external_id;
+        $city->author_id = $user->id;
 
         $city->save();
 
