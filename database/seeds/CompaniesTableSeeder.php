@@ -27,6 +27,36 @@ class CompaniesTableSeeder extends Seeder
 		        'director_user_id' => '3',  
                 // 'admin_user_id' => '1',  
         	],
+            [
+
+                'company_name' => 'Оконная компания "Фенстер"',
+                'company_phone' => '83952718765',
+                // 'company_extra_phone' => '83952717775',
+                'city_id' => '1',
+                'company_address' => 'ул. Ленина, 5',
+                // 'company_inn' => '',
+                // 'kpp' => '',
+                // 'account_settlement' => '',
+                // 'account_correspondent' => '',
+                // 'bank' => '',
+                'director_user_id' => '4',  
+                // 'admin_user_id' => '1',  
+            ],
+            [
+
+                'company_name' => 'Фирма "Автомобили"',
+                'company_phone' => '83952712315',
+                // 'company_extra_phone' => '83952717775',
+                'city_id' => '1',
+                'company_address' => 'ул. Есенина, 78б',
+                // 'company_inn' => '',
+                // 'kpp' => '',
+                // 'account_settlement' => '',
+                // 'account_correspondent' => '',
+                // 'bank' => '',
+                'director_user_id' => '5',  
+                // 'admin_user_id' => '1',  
+            ],
         ]);
     }
 }

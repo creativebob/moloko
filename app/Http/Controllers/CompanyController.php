@@ -8,8 +8,7 @@ use App\Company;
 use App\Page;
 
 // Модели которые отвечают за работу с правами + политики
-use App\Access;
-use App\Access_group;
+use App\Role;
 use App\Policies\CompanyPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +29,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $this->authorize('index', Company::class);
+        // $this->authorize('index', Company::class);
 
         $companies = Company::paginate(30);
         $menu = Page::get();

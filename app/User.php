@@ -17,17 +17,41 @@ class User extends Authenticatable
   /**
    * Получить запись с именем группы доступа
    */
-  public function group_action()
-  {
-    return $this->BelongsTo('App\Access_group', 'group_action_id');
-  }
+  // public function group_action()
+  // {
+  //   return $this->BelongsTo('App\Role', 'group_action_id');
+  // }
 
-  public function group_locality()
-  {
-    return $this->BelongsTo('App\Access_group', 'group_locality_id');
-  }
+  // public function group_locality()
+  // {
+  //   return $this->BelongsTo('App\Role', 'group_locality_id');
+  // }
 
     // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
+
+
+
+    // Фильтрация для показа системных записей
+    public function scopeSystemItem($query, $system_item)
+    {
+        if(isset($system_item)){
+          return $query->orWhere('system_item', '1');
+        } else {return $query;};
+    }
+
+        // Фильтрация для показа системных записей
+    public function scopeOtherItem($query, $other_item)
+    {
+        if(isset($other_item)){
+
+            if(isset($other_item['all'])){
+                return $query;
+            } else {
+                // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
+                return $query->WhereIn('author_id', $other_item)->orWhere('author_id', $other_item['user_id'])->orWhere('id', $other_item['user_id']);
+            }
+        }
+    }
 
     // Фильтрация по статусу пользователя: клиент или сотрудник
     public function scopeUserType($query, $user_type)
@@ -180,8 +204,6 @@ class User extends Authenticatable
         'employee_id', 
         'access_block', 
         'company_id', 
-        'group_action_id', 
-        'group_locality_id', 
 
     ];
 
@@ -203,11 +225,21 @@ class User extends Authenticatable
   {
     return $this->belongsTo('App\Company');
   }
-   /**
-  * Получаем группу пользователя.
+
+    /**
+  * Получаем роли.
   */
-  public function access_group()
+  public function roles()
   {
-    return $this->belongsTo('App\Access_group', 'group_action_id');
+    return $this->belongsToMany('App\Role');
   }
+
+    /**
+  * Получаем роли.
+  */
+  public function employee()
+  {
+    return $this->hasMany('App\Employee');
+  }
+
 }

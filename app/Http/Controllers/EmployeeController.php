@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Employee;
-use App\Department;
+use App\Page;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeeController extends Controller
 {
@@ -15,7 +16,21 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        //
+      $user = Auth::user();
+      if (isset($user->company_id)) {
+      // Если у пользователя есть компания
+      // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
+      $employees = Employee::whereCompany_id($user->company_id)->paginate(30);
+    } else {
+      if ($user->god == 1) {
+        // Если нет, то бог без компании
+        // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
+        $employees = Employee::paginate(30);
+      };
+    };
+    $page_info = Page::wherePage_alias('/employees')->first();
+    $menu = Page::whereSite_id('1')->get();
+    return view('employees.index', compact('employees', 'page_info', 'menu'));
     }
 
     /**
@@ -43,6 +58,7 @@ class EmployeeController extends Controller
 
       $employee = new Employee;
 
+      $employee->company_id = Auth::user()->company_id;
       $employee->position_id = $position_id;
       $employee->department_id = $department_id;
 

@@ -13,14 +13,13 @@ class Company extends Model
    *
    * @var array
    */
-  protected $dates = ['deleted_at'];
 
 	public function user_info()
 	{
 		return $this->BelongsTo('App\User', 'director_user_id');
 	}
 
-
+    protected $dates = ['deleted_at'];
     protected $fillable = [
 
         'company_name', 
@@ -35,7 +34,6 @@ class Company extends Model
         'bank', 
         'director_user_id', 
         'admin_user_id'
-
     ];
   /**
   * Получаем отделы компании.

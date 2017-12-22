@@ -77,6 +77,7 @@
           <li class="medium-item parent" id="employees-{{ $employee->id }}" data-name="{{ $position->position_name }}">
             <div class="medium-as-last">{{ $position->position_name }} (
             @if (isset($employee->user_id))
+              <a class="link-recursion">{{ $employee->user->nickname }}</a>
             @else
               <a class="link-recursion">Вакансия</a>
             @endif

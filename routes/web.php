@@ -20,6 +20,15 @@ Auth::routes();
 Route::resource('/users', 'UserController')->middleware('auth');
 Route::resource('/companies', 'CompanyController')->middleware('auth');
 
+// Маршруты для правил доступа
+Route::resource('rights', 'RightController')->middleware('auth');
+
+// Маршруты для групп доступа
+Route::resource('roles', 'RoleController')->middleware('auth');
+
+// Маршруты для сущностей
+Route::resource('entities', 'EntityController')->middleware('auth');
+
 // Авторизуемся под выбранной компанией
 Route::get('/getauth/{id}/{company_id}', 'UserController@getauth')->middleware('auth')->name('users.getauth');
 

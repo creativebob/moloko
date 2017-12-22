@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\User;
-use App\Access;
+use App\RightsRole;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class AccessPolicy
+class RightsRolePolicy
 {
     use HandlesAuthorization;
 

@@ -12,28 +12,37 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-        // Наполнение локализаций
-        $this->call(RegionsTableSeeder::class);
-        $this->call(AreasTableSeeder::class);
-        $this->call(CitiesTableSeeder::class);
+            // Пользователи и компании
+            $this->call(CompaniesTableSeeder::class);
+            $this->call(UsersTableSeeder::class);
 
-        // Наполнение таблиц с правами
-        $this->call(CategotyRightTableSeeder::class);
-        $this->call(RightsTableSeeder::class);
-		$this->call(AccessGroupsTableSeeder::class);
-        $this->call(AccessesTableSeeder::class);
+            // Наполнение локализаций
+            $this->call(RegionsTableSeeder::class);
+            $this->call(AreasTableSeeder::class);
+            $this->call(CitiesTableSeeder::class);
 
-        // Пользователи и компании
-        $this->call(CompaniesTableSeeder::class);
-        $this->call(UsersTableSeeder::class);
+            // Филиалы / отделы
+            $this->call(DepartmentsTableSeeder::class);
 
-        // Сайты, страницы
-        $this->call(SitesTableSeeder::class);
-        $this->call(PagesTableSeeder::class);
+            // Сайты, страницы
+            $this->call(SitesTableSeeder::class);
+            $this->call(PagesTableSeeder::class);
 
-        // Филиалы, отделы и должности
-        $this->call(PositionsTableSeeder::class);
-        $this->call(PositionsTableSeeder::class);
+            // Должности
+            $this->call(PositionsTableSeeder::class);
+
+            // Наполнение таблиц с правами
+            $this->call(CategoryRightsTableSeeder::class);
+            $this->call(RightsTableSeeder::class);
+    		$this->call(RolesTableSeeder::class);
+            $this->call(RightRoleTableSeeder::class);
+            $this->call(RoleUserTableSeeder::class);
+
+            // Сущности
+            $this->call(EntitiesTableSeeder::class);
+
+            // Сотрудники
+            $this->call(EmployeesTableSeeder::class);
             
     }
 }

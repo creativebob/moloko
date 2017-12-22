@@ -26,7 +26,7 @@ class CompanyPolicy
         return $result;
     }
 
-    public function index(User $user)
+    public function index(User $user, Company $company)
     {
         $current_access = Auth::user()->group_action_id;
         $access = Access::where(['access_group_id' => $current_access]);

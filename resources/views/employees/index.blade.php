@@ -68,24 +68,31 @@
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-position-name">Название должности</th>
-          <th class="td-position-page">Alias страницы</th>
-          <th class="td-delete"></th>
+          <th class="td-employee-position">Название должности</th>
+          <th class="td-empmployee-user">Назанченный пользователь</th>
+          <!-- <th class="td-delete"></th> -->
         </tr>
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
-      @if(!empty($positions))
-        @foreach($positions as $position)
-        <tr class="parent" id="positions-{{ $position->id }}" data-name="{{ $position->position_name }}">
+      @if(!empty($employees))
+        @foreach($employees as $employee)
+        <tr class="parent" id="employees-{{ $employee->id }}" data-name="{{ $employee->position_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $position->id }}"><label class="label-check" for="check-{{ $position->id }}"></label></td>
-          <td class="td-position-name">{{ link_to_route('positions.edit', $position->position_name, [$position->id]) }} </td>
-          <td class="td-position-page">Страница, куда отправляет должность</td>
-          <td class="td-delete">
-            @if (isset($position->company_id))
+          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $employee->id }}"><label class="label-check" for="check-{{ $employee->id }}"></label></td>
+          <td class="td-employee-position">{{ $employee->position->position_name }} </td>
+          <td class="td-empmployee-user">
+            @if (isset($employee->user_id))
+              <a>{{ $employee->user->nickname }}</a>
+            @else
+              <a>Вакансия</a>
+            @endif
+
+          </td>
+         <!--  <td class="td-delete">
+            @if (isset($employee->company_id))
               <a class="icon-delete sprite" data-open="item-delete"></a>
             @endif
-          </td>       
+          </td>  -->      
         </tr>
         @endforeach
       @endif
@@ -97,8 +104,8 @@
 {{-- Pagination --}}
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
-    <span class="pagination-title">Кол-во записей: {{ $positions->count() }}</span>
-    {{ $positions->links() }}
+    <span class="pagination-title">Кол-во записей: {{ $employees->count() }}</span>
+    {{ $employees->links() }}
   </div>
 </div>
 @endsection

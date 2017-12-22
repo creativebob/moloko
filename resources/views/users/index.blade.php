@@ -72,8 +72,8 @@
           <th class="td-email">Почта</th>
           <th class="td-contragent-status">Статус</th>
           <th class="td-access-block">Доступ</th>
-          <th class="td-group-users-id">Уровень доступа</th>
-          <th class="td-group-users-id">Локализация</th>
+{{--           <th class="td-group-users-id">Уровень доступа</th>
+          <th class="td-group-users-id">Локализация</th> --}}
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -90,8 +90,8 @@
           <td class="td-email">{{ $user->email }}</td>
           <td class="td-contragent-status">{{ decor_user_type($user->user_type) }}</td>
           <td class="td-access-block">{{ decor_access_block($user->access_block) }}</td>
-          <td class="td-group_action_id">{{ $user->group_action->access_group_name }}</td>
-          <td class="td-group_locality_id">{{ $user->group_locality->access_group_name }}</td>
+{{--           <td class="td-group_action_id">{{ $user->group_action->access_group_name }}</td>
+          <td class="td-group_locality_id">{{ $user->group_locality->access_group_name }}</td> --}}
           <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
           <!-- <td class="td-delete">{{ link_to_route('users.destroy', " " , [$user->id], ['class'=>'icon-delete sprite']) }}</td> -->
         </tr>

@@ -51,21 +51,20 @@ class UpdateUsersTable extends Migration
             // $table->foreign('employee_id')->references('employee_id')->on('employees');
             $table->integer('access_block')->nullable()->unsigned()->comment('Доступ открыт 0 или Блокирован 1')->default('0')->after('employee_id');
 
-            $table->integer('group_action_id')->nullable()->unsigned()->comment('Группа доступа по функционалу')->after('access_block');
-            $table->integer('group_locality_id')->nullable()->unsigned()->comment('Группа доступа по филиалу')->after('group_action_id');
+            $table->integer('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('access_block');
 
-            $table->integer('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('group_locality_id');
+            $table->integer('god')->nullable()->unsigned()->comment('Божественное право')->default(null)->after('company_id');
 
-            $table->integer('god')->nullable()->unsigned()->comment('Божественное право')->default('0')->after('company_id');
+            $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
+            $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->softDeletes();
 
         });
 
         Schema::table('users', function(Blueprint $table) {
-
-            $table->foreign('group_action_id')->references('id')->on('access_groups');
-            $table->foreign('group_locality_id')->references('id')->on('access_groups');
             $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('author_id')->references('id')->on('users');
         });
 
     }
@@ -107,16 +106,8 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('access_block');
             $table->dropColumn('god');           
 
-            $table->dropForeign('users_group_action_id_foreign'); 
-            $table->dropForeign('users_group_locality_id_foreign');
             $table->dropForeign('users_company_id_foreign');
-
-            // $table->dropForeign('users_company_id_foreign');
-
-            // $table->dropColumn('group_action_id');
-            // $table->dropColumn('group_locality_id');  
-
-
+            $table->dropForeign('users_author_id_foreign');
 
         });
 

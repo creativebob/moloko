@@ -8,7 +8,7 @@ use App\Page;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Access;
-use App\Access_group;
+use App\Role;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +26,35 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $this->authorize('index', User::class);
-	    $users = User::userType($request->user_type)->accessBlock($request->access_block)->paginate(30);
+        $user = Auth::user();
+        $others_item['user_id'] = $user->id;
+        $system_item = null;
+
+        // Смотрим права на простотр системных.
+         foreach ($user->roles as $role) {
+            foreach ($role->rights as $right) {
+                // Перебор всех прав пользователя
+                if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;};
+                if ($right->right_action == 'system-user') {$system_item = 1;};
+                if ($right->right_action == 'get-users') {$others_item['all'] = 'all';};
+                if ($right->right_action == 'get-depertments') {$others_item['all'] = 'all';}; 
+            }
+        }
+
+        if (isset($user->company_id)) {
+            // Если у пользователя есть компания
+            $users = User::whereCompany_id($user->company_id)
+                    ->whereGod(null)
+                    ->otherItem($others_item)
+                    ->systemItem($system_item) // Фильтр по системным записям
+                    ->paginate(30);
+        } else {
+            // Если нет, то бог без компании
+            if ($user->god == 1) {
+              $users = User::paginate(30);
+            };
+        }
+        // dd($users);
 
         $menu = Page::get();
 	    return view('users.index', compact('users', 'access', 'menu'));
@@ -34,7 +62,7 @@ class UserController extends Controller
 
     public function store(UpdateUser $request)
     {
-        $this->authorize('create', User::class);
+        // $this->authorize('create', User::class);
 
     	$user = new User;
 
@@ -113,21 +141,21 @@ class UserController extends Controller
     //
     public function create()
     {
-        $this->authorize('create', User::class);
+        // $this->authorize('create', User::class);
 
     	$user = new User;
-        $access_action_list = Access_group::where('category_right_id', '1')->pluck('access_group_name', 'id');
-        $access_locality_list = Access_group::where('category_right_id', '2')->pluck('access_group_name', 'id');
-        $access_groups = new Access_group;
+        $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
+        $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
+        $roles = new Role;
         $menu = Page::get();
-    	return view('users.create', compact('user', 'access_groups', 'access_action_list', 'access_locality_list', 'menu'));
+    	return view('users.create', compact('user', 'roles', 'access_action_list', 'access_locality_list', 'menu'));
     }
 
     public function update(UpdateUser $request, $id)
     {
 
         $user = User::findOrFail($id);
-        $this->authorize('update', $user);
+        // $this->authorize('update', $user);
 
     	$user->login = $request->login;
     	$user->email = $request->email;
@@ -183,27 +211,27 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id);
-        $this->authorize('view', $user);
+        // $this->authorize('view', $user);
 
-        $access_action_list = Access_group::where('category_right_id', '1')->pluck('access_group_name', 'id');
-        $access_locality_list = Access_group::where('category_right_id', '2')->pluck('access_group_name', 'id');
-        $access_groups = new Access_group;
+        $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
+        $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
+        $roles = new Role;
         $menu = Page::get();
-    	return view('users.show', compact('user', 'access_groups', 'access_action_list', 'access_locality_list', 'menu'));
+    	return view('users.show', compact('user', 'roles', 'access_action_list', 'access_locality_list', 'menu'));
     }
 
     public function edit($id)
     {
 
         $user = User::findOrFail($id);
-        $this->authorize('update', $user);
+        // $this->authorize('update', $user);
 
-        $access_action_list = Access_group::where('category_right_id', '1')->pluck('access_group_name', 'id');
-        $access_locality_list = Access_group::where('category_right_id', '2')->pluck('access_group_name', 'id');
-        $access_groups = new Access_group;
+        $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
+        $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
+        $roles = new Role;
         $menu = Page::get();
          Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
-         return view('users.edit', compact('user', 'access_groups', 'access_action_list', 'access_locality_list', 'menu'));
+         return view('users.edit', compact('user', 'roles', 'access_action_list', 'access_locality_list', 'menu'));
     }
 
 
@@ -222,7 +250,7 @@ class UserController extends Controller
     public function getauth($id, $company_id)
     {
         $user = User::findOrFail($id);
-        $this->authorize('update', $user);
+        // $this->authorize('update', $user);
 
         $user->company_id = $company_id;
         $user->save();
@@ -232,7 +260,7 @@ class UserController extends Controller
 
     public function getgod()
     {
-        $this->authorize('update', User::class); 
+        // $this->authorize('update', User::class); 
         if(Auth::user()->god == 1){
             $user = User::findOrFail(Auth::user()->id);
             $user->company_id = null;
