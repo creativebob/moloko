@@ -31,7 +31,8 @@ class DatabaseSeeder extends Seeder
         $this->call(SitesTableSeeder::class);
         $this->call(PagesTableSeeder::class);
 
-        // Должности
+        // Филиалы, отделы и должности
+        $this->call(PositionsTableSeeder::class);
         $this->call(PositionsTableSeeder::class);
             
     }
