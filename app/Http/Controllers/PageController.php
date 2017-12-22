@@ -60,6 +60,8 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
+      $user = Auth::user();
+
       $page = new Page;
 
       $page->page_name = $request->page_name;
@@ -67,8 +69,11 @@ class PageController extends Controller
       $page->page_description = $request->page_description;
       $page->page_alias = $request->page_alias;
       $page->site_id = $request->site_id;
+      $page->author_id = $user->id;
       
       $page->save();
+     
+      
 
       return redirect('/pages?site_id=' . $request->site_id);
     }

@@ -53,11 +53,13 @@ class SiteController extends Controller
    */
   public function store(Request $request)
   {
+    $user = Auth::user();
     $site = new Site;
 
     $site->site_name = $request->site_name;
     $site->site_domen = $request->site_domen;
-    $site->company_id = Auth::user()->company_id;
+    $site->company_id = $user->company_id;
+    $site->author_id = $user->id;
     
     $site->save();
 

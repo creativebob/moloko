@@ -1697,11 +1697,7 @@ input[type=checkbox], input[type=radio] {
     .td-checkbox, .td-delete {
       padding: 0;
     }
-    .td-getauth {
-      .button {
-        margin-bottom: 0;
-      }
-    }
+    
     // Стилизуем thead
     thead {
       // width: 100%;
@@ -1738,6 +1734,12 @@ input[type=checkbox], input[type=radio] {
     // Стилизуем tbody
     tbody {
       overflow-x: hidden;
+
+      tr {
+        .button {
+          margin-bottom: 0;
+        }
+      }
       // Убираем выделение каждой четной строки
       tr:nth-child(even) {
         border-bottom: 0;

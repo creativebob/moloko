@@ -7,6 +7,7 @@ use App\Area;
 use App\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class RegionController extends Controller
 {
@@ -38,6 +39,7 @@ class RegionController extends Controller
    */
   public function store(Request $request)
   {
+    
     $region_database = $request->region_database;
     // По умолчанию значение 0
     if ($region_database == 0) {
@@ -60,11 +62,14 @@ class RegionController extends Controller
     // Если область не найдена, то меняем значение на 1, пишем в базу и отдаем результат
     if ($region_database == 1) {
 
+      $user = Auth::user();
+
       $region = new Region;
 
       $region->region_name = $request->region_name;
       $region->region_code = $request->region_code;
       $region->region_vk_external_id = $request->region_vk_external_id;
+      $region->author_id = $user->id;
 
       $region->save();
 

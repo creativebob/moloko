@@ -62,12 +62,15 @@ class PositionController extends Controller
      */
     public function store(Request $request)
     {
+      $user = Auth::user();
+
       $position = new Position;
 
       $position->position_name = $request->position_name;
       $position->page_id = $request->page_id;
-      $position->company_id = Auth::user()->company_id;
-      
+      $position->company_id = $user->company_id;
+      $position->author_id = $user->id;
+
       $position->save();
 
       if ($position) {

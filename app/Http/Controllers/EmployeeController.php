@@ -51,6 +51,9 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
+      $user = Auth::user();
+
+
       // Пишем вакансию в бд
       $position_id = $request->position_id;
       $department_id = $request->parent_id;
@@ -58,9 +61,10 @@ class EmployeeController extends Controller
 
       $employee = new Employee;
 
-      $employee->company_id = Auth::user()->company_id;
+      $employee->company_id = $user->id;
       $employee->position_id = $position_id;
       $employee->department_id = $department_id;
+      $employee->author_id = $user->id;
 
       $employee->save();
 
