@@ -71,6 +71,12 @@ class Department extends Model
   {
     return $this->belongsTo('App\City');
   }
-
+  /**
+  * Получаем роли филиала.
+  */
+  public function roles()
+  {
+    return $this->hasMany('App\Role');
+  } 
 
 }

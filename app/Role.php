@@ -55,5 +55,19 @@ class Role extends Model
   {
     return $this->belongsToMany('App\Right');
   }
+    /**
+  * Получаем категорию.
+  */
+  public function company()
+  {
+    return $this->belongsTo('App\Company');
+  }
+      /**
+  * Получаем категорию.
+  */
+  public function department()
+  {
+    return $this->belongsTo('App\Department');
+  }
 
 }

@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Company;
 use App\Page;
+use App\Right;
+
 
 // Модели которые отвечают за работу с правами + политики
-use App\Access;
 use App\Role;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -64,6 +65,7 @@ class UserController extends Controller
     {
         // $this->authorize('create', User::class);
 
+        $auth_user = Auth::user();
     	$user = new User;
 
     	$user->login = $request->login;
@@ -101,9 +103,24 @@ class UserController extends Controller
     	$user->employee_id = $request->employee_id;
     	$user->access_block = $request->access_block;
 
-    	$user->group_action_id = $request->group_action_id;
-    	$user->group_locality_id = $request->group_locality_id;
+        $user->author_id = $auth_user->id;
         $user->save();
+
+        if($user){
+
+            // Если прошло сохранение, то создаем на пользователя право
+            $newright = new Right;
+            $newright->right_name = $user->first_name . " " . $user->second_name;
+            $newright->right_action = $user->id;
+
+            // Указываем 2-ую категорию прав: права по отделам - локальные
+            $newright->category_right_id = 3;
+            $newright->author_id = $auth_user->id;    
+            $newright->save();
+            if($newright){$f = 1;} else {abort(403);};
+
+        } else {abort(403);};
+
 
         // Создаем компанию под пользователя
         // Если стоит отметка о том, что нужно создать компанию.
@@ -135,7 +152,6 @@ class UserController extends Controller
         };
 
 		return redirect('users');
-
     }
 
     //

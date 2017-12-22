@@ -13,4 +13,15 @@ class Category_right extends Model
   {
     return $this->hasMany('App\Rights');
   }
+
+
+    /**
+  * Получаем роли.
+  */
+  public function roles()
+  {
+    return $this->hasMany('App\Role');
+  }
+
+  
 }

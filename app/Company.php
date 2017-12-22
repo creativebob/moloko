@@ -56,4 +56,11 @@ class Company extends Model
   {
     return $this->hasMany('App\User');
   }
+  /**
+  * Получаем роли компании.
+  */
+  public function roles()
+  {
+    return $this->hasMany('App\Role');
+  } 
 }

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RightRole extends Model
 {
@@ -12,6 +13,7 @@ class RightRole extends Model
    *
    * @var array
    */
+  protected $table = 'right_role';
   protected $dates = ['deleted_at'];
   protected $fillable = [
     	'id', 

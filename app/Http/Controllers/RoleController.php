@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\Page;
 use App\User;
+use App\Department;
+use App\RightRole;
+use App\Right;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
@@ -57,7 +60,7 @@ class RoleController extends Controller
         }
         // dd($users);
 
-        $menu = Role::get();
+        $menu = Page::get();
         return view('roles.index', compact('roles', 'menu'));
     }
 
@@ -71,9 +74,12 @@ class RoleController extends Controller
     {
         // $this->authorize('create', Role::class);
 
+        $user = Auth::user();
+        $departments_list = Department::where('company_id', $user->company_id)->whereFilial_status(1)->pluck('department_name', 'id');
+
         $role = new Role;
         $menu = Page::get();
-        return view('roles.create', compact('role', 'menu'));
+        return view('roles.create', compact('role', 'menu', 'departments_list'));
     }
 
     /**
@@ -86,12 +92,24 @@ class RoleController extends Controller
     {
         // $this->authorize('create', Role::class);
 
+        $user = Auth::user();
         $role = new Role;
         $role->role_name = $request->role_name;
         $role->role_description = $request->role_description;
-
+        if(isset($user->company_id)){ $role->company_id = $user->company_id;} else { $role->system_item = 1;};
+        $role->author_id = $user->id;
         $role->save();
-        return redirect('roles');
+        if($role){
+            $right_role = new RightRole;
+            $right_role->role_id = $role->id;
+            $right_id = Right::whereRight_action($request->department_id)->first();
+            $right_role->right_id = $right_id->id;
+            $right_role ->save();
+
+        } else {abort(403);}
+
+
+        return redirect('/roles');
     }
 
     /**

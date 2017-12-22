@@ -33,9 +33,10 @@ class DepartmentController extends Controller
          foreach ($user->roles as $role) {
             foreach ($role->rights as $right) {
                 // Перебор всех прав пользователя
-                if ($right->category_right_id == 2) {$others_item[$right->right_action] = $right->right_action;};
+                if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;}; // Массив авторов
+                if ($right->category_right_id == 2) {$others_item[$right->right_action] = $right->right_action;}; // Массив филиалов
                 if ($right->right_action == 'system-user') {$system_item = 1;};
-                if ($right->right_action == 'get-user23s') {$others_item['all'] = 'all';};
+                if ($right->right_action == 'get-users') {$others_item['all'] = 'all';};
             }
         }
 

@@ -15,14 +15,11 @@ class CreateRolesTable extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('role_name')->index()->unique()->comment('Имя категории пользователей');
+            $table->string('role_name')->index()->comment('Имя категории пользователей');
             $table->string('role_description')->index()->nullable()->comment('Описание категории');
 
-            $table->integer('category_right_id')->nullable()->unsigned()->comment('Категория пользователей');
-            $table->foreign('category_right_id')->references('id')->on('category_rights');
-
-            $table->integer('department_id')->nullable()->unsigned()->comment('ID филиала');
-            $table->foreign('department_id')->references('id')->on('departments');
+            $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
+            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');

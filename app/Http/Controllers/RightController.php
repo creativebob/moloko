@@ -46,7 +46,7 @@ class RightController extends Controller
     public function create()
     {
         // $this->authorize('create', Right::class);
-        $menu = Page::get();
+        // 
         $right = new Right;
         $entity_list = Entity::get()->pluck('entity_name', 'id');
         $menu = Page::get();
@@ -61,7 +61,8 @@ class RightController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = Auth::user();
+        $role->author_id = $user->id;
     }
 
     /**

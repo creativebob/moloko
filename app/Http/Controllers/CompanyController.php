@@ -60,6 +60,7 @@ class CompanyController extends Controller
     {
         $this->authorize('create', Company::class);
 
+        $user = Auth::user();
         $company = new Company;
         $company->company_name = $request->company_name;
         $company->company_phone = cleanPhone($request->company_phone);
@@ -76,8 +77,8 @@ class CompanyController extends Controller
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
 
-        $company->director_user_id = Auth::user()->company_id;
-
+        $company->director_user_id = $user->company_id;
+        $company->author_id = $user->id;
 
         $company->save();
         return redirect('/companies');

@@ -20,6 +20,10 @@ class CreateRightsTable extends Migration
             $table->integer('category_right_id')->nullable()->unsigned()->comment('Категория правила');
             $table->foreign('category_right_id')->references('id')->on('category_rights');
 
+
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
+
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 

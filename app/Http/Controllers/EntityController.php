@@ -61,12 +61,14 @@ class EntityController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', Entity::class);
+        // $this->authorize('create', Entity::class);
 
+        $user = Auth::user();  
         $entity = new entity;
         $entity->entity_name = $request->entity_name;
         $entity->entity_alias = $request->entity_alias;
-
+ 
+        $entity->author_id = $user->id;
         $entity->save();
         return redirect('entities');
     }
@@ -80,7 +82,7 @@ class EntityController extends Controller
     public function show($id)
     {
         $entity = Entity::findOrFail($id);
-        $this->authorize('update', $entity);
+        // $this->authorize('update', $entity);
 
         $menu = Page::get();
         return view('entities.show', compact('entity', 'menu'));
@@ -95,7 +97,7 @@ class EntityController extends Controller
     public function edit($id)
     {
         $entity = Entity::findOrFail($id);
-        $this->authorize('update', $entity);
+        // $this->authorize('update', $entity);
 
         $menu = Page::get();
         return view('entities.show', compact('entity', 'menu'));
@@ -111,7 +113,7 @@ class EntityController extends Controller
     public function update(Request $request, $id)
     {
         $entity = Entity::findOrFail($id);
-        $this->authorize('update', $entity);
+        // $this->authorize('update', $entity);
         $entity->entity_name = $request->entity_name;
         $entity->entity_alias = $request->entity_alias;
 
@@ -128,7 +130,7 @@ class EntityController extends Controller
     public function destroy($id)
     {
         $entity = Entity::findOrFail($id);
-        $this->authorize('update', $entity); 
+        // $this->authorize('update', $entity); 
 
         // Удаляем пользователя с обновлением
         $entity = Entity::destroy($id);
