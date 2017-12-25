@@ -3,8 +3,8 @@
   @php
     $count = 0;
   @endphp
-  @foreach ($employees as $employee)
-    @if($department['id'] == $employee->department_id)
+  @foreach ($staff as $staffer)
+    @if($department['id'] == $staffer->department_id)
       @php
         $count = $count + 1;
       @endphp
@@ -17,8 +17,8 @@
   @php
     $count = 0;
   @endphp
-  @foreach ($employees as $employee)
-    @if($department['id'] == $employee->department_id)
+  @foreach ($staff as $staffer)
+    @if($department['id'] == $staffer->department_id)
       @php
         $count = $count + 1;
       @endphp
@@ -70,18 +70,18 @@
 
   <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
   {{-- список должностей, не относящимся к отделам или во вложенности --}}
-  @foreach ($employees as $employee)
-    @if($department['id'] == $employee->department_id)
+  @foreach ($staff as $staffer)
+    @if($department['id'] == $staffer->department_id)
       @foreach ($positions as $position)
-        @if($position->id == $employee->position_id)
-          <li class="medium-item parent" id="employees-{{ $employee->id }}" data-name="{{ $position->position_name }}">
-            <div class="medium-as-last">{{ $position->position_name }} (
-            @if (isset($employee->user_id))
-              <a class="link-recursion">{{ $employee->user->nickname }}</a>
+        @if($position->id == $staffer->position_id)
+          <li class="medium-item parent" id="staff-{{ $staffer->id }}" data-name="{{ $position->position_name }}">
+            <div class="medium-as-last">{{ $position->position_name }} ( <a href="/staff/{{ $staffer->id }}/edit" class="link-recursion">
+            @if (isset($staffer->user_id))
+              {{ $staffer->user->first_name }} {{ $staffer->user->second_name }}
             @else
-              <a class="link-recursion">Вакансия</a>
+              Вакансия
             @endif
-            )
+            </a> ) 
               <ul class="icon-list">
                 <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
               </ul>
@@ -97,13 +97,13 @@
     @endforeach
   @else
     <ul class="menu vertical nested last-list">
-      @foreach ($employees as $employee)
-        @if($department['id'] == $employee->department_id)
+      @foreach ($staff as $staffer)
+        @if($department['id'] == $staffer->department_id)
           @foreach ($positions as $position)
-            @if($position->id == $employee->position_id)
-              <li class="last-item parent" id="employees-{{ $employee->id }}" data-name="{{ $position->position_name }}">
+            @if($position->id == $staffer->position_id)
+              <li class="last-item parent" id="staff-{{ $staffer->id }}" data-name="{{ $position->position_name }}">
                 <div class="last-link">{{ $position->position_name }} (
-                  @if (isset($employee->user_id))
+                  @if (isset($staffer->user_id))
 
                   @else
                     Вакансия

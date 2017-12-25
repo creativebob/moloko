@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model
 {
-  use SoftDeletes;
+   use SoftDeletes;
   /**
    * Атрибуты, которые должны быть преобразованы в даты.
    *
@@ -15,33 +15,23 @@ class Employee extends Model
    */
   protected $dates = ['deleted_at'];
   protected $fillable = [
-  	'user_id',
-    'position_id',
-    'department_id',
-    'car_id',
+  	'vacancy_id',
+    'user_id',
     'date_employment',
     'date_dismissal',
   ];
   /**
-  * Получаем отдел данной должности.
+  * Получаем вакансию для сотрудников.
   */
-  public function department()
+  public function staffer()
   {
-    return $this->belongsTo('App\Department');
+    return $this->belongsTo('App\Staffer');
   }
   /**
-  * Получаем должность.
-  */
-  public function position()
-  {
-    return $this->belongsTo('App\Position');
-  }
-  /**
-  * Получаем юзера.
+  * Получаем сотрудника.
   */
   public function user()
   {
     return $this->belongsTo('App\User');
   }
-
 }

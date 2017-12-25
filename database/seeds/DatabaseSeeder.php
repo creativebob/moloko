@@ -41,7 +41,8 @@ class DatabaseSeeder extends Seeder
             // Сущности
             $this->call(EntitiesTableSeeder::class);
 
-            // Сотрудники
+            // Вакансии и сотрудники
+            $this->call(StaffTableSeeder::class);
             $this->call(EmployeesTableSeeder::class);
             
     }

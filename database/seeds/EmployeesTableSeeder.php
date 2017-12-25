@@ -11,25 +11,35 @@ class EmployeesTableSeeder extends Seeder
      */
     public function run()
     {
-         DB::table('employees')->insert([
+        DB::table('employees')->insert([
         	[	
-        		'company_id' => 1,
+        		'staffer_id' => 1,
+                'company_id' => 1,
 		        'user_id' => 4,
-                'position_id' => 1,
-		        'department_id' => 1,
+                'date_employment' => '2017-12-01',
+                'date_dismissal' => null,
         	],
-        	[	
-        		'company_id' => 1,
-        		'user_id' => null,
-                'position_id' => 2,
-		        'department_id' => 3,
-        	],
-        	[	
-        		'company_id' => 1,
-        		'user_id' => null,
-                'position_id' => 2,
-		        'department_id' => 3,
-        	],
+            [   
+                'staffer_id' => 2,
+                'company_id' => 1,
+                'user_id' => 5,
+                'date_employment' => '2017-12-01',
+                'date_dismissal' => null,
+            ],
+            [   
+                'staffer_id' => 3,
+                'company_id' => 1,
+                'user_id' => 6,
+                'date_employment' => '2017-12-01',
+                'date_dismissal' => null,
+            ],
+            [   
+                'staffer_id' => 4,
+                'company_id' => 1,
+                'user_id' => 6,
+                'date_employment' => '2017-11-01',
+                'date_dismissal' => '2017-11-02',
+            ],
         ]);
     }
 }

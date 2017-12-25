@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Department;
 use App\City;
 use App\Position;
-use App\Employee;
+use App\Staffer;
 use App\Page;
 use App\Right;
 use Illuminate\Http\Request;
@@ -45,10 +45,9 @@ class DepartmentController extends Controller
     if (isset($user->company_id)) {
       // Если у пользователя есть компания
       $departments = Department::whereCompany_id($user->company_id)
-              
               ->systemItem($system_item) // Фильтр по системным записям
               ->get();
-      $employees = Employee::whereCompany_id($user->company_id)->get();
+      $staff = Staffer::whereCompany_id($user->company_id)->get();
       $positions = Position::whereCompany_id($user->company_id)
                         ->orWhereNull('company_id')
                         ->get();
@@ -56,7 +55,7 @@ class DepartmentController extends Controller
       // Если нет, то бог без компании
       if ($user->god == 1) {
         $departments = Department::get();
-        $employees = Employee::get();
+        $staff = Staffer::get();
         $positions = Position::get();
       };
     }
@@ -85,8 +84,60 @@ class DepartmentController extends Controller
     $positions_list = $positions->pluck('position_name', 'id');
     $menu = Page::whereSite_id(1)->get();
     $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
-    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'tree', 'employees', 'page_info', 'pages', 'menu', 'departments'));
+    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'tree', 'staff', 'page_info', 'pages', 'menu', 'departments'));
     // dd($positions);
+  }
+
+  // Получаем сторонние данные по 
+  public function current_department($filial, $depart, $position)
+  {
+    if (isset(Auth::user()->company_id)) {
+      // Получаем данные из таблицы в массиве
+      $departments = Department::whereCompany_id(Auth::user()->company_id)
+                        ->get();
+      $tree = $departments->pluck('department_name', 'id');
+      $staff = Staffer::get();
+      $positions = Position::whereCompany_id(Auth::user()->company_id)
+                        ->orWhereNull('company_id')
+                        ->get();
+      $positions_list = $positions->pluck('position_name', 'id');
+    } else {
+      // Если нет, то бог без компании
+        if (Auth::user()->god == 1) {
+          $departments = Department::get(); 
+          $tree = $departments->pluck('department_name', 'id');
+          $staff = Staffer::all();
+          $positions = Position::get();
+          $positions_list = $positions->pluck('position_name', 'id');
+        };
+    };
+
+    $departments_db = $departments->toArray();
+    //Создаем масив где ключ массива является ID меню
+    $departments_id = [];
+    foreach ($departments_db as $department) {
+      $departments_id[$department['id']] = $department;
+    };
+    //Функция построения дерева из массива от Tommy Lacroix
+    $departments_tree = [];
+    foreach ($departments_id as $id => &$node) {   
+      //Если нет вложений
+      if (!$node['department_parent_id']){
+        $departments_tree[$id] = &$node;
+      } else { 
+      //Если есть потомки то перебераем массив
+        $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
+      }
+    };
+    $data = [
+      'filial_id' => $filial,
+      'department_id' => $depart,
+      'position_id' => $position,
+    ];
+
+    $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
+    $menu = Page::whereSite_id(1)->get();
+    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'data', 'tree', 'staff', 'page_info', 'menu', 'departments')); 
   }
 
 
@@ -218,7 +269,7 @@ class DepartmentController extends Controller
 
         $department = new Department;
 
-        $department->company_id = Auth::user()->company_id;
+        $department->company_id = $user->company_id;
         $department->department_name = $request->department_name;
         if($request->department_address == '') {
         } else {
@@ -402,57 +453,7 @@ class DepartmentController extends Controller
     // return Redirect('/current_department/'.$depart->filial_id.'/'.$depart->department_parent_id.'/0');
   }
 
-  // Получаем сторонние данные по 
-  public function current_department($filial, $depart, $position)
-  {
-    if (isset(Auth::user()->company_id)) {
-      // Получаем данные из таблицы в массиве
-      $departments = Department::whereCompany_id(Auth::user()->company_id)
-                        ->get();
-      $tree = $departments->pluck('department_name', 'id');
-      $employees = Employee::get();
-      $positions = Position::whereCompany_id(Auth::user()->company_id)
-                        ->orWhereNull('company_id')
-                        ->get();
-      $positions_list = $positions->pluck('position_name', 'id');
-    } else {
-      // Если нет, то бог без компании
-        if (Auth::user()->god == 1) {
-          $departments = Department::get(); 
-          $tree = $departments->pluck('department_name', 'id');
-          $employees = Employee::all();
-          $positions = Position::get();
-          $positions_list = $positions->pluck('position_name', 'id');
-        };
-    };
-
-    $departments_db = $departments->toArray();
-    //Создаем масив где ключ массива является ID меню
-    $departments_id = [];
-    foreach ($departments_db as $department) {
-      $departments_id[$department['id']] = $department;
-    };
-    //Функция построения дерева из массива от Tommy Lacroix
-    $departments_tree = [];
-    foreach ($departments_id as $id => &$node) {   
-      //Если нет вложений
-      if (!$node['department_parent_id']){
-        $departments_tree[$id] = &$node;
-      } else { 
-      //Если есть потомки то перебераем массив
-        $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
-      }
-    };
-    $data = [
-      'filial_id' => $filial,
-      'department_id' => $depart,
-      'position_id' => $position,
-    ];
-
-    $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
-    $menu = Page::whereSite_id(1)->get();
-    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'data', 'tree', 'employees', 'page_info', 'menu', 'departments')); 
-  }
+  
 }
 
 

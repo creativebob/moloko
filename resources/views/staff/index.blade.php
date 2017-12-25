@@ -17,7 +17,7 @@
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
 	      <h2 class="header-content">{{ $page_info->page_name }}</h2>
-	      <a href="/positions/create" class="icon-add sprite"></a>
+	      <a href="/departments" class="icon-add sprite"></a>
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -68,35 +68,43 @@
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-employee-name">Имя сотрудника</th>
-          <th class="td-employee-position">Название должности</th>
-          <th class="td-employee-department">Отдел</th>
-          <th class="td-employee-date-employment">Дата приема</th>
-          <th class="td-employee-date-dismissal">Дата увольнения</th>
-          <th class="td-employee-status">Статус</th>
+          <th class="td-staffer-position">Название должности</th>
+          <th class="td-staffer-department">Отдел</th>
+          <th class="td-staffer-phone">Телефон</th>
+          <th class="td-staffer-date-employment">Дата приема</th>
+          
           <!-- <th class="td-delete"></th> -->
         </tr>
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
-      @if(!empty($employees))
-        @foreach($employees as $employee)
-        <tr class="parent" id="employees-{{ $employee->id }}" data-name="{{ $employee->position_name }}">
+      @if(!empty($staff))
+        @foreach($staff as $staffer)
+        <tr class="parent" id="staff-{{ $staffer->id }}" data-name="{{ $staffer->position_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $employee->id }}"><label class="label-check" for="check-{{ $employee->id }}"></label></td>
-          <td class="td-employee-name"><a href="/staff/{{ $employee->id }}/edit">{{ $employee->user->first_name }} {{ $employee->user->second_name }}</a></td>
-          <td class="td-employee-position">
-            {{ $employee->staffer->position->position_name }}
+          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $staffer->id }}"><label class="label-check" for="check-{{ $staffer->id }}"></label></td>
+          <td class="td-staffer-position">
+            <a href="/staff/{{ $staffer->id }}/edit"> 
+              @if (isset($staffer->user_id))
+                {{ $staffer->user->second_name }} {{ $staffer->user->first_name }}
+              @else
+                 Вакансия
+              @endif
+              
+            </a>( {{ $staffer->position->position_name }} )
           </td>
-          <td class="td-employee-department">{{ $employee->staffer->department->department_name }}</td>
-          <td class="td-employee-date-employment">{{ $employee->date_employment }}</td>
-          <td class="td-employee-date-dismissal">{{ $employee->date_dismissal }}</td>
-          <td class="td-employee-status">
-          @if (!empty($employee->date_dismissal))
-            Уволен
-          @else
-            Работает
-          @endif
+          <td class="td-staffer-department">{{ $staffer->department->department_name }}</td>
+          <td class="td-staffer-phone">
+            @if (isset($staffer->user_id))
+              {{ $staffer->user->phone }}
+            @endif</td>
+          <td class="td-staffer-date-employment">
+            @foreach ($staffer->employees as $employee)
+              @if (($employee->user_id == $staffer->user_id) && ($employee->date_dismissal == null))
+                {{ $employee->date_employment }}
+              @endif
+            @endforeach
           </td>
+          
          <!--  <td class="td-delete">
             @if (isset($employee->company_id))
               <a class="icon-delete sprite" data-open="item-delete"></a>
@@ -113,8 +121,8 @@
 {{-- Pagination --}}
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
-    <span class="pagination-title">Кол-во записей: {{ $employees->count() }}</span>
-    {{ $employees->links() }}
+    <span class="pagination-title">Кол-во записей: {{ $staff->count() }}</span>
+    {{ $staff->links() }}
   </div>
 </div>
 @endsection

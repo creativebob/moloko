@@ -235,9 +235,16 @@ class User extends Authenticatable
   }
 
     /**
-  * Получаем роли.
+  * Получаем штат.
   */
-  public function employee()
+  public function staff()
+  {
+    return $this->hasMany('App\Staffer');
+  }
+    /**
+  * Получаем сотрудников.
+  */
+  public function employees()
   {
     return $this->hasMany('App\Employee');
   }

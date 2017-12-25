@@ -15,16 +15,16 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->increments('id');
+
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
+
+            $table->integer('staffer_id')->unsigned()->nullable()->comment('Id штата');
+            $table->foreign('staffer_id')->references('id')->on('staff');
+
             $table->integer('user_id')->unsigned()->nullable()->comment('Id пользователя');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('position_id')->unsigned()->nullable()->comment('Id должности');
-            $table->foreign('position_id')->references('id')->on('positions');
-            $table->integer('department_id')->unsigned()->nullable()->comment('Id отдела');
-            $table->foreign('department_id')->references('id')->on('departments');
-            $table->integer('car_id')->unsigned()->nullable()->comment('Id автомобиля');
-            // $table->foreign('car_id')->references('id')->on('cars');
+  
             $table->date('date_employment')->nullable()->comment('Дата приема на работу');
             $table->date('date_dismissal')->nullable()->comment('Дата увольнения');
 
