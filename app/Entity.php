@@ -18,4 +18,24 @@ class Entity extends Model
   	'entity_name',
   	'entity_alias',
   ];
+
+
+    /**
+  * Получаем действия над сущностью
+  */
+  public function actions()
+  {
+    return $this->belongsToMany('App\Action', 'action_entity', 'entity_id', 'action_id');
+  }
+
+
+    /**
+  * Получаем полиморфную запись (ID права).
+  */
+  public function actionentities()
+  {
+    return $this->hasMany('App\Actionentity');
+  }
+
+
 }

@@ -20,10 +20,10 @@ class Right extends Model
     }
 
   		protected $dates = ['deleted_at'];
-        protected $fillable = [
-       	'right_name', 
-		'right_action', 
-		'category_right_id', 
+      protected $fillable = [
+      'right_name', 
+		  'right_action', 
+		  'category_right_id', 
     ];
       /**
   * Получаем права.
@@ -32,12 +32,18 @@ class Right extends Model
   {
     return $this->belongsToMany('App\Role');
   }
+
     /**
   * Получаем категорию права.
   */
   public function сategory_right()
   {
     return $this->belongsTo('App\Сategory_right');
+  }
+
+  public function actionentity()
+  {
+    return $this->hasOne('App\ActionEntity', 'id', 'object_entity');
   }
 
 }

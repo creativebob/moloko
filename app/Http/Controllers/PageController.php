@@ -104,6 +104,7 @@ class PageController extends Controller
       return view('pages.edit', compact('page', 'menu', 'sites', 'current_site'));
     }
 
+
     /**
      * Update the specified resource in storage.
      *
@@ -144,4 +145,6 @@ class PageController extends Controller
         echo 'произошла ошибка';
       }; 
     }
+
+
 }

@@ -78,7 +78,7 @@
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $right->id }}"><label class="label-check" for="check-{{ $right->id }}"></label></td>
           <td class="td-right_name">{{ $right->right_name }}</td>
-          <td class="td-right_action">{{ $right->right_action }}</td>
+          <td class="td-right_action">@if($right->category_right_id == 1) {{ $right->actionentity->alias_action_entity }} @endif</td>
           <td class="category_right_id">{{ $right->category_right_id }}</td>
 
           <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       

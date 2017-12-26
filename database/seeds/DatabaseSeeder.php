@@ -31,6 +31,15 @@ class DatabaseSeeder extends Seeder
             // Должности
             $this->call(PositionsTableSeeder::class);
 
+            // Сущности
+            $this->call(EntitiesTableSeeder::class);
+
+            // Действия над сущностями
+            $this->call(ActionsTableSeeder::class);
+
+            // Создаем связи между действиями и сущностями
+            $this->call(ActionEntityTableSeeder::class);
+            
             // Наполнение таблиц с правами
             $this->call(CategoryRightsTableSeeder::class);
             $this->call(RightsTableSeeder::class);
@@ -38,8 +47,9 @@ class DatabaseSeeder extends Seeder
             $this->call(RightRoleTableSeeder::class);
             $this->call(RoleUserTableSeeder::class);
 
-            // Сущности
-            $this->call(EntitiesTableSeeder::class);
+
+
+
 
             // Сотрудники
             $this->call(EmployeesTableSeeder::class);

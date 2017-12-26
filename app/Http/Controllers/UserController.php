@@ -229,11 +229,11 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         // $this->authorize('view', $user);
 
-        $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
-        $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
+        // $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
+        // $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
         $roles = new Role;
         $menu = Page::get();
-    	return view('users.show', compact('user', 'roles', 'access_action_list', 'access_locality_list', 'menu'));
+    	return view('users.show', compact('user', 'roles', 'menu'));
     }
 
     public function edit($id)
@@ -242,12 +242,12 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         // $this->authorize('update', $user);
 
-        $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
-        $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
+        // $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
+        // $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
         $roles = new Role;
         $menu = Page::get();
          Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
-         return view('users.edit', compact('user', 'roles', 'access_action_list', 'access_locality_list', 'menu'));
+         return view('users.edit', compact('user', 'roles', 'menu'));
     }
 
 
