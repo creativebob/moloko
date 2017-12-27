@@ -17,7 +17,7 @@
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
 	      <h2 class="header-content">{{ $page_info->page_name }}</h2>
-	      <a href="/positions/create" class="icon-add sprite"></a>
+	      <a href="/staff" class="icon-add sprite"></a>
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
