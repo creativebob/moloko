@@ -39,9 +39,9 @@ class RightsTableSeeder extends Seeder
         //  ['right_name' => 'Просмотр всех пользователей', 'object_entity' => 7, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1], 
 
 
-          ['right_name' => 'Просмотр всех филиалов', 'object_entity' => 'getall-department', 'category_right_id' => 2, 'company_id' => 1, 'system_item' => null], 
-          ['right_name' => 'Иркутский филиал', 'object_entity' => 1, 'category_right_id' => 2, 'company_id' => 1, 'system_item' => null], 
-          ['right_name' => 'Улан-Удэнский филиал', 'object_entity' => 2, 'category_right_id' => 2, 'company_id' => 1, 'system_item' => null], 
+          // ['right_name' => 'Просмотр всех филиалов', 'object_entity' => 'getall-department', 'category_right_id' => 2, 'company_id' => 1, 'system_item' => null], 
+          // ['right_name' => 'Иркутский филиал', 'object_entity' => 1, 'category_right_id' => 2, 'company_id' => 1, 'system_item' => null], 
+          // ['right_name' => 'Улан-Удэнский филиал', 'object_entity' => 2, 'category_right_id' => 2, 'company_id' => 1, 'system_item' => null], 
 
         ]);
     }

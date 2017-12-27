@@ -32,11 +32,6 @@
               {{ Form::text('role_description', $role->role_description, ['class'=>'role-description-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
               </label>
             </div>
-            <div class="small-12 medium-6 cell">
-              <label>Отдел
-                {{ Form::select('department_id', $departments_list, $role->department_id) }}
-              </label>
-            </div>
           </div>
 
       </div>

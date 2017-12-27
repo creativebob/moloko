@@ -102,16 +102,17 @@ class RoleController extends Controller
         $role->author_id = $user->id;
         $role->save();
         if($role){
-            $right_role = new RightRole;
-            $right_role->role_id = $role->id;
-            $right_id = Right::whereRight_action($request->department_id)->first();
-            $right_role->right_id = $right_id->id;
-            $right_role ->save();
+
+            // Блок на удаление
+            // $right_role = new RightRole;
+            // $right_role->role_id = $role->id;
+            // $right_id = Right::whereRight_action($request->department_id)->first();
+            // $right_role->right_id = $right_id->id;
+            // $right_role ->save();
 
         } else {abort(403);}
 
-
-        return redirect('/roles');
+        return redirect('roles');
     }
 
     /**
@@ -194,4 +195,20 @@ class RoleController extends Controller
         $actions = Action::get();
         return view('roles.setting', compact('role', 'menu', 'entities', 'actions'));
     }
+
+    public function setright($id_right, $id_role)
+    {
+        $menu = Page::get();
+        $entities = Entity::paginate(30);
+        $role = Role::with(['rights' => function($q)
+        {
+            $q->where('category_right_id', 1);
+        }])->findOrFail($id);
+
+        $actions = Action::get();
+        return view('roles.setting', compact('role', 'menu', 'entities', 'actions'));
+    }
+
+
+
 }
