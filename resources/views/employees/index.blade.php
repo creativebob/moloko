@@ -73,7 +73,9 @@
           <th class="td-employee-department">Отдел</th>
           <th class="td-employee-date-employment">Дата приема</th>
           <th class="td-employee-date-dismissal">Дата увольнения</th>
+          
           <th class="td-employee-status">Статус</th>
+          <th class="td-employee-dismissal-desc">Причина увольнения</th>
           <!-- <th class="td-delete"></th> -->
         </tr>
       </thead>
@@ -83,7 +85,13 @@
         <tr class="parent" id="employees-{{ $employee->id }}" data-name="{{ $employee->position_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $employee->id }}"><label class="label-check" for="check-{{ $employee->id }}"></label></td>
-          <td class="td-employee-name"><a href="/staff/{{ $employee->id }}/edit">{{ $employee->user->first_name }} {{ $employee->user->second_name }}</a></td>
+          <td class="td-employee-name">
+          @if ($employee->date_dismissal == null)
+            <a href="/staff/{{ $employee->id }}/edit">
+          @else
+            <a href="/employees/{{ $employee->id }}/edit">
+          @endif
+          {{ $employee->user->first_name }} {{ $employee->user->second_name }}</a></td>
           <td class="td-employee-position">
             {{ $employee->staffer->position->position_name }}
           </td>
@@ -97,6 +105,7 @@
             Работает
           @endif
           </td>
+          <td class="td-employee-dismissal-desc">{{ $employee->dismissal_desc }}</td>
          <!--  <td class="td-delete">
             @if (isset($employee->company_id))
               <a class="icon-delete sprite" data-open="item-delete"></a>

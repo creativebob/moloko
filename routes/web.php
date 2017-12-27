@@ -57,8 +57,8 @@ Route::resource('/departments', 'DepartmentController')->middleware('auth');
 Route::get('/current_department/{parent}/{department}/{position}', 'DepartmentController@current_department')->middleware('auth');
 // Должности
 Route::resource('/positions', 'PositionController')->middleware('auth');
-// Контроллер вакансий
-Route::resource('staff', 'StafferController')->middleware('auth');
+// Контроллер штата компании
+Route::resource('/staff', 'StafferController')->middleware('auth');
 // Контроллер сотрудников
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
 //Конец блока филиалов, отделов и должностей

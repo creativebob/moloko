@@ -15,23 +15,25 @@
     @endif
     <!-- Сотрудник -->
     <label>Название должности
-    {{ Form::text('position_name', $vacancy->position->position_name, ['class'=>'position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'readonly']) }}
+    {{ Form::text('position_name', $employee->staffer->position->position_name, ['class'=>'position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'readonly']) }}
     </label>
     <label>Сотрудник:
-      {{ Form::select('user_id', $users, $vacancy->user_id, ['id'=>'vacancy-select', 'placeholder'=>'Вакансия']) }}
+      {{ Form::select('user_id', $users, $employee->user_id, ['id'=>'staffer-select', 'placeholder'=>'Вакансия', 'disabled']) }}
     </label>
-    <label>Дата приема
-        @foreach ($vacancy->employees as $employee)
-          @if (($employee->user_id == $vacancy->user_id) && ($employee->date_dismissal == null))
-            {{ Form::text('date_employment', $employee->date_employment, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
-          @else
-            {{ Form::text('date_employment', null, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
-          @endif
-        @endforeach
-        
-    </label>
-    <label>Дата увольнения
-      {{ Form::text('date_dismissal', null, ['class'=>'date_dismissal date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+    <div class="grid-x">
+      <div class="small-12 medium-5 cell">
+        <label>Дата приема
+          {{ Form::text('date_employment', $employee->date_employment, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+        </label>
+      </div>
+      <div class="small-12 medium-5 medium-offset-1 cell">
+        <label>Дата увольнения
+          {{ Form::text('date_dismissal', $employee->date_dismissal, ['class'=>'date_dismissal date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+        </label>
+      </div>
+    </div>
+    <label>Причина увольнения
+    {{ Form::text('dismissal_desc', $employee->dismissal_desc, ['class'=>'position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
     
   </div>

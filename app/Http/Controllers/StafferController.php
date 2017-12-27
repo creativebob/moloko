@@ -95,14 +95,13 @@ class StafferController extends Controller
     {
       $user = Auth::user();
 
-      $staffer = Staffer::with(['employees' => function($q)
-        {
-            $q->whereDate_dismissal(null);
-        }])->findOrFail($id);
+      $staffer = Staffer::with(['employees' => function($q) {
+                            $q->whereDate_dismissal(null);
+                          }])->findOrFail($id);
       $users = User::whereCompany_id($user->company_id)->orderBy('second_name')->get()->pluck('second_name', 'id');
       $menu = Page::whereSite_id('1')->get();
 
-      // dd($staffer);
+      // dd($staffer->user_id);
       
       return view('staff.edit', compact('staffer', 'menu', 'users'));    
     }
@@ -128,6 +127,7 @@ class StafferController extends Controller
         $employee = Employee::whereStaffer_id($id)->whereDate_dismissal(null)->first();
         // Заполняем дату
         $employee->date_dismissal = $request->date_dismissal;
+        $employee->dismissal_desc = $request->dismissal_desc;
         $staffer->editor_id = $user->id;
         $employee->editor_id = $user->id;
       // Если даты увольнения нет

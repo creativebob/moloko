@@ -28,6 +28,8 @@ class CreateEmployeesTable extends Migration
             $table->date('date_employment')->nullable()->comment('Дата приема на работу');
             $table->date('date_dismissal')->nullable()->comment('Дата увольнения');
 
+            $table->string('dismissal_desc')->nullable()->comment('Причина увольнения');
+
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 

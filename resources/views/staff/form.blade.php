@@ -21,20 +21,26 @@
       {{ Form::select('user_id', $users, $staffer->user_id, ['id'=>'staffer-select', 'placeholder'=>'Вакансия']) }}
     </label>
     <label>Дата приема
+      @php 
+        $date_employment = null;
+      @endphp
       @if (!empty($staffer))
         @foreach ($staffer->employees as $employee)
-          @if ($employee->user_id == $staffer->user_id)
-            {{ Form::text('date_employment', $employee->date_employment, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
-            @else
-            {{ Form::text('date_employment', null, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+          @if (($employee->user_id == $staffer->user_id) && ($employee->date_dismissal == null))
+            @php
+              $date_employment = $employee->date_employment; 
+            @endphp    
           @endif
         @endforeach
       
+        {{ Form::text('date_employment', $date_employment, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
       @endif
-        
     </label>
     <label>Дата увольнения
       {{ Form::text('date_dismissal', null, ['class'=>'date_dismissal date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+    </label>
+    <label>Причина увольнения
+    {{ Form::text('dismissal_desc', null, ['class'=>'position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
     
   </div>
