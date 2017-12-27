@@ -68,13 +68,16 @@
 
                               @if(!empty($right->actionentity->alias_action_entity))
 
-                                @if($right->actionentity->alias_action_entity == ($action->action_method . '-' . $entity->entity_alias)) 
+                                @if($right->actionentity->alias_action_entity == ($action->action_method . '-' . $entity->entity_alias)&&($right->directive == 'allow')) 
                                   @php $a = "checked"; @endphp
-                                @endif
+
                                   <div class="checkbox">
                                     <input type="checkbox" id="{{ $entity->entity_name }}-{{ $action->id }}" {{ $a }}>
                                     <label for="{{ $entity->entity_name }}-{{ $action->id }}"></label>
                                   </div>
+
+                                @endif
+
                               @endif
                               
                             @endforeach

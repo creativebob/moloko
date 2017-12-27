@@ -22,8 +22,8 @@ class RightsTableSeeder extends Seeder
 
         foreach($actionentities as $actionentity){
 
-                $mass[] = ['right_name' => $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1];
-
+                $mass[] = ['right_name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'allow'];
+                $mass[] = ['right_name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'deny'];
         };
 
         DB::table('rights')->insert($mass);
