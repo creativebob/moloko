@@ -24,6 +24,8 @@ class CreateStaffTable extends Migration
             $table->foreign('position_id')->references('id')->on('positions');
             $table->integer('department_id')->unsigned()->nullable()->comment('Id отдела');
             $table->foreign('department_id')->references('id')->on('departments');
+             $table->integer('filial_id')->unsigned()->nullable()->comment('Id отдела');
+            $table->foreign('filial_id')->references('id')->on('departments');
             
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');

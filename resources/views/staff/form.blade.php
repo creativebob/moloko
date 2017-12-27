@@ -21,13 +21,16 @@
       {{ Form::select('user_id', $users, $staffer->user_id, ['id'=>'staffer-select', 'placeholder'=>'Вакансия']) }}
     </label>
     <label>Дата приема
+      @if (!empty($staffer))
         @foreach ($staffer->employees as $employee)
-          @if (($employee->user_id == $staffer->user_id) && ($employee->date_dismissal == null))
+          @if ($employee->user_id == $staffer->user_id)
             {{ Form::text('date_employment', $employee->date_employment, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
-          @else
+            @else
             {{ Form::text('date_employment', null, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
           @endif
         @endforeach
+      
+      @endif
         
     </label>
     <label>Дата увольнения
