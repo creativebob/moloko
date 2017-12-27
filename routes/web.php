@@ -25,6 +25,9 @@ Route::resource('rights', 'RightController')->middleware('auth');
 
 // Маршруты для групп доступа
 Route::resource('roles', 'RoleController')->middleware('auth');
+// Route::resource('rightrole', 'RightroleController')->middleware('auth');
+
+Route::get('/roles/{id}/setting', 'RoleController@setting')->middleware('auth')->name('roles.setting');
 
 // Маршруты для сущностей
 Route::resource('entities', 'EntityController')->middleware('auth');

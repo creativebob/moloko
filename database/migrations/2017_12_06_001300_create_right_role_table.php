@@ -15,6 +15,7 @@ class CreateRightRoleTable extends Migration
     {
         Schema::create('right_role', function (Blueprint $table) {
             $table->increments('id');
+            
             $table->integer('right_id')->nullable()->unsigned()->comment('ID правила');
             $table->foreign('right_id')->references('id')->on('rights');
 

@@ -18,19 +18,11 @@ class EntitiesTableSeeder extends Seeder
         	],
         	[
 		        'entity_name' => 'Компании',
-		        'entity_alias' => 'company',
+		        'entity_alias' => 'companies',
         	],
         	[
 		        'entity_name' => 'Отделы',
 		        'entity_alias' => 'departments',
-        	],
-        	[
-		        'entity_name' => 'Доступ',
-		        'entity_alias' => 'accesses',
-        	],
-        	[
-		        'entity_name' => 'Группы доступа',
-		        'entity_alias' => 'access_groups',
         	],
         	[
 		        'entity_name' => 'Районы',

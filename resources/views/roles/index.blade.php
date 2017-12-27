@@ -70,7 +70,7 @@
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $role->id }}"><label class="label-check" for="check-{{ $role->id }}"></label></td>
           <td class="td-role-name">{{ link_to_route('roles.edit', $role->role_name, [$role->id]) }}</td>
-          <td class="td-role-set"><button class="tiny button">Настройка</button></td>
+          <td class="td-role-set">{{ link_to_route('roles.setting', 'Настройка', [$role->id], ['class'=>'button tiny']) }}</td>
           <td class="td-role-company-id">@if(!empty($role->company->company_name)) {{ link_to_route('roles.edit', $role->company->company_name, [$role->id]) }} @endif</td>
           <td class="td-role-department-id">@if(!empty($role->department_id)) {{ link_to_route('roles.edit', $role->department->department_name, [$role->id]) }} @endif</td>
           <td class="td-role-count">{{ count($role->rights) }}</td>

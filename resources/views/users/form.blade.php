@@ -215,12 +215,12 @@
         <div class="grid-x grid-padding-x">
           <div class="small-12 cell tabs-margin-top">
             <label>Уровень доступа
-              {{ Form::select('group_action_id', $access_action_list, $user->group_action_id) }}
+              {{-- Form::select('group_action_id', $access_action_list, $user->group_action_id) --}}
             </label>
           </div>
           <div class="small-12 cell">
             <label>Область доступа
-              {{ Form::select('group_locality_id', $access_locality_list, $user->group_locality_id) }}
+              {{-- Form::select('group_locality_id', $access_locality_list, $user->group_locality_id) --}}
             </label>
           </div>
           <div class="small-12 cell checkbox">

@@ -7,7 +7,9 @@ use App\Page;
 use App\User;
 use App\Department;
 use App\RightRole;
+use App\Action;
 use App\Right;
+use App\Entity;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
@@ -136,10 +138,12 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = Role::findOrFail($id);
+        $user = Auth::user();
+        $departments_list = Department::where('company_id', $user->company_id)->whereFilial_status(1)->pluck('department_name', 'id');
         // $this->authorize('update', $entity);
 
         $menu = Page::get();
-        return view('roles.show', compact('role', 'menu'));
+        return view('roles.show', compact('role', 'menu', 'departments_list'));
     }
 
     /**
@@ -169,5 +173,25 @@ class RoleController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function setting($id)
+    {
+        $menu = Page::get();
+        $entities = Entity::paginate(30);
+        $role = Role::with(['rights' => function($q)
+        {
+            $q->where('category_right_id', 1);
+        }])->findOrFail($id);
+
+        $actions = Action::get();
+        return view('roles.setting', compact('role', 'menu', 'entities', 'actions'));
     }
 }
