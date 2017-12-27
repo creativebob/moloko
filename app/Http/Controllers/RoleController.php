@@ -35,24 +35,24 @@ class RoleController extends Controller
     {
         // $this->authorize('index', User::class);
         $user = Auth::user();
-        $others_item['user_id'] = $user->id;
-        $system_item = null;
+        // $others_item['user_id'] = $user->id;
+        // $system_item = null;
 
-        // Смотрим права на простотр системных.
-         foreach ($user->roles as $role) {
-            foreach ($role->rights as $right) {
-                // Перебор всех прав пользователя
-                if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;};
-                if ($right->right_action == 'system-user') {$system_item = 1;};
-                if ($right->right_action == 'get-users') {$others_item['all'] = 'all';};
-            }
-        }
+        // // Смотрим права на простотр системных.
+        //  foreach ($user->roles as $role) {
+        //     foreach ($role->rights as $right) {
+        //         // Перебор всех прав пользователя
+        //         if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;};
+        //         if ($right->right_action == 'system-user') {$system_item = 1;};
+        //         if ($right->right_action == 'get-users') {$others_item['all'] = 'all';};
+        //     }
+        // }
 
         if (isset($user->company_id)) {
             // Если у пользователя есть компания
             $roles = Role::whereCompany_id($user->company_id)
-                    ->otherItem($others_item)
-                    ->systemItem($system_item) // Фильтр по системным записям
+                    // ->otherItem($others_item)
+                    // ->systemItem($system_item) // Фильтр по системным записям
                     ->paginate(30);
         } else {
             // Если нет, то бог без компании

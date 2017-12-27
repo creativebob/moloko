@@ -20,6 +20,9 @@ class Staffer extends Model
     'position_id',
     'department_id',
   ];
+
+
+ 
   /**
   * Получаем отдел данной должности.
   */

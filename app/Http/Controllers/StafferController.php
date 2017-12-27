@@ -62,9 +62,10 @@ class StafferController extends Controller
 
       $staffer = new Staffer;
 
-      $staffer->company_id = $user->id;
+      $staffer->company_id = $user->company_id;
       $staffer->position_id = $position_id;
       $staffer->department_id = $department_id;
+      $staffer->filial_id = $filial_id;
       $staffer->author_id = $user->id;
 
       $staffer->save();
@@ -94,11 +95,14 @@ class StafferController extends Controller
     {
       $user = Auth::user();
 
-      $staffer = Staffer::findOrFail($id);
-      $users = User::whereCompany_id($user->company_id)->orderBy('nickname')->get()->pluck('nickname', 'id');
+      $staffer = Staffer::with(['employees' => function($q)
+        {
+            $q->whereDate_dismissal(null);
+        }])->findOrFail($id);
+      $users = User::whereCompany_id($user->company_id)->orderBy('second_name')->get()->pluck('second_name', 'id');
       $menu = Page::whereSite_id('1')->get();
 
-    
+      // dd($staffer);
       
       return view('staff.edit', compact('staffer', 'menu', 'users'));    
     }
@@ -113,22 +117,34 @@ class StafferController extends Controller
     public function update(Request $request, $id)
     {
       $user = Auth::user();
-
-      $staffer = Employee::findOrFail($id);
-
-      if (isset($request->date_dismissal)) {
-        $staffer->user_id = null;
-        $staffer->date_dismissal = $request->date_dismissal;
-        $staffer->editor_id = $user->id;
-      } else {
-        $staffer->user_id = $request->user_id;
-        $staffer->editor_id = $user->id;
-      }
-
- 
-  
+      // Находим должность в штате
+      $staffer = Staffer::findOrFail($id);
       
-
+      // Если не пустая дата увольнения пришла
+      if (isset($request->date_dismissal)) {
+        // Снимаем с должности в штате
+        $staffer->user_id = null;
+        // Ищем в сотрудниках по id должности и где пустая дата увольнения
+        $employee = Employee::whereStaffer_id($id)->whereDate_dismissal(null)->first();
+        // Заполняем дату
+        $employee->date_dismissal = $request->date_dismissal;
+        $staffer->editor_id = $user->id;
+        $employee->editor_id = $user->id;
+      // Если даты увольнения нет
+      } else {
+        // Назначаем пользователя
+        $staffer->user_id = $request->user_id;
+        // Создаем новую запись в сотрудниках
+        $employee = new Employee;
+        $employee->company_id = $user->company_id;
+        $employee->staffer_id = $id;
+        $employee->user_id = $request->user_id;
+        $employee->date_employment = $request->date_employment;
+        $employee->author_id = $user->id;
+      }
+     
+      
+      $employee->save();
       $staffer->save();
 
       return redirect('/staff');

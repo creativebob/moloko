@@ -220,20 +220,7 @@ class DepartmentController extends Controller
         $filial->save();
 
         if ($filial) {
-          $right = new Right;
-
-          $right->right_name = $filial->department_name;
-          $right->right_action = $filial->id;
-          $right->category_right_id = 2;
-          $right->author_id = $user->id;
-
-          $right->save();
-
-          if ($right) {
-            return Redirect('/current_department/'.$filial->id.'/0/0');
-          } else {
-             echo 'Ошибка записи правила';
-          };
+          return Redirect('/current_department/'.$filial->id.'/0/0');
         } else {
           echo 'Ошибка записи филиала';
         };
@@ -288,22 +275,7 @@ class DepartmentController extends Controller
         $department->save();
 
         if ($department) {
-          $right = new Right;
-
-          $right->right_name = $department->department_name;
-          $right->right_action = $department->id;
-          $right->category_right_id = 2;
-          $right->author_id = $user->id;
-
-          $right->save();
-
-          if ($right) {
-            $filial_id = $department->filial_id;
-            $department_id = $department->id;
-            return Redirect('/current_department/'.$filial_id.'/'.$department_id.'/0');
-          } else {
-             echo 'Ошибка записи правила';
-          };
+          return Redirect('/current_department/'.$filial_id.'/'.$department_id.'/0');
         } else {
           echo 'Ошибка записи филиала';
         };
