@@ -1,12 +1,12 @@
 @extends('layouts.app')
-@include('vacancies.inhead')
+@include('employees.inhead')
 
 @section('title', 'Редактировать сотрудника')
 
 @section('title-content')
 	<div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">РЕДАКТИРОВАТЬ сотрудника</h2>
+       <h2 class="header-content">РЕДАКТИРОВАТЬ уволенного сотрудника</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -15,15 +15,15 @@
 
 @section('content')
 
-  {{ Form::model($vacancy, ['route' => ['vacancies.update', $vacancy->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($employee, ['route' => ['employees.update', $employee->id], 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
-    @include('vacancies.form', ['submitButtonText' => 'Редактировать сотрудника', 'param'=>''])
+    @include('employees.form', ['submitButtonText' => 'Редактировать уволенного сотрудника', 'param'=>''])
     
   {{ Form::close() }}
 
 @endsection
 
-@include('vacancies.scripts')
+@include('employees.scripts')
 
 

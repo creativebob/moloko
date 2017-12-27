@@ -214,7 +214,15 @@ class RoleController extends Controller
 
         $menu = Page::get();
         $actions = Action::get();
-        return view('roles.setting', compact('role', 'menu', 'entities', 'actions'));
+
+    // $user = User::findOrFail(Auth::user()->id);
+
+    foreach (Auth::user()->staff as $staffer) {
+         dd($staffer->filial_id);
+    }
+   
+
+        // return view('roles.setting', compact('role', 'menu', 'entities', 'actions'));
     }
 
 }

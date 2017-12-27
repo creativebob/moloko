@@ -18,6 +18,7 @@ class EmployeesTableSeeder extends Seeder
 		        'user_id' => 4,
                 'date_employment' => '2017-12-01',
                 'date_dismissal' => null,
+                'dismissal_desc' => null,
         	],
             [   
                 'staffer_id' => 2,
@@ -25,6 +26,7 @@ class EmployeesTableSeeder extends Seeder
                 'user_id' => 5,
                 'date_employment' => '2017-12-01',
                 'date_dismissal' => null,
+                'dismissal_desc' => null,
             ],
             [   
                 'staffer_id' => 3,
@@ -32,6 +34,7 @@ class EmployeesTableSeeder extends Seeder
                 'user_id' => 6,
                 'date_employment' => '2017-12-01',
                 'date_dismissal' => null,
+                'dismissal_desc' => null,
             ],
             [   
                 'staffer_id' => 4,
@@ -39,6 +42,7 @@ class EmployeesTableSeeder extends Seeder
                 'user_id' => 6,
                 'date_employment' => '2017-11-01',
                 'date_dismissal' => '2017-11-02',
+                'dismissal_desc' => 'Заебал',
             ],
         ]);
     }

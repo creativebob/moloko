@@ -274,8 +274,10 @@ class DepartmentController extends Controller
 
         $department->save();
 
+        $department_id = $department->id;
+
         if ($department) {
-          return Redirect('/current_department/'.$filial_id.'/'.$department_id.'/0');
+          return Redirect('/current_department/'.$request->filial_id.'/'.$department_id.'/0');
         } else {
           echo 'Ошибка записи филиала';
         };

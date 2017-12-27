@@ -75,7 +75,15 @@ class EmployeeController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = Auth::user();
+
+      $employee = Employee::findOrFail($id);
+      $users = User::whereCompany_id($user->company_id)->orderBy('second_name')->get()->pluck('second_name', 'id');
+      $menu = Page::whereSite_id('1')->get();
+
+      // dd($staffer->user_id);
+      
+      return view('employees.edit', compact('employee', 'menu', 'users'));    
     }
 
     /**
