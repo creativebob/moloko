@@ -28,6 +28,7 @@ Route::resource('roles', 'RoleController')->middleware('auth');
 // Route::resource('rightrole', 'RightroleController')->middleware('auth');
 
 Route::get('/roles/{id}/setting', 'RoleController@setting')->middleware('auth')->name('roles.setting');
+Route::post('/roles/setright', 'RoleController@setright')->middleware('auth')->name('roles.setright');
 
 // Маршруты для сущностей
 Route::resource('entities', 'EntityController')->middleware('auth');

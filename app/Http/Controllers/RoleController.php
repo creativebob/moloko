@@ -43,8 +43,8 @@ class RoleController extends Controller
             foreach ($role->rights as $right) {
                 // Перебор всех прав пользователя
                 if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;};
-                if ($right->right_action == 'system-user') {$system_item = 1;};
-                if ($right->right_action == 'get-users') {$others_item['all'] = 'all';};
+                if ($right->right_action == 'system-users') {$system_item = 1;};
+                if ($right->right_action == 'getall-users') {$others_item['all'] = 'all';};
             }
         }
 
@@ -201,44 +201,67 @@ class RoleController extends Controller
         //     }
         // }
 
+        $auth_user_roles = $user->roles;
+        // Создаем ассоциированный массив прав на авторизованного пользователя
+        // В формате: Ключ"user-create-allow" и значение "1" если найдено правило.
+        $user_access = [];
         foreach ($user->roles as $role) {
             foreach ($role->rights as $right){
-                echo $right->right_name;
+                $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = 1;
             }
         }
 
-        // $menu = Page::get();
-        // $entities = Entity::paginate(30);
-        // $role = Role::with(['rights' => function($q)
-        // {
-        //     $q->where('category_right_id', 1);
-        // }])->findOrFail($id);
 
-        // $actions = Action::get();
-        // return view('roles.setting', compact('role', 'menu', 'entities', 'actions'));
-    }
-
-    public function setright($id_right, $id_role)
-    {
-
-
-        $entities = Entity::paginate(30);
-        $role = Role::with(['rights' => function($q)
+        $current_role = Role::with(['rights' => function($q)
         {
             $q->where('category_right_id', 1);
         }])->findOrFail($id);
 
+        // Создаем ассоциированный массив прав на авторизованного пользователя
+        // В формате: Ключ"user-create-allow" и значение "1" если найдено правило.
+        $role_access = [];
+
+        foreach ($current_role->rights as $right){
+            $role_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = 1;
+        }
+
+        // dd($role_access);
+
+        $entities = Entity::paginate(30);
         $menu = Page::get();
         $actions = Action::get();
-
-    // $user = User::findOrFail(Auth::user()->id);
-
-    foreach (Auth::user()->staff as $staffer) {
-         dd($staffer->filial_id);
+        return view('roles.setting', compact('auth_user_roles', 'current_role', 'menu', 'entities', 'actions', 'user_access', 'role_access'));
     }
-   
 
-        // return view('roles.setting', compact('role', 'menu', 'entities', 'actions'));
+    public function setright(Request $request)
+    {
+        $user = Auth::user();
+        echo $request->role_id . " - " . $request->right_id;
+
+
+        $rightrole = RightRole::where('role_id', $request->role_id)->where('right_id', $request->right_id)->first();
+
+        if(isset($rightrole)){
+
+            $rightrole = RightRole::destroy($rightrole->id);
+            echo "Есть такая запись! Сделали попытку ебнуть ее!";
+
+        } else {
+
+            echo "Такой записи не было. Сделали попытку записать!";
+
+            $rightrole = new RightRole;
+            $rightrole->role_id = $request->role_id;
+            $rightrole->right_id = $request->right_id;
+            $rightrole->author_id = $user->id;
+
+            $rightrole->save();
+
+        if($rightrole){
+
+        } else { echo "Все пошло по пизде!"; }
+
+        };
     }
 
 }
