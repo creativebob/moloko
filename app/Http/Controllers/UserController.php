@@ -104,52 +104,50 @@ class UserController extends Controller
     	$user->access_block = $request->access_block;
 
         $user->author_id = $auth_user->id;
+
+        // Если у пользователя есть назначенная компания и пользователь не являеться богом
+        if(isset($auth_user->company_id)&&($auth_user->god != 1)){
+            $user->company_id = $auth_user->company_id;
+        // Если бог авторизован под компанией
+        } elseif(isset($auth_user->company_id)&&($auth_user->god == 1)) {
+            $user->company_id = $auth_user->company_id;
+        } elseif(($auth_user->company_id == null) && ($auth_user->god == 1)){
+            $user->system_item = 1;
+        } else {
+            abort(403);
+        };
+
         $user->save();
 
-        if($user){
 
-            // Если прошло сохранение, то создаем на пользователя право
-            $newright = new Right;
-            $newright->right_name = $user->first_name . " " . $user->second_name;
-            $newright->right_action = $user->id;
+        // // Создаем компанию под пользователя
+        // // Если стоит отметка о том, что нужно создать компанию.
+        // if($user->orgform_status == '1'){
 
-            // Указываем 2-ую категорию прав: права по отделам - локальные
-            $newright->category_right_id = 3;
-            $newright->author_id = $auth_user->id;    
-            $newright->save();
-            if($newright){$f = 1;} else {abort(403);};
-
-        } else {abort(403);};
-
-
-        // Создаем компанию под пользователя
-        // Если стоит отметка о том, что нужно создать компанию.
-        if($user->orgform_status == '1'){
-
-            //Проверим по ИНН есть ли компания в базе
-            $company_inn = Company::where('company_inn', $user->user_inn)->count();
-            if($company_inn == 1){
-                // Компания существует
+        //     //Проверим по ИНН есть ли компания в базе
+        //     $company_inn = Company::where('company_inn', $user->user_inn)->count();
+        //     if($company_inn == 1){
+        //         // Компания существует
                 
-            } else {
-                // Компания не существует
+        //     } else {
+        //         // Компания не существует
 
-            $company = new Company;
-            $company->company_name = $request->company_name;
-            $company->kpp = $request->kpp;
-            $company->account_settlement = $request->account_settlement;
-            $company->account_correspondent = $request->account_correspondent;
-            $company->bank = $request->bank;
-            $company->user_id = $user_id;
+        //     $company = new Company;
+        //     $company->company_name = $request->company_name;
+        //     $company->kpp = $request->kpp;
+        //     $company->account_settlement = $request->account_settlement;
+        //     $company->account_correspondent = $request->account_correspondent;
+        //     $company->bank = $request->bank;
+        //     $company->user_id = $user_id;
 
-            $company->save();
-            };
+        //     $company->save();
+        //     };
 
-        } else{
+        // } else{
 
-        // Когда отметки нет
+        // // Когда отметки нет
          
-        };
+        // };
 
 		return redirect('users');
     }
@@ -160,11 +158,9 @@ class UserController extends Controller
         // $this->authorize('create', User::class);
 
     	$user = new User;
-        $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
-        $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
         $roles = new Role;
         $menu = Page::get();
-    	return view('users.create', compact('user', 'roles', 'access_action_list', 'access_locality_list', 'menu'));
+    	return view('users.create', compact('user', 'roles', 'menu'));
     }
 
     public function update(UpdateUser $request, $id)

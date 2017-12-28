@@ -3,7 +3,6 @@
 namespace App\Policies;
 
 use App\User;
-use App\Access;
 use App\Company;
 
 use Illuminate\Support\Facades\Auth;

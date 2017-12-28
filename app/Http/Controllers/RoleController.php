@@ -173,7 +173,13 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Удаляем роль с обновлением
+        $role = Role::destroy($id);
+        if ($role) {
+          return Redirect('roles');
+        } else {
+          echo 'Произошла ошибка';
+        }; 
     }
 
     

@@ -33,7 +33,7 @@ class CompanyController extends Controller
 
         $companies = Company::paginate(30);
         $menu = Page::get();
-        return view('companies.index', compact('companies', 'access', 'menu'));
+        return view('companies.index', compact('companies', 'menu'));
 
     }
 
@@ -44,7 +44,7 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Company::class);
+        // $this->authorize('create', Company::class);
         $menu = Page::get();
         $company = new Company;
         return view('companies.create', compact('company', 'menu'));   
@@ -58,7 +58,7 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', Company::class);
+        // $this->authorize('create', Company::class);
 
         $user = Auth::user();
         $company = new Company;
@@ -81,7 +81,8 @@ class CompanyController extends Controller
         $company->author_id = $user->id;
 
         $company->save();
-        return redirect('/companies');
+        
+        return redirect('companies.index');
 
     }
 
@@ -94,7 +95,7 @@ class CompanyController extends Controller
     public function show($id)
     {
         $company = Company::findOrFail($id);
-        $this->authorize('view', $company);
+        // $this->authorize('view', $company);
         $menu = Page::get();
         return view('companies.show', compact('company', 'menu'));
     }
@@ -124,7 +125,7 @@ class CompanyController extends Controller
     public function update(Request $request, $id)
     {
         $company = Company::findOrFail($id);
-        $this->authorize('update', $company);
+        // $this->authorize('update', $company);
 
         $company->company_name = $request->company_name;
         $company->company_phone = cleanPhone($request->company_phone);
@@ -157,7 +158,7 @@ class CompanyController extends Controller
     {
 
         $company = User::findOrFail($id);
-        $this->authorize('delete', $company);   
+        // $this->authorize('delete', $company);   
 
         // Удаляем пользователя с обновлением
         $company = Company::destroy($id);
