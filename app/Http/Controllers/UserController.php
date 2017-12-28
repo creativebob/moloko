@@ -6,6 +6,8 @@ use App\User;
 use App\Company;
 use App\Page;
 use App\Right;
+use App\RoleUser;
+use App\Department;
 
 
 // Модели которые отвечают за работу с правами + политики
@@ -45,7 +47,7 @@ class UserController extends Controller
         if (isset($user->company_id)) {
             // Если у пользователя есть компания
             $users = User::whereCompany_id($user->company_id)
-                    ->whereGod(null)
+                    // ->whereGod(null)
                     // ->otherItem($others_item)
                     // ->systemItem($system_item) // Фильтр по системным записям
                     ->paginate(30);
@@ -160,11 +162,9 @@ class UserController extends Controller
         // $this->authorize('create', User::class);
 
     	$user = new User;
-        $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
-        $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
         $roles = new Role;
         $menu = Page::get();
-    	return view('users.create', compact('user', 'roles', 'access_action_list', 'access_locality_list', 'menu'));
+    	return view('users.create', compact('user', 'roles', 'menu'));
     }
 
     public function update(UpdateUser $request, $id)
@@ -229,8 +229,6 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         // $this->authorize('view', $user);
 
-        // $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
-        // $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
         $roles = new Role;
         $menu = Page::get();
     	return view('users.show', compact('user', 'roles', 'menu'));
@@ -238,16 +236,23 @@ class UserController extends Controller
 
     public function edit($id)
     {
-
+        $auth_user = Auth::user();
         $user = User::findOrFail($id);
         // $this->authorize('update', $user);
 
         // $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
         // $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
-        $roles = new Role;
+        $role = new Role;
         $menu = Page::get();
-         Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
-         return view('users.edit', compact('user', 'roles', 'menu'));
+        $role_users = RoleUser::whereUser_id($id)->get();
+
+        $roles = Role::whereCompany_id($auth_user->company_id)->pluck('role_name', 'id');
+        $departments = Department::whereCompany_id($auth_user->company_id)->pluck('department_name', 'id');
+
+        // dd($roles);
+        
+        Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
+        return view('users.edit', compact('user', 'role', 'menu', 'role_users', 'roles', 'departments'));
     }
 
 

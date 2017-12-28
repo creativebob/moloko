@@ -13,7 +13,7 @@
   </div>
 
   <div class="grid-x tabs-wrap inputs">
-    <div class="small-12 medium-7 large-5 cell tabs-margin-top">
+    <div class="small-12 medium-6 large-5 cell tabs-margin-top">
       <div class="tabs-content" data-tabs-content="tabs">
 
 
@@ -186,7 +186,7 @@
         </div>
       </div>
     </div>
-    <div class="small-12 medium-4 medium-offset-1 large-4 large-offset-3 cell">
+    <div class="small-12 medium-5 medium-offset-1 large-5 large-offset-2 cell">
       <fieldset class="fieldset-access">
         <legend>Настройка доступа</legend>
         <div class="grid-x grid-padding-x"> 
@@ -214,15 +214,45 @@
         </div>
         <div class="grid-x grid-padding-x">
           <div class="small-12 cell tabs-margin-top">
-            <label>Уровень доступа
-              {{-- Form::select('group_action_id', $access_action_list, $user->group_action_id) --}}
-            </label>
+            <table>
+              <caption>Уровень доступа</caption>
+              <thead>
+                <tr>
+                  <th>Роль</th>
+                  <th>Филиал</th>
+                  <th>Должность</th>
+                  <th>Инфа</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach ($role_users as $role_user)
+                  <tr>
+                    <td>
+                      {{ $role_user->role->role_name }}
+                    </td>
+                    <td>
+                      {{ $role_user->department->department_name }}
+                    </td>
+                    <td>
+                      @if (isset($role_user->position->position_name))
+                      {{ $role_user->position->position_name }}
+                      @else
+                      спецдолжность
+                      @endif
+                    </td>
+                    <td>Инфа</td>
+                    <td>Удаление</td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+           
           </div>
-          <div class="small-12 cell">
-            <label>Область доступа
-              {{-- Form::select('group_locality_id', $access_locality_list, $user->group_locality_id) --}}
-            </label>
+          <div class="small-8 samll-offset-2 medium-6 medium-offset-3 cell">
+            <a class="button" data-open="role-add">настройка доступа</a>
           </div>
+
           <div class="small-12 cell checkbox">
               {{ Form::checkbox('access_block', 1, $user->access_block == 1, ['id'=>'access-block-checkbox']) }}
             <label for="access-block-checkbox"><span>Блокировать доступ</span></label>
