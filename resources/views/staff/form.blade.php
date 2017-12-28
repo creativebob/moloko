@@ -18,7 +18,15 @@
     {{ Form::text('position_name', $staffer->position->position_name, ['class'=>'position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'readonly']) }}
     </label>
     <label>Сотрудник:
-      {{ Form::select('user_id', $users, $staffer->user_id, ['id'=>'staffer-select', 'placeholder'=>'Вакансия']) }}
+      @php
+        $block = null;
+      @endphp
+      @if (!empty($staffer->user_id))
+        @php
+         $block = 'disabled';
+        @endphp
+      @endif
+      {{ Form::select('user_id', $users, $staffer->user_id, ['id'=>'staffer-select', 'placeholder'=>'Вакансия', $block]) }}
     </label>
     <label>Дата приема
       @php 
