@@ -22,6 +22,9 @@ class CreateRoleUserTable extends Migration
             $table->integer('department_id')->nullable()->unsigned()->comment('ID отдела / филиала');
             $table->foreign('department_id')->references('id')->on('departments');
 
+            $table->integer('position_id')->nullable()->unsigned()->comment('ID должности');
+            $table->foreign('position_id')->references('id')->on('positions');
+
             $table->integer('user_id')->nullable()->unsigned()->comment('ID пользователя');
             $table->foreign('user_id')->references('id')->on('users');
 

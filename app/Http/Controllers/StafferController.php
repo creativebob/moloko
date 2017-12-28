@@ -7,8 +7,11 @@ use App\Employee;
 use App\Page;
 use App\User;
 use App\Department;
+use App\RoleUser;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class StafferController extends Controller
 {
@@ -131,6 +134,8 @@ class StafferController extends Controller
         $employee->dismissal_desc = $request->dismissal_desc;
         $staffer->editor_id = $user->id;
         $employee->editor_id = $user->id;
+        // Удаляем должность и права данного юзера
+        $delete = RoleUser::wherePosition_id($staffer->position_id)->delete();
       // Если даты увольнения нет
       } else {
         // Назначаем пользователя
@@ -142,6 +147,19 @@ class StafferController extends Controller
         $employee->user_id = $request->user_id;
         $employee->date_employment = $request->date_employment;
         $employee->author_id = $user->id;
+        // Создать связь сотрудника, филиала и ролей должности
+        $mass = [];
+        foreach ($staffer->position->roles as $role) {
+          $mass[] = [
+            'user_id' => $user->id,
+            'role_id' => $role->id,
+            'department_id' => $staffer->filial_id,
+            'position_id' => $staffer->position_id,
+            'author_id' => $user->id,
+          ];
+        }
+        DB::table('role_user')->insert($mass);
+       
       }
      
       

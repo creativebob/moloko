@@ -11,9 +11,10 @@ class RoleUser extends Model
    *
    * @var array
    */
+  protected $table = 'role_user';
   protected $fillable = [
     	'id', 
-        'role_id', 
-        'user_id', 
+      'role_id', 
+      'user_id', 
     ];
 }

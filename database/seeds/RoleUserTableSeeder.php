@@ -17,31 +17,37 @@ class RoleUserTableSeeder extends Seeder
 	        	'role_id' => '1', 
                 'department_id' => '1', 
 	        	'user_id' => '1', 
+                'position_id' => null, 
         	],
         	[
 	        	'role_id' => '1', 
                 'department_id' => '1', 
 	        	'user_id' => '2', 
+                'position_id' => null, 
         	],
         	[
 	        	'role_id' => '1', 
                 'department_id' => '1', 
 	        	'user_id' => '3', 
+                'position_id' => null, 
         	],
             [
                 'role_id' => '1', 
                 'department_id' => '1', 
                 'user_id' => '4', 
+                'position_id' => 1, 
             ],
             [
                 'role_id' => '1', 
                 'department_id' => '1',   
                 'user_id' => '5', 
+                'position_id' => 2, 
             ],
             [
                 'role_id' => '1', 
                 'department_id' => '1', 
                 'user_id' => '6', 
+                'position_id' => 3, 
             ],
         ]);
 

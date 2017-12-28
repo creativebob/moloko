@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@include('companies.inhead')
 
 @section('title', 'Редактировать должность')
 
@@ -18,7 +17,7 @@
   {{ Form::model($position, ['route' => ['positions.update', $position->id], 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
-    @include('positions.form', ['submitButtonText' => 'Редактировать страницу', 'param'=>''])
+    @include('positions.form', ['submitButtonText' => 'Редактировать должность', 'param'=>''])
     
   {{ Form::close() }}
 

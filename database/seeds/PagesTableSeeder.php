@@ -25,7 +25,7 @@ class PagesTableSeeder extends Seeder
                 'site_id' => '1',
                 'page_title' => 'Группы доступа (роли)',
                 'page_description' => 'Пользовательские группы доступа',
-                'page_alias' => 'roles',
+                'page_alias' => '/roles',
             ],
             [
                 'page_name' => 'Компании',

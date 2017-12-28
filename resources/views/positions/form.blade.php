@@ -15,13 +15,57 @@
     @endif
     <!-- Должность -->
     <label>Название должности
-    {{ Form::text('position_name', $position->position_name, ['class'=>'position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+    @php
+      $block = null;
+    @endphp
+    @if ($position->system_item == 1)
+      @php
+        $block = 'readonly';
+      @endphp
+    @endif
+    {{ Form::text('position_name', null, ['class'=>'position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', $block]) }}
     </label>
     <label>Страница должности:
-      {{ Form::select('page_id', $pages, $position->page_id, ['id'=>'page-select']) }}
+      {{ Form::select('page_id', $pages, null, ['id'=>'page-select']) }}
     </label>
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
+    <fieldset class="fieldset-access">
+        <legend>Настройка доступа</legend>
+        <div class="grid-x grid-padding-x"> 
+          <div class="small-12 cell">
+            <ul>
+              @foreach ($roles as $role)
+              <li>
+                <div class="small-12 cell checkbox">
+                  
+                   {{ Form::checkbox('roles[]', $role->id, null, ['id'=>'role-'.$role->id]) }}
+                  <label for="role-{{ $role->id }}"><span>{{ $role->role_name }}</span></label>
+                  @foreach ($role->rights as $right)
+                    @if ($right->directive == 'allow')
+                      1
+                    @else
+                      0
+                    @endif
+                    @break
+                  @endforeach
+                  @foreach ($role->rights as $right)
+                    @if ($right->directive == 'deny')
+                      1
+                    @else
+                      0
+                    @endif
+                    @break
+                  @endforeach
+
+                </div>
+              </li>
+              @endforeach
+            </ul>
+
+          </div>
+        </div>
+      </fieldset> 
 
   </div>
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
