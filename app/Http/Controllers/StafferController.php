@@ -6,6 +6,7 @@ use App\Staffer;
 use App\Employee;
 use App\Page;
 use App\User;
+use App\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

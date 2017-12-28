@@ -47,4 +47,12 @@ class Position extends Model
   {
     return $this->hasMany('App\Employee');
   }
+
+    /**
+  * Получаем роли.
+  */
+  public function roles()
+  {
+    return $this->belongsToMany('App\Role');
+  }
 }

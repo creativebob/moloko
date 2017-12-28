@@ -46,9 +46,7 @@ class DatabaseSeeder extends Seeder
     		$this->call(RolesTableSeeder::class);
             $this->call(RightRoleTableSeeder::class);
             $this->call(RoleUserTableSeeder::class);
-
-
-
+            $this->call(PositionRoleTableSeeder::class);
 
 
             // Вакансии и сотрудники
