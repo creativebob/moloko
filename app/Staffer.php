@@ -19,6 +19,7 @@ class Staffer extends Model
   	'user_id',
     'position_id',
     'department_id',
+    'filial_id'
   ];
 
 

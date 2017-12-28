@@ -67,7 +67,8 @@
                             @foreach($role->rights as $right)
 
                               @if(!empty($right->actionentity->alias_action_entity))
-                                @if($right->actionentity->alias_action_entity == ($action->action_method . '-' . $entity->entity_alias)) 
+
+                                @if($right->actionentity->alias_action_entity == ($action->action_method . '-' . $entity->entity_alias)&&($right->directive == 'allow')) 
                                   @php $a = "checked"; @endphp
 
                                   <div class="checkbox">
@@ -76,6 +77,7 @@
                                   </div>
 
                                 @endif
+
                               @endif
                               
                             @endforeach
