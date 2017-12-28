@@ -20,6 +20,25 @@
     position : "bottom",
     hide_on_select : true
   });
+
+
+  $(document).on('click', '.checkbox_right', function() {
+
+      // Скрипт передачи значения на изменение
+
+
+            $.ajax({
+              headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              url: "/roles/setright",
+              type: "POST",
+              data: {right_id: $(this).attr('id'), role_id: $(this).attr('data-role-id')},
+              success: function (data) {
+              }
+            });
+
+      });
   
 </script>
 @endsection

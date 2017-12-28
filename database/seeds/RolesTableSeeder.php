@@ -14,10 +14,9 @@ class RolesTableSeeder extends Seeder
         DB::table('roles')->insert([
         	['role_name' => 'Полный доступ', 'company_id' => null, 'system_item' => 1], 
         	['role_name' => 'Администратор', 'company_id' => null, 'system_item' => 1], 
-            ['role_name' => 'Руководитель', 'company_id' => null, 'system_item' => 1],  
-            ['role_name' => 'Менеджер', 'company_id' => null, 'system_item' => 1], 
-            ['role_name' => 'Все филиалы', 'company_id' => 1, 'system_item' => null],  
-            ['role_name' => 'Иркутский филиал', 'company_id' => 1, 'system_item' => null], 
+            ['role_name' => 'Модератор новостей сайта', 'company_id' => null, 'system_item' => 1],  
+            ['role_name' => 'Смотрящий на районе', 'company_id' => null, 'system_item' => 1], 
+            ['role_name' => 'Бесправное чмо', 'company_id' => null, 'system_item' => 1],  
         ]);
     }
 }

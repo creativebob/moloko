@@ -18,8 +18,8 @@
   <div class="grid-x tabs-wrap">
     <div class="small-12 cell">
       <ul class="tabs-list" data-tabs id="tabs">
-        <li class="tabs-title is-active"><a href="#content-panel-1" aria-selected="true">Функциональные права</a></li>
-        <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Права в рамках отделов</a></li>
+        <li class="tabs-title is-active"><a href="#content-panel-1" aria-selected="true">Разрешения</a></li>
+        <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Запреты</a></li>
         <li class="tabs-title"><a data-tabs-target="content-panel-3" href="#content-panel-3">Авторские права</a></li>
       </ul>
     </div>
@@ -51,6 +51,7 @@
                     </tr>
                   </thead>
                   <tbody data-tbodyId="1" class="tbody-width">
+
                   @if(!empty($entities))
                     @foreach($entities as $entity)
 
@@ -64,22 +65,34 @@
 
 
                             @php $a = ""; @endphp
-                            @foreach($role->rights as $right)
 
-                              @if(!empty($right->actionentity->alias_action_entity))
 
-                                @if($right->actionentity->alias_action_entity == ($action->action_method . '-' . $entity->entity_alias)&&($right->directive == 'allow')) 
-                                  @php $a = "checked"; @endphp
+                            @foreach($auth_user_roles as $user_role)
 
-                                  <div class="checkbox">
-                                    <input type="checkbox" id="{{ $entity->entity_name }}-{{ $action->id }}" {{ $a }}>
-                                    <label for="{{ $entity->entity_name }}-{{ $action->id }}"></label>
-                                  </div>
+                                  @foreach($user_role->rights as $right)
 
-                                @endif
+                                    @if(!empty($right->actionentity->alias_action_entity))
 
-                              @endif
-                              
+                                      @if(
+                                        $right->actionentity->alias_action_entity == ($action->action_method . '-' . $entity->entity_alias)
+                                        &&($right->directive == 'allow')&&(isset($role_access[$action->action_method . '-' . $entity->entity_alias . '-allow'])))
+                                        @php $a = "checked"; @endphp
+                                        @endif
+
+                                      @if(
+                                        $right->actionentity->alias_action_entity == ($action->action_method . '-' . $entity->entity_alias)
+                                        &&($right->directive == 'allow'))
+
+                                            <div class="checkbox">
+                                              <input type="checkbox" class="checkbox_right" id="{{ $right->id }}" data-role-id = "{{ $current_role->id }}" {{ $a }}>
+                                              <label for="{{ $right->id }}"></label>
+                                            </div>
+                                      @endif
+
+                                    @endif
+                                
+                                  @endforeach
+
                             @endforeach
 
 
@@ -110,8 +123,91 @@
 
         <div class="tabs-panel" id="content-panel-2">
           <div class="grid-x grid-padding-x">
-            <div class="small-12 medium-6 cell">
+            <div class="small-12 cell">
 
+
+            {{-- Таблица --}}
+            <div class="grid-x">
+              <div class="small-12 cell">
+                <table class="table-content tablesorter" id="table-content">
+                  <thead class="thead-width">
+                    <tr id="thead-content">
+                      <th class="td-drop"><div class="sprite icon-drop"></div></th>
+                      <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+                      <th class="td-entity-name">Название таблицы</th>
+
+                         @foreach($actions as $action)
+                            <th class="td-action-{{ $action->action_method }}">{{ $action->action_name }}</th>
+                         @endforeach
+
+                    </tr>
+                  </thead>
+                  <tbody data-tbodyId="1" class="tbody-width">
+
+                  @if(!empty($entities))
+                    @foreach($entities as $entity)
+
+                      <tr class="parent" id="entities-{{ $entity->id }}" data-name="{{ $entity->entity_name }}">
+                        <td class="td-drop"><div class="sprite icon-drop"></div></td>
+                        <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $entity->id }}"><label class="label-check" for="check-{{ $entity->id }}"></label></td>
+                        <td class="td-entity-name">{{ $entity->entity_name }} </td>
+
+                         @foreach($actions as $action)
+                         <td class="td-action-{{ $action->action_method }}">
+
+
+                            @php $a = ""; @endphp
+
+
+                            @foreach($auth_user_roles as $user_role)
+
+                                  @foreach($user_role->rights as $right)
+
+                                    @if(!empty($right->actionentity->alias_action_entity))
+
+                                      @if(
+                                        $right->actionentity->alias_action_entity == ($action->action_method . '-' . $entity->entity_alias)
+                                        &&($right->directive == 'deny')&&(isset($role_access[$action->action_method . '-' . $entity->entity_alias . '-deny'])))
+                                        @php $a = "checked"; @endphp
+                                        @endif
+
+                                      @if(
+                                        $right->actionentity->alias_action_entity == ($action->action_method . '-' . $entity->entity_alias)
+                                        &&($right->directive == 'deny'))
+
+                                            <div class="checkbox">
+                                              <input type="checkbox" class="checkbox_right" id="{{ $right->id }}" data-role-id = "{{ $current_role->id }}" {{ $a }}>
+                                              <label for="{{ $right->id }}"></label>
+                                            </div>
+                                      @endif
+
+                                    @endif
+                                
+                                  @endforeach
+
+                            @endforeach
+
+
+                             </td>
+
+
+                           @endforeach
+
+                      </tr>
+                    @endforeach
+                  @endif
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {{-- Pagination --}}
+            <div class="grid-x" id="pagination">
+              <div class="small-6 cell pagination-head">
+                <span class="pagination-title">Кол-во записей: {{ $entities->count() }}</span>
+                {{ $entities->links() }}
+              </div>
+            </div>
             </div>
           </div>
         </div>
