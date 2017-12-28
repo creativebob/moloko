@@ -186,9 +186,25 @@ class RoleController extends Controller
     public function setting($id)
     {
 
+        $mymass = [];
 
-        foreach (Auth::user()->staff as $staffer) {
-            dd($staffer->filial_id);
+        $user = Auth::user();
+        foreach ($user->staff as $staffer) {
+            $mymass[] = $staffer->filial_id;
+        }
+
+        // $mymass = implode(", ", $mymass);
+
+        // foreach ($user->roles as $role) {
+        //     foreach ($role->rights as $right){
+        //         echo $right->right_name;
+        //     }
+        // }
+
+        foreach ($user->roles as $role) {
+            foreach ($role->rights as $right){
+                echo $right->right_name;
+            }
         }
 
         // $menu = Page::get();

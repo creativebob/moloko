@@ -30,7 +30,7 @@ class Right extends Model
   */
   public function roles()
   {
-    return $this->belongsToMany('App\Role');
+    return $this->belongsToMany('App\Role')->withPivot('category_right_id', 'directive', 'object_entity', 'right_name');
   }
 
     /**
