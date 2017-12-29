@@ -18,7 +18,9 @@ class ActionsTableSeeder extends Seeder
         	['action_name' => 'Редактирование', 'action_method' => 'edit'], 
         	['action_name' => 'Удаление', 'action_method' => 'delete'], 
         	['action_name' => 'Системная', 'action_method' => 'system'], 
-        	['action_name' => 'Показать все', 'action_method' => 'getall'], 
+            ['action_name' => 'Другие авторы', 'action_method' => 'authors'], 
+        	['action_name' => 'Нет ограничений', 'action_method' => 'nolimit'], 
+            ['action_name' => 'Модерация', 'action_method' => 'moderation'], 
         ]);
     }
 }

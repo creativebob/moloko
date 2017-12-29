@@ -64,6 +64,11 @@
                     {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 
                   @endif</li>
 
+                <li>
+                  @if(isset($session['access']))
+                    <a>Права получены</a>
+                  @endif</li>
+
 
                 {{-- Кнопка выхода --}}
 

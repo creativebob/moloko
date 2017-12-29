@@ -23,7 +23,6 @@ class LoginController extends Controller
         return 'login';
     }
 
-
     use AuthenticatesUsers;
 
     /**
@@ -32,8 +31,7 @@ class LoginController extends Controller
      * @var string
      */
     
-    protected $redirectTo = '/users';
-
+    protected $redirectTo = '/getaccess';
 
     /**
      * Create a new controller instance.

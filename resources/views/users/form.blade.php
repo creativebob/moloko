@@ -222,27 +222,23 @@
                   <th>Филиал</th>
                   <th>Должность</th>
                   <th>Инфа</th>
-                  <th></th>
+                  <th class="td-delete"></th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="roleuser-table">
                 @foreach ($role_users as $role_user)
-                  <tr>
-                    <td>
-                      {{ $role_user->role->role_name }}
-                    </td>
-                    <td>
-                      {{ $role_user->department->department_name }}
-                    </td>
+                  <tr class="parent" id="roleuser-{{ $role_user->id }}" data-name="{{ $role_user->role->role_name }}">
+                    <td>{{ $role_user->role->role_name }}</td>
+                    <td>{{ $role_user->department->department_name }}</td>
                     <td>
                       @if (isset($role_user->position->position_name))
-                      {{ $role_user->position->position_name }}
+                        {{ $role_user->position->position_name }}
                       @else
-                      спецдолжность
+                        Спецправо
                       @endif
                     </td>
                     <td>Инфа</td>
-                    <td>Удаление</td>
+                    <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete-ajax"></a></td>
                   </tr>
                 @endforeach
               </tbody>

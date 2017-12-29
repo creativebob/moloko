@@ -23,7 +23,7 @@
   {{ Form::close() }}
 
 @endsection
-@include('users.scripts')
+
 
 @section('modals')
 {{-- Модалка добавления роли --}}
@@ -33,7 +33,7 @@
       <h5>ДОБАВЛЕНИЕ Роли</h5>
     </div>
   </div>
-  {{ Form::open(['id' => 'form-region-add']) }}
+  {{ Form::open(['id' => 'form-role-add']) }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 medium-6 cell">
         <label>Роли
@@ -44,6 +44,7 @@
         <label>Отделы
           {{ Form::select('department_id', $departments, $departments, ['id'=>'select-departments']) }}
         </label>
+        <input type="hidden" name="user_id" id="user-id" value="{{ $user->id }}">
       </div>
     </div>
     <div class="grid-x align-center">
@@ -55,6 +56,11 @@
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 {{-- Конец модалки добавления роли --}}
+
+{{-- Модалка удаления с ajax --}}
+@include('includes.modals.modal-delete-ajax')
 @endsection
+
+@include('users.scripts')
 
 
