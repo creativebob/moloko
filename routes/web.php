@@ -18,20 +18,24 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::resource('/users', 'UserController')->middleware('auth');
+
 Route::resource('/companies', 'CompanyController')->middleware('auth');
 
 // Маршруты для правил доступа
-Route::resource('rights', 'RightController')->middleware('auth');
+Route::resource('/rights', 'RightController')->middleware('auth');
 
 // Маршруты для групп доступа
-Route::resource('roles', 'RoleController')->middleware('auth');
+Route::resource('/roles', 'RoleController')->middleware('auth');
 // Route::resource('rightrole', 'RightroleController')->middleware('auth');
 
 Route::get('/roles/{id}/setting', 'RoleController@setting')->middleware('auth')->name('roles.setting');
 Route::post('/roles/setright', 'RoleController@setright')->middleware('auth')->name('roles.setright');
 
+
+// Маршрут связи юзера с ролями и отделами
+Route::resource('/roleuser', 'RoleUserController')->middleware('auth');
 // Маршруты для сущностей
-Route::resource('entities', 'EntityController')->middleware('auth');
+Route::resource('/entities', 'EntityController')->middleware('auth');
 
 // Авторизуемся под выбранной компанией
 Route::get('/getauth/{id}/{company_id}', 'UserController@getauth')->middleware('auth')->name('users.getauth');
