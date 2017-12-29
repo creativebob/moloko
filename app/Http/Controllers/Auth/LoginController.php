@@ -20,7 +20,7 @@ class LoginController extends Controller
 
     public function username()
     {
-      return 'login';
+        return 'login';
     }
 
 
@@ -31,6 +31,7 @@ class LoginController extends Controller
      *
      * @var string
      */
+    
     protected $redirectTo = '/users';
 
 

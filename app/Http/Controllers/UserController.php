@@ -8,13 +8,14 @@ use App\Page;
 use App\Right;
 use App\RoleUser;
 use App\Department;
-
+use App\Http\Controllers\Session;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
@@ -60,7 +61,10 @@ class UserController extends Controller
         // dd($users);
 
         $menu = Page::get();
-	    return view('users.index', compact('users', 'access', 'menu'));
+
+        $session  = $request->session()->all();
+        // dd($session);
+	    return view('users.index', compact('users', 'access', 'menu', 'session'));
 	}
 
     public function store(UpdateUser $request)
@@ -266,15 +270,41 @@ class UserController extends Controller
     }
 
 
-    public function getauth($id, $company_id)
+    public function getauthcompany($company_id)
     {
-        $user = User::findOrFail($id);
+
         // $this->authorize('update', $user);
 
-        $user->company_id = $company_id;
-        $user->save();
- 
-        return redirect('/companies');
+        $auth_user = Auth::user();
+
+        if($auth_user->god == 1){
+            $auth_user->company_id = $company_id;
+            $auth_user->save();         
+        }
+        return redirect('companies');
+    }
+
+
+    public function getauthuser(Request $request, $user_id)
+    {
+
+        // $this->authorize('update', $user);
+
+        $auth_user = Auth::user();
+
+        if(Auth::user()->god == 1){
+
+            $request->session()->put('god', $auth_user->id);
+
+        };
+
+        if($auth_user->god == 1){
+            // Auth::logout();
+            // Auth::login($user_id);
+
+            Auth::loginUsingId($user_id);
+        }
+        return redirect('users');
     }
 
     public function getgod()
@@ -285,6 +315,20 @@ class UserController extends Controller
             $user->company_id = null;
             $user->save();
         }
-        return redirect('/companies');
+        return redirect('companies');
     }
+
+    public function returngod(Request $request)
+    {
+        
+        if ($request->session()->has('god')) {
+
+            $god_id = $request->session()->get('god');
+            $request->session()->forget('god');
+            Auth::loginUsingId($god_id);
+        }
+
+        return redirect('users');
+    }
+
 }

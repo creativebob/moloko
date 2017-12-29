@@ -55,9 +55,16 @@
                 <li><hr></li>
                 <li><a href="">Нужна помощь?</a></li>
                 <li>
-                  @if(isset(Auth::user()->company_id))
+                  @if(isset(Auth::user()->company_id)&&(Auth::user()->god == 1))
                     {{ link_to_route('users.getgod', 'Выйти из компании', $value = Null) }} 
                   @endif</li>
+
+                <li>
+                  @if(isset($session['god']))
+                    {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 
+                  @endif</li>
+
+
                 {{-- Кнопка выхода --}}
 
                 <li><a href="{{ route('logout') }}"
