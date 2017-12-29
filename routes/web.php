@@ -74,3 +74,7 @@ Route::resource('/sites', 'SiteController')->middleware('auth');
 Route::resource('/pages', 'PageController')->middleware('auth');
 
 //Конец блока сайтов и страниц
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

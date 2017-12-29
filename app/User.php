@@ -35,7 +35,7 @@ class User extends Authenticatable
     public function scopeSystemItem($query, $system_item)
     {
         if(isset($system_item)){
-          return $query->orWhere('system_item', '1');
+          return $query->orWhere('system_item', 1);
         } else {return $query;};
     }
 

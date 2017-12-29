@@ -43,13 +43,19 @@ class UserController extends Controller
         //         if ($right->right_action == 'get-depertments') {$others_item['all'] = 'all';}; 
         //     }
         // }
+        foreach ($user->roles as $role) {
+          foreach ($role->rights as $right) {
+            if ($right->actionentity->alias_action_entity == 'system-users') {$system_item = 1;};
+            // dd($right->actionentity);
+          }
+        }
 
         if (isset($user->company_id)) {
             // Если у пользователя есть компания
             $users = User::whereCompany_id($user->company_id)
                     // ->whereGod(null)
                     // ->otherItem($others_item)
-                    // ->systemItem($system_item) // Фильтр по системным записям
+                    ->systemItem($system_item) // Фильтр по системным записям
                     ->paginate(30);
         } else {
             // Если нет, то бог без компании
