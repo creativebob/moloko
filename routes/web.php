@@ -17,6 +17,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
+
+Route::get('/getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
+
 Route::resource('/users', 'UserController')->middleware('auth');
 
 Route::resource('/companies', 'CompanyController')->middleware('auth');
@@ -38,10 +41,16 @@ Route::resource('/roleuser', 'RoleUserController')->middleware('auth');
 Route::resource('/entities', 'EntityController')->middleware('auth');
 
 // Авторизуемся под выбранной компанией
-Route::get('/getauth/{id}/{company_id}', 'UserController@getauth')->middleware('auth')->name('users.getauth');
+Route::get('/getauthcompany/{company_id}', 'UserController@getauthcompany')->middleware('auth')->name('users.getauthcompany');
+
+// Авторизуемся под выбранным пользователем
+Route::get('/getauthuser/{user_id}', 'UserController@getauthuser')->middleware('auth')->name('users.getauthuser');
 
 // Сбрасываем для бога company_id
 Route::get('/getgod', 'UserController@getgod')->middleware('auth')->name('users.getgod');
+
+// Получаем доступ бога
+Route::get('/returngod', 'UserController@returngod')->middleware('auth')->name('users.returngod');
 
 Route::get('/page', 'PageController@create');
 

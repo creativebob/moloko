@@ -85,7 +85,7 @@
 
           {{-- Если пользователь бог, то показываем для него переключатель на компанию --}}
           @if(Auth::user()->god == 1)
-            <td class="td-getauth">@if(Auth::user()->company_id != $company->id) {{ link_to_route('users.getauth', 'Авторизоваться', ['id'=>Auth::user()->id, 'company_id'=>$company->id], ['class' => 'tiny button']) }} @endif</td>
+            <td class="td-getauth">@if(Auth::user()->company_id != $company->id) {{ link_to_route('users.getauthcompany', 'Авторизоваться', ['company_id'=>$company->id], ['class' => 'tiny button']) }} @endif</td>
           @endif
 
           <td class="td-company-address">{{ $company->company_address }} </td>

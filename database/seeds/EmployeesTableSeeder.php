@@ -39,10 +39,18 @@ class EmployeesTableSeeder extends Seeder
             [   
                 'staffer_id' => 4,
                 'company_id' => 1,
-                'user_id' => 6,
-                'date_employment' => '2017-11-01',
-                'date_dismissal' => '2017-11-02',
-                'dismissal_desc' => 'Заебал',
+                'user_id' => 7,
+                'date_employment' => '2017-12-01',
+                'date_dismissal' => null,
+                'dismissal_desc' => null,
+            ],
+            [   
+                'staffer_id' => 4,
+                'company_id' => 1,
+                'user_id' => 5,
+                'date_employment' => '2017-08-01',
+                'date_dismissal' => '2017-09-01',
+                'dismissal_desc' => 'Отпуск без содержания',
             ],
         ]);
     }

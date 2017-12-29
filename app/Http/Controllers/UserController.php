@@ -8,13 +8,14 @@ use App\Page;
 use App\Right;
 use App\RoleUser;
 use App\Department;
-
+use App\Http\Controllers\Session;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
@@ -28,12 +29,17 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
+
+        $session  = $request->session()->all();
         // $this->authorize('index', User::class);
+
         $user = Auth::user();
+
         $others_item['user_id'] = $user->id;
         $system_item = null;
 
         // Смотрим права на простотр системных.
+
         //  foreach ($user->roles as $role) {
         //     foreach ($role->rights as $right) {
         //         // Перебор всех прав пользователя
@@ -43,12 +49,22 @@ class UserController extends Controller
         //         if ($right->right_action == 'get-depertments') {$others_item['all'] = 'all';}; 
         //     }
         // }
-        foreach ($user->roles as $role) {
-          foreach ($role->rights as $right) {
-            if ($right->actionentity->alias_action_entity == 'system-users') {$system_item = 1;};
-            // dd($right->actionentity);
-          }
-        }
+        // foreach ($user->roles as $role) {
+        //   foreach ($role->rights as $right) {
+        //     if ($right->actionentity->alias_action_entity == 'system-users') {$system_item = 1;};
+        //     // dd($right->actionentity);
+        //   }
+
+        //  foreach ($user->roles as $role) {
+        //     foreach ($role->rights as $right) {
+        //         // Перебор всех прав пользователя
+        //         // if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;};
+        //         if ($right->right_action == 'system-users') {$system_item = 1;};
+        //         // if ($right->right_action == 'get-users') {$others_item['all'] = 'all';};
+        //         // if ($right->right_action == 'get-depertments') {$others_item['all'] = 'all';}; 
+        //     }
+
+        // }
 
         if (isset($user->company_id)) {
             // Если у пользователя есть компания
@@ -63,10 +79,16 @@ class UserController extends Controller
               $users = User::paginate(30);
             };
         }
+
+
+
         // dd($users);
 
         $menu = Page::get();
-	    return view('users.index', compact('users', 'access', 'menu'));
+
+        $session  = $request->session()->all();
+        // dd($session);
+	    return view('users.index', compact('users', 'access', 'menu', 'session'));
 	}
 
     public function store(UpdateUser $request)
@@ -272,15 +294,41 @@ class UserController extends Controller
     }
 
 
-    public function getauth($id, $company_id)
+    public function getauthcompany($company_id)
     {
-        $user = User::findOrFail($id);
+
         // $this->authorize('update', $user);
 
-        $user->company_id = $company_id;
-        $user->save();
- 
-        return redirect('/companies');
+        $auth_user = Auth::user();
+
+        if($auth_user->god == 1){
+            $auth_user->company_id = $company_id;
+            $auth_user->save();         
+        }
+        return redirect('companies');
+    }
+
+
+    public function getauthuser(Request $request, $user_id)
+    {
+
+        // $this->authorize('update', $user);
+
+        $auth_user = Auth::user();
+
+        if(Auth::user()->god == 1){
+
+            $request->session()->put('god', $auth_user->id);
+
+        };
+
+        if($auth_user->god == 1){
+            // Auth::logout();
+            // Auth::login($user_id);
+
+            Auth::loginUsingId($user_id);
+        }
+        return redirect('users');
     }
 
     public function getgod()
@@ -291,7 +339,20 @@ class UserController extends Controller
             $user->company_id = null;
             $user->save();
         }
-        return redirect('/companies');
+        return redirect('companies');
     }
-   
+
+    public function returngod(Request $request)
+    {
+        
+        if ($request->session()->has('god')) {
+
+            $god_id = $request->session()->get('god');
+            $request->session()->forget('god');
+            Auth::loginUsingId($god_id);
+        }
+
+        return redirect('users');
+    }
+
 }
