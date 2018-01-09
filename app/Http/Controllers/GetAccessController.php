@@ -47,7 +47,9 @@ class GetAccessController extends Controller
             }
         }
 
-        $request->session()->put('access', $user_access);
+        // $request->session()->put('access', $user_access);
+        session(['access' => $user_access]);
+        
         return redirect()->route('users.index');
     }
 }

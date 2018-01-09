@@ -30,24 +30,34 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
-        $session  = $request->session()->all();
+        $user = Auth::user();
+        $session  = session('access');
+
+        // Получение сессии через request
+        // $session  = $request->session()->all();
+
+        // Подключение политики
         // $this->authorize('index', User::class);
 
-        $user = Auth::user();
 
         $others_item['user_id'] = $user->id;
         $system_item = null;
 
+        if(($session['system-users-allow'] == 1)&&($session['system-users-deny'] != 1)){
+            echo "Все заебись!";
+        } else {echo "Доступ к системным правам запрещен!"; };
+
+
         // Смотрим права на простотр системных.
-         foreach ($user->roles as $role) {
-            foreach ($role->rights as $right) {
-                // Перебор всех прав пользователя
-                // if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;};
-                if ($right->right_action == 'system-users') {$system_item = 1;};
-                // if ($right->right_action == 'get-users') {$others_item['all'] = 'all';};
-                // if ($right->right_action == 'get-depertments') {$others_item['all'] = 'all';}; 
-            }
-        }
+        //  foreach ($user->roles as $role) {
+        //     foreach ($role->rights as $right) {
+        //         // Перебор всех прав пользователя
+        //         // if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;};
+        //         if ($right->right_action == 'system-users') {$system_item = 1;};
+        //         // if ($right->right_action == 'get-users') {$others_item['all'] = 'all';};
+        //         // if ($right->right_action == 'get-depertments') {$others_item['all'] = 'all';}; 
+        //     }
+        // }
 
         if (isset($user->company_id)) {
             // Если у пользователя есть компания

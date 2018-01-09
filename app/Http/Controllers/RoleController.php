@@ -249,8 +249,12 @@ class RoleController extends Controller
 
         if(isset($rightrole)){
 
-            $rightrole = RightRole::destroy($rightrole->id);
-            echo "Есть такая запись! Сделали попытку ебнуть ее!";
+            // Если запись права в роли не являеться системной, то удаляем ее.
+            if($rightrole->system_item == null){
+                $rightrole = RightRole::destroy($rightrole->id);
+                echo "Есть такая запись! Сделали попытку ебнуть ее!";                
+            };
+
 
         } else {
 

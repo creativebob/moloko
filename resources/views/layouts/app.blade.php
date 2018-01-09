@@ -66,6 +66,7 @@
 
                 <li>
                   @if(isset($session['access']))
+                    {{ isset($session['access']['index-users-allow']) }}
                     <a>Права получены</a>
                   @endif</li>
 
