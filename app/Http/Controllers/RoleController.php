@@ -62,8 +62,7 @@ class RoleController extends Controller
         }
         // dd($users);
 
-        $menu = Page::get();
-        return view('roles.index', compact('roles', 'menu'));
+        return view('roles.index', compact('roles'));
     }
 
 
@@ -80,8 +79,8 @@ class RoleController extends Controller
         $departments_list = Department::where('company_id', $user->company_id)->whereFilial_status(1)->pluck('department_name', 'id');
 
         $role = new Role;
-        $menu = Page::get();
-        return view('roles.create', compact('role', 'menu', 'departments_list'));
+
+        return view('roles.create', compact('role', 'departments_list'));
     }
 
     /**
@@ -126,8 +125,7 @@ class RoleController extends Controller
         $role = Role::findOrFail($id);
         // $this->authorize('update', $role);
 
-        $menu = Page::get();
-        return view('roles.show', compact('role', 'menu'));
+        return view('roles.show', compact('role'));
     }
 
     /**
@@ -143,8 +141,7 @@ class RoleController extends Controller
         $departments_list = Department::where('company_id', $user->company_id)->whereFilial_status(1)->pluck('department_name', 'id');
         // $this->authorize('update', $entity);
 
-        $menu = Page::get();
-        return view('roles.show', compact('role', 'menu', 'departments_list'));
+        return view('roles.show', compact('role', 'departments_list'));
     }
 
     /**
@@ -234,9 +231,8 @@ class RoleController extends Controller
         // dd($role_access);
 
         $entities = Entity::paginate(30);
-        $menu = Page::get();
         $actions = Action::get();
-        return view('roles.setting', compact('auth_user_roles', 'current_role', 'menu', 'entities', 'actions', 'user_access', 'role_access'));
+        return view('roles.setting', compact('auth_user_roles', 'current_role', 'entities', 'actions', 'user_access', 'role_access'));
     }
 
     public function setright(Request $request)

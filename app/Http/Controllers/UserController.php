@@ -84,11 +84,10 @@ class UserController extends Controller
 
         // dd($users);
 
-        $menu = Page::get();
 
         $session  = $request->session()->all();
         // dd($session);
-	    return view('users.index', compact('users', 'access', 'menu', 'session'));
+	    return view('users.index', compact('users', 'access', 'session'));
 	}
 
     public function store(UpdateUser $request)
@@ -189,8 +188,7 @@ class UserController extends Controller
 
     	$user = new User;
         $roles = new Role;
-        $menu = Page::get();
-    	return view('users.create', compact('user', 'roles', 'menu'));
+    	return view('users.create', compact('user', 'roles'));
     }
 
     public function update(UpdateUser $request, $id)
@@ -256,8 +254,7 @@ class UserController extends Controller
         // $this->authorize('view', $user);
 
         $roles = new Role;
-        $menu = Page::get();
-    	return view('users.show', compact('user', 'roles', 'menu'));
+    	return view('users.show', compact('user', 'roles'));
     }
 
     public function edit($id)
@@ -269,7 +266,6 @@ class UserController extends Controller
         // $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
         // $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
         $role = new Role;
-        $menu = Page::get();
         $role_users = RoleUser::whereUser_id($id)->get();
 
         $roles = Role::whereCompany_id($auth_user->company_id)->pluck('role_name', 'id');
@@ -278,7 +274,7 @@ class UserController extends Controller
         // dd($roles);
         
         Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
-        return view('users.edit', compact('user', 'role', 'menu', 'role_users', 'roles', 'departments'));
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles', 'departments'));
     }
 
 

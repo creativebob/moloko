@@ -93,7 +93,7 @@ class UsersTableSeeder extends Seeder
         	],
         	[
 	        	'login' => 'davydenko', 
-	        	'email' => 'makc_berluskone1@mail.ru', 
+	        	'email' => 'd@vorotamars.ru', 
 	        	'password' => bcrypt('123456'), 
 	        	'first_name' => 'Максим',
 	        	'second_name' => 'Давыденко',

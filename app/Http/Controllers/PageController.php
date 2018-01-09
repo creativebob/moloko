@@ -36,8 +36,8 @@ class PageController extends Controller
       session(['current_site' => $request->site_id]);
 
       $page_info = Page::wherePage_alias('/pages')->whereSite_id('1')->first();
-      $menu = Page::whereSite_id(1)->get();
-      return view('pages.index', compact('pages', 'page_info', 'menu'));
+
+      return view('pages.index', compact('pages', 'page_info'));
     }
     /**
      * Show the form for creating a new resource.
@@ -49,8 +49,8 @@ class PageController extends Controller
       $sites = Site::whereCompany_id(Auth::user()->company_id)->get()->pluck('site_name', 'id');
       $current_site = $request->session()->get('current_site');
       $page = new Page;
-      $menu = Page::whereSite_id('1')->get();
-      return view('pages.create', compact('page', 'menu', 'sites', 'current_site'));  
+
+      return view('pages.create', compact('page', 'sites', 'current_site'));  
     }
     /**
      * Store a newly created resource in storage.
@@ -99,9 +99,8 @@ class PageController extends Controller
     {
       $page = Page::findOrFail($id);
       $sites = Site::whereCompany_id(Auth::user()->company_id)->get()->pluck('site_name', 'id');
-      $menu = Page::whereSite_id('1')->get();
       $current_site = $request->session()->get('current_site');
-      return view('pages.edit', compact('page', 'menu', 'sites', 'current_site'));
+      return view('pages.edit', compact('page', 'sites', 'current_site'));
     }
 
 

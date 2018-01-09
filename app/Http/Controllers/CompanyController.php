@@ -32,8 +32,7 @@ class CompanyController extends Controller
         // $this->authorize('index', Company::class);
 
         $companies = Company::paginate(30);
-        $menu = Page::get();
-        return view('companies.index', compact('companies', 'menu'));
+        return view('companies.index', compact('companies'));
 
     }
 
@@ -45,9 +44,8 @@ class CompanyController extends Controller
     public function create()
     {
         // $this->authorize('create', Company::class);
-        $menu = Page::get();
         $company = new Company;
-        return view('companies.create', compact('company', 'menu'));   
+        return view('companies.create', compact('company'));   
     }
 
     /**
@@ -96,8 +94,7 @@ class CompanyController extends Controller
     {
         $company = Company::findOrFail($id);
         // $this->authorize('view', $company);
-        $menu = Page::get();
-        return view('companies.show', compact('company', 'menu'));
+        return view('companies.show', compact('company'));
     }
 
     /**
@@ -111,8 +108,8 @@ class CompanyController extends Controller
         $company = Company::findOrFail($id);
         $this->authorize('update', $company);
 
-        $menu = Page::get();
-        return view('companies.show', compact('company', 'menu'));
+
+        return view('companies.show', compact('company'));
     }
 
     /**

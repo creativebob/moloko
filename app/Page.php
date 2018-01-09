@@ -50,4 +50,11 @@ class Page extends Model
   {
     return $this->hasOne('App\Position');
   }
+  /**
+  * Получаем пункты меню.
+  */
+  public function menu()
+  {
+    return $this->hasOne('App\Menu');
+  }
 }

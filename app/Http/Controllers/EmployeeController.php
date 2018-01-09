@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Vacancy;
 use App\Employee;
-use App\Page;
 use App\User;
+use App\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,8 +31,7 @@ class EmployeeController extends Controller
         };
       };
       $page_info = Page::wherePage_alias('/employees')->first();
-      $menu = Page::whereSite_id('1')->get();
-      return view('employees.index', compact('employees', 'page_info', 'menu'));
+      return view('employees.index', compact('employees', 'page_info'));
     }
 
     /**
@@ -79,11 +78,10 @@ class EmployeeController extends Controller
 
       $employee = Employee::findOrFail($id);
       $users = User::whereCompany_id($user->company_id)->orderBy('second_name')->get()->pluck('second_name', 'id');
-      $menu = Page::whereSite_id('1')->get();
 
       // dd($staffer->user_id);
       
-      return view('employees.edit', compact('employee', 'menu', 'users'));    
+      return view('employees.edit', compact('employee', 'users'));    
     }
 
     /**
