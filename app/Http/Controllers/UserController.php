@@ -33,6 +33,7 @@ class UserController extends Controller
         $user = Auth::user();
         $session  = session('access');
 
+
         // Получение сессии через request
         // $session  = $request->session()->all();
 
@@ -43,20 +44,29 @@ class UserController extends Controller
         $others_item['user_id'] = $user->id;
         $system_item = null;
 
-        if(($session['system-users-allow'] == 1)&&($session['system-users-deny'] != 1)){
-            echo "Все заебись!";
-        } else {echo "Доступ к системным правам запрещен!"; };
+        // if(($session['system-users-allow'] == 1)&&($session['system-users-deny'] != 1)){
+        //     echo "Все заебись!";
+        // } else {echo "Доступ к системным правам запрещен!"; };
 
 
         // Смотрим права на простотр системных.
+
         //  foreach ($user->roles as $role) {
         //     foreach ($role->rights as $right) {
         //         // Перебор всех прав пользователя
-        //         // if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;};
-        //         if ($right->right_action == 'system-users') {$system_item = 1;};
-        //         // if ($right->right_action == 'get-users') {$others_item['all'] = 'all';};
-        //         // if ($right->right_action == 'get-depertments') {$others_item['all'] = 'all';}; 
+        //         if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;};
+        //         if ($right->right_action == 'system-user') {$system_item = 1;};
+        //         if ($right->right_action == 'get-users') {$others_item['all'] = 'all';};
+        //         if ($right->right_action == 'get-depertments') {$others_item['all'] = 'all';}; 
         //     }
+        // }
+        // foreach ($user->roles as $role) {
+        //   foreach ($role->rights as $right) {
+        //     if ($right->actionentity->alias_action_entity == 'system-users') {$system_item = 1;};
+        //     // dd($right->actionentity);
+        //   }
+
+
         // }
 
         if (isset($user->company_id)) {
@@ -74,14 +84,12 @@ class UserController extends Controller
         }
 
 
-
         // dd($users);
 
-        $menu = Page::get();
 
         $session  = $request->session()->all();
         // dd($session);
-	    return view('users.index', compact('users', 'access', 'menu', 'session'));
+	    return view('users.index', compact('users', 'access', 'session'));
 	}
 
     public function store(UpdateUser $request)
@@ -182,8 +190,7 @@ class UserController extends Controller
 
     	$user = new User;
         $roles = new Role;
-        $menu = Page::get();
-    	return view('users.create', compact('user', 'roles', 'menu'));
+    	return view('users.create', compact('user', 'roles'));
     }
 
     public function update(UpdateUser $request, $id)
@@ -249,8 +256,7 @@ class UserController extends Controller
         // $this->authorize('view', $user);
 
         $roles = new Role;
-        $menu = Page::get();
-    	return view('users.show', compact('user', 'roles', 'menu'));
+    	return view('users.show', compact('user', 'roles'));
     }
 
     public function edit($id)
@@ -262,7 +268,6 @@ class UserController extends Controller
         // $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
         // $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
         $role = new Role;
-        $menu = Page::get();
         $role_users = RoleUser::whereUser_id($id)->get();
 
         $roles = Role::whereCompany_id($auth_user->company_id)->pluck('role_name', 'id');
@@ -271,7 +276,7 @@ class UserController extends Controller
         // dd($roles);
         
         Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
-        return view('users.edit', compact('user', 'role', 'menu', 'role_users', 'roles', 'departments'));
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles', 'departments'));
     }
 
 
@@ -311,7 +316,7 @@ class UserController extends Controller
 
         if(Auth::user()->god == 1){
 
-            $request->session()->put('god', $auth_user->id);
+            session(['god' => $auth_user->id]);
 
         };
 
@@ -320,6 +325,30 @@ class UserController extends Controller
             // Auth::login($user_id);
 
             Auth::loginUsingId($user_id);
+
+
+
+            // ПОЛУЧАЕМ ВСЕ ПРАВА ПОЛЬЗОВАТЕЛЯ
+            $user = User::findOrFail($user_id);
+            foreach ($user->staff as $staffer) {
+                $mymass[] = $staffer->filial_id;
+            }
+
+            // Создаем ассоциированный массив прав на авторизованного пользователя
+            // В формате: Ключ"user-create-allow" и значение "1" если найдено правило.
+            $user_access = [];
+            foreach ($user->roles as $role) {
+                foreach ($role->rights as $right){
+                    $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
+                }
+            }
+
+            // $request->session()->put('access', $user_access);
+            session(['access' => $user_access]);
+
+
+
+
         }
         return redirect('users');
     }
@@ -331,6 +360,27 @@ class UserController extends Controller
             $user = User::findOrFail(Auth::user()->id);
             $user->company_id = null;
             $user->save();
+
+            $mymass = [];
+            $user = Auth::user();
+            foreach ($user->staff as $staffer) {
+                $mymass[] = $staffer->filial_id;
+            }
+
+            $auth_user_roles = $user->roles;
+
+            // Создаем ассоциированный массив прав на авторизованного пользователя
+            // В формате: Ключ"user-create-allow" и значение "1" если найдено правило.
+            $user_access = [];
+            foreach ($user->roles as $role) {
+                foreach ($role->rights as $right){
+                    $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
+                }
+            }
+
+            // $request->session()->put('access', $user_access);
+            session(['access' => $user_access]);
+
         }
         return redirect('companies');
     }
@@ -343,6 +393,26 @@ class UserController extends Controller
             $god_id = $request->session()->get('god');
             $request->session()->forget('god');
             Auth::loginUsingId($god_id);
+
+
+            // ПОЛУЧАЕМ ВСЕ ПРАВА ПОЛЬЗОВАТЕЛЯ
+            $user = User::findOrFail($god_id);
+            foreach ($user->staff as $staffer) {
+                $mymass[] = $staffer->filial_id;
+            }
+
+            // Создаем ассоциированный массив
+            $user_access = [];
+            foreach ($user->roles as $role) {
+                foreach ($role->rights as $right){
+                    $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
+                }
+            }
+
+            // $request->session()->put('access', $user_access);
+            session(['access' => $user_access]);
+
+
         }
 
         return redirect('users');

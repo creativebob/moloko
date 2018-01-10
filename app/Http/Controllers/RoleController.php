@@ -10,6 +10,7 @@ use App\RightRole;
 use App\Action;
 use App\Right;
 use App\Entity;
+use App\RoleUser;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
@@ -54,16 +55,17 @@ class RoleController extends Controller
                     ->otherItem($others_item)
                     ->systemItem($system_item) // Фильтр по системным записям
                     ->paginate(30);
+
         } else {
             // Если нет, то бог без компании
             if ($user->god == 1) {
-              $roles = Role::paginate(30);
+                $roles = Role::paginate(30);
             };
         }
-        // dd($users);
 
-        $menu = Page::get();
-        return view('roles.index', compact('roles', 'menu'));
+        // dd($roles->all());
+
+        return view('roles.index', compact('roles'));
     }
 
 
@@ -80,8 +82,8 @@ class RoleController extends Controller
         $departments_list = Department::where('company_id', $user->company_id)->whereFilial_status(1)->pluck('department_name', 'id');
 
         $role = new Role;
-        $menu = Page::get();
-        return view('roles.create', compact('role', 'menu', 'departments_list'));
+
+        return view('roles.create', compact('role', 'departments_list'));
     }
 
     /**
@@ -126,8 +128,7 @@ class RoleController extends Controller
         $role = Role::findOrFail($id);
         // $this->authorize('update', $role);
 
-        $menu = Page::get();
-        return view('roles.show', compact('role', 'menu'));
+        return view('roles.show', compact('role'));
     }
 
     /**
@@ -143,8 +144,7 @@ class RoleController extends Controller
         $departments_list = Department::where('company_id', $user->company_id)->whereFilial_status(1)->pluck('department_name', 'id');
         // $this->authorize('update', $entity);
 
-        $menu = Page::get();
-        return view('roles.show', compact('role', 'menu', 'departments_list'));
+        return view('roles.show', compact('role', 'departments_list'));
     }
 
     /**
@@ -189,61 +189,137 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function setting($id)
+    public function setting($role_id)
     {
 
-        $mymass = [];
+        $count_role = RoleUser::where('role_id', $role_id)->where('user_id', Auth::user()->id)->count();
+        if($count_role != 0) {abort(403);};
 
-        $user = Auth::user();
-        foreach ($user->staff as $staffer) {
-            $mymass[] = $staffer->filial_id;
-        }
+        // РАБОТАЕМ С РАЗРЕШЕНИЯМИ:
+        
+        // Создаем массив который будет содержать данные на отображение всех чекбоксов
+        // с учетом прав пользователя, и с учетом прав редактируемой роли
 
-        // $mymass = implode(", ", $mymass);
+        // Инициируем пустой массив для хранения данных построчно. 
+        // Данные будут выводитья путем разового перебора этого массива
+        $main_mass = [];
 
-        // foreach ($user->roles as $role) {
-        //     foreach ($role->rights as $right){
-        //         echo $right->right_name;
-        //     }
-        // }
+        // Инициируем пустой массив для хранения данных по чекбоксам в строке
+        $boxes = [];
 
-        $auth_user_roles = $user->roles;
-        // Создаем ассоциированный массив прав на авторизованного пользователя
-        // В формате: Ключ"user-create-allow" и значение "1" если найдено правило.
-        $user_access = [];
-        foreach ($user->roles as $role) {
-            foreach ($role->rights as $right){
-                $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = 1;
-            }
-        }
+        // Получаем сущности
+        $entities = Entity::get();
+        $actions = Action::get();
 
-
+        // Получаем права на редактируемую роль
         $current_role = Role::with(['rights' => function($q)
         {
             $q->where('category_right_id', 1);
-        }])->findOrFail($id);
+        }])->findOrFail($role_id);
 
-        // Создаем ассоциированный массив прав на авторизованного пользователя
-        // В формате: Ключ"user-create-allow" и значение "1" если найдено правило.
+        // Создаем ассоциированный массив
+        // В формате: Ключ"user-create-allow" и right_id
         $role_access = [];
 
         foreach ($current_role->rights as $right){
-            $role_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = 1;
+            $role_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
         }
 
-        // dd($role_access);
 
-        $entities = Entity::paginate(30);
-        $menu = Page::get();
-        $actions = Action::get();
-        return view('roles.setting', compact('auth_user_roles', 'current_role', 'menu', 'entities', 'actions', 'user_access', 'role_access'));
+        // Наполняем массив данными:
+        foreach($entities as $entity){
+
+            // Перебираем все операции действий в системе 
+            foreach($actions as $action){
+
+                // РАБОТАЕМ С РАЗРЕШЕНИЯМИ:
+                // Получаем имя искомого разрешения у юзера
+                $box_allow_name = $action->action_method . '-' . $entity->entity_alias . '-allow';
+
+                //Смотрим права авторизованного пользователя
+                $session  = session('access');
+
+                // Если запись существует, пишем 1, если нет, то 0
+                if(isset($session[$box_allow_name])){
+                    $status_box = '1';
+                    $right_id = $session[$box_allow_name];
+
+                    // Если в редактиремой роли присутствует право (которое также присутствует и у авторизованного пользователя),
+                    // то ставим галочку
+                    
+                    if(isset($role_access[$box_allow_name])){
+                        $checked = 'checked';
+                    } else {$checked='';};
+                    $disabled = '';
+                    
+
+                } else {
+                    $checked = '';
+                    $status_box = '0';
+                    $disabled = 'disabled';
+                    $right_id = '';
+                };
+
+                // Формируем строку с данными для чекбоксов на одну сущность
+                $boxes[] = ['action_method' => $box_allow_name, 'status_box' => $status_box, 'right_id' => $right_id, 'checked' => $checked, 'disabled' => $disabled];
+
+
+
+                // РАБОТАЕМ С ЗАПРЕТАМИ:
+                // Получаем имя искомого разрешения у юзера
+                $box_deny_name = $action->action_method . '-' . $entity->entity_alias . '-deny';
+
+                // Если запись существует, пишем 1, если нет, то 0
+                if(isset($session[$box_deny_name])){
+                    $status_box = '1';
+                    $right_id = $session[$box_deny_name];
+
+                    // Если в редактиремой роли присутствует право (которое также присутствует и у авторизованного пользователя),
+                    // то ставим галочку
+                    
+                    if(isset($role_access[$box_deny_name])){
+                        $checked = 'checked';
+                    } else {$checked='';};
+                    $disabled = '';
+                    
+
+                } else {
+                    $checked = '';
+                    $status_box = '0';
+                    $disabled = 'disabled';
+                    $right_id = '';
+                };
+
+                // Формируем строку с данными для чекбоксов на одну сущность
+                $boxes_deny[] = ['action_method' => $box_deny_name, 'status_box' => $status_box, 'right_id' => $right_id, 'checked' => $checked, 'disabled' => $disabled];
+
+
+
+            }
+
+        // Формируем строку разрешений
+            $main_mass[] = ['entity_name' => $entity->entity_name, 'entity_id' => $entity->id, 'boxes' => $boxes];
+
+        // Формируем строку запретов
+            $main_mass_deny[] = ['entity_name' => $entity->entity_name, 'entity_id' => $entity->id, 'boxes' => $boxes_deny];
+
+
+            // Чистим массив - готовим для очередной итерации
+            $boxes = [];
+            $boxes_deny = [];
+        }
+
+        // dd($main_mass_deny);
+
+        // 
+        return view('roles.setting', compact('main_mass', 'main_mass_deny', 'actions', 'role_id'));
     }
+
 
     public function setright(Request $request)
     {
         $user = Auth::user();
         echo $request->role_id . " - " . $request->right_id;
-
 
         $rightrole = RightRole::where('role_id', $request->role_id)->where('right_id', $request->right_id)->first();
 
@@ -254,7 +330,6 @@ class RoleController extends Controller
                 $rightrole = RightRole::destroy($rightrole->id);
                 echo "Есть такая запись! Сделали попытку ебнуть ее!";                
             };
-
 
         } else {
 

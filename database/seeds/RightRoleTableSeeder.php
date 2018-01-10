@@ -17,6 +17,7 @@ class RightRoleTableSeeder extends Seeder
 
         // Получаем все существующие разрешения (allow) 
         $rights = Right::where('directive', 'allow')->get();
+        // $rights = Right::get();                                             
         $mass = [];
 
         // Генерируем права на полный доступ
@@ -28,7 +29,6 @@ class RightRoleTableSeeder extends Seeder
 
         // Генерируем прочее право
         DB::table('right_role')->insert([
-
         	['right_id' => 1, 'role_id' => 2], 
         	['right_id' => 2, 'role_id' => 2], 
         	['right_id' => 3, 'role_id' => 2], 

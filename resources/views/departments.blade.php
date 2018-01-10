@@ -42,14 +42,14 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
+    
     @if($departments_tree)
-      @foreach ($departments_tree as $department)
-        @include('departments-list')
-      @endforeach
+      <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
+        @foreach ($departments_tree as $department)
+          @include('departments-list')
+        @endforeach
+      </ul>
     @endif
-    </ul>
-
   </div>
 </div>
 @endsection

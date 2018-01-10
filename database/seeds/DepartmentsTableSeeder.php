@@ -39,6 +39,15 @@ class DepartmentsTableSeeder extends Seeder
                 'filial_status' => null,
                 'company_id' => 1,
             ],
+             [
+                'department_name' => 'Отдел маркетинга и автоматизации',
+                'department_address' => null,
+                'department_phone' => null,
+                'department_parent_id' => 1,
+                'filial_id' => 1,
+                'filial_status' => null,
+                'company_id' => 1,
+            ],
         ]);
     }
 }

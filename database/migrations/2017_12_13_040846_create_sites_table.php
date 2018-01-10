@@ -17,7 +17,9 @@ class CreateSitesTable extends Migration
             $table->increments('id');
             $table->string('site_name', 30)->unique()->nullable()->index()->comment('Название сайта');
             $table->string('site_domen', 30)->unique()->nullable()->index()->comment('Домен сайта');
+
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');

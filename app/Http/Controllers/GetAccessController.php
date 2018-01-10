@@ -43,7 +43,7 @@ class GetAccessController extends Controller
         $user_access = [];
         foreach ($user->roles as $role) {
             foreach ($role->rights as $right){
-                $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = 1;
+                $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
             }
         }
 

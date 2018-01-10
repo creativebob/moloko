@@ -33,9 +33,8 @@ class RightController extends Controller
         // $this->authorize('index', Right::class);
 
         $rights = Right::paginate(30);
-        $menu = Page::get();
 
-        return view('rights.index', compact('rights', 'menu'));
+        return view('rights.index', compact('rights'));
     }
 
     /**
@@ -49,8 +48,7 @@ class RightController extends Controller
         // 
         $right = new Right;
         $entity_list = Entity::get()->pluck('entity_name', 'id');
-        $menu = Page::get();
-        return view('rights.create', compact('right', 'entity_list', 'menu'));
+        return view('rights.create', compact('right', 'entity_list'));
     }
 
     /**

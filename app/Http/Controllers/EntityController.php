@@ -35,8 +35,7 @@ class EntityController extends Controller
         // $this->authorize('index', $model);
 
         $entities = Entity::paginate(30);
-        $menu = Page::get();
-        return view('entities.index', compact('entities', 'menu'));
+        return view('entities.index', compact('entities'));
     }
 
     /**
@@ -49,8 +48,7 @@ class EntityController extends Controller
         // $this->authorize('create', Entity::class);
 
         $entity = new Entity;
-        $menu = Page::get();
-        return view('entities.create', compact('entity', 'menu'));
+        return view('entities.create', compact('entity'));
     }
 
     /**
@@ -84,8 +82,8 @@ class EntityController extends Controller
         $entity = Entity::findOrFail($id);
         // $this->authorize('update', $entity);
 
-        $menu = Page::get();
-        return view('entities.show', compact('entity', 'menu'));
+
+        return view('entities.show', compact('entity'));
     }
 
     /**
@@ -99,8 +97,7 @@ class EntityController extends Controller
         $entity = Entity::findOrFail($id);
         // $this->authorize('update', $entity);
 
-        $menu = Page::get();
-        return view('entities.show', compact('entity', 'menu'));
+        return view('entities.show', compact('entity'));
     }
 
     /**

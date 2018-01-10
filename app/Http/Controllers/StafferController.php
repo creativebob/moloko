@@ -35,8 +35,7 @@ class StafferController extends Controller
         };
       };
       $page_info = Page::wherePage_alias('/staff')->first();
-      $menu = Page::whereSite_id('1')->get();
-      return view('staff.index', compact('staff', 'page_info', 'menu'));
+      return view('staff.index', compact('staff', 'page_info'));
     }
 
     /**
@@ -103,11 +102,10 @@ class StafferController extends Controller
                             $q->whereDate_dismissal(null);
                           }])->findOrFail($id);
       $users = User::whereCompany_id($user->company_id)->orderBy('second_name')->get()->pluck('second_name', 'id');
-      $menu = Page::whereSite_id('1')->get();
 
       // dd($staffer->user_id);
       
-      return view('staff.edit', compact('staffer', 'menu', 'users'));    
+      return view('staff.edit', compact('staffer', 'users'));    
     }
 
     /**
