@@ -106,6 +106,7 @@ class SiteController extends Controller
     $site->site_name = $request->site_name;
     $site->site_domen = $request->site_domen;
     $site->company_id = Auth::user()->company_id;
+    $site->editor_id = $user->id;
     
     $site->save();
 

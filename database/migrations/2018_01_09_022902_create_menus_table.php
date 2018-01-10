@@ -15,14 +15,14 @@ class CreateMenusTable extends Migration
   {
     Schema::create('menus', function (Blueprint $table) {
       $table->increments('id');
-      $table->string('menu_name')->nullable()->comment('Имя меню');
+      $table->string('menu_name')->nullable()->comment('Имя категории меню');
       $table->string('menu_icon')->nullable()->comment('Имя иконки меню');
 
       $table->integer('menu_parent_id')->unsigned()->nullable()->comment('Id родителя пункта меню');
       $table->foreign('menu_parent_id')->references('id')->on('menus');
 
-      $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта меню');
-      $table->foreign('site_id')->references('id')->on('sites');
+      $table->integer('navigation_id')->unsigned()->nullable()->comment('Id названия меню');
+      $table->foreign('navigation_id')->references('id')->on('navigations');
 
       $table->integer('page_id')->unsigned()->nullable()->comment('Id страницы пункта меню');
       $table->foreign('page_id')->references('id')->on('pages');

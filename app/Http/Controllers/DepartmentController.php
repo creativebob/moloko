@@ -31,32 +31,20 @@ class DepartmentController extends Controller
     $others_item['user_id'] = $user->id;
     $system_item = null;
 
-    // Смотрим права на простотр системных.
-    //  foreach ($user->roles as $role) {
-    //     foreach ($role->rights as $right) {
-    //         // Перебор всех прав пользователя
-    //         if ($right->category_right_id == 2) {$others_item[$right->right_action] = $right->right_action;};
-    //         if ($right->right_action == 'system-user') {$system_item = 1;};
-    //         if ($right->right_action == 'get-user23s') {$others_item['all'] = 'all';};
-    //     }
-    // ->otherItem($others_item)
-    // }
-
     if (isset($user->company_id)) {
       // Если у пользователя есть компания
-      $departments = Department::whereCompany_id($user->company_id)
+      $departments = Department::with(['staff', 'staff.position', 'staff.user'])
+              ->whereCompany_id($user->company_id)
               ->systemItem($system_item) // Фильтр по системным записям
               ->get();
-      $staff = Staffer::whereCompany_id($user->company_id)->get();
-      $positions = Position::whereCompany_id($user->company_id)
-                        ->orWhereNull('company_id')
-                        ->get();
+      // $positions = Position::whereCompany_id($user->company_id)
+      //                   ->orWhereNull('company_id')
+      //                   ->get();
     } else {
       // Если нет, то бог без компании
       if ($user->god == 1) {
-        $departments = Department::get();
-        $staff = Staffer::get();
-        $positions = Position::get();
+        $departments = Department::with(['staff', 'staff.position', 'staff.user'])->get();
+        // $positions = Position::get();
       };
     }
     // dd($departments);
@@ -81,16 +69,24 @@ class DepartmentController extends Controller
     };
     
     $tree = $departments->pluck('department_name', 'id');
-    $positions_list = $positions->pluck('position_name', 'id');
+    $positions_list = Position::whereCompany_id($user->company_id)
+                        ->orWhereNull('company_id')->pluck('position_name', 'id');
     $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
-    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'tree', 'staff', 'page_info', 'pages', 'departments'));
+
+
+    // dd($departments_tree);
+
+    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'tree', 'page_info', 'pages', 'departments'));
     // dd($positions);
   }
 
   // Получаем сторонние данные по 
   public function current_department($filial, $depart, $position)
   {
-    if (isset(Auth::user()->company_id)) {
+    $user = Auth::user();
+    $others_item['user_id'] = $user->id;
+    $system_item = null;
+    if (isset($user->company_id)) {
       // Получаем данные из таблицы в массиве
       $departments = Department::whereCompany_id(Auth::user()->company_id)
                         ->get();
@@ -100,14 +96,19 @@ class DepartmentController extends Controller
                         ->orWhereNull('company_id')
                         ->get();
       $positions_list = $positions->pluck('position_name', 'id');
+      // $departments = Department::with(['staff', 'staff.position', 'staff.user'])
+      //         ->whereCompany_id($user->company_id)
+      //         ->systemItem($system_item) // Фильтр по системным записям
+      //         ->get();
     } else {
       // Если нет, то бог без компании
-        if (Auth::user()->god == 1) {
-          $departments = Department::get(); 
-          $tree = $departments->pluck('department_name', 'id');
-          $staff = Staffer::all();
-          $positions = Position::get();
-          $positions_list = $positions->pluck('position_name', 'id');
+        if ($user->god == 1) {
+          // $departments = Department::get(); 
+          // $tree = $departments->pluck('department_name', 'id');
+          // $staff = Staffer::all();
+          // $positions = Position::get();
+          // $positions_list = $positions->pluck('position_name', 'id');
+          $departments = Department::with(['staff', 'staff.position', 'staff.user'])->get();
         };
     };
 

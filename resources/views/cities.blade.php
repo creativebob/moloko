@@ -1,7 +1,6 @@
 @extends('layouts.app')
- 
-@section('inhead')
 
+@section('inhead')
 @endsection
 
 @section('title', 'Населенные пункты')
@@ -297,20 +296,16 @@
 </div>
 {{-- Конец модалки редактирования --}}
 
-
-
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-delete')
 
 {{-- Модалка удаления ajax --}}
 @include('includes.modals.modal-delete-ajax')
-
 @endsection
 
 @section('scripts')
 <script type="text/javascript">
 $(function() {
- 
   // Функция получения городов из вк или с фильтром по нашей базе
   function getCityVk () {  
     $('#submit-city-add').prop('disabled', true);
@@ -637,18 +632,13 @@ $(function() {
       var lastItem = $('#areas-{{ $data['area_id'] }}').find('.last-list');
       $('#content-list').foundation('down', lastItem);
     };
-
-
     // Если удален город, не имеющий район
     if (({{ $data['area_id'] }} == 0)  && ({{ $data['city_id'] }} !== 0)) {
     };
-
-
     // Если удален район, не имеющий городов
     if(({{ $data['area_id'] }} == 0) && ({{ $data['city_id'] }} == 0)) { 
 
     };
-
     // Если добавили город с районом
     if (({{ $data['city_id'] }} !== 0) && ({{ $data['area_id'] }} !== 0)) {
       // Подсвечиваем ссылку
@@ -657,7 +647,6 @@ $(function() {
       var lastItem = $('#areas-{{ $data['area_id'] }}').find('.last-list');
       $('#content-list').foundation('down', lastItem);
     };
-  
       // Перебираем родителей и посвечиваем их
   //   var parents = $(this).parents('.medium-list');
   //   for (var i = 0; i < parents.length; i++) {
@@ -669,11 +658,9 @@ $(function() {
   @endif
 });
 </script>
-
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.multilevel-menu-active-scripts')
 
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.modals.modal-delete-ajax-script')
-
 @endsection

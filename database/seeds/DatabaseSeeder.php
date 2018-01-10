@@ -52,6 +52,7 @@ class DatabaseSeeder extends Seeder
     $this->call(EmployeesTableSeeder::class);
 
     // Меню
+    $this->call(NavigationsTableSeeder::class);
     $this->call(MenusTableSeeder::class);
           
   }

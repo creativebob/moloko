@@ -60,9 +60,9 @@ class Department extends Model
   /**
    * Получаем должности.
    */
-  public function vacancies()
+  public function staff()
   {
-    return $this->hasMany('App\Vacancy');
+    return $this->hasMany('App\Staffer');
   }
   /**
   * Получаем город.
