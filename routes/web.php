@@ -54,6 +54,10 @@ Route::get('/returngod', 'UserController@returngod')->middleware('auth')->name('
 
 Route::get('/page', 'PageController@create');
 
+// Навигация и меню
+Route::resource('/navigations', 'NavigationController')->middleware('auth');
+Route::resource('/menus', 'MenuController')->middleware('auth');
+
 // Контроллеры для отображения населенных пунктов, районов и областей
 Route::resource('/cities', 'CityController')->middleware('auth');
 Route::resource('/areas', 'AreaController')->middleware('auth');
