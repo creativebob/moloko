@@ -630,14 +630,10 @@ $(function() {
   @endif
 });
 </script>
-
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.multilevel-menu-active-scripts')
-
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.modals.modal-delete-ajax-script')
-
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.modals.modal-delete-script')
-
 @endsection
