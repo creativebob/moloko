@@ -61,15 +61,23 @@
                   @endif
                 </li>
                 <li>
-                  @if(isset($session['god']))
+                  @php
+
+                    $session_god = session('god'); 
+                    $session_access = session('access'); 
+
+                  @endphp
+
+                  @if(isset($session_god))
                     {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 
                   @endif
                 </li>
                 <li>
-                  @if(isset($session['access']))
-                    <a>Права получены</a>
-                  @endif
-                </li>
+
+                  @if(isset($session_access))
+                    <a onclick="alert('Перечень прав пока не отображается');">Права получены</a>
+                  @endif</li>
+
                 {{-- Кнопка выхода --}}
                 <li><a href="{{ route('logout') }}"
                     onclick="event.preventDefault();

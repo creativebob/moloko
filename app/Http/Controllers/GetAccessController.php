@@ -43,11 +43,13 @@ class GetAccessController extends Controller
         $user_access = [];
         foreach ($user->roles as $role) {
             foreach ($role->rights as $right){
-                $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = 1;
+                $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
             }
         }
 
-        $request->session()->put('access', $user_access);
+        // $request->session()->put('access', $user_access);
+        session(['access' => $user_access]);
+        
         return redirect()->route('users.index');
     }
 }

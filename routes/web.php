@@ -17,7 +17,6 @@ Route::get('/', function () {
 
 Auth::routes();
 
-
 Route::get('/getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
 
 Route::resource('/users', 'UserController')->middleware('auth');
@@ -33,7 +32,6 @@ Route::resource('/roles', 'RoleController')->middleware('auth');
 
 Route::get('/roles/{id}/setting', 'RoleController@setting')->middleware('auth')->name('roles.setting');
 Route::post('/roles/setright', 'RoleController@setright')->middleware('auth')->name('roles.setright');
-
 
 // Маршрут связи юзера с ролями и отделами
 Route::resource('/roleuser', 'RoleUserController')->middleware('auth');

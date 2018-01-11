@@ -11,22 +11,21 @@ class RightRoleTableSeeder extends Seeder
      *
      * @return void
      */
+    
     public function run()
     {
 
-        $rights = Right::get();
+        // Получаем все существующие разрешения (allow) 
+        $rights = Right::where('directive', 'allow')->get();
+        // $rights = Right::get();                                             
         $mass = [];
 
         // Генерируем права на полный доступ
         foreach($rights as $right){
-
-                $mass[] = ['right_id' => $right->id, 'role_id' => 1];
-
+            $mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system_item' => 1];
         }
 
         DB::table('right_role')->insert($mass);
-
-
 
         // Генерируем прочее право
         DB::table('right_role')->insert([
