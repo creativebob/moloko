@@ -55,6 +55,9 @@ Route::get('/page', 'PageController@create');
 // Навигация и меню
 Route::resource('/navigations', 'NavigationController')->middleware('auth');
 Route::resource('/menus', 'MenuController')->middleware('auth');
+// Текущий добавленный/удаленный пункт меню
+Route::get('/current_menu/{section}/{menu}/{page}', 'MenuController@current_menu')->middleware('auth');
+
 
 // Контроллеры для отображения населенных пунктов, районов и областей
 Route::resource('/cities', 'CityController')->middleware('auth');

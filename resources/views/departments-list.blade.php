@@ -37,24 +37,25 @@
         @endforeach
       @endif
       @if (isset($department['staff']))
-      @foreach($department['staff'] as $staffer)
-        <li class="medium-item parent" id="staff-{{ $staffer['id'] }}" data-name="{{ $staffer['position']['position_name'] }}">
-          <div class="medium-as-last">{{ $staffer['position']['position_name'] }} ( <a href="/staff/{{ $staffer['id'] }}/edit" class="link-recursion">
-          @if (isset($staffer['user_id']))
-            {{ $staffer['user']['first_name'] }} {{ $staffer['user']['second_name'] }}
-          @else
-            Вакансия
-          @endif
-          </a> ) 
-            <ul class="icon-list">
-              <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
-            </ul>
-          </div>
-        </li>
-      @endforeach
+        @foreach($department['staff'] as $staffer)
+          <li class="medium-item parent" id="staff-{{ $staffer['id'] }}" data-name="{{ $staffer['position']['position_name'] }}">
+            <div class="medium-as-last">{{ $staffer['position']['position_name'] }} ( <a href="/staff/{{ $staffer['id'] }}/edit" class="link-recursion">
+            @if (isset($staffer['user_id']))
+              {{ $staffer['user']['first_name'] }} {{ $staffer['user']['second_name'] }}
+            @else
+              Вакансия
+            @endif
+            </a> ) 
+              <ul class="icon-list">
+                <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
+              </ul>
+            </div>
+          </li>
+        @endforeach
+      @endif
     </ul>
   @endif
-@endif
+</li>
 
 
  

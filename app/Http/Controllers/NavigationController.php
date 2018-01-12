@@ -63,7 +63,7 @@ class NavigationController extends Controller
         $navigation->save();
 
         if ($navigation) {
-          return Redirect('/navigations');
+          return Redirect('/menus?site_id='.$request->site_id);
         } else {
           $error = 'ошибка';
         };
@@ -88,7 +88,12 @@ class NavigationController extends Controller
      */
     public function edit($id)
     {
-        //
+        $navigation = Navigation::findOrFail($id);
+          // Отдаем даныне по навигации
+          $result = [
+            'navigation_name' => $navigation->navigation_name,
+          ];
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -102,7 +107,6 @@ class NavigationController extends Controller
     {
         $user = Auth::user();
         $navigation = Navigation::findOrFail($id);
-        // $this->authorize('update', $navigation);
 
         $navigation->navigation_name = $request->navigation_name;
         $navigation->site_id = $request->site_id;
@@ -111,7 +115,7 @@ class NavigationController extends Controller
         
         $navigation->save();
 
-        return Redirect('/navigations');
+        return Redirect('/menus?site_id='.$navigation->site_id);
     }
 
     /**
@@ -122,10 +126,13 @@ class NavigationController extends Controller
      */
     public function destroy($id)
     {
+        $user = Auth::user();
+        $nav = Navigation::findOrFail($id);
+        $nav->editor_id = $user->id;
         // Удаляем сайт с обновлением
         $navigation = Navigation::destroy($id);
         if ($navigation) {
-          return Redirect('/navigations');
+          return Redirect('/menus?site_id='.$nav->site_id);
         } else {
           echo 'произошла ошибка';
         };

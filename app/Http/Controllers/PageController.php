@@ -48,6 +48,7 @@ class PageController extends Controller
     {   
       $sites = Site::whereCompany_id(Auth::user()->company_id)->get()->pluck('site_name', 'id');
       $current_site = $request->session()->get('current_site');
+      // dd($current_site);
       $page = new Page;
 
       return view('pages.create', compact('page', 'sites', 'current_site'));  

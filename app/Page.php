@@ -53,8 +53,8 @@ class Page extends Model
   /**
   * Получаем пункты меню.
   */
-  public function menu()
+  public function menus()
   {
-    return $this->hasOne('App\Menu');
+    return $this->hasMany('App\Menu');
   }
 }

@@ -404,7 +404,7 @@ class DepartmentController extends Controller
   {
 
     $department = Department::findOrFail($id);
-    if ($department->filial_status == 1) {
+    
       // Видим что филиал и удаляем с обновлением
       $department = Department::destroy($id);
       if ($department){
@@ -414,14 +414,14 @@ class DepartmentController extends Controller
         // В случае непредвиденной ошибки
         echo "Непредвиденноая ошибка";
       };
-    } 
+    
 
     // Удаляем ajax
     // Проверяем содержит ли филиал вложения
     // $department = Department::whereDepartment_parent_id($id)->first();
-
-      // Если содержит, то даем сообщенеи об ошибке
-
+    // if ($department->filial_status == 1) {
+    //   // Если содержит, то даем сообщенеи об ошибке
+    //   } 
     // $depart =  Department::find($id);
     // return Redirect('/current_department/'.$depart->filial_id.'/'.$depart->department_parent_id.'/0');
   }
