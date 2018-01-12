@@ -285,19 +285,17 @@ input[type=checkbox], input[type=radio] {
     background: url(sprites/sprite_menu.png) no-repeat;
     background-position: 0px -480px;
     content: '';
-
-    input[type=checkbox]:checked + label:before {
-      background-position: -32px -480px;
-    }
   }
   .disabled:before {
     opacity: 0.3;
+  }
+  input[type=checkbox]:checked + label:before {
+    background-position: -32px -480px;
   }
 }
 :indeterminate + label:before { // Неопределенное состояние
   background-position: -64px -480px;
 }
-
 // Чекбокс (Выделить все)
 .checkbox-th {
   label:before {
