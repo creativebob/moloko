@@ -31,7 +31,7 @@ class UserController extends Controller
     {
 
         $user = Auth::user();
-        $session  = session('access');
+        $access  = session('access');
 
 
         // Получение сессии через request
@@ -41,8 +41,33 @@ class UserController extends Controller
         // $this->authorize('index', User::class);
 
 
-        $others_item['user_id'] = $user->id;
-        $system_item = null;
+        
+
+        // Проверяем право просмотра системных записей:
+        if(isset($access['system-users-allow']) && (!isset($access['system-users-deny'])))
+        {
+            $system_item = 1;
+        } else {
+            $system_item = null;
+        };
+
+
+        // Проверяем право на просмотр чужих записей:
+        // 
+        
+        if(count($access['list_authors']['authors_id']) > 0){
+            $authors = $access['list_authors'];
+            // dd($authors);
+        } else {
+
+            if(isset($access['authors-users-allow']) && (!isset($access['authors-users-deny'])))
+            {
+                $authors = null;
+            };
+         };
+
+
+
 
         // if(($session['system-users-allow'] == 1)&&($session['system-users-deny'] != 1)){
         //     echo "Все заебись!";
@@ -69,11 +94,13 @@ class UserController extends Controller
 
         // }
 
+
+
         if (isset($user->company_id)) {
             // Если у пользователя есть компания
             $users = User::whereCompany_id($user->company_id)
-                    // ->whereGod(null)
-                    // ->otherItem($others_item)
+                    ->whereGod(null)
+                    ->authors($authors)
                     ->systemItem($system_item) // Фильтр по системным записям
                     ->paginate(30);
         } else {

@@ -24,7 +24,9 @@ class UsersTableSeeder extends Seeder
 	        	'user_type' => 1, 
 	        	'access_block' => 0, 
 	        	'company_id' => Null, 
-	        	'god' => 1, 
+	        	'god' => null, 
+	        	'system_item' => 1, 
+	        	'author_id' => null, 
         	],
         	[
 	        	'login' => 'creativebob', 
@@ -38,6 +40,8 @@ class UsersTableSeeder extends Seeder
 	        	'access_block' => 0, 
 	        	'company_id' => Null, 
 	        	'god' => 1, 
+	        	'system_item' => null, 
+	        	'author_id' => 1, 
         	],
         	[
 	        	'login' => 'makc_berluskone', 
@@ -49,8 +53,10 @@ class UsersTableSeeder extends Seeder
 	        	'phone' => '88888888888', 
 	        	'user_type' => 1, 
 	        	'access_block' => 0, 
-	        	'company_id' => Null, 
+	        	'company_id' => null, 
 	        	'god' => 1, 
+	        	'system_item' => null, 
+	        	'author_id' => 1, 
         	],
         	[
 	        	'login' => 'timoshenko', 
@@ -64,6 +70,8 @@ class UsersTableSeeder extends Seeder
 	        	'access_block' => 0, 
 	        	'company_id' => 1, 
 	        	'god' => null, 
+	        	'system_item' => null, 
+	        	'author_id' => 1, 
         	],
         	[
 	        	'login' => 'mironov', 
@@ -77,6 +85,8 @@ class UsersTableSeeder extends Seeder
 	        	'access_block' => 0, 
 	        	'company_id' => 1, 
 	        	'god' => null, 
+	        	'system_item' => null, 
+	        	'author_id' => 1, 
         	],
         	[
 	        	'login' => 'kondrachuk', 
@@ -90,6 +100,8 @@ class UsersTableSeeder extends Seeder
 	        	'access_block' => 0, 
 	        	'company_id' => 1, 
 	        	'god' => null, 
+	        	'system_item' => null, 
+	        	'author_id' => 1, 
         	],
         	[
 	        	'login' => 'davydenko', 
@@ -103,6 +115,8 @@ class UsersTableSeeder extends Seeder
 	        	'access_block' => 0, 
 	        	'company_id' => 1, 
 	        	'god' => null, 
+	        	'system_item' => null, 
+	        	'author_id' => 1, 
         	],
         ]);
 

@@ -10,6 +10,7 @@ use App\RightRole;
 use App\Action;
 use App\Right;
 use App\Entity;
+use App\ListUser;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
@@ -36,16 +37,42 @@ class GetAccessController extends Controller
             $mymass[] = $staffer->filial_id;
         }
 
+
+        // Получим все права и их ID в массив
         $auth_user_roles = $user->roles;
+
+        // Находим все возможные в системе права и кладем их в массив с указанием их ID
+        // $allrights_array = [];
+        // foreach ($auth_user_roles as $role) {
+        //     foreach ($role->rights as $right) {
+
+        //         $allrights_array[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
+
+        //     }
+        // }
+
+
 
         // Создаем ассоциированный массив прав на авторизованного пользователя
         // В формате: Ключ"user-create-allow" и значение "1" если найдено правило.
         $user_access = [];
         foreach ($user->roles as $role) {
             foreach ($role->rights as $right){
-                $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
+                
+                // if(isset($allrights_array[$right->actionentity->alias_action_entity . "-" . 'deny'])){
+                    $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
+                // };          
             }
         }
+
+        // Получаем авторов
+        // TODO
+        
+        $authors['authors_id'] = [5, 6, 7];
+        $authors['user_id'] = $user->id;
+        $user_access['list_authors'] = $authors;
+
+        // dd($user_access);
 
         // $request->session()->put('access', $user_access);
         session(['access' => $user_access]);

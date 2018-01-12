@@ -66,6 +66,8 @@
                     $session_god = session('god'); 
                     $session_access = session('access'); 
 
+                    $item = 123;
+
                   @endphp
 
                   @if(isset($session_god))
@@ -75,7 +77,7 @@
                 <li>
 
                   @if(isset($session_access))
-                    <a onclick="alert('Перечень прав пока не отображается');">Права получены</a>
+                    <a onclick="alert('Перечень прав пока не отображается');">Права получены {{ $item }} </a>
                   @endif</li>
 
                 {{-- Кнопка выхода --}}
