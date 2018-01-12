@@ -11,6 +11,7 @@ use App\Action;
 use App\Right;
 use App\Entity;
 use App\RoleUser;
+use App\ActionEntity;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
@@ -59,13 +60,35 @@ class RoleController extends Controller
         } else {
             // Если нет, то бог без компании
             if ($user->god == 1) {
-                $roles = Role::paginate(30);
+              $roles = Role::paginate(30);
             };
         }
 
-        // dd($roles->all());
 
-        return view('roles.index', compact('roles'));
+
+        // Определяем количество разрешений 
+        $counts_directive_array = [];
+        foreach ($roles as $role) {
+
+            foreach ($user->roles as $user_role) {
+
+                if($role->id == $user_role->id){
+                    $disabled_role = 'disabled';
+                } else {
+                    $disabled_role = '';
+                };
+            }
+
+
+            $count_allow = $role->rights->where('directive', 'allow')->count();
+            $count_deny = $role->rights->where('directive', 'deny')->count();
+
+            $counts_directive_array[$role->id]['count_allow'] = $count_allow;
+            $counts_directive_array[$role->id]['count_deny'] = $count_deny;
+            $counts_directive_array[$role->id]['disabled_role'] = $disabled_role;
+        };
+
+        return view('roles.index', compact('roles', 'counts_directive_array'));
     }
 
 
@@ -192,8 +215,22 @@ class RoleController extends Controller
     public function setting($role_id)
     {
 
+
         $count_role = RoleUser::where('role_id', $role_id)->where('user_id', Auth::user()->id)->count();
         if($count_role != 0) {abort(403);};
+
+        // Получим все права и их ID в массив
+        $allrights = Right::get();
+
+        // Находим все возможные в системе права и кладем их в массив с указанием их ID
+        $allrights_array = [];
+        foreach ($allrights as $right) {
+            $allrights_array[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
+            $f = $right->actionentity->alias_action_entity;
+        }
+
+
+
 
         // РАБОТАЕМ С РАЗРЕШЕНИЯМИ:
         
@@ -210,6 +247,10 @@ class RoleController extends Controller
         // Получаем сущности
         $entities = Entity::get();
         $actions = Action::get();
+        $all_deny_right = Right::where('directive', 'deny')->get()->toarray();
+
+        // dd($right);
+
 
         // Получаем права на редактируемую роль
         $current_role = Role::with(['rights' => function($q)
@@ -225,6 +266,9 @@ class RoleController extends Controller
             $role_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
         }
 
+        //Смотрим права авторизованного пользователя
+        $session  = session('access');
+
 
         // Наполняем массив данными:
         foreach($entities as $entity){
@@ -232,15 +276,15 @@ class RoleController extends Controller
             // Перебираем все операции действий в системе 
             foreach($actions as $action){
 
-                // РАБОТАЕМ С РАЗРЕШЕНИЯМИ:
-                // Получаем имя искомого разрешения у юзера
-                $box_allow_name = $action->action_method . '-' . $entity->entity_alias . '-allow';
 
-                //Смотрим права авторизованного пользователя
-                $session  = session('access');
+
+                // РАБОТАЕМ С РАЗРЕШЕНИЯМИ: -----------------------------------------------------------------------------------------------
+                // Получаем имя искомого разрешения и/или запрета у юзера:
+                $box_allow_name = $action->action_method . '-' . $entity->entity_alias . '-allow';
+                $box_deny_name = $action->action_method . '-' . $entity->entity_alias . '-deny';
 
                 // Если запись существует, пишем 1, если нет, то 0
-                if(isset($session[$box_allow_name])){
+                if(isset($session[$box_allow_name])&&(isset($session[$box_deny_name]) == false)){
                     $status_box = '1';
                     $right_id = $session[$box_allow_name];
 
@@ -249,9 +293,11 @@ class RoleController extends Controller
                     
                     if(isset($role_access[$box_allow_name])){
                         $checked = 'checked';
-                    } else {$checked='';};
-                    $disabled = '';
-                    
+                    } else {
+                        $checked='';
+                    };
+                        $disabled = '';
+
 
                 } else {
                     $checked = '';
@@ -261,39 +307,52 @@ class RoleController extends Controller
                 };
 
                 // Формируем строку с данными для чекбоксов на одну сущность
-                $boxes[] = ['action_method' => $box_allow_name, 'status_box' => $status_box, 'right_id' => $right_id, 'checked' => $checked, 'disabled' => $disabled];
+                $boxes[] = [
+                    'action_method' => $box_allow_name, 
+                    'action_id' => $action->id, 
+                    'entity_id' => $entity->id, 
+                    'status_box' => $status_box, 
+                    'right_id' => $right_id, 
+                    'checked' => $checked, 
+                    'disabled' => $disabled
+                ];
 
 
+                // РАБОТАЕМ С ЗАПРЕТАМИ: -------------------------------------------------------------------------------------------------------
 
-                // РАБОТАЕМ С ЗАПРЕТАМИ:
-                // Получаем имя искомого разрешения у юзера
-                $box_deny_name = $action->action_method . '-' . $entity->entity_alias . '-deny';
+                //Получаем ID текущего права (Чекбокс над которым прохдит операция) 
+                $right_id = $allrights_array[$box_deny_name];
 
                 // Если запись существует, пишем 1, если нет, то 0
                 if(isset($session[$box_deny_name])){
                     $status_box = '1';
-                    $right_id = $session[$box_deny_name];
+                    $disabled = 'disabled';
+
+                } else {
 
                     // Если в редактиремой роли присутствует право (которое также присутствует и у авторизованного пользователя),
                     // то ставим галочку
                     
                     if(isset($role_access[$box_deny_name])){
+                        $status_box = '1';
                         $checked = 'checked';
-                    } else {$checked='';};
-                    $disabled = '';
-                    
-
-                } else {
-                    $checked = '';
-                    $status_box = '0';
-                    $disabled = 'disabled';
-                    $right_id = '';
+                    } else {
+                        $status_box = '0';
+                        $checked = '';
+                    };
                 };
 
+
                 // Формируем строку с данными для чекбоксов на одну сущность
-                $boxes_deny[] = ['action_method' => $box_deny_name, 'status_box' => $status_box, 'right_id' => $right_id, 'checked' => $checked, 'disabled' => $disabled];
-
-
+                $boxes_deny[] = [
+                    'action_method' => $box_deny_name, 
+                    'action_id' => $action->id, 
+                    'entity_id' => $entity->id, 
+                    'status_box' => $status_box, 
+                    'right_id' => $right_id, 
+                    'checked' => $checked, 
+                    'disabled' => $disabled
+                ];
 
             }
 
@@ -307,7 +366,11 @@ class RoleController extends Controller
             // Чистим массив - готовим для очередной итерации
             $boxes = [];
             $boxes_deny = [];
-        }
+
+        }  // Завершение foreach (Наполняем массив данными)
+
+
+
 
         // dd($main_mass_deny);
 
@@ -319,34 +382,33 @@ class RoleController extends Controller
     public function setright(Request $request)
     {
         $user = Auth::user();
-        echo $request->role_id . " - " . $request->right_id;
-
         $rightrole = RightRole::where('role_id', $request->role_id)->where('right_id', $request->right_id)->first();
 
         if(isset($rightrole)){
 
-            // Если запись права в роли не являеться системной, то удаляем ее.
-            if($rightrole->system_item == null){
-                $rightrole = RightRole::destroy($rightrole->id);
-                echo "Есть такая запись! Сделали попытку ебнуть ее!";                
-            };
+                // Если запись права в роли не являеться системной, то удаляем ее.
+                if($rightrole->system_item == null){
+                    $rightrole = RightRole::destroy($rightrole->id);
+                    echo "Есть такая запись! Сделали попытку ебнуть ее!";                
+                };
 
         } else {
 
-            echo "Такой записи не было. Сделали попытку записать!";
+                echo "Такой записи не было. Сделали попытку записать!";
 
-            $rightrole = new RightRole;
-            $rightrole->role_id = $request->role_id;
-            $rightrole->right_id = $request->right_id;
-            $rightrole->author_id = $user->id;
+                $rightrole = new RightRole;
+                $rightrole->role_id = $request->role_id;
+                $rightrole->right_id = $request->right_id;
+                $rightrole->author_id = $user->id;
 
-            $rightrole->save();
+                $rightrole->save();
 
-        if($rightrole){
+                if($rightrole){
 
-        } else { echo "Все пошло по пизде!"; }
+                } else { echo "Все пошло по пизде!"; }
 
         };
+
     }
 
 }

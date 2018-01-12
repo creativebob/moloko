@@ -64,8 +64,8 @@
                         @foreach($one_string['boxes'] as $boxes)
                               <td class="td-action-{{ $action->action_method }}">
                                   <div class="checkbox">
-                                    <input type="checkbox" class="checkbox_right" {{ $boxes['checked'] }} {{ $boxes['disabled'] }} id="{{ $boxes['right_id'] }}" data-role-id = "{{ $role_id }}">
-                                    <label for="{{ $boxes['right_id']  }}"></label>
+                                    <input type="checkbox" class="checkbox_right" {{ $boxes['checked'] }} {{ $boxes['disabled'] }} id="{{ $boxes['right_id'] }}" data-role-id = "{{ $role_id }}" data-entity-id = "{{ $boxes['entity_id'] }}" data-action-id = "{{ $boxes['action_id'] }}" data-deny-status = "0">
+                                    <label for="{{ $boxes['right_id'] }}" class="{{ $boxes['disabled'] }}"></label>
                                   </div>
                               </td>
                         @endforeach
@@ -119,8 +119,8 @@
                         @foreach($one_string['boxes'] as $boxes)
                               <td class="td-action-{{ $action->action_method }}">
                                   <div class="checkbox">
-                                    <input type="checkbox" class="checkbox_right" {{ $boxes['checked'] }} {{ $boxes['disabled'] }} id="{{ $boxes['right_id'] }}" data-role-id = "{{ $role_id }}">
-                                    <label for="{{ $boxes['right_id']  }}"></label>
+                                    <input type="checkbox" class="checkbox_right" {{ $boxes['checked'] }} {{ $boxes['disabled'] }} id="{{ $boxes['right_id'] }}" data-role-id = "{{ $role_id }}" data-entity-id = "{{ $one_string['entity_id'] }}" data-action-id = "{{ $boxes['action_id'] }}" data-deny-status = "1">
+                                    <label for="{{ $boxes['right_id'] }}" class="{{ $boxes['disabled'] }}"></label>
                                   </div>
                               </td>
                         @endforeach
