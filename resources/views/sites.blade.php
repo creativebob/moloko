@@ -71,7 +71,8 @@
           <th class="td-site-name">Название сайта</th>
           <th class="td-site-domen">Домен сайта</th>
           <th class="td-company-name">Компания</th>
-          <th class="td-site-edit"></th>
+          <th class="td-site-edit">Изменить</th>
+          <th class="td-site-navigation"></th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -85,6 +86,7 @@
           <td class="td-site-domen"><a href="http://{{ $site->site_domen }}" target="_blank">{{ $site->site_domen }}</a></td>
           <td class="td-company-name" data-company-id="{{ $site->company->id or '' }}">{{ $site->company->company_name or 'Системный сайт' }}</td>
           <td class="td-site-edit"><a class="icon-edit sprite" data-open="site-edit"></a></td>
+          <td class="td-site-navigation"><a href="/menus?site_id={{ $site->id }}" class="tiny button">Навигация</a></td>
           <td class="td-delete">
             @if (isset($site->company_id))
             <a class="icon-delete sprite" data-open="item-delete"></a>

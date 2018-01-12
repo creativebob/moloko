@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Menu;
 use App\Page;
 use App\Navigation;
+use App\Site;
 
 
 use Illuminate\Http\Request;
@@ -23,42 +24,61 @@ class MenuController extends Controller
       $user = Auth::user();
       $others_item['user_id'] = $user->id;
       $system_item = null;
-      // Пишем сайт в сессию
-      session(['current_navigation' => $request->navigation_id]);
+
+      $site = Site::findOrFail($request->site_id);
+
+
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
-        $menus = Menu::with('page')
-                ->whereNavigation_id($request->navigation_id)
+        $navigations = Navigation::with(['menus', 'site', 'site.pages'])
+                ->whereSite_id($request->site_id)
                 ->systemItem($system_item) // Фильтр по системным записям
                 ->get();
-        $navigation = Navigation::findOrFail($request->navigation_id);
+        $site = Site::with('pages')->findOrFail($request->site_id);
       } else {
         // Если нет, то бог без компании
         if ($user->god == 1) {
-          $menus = Menu::with('page')->whereNavigation_id($request->navigation_id)->get();
-          $navigation = Navigation::findOrFail($request->navigation_id);
+          $navigations = Navigation::with(['menus', 'menus.page'])
+                                  ->whereSite_id($request->site_id)
+                                  ->get();
+          $site = Site::with('pages')->findOrFail($request->site_id);
         };
-      }
-      $menus = $menus->toArray();
-      //Создаем масив где ключ массива является ID меню
-      $menus_id = [];
-      foreach ($menus as $menu) {
-        $menus_id[$menu['id']] = $menu;
-      };
-      //Функция построения дерева из массива от Tommy Lacroix
-      $menu_tree = [];
-      foreach ($menus_id as $id => &$node) {   
-        //Если нет вложений
-        if (!$node['menu_parent_id']){
-          $menu_tree[$id] = &$node;
-        } else { 
-        //Если есть потомки то перебераем массив
-          $menus_id[$node['menu_parent_id']]['children'][$id] = &$node;
+      }  
+      // dd($navigations->toArray());
+      // Создаем масив где ключ массива является ID меню
+      $navigation_id = [];
+      $navigation_tree = [];
+      foreach ($navigations->toArray() as $navigation) {
+        $navigation_id[$navigation['id']] = $navigation;
+        $navigation_tree[$navigation['id']] = $navigation;
+        foreach ($navigation_id as $navigation) {
+          //Создаем масив где ключ массива является ID меню
+          $navigation_id[$navigation['id']]['menus'] = [];
+          foreach ($navigation['menus'] as $menu) {
+            // dd($menu);
+            $navigation_id[$navigation['id']]['menus'][$menu['id']] = $menu;
+          }
+          //Функция построения дерева из массива от Tommy Lacroix
+          $navigation_tree[$navigation['id']]['menus'] = [];
+          foreach ($navigation_id[$navigation['id']]['menus'] as $menu => &$node) {   
+            //Если нет вложений
+            if (!$node['menu_parent_id']){
+              $navigation_tree[$navigation['id']]['menus'][$menu] = &$node;
+            } 
+            else { 
+            //Если есть потомки то перебераем массив
+            $navigation_id[$navigation['id']]['menus'][$node['menu_parent_id']]['children'][$menu] = &$node;
+            }
+          };
         }
-      };
+      }
+      // $menu_tree = $navigations;
+      // dd($navigation_tree[1]['menus']);
+      $pages = $site->pages->pluck('page_name', 'id');
+      // dd($site);
+
       $page_info = Page::wherePage_alias('/menus')->whereSite_id('1')->first();
-      // dd($menu_tree);
-      return view('menus', compact('menu_tree', 'page_info', 'navigation'));
+      return view('menus', compact('site', 'navigation_tree', 'page_info', 'pages'));
       // dd($positions);
     }
 
@@ -107,7 +127,8 @@ class MenuController extends Controller
         'page_id' => $page,
       ];
       // dd($data);
-      return view('menus', compact('menu_tree', 'navigation', 'data', 'page_info')); 
+      $pages = $navigation->site->pages->pluck('page_name', 'id');
+      return view('menus', compact('menu_tree', 'navigation', 'data', 'page_info', 'pages')); 
     }
 
     /**
@@ -130,76 +151,60 @@ class MenuController extends Controller
     {
       $user = Auth::user();
 
-      // Пишем филиал
-      if (isset($request->section_db)) {
-        // По умолчанию значение 0
-        // if ($request->filial_database == 0) {
-        //   // Проверка города в нашей базе данных
-        //   $city_name = $request->city_name;
+      // Пишем раздел меню
+      if (isset($request->section) && $request->section == 1) {
 
-        //   $cities = City::where('city_name', 'like', $city_name.'%')->get();
-        //   $count = $cities->count();
-        //   if ($count > 0) {
-            
-        //     $objRes = (object) [];
-        //     foreach ($cities as $city) {
-        //       $city_id = $city->id;
-        //       $city_name = $city->city_name;
+          $menu = new Menu;
 
-        //       if ($city->area_id == null) {
-        //         $area_name = '';
-        //         $region_name = $city->region->region_name;
-        //       } else {
-        //         $area_name = $city->area->area_name;
-        //         $region_name = $city->area->region->region_name;
-        //       };
-          
-        //       $objRes->city_id[] = $city_id;
-        //       $objRes->city_name[] = $city_name;
-        //       $objRes->area_name[] = $area_name;
-        //       $objRes->region_name[] = $region_name;
-        //     };
-
-        //     $result = [
-        //       'error_status' => 0,
-        //       'cities' => $objRes,
-        //       'count' => $count
-        //     ];
-        //   } else {
-        //     $result = [
-        //       'error_message' => 'Населенный пункт не существует в нашей базе данных, добавьте его!',
-        //       'error_status' => 1
-        //     ];
-        //   };
-        //   echo json_encode($result, JSON_UNESCAPED_UNICODE);
-        // };
-        // Если город найден, то меняем значение на 1, пишем в базу и отдаем результат
-        if ($request->section_db == 1) {
-
-          $section = new Menu;
-
-          $section->menu_name = $request->section_name;
-          if (isset($request->section_icon)) {
-            $section->menu_icon = $request->section_icon;
+          $menu->menu_name = $request->menu_name;
+          $menu->navigation_id = $request->navigation_id;
+          if (isset($request->menu_icon)) {
+            $menu->menu_icon = $request->menu_icon;
           };
-          $section->navigation_id = $request->navigation_id;
+          if (isset($request->menu_parent_id)) {
+            $menu->menu_parent_id = $request->menu_parent_id;
+          };
           if ($user->company_id == null) {
 
           } else {
-            $section->company_id = $user->company_id;
+            $menu->company_id = $user->company_id;
           }
-          $section->author_id = $user->id;
+          $menu->author_id = $user->id;
 
-          $section->save();
+          $menu->save();
 
-          if ($section) {
-            return Redirect('/current_menu/'.$section->id.'/0/0');
+          if ($menu) {
+            return Redirect('menus?site_id='.$request->site_id);
           } else {
             echo 'Ошибка записи раздела меню';
           };
           
         };
-      };
+      // Пишем пункт меню
+      if (isset($request->page) && $request->page == 1) {
+          $menu = new Menu;
+
+          $menu->page_id = $request->page_id;
+          if (isset($request->menu_parent_id)) {
+            $menu->menu_parent_id = $request->menu_parent_id;
+          };
+          $menu->navigation_id = $request->navigation_id;
+          if ($user->company_id == null) {
+
+          } else {
+            $menu->company_id = $user->company_id;
+          }
+          $menu->author_id = $user->id;
+
+          $menu->save();
+
+          if ($menu) {
+            return Redirect('menus?site_id='.$request->site_id);
+          } else {
+            echo 'Ошибка записи раздела меню';
+          };
+          
+        };
     }
 
     /**
@@ -210,36 +215,7 @@ class MenuController extends Controller
      */
     public function show($id)
     {
-      $user = Auth::user();
-
-      // Пишем филиал
-      if (isset($request->section_db)) {
-        if ($request->section_db == 1) {
-
-          $page = Page::findOrFail($id);
-
-          $section->menu_name = $request->section_name;
-          if (isset($request->section_icon)) {
-            $section->menu_icon = $request->section_icon;
-          };
-          $section->navigation_id = $request->navigation_id;
-          if ($user->company_id == null) {
-
-          } else {
-            $section->company_id = $user->company_id;
-          }
-          $section->author_id = $user->id;
-
-          $section->save();
-
-          if ($section) {
-            return Redirect('/current_menu/'.$section->id.'/0/0');
-          } else {
-            echo 'Ошибка записи раздела меню';
-          };
-          
-        };
-      };
+      
     }
 
     /**
@@ -250,50 +226,15 @@ class MenuController extends Controller
      */
     public function edit($id)
     {
-      $menu = Menu::findOrFail($id);
-
-    if ($menu->menu_parent_id == null) {
-      // Меняем раздел
+      // Отдаем данные по меню
+       $menu = Menu::findOrFail($id);
+     
       $result = [
-        'section_name' => $menu->menu_name,
-        'section_icon' => $menu->menu_icon,
+        'menu_name' => $menu->menu_name,
+        'menu_icon' => $menu->menu_icon,
         'navigation_id' => $menu->navigation_id,
       ];
-    } 
-    // else {
-    //   // Меняем отдел
-
-    //   if (isset($department->city_id)) {
-    //     $city_id = $department->city_id; 
-    //   } else {
-    //     $city_id = '';
-    //   };
-    //   if (isset($department->city->city_name)) {
-    //     $city_name = $department->city->city_name;
-    //   } else {
-    //     $city_name = '';
-    //   };
-    //   if (isset($department->department_address)) {
-    //     $department_address = $department->department_address;
-    //   } else {
-    //     $department_address = '';
-    //   };
-    //   if (isset($department->department_phone)) {
-    //     $department_phone = decorPhone($department->department_phone);
-    //   } else {
-    //     $department_phone = '';
-    //   };
-    //   $result = [
-    //     'city_id' => $city_id,
-    //     'city_name' => $city_name,
-    //     'department_address' => $department_address,
-    //     'department_phone' => $department_phone,
-    //     'department_name' => $department->department_name,
-    //     'department_parent_id' => $department->department_parent_id,
-    //     'filial_id' => $department->filial_id,
-    //   ];
-    // };
-    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+      echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -305,7 +246,33 @@ class MenuController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      $user = Auth::user();
+
+      $menu = Menu::with('navigation')->findOrFail($id);
+      $site_id = $menu->navigation->site_id;
+
+      $menu->menu_name = $request->menu_name;
+      $menu->navigation_id = $request->navigation_id;
+      $menu->menu_icon = $request->menu_icon;
+      if (isset($request->menu_parent_id)) {
+        $menu->menu_parent_id = $request->menu_parent_id;
+      };
+      if ($user->company_id == null) {
+
+      } else {
+        $menu->company_id = $user->company_id;
+      }
+      $menu->editor_id = $user->id;
+
+      $menu->save();
+
+      if ($menu) {
+        return Redirect('/menus?site_id='.$site_id);
+      } else {
+        echo 'Ошибка записи раздела меню';
+      };
+        
+ 
     }
 
     /**
@@ -316,12 +283,12 @@ class MenuController extends Controller
      */
     public function destroy($id)
     {
-      $menu = Menu::findOrFail($id);
-      $navigation_id = $menu->navigation_id;
+      $menu = Menu::with('navigation')->findOrFail($id);
+      $site_id = $menu->navigation->site_id;
         // Удаляем с обновлением
         $menu = Menu::destroy($id);
         if ($menu) {
-          return Redirect('/menus?navigation_id='.$navigation_id);
+          return Redirect('/menus?site_id='.$site_id);
         } else {
           // В случае непредвиденной ошибки
           echo "Непредвиденная ошибка";

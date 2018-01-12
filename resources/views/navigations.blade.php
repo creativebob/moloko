@@ -80,7 +80,7 @@
         <tr class="parent" id="navigations-{{ $navigation->id }}" data-name="{{ $navigation->navigation_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $navigation->id }}"><label class="label-check" for="check-{{ $navigation->id }}"></label></td>
-          <td class="td-navigation-name"><a href="/menus?navigation_id={{ $navigation->id }}">{{ $navigation->navigation_name }}</a></td>
+          <td class="td-navigation-name"><a href="/menus?site_id={{ $navigation->site->id }}">{{ $navigation->navigation_name }}</a></td>
           <td class="td-navigation-site" data-site-id="{{ $navigation->site->id or '' }}">{{ $navigation->site->site_name }}</td>
           <td class="td-navigation-edit"><a class="icon-edit sprite" data-open="navigation-edit"></a></td>
           <td class="td-delete">

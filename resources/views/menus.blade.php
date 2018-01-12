@@ -13,8 +13,8 @@
   <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-options="stickyOn: small;" data-top-anchor="head-content:top">
     <div class="top-bar head-content">
       <div class="top-bar-left">
-        <h2 class="header-content">{{ $navigation->site->site_name or 'Список менюшек'}} {{ $navigation->navigation_name}} </h2>
-        <a class="icon-add sprite" data-open="section-add"></a>
+        <h2 class="header-content">{{ $site->site_name }}</h2>
+        <a class="icon-add sprite" data-open="navigation-add"></a>
       </div>
       <div class="top-bar-right">
         <a class="icon-filter sprite"></a>
@@ -43,44 +43,43 @@
 <div class="grid-x">
   <div class="small-12 cell">
     
-    @if($menu_tree)
+    @if($navigation_tree)
       <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
-        @foreach ($menu_tree as $menu)
-
-        @if($menu['menu_parent_id'] == null)
-          {{-- Если Подкатегория --}}
-          <li class="first-item parent" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['menu_name'] }}">
-            <ul class="icon-list">
-              <li><div class="icon-list-add sprite" data-open="menu-add"></div></li>
-              <li><div class="icon-list-edit sprite" data-open="section-edit"></div></li>
-              <li>
-                @if (!isset($menu['children']))
-                  <div class="icon-list-delete sprite" data-open="item-delete"></div>
-                @endif
-              </li>
-            </ul>
-            <a data-list="" class="first-link">
-              <div class="list-title">
-                <div class="icon-open sprite"></div>
-                <span class="first-item-name">{{ $menu['menu_name'] }}</span>
-                <span class="number">
-                  @if (isset($menu['children']))
-                   {{ count($menu['children']) }}
-                  @else
-                    0
+        @foreach ($navigation_tree as $navigation)
+          @if (isset($navigation['menus']))
+            {{-- Если Подкатегория --}}
+            <li class="first-item parent" id="navigations-{{ $navigation['id'] }}" data-name="{{ $navigation['navigation_name'] }}">
+              <ul class="icon-list">
+                <li><div class="icon-list-add sprite" data-open="menu-add"></div></li>
+                <li><div class="icon-list-edit sprite" data-open="navigation-edit"></div></li>
+                <li>
+                  @if(count($navigation['menus']) == 0)
+                    <div class="icon-list-delete sprite" data-open="item-delete"></div>
                   @endif
-                </span>
-              </div>
-            </a>
-            @if(isset($menu['children']))
-             <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
-              @foreach($menu['children'] as $menu)
-                @include('menu-list', $menu)
-              @endforeach
-            </ul>
-            @endif
-        @endif
-          
+                </li>
+              </ul>
+              <a data-list="" class="first-link">
+                <div class="list-title">
+                  <div class="icon-open sprite"></div>
+                  <span class="first-item-name">{{ $navigation['navigation_name'] }}</span>
+                  <span class="number">
+                    @if (isset($navigation['menus']))
+                      {{ count($navigation['menus']) }}
+                    @else
+                      0
+                    @endif
+                  </span>
+                </div>
+              </a>
+              @if (isset($navigation['menus']))
+                <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
+                  @foreach($navigation['menus'] as $menu)
+                    @include('menus-list', $menu)
+                  @endforeach
+                </ul>
+              @endif
+            </li>
+          @endif
         @endforeach
       </ul>
     @endif
@@ -89,134 +88,125 @@
 @endsection
 
 @section('modals')
-{{-- Модалка добавления раздела --}}
-<div class="reveal" id="section-add" data-reveal>
+{{-- Модалка добавления навигации --}}
+<div class="reveal" id="navigation-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>ДОБАВЛЕНИЕ раздела меню</h5>
+      <h5>ДОБАВЛЕНИЕ навигации</h5>
     </div>
   </div>
-  {{ Form::open(['url' => '/menus', 'id' => 'form-section-add', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['url' => '/navigations', 'id' => 'form-navigation-add', 'data-abide', 'novalidate']) }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
-        <label class="input-icon">Введите название раздела
-          {{ Form::text('section_name', $value = null, ['class'=>'section-name-field-add', 'autocomplete'=>'off', 'required']) }}
+        <label class="input-icon">Введите название навигации
+          {{ Form::text('navigation_name', $value = null, ['autocomplete'=>'off', 'required']) }}
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
-        @if($navigation->id == 1)
-        <label class="input-icon">Введите имя иконки
-          {{ Form::text('section_icon', $value = null, ['class'=>'section-icon-field-add', 'autocomplete'=>'off', 'required']) }}
-        </label>
-        @endif
-        <input type="hidden" name="section_db" id="section-add" value="1">
-        <input type="hidden" name="navigation_id" class="navigation-id" value="{{ $navigation->id }}">
+        <input type="hidden" name="site_id" value="{{ $site->id }}">
       </div>
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-section-add']) }}
+        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-navigation-add']) }}
       </div>
     </div>
   {{ Form::close() }}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
-{{-- Конец модалки добавления раздела --}}
+{{-- Конец модалки добавления навигации --}}
 
-{{-- Модалка редактирования раздела --}}
-<div class="reveal" id="section-edit" data-reveal>
+{{-- Модалка редактирования навигации --}}
+<div class="reveal" id="navigation-edit" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>Редактирование филиала</h5>
+      <h5>Редактирование навигации</h5>
     </div>
   </div>
-  {{ Form::open(['id' => 'form-section-edit', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['id' => 'form-navigation-edit', 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
-         <label class="input-icon">Введите название раздела
-          {{ Form::text('section_name', $value = null, ['class'=>'section-name-field', 'autocomplete'=>'off', 'required']) }}
+         <label class="input-icon">Введите название навигации
+          {{ Form::text('navigation_name', $value = null, ['id'=>'navigation-name-field', 'autocomplete'=>'off', 'required']) }}
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
-        @if($navigation->id == 1)
-        <label class="input-icon">Введите имя иконки
-          {{ Form::text('section_icon', $value = null, ['class'=>'section-icon-field', 'autocomplete'=>'off', 'required']) }}
-        </label>
-        @endif
-        <input type="hidden" name="section_db" id="section-add" value="1">
-        <input type="hidden" name="navigation_id" class="navigation-id" value="{{ $navigation->id }}">
+        <input type="hidden" name="site_id" value="{{ $site->id }}">
       </div>
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-section-edit']) }}
+        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-navigation-edit']) }}
       </div>
     </div>
   {{ Form::close() }}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
-{{-- Конец модалки редактирования раздела --}}
+{{-- Конец модалки редактирования навигации --}}
 
-{{-- Модалка добавления отдела --}}
-<div class="reveal" id="department-add" data-reveal>
+{{-- Модалка добавления пункта меню --}}
+<div class="reveal" id="menu-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>ДОБАВЛЕНИЕ отдела / должности</h5>
+      <h5>ДОБАВЛЕНИЕ меню / странички</h5>
     </div>
   </div>
   <div class="grid-x tabs-wrap tabs-margin-top">
     <div class="small-8 small-offset-2 cell">
       <ul class="tabs-list" data-tabs id="tabs">
-        <li class="tabs-title is-active"><a href="#add-department" aria-selected="true">Добавить отдел</a></li>
-        <li class="tabs-title"><a data-tabs-target="add-position" href="#add-position">Добавить должность</a></li>
+        <li class="tabs-title is-active"><a href="#add-menu" aria-selected="true">Добавить пункт меню</a></li>
+        <li class="tabs-title"><a data-tabs-target="add-page" href="#add-page">Добавить страничку</a></li>
       </ul>
     </div>
   </div>
   <div class="tabs-wrap inputs">
     <div class="tabs-content" data-tabs-content="tabs">
-      <!-- Добавляем отдел -->
-      <div class="tabs-panel is-active" id="add-department">
-        {{ Form::open(['url' => '/departments', 'id' => 'form-department-add']) }}
+      <!-- Добавляем пункт меню -->
+      <div class="tabs-panel is-active" id="add-menu">
+        {{ Form::open(['url' => '/menus', 'id' => 'form-menu-add']) }}
           <div class="grid-x grid-padding-x modal-content inputs">
             <div class="small-10 small-offset-1 cell">
-            
-              <label>Название отдела
-                {{ Form::text('department_name', $value = null, ['id'=>'department-name-field', 'autocomplete'=>'off', 'required']) }}
+              {{-- <label>Добавляем пункт в:
+                <select >
+                  @foreach ($navigation_tree as $navigation)
+                    @foreach ($navigation['menus'] as $menu)
+
+                      <option>{{ $menu['menu_name'] }}</option>
+                    @endforeach
+                  @endforeach
+                </select>
+              </label> --}}
+              <label>Название пункта меню
+                {{ Form::text('menu_name', $value = null, ['autocomplete'=>'off', 'required']) }}
                 <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
               </label>
-              <label class="input-icon">Город
-                {{ Form::text('city_name', $value = null, ['class'=>'city-name-field', 'autocomplete'=>'off']) }}
-                <div class="sprite-input-right icon-success load">лол</div>
-                <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
+              <label>Введите имя иконки
+                {{ Form::text('menu_icon', $value = null, ['autocomplete'=>'off']) }}
               </label>
-              <label>Адресс отдела
-                {{ Form::text('department_address', $value = null, ['class'=>'department-address-field', 'autocomplete'=>'off']) }}
-              </label>
-              <label>Телефон отдела
-                {{ Form::text('department_phone', $value = null, ['class'=>'department-phone-field phone-field', 'autocomplete'=>'off']) }}
-              </label>
-              <input type="hidden" name="department_database" id="department-database" value="0">
-              <input type="hidden" name="section_id" id="dep-filial-id-field">
-              <input type="hidden" name="parent_id" id="dep-parent-id-field">
+              <input type="hidden" name="section" value="1">
+              <input type="hidden" name="site_id" value="{{ $site->id }}">
+              <input type="hidden" name="navigation_id" class="navigation-id">
+              <input type="hidden" name="menu_parent_id" class="menu-parent-id">
             </div>
           </div>
           <div class="grid-x align-center">
             <div class="small-6 medium-4 cell">
-              {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-department-add']) }}
+              {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-menu-add']) }}
             </div>
           </div>
         {{ Form::close() }}
       </div>
-      <!-- Добавляем должность -->
-      <div class="tabs-panel" id="add-position">
-        {{ Form::open(['url' => '/staff', 'id' => 'form-positions-add']) }}
+      <!-- Добавляем страничку -->
+      <div class="tabs-panel" id="add-page">
+        {{ Form::open(['url' => '/menus', 'id' => 'form-page-add']) }}
           <div class="grid-x grid-padding-x modal-content inputs">
             <div class="small-10 small-offset-1 cell">
-              {{-- <label>Добавляем должность в:
-                {{ Form::select('tree', $tree, null, ['id'=>'pos-tree-select']) }}
-              </label> --}}
-
-              <input type="hidden" name="section_id" id="pos-filial-id-field">
-              <input type="hidden" name="parent_id" id="pos-parent-id-field">
+              <label>Страничка:
+                {{ Form::select('page_id', $pages, null, ['id'=>'pages-tree-select']) }}
+              </label>
+              <input type="hidden" name="page" value="1">
+              <input type="hidden" name="site_id" value="{{ $site->id }}">
+              <input type="hidden" name="navigation_id" class="navigation-id">
+              <input type="hidden" name="menu_parent_id" class="menu-parent-id">
             </div>
           </div>
           <div class="grid-x align-center">
@@ -230,50 +220,40 @@
   </div>
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
-{{-- Конец модалки добавления отдела --}}
+{{-- Конец модалки добавления пункта меню --}}
 
-{{-- Модалка редактирования отдела --}}
-<div class="reveal" id="department-edit" data-reveal>
+{{-- Модалка редактирования пункта меню --}}
+<div class="reveal" id="menu-edit" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>Редактирование отдела</h5>
+      <h5>Редактирование пункта меню</h5>
     </div>
   </div>
   <!-- Редактируем отдел -->
-  {{ Form::open(['id' => 'form-department-edit']) }}
+  {{ Form::open(['id' => 'form-menu-edit']) }}
   {{ method_field('PATCH') }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
-
-        <label>Название отдела
-          {{ Form::text('department_name', $value = null, ['class'=>'department-name-field', 'autocomplete'=>'off', 'required']) }}
+        <label>Название пункта меню
+          {{ Form::text('menu_name', $value = null, ['id'=>'menu-name', 'autocomplete'=>'off', 'required']) }}
           <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
         </label>
-        <label class="input-icon">Город
-          {{ Form::text('city_name', $value = null, ['id'=>'dep-city-name-field-edit', 'autocomplete'=>'off']) }}
-          <div class="sprite-input-right icon-success load">лол</div>
-          <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
+        <label>Введите имя иконки
+          {{ Form::text('menu_icon', $value = null, ['id'=>'menu-icon', 'autocomplete'=>'off']) }}
         </label>
-        <label>Адресс отдела
-          {{ Form::text('department_address', $value = null, ['class'=>'department-address-field', 'autocomplete'=>'off']) }}
-        </label>
-        <label>Телефон отдела
-          {{ Form::text('department_phone', $value = null, ['class'=>'department-phone-field phone-field', 'autocomplete'=>'off']) }}
-        </label>
-        <input type="hidden" name="department_database" id="department-db-edit" value="0">
-        <input type="hidden" name="section_id" id="dep-filial-id-field-edit">
-        <input type="hidden" name="city_id" id="dep-city-id-field-edit">
+        <input type="hidden" name="site_id" value="{{ $site->id }}">
+        <input type="hidden" name="navigation_id" class="navigation-id">
       </div>
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-department-edit']) }}
+        {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-menu-edit']) }}
       </div>
     </div>
   {{ Form::close() }}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
-{{-- Конец модалки отдела --}}
+{{-- Конец модалки пункта меню --}}
 
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-delete')
@@ -292,12 +272,60 @@ $(function() {
     var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
     return error;
   };
-  // Редактируем раздел меню
-  $(document).on('click', '[data-open="section-edit"]', function() {
+  // Редактируем навигацию
+  $(document).on('click', '[data-open="navigation-edit"]', function() {
       // Получаем данные о разделе
       var id = $(this).closest('.parent').attr('id').split('-')[1];
-      $('#form-section-edit').attr('action', '/menus/' + id);
+      $('#form-navigation-edit').attr('action', '/navigations/' + id);
       // Сам ajax запрос
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: "/navigations/" + id + "/edit",
+        type: "GET",
+        success: function(date){
+          var result = $.parseJSON(date);
+          $('#navigation-name-field').val(result.navigation_name);
+        }
+      });
+  });
+  // При закрытии модалки очищаем поля
+  $(document).on('click', '.close-modal', function() {
+    $('#navigation-name-field').val('');
+  });
+  // Добавление отдела или должности
+  // Переносим id родителя и филиала в модалку
+  $(document).on('click', '[data-open="menu-add"]', function() {
+    var parent = $(this).closest('.parent').attr('id').split('-')[1];
+    var navigation = $(this).closest('.first-item').attr('id').split('-')[1];
+    if (parent == navigation) {
+      $('.navigation-id').val(navigation);
+    } else {
+      $('.menu-parent-id').val(parent);
+      $('.navigation-id').val(navigation);
+    }
+    // alert(parent);
+    // Заполняем скрытые инпуты филиала и родителя
+    
+    // $('#dep-parent-id-field').val(parent);
+    // $('#pos-filial-id-field').val(filial);
+    // $('#pos-parent-id-field').val(parent);
+    // Отмечам в какой пункт будем добавлять
+    // $('#dep-tree-select>[value="' + parent + '"]').prop('selected', true);
+    // $('#pos-tree-select>[value="' + parent + '"]').prop('selected', true);
+  });
+  // Редактируем меню
+  $(document).on('click', '[data-open="menu-edit"]', function() {
+    var id = $(this).closest('.parent').attr('id').split('-')[1];
+    // Отмечам в какой пункт будем добавлять
+    // $('#dep-select-edit>[value="' + id + '"]').prop('selected', true);
+    // // Блокируем кнопку
+    // $('#submit-menu-edit').prop('disabled', false);
+      // Получаем данные о филиале
+      $('#form-menu-edit').attr('action', '/menus/' + id);
+      // Сам ajax запрос
+      // alert(id);
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -306,63 +334,14 @@ $(function() {
         type: "GET",
         success: function(date){
           var result = $.parseJSON(date);
-          $('.section-name-field').val(result.section_name);
-          $('.section-icon-field').val(result.section_icon);
-          $('.navigation-edit').val(result.navigation_id);
-        }
-      });
-  });
-
-  // При закрытии модалки очищаем поля
-  $(document).on('click', '.close-modal', function() {
-    $('.section-name-field').val('');
-    $('.section-icon-field').val('');
-    $('.navigation-edit').val('');
-  });
-
-
-  // Добавление отдела или должности
-  // Переносим id родителя и филиала в модалку
-  $(document).on('click', '[data-open="menu-add"]', function() {
-    var parent = $(this).closest('.parent').attr('id').split('-')[1];
-    var filial = $(this).closest('.first-item').attr('id').split('-')[1];
-    // Заполняем скрытые инпуты филиала и родителя
-    $('#dep-filial-id-field').val(filial);
-    $('#dep-parent-id-field').val(parent);
-    $('#pos-filial-id-field').val(filial);
-    $('#pos-parent-id-field').val(parent);
-    // Отмечам в какой пункт будем добавлять
-    $('#dep-tree-select>[value="' + parent + '"]').prop('selected', true);
-    $('#pos-tree-select>[value="' + parent + '"]').prop('selected', true);
-  });
-  // Редактируем отдел
-  $(document).on('click', '[data-open="menu-edit"]', function() {
-    var id = $(this).closest('.parent').attr('id').split('-')[1];
-    // Отмечам в какой пункт будем добавлять
-    // $('#dep-select-edit>[value="' + id + '"]').prop('selected', true);
-    // Блокируем кнопку
-    $('#submit-menu-edit').prop('disabled', false);
-      // Получаем данные о филиале
-      $('#form-menu-edit').attr('action', '/menu/' + id);
-      // Сам ajax запрос
-      // alert(id);
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "/menu/" + id + "/edit",
-        type: "GET",
-        success: function(date){
-          var result = $.parseJSON(date);
           // alert(result);
-          $('#dep-city-name-field-edit').val(result.city_name);
-          $('.menu-name-field').val(result.menu_name);
-          $('.menu-address-field').val(result.filial_address);
-          $('.menu-phone-field').val(result.filial_phone);
-          $('#dep-city-id-field-edit').val(result.city_id);
-          $('#menu-db-edit').val(1);
-          $('#dep-filial-id-field-edit').val(result.section_id);
-          $('#depaprment-parent-id>[value="' + result.menu_parent_id + '"]').prop('selected', true);
+          $('#menu-name').val(result.menu_name);
+          $('#menu-icon').val(result.menu_icon);
+          $('.navigation-id').val(result.navigation_id);
+          // $('#dep-city-id-field-edit').val(result.city_id);
+          // $('#menu-db-edit').val(1);
+          // $('#dep-filial-id-field-edit').val(result.section_id);
+          // $('#depaprment-parent-id>[value="' + result.menu_parent_id + '"]').prop('selected', true);
         }
       });
   });
