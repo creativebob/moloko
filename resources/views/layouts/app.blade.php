@@ -6,10 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('/css/foundation.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
-
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     {{-- Add jQuery library --}}
     <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
     <script type="text/javascript" src="/js/jquery.latest.min.js"></script>
@@ -41,12 +39,15 @@
           <div class="small-5 right-head cell">
             <ul>
               <li><a id="task-toggle"><img src="/img/header/alert.png"></a></li>
-              <li><a data-toggle="profile">
+              <li>
+                <a data-toggle="profile">
                 <span>
                   @if(isset(Auth::user()->company_id))
                     {{ Auth::user()->company->company_name}}  | 
                   @endif
-                  {{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }}</span><img src="/img/header/avatar.png"></a></li>
+                  {{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }}</span><img src="/img/header/avatar.png">
+                </a>
+              </li>
             </ul>
             <div class="dropdown-pane profile-head" id="profile" data-dropdown data-position="bottom" data-alignment="right" data-v-offset="10" data-h-offset="-30" data-close-on-click="true">
               <ul class="menu vertical">
@@ -55,16 +56,35 @@
                 <li><hr></li>
                 <li><a href="">Нужна помощь?</a></li>
                 <li>
-                  @if(isset(Auth::user()->company_id))
+                  @if(isset(Auth::user()->company_id)&&(Auth::user()->god == 1))
                     {{ link_to_route('users.getgod', 'Выйти из компании', $value = Null) }} 
-                  @endif</li>
-                {{-- Кнопка выхода --}}
+                  @endif
+                </li>
+                <li>
+                  @php
 
+                    $session_god = session('god'); 
+                    $session_access = session('access'); 
+
+                    $item = 123;
+
+                  @endphp
+
+                  @if(isset($session_god))
+                    {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 
+                  @endif
+                </li>
+                <li>
+
+                  @if(isset($session_access))
+                    <a onclick="alert('Перечень прав пока не отображается');">Права получены {{ $item }} </a>
+                  @endif</li>
+
+                {{-- Кнопка выхода --}}
                 <li><a href="{{ route('logout') }}"
                     onclick="event.preventDefault();
-                             document.getElementById('logout-form').submit();">
-                    Выход
-                </a></li>
+                             document.getElementById('logout-form').submit();">Выход</a>
+                </li>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                   {{ csrf_field() }}
                 </form>
@@ -92,16 +112,11 @@
       {{-- Контент --}}
       <main class="content" id="content">
         {{-- Прилипающий заголовок --}}
-        
         @yield('title-content')
-
         {{-- Основой контент --}}
-        
         @yield('content')
       </main>
-
         {{-- Модальные окна --}}
-    
         @yield('modals')
     </div>
     {{-- Footer --}}
@@ -140,35 +155,27 @@
     <script src="/js/vendor/what-input.js"></script>
     <script src="/js/vendor/foundation.js"></script>
     <script src="/js/app.js"></script>
-
     <!-- Наши скрипты -->
     <script type="text/javascript">
-
     $(function() {
     console.log('Начало обработки страницы');
     });
-
     $(window).on('load', function () {
       $("body").removeClass("block-refresh");
       renderContent ();
-
       setTimeout(function(){
         $('#wrapper').css({'transition': 'margin 0.3s ease'});
         $('#sidebar').css({'transition': 'width 0.3s ease'});
         $('#task-manager').css({'transition': 'margin-right 0.3s ease'});
-
         if ($("div").is("#head-content")) {
           $('.head-content').css({'transition': 'width 0.3s ease'});
         };
-
         if ($("table").is("#table-content")) {
           // $('#thead-sticky').css({'transition': 'margin 0.1s ease'});
           $('#thead-content').css({'transition': 'width 0.3s ease'});
           $('#thead-content>th').css({'transition': 'width 0.3s ease'});
         };
-
         // $('#filters').css({'transition': 'height 1s ease'});
-
         $('.td-drop').width(32);
         $('.td-checkbox').width(32);
         $('.td-delete').width(32);
@@ -185,10 +192,7 @@
     //   $('#foot-drop').toggleClass('active-foot-drop');
     // });
     </script>
-
     {{-- Наши скрипты --}}
-
     @yield('scripts')
-
   </body>
 </html>

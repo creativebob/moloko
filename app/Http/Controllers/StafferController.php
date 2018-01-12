@@ -35,8 +35,7 @@ class StafferController extends Controller
         };
       };
       $page_info = Page::wherePage_alias('/staff')->first();
-      $menu = Page::whereSite_id('1')->get();
-      return view('staff.index', compact('staff', 'page_info', 'menu'));
+      return view('staff.index', compact('staff', 'page_info'));
     }
 
     /**
@@ -103,11 +102,10 @@ class StafferController extends Controller
                             $q->whereDate_dismissal(null);
                           }])->findOrFail($id);
       $users = User::whereCompany_id($user->company_id)->orderBy('second_name')->get()->pluck('second_name', 'id');
-      $menu = Page::whereSite_id('1')->get();
 
       // dd($staffer->user_id);
       
-      return view('staff.edit', compact('staffer', 'menu', 'users'));    
+      return view('staff.edit', compact('staffer', 'users'));    
     }
 
     /**
@@ -132,10 +130,10 @@ class StafferController extends Controller
         // Заполняем дату
         $employee->date_dismissal = $request->date_dismissal;
         $employee->dismissal_desc = $request->dismissal_desc;
-        $staffer->editor_id = $user->id;
         $employee->editor_id = $user->id;
+        $staffer->editor_id = $user->id;
         // Удаляем должность и права данного юзера
-        $delete = RoleUser::wherePosition_id($staffer->position_id)->delete();
+        $delete = RoleUser::wherePosition_id($staffer->position_id)->whereUser_id($staffer->user_id)->delete();
       // Если даты увольнения нет
       } else {
         // Назначаем пользователя
@@ -151,7 +149,7 @@ class StafferController extends Controller
         $mass = [];
         foreach ($staffer->position->roles as $role) {
           $mass[] = [
-            'user_id' => $user->id,
+            'user_id' => $request->user_id,
             'role_id' => $role->id,
             'department_id' => $staffer->filial_id,
             'position_id' => $staffer->position_id,

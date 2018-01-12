@@ -27,6 +27,13 @@ class Site extends Model
     return $this->hasMany('App\Page');
   }
   /**
+   * Получаем навигации.
+   */
+  public function navigations()
+  {
+    return $this->hasMany('App\Navigation');
+  }
+  /**
   * Получаем компанию.
   */
   public function company()

@@ -13,7 +13,7 @@
   <div class="sticky sticky-topbar" id="head-sticky" data-sticky-on="small" data-sticky data-margin-top="2.4" data-top-anchor="head-content:top">
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
-	      <h2 class="header-content">Пользователи системы</h2>
+	      <h2 class="header-content">Пользователи системы @if(!empty($session['god'])) {{ $session['god'] }} @endif</h2>
 	      <a href="/users/create" class="icon-add sprite"></a>
 	    </div>
 	    <div class="top-bar-right">
@@ -67,6 +67,7 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-second-name">Пользователь</th>
           <th class="td-login">Логин</th>
+          @if(Auth::user()->god == 1)<th class="td-getauth">Действие</th> @endif
 <!--           <th class="td-first-name">Имя</th> -->
           <th class="td-phone">Телефон</th>
           <th class="td-email">Почта</th>
@@ -85,6 +86,14 @@
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $user->id }}"><label class="label-check" for="check-{{ $user->id }}"></label></td>
           <td class="td-second-name">{{ link_to_route('users.edit', $user->second_name . " " . $user->first_name . " (". $user->nickname . ")", [$user->id]) }} </td>
           <td class="td-login">{{ $user->login }} </td>
+
+
+          {{-- Если пользователь бог, то показываем для него переключатель на авторизацию под полдьзователем --}}
+          @if(Auth::user()->god == 1)
+            <td class="td-getauth">@if((Auth::user()->id != $user->id)&&!empty($user->company_id)) {{ link_to_route('users.getauthuser', 'Авторизоваться', ['user_id'=>$user->id], ['class' => 'tiny button']) }} @endif</td>
+          @endif
+
+
 <!--           <td class="td-first-name">{{ $user->first_name }}</td> -->
           <td class="td-phone">{{ $user->phone }}</td>
           <td class="td-email">{{ $user->email }}</td>

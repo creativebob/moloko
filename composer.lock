@@ -3768,6 +3768,7 @@
         },
         {
             "name": "sebastian/comparator",
+<<<<<<< HEAD
             "version": "2.1.2",
             "source": {
                 "type": "git",
@@ -3778,6 +3779,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/11c07feade1d65453e06df3b3b90171d6d982087",
                 "reference": "11c07feade1d65453e06df3b3b90171d6d982087",
+=======
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/comparator.git",
+                "reference": "b11c729f95109b56a0fe9650c6a63a0fcd8c439f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/b11c729f95109b56a0fe9650c6a63a0fcd8c439f",
+                "reference": "b11c729f95109b56a0fe9650c6a63a0fcd8c439f",
+>>>>>>> ce0ea0735cc795ab8f1b252935f99bf766983e97
                 "shasum": ""
             },
             "require": {
@@ -3828,7 +3841,11 @@
                 "compare",
                 "equality"
             ],
+<<<<<<< HEAD
             "time": "2018-01-12T06:34:42+00:00"
+=======
+            "time": "2017-12-22T14:50:35+00:00"
+>>>>>>> ce0ea0735cc795ab8f1b252935f99bf766983e97
         },
         {
             "name": "sebastian/diff",

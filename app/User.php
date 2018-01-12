@@ -35,22 +35,21 @@ class User extends Authenticatable
     public function scopeSystemItem($query, $system_item)
     {
         if(isset($system_item)){
-          return $query->orWhere('system_item', '1');
+          return $query->orWhere('system_item', 1);
         } else {return $query;};
     }
 
         // Фильтрация для показа системных записей
-    public function scopeOtherItem($query, $other_item)
+    public function scopeAuthors($query, $authors)
     {
-        if(isset($other_item)){
+        if(isset($authors)){
 
-            if(isset($other_item['all'])){
-                return $query;
+            // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
+            return $query->WhereIn('author_id', $authors['authors_id'])->orWhere('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
+
             } else {
-                // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
-                return $query->WhereIn('author_id', $other_item)->orWhere('author_id', $other_item['user_id'])->orWhere('id', $other_item['user_id']);
+                return $query;
             }
-        }
     }
 
     // Фильтрация по статусу пользователя: клиент или сотрудник

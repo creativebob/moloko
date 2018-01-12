@@ -36,8 +36,7 @@ class PositionController extends Controller
       }
 
       $page_info = Page::wherePage_alias('/positions')->whereSite_id('1')->first();
-      $menu = Page::whereSite_id(1)->get();
-      return view('positions.index', compact('positions', 'page_info', 'menu'));
+      return view('positions.index', compact('positions', 'page_info'));
 
       // $user = Auth::user()->id;
       // dd(User::find($user)->access_group->rights()->get());
@@ -51,12 +50,11 @@ class PositionController extends Controller
     public function create()
     {
       $this->authorize('create', Position::class);
-      $menu = Page::whereSite_id('1')->get();
-      $pages = Page::whereSite_id('1')->pluck('page_name', 'id');
+      $pages = Page::whereSite_id(1)->whereSystem_item(null)->pluck('page_name', 'id');
       $position = new Position;
       $roles = Role::get();
 
-      return view('positions.create', compact('position', 'pages', 'menu', 'roles'));  
+      return view('positions.create', compact('position', 'pages', 'roles'));  
     }
 
     /**
@@ -116,12 +114,11 @@ class PositionController extends Controller
     {
       $position = Position::findOrFail($id);
 
-      $menu = Page::whereSite_id('1')->get();
-      $pages = $menu->pluck('page_name', 'id');
+      $pages = Page::whereSite_id('1')->pluck('page_name', 'id');
 
       $roles = Role::get();
       
-      return view('positions.edit', compact('position', 'menu', 'pages', 'roles'));
+      return view('positions.edit', compact('position', 'pages', 'roles'));
     }
 
     /**

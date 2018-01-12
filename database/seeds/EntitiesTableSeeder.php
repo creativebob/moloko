@@ -64,6 +64,10 @@ class EntitiesTableSeeder extends Seeder
 		        'entity_name' => 'Сотрудники',
 		        'entity_alias' => 'employees',
         	],
+            [
+                'entity_name' => 'Меню',
+                'entity_alias' => 'menus',
+            ],
         ]);
     }
 }

@@ -164,9 +164,9 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
-
         // Те, что подключаем сами, ручками )))
         Collective\Html\HtmlServiceProvider::class,
+
         Lavary\Menu\ServiceProvider::class,
 
 

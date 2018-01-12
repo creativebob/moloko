@@ -42,14 +42,73 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
-    @if($departments_tree)
-      @foreach ($departments_tree as $department)
-        @include('departments-list')
-      @endforeach
-    @endif
-    </ul>
 
+    @if($departments_tree)
+      <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
+        @foreach ($departments_tree as $department)
+          @php
+            $count = 0;
+          @endphp
+          @if (isset($department['children']))
+            @php
+              $count = count($department['children']) + $count;
+            @endphp
+          @endif
+          @if (isset($department['staff']))
+            @php
+              $count = count($department['staff']) + $count;
+            @endphp
+          @endif
+          @if($department['filial_status'] == 1)
+            {{-- Если филиал --}}
+            <li class="first-item parent" id="departments-{{ $department['id'] }}" data-name="{{ $department['department_name'] }}">
+              <ul class="icon-list">
+                <li><div class="icon-list-add sprite" data-open="department-add"></div></li>
+                <li><div class="icon-list-edit sprite" data-open="filial-edit"></div></li>
+                <li>
+                  @if (!isset($department['children']))
+                    <div class="icon-list-delete sprite" data-open="item-delete"></div>
+                  @endif
+                </li>
+              </ul>
+              <a data-list="" class="first-link">
+                <div class="list-title">
+                  <div class="icon-open sprite"></div>
+                  <span class="first-item-name">{{ $department['department_name'] }}</span>
+                  <span class="number">{{ $count }}</span>
+                </div>
+              </a>
+            @if (isset($department['staff']) || isset($department['children']))
+              <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
+                @if (isset($department['staff']))
+                  @foreach($department['staff'] as $staffer)
+                    <li class="medium-item parent" id="staff-{{ $staffer['id'] }}" data-name="{{ $staffer['position']['position_name'] }}">
+                      <div class="medium-as-last">{{ $staffer['position']['position_name'] }} ( <a href="/staff/{{ $staffer['id'] }}/edit" class="link-recursion">
+                      @if (isset($staffer['user_id']))
+                        {{ $staffer['user']['first_name'] }} {{ $staffer['user']['second_name'] }}
+                      @else
+                        Вакансия
+                      @endif
+                      </a> ) 
+                        <ul class="icon-list">
+                          <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
+                        </ul>
+                      </div>
+                    </li>
+                  @endforeach
+                @endif
+                @if (isset($department['children']))
+                  @foreach($department['children'] as $department)
+                    @include('departments-list', $department)
+                  @endforeach
+                @endif
+              </ul>
+            @endif
+          </li>
+          @endif
+        @endforeach
+      </ul>
+    @endif
   </div>
 </div>
 @endsection
@@ -571,14 +630,10 @@ $(function() {
   @endif
 });
 </script>
-
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.multilevel-menu-active-scripts')
-
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.modals.modal-delete-ajax-script')
-
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.modals.modal-delete-script')
-
 @endsection

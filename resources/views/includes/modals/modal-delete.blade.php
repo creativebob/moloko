@@ -1,4 +1,4 @@
-﻿{{-- Модалка удаления с refresh --}}
+{{-- Модалка удаления с refresh --}}
 <div class="reveal rev-small" id="item-delete" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">

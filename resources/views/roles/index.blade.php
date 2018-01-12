@@ -59,6 +59,7 @@
           <th class="td-role-company-id">Компания</th>
           <th class="td-role-count">Количество правил</th>
           <th class="td-role-description">Описание</th>
+          <th class="td-role-author">Автор</th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -69,10 +70,16 @@
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $role->id }}"><label class="label-check" for="check-{{ $role->id }}"></label></td>
           <td class="td-role-name">{{ link_to_route('roles.edit', $role->role_name, [$role->id]) }}</td>
-          <td class="td-role-set">{{ link_to_route('roles.setting', 'Настройка', [$role->id], ['class'=>'button tiny']) }}</td>
+          <td class="td-role-set">
+            @if(!empty($counts_directive_array[$role->id]['disabled_role']))
+              <a class="button tiny" disabled>Настройка</a>
+            @else 
+              {{ link_to_route('roles.setting', 'Настройка', [$role->id], ['class'=>'button tiny']) }}
+            @endif</td>
           <td class="td-role-company-id">@if(!empty($role->company->company_name)) {{ $role->company->company_name }} @else Системная  @endif</td>
-          <td class="td-role-count">{{ count($role->rights) }}</td>
+          <td class="td-role-count">{{ $counts_directive_array[$role->id]['count_allow'] . ' / ' . $counts_directive_array[$role->id]['count_deny'] }}</td>
           <td class="td-role-description">{{ $role->role_description }} </td>
+          <td class="td-role-author">@if(!empty($role->author->first_name)) {{ $role->author->first_name . ' ' . $role->author->second_name }} @endif</td>
           <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
         </tr>
         @endforeach

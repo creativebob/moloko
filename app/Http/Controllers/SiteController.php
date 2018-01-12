@@ -31,8 +31,7 @@ class SiteController extends Controller
       };
     };
     $page_info = Page::wherePage_alias('/sites')->whereSite_id('1')->first();
-    $menu = Page::whereSite_id('1')->get();
-    return view('sites', compact('sites', 'page_info', 'companies', 'menu'));
+    return view('sites', compact('sites', 'page_info', 'companies'));
   }
 
   /**
@@ -107,6 +106,7 @@ class SiteController extends Controller
     $site->site_name = $request->site_name;
     $site->site_domen = $request->site_domen;
     $site->company_id = Auth::user()->company_id;
+    $site->editor_id = $user->id;
     
     $site->save();
 

@@ -1,4 +1,4 @@
-﻿{{-- Модалка удаления ajax --}}
+{{-- Модалка удаления ajax --}}
 <div class="reveal rev-small" id="item-delete-ajax" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">

@@ -20,9 +20,8 @@ class LoginController extends Controller
 
     public function username()
     {
-      return 'login';
+        return 'login';
     }
-
 
     use AuthenticatesUsers;
 
@@ -31,8 +30,8 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/users';
-
+    
+    protected $redirectTo = '/getaccess';
 
     /**
      * Create a new controller instance.
