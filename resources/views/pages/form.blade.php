@@ -29,6 +29,7 @@
  <!--    <label>Компания сайта:
       {{ Form::select('site_id', $sites, $current_site, ['id'=>'site-select']) }}
     </label> -->
+    <input type="hidden" name="site_id" value="{{ $current_site }}">
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
 
