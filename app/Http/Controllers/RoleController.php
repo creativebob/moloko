@@ -215,7 +215,6 @@ class RoleController extends Controller
     public function setting($role_id)
     {
 
-
         $count_role = RoleUser::where('role_id', $role_id)->where('user_id', Auth::user()->id)->count();
         if($count_role != 0) {abort(403);};
 
@@ -228,8 +227,6 @@ class RoleController extends Controller
             $allrights_array[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
             $f = $right->actionentity->alias_action_entity;
         }
-
-
 
 
         // РАБОТАЕМ С РАЗРЕШЕНИЯМИ:
@@ -296,6 +293,7 @@ class RoleController extends Controller
                     } else {
                         $checked='';
                     };
+                    
                         $disabled = '';
 
 

@@ -26,7 +26,7 @@
 
       // Скрипт передачи значения на изменение
       // 
-      // alert($(this).attr('data-deny-status') + '   ' + $(this).attr('data-action-id') + '   ' + $(this).attr('data-entity-id'));
+      alert($(this).attr('data-deny-status') + '   ' + $(this).attr('data-action-id') + '   ' + $(this).attr('data-entity-id'));
 
             $.ajax({
               headers: {
@@ -36,7 +36,7 @@
               type: "POST",
               data: {right_id: $(this).attr('id'), role_id: $(this).attr('data-role-id')},
               success: function (data) {
-                // alert(data);
+                alert(data);
               }
             });
 
