@@ -226,6 +226,7 @@
                 </tr>
               </thead>
               <tbody class="roleuser-table">
+                @if(!empty($role_users))
                 @foreach ($role_users as $role_user)
                   <tr class="parent" id="roleuser-{{ $role_user->id }}" data-name="{{ $role_user->role->role_name }}">
                     <td>{{ $role_user->role->role_name }}</td>
@@ -241,6 +242,8 @@
                     <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete-ajax"></a></td>
                   </tr>
                 @endforeach
+                @endif
+
               </tbody>
             </table>
            

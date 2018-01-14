@@ -66,7 +66,10 @@ class UserController extends Controller
             };
          };
 
-
+        // Показываем богу всех авторов
+        if($user->god == 1) {
+            $authors = null;
+        };
 
 
         // if(($session['system-users-allow'] == 1)&&($session['system-users-deny'] != 1)){
@@ -370,6 +373,15 @@ class UserController extends Controller
                 }
             }
 
+        // Получаем авторов
+        // TODO
+        
+        $authors['authors_id'] = [5, 6, 7];
+        $authors['user_id'] = $user->id;
+        $user_access['list_authors'] = $authors;
+
+
+
             // $request->session()->put('access', $user_access);
             session(['access' => $user_access]);
 
@@ -405,6 +417,14 @@ class UserController extends Controller
                 }
             }
 
+        // Получаем авторов
+        // TODO
+        
+        $authors['authors_id'] = [5, 6, 7];
+        $authors['user_id'] = $user->id;
+        $user_access['list_authors'] = $authors;
+
+
             // $request->session()->put('access', $user_access);
             session(['access' => $user_access]);
 
@@ -435,6 +455,14 @@ class UserController extends Controller
                     $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
                 }
             }
+
+        // Получаем авторов
+        // TODO
+        
+        $authors['authors_id'] = [5, 6, 7];
+        $authors['user_id'] = $user->id;
+        $user_access['list_authors'] = $authors;
+
 
             // $request->session()->put('access', $user_access);
             session(['access' => $user_access]);

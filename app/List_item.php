@@ -3,11 +3,18 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ListUser extends Model
+class List_item extends Model
 {
-	protected $table = 'list_user';
 
+ 	use SoftDeletes;
+		
+  	protected $dates = ['deleted_at'];
+    protected $fillable = [
+	    'item_entity', 
+	    'booklist_id', 
+    ];
 
     /**
   * Получаем запись (ID списка).
@@ -15,15 +22,6 @@ class ListUser extends Model
   public function booklist()
   {
     return $this->belongsTo('App\Booklist');
-  }
-
-
-    /**
-  * Получаем запись (ID пользователя).
-  */
-  public function user()
-  {
-    return $this->belongsTo('App\User');
   }
 
 }

@@ -11,6 +11,8 @@ use App\Action;
 use App\Right;
 use App\Entity;
 use App\ListUser;
+use App\Booklist;
+use App\List_item;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
@@ -68,6 +70,26 @@ class GetAccessController extends Controller
         // Получаем авторов
         // TODO
         
+
+        $booklist = Booklist::get();
+
+        // dd($list_users->list_items);
+
+
+        // foreach ($list_users as $list) {
+        //     foreach ($list->list_items as $list_item){
+                
+         
+
+
+        //         $authors[] = $list_item->item;
+        
+        //     }
+        // }
+
+
+        dd($booklist);
+
         $authors['authors_id'] = [5, 6, 7];
         $authors['user_id'] = $user->id;
         $user_access['list_authors'] = $authors;
