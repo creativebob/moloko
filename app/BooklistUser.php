@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ListUser extends Model
+class BooklistUser extends Model
 {
-	protected $table = 'list_user';
+	protected $table = 'booklist_user';
 
 
     /**

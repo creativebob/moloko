@@ -35,13 +35,38 @@ class GetAccessController extends Controller
         $mymass = [];
 
         $user = Auth::user();
-        foreach ($user->staff as $staffer) {
-            $mymass[] = $staffer->filial_id;
-        }
+
+        // //Получаем права всех должностей
+        // foreach ($user->staff as $staffer) {
+        //     $mymass[] = $staffer->filial_id;
+        // }
+        // 
+        $user = User::with(['staff', 'roles', 'roles.rights', 'booklists', 'booklists.list_items'])->findOrFail($user->id);
+        // dd($user);
+
+        //Получаем права первой должности
+        if($user->god == null){
+
+            $staffer = $user->staff->first();
 
 
-        // Получим все права и их ID в массив
-        $auth_user_roles = $user->roles;
+            // Если нет должности - иди нахуй!
+            if(isset($staffer)){
+                $user_filial_id = $staffer->filial_id; 
+                // Получим все права и их ID в массив
+                $auth_user_roles = $user->roles->where('department_id', $user_filial_id);
+            } else {abort(403);};
+
+        } else {
+
+            //Если бог
+            $user_filial_id = null;
+            $auth_user_roles = $user->roles;
+        };
+
+        if(!isset($auth_user_roles)){abort(403);};
+
+        // dd($auth_user_roles);
 
         // Находим все возможные в системе права и кладем их в массив с указанием их ID
         // $allrights_array = [];
@@ -54,50 +79,53 @@ class GetAccessController extends Controller
         // }
 
 
-
         // Создаем ассоциированный массив прав на авторизованного пользователя
         // В формате: Ключ"user-create-allow" и значение "1" если найдено правило.
-        $user_access = [];
+        // 
+        $access = [];
+        $all_rights = [];
+        $filial_rights = [];
+
         foreach ($user->roles as $role) {
+
+            $department_id = $role->pivot->department_id;
+            // dd($department_id);
+
             foreach ($role->rights as $right){
                 
                 // if(isset($allrights_array[$right->actionentity->alias_action_entity . "-" . 'deny'])){
-                    $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
+                    $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
                 // };          
             }
+
+            $filial_rights[$department_id] = $all_rights;
+
         }
 
-        // Получаем авторов
-        // TODO
-        
+        if(count($filial_rights) == 0){abort(403);};
 
-        $booklist = Booklist::get();
+        $list_authors = [];
+        foreach ($user->booklists as $booklist) {
+            $list_authors = $booklist->list_items->implode('item_entity', ', ');
+            
+            // foreach ($booklist->list_items as $list_item) {
+            //     $list_authors[] = $list_item->item_entity;
+            // }
+        }
 
-        // dd($list_users->list_items);
-
-
-        // foreach ($list_users as $list) {
-        //     foreach ($list->list_items as $list_item){
-                
-         
-
-
-        //         $authors[] = $list_item->item;
-        
-        //     }
-        // }
-
-
-        dd($booklist);
-
-        $authors['authors_id'] = [5, 6, 7];
+        // Если есть списки авторов, то указываем их
+        if(count($list_authors)>0){$authors['authors_id'] = [$list_authors];} else {$authors['authors_id'] = null;};
         $authors['user_id'] = $user->id;
-        $user_access['list_authors'] = $authors;
 
-        // dd($user_access);
+        $access['list_authors'] = $authors;
+        $access['filial_rights'] = $filial_rights;
+        $access['all_rights'] = $all_rights;
+        $access['user_info']['filial_id'] = $user_filial_id;
 
-        // $request->session()->put('access', $user_access);
-        session(['access' => $user_access]);
+        // dd($access);
+
+        // $request->session()->put('access', $all_rights);
+        session(['access' => $access]);
         
         return redirect()->route('users.index');
     }

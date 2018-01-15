@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class ListUserTableSeeder extends Seeder
+class ListItemsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,10 +11,14 @@ class ListUserTableSeeder extends Seeder
      */
     public function run()
     {
-		DB::table('list_user')->insert([
+		DB::table('list_items')->insert([
             [
+                'item_entity' => 5,
                 'booklist_id' => 1,
-                'user_id' => 4,
+            ],
+            [
+                'item_entity' => 6,
+                'booklist_id' => 1,
             ],
         ]);
     }

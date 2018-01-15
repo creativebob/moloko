@@ -19,4 +19,13 @@ class Booklist extends Model
   {
     return $this->hasMany('App\List_item');
   }
+
+    /**
+  * Получаем пользователей
+  */
+  public function users()
+  {
+    return $this->belongsToMany('App\User');
+  }
+
 }
