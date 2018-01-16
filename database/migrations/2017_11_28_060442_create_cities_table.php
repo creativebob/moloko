@@ -29,6 +29,7 @@ class CreateCitiesTable extends Migration
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->timestamps();
+            $table->dateTime('moderated_at')->nullable()->comment('Дата модерации');
             $table->softDeletes();
         });
     }

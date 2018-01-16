@@ -40,20 +40,20 @@ class RoleController extends Controller
         $others_item['user_id'] = $user->id;
         $system_item = null;
 
-        // Смотрим права на простотр системных.
-         foreach ($user->roles as $role) {
-            foreach ($role->rights as $right) {
-                // Перебор всех прав пользователя
-                if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;};
-                if ($right->right_action == 'system-users') {$system_item = 1;};
-                if ($right->right_action == 'getall-users') {$others_item['all'] = 'all';};
-            }
-        }
+        // // Смотрим права на простотр системных.
+        //  foreach ($user->roles as $role) {
+        //     foreach ($role->rights as $right) {
+        //         // Перебор всех прав пользователя
+        //         if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;};
+        //         if ($right->right_action == 'system-users') {$system_item = 1;};
+        //         if ($right->right_action == 'getall-users') {$others_item['all'] = 'all';};
+        //     }
+        // }
 
         if (isset($user->company_id)) {
             // Если у пользователя есть компания
             $roles = Role::whereCompany_id($user->company_id)
-                    ->otherItem($others_item)
+                    // ->otherItem($others_item)
                     ->systemItem($system_item) // Фильтр по системным записям
                     ->paginate(30);
 
@@ -63,7 +63,6 @@ class RoleController extends Controller
               $roles = Role::paginate(30);
             };
         }
-
 
 
         // Определяем количество разрешений 

@@ -26,15 +26,20 @@ use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
-
     public function index(Request $request)
     {
 
-        // Зависимость от филиала: false - независим / true - зависим
-        $dependence = true;
+            // Подключение политики
+            // $this->authorize('index', User::class);
+        
 
         $user = Auth::user();
+
+        // Получаем сессию
         $session  = session('access');
+        if(!isset($session)){abort(403);};
+
+        $list_authors = $session['list_authors'];
         // dd($session);
 
         // Показываем богу всех авторов
@@ -46,28 +51,45 @@ class UserController extends Controller
 
         } else {
 
-            $user_filial_id = $session['user_info']['filial_id'];
-            $list_authors = $session['list_authors'];
+            if(isset($session['all_rights']['nolimit-users-allow']) && (!isset($session['all_rights']['nolimit-users-deny']))){
 
-            if($dependence) {
-                if(isset($session['filial_rights'][$user_filial_id])){$access = $session['filial_rights'][$user_filial_id];};
-                $filials = collect($session['filial_rights'])->keys();
-
-            } else {
+                // Видим в правах независимость от филиала и даем все права!
                 $access = $session['all_rights'];
                 $filials = null;
+
+            } else {
+
+                // ЗАВИСИМОСТЬ ОТ ФИЛИАЛА ---------------------------------------------------------------------------------------------------------------
+                // Указываем - являеться ли сущность зависимой от филиала
+                // false - независима / true - зависима
+
+                $dependence = true;
+
+                $user_filial_id = $session['user_info']['filial_id'];
+                if($dependence) {
+                    if(isset($session['filial_rights'][$user_filial_id])){$access = $session['filial_rights'][$user_filial_id];};
+
+                    $filials = [];
+                    foreach($session['filial_rights'] as $key => $filial){
+                            if(isset($filial['index-users-allow']) && (!isset($filial['index-users-deny']))){
+                            $filials[] = $key;
+                        }
+                    }
+
+                    // dd($filials);
+                    // $filials = collect($session['filial_rights'])->keys();
+
+                } else {
+                    $access = $session['all_rights'];
+                    $filials = null;
+                }
+
             }
-          
-            $authors['authors_id'] = null;
+            // dd($filials);
 
-            // Получение сессии через request
-            // $session  = $request->session()->all();
-
-            // Подключение политики
-            // $this->authorize('index', User::class);
-        
-
+            // ЗАВИСИМОСТЬ ОТ СИСТЕМНЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------------------------------
             // Проверяем право просмотра системных записей:
+            
             if(isset($access['system-users-allow']) && (!isset($access['system-users-deny'])))
             {
                 $system_item = 1;
@@ -75,10 +97,14 @@ class UserController extends Controller
                 $system_item = null;
             };
 
+
+            // ЗАВИСИМОСТЬ ОТ АВТОРА ЗАПИСИ ---------------------------------------------------------------------------------------------------------------
             // Проверяем право на просмотр чужих записей:
             // dd($access['list_authors']['authors_id']);
-
+            // 
+            $authors['authors_id'] = null;
             if(count($list_authors['authors_id']) > 0){
+
                 $authors = $list_authors;
                 // dd($authors);
             } else {
@@ -90,6 +116,7 @@ class UserController extends Controller
                     $authors = $list_authors;
                 };
             };
+                                              
 
         }
 
@@ -102,8 +129,9 @@ class UserController extends Controller
             $users = User::whereCompany_id($user->company_id)
                     ->filials($filials)
                     ->whereGod(null)
-                    ->authors($authors)
+                    ->authors($authors, $filials)
                     ->systemItem($system_item) // Фильтр по системным записям
+                    ->orWhere('id', $user->id) // только для пользователей
                     ->paginate(30);
         } else {
             // Если нет, то бог без компании
@@ -123,6 +151,10 @@ class UserController extends Controller
     public function store(UpdateUser $request)
     {
         // $this->authorize('create', User::class);
+
+        // Получаем сессию
+        $session  = session('access');
+        if(!isset($session)){abort(403);};
 
         $auth_user = Auth::user();
     	$user = new User;
@@ -167,9 +199,12 @@ class UserController extends Controller
         // Если у пользователя есть назначенная компания и пользователь не являеться богом
         if(isset($auth_user->company_id)&&($auth_user->god != 1)){
             $user->company_id = $auth_user->company_id;
+            $user->filial_id = $session['user_info']['filial_id'];
+
         // Если бог авторизован под компанией
         } elseif(isset($auth_user->company_id)&&($auth_user->god == 1)) {
             $user->company_id = $auth_user->company_id;
+
         } elseif(($auth_user->company_id == null) && ($auth_user->god == 1)){
             $user->system_item = 1;
         } else {

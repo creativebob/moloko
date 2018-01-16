@@ -52,9 +52,10 @@ class UpdateUsersTable extends Migration
             $table->integer('access_block')->nullable()->unsigned()->comment('Доступ открыт 0 или Блокирован 1')->default('0')->after('employee_id');
 
             $table->integer('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('access_block');
+            $table->integer('filial_id')->nullable()->unsigned()->comment('ID филиала компании')->after('company_id');
 
             $table->integer('god')->nullable()->unsigned()->comment('Божественное право')->default(null)->after('company_id');
-
+            $table->dateTime('moderated_at')->nullable()->comment('Дата модерации');
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
@@ -65,6 +66,7 @@ class UpdateUsersTable extends Migration
         Schema::table('users', function(Blueprint $table) {
             $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('author_id')->references('id')->on('users');
+            $table->foreign('filial_id')->references('id')->on('departments');
         });
 
     }
@@ -104,10 +106,13 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('lead_id');
             $table->dropColumn('employee_id');
             $table->dropColumn('access_block');
-            $table->dropColumn('god');           
+            $table->dropColumn('god');
+            $table->dropColumn('moderated_at');         
 
             $table->dropForeign('users_company_id_foreign');
             $table->dropForeign('users_author_id_foreign');
+            $table->dropForeign('users_filial_id_foreign');  
+
 
         });
 

@@ -39,12 +39,14 @@ class User extends Authenticatable
     }
 
         // Фильтрация для показа авторов
-    public function scopeAuthors($query, $authors)
+    public function scopeAuthors($query, $authors, $filials)
     {
+
+
         if(isset($authors)){
 
             if($authors['authors_id'] == null){
-                // dd($authors);
+                dd($authors);
 
                 // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
                 return $query->Where('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
@@ -52,17 +54,23 @@ class User extends Authenticatable
 
             } else {
 
+
                 // $authors['authors_id'] = [4, 5, 6, 7];
+                // 
+                // // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
+                return $query->WhereIn('author_id', $authors['authors_id'])->orWhere('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
 
                 // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
-                return $query->WhereIn('author_id', $authors['authors_id'])->orWhere('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
+                // return $query->whereHas('staff', function ($query) use ($filials){
+                //   $query->whereIn('filial_id', $filials);
+                // })->WhereIn('author_id', $authors['authors_id'])->orWhere('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
             }
 
           } else {
-
+  
               // Без ограничений
 
-              return $query;
+               return $query;
           }
     }
 
@@ -80,9 +88,7 @@ class User extends Authenticatable
            
                 // dd($filials);
                 // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
-                return $query->whereHas('staff', function ($query) use ($filials){
-                  $query->whereIn('filial_id', $filials);
-                });
+                return $query->whereIn('filial_id', $filials);
             }
     }
 
@@ -237,6 +243,7 @@ class User extends Authenticatable
         'employee_id', 
         'access_block', 
         'company_id', 
+        'filial_id', 
 
     ];
 

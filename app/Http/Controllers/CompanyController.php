@@ -106,7 +106,7 @@ class CompanyController extends Controller
     public function edit($id)
     {
         $company = Company::findOrFail($id);
-        $this->authorize('update', $company);
+        // $this->authorize('update', $company);
 
 
         return view('companies.show', compact('company'));

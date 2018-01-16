@@ -13,7 +13,6 @@ class DatabaseSeeder extends Seeder
   {
     // Пользователи и компании
     $this->call(CompaniesTableSeeder::class);
-    $this->call(UsersTableSeeder::class);
 
     // Наполнение локализаций
     $this->call(RegionsTableSeeder::class);
@@ -22,6 +21,7 @@ class DatabaseSeeder extends Seeder
 
     // Филиалы / отделы
     $this->call(DepartmentsTableSeeder::class);
+    $this->call(UsersTableSeeder::class);
 
     // Сайты, страницы
     $this->call(SitesTableSeeder::class);
