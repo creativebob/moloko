@@ -28,20 +28,21 @@ class StafferController extends Controller
         // Если у пользователя есть компания
         // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
         $staff = Staffer::with('filial', 'department', 'user', 'position')->whereCompany_id($user->company_id)->paginate(30);
-        $filials = Company::whereHas('departments', function($query) {
+        $company = Company::with(['departments' => function($query) {
                       $query->whereFilial_status(1);
-                    })->whereId($user->company_id)->count();
+                    }])->findOrFail($user->company_id);
       } else {
         if ($user->god == 1) {
           // Если нет, то бог без компании
           // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
           $staff = Staffer::with('filial', 'department', 'user', 'position')->paginate(30);
-          $filials = Company::whereHas('departments', function($query) {
+          $company = Company::with(['departments' => function($query) {
                       $query->whereFilial_status(1);
-                   })->whereId($user->company_id)->count();
+                    }])->findOrFail($user->company_id);
         };
       };
       $page_info = Page::wherePage_alias('/staff')->first();
+      $filials = count($company->departments);
       // dd($filials);
       return view('staff.index', compact('staff', 'page_info', 'filials'));
     }
