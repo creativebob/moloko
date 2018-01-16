@@ -32,56 +32,44 @@ class GetAccessController extends Controller
     public function set(Request $request)
     {
 
-        $mymass = [];
+
 
         $user = Auth::user();
 
         // //Получаем права всех должностей
+        // $mymass = [];
         // foreach ($user->staff as $staffer) {
         //     $mymass[] = $staffer->filial_id;
         // }
-        // 
+
         $user = User::with(['staff', 'roles', 'roles.rights', 'booklists', 'booklists.list_items'])->findOrFail($user->id);
-        // dd($user);
+
 
         //Получаем права первой должности
         if($user->god == null){
 
             $staffer = $user->staff->first();
 
-
             // Если нет должности - иди нахуй!
             if(isset($staffer)){
                 $user_filial_id = $staffer->filial_id; 
                 // Получим все права и их ID в массив
                 $auth_user_roles = $user->roles->where('department_id', $user_filial_id);
-            } else {abort(403);};
+            } else {
+                abort(403);
+            };
 
         } else {
 
             //Если бог
             $user_filial_id = null;
             $auth_user_roles = $user->roles;
-        };
+        }
 
         if(!isset($auth_user_roles)){abort(403);};
 
-        // dd($auth_user_roles);
-
-        // Находим все возможные в системе права и кладем их в массив с указанием их ID
-        // $allrights_array = [];
-        // foreach ($auth_user_roles as $role) {
-        //     foreach ($role->rights as $right) {
-
-        //         $allrights_array[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
-
-        //     }
-        // }
 
 
-        // Создаем ассоциированный массив прав на авторизованного пользователя
-        // В формате: Ключ"user-create-allow" и значение "1" если найдено правило.
-        // 
         $access = [];
         $all_rights = [];
         $filial_rights = [];
@@ -92,7 +80,10 @@ class GetAccessController extends Controller
             // dd($department_id);
 
             foreach ($role->rights as $right){
-                
+
+                // Создаем ассоциированный массив прав на авторизованного пользователя
+                // В формате: Ключ"user-create-allow" и значение "1" если найдено правило.
+
                 // if(isset($allrights_array[$right->actionentity->alias_action_entity . "-" . 'deny'])){
                     $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
                 // };          
@@ -102,7 +93,9 @@ class GetAccessController extends Controller
 
         }
 
-        if(count($filial_rights) == 0){abort(403);};
+        if(count($filial_rights) == 0){
+            abort(403);
+        };
 
         $list_authors = [];
         foreach ($user->booklists as $booklist) {

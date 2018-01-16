@@ -46,13 +46,11 @@ class UserController extends Controller
 
         } else {
 
-
-
             $user_filial_id = $session['user_info']['filial_id'];
             $list_authors = $session['list_authors'];
 
             if($dependence) {
-                $access = $session['filial_rights'][$user_filial_id];
+                if(isset($session['filial_rights'][$user_filial_id])){$access = $session['filial_rights'][$user_filial_id];};
                 $filials = collect($session['filial_rights'])->keys();
 
             } else {

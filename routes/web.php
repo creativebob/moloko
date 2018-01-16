@@ -88,6 +88,11 @@ Route::resource('/sites', 'SiteController')->middleware('auth');
 // Контроллер отображения страниц 
 Route::resource('/pages', 'PageController')->middleware('auth');
 
+Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');
+
+
+
+
 //Конец блока сайтов и страниц
 
 Auth::routes();

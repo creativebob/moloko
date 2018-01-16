@@ -65,8 +65,8 @@
 
                     $session_god = session('god'); 
                     $session_access = session('access');
-
-                    $item = 123;
+                    $user_filial_id = $session_access['user_info']['filial_id'];
+                    $rights_user_filial = collect($session_access['all_rights'])->keys()->implode('\n');
 
                   @endphp
 
@@ -77,7 +77,7 @@
                 <li>
 
                   @if(isset($session_access))
-                    <a onclick="alert('Перечень прав пока не отображается');">Права получены {{ $item }} </a>
+                    {{ link_to_route('help.show_session', 'Смотреть сессию', $value = Null, ['target' => '_blank']) }} 
                   @endif</li>
 
                 {{-- Кнопка выхода --}}

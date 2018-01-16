@@ -215,7 +215,9 @@ class RoleController extends Controller
     public function setting($role_id)
     {
 
-        $count_role = RoleUser::where('role_id', $role_id)->where('user_id', Auth::user()->id)->count();
+        $user = Auth::user();
+
+        $count_role = RoleUser::where('role_id', $role_id)->where('user_id', $user->id)->count();
         if($count_role != 0) {abort(403);};
 
         // Получим все права и их ID в массив
@@ -263,8 +265,20 @@ class RoleController extends Controller
             $role_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
         }
 
-        //Смотрим права авторизованного пользователя
+
         $session  = session('access');
+        if($user->god == 0){
+
+            // Если простой смертный, то получает свои права
+            // Смотрим права авторизованного пользователя для филиала в котором он устроен - получаем все права
+            $user_filial_id  = session('access')['user_info']['filial_id'];
+            $session = $session['filial_rights'][$user_filial_id];
+
+        } else {
+
+            // Если бог, то получает все права
+            $session = $session['all_rights'];
+        };
 
 
         // Наполняем массив данными:
