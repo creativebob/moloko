@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Scopes\ModerationScope;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
@@ -13,6 +14,19 @@ class User extends Authenticatable
 
     use Notifiable;
     use SoftDeletes;
+
+
+      /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new ModerationScope);
+    }
 
   /**
    * Получить запись с именем группы доступа
