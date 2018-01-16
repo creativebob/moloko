@@ -63,4 +63,18 @@ class Company extends Model
   {
     return $this->hasMany('App\Role');
   } 
+  /**
+  * Получаем штат компании.
+  */
+  public function staff()
+  {
+    return $this->hasMany('App\Staffer');
+  } 
+  /**
+  * Получаем филиалы компании.
+  */
+  // public function filials()
+  // {
+  //   return $this->hasMany('App\Department');
+  // } 
 }

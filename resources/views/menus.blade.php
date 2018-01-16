@@ -422,21 +422,26 @@ $(function() {
   // Открываем меню и подменю, если только что добавили населенный пункт
   @if(!empty($data))
   if ({{ $data != null }})  {
-
     // Общие правила
-    // Подсвечиваем область
-    $('#menus-' + {{ $data['section_id'] }}).addClass('first-active').find('.icon-list:first-child').attr('aria-hidden', 'false').css('display', 'block');
-    // Открываем область
-    var firstItem = $('#menus-' + {{ $data['section_id'] }}).find('.medium-list');
-    // Открываем аккордионы
+    // Подсвечиваем навигацию
+    $('#navigations-' + {{ $data['navigation_id'] }}).addClass('first-active').find('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
+    // Открываем навигацию
+    var firstItem = $('#navigations-' + {{ $data['navigation_id'] }}).find('.medium-list:first');
+    // Открываем аккордион
     $('#content-list').foundation('down', firstItem);
-
-    // Отображаем отдел и филиал, без должностей
-    if (({{ $data['page_id'] }} == 0) && ({{ $data['menu_id'] }} !== 0)) {
+    // Отображаем подпункт меню без страницы
+    if ({{ $data['menu_id'] }} !== 0) {
       // Подсвечиваем ссылку
       $('#menus-{{ $data['menu_id'] }}').find('.medium-link').addClass('medium-active');
       // Открываем меню удаления в середине
-       $('#menus-{{ $data['menu_id'] }}').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
+      $('#menus-{{ $data['menu_id'] }}').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
+      if ($('#menus-' + {{ $data['menu_id'] }}).is('.medium-list')) {
+       // Открываем навигацию
+       var mediumItem = $('#menus-' + {{ $data['menu_id'] }}).find('.medium-list');
+      // Открываем аккордион
+      $('#content-list').foundation('down', mediumItem);
+      };
+      
     };
 
     // 

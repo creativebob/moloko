@@ -69,6 +69,10 @@
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-staffer-position">Название должности</th>
+
+        @if ($filials > 1)
+          <th class="td-staffer-filial">Филиал</th>
+        @endif
           <th class="td-staffer-department">Отдел</th>
           <th class="td-staffer-phone">Телефон</th>
           <th class="td-staffer-date-employment">Дата приема</th>
@@ -92,7 +96,15 @@
               
             </a>( {{ $staffer->position->position_name }} )
           </td>
-          <td class="td-staffer-department">{{ $staffer->department->department_name }}</td>
+          @if ($filials > 1)
+            <td class="td-staffer-filial">{{ $staffer->filial->department_name }}</td>
+          @endif
+          <td class="td-staffer-department">
+          @if ($staffer->filial->department_name !== $staffer->department->department_name)
+            {{ $staffer->department->department_name }}
+          @endif
+
+          </td>
           <td class="td-staffer-phone">
             @if (isset($staffer->user_id))
               {{ $staffer->user->phone }}
