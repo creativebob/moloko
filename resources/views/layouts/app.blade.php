@@ -64,7 +64,7 @@
                   @php
 
                     $session_god = session('god'); 
-                    $session_access = session('access'); 
+                    $session_access = session('access');
 
                     $item = 123;
 

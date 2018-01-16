@@ -30,7 +30,6 @@ class User extends Authenticatable
     // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
 
 
-
     // Фильтрация для показа системных записей
     public function scopeSystemItem($query, $system_item)
     {
@@ -39,16 +38,51 @@ class User extends Authenticatable
         } else {return $query;};
     }
 
-        // Фильтрация для показа системных записей
+        // Фильтрация для показа авторов
     public function scopeAuthors($query, $authors)
     {
         if(isset($authors)){
 
-            // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
-            return $query->WhereIn('author_id', $authors['authors_id'])->orWhere('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
+            if($authors['authors_id'] == null){
+                // dd($authors);
+
+                // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
+                return $query->Where('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
+
 
             } else {
-                return $query;
+
+                // $authors['authors_id'] = [4, 5, 6, 7];
+
+                // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
+                return $query->WhereIn('author_id', $authors['authors_id'])->orWhere('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
+            }
+
+          } else {
+
+              // Без ограничений
+
+              return $query;
+          }
+    }
+
+         // Фильтрация по филиалу
+    public function scopeFilials($query, $filials)
+    {
+
+
+
+            if($filials == null){
+
+              return $query;
+
+            } else {
+           
+                // dd($filials);
+                // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
+                return $query->whereHas('staff', function ($query) use ($filials){
+                  $query->whereIn('filial_id', $filials);
+                });
             }
     }
 
@@ -230,8 +264,18 @@ class User extends Authenticatable
   */
   public function roles()
   {
-    return $this->belongsToMany('App\Role');
+    return $this->belongsToMany('App\Role')->withPivot('department_id');
   }
+
+
+    /**
+  * Получаем списки авторов
+  */
+  public function booklists()
+  {
+    return $this->belongsToMany('App\Booklist');
+  }
+
 
     /**
   * Получаем штат.

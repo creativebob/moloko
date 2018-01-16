@@ -11,7 +11,7 @@ class BooklistsTableSeeder extends Seeder
      */
     public function run()
     {
-		DB::table('booklists')->insert([
+        DB::table('booklists')->insert([
             [
                 'list_name' => 'Тестовый список',
                 'list_description' => 'Несколько людей из базы данных',

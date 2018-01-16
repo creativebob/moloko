@@ -30,78 +30,79 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
+        // Зависимость от филиала: false - независим / true - зависим
+        $dependence = true;
+
         $user = Auth::user();
-        $access  = session('access');
-
-
-        // Получение сессии через request
-        // $session  = $request->session()->all();
-
-        // Подключение политики
-        // $this->authorize('index', User::class);
-
-
-        
-
-        // Проверяем право просмотра системных записей:
-        if(isset($access['system-users-allow']) && (!isset($access['system-users-deny'])))
-        {
-            $system_item = 1;
-        } else {
-            $system_item = null;
-        };
-
-
-        // Проверяем право на просмотр чужих записей:
-        // 
-        
-        if(count($access['list_authors']['authors_id']) > 0){
-            $authors = $access['list_authors'];
-            // dd($authors);
-        } else {
-
-            if(isset($access['authors-users-allow']) && (!isset($access['authors-users-deny'])))
-            {
-                $authors = null;
-            };
-         };
+        $session  = session('access');
+        // dd($session);
 
         // Показываем богу всех авторов
         if($user->god == 1) {
+
             $authors = null;
-        };
+            $filials = null;
+            $system_item = 1;
+
+        } else {
 
 
-        // if(($session['system-users-allow'] == 1)&&($session['system-users-deny'] != 1)){
-        //     echo "Все заебись!";
-        // } else {echo "Доступ к системным правам запрещен!"; };
+
+            $user_filial_id = $session['user_info']['filial_id'];
+            $list_authors = $session['list_authors'];
+
+            if($dependence) {
+                $access = $session['filial_rights'][$user_filial_id];
+                $filials = collect($session['filial_rights'])->keys();
+
+            } else {
+                $access = $session['all_rights'];
+                $filials = null;
+            }
+          
+            $authors['authors_id'] = null;
+
+            // Получение сессии через request
+            // $session  = $request->session()->all();
+
+            // Подключение политики
+            // $this->authorize('index', User::class);
+        
+
+            // Проверяем право просмотра системных записей:
+            if(isset($access['system-users-allow']) && (!isset($access['system-users-deny'])))
+            {
+                $system_item = 1;
+            } else {
+                $system_item = null;
+            };
+
+            // Проверяем право на просмотр чужих записей:
+            // dd($access['list_authors']['authors_id']);
+
+            if(count($list_authors['authors_id']) > 0){
+                $authors = $list_authors;
+                // dd($authors);
+            } else {
+
+                if(isset($access['authors-users-allow']) && (!isset($access['authors-users-deny'])))
+                {
+                    $authors = null;
+                } else {
+                    $authors = $list_authors;
+                };
+            };
+
+        }
 
 
-        // Смотрим права на простотр системных.
-
-        //  foreach ($user->roles as $role) {
-        //     foreach ($role->rights as $right) {
-        //         // Перебор всех прав пользователя
-        //         if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;};
-        //         if ($right->right_action == 'system-user') {$system_item = 1;};
-        //         if ($right->right_action == 'get-users') {$others_item['all'] = 'all';};
-        //         if ($right->right_action == 'get-depertments') {$others_item['all'] = 'all';}; 
-        //     }
-        // }
-        // foreach ($user->roles as $role) {
-        //   foreach ($role->rights as $right) {
-        //     if ($right->actionentity->alias_action_entity == 'system-users') {$system_item = 1;};
-        //     // dd($right->actionentity);
-        //   }
-
-
-        // }
-
+        // dd($filials);
 
 
         if (isset($user->company_id)) {
             // Если у пользователя есть компания
             $users = User::whereCompany_id($user->company_id)
+                    ->filials($filials)
                     ->whereGod(null)
                     ->authors($authors)
                     ->systemItem($system_item) // Фильтр по системным записям
@@ -115,7 +116,6 @@ class UserController extends Controller
 
 
         // dd($users);
-
 
         $session  = $request->session()->all();
         // dd($session);
@@ -344,52 +344,12 @@ class UserController extends Controller
 
         $auth_user = Auth::user();
 
-        if(Auth::user()->god == 1){
-
+        if($auth_user->god == 1){
             session(['god' => $auth_user->id]);
-
+            Auth::loginUsingId($user_id);
         };
 
-        if($auth_user->god == 1){
-            // Auth::logout();
-            // Auth::login($user_id);
-
-            Auth::loginUsingId($user_id);
-
-
-
-            // ПОЛУЧАЕМ ВСЕ ПРАВА ПОЛЬЗОВАТЕЛЯ
-            $user = User::findOrFail($user_id);
-            foreach ($user->staff as $staffer) {
-                $mymass[] = $staffer->filial_id;
-            }
-
-            // Создаем ассоциированный массив прав на авторизованного пользователя
-            // В формате: Ключ"user-create-allow" и значение "1" если найдено правило.
-            $user_access = [];
-            foreach ($user->roles as $role) {
-                foreach ($role->rights as $right){
-                    $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
-                }
-            }
-
-        // Получаем авторов
-        // TODO
-        
-        $authors['authors_id'] = [5, 6, 7];
-        $authors['user_id'] = $user->id;
-        $user_access['list_authors'] = $authors;
-
-
-
-            // $request->session()->put('access', $user_access);
-            session(['access' => $user_access]);
-
-
-
-
-        }
-        return redirect('users');
+        return redirect('/getaccess');
     }
 
     public function getgod()
@@ -399,35 +359,6 @@ class UserController extends Controller
             $user = User::findOrFail(Auth::user()->id);
             $user->company_id = null;
             $user->save();
-
-            $mymass = [];
-            $user = Auth::user();
-            foreach ($user->staff as $staffer) {
-                $mymass[] = $staffer->filial_id;
-            }
-
-            $auth_user_roles = $user->roles;
-
-            // Создаем ассоциированный массив прав на авторизованного пользователя
-            // В формате: Ключ"user-create-allow" и значение "1" если найдено правило.
-            $user_access = [];
-            foreach ($user->roles as $role) {
-                foreach ($role->rights as $right){
-                    $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
-                }
-            }
-
-        // Получаем авторов
-        // TODO
-        
-        $authors['authors_id'] = [5, 6, 7];
-        $authors['user_id'] = $user->id;
-        $user_access['list_authors'] = $authors;
-
-
-            // $request->session()->put('access', $user_access);
-            session(['access' => $user_access]);
-
         }
         return redirect('companies');
     }
@@ -442,35 +373,9 @@ class UserController extends Controller
             Auth::loginUsingId($god_id);
 
 
-            // ПОЛУЧАЕМ ВСЕ ПРАВА ПОЛЬЗОВАТЕЛЯ
-            $user = User::findOrFail($god_id);
-            foreach ($user->staff as $staffer) {
-                $mymass[] = $staffer->filial_id;
-            }
-
-            // Создаем ассоциированный массив
-            $user_access = [];
-            foreach ($user->roles as $role) {
-                foreach ($role->rights as $right){
-                    $user_access[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
-                }
-            }
-
-        // Получаем авторов
-        // TODO
-        
-        $authors['authors_id'] = [5, 6, 7];
-        $authors['user_id'] = $user->id;
-        $user_access['list_authors'] = $authors;
-
-
-            // $request->session()->put('access', $user_access);
-            session(['access' => $user_access]);
-
-
         }
 
-        return redirect('users');
+        return redirect('/getaccess');
     }
 
 }

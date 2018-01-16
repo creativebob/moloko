@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateListUserTable extends Migration
+class CreateBooklistUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateListUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('list_user', function (Blueprint $table) {
+        Schema::create('booklist_user', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('booklist_id')->nullable()->unsigned()->comment('ID списка');
@@ -38,6 +38,6 @@ class CreateListUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('list_user');
+        Schema::dropIfExists('booklist_user');
     }
 }
