@@ -17,7 +17,6 @@ class ModerationScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-      $builder->where('moderated_at', null);
-
+      $builder->where('moderated_at', '!=', null);
     }
 }

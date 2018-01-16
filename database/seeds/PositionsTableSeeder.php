@@ -18,6 +18,7 @@ class PositionsTableSeeder extends Seeder
 		        'direction_status' => 1,
 		        'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
         	],
             [
                 'position_name' => 'Менеджер',
@@ -25,6 +26,15 @@ class PositionsTableSeeder extends Seeder
                 'direction_status' => null,
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
+            ],
+            [
+                'position_name' => 'Администратор',
+                'page_id' => 6,
+                'direction_status' => null,
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
             ],
         	[
 		        'position_name' => 'Web-разработчик',
@@ -32,6 +42,7 @@ class PositionsTableSeeder extends Seeder
 		        'direction_status' => null,
 		        'company_id' => 1,
                 'system_item' => null,
+                'author_id' => 1,
         	],
         ]);
     }
