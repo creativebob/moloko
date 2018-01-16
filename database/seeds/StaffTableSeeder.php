@@ -38,7 +38,7 @@ class StaffTableSeeder extends Seeder
             ],
         	[	
         		'company_id' => 1,
-        		'user_id' => 4,
+        		'user_id' => 5,
                 'position_id' => 2,
 		        'department_id' => 4,
                 'filial_id' => 1,
@@ -46,7 +46,7 @@ class StaffTableSeeder extends Seeder
         	],
         	[	
         		'company_id' => 1,
-        		'user_id' => 5,
+        		'user_id' => 6,
                 'position_id' => 2,
 		        'department_id' => 4,
                 'filial_id' => 1,
