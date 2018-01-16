@@ -22,14 +22,19 @@ class Staffer extends Model
     'filial_id'
   ];
 
-
- 
   /**
   * Получаем отдел данной должности.
   */
   public function department()
   {
     return $this->belongsTo('App\Department');
+  }
+  /**
+  * Получаем Филиал данной должности.
+  */
+  public function filial()
+  {
+    return $this->belongsTo('App\Department', 'filial_id');
   }
   /**
   * Получаем должность.
@@ -51,6 +56,13 @@ class Staffer extends Model
   public function employees()
   {
     return $this->hasMany('App\Employee');
+  }
+  /**
+  * Получаем компанию.
+  */
+  public function company()
+  {
+    return $this->belongsTo('App\Company');
   }
 
 }

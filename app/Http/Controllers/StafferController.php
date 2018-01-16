@@ -6,6 +6,7 @@ use App\Staffer;
 use App\Employee;
 use App\Page;
 use App\User;
+use App\Company;
 use App\Department;
 use App\RoleUser;
 
@@ -26,16 +27,23 @@ class StafferController extends Controller
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
         // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
-        $staff = Staffer::whereCompany_id($user->company_id)->paginate(30);
+        $staff = Staffer::with('filial', 'department', 'user', 'position')->whereCompany_id($user->company_id)->paginate(30);
+        $filials = Company::whereHas('departments', function($query) {
+                      $query->whereFilial_status(1);
+                    })->whereId($user->company_id)->count();
       } else {
         if ($user->god == 1) {
           // Если нет, то бог без компании
           // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
-          $staff = Staffer::paginate(30);
+          $staff = Staffer::with('filial', 'department', 'user', 'position')->paginate(30);
+          $filials = Company::whereHas('departments', function($query) {
+                      $query->whereFilial_status(1);
+                   })->whereId($user->company_id)->count();
         };
       };
       $page_info = Page::wherePage_alias('/staff')->first();
-      return view('staff.index', compact('staff', 'page_info'));
+      // dd($filials);
+      return view('staff.index', compact('staff', 'page_info', 'filials'));
     }
 
     /**

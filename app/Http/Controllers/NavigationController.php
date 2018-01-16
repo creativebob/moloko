@@ -63,7 +63,7 @@ class NavigationController extends Controller
         $navigation->save();
 
         if ($navigation) {
-          return Redirect('/menus?site_id='.$request->site_id);
+          return Redirect('/current_menu/'.$navigation->id.'/0');
         } else {
           $error = 'ошибка';
         };
@@ -115,7 +115,7 @@ class NavigationController extends Controller
         
         $navigation->save();
 
-        return Redirect('/menus?site_id='.$navigation->site_id);
+        return Redirect('/current_menu/'.$navigation->id.'/0');
     }
 
     /**
