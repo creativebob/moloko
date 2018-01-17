@@ -21,14 +21,7 @@ class RegionController extends Controller
    */
   public function index()
   {
-    $region = Region::with('areas', 'cities')->findOrFail(4);
-
-    if (count($region->areas) == 0) {
-      $lol = "Пусто";
-    } else {
-      $lol = 'Не пусто';
-    }
-    dd($lol);
+    //
   }
 
   /**
@@ -138,20 +131,21 @@ class RegionController extends Controller
    */
   public function destroy($id)
   {
+    $user = Auth::user();
     // Удаляем ajax
     // Проверяем содержит ли район вложенные населенные пункты
     $region = Region::with('areas', 'cities')->findOrFail($id);
-    dd($region);
-    if (count($region->areas) == 0 || count($region->cities) == 0) {
+    if ((count($region->areas) > 0) || (count($region->cities) > 0)) {
       // Если содержит, то даем сообщение об ошибке
       $data = [
         'status' => 0,
         'msg' => 'Данная область содержит населенные пункты, удаление невозможно'
       ];
     } else {
+      $region->editor_id = $user->id;
+      $region->save();
       // Если нет, мягко удаляем
       $region = Region::destroy($id);
-
       if ($region){
         $data = [
           'status'=> 1,
