@@ -74,7 +74,7 @@ Route::get('/current_city/{region}/{area}/{city}', 'CityController@current_city'
 // Контроллеры для отображения филиалов, отделов и должностей
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
 // Текущий добавленный/удаленный отдел
-Route::get('/current_department/{parent}/{department}/{position}', 'DepartmentController@current_department')->middleware('auth');
+Route::get('/current_department/{parent}/{department}', 'DepartmentController@current_department')->middleware('auth');
 // Должности
 Route::resource('/positions', 'PositionController')->middleware('auth');
 // Контроллер штата компании

@@ -81,7 +81,7 @@ class DepartmentController extends Controller
   }
 
   // Получаем сторонние данные по 
-  public function current_department($filial, $depart, $position)
+  public function current_department($filial, $depart)
   {
     $user = Auth::user();
     $others_item['user_id'] = $user->id;
@@ -132,9 +132,10 @@ class DepartmentController extends Controller
     $data = [
       'filial_id' => $filial,
       'department_id' => $depart,
-      'position_id' => $position,
     ];
-
+    $tree = $departments->pluck('department_name', 'id');
+    $positions_list = Position::whereCompany_id($user->company_id)
+                        ->orWhereNull('company_id')->pluck('position_name', 'id');
     $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
     return view('departments', compact('departments_tree', 'positions', 'positions_list', 'data', 'tree', 'staff', 'page_info', 'departments')); 
   }
@@ -219,7 +220,7 @@ class DepartmentController extends Controller
         $filial->save();
 
         if ($filial) {
-          return Redirect('/current_department/'.$filial->id.'/0/0');
+          return Redirect('/current_department/'.$filial->id.'/0');
         } else {
           echo 'Ошибка записи филиала';
         };
@@ -276,7 +277,7 @@ class DepartmentController extends Controller
         $department_id = $department->id;
 
         if ($department) {
-          return Redirect('/current_department/'.$request->filial_id.'/'.$department_id.'/0');
+          return Redirect('/current_department/'.$request->filial_id.'/'.$department_id);
         } else {
           echo 'Ошибка записи филиала';
         };
@@ -372,7 +373,7 @@ class DepartmentController extends Controller
       $filial->save();
       
       
-      return Redirect('/current_department/'.$filial->id.'/0/0');
+      return Redirect('/current_department/'.$filial->id.'/0');
     };
     if ($request->department_database == 1) {
 
@@ -390,7 +391,7 @@ class DepartmentController extends Controller
       $department->save();
       
       
-      return Redirect('/current_department/'.$department->filial_id.'/'.$id.'/0');
+      return Redirect('/current_department/'.$department->filial_id.'/'.$id);
     };
   }
 

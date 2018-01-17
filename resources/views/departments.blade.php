@@ -591,7 +591,6 @@ $(function() {
   // Открываем меню и подменю, если только что добавили населенный пункт
   @if(!empty($data))
   if ({{ $data != null }})  {
-
     // Общие правила
     // Подсвечиваем область
     $('#departments-' + {{ $data['filial_id'] }}).addClass('first-active').find('.icon-list:first-child').attr('aria-hidden', 'false').css('display', 'block');
@@ -601,7 +600,7 @@ $(function() {
     $('#content-list').foundation('down', firstItem);
 
     // Отображаем отдел и филиал, без должностей
-    if (({{ $data['position_id'] }} == 0) && ({{ $data['department_id'] }} !== 0)) {
+    if ({{ $data['department_id'] }} !== 0) {
       // Подсвечиваем ссылку
       $('#departments-{{ $data['department_id'] }}').find('.medium-link').addClass('medium-active');
       // Открываем меню удаления в середине

@@ -21,7 +21,14 @@ class RegionController extends Controller
    */
   public function index()
   {
-      //
+    $region = Region::with('areas', 'cities')->findOrFail(4);
+
+    if (count($region->areas) == 0) {
+      $lol = "Пусто";
+    } else {
+      $lol = 'Не пусто';
+    }
+    dd($lol);
   }
 
   /**
@@ -65,7 +72,6 @@ class RegionController extends Controller
     if ($region_database == 1) {
 
       $user = Auth::user();
-
       $region = new Region;
 
       $region->region_name = $request->region_name;
@@ -75,14 +81,18 @@ class RegionController extends Controller
 
       $region->save();
 
-      $region_id = $region->id;
+      if ($region) {
+        $region_id = $region->id;
       
-      $region = [
-        'region_id' => $region_id,
-        'region_name' => $region->region_name,
-        'region_vk_external_id' => $region->region_vk_external_id
-      ];
-      echo json_encode($region, JSON_UNESCAPED_UNICODE);
+        $region = [
+          'region_id' => $region_id,
+          'region_name' => $region->region_name,
+          'region_vk_external_id' => $region->region_vk_external_id
+        ];
+        echo json_encode($region, JSON_UNESCAPED_UNICODE);
+      } else {
+        abort(403, 'Не удалось записать область!');
+      }
     };
   }
 
@@ -130,12 +140,10 @@ class RegionController extends Controller
   {
     // Удаляем ajax
     // Проверяем содержит ли район вложенные населенные пункты
-    // $regions = Region::whereId($id)->first();
-    $cities = City::whereRegion_id($id)->first();
-    $areas = Area::whereRegion_id($id)->first();
-    // if ($regions->areas->cities || $regions->cities) {
-    if ($areas || $cities) {
-      // Если содержит, то даем сообщенеи об ошибке
+    $region = Region::with('areas', 'cities')->findOrFail($id);
+    dd($region);
+    if (count($region->areas) == 0 || count($region->cities) == 0) {
+      // Если содержит, то даем сообщение об ошибке
       $data = [
         'status' => 0,
         'msg' => 'Данная область содержит населенные пункты, удаление невозможно'
