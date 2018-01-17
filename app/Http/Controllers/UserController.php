@@ -132,13 +132,15 @@ class UserController extends Controller
                     ->authors($authors, $filials)
                     ->systemItem($system_item) // Фильтр по системным записям
                     ->orWhere('id', $user->id) // только для пользователей
+                    ->orderBy('moderated', 'desc')
                     ->paginate(30);
         } else {
             // Если нет, то бог без компании
             if ($user->god == 1) {
-              $users = User::withoutGlobalScope(ModerationScope::class)->paginate(30);
+              $users = User::withoutGlobalScope(ModerationScope::class)->orderBy('moderated', 'desc')->paginate(30);
             };
         }
+ 
 
 
         // dd($users);
