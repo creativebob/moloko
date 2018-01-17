@@ -21,12 +21,11 @@ class User extends Authenticatable
     //  *
     //  * @return void
     //  */
-    // protected static function boot()
-    // {
-    //     parent::boot();
-
-    //     static::addGlobalScope(new ModerationScope);
-    // }
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new ModerationScope);
+    }
 
   /**
    * Получить запись с именем группы доступа

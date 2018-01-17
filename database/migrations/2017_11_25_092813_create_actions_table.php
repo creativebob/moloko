@@ -18,7 +18,7 @@ class CreateActionsTable extends Migration
             $table->string('action_name')->index()->comment('Имя действия');
             $table->string('action_method')->index()->comment('Имя метода');
             $table->timestamps();
-            $table->dateTime('moderated_at')->nullable()->comment('Дата модерации');
+            $table->integer('moderated')->nullable()->unsigned()->comment('Статус модерации');
             $table->softDeletes();
         });
     }
