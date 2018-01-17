@@ -16,17 +16,17 @@ class User extends Authenticatable
     use SoftDeletes;
 
 
-    //   /**
-    //  * The "booting" method of the model.
-    //  *
-    //  * @return void
-    //  */
-    // protected static function boot()
-    // {
-    //     parent::boot();
+      /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
 
-    //     static::addGlobalScope(new ModerationScope);
-    // }
+        static::addGlobalScope(new ModerationScope);
+    }
 
   /**
    * Получить запись с именем группы доступа
