@@ -39,25 +39,38 @@ class UserController extends Controller
         $session  = session('access');
         if(!isset($session)){abort(403, 'Нет сессии!');};
 
+        // Получаем список авторов
         $list_authors = $session['list_authors'];
-        // dd($session);
 
         // Показываем богу всех авторов
         if($user->god == 1) {
 
-            $authors = null;
             $filials = null;
             $system_item = 1;
 
         } else {
 
+            // ОСНОВНЫЕ ПРОВЕРКИ --------------------------------------------------------------------------------------------------------------------
+
             if(isset($session['all_rights']['nolimit-users-allow']) && (!isset($session['all_rights']['nolimit-users-deny']))){
 
                 // Видим в правах независимость от филиала и даем все права!
                 $access = $session['all_rights'];
-                $filials = null;
+
+                if(isset($user->company_id)){
+                    $filials = Department::whereCompany_id($user->company_id)->where('filial_status', 1)->get()->keys('department_id')->toarray();
+                };
+
+                // dd($filials);
+
+
+                $list_authors['authors_id'] = null;
+                $authors = $list_authors;
+
 
             } else {
+
+
 
                 // ЗАВИСИМОСТЬ ОТ ФИЛИАЛА ---------------------------------------------------------------------------------------------------------------
                 // Указываем - являеться ли сущность зависимой от филиала
@@ -66,67 +79,92 @@ class UserController extends Controller
                 $dependence = true;
 
                 $user_filial_id = $session['user_info']['filial_id'];
-                if($dependence) {
-                    if(isset($session['filial_rights'][$user_filial_id])){$access = $session['filial_rights'][$user_filial_id];};
 
+
+                if($dependence){
+
+                    // if(isset($session['filial_rights'][$user_filial_id])){
+                    //     $access = $session['filial_rights'][$user_filial_id];
+                    // };
+
+                    // Получаем массив с ID филиаломи в которых присутствует право на просмотр
                     $filials = [];
                     foreach($session['filial_rights'] as $key => $filial){
-                            if(isset($filial['index-users-allow']) && (!isset($filial['index-users-deny']))){
-                            $filials[] = $key;
-                        }
-                    }
+                        if(isset($filial['index-users-allow']) && (!isset($filial['index-users-deny']))){
+                            $filials[] = $filial['filial'];
+                        };
+                    };
 
+                    if($filials == null){abort(403, "У вас нет права на просмотр списка пользователей!");};
+
+                    $filials_for_index = $filials;
 
                 } else {
-                    $access = $session['all_rights'];
-                    $filials = null;
-                }
 
-            }
+                    if(isset($session['all_rights']['index-users-allow']) && (!isset($session['all_rights']['index-users-deny']))){
+                        $filials = null;
+                    };
+                };
+
+
+                // ЗАВИСИМОСТЬ ОТ АВТОРА ЗАПИСИ ---------------------------------------------------------------------------------------------------------------
+                // Проверяем право на просмотр чужих записей:
+                // dd($access['list_authors']['authors_id']);
+
+                // Получаем список ID филиалов в которых у нас есть право на текущую операцию
+                $filials = [];
+
+                foreach($session['filial_rights'] as $key => $filial){
+                    if(isset($filial['authors-users-allow']) && (!isset($filial['authors-users-deny']))){
+                        $filials[] = $filial['filial'];
+                    };
+                };
+
+                if($filials == null){
+
+                    $list_authors['authors_id'] = null;
+                    $filials = $filials_for_index;
+                    $authors = $list_authors;
+
+                } else {
+                    $authors = $list_authors['authors_id'];
+                };
+
+
+            };
+
+
 
             // ЗАВИСИМОСТЬ ОТ СИСТЕМНЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------------------------------
             // Проверяем право просмотра системных записей:
             
-            if(isset($access['system-users-allow']) && (!isset($access['system-users-deny'])))
-            {
+            if(isset($session['all_rights']['system-users-allow']) && (!isset($session['all_rights']['system-users-deny']))){
                 $system_item = 1;
             } else {
                 $system_item = null;
             };
 
 
-            // ЗАВИСИМОСТЬ ОТ АВТОРА ЗАПИСИ ---------------------------------------------------------------------------------------------------------------
-            // Проверяем право на просмотр чужих записей:
-            // dd($access['list_authors']['authors_id']);
-            // 
-            $authors['authors_id'] = null;
-            if(count($list_authors['authors_id']) > 0){
-
-                $authors = $list_authors;
-                // dd($authors);
-            } else {
-
-                if(isset($access['authors-users-allow']) && (!isset($access['authors-users-deny'])))
-                {
-                    $authors = null;
-                } else {
-                    $authors = $list_authors;
-                };
-            };                                 
-        }
 
             // ПРОВЕРЯЕМ ПРАВО НА ПРОСМОТР НЕ ОТМОДЕРИРОВАННЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------
             // Проверяем право просмотра системных записей:
             
-            if(isset($access['moderator-users-allow']) && (!isset($access['moderator-users-deny'])))
-            {
+            if(isset($session['all_rights']['moderator-users-allow']) && (!isset($session['all_rights']['moderator-users-deny']))){
                 $moderator = ModerationScope::class;
             } else {
                 $moderator = null;
             };
 
+        };
 
-        if (isset($user->company_id)) {
+
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+        if(isset($user->company_id)) {
             // Если у пользователя есть компания
             $users = User::withoutGlobalScope($moderator)
                     ->whereCompany_id($user->company_id)
@@ -140,13 +178,14 @@ class UserController extends Controller
 
         } else {
             // Если нет, то бог без компании
-            if ($user->god == 1) {
+            if($user->god == 1) {
 
               $users = User::withoutGlobalScope(ModerationScope::class)
                     ->orderBy('moderated', 'desc')
                     ->paginate(30);
             };
-        }
+        };
+
 
         $session  = $request->session()->all();
         // dd($session);
@@ -166,7 +205,7 @@ class UserController extends Controller
         $filials = [];
         foreach($session['filial_rights'] as $key => $filial){
                 if(isset($filial['create-users-allow']) && (!isset($filial['create-users-deny']))){
-                $filials[] = $key;
+                $filials[] = $filial['filial'];
             }
         }
 
@@ -367,29 +406,36 @@ class UserController extends Controller
 
     public function edit($id)
     {
+        $auth_user = Auth::user();
+        $user = User::findOrFail($id);
 
         // $this->authorize('update', $user);
 
+        if($auth_user->god == null) {
+
+
         // Получаем сессию
         $session  = session('access');
+
         if(!isset($session)){abort(403, 'Нет сессии!');};
         $user_filial_id = $session['user_info']['filial_id'];
 
         // Получаем список ID филиалов в которых у нас есть право на текущую операцию
         $filials = [];
+
         foreach($session['filial_rights'] as $key => $filial){
                 if(isset($filial['edit-users-allow']) && (!isset($filial['edit-users-deny']))){
-                $filials[] = $key;
+                $filials[] = $filial['filial'];
             }
         }
 
-        if($filials == null){abort(403, 'Не достаточно прав!');};
+        if($filials == null){abort(403, 'Недостаточно прав!');};
 
         // $filials[] = $user_filial_id;
         $list_filials = Department::whereIn('id', $filials)->where('filial_status', 1)->orderBy('department_name')->pluck('department_name', 'id');
 
-        $auth_user = Auth::user();
-        $user = User::findOrFail($id);
+        };
+
 
         $role = new Role;
         $role_users = RoleUser::whereUser_id($id)->get();

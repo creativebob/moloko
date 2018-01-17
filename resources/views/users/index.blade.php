@@ -90,7 +90,16 @@
 
           {{-- Если пользователь бог, то показываем для него переключатель на авторизацию под полдьзователем --}}
           @if(Auth::user()->god == 1)
-            <td class="td-getauth">@if((Auth::user()->id != $user->id)&&!empty($user->company_id)) {{ link_to_route('users.getauthuser', 'Авторизоваться', ['user_id'=>$user->id], ['class' => 'tiny button']) }} @endif</td>
+
+          @php
+
+            $count_roles = count($user->roles);
+            if($count_roles < 1){$but_class = "tiny button warning"; $but_text = "Права не назначены";} else {$but_class = "tiny button"; $but_text = "Авторизоваться";};
+
+          @endphp
+
+
+            <td class="td-getauth">@if((Auth::user()->id != $user->id)&&!empty($user->company_id)) {{ link_to_route('users.getauthuser', $but_text, ['user_id'=>$user->id], ['class' => $but_class]) }} @endif</td>
           @endif
 
 
