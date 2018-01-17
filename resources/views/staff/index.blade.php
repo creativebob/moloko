@@ -88,10 +88,10 @@
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $staffer->id }}"><label class="label-check" for="check-{{ $staffer->id }}"></label></td>
           <td class="td-staffer-position">
             <a href="/staff/{{ $staffer->id }}/edit"> 
-              @if (isset($staffer->user_id))
-                {{ $staffer->user->second_name }} {{ $staffer->user->first_name }}
+              @if (isset($staffer->user))
+                {{ $staffer->user->second_name . ' ' . $staffer->user->first_name }}
               @else
-                 Вакансия
+                Вакансия
               @endif
               
             </a>( {{ $staffer->position->position_name }} )
@@ -106,7 +106,7 @@
 
           </td>
           <td class="td-staffer-phone">
-            @if (isset($staffer->user_id))
+            @if (isset($staffer->user))
               {{ $staffer->user->phone }}
             @endif</td>
           <td class="td-staffer-date-employment">

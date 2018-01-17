@@ -24,6 +24,7 @@ class StafferController extends Controller
     public function index()
     {
       $user = Auth::user();
+      
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
         // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
@@ -41,9 +42,10 @@ class StafferController extends Controller
                     }])->findOrFail($user->company_id);
         };
       };
+      // dd($staff);
       $page_info = Page::wherePage_alias('/staff')->first();
       $filials = count($company->departments);
-      // dd($filials);
+     
       return view('staff.index', compact('staff', 'page_info', 'filials'));
     }
 
