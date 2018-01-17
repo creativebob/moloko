@@ -81,7 +81,7 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($users))
         @foreach($users as $user)
-        <tr class="parent" id="users-{{ $user->id }}" data-name="{{ $user->nickname }}">
+        <tr class="parent @if($user->moderated == 1) no-moderation @endif" id="users-{{ $user->id }}" data-name="{{ $user->nickname }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $user->id }}"><label class="label-check" for="check-{{ $user->id }}"></label></td>
           <td class="td-second-name">{{ link_to_route('users.edit', $user->second_name . " " . $user->first_name . " (". $user->nickname . ")", [$user->id]) }} </td>

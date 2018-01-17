@@ -9,6 +9,7 @@ use App\Right;
 use App\RoleUser;
 use App\Department;
 use App\Http\Controllers\Session;
+use App\Scopes\ModerationScope;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;

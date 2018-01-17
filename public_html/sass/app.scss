@@ -1745,6 +1745,11 @@ input[type=checkbox], input[type=radio] {
           margin-bottom: 0;
         }
       }
+      .no-moderation {
+        td {
+          background-color: $content-table-no-moderation;
+        }
+      }
       // Убираем выделение каждой четной строки
       tr:nth-child(even) {
         border-bottom: 0;
@@ -1874,9 +1879,7 @@ input[type=checkbox], input[type=radio] {
       }
     }
 
-    .no-moderation {
-      background-color: $content-table-no-moderation;
-    }
+    
   }
   // Pagination
   #pagination {
