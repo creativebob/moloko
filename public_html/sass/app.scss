@@ -176,6 +176,7 @@ $content-input-focus-border-color: #333333;
   $content-table-td-border: #eeeeee;
   $content-table-deleted-color: #646464;
   $content-table-active-border-color-blue: #5190ff;
+  $content-table-no-moderation: #ffcccc;
 
   // Таблица поиска
   $content-table-search-td-border-color: #dadada;
@@ -1744,6 +1745,11 @@ input[type=checkbox], input[type=radio] {
           margin-bottom: 0;
         }
       }
+      .no-moderation {
+        td {
+          background-color: $content-table-no-moderation;
+        }
+      }
       // Убираем выделение каждой четной строки
       tr:nth-child(even) {
         border-bottom: 0;
@@ -1872,6 +1878,8 @@ input[type=checkbox], input[type=radio] {
         }
       }
     }
+
+    
   }
   // Pagination
   #pagination {

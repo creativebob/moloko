@@ -15,7 +15,7 @@ $(function() {
       sorter: false 
       },
     },
-    sortList: [[2,0]],
+    // sortList: [[2,0]],
     cssHeader: "thead-header"
   });  
   // Оставляем ширину у вырванного из потока элемента

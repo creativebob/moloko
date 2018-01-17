@@ -53,8 +53,10 @@ class GetAccessController extends Controller
             // Если нет должности - иди нахуй!
             if(isset($staffer)){
                 $user_filial_id = $staffer->filial_id; 
+                $user_department_id = $staffer->department_id;
+
                 // Получим все права и их ID в массив
-                $auth_user_roles = $user->roles->where('department_id', $user_filial_id);
+                $auth_user_roles = $user->roles->where('department_id', $user_filial_id)->orWhere('department_id', $user_department_id);
             } else {
                 abort(403);
             };
@@ -114,6 +116,7 @@ class GetAccessController extends Controller
         $access['filial_rights'] = $filial_rights;
         $access['all_rights'] = $all_rights;
         $access['user_info']['filial_id'] = $user_filial_id;
+        $access['user_info']['department_id'] = $user_department_id;
 
         // dd($access);
 
