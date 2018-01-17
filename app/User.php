@@ -257,6 +257,7 @@ class User extends Authenticatable
         'access_block', 
         'company_id', 
         'filial_id', 
+        'moderated', 
 
     ];
 

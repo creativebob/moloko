@@ -19,25 +19,4 @@ class ModerationScope implements Scope
     {
       $builder->where('moderated', null);
     }
-
-    public function remove(Builder $builder, Model $model)
-    {
-        $column = $model->getQualifiedDeletedAtColumn();
-
-        $query = $builder->getQuery();
-
-        foreach ((array) $query->wheres as $key => $where)
-        {
-            // Если оператор where ограничивает мягкое удаление данных, мы удалим его из
-            // запроса и сбросим ключи в операторах where. Это позволит разработчику
-            // включить удалённую модель в отношения результирующего набора, который загружается "лениво".
-            if ($this->isSoftDeleteConstraint($where, $column))
-            {
-                unset($query->wheres[$key]);
-
-                $query->wheres = array_values($query->wheres);
-            }
-        }
-    }
-    
 }

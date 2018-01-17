@@ -9,6 +9,7 @@ use App\Right;
 use App\RoleUser;
 use App\Department;
 use App\Http\Controllers\Session;
+use App\Scopes\ModerationScope;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
@@ -76,8 +77,6 @@ class UserController extends Controller
                         }
                     }
 
-                    // dd($filials);
-                    // $filials = collect($session['filial_rights'])->keys();
 
                 } else {
                     $access = $session['all_rights'];
@@ -85,7 +84,6 @@ class UserController extends Controller
                 }
 
             }
-            // dd($filials);
 
             // ЗАВИСИМОСТЬ ОТ СИСТЕМНЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------------------------------
             // Проверяем право просмотра системных записей:
@@ -118,29 +116,39 @@ class UserController extends Controller
             };                                 
         }
 
-
-        // dd($filials);
+            // ПРОВЕРЯЕМ ПРАВО НА ПРОСМОТР НЕ ОТМОДЕРИРОВАННЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------
+            // Проверяем право просмотра системных записей:
+            
+            if(isset($access['moderator-users-allow']) && (!isset($access['moderator-users-deny'])))
+            {
+                $moderator = ModerationScope::class;
+            } else {
+                $moderator = null;
+            };
 
 
         if (isset($user->company_id)) {
             // Если у пользователя есть компания
-            $users = User::withoutGlobalScope(ModerationScope::class)
+            $users = User::withoutGlobalScope($moderator)
                     ->whereCompany_id($user->company_id)
                     ->filials($filials)
                     ->whereGod(null)
                     ->authors($authors, $filials)
                     ->systemItem($system_item) // Фильтр по системным записям
                     ->orWhere('id', $user->id) // только для пользователей
+                    ->orderBy('moderated', 'asc')
                     ->paginate(30);
+
+            // dd($users);
         } else {
             // Если нет, то бог без компании
             if ($user->god == 1) {
-              $users = User::withoutGlobalScope(ModerationScope::class)->paginate(30);
+              $users = User::withoutGlobalScope(ModerationScope::class)
+                    ->orderBy('moderated', 'asc')
+                    ->paginate(30);
             };
         }
 
-
-        // dd($users);
 
         $session  = $request->session()->all();
         // dd($session);
