@@ -199,7 +199,7 @@
           @if(!empty($list_filials))
           <div class="small-12 cell">
             <label>Для филиала
-              {{ Form::select('filial_id', $list_filials, null, ['id'=>'id_filial']) }}
+              {{ Form::select('filial_id', $list_filials, null) }}
             </label>
           </div>
           @endif

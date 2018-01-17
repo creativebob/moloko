@@ -373,6 +373,7 @@ class UserController extends Controller
         // Получаем сессию
         $session  = session('access');
         if(!isset($session)){abort(403, 'Нет сессии!');};
+        $user_filial_id = $session['user_info']['filial_id'];
 
         // Получаем список ID филиалов в которых у нас есть право на текущую операцию
         $filials = [];
@@ -382,8 +383,10 @@ class UserController extends Controller
             }
         }
 
-        $list_filials = Department::whereIn('id', $filials)->pluck('department_name', 'id');
-        // dd($list_filials);
+        if($filials == null){abort(403, 'Не достаточно прав!');};
+
+        // $filials[] = $user_filial_id;
+        $list_filials = Department::whereIn('id', $filials)->where('filial_status', 1)->orderBy('department_name')->pluck('department_name', 'id');
 
         $auth_user = Auth::user();
         $user = User::findOrFail($id);
@@ -396,7 +399,7 @@ class UserController extends Controller
 
         
         Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles', 'departments', `list_filials`));
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles', 'departments', 'list_filials'));
     }
 
 

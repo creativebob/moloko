@@ -32,8 +32,6 @@ class GetAccessController extends Controller
     public function set(Request $request)
     {
 
-
-
         $user = Auth::user();
 
         // //Получаем права всех должностей
@@ -52,35 +50,55 @@ class GetAccessController extends Controller
 
             // Если нет должности - иди нахуй!
             if(isset($staffer)){
+
                 $user_filial_id = $staffer->filial_id; 
-                $user_department_id = $staffer->department_id;
+                $user_department_id = $staffer->department_id; 
+                // dd($user_department_id);
 
                 // Получим все права и их ID в массив
-                $auth_user_roles = $user->roles->where('department_id', $user_filial_id)->orWhere('department_id', $user_department_id);
+                $auth_user_roles = $user->roles->where('department_id', $user_filial_id);
+
+
             } else {
-                abort(403);
+                abort(403, 'Вы не трудоустроены!');
             };
 
         } else {
 
             //Если бог
             $user_filial_id = null;
+            $user_department_id = null;
             $auth_user_roles = $user->roles;
         }
 
         if(!isset($auth_user_roles)){abort(403);};
 
-
-
         $access = [];
         $all_rights = [];
         $filial_rights = [];
+        $filial_id = null;
+
+
+        if(isset($user->company_id)){
+            $departments = Department::whereCompany_id($user->company_id)->where('filial_status', 1)->get();
+        };
 
         foreach ($user->roles as $role) {
 
             $department_id = $role->pivot->department_id;
-            // dd($department_id);
+            // Пытаюсь получить ID филиала
 
+
+
+            // if(isset($user->company_id)){
+
+            //     $filial_id = $departments->where('id', $department_id)->first()->filial_id;
+            //     dd($filial_id);
+            // }
+
+            // dd($filial_id);
+
+            // dd($department_id);
             foreach ($role->rights as $right){
 
                 // Создаем ассоциированный массив прав на авторизованного пользователя
@@ -88,11 +106,13 @@ class GetAccessController extends Controller
 
                 // if(isset($allrights_array[$right->actionentity->alias_action_entity . "-" . 'deny'])){
                     $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
+                    $item_filial_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
                 // };          
             }
 
-            $filial_rights[$department_id] = $all_rights;
 
+            $filial_rights[$department_id] = $item_filial_rights;
+            // $filial_rights[$department_id]['filial'] = $filial_id;
         }
 
         if(count($filial_rights) == 0){

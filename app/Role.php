@@ -82,4 +82,10 @@ class Role extends Model
     return $this->belongsTo('App\User', 'author_id');
   }
 
+  public function departments()
+  {
+    return $this->belongsToMany('App\Department', 'role_user', 'department_id');
+  }
+
+
 }
