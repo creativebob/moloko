@@ -20,7 +20,8 @@ class ActionsTableSeeder extends Seeder
         	['action_name' => 'Системная', 'action_method' => 'system'], 
             ['action_name' => 'Другие авторы', 'action_method' => 'authors'], 
         	['action_name' => 'Нет ограничений', 'action_method' => 'nolimit'], 
-            ['action_name' => 'Модерация', 'action_method' => 'moderation'], 
+            ['action_name' => 'Автомодерация', 'action_method' => 'automoderate'], 
+            ['action_name' => 'Модератор', 'action_method' => 'moderator'],  
         ]);
     }
 }

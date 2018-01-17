@@ -16,15 +16,25 @@ class User extends Authenticatable
     use SoftDeletes;
 
 
-      /**
-     * The "booting" method of the model.
+    /**
+     * Загрузка типажа мягкого удаления для модели.
      *
      * @return void
      */
+    // public static function bootModeration()
+    // {
+    //   static::addGlobalScope(new ModerationScope);
+    // }
+
+
+    //   /**
+    //  * The "booting" method of the model.
+    //  *
+    //  * @return void
+    //  */
     protected static function boot()
     {
         parent::boot();
-
         static::addGlobalScope(new ModerationScope);
     }
 

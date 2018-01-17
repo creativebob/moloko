@@ -115,9 +115,7 @@ class UserController extends Controller
                 } else {
                     $authors = $list_authors;
                 };
-            };
-                                              
-
+            };                                 
         }
 
 
@@ -126,7 +124,8 @@ class UserController extends Controller
 
         if (isset($user->company_id)) {
             // Если у пользователя есть компания
-            $users = User::whereCompany_id($user->company_id)
+            $users = User::withoutGlobalScope(ModerationScope::class)
+                    ->whereCompany_id($user->company_id)
                     ->filials($filials)
                     ->whereGod(null)
                     ->authors($authors, $filials)
@@ -136,7 +135,7 @@ class UserController extends Controller
         } else {
             // Если нет, то бог без компании
             if ($user->god == 1) {
-              $users = User::paginate(30);
+              $users = User::withoutGlobalScope(ModerationScope::class)->paginate(30);
             };
         }
 
