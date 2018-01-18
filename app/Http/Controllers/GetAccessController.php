@@ -75,8 +75,10 @@ class GetAccessController extends Controller
             $filial_id = null;
 
             if(isset($user->company_id)){
-                $departments = Department::whereCompany_id($user->company_id)->where('filial_status', 1)->get();
+                $departments = Department::whereCompany_id($user->company_id)->get();
             };
+
+
 
             // ПОЛУЧАЕМ АВТОРОВ ---------------------------------------------------------------------------------------
             // Если есть списки авторов, то указываем их
@@ -103,25 +105,50 @@ class GetAccessController extends Controller
 
             // ЕСЛИ БОГ ------------------------------------------------------------------------------------------
 
-        }
+        };
 
-        foreach ($user->roles as $role) {
+        $right_mass = [];
+
+
+        foreach($user->roles as $role) {
+
             $department_id = $role->pivot->department_id;
 
-            foreach ($role->rights as $right){
+
+            // Если не бог - получаем ID филиала
+            if($user->god == null){
+                if((isset($department_id))&&($department_id !== null)){
+                    $filial = $departments->where('id', $department_id)->first();
+                    if($departments->where('id', $department_id)->first()->filial_id == null){
+                        $filial_id = $departments->where('id', $department_id)->first()->id;
+                    } else {
+                        $filial_id = $departments->where('id', $department_id)->first()->filial_id;
+                    };
+                };
+            };
+
+            foreach($role->rights as $right){
 
                 // Создаем ассоциированный массив прав на авторизованного пользователя
                     $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
                     $item_filial_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
+
+
+                    $right_mass['right_id'] = $right->id;
+                    $right_mass['departments'][$filial_id] = $department_id;
+
+                    $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right_mass;
             }
 
             // Если не бог - получаем ID филиала
             if($user->god == null){
-                if(isset($department_id)){
+
+                if((isset($department_id))&&($department_id !== null)){
+
                     $filial_id = $departments->where('id', $department_id)->first()->filial_id;
-                    if($filial_id == null){
-                        $filial_id = $department_id;
-                    };
+ 
+                    // dd($filial_id);
+
                 } else {
                     $filial_id = null;
                 };
@@ -129,7 +156,6 @@ class GetAccessController extends Controller
                 $filial_rights[$department_id] = $item_filial_rights;   
                              
             };
-
 
             $filial_rights[$department_id]['filial'] = $filial_id;
         }

@@ -49,6 +49,11 @@
           </div>
           <div class="small-5 right-head cell">
             <ul>
+              <li>
+                  @if(isset($session_god))
+                    {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 
+                  @endif
+                </li>
               <li><a id="task-toggle"><img src="/img/header/alert.png"></a></li>
               <li>
                 <a data-toggle="profile">
