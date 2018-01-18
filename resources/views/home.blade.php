@@ -13,7 +13,7 @@
                         </div>
                     @endif
 
-                    You are logged in!
+                    Ну типа твой рабочий стол и все такоя...
                 </div>
             </div>
         </div>

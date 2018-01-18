@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+// Подключаем модели
 use App\Site;
 use App\Page;
 use App\Company;
 
+// Подключаем фасады
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateSite;
 use Illuminate\Support\Facades\Auth;
@@ -19,14 +21,13 @@ class SiteController extends Controller
    */
   public function index()
   {
-    if (isset(Auth::user()->company_id)) {
+    $user = Auth::user();
+    if (isset($user->company_id)) {
       // Если у пользователя есть компания
-      // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
-      $sites = Site::whereCompany_id(Auth::user()->company_id)->paginate(30);
+      $sites = Site::whereCompany_id($user->company_id)->paginate(30);
     } else {
-      if (Auth::user()->god == 1) {
+      if ($user->god == 1) {
         // Если нет, то бог без компании
-        // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
         $sites = Site::paginate(30);
       };
     };
@@ -54,18 +55,15 @@ class SiteController extends Controller
   {
     $user = Auth::user();
     $site = new Site;
-
     $site->site_name = $request->site_name;
     $site->site_domen = $request->site_domen;
     $site->company_id = $user->company_id;
     $site->author_id = $user->id;
-    
     $site->save();
-
     if ($site) {
       return Redirect('/sites');
     } else {
-      $error = 'ошибка';
+      abort(403, 'Ошибка записи сайта');
     };
   }
 
@@ -88,7 +86,7 @@ class SiteController extends Controller
    */
   public function edit($id)
   {
-    
+    // 
   }
 
   /**
@@ -100,17 +98,19 @@ class SiteController extends Controller
    */
   public function update(Request $request, $id)
   {
-    $site = Site::findOrFail($id);
     // $this->authorize('update', $site);
-
+    $user = Auth::user();
+    $site = Site::findOrFail($id);
     $site->site_name = $request->site_name;
     $site->site_domen = $request->site_domen;
-    $site->company_id = Auth::user()->company_id;
+    $site->company_id =  $user->company_id;
     $site->editor_id = $user->id;
-    
     $site->save();
-
-    return Redirect('/sites');
+    if ($site) {
+      return Redirect('/sites');
+    } else {
+      abort(403, 'Ошибка обновления сайта');
+    };
   }
 
   /**
@@ -121,12 +121,20 @@ class SiteController extends Controller
    */
   public function destroy($id)
   {
-    // Удаляем сайт с обновлением
-    $site = Site::destroy($id);
+    $user = Auth::user();
+    $site = Site::findOrFail($id);
     if ($site) {
-      return Redirect('/sites');
+      $site->editor_id = $user->id;
+      $site->save();
+      // Удаляем сайт с обновлением
+      $site = Site::destroy($id);
+      if ($site) {
+        return Redirect('/sites');
+      } else {
+        abort(403, 'Ошибка при удалении сайта');
+      };
     } else {
-      echo 'произошла ошибка';
-    }; 
+      abort(403, 'Сайт не найден');
+    };
   }
 }

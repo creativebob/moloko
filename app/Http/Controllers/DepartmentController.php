@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
+// Подключаем модели
 use App\Department;
 use App\City;
 use App\Position;
 use App\Staffer;
 use App\Page;
 use App\Right;
+
+// Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-// use Department as LavMenu;
-
-
 
 class DepartmentController extends Controller
 {
@@ -23,34 +23,27 @@ class DepartmentController extends Controller
    */
   public function index()
   {
-
-
 // $this->authorize('index', User::class);
-
     $user = Auth::user();
     $others_item['user_id'] = $user->id;
     $system_item = null;
-
     if (isset($user->company_id)) {
       // Если у пользователя есть компания
       $departments = Department::with(['staff', 'staff.position', 'staff.user'])
               ->whereCompany_id($user->company_id)
               ->systemItem($system_item) // Фильтр по системным записям
               ->get();
-      // $positions = Position::whereCompany_id($user->company_id)
-      //                   ->orWhereNull('company_id')
-      //                   ->get();
+      $positions_list = Position::whereCompany_id($user->company_id)
+                        ->orWhereNull('company_id')->pluck('position_name', 'id');
     } else {
       // Если нет, то бог без компании
       if ($user->god == 1) {
         $departments = Department::with(['staff', 'staff.position', 'staff.user'])->get();
-        // $positions = Position::get();
+        $positions_list = Position::pluck('position_name', 'id');
       };
     }
     // dd($departments);
-
     $departments_db = $departments->toArray();
-
     //Создаем масив где ключ массива является ID меню
     $departments_id = [];
     foreach ($departments_db as $department) {
@@ -67,17 +60,10 @@ class DepartmentController extends Controller
         $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
       }
     };
-    
-    $tree = $departments->pluck('department_name', 'id');
-    $positions_list = Position::whereCompany_id($user->company_id)
-                        ->orWhereNull('company_id')->pluck('position_name', 'id');
+    $departments_list = $departments->pluck('department_name', 'id');
     $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
-
-
     // dd($departments_tree);
-
-    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'tree', 'page_info', 'pages', 'departments'));
-    // dd($positions);
+    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'departments_list', 'page_info', 'pages', 'departments'));
   }
 
   // Получаем сторонние данные по 
@@ -87,31 +73,21 @@ class DepartmentController extends Controller
     $others_item['user_id'] = $user->id;
     $system_item = null;
     if (isset($user->company_id)) {
-      // Получаем данные из таблицы в массиве
-      $departments = Department::whereCompany_id(Auth::user()->company_id)
-                        ->get();
-      $tree = $departments->pluck('department_name', 'id');
-      $staff = Staffer::get();
-      $positions = Position::whereCompany_id(Auth::user()->company_id)
-                        ->orWhereNull('company_id')
-                        ->get();
-      $positions_list = $positions->pluck('position_name', 'id');
-      // $departments = Department::with(['staff', 'staff.position', 'staff.user'])
-      //         ->whereCompany_id($user->company_id)
-      //         ->systemItem($system_item) // Фильтр по системным записям
-      //         ->get();
+      // Если у пользователя есть компания
+      $departments = Department::with(['staff', 'staff.position', 'staff.user'])
+              ->whereCompany_id($user->company_id)
+              ->systemItem($system_item) // Фильтр по системным записям
+              ->get();
+      $positions_list = Position::whereCompany_id($user->company_id)
+                        ->orWhereNull('company_id')->pluck('position_name', 'id');
     } else {
       // Если нет, то бог без компании
-        if ($user->god == 1) {
-          // $departments = Department::get(); 
-          // $tree = $departments->pluck('department_name', 'id');
-          // $staff = Staffer::all();
-          // $positions = Position::get();
-          // $positions_list = $positions->pluck('position_name', 'id');
-          $departments = Department::with(['staff', 'staff.position', 'staff.user'])->get();
-        };
-    };
-
+      if ($user->god == 1) {
+        $departments = Department::with(['staff', 'staff.position', 'staff.user'])->get();
+        $positions_list = Position::pluck('position_name', 'id');
+      };
+    }
+    // dd($departments);
     $departments_db = $departments->toArray();
     //Создаем масив где ключ массива является ID меню
     $departments_id = [];
@@ -129,15 +105,13 @@ class DepartmentController extends Controller
         $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
       }
     };
+    $departments_list = $departments->pluck('department_name', 'id');
+    $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
     $data = [
       'filial_id' => $filial,
       'department_id' => $depart,
     ];
-    $tree = $departments->pluck('department_name', 'id');
-    $positions_list = Position::whereCompany_id($user->company_id)
-                        ->orWhereNull('company_id')->pluck('position_name', 'id');
-    $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
-    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'data', 'tree', 'staff', 'page_info', 'departments')); 
+    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'data', 'departments_list', 'staff', 'page_info', 'departments')); 
   }
 
 
@@ -160,23 +134,19 @@ class DepartmentController extends Controller
   public function store(Request $request)
   {
     $user = Auth::user();
-
     // Пишем филиал
     if (isset($request->filial_database)) {
       // По умолчанию значение 0
       if ($request->filial_database == 0) {
         // Проверка города в нашей базе данных
         $city_name = $request->city_name;
-
         $cities = City::where('city_name', 'like', $city_name.'%')->get();
         $count = $cities->count();
         if ($count > 0) {
-          
           $objRes = (object) [];
           foreach ($cities as $city) {
             $city_id = $city->id;
             $city_name = $city->city_name;
-
             if ($city->area_id == null) {
               $area_name = '';
               $region_name = $city->region->region_name;
@@ -184,13 +154,11 @@ class DepartmentController extends Controller
               $area_name = $city->area->area_name;
               $region_name = $city->area->region->region_name;
             };
-        
             $objRes->city_id[] = $city_id;
             $objRes->city_name[] = $city_name;
             $objRes->area_name[] = $area_name;
             $objRes->region_name[] = $region_name;
           };
-
           $result = [
             'error_status' => 0,
             'cities' => $objRes,
@@ -206,9 +174,7 @@ class DepartmentController extends Controller
       };
       // Если город найден, то меняем значение на 1, пишем в базу и отдаем результат
       if ($request->filial_database == 1) {
-
         $filial = new Department;
-
         $filial->company_id = $user->company_id;
         $filial->city_id = $request->city_id;
         $filial->department_name = $request->filial_name;
@@ -216,13 +182,11 @@ class DepartmentController extends Controller
         $filial->department_phone = cleanPhone($request->filial_phone);
         $filial->filial_status = 1;
         $filial->author_id = $user->id;
-
         $filial->save();
-
         if ($filial) {
           return Redirect('/current_department/'.$filial->id.'/0');
         } else {
-          echo 'Ошибка записи филиала';
+          abort(403, 'Ошибка при записи филиала!');
         };
         
       };
@@ -279,7 +243,7 @@ class DepartmentController extends Controller
         if ($department) {
           return Redirect('/current_department/'.$request->filial_id.'/'.$department_id);
         } else {
-          echo 'Ошибка записи филиала';
+          abort(403, 'Ошибка при записи отдела!');
         };
       };
     };
@@ -316,7 +280,6 @@ class DepartmentController extends Controller
       ];
     } else {
       // Меняем отдел
-
       if (isset($department->city_id)) {
         $city_id = $department->city_id; 
       } else {
@@ -360,25 +323,23 @@ class DepartmentController extends Controller
   public function update(Request $request, $id)
   {
     if ($request->filial_database == 1) {
-
       $filial = Department::findOrFail($id);
-
       $filial->company_id = Auth::user()->company_id;
       $filial->city_id = $request->city_id;
       $filial->department_name = $request->filial_name;
       $filial->department_address = $request->filial_address;
       $filial->department_phone = cleanPhone($request->filial_phone);
       $filial->filial_status = 1;
-
+      $filial->filial_id = $id;
       $filial->save();
-      
-      
-      return Redirect('/current_department/'.$filial->id.'/0');
+      if ($filial) {
+        return Redirect('/current_department/'.$filial->id.'/0');
+      } else {
+        abort(403, 'Ошибка при оюновлении филиала!');
+      };
     };
     if ($request->department_database == 1) {
-
       $department = Department::findOrFail($id);
-
       $department->company_id = Auth::user()->company_id;
       $department->city_id = $request->city_id;
       $department->department_name = $request->department_name;
@@ -386,12 +347,12 @@ class DepartmentController extends Controller
       // $department->department_phone = cleanPhone($request->department_phone);
       $department->department_parent_id = $request->department_parent_id;
       $department->filial_id = $request->filial_id;
-
-
       $department->save();
-      
-      
-      return Redirect('/current_department/'.$department->filial_id.'/'.$id);
+      if ($department) {
+        return Redirect('/current_department/'.$department->filial_id.'/'.$id);
+      } else {
+        abort(403, 'Ошибка при обновлении отдела!');
+      };
     };
   }
 
@@ -403,31 +364,31 @@ class DepartmentController extends Controller
    */
   public function destroy($id)
   {
-
-    $department = Department::findOrFail($id);
-    
-      // Видим что филиал и удаляем с обновлением
+    $user = Auth::user();
+    $department = Department::with('staff')->findOrFail($id);
+    if (count($department->staff) > 0) {
+      abort(403, 'Филиал/отдел не пустой');
+    } else {
+      if ($department->filial_status == null) {
+        $filial_id = $department->filial_id;
+        $department_id = $department->id;
+      } else {
+        $department_id = 0;
+      };
+      $department->editor_id = $user->id;
+      $department->save();
       $department = Department::destroy($id);
       if ($department){
-        return Redirect('/departments');
-        
+        if ($department_id == 0) {
+          return Redirect('/departments');
+        } else {
+          return Redirect('/current_department/'.$filial_id.'/'.$department_id);
+        };
       } else {
-        // В случае непредвиденной ошибки
-        echo "Непредвиденноая ошибка";
+        abort(403, 'Ошибка при удалении филиала/отдела');
       };
-    
-
-    // Удаляем ajax
-    // Проверяем содержит ли филиал вложения
-    // $department = Department::whereDepartment_parent_id($id)->first();
-    // if ($department->filial_status == 1) {
-    //   // Если содержит, то даем сообщенеи об ошибке
-    //   } 
-    // $depart =  Department::find($id);
-    // return Redirect('/current_department/'.$depart->filial_id.'/'.$depart->department_parent_id.'/0');
+    }
   }
-
-  
 }
 
 

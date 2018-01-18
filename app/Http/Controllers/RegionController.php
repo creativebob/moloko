@@ -4,12 +4,9 @@ namespace App\Http\Controllers;
 
 // Подключаем модели
 use App\Region;
-use App\Area;
-use App\City;
 
 // Подключаем фасады
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class RegionController extends Controller

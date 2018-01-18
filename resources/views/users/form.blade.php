@@ -214,7 +214,7 @@
         </div>
         <div class="grid-x grid-padding-x">
           <div class="small-12 cell tabs-margin-top">
-            <table>
+            <table class="table-content">
               <caption>Уровень доступа</caption>
               <thead>
                 <tr>
@@ -248,8 +248,8 @@
             </table>
            
           </div>
-          <div class="small-8 samll-offset-2 medium-6 medium-offset-3 cell">
-            <a class="button" data-open="role-add">настройка доступа</a>
+          <div class="small-8 small-offset-2 medium-6 medium-offset-3 text-center cell">
+            <a class="button" data-open="role-add">Настройка доступа</a>
           </div>
 
           <div class="small-12 cell checkbox">

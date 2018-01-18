@@ -145,13 +145,6 @@ class MenusTableSeeder extends Seeder
                 'page_id' => 14,
                 'navigation_id' => 1,
             ],
-            [
-                'menu_name' => null,
-                'menu_icon' => null,
-                'menu_parent_id' => 3,
-                'page_id' => 15,
-                'navigation_id' => 1,
-            ],
 
         ]);
     }

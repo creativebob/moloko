@@ -66,7 +66,7 @@
                 <li><div class="icon-list-add sprite" data-open="department-add"></div></li>
                 <li><div class="icon-list-edit sprite" data-open="filial-edit"></div></li>
                 <li>
-                  @if (!isset($department['children']))
+                  @if ((count($department['staff']) == 0) && !isset($department['children']))
                     <div class="icon-list-delete sprite" data-open="item-delete"></div>
                   @endif
                 </li>
@@ -216,7 +216,7 @@
           <div class="grid-x grid-padding-x modal-content inputs">
             <div class="small-10 small-offset-1 cell">
               <label>Добавляем отдел в:
-                {{ Form::select('tree', $tree, null, ['id'=>'dep-tree-select']) }}
+                {{ Form::select('departments_list', $departments_list, null, ['id'=>'dep-tree-select']) }}
               </label>
               <label>Название отдела
                 {{ Form::text('department_name', $value = null, ['id'=>'department-name-field', 'autocomplete'=>'off', 'required']) }}
@@ -251,7 +251,7 @@
           <div class="grid-x grid-padding-x modal-content inputs">
             <div class="small-10 small-offset-1 cell">
               <label>Добавляем должность в:
-                {{ Form::select('tree', $tree, null, ['id'=>'pos-tree-select']) }}
+                {{ Form::select('departments_list', $departments_list, null, ['id'=>'pos-tree-select']) }}
               </label>
               <label>Должность
                 {{ Form::select('position_id', $positions_list) }}
@@ -286,7 +286,7 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label>Отдел находится в:
-          {{ Form::select('department_parent_id', $tree, null, ['id'=>'dep-select-edit']) }}
+          {{ Form::select('department_parent_id', $departments_list, null, ['id'=>'dep-select-edit']) }}
         </label>
         <label>Название отдела
           {{ Form::text('department_name', $value = null, ['class'=>'department-name-field', 'autocomplete'=>'off', 'required']) }}
