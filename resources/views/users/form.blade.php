@@ -192,9 +192,18 @@
         <div class="grid-x grid-padding-x"> 
           <div class="small-12 cell">
             <label>Статус пользователя
-              {{ Form::select('user_type', [ '1' => 'Сотрудник', '2' => 'Клиент']) }}
+              {{ Form::select('user_type', [ '1' => 'Пользователь системы', '2' => 'Клиент']) }}
             </label>
           </div>
+
+          @if(!empty($list_filials))
+          <div class="small-12 cell">
+            <label>Для филиала
+              {{ Form::select('filial_id', $list_filials, null) }}
+            </label>
+          </div>
+          @endif
+
         </div>
         <div class="grid-x grid-padding-x"> 
           <div class="small-12 cell tabs-margin-top">

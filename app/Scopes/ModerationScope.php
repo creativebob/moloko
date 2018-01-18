@@ -19,5 +19,4 @@ class ModerationScope implements Scope
     {
       $builder->where('moderated', null);
     }
-
 }

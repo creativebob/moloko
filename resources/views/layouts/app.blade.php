@@ -1,3 +1,14 @@
+@php
+
+  $session_god = session('god'); 
+  $session_access = session('access');
+  $user_filial_id = $session_access['user_info']['filial_id'];
+  $rights_user_filial = collect($session_access['all_rights'])->keys()->implode('\n');
+  
+  if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' . count($session_access['list_authors']['authors_id']);} else {$count_authors = "";};
+
+@endphp
+
 <!doctype html>
 <html class="no-js" lang="ru" dir="ltr">
   <head>
@@ -45,7 +56,7 @@
                   @if(isset(Auth::user()->company_id))
                     {{ Auth::user()->company->company_name}}  | 
                   @endif
-                  {{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }}</span><img src="/img/header/avatar.png">
+                  {{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }} {{ $count_authors }}</span><img src="/img/header/avatar.png">
                 </a>
               </li>
             </ul>
@@ -61,14 +72,7 @@
                   @endif
                 </li>
                 <li>
-                  @php
 
-                    $session_god = session('god'); 
-                    $session_access = session('access');
-                    $user_filial_id = $session_access['user_info']['filial_id'];
-                    $rights_user_filial = collect($session_access['all_rights'])->keys()->implode('\n');
-
-                  @endphp
 
                   @if(isset($session_god))
                     {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 

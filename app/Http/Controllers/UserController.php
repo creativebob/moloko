@@ -33,32 +33,44 @@ class UserController extends Controller
             // Подключение политики
             // $this->authorize('index', User::class);
         
-
         $user = Auth::user();
 
         // Получаем сессию
         $session  = session('access');
-        if(!isset($session)){abort(403);};
+        if(!isset($session)){abort(403, 'Нет сессии!');};
 
+        // Получаем список авторов
         $list_authors = $session['list_authors'];
-        // dd($session);
 
         // Показываем богу всех авторов
         if($user->god == 1) {
 
-            $authors = null;
             $filials = null;
             $system_item = 1;
 
         } else {
 
+            // ОСНОВНЫЕ ПРОВЕРКИ --------------------------------------------------------------------------------------------------------------------
+
             if(isset($session['all_rights']['nolimit-users-allow']) && (!isset($session['all_rights']['nolimit-users-deny']))){
 
                 // Видим в правах независимость от филиала и даем все права!
                 $access = $session['all_rights'];
-                $filials = null;
+
+                if(isset($user->company_id)){
+                    $filials = Department::whereCompany_id($user->company_id)->where('filial_status', 1)->get()->keys('department_id')->toarray();
+                };
+
+                // dd($filials);
+
+
+                $list_authors['authors_id'] = null;
+                $authors = $list_authors;
+
 
             } else {
+
+
 
                 // ЗАВИСИМОСТЬ ОТ ФИЛИАЛА ---------------------------------------------------------------------------------------------------------------
                 // Указываем - являеться ли сущность зависимой от филиала
@@ -67,65 +79,94 @@ class UserController extends Controller
                 $dependence = true;
 
                 $user_filial_id = $session['user_info']['filial_id'];
-                if($dependence) {
-                    if(isset($session['filial_rights'][$user_filial_id])){$access = $session['filial_rights'][$user_filial_id];};
 
+
+                if($dependence){
+
+                    // if(isset($session['filial_rights'][$user_filial_id])){
+                    //     $access = $session['filial_rights'][$user_filial_id];
+                    // };
+
+                    // Получаем массив с ID филиаломи в которых присутствует право на просмотр
                     $filials = [];
                     foreach($session['filial_rights'] as $key => $filial){
-                            if(isset($filial['index-users-allow']) && (!isset($filial['index-users-deny']))){
-                            $filials[] = $key;
-                        }
-                    }
+                        if(isset($filial['index-users-allow']) && (!isset($filial['index-users-deny']))){
+                            $filials[] = $filial['filial'];
+                        };
+                    };
 
-                    // dd($filials);
-                    // $filials = collect($session['filial_rights'])->keys();
+                    if($filials == null){abort(403, "У вас нет права на просмотр списка пользователей!");};
+
+                    $filials_for_index = $filials;
 
                 } else {
-                    $access = $session['all_rights'];
-                    $filials = null;
-                }
 
-            }
-            // dd($filials);
+                    if(isset($session['all_rights']['index-users-allow']) && (!isset($session['all_rights']['index-users-deny']))){
+                        $filials = null;
+                    };
+                };
+
+
+                // ЗАВИСИМОСТЬ ОТ АВТОРА ЗАПИСИ ---------------------------------------------------------------------------------------------------------------
+                // Проверяем право на просмотр чужих записей:
+                // dd($access['list_authors']['authors_id']);
+
+                // Получаем список ID филиалов в которых у нас есть право на текущую операцию
+                $filials = [];
+
+                foreach($session['filial_rights'] as $key => $filial){
+                    if(isset($filial['authors-users-allow']) && (!isset($filial['authors-users-deny']))){
+                        $filials[] = $filial['filial'];
+                    };
+                };
+
+                if($filials == null){
+
+                    $list_authors['authors_id'] = null;
+                    $filials = $filials_for_index;
+                    $authors = $list_authors;
+
+                } else {
+                    $authors = $list_authors['authors_id'];
+                };
+
+
+            };
+
+
 
             // ЗАВИСИМОСТЬ ОТ СИСТЕМНЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------------------------------
             // Проверяем право просмотра системных записей:
             
-            if(isset($access['system-users-allow']) && (!isset($access['system-users-deny'])))
-            {
+            if(isset($session['all_rights']['system-users-allow']) && (!isset($session['all_rights']['system-users-deny']))){
                 $system_item = 1;
             } else {
                 $system_item = null;
             };
 
 
-            // ЗАВИСИМОСТЬ ОТ АВТОРА ЗАПИСИ ---------------------------------------------------------------------------------------------------------------
-            // Проверяем право на просмотр чужих записей:
-            // dd($access['list_authors']['authors_id']);
-            // 
-            $authors['authors_id'] = null;
-            if(count($list_authors['authors_id']) > 0){
 
-                $authors = $list_authors;
-                // dd($authors);
+            // ПРОВЕРЯЕМ ПРАВО НА ПРОСМОТР НЕ ОТМОДЕРИРОВАННЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------
+            // Проверяем право просмотра системных записей:
+            
+            if(isset($session['all_rights']['moderator-users-allow']) && (!isset($session['all_rights']['moderator-users-deny']))){
+                $moderator = ModerationScope::class;
             } else {
+                $moderator = null;
+            };
 
-                if(isset($access['authors-users-allow']) && (!isset($access['authors-users-deny'])))
-                {
-                    $authors = null;
-                } else {
-                    $authors = $list_authors;
-                };
-            };                                 
-        }
+        };
 
 
-        // dd($filials);
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        if (isset($user->company_id)) {
+        if(isset($user->company_id)) {
             // Если у пользователя есть компания
-            $users = User::withoutGlobalScope(ModerationScope::class)
+            $users = User::withoutGlobalScope($moderator)
                     ->whereCompany_id($user->company_id)
                     ->filials($filials)
                     ->whereGod(null)
@@ -134,69 +175,115 @@ class UserController extends Controller
                     ->orWhere('id', $user->id) // только для пользователей
                     ->orderBy('moderated', 'desc')
                     ->paginate(30);
+
         } else {
             // Если нет, то бог без компании
-            if ($user->god == 1) {
-              $users = User::withoutGlobalScope(ModerationScope::class)->orderBy('moderated', 'desc')->paginate(30);
+            if($user->god == 1) {
+
+              $users = User::withoutGlobalScope(ModerationScope::class)
+                    ->orderBy('moderated', 'desc')
+                    ->paginate(30);
             };
-        }
- 
+        };
 
-
-        // dd($users);
 
         $session  = $request->session()->all();
         // dd($session);
 	    return view('users.index', compact('users', 'access', 'session'));
 	}
 
-    public function store(UpdateUser $request)
+    //
+    public function create()
     {
         // $this->authorize('create', User::class);
 
         // Получаем сессию
         $session  = session('access');
-        if(!isset($session)){abort(403);};
+        if(!isset($session)){abort(403, 'Нет сессии!');};
+
+        // Получаем список ID филиалов в которых у нас есть право на текущую операцию
+        $filials = [];
+        foreach($session['filial_rights'] as $key => $filial){
+                if(isset($filial['create-users-allow']) && (!isset($filial['create-users-deny']))){
+                $filials[] = $filial['filial'];
+            }
+        }
+
+        $list_filials = Department::whereIn('id', $filials)->pluck('department_name', 'id');
+
+    	$user = new User;
+        $roles = new Role;
+    	return view('users.create', compact('user', 'roles', 'list_filials'));
+    }
+
+
+    public function store(UpdateUser $request)
+    {
+
+        // $this->authorize('create', User::class);
+
+        // Получаем сессию
+        $session  = session('access');
+        if(!isset($session)){abort(403, 'Нет сессии!');};
+
+        // Получаем список ID филиалов в которых у нас есть право на текущую операцию
+        $filials = [];
+        foreach($session['filial_rights'] as $key => $filial){
+                if(isset($filial['create-users-allow']) && (!isset($filial['create-users-deny']))){
+                $filials[] = $key;
+            }
+        }
+
 
         $auth_user = Auth::user();
-    	$user = new User;
+        $user = new User;
 
-    	$user->login = $request->login;
-    	$user->email = $request->email;
-    	$user->password = bcrypt($request->password);
-    	$user->nickname = $request->nickname;
+        $user->login = $request->login;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->nickname = $request->nickname;
 
-    	$user->first_name =   $request->first_name;
-    	$user->second_name = $request->second_name;
-    	$user->patronymic = $request->patronymic;
-		$user->sex = $request->sex;
-	   	$user->birthday = $request->birthday;
+        $user->first_name =   $request->first_name;
+        $user->second_name = $request->second_name;
+        $user->patronymic = $request->patronymic;
+        $user->sex = $request->sex;
+        $user->birthday = $request->birthday;
 
-    	$user->phone = cleanPhone($request->phone);
+        $user->phone = cleanPhone($request->phone);
 
-    	if(($request->extra_phone != Null)&&($request->extra_phone != "")){
-    		$user->extra_phone = cleanPhone($request->extra_phone);
-    	};
+        if(($request->extra_phone != Null)&&($request->extra_phone != "")){
+            $user->extra_phone = cleanPhone($request->extra_phone);
+        };
 
-    	$user->telegram_id = $request->telegram_id;
-    	$user->city_id = $request->city_id;
-    	$user->address = $request->address;
+        $user->telegram_id = $request->telegram_id;
+        $user->city_id = $request->city_id;
+        $user->address = $request->address;
 
-    	$user->orgform_status = $request->orgform_status;
+        $user->orgform_status = $request->orgform_status;
 
-    	$user->user_inn = $request->inn;
+        $user->user_inn = $request->inn;
 
-    	$user->passport_address = $request->passport_address;
-    	$user->passport_number = $request->passport_number;
-    	$user->passport_released = $request->passport_released;
-    	$user->passport_date = $request->passport_date;
+        $user->passport_address = $request->passport_address;
+        $user->passport_number = $request->passport_number;
+        $user->passport_released = $request->passport_released;
+        $user->passport_date = $request->passport_date;
 
-    	$user->user_type = $request->user_type;
-    	$user->lead_id = $request->lead_id;
-    	$user->employee_id = $request->employee_id;
-    	$user->access_block = $request->access_block;
-
+        $user->user_type = $request->user_type;
+        $user->lead_id = $request->lead_id;
+        $user->employee_id = $request->employee_id;
+        $user->access_block = $request->access_block;
         $user->author_id = $auth_user->id;
+
+        if(isset($access['automoderate-users-allow']) && (!isset($access['automoderate-users-deny'])))
+        {
+            $moderator = ModerationScope::class;
+        } else {
+            $moderator = null;
+        };
+
+
+
+
 
         // Если у пользователя есть назначенная компания и пользователь не являеться богом
         if(isset($auth_user->company_id)&&($auth_user->god != 1)){
@@ -245,18 +332,11 @@ class UserController extends Controller
          
         // };
 
-		return redirect('users');
+        return redirect('users');
     }
 
-    //
-    public function create()
-    {
-        // $this->authorize('create', User::class);
 
-    	$user = new User;
-        $roles = new Role;
-    	return view('users.create', compact('user', 'roles'));
-    }
+
 
     public function update(UpdateUser $request, $id)
     {
@@ -328,20 +408,44 @@ class UserController extends Controller
     {
         $auth_user = Auth::user();
         $user = User::findOrFail($id);
+
         // $this->authorize('update', $user);
 
-        // $access_action_list = Role::where('category_right_id', '1')->pluck('role_name', 'id');
-        // $access_locality_list = Role::where('category_right_id', '2')->pluck('role_name', 'id');
+        if($auth_user->god == null) {
+
+
+        // Получаем сессию
+        $session  = session('access');
+
+        if(!isset($session)){abort(403, 'Нет сессии!');};
+        $user_filial_id = $session['user_info']['filial_id'];
+
+        // Получаем список ID филиалов в которых у нас есть право на текущую операцию
+        $filials = [];
+
+        foreach($session['filial_rights'] as $key => $filial){
+                if(isset($filial['edit-users-allow']) && (!isset($filial['edit-users-deny']))){
+                $filials[] = $filial['filial'];
+            }
+        }
+
+        if($filials == null){abort(403, 'Недостаточно прав!');};
+
+        // $filials[] = $user_filial_id;
+        $list_filials = Department::whereIn('id', $filials)->where('filial_status', 1)->orderBy('department_name')->pluck('department_name', 'id');
+
+        };
+
+
         $role = new Role;
         $role_users = RoleUser::whereUser_id($id)->get();
 
         $roles = Role::whereCompany_id($auth_user->company_id)->pluck('role_name', 'id');
         $departments = Department::whereCompany_id($auth_user->company_id)->pluck('department_name', 'id');
 
-        // dd($roles);
         
         Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles', 'departments'));
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles', 'departments', 'list_filials'));
     }
 
 

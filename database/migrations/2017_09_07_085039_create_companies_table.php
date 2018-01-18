@@ -43,7 +43,7 @@ class CreateCompaniesTable extends Migration
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
 
             $table->timestamps();
-            $table->dateTime('moderated_at')->nullable()->comment('Дата модерации');
+            $table->integer('moderated')->nullable()->unsigned()->comment('Статус модерации');
             $table->softDeletes();
         });
     }
