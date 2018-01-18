@@ -1,11 +1,11 @@
 @extends('layouts.app')
  
 @section('inhead')
-<meta name="description" content="{{ $page_info->page_description }}" />
+<meta name="description" content="Меню {{ $site->site_name }}" />
 @endsection
 
 @section('title')
-  {{ $page_info->page_name }}
+   Меню {{ $site->site_name }}
 @endsection
 
 @section('title-content')

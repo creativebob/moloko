@@ -26,7 +26,7 @@
          $block = 'disabled';
         @endphp
       @endif
-      {{ Form::select('user_id', $users, $staffer->user_id, ['id'=>'staffer-select', 'placeholder'=>'Вакансия', $block]) }}
+      {{ Form::select('user_id', $users_list, $staffer->user_id, ['id'=>'staffer-select', 'placeholder'=>'Вакансия', $block]) }}
     </label>
     <label>Дата приема
       @php 

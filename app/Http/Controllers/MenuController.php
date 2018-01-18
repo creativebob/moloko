@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-
+// Подключаем модели
 use App\Menu;
 use App\Page;
 use App\Navigation;
 use App\Site;
 
-
+// Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Session;
@@ -23,15 +23,11 @@ class MenuController extends Controller
     public function index(Request $request)
     {
       $user = Auth::user();
-      $others_item['user_id'] = $user->id;
-      $system_item = null;
       // Пишем сайт в сессию
       session(['current_site' => $request->site_id]);
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
         $site = Site::with(['pages', 'navigations', 'navigations.menus', 'navigations.menus.page'])
-                  // ->whereId($request->site_id)
-                  // ->systemItem($system_item) // Фильтр по системным записям
                   ->findOrFail($request->site_id);
       } else {
         // Если нет, то бог без компании
@@ -76,14 +72,10 @@ class MenuController extends Controller
     public function current_menu(Request $request, $navigat, $menu_id)
     {
       $user = Auth::user();
-      $others_item['user_id'] = $user->id;
-      $system_item = null;
       $site_id  = session('current_site');
      if (isset($user->company_id)) {
         // Если у пользователя есть компания
         $site = Site::with(['pages', 'navigations', 'navigations.menus', 'navigations.menus.page'])
-                  // ->whereId($request->site_id)
-                  // ->systemItem($system_item) // Фильтр по системным записям
                   ->findOrFail($site_id);
       } else {
         // Если нет, то бог без компании
@@ -121,7 +113,6 @@ class MenuController extends Controller
       }
       $pages = $site->pages->pluck('page_name', 'id');
       $page_info = Page::wherePage_alias('/menus')->whereSite_id('1')->first();
-
       $data = [
         'navigation_id' => $navigat,
         'menu_id' => $menu_id,
@@ -149,12 +140,9 @@ class MenuController extends Controller
     public function store(Request $request)
     {
       $user = Auth::user();
-
       // Пишем раздел меню
       if (isset($request->section) && $request->section == 1) {
-
           $menu = new Menu;
-
           $menu->menu_name = $request->menu_name;
           $menu->navigation_id = $request->navigation_id;
           if (isset($request->menu_icon)) {
@@ -167,43 +155,36 @@ class MenuController extends Controller
 
           } else {
             $menu->company_id = $user->company_id;
-          }
+          };
           $menu->author_id = $user->id;
-
           $menu->save();
-
           if ($menu) {
             return Redirect('/current_menu/'.$menu->navigation_id.'/'.$menu->id);
           } else {
-            echo 'Ошибка записи раздела меню';
+            abort(403, 'Ошибка при записи раздела меню!');
           };
-          
         };
       // Пишем пункт меню
       if (isset($request->page) && $request->page == 1) {
-          $menu = new Menu;
-
-          $menu->page_id = $request->page_id;
-          if (isset($request->menu_parent_id)) {
-        $menu->menu_parent_id = $request->menu_parent_id;
-      };
-          $menu->navigation_id = $request->navigation_id;
-          if ($user->company_id == null) {
-
-          } else {
-            $menu->company_id = $user->company_id;
-          }
-          $menu->author_id = $user->id;
-
-          $menu->save();
-
-          if ($menu) {
-            return Redirect('/current_menu/'.$menu->navigation_id.'/'.$menu->id);
-          } else {
-            echo 'Ошибка записи раздела меню';
-          };
-          
+        $menu = new Menu;
+        $menu->page_id = $request->page_id;
+        if (isset($request->menu_parent_id)) {
+          $menu->menu_parent_id = $request->menu_parent_id;
         };
+        $menu->navigation_id = $request->navigation_id;
+        if ($user->company_id == null) {
+
+        } else {
+          $menu->company_id = $user->company_id;
+        }
+        $menu->author_id = $user->id;
+        $menu->save();
+        if ($menu) {
+          return Redirect('/current_menu/'.$menu->navigation_id.'/'.$menu->id);
+        } else {
+          abort(403, 'Ошибка записи раздела меню');
+        };
+      };
     }
 
     /**
@@ -226,8 +207,7 @@ class MenuController extends Controller
     public function edit($id)
     {
       // Отдаем данные по меню
-       $menu = Menu::findOrFail($id);
-     
+      $menu = Menu::findOrFail($id);
       $result = [
         'menu_name' => $menu->menu_name,
         'menu_icon' => $menu->menu_icon,
@@ -246,10 +226,8 @@ class MenuController extends Controller
     public function update(Request $request, $id)
     {
       $user = Auth::user();
-
       $menu = Menu::with('navigation')->findOrFail($id);
       $site_id = $menu->navigation->site_id;
-
       $menu->menu_name = $request->menu_name;
       $menu->navigation_id = $request->navigation_id;
       $menu->menu_icon = $request->menu_icon;
@@ -262,16 +240,12 @@ class MenuController extends Controller
         $menu->company_id = $user->company_id;
       }
       $menu->editor_id = $user->id;
-
       $menu->save();
-
       if ($menu) {
         return Redirect('/current_menu/'.$menu->navigation_id.'/'.$menu->id);
       } else {
-        echo 'Ошибка записи раздела меню';
+        abort(403, 'Ошибка обновления раздела меню');
       };
-        
- 
     }
 
     /**
@@ -282,15 +256,20 @@ class MenuController extends Controller
      */
     public function destroy($id)
     {
+      $user = Auth::user();
       $menu = Menu::with('navigation')->findOrFail($id);
       $site_id = $menu->navigation->site_id;
-        // Удаляем с обновлением
-        $menu = Menu::destroy($id);
+      if ($menu) {
+        $menu->editor_id = $user->id;
+        $menu->save();
+       // Удаляем с обновлением
         if ($menu) {
           return Redirect('/current_menu/'.$menu->navigation_id.'/0');
         } else {
-          // В случае непредвиденной ошибки
-          echo "Непредвиденная ошибка";
+          abort(403, 'Ошибка при удалении меню');
         };
+      } else {
+        abort(403, 'Меню не найдено');
+      };
     }
 }

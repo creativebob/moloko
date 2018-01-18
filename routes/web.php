@@ -68,7 +68,7 @@ Route::resource('/regions', 'RegionController')->middleware('auth');
 Route::post('/city', 'CityController@get_vk_city')->middleware('auth');
 Route::post('/region', 'RegionController@get_vk_region')->middleware('auth');
 // Текущий добавленный/удаленный город
-Route::get('/current_city/{region}/{area}/{city}', 'CityController@current_city')->middleware('auth');
+Route::get('/current_city/{region}/{area}', 'CityController@current_city')->middleware('auth');
 // Конец блока с населенными пунктами
 
 // Контроллеры для отображения филиалов, отделов и должностей

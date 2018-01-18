@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Region;
+// Подключаем модели
 use App\Area;
-use App\City;
+
+// Подключаем фасады
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AreaController extends Controller
 {
@@ -17,7 +18,7 @@ class AreaController extends Controller
      */
     public function index()
     {
-        //
+      //
     }
 
     /**
@@ -83,20 +84,24 @@ class AreaController extends Controller
      */
     public function destroy($id)
     {
+      $user = Auth::user();
       // Удаляем с обновлением
       // Находим область и район города
-      $del_area = Area::whereId($id)->first();
-      $region_id = $del_area->region->id;
+      $area = Area::with('cities')->findOrFail($id);
+      $region_id = $area->region_id;
+      // dd($area);
       
-      $area = Area::destroy($id);
-      if ($area) {
-        return Redirect('current_city/'.$region_id.'/0/0');
+      if (count($area->cities) > 0) {
+        abort(403, 'Район не пустой!');
       } else {
-        $data = [
-          'status' => 0,
-          'msg' => 'Произошла ошибка'
-        ];
-        echo 'произошла ошибка';
-      };
+        $area->editor_id = $user->id;
+        $area->save();
+        $area = Area::destroy($id);
+        if ($area) {
+          return Redirect('current_city/'.$region_id.'/0/0');
+        } else {
+          abort(403, 'Ошибка при удалении района!');
+        }
+      }
     }
 }

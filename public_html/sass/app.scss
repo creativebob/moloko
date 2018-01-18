@@ -1672,6 +1672,14 @@ input[type=checkbox], input[type=radio] {
     border-collapse: separate;
     width: 100%;
 
+    caption {
+      font-family: $PFDDPM;
+      text-align: center;
+      font-size: 0.875rem;
+      font-weight: normal;
+      // color: $content-input-color;
+    }
+
     td.details-control {
       background: url('../resources/details_open.png') no-repeat center center;
       cursor: pointer;

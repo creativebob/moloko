@@ -1,16 +1,19 @@
 @extends('layouts.app')
 
 @section('inhead')
+  <meta name="description" content="{{ $page_info->page_description }}" />
 @endsection
 
-@section('title', 'Населенные пункты')
+@section('title')
+  {{ $page_info->page_name }}
+@endsection
 
 @section('title-content')
 <div data-sticky-container id="head-content">
   <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-options="stickyOn: small;" data-top-anchor="head-content:top">
     <div class="top-bar head-content">
       <div class="top-bar-left">
-        <h2 class="header-content">НАСЕЛЕННЫЕ ПУНКТЫ</h2>
+        <h2 class="header-content">{{ $page_info->page_name }}</h2>
         <a class="icon-add sprite" data-open="region-add"></a>
       </div>
       <div class="top-bar-right">
@@ -47,7 +50,7 @@
           <li><div class="icon-list-add sprite" data-open="city-add"></div></li>
           {{-- <li><div class="icon-list-edit sprite" data-open="region-edit"></div></li> --}}
           <li>
-          @if($region->areas_count + $region->cities_count == 0)  
+          @if((count($region->areas) + count($region->cities)) == 0)  
             <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
           @endif
           </li>
@@ -56,49 +59,43 @@
           <div class="list-title">
             <div class="icon-open sprite"></div>
             <span class="first-item-name">{{ $region->region_name }}</span>
-            <span class="number">{{ $region->areas_count + $region->cities_count }}</span>
+            <span class="number">{{ count($region->areas) + count($region->cities) }}</span>
           </div>
         </a>
-        @if(!empty($areas))
+        @if((count($region->areas) > 0) || (count($region->cities) > 0))
         <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
-          @foreach ($areas as $area)
-            @if($region->id == $area->region_id)
+          @foreach ($region->areas as $area)
             <li class="medium-item parent" id="areas-{{ $area->id }}" data-name="{{ $area->area_name }}">
               <a class="medium-link">
                 <div class="list-title">
                   <div class="icon-open sprite"></div>
                   <span>{{ $area->area_name }}</span>
-                  <span class="number">{{ $area->cities_count }}</span>
+                  <span class="number">{{ count($area->cities) }}</span>
                 </div>
               </a>
               <ul class="icon-list">
                 <li>
-                @if($area->cities_count == 0)
+                @if(count($area->cities) == 0)
                   <div class="icon-list-delete sprite" data-open="item-delete"></div>
                 @endif
                 </li>
               </ul>
-              @if(!empty($cities))
+              @if(count($area->cities) > 0)
               <ul class="menu vertical nested last-list">
-                @foreach ($cities as $city)
-                  @if($area->id == $city->area_id)
+                @foreach ($area->cities as $city)
                   <li class="last-item parent" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
                     <div class="last-link">{{ $city->city_name }}
                       <ul class="icon-list">
                         <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
                       </ul>
                     </div>
-                  </li>
-                  @endif
                 @endforeach
               </ul>
               @endif
             </li>
-            @endif
           @endforeach
-          @if(!empty($cities))
-            @foreach ($cities as $city)
-              @if($region->id == $city->region_id)
+          @if(count($region->cities) > 0)
+            @foreach ($region->cities as $city)
               <li class="medium-item parent" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
                 <div class="medium-as-last">{{ $city->city_name }}
                   <ul class="icon-list">
@@ -106,7 +103,6 @@
                   </ul>
                 </div>
               </li>
-              @endif
             @endforeach
           @endif
         </ul>
@@ -622,7 +618,7 @@ $(function() {
     $('#content-list').foundation('down', firstItem);
 
     // Если удален город, имеющий район
-    if (({{ $data['city_id'] }} == 0) && ({{ $data['area_id'] }} !== 0)) {
+    if ({{ $data['area_id'] }} !== 0) {
       // Подсвечиваем ссылку
       $('#areas-{{ $data['area_id'] }}').find('.medium-link').addClass('medium-active');
       // Открываем меню удаления в середине
@@ -632,21 +628,15 @@ $(function() {
       var lastItem = $('#areas-{{ $data['area_id'] }}').find('.last-list');
       $('#content-list').foundation('down', lastItem);
     };
-    // Если удален город, не имеющий район
-    if (({{ $data['area_id'] }} == 0)  && ({{ $data['city_id'] }} !== 0)) {
-    };
-    // Если удален район, не имеющий городов
-    if(({{ $data['area_id'] }} == 0) && ({{ $data['city_id'] }} == 0)) { 
-
-    };
-    // Если добавили город с районом
-    if (({{ $data['city_id'] }} !== 0) && ({{ $data['area_id'] }} !== 0)) {
-      // Подсвечиваем ссылку
-      $('#areas-{{ $data['area_id'] }}').find('.medium-link').addClass('medium-active');
-      // Находим средние элементы
-      var lastItem = $('#areas-{{ $data['area_id'] }}').find('.last-list');
-      $('#content-list').foundation('down', lastItem);
-    };
+   
+    // // Если добавили город с районом
+    // if ({{ $data['area_id'] }} !== 0) {
+    //   // Подсвечиваем ссылку
+    //   $('#areas-{{ $data['area_id'] }}').find('.medium-link').addClass('medium-active');
+    //   // Находим средние элементы
+    //   var lastItem = $('#areas-{{ $data['area_id'] }}').find('.last-list');
+    //   $('#content-list').foundation('down', lastItem);
+    // };
       // Перебираем родителей и посвечиваем их
   //   var parents = $(this).parents('.medium-list');
   //   for (var i = 0; i < parents.length; i++) {

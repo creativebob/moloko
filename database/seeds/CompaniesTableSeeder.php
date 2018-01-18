@@ -24,7 +24,7 @@ class CompaniesTableSeeder extends Seeder
 		        // 'account_settlement' => '',
 		        // 'account_correspondent' => '',
 		        // 'bank' => '',
-		        'director_user_id' => '3',  
+		        'director_user_id' => 4,  
                 // 'admin_user_id' => '1',  
         	],
             [
@@ -39,7 +39,7 @@ class CompaniesTableSeeder extends Seeder
                 // 'account_settlement' => '',
                 // 'account_correspondent' => '',
                 // 'bank' => '',
-                'director_user_id' => '4',  
+                'director_user_id' => null,  
                 // 'admin_user_id' => '1',  
             ],
             [
@@ -54,7 +54,7 @@ class CompaniesTableSeeder extends Seeder
                 // 'account_settlement' => '',
                 // 'account_correspondent' => '',
                 // 'bank' => '',
-                'director_user_id' => '5',  
+                'director_user_id' => null,  
                 // 'admin_user_id' => '1',  
             ],
         ]);

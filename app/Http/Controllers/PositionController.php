@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+// Подключаем модели
 use App\Position;
 use App\Page;
 use App\User;
 use App\Role;
 use App\PositionRole;
+
+// Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,25 +24,20 @@ class PositionController extends Controller
      */
     public function index()
     {
-      // $this->authorize('index', Position::class);
-      // dd($b);
-      if (isset(Auth::user()->company_id)) {
+      $user = Auth::user();
+      if (isset($user->company_id)) {
         // Если у пользователя есть компания
         $positions = Position::whereCompany_id(Auth::user()->company_id)
                 ->orWhereNull('company_id')
                 ->paginate(30);
       } else {
         // Если нет, то бог без компании
-        if (Auth::user()->god == 1) {
+        if ($user->god == 1) {
           $positions = Position::paginate(30);
         };
       }
-
       $page_info = Page::wherePage_alias('/positions')->whereSite_id('1')->first();
       return view('positions.index', compact('positions', 'page_info'));
-
-      // $user = Auth::user()->id;
-      // dd(User::find($user)->access_group->rights()->get());
     }
 
     /**
@@ -49,11 +47,11 @@ class PositionController extends Controller
      */
     public function create()
     {
-      $this->authorize('create', Position::class);
-      $pages = Page::whereSite_id(1)->whereSystem_item(null)->pluck('page_name', 'id');
+      $user = Auth::user();
+      // $this->authorize('create', Position::class);
+      $pages = Page::whereSite_id('1')->pluck('page_name', 'id');
       $position = new Position;
-      $roles = Role::get();
-
+      $roles = Role::whereCompany_id($user->company_id)->orWhereNull('company_id')->get();
       return view('positions.create', compact('position', 'pages', 'roles'));  
     }
 
@@ -112,12 +110,10 @@ class PositionController extends Controller
      */
     public function edit(Request $request, $id)
     {
+      $user = Auth::user();
       $position = Position::findOrFail($id);
-
       $pages = Page::whereSite_id('1')->pluck('page_name', 'id');
-
-      $roles = Role::get();
-      
+      $roles = Role::whereCompany_id($user->company_id)->orWhereNull('company_id')->get();
       return view('positions.edit', compact('position', 'pages', 'roles'));
     }
 
@@ -132,21 +128,16 @@ class PositionController extends Controller
     {
       // Обновляем должность
       $user = Auth::user();
-
       $position = Position::findOrFail($id);
-
       // Выбираем существующие роли для должности на данный момент
       $position_roles = $position->roles;
-
       $position->position_name = $request->position_name;
       $position->page_id = $request->page_id;
       $position->company_id = $user->company_id;
       $position->editor_id = $user->id;
-      
       $position->save();
-
+      // Если записалось
       if ($position) {
-        // dd($request->roles);
         // Когда должность обновилась, смотрим пришедние для нее роли и сравниваем с существующими
         if (isset($request->roles)) {
           $delete = PositionRole::wherePosition_id($id)->delete();
@@ -179,12 +170,8 @@ class PositionController extends Controller
         }
         return Redirect('/positions');
       } else {
-        $error = 'ошибка';
+        abort(403, 'Ошибка записи должности');
       };
-
-      
-
-     
     }
 
     /**
@@ -195,12 +182,20 @@ class PositionController extends Controller
      */
     public function destroy($id)
     {
-      // Удаляем страницу с обновлением
-      $position = Position::destroy($id);
-      if ($position) {
-        return Redirect('/positions');
+      $user = Auth::user();
+      $position = Position::findOrFail($id);
+      if (isset($position)) {
+        $position->editor_id = $user->id;
+        $position->save();
+        // Удаляем страницу с обновлением
+        $position = Position::destroy($id);
+        if ($position) {
+          return Redirect('/positions');
+        } else {
+          abort(403, 'Ошибка при удалении должности');
+        }; 
       } else {
-        echo 'произошла ошибка';
-      }; 
+        abort(403, 'Должность не найдена');
+      };
     }
 }
