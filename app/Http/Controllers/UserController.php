@@ -37,10 +37,7 @@ class UserController extends Controller
         // Получаем сессию
         $session  = session('access');
 
-        if(!isset($session))
-        {
-            abort(403, 'Нет сессии!');
-        };
+        if(!isset($session)){abort(403, 'Нет сессии!');};
 
         // Получаем список авторов
         $list_authors = $session['list_authors'];
@@ -51,27 +48,11 @@ class UserController extends Controller
 
             $filials = null;
             $system_item = 1;
-            $authors = $list_authors;
+            $authors = null;
 
         } else {
 
             // ОСНОВНЫЕ ПРОВЕРКИ --------------------------------------------------------------------------------------------------------------------
-
-            // if(isset($session['all_rights']['nolimit-users-allow']) && (!isset($session['all_rights']['nolimit-users-deny'])))
-            // {
-
-            //     // Видим в правах независимость от филиала и даем все права!
-            //     $access = $session['all_rights'];
-
-            //     if(isset($user->company_id)){
-            //         $filials = Department::whereCompany_id($user->company_id)->where('filial_status', 1)->get()->keys('department_id')->toarray();
-            //     };
-
-            //     $list_authors['authors_id'] = null;
-            //     $authors = $list_authors;
-
-            // } else {
-
 
                 // Указываем - являеться ли сущность зависимой от филиала
                 // false - независима / true - зависима
@@ -80,8 +61,15 @@ class UserController extends Controller
                 // Филиал в который устроен пользователь
                 $user_filial_id = $session['user_info']['filial_id'];
 
+                // Управление зависимостью через право
+                // Если выбрано "Нет ограичений" мы снимаем филиальную зависимость
 
-
+                if(isset($session['all_rights']['nolimit-users-allow']) && (!isset($session['all_rights']['nolimit-users-deny'])))
+                {
+                    $dependence = false;
+                } else {
+                    $dependence = true;
+                };
 
                 // ПОКАЗ СПИСКА ПОЛЬЗОВАТЕЛЕЙ ---------------------------------------------------------------------------------------------------------------
 
@@ -116,85 +104,47 @@ class UserController extends Controller
                 };
 
 
+                // ВКЛЮЧЕНИЕ ИЛИ ОТКЛЮЧЕНИЕ РАСШИРЯЮЩЕГО СПИСКА АВТОРОВ ------------------------------------------------------------------------------------
 
-                // РАСШИРЕНИЕ СПИСКА ПОЛЬЗОВАТЕЛЕЙ ЗА СЧЕТ ДОПОЛНИТЕЛЬНОГО СПИСКА --------------------------------------------------------------------------
-                // Проверяем право на просмотр чужих записей:
-                // dd($access['list_authors']['authors_id']);
-
+                // Добавление авторов пользователю. По умолчанию: true - добавить список авторов из сессии
+                $use_authors = true;
 
                 if($dependence)
                 {
 
                     // Если выборка зависима
-                    // Проверяем в правах (которые записаны в сессию) наличие права на просмотр общего списка пользователей 
-                    // и отсутствие запрета
+                    // Проверяем в правах (которые записаны в сессию) наличие права на просмотр чужих записей 
+                    // и отсутствие такого запрета
                     if(isset($session['all_rights']['authors-users-allow']) && (!isset($session['all_rights']['authors-users-deny'])))
                     {
-
-                        // Получаем список ID филиалов в которых присутствует право на просмотр списка пользователей
-                        $filials = collect($session['all_rights']['authors-users-allow']['departments'])->keys()->toarray();
-
-                        // Получаем читаемый список филиалов для SELECT в формах
-                        $list_filials = Department::whereIn('id', $filials)->pluck('department_name', 'id');
-
-
-                        // Получаем список ID департаментов в которых присутствует право на просмотр списка пользователей
-                        $departments = collect($session['all_rights']['authors-users-allow']['departments'])->values()->toarray();
 
                         // Фильтр не сработает если уйдет $authors = null и будут показаны все авторы компании без ограничений
                         // Нам не важно, есть ли у него индивидуальные списки авторов.
                         $authors = null;
 
+                        if($use_authors){
+                           if(isset($session['all_rights']['authors-users-allow']['authors'])) {$authors = $session['all_rights']['authors-users-allow']['authors'];} else {$authors = null;};                            
+                        };
+
 
                     } else {
 
-                        // Существует ли индивидуальный список на просмотр записей других авторов 
-                        // у текущего авторизованного пользователя
-                        if($list_authors['authors_id'] !== null)
-                        {
-                            // Передаем этот список в запрос     
-                            $authors = $list_authors;
-
-                        } else {
-
-                            // Говорим, что список пуст - пользователь увидит только свои записи (и себя самого в таблице users).   
-                            $authors = $list_authors;
-                        };
+                        // Передаем список авторов из сессии в запрос
+                        
+                        $authors['authors_id'] = null;
+                        $authors['user_id'] = $user->id;
 
                     };
 
                 } else {
 
-                    // Если выборка не зависима
+                        // Передаем список авторов из сессии в запрос
+                        if($use_authors){
+                           if(isset($session['all_rights']['authors-users-allow']['authors'])) {$authors = $session['all_rights']['authors-users-allow']['authors'];} else {$authors = null;};                            
+                        };
 
                 };
-
-
-
-
-
-                // // Получаем список ID филиалов в которых у нас есть право на текущую операцию
-                // $filials = [];
-
-                // foreach($session['filial_rights'] as $key => $filial)
-                // {
-                //     if(isset($filial['authors-users-allow']) && (!isset($filial['authors-users-deny'])))
-                //     {
-                //         $filials[] = $filial['filial'];
-                //     };
-                // };
-
-                // if($filials == null)
-                // {
-                //     $list_authors['authors_id'] = null;
-                //     $filials = $filials_for_index;
-                //     $authors = $list_authors;
-
-                // } else {
-                //     $authors = $list_authors;
-                // };
             };
-        // };
 
 
         // ЗАВИСИМОСТЬ ОТ СИСТЕМНЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------------------------------
@@ -219,6 +169,18 @@ class UserController extends Controller
         };
 
 
+        // ДЛЯ ТЕСТИРОВАНИЯ ----------------------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        $query_array = [];
+        $query_array['ID company'] = $user->company_id;
+        $query_array['filials'] = $filials;
+        $query_array['authors'] = $authors;
+        $query_array['filials'] = $filials;
+
+        // dd($query_array);
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -233,7 +195,7 @@ class UserController extends Controller
             ->whereGod(null)
             ->authors($authors, $filials)
             ->systemItem($system_item) // Фильтр по системным записям
-            ->orWhere('id', $user->id) // Только для пользователей
+            // ->orWhere('id', $user->id) // Только для пользователей
             ->orderBy('moderated', 'desc')
             ->paginate(30);
 

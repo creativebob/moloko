@@ -88,10 +88,14 @@ class GetAccessController extends Controller
             if(count($user->booklists) > 0){
 
                 foreach ($user->booklists as $booklist) {
-                    $list_authors = $booklist->list_items->implode('item_entity', ', ');
+                    foreach ($booklist->list_items as $list_item) {
+                        $list_authors[] = $list_item->item_entity;
+                    };
                 };
 
-                $authors['authors_id'] = [$list_authors];
+                // dd($list_authors);
+
+                $authors['authors_id'] = $list_authors;
 
             } else {
                 $authors['authors_id'] = null;
@@ -133,12 +137,18 @@ class GetAccessController extends Controller
                     $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
                     $item_filial_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
 
+                    if($right->actionentity->alias_action_entity . "-" . $right->directive == 'authors-users-allow')
+                    {
+                        $right_mass['authors'] = $authors;
+                    } else {
+                        $right_mass['authors'] = null;
+                    };
 
                     $right_mass['right_id'] = $right->id;
                     $right_mass['departments'][$filial_id] = $department_id;
 
                     $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right_mass;
-            }
+            };
 
             // Если не бог - получаем ID филиала
             if($user->god == null){
@@ -158,7 +168,7 @@ class GetAccessController extends Controller
             };
 
             $filial_rights[$department_id]['filial'] = $filial_id;
-        }
+        };
 
         if(count($filial_rights) == 0){
             abort(403, 'Прав связанных с филиалом не обнаружено');
