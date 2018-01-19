@@ -13,7 +13,7 @@
                         </div>
                     @endif
 
-                    Ну типа твой рабочий стол и все такоя...
+                    <img src="/img/work.jpg">
                 </div>
             </div>
         </div>

@@ -625,8 +625,10 @@ $(function() {
        $('#areas-{{ $data['area_id'] }}').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
 
       // Находим средние элементы
-      var lastItem = $('#areas-{{ $data['area_id'] }}').find('.last-list');
-      $('#content-list').foundation('down', lastItem);
+      var mediumItem = $('#areas-{{ $data['area_id'] }}').find('.last-list');
+      if (mediumItem.is('.last-list')) {
+        $('#content-list').foundation('down', mediumItem);
+      };
     };
    
     // // Если добавили город с районом
