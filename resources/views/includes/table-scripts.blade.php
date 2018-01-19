@@ -30,15 +30,16 @@ $(function() {
       helper: fixHelper, // ширина вырванного элемента
       handle: 'td:first' // указываем за какой элемент можно тянуть
   }).disableSelection();
+
   // Чекбоксы
   console.log('Запуск функции чекбоксов');
-  var checkboxes = document.querySelectorAll('input.table-check-allow');
-  var checkall = document.getElementById('check-all-allow');
+  var checkboxes = document.querySelectorAll('input.table-check');
+  var checkall = document.getElementById('check-all');
   console.log('Видим общее количество чекбоксов = ' + checkboxes.length);
 
   for(var i=0; i<checkboxes.length; i++) {
     checkboxes[i].onclick = function() {
-      var checkedCount = document.querySelectorAll('input.table-check-allow:checked').length;
+      var checkedCount = document.querySelectorAll('input.table-check:checked').length;
       console.log('Берем выделенные чекбоксы  = ' + checkedCount);
       checkall.checked = checkedCount > 0;
       checkall.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;

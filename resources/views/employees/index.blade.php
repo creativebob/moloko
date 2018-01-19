@@ -70,6 +70,9 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-employee-name">Имя сотрудника</th>
           <th class="td-employee-position">Название должности</th>
+          @if ($filials > 1)
+            <th class="td-employee-filial">Филиал</th>
+          @endif
           <th class="td-employee-department">Отдел</th>
           <th class="td-employee-date-employment">Дата приема</th>
           <th class="td-employee-date-dismissal">Дата увольнения</th>
@@ -95,7 +98,14 @@
           <td class="td-employee-position">
             {{ $employee->staffer->position->position_name }}
           </td>
-          <td class="td-employee-department">{{ $employee->staffer->department->department_name }}</td>
+          @if ($filials > 1)
+            <td class="td-employee-filial">{{ $employee->staffer->filial->department_name }}</td>
+          @endif
+          <td class="td-employee-department">
+          @if ($employee->staffer->filial->department_name !== $employee->staffer->department->department_name)
+            {{ $employee->staffer->department->department_name }}
+          @endif
+          </td>
           <td class="td-employee-date-employment">{{ $employee->date_employment }}</td>
           <td class="td-employee-date-dismissal">{{ $employee->date_dismissal }}</td>
           <td class="td-employee-status">

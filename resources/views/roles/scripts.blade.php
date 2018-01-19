@@ -14,26 +14,29 @@
   }).disableSelection();
 
   var parent = $('.parent');
-  // var checkbox = [];
-
   // Смотрим есть ли выделенные чекбоксы в правах сущности, и если все выделены, то выделяем и ее
   // Разрешение
-  $('.parent').each(function(index) {
-    var checked = $(this).find('input:checkbox:checked:not(.table-check-allow)').length;
-    var childs = $(this).find('.checkbox-allow').length;
-    if (checked == childs) {
-      $(this).find('.table-check-allow').prop('checked', true);
-    };
-  });
+  function checkedAllow() {
+    parent.each(function(index) {
+      var checked = $(this).find('input:checkbox:checked:not(.table-check-allow)').length;
+      var childs = $(this).find('.checkbox-allow').length;
+      if (checked == childs) {
+        $(this).find('.table-check-allow').prop('checked', true);
+      };
+    });
+  };
+  checkedAllow();
   // Запрет
-  $('.parent').each(function(index) {
-    var checked = $(this).find('input:checkbox:checked:not(.table-check-deny)').length;
-    var childs = $(this).find('.checkbox-deny').length;
-    if (checked == childs) {
-      $(this).find('.table-check-deny').prop('checked', true);
-    };
-  });
-
+  function checkedDeny() {
+    parent.each(function(index) {
+      var checked = $(this).find('input:checkbox:checked:not(.table-check-deny)').length;
+      var childs = $(this).find('.checkbox-deny').length;
+      if (checked == childs) {
+        $(this).find('.table-check-deny').prop('checked', true);
+      };
+    }); 
+  };
+  checkedDeny();
   // Скрипт передачи значения на изменение
   // Разрешение
   $(document).on('click', '.checkbox-allow', function() {
@@ -41,13 +44,7 @@
     if ($(this).prop('checked') == false) {
       parent.find('.table-check-allow').prop('checked', false);
     } else {
-      parent.each(function(index) {
-        var checked = $(this).find('input:checkbox:checked:not(.table-check-allow)').length;
-        var childs = $(this).find('.checkbox-allow').length;
-        if (checked == childs) {
-          $(this).find('.table-check-allow').prop('checked', true);
-        };
-      });
+      checkedAllow();
     };
     $.ajax({
       headers: {
@@ -67,13 +64,7 @@
     if ($(this).prop('checked') == false) {
       parent.find('.table-check-deny').prop('checked', false);
     } else {
-      parent.each(function(index) {
-        var checked = $(this).find('input:checkbox:checked:not(.table-check-deny)').length;
-        var childs = $(this).find('.checkbox-deny').length;
-        if (checked == childs) {
-          $(this).find('.table-check-deny').prop('checked', true);
-        };
-      });
+      checkedDeny();
     };
     $.ajax({
       headers: {
@@ -102,27 +93,28 @@
     } else {
       check = 0;
     };
-        // alert(check);
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/roles/setright",
-      type: "POST",
-      data: {rights: rights, role_id: $(this).data('role-id'), checkbox: check},
-      success: function (data) {
-        var result = $.parseJSON(data);
-        if (result.status == 1) {
-          parent.find('.checkbox-allow').each(function($index) {
-            $(this).prop('checked', true);
-          });
-        } else {
-          parent.find('.checkbox-allow').each(function($index) {
-            $(this).prop('checked', false);
-          });
-        };
-      }
-    });
+        alert(rights);
+        // alert(rights);
+    // $.ajax({
+    //   headers: {
+    //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //   },
+    //   url: "/roles/setright",
+    //   type: "POST",
+    //   data: {rights: rights, role_id: $(this).data('role-id'), checkbox: check},
+    //   success: function (data) {
+    //     var result = $.parseJSON(data);
+    //     if (result.status == 1) {
+    //       parent.find('.checkbox-allow').each(function($index) {
+    //         $(this).prop('checked', true);
+    //       });
+    //     } else {
+    //       parent.find('.checkbox-allow').each(function($index) {
+    //         $(this).prop('checked', false);
+    //       });
+    //     };
+    //   }
+    // });
   });
   // Запрет
   $(document).on('click', '.table-check-deny', function() {

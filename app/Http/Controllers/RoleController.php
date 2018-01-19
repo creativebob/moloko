@@ -397,14 +397,17 @@ class RoleController extends Controller
         $role_id = $request->role_id;
         // echo $request->rights;
         if (count($request->rights) > 0) {
+            // если пришел массив правил, удаляем все что найдум
             $delete_rights = RightRole::where(['role_id' => $role_id, 'system_item' => null])->whereIn('right_id', $request->rights)->delete();
              // echo $request->checkbox;
             if ($request->checkbox == false) {
+                // Если чекбокс был снят то все
                 $data = [
                     'status' => 0,
                     'msg' => "Удалили права на сущность!",
                 ];
             } else {
+                // Если чекбокс былвключен, то пишем пришедшие значения
                 // echo $delete_rights;
                 $mass = [];
                 // Смотрим список пришедших роллей
@@ -421,6 +424,7 @@ class RoleController extends Controller
                     'msg' => "Записали права на сущность!",
                 ];
             };
+            // Отдаем результат
             echo json_encode($data, JSON_UNESCAPED_UNICODE);
             
         } else {

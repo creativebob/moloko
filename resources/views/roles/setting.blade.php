@@ -49,26 +49,23 @@
                           @endforeach
                       </tr>
                     </thead>
-                    <tbody data-tbodyId="1" class="tbody-width">
+                    <tbody class="tbody-width">
                     @foreach($main_mass as $one_string)
                       <tr class="parent" id="entities-{{ $one_string['entity_name'] }}" data-name="{{ $one_string['entity_name'] }}">
                         <td class="td-drop"><div class="sprite icon-drop"></div></td>
-                        <td class="td-checkbox checkbox">
-                          <input type="checkbox" class="table-check-allow" data-role-id="{{ $role_id }}" name="" id="check-{{ $one_string['entity_id'] }}-allow">
-                          <label class="label-check" for="check-{{ $one_string['entity_id'] }}-allow"></label>
-                        </td>
-                        <td class="td-entity-name">{{ $one_string['entity_name'] }}</td>
-                        @foreach($one_string['boxes'] as $boxes)
-                          <td class="td-action-{{ $action->action_method }}">
-                              <div class="checkbox">
-                                <input type="checkbox" class="checkbox_right checkbox-allow" {{ $boxes['checked'] }} {{ $boxes['disabled'] }} id="{{ $boxes['right_id'] }}" data-role-id = "{{ $role_id }}" data-entity-id="{{ $boxes['entity_id'] }}" data-action-id="{{ $boxes['action_id'] }}" data-deny-status = "0">
-                                <label for="{{ $boxes['right_id'] }}" class="{{ $boxes['disabled'] }}"></label>
-                              </div>
-                          </td>
-                        @endforeach
+                        <td class="td-checkbox checkbox"><input type="checkbox" class="table-check-allow"  data-role-id="{{ $role_id }}" name="" id="check-{{ $one_string['entity_name'] }}-allow"><label class="label-check" for="check-{{ $one_string['entity_name'] }}-allow"></label></td>
+                        <td class="td-entity-name">{{ $one_string['entity_name'] }} </td>
+                          @foreach($one_string['boxes'] as $boxes)
+                            <td class="td-action-{{ $action->action_method }}">
+                                <div class="checkbox">
+                                  <input type="checkbox" class="checkbox-allow" {{ $boxes['checked'] }} {{ $boxes['disabled'] }} id="{{ $boxes['right_id'] }}" data-role-id="{{ $role_id }}" data-entity-id="{{ $one_string['entity_id'] }}" data-action-id="{{ $boxes['action_id'] }}" data-deny-status="0">
+                                  <label for="{{ $boxes['right_id'] }}" class="{{ $boxes['disabled'] }}"></label>
+                                </div>
+                            </td>
+                          @endforeach
                       </tr>
                     @endforeach
-                    </tbody>
+                  </tbody>
                   </table>
                 </div>
               </div>
@@ -94,7 +91,7 @@
                         @endforeach
                     </tr>
                   </thead>
-                  <tbody data-tbodyId="1" class="tbody-width">
+                  <tbody class="tbody-width">
                     @foreach($main_mass_deny as $one_string)
                       <tr class="parent" id="entities-{{ $one_string['entity_name'] }}" data-name="{{ $one_string['entity_name'] }}">
                         <td class="td-drop"><div class="sprite icon-drop"></div></td>
@@ -103,7 +100,7 @@
                           @foreach($one_string['boxes'] as $boxes)
                             <td class="td-action-{{ $action->action_method }}">
                                 <div class="checkbox">
-                                  <input type="checkbox" class="checkbox_right checkbox-deny" {{ $boxes['checked'] }} {{ $boxes['disabled'] }} id="{{ $boxes['right_id'] }}" data-role-id = "{{ $role_id }}" data-entity-id = "{{ $one_string['entity_id'] }}" data-action-id = "{{ $boxes['action_id'] }}" data-deny-status = "1">
+                                  <input type="checkbox" class="checkbox-deny" {{ $boxes['checked'] }} {{ $boxes['disabled'] }} id="{{ $boxes['right_id'] }}" data-role-id="{{ $role_id }}" data-entity-id="{{ $one_string['entity_id'] }}" data-action-id="{{ $boxes['action_id'] }}" data-deny-status="1">
                                   <label for="{{ $boxes['right_id'] }}" class="{{ $boxes['disabled'] }}"></label>
                                 </div>
                             </td>
