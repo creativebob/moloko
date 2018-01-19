@@ -29,7 +29,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        
+
         // Подключение политики
         // $this->authorize('index', User::class);
         
@@ -101,21 +101,22 @@ class UserController extends Controller
     //
     public function create()
     {
-        // $this->authorize('create', User::class);
 
-        // Получаем сессию
-        $session  = session('access');
-        if(!isset($session)){abort(403, 'Нет сессии!');};
+        // Подключение политики
+        // $this->authorize('index', User::class);
+        
+        $user = Auth::user();
 
-        // Получаем список ID филиалов в которых у нас есть право на текущую операцию
-        $filials = [];
-        foreach($session['filial_rights'] as $key => $filial){
-                if(isset($filial['create-users-allow']) && (!isset($filial['create-users-deny']))){
-                $filials[] = $filial['filial'];
-            }
-        }
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $operator_answer = operator_right('users', true);
+        // dd($operator_answer);
 
-        $list_filials = Department::whereIn('id', $filials)->pluck('department_name', 'id');
+        // Получаем читаемый список филиалов для SELECT в формах
+        $list_filials = Department::whereIn('id', $operator_answer['filials'])->pluck('department_name', 'id');
+
+        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
+        // $user = $operator_answer['user_id'];
 
     	$user = new User;
         $roles = new Role;
@@ -126,22 +127,23 @@ class UserController extends Controller
     public function store(UpdateUser $request)
     {
 
-        // $this->authorize('create', User::class);
-
-        // Получаем сессию
-        $session  = session('access');
-        if(!isset($session)){abort(403, 'Нет сессии!');};
-
-        // Получаем список ID филиалов в которых у нас есть право на текущую операцию
-        $filials = [];
-        foreach($session['filial_rights'] as $key => $filial){
-                if(isset($filial['create-users-allow']) && (!isset($filial['create-users-deny']))){
-                $filials[] = $key;
-            }
-        }
-
-
+        // Подключение политики
+        // $this->authorize('index', User::class);
+        
         $auth_user = Auth::user();
+
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $operator_answer = operator_right('users', true);
+        // dd($operator_answer);
+
+        // Получаем читаемый список филиалов для SELECT в формах
+        $list_filials = Department::whereIn('id', $operator_answer['filials'])->pluck('department_name', 'id');
+
+        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
+        // $user = $operator_answer['user_id'];
+        // 
+
         $user = new User;
 
         $user->login = $request->login;
@@ -180,16 +182,7 @@ class UserController extends Controller
         $user->access_block = $request->access_block;
         $user->author_id = $auth_user->id;
 
-        if(isset($access['automoderate-users-allow']) && (!isset($access['automoderate-users-deny'])))
-        {
-            $moderator = ModerationScope::class;
-        } else {
-            $moderator = null;
-        };
-
-
-
-
+        if($operator_answer['automoderate'] == false){$user->moderation = 1;};
 
         // Если у пользователя есть назначенная компания и пользователь не являеться богом
         if(isset($auth_user->company_id)&&($auth_user->god != 1)){
@@ -247,8 +240,19 @@ class UserController extends Controller
     public function update(UpdateUser $request, $id)
     {
 
-        $user = User::findOrFail($id);
+        // Подключение политики
         // $this->authorize('update', $user);
+        
+        $user_auth = Auth::user();
+
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $operator_answer = operator_right('users', true);
+        // dd($operator_answer);
+
+
+        $user = User::withoutGlobalScope($operator_answer['moderator'])->findOrFail($id);
+
 
     	$user->login = $request->login;
     	$user->email = $request->email;
@@ -291,14 +295,11 @@ class UserController extends Controller
     	$user->employee_id = $request->employee_id;
     	$user->access_block = $request->access_block;
 
-    	$user->group_action_id = $request->group_action_id;
-    	$user->group_locality_id = $request->group_locality_id;
+        if($operator_answer['automoderate']){$user->moderated = null;} else {$user->moderated = 1;};
 
 		$user->save();
  
 		return redirect('users');
-    	// $users = User::all();
-
     }
 
     public function show($id)
@@ -312,43 +313,37 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $auth_user = Auth::user();
-        $user = User::findOrFail($id);
 
+        // Подключение политики
         // $this->authorize('update', $user);
+        
+        $user_auth = Auth::user();
 
-        if($auth_user->god == null) {
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $operator_answer = operator_right('users', true);
+        // dd($operator_answer);
 
+        // Получаем читаемый список филиалов для SELECT в формах
+        $list_filials = Department::whereIn('id', $operator_answer['filials'])->pluck('department_name', 'id');
 
-        // Получаем сессию
-        $session  = session('access');
+        // Получаем читаемый список отделов для SELECT в формах
+        $departments = Department::whereIn('id', $operator_answer['departments'])->pluck('department_name', 'id');
 
-        if(!isset($session)){abort(403, 'Нет сессии!');};
-        $user_filial_id = $session['user_info']['filial_id'];
+        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
+        // $user = $operator_answer['user_id'];
 
-        // Получаем список ID филиалов в которых у нас есть право на текущую операцию
-        $filials = [];
+        // $operator_answer['moderator'] = ModerationScope::class;
+        // dd($operator_answer['moderator']);
 
-        foreach($session['filial_rights'] as $key => $filial){
-                if(isset($filial['edit-users-allow']) && (!isset($filial['edit-users-deny']))){
-                $filials[] = $filial['filial'];
-            }
-        }
-
-        if($filials == null){abort(403, 'Недостаточно прав!');};
-
-        // $filials[] = $user_filial_id;
-        $list_filials = Department::whereIn('id', $filials)->where('filial_status', 1)->orderBy('department_name')->pluck('department_name', 'id');
-
-        };
-
+        $user = User::withoutGlobalScope($operator_answer['moderator'])->findOrFail($id);
+        // dd($user);
 
         $role = new Role;
         $role_users = RoleUser::whereUser_id($id)->get();
 
-        $roles = Role::whereCompany_id($auth_user->company_id)->pluck('role_name', 'id');
-        $departments = Department::whereCompany_id($auth_user->company_id)->pluck('department_name', 'id');
-
+        $roles = Role::whereCompany_id($user_auth->company_id)->pluck('role_name', 'id');
+        // $departments = Department::whereCompany_id($user_auth->company_id)->pluck('department_name', 'id');
         
         Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
         return view('users.edit', compact('user', 'role', 'role_users', 'roles', 'departments', 'list_filials'));

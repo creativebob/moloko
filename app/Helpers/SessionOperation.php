@@ -1,6 +1,8 @@
 <?php
+        use App\Scopes\ModerationScope;
 
-    function operator_right($entity_name, $entity_dependence) {
+        function operator_right($entity_name, $entity_dependence) {
+
 
         // Получаем сессию
         $session  = session('access');
@@ -13,19 +15,41 @@
 
 
 
-        // ПРОВЕРЯЕМ ПРАВО НА ПРОСМОТР НЕ ОТМОДЕРИРОВАННЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------
+        // ПРОВЕРЯЕМ ПРАВО НА ПРОСМОТР НЕ ОТМОДЕРИРОВАННЫХ ЗАПИСЕЙ  ------------------------------------------------------------------------------------------
         // Проверяем право просмотра системных записей:
         
         if(isset($session['all_rights']['moderator-'.$entity_name.'-allow']) && (!isset($session['all_rights']['moderator-'.$entity_name.'-deny'])))
         {
+
             // Не буду иметь возможность модерировать записи - не буду их видеть
             $moderator = ModerationScope::class;
+            // dd($moderator);
 
         } else {
 
             // Буду видеть не отмодерированные записи и смогу их модерировать
             $moderator = null;
+
         };
+
+
+
+
+
+        // ПРОВЕРЯЕМ ПРАВО НА ПОЛНОЦЕННОЕ СОЗДАНИЕ ЗАПИСИ (Без необходимости последующего модерирования) -----------------------------------------------------
+        // Проверяем право просмотра системных записей:
+        
+        if(isset($session['all_rights']['automoderate-'.$entity_name.'-allow']) && (!isset($session['all_rights']['automoderate-'.$entity_name.'-deny'])))
+        {
+
+            // Пишем сразу
+            $automoderate = true;
+        } else {
+
+            // Пишем ущербную запись (требуеться модерация)
+            $automoderate = false;
+        };
+
 
 
 
@@ -124,7 +148,7 @@
                 $list_authors['authors_id'] = null;
                 $authors = $list_authors;
                 $authors = $list_authors;  
-                
+
             };
 
         } else {
@@ -136,8 +160,6 @@
 
 
 
-
-
         // ФОРМИРУЕМ РЕЗУЛЬТАТЫ И ОФОРМЛЯЕМ ИХ В ВИДЕ МАССИВА ДЛЯ ОТПРАВКИ В КОНТРОЛЛЕР
 
         $operator_info['dependence'] = $dependence;
@@ -146,6 +168,7 @@
         $operator_info['filials'] = $filials;
         $operator_info['departments'] = $departments;
         $operator_info['authors'] = $authors;
+        $operator_info['automoderate'] = $automoderate;
         $operator_info['user_id'] = $session['user_info']['user_id'];
         $operator_info['company_id'] = $session['user_info']['company_id'];
 

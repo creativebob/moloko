@@ -163,7 +163,7 @@ class GetAccessController extends Controller
                     $filial_id = null;
                 };
 
-                $filial_rights[$department_id] = $item_filial_rights;   
+                $filial_rights[$department_id] = $item_filial_rights;
                              
             };
 
