@@ -93,28 +93,28 @@
     } else {
       check = 0;
     };
-        alert(rights);
         // alert(rights);
-    // $.ajax({
-    //   headers: {
-    //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //   },
-    //   url: "/roles/setright",
-    //   type: "POST",
-    //   data: {rights: rights, role_id: $(this).data('role-id'), checkbox: check},
-    //   success: function (data) {
-    //     var result = $.parseJSON(data);
-    //     if (result.status == 1) {
-    //       parent.find('.checkbox-allow').each(function($index) {
-    //         $(this).prop('checked', true);
-    //       });
-    //     } else {
-    //       parent.find('.checkbox-allow').each(function($index) {
-    //         $(this).prop('checked', false);
-    //       });
-    //     };
-    //   }
-    // });
+        // alert(rights);
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/roles/setright",
+      type: "POST",
+      data: {rights: rights, role_id: $(this).data('role-id'), checkbox: check},
+      success: function (data) {
+        var result = $.parseJSON(data);
+        if (result.status == 1) {
+          parent.find('.checkbox-allow').each(function($index) {
+            $(this).prop('checked', true);
+          });
+        } else {
+          parent.find('.checkbox-allow').each(function($index) {
+            $(this).prop('checked', false);
+          });
+        };
+      }
+    });
   });
   // Запрет
   $(document).on('click', '.table-check-deny', function() {
