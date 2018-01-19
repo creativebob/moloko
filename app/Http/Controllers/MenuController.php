@@ -262,6 +262,7 @@ class MenuController extends Controller
       if ($menu) {
         $menu->editor_id = $user->id;
         $menu->save();
+        $menu = Menu::destroy($id);
        // Удаляем с обновлением
         if ($menu) {
           return Redirect('/current_menu/'.$menu->navigation_id.'/0');

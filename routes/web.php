@@ -50,16 +50,11 @@ Route::get('/getgod', 'UserController@getgod')->middleware('auth')->name('users.
 
 // Получаем доступ бога
 Route::get('/returngod', 'UserController@returngod')->middleware('auth')->name('users.returngod');
-
-Route::get('/page', 'PageController@create');
-
 // Навигация и меню
 Route::resource('/navigations', 'NavigationController')->middleware('auth');
 Route::resource('/menus', 'MenuController')->middleware('auth');
 // Текущий добавленный/удаленный пункт меню
 Route::get('/current_menu/{section}/{menu}', 'MenuController@current_menu')->middleware('auth');
-
-
 // Контроллеры для отображения населенных пунктов, районов и областей
 Route::resource('/cities', 'CityController')->middleware('auth');
 Route::resource('/areas', 'AreaController')->middleware('auth');
@@ -69,8 +64,6 @@ Route::post('/city', 'CityController@get_vk_city')->middleware('auth');
 Route::post('/region', 'RegionController@get_vk_region')->middleware('auth');
 // Текущий добавленный/удаленный город
 Route::get('/current_city/{region}/{area}', 'CityController@current_city')->middleware('auth');
-// Конец блока с населенными пунктами
-
 // Контроллеры для отображения филиалов, отделов и должностей
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
 // Текущий добавленный/удаленный отдел
@@ -81,19 +74,12 @@ Route::resource('/positions', 'PositionController')->middleware('auth');
 Route::resource('/staff', 'StafferController')->middleware('auth');
 // Контроллер сотрудников
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
-//Конец блока филиалов, отделов и должностей
-
 // Контроллер отображения сайтов 
 Route::resource('/sites', 'SiteController')->middleware('auth');
 // Контроллер отображения страниц 
 Route::resource('/pages', 'PageController')->middleware('auth');
-
+// Отображение сессии
 Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');
-
-
-
-
-//Конец блока сайтов и страниц
 
 Auth::routes();
 

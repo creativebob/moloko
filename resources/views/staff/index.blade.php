@@ -103,7 +103,6 @@
           @if ($staffer->filial->department_name !== $staffer->department->department_name)
             {{ $staffer->department->department_name }}
           @endif
-
           </td>
           <td class="td-staffer-phone">
             @if (isset($staffer->user))

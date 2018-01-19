@@ -98,7 +98,7 @@ class AreaController extends Controller
         $area->save();
         $area = Area::destroy($id);
         if ($area) {
-          return Redirect('current_city/'.$region_id.'/0/0');
+          return Redirect('current_city/'.$region_id.'/0');
         } else {
           abort(403, 'Ошибка при удалении района!');
         }

@@ -30,6 +30,7 @@ $(function() {
       helper: fixHelper, // ширина вырванного элемента
       handle: 'td:first' // указываем за какой элемент можно тянуть
   }).disableSelection();
+
   // Чекбоксы
   console.log('Запуск функции чекбоксов');
   var checkboxes = document.querySelectorAll('input.table-check');

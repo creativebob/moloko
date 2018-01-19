@@ -167,8 +167,6 @@ return [
         // Те, что подключаем сами, ручками )))
         Collective\Html\HtmlServiceProvider::class,
 
-        Lavary\Menu\ServiceProvider::class,
-
 
         /*
          * Package Service Providers...
@@ -235,7 +233,6 @@ return [
         // Те, что подключаем сами, ручками )))
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
-        'Menu' => Lavary\Menu\Facade::class,
         
 
     ],

@@ -27,7 +27,7 @@ class PositionController extends Controller
       $user = Auth::user();
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
-        $positions = Position::whereCompany_id(Auth::user()->company_id)
+        $positions = Position::whereCompany_id($user->company_id)
                 ->orWhereNull('company_id')
                 ->paginate(30);
       } else {
@@ -35,8 +35,8 @@ class PositionController extends Controller
         if ($user->god == 1) {
           $positions = Position::paginate(30);
         };
-      }
-      $page_info = Page::wherePage_alias('/positions')->whereSite_id('1')->first();
+      };
+      $page_info = Page::where(['page_alias' => '/positions', 'site_id' => 1])->first();
       return view('positions.index', compact('positions', 'page_info'));
     }
 
@@ -112,8 +112,16 @@ class PositionController extends Controller
     {
       $user = Auth::user();
       $position = Position::findOrFail($id);
-      $pages = Page::whereSite_id('1')->pluck('page_name', 'id');
-      $roles = Role::whereCompany_id($user->company_id)->orWhereNull('company_id')->get();
+      if (isset($user->company_id)) {
+        // Если у пользователя есть компания
+        $roles = Role::whereCompany_id($user->company_id)->orWhereNull('company_id')->get();
+      } else {
+        // Если нет, то бог без компании
+        if ($user->god == 1) {
+          $roles = Role::get();
+        };
+      };
+      $pages = Page::whereSite_id(1)->pluck('page_name', 'id');
       return view('positions.edit', compact('position', 'pages', 'roles'));
     }
 

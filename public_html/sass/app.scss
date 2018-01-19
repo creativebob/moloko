@@ -992,7 +992,7 @@ input[type=checkbox], input[type=radio] {
     font-size: 0.875rem;
     color: $content-input-color;
 
-    input {
+    input, textarea {
       margin-top: 0.25rem;
       margin-bottom: 0.85rem;
       height: 26px;
@@ -1002,6 +1002,9 @@ input[type=checkbox], input[type=radio] {
       padding: 5px 12px;
       border: 1px solid $content-input-border-color;
       box-shadow: none;
+    }
+    textarea {
+      height: 8rem;
     }
     // Сообщение об ошибке в инпутах
     .is-invalid-input:not(:focus) {
@@ -1020,7 +1023,7 @@ input[type=checkbox], input[type=radio] {
       // Меняем положение стрелочки фонды
       background-position: 100% center;
     }
-    input:focus, select:focus {
+    input:focus, select:focus, textarea:focus {
       border: 1px solid $content-input-focus-border-color;
     }
   }

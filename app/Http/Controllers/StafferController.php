@@ -33,6 +33,7 @@ class StafferController extends Controller
         $company = Company::with(['departments' => function($query) {
                       $query->whereFilial_status(1);
                     }])->findOrFail($user->company_id);
+        $filials = count($company->departments);
       } else {
         if ($user->god == 1) {
           // Если нет, то бог без компании
@@ -45,7 +46,7 @@ class StafferController extends Controller
       };
       // dd($staff);
       $page_info = Page::wherePage_alias('/staff')->first();
-      $filials = count($company->departments);
+      
       return view('staff.index', compact('staff', 'page_info', 'filials'));
     }
 
