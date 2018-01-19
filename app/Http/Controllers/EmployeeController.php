@@ -6,6 +6,7 @@ use App\Vacancy;
 use App\Employee;
 use App\User;
 use App\Page;
+use App\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

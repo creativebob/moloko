@@ -8,6 +8,9 @@ use App\Area;
 use App\City;
 use App\Page;
 
+// // Валидация
+// use App\Http\Requests\UpdateCity;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

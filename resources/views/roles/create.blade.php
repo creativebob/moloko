@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@include('roles.inhead')
 
 @section('title', 'Новая группа пользователей')
 

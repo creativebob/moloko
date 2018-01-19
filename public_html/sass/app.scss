@@ -1224,6 +1224,12 @@ input[type=checkbox], input[type=radio] {
     }
   }
 }
+.allow {
+  color: green;
+}
+.deny {
+  color: red;
+}
 // Основной контент
 .content {
   padding: 30px 20px 44px 20px;
