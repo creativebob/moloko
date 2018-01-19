@@ -7,9 +7,11 @@ use App\Site;
 use App\Page;
 use App\Company;
 
+// Валидация
+use App\Http\Requests\SiteRequest;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
-use App\Http\Requests\UpdateSite;
 use Illuminate\Support\Facades\Auth;
 
 class SiteController extends Controller
@@ -51,7 +53,7 @@ class SiteController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store(SiteRequest $request)
   {
     $user = Auth::user();
     $site = new Site;
@@ -96,7 +98,7 @@ class SiteController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, $id)
+  public function update(SiteRequest $request, $id)
   {
     // $this->authorize('update', $site);
     $user = Auth::user();

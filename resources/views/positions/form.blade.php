@@ -41,23 +41,11 @@
                   
                    {{ Form::checkbox('roles[]', $role->id, null, ['id'=>'role-'.$role->id]) }}
                   <label for="role-{{ $role->id }}"><span>{{ $role->role_name }}</span></label>
-                  @foreach ($role->rights as $right)
-                    @if ($right->directive == 'allow')
-                      1
-                    @else
-                      0
-                    @endif
-                    @break
-                  @endforeach
-                  @foreach ($role->rights as $right)
-                    @if ($right->directive == 'deny')
-                      1
-                    @else
-                      0
-                    @endif
-                    @break
-                  @endforeach
-
+                  @php
+                  $allow = count($role->rights->where('directive', 'allow'));
+                  $deny = count($role->rights->where('directive', 'deny'));
+                  @endphp
+                  <span class="allow">{{ $allow }}</span> / <span class="deny">{{ $deny }}</span>
                 </div>
               </li>
               @endforeach

@@ -15,8 +15,8 @@ class CreateSitesTable extends Migration
     {
         Schema::create('sites', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('site_name', 30)->unique()->nullable()->index()->comment('Название сайта');
-            $table->string('site_domen', 30)->unique()->nullable()->index()->comment('Домен сайта');
+            $table->string('site_name', 30)->nullable()->index()->comment('Название сайта');
+            $table->string('site_domen', 30)->nullable()->index()->comment('Домен сайта');
 
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');

@@ -8,6 +8,9 @@ use App\Page;
 use App\Navigation;
 use App\Site;
 
+// Валидация
+use App\Http\Requests\MenuRequest;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -137,7 +140,7 @@ class MenuController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MenuRequest $request)
     {
       $user = Auth::user();
       // Пишем раздел меню
@@ -223,7 +226,7 @@ class MenuController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(MenuRequest $request, $id)
     {
       $user = Auth::user();
       $menu = Menu::with('navigation')->findOrFail($id);

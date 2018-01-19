@@ -6,6 +6,9 @@ namespace App\Http\Controllers;
 use App\Page;
 use App\Site;
 
+// Валидация
+use App\Http\Requests\PageRequest;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,26 +25,19 @@ class PageController extends Controller
       $user = Auth::user();
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
-        
-        // $pages = Page::whereHas('site', function ($query) use ($user) {
-        //           $query->whereCompany_id($user->company_id);
-        //         })
-        //         ->with('site')
-        //         ->siteId($request->site_id)
-        //         ->paginate(30);
-        $pages = Page::siteId($request->site_id)
+        $pages = Page::whereSite_id($request->site_id)
                 ->paginate(30);
         $site = Site::findOrFail($request->site_id);
       } else {
         // Если нет, то бог без компании
         if ($user->god == 1) {
-          $pages = Page::siteId($request->site_id)->paginate(30);
+          $pages = Page::whereSite_id($request->site_id)->paginate(30);
           $site = Site::findOrFail($request->site_id);
         };
       };
       // Пишем сайт в сессию
       session(['current_site' => $request->site_id]);
-      $page_info = Page::wherePage_alias('/pages')->whereSite_id('1')->first();
+      $page_info = Page::wherePage_alias('/pages')->whereSite_id(1)->first();
       return view('pages.index', compact('pages', 'site', 'page_info'));
     }
     /**
@@ -63,7 +59,7 @@ class PageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PageRequest $request)
     {
       $user = Auth::user();
       $page = new Page;
@@ -114,7 +110,7 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PageRequest $request, $id)
     {
       $user = Auth::user();
       $page = Page::findOrFail($id);

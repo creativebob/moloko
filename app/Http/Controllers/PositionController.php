@@ -9,6 +9,9 @@ use App\User;
 use App\Role;
 use App\PositionRole;
 
+// Валидация
+use App\Http\Requests\PositionRequest;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -61,7 +64,7 @@ class PositionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PositionRequest $request)
     {
       $user = Auth::user();
       // СОздаем новую должность
@@ -114,13 +117,14 @@ class PositionController extends Controller
       $position = Position::findOrFail($id);
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
-        $roles = Role::whereCompany_id($user->company_id)->orWhereNull('company_id')->get();
+        $roles = Role::with('rights')->whereCompany_id($user->company_id)->orWhereNull('company_id')->get();
       } else {
         // Если нет, то бог без компании
         if ($user->god == 1) {
-          $roles = Role::get();
+          $roles = Role::with('rights')->get();
         };
       };
+      // dd($roles);
       $pages = Page::whereSite_id(1)->pluck('page_name', 'id');
       return view('positions.edit', compact('position', 'pages', 'roles'));
     }
@@ -132,7 +136,7 @@ class PositionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PositionRequest $request, $id)
     {
       // Обновляем должность
       $user = Auth::user();
@@ -157,7 +161,7 @@ class PositionController extends Controller
               'role_id' => $role,
               'author_id' => $user->id,
             ];
-          }
+          };
           DB::table('position_role')->insert($mass);
           // Лехина идея с перебором на соответствие
           // $p = 0;

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 // Подключаем модели
 use App\Region;
 
+// Валидация
+// use App\Http\Requests\Region;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

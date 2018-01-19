@@ -8,6 +8,9 @@ use App\Menu;
 use App\Page;
 use App\Site;
 
+// Валидация
+use App\Http\Requests\NavigationRequest;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,7 +56,7 @@ class NavigationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(NavigationRequest $request)
     {
         $user = Auth::user();
         $navigation = new Navigation;
@@ -105,7 +108,7 @@ class NavigationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(NavigationRequest $request, $id)
     {
         $user = Auth::user();
         $navigation = Navigation::findOrFail($id);
