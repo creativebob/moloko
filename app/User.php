@@ -5,9 +5,15 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Scopes\ModerationScope;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use App\Scopes\ModerationScope;
+
+use App\Scopes\Traits\AuthorsTraitScopes;
+use App\Scopes\Traits\SystemItemTraitScopes;
+use App\Scopes\Traits\FilialsTraitScopes;
+use App\Scopes\Traits\ModerationTraitScopes;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -15,6 +21,9 @@ class User extends Authenticatable
     use Notifiable;
     use SoftDeletes;
 
+    use AuthorsTraitScopes;
+    use SystemItemTraitScopes;
+    use FilialsTraitScopes;
 
     /**
      * Загрузка типажа мягкого удаления для модели.
@@ -54,69 +63,6 @@ class User extends Authenticatable
     // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
 
 
-    // Фильтрация для показа системных записей
-    public function scopeSystemItem($query, $system_item)
-    {
-        if(isset($system_item)){
-          return $query->orWhere('system_item', 1);
-        } else {return $query;};
-    }
-
-        // Фильтрация для показа авторов
-    public function scopeAuthors($query, $authors, $filials)
-    {
-
-
-        if(isset($authors)){
-
-            if($authors['authors_id'] == null){
-
-
-                // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
-                return $query->Where('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
-
-
-            } else {
-
-
-                // $authors['authors_id'] = [4, 5, 6, 7];
-                // 
-                // // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
-                // return $query->WhereIn('author_id', $authors['authors_id'])->orWhere('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
-
-                // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
-
-                // dd($filials);
-                return $query->whereHas('staff', function ($query) use ($filials){
-                  $query->whereIn('filial_id', $filials);
-                })->WhereIn('author_id', $authors['authors_id'])->orWhere('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
-            };
-
-          } else {
-  
-              // Без ограничений
-
-               return $query;
-          }
-    }
-
-         // Фильтрация по филиалу
-    public function scopeFilials($query, $filials)
-    {
-
-
-
-            if($filials == null){
-
-              return $query;
-
-            } else {
-           
-                // dd($filials);
-                // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
-                return $query->whereIn('filial_id', $filials);
-            }
-    }
 
     // Фильтрация по статусу пользователя: клиент или сотрудник
     public function scopeUserType($query, $user_type)

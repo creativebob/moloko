@@ -297,7 +297,7 @@ class RoleController extends Controller
                 // Если запись существует, пишем 1, если нет, то 0
                 if(isset($session[$box_allow_name])&&(isset($session[$box_deny_name]) == false)){
                     $status_box = '1';
-                    $right_id = $session[$box_allow_name];
+                    $right_id = $session[$box_allow_name]['right_id'];
 
                     // Если в редактиремой роли присутствует право (которое также присутствует и у авторизованного пользователя),
                     // то ставим галочку
