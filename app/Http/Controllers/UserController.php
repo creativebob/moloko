@@ -29,90 +29,74 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
+        
         // Подключение политики
         // $this->authorize('index', User::class);
         
         $user = Auth::user();
 
-        // Получаем сессию
-        $session  = session('access');
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $operator_answer = operator_right('users', true);
+        // dd($operator_answer);
 
-        if(!isset($session)){abort(403, 'Нет сессии!');};
+        // Получаем читаемый список филиалов для SELECT в формах
+        $list_filials = Department::whereIn('id', $operator_answer['filials'])->pluck('department_name', 'id');
 
-        // Получаем список авторов
-        $list_authors = $session['list_authors'];
-
-        // Показываем богу всех авторов
-        if($user->god == 1)
-        {
-
-            $filials = null;
-            $system_item = 1;
-            $authors = null;
-
-        } else {
-
-            // ОСНОВНЫЕ ПРОВЕРКИ --------------------------------------------------------------------------------------------------------------------
-
-                // Указываем - являеться ли сущность зависимой от филиала
-                // false - независима / true - зависима
-                $dependence = true;
+        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
+        // $user = $operator_answer['user_id'];
 
 
-                // Управление зависимостью через право
-                // Если выбрано "Нет ограичений" мы снимаем филиальную зависимость
-
-                if(isset($session['all_rights']['nolimit-users-allow']) && (!isset($session['all_rights']['nolimit-users-deny'])))
-                {
-                    $dependence = false;
-                } else {
-                    $dependence = true;
-                };
-        };
 
 
-        // ПРОВЕРЯЕМ ПРАВО НА ПРОСМОТР НЕ ОТМОДЕРИРОВАННЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------
-        // Проверяем право просмотра системных записей:
-        
-        if(isset($session['all_rights']['moderator-users-allow']) && (!isset($session['all_rights']['moderator-users-deny'])))
-        {
-            $moderator = ModerationScope::class;
-        } else {
-            $moderator = null;
-        };
+
+
+        // Тут типа кодим ...
+
+
+
+
 
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $dependence = true;
-
-        if(isset($user->company_id))
+        if((isset($operator_answer['company_id']))&&($user->god == null))
         {
             // Если у пользователя есть компания
-            $users = User::withoutGlobalScope($moderator)
-            ->whereCompany_id($user->company_id)
-            ->filials($dependence, $session) // $filials должна существовать только для зависимых от филиала, иначе $filials должна равняться null
+            $users = User::withoutGlobalScope($operator_answer['moderator'])
+            ->whereCompany_id($operator_answer['company_id'])
+            ->filials($operator_answer['filials'], $operator_answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
             ->whereGod(null)
-            ->authors($dependence, $session)
-            ->systemItem($session) // Фильтр по системным записям
+            ->authors($operator_answer['authors'])
+            ->systemItem($operator_answer['system_item']) // Фильтр по системным записям
+            ->orderBy('moderated', 'desc')
+            ->paginate(30);
+
+        } elseif($user->god == 1) {
+
+            // Вы вероятно под выбранной компании
+            // 
+            $filials = null;
+            $system_item = 1;
+            $authors = null;
+
+            $users = User::withoutGlobalScope(ModerationScope::class)
             ->orderBy('moderated', 'desc')
             ->paginate(30);
 
         } else {
 
-            // Если нет, то бог без компании
-            if($user->god == 1)
-            {
-                $users = User::withoutGlobalScope(ModerationScope::class)
-                ->orderBy('moderated', 'desc')
-                ->paginate(30);
-            };
+            abort(403, 'Пошел нахуй!');
+
         };
 
 	    return view('users.index', compact('users', 'access', 'session'));
 	}
+
+
+
 
     //
     public function create()

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Scopes\ModerationScope;
 
 use App\Scopes\Traits\AuthorsTraitScopes;
-use App\Scopes\Traits\SystemItemTraitScopes;
+use App\Scopes\Traits\SystemitemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\ModerationTraitScopes;
 
@@ -22,7 +22,7 @@ class User extends Authenticatable
     use SoftDeletes;
 
     use AuthorsTraitScopes;
-    use SystemItemTraitScopes;
+    use SystemitemTraitScopes;
     use FilialsTraitScopes;
 
     /**
@@ -41,27 +41,12 @@ class User extends Authenticatable
     //  *
     //  * @return void
     //  */
+    //  
     protected static function boot()
     {
         parent::boot();
         static::addGlobalScope(new ModerationScope);
     }
-
-  /**
-   * Получить запись с именем группы доступа
-   */
-  // public function group_action()
-  // {
-  //   return $this->BelongsTo('App\Role', 'group_action_id');
-  // }
-
-  // public function group_locality()
-  // {
-  //   return $this->BelongsTo('App\Role', 'group_locality_id');
-  // }
-
-    // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
-
 
 
     // Фильтрация по статусу пользователя: клиент или сотрудник
@@ -125,25 +110,6 @@ class User extends Authenticatable
             };
     }
 
-    // public function getContragentStatusAttribute($value) {
-    //     if($value == 1){
-    //         $value = "Сотрудник";
-    //     } elseif($value == 2) {
-    //         $value = "Клиент";
-    //     };
-    //     return $value;
-    // }
-
-    // public function setAccessBlockAttribute($value) {
-    //     if($value == Null){
-    //         $value = "Открыт";
-    //     } elseif($value == 1) {
-    //         $value = "Заблокирован";
-    //     };
-    //     return $value;
-    // }
-
-
     public function getPhoneAttribute($value) {
         
         if(strlen($value) == 11 ){
@@ -169,8 +135,6 @@ class User extends Authenticatable
 
         return $result;
     }
-
-
 
     /**
      * The attributes that are mass assignable.
@@ -219,7 +183,6 @@ class User extends Authenticatable
         'moderated', 
 
     ];
-
 
 
     /**

@@ -28,7 +28,8 @@
             "App\\": "app/"
         },
         "files": [
-            "app/Helpers/StringOperation.php"
+            "app/Helpers/StringOperation.php", 
+            "app/Helpers/SessionOperation.php" 
         ]
     },
     "autoload-dev": {

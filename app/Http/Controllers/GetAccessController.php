@@ -176,6 +176,9 @@ class GetAccessController extends Controller
 
         $access['filial_rights'] = $filial_rights;
         $access['all_rights'] = $all_rights;
+
+        $access['user_info']['user_id'] = $user->id;
+        $access['user_info']['company_id'] = $user->company_id;
         $access['user_info']['filial_id'] = $user_filial_id;
         $access['user_info']['department_id'] = $user_department_id;
         $access['list_authors'] = $authors;
