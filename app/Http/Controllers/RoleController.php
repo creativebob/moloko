@@ -18,6 +18,7 @@ use App\Role;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
@@ -393,32 +394,65 @@ class RoleController extends Controller
     public function setright(Request $request)
     {
         $user = Auth::user();
-        $rightrole = RightRole::where('role_id', $request->role_id)->where('right_id', $request->right_id)->first();
-
-        if(isset($rightrole)){
-
-                // Если запись права в роли не являеться системной, то удаляем ее.
-                if($rightrole->system_item == null){
-                    $rightrole = RightRole::destroy($rightrole->id);
-                    echo "Есть такая запись! Сделали попытку ебнуть ее!";                
+        $role_id = $request->role_id;
+        // echo $request->rights;
+        if (count($request->rights) > 0) {
+            $delete_rights = RightRole::where(['role_id' => $role_id, 'system_item' => null])->whereIn('right_id', $request->rights)->delete();
+             // echo $request->checkbox;
+            if ($request->checkbox == false) {
+                $data = [
+                    'status' => 0,
+                    'msg' => "Удалили права на сущность!",
+                ];
+            } else {
+                // echo $delete_rights;
+                $mass = [];
+                // Смотрим список пришедших роллей
+                foreach ($request->rights as $right) {
+                  $mass[] = [
+                    'right_id' => $right,
+                    'role_id' => $role_id,
+                    'author_id' => $user->id,
+                  ];
                 };
-
+                DB::table('right_role')->insert($mass);
+                $data = [
+                    'status' => 1,
+                    'msg' => "Записали права на сущность!",
+                ];
+            };
+            echo json_encode($data, JSON_UNESCAPED_UNICODE);
+            
         } else {
+            $rightrole = RightRole::where('role_id', $request->role_id)->where('right_id', $request->right_id)->first();
 
-                echo "Такой записи не было. Сделали попытку записать!";
+            if(isset($rightrole)){
 
-                $rightrole = new RightRole;
-                $rightrole->role_id = $request->role_id;
-                $rightrole->right_id = $request->right_id;
-                $rightrole->author_id = $user->id;
+                    // Если запись права в роли не являеться системной, то удаляем ее.
+                    if($rightrole->system_item == null){
+                        $rightrole = RightRole::destroy($rightrole->id);
+                        echo "Есть такая запись! Сделали попытку ебнуть ее!";                
+                    };
 
-                $rightrole->save();
+            } else {
 
-                if($rightrole){
+                    echo "Такой записи не было. Сделали попытку записать!";
 
-                } else { echo "Все пошло по пизде!"; }
+                    $rightrole = new RightRole;
+                    $rightrole->role_id = $request->role_id;
+                    $rightrole->right_id = $request->right_id;
+                    $rightrole->author_id = $user->id;
 
+                    $rightrole->save();
+
+                    if($rightrole){
+
+                    } else { echo "Все пошло по пизде!"; }
+
+            };
         };
+        
+        
 
     }
 

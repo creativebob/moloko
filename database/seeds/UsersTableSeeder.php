@@ -134,7 +134,7 @@ class UsersTableSeeder extends Seeder
         	],
         	[
 	        	'login' => 'ylan1', 
-	        	'email' => 'yaln1@vorotamars.ru', 
+	        	'email' => 'ylan1@vorotamars.ru', 
 	        	'password' => bcrypt('123456'), 
 	        	'first_name' => 'Улан',
 	        	'second_name' => 'Первый',
@@ -150,7 +150,7 @@ class UsersTableSeeder extends Seeder
         	],
         	[
 	        	'login' => 'ylan2', 
-	        	'email' => 'yaln2@vorotamars.ru', 
+	        	'email' => 'ylan2@vorotamars.ru', 
 	        	'password' => bcrypt('123456'), 
 	        	'first_name' => 'Улан',
 	        	'second_name' => 'Второй',
@@ -166,7 +166,7 @@ class UsersTableSeeder extends Seeder
         	],
         	[
 	        	'login' => 'ylan3', 
-	        	'email' => 'yaln3@vorotamars.ru', 
+	        	'email' => 'ylan3@vorotamars.ru', 
 	        	'password' => bcrypt('123456'), 
 	        	'first_name' => 'Улан',
 	        	'second_name' => 'Третий',
