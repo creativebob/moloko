@@ -31,7 +31,7 @@ class UserController extends Controller
     {
 
         // Подключение политики
-        // $this->authorize('index', User::class);
+        $this->authorize('index', User::class);
         
         $user = Auth::user();
 
@@ -103,7 +103,7 @@ class UserController extends Controller
     {
 
         // Подключение политики
-        // $this->authorize('index', User::class);
+        $this->authorize('create', User::class);
         
         $user = Auth::user();
 
@@ -128,7 +128,7 @@ class UserController extends Controller
     {
 
         // Подключение политики
-        // $this->authorize('index', User::class);
+        $this->authorize('create', User::class);
         
         $auth_user = Auth::user();
 
@@ -241,7 +241,7 @@ class UserController extends Controller
     {
 
         // Подключение политики
-        // $this->authorize('update', $user);
+        $this->authorize('update', User::class);
         
         $user_auth = Auth::user();
 
@@ -291,6 +291,7 @@ class UserController extends Controller
     	$user->passport_date = $request->passport_date;
 
     	$user->user_type = $request->user_type;
+        
     	$user->lead_id = $request->lead_id;
     	$user->employee_id = $request->employee_id;
     	$user->access_block = $request->access_block;
@@ -304,8 +305,32 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = User::findOrFail($id);
-        // $this->authorize('view', $user);
+
+
+
+
+
+        // Подключение политики
+        $this->authorize('view', User::class);
+        
+        $user_auth = Auth::user();
+
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $operator_answer = operator_right('users', true);
+        // dd($operator_answer);
+
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = User::withoutGlobalScope($operator_answer['moderator'])
+        ->whereCompany_id($operator_answer['company_id'])
+        ->filials($operator_answer['filials'], $operator_answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->whereGod(null)
+        ->authors($operator_answer['authors'])
+        ->systemItem($operator_answer['system_item']) // Фильтр по системным записям
+        ->findOrFail($id);
+        
+        if(!isset($user)){abort(403, "Не достаточно прав!");};
 
         $roles = new Role;
     	return view('users.show', compact('user', 'roles'));
@@ -315,7 +340,7 @@ class UserController extends Controller
     {
 
         // Подключение политики
-        // $this->authorize('update', $user);
+        $this->authorize('update', User::class);
         
         $user_auth = Auth::user();
 
@@ -352,8 +377,20 @@ class UserController extends Controller
 
     public function destroy($id)
     {
+
+        // Подключение политики
+        $this->authorize('delete', User::class);
+        
+        $user_auth = Auth::user();
+
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $operator_answer = operator_right('users', true);
+        // dd($operator_answer);
+
         // Удаляем пользователя с обновлением
-        $user = User::destroy($id);
+        $user = User::withoutGlobalScope($operator_answer['moderator'])->findOrFail($id);
+
         if ($user) {
           return Redirect('/users');
         } else {
@@ -365,7 +402,7 @@ class UserController extends Controller
     public function getauthcompany($company_id)
     {
 
-        // $this->authorize('update', $user);
+        // $this->authorize('update', User::class);
 
         $auth_user = Auth::user();
 

@@ -15,7 +15,7 @@ class ActionsTableSeeder extends Seeder
         	['action_name' => 'Просмотр', 'action_method' => 'view'], 
         	['action_name' => 'Просмотр списка', 'action_method' => 'index'], 
         	['action_name' => 'Добавление', 'action_method' => 'create'], 
-        	['action_name' => 'Редактирование', 'action_method' => 'edit'], 
+        	['action_name' => 'Редактирование', 'action_method' => 'update'], 
         	['action_name' => 'Удаление', 'action_method' => 'delete'], 
         	['action_name' => 'Системная', 'action_method' => 'system'], 
             ['action_name' => 'Другие авторы', 'action_method' => 'authors'], 
