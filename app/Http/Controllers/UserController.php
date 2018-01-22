@@ -307,19 +307,11 @@ class UserController extends Controller
     {
 
 
-
-
-
-        // Подключение политики
-        $this->authorize('view', User::class);
-        
-        $user_auth = Auth::user();
-
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
         $operator_answer = operator_right('users', true);
-        // dd($operator_answer);
 
+        // dd($operator_answer);
 
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::withoutGlobalScope($operator_answer['moderator'])
@@ -328,9 +320,16 @@ class UserController extends Controller
         ->whereGod(null)
         ->authors($operator_answer['authors'])
         ->systemItem($operator_answer['system_item']) // Фильтр по системным записям
-        ->findOrFail($id);
-        
+        ->find($id);
+
+
+
         if(!isset($user)){abort(403, "Не достаточно прав!");};
+
+        // Подключение политики
+        $this->authorize('view', $user);
+        
+        // $user_auth = Auth::user();
 
         $roles = new Role;
     	return view('users.show', compact('user', 'roles'));

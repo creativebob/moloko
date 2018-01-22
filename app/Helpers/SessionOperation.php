@@ -74,6 +74,7 @@
             // Получаем список ID филиалов в которых присутствует право на просмотр списка пользователей
             $filials = collect($session['all_rights']['index-'.$entity_name.'-allow']['departments'])->keys()->toarray();
 
+
             // Получаем список ID департаментов в которых присутствует право на просмотр списка пользователей
             $departments = collect($session['all_rights']['index-'.$entity_name.'-allow']['departments'])->values()->toarray();
 
@@ -81,10 +82,9 @@
 
             // Если выборка не зависима
             $filials = null;
+            $departments = null;
+            abort(403, 'Ебать, прав то нет у тебя! Филиал или отдел не прописался в сессию.');
         };
-
-
-
 
 
         // ЗАВИСИМОСТЬ ОТ СИСТЕМНЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------------------------------
@@ -165,6 +165,8 @@
         $operator_info['automoderate'] = $automoderate;
         $operator_info['user_id'] = $session['user_info']['user_id'];
         $operator_info['company_id'] = $session['user_info']['company_id'];
+
+        // dd($operator_info);
 
         return $operator_info;
     };

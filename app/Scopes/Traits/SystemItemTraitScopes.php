@@ -14,15 +14,16 @@ trait SystemitemTraitScopes
 
         if(isset($system_item)){
             if($system_item == 1){
-
-                return $query->orWhere('system_item', 1);
-            } else {
+              
                 return $query;
+            } else {
+
+                return $query->Where('system_item', null);
             };
 
         } else {
             
-          return $query;
+          return $query->Where('system_item', null);
         };
     }
 

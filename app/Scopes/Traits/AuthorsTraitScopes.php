@@ -10,33 +10,35 @@ trait AuthorsTraitScopes
     {
 
         if(isset($authors)){
-
             if($authors['authors_id'] == null){
 
-                // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
-                return $query->Where('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
+                    $user_id = $authors['user_id'];
+
+                    return $query
+                    ->Where(function ($query) use ($user_id, $authors) {$query
+                    ->orWhere('author_id', $user_id)
+                    ->orWhere('id', $user_id);});
 
             } else {
 
-              // $authors['authors_id'] = collect($authors['authors_id'])->implode(', ');
-              // // dd($authors['authors_id']);
+                    $user_id = $authors['user_id'];
+                    $authors = $authors['authors_id'];
 
-                // // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
-                return $query->WhereIn('author_id', $authors['authors_id'])->orWhere('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
-
-                // Получаем записи авторов которых нам открыли - получаем записи созданные нами - получаем себя
-
-                // dd($filials);
-                // return $query->whereHas('staff', function ($query) use ($filials){
-                //   $query->whereIn('filial_id', $filials);
-                // })->WhereIn('author_id', $authors['authors_id'])->orWhere('author_id', $authors['user_id'])->orWhere('id', $authors['user_id']);
+                    return $query
+                    ->Where(function ($query) use ($user_id, $authors) {$query
+                    ->orWhere('author_id', $user_id)
+                    ->orWhereIn('author_id', $authors)
+                    ->orWhere('id', $user_id);});
             };
 
         } else {
 
-            // Без ограничений
-            // dd($authors['authors_id']);
-             return $query;
+                    $user_id = $authors['user_id'];
+
+                    return $query
+                    ->Where(function ($query) use ($user_id, $authors) {$query
+                    ->orWhere('author_id', $user_id)
+                    ->orWhere('id', $user_id);});
         }
     }
 }
