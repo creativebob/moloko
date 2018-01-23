@@ -37,17 +37,14 @@ class UserController extends Controller
 
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
-        $operator_answer = operator_right('users', true);
-        // dd($operator_answer);
+        $answer = operator_right('users', true);
+        // dd($answer);
 
         // Получаем читаемый список филиалов для SELECT в формах
-        $list_filials = Department::whereIn('id', $operator_answer['filials'])->pluck('department_name', 'id');
+        if($user->god == null){$list_filials = Department::whereIn('id', $answer['filials'])->pluck('department_name', 'id');};
 
         // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
-        // $user = $operator_answer['user_id'];
-
-
-
+        // $user = $answer['user_id'];
 
 
 
@@ -55,47 +52,22 @@ class UserController extends Controller
 
 
 
-
-
-
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        if((isset($operator_answer['company_id']))&&($user->god == null))
-        {
-            // Если у пользователя есть компания
-            $users = User::withoutGlobalScope($operator_answer['moderator'])
-            ->whereCompany_id($operator_answer['company_id'])
-            ->filials($operator_answer['filials'], $operator_answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-            ->whereGod(null)
-            ->authors($operator_answer['authors'])
-            ->systemItem($operator_answer['system_item']) // Фильтр по системным записям
-            ->orderBy('moderated', 'desc')
-            ->paginate(30);
 
-        } elseif($user->god == 1) {
-
-            // Вы вероятно под выбранной компании
-            // 
-            $filials = null;
-            $system_item = 1;
-            $authors = null;
-
-            $users = User::withoutGlobalScope(ModerationScope::class)
-            ->orderBy('moderated', 'desc')
-            ->paginate(30);
-
-        } else {
-
-            abort(403, 'Пошел нахуй!');
-
-        };
+        $users = User::withoutGlobalScope($answer['moderator'])
+        ->companies($answer['company_id'])
+        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer['all_authors'])
+        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+        ->orWhere('id', $user->id) // Только для сущности USERS
+        ->orderBy('moderated', 'desc')
+        ->paginate(30);
 
 	    return view('users.index', compact('users', 'access', 'session'));
 	}
-
-
 
 
     //
@@ -109,14 +81,14 @@ class UserController extends Controller
 
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
-        $operator_answer = operator_right('users', true);
-        // dd($operator_answer);
+        $answer = operator_right('users', true);
+        // dd($answer);
 
         // Получаем читаемый список филиалов для SELECT в формах
-        $list_filials = Department::whereIn('id', $operator_answer['filials'])->pluck('department_name', 'id');
+        $list_filials = Department::whereIn('id', $answer['filials'])->pluck('department_name', 'id');
 
         // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
-        // $user = $operator_answer['user_id'];
+        // $user = $answer['user_id'];
 
     	$user = new User;
         $roles = new Role;
@@ -134,14 +106,14 @@ class UserController extends Controller
 
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
-        $operator_answer = operator_right('users', true);
-        // dd($operator_answer);
+        $answer = operator_right('users', true);
+        // dd($answer);
 
         // Получаем читаемый список филиалов для SELECT в формах
-        $list_filials = Department::whereIn('id', $operator_answer['filials'])->pluck('department_name', 'id');
+        $list_filials = Department::whereIn('id', $answer['filials'])->pluck('department_name', 'id');
 
         // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
-        // $user = $operator_answer['user_id'];
+        // $user = $answer['user_id'];
         // 
 
         $user = new User;
@@ -182,7 +154,7 @@ class UserController extends Controller
         $user->access_block = $request->access_block;
         $user->author_id = $auth_user->id;
 
-        if($operator_answer['automoderate'] == false){$user->moderation = 1;};
+        if($answer['automoderate'] == false){$user->moderation = 1;};
 
         // Если у пользователя есть назначенная компания и пользователь не являеться богом
         if(isset($auth_user->company_id)&&($auth_user->god != 1)){
@@ -235,8 +207,6 @@ class UserController extends Controller
     }
 
 
-
-
     public function update(UpdateUser $request, $id)
     {
 
@@ -247,11 +217,11 @@ class UserController extends Controller
 
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
-        $operator_answer = operator_right('users', true);
-        // dd($operator_answer);
+        $answer = operator_right('users', true);
+        // dd($answer);
 
 
-        $user = User::withoutGlobalScope($operator_answer['moderator'])->findOrFail($id);
+        $user = User::withoutGlobalScope($answer['moderator'])->findOrFail($id);
 
 
     	$user->login = $request->login;
@@ -296,7 +266,7 @@ class UserController extends Controller
     	$user->employee_id = $request->employee_id;
     	$user->access_block = $request->access_block;
 
-        if($operator_answer['automoderate']){$user->moderated = null;} else {$user->moderated = 1;};
+        if($answer['automoderate']){$user->moderated = null;} else {$user->moderated = 1;};
 
 		$user->save();
  
@@ -306,31 +276,27 @@ class UserController extends Controller
     public function show($id)
     {
 
-
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
-        $operator_answer = operator_right('users', true);
+        $answer = operator_right('users', true);
 
-        // dd($operator_answer);
+        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
+        $user_auth_id = $answer['user_id'];
+        // $user_auth = Auth::user();
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::withoutGlobalScope($operator_answer['moderator'])
-        ->whereCompany_id($operator_answer['company_id'])
-        ->filials($operator_answer['filials'], $operator_answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->whereGod(null)
-        ->authors($operator_answer['authors'])
-        ->systemItem($operator_answer['system_item']) // Фильтр по системным записям
+        $user = User::withoutGlobalScope($answer['moderator'])
+        ->companies($answer['company_id'])
+        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer['all_authors'])
+        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
         ->find($id);
 
-
-
-        if(!isset($user)){abort(403, "Не достаточно прав!");};
+        // if(!isset($user)){abort(403, "Не достаточно прав!");};
 
         // Подключение политики
         $this->authorize('view', $user);
         
-        // $user_auth = Auth::user();
-
         $roles = new Role;
     	return view('users.show', compact('user', 'roles'));
     }
@@ -338,35 +304,42 @@ class UserController extends Controller
     public function edit($id)
     {
 
-        // Подключение политики
-        $this->authorize('update', User::class);
-        
-        $user_auth = Auth::user();
-
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
-        $operator_answer = operator_right('users', true);
-        // dd($operator_answer);
-
-        // Получаем читаемый список филиалов для SELECT в формах
-        $list_filials = Department::whereIn('id', $operator_answer['filials'])->pluck('department_name', 'id');
-
-        // Получаем читаемый список отделов для SELECT в формах
-        $departments = Department::whereIn('id', $operator_answer['departments'])->pluck('department_name', 'id');
+        $answer = operator_right('users', true);
 
         // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
-        // $user = $operator_answer['user_id'];
+        $user_auth_id = $answer['user_id'];
+        $user_status = $answer['user_status'];
+        // $user_auth = Auth::user();
 
-        // $operator_answer['moderator'] = ModerationScope::class;
-        // dd($operator_answer['moderator']);
 
-        $user = User::withoutGlobalScope($operator_answer['moderator'])->findOrFail($id);
-        // dd($user);
+         if($user_status == null){
 
+         // Получаем читаемый список филиалов для SELECT в формах           
+            $list_filials = Department::whereIn('id', $answer['filials'])->pluck('department_name', 'id');
+            $departments = Department::whereIn('id', $answer['departments'])->pluck('department_name', 'id');
+        } else {
+
+            $list_filials = Department::where('company_id', $answer['company_id'])->where('filial_status', 1)->pluck('department_name', 'id');
+            $departments = Department::where('company_id', $answer['company_id'])->pluck('department_name', 'id');
+        };
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = User::withoutGlobalScope($answer['moderator'])
+        ->companies($answer['company_id'])
+        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer['all_authors'])
+        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+        ->find($id);
+
+        // Подключение политики
+        $this->authorize('update', $user);
+        
         $role = new Role;
         $role_users = RoleUser::whereUser_id($id)->get();
 
-        $roles = Role::whereCompany_id($user_auth->company_id)->pluck('role_name', 'id');
+        $roles = Role::whereCompany_id($answer['company_id'])->pluck('role_name', 'id');
         // $departments = Department::whereCompany_id($user_auth->company_id)->pluck('department_name', 'id');
         
         Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
@@ -384,11 +357,11 @@ class UserController extends Controller
 
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
-        $operator_answer = operator_right('users', true);
-        // dd($operator_answer);
+        $answer = operator_right('users', true);
+        // dd($answer);
 
         // Удаляем пользователя с обновлением
-        $user = User::withoutGlobalScope($operator_answer['moderator'])->findOrFail($id);
+        $user = User::withoutGlobalScope($answer['moderator'])->findOrFail($id);
 
         if ($user) {
           return Redirect('/users');
@@ -409,7 +382,7 @@ class UserController extends Controller
             $auth_user->company_id = $company_id;
             $auth_user->save();         
         }
-        return redirect('companies');
+        return redirect('/getaccess/companies.index');
     }
 
 
@@ -436,7 +409,7 @@ class UserController extends Controller
             $user->company_id = null;
             $user->save();
         }
-        return redirect('companies');
+        return redirect('/getaccess');
     }
 
     public function returngod(Request $request)
@@ -447,7 +420,6 @@ class UserController extends Controller
             $god_id = $request->session()->get('god');
             $request->session()->forget('god');
             Auth::loginUsingId($god_id);
-
 
         }
 

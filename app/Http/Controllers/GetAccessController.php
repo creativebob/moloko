@@ -37,7 +37,6 @@ class GetAccessController extends Controller
         $user_filial_id = null;
         $user_department_id = null;
         $auth_user_roles = $user->roles;
-        $authors['user_id'] = $user->id;
         $filial_rights = null;
         $filial_id = null;
 
@@ -95,21 +94,16 @@ class GetAccessController extends Controller
 
                 // dd($list_authors);
 
-                $authors['authors_id'] = $list_authors;
-
             } else {
-                $authors['authors_id'] = null;
+
+
+                $list_authors = null;
             };
 
 
             // -------------------------------------------------------------------------------------------------------
 
 
-        } else {
-
-            // ЕСЛИ БОГ ------------------------------------------------------------------------------------------
-
-        };
 
         $right_mass = [];
 
@@ -139,9 +133,9 @@ class GetAccessController extends Controller
 
                     if($right->actionentity->alias_action_entity . "-" . $right->directive == 'authors-users-allow')
                     {
-                        $right_mass['authors'] = $authors;
+                        $right_mass['list_authors'] = $list_authors;
                     } else {
-                        $right_mass['authors'] = null;
+                        $right_mass['list_authors'] = null;
                     };
 
                     $right_mass['right_id'] = $right->id;
@@ -174,18 +168,45 @@ class GetAccessController extends Controller
             abort(403, 'Прав связанных с филиалом не обнаружено');
         };
 
+
+
+        } else {
+
+            // ЕСЛИ БОГ ------------------------------------------------------------------------------------------
+            foreach($user->roles as $role) {
+                foreach($role->rights as $right){
+
+                    // Пишем богу все права
+                    $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
+                    $right_mass['right_id'] = $right->id;
+                    $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right_mass;
+
+                };
+            };
+
+            $user_filial_id = null;
+            $user_department_id = null;
+
+        };
+
+
+        // ФОРМИРУЕМ МАССИВ С ПРАВАМИ
+
         $access['filial_rights'] = $filial_rights;
         $access['all_rights'] = $all_rights;
-
         $access['user_info']['user_id'] = $user->id;
+        $access['user_info']['user_status'] = $user->god;
         $access['user_info']['company_id'] = $user->company_id;
         $access['user_info']['filial_id'] = $user_filial_id;
         $access['user_info']['department_id'] = $user_department_id;
-        $access['list_authors'] = $authors;
 
         // Пишем в сессию массив с полученными правами!
         session(['access' => $access]);
         
-        return redirect()->route('users.index');
+
+        $link = 'users.index';
+
+        if(isset($request->link)){$link = $request->link;};
+        return redirect()->route($link);
     }
 }

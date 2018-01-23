@@ -42,16 +42,11 @@ class UserPolicy
     }
 
 
-    public function view(User $user, $user_item)
+    public function view(User $user, User $user_item)
     {
 
         $session  = session('access');
-
         if(isset($session['all_rights']['view-users-allow']['departments'][$user_item->filial_id]) && (!isset($session['all_rights']['view-users-deny']['departments'][$user_item->filial_id])))
-        {$result = true;} else {$result = false;};
-
-        if(isset($session['all_rights']['view-users-allow']) && (!isset($session['all_rights']['view-users-deny'])))
-
         {$result = true;} else {$result = false;};
         return $result;
     }
@@ -64,10 +59,10 @@ class UserPolicy
         return $result;
     }
 
-    public function update(User $user, User $myuser)
+    public function update(User $user, User $user_item)
     {
         $session  = session('access');
-        if(isset($session['all_rights']['update-users-allow']) && (!isset($session['all_rights']['update-users-deny'])))
+        if(isset($session['all_rights']['update-users-allow']['departments'][$user_item->filial_id]) && (!isset($session['all_rights']['update-users-deny']['departments'][$user_item->filial_id])))
         {$result = true;} else {$result = false;};
         return $result;
     }

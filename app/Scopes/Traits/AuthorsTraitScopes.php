@@ -6,39 +6,29 @@ trait AuthorsTraitScopes
 {
 
         // Фильтрация для показа авторов
-    public function scopeAuthors($query, $authors)
+    public function scopeAuthors($query, $all_authors)
     {
+        $user_id = $all_authors['user_id'];
 
-        if(isset($authors)){
-            if($authors['authors_id'] == null){
+        if($all_authors['authors_status']){
 
-                    $user_id = $authors['user_id'];
+            if($all_authors['list_authors'] == null){
 
-                    return $query
-                    ->Where(function ($query) use ($user_id, $authors) {$query
-                    ->orWhere('author_id', $user_id)
-                    ->orWhere('id', $user_id);});
+                    return $query;
 
             } else {
 
-                    $user_id = $authors['user_id'];
-                    $authors = $authors['authors_id'];
+                    $authors = $all_authors['list_authors'];
 
                     return $query
                     ->Where(function ($query) use ($user_id, $authors) {$query
                     ->orWhere('author_id', $user_id)
-                    ->orWhereIn('author_id', $authors)
-                    ->orWhere('id', $user_id);});
+                    ->orWhereIn('author_id', $authors);});
             };
 
         } else {
 
-                    $user_id = $authors['user_id'];
-
-                    return $query
-                    ->Where(function ($query) use ($user_id, $authors) {$query
-                    ->orWhere('author_id', $user_id)
-                    ->orWhere('id', $user_id);});
+            return $query->Where('author_id', $user_id);
         }
     }
 }
