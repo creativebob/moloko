@@ -115,12 +115,26 @@ class GetAccessController extends Controller
 
             // Если не бог - получаем ID филиала
             if($user->god == null){
+
                 if((isset($department_id))&&($department_id !== null)){
+
                     $filial = $departments->where('id', $department_id)->first();
+
                     if($departments->where('id', $department_id)->first()->filial_id == null){
+
                         $filial_id = $departments->where('id', $department_id)->first()->id;
+                        $department_name = $departments->where('id', $department_id)->first()->department_name;
+
                     } else {
+
                         $filial_id = $departments->where('id', $department_id)->first()->filial_id;
+                        $department_name = $departments->where('id', $department_id)->first()->department_name;
+                    };
+
+                    $filial_status = $departments->where('id', $department_id)->first()->filial_status;
+
+                    if($filial_status == 1){
+                         $filial_name = $departments->where('id', $department_id)->first()->department_name;
                     };
                 };
             };
@@ -140,6 +154,8 @@ class GetAccessController extends Controller
 
                     $right_mass['right_id'] = $right->id;
                     $right_mass['departments'][$filial_id] = $department_id;
+                    $right_mass['list_filials'][$filial_id] = $filial_name;
+                    $right_mass['list_departments'][$filial_id] = $department_name; 
 
                     $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right_mass;
             };
