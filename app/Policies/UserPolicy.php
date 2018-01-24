@@ -45,35 +45,27 @@ class UserPolicy
 
     public function view(User $user, User $user_item)
     {
-
-        $session  = session('access');
-        $nolimit_status = isset($session['all_rights']['nolimit-users-allow']);
-        $main_update_status = isset($session['all_rights']['update-users-allow']['departments'][$user_item->filial_id]);
-        $update_status = isset($session['all_rights']['update-users-allow']);
-
-        if(($update_status)&&($main_update_status || $main_update_status)){$result = true;} else {$result = false;};
+        $result = $this->getstatus('users', $model, 'update');
         return $result;
     }
 
     public function create(User $user)
     {
         $session  = session('access');
-        if(isset($session['all_rights']['create-users-allow']) && (!isset($session['all_rights']['create-users-deny'])))
+        if(isset($session['all_rights']['create-users-allow']))
         {$result = true;} else {$result = false;};
         return $result;
     }
 
-    public function update(User $user, User $user_item)
+    public function update(User $user, User $model)
     { 
-        $result = $this->getstatus('users', $user_item);
+        $result = $this->getstatus('users', $model, 'update');
         return $result;
     }
 
     public function delete(User $user, User $model)
     {
-        $session  = session('access');
-        if(isset($session['all_rights']['delete-users-allow']) && (!isset($session['all_rights']['delete-users-deny'])))
-        {$result = true;} else {$result = false;};
+        $result = $this->getstatus('users', $model, 'delete');
         return $result;
     }
 }

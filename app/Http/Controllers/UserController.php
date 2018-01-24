@@ -73,7 +73,6 @@ class UserController extends Controller
     //
     public function create()
     {
-
         // Подключение политики
         $this->authorize('create', User::class);
         
@@ -325,7 +324,9 @@ class UserController extends Controller
 
         // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
 
-        $list_departments = getListsDepartments($user->company_id); // Функция из Helper отдает массив со списками для SELECT
+        // Функция из Helper отдает массив со списками для SELECT (На нее отправляем id компании, для того чтобы бог получил все ее филиалы)
+        $list_departments = getListsDepartments($user->company_id);
+
         $list_filials = $list_departments['list_filials'];
         $list_departments = $list_departments['list_departments'];
 
@@ -346,24 +347,33 @@ class UserController extends Controller
     public function destroy($id)
     {
 
-        // Подключение политики
-        $this->authorize('delete', User::class);
-        
-        $user_auth = Auth::user();
 
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
         $answer = operator_right('users', true);
-        // dd($answer);
+
+        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
+        // $user_auth_id = $answer['user_id'];
+        // $user_status = $answer['user_status'];
+
+        $user_auth = Auth::user();
+        $user_auth_id = $user_auth->id;
+        $user_status = $user_auth->god;
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = User::findOrFail($id);
+
+        // Подключение политики
+        $this->authorize('delete', $user);
 
         // Удаляем пользователя с обновлением
-        $user = User::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+        $user = User::destroy($id);
 
-        if ($user) {
+        if($user) {
           return Redirect('/users');
         } else {
-          echo 'Произошла ошибка';
-        }; 
+          abort(403,'Что-то пошло не так!');
+        };
     }
 
 
