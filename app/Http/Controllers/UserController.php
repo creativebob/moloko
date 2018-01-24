@@ -315,13 +315,15 @@ class UserController extends Controller
 
 
          if($user_status == null){
-
+            // dd($answer['session']['all_rights']['update-users-allow']['list_filials']);
          // Получаем читаемый список филиалов для SELECT в формах           
-            $list_filials = Department::whereIn('id', $answer['filials'])->pluck('department_name', 'id');
-            $departments = Department::whereIn('id', $answer['departments'])->pluck('department_name', 'id');
+            $list_filials = $answer['session']['all_rights']['update-users-allow']['list_filials'];
+
+            $departments = Department::where('company_id', $answer['company_id'])->pluck('department_name', 'id');
+
         } else {
 
-            $list_filials = Department::where('company_id', $answer['company_id'])->where('filial_status', 1)->pluck('department_name', 'id');
+            $list_filials = $answer['session']['all_rights']['update-users-allow']['list_filials'];
             $departments = Department::where('company_id', $answer['company_id'])->pluck('department_name', 'id');
         };
 

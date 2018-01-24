@@ -183,6 +183,8 @@
         $answer['user_status'] = $session['user_info']['user_status'];
         $answer['company_id'] = $session['user_info']['company_id'];
 
+        $answer['session'] = $session;
+
         $answer['all_authors']['authors_status'] = $authors_status;
         $answer['all_authors']['list_authors'] = $list_authors;
         $answer['all_authors']['user_id'] = $session['user_info']['user_id'];
