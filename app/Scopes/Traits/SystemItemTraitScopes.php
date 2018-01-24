@@ -18,14 +18,14 @@ trait SystemitemTraitScopes
                     return $query->WhereNull('system_item')->orWhere('system_item', 1);
                 } else
                 {
-                    // return $query->orWhere('system_item', 1); // Рабочая версия
+                    return $query->orWhere('system_item', 1); // Рабочая версия
 
-                    return $query
-                    ->Where(function ($query){$query
-                    ->Where('system_item', 1)
-                    // ->WhereNotNull('company_id')
-                    // ->WhereNull('company_id')
-                    ->orWhereNull('system_item');});
+                    // return $query
+                    // ->Where(function ($query){$query
+                    // ->Where('system_item', 1)
+                    // // ->WhereNotNull('company_id')
+                    // // ->WhereNull('company_id')
+                    // ->orWhereNull('system_item');});
 
                 };
             };
