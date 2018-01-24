@@ -309,34 +309,28 @@ class UserController extends Controller
         $answer = operator_right('users', true);
 
         // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
-        $user_auth_id = $answer['user_id'];
-        $user_status = $answer['user_status'];
-        // $user_auth = Auth::user();
+        // $user_auth_id = $answer['user_id'];
+        // $user_status = $answer['user_status'];
 
-
-         if($user_status == null){
-            // dd($answer['session']['all_rights']['update-users-allow']['list_filials']);
-         // Получаем читаемый список филиалов для SELECT в формах           
-            $list_filials = $answer['session']['all_rights']['update-users-allow']['list_filials'];
-
-            $departments = Department::where('company_id', $answer['company_id'])->pluck('department_name', 'id');
-
-        } else {
-
-            $list_filials = $answer['session']['all_rights']['update-users-allow']['list_filials'];
-            $departments = Department::where('company_id', $answer['company_id'])->pluck('department_name', 'id');
-        };
+        $user_auth = Auth::user();
+        $user_auth_id = $user_auth->id;
+        $user_status = $user_auth->god;
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::withoutGlobalScope($answer['moderator'])
-        ->companies($answer['company_id'])
-        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer['all_authors'])
-        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
-        ->findOrFail($id);
+        $user = User::findOrFail($id);
 
         // Подключение политики
         $this->authorize('update', $user);
+
+
+        // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
+
+        $list_departments = getListsDepartments($user->company_id); // Функция из Helper отдает массив со списками для SELECT
+        $list_filials = $list_departments['list_filials'];
+        $list_departments = $list_departments['list_departments'];
+
+        // ЗАВЕРШЕНИЕ ПОДГОТОВКИ СПИСКОВ -----------------------------------------------------------------------------------------------------------------------------
+
         
         $role = new Role;
         $role_users = RoleUser::whereUser_id($id)->get();
@@ -345,7 +339,7 @@ class UserController extends Controller
         // $departments = Department::whereCompany_id($user_auth->company_id)->pluck('department_name', 'id');
         
         Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles', 'departments', 'list_filials'));
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles', 'list_departments', 'list_filials'));
     }
 
 

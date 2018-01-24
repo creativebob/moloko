@@ -1,5 +1,6 @@
 <?php
         use App\Scopes\ModerationScope;
+        use App\Department;
 
         function operator_right($entity_name, $entity_dependence) {
 
@@ -192,6 +193,52 @@
         // dd($answer);
 
         return $answer;
-    };
+    }
+
+    function getListsDepartments($company_id) {
+
+        // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
+        // Получаем сессию
+        
+        $session  = session('access');
+        if(!isset($session)){abort(403, 'Нет сессии!');};
+
+        // Если бог, то будем выбирать списки филиалов и отделов через функцию в хэлпере
+        if($session['user_info']['user_status'] == 1){
+
+            $departments = Department::whereCompany_id($company_id)->get();
+
+            foreach($departments as $department){
+
+                $list_departments[$department->id] = $department->department_name;
+
+                if($department->filial_status == 1){$list_filials[$department->id] = $department->department_name;};
+            };
+
+        } elseif($session['user_info']['user_status'] == null) {
+
+            //Если обычный пользователь, то смотрим списки в сессии
+            if(isset($session['all_rights']['update-users-allow']['list_filials'])){
+                $list_filials = $session['all_rights']['update-users-allow']['list_filials'];
+            };
+
+            if(isset($session['all_rights']['update-users-allow']['list_departments'])){
+                $list_departments = $session['all_rights']['update-users-allow']['list_departments'];
+            };
+
+        } else {
+
+            // Устанавливаем умолчания на списки филиалов и отдело
+            $list_filials = ['Филиалы не определены'];
+            $list_departments = ['Отделы не определены']; 
+
+        };
+
+        $lists_departments['list_filials'] = $list_filials;
+        $lists_departments['list_departments'] = $list_departments;
+
+        return $lists_departments;
+    }
+
 
 ?>

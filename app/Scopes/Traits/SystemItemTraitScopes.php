@@ -32,12 +32,19 @@ trait SystemitemTraitScopes
 
             if(($user_status == null)&&($system_item == 1)){
 
-                return $query->orWhere('system_item', 1);
+                // return $query->orWhere('system_item', 1);
+
+                return $query
+                ->Where(function ($query){$query
+                ->Where('system_item', 1)
+                // ->WhereNotNull('company_id')
+                // ->WhereNull('company_id')
+                ->orWhereNull('system_item');});
             };
 
         } else {
             
-          return $query->WhereNull('system_item');
+            return $query->WhereNull('system_item');
         };
     }
 
