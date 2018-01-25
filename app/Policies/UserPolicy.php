@@ -31,8 +31,8 @@ class UserPolicy
     
     public function before($user)
     {
-        if (Auth::user()->god == 1) {$result = true;} else {$result = null;};
-        return $result;
+        // if (Auth::user()->god == 1) {$result = true;} else {$result = null;};
+        // return $result;
     }
 
     public function index(User $user)

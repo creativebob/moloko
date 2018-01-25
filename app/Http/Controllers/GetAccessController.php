@@ -200,6 +200,7 @@ class GetAccessController extends Controller
         } else {
 
             // ЕСЛИ БОГ ------------------------------------------------------------------------------------------
+
             foreach($user->roles as $role) {
                 foreach($role->rights as $right){
 
