@@ -172,24 +172,24 @@ class UserController extends Controller
         $user->company_id = $company_id;
 
         // Пишем ID филиала авторизованного пользователя
-        if($company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
-        $user->filial_id = $session['user_info']['filial_id'];
+        if($filial_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
+        $user->filial_id = $filial_id;
 
 
-        // Если у пользователя есть назначенная компания и пользователь не являеться богом
-        if(isset($user_auth->company_id)&&($user_auth->god != 1)){
-            $user->company_id = $user_auth->company_id;
-            $user->filial_id = $session['user_info']['filial_id'];
+        // // Если у пользователя есть назначенная компания и пользователь не являеться богом
+        // if(isset($user_auth->company_id)&&($user_auth->god != 1)){
+        //     $user->company_id = $company_id;
+        //     $user->filial_id = $filial_id;
 
-        // Если бог авторизован под компанией
-        } elseif(isset($user_auth->company_id)&&($user_auth->god == 1)) {
-            $user->company_id = $user_auth->company_id;
+        // // Если бог авторизован под компанией
+        // } elseif(isset($user_auth->company_id)&&($user_auth->god == 1)) {
+        //     $user->company_id = $user_auth->company_id;
 
-        } elseif(($user_auth->company_id == null) && ($user_auth->god == 1)){
-            $user->system_item = 1;
-        } else {
-            abort(403);
-        };
+        // } elseif(($user_auth->company_id == null) && ($user_auth->god == 1)){
+        //     $user->system_item = 1;
+        // } else {
+        //     abort(403);
+        // };
 
         $user->save();
         return redirect('users');
@@ -315,7 +315,7 @@ class UserController extends Controller
         // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
 
         // Функция из Helper отдает массив со списками для SELECT (На нее отправляем id компании, для того чтобы бог получил все ее филиалы)
-        $list_departments = getListsDepartments($user->company_id);
+        $list_departments = getListsDepartments($user_auth->company_id);
 
         $list_filials = $list_departments['list_filials'];
         $list_departments = $list_departments['list_departments'];
@@ -337,7 +337,6 @@ class UserController extends Controller
     public function destroy($id)
     {
 
-
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
         $answer = operator_right('users', true);
@@ -353,6 +352,7 @@ class UserController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::findOrFail($id);
 
+        
         // Подключение политики
         $this->authorize('delete', $user);
 

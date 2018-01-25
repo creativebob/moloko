@@ -71,6 +71,7 @@ class GetAccessController extends Controller
             $access = [];
             $all_rights = [];
             $filial_rights = [];
+            $item_filial_rights = [];
             $filial_id = null;
 
             if(isset($user->company_id)){
@@ -122,14 +123,15 @@ class GetAccessController extends Controller
                 $filial_name = $departments->where('id', $department_id)->first()->department_name;
             };
 
-
             foreach($role->rights as $right){
 
                 $j = $role->rights->where('alias_right', $right->actionentity->alias_action_entity . "-deny")->count();
+
                 if($j > 0){
 
 
                 } else {
+
 
                     // СОЗДАЕМ ГЛАНЫЙ МАССИВ ДЛЯ СЕССИИ:
                     // В массив пришем ID права
@@ -166,7 +168,6 @@ class GetAccessController extends Controller
                         };
                     };
 
-
                 };
 
             };
@@ -184,6 +185,9 @@ class GetAccessController extends Controller
                     $filial_id = null;
                 };
 
+                if($item_filial_rights == null){
+                    Auth::logout();
+                    abort(403, 'О горе нет прав!');};
                 $filial_rights[$department_id] = $item_filial_rights;
                              
             };
@@ -192,6 +196,7 @@ class GetAccessController extends Controller
         };
 
         if(count($filial_rights) == 0){
+            Auth::logout();
             abort(403, 'Прав связанных с филиалом не обнаружено');
         };
 

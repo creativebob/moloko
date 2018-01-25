@@ -203,6 +203,10 @@
         $session  = session('access');
         if(!isset($session)){abort(403, 'Нет сессии!');};
 
+        // Устанавливаем умолчания на списки филиалов и отдело
+        $list_filials = ['Филиалы не определены'];
+        $list_departments = ['Отделы не определены']; 
+
         // Если бог, то будем выбирать списки филиалов и отделов
         if($session['user_info']['user_status'] == 1){
 
@@ -223,12 +227,6 @@
             if(isset($session['all_rights']['update-users-allow']['list_departments'])){
                 $list_departments = $session['all_rights']['update-users-allow']['list_departments'];
             };
-
-        } else {
-
-            // Устанавливаем умолчания на списки филиалов и отдело
-            $list_filials = ['Филиалы не определены'];
-            $list_departments = ['Отделы не определены']; 
 
         };
 
