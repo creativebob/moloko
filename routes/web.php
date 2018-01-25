@@ -50,11 +50,7 @@ Route::get('/getgod', 'UserController@getgod')->middleware('auth')->name('users.
 
 // Получаем доступ бога
 Route::get('/returngod', 'UserController@returngod')->middleware('auth')->name('users.returngod');
-// Навигация и меню
-Route::resource('/navigations', 'NavigationController')->middleware('auth');
-Route::resource('/menus', 'MenuController')->middleware('auth');
-// Текущий добавленный/удаленный пункт меню
-Route::get('/current_menu/{section}/{menu}', 'MenuController@current_menu')->middleware('auth');
+
 // Контроллеры для отображения населенных пунктов, районов и областей
 Route::resource('/cities', 'CityController')->middleware('auth');
 Route::resource('/areas', 'AreaController')->middleware('auth');
@@ -77,7 +73,14 @@ Route::resource('/employees', 'EmployeeController')->middleware('auth');
 // Контроллер отображения сайтов 
 Route::resource('/sites', 'SiteController')->middleware('auth');
 // Контроллер отображения страниц 
+Route::get('/sites/{site_alias}/pages', 'SiteController@pages')->middleware('auth')->name('sites.pages');
+Route::get('/sites/{site_alias}/navigations', 'SiteController@navigations')->middleware('auth')->name('sites.navigations');
 Route::resource('/pages', 'PageController')->middleware('auth');
+// Навигация и меню
+Route::resource('/navigations', 'NavigationController')->middleware('auth');
+Route::resource('/menus', 'MenuController')->middleware('auth');
+// Текущий добавленный/удаленный пункт меню
+Route::get('/current_menu/{section}/{menu}', 'MenuController@current_menu')->middleware('auth');
 // Отображение сессии
 Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');
 

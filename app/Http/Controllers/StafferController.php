@@ -66,7 +66,7 @@ class StafferController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StafferRequest $request)
     {
       $user = Auth::user();
       // Пишем вакансию в бд
@@ -128,7 +128,7 @@ class StafferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EmployeeRequest $request, $id)
     {
       $user = Auth::user();
       $staffer = Staffer::findOrFail($id);

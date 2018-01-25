@@ -110,14 +110,7 @@
     {{-- Основной контент --}}
     <div id="wrapper">
       {{-- Breadcrumbs --}}
-      <div class="grid-x breadcrumbs">
-        <div class="small-12 cell"> 
-          <ul>
-            <li><a href="#">Настройки</a></li>
-            <li>Пользователи системы</li>
-          </ul>
-        </div>
-      </div>
+      @yield('breadcrumbs')
       {{-- Контент --}}
       <main class="content" id="content">
         {{-- Прилипающий заголовок --}}

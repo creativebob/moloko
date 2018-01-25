@@ -55,4 +55,11 @@ class Position extends Model
   {
     return $this->belongsToMany('App\Role');
   }
+  /**
+  * Получаем автора
+  */
+   public function author()
+  {
+    return $this->belongsTo('App\User', 'author_id');
+  }
 }

@@ -68,4 +68,11 @@ class Employee extends Model
   {
     return $this->belongsTo('App\User');
   }
+  /**
+  * Получаем автора
+  */
+   public function author()
+  {
+    return $this->belongsTo('App\User', 'author_id');
+  }
 }

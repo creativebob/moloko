@@ -25,13 +25,13 @@ class PageController extends Controller
       $user = Auth::user();
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
-        $pages = Page::whereSite_id($request->site_id)
+        $pages = Page::with('author')->whereSite_id($request->site_id)
                 ->paginate(30);
         $site = Site::findOrFail($request->site_id);
       } else {
         // Если нет, то бог без компании
         if ($user->god == 1) {
-          $pages = Page::whereSite_id($request->site_id)->paginate(30);
+          $pages = Page::with('author')->whereSite_id($request->site_id)->paginate(30);
           $site = Site::findOrFail($request->site_id);
         };
       };
@@ -48,10 +48,11 @@ class PageController extends Controller
     public function create(Request $request)
     {   
       $user = Auth::user();
-      $sites = Site::whereCompany_id($user->company_id)->pluck('site_name', 'id');
-      $current_site = $request->session()->get('current_site');
+      $sites = Site::whereCompany_id($user->company_id);
+      $sites_list = $sites->pluck('site_name', 'id');
+      $current_site = $sites->findOrFail($request->session()->get('current_site'));
       $page = new Page;
-      return view('pages.create', compact('page', 'sites', 'current_site'));  
+      return view('pages.create', compact('page', 'sites_list', 'current_site'));  
     }
     /**
      * Store a newly created resource in storage.
@@ -98,7 +99,7 @@ class PageController extends Controller
     {
       $user = Auth::user();
       $sites = Site::whereCompany_id($user->company_id)->pluck('site_name', 'id');
-      $page = Page::findOrFail($id);
+      $page = Page::With('site')->findOrFail($id);
       $current_site = $request->session()->get('current_site');
       return view('pages.edit', compact('page', 'sites', 'current_site'));
     }

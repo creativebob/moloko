@@ -57,9 +57,19 @@
 	</div>
 </div>
 @endsection
+
+@section('breadcrumbs')
+<div class="grid-x breadcrumbs">
+  <div class="small-12 cell"> 
+    <ul>
+      <li><a href="/sites">Сайты</a></li>
+      <li>{{ $site->site_name }}</li>
+    </ul>
+  </div>
+</div>
+@endsection
  
 @section('content')
-
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
@@ -73,6 +83,7 @@
           <th class="td-page-description">Описание</th>
           <th class="td-page-alias">Алиас</th>
           <th class="td-site-id">Сайт</th>
+          <th class="td-page-author">Автор</th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -87,6 +98,7 @@
           <td class="td-page-description">{{ $page->page_description }}</td>
           <td class="td-page-alias">{{ $page->page_alias }}</td>
           <td class="td-site-id">{{ $page->site->site_name or ' ... ' }}</td>
+          <td class="td-page-author">@if(isset($page->author->first_name)) {{ $page->author->first_name . ' ' . $page->author->second_name }} @endif</td>
           <td class="td-delete">
             @if (isset($page->site->company_id))
               <a class="icon-delete sprite" data-open="item-delete"></a>

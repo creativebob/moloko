@@ -57,4 +57,11 @@ class Page extends Model
   {
     return $this->hasMany('App\Menu');
   }
+  /**
+  * Получаем автора
+  */
+   public function author()
+  {
+    return $this->belongsTo('App\User', 'author_id');
+  }
 }

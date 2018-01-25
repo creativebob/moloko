@@ -15,12 +15,14 @@ class SitesTableSeeder extends Seeder
         	[
 		        'site_name' => 'Crm System',
 		        'site_domen' => 'crmsystem.vkmars.ru',
+                'site_alias' => 'crmsystem',
 		        'company_id' => null,
 		        
         	],
             [
                 'site_name' => 'Ворота "Марс"',
                 'site_domen' => 'vorotamars.ru',
+                'site_alias' => 'vorotamars',
                 'company_id' => 1,
                 
             ],

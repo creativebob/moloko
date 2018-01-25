@@ -70,6 +70,7 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-position-name">Название должности</th>
           <th class="td-position-page">Alias страницы</th>
+          <th class="td-position-author">Автор</th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -81,6 +82,7 @@
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $position->id }}"><label class="label-check" for="check-{{ $position->id }}"></label></td>
           <td class="td-position-name">{{ link_to_route('positions.edit', $position->position_name, [$position->id]) }} </td>
           <td class="td-position-page">{{ $position->page->page_alias }}</td>
+          <td class="td-position-author">@if(isset($position->author->first_name)) {{ $position->author->first_name . ' ' . $position->author->second_name }} @endif</td>
           <td class="td-delete">
             @if (isset($position->company_id))
               <a class="icon-delete sprite" data-open="item-delete"></a>

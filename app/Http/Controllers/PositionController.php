@@ -30,13 +30,13 @@ class PositionController extends Controller
       $user = Auth::user();
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
-        $positions = Position::whereCompany_id($user->company_id)
+        $positions = Position::with('author')->whereCompany_id($user->company_id)
                 ->orWhereNull('company_id')
                 ->paginate(30);
       } else {
         // Если нет, то бог без компании
         if ($user->god == 1) {
-          $positions = Position::paginate(30);
+          $positions = Position::with('author')->paginate(30);
         };
       };
       $page_info = Page::where(['page_alias' => '/positions', 'site_id' => 1])->first();

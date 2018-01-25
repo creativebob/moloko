@@ -13,6 +13,19 @@
   </div>
 @endsection
 
+@section('breadcrumbs')
+<div class="grid-x breadcrumbs">
+  <div class="small-12 cell"> 
+    <ul>
+      <li><a href="/sites">Сайты</a></li>
+      <li><a href="/pages?site_id={{ $page->site->id }}">{{ $page->site->site_name }}</a></li>
+      <li><a href="/pages?site_id={{ $page->site->id }}">Страницы</a></li>
+      <li>Страница "{{ $page->page_name }}"</li>
+    </ul>
+  </div>
+</div>
+@endsection
+
 @section('content')
 
   {{ Form::model($page, ['route' => ['pages.update', $page->id], 'data-abide', 'novalidate']) }}

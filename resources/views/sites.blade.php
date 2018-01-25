@@ -73,6 +73,7 @@
           <th class="td-company-name">Компания</th>
           <th class="td-site-edit">Изменить</th>
           <th class="td-site-navigation"></th>
+          <th class="td-site-author">Автор</th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -82,11 +83,12 @@
         <tr class="parent" id="sites-{{ $site->id }}" data-name="{{ $site->site_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"><label class="label-check" for="check-{{ $site->id }}"></label></td>
-          <td class="td-site-name"><a href="/pages?site_id={{ $site->id }}">{{ $site->site_name }}</a></td>
+          <td class="td-site-name"><a href="/sites/{{ $site->site_alias }}/pages">{{ $site->site_name }}</a></td>
           <td class="td-site-domen"><a href="http://{{ $site->site_domen }}" target="_blank">{{ $site->site_domen }}</a></td>
           <td class="td-company-name" data-company-id="{{ $site->company->id or '' }}">{{ $site->company->company_name or 'Системный сайт' }}</td>
           <td class="td-site-edit"><a class="icon-edit sprite" data-open="site-edit"></a></td>
-          <td class="td-site-navigation"><a href="/menus?site_id={{ $site->id }}" class="tiny button">Навигация</a></td>
+          <td class="td-site-navigation"><a href="/sites/{{ $site->site_alias }}/navigations" class="tiny button">Навигация</a></td>
+          <td class="td-site-author">@if(isset($site->author->first_name)) {{ $site->author->first_name . ' ' . $site->author->second_name }} @endif</td>
           <td class="td-delete">
             @if (isset($site->company_id))
             <a class="icon-delete sprite" data-open="item-delete"></a>

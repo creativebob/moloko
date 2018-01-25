@@ -35,4 +35,11 @@ class Navigation extends Model
   {
     return $this->belongsTo('App\Site');
   }
+  /**
+  * Получаем автора
+  */
+   public function author()
+  {
+    return $this->belongsTo('App\User', 'author_id');
+  }
 }

@@ -40,4 +40,11 @@ class Site extends Model
   {
     return $this->belongsTo('App\Company');
   }
+  /**
+  * Получаем автора
+  */
+   public function author()
+  {
+    return $this->belongsTo('App\User', 'author_id');
+  }
 }
