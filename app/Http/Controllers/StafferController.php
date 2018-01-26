@@ -28,7 +28,7 @@ class StafferController extends Controller
       $user = Auth::user();
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
-        $staff = Staffer::with('filial', 'department', 'user', 'position')->whereCompany_id($user->company_id)->paginate(30);
+        $staff = Staffer::with('filial', 'department', 'user', 'position', 'employees')->whereCompany_id($user->company_id)->paginate(30);
         // Смотрим сколько филиалов в компании
         $company = Company::with(['departments' => function($query) {
                       $query->whereFilial_status(1);
@@ -37,7 +37,7 @@ class StafferController extends Controller
       } else {
         if ($user->god == 1) {
           // Если нет, то бог без компании
-          $staff = Staffer::with('filial', 'department', 'user', 'position')->paginate(30);
+          $staff = Staffer::with('filial', 'department', 'user', 'position', 'employees')->paginate(30);
           // Смотрим сколько филиалов в компании
           $company = Company::with(['departments' => function($query) {
                       $query->whereFilial_status(1);
@@ -45,8 +45,7 @@ class StafferController extends Controller
         };
       };
       // dd($staff);
-      $page_info = Page::wherePage_alias('/staff')->first();
-      
+      $page_info = pageInfo('staff');     
       return view('staff.index', compact('staff', 'page_info', 'filials'));
     }
 

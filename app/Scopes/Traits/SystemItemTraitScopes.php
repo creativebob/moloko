@@ -2,31 +2,49 @@
 
 namespace App\Scopes\Traits;
 
-trait SystemItemTraitScopes
+trait SystemitemTraitScopes
 {
 
     // Фильтрация для показа системных записей
-    public function scopeSystemItem($query, $session)
+    public function scopeSystemitem($query, $system_item, $user_status, $company_id)
     {
 
-
         // ЗАВИСИМОСТЬ ОТ СИСТЕМНЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------------------------------
-        // Проверяем право просмотра системных записей:
-        
-        if(isset($session['all_rights']['system-users-allow']) && (!isset($session['all_rights']['system-users-deny'])))
-        {
-            $system_item = 1;
-        } else {
-            $system_item = null;
-        };
-
         if(isset($system_item)){
 
-          return $query->orWhere('system_item', 1);
+            if($user_status == 1){
+
+                if($company_id == null){
+                    return $query->WhereNull('system_item')->orWhere('system_item', 1);
+                } else
+                {
+                    return $query->orWhere('system_item', 1); // Рабочая версия
+
+                    // return $query
+                    // ->Where(function ($query){$query
+                    // ->Where('system_item', 1)
+                    // // ->WhereNotNull('company_id')
+                    // // ->WhereNull('company_id')
+                    // ->orWhereNull('system_item');});
+
+                };
+            };
+
+            if(($user_status == null)&&($system_item == 1)){
+
+                // return $query->orWhere('system_item', 1);
+
+                return $query
+                ->Where(function ($query){$query
+                ->Where('system_item', 1)
+                // ->WhereNotNull('company_id')
+                // ->WhereNull('company_id')
+                ->orWhereNull('system_item');});
+            };
 
         } else {
-
-          return $query;
+            
+            return $query->WhereNull('system_item');
         };
     }
 

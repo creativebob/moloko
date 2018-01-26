@@ -221,7 +221,7 @@ class RoleController extends Controller
         if($count_role != 0) {abort(403);};
 
         // Получим все права и их ID в массив
-        $allrights = Right::get();
+        $allrights = Right::with('actionentity')->get();
 
         // Находим все возможные в системе права и кладем их в массив с указанием их ID
         $allrights_array = [];
@@ -246,9 +246,9 @@ class RoleController extends Controller
         // Получаем сущности
         $entities = Entity::get();
         $actions = Action::get();
-        $all_deny_right = Right::where('directive', 'deny')->get()->toarray();
+        $all_deny_right = Right::with('actionentity')->where('directive', 'deny')->get()->toarray();
 
-        // dd($right);
+        // dd($all_deny_right);
 
 
         // Получаем права на редактируемую роль

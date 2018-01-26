@@ -1,7 +1,7 @@
-@if (isset($sidebar['page']))
+@if (isset($sidebar['menu_alias']))
 	{{-- Если вложенный --}}
 	<li>
-		<a href="{{ $sidebar['page']['page_alias'] }}" data-link="{{ $sidebar['id'] }}">{{ $sidebar['page']['page_name'] }}</a>
+		<a href="/{{ $sidebar['menu_alias'] }}" data-link="{{ $sidebar['id'] }}">{{ $sidebar['page']['page_name'] }}</a>
 	</li>
 @else
 	<li><a data-link="{{ $sidebar['id'] }}"><span>{{ $sidebar['menu_name'] }}</span></a>

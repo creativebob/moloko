@@ -1,8 +1,7 @@
 @extends('layouts.app')
  
 @section('inhead')
-<meta name="description" content="{{ $site->site_name }}" />
-{{-- Скрипты таблиц в шапке --}}
+
   @include('includes.table-inhead')
 @endsection
 
@@ -17,7 +16,6 @@
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
 	      <h2 class="header-content">{{ $site->site_name }}</h2>
-	      <a href="/pages/create" class="icon-add sprite"></a>
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -57,19 +55,9 @@
 	</div>
 </div>
 @endsection
-
-@section('breadcrumbs')
-<div class="grid-x breadcrumbs">
-  <div class="small-12 cell"> 
-    <ul>
-      <li><a href="/sites">Сайты</a></li>
-      <li>{{ $site->site_name }}</li>
-    </ul>
-  </div>
-</div>
-@endsection
  
 @section('content')
+
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
@@ -78,35 +66,24 @@
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-page-name">Название страницы</th>
-          <th class="td-page-title">Заголовок</th>
-          <th class="td-page-description">Описание</th>
-          <th class="td-page-alias">Алиас</th>
-          <th class="td-site-id">Сайт</th>
-          <th class="td-page-author">Автор</th>
+          <th class="td-menu-name">Название раздела</th>
+          <th class="td-site-author">Автор</th>
           <th class="td-delete"></th>
         </tr>
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
-      @if(!empty($pages))
-        @foreach($pages as $page)
-        <tr class="parent" id="pages-{{ $page->id }}" data-name="{{ $page->page_name }}">
+      @if(!empty($site))
+        @foreach($sites->menus as $menu)
+        <tr class="parent" id="sites-{{ $site->id }}" data-name="{{ $site->site_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $page->id }}"><label class="label-check" for="check-{{ $page->id }}"></label></td>
-          <td class="td-page-name">
-            <a href="/sites/{{ $page->site->site_alias }}/pages/{{ $page->page_alias }}/edit">{{ $page->page_name }}</a>
-           
-          </td>
-          <td class="td-page-title">{{ $page->page_title }}</td>
-          <td class="td-page-description">{{ $page->page_description }}</td>
-          <td class="td-page-alias">{{ $page->page_alias }}</td>
-          <td class="td-site-id">{{ $page->site->site_name or ' ... ' }}</td>
-          <td class="td-page-author">@if(isset($page->author->first_name)) {{ $page->author->first_name . ' ' . $page->author->second_name }} @endif</td>
+          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"><label class="label-check" for="check-{{ $site->id }}"></label></td>
+          <td class="td-menu-name"><a href="/sites/{{ $site->site_alias }}/{{ $menu->menu_alias }}">{{ $menu->menu_name }}</a></td>
+          <td class="td-site-author">@if(isset($site->author->first_name)) {{ $site->author->first_name . ' ' . $site->author->second_name }} @endif</td>
           <td class="td-delete">
-            @if (isset($page->site->company_id))
-              <a class="icon-delete sprite" data-open="item-delete"></a>
+            @if (isset($site->company_id))
+            <a class="icon-delete sprite" data-open="item-delete"></a>
             @endif
-          </td>
+          </td>   
         </tr>
         @endforeach
       @endif
@@ -118,8 +95,8 @@
 {{-- Pagination --}}
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
-    <span class="pagination-title">Кол-во записей: {{ $pages->count() }}</span>
-    {{ $pages->links() }}
+    <span class="pagination-title">Кол-во записей: {{ $sites->count() }}</span>
+    {{ $sites->links() }}
   </div>
 </div>
 @endsection

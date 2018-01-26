@@ -30,16 +30,16 @@ class PositionController extends Controller
       $user = Auth::user();
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
-        $positions = Position::with('author')->whereCompany_id($user->company_id)
+        $positions = Position::with('author', 'page')->whereCompany_id($user->company_id)
                 ->orWhereNull('company_id')
                 ->paginate(30);
       } else {
         // Если нет, то бог без компании
         if ($user->god == 1) {
-          $positions = Position::with('author')->paginate(30);
+          $positions = Position::with('author', 'page')->paginate(30);
         };
       };
-      $page_info = Page::where(['page_alias' => '/positions', 'site_id' => 1])->first();
+      $page_info = pageInfo('positions');
       return view('positions.index', compact('positions', 'page_info'));
     }
 
@@ -90,7 +90,7 @@ class PositionController extends Controller
         DB::table('position_role')->insert($mass);
         return Redirect('/positions');
       } else {
-        $error = 'ошибка';
+        abort(403, 'Ошибка записи должности');
       };
     }
 
@@ -113,17 +113,8 @@ class PositionController extends Controller
      */
     public function edit(Request $request, $id)
     {
-      $user = Auth::user();
       $position = Position::findOrFail($id);
-      if (isset($user->company_id)) {
-        // Если у пользователя есть компания
-        $roles = Role::with('rights')->whereCompany_id($user->company_id)->orWhereNull('company_id')->get();
-      } else {
-        // Если нет, то бог без компании
-        if ($user->god == 1) {
-          $roles = Role::with('rights')->get();
-        };
-      };
+      $roles = Role::with('rights')->get();
       // dd($roles);
       $pages = Page::whereSite_id(1)->pluck('page_name', 'id');
       return view('positions.edit', compact('position', 'pages', 'roles'));

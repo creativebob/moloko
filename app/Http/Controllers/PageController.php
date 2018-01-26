@@ -20,25 +20,18 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index($site_alias)
     { 
+
       $user = Auth::user();
-      if (isset($user->company_id)) {
-        // Если у пользователя есть компания
-        $pages = Page::with('author')->whereSite_id($request->site_id)
-                ->paginate(30);
-        $site = Site::findOrFail($request->site_id);
-      } else {
-        // Если нет, то бог без компании
-        if ($user->god == 1) {
-          $pages = Page::with('author')->whereSite_id($request->site_id)->paginate(30);
-          $site = Site::findOrFail($request->site_id);
-        };
-      };
-      // Пишем сайт в сессию
-      session(['current_site' => $request->site_id]);
-      $page_info = Page::wherePage_alias('/pages')->whereSite_id(1)->first();
-      return view('pages.index', compact('pages', 'site', 'page_info'));
+      $site = Site::with('pages', 'pages.author')->whereSite_alias($site_alias)->first();
+
+      $pages = Page::with('author')->whereSite_id($site->id)->paginate(30);
+
+
+      // $page_info = pageInfo('pages');
+          // dd($page_info);
+      return view('pages.index', compact('pages', 'site'));
     }
     /**
      * Show the form for creating a new resource.
@@ -95,12 +88,13 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id)
+    public function edit(Request $request, $site_alias, $page_alias)
     {
       $user = Auth::user();
       $sites = Site::whereCompany_id($user->company_id)->pluck('site_name', 'id');
-      $page = Page::With('site')->findOrFail($id);
+      $page = Page::With('site')->wherePage_alias($page_alias)->first();
       $current_site = $request->session()->get('current_site');
+      // dd($page);
       return view('pages.edit', compact('page', 'sites', 'current_site'));
     }
 

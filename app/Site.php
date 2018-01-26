@@ -26,6 +26,13 @@ class Site extends Model
   {
     return $this->hasMany('App\Page');
   }
+    /**
+  * Получаем пункты меню.
+  */
+  public function menus()
+  {
+    return $this->belongsToMany('App\Menu');
+  }
   /**
    * Получаем навигации.
    */
@@ -47,4 +54,5 @@ class Site extends Model
   {
     return $this->belongsTo('App\User', 'author_id');
   }
+  
 }

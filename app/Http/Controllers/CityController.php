@@ -25,18 +25,18 @@ class CityController extends Controller
   public function index()
   {
     $regions = Region::with('areas', 'areas.cities', 'cities')->get();
-    $page_info = Page::wherePage_alias('/cities')->whereSite_id('1')->first();
+    $page_info = pageInfo('cities');
     return view('cities', compact('regions', 'page_info')); 
   }
   // Получаем сторонние данные по 
   public function current_city($region, $area)
   {
     $regions = Region::with('areas', 'areas.cities', 'cities')->get();
-    $page_info = Page::wherePage_alias('/cities')->whereSite_id('1')->first();
     $data = [
       'region_id' => $region,
       'area_id' => $area,
     ];
+    $page_info = pageInfo('cities');
     return view('cities', compact('regions', 'page_info', 'data')); 
   }
 

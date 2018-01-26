@@ -1,10 +1,8 @@
 <?php
+use App\Page;
 
     function pageInfo($alias) {
-        $page_info = Page::wherePage_alias($alias)->whereSite_id('1')->first();
+        $result = Page::where(['page_alias' => $alias, 'site_id' => 1])->first();
         return $result;
     };
-
-
-
 ?>

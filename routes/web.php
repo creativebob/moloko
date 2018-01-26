@@ -70,12 +70,17 @@ Route::resource('/positions', 'PositionController')->middleware('auth');
 Route::resource('/staff', 'StafferController')->middleware('auth');
 // Контроллер сотрудников
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
+
 // Контроллер отображения сайтов 
 Route::resource('/sites', 'SiteController')->middleware('auth');
-// Контроллер отображения страниц 
-Route::get('/sites/{site_alias}/pages', 'SiteController@pages')->middleware('auth')->name('sites.pages');
-Route::get('/sites/{site_alias}/navigations', 'SiteController@navigations')->middleware('auth')->name('sites.navigations');
-Route::resource('/pages', 'PageController')->middleware('auth');
+Route::get('/sites/{site_alias}', 'SiteController@sections')->middleware('auth');
+
+
+// Route::resource('/menusite', 'MenuSiteController')->middleware('auth');
+// Route::resource('/pages', 'PageController')->middleware('auth');
+
+
+
 // Навигация и меню
 Route::resource('/navigations', 'NavigationController')->middleware('auth');
 Route::resource('/menus', 'MenuController')->middleware('auth');

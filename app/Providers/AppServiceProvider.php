@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 use App\Menu;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
         // Знаем что статика, поэтому указываем в таблице навигации первый id
         if (Schema::hasTable('menus')) { 
             // Передаем меню на все страницы приложения
-            $sidebar = Menu::with('page')->whereNavigation_id(1)->get()->toArray();
+            $sidebar = Menu::with('page')->whereNavigation_id(2)->get()->toArray();
             //Создаем масив где ключ массива является ID меню
             $sidebar_id = [];
             foreach ($sidebar as $sidebar_item) {
@@ -42,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
             View::share('sidebar_tree', $sidebar_tree);
         }
         // Конец меню для левого сайдбара
-        
+
     }
 
     /**

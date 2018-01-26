@@ -27,16 +27,16 @@ class NavigationController extends Controller
       $user = Auth::user();
       if (isset($user->company_id)) {
           // Если у пользователя есть компания
-          $navigations = Navigation::with('site')->whereCompany_id($user->company_id)->paginate(30);
+          $navigations = Navigation::with('site')->where(['category_navigation_id' => 2, 'company_id' => $user->company_id])->paginate(30);
           $sites = Site::whereCompany_id($user->company_id)->pluck('site_name', 'id');
         } else {
           if (Auth::user()->god == 1) {
             // Если нет, то бог без компании
-            $navigations = Navigation::with('site')->paginate(30);
+            $navigations = Navigation::with('site')->where('category_navigation_id', 2)->paginate(30);
             $sites = Site::pluck('site_name', 'id');
           };
         };
-        $page_info = Page::wherePage_alias('/navigations')->whereSite_id('1')->first();
+        $page_info = pageInfo('navigations');
         return view('navigations', compact('navigations', 'page_info', 'sites'));
     }
 

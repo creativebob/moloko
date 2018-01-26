@@ -29,109 +29,65 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
+
         // Подключение политики
-        // $this->authorize('index', User::class);
+        $this->authorize('index', User::class);
         
         $user = Auth::user();
 
-        // Получаем сессию
-        $session  = session('access');
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $answer = operator_right('users', true);
+        // dd($answer);
 
-        if(!isset($session)){abort(403, 'Нет сессии!');};
+        // Получаем читаемый список филиалов для SELECT в формах
+        if($user->god == null){$list_filials = Department::whereIn('id', $answer['filials'])->pluck('department_name', 'id');};
 
-        // Получаем список авторов
-        $list_authors = $session['list_authors'];
-
-        // Показываем богу всех авторов
-        if($user->god == 1)
-        {
-
-            $filials = null;
-            $system_item = 1;
-            $authors = null;
-
-        } else {
-
-            // ОСНОВНЫЕ ПРОВЕРКИ --------------------------------------------------------------------------------------------------------------------
-
-                // Указываем - являеться ли сущность зависимой от филиала
-                // false - независима / true - зависима
-                $dependence = true;
+        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
+        // $user = $answer['user_id'];
 
 
-                // Управление зависимостью через право
-                // Если выбрано "Нет ограичений" мы снимаем филиальную зависимость
 
-                if(isset($session['all_rights']['nolimit-users-allow']) && (!isset($session['all_rights']['nolimit-users-deny'])))
-                {
-                    $dependence = false;
-                } else {
-                    $dependence = true;
-                };
-        };
+        // Тут типа кодим ...
 
-
-        // ПРОВЕРЯЕМ ПРАВО НА ПРОСМОТР НЕ ОТМОДЕРИРОВАННЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------
-        // Проверяем право просмотра системных записей:
-        
-        if(isset($session['all_rights']['moderator-users-allow']) && (!isset($session['all_rights']['moderator-users-deny'])))
-        {
-            $moderator = ModerationScope::class;
-        } else {
-            $moderator = null;
-        };
 
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $dependence = true;
 
-        if(isset($user->company_id))
-        {
-            // Если у пользователя есть компания
-            $users = User::withoutGlobalScope($moderator)
-            ->whereCompany_id($user->company_id)
-            ->filials($dependence, $session) // $filials должна существовать только для зависимых от филиала, иначе $filials должна равняться null
-            ->whereGod(null)
-            ->authors($dependence, $session)
-            ->systemItem($session) // Фильтр по системным записям
-            ->orderBy('moderated', 'desc')
-            ->paginate(30);
-
-        } else {
-
-            // Если нет, то бог без компании
-            if($user->god == 1)
-            {
-                $users = User::withoutGlobalScope(ModerationScope::class)
-                ->orderBy('moderated', 'desc')
-                ->paginate(30);
-            };
-        };
+        $users = User::withoutGlobalScope($answer['moderator'])
+        ->companies($answer['company_id'])
+        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer['all_authors'])
+        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+        ->orWhere('id', $user->id) // Только для сущности USERS
+        ->orderBy('moderated', 'desc')
+        ->paginate(30);
 
 	    return view('users.index', compact('users', 'access', 'session'));
 	}
 
+
     //
     public function create()
     {
-        // $this->authorize('create', User::class);
+        // Подключение политики
+        $this->authorize('create', User::class);
+        
+        $user = Auth::user();
 
-        // Получаем сессию
-        $session  = session('access');
-        if(!isset($session)){abort(403, 'Нет сессии!');};
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $answer = operator_right('users', true);
+        // dd($answer);
 
-        // Получаем список ID филиалов в которых у нас есть право на текущую операцию
-        $filials = [];
-        foreach($session['filial_rights'] as $key => $filial){
-                if(isset($filial['create-users-allow']) && (!isset($filial['create-users-deny']))){
-                $filials[] = $filial['filial'];
-            }
-        }
+        // Получаем читаемый список филиалов для SELECT в формах
+        $list_filials = Department::whereIn('id', $answer['filials'])->pluck('department_name', 'id');
 
-        $list_filials = Department::whereIn('id', $filials)->pluck('department_name', 'id');
+        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
+        // $user = $answer['user_id'];
 
     	$user = new User;
         $roles = new Role;
@@ -142,22 +98,23 @@ class UserController extends Controller
     public function store(UpdateUser $request)
     {
 
-        // $this->authorize('create', User::class);
-
-        // Получаем сессию
-        $session  = session('access');
-        if(!isset($session)){abort(403, 'Нет сессии!');};
-
-        // Получаем список ID филиалов в которых у нас есть право на текущую операцию
-        $filials = [];
-        foreach($session['filial_rights'] as $key => $filial){
-                if(isset($filial['create-users-allow']) && (!isset($filial['create-users-deny']))){
-                $filials[] = $key;
-            }
-        }
-
-
+        // Подключение политики
+        $this->authorize('create', User::class);
+        
         $auth_user = Auth::user();
+
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $answer = operator_right('users', true);
+        // dd($answer);
+
+        // Получаем читаемый список филиалов для SELECT в формах
+        $list_filials = Department::whereIn('id', $answer['filials'])->pluck('department_name', 'id');
+
+        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
+        // $user = $answer['user_id'];
+        // 
+
         $user = new User;
 
         $user->login = $request->login;
@@ -196,16 +153,7 @@ class UserController extends Controller
         $user->access_block = $request->access_block;
         $user->author_id = $auth_user->id;
 
-        if(isset($access['automoderate-users-allow']) && (!isset($access['automoderate-users-deny'])))
-        {
-            $moderator = ModerationScope::class;
-        } else {
-            $moderator = null;
-        };
-
-
-
-
+        if($answer['automoderate'] == false){$user->moderation = 1;};
 
         // Если у пользователя есть назначенная компания и пользователь не являеться богом
         if(isset($auth_user->company_id)&&($auth_user->god != 1)){
@@ -258,13 +206,22 @@ class UserController extends Controller
     }
 
 
-
-
     public function update(UpdateUser $request, $id)
     {
 
-        $user = User::findOrFail($id);
-        // $this->authorize('update', $user);
+        // Подключение политики
+        $this->authorize('update', User::class);
+        
+        $user_auth = Auth::user();
+
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $answer = operator_right('users', true);
+        // dd($answer);
+
+
+        $user = User::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+
 
     	$user->login = $request->login;
     	$user->email = $request->email;
@@ -303,90 +260,127 @@ class UserController extends Controller
     	$user->passport_date = $request->passport_date;
 
     	$user->user_type = $request->user_type;
+        
     	$user->lead_id = $request->lead_id;
     	$user->employee_id = $request->employee_id;
     	$user->access_block = $request->access_block;
 
-    	$user->group_action_id = $request->group_action_id;
-    	$user->group_locality_id = $request->group_locality_id;
+        if($answer['automoderate']){$user->moderated = null;} else {$user->moderated = 1;};
 
 		$user->save();
  
 		return redirect('users');
-    	// $users = User::all();
-
     }
 
     public function show($id)
     {
-        $user = User::findOrFail($id);
-        // $this->authorize('view', $user);
 
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $answer = operator_right('users', true);
+
+        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
+        $user_auth_id = $answer['user_id'];
+        // $user_auth = Auth::user();
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = User::withoutGlobalScope($answer['moderator'])
+        ->companies($answer['company_id'])
+        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer['all_authors'])
+        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+        ->find($id);
+
+        // if(!isset($user)){abort(403, "Не достаточно прав!");};
+
+        // Подключение политики
+        $this->authorize('view', $user);
+        
         $roles = new Role;
     	return view('users.show', compact('user', 'roles'));
     }
 
     public function edit($id)
     {
-        $auth_user = Auth::user();
+
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $answer = operator_right('users', true);
+
+        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
+        // $user_auth_id = $answer['user_id'];
+        // $user_status = $answer['user_status'];
+
+        $user_auth = Auth::user();
+        $user_auth_id = $user_auth->id;
+        $user_status = $user_auth->god;
+
+        // ГЛАВНЫЙ ЗАПРОС:
         $user = User::findOrFail($id);
 
-        // $this->authorize('update', $user);
-
-        if($auth_user->god == null) {
-
-
-        // Получаем сессию
-        $session  = session('access');
-
-        if(!isset($session)){abort(403, 'Нет сессии!');};
-        $user_filial_id = $session['user_info']['filial_id'];
-
-        // Получаем список ID филиалов в которых у нас есть право на текущую операцию
-        $filials = [];
-
-        foreach($session['filial_rights'] as $key => $filial){
-                if(isset($filial['edit-users-allow']) && (!isset($filial['edit-users-deny']))){
-                $filials[] = $filial['filial'];
-            }
-        }
-
-        if($filials == null){abort(403, 'Недостаточно прав!');};
-
-        // $filials[] = $user_filial_id;
-        $list_filials = Department::whereIn('id', $filials)->where('filial_status', 1)->orderBy('department_name')->pluck('department_name', 'id');
-
-        };
+        // Подключение политики
+        $this->authorize('update', $user);
 
 
+        // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
+
+        // Функция из Helper отдает массив со списками для SELECT (На нее отправляем id компании, для того чтобы бог получил все ее филиалы)
+        $list_departments = getListsDepartments($user->company_id);
+
+        $list_filials = $list_departments['list_filials'];
+        $list_departments = $list_departments['list_departments'];
+
+        // ЗАВЕРШЕНИЕ ПОДГОТОВКИ СПИСКОВ -----------------------------------------------------------------------------------------------------------------------------
+
+        
         $role = new Role;
         $role_users = RoleUser::whereUser_id($id)->get();
 
-        $roles = Role::whereCompany_id($auth_user->company_id)->pluck('role_name', 'id');
-        $departments = Department::whereCompany_id($auth_user->company_id)->pluck('department_name', 'id');
-
+        $roles = Role::whereCompany_id($answer['company_id'])->pluck('role_name', 'id');
+        // $departments = Department::whereCompany_id($user_auth->company_id)->pluck('department_name', 'id');
         
         Log::info('Позырили страницу Users, в частности смотрели пользователя с ID: '.$id);
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles', 'departments', 'list_filials'));
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles', 'list_departments', 'list_filials'));
     }
 
 
     public function destroy($id)
     {
+
+
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $answer = operator_right('users', true);
+
+        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
+        // $user_auth_id = $answer['user_id'];
+        // $user_status = $answer['user_status'];
+
+        $user_auth = Auth::user();
+        $user_auth_id = $user_auth->id;
+        $user_status = $user_auth->god;
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = User::findOrFail($id);
+
+        // Подключение политики
+        $this->authorize('delete', $user);
+
         // Удаляем пользователя с обновлением
         $user = User::destroy($id);
-        if ($user) {
+
+        if($user) {
           return Redirect('/users');
         } else {
-          echo 'Произошла ошибка';
-        }; 
+          abort(403,'Что-то пошло не так!');
+        };
     }
 
 
     public function getauthcompany($company_id)
     {
 
-        // $this->authorize('update', $user);
+        // $this->authorize('update', User::class);
 
         $auth_user = Auth::user();
 
@@ -394,7 +388,7 @@ class UserController extends Controller
             $auth_user->company_id = $company_id;
             $auth_user->save();         
         }
-        return redirect('companies');
+        return redirect('/getaccess/companies.index');
     }
 
 
@@ -421,7 +415,7 @@ class UserController extends Controller
             $user->company_id = null;
             $user->save();
         }
-        return redirect('companies');
+        return redirect('/getaccess');
     }
 
     public function returngod(Request $request)
@@ -432,7 +426,6 @@ class UserController extends Controller
             $god_id = $request->session()->get('god');
             $request->session()->forget('god');
             Auth::loginUsingId($god_id);
-
 
         }
 

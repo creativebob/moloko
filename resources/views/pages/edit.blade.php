@@ -18,8 +18,8 @@
   <div class="small-12 cell"> 
     <ul>
       <li><a href="/sites">Сайты</a></li>
-      <li><a href="/pages?site_id={{ $page->site->id }}">{{ $page->site->site_name }}</a></li>
-      <li><a href="/pages?site_id={{ $page->site->id }}">Страницы</a></li>
+      <li><a href="/sites/{{ $page->site->site_alias }}/pages">{{ $page->site->site_name }}</a></li>
+      <li><a href="/sites/{{ $page->site->site_alias }}/pages">Страницы</a></li>
       <li>Страница "{{ $page->page_name }}"</li>
     </ul>
   </div>

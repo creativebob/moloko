@@ -37,4 +37,12 @@ class Menu extends Model
   {
     return $this->belongsTo('App\Page');
   }
+
+    /**
+  * Получаем сайты.
+  */
+  public function sites()
+  {
+    return $this->belongsToMany('App\Site');
+  }
 }

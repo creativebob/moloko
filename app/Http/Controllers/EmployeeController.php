@@ -23,7 +23,7 @@ class EmployeeController extends Controller
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
         // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
-        $employees = Employee::with('staffer', 'staffer.filial', 'staffer.department')->whereCompany_id($user->company_id)->paginate(30);
+        $employees = Employee::with('staffer', 'staffer.position', 'staffer.filial', 'staffer.department', 'user')->whereCompany_id($user->company_id)->paginate(30);
         // Смотрим сколько филиалов в компании
         $company = Company::with(['departments' => function($query) {
                       $query->whereFilial_status(1);
@@ -37,7 +37,7 @@ class EmployeeController extends Controller
         $filials = 2;
         };
       };
-      $page_info = Page::wherePage_alias('/employees')->first();
+      $page_info = pageInfo('employees');
       return view('employees.index', compact('employees', 'page_info', 'filials'));
     }
 

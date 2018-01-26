@@ -76,15 +76,6 @@ class PagesTableSeeder extends Seeder
                 'company_id' => null,
                 'system_item' => 1,
             ],
-            // [
-            //     'page_name' => 'Страницы сайта',
-            //     'site_id' => '1',
-            //     'page_title' => 'Страницы сайта',
-            //     'page_description' => 'Страницы определенного сайта',
-            //     'page_alias' => '/pages',
-            //     'company_id' => null,
-            //     'system_item' => 1,
-            // ],
             [
                 'page_name' => 'Населенные пункты',
                 'site_id' => '1',
@@ -130,15 +121,6 @@ class PagesTableSeeder extends Seeder
                 'company_id' => null,
                 'system_item' => 1,
             ],
-            // [
-            //     'page_name' => 'Навигация',
-            //     'site_id' => '1',
-            //     'page_title' => 'Навигация блока',
-            //     'page_description' => 'Навигация',
-            //     'page_alias' => '/navigations',
-            //     'company_id' => null,
-            //     'system_item' => 1,
-            // ],
             [
                 'page_name' => 'Главная',
                 'site_id' => '2',
@@ -148,6 +130,24 @@ class PagesTableSeeder extends Seeder
                 'company_id' => 1,
                 'system_item' => null,
             ],
+            // [
+            //     'page_name' => 'Страницы сайта',
+            //     'site_id' => '1',
+            //     'page_title' => 'Страницы сайта',
+            //     'page_description' => 'Страницы определенного сайта',
+            //     'page_alias' => '/pages',
+            //     'company_id' => null,
+            //     'system_item' => 1,
+            // ],
+            // [
+            //     'page_name' => 'Навигация',
+            //     'site_id' => '1',
+            //     'page_title' => 'Навигация блока',
+            //     'page_description' => 'Навигация',
+            //     'page_alias' => '/navigations',
+            //     'company_id' => null,
+            //     'system_item' => 1,
+            // ],
 
         ]);
     }

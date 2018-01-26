@@ -61,7 +61,7 @@ class DepartmentController extends Controller
       }
     };
     $departments_list = $departments->pluck('department_name', 'id');
-    $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
+    $page_info = pageInfo('departments');
     // dd($departments_tree);
     return view('departments', compact('departments_tree', 'positions', 'positions_list', 'departments_list', 'page_info', 'pages', 'departments'));
   }
@@ -106,7 +106,7 @@ class DepartmentController extends Controller
       }
     };
     $departments_list = $departments->pluck('department_name', 'id');
-    $page_info = Page::wherePage_alias('/departments')->whereSite_id('1')->first();
+    $page_info = pageInfo('departments');
     $data = [
       'filial_id' => $filial,
       'department_id' => $depart,
