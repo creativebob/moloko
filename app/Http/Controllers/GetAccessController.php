@@ -46,7 +46,7 @@ class GetAccessController extends Controller
         //     $mymass[] = $staffer->filial_id;
         // }
 
-        $user = User::with(['staff', 'roles', 'roles.rights', 'booklists', 'booklists.list_items'])->findOrFail($user->id);
+        $user = User::with(['staff', 'roles', 'roles.rights','roles.rights.actionentity', 'booklists', 'booklists.list_items', 'company'])->findOrFail($user->id);
 
         //Получаем права первой должности
         if(($user->god == null)&&(isset($user->company_id))){
@@ -201,25 +201,20 @@ class GetAccessController extends Controller
         };
 
 
-
         } else {
 
             // ЕСЛИ БОГ ------------------------------------------------------------------------------------------
-
-            foreach($user->roles as $role) {
-                foreach($role->rights as $right){
+                $rights = Right::all();
+                foreach($rights as $right){
 
                     // Пишем богу все права
-                    $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
+                    $all_rights[$right->actionentity->alias_action_entity . "-allow"] = $right->id;
                     $right_mass['right_id'] = $right->id;
-                    $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right_mass;
-
+                    $all_rights[$right->actionentity->alias_action_entity . "-allow"] = $right_mass;
                 };
-            };
 
             $user_filial_id = null;
             $user_department_id = null;
-
         };
 
 
@@ -233,10 +228,17 @@ class GetAccessController extends Controller
         $access['user_info']['filial_id'] = $user_filial_id;
         $access['user_info']['department_id'] = $user_department_id;
 
+        if($user->company != null){
+            $access['company_info']['company_id'] = $user->company_id;
+            $access['company_info']['company_name'] = $user->company->company_name;
+        } else {
+            $access['company_info']['company_id'] = '';
+            $access['company_info']['company_name'] = '';
+        };
+
         // Пишем в сессию массив с полученными правами!
         session(['access' => $access]);
-        
-
+    
         $link = 'users.index';
 
         if(isset($request->link)){$link = $request->link;};

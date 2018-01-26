@@ -82,6 +82,42 @@ class EntitiesTableSeeder extends Seeder
                 'entity_alias' => 'menus',
                 'author_id' => 1,
             ],
+            [
+                'entity_name' => 'Роли',
+                'entity_alias' => 'roles',
+                'author_id' => 1,
+            ],
+            [
+                'entity_name' => 'Сайты',
+                'entity_alias' => 'sites',
+                'author_id' => 1,
+            ],
+            [
+                'entity_name' => 'Списки',
+                'entity_alias' => 'booklists',
+                'author_id' => 1,
+            ],
+
+
+
+            // Связующие сущности
+
+            // [
+            //     'entity_name' => 'Связь Право-Роль',
+            //     'entity_alias' => 'right_role',
+            //     'author_id' => 1,
+            // ],
+            // [
+            //     'entity_name' => 'Связь Роль-Пользователь',
+            //     'entity_alias' => 'role_user',
+            //     'author_id' => 1,
+            // ],
+            // [
+            //     'entity_name' => 'Связь Действие-Сущность',
+            //     'entity_alias' => 'action_entity',
+            //     'author_id' => 1,
+            // ],
+            
         ]);
     }
 }

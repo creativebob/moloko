@@ -2,11 +2,11 @@
 
 namespace App\Scopes\Traits;
 
-trait CompaniesTraitScopes
+trait CompaniesFilterTraitScopes
 {
 
     // Фильтрация для показа системных записей
-    public function scopeCompanies($query, $companies)
+    public function scopeCompaniesFilter($query, $companies)
     {
         // ФИЛЬТРАЦИЯ ПО КОМПАНИИ  -----------------------------------------------------------------------------------------------------------
 
@@ -18,7 +18,6 @@ trait CompaniesTraitScopes
 
             // Показываем записи выбранной компании
             return $query->Where('company_id', $companies);
-
         };
     }
 

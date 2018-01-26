@@ -5,7 +5,6 @@ namespace App\Policies\Traits;
 trait PoliticTrait
 {
 
-
         // Фильтрация для показа авторов
     public function getstatus($entity_name, $model, $method)
     {
@@ -27,7 +26,7 @@ trait PoliticTrait
         };
 
         // Предупреждаем божественное влияние на create и store!
-        if(($company_id == null)&&(($method == 'create')||($method == 'store'))){
+        if(($company_id == null)&&(($method == 'create')||($method == 'store')||($method == 'update'))){
             abort(403, 'Вы не относитесь ни к одной компании. Авторизуйтесь!');
             return false;
         };
