@@ -31,29 +31,25 @@ class UserPolicy
     
     public function before($user)
     {
-        if (Auth::user()->god == 1) {$result = true;} else {$result = null;};
-        return $result;
+        // if (Auth::user()->god == 1) {$result = true;} else {$result = null;};
+        // return $result;
     }
 
     public function index(User $user)
     {
-        $session  = session('access');
-        if(isset($session['all_rights']['index-users-allow']))
-        {$result = true;} else {$result = false;};
+        $result = $this->getstatus('users', null, 'index');
         return $result;
     }
 
-    public function view(User $user, User $user_item)
+    public function view(User $user, User $model)
     {
-        $result = $this->getstatus('users', $model, 'update');
+        $result = $this->getstatus('users', $model, 'view');
         return $result;
     }
 
     public function create(User $user)
     {
-        $session  = session('access');
-        if(isset($session['all_rights']['create-users-allow']))
-        {$result = true;} else {$result = false;};
+        $result = $this->getstatus('users', null, 'create');
         return $result;
     }
 

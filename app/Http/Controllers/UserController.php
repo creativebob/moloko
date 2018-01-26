@@ -83,11 +83,15 @@ class UserController extends Controller
         $answer = operator_right('users', true);
         // dd($answer);
 
-        // Получаем читаемый список филиалов для SELECT в формах
-        $list_filials = Department::whereIn('id', $answer['filials'])->pluck('department_name', 'id');
+        // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
 
-        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
-        // $user = $answer['user_id'];
+        // Функция из Helper отдает массив со списками для SELECT (На нее отправляем id компании, для того чтобы бог получил все ее филиалы)
+        $list_departments = getListsDepartments($user->company_id);
+
+        $list_filials = $list_departments['list_filials'];
+        $list_departments = $list_departments['list_departments'];
+
+        // ЗАВЕРШЕНИЕ ПОДГОТОВКИ СПИСКОВ -----------------------------------------------------------------------------------------------------------------------------
 
     	$user = new User;
         $roles = new Role;
@@ -98,23 +102,29 @@ class UserController extends Controller
     public function store(UpdateUser $request)
     {
 
-        // Подключение политики
-        $this->authorize('create', User::class);
-        
-        $auth_user = Auth::user();
-
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
         $answer = operator_right('users', true);
-        // dd($answer);
 
-        // Получаем читаемый список филиалов для SELECT в формах
-        $list_filials = Department::whereIn('id', $answer['filials'])->pluck('department_name', 'id');
+        // Получаем данные для авторизованного пользователя из сессии если не хотим использовать Auth::user();
+        // $user_auth_id = $answer['user_id'];
+        // $user_status = $answer['user_status'];
+        // $company_id = $answer['company_id'];
+        // $filial_id = $answer['filial_id'];
 
-        // Получаем ID авторизованного пользователя из сессии если не хотим использовать Auth::user();
-        // $user = $answer['user_id'];
-        // 
+        // Получаем данные для авторизованного пользователя дополнительным запросом к базе.
+        $user_auth = Auth::user();
+        $user_auth_id = $user_auth->id;
+        $user_status = $user_auth->god;
+        $company_id = $user_auth->company_id;
+        $filial_id = $user_auth->filial_id;
 
+        // Подключение политики
+        $this->authorize('create', User::class);
+        // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
+
+
+        // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
         $user = new User;
 
         $user->login = $request->login;
@@ -139,7 +149,6 @@ class UserController extends Controller
         $user->address = $request->address;
 
         $user->orgform_status = $request->orgform_status;
-
         $user->user_inn = $request->inn;
 
         $user->passport_address = $request->passport_address;
@@ -151,57 +160,38 @@ class UserController extends Controller
         $user->lead_id = $request->lead_id;
         $user->employee_id = $request->employee_id;
         $user->access_block = $request->access_block;
-        $user->author_id = $auth_user->id;
 
-        if($answer['automoderate'] == false){$user->moderation = 1;};
+        $user->author_id = $user_auth->id;
 
-        // Если у пользователя есть назначенная компания и пользователь не являеться богом
-        if(isset($auth_user->company_id)&&($auth_user->god != 1)){
-            $user->company_id = $auth_user->company_id;
-            $user->filial_id = $session['user_info']['filial_id'];
-
-        // Если бог авторизован под компанией
-        } elseif(isset($auth_user->company_id)&&($auth_user->god == 1)) {
-            $user->company_id = $auth_user->company_id;
-
-        } elseif(($auth_user->company_id == null) && ($auth_user->god == 1)){
-            $user->system_item = 1;
-        } else {
-            abort(403);
+        if($answer['automoderate'] == false){
+            $user->moderation = 1;
         };
 
-        $user->save();
+        // Пишем ID компании авторизованного пользователя
+        if($company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
+        $user->company_id = $company_id;
+
+        // Пишем ID филиала авторизованного пользователя
+        if($filial_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
+        $user->filial_id = $filial_id;
 
 
-        // // Создаем компанию под пользователя
-        // // Если стоит отметка о том, что нужно создать компанию.
-        // if($user->orgform_status == '1'){
+        // // Если у пользователя есть назначенная компания и пользователь не являеться богом
+        // if(isset($user_auth->company_id)&&($user_auth->god != 1)){
+        //     $user->company_id = $company_id;
+        //     $user->filial_id = $filial_id;
 
-        //     //Проверим по ИНН есть ли компания в базе
-        //     $company_inn = Company::where('company_inn', $user->user_inn)->count();
-        //     if($company_inn == 1){
-        //         // Компания существует
-                
-        //     } else {
-        //         // Компания не существует
+        // // Если бог авторизован под компанией
+        // } elseif(isset($user_auth->company_id)&&($user_auth->god == 1)) {
+        //     $user->company_id = $user_auth->company_id;
 
-        //     $company = new Company;
-        //     $company->company_name = $request->company_name;
-        //     $company->kpp = $request->kpp;
-        //     $company->account_settlement = $request->account_settlement;
-        //     $company->account_correspondent = $request->account_correspondent;
-        //     $company->bank = $request->bank;
-        //     $company->user_id = $user_id;
-
-        //     $company->save();
-        //     };
-
-        // } else{
-
-        // // Когда отметки нет
-         
+        // } elseif(($user_auth->company_id == null) && ($user_auth->god == 1)){
+        //     $user->system_item = 1;
+        // } else {
+        //     abort(403);
         // };
 
+        $user->save();
         return redirect('users');
     }
 
@@ -325,7 +315,7 @@ class UserController extends Controller
         // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
 
         // Функция из Helper отдает массив со списками для SELECT (На нее отправляем id компании, для того чтобы бог получил все ее филиалы)
-        $list_departments = getListsDepartments($user->company_id);
+        $list_departments = getListsDepartments($user_auth->company_id);
 
         $list_filials = $list_departments['list_filials'];
         $list_departments = $list_departments['list_departments'];
@@ -347,7 +337,6 @@ class UserController extends Controller
     public function destroy($id)
     {
 
-
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
         $answer = operator_right('users', true);
@@ -363,6 +352,7 @@ class UserController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::findOrFail($id);
 
+        
         // Подключение политики
         $this->authorize('delete', $user);
 

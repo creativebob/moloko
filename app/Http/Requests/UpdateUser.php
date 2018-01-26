@@ -27,7 +27,7 @@ class UpdateUser extends FormRequest
         return [
 
             'login' => 'required|string|max:255', 
-            'email' => 'required|string|email|max:255', 
+            'email' => 'nullable|string|email|max:255', 
             // 'password' => 'required|string|min:6|confirmed',
 
             'nickname' => 'alpha|string|max:255|nullable', 

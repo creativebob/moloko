@@ -203,15 +203,17 @@
         $session  = session('access');
         if(!isset($session)){abort(403, 'Нет сессии!');};
 
-        // Если бог, то будем выбирать списки филиалов и отделов через функцию в хэлпере
+        // Устанавливаем умолчания на списки филиалов и отдело
+        $list_filials = ['Филиалы не определены'];
+        $list_departments = ['Отделы не определены']; 
+
+        // Если бог, то будем выбирать списки филиалов и отделов
         if($session['user_info']['user_status'] == 1){
 
             $departments = Department::whereCompany_id($company_id)->get();
 
             foreach($departments as $department){
-
                 $list_departments[$department->id] = $department->department_name;
-
                 if($department->filial_status == 1){$list_filials[$department->id] = $department->department_name;};
             };
 
@@ -225,12 +227,6 @@
             if(isset($session['all_rights']['update-users-allow']['list_departments'])){
                 $list_departments = $session['all_rights']['update-users-allow']['list_departments'];
             };
-
-        } else {
-
-            // Устанавливаем умолчания на списки филиалов и отдело
-            $list_filials = ['Филиалы не определены'];
-            $list_departments = ['Отделы не определены']; 
 
         };
 
