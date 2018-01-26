@@ -45,182 +45,81 @@ class GetAccessController extends Controller
         // foreach ($user->staff as $staffer) {
         //     $mymass[] = $staffer->filial_id;
         // }
-
-        $user = User::with(['staff', 'roles', 'roles.rights','roles.rights.actionentity', 'booklists', 'booklists.list_items', 'company'])->findOrFail($user->id);
+        $departments = Department::whereCompany_id($user->company_id)->get();
+        $user = User::with(['staff', 'roles', 'roles.rights', 'roles.rights.actionentity', 'booklists', 'booklists.list_items', 'company'])->findOrFail($user->id);
 
         //Получаем права первой должности
         if(($user->god == null)&&(isset($user->company_id))){
 
-            $staffer = $user->staff->first();
+            // $staffer = $user->staff->first();
 
-            // Если нет должности - иди нахуй!
-            if(isset($staffer)){
+            // // Если нет должности - иди нахуй!
+            // if(isset($staffer)){
 
-                $user_filial_id = $staffer->filial_id; 
-                $user_department_id = $staffer->department_id; 
-                // dd($user_department_id);
+            //     $user_company_id = $user->company_id;
+            //     $user_filial_id = $staffer->filial_id; 
+            //     $user_department_id = $staffer->department_id;
 
-                // Получим все права и их ID в массив
-                $auth_user_roles = $user->roles->where('department_id', $user_filial_id);
-                if(!isset($auth_user_roles)){abort(403, 'Пользователю не назначены права (роли)');};
+            //     // Получим все права и их ID в массив ?????????????????????????????????????????????????????????
+            //     $auth_user_roles = $user->roles->where('department_id', $user_filial_id);
+            //     if(!isset($auth_user_roles)){abort(403, 'Пользователю не назначены права (роли)');};
+            //     } else {
+            //         abort(403, 'Вы не трудоустроены!');
+            //     };
 
-            } else {
-                abort(403, 'Вы не трудоустроены!');
-            };
+                // ПОЛУЧАЕМ АВТОРОВ ---------------------------------------------------------------------------------------
+                // Если есть списки авторов, то указываем их
 
-            $access = [];
-            $all_rights = [];
-            $filial_rights = [];
-            $item_filial_rights = [];
-            $filial_id = null;
-
-            if(isset($user->company_id)){
-                $departments = Department::whereCompany_id($user->company_id)->get();
-            };
-
-
-            // ПОЛУЧАЕМ АВТОРОВ ---------------------------------------------------------------------------------------
-            // Если есть списки авторов, то указываем их
-
-            // dd($user);
-
-            if(count($user->booklists) > 0){
-
-                foreach ($user->booklists as $booklist) {
-                    foreach ($booklist->list_items as $list_item) {
-                        $list_authors[] = $list_item->item_entity;
-                    };
-                };
-
-                // dd($list_authors);
-
-            } else {
-
-                $list_authors = null;
-            };
-
-
-            // -------------------------------------------------------------------------------------------------------
-
-
-        $right_mass = [];
-
-        foreach($user->roles as $role) {
-
-            $department = $departments->where('id', $role->pivot->department_id)->first();
-            $department_id = $department->id;
-            $department_name = $department->department_name;
-            $filial_status = $department->filial_status;
-
-            if($filial_status == 1){
-
-                $filial_id = $department->id;
-                $filial_name = $department_name;
-
-            } else {
-
-                $filial_id = $departments->where('id', $department_id)->first()->filial_id;
-                $filial_name = $departments->where('id', $department_id)->first()->department_name;
-            };
-
-            foreach($role->rights as $right){
-
-                $j = $role->rights->where('alias_right', $right->actionentity->alias_action_entity . "-deny")->count();
-
-                if($j > 0){
-
-
-                } else {
-
-
-                    // СОЗДАЕМ ГЛАНЫЙ МАССИВ ДЛЯ СЕССИИ:
-                    // В массив пришем ID права
-                    $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive]['right_id'] = $right->id;
-
-                    $item_filial_rights[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
-
-                    // К праву смотреть чужих авторов - пишем список авторов
-                    if($right->actionentity->alias_action_entity . "-" . $right->directive == 'authors-users-allow')
-                    {
-                        $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive]['authors'] = $list_authors;
-                    } else {
-                        $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive]['authors'] = null;
-                    };
-
-
-                    // Пишем ID департамента, в ключе указываем ID филиала
-                    $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive]['departments'][$filial_id] = $department_id;
-
-                    if(($right->actionentity->action_id == 3)||($right->actionentity->action_id == 4)){
-
-                        if($filial_status == 1){$all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive]['list_filials'][$filial_id] = $filial_name;};
-                        $all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive]['list_departments'][$department_id] = $department_name; 
-                    };
-
-
-                    if(isset($all_rights[$right->actionentity->alias_action_entity . "-deny"]['departments'][$filial_id][$department_id])){
-
-                        unset($all_rights[$right->actionentity->alias_action_entity . "-allow"]['departments'][$filial_id]);
-
-                        if($filial_status == 1){
-                            unset($all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive]['list_departments'][$department_id]);
-                            unset($all_rights[$right->actionentity->alias_action_entity . "-" . $right->directive]['list_filials'][$filial_id]);
+                if(count($user->booklists) > 0){
+                    foreach ($user->booklists as $booklist) {
+                        foreach ($booklist->list_items as $list_item) {
+                            $list_authors[] = $list_item->item_entity;
                         };
                     };
+                } else {$list_authors = null;};
 
-                };
+                // -------------------------------------------------------------------------------------------------------
 
-            };
+                foreach($user->roles as $role) {
+                    foreach($role->rights as $right){
+                        $all_rights[$right->alias_right]['right_id'] = $right->id;
 
-            // Если не бог - получаем ID филиала
-            if($user->god == null){
+                        // Собираем из всех ролей отделы и формируем их список к текущему праву
+                        $all_rights[$right->alias_right]['departmets'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->department_name;
 
-                if((isset($department_id))&&($department_id !== null)){
-
-                    $filial_id = $departments->where('id', $department_id)->first()->filial_id;
- 
-                    // dd($filial_id);
-
-                } else {
-                    $filial_id = null;
-                };
-
-                if($item_filial_rights == null){
-                    Auth::logout();
-                    abort(403, 'О горе нет прав!');};
-                $filial_rights[$department_id] = $item_filial_rights;
-                             
-            };
-
-            $filial_rights[$department_id]['filial'] = $filial_id;
-        };
-
-        if(count($filial_rights) == 0){
-            Auth::logout();
-            abort(403, 'Прав связанных с филиалом не обнаружено');
-        };
-
+                        // Собираем из всех ролей филиалы и формируем их список к текущему праву
+                        if($departments->where('id', $role->pivot->department_id)->first()->filial_status == 1){
+                        $all_rights[$right->alias_right]['filials'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->department_name;};
+                    }
+                }
 
         } else {
 
-            // ЕСЛИ БОГ ------------------------------------------------------------------------------------------
-                $rights = Right::all();
-                foreach($rights as $right){
+        // ЕСЛИ БОГ ------------------------------------------------------------------------------------------
+            
+            $rights = Right::all();
 
-                    // Пишем богу все права
-                    $all_rights[$right->actionentity->alias_action_entity . "-allow"] = $right->id;
-                    $right_mass['right_id'] = $right->id;
-                    $all_rights[$right->actionentity->alias_action_entity . "-allow"] = $right_mass;
-                };
+            foreach($rights as $right){
 
-            $user_filial_id = null;
-            $user_department_id = null;
+                // Пишем богу все права
+                $all_rights[$right->alias_right]['right_id'] = $right->id;
+
+            };
+
+            // Создаем для бога список всех филиалов
+            foreach($departments as $department){
+
+                $access['list_departments'][$department->id] = $department->department_name;
+
+                if($department->filial_status == 1){$access['list_departments'][$department->id] = $department->department_name;};
+            }
+
         };
 
 
         // ФОРМИРУЕМ МАССИВ С ПРАВАМИ
 
-        $access['filial_rights'] = $filial_rights;
+        // $access['filial_rights'] = $filial_rights;
         $access['all_rights'] = $all_rights;
         $access['user_info']['user_id'] = $user->id;
         $access['user_info']['user_status'] = $user->god;
@@ -229,7 +128,7 @@ class GetAccessController extends Controller
         $access['user_info']['department_id'] = $user_department_id;
 
         if($user->company != null){
-            $access['company_info']['company_id'] = $user->company_id;
+            $access['company_info']['company_id'] = $user->company->company_id;
             $access['company_info']['company_name'] = $user->company->company_name;
         } else {
             $access['company_info']['company_id'] = '';
@@ -238,6 +137,8 @@ class GetAccessController extends Controller
 
         // Пишем в сессию массив с полученными правами!
         session(['access' => $access]);
+
+        // dd($access);
     
         $link = 'users.index';
 

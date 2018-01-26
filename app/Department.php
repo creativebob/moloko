@@ -10,6 +10,11 @@ class Department extends Model
 	use SoftDeletes;
 
 
+    // Фильтрация для показа системных записей
+    public function scopeOnlyFilial($query)
+    {
+          return $query->Where('filial_status', '1');
+    }
 
     // Фильтрация для показа системных записей
     public function scopeSystemItem($query, $system_item)

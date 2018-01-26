@@ -25,13 +25,13 @@ class UserController extends Controller
     public function index(Request $request)
     {
         // Подключение политики
-        $this->authorize('index', User::class);
+        // $this->authorize('index', User::class);
 
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
         $answer = operator_right('users', true);
         // dd($answer['all_authors']);
-
+        // dd($answer);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -57,14 +57,11 @@ class UserController extends Controller
         $answer = operator_right('users', true);
 
         // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
-
         // Функция из Helper отдает массив со списками для SELECT (На нее отправляем id компании, для того чтобы бог получил все ее филиалы)
         $list_departments = getListsDepartments($request->user()->company_id);
-
         $list_filials = $list_departments['list_filials'];
         $list_departments = $list_departments['list_departments'];
 
-        // ЗАВЕРШЕНИЕ ПОДГОТОВКИ СПИСКОВ -----------------------------------------------------------------------------------------------------------------------------
 
     	$user = new User;
         $roles = new Role;
@@ -79,7 +76,7 @@ class UserController extends Controller
 
         $answer = operator_right('users', true);
 
-        // Получаем данные для авторизованного пользователя дополнительным запросом к базе.
+        // Получаем данные для авторизованного пользователя
         $user_auth = $request->user();
         $user_auth_id = $user_auth->id;
         $user_status = $user_auth->god;
@@ -229,7 +226,7 @@ class UserController extends Controller
         $user = User::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('update', $user);
+        // $this->authorize('update', $user);
 
         // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
 
