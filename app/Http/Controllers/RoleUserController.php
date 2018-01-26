@@ -32,13 +32,13 @@ class RoleUserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        // echo '1 = '.$request->role_id.', 2 = '.$request->department_id.', 3 = '.$request->user_id;
-        $user = Auth::user();
+
+        $user = $request->user();
 
         $role_user = new RoleUser;
         $role_user->role_id = $request->role_id;
@@ -49,7 +49,7 @@ class RoleUserController extends Controller
         $role_user->save();
 
         if ($role_user) {
-            $result= [
+            $result = [
                 'status' => 1,
                 'role_id' => $role_user->role_id,
                 'role_name' => $role_user->role->role_name,
@@ -57,13 +57,12 @@ class RoleUserController extends Controller
             ];
            
         } else {
-            $result= [
+            $result = [
                 'status' => 0,
             ];
             
         }
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    
     }
 
     /**

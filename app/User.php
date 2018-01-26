@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Scopes\ModerationScope;
 
-use App\Scopes\Traits\CompaniesTraitScopes;
+use App\Scopes\Traits\CompaniesFilterTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
@@ -22,11 +22,11 @@ class User extends Authenticatable
     use Notifiable;
     use SoftDeletes;
 
-    use CompaniesTraitScopes;
+    // Подключаем Scopes для главного запроса
+    use CompaniesFilterTraitScopes;
     use AuthorsTraitScopes;
     use SystemitemTraitScopes;
     use FilialsTraitScopes;
-
 
     /**
      * Загрузка типажа мягкого удаления для модели.

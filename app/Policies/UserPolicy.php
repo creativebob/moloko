@@ -64,4 +64,9 @@ class UserPolicy
         $result = $this->getstatus('users', $model, 'delete');
         return $result;
     }
+
+    public function god(User $user)
+    {
+        if(Auth::user()->god){return true;} else {return false;};
+    }
 }

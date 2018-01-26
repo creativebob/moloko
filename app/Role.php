@@ -5,9 +5,26 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Scopes\ModerationScope;
+
+use App\Scopes\Traits\CompaniesFilterTraitScopes;
+use App\Scopes\Traits\AuthorsTraitScopes;
+use App\Scopes\Traits\SystemitemTraitScopes;
+use App\Scopes\Traits\FilialsTraitScopes;
+use App\Scopes\Traits\ModerationTraitScopes;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
 class Role extends Model
 {
- 	use SoftDeletes;
+
+ 	  use SoftDeletes;
+
+    // Подключаем Scopes для главного запроса
+    use CompaniesFilterTraitScopes;
+    use AuthorsTraitScopes;
+    use SystemitemTraitScopes;
+    use FilialsTraitScopes;
 
 
     // Фильтрация для показа системных записей

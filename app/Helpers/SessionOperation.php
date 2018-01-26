@@ -127,16 +127,16 @@
 
                     // Если РАЗРЕШЕНО использовать список авторов
                     // Проверяем - есть ли в сессии авторы?
-                    if(isset($session['all_rights']['authors-'.$entity_name.'-allow']['list_authors'])) 
+                    if(isset($session['all_rights']['authors-'.$entity_name.'-allow']['authors'])) 
                     {
 
                         // Берем их так как они есть
-                        $list_authors = $session['all_rights']['authors-'.$entity_name.'-allow']['list_authors'];
+                        $list_authors = $session['all_rights']['authors-'.$entity_name.'-allow']['authors'];
 
                     } else {
 
                         // Пишем null так как авторы не нашлись
-                        $list_authors = null;;
+                        $list_authors = null;
                         // abort(403, 'Не найден список авторов для пользователя!');
 
                     };
@@ -203,10 +203,6 @@
         $session  = session('access');
         if(!isset($session)){abort(403, 'Нет сессии!');};
 
-        // Устанавливаем умолчания на списки филиалов и отдело
-        $list_filials = ['Филиалы не определены'];
-        $list_departments = ['Отделы не определены']; 
-
         // Если бог, то будем выбирать списки филиалов и отделов
         if($session['user_info']['user_status'] == 1){
 
@@ -222,11 +218,11 @@
             //Если обычный пользователь, то смотрим списки в сессии
             if(isset($session['all_rights']['update-users-allow']['list_filials'])){
                 $list_filials = $session['all_rights']['update-users-allow']['list_filials'];
-            };
+            } else {abort(403, 'Вы похоже не трудоустроены!');};
 
             if(isset($session['all_rights']['update-users-allow']['list_departments'])){
                 $list_departments = $session['all_rights']['update-users-allow']['list_departments'];
-            };
+            } else {abort(403, 'Вы похоже не трудоустроены!');};
 
         };
 

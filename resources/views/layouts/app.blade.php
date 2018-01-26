@@ -1,8 +1,13 @@
 @php
 
-  $session_god = session('god'); 
+  $session_god = session('god');
   $session_access = session('access');
+
   $user_filial_id = $session_access['user_info']['filial_id'];
+  $user_status = $session_access['user_info']['user_status'];
+  $company_id = $session_access['company_info']['company_id'];
+  $company_name = $session_access['company_info']['company_name'];
+
   $rights_user_filial = collect($session_access['all_rights'])->keys()->implode('\n');
   
   if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' . count($session_access['list_authors']['authors_id']);} else {$count_authors = "";};
@@ -59,7 +64,7 @@
                 <a data-toggle="profile">
                 <span>
                   @if(isset(Auth::user()->company_id))
-                    {{ Auth::user()->company->company_name}}  | 
+                    {{ $company_name }}  | 
                   @endif
                   {{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }} {{ $count_authors }}</span><img src="/img/header/avatar.png">
                 </a>
@@ -72,7 +77,7 @@
                 <li><hr></li>
                 <li><a href="">Нужна помощь?</a></li>
                 <li>
-                  @if(isset(Auth::user()->company_id)&&(Auth::user()->god == 1))
+                  @if(isset($company_id)&&($user_status == 1))
                     {{ link_to_route('users.getgod', 'Выйти из компании', $value = Null) }} 
                   @endif
                 </li>

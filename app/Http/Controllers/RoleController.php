@@ -27,6 +27,8 @@ use App\Http\Requests\UpdateUser;
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
 
+
+
 class RoleController extends Controller
 {
     /**
@@ -34,60 +36,56 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // $this->authorize('index', User::class);
-        $user = Auth::user();
-        $others_item['user_id'] = $user->id;
-        $system_item = null;
 
-        // // Смотрим права на простотр системных.
-        //  foreach ($user->roles as $role) {
-        //     foreach ($role->rights as $right) {
-        //         // Перебор всех прав пользователя
-        //         if ($right->category_right_id == 3) {$others_item[$right->right_action] = $right->right_action;};
-        //         if ($right->right_action == 'system-users') {$system_item = 1;};
-        //         if ($right->right_action == 'getall-users') {$others_item['all'] = 'all';};
-        //     }
-        // }
+        // Подключение политики
+        // $this->authorize('index', Role::class);
 
-        if (isset($user->company_id)) {
-            // Если у пользователя есть компания
-            $roles = Role::whereCompany_id($user->company_id)
-                    // ->otherItem($others_item)
-                    ->systemItem($system_item) // Фильтр по системным записям
-                    ->paginate(30);
+        $user = User::with('roles')->find($request->user()->id);
 
-        } else {
-            // Если нет, то бог без компании
-            if ($user->god == 1) {
-              $roles = Role::paginate(30);
-            };
-        }
+        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
+        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
+        $answer = operator_right('roles', false);
 
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+        $roles = Role::with('rights')->withoutGlobalScope($answer['moderator'])
+        ->companiesFilter($answer['company_id'])
+        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer['all_authors'])
+        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+        ->orderBy('moderated', 'desc')
+        ->paginate(30);
+
+        // dd($user->roles);
 
         // Определяем количество разрешений 
         $counts_directive_array = [];
+
         foreach ($roles as $role) {
 
             foreach ($user->roles as $user_role) {
 
-                if($role->id == $user_role->id){
-                    $disabled_role = 'disabled';
+                if($role->id == $user_role->id)
+                {
+                    $counts_directive_array[$role->id]['disabled_role'] = 'disabled';
                 } else {
-                    $disabled_role = '';
+                    $counts_directive_array[$role->id]['disabled_role'] = '';
                 };
-            }
 
+            };
 
             $count_allow = $role->rights->where('directive', 'allow')->count();
             $count_deny = $role->rights->where('directive', 'deny')->count();
 
             $counts_directive_array[$role->id]['count_allow'] = $count_allow;
             $counts_directive_array[$role->id]['count_deny'] = $count_deny;
-            $counts_directive_array[$role->id]['disabled_role'] = $disabled_role;
         };
 
+        // dd($counts_directive_array);
         return view('roles.index', compact('roles', 'counts_directive_array'));
     }
 
@@ -225,10 +223,11 @@ class RoleController extends Controller
 
         // Находим все возможные в системе права и кладем их в массив с указанием их ID
         $allrights_array = [];
+
         foreach ($allrights as $right) {
             $allrights_array[$right->actionentity->alias_action_entity . "-" . $right->directive] = $right->id;
             $f = $right->actionentity->alias_action_entity;
-        }
+        };
 
 
         // РАБОТАЕМ С РАЗРЕШЕНИЯМИ:
@@ -255,6 +254,7 @@ class RoleController extends Controller
         $current_role = Role::with(['rights' => function($q)
         {
             $q->where('category_right_id', 1);
+
         }])->findOrFail($role_id);
 
         // Создаем ассоциированный массив
@@ -267,12 +267,14 @@ class RoleController extends Controller
 
 
         $session  = session('access');
+
         if($user->god == 0){
 
             // Если простой смертный, то получает свои права
             // Смотрим права авторизованного пользователя для филиала в котором он устроен - получаем все права
+
             $user_filial_id  = session('access')['user_info']['filial_id'];
-            $session = $session['filial_rights'][$user_filial_id];
+            $session = $session['all_rights'];
 
         } else {
 
@@ -394,11 +396,16 @@ class RoleController extends Controller
     public function setright(Request $request)
     {
         $user = Auth::user();
+
         $role_id = $request->role_id;
+
+
         // echo $request->rights;
         if (count($request->rights) > 0) {
-            // если пришел массив правил, удаляем все что найдум
+
+            // если пришел массив правил, удаляем все что найдем
             $delete_rights = RightRole::where(['role_id' => $role_id, 'system_item' => null])->whereIn('right_id', $request->rights)->delete();
+            
              // echo $request->checkbox;
             if ($request->checkbox == false) {
                 // Если чекбокс был снят то все
@@ -428,6 +435,7 @@ class RoleController extends Controller
             echo json_encode($data, JSON_UNESCAPED_UNICODE);
             
         } else {
+
             $rightrole = RightRole::where('role_id', $request->role_id)->where('right_id', $request->right_id)->first();
 
             if(isset($rightrole)){
