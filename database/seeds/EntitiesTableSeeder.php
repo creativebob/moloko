@@ -88,11 +88,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
             ],
             [
-                'entity_name' => 'Сайты',
-                'entity_alias' => 'sites',
-                'author_id' => 1,
-            ],
-            [
                 'entity_name' => 'Списки',
                 'entity_alias' => 'booklists',
                 'author_id' => 1,

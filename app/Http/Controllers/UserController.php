@@ -25,7 +25,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         // Подключение политики
-        // $this->authorize('index', User::class);
+        $this->authorize('index', User::class);
 
         // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
         // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
@@ -62,7 +62,6 @@ class UserController extends Controller
         $list_filials = $list_departments['list_filials'];
         $list_departments = $list_departments['list_departments'];
 
-
     	$user = new User;
         $roles = new Role;
     	return view('users.create', compact('user', 'roles', 'list_filials'));
@@ -81,7 +80,7 @@ class UserController extends Controller
         $user_auth_id = $user_auth->id;
         $user_status = $user_auth->god;
         $company_id = $user_auth->company_id;
-        $filial_id = $user_auth->filial_id;
+        $filial_id = $request->filial_id;
 
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
         $user = new User;
@@ -132,7 +131,7 @@ class UserController extends Controller
         $user->company_id = $company_id;
 
         // Пишем ID филиала авторизованного пользователя
-        if($filial_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
+        if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
         $user->filial_id = $filial_id;
 
         $user->save();
@@ -147,6 +146,7 @@ class UserController extends Controller
         $answer = operator_right('users', true);
 
         $user = User::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+        $filial_id = $request->filial_id;
 
         // Подключение политики
         $this->authorize('update', $user);
@@ -186,6 +186,8 @@ class UserController extends Controller
     	$user->lead_id = $request->lead_id;
     	$user->employee_id = $request->employee_id;
     	$user->access_block = $request->access_block;
+
+        $user->filial_id = $request->filial_id;
 
         // Модерируем (Временно)
         if($answer['automoderate']){$user->moderated = null;};
@@ -275,15 +277,13 @@ class UserController extends Controller
     }
 
 
-    public function getauthuser(Request $request, $user_id)
+    public function getauthuser($user_id)
     {
 
         // Только для бога
         $this->authorize('god', User::class);
-
-        session(['god' => $request->user()->id]);
+        session(['god' => Auth::user()->id]);
         Auth::loginUsingId($user_id);
-
         return redirect('/getaccess');
     }
 
