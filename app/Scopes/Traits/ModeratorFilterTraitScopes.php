@@ -14,7 +14,7 @@ trait ModeratorFilterTraitScopes
 
         if(($entity_dependence == false)&&($entity_dependence == null)){
 
-            $query->Orwhere(function ($query) use ($user_id) {$query->withoutGlobalScope(ModerationScope::class)->Where('moderated', 1)->Where('author_id', $user_id);});
+            $query->where(function ($query) use ($user_id) {$query->withoutGlobalScope(ModerationScope::class)->WhereNull('moderated')->orWhere('moderated', 1)->Where('author_id', $user_id);});
             return $query;
 
         } else {
