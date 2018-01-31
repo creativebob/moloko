@@ -18,7 +18,7 @@
   <div class="small-12 cell"> 
     <ul>
       <li><a href="/sites">Сайты</a></li>
-      <li><a href="/sites/{{ $page->site->site_alias }}/pages">{{ $page->site->site_name }}</a></li>
+      <li><a href="/sites/{{ $page->site->site_alias }}">{{ $page->site->site_name }}</a></li>
       <li><a href="/sites/{{ $page->site->site_alias }}/pages">Страницы</a></li>
       <li>Страница "{{ $page->page_name }}"</li>
     </ul>
@@ -28,7 +28,7 @@
 
 @section('content')
 
-  {{ Form::model($page, ['route' => ['pages.update', $page->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($page, ['url' => '/sites/'.$site_alias.'/pages/'.$page->id, 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
     @include('pages.form', ['submitButtonText' => 'Редактировать страницу', 'param'=>''])

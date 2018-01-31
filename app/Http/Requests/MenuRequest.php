@@ -24,8 +24,9 @@ class MenuRequest extends FormRequest
     public function rules()
     {
         return [
-            'menu_name' => 'string|max:255|nullable', 
+            'menu_name' => 'string|max:255', 
             'menu_icon' => 'string|max:255|nullable',
+            'menu_alias' => 'string|max:255|nullable',
             'navigation_id' => 'integer', 
             'menu_parent_id' => 'integer|nullable', 
             'page_id' => 'integer|nullable',             

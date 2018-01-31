@@ -24,9 +24,9 @@ class SiteController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Request $request)
   {
-    $user = Auth::user();
+    $user = $request->user();
     if (isset($user->company_id)) {
       // Если у пользователя есть компания
       $sites = Site::with('author')->whereCompany_id($user->company_id)->paginate(30);
@@ -36,10 +36,8 @@ class SiteController extends Controller
         $sites = Site::with('author')->paginate(30);
       };
     };
-    $sections = Menu::whereNavigation_id(1)->get();
-
     $page_info = pageInfo('sites');
-    return view('sites.index', compact('sites', 'page_info', 'sections'));
+    return view('sites.index', compact('sites', 'page_info'));
   }
 
   /**
@@ -49,8 +47,6 @@ class SiteController extends Controller
    */
   public function create()
   {
-      $user = Auth::user();
-      // $this->authorize('create', Position::class);
       $site = new Site;
       $menus = Menu::whereNavigation_id(1)->get();
       return view('sites.create', compact('site', 'menus'));  
@@ -64,12 +60,14 @@ class SiteController extends Controller
    */
   public function store(SiteRequest $request)
   {
-    $user = Auth::user();
+    $user = $request->user();
     $site = new Site;
     $site->site_name = $request->site_name;
     $site->site_domen = $request->site_domen;
     $site_alias = explode('.', $request->site_domen);
     $site->site_alias = $site_alias[0];
+    // Пишем ID компании авторизованного пользователя
+    if($user->company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
     $site->company_id = $user->company_id;
     $site->author_id = $user->id;
     $site->save();
@@ -107,13 +105,10 @@ class SiteController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function edit($id)
+  public function edit($site_alias)
   {
-    $site = Site::findOrFail($id);
+    $site = Site::whereSite_alias($site_alias)->first();
     $menus = Menu::whereNavigation_id(1)->get();
-    // dd($site);
-
-
     return view('sites.edit', compact('site', 'menus'));
   }
 
@@ -126,13 +121,12 @@ class SiteController extends Controller
    */
   public function update(SiteRequest $request, $id)
   {
-    // $this->authorize('update', $site);
-    $user = Auth::user();
+    $user = $request->user();
     $site = Site::findOrFail($id);
     $site->site_name = $request->site_name;
     $site_alias = explode('.', $request->site_domen);
     $site->site_alias = $site_alias[0];
-    $site->company_id =  $user->company_id;
+    // $site->company_id =  $user->company_id;
     $site->editor_id = $user->id;
     $site->save();
     if ($site) {
@@ -165,9 +159,9 @@ class SiteController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function destroy($id)
+  public function destroy(Request $request, $id)
   {
-    $user = Auth::user();
+    $user = $request->user();
     $site = Site::findOrFail($id);
     if ($site) {
       $site->editor_id = $user->id;
@@ -190,70 +184,8 @@ class SiteController extends Controller
      */
     public function sections($site_alias)
     { 
-      dd($site_alias);
-      // $site = Site::with('menus')->whereSite_alias($site_alias)->first();
-      // // dd($site);
-      // // return echo "string";
-      // return view('sites.sections', compact('site'));
+      // dd($site_alias);
+      $site = Site::with('menus', 'author')->whereSite_alias($site_alias)->first();
+      return view('sites.sections', compact('site'));
     }
-  /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function pages($site_alias)
-    // { 
-    //   $user = Auth::user();
-    //   $site = Site::with('pages', 'pages.author')->whereSite_alias($site_alias)->first();
-    //   $pages = Page::with('author')->whereSite_id($site->id)->paginate(30);
-
-      
-    //   $page_info = pageInfo('pages');
-    //   return view('pages.index', compact('pages', 'site', 'page_info'));
-    // }
-    // /**
-    // * Display a listing of the resource.
-    // *
-    // * @return \Illuminate\Http\Response
-    // */
-    // public function navigations($site_alias)
-    // {
-    //   $user = Auth::user();
-    //   $site = Site::with(['pages', 'navigations.menus', 'navigations.menus.page'])
-    //               ->with(['navigations' => function($query) {
-    //                   $query->whereCategory_navigation_id(2);
-    //                 }])
-    //               ->whereSite_alias($site_alias)->first();                       
-
-    //   // Создаем масив где ключ массива является ID меню
-    //   $navigation_id = [];
-    //   $navigation_tree = [];
-    //   foreach ($site->navigations->toArray() as $navigation) {
-    //     $navigation_id[$navigation['id']] = $navigation;
-    //     $navigation_tree[$navigation['id']] = $navigation;
-    //     foreach ($navigation_id as $navigation) {
-    //       //Создаем масив где ключ массива является ID меню
-    //       $navigation_id[$navigation['id']]['menus'] = [];
-    //       foreach ($navigation['menus'] as $menu) {
-    //         // dd($menu);
-    //         $navigation_id[$navigation['id']]['menus'][$menu['id']] = $menu;
-    //       }
-    //       //Функция построения дерева из массива от Tommy Lacroix
-    //       $navigation_tree[$navigation['id']]['menus'] = [];
-    //       foreach ($navigation_id[$navigation['id']]['menus'] as $menu => &$node) {   
-    //         //Если нет вложений
-    //         if (!$node['menu_parent_id']){
-    //           $navigation_tree[$navigation['id']]['menus'][$menu] = &$node;
-    //         } 
-    //         else { 
-    //         //Если есть потомки то перебераем массив
-    //         $navigation_id[$navigation['id']]['menus'][$node['menu_parent_id']]['children'][$menu] = &$node;
-    //         }
-    //       };
-    //     }
-    //   }
-    //   $pages = $site->pages->pluck('page_name', 'id');
-    //   $page_info = pageInfo('menus');
-    //   return view('menus', compact('site', 'navigation_tree', 'page_info', 'pages'));
-    // }
 }

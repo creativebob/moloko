@@ -95,7 +95,7 @@
       <h5>ДОБАВЛЕНИЕ навигации</h5>
     </div>
   </div>
-  {{ Form::open(['url' => '/navigations', 'id' => 'form-navigation-add', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['url' => '/sites/'.$site_alias.'/navigations', 'id' => 'form-navigation-add', 'data-abide', 'novalidate']) }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label class="input-icon">Введите название навигации
@@ -147,75 +147,62 @@
 <div class="reveal" id="menu-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>ДОБАВЛЕНИЕ меню / странички</h5>
+      <h5>ДОБАВЛЕНИЕ пункта меню</h5>
     </div>
   </div>
-  <div class="grid-x tabs-wrap tabs-margin-top">
-    <div class="small-8 small-offset-2 cell">
+  <div class="grid-x tabs-wrap tabs-margin-top align-center">
+    <div class="small-10 medium-4 cell">
       <ul class="tabs-list" data-tabs id="tabs">
-        <li class="tabs-title is-active"><a href="#add-menu" aria-selected="true">Добавить пункт меню</a></li>
-        <li class="tabs-title"><a data-tabs-target="add-page" href="#add-page">Добавить страничку</a></li>
+        <li class="tabs-title is-active"><a href="#add-menu" aria-selected="true">Меню</a></li>
+        <li class="tabs-title"><a data-tabs-target="add-options" href="#add-options">Настройки</a></li>
       </ul>
     </div>
   </div>
   <div class="tabs-wrap inputs">
     <div class="tabs-content" data-tabs-content="tabs">
-      <!-- Добавляем пункт меню -->
-      <div class="tabs-panel is-active" id="add-menu">
-        {{ Form::open(['url' => '/menus', 'id' => 'form-menu-add']) }}
+      {{ Form::open(['url' => '/sites/'.$site_alias.'/menus', 'id' => 'form-menu-add']) }}
+        <!-- Добавляем пункт меню -->
+        <div class="tabs-panel is-active" id="add-menu">
           <div class="grid-x grid-padding-x modal-content inputs">
             <div class="small-10 small-offset-1 cell">
-              {{-- <label>Добавляем пункт в:
-                <select >
-                  @foreach ($navigation_tree as $navigation)
-                    @foreach ($navigation['menus'] as $menu)
-
-                      <option>{{ $menu['menu_name'] }}</option>
-                    @endforeach
-                  @endforeach
-                </select>
-              </label> --}}
               <label>Название пункта меню
                 {{ Form::text('menu_name', $value = null, ['autocomplete'=>'off', 'required']) }}
                 <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
               </label>
+              <label>Введите ссылку
+                {{ Form::text('menu_alias', $value = null, ['autocomplete'=>'off']) }}
+              </label>
+              <label>Страница:
+                {{ Form::select('page_id', $pages_list, null, ['class'=>'pages-tree-select', 'placeholder'=>'Не выбрано']) }}
+              </label>
+              <input type="hidden" name="site_id" value="{{ $site->id }}">
+            </div>
+          </div>
+        </div>
+        <!-- Добавляем опции -->
+        <div class="tabs-panel" id="add-options">
+          <div class="grid-x grid-padding-x modal-content inputs">
+            <div class="small-10 small-offset-1 cell">
+              <label>Меню:
+                {{ Form::select('navigation_id', $navigations, null, ['class'=>'navigations-tree-select']) }}
+              </label>
+              <label>Добавляем пункт в:
+                <select class="menus-tree-select" name="menu_parent_id">
+                  <option value="null">Не выбрано</option>
+                </select>
+              </label>
               <label>Введите имя иконки
                 {{ Form::text('menu_icon', $value = null, ['autocomplete'=>'off']) }}
               </label>
-              <input type="hidden" name="section" value="1">
-              <input type="hidden" name="site_id" value="{{ $site->id }}">
-              <input type="hidden" name="navigation_id" class="navigation-id">
-              <input type="hidden" name="menu_parent_id" class="menu-parent-id">
             </div>
           </div>
-          <div class="grid-x align-center">
-            <div class="small-6 medium-4 cell">
-              {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-menu-add']) }}
-            </div>
+        </div>
+        <div class="grid-x align-center">
+          <div class="small-6 medium-4 cell">
+            {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-menu-add']) }}
           </div>
-        {{ Form::close() }}
-      </div>
-      <!-- Добавляем страничку -->
-      <div class="tabs-panel" id="add-page">
-        {{ Form::open(['url' => '/menus', 'id' => 'form-page-add']) }}
-          <div class="grid-x grid-padding-x modal-content inputs">
-            <div class="small-10 small-offset-1 cell">
-              <label>Страничка:
-                {{ Form::select('page_id', $pages, null, ['id'=>'pages-tree-select']) }}
-              </label>
-              <input type="hidden" name="page" value="1">
-              <input type="hidden" name="site_id" value="{{ $site->id }}">
-              <input type="hidden" name="navigation_id" class="navigation-id">
-              <input type="hidden" name="menu_parent_id" class="menu-parent-id">
-            </div>
-          </div>
-          <div class="grid-x align-center">
-            <div class="small-6 medium-4 cell">
-              {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-department-add']) }}
-            </div>
-          </div>
-        {{ Form::close() }}
-      </div>
+        </div>
+      {{ Form::close() }}
     </div>
   </div>
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
@@ -229,28 +216,62 @@
       <h5>Редактирование пункта меню</h5>
     </div>
   </div>
-  <!-- Редактируем отдел -->
-  {{ Form::open(['id' => 'form-menu-edit']) }}
-  {{ method_field('PATCH') }}
-    <div class="grid-x grid-padding-x modal-content inputs">
-      <div class="small-10 small-offset-1 cell">
-        <label>Название пункта меню
-          {{ Form::text('menu_name', $value = null, ['id'=>'menu-name', 'autocomplete'=>'off', 'required']) }}
-          <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
-        </label>
-        <label>Введите имя иконки
-          {{ Form::text('menu_icon', $value = null, ['id'=>'menu-icon', 'autocomplete'=>'off']) }}
-        </label>
-        <input type="hidden" name="site_id" value="{{ $site->id }}">
-        <input type="hidden" name="navigation_id" class="navigation-id">
-      </div>
+  <div class="grid-x tabs-wrap tabs-margin-top align-center">
+    <div class="small-10 medium-4 cell">
+      <ul class="tabs-list" data-tabs id="tabs">
+        <li class="tabs-title is-active"><a href="#edit-menu" aria-selected="true">Меню</a></li>
+        <li class="tabs-title"><a data-tabs-target="edit-options" href="#edit-options">Настройки</a></li>
+      </ul>
     </div>
-    <div class="grid-x align-center">
-      <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-menu-edit']) }}
-      </div>
+  </div>
+  <div class="tabs-wrap inputs">
+    <div class="tabs-content" data-tabs-content="tabs">
+      {{ Form::open(['id' => 'form-menu-edit']) }}
+      {{ method_field('PATCH') }}
+        <!-- Добавляем пункт меню -->
+        <div class="tabs-panel is-active" id="edit-menu">
+          <div class="grid-x grid-padding-x modal-content inputs">
+            <div class="small-10 small-offset-1 cell">
+              <label>Название пункта меню
+                {{ Form::text('menu_name', $value = null, ['id'=>'menu-name', 'autocomplete'=>'off', 'required']) }}
+                <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
+              </label>
+              <label>Введите ссылку
+                {{ Form::text('menu_alias', $value = null, ['id'=>'menu-alias', 'autocomplete'=>'off']) }}
+              </label>
+              <label>Страница:
+                {{ Form::select('page_id', $pages_list, null, ['class'=>'pages-tree-select', 'class'=>'pages-tree-select', 'placeholder'=>'Не выбрано']) }}
+              </label>
+              <input type="hidden" name="site_id" value="{{ $site->id }}">
+            </div>
+          </div>
+        </div>
+        <!-- Добавляем опции -->
+        <div class="tabs-panel" id="edit-options">
+          <div class="grid-x grid-padding-x modal-content inputs">
+            <div class="small-10 small-offset-1 cell">
+              <label>Меню:
+                {{ Form::select('navigation_id', $navigations, null, ['class'=>'navigations-tree-select']) }}
+              </label>
+              <label>Добавляем пункт в:
+                <select class="menus-tree-select" name="menu_parent_id">
+                  <option value="null">Не выбрано</option>
+                </select>
+              </label>
+              <label>Введите имя иконки
+                {{ Form::text('menu_icon', $value = null, ['id'=>'menu-icon', 'autocomplete'=>'off']) }}
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="grid-x align-center">
+          <div class="small-6 medium-4 cell">
+            {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-menu-add']) }}
+          </div>
+        </div>
+      {{ Form::close() }}
     </div>
-  {{ Form::close() }}
+  </div>
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 {{-- Конец модалки пункта меню --}}
@@ -264,8 +285,14 @@
 
 @section('scripts')
 <script type="text/javascript" src="/js/jquery.inputmask.min.js"></script>
+@if(!empty($data))
+  {{-- Подсветка вложенности --}}
+  @include('includes.backlight-menu-script')
+@endif
 <script type="text/javascript">
 $(function() {
+  // Берем алиас сайта
+  var siteAlias = '{{ $site_alias }}';
   $('.phone-field').mask('8 (000) 000-00-00');
   // Функция появления окна с ошибкой
   function showError (msg) {
@@ -274,76 +301,127 @@ $(function() {
   };
   // Редактируем навигацию
   $(document).on('click', '[data-open="navigation-edit"]', function() {
-      // Получаем данные о разделе
-      var id = $(this).closest('.parent').attr('id').split('-')[1];
-      $('#form-navigation-edit').attr('action', '/navigations/' + id);
-      // Сам ajax запрос
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "/navigations/" + id + "/edit",
-        type: "GET",
-        success: function(date){
-          var result = $.parseJSON(date);
-          $('#navigation-name-field').val(result.navigation_name);
-        }
-      });
+    // Получаем данные о разделе
+    var id = $(this).closest('.parent').attr('id').split('-')[1];
+    $('#form-navigation-edit').attr('action', '/sites/' + siteAlias + '/navigations/' + id);
+    // Ajax запрос
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/sites/" + siteAlias + "/navigations/" + id + "/edit",
+      type: "GET",
+      success: function(date){
+        var result = $.parseJSON(date);
+        $('#navigation-name-field').val(result.navigation_name);
+      }
+    });
   });
   // При закрытии модалки очищаем поля
   $(document).on('click', '.close-modal', function() {
     $('#navigation-name-field').val('');
   });
-  // Добавление отдела или должности
-  // Переносим id родителя и филиала в модалку
+
+  // Добавление пункта меню
+  // Переносим id родителя и навигации в модалку
   $(document).on('click', '[data-open="menu-add"]', function() {
-    var parent = $(this).closest('.parent').attr('id').split('-')[1];
+    var parent = $(this).closest('.medium-item').attr('id').split('-')[1];
     var navigation = $(this).closest('.first-item').attr('id').split('-')[1];
+    // alert(navigation + parent);
     if (parent == navigation) {
-      $('.navigation-id').val(navigation);
+      // Если id родителя совпадает с id навигации, значит навигация и отправляем на контроллер навигаций
+      var url = "/sites/" + siteAlias + "/navigations/" + navigation + "/edit";
     } else {
-      $('.menu-parent-id').val(parent);
-      $('.navigation-id').val(navigation);
-    }
-    // alert(parent);
-    // Заполняем скрытые инпуты филиала и родителя
-    
-    // $('#dep-parent-id-field').val(parent);
-    // $('#pos-filial-id-field').val(filial);
-    // $('#pos-parent-id-field').val(parent);
-    // Отмечам в какой пункт будем добавлять
-    // $('#dep-tree-select>[value="' + parent + '"]').prop('selected', true);
-    // $('#pos-tree-select>[value="' + parent + '"]').prop('selected', true);
+      // Иначе отправляем на контроллер пунктов меню
+      var url = "/sites/" + siteAlias + "/menus/" + parent + "/edit";
+    };
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: url,
+      type: "GET",
+      success: function(date){
+        var result = $.parseJSON(date);
+        $('.menus-tree-select>option').remove();
+        var data = "<option value>Не выбрано</option>";
+        $.each(result.menus, function(id, name) {
+          data = data + "<option value=" + id + ">" + name + "</option>";
+        });
+        $('.menus-tree-select').append(data);
+        if (parent == navigation) {
+          $('.navigations-tree-select>[value="' + navigation + '"]').prop('selected', true);
+        } else {
+          $('.navigations-tree-select>[value="' + navigation + '"]').prop('selected', true);
+          $('.menus-tree-select>[value="' + parent + '"]').prop('selected', true);
+        };
+        
+      }
+    }); 
   });
   // Редактируем меню
   $(document).on('click', '[data-open="menu-edit"]', function() {
-    var id = $(this).closest('.parent').attr('id').split('-')[1];
-    // Отмечам в какой пункт будем добавлять
-    // $('#dep-select-edit>[value="' + id + '"]').prop('selected', true);
-    // // Блокируем кнопку
-    // $('#submit-menu-edit').prop('disabled', false);
+    var id = $(this).closest('.medium-item').attr('id').split('-')[1];
+    // alert(id);
       // Получаем данные о филиале
-      $('#form-menu-edit').attr('action', '/menus/' + id);
-      // Сам ajax запрос
-      // alert(id);
+      $('#form-menu-edit').attr('action', '/sites/' + siteAlias + '/menus/' + id);
+      // Аjax запрос
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/menus/" + id + "/edit",
+        url: "/sites/" + siteAlias + "/menus/" + id + "/edit",
         type: "GET",
         success: function(date){
           var result = $.parseJSON(date);
-          // alert(result);
+
+          // alert(result.menus);
           $('#menu-name').val(result.menu_name);
           $('#menu-icon').val(result.menu_icon);
-          $('.navigation-id').val(result.navigation_id);
-          // $('#dep-city-id-field-edit').val(result.city_id);
-          // $('#menu-db-edit').val(1);
-          // $('#dep-filial-id-field-edit').val(result.section_id);
-          // $('#depaprment-parent-id>[value="' + result.menu_parent_id + '"]').prop('selected', true);
+          $('#menu-alias').val(result.menu_alias);
+          $('.menus-tree-select>option').remove();
+          var data = "<option value  >Не выбрано</option>";
+          $.each(result.menus, function(id, name) {
+            data = data + "<option value=" + id + ">" + name + "</option>";
+          });
+          $('.menus-tree-select').append(data);
+          $('.navigations-tree-select>[value="' + result.navigation_id + '"]').prop('selected', true);
+          $('.menus-tree-select>[value="' + result.menu_parent_id + '"]').prop('selected', true);
+          $('.pages-tree-select>[value="' + result.page_id + '"]').prop('selected', true);
+          // alert(result.page_id);
         }
       });
+  });
+
+  // При смене навигации меняем список менюшек
+  $(document).on('change', '.navigations-tree-select', function() {
+    var id = $(this).val();
+    // alert(id);
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/sites/" + siteAlias + "/navigations/" + id + "/edit",
+      type: "GET",
+      success: function(date){
+        var result = $.parseJSON(date);
+        $('.menus-tree-select>option').remove();
+        var data = "<option>Не выбрано</option>";
+        $.each(result.menus, function(id, name) {
+          data = data + "<option value=" + id + ">" + name + "</option>";
+        });
+
+        $('.menus-tree-select').append(data);
+      }
+    });
+  });
+  $(document).on('click', '.icon-close-modal', function() {
+    $('#menu-name').val('');
+    $('#menu-icon').val('');
+    $('#menu-alias').val('');
+    $('.pages-tree-select>option:first-child').prop('selected', true);
+    $('.navigations-tree-select>option:first-child').prop('selected', true);
+    $('.menus-tree-select>option').remove();
   });
   // При смнене пункта меняем id родителя
   $(document).on('change', '#dep-tree-select', function() {
@@ -406,8 +484,6 @@ $(function() {
       // $('#city-name-field').val('');
     };
   });
-
-  
   // При закрытии окна с ошибкой очищаем модалку
   $(document).on('click', '.error-close', function() {
     $('.item-error').remove();
@@ -418,53 +494,24 @@ $(function() {
     $('#area-name').val('');
     $('#region-name').val('');
   });
-
   // Открываем меню и подменю, если только что добавили населенный пункт
   @if(!empty($data))
-  if ({{ $data != null }})  {
-    // Общие правила
-    // Подсвечиваем навигацию
-    $('#navigations-' + {{ $data['navigation_id'] }}).addClass('first-active').find('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
-    // Открываем навигацию
-    var firstItem = $('#navigations-' + {{ $data['navigation_id'] }}).find('.medium-list:first');
-    // Открываем аккордион
-    $('#content-list').foundation('down', firstItem);
-    // Отображаем подпункт меню без страницы
-    if ({{ $data['menu_id'] }} !== 0) {
-      // Подсвечиваем ссылку
-      $('#menus-{{ $data['menu_id'] }}').find('.medium-link').addClass('medium-active');
-      // Открываем меню удаления в середине
-      $('#menus-{{ $data['menu_id'] }}').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
-      if ($('#menus-' + {{ $data['menu_id'] }}).is('.medium-list')) {
-       // Открываем навигацию
-       var mediumItem = $('#menus-' + {{ $data['menu_id'] }}).find('.medium-list');
-      // Открываем аккордион
-      $('#content-list').foundation('down', mediumItem);
-      };
-      
-    };
-
-    // 
-
-        // Перебираем родителей и посвечиваем их
-    // var parents = $('#menu-{{ $data['menu_id'] }}').parents('.parent');
-    // for (var i = 0; i < parents.length; i++) {
-    //   $(parents[i]).find('.medium-link').addClass('medium-active');
-    //   $(parents[i]).find('.icon-list').css('display', 'block').attr('aria-hiden', 'false');
-    // };
-        
-  }
+    backlightItems ();
   @endif
+
+  // Мягкое удаление с refresh
+  $(document).on('click', '[data-open="item-delete"]', function() {
+    // находим описание сущности, id и название удаляемого элемента в родителе
+    var parent = $(this).closest('.parent');
+    var type = parent.attr('id').split('-')[0];
+    var id = parent.attr('id').split('-')[1];
+    var name = parent.data('name');
+    $('.title-delete').text(name);
+    $('.delete-button').attr('id', 'del-' + type + '-' + id);
+    $('#form-item-del').attr('action', '/sites/'+ siteAlias + '/' + type + '/' + id);
+  });
 });
 </script>
-
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.multilevel-menu-active-scripts')
-
-{{-- Скрипт модалки удаления ajax --}}
-@include('includes.modals.modal-delete-ajax-script')
-
-{{-- Скрипт модалки удаления ajax --}}
-@include('includes.modals.modal-delete-script')
-
 @endsection

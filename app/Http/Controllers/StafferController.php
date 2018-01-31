@@ -11,6 +11,8 @@ use App\Company;
 use App\Department;
 use App\RoleUser;
 
+
+use App\Http\Requests\StafferRequest;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,9 +25,9 @@ class StafferController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-      $user = Auth::user();
+      $user = $request->user();
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
         $staff = Staffer::with('filial', 'department', 'user', 'position', 'employees')->whereCompany_id($user->company_id)->paginate(30);
@@ -37,11 +39,7 @@ class StafferController extends Controller
       } else {
         if ($user->god == 1) {
           // Если нет, то бог без компании
-          $staff = Staffer::with('filial', 'department', 'user', 'position', 'employees')->paginate(30);
-          // Смотрим сколько филиалов в компании
-          $company = Company::with(['departments' => function($query) {
-                      $query->whereFilial_status(1);
-                    }])->findOrFail($user->company_id);
+          abort(403, 'Необходимо авторизоваться под компанией');
         };
       };
       // dd($staff);
@@ -67,13 +65,15 @@ class StafferController extends Controller
      */
     public function store(StafferRequest $request)
     {
-      $user = Auth::user();
+      $user = $request->user();
       // Пишем вакансию в бд
       $position_id = $request->position_id;
       $department_id = $request->parent_id;
       $filial_id = $request->filial_id;
 
       $staffer = new Staffer;
+      // Пишем ID компании авторизованного пользователя
+      if($user->company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
       $staffer->company_id = $user->company_id;
       $staffer->position_id = $position_id;
       $staffer->department_id = $department_id;
@@ -107,7 +107,7 @@ class StafferController extends Controller
      */
     public function edit($id)
     {
-      $user = Auth::user();
+      $user = $request->user();
       $staffer = Staffer::with(['employees' => function($query) {
                             $query->whereDate_dismissal(null);
                           }])->findOrFail($id);
@@ -129,7 +129,7 @@ class StafferController extends Controller
      */
     public function update(EmployeeRequest $request, $id)
     {
-      $user = Auth::user();
+      $user = $request->user();
       $staffer = Staffer::findOrFail($id);
       // Если не пустая дата увольнения пришла
       if (isset($request->date_dismissal)) {
@@ -209,7 +209,7 @@ class StafferController extends Controller
     {
       // Удаляем должность из отдела с обновлением
       // Находим филиал и отдел
-      $user = Auth::user();
+      $user = $request->user();
       $staffer = Staffer::with('department')->findOrFail($id);
       if (isset($staffer->department->filial_id)) {
         $filial_id = $staffer->department->filial_id;

@@ -52,7 +52,7 @@ class PositionController extends Controller
     {
       $user = Auth::user();
       // $this->authorize('create', Position::class);
-      $pages = Page::whereSite_id('1')->pluck('page_name', 'id');
+      $pages = Page::whereSite_id(1)->pluck('page_name', 'id');
       $position = new Position;
       $roles = Role::whereCompany_id($user->company_id)->orWhereNull('company_id')->get();
       return view('positions.create', compact('position', 'pages', 'roles'));  

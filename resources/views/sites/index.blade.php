@@ -85,7 +85,7 @@
           <td class="td-site-name"><a href="/sites/{{ $site->site_alias }}">{{ $site->site_name }}</a></td>
           <td class="td-site-domen"><a href="http://{{ $site->site_domen }}" target="_blank">{{ $site->site_domen }}</a></td>
           <td class="td-company-name" data-company-id="{{ $site->company->id or '' }}">{{ $site->company->company_name or 'Системный сайт' }}</td>
-          <td class="td-site-edit"><a class="tiny button" href="/sites/{{ $site->id }}/edit">Редактировать</a></td>
+          <td class="td-site-edit"><a class="tiny button" href="/sites/{{ $site->site_alias }}/edit">Редактировать</a></td>
           <td class="td-site-author">@if(isset($site->author->first_name)) {{ $site->author->first_name . ' ' . $site->author->second_name }} @endif</td>
           <td class="td-delete">
             @if (isset($site->company_id))

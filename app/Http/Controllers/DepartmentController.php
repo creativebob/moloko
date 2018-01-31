@@ -70,7 +70,7 @@ class DepartmentController extends Controller
   }
 
   // Получаем сторонние данные по 
-  public function current_department($filial, $depart)
+  public function current_department($section_id, $item_id)
   {
     $user = Auth::user();
     $others_item['user_id'] = $user->id;
@@ -111,8 +111,10 @@ class DepartmentController extends Controller
     $departments_list = $departments->pluck('department_name', 'id');
     $page_info = pageInfo('departments');
     $data = [
-      'filial_id' => $filial,
-      'department_id' => $depart,
+      'section_name' => 'departments',
+      'item_name' => 'staff',
+      'section_id' => $section_id,
+      'item_id' => $item_id,
     ];
     return view('departments', compact('departments_tree', 'positions', 'positions_list', 'data', 'departments_list', 'staff', 'page_info', 'departments')); 
   }
