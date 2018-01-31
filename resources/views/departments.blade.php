@@ -500,7 +500,7 @@ $(function() {
           $('#dep-city-id-field-edit').val(result.city_id);
           $('#department-db-edit').val(1);
           $('#dep-filial-id-field-edit').val(result.filial_id);
-          $('#depaprment-parent-id>[value="' + result.department_parent_id + '"]').prop('selected', true);
+          $('#dep-select-edit>[value="' + result.department_parent_id + '"]').prop('selected', true);
         }
       });
   });
@@ -587,30 +587,44 @@ $(function() {
     $('#area-name').val('');
     $('#region-name').val('');
   });
-
+  // @if(!empty($data))
+  //   backlightItems ();
+  // @endif
   // Открываем меню и подменю, если только что добавили населенный пункт
   @if(!empty($data))
-  if ({{ $data != null }})  {
     // Общие правила
-    // Подсвечиваем область
-    $('#departments-' + {{ $data['filial_id'] }}).addClass('first-active').find('.icon-list:first-child').attr('aria-hidden', 'false').css('display', 'block');
-    // Открываем область
-    var firstItem = $('#departments-' + {{ $data['filial_id'] }}).find('.medium-list');
-    // Открываем аккордионы
-    $('#content-list').foundation('down', firstItem);
+    // Подсвечиваем навигацию
+    $('#{{ $data['section_name'] }}-{{ $data['section_id'] }}').addClass('first-active').find('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
+     // Открываем только навигацию
+      var firstItem = $('#{{ $data['section_name'] }}-{{ $data['section_id'] }}').find('.medium-list:first');
+      // Открываем аккордион
+      $('#content-list').foundation('down', firstItem); 
 
-    // Отображаем отдел и филиал, без должностей
-    if ({{ $data['department_id'] }} !== 0) {
+   // Отображаем отдел и филиал, без должностей
+    if ({{ $data['item_id'] }} !== 0) {
+       // Перебираем родителей и подсвечиваем их
+      $.each($('#departments-{{ $data['item_id'] }}').parents('.medium-item').get().reverse(), function (index) {
+        $(this).children('.medium-link:first').addClass('medium-active');
+        $(this).children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
+        $('#content-list').foundation('down', $(this).closest('.medium-list'));
+      });
+      // Если элемент содержит вложенность, открываем его
+      if ($('#departments-{{ $data['item_id'] }}').hasClass('.parent')) {
+        $('#departments-{{ $data['item_id'] }}').children('.medium-link:first').addClass('medium-active');
+        $('#departments-{{ $data['item_id'] }}').children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
+        $('#content-list').foundation('down', $('#departments-{{ $data['item_id'] }}').children('.medium-list:first'));
+      }
       // Подсвечиваем ссылку
-      $('#departments-{{ $data['department_id'] }}').find('.medium-link').addClass('medium-active');
+      $('#departments-{{ $data['item_id'] }}').find('.medium-link').addClass('medium-active');
       // Открываем меню удаления в середине
-       $('#departments-{{ $data['department_id'] }}').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
+       $('#departments-{{ $data['item_id'] }}').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
+        // Если родитель содержит не пустой элемент
+      if ($('#departments-{{ $data['item_id'] }}').parent('.medium-list').has('.parent')) {
+        $('#content-list').foundation('down', $('#departments-{{ $data['item_id'] }}').closest('.medium-list'));
+      };
     };
-
-    // 
-
-        // Перебираем родителей и посвечиваем их
-    // var parents = $('#departments-{{ $data['department_id'] }}').parents('.parent');
+    // Перебираем родителей и посвечиваем их
+    // var parents = $('#departments-{{ $data['item_id'] }}').parents('.parent');
     // for (var i = 0; i < parents.length; i++) {
     //   $(parents[i]).find('.medium-link').addClass('medium-active');
     //   $(parents[i]).find('.icon-list').css('display', 'block').attr('aria-hiden', 'false');
@@ -622,10 +636,7 @@ $(function() {
     // for (var i = 0; i < parents.length; i++) {
     //   $(parents[i]).parent('li').children('a').addClass('medium-active');
     // };
-  
-  
-        
-  }
+
   @endif
 });
 </script>

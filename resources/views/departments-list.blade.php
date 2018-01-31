@@ -33,7 +33,7 @@
     <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
       @if (isset($department['staff']))
         @foreach($department['staff'] as $staffer)
-          <li class="medium-item parent" id="staff-{{ $staffer['id'] }}" data-name="{{ $staffer['position']['position_name'] }}">
+          <li class="medium-item" id="staff-{{ $staffer['id'] }}" data-name="{{ $staffer['position']['position_name'] }}">
             <div class="medium-as-last">{{ $staffer['position']['position_name'] }} ( <a href="/staff/{{ $staffer['id'] }}/edit" class="link-recursion">
             @if (isset($staffer['user_id']))
               {{ $staffer['user']['first_name'] }} {{ $staffer['user']['second_name'] }}

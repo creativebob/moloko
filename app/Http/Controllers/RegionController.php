@@ -64,7 +64,7 @@ class RegionController extends Controller
     // Если область не найдена, то меняем значение на 1, пишем в базу и отдаем результат
     if ($region_database == 1) {
 
-      $user = Auth::user();
+      $user = $request->user();
       $region = new Region;
 
       $region->region_name = $request->region_name;
@@ -131,7 +131,7 @@ class RegionController extends Controller
    */
   public function destroy($id)
   {
-    $user = Auth::user();
+    $user = $request->user();
     // Удаляем ajax
     // Проверяем содержит ли район вложенные населенные пункты
     $region = Region::with('areas', 'cities')->findOrFail($id);

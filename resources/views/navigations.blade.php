@@ -117,7 +117,7 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label>Сайт навигации
-          {{ Form::select('site_id', $sites, null, ['id'=>'add-site-select']) }}
+          {{ Form::select('site_id', $sites_list, null, ['id'=>'add-site-select']) }}
         </label>
         <label>Название навигации
            {{ Form::text('navigation_name', $value = null, ['autocomplete'=>'off', 'required']) }}
@@ -147,7 +147,7 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label>Сайт навигации
-          {{ Form::select('site_id', $sites, null, ['id'=>'edit-site-select']) }}
+          {{ Form::select('site_id', $sites_list, null, ['id'=>'edit-site-select']) }}
         </label>
         <label>Название навигации
           {{ Form::text('navigation_name', $value = null, ['id'=>'navigation-name-field', 'autocomplete'=>'off', 'required']) }}

@@ -17,7 +17,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
         // Меню для левого сайдбара
         // Знаем что статика, поэтому указываем в таблице навигации первый id
         if (Schema::hasTable('menus')) { 

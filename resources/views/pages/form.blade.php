@@ -21,12 +21,12 @@
     {{ Form::text('page_title', $page->page_title, ['class'=>'page-title-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
     <label>Описание страницы
-    {{ Form::textarea('page_description', $page->page_description, ['class'=>'page-description-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'size' => '10x3']) }}
+    {{ Form::textarea('page_description', $page->page_description, ['class'=>'page-description-field', 'autocomplete'=>'off', 'size' => '10x3']) }}
     </label>
     <label>Алиас страницы
     {{ Form::text('page_alias', $page->page_alias, ['class'=>'page-alias-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
-    <input type="hidden" name="site_id" value="{{ $current_site }}">
+    <input type="hidden" name="site_id" value="{{ $current_site->id }}">
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
 

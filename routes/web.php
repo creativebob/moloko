@@ -63,7 +63,7 @@ Route::get('/current_city/{region}/{area}', 'CityController@current_city')->midd
 // Контроллеры для отображения филиалов, отделов и должностей
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
 // Текущий добавленный/удаленный отдел
-Route::get('/current_department/{parent}/{department}', 'DepartmentController@current_department')->middleware('auth');
+Route::get('/current_department/{section_id}/{item_id}', 'DepartmentController@current_department')->middleware('auth');
 // Должности
 Route::resource('/positions', 'PositionController')->middleware('auth');
 // Контроллер штата компании
@@ -72,20 +72,24 @@ Route::resource('/staff', 'StafferController')->middleware('auth');
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
 
 // Контроллер отображения сайтов 
-Route::resource('/sites', 'SiteController')->middleware('auth');
-Route::get('/sites/{site_alias}', 'SiteController@sections')->middleware('auth');
+Route::get('/sites', 'SiteController@index')->middleware('auth')->name('sites.index');
+Route::get('/sites/create', 'SiteController@create')->middleware('auth')->name('sites.create');
+Route::post('/sites', 'SiteController@store')->middleware('auth')->name('sites.store');
+Route::get('/sites/{site_alias}/edit', 'SiteController@edit')->middleware('auth')->name('sites.edit');
+Route::patch('/sites/{id}', 'SiteController@update')->middleware('auth')->name('sites.update');
+Route::delete('/sites/{id}', 'SiteController@destroy')->middleware('auth')->name('sites.destroy');
 
-
+Route::get('/sites/{site_alias}', 'SiteController@sections')->middleware('auth')->name('sites.sections');
+// Группа с префиксом
+Route::prefix('/sites/{site_alias}')->group(function () {
+    Route::resource('/pages', 'PageController')->middleware('auth');
+    // Навигация и меню
+    Route::resource('/navigations', 'NavigationController')->middleware('auth');
+    Route::resource('/menus', 'MenuController')->middleware('auth');
+    // Текущий добавленный/удаленный пункт меню
+	Route::get('/current_menu/{section_id}/{item_id}', 'MenuController@current_menu')->middleware('auth');
+});
 // Route::resource('/menusite', 'MenuSiteController')->middleware('auth');
-// Route::resource('/pages', 'PageController')->middleware('auth');
-
-
-
-// Навигация и меню
-Route::resource('/navigations', 'NavigationController')->middleware('auth');
-Route::resource('/menus', 'MenuController')->middleware('auth');
-// Текущий добавленный/удаленный пункт меню
-Route::get('/current_menu/{section}/{menu}', 'MenuController@current_menu')->middleware('auth');
 // Отображение сессии
 Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');
 

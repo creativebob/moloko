@@ -73,7 +73,7 @@
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($site))
-        @foreach($sites->menus as $menu)
+        @foreach($site->menus as $menu)
         <tr class="parent" id="sites-{{ $site->id }}" data-name="{{ $site->site_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"><label class="label-check" for="check-{{ $site->id }}"></label></td>
@@ -89,14 +89,6 @@
       @endif
       </tbody>
     </table>
-  </div>
-</div>
-
-{{-- Pagination --}}
-<div class="grid-x" id="pagination">
-  <div class="small-6 cell pagination-head">
-    <span class="pagination-title">Кол-во записей: {{ $sites->count() }}</span>
-    {{ $sites->links() }}
   </div>
 </div>
 @endsection

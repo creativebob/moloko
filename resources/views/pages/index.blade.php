@@ -7,7 +7,7 @@
 @endsection
 
 @section('title')
-  {{ $site->site_name }}
+  {{ $page_info->page_name . ' ' . $site->site_name }}
 @endsection
 
 @section('title-content')
@@ -16,8 +16,8 @@
   <div class="sticky sticky-topbar" id="head-sticky" data-sticky-on="small" data-sticky data-margin-top="2.4" data-top-anchor="head-content:top">
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
-	      <h2 class="header-content">{{ $site->site_name }}</h2>
-	      <a href="/pages/create" class="icon-add sprite"></a>
+	      <h2 class="header-content">{{ $page_info->page_name . ' ' . $site->site_name }}</h2>
+	      <a href="/sites/{{ $site_alias }}/pages/create" class="icon-add sprite"></a>
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -125,14 +125,24 @@
 @endsection
 
 @section('modals')
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
-@endsection
-
+<script type="text/javascript">
+$(function() {
+  // Берем алиас сайта
+  var siteAlias = '{{ $site_alias }}';
+ // Мягкое удаление с refresh
+  $(document).on('click', '[data-open="item-delete"]', function() {
+    // находим описание сущности, id и название удаляемого элемента в родителе
+    var parent = $(this).closest('.parent');
+    var type = parent.attr('id').split('-')[0];
+    var id = parent.attr('id').split('-')[1];
+    var name = parent.data('name');
+    $('.title-delete').text(name);
+    $('.delete-button').attr('id', 'del-' + type + '-' + id);
+    $('#form-item-del').attr('action', '/sites/'+ siteAlias + '/' + type + '/' + id);
+  });
+});
+</script> 
 @section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.table-scripts')
-
-{{-- Скрипт модалки удаления --}}
-@include('includes.modals.modal-delete-script')
 @endsection

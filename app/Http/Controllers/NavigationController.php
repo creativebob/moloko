@@ -22,22 +22,25 @@ class NavigationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($site_alias)
     {
-      $user = Auth::user();
+      $user = $request->user();
       if (isset($user->company_id)) {
           // Если у пользователя есть компания
           $navigations = Navigation::with('site')->where(['category_navigation_id' => 2, 'company_id' => $user->company_id])->paginate(30);
-          $sites = Site::whereCompany_id($user->company_id)->pluck('site_name', 'id');
+          $sites = Site::whereCompany_id($user->company_id)->get();
+          
         } else {
-          if (Auth::user()->god == 1) {
+          if ($request->user()->god == 1) {
             // Если нет, то бог без компании
             $navigations = Navigation::with('site')->where('category_navigation_id', 2)->paginate(30);
-            $sites = Site::pluck('site_name', 'id');
+            $sites = Site::get();
           };
         };
+        $sites_list = $sites->pluck('site_name', 'id');
+        // dd($sites_list);
         $page_info = pageInfo('navigations');
-        return view('navigations', compact('navigations', 'page_info', 'sites'));
+        return view('navigations', compact('navigations', 'page_info', 'sites_list'));
     }
 
     /**
@@ -56,9 +59,9 @@ class NavigationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(NavigationRequest $request)
+    public function store(NavigationRequest $request, $site_alias)
     {
-        $user = Auth::user();
+        $user = $request->user();
         $navigation = new Navigation;
         $navigation->navigation_name = $request->navigation_name;
         $navigation->site_id = $request->site_id;
@@ -68,7 +71,7 @@ class NavigationController extends Controller
         // Пишем сайт в сессию
         session(['current_site' => $request->site_id]);
         if ($navigation) {
-          return Redirect('/current_menu/'.$navigation->id.'/0');
+          return Redirect('/sites/'.$site_alias.'/current_menu/'.$navigation->id.'/0');
         } else {
           abort(403, 'Ошибка при записи навигации!');
         };
@@ -91,12 +94,13 @@ class NavigationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($site_alias, $id)
     {
-        $navigation = Navigation::findOrFail($id);
+        $navigation = Navigation::with('menus')->findOrFail($id);
         // Отдаем данные по навигации
         $result = [
           'navigation_name' => $navigation->navigation_name,
+          'menus' => $navigation->menus->where('page_id', null)->pluck('menu_name', 'id'),
         ];
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
@@ -108,9 +112,9 @@ class NavigationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(NavigationRequest $request, $id)
+    public function update(NavigationRequest $request, $site_alias, $id)
     {
-        $user = Auth::user();
+        $user = $request->user();
         $navigation = Navigation::findOrFail($id);
         $navigation->navigation_name = $request->navigation_name;
         $navigation->site_id = $request->site_id;
@@ -120,7 +124,7 @@ class NavigationController extends Controller
         // Пишем сайт в сессию
         session(['current_site' => $request->site_id]);
         if ($navigation) {
-          return Redirect('/current_menu/'.$navigation->id.'/0');
+          return Redirect('/sites/'.$site_alias.'/current_menu/'.$navigation->id.'/0');
         } else {
           abort(403, 'Ошибка при записи навигации!');
         };
@@ -132,9 +136,9 @@ class NavigationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $site_alias, $id)
     {
-      $user = Auth::user();
+      $user = $request->user();
       $navigation = Navigation::findOrFail($id);
       $site_id = $navigation->site_id;
       if ($navigation) {
@@ -143,7 +147,7 @@ class NavigationController extends Controller
         // Удаляем навигацию с обновлением
         $navigation = Navigation::destroy($id);
         if ($navigation) {
-          return Redirect('/menus?site_id='.$site_id);
+          return Redirect('/sites/'.$site_alias.'/menus');
         } else {
           abort(403, 'Ошибка при удалении навигации');
         };

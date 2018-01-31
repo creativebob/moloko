@@ -24,28 +24,33 @@ class PageController extends Controller
     { 
 
       $user = Auth::user();
-      $site = Site::with('pages', 'pages.author')->whereSite_alias($site_alias)->first();
-
-      $pages = Page::with('author')->whereSite_id($site->id)->paginate(30);
-
-
-      // $page_info = pageInfo('pages');
-          // dd($page_info);
-      return view('pages.index', compact('pages', 'site'));
+      $site = Site::whereSite_alias($site_alias)->first();
+      $pages = Page::with('site', 'author')->whereSite_id($site->id)->paginate(30);
+      // $pages = Page::with(['author', 'site' => function($query) use ($site_alias) {
+      //                 $query->whereSite_alias($site_alias);
+      //               }])->paginate(30);
+      // $site = '';
+      // foreach ($pages as $page) {
+      //   $site = $page->site;
+      //   break;
+      // };
+      $page_info = pageInfo('pages');
+      // dd($page_info);
+      return view('pages.index', compact('pages', 'site', 'page_info', 'site_alias'));
     }
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $request, $site_alias)
     {   
       $user = Auth::user();
       $sites = Site::whereCompany_id($user->company_id);
       $sites_list = $sites->pluck('site_name', 'id');
-      $current_site = $sites->findOrFail($request->session()->get('current_site'));
+      $current_site = Site::whereSite_alias($site_alias)->first();
       $page = new Page;
-      return view('pages.create', compact('page', 'sites_list', 'current_site'));  
+      return view('pages.create', compact('page', 'sites_list', 'current_site', 'site_alias'));  
     }
     /**
      * Store a newly created resource in storage.
@@ -53,7 +58,7 @@ class PageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PageRequest $request)
+    public function store(PageRequest $request, $site_alias)
     {
       $user = Auth::user();
       $page = new Page;
@@ -65,7 +70,7 @@ class PageController extends Controller
       $page->author_id = $user->id;
       $page->save();
       if ($page) {
-        return redirect('/pages?site_id=' . $request->site_id);
+        return redirect('/sites/'.$site_alias.'/pages');
       } else {
         abort(403, 'Ошибка при записи страницы!');
       };
@@ -91,11 +96,12 @@ class PageController extends Controller
     public function edit(Request $request, $site_alias, $page_alias)
     {
       $user = Auth::user();
-      $sites = Site::whereCompany_id($user->company_id)->pluck('site_name', 'id');
+      $sites = Site::whereCompany_id($user->company_id)->get();
+      $sites_list = $sites->pluck('site_name', 'id');
+      $current_site = Site::where('site_alias', $site_alias)->first();
       $page = Page::With('site')->wherePage_alias($page_alias)->first();
-      $current_site = $request->session()->get('current_site');
-      // dd($page);
-      return view('pages.edit', compact('page', 'sites', 'current_site'));
+      // dd($current_site);
+      return view('pages.edit', compact('page', 'sites_list', 'current_site', 'site_alias'));
     }
 
     /**
@@ -105,7 +111,7 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(PageRequest $request, $id)
+    public function update(PageRequest $request, $site_alias, $id)
     {
       $user = Auth::user();
       $page = Page::findOrFail($id);
@@ -117,7 +123,7 @@ class PageController extends Controller
       $page->editor_id = $user->id;
       $page->save();
       if ($page) {
-        return redirect('/pages?site_id=' . $request->site_id);
+        return redirect('/sites/'.$site_alias.'/pages');
       } else {
         abort(403, 'Ошибка при записи страницы!');
       };
@@ -129,7 +135,7 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($site_alias, $id)
     { 
       $user = Auth::user();
       $page = Page::findOrFail($id);
@@ -140,7 +146,7 @@ class PageController extends Controller
         // Удаляем страницу с обновлением
         $page = Page::destroy($id);
         if ($page) {
-          return Redirect('/pages?site_id='.$site_id);
+          return Redirect('/sites/'.$site_alias.'/pages');
         } else {
           abort(403, 'Ошибка при удалении страницы');
         };

@@ -14,7 +14,7 @@ class NavigationsTableSeeder extends Seeder
          DB::table('navigations')->insert([
             [
                 'navigation_name' => 'Разделы управления сайтом',
-                'site_id' => 1, 
+                'site_id' => null, 
                 'system_item' => 1,  
                 'company_id' => null,
                 'category_navigation_id' => 1,         

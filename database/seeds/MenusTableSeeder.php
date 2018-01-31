@@ -63,7 +63,7 @@ class MenusTableSeeder extends Seeder
                 'author_id' => 1,
             ],
         	[
-		        'menu_name' => null,
+		        'menu_name' => 'Компании',
                 'menu_icon' => null,
                 'menu_alias' => 'companies',
                 'menu_parent_id' => 1,
@@ -73,7 +73,7 @@ class MenusTableSeeder extends Seeder
                 'author_id' => 1,
         	],
         	[
-		        'menu_name' => null,
+		        'menu_name' => 'Пользователи',
                 'menu_icon' => null,
                 'menu_alias' => 'users',
                 'menu_parent_id' => 1,
@@ -83,7 +83,7 @@ class MenusTableSeeder extends Seeder
                 'author_id' => 1,
         	],
         	[
-		        'menu_name' => null,
+		        'menu_name' => 'Филиалы и отделы',
                 'menu_icon' => null,
                 'menu_alias' => 'departments',
                 'menu_parent_id' => 1,
@@ -93,7 +93,7 @@ class MenusTableSeeder extends Seeder
                 'author_id' => 1,
         	],
         	[
-		        'menu_name' => null,
+		        'menu_name' => 'Штат',
                 'menu_icon' => null,
                 'menu_alias' => 'staff',
                 'menu_parent_id' => 1,
@@ -103,7 +103,7 @@ class MenusTableSeeder extends Seeder
                 'author_id' => 1,
         	],
         	[
-		        'menu_name' => null,
+		        'menu_name' => 'Сотрудники',
                 'menu_icon' => null,
                 'menu_alias' => 'employees',
                 'menu_parent_id' => 1,
@@ -113,7 +113,7 @@ class MenusTableSeeder extends Seeder
                 'author_id' => 1,
         	],
         	[
-		        'menu_name' => null,
+		        'menu_name' => 'Тестовая',
                 'menu_icon' => null,
                 'menu_alias' => 'home',
                 'menu_parent_id' => 2,
@@ -123,7 +123,7 @@ class MenusTableSeeder extends Seeder
                 'author_id' => 1,
         	],
         	[
-		        'menu_name' => null,
+		        'menu_name' => 'Сайты',
                 'menu_icon' => null,
                 'menu_alias' => 'sites',
                 'menu_parent_id' => 3,
@@ -133,7 +133,7 @@ class MenusTableSeeder extends Seeder
                 'author_id' => 1,
         	],
         	[
-		        'menu_name' => null,
+		        'menu_name' => 'Населенные пункты',
                 'menu_icon' => null,
                 'menu_alias' => 'cities',
                 'menu_parent_id' => 4,
@@ -143,7 +143,7 @@ class MenusTableSeeder extends Seeder
                 'author_id' => 1,
         	],
         	[
-		        'menu_name' => null,
+		        'menu_name' => 'Должности',
                 'menu_icon' => null,
                 'menu_alias' => 'positions',
                 'menu_parent_id' => 4,
@@ -153,7 +153,7 @@ class MenusTableSeeder extends Seeder
                 'author_id' => 1,
         	],
         	[
-		        'menu_name' => null,
+		        'menu_name' => 'Сущности',
                 'menu_icon' => null,
                 'menu_alias' => 'entities',
                 'menu_parent_id' => 5,
@@ -163,7 +163,7 @@ class MenusTableSeeder extends Seeder
                 'author_id' => 1,
         	],
         	[
-		        'menu_name' => null,
+		        'menu_name' => 'Роли',
                 'menu_icon' => null,
                 'menu_alias' => 'roles',
                 'menu_parent_id' => 5,
@@ -173,7 +173,7 @@ class MenusTableSeeder extends Seeder
                 'author_id' => 1,
         	],
             [
-                'menu_name' => null,
+                'menu_name' => 'Права',
                 'menu_icon' => null,
                 'menu_alias' => 'rights',
                 'menu_parent_id' => 5,
@@ -193,9 +193,9 @@ class MenusTableSeeder extends Seeder
                 'author_id' => 1,
             ],
             [
-                'menu_name' => 'Навигация',
+                'menu_name' => 'Меню',
                 'menu_icon' => null,
-                'menu_alias' => 'navigations',
+                'menu_alias' => 'menus',
                 'menu_parent_id' => null,
                 'page_id' => null,
                 'navigation_id' => 1,
