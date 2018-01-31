@@ -45,11 +45,11 @@ class GetAccessController extends Controller
             foreach($departments as $department){
 
                 // Пишем в сессию список отделов
-                $access['company_info']['list_departments'][$department->id] = $department->department_name;
+                $access['company_info']['departments'][$department->id] = $department->department_name;
 
                 // Пишем в сессию список филиалов
                 if($department->filial_status == 1){
-                    $access['company_info']['list_filials'][$department->id] = $department->department_name;
+                    $access['company_info']['filials'][$department->id] = $department->department_name;
                 };
             }
         };
@@ -160,6 +160,11 @@ class GetAccessController extends Controller
                                 if($right->alias_right == 'authors-users-allow'){$all_rights[$right->alias_right]['authors'] = $list_authors;};
                         }
                     }
+
+                    if(!isset($all_rights)){
+                        Auth::logout();
+                        abort(403, "У пользователя отсутствуют права!");
+                    };
 
             };
 

@@ -188,9 +188,6 @@ class DepartmentController extends Controller
         $filial->save();
         if($filial) {
 
-        // // Обновляем в сессии список
-        // updateListFilials($request->user()->company_id);
-
           return Redirect('/current_department/'.$filial->id.'/0');
         } else {
           abort(403, 'Ошибка при записи филиала!');

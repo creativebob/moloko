@@ -2,7 +2,7 @@
         use App\Scopes\ModerationScope;
         use App\Department;
 
-        function operator_right($entity_name, $entity_dependence) {
+        function operator_right($entity_name, $entity_dependence, $method) {
 
 
         // Получаем сессию
@@ -230,29 +230,48 @@
         return $lists_departments;
     }
 
-    function updateListFilials($company_id) {
 
-        // // Собираем данные о компании
-        // if($company_id != null){
+    // Функция которая получает список разрешенных правами департаментов на указанное право
 
-        //     // Получаем все отделы компании
-        //     $departments = Department::whereCompany_id($company_id)->get();
+    function getLS($entity_name, $method, $type_list) {
 
-        //     // Настройка прав бога, если он авторизован под компанией 
-        //     foreach($departments as $department){
+            // Получаем сессию
+            $session  = session('access');
+            if(!isset($session)){abort(403, 'Нет сессии!');};
 
-        //         // Пишем в сессию список отделов
-        //         $access['company_info']['list_departments'][$department->id] = $department->department_name;
+            if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'][$type_list])) {
 
-        //         // Пишем в сессию список филиалов
-        //         if($department->filial_status == 1){
-        //             $access['company_info']['list_filials'][$department->id] = $department->department_name;
-        //         };
-        //     }
+                // Получаем список отделов
+                $departments = $session['all_rights'][$method . '-'. $entity_name .'-allow'][$type_list];
 
-            
-        // };
+                // Нет ли блокировки этого права?
+                if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny'][$type_list])) {
+
+                    $departments = collect($departments);
+
+                    // Блокировка найдена
+                    $minus_departments = collect($session['all_rights'][$method . '-'. $entity_name .'-deny'][$type_list])->keys();
+
+                    // Вычетаем из списка департаментов - департаменты для которых есть запрет
+                    $departments = $departments->except($minus_departments);
+                };                
+            };
+
+
+        if($session['user_info']['user_status'] == 1){
+
+            if($session['user_info']['company_id'] == null){
+                
+                $departments = null;
+            } else {
+
+                // Получаем список отделов для бога
+                $departments = $session['company_info'][$type_list];
+            };
+        };
+
+        if(!isset($departments)){$departments = null;};
+        return $departments;
     }
-
 
 ?>

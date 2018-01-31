@@ -20,26 +20,18 @@ trait SystemitemTraitScopes
                 {
                     return $query->orWhere('system_item', 1); // Рабочая версия
 
-                    // return $query
-                    // ->Where(function ($query){$query
-                    // ->Where('system_item', 1)
-                    // // ->WhereNotNull('company_id')
-                    // // ->WhereNull('company_id')
-                    // ->orWhereNull('system_item');});
-
                 };
             };
 
             if(($user_status == null)&&($system_item == 1)){
 
-                // return $query->orWhere('system_item', 1);
+                // $system_filials = collect(getLS('users', 'system', 'filials'))->keys()->toarray(); 
 
                 return $query
-                ->Where(function ($query){$query
+                ->orWhere(function ($query) {$query
+                ->Where('company_id', null)            
                 ->Where('system_item', 1)
-                // ->WhereNotNull('company_id')
-                // ->WhereNull('company_id')
-                ->orWhereNull('system_item');});
+                ;});
             };
 
         } else {

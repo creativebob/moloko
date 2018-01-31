@@ -13,6 +13,7 @@ use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\ModerationTraitScopes;
+use App\Scopes\Traits\ModeratorFilterTraitScopes;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -27,6 +28,7 @@ class User extends Authenticatable
     use AuthorsTraitScopes;
     use SystemitemTraitScopes;
     use FilialsTraitScopes;
+    use ModeratorFilterTraitScopes;
 
     /**
      * Загрузка типажа мягкого удаления для модели.

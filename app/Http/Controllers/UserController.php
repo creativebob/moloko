@@ -22,22 +22,28 @@ use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
+
+    // Сущность над которой производит операции контроллер
+    protected $entity_name = 'users';
+
     public function index(Request $request)
     {
-        // Подключение политики
-        $this->authorize('index', User::class);
+        // Получаем метод
+        $method = __FUNCTION__;
 
-        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
-        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
-        $answer = operator_right('users', true);
-        // dd($answer['all_authors']);
-        // dd($answer);
+        // Подключение политики
+        $this->authorize($method, User::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, true, $method);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $users = User::with('roles')->withoutGlobalScope($answer['moderator'])
+        $users = User::with('roles')
+        ->withoutGlobalScope($answer['moderator'])
+        ->moderatorFilter($answer['dependence'])
         ->companiesFilter($answer['company_id'])
         ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer['all_authors'])
@@ -46,21 +52,25 @@ class UserController extends Controller
         ->orderBy('moderated', 'desc')
         ->paginate(30);
 
+        // dd($users);
+
 	    return view('users.index', compact('users'));
 	}
 
     public function create(Request $request)
     {
+        // Получаем метод
+        $method = __FUNCTION__;
+
         // Подключение политики
-        $this->authorize('create', User::class);
+        $this->authorize(__FUNCTION__, User::class);
 
-        $answer = operator_right('users', true);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, true, $method);
 
-        // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
-        // Функция из Helper отдает массив со списками для SELECT (На нее отправляем id компании, для того чтобы бог получил все ее филиалы)
-        $list_departments = getListsDepartments($request->user()->company_id);
-        $list_filials = $list_departments['list_filials'];
-        $list_departments = $list_departments['list_departments'];
+        // Функция из Helper отдает массив со списками для SELECT
+        $list_departments = getLS('users', 'view', 'departments');
+        $list_filials = getLS('users', 'view', 'departments');
 
     	$user = new User;
         $roles = new Role;
@@ -69,11 +79,13 @@ class UserController extends Controller
 
     public function store(UpdateUser $request)
     {
+        // Получаем метод
+        $method = __FUNCTION__;
 
         // Подключение политики
         $this->authorize('create', User::class);
 
-        $answer = operator_right('users', true);
+        $answer = operator_right('users', true, $method);
 
         // Получаем данные для авторизованного пользователя
         $user_auth = $request->user();
@@ -142,10 +154,15 @@ class UserController extends Controller
     public function update(UpdateUser $request, $id)
     {
 
+        // Получаем авторизованного пользователя
         $user_auth = $request->user();
-        $answer = operator_right('users', true);
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, true, $method);
+
+        // ГЛАВНЫЙ ЗАПРОС:
         $user = User::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+
         $filial_id = $request->filial_id;
 
         // Подключение политики
@@ -205,15 +222,10 @@ class UserController extends Controller
         // Подключение политики
         $this->authorize('view', $user);
 
-        // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
+        // Функция из Helper отдает массив со списками для SELECT
+        $list_departments = getLS('users', 'view', 'departments');
+        $list_filials = getLS('users', 'view', 'departments');
 
-        // Функция из Helper отдает массив со списками для SELECT (На нее отправляем id компании, для того чтобы бог получил все ее филиалы)
-        $list_departments = getListsDepartments($request->user()->company_id);
-        $list_filials = $list_departments['list_filials'];
-        $list_departments = $list_departments['list_departments'];
-
-        // ЗАВЕРШЕНИЕ ПОДГОТОВКИ СПИСКОВ -----------------------------------------------------------------------------------------------------------------------------
-        
         $role = new Role;
         $role_users = RoleUser::whereUser_id($request->user()->id)->get();
         $roles = Role::whereCompany_id($request->user()->company_id)->pluck('role_name', 'id');
@@ -228,18 +240,12 @@ class UserController extends Controller
         $user = User::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
 
         // Подключение политики
-        // $this->authorize('update', $user);
+        $this->authorize('update', $user);
 
-        // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
+        // Функция из Helper отдает массив со списками для SELECT
+        $list_departments = getLS('users', 'view', 'departments');
+        $list_filials = getLS('users', 'view', 'filials');
 
-        // Функция из Helper отдает массив со списками для SELECT (На нее отправляем id компании, для того чтобы бог получил все ее филиалы)
-        $list_departments = getListsDepartments($request->user()->company_id);
-
-        $list_filials = $list_departments['list_filials'];
-        $list_departments = $list_departments['list_departments'];
-
-        // ЗАВЕРШЕНИЕ ПОДГОТОВКИ СПИСКОВ -----------------------------------------------------------------------------------------------------------------------------
-        
         $role = new Role;
         $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
         $roles = Role::whereCompany_id($user->company_id)->pluck('role_name', 'id');
@@ -261,6 +267,11 @@ class UserController extends Controller
 
         if($user) {return Redirect('/users');} else {abort(403,'Что-то пошло не так!');};
     }
+
+
+    // --------------------------------------------------------------------------------------------------------------------------------------------------------------
+    // СПЕЦИФИЧЕСКИЕ МЕТОДЫ СУЩНОСТИ
+    // --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
     public function getauthcompany($company_id)
