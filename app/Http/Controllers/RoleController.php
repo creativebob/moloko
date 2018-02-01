@@ -15,7 +15,7 @@ use App\ActionEntity;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
-use App\Policies\UserPolicy;
+use App\Policies\RolePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -42,10 +42,10 @@ class RoleController extends Controller
         $method = __FUNCTION__;
 
         // Подключение политики
-        $this->authorize($method, User::class);
+        $this->authorize($method, Role::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, $method);
+        $answer = operator_right($this->entity_name, false, $method);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -69,7 +69,6 @@ class RoleController extends Controller
         $counts_directive_array = [];
 
         foreach ($roles as $role) {
-
             foreach ($user->roles as $user_role) {
 
                 if($role->id == $user_role->id)
@@ -92,95 +91,93 @@ class RoleController extends Controller
         return view('roles.index', compact('roles', 'counts_directive_array'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        // $this->authorize('create', Role::class);
 
-        $user = Auth::user();
-        $departments_list = Department::where('company_id', $user->company_id)->whereFilial_status(1)->pluck('department_name', 'id');
+    public function create(Request $request)
+    {
+
+        // Получаем метод
+        $method = __FUNCTION__;
+
+        // Подключение политики
+        $this->authorize('create', Role::class);
 
         $role = new Role;
-
-        return view('roles.create', compact('role', 'departments_list'));
+        return view('roles.create', compact('role'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        // $this->authorize('create', Role::class);
+        // Получаем метод
+        $method = __FUNCTION__;
 
-        $user = Auth::user();
+        // Подключение политики
+        $this->authorize('create', Role::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, false, $method);
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
         $role = new Role;
         $role->role_name = $request->role_name;
         $role->role_description = $request->role_description;
         if(isset($user->company_id)){ $role->company_id = $user->company_id;} else { $role->system_item = 1;};
         $role->author_id = $user->id;
         $role->save();
+
         if($role){
 
-            // Блок на удаление
-            // $right_role = new RightRole;
-            // $right_role->role_id = $role->id;
-            // $right_id = Right::whereRight_action($request->department_id)->first();
-            // $right_role->right_id = $right_id->id;
-            // $right_role ->save();
-
-        } else {abort(403);}
+        } else {abort(403);};
 
         return redirect('roles');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function show($id)
     {
-        $role = Role::findOrFail($id);
-        // $this->authorize('update', $role);
 
-        return view('roles.show', compact('role'));
+        // ГЛАВНЫЙ ЗАПРОС:
+        $role = Role::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize('view', $role);
+        return view('roles.edit', compact('role'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
-        $role = Role::findOrFail($id);
-        $user = Auth::user();
-        $departments_list = Department::where('company_id', $user->company_id)->whereFilial_status(1)->pluck('department_name', 'id');
-        // $this->authorize('update', $entity);
 
-        return view('roles.show', compact('role', 'departments_list'));
+        // ГЛАВНЫЙ ЗАПРОС:
+        $role = Role::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize('update', $role);
+        return view('roles.edit', compact('role'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
-        $role = Role::findOrFail($id);
-        // $this->authorize('update', $role);
+
+        // Получаем метод
+        $method = __FUNCTION__;
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, true, $method);
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $role = Role::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize('update', $role);
+
         $role->role_name = $request->role_name;
         $role->role_description = $request->role_description;
 
@@ -188,15 +185,14 @@ class RoleController extends Controller
         return redirect('roles');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        // Удаляем роль с обновлением
+        // ГЛАВНЫЙ ЗАПРОС:
+        $role = Role::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize('delete', $role);
+
         $role = Role::destroy($id);
         if ($role) {
           return Redirect('roles');
@@ -205,17 +201,14 @@ class RoleController extends Controller
         }; 
     }
 
-    
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function setting($role_id)
+    public function setting(Request $request, $role_id)
     {
 
-        $user = Auth::user();
+        // Подключение политики
+        $this->authorize('index', Role::class);
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
 
         $count_role = RoleUser::where('role_id', $role_id)->where('user_id', $user->id)->count();
         if($count_role != 0) {abort(403);};

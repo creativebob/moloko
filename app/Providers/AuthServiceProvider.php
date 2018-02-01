@@ -6,6 +6,7 @@ use App\User;
 use App\Page;
 use App\RightsRole;
 use App\Company;
+use App\Role;
 
 use App\Right;
 use App\Entity;
@@ -15,6 +16,7 @@ use App\Policies\UserPolicy;
 use App\Policies\PagePolicy;
 use App\Policies\RightsRolePolicy;
 use App\Policies\CompanyPolicy;
+use App\Policies\RolePolicy;
 
 use App\Policies\RightPolicy;
 use App\Policies\EntityPolicy;
@@ -40,6 +42,7 @@ class AuthServiceProvider extends ServiceProvider
         Right::class => RightPolicy::class, 
         Entity::class => EntityPolicy::class, 
         Position::class => PositionPolicy::class,
+        Role::class => RolePolicy::class,
     ];
 
     /**

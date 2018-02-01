@@ -4,12 +4,11 @@ namespace App\Policies;
 
 use App\Policies\Traits\PoliticTrait;
 use App\User;
+use App\Role;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
-// use App\Http\Controllers\Session;
 
-class UserPolicy
+class RolePolicy
 {
     
     use HandlesAuthorization;
@@ -23,13 +22,8 @@ class UserPolicy
      * @return mixed
      */
     
-    // Проверяем на бога. Имеет приоритет над всеми остльными методами
-    // Если true - предоставляем доступ
-    // Если null - отправляем на проверку в последующих методах
-    // если false - блокируем доступ
-
-    protected$entity_name = 'users';
-    protected $entity_dependence = true;
+    protected $entity_name = 'roles';
+    protected $entity_dependence = false;
 
     // Проверяем на бога. Имеет приоритет над всеми остльными методами
     // Если true - предоставляем доступ
@@ -48,7 +42,7 @@ class UserPolicy
         return $result;
     }
 
-    public function view(User $user, User $model)
+    public function view(User $user, Role $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
         return $result;
@@ -60,13 +54,13 @@ class UserPolicy
         return $result;
     }
 
-    public function update(User $user, User $model)
+    public function update(User $user, Role $model)
     { 
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
 
-    public function delete(User $user, User $model)
+    public function delete(User $user, Role $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
