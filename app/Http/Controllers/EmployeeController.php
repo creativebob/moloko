@@ -10,6 +10,9 @@ use App\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+// Валидация
+use App\Http\Requests\EmployeeRequest;
+
 class EmployeeController extends Controller
 {
     /**

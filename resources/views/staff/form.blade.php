@@ -41,7 +41,7 @@
           @endif
         @endforeach
       
-        {{ Form::text('date_employment', $date_employment, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+        {{ Form::text('date_employment', $date_employment, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off', 'required']) }}
       @endif
     </label>
     <label>Дата увольнения
