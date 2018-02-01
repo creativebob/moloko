@@ -5,10 +5,11 @@ namespace App\Scopes\Traits;
 trait AuthorsTraitScopes
 {
 
-        // Фильтрация для показа авторов
+    // Фильтрация для показа авторов
     public function scopeAuthors($query, $all_authors)
     {
         $user_id = $all_authors['user_id'];
+        
 
         if($all_authors['authors_status']){
 

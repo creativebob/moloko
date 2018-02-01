@@ -31,36 +31,39 @@ use Illuminate\Support\Facades\Log;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    // Сущность над которой производит операции контроллер
+    protected $entity_name = 'roles';
+
     public function index(Request $request)
     {
 
+        // Получаем метод
+        $method = __FUNCTION__;
+
         // Подключение политики
-        // $this->authorize('index', Role::class);
+        $this->authorize($method, User::class);
 
-        $user = User::with('roles')->find($request->user()->id);
-
-        // Делаем запрос к оператору прав и передаем ему имя сущности - функция operator_right() получает данные из сессии, анализирует права и отдает результат анализа
-        // в виде массива с итогами. Эти итоги используються ГЛАВНЫМ запросом.
-        $answer = operator_right('roles', false);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, true, $method);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $roles = Role::with('rights')->withoutGlobalScope($answer['moderator'])
+        $roles = Role::with('rights')
+        ->withoutGlobalScope($answer['moderator'])
+        ->moderatorFilter($answer['dependence'])
         ->companiesFilter($answer['company_id'])
         ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer['all_authors'])
         ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+        ->orWhere('id', $request->user()->id) // Только для сущности USERS
         ->orderBy('moderated', 'desc')
         ->paginate(30);
 
-        // dd($user->roles);
+        // Получаем авторизованного пользователя
+        $user = Auth::user();
 
         // Определяем количество разрешений 
         $counts_directive_array = [];
@@ -88,7 +91,6 @@ class RoleController extends Controller
         // dd($counts_directive_array);
         return view('roles.index', compact('roles', 'counts_directive_array'));
     }
-
 
     /**
      * Show the form for creating a new resource.

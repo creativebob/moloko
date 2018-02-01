@@ -2,7 +2,7 @@
         use App\Scopes\ModerationScope;
         use App\Department;
 
-        function operator_right($entity_name, $entity_dependence) {
+        function operator_right($entity_name, $entity_dependence, $method) {
 
 
         // Получаем сессию
@@ -74,18 +74,16 @@
             if(isset($session['all_rights']['index-'.$entity_name.'-allow']) && (!isset($session['all_rights']['index-'.$entity_name.'-deny'])))
             {
 
+                // dd($session['all_rights']['index-'.$entity_name.'-allow']['departments']);
+
                 // Получаем список ID филиалов в которых присутствует право на просмотр списка пользователей
                 $filials = collect($session['all_rights']['index-'.$entity_name.'-allow']['departments'])->keys()->toarray();
 
-
                 // Получаем список ID департаментов в которых присутствует право на просмотр списка пользователей
-                $departments = collect($session['all_rights']['index-'.$entity_name.'-allow']['departments'])->values()->toarray();
+                $departments = collect($session['all_rights']['index-'.$entity_name.'-allow']['filials'])->keys()->toarray();
 
             } else {
-
-                // Если выборка не зависима
-                $filials = null;
-                $departments = null;
+                abort(403, "Нет прав на операцию!");
             };
 
 
@@ -205,6 +203,7 @@
         // Если бог, то будем выбирать списки филиалов и отделов
         if($session['user_info']['user_status'] == 1){
 
+            if($session['user_info']['company_id'] == null){abort(403, "Необходимо авторизоваться под компанией!");};
             $departments = Department::whereCompany_id($company_id)->get();
 
             foreach($departments as $department){
@@ -215,12 +214,12 @@
         } elseif($session['user_info']['user_status'] == null) {
 
             //Если обычный пользователь, то смотрим списки в сессии
-            if(isset($session['all_rights']['update-users-allow']['list_filials'])){
-                $list_filials = $session['all_rights']['update-users-allow']['list_filials'];
+            if(isset($session['all_rights']['update-users-allow']['filials'])){
+                $list_filials = $session['all_rights']['update-users-allow']['filials'];
             } else {abort(403, 'Вы похоже не трудоустроены!');};
 
-            if(isset($session['all_rights']['update-users-allow']['list_departments'])){
-                $list_departments = $session['all_rights']['update-users-allow']['list_departments'];
+            if(isset($session['all_rights']['update-users-allow']['departments'])){
+                $list_departments = $session['all_rights']['update-users-allow']['departments'];
             } else {abort(403, 'Вы похоже не трудоустроены!');};
 
         };
@@ -231,5 +230,48 @@
         return $lists_departments;
     }
 
+
+    // Функция которая получает список разрешенных правами департаментов на указанное право
+
+    function getLS($entity_name, $method, $type_list) {
+
+            // Получаем сессию
+            $session  = session('access');
+            if(!isset($session)){abort(403, 'Нет сессии!');};
+
+            if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'][$type_list])) {
+
+                // Получаем список отделов
+                $departments = $session['all_rights'][$method . '-'. $entity_name .'-allow'][$type_list];
+
+                // Нет ли блокировки этого права?
+                if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny'][$type_list])) {
+
+                    $departments = collect($departments);
+
+                    // Блокировка найдена
+                    $minus_departments = collect($session['all_rights'][$method . '-'. $entity_name .'-deny'][$type_list])->keys();
+
+                    // Вычетаем из списка департаментов - департаменты для которых есть запрет
+                    $departments = $departments->except($minus_departments);
+                };                
+            };
+
+
+        if($session['user_info']['user_status'] == 1){
+
+            if($session['user_info']['company_id'] == null){
+                
+                $departments = null;
+            } else {
+
+                // Получаем список отделов для бога
+                $departments = $session['company_info'][$type_list];
+            };
+        };
+
+        if(!isset($departments)){$departments = null;};
+        return $departments;
+    }
 
 ?>

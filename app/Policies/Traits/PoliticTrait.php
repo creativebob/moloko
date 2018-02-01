@@ -13,16 +13,23 @@ trait PoliticTrait
         $session  = session('access');
         $user_id = $session['user_info']['user_id'];
         $user_status = $session['user_info']['user_status'];
+        $result = false;
+        $filial_id = $session['user_info']['filial_id'];
 
         if(((!isset($session['user_info']['company_id']))||(!isset($session['user_info']['filial_id']))||(!isset($session['user_info']['department_id'])))&&($user_status == null)){return false;};
 
         // Пишем богу company_id = null
         if(isset($session['user_info']['company_id'])){$company_id = $session['user_info']['company_id'];} else {$company_id = null;};
 
-        // Блокируем не авторизованного под компанией бога намеренного создавать записи
-        if(($user_status == 1)&&($method == 'create')&&($company_id == null)){
-            abort(403, 'Авторизуйтесь под компанией для создания записи');
-            return false;
+        // Бог авторизованный под компанией может редактировать
+        if(($user_status == 1)&&($method == 'update')&&($company_id != null)){
+
+            if(isset($session['company_info']['filials'])){
+                return true;            
+            } else {
+                abort(403, "Для начала создайте филиал!");
+            };
+
         };
 
         // Предупреждаем божественное влияние на create и store!
@@ -36,12 +43,46 @@ trait PoliticTrait
 
 
 
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        // ОБЩИЕ ПРОВЕРКИ ДО ПРОВЕРКИ ОСНОВНЫХ ПРАВ -----------------------------------------------------------------------------------------------------------------
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        // Общие проверки права для создания
+        if($method == 'create'){
+
+            // Если нет компании
+            if($company_id == null){
+                    abort(403, 'Авторизуйтесь под компанией для создания записи');
+                    return false;
+            } else {
+
+                if(!isset($session['company_info']['filials'])){
+                    abort(403, 'Для начала необходимо создать филиал! ;)');
+                    return false;
+                };
+            };
+        };
+
+
+
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         // INDEX  ---------------------------------------------------------------------------------------------------------------------------------------------------
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        // Разрешено ли просматривать списки
         if($method == 'index'){
-            if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {return true;} else {abort(403, 'У вас нет прав на просмотр списка!');};
+            if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {
+
+                // Нет ли блокировки этого права?
+                if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
+
+                    //Разрешаем, так как блокировки нет!
+                    return true;
+
+                } else {abort(403, 'Вам запрещено просматривать список!');};
+
+            } else {abort(403, 'У вас нет прав на просмотр списка!');};
         };
 
 
@@ -51,7 +92,17 @@ trait PoliticTrait
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         if($method == 'create'){
-            if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {return true;} else {abort(403, 'У вас нет прав на создание записи!');};
+            if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {
+
+                // Нет ли блокировки этого права?
+                if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
+
+                    //Разрешаем, так как блокировки нет!
+                    return true;
+                    
+                } else {abort(403, 'Вам запрещено создавать записи!');};
+
+            } else {abort(403, 'У вас нет прав на создание записи');};
         };
 
 
@@ -62,30 +113,82 @@ trait PoliticTrait
 
 
         // Получаем статус ограничения по филиалам (Есть или нет)
-        $nolimit_status = isset($session['all_rights']['nolimit-'. $entity_name .'-allow']);
+
+        if(isset($session['all_rights']['nolimit-'. $entity_name .'-allow'])) {
+
+            // Нет ли блокировки этого права?
+            if(!isset($session['all_rights']['nolimit-'. $entity_name .'-deny'])) {
+
+                //Разрешаем, так как блокировки нет!
+                $nolimit_status = true;
+                
+            } else {$nolimit_status = false;};
+
+        } else {$nolimit_status = false;};
+
+
 
         // Получаем статус наличия права в связке с филиалом (Есть или нет)
-        $right_dep_status = isset($session['all_rights'][$method . '-'. $entity_name .'-allow']['departments'][$model->filial_id]);
-
-        // Получаем статус наличия общего права без связи с филиалом (Есть или нет)
-        $right_status = isset($session['all_rights'][$method . '-'. $entity_name .'-allow']);
+        if(($method == 'update')&&($method == 'delete')&&($method == 'view')){
 
 
-        // Главная проверка (учитывая настройки зависимостей)
-        if((($right_status)&&($nolimit_status)) || $right_dep_status){
-            $result = true;
-        } else {
-            $result = false;
-            abort(403, 'Вам не разрешена операция над этой записью');
+            if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow']['departments'][$model->filial_id])) {
+
+                // Нет ли блокировки этого права?
+                if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny']['departments'][$model->filial_id])) {
+
+                    //Разрешаем, так как блокировки нет!
+                    $right_dep_status = true;
+                    
+                } else {$right_dep_status = false;};
+
+            } else {$right_dep_status = false;};
+
+
+
+
+            if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {
+
+                // Нет ли блокировки этого права?
+                if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
+
+                    //Разрешаем, так как блокировки нет!
+                    $right_status = true;
+                    
+                } else {$right_status = false;};
+
+            } else {$right_status = false;};
+
+
+
+
+            // Главная проверка (учитывая настройки зависимостей)
+            if((($right_status)&&($nolimit_status)) || $right_dep_status){
+                $result = true;
+            } else {
+                $result = false;
+                abort(403, 'Вам не разрешена операция над этой записью');
+            };
+
         };
-
 
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         // SYSTEM ITEM ----------------------------------------------------------------------------------------------------------------------------------------------
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        $system_status = isset($session['all_rights']['system-'. $entity_name .'-allow']);
+        // Разрешения и запреты на операцию с системными записями
+        if(isset($session['all_rights']['system-'. $entity_name .'-allow'])) {
+
+            // Нет ли блокировки этого права?
+            if(!isset($session['all_rights']['system-'. $entity_name .'-deny'])) {
+
+                //Разрешаем, так как блокировки нет!
+                $system_status = true;
+                
+            } else {$system_status = false;};
+
+        } else {$system_status = false;};
 
         // Проверка на возможность операций с системной записью
         if(($model->system_item == 1)&&($system_status == false)){
@@ -93,15 +196,29 @@ trait PoliticTrait
             abort(403, 'Вам не разрешена операция над системной записью');
         };
 
-
-
+        // Получаем статус наличия права в связке с филиалом (Есть или нет)
+        if($method == 'delete'){
+            abort(403, 'Удаление системных записей запрещено законом');
+        };
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         // ПРОВЕРКА РАЗРЕШЕНИЙ ПО АВТОРАМ ---------------------------------------------------------------------------------------------------------------------------
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         // Получаем статус наличия разрешения на чтение чужих записей (Есть или нет)
-        $authors_status = isset($session['all_rights']['authors-'. $entity_name .'-allow']);
+
+        if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {
+
+            // Нет ли блокировки этого права?
+            if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
+
+                //Разрешаем, так как блокировки нет!
+                $authors_status = true;
+                
+            } else {$authors_status = false;};
+
+        } else {$authors_status = false;};
+
 
         // По умолчанию (до проверки) мы не имеем права читать чужие записи
         $result_author = false;

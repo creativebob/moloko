@@ -14,6 +14,9 @@ use App\Right;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
+use App\Http\Controllers\Session;
+
 class DepartmentController extends Controller
 {
   /**
@@ -209,7 +212,8 @@ class DepartmentController extends Controller
         $filial->filial_status = 1;
         $filial->author_id = $user->id;
         $filial->save();
-        if ($filial) {
+        if($filial) {
+
           return Redirect('/current_department/'.$filial->id.'/0');
         } else {
           abort(403, 'Ошибка при записи филиала!');
@@ -266,8 +270,10 @@ class DepartmentController extends Controller
 
         $department_id = $department->id;
 
-        if ($department) {
+        if($department){
+
           return Redirect('/current_department/'.$request->filial_id.'/'.$department_id);
+
         } else {
           abort(403, 'Ошибка при записи отдела!');
         };

@@ -5,7 +5,7 @@
 
   $user_filial_id = $session_access['user_info']['filial_id'];
   $user_status = $session_access['user_info']['user_status'];
-  $company_id = $session_access['company_info']['company_id'];
+  $company_id = $session_access['user_info']['company_id'];
   $company_name = $session_access['company_info']['company_name'];
 
   $rights_user_filial = collect($session_access['all_rights'])->keys()->implode('\n');

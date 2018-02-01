@@ -55,13 +55,14 @@ class RoleUserController extends Controller
                 'role_name' => $role_user->role->role_name,
                 'department_name' => $role_user->department->department_name,
             ];
-           
+
         } else {
             $result = [
                 'status' => 0,
             ];
             
         }
+
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
