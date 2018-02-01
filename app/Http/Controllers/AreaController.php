@@ -82,9 +82,9 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-      $user = Auth::user();
+      $user = $request->user();
       // Удаляем с обновлением
       // Находим область и район города
       $area = Area::with('cities')->findOrFail($id);

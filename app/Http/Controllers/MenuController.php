@@ -261,7 +261,7 @@ class MenuController extends Controller
         $parent_id = $menu->menu_parent_id;
       } else {
         $parent_id = 0;
-      }
+      };
       if ($menu) {
         $menu->editor_id = $user->id;
         $menu->save();

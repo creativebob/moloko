@@ -31,8 +31,8 @@
     @endif
 	</li>
 @else
-	{{-- Ссылка на конечный --}}
-	<li class="medium-item parent" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['menu_name'] }}">
+	{{-- Конечный --}}
+	<li class="medium-item" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['menu_name'] }}">
 		<div class="medium-as-last">{{ $menu['menu_name'] }}
 		  <ul class="icon-list">
 		  	<li><div class="icon-list-add sprite" data-open="menu-add"></div></li>  

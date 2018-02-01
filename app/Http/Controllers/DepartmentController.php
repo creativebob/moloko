@@ -21,10 +21,10 @@ class DepartmentController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Request $request)
   {
 // $this->authorize('index', User::class);
-    $user = Auth::user();
+    $user = $request->user();
     $others_item['user_id'] = $user->id;
     $system_item = null;
     if (isset($user->company_id)) {
@@ -50,6 +50,7 @@ class DepartmentController extends Controller
       $departments_id[$department['id']] = $department;
     };
     //Функция построения дерева из массива от Tommy Lacroix
+    
     $departments_tree = [];
     foreach ($departments_id as $id => &$node) {   
       //Если нет вложений
@@ -60,6 +61,18 @@ class DepartmentController extends Controller
         $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
       }
     };
+    foreach ($departments_tree as $department) {
+      $count = 0;
+      if (isset($department['children'])) {
+        $count = count($department['children']) + $count;
+      };
+      if (isset($department['staff'])) {
+        $count = count($department['staff']) + $count;
+      };
+      $departments_tree[$department['id']]['count'] = $count;
+      // dd($department);
+    };
+          
     $departments_list = $departments->pluck('department_name', 'id');
     $page_info = pageInfo('departments');
     // dd($departments_tree);
@@ -67,9 +80,9 @@ class DepartmentController extends Controller
   }
 
   // Получаем сторонние данные по 
-  public function current_department($section_id, $item_id)
+  public function current_department(Request $request, $section_id, $item_id)
   {
-    $user = Auth::user();
+    $user = $request->user();
     $others_item['user_id'] = $user->id;
     $system_item = null;
     if (isset($user->company_id)) {
@@ -104,6 +117,17 @@ class DepartmentController extends Controller
       //Если есть потомки то перебераем массив
         $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
       }
+    };
+    foreach ($departments_tree as $department) {
+      $count = 0;
+      if (isset($department['children'])) {
+        $count = count($department['children']) + $count;
+      };
+      if (isset($department['staff'])) {
+        $count = count($department['staff']) + $count;
+      };
+      $departments_tree[$department['id']]['count'] = $count;
+      // dd($department);
     };
     $departments_list = $departments->pluck('department_name', 'id');
     $page_info = pageInfo('departments');
@@ -135,7 +159,7 @@ class DepartmentController extends Controller
    */
   public function store(Request $request)
   {
-    $user = Auth::user();
+    $user = $request->user();
     // Пишем филиал
     if (isset($request->filial_database)) {
       // По умолчанию значение 0
@@ -326,7 +350,7 @@ class DepartmentController extends Controller
   {
     if ($request->filial_database == 1) {
       $filial = Department::findOrFail($id);
-      $filial->company_id = Auth::user()->company_id;
+      $filial->company_id = $request->user()->company_id;
       $filial->city_id = $request->city_id;
       $filial->department_name = $request->filial_name;
       $filial->department_address = $request->filial_address;
@@ -342,7 +366,7 @@ class DepartmentController extends Controller
     };
     if ($request->department_database == 1) {
       $department = Department::findOrFail($id);
-      $department->company_id = Auth::user()->company_id;
+      $department->company_id = $request->user()->company_id;
       $department->city_id = $request->city_id;
       $department->department_name = $request->department_name;
       $department->department_address = $request->department_address;
@@ -364,9 +388,9 @@ class DepartmentController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function destroy($id)
+  public function destroy(Request $request, $id)
   {
-    $user = Auth::user();
+    $user = $request->user();
     $department = Department::with('staff')->findOrFail($id);
     if (count($department->staff) > 0) {
       abort(403, 'Филиал/отдел не пустой');

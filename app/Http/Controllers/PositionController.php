@@ -25,9 +25,9 @@ class PositionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-      $user = Auth::user();
+      $user = $request->user();
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
         $positions = Position::with('author', 'page')->whereCompany_id($user->company_id)
@@ -48,9 +48,9 @@ class PositionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-      $user = Auth::user();
+      $user = $request->user();
       // $this->authorize('create', Position::class);
       $pages = Page::whereSite_id(1)->pluck('page_name', 'id');
       $position = new Position;
@@ -66,7 +66,7 @@ class PositionController extends Controller
      */
     public function store(PositionRequest $request)
     {
-      $user = Auth::user();
+      $user = $request->user();
       // СОздаем новую должность
       $position = new Position;
 
@@ -130,7 +130,7 @@ class PositionController extends Controller
     public function update(PositionRequest $request, $id)
     {
       // Обновляем должность
-      $user = Auth::user();
+      $user = $request->user();
       $position = Position::findOrFail($id);
       // Выбираем существующие роли для должности на данный момент
       $position_roles = $position->roles;
@@ -183,9 +183,9 @@ class PositionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-      $user = Auth::user();
+      $user = $request->user();
       $position = Position::findOrFail($id);
       if (isset($position)) {
         $position->editor_id = $user->id;
