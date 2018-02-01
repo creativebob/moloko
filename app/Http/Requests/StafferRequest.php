@@ -24,9 +24,8 @@ class StafferRequest extends FormRequest
     public function rules()
     {
         return [
-            'position_id' => 'integer', 
-            'department_id' => 'integer', 
-            'filial_id' => 'integer', 
+            'position_id' => 'integer|nullable', 
+            'department_id' => 'integer|nullable', 
             'filial_id' => 'integer|nullable', 
         ];
     }

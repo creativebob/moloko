@@ -46,19 +46,7 @@
     @if($departments_tree)
       <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
         @foreach ($departments_tree as $department)
-          @php
-            $count = 0;
-          @endphp
-          @if (isset($department['children']))
-            @php
-              $count = count($department['children']) + $count;
-            @endphp
-          @endif
-          @if (isset($department['staff']))
-            @php
-              $count = count($department['staff']) + $count;
-            @endphp
-          @endif
+         
           @if($department['filial_status'] == 1)
             {{-- Если филиал --}}
             <li class="first-item parent" id="departments-{{ $department['id'] }}" data-name="{{ $department['department_name'] }}">
@@ -75,7 +63,7 @@
                 <div class="list-title">
                   <div class="icon-open sprite"></div>
                   <span class="first-item-name">{{ $department['department_name'] }}</span>
-                  <span class="number">{{ $count }}</span>
+                  <span class="number">{{ $department['count'] }}</span>
                 </div>
               </a>
             @if (isset($department['staff']) || isset($department['children']))
@@ -593,50 +581,35 @@ $(function() {
   // Открываем меню и подменю, если только что добавили населенный пункт
   @if(!empty($data))
     // Общие правила
-    // Подсвечиваем навигацию
-    $('#{{ $data['section_name'] }}-{{ $data['section_id'] }}').addClass('first-active').find('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
-     // Открываем только навигацию
-      var firstItem = $('#{{ $data['section_name'] }}-{{ $data['section_id'] }}').find('.medium-list:first');
-      // Открываем аккордион
-      $('#content-list').foundation('down', firstItem); 
+    // Подсвечиваем Филиал
+    $('#departments-{{ $data['section_id'] }}').addClass('first-active').find('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
+     // Открываем только Филиал
+     
 
    // Отображаем отдел и филиал, без должностей
-    if ({{ $data['item_id'] }} !== 0) {
-       // Перебираем родителей и подсвечиваем их
-      $.each($('#departments-{{ $data['item_id'] }}').parents('.medium-item').get().reverse(), function (index) {
+    if ({{ $data['item_id'] }} == 0) {
+      var firstItem = $('#departments-{{ $data['section_id'] }}').find('.medium-list:first');
+      // Открываем аккордион
+      $('#content-list').foundation('down', firstItem); 
+    } else {
+      // Перебираем родителей и подсвечиваем их
+      $.each($('#departments-{{ $data['item_id'] }}').parents('.parent').get().reverse(), function (index) {
         $(this).children('.medium-link:first').addClass('medium-active');
         $(this).children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
         $('#content-list').foundation('down', $(this).closest('.medium-list'));
       });
+      // Если родитель содержит не пустой элемент
+      if ($('#departments-{{ $data['item_id'] }}').parent('.parent').has('.parent')) {
+        $('#content-list').foundation('down', $('#departments-{{ $data['item_id'] }}').closest('.medium-list'));
+      };
       // Если элемент содержит вложенность, открываем его
-      if ($('#departments-{{ $data['item_id'] }}').hasClass('.parent')) {
+      if ($('#departments-{{ $data['item_id'] }}').hasClass('parent')) {
         $('#departments-{{ $data['item_id'] }}').children('.medium-link:first').addClass('medium-active');
         $('#departments-{{ $data['item_id'] }}').children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
         $('#content-list').foundation('down', $('#departments-{{ $data['item_id'] }}').children('.medium-list:first'));
+        // alert('open');
       }
-      // Подсвечиваем ссылку
-      $('#departments-{{ $data['item_id'] }}').find('.medium-link').addClass('medium-active');
-      // Открываем меню удаления в середине
-       $('#departments-{{ $data['item_id'] }}').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
-        // Если родитель содержит не пустой элемент
-      if ($('#departments-{{ $data['item_id'] }}').parent('.medium-list').has('.parent')) {
-        $('#content-list').foundation('down', $('#departments-{{ $data['item_id'] }}').closest('.medium-list'));
-      };
     };
-    // Перебираем родителей и посвечиваем их
-    // var parents = $('#departments-{{ $data['item_id'] }}').parents('.parent');
-    // for (var i = 0; i < parents.length; i++) {
-    //   $(parents[i]).find('.medium-link').addClass('medium-active');
-    //   $(parents[i]).find('.icon-list').css('display', 'block').attr('aria-hiden', 'false');
-    // };
-  // });
-
-  // Перебираем родителей и посвечиваем их
-    // var parents = $(this).parents('.medium-list');
-    // for (var i = 0; i < parents.length; i++) {
-    //   $(parents[i]).parent('li').children('a').addClass('medium-active');
-    // };
-
   @endif
 });
 </script>

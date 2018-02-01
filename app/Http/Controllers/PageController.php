@@ -20,10 +20,10 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($site_alias)
+    public function index(Request $request, $site_alias)
     { 
 
-      $user = Auth::user();
+      $user = $request->user();
       $site = Site::whereSite_alias($site_alias)->first();
       $pages = Page::with('site', 'author')->whereSite_id($site->id)->paginate(30);
       // $pages = Page::with(['author', 'site' => function($query) use ($site_alias) {
@@ -45,7 +45,7 @@ class PageController extends Controller
      */
     public function create(Request $request, $site_alias)
     {   
-      $user = Auth::user();
+      $user = $request->user();
       $sites = Site::whereCompany_id($user->company_id);
       $sites_list = $sites->pluck('site_name', 'id');
       $current_site = Site::whereSite_alias($site_alias)->first();
@@ -60,7 +60,7 @@ class PageController extends Controller
      */
     public function store(PageRequest $request, $site_alias)
     {
-      $user = Auth::user();
+      $user = $request->user();
       $page = new Page;
       $page->page_name = $request->page_name;
       $page->page_title = $request->page_title;
@@ -95,7 +95,7 @@ class PageController extends Controller
      */
     public function edit(Request $request, $site_alias, $page_alias)
     {
-      $user = Auth::user();
+      $user = $request->user();
       $sites = Site::whereCompany_id($user->company_id)->get();
       $sites_list = $sites->pluck('site_name', 'id');
       $current_site = Site::where('site_alias', $site_alias)->first();
@@ -113,7 +113,7 @@ class PageController extends Controller
      */
     public function update(PageRequest $request, $site_alias, $id)
     {
-      $user = Auth::user();
+      $user = $request->user();
       $page = Page::findOrFail($id);
       $page->page_name = $request->page_name;
       $page->page_title = $request->page_title;
@@ -135,9 +135,9 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($site_alias, $id)
+    public function destroy(Request $request, $site_alias, $id)
     { 
-      $user = Auth::user();
+      $user = $request->user();
       $page = Page::findOrFail($id);
       $site_id = $page->site_id;
       if ($page) {

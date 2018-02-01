@@ -11,8 +11,10 @@ use App\Company;
 use App\Department;
 use App\RoleUser;
 
-
+// Валидация
 use App\Http\Requests\StafferRequest;
+use App\Http\Requests\EmployeeRequest;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,16 +75,17 @@ class StafferController extends Controller
 
       $staffer = new Staffer;
       // Пишем ID компании авторизованного пользователя
-      if($user->company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
+      if ($user->company_id == null) {
+        abort(403, 'Необходимо авторизоваться под компанией');
+      };
       $staffer->company_id = $user->company_id;
       $staffer->position_id = $position_id;
       $staffer->department_id = $department_id;
       $staffer->filial_id = $filial_id;
       $staffer->author_id = $user->id;
       $staffer->save();
-
       if ($staffer) {
-         return Redirect('current_department/'.$filial_id.'/'.$department_id);
+        return Redirect('/current_department/'.$filial_id.'/'.$department_id);
       } else {
         abort(403, 'Ошибка при записи штата!');
       };
@@ -105,7 +108,7 @@ class StafferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
       $user = $request->user();
       $staffer = Staffer::with(['employees' => function($query) {

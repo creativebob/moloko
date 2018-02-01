@@ -22,7 +22,7 @@ class NavigationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($site_alias)
+    public function index(Request $request, $site_alias)
     {
       $user = $request->user();
       if (isset($user->company_id)) {

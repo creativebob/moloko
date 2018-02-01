@@ -10,6 +10,9 @@ use App\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+// Валидация
+use App\Http\Requests\EmployeeRequest;
+
 class EmployeeController extends Controller
 {
     /**
@@ -17,9 +20,9 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-      $user = Auth::user();
+      $user = $request->user();
       if (isset($user->company_id)) {
         // Если у пользователя есть компания
         // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
@@ -79,9 +82,9 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $user = Auth::user();
+        $user = $request->user();
 
       $employee = Employee::findOrFail($id);
       $users = User::whereCompany_id($user->company_id)->orderBy('second_name')->get()->pluck('second_name', 'id');

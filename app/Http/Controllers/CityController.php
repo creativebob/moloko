@@ -107,7 +107,7 @@ class CityController extends Controller
     };
     // Если город не найден, то меняем значение на 1, пишем в базу и отдаем результат
     if ($city_database == 1) {
-      $user = Auth::user();
+      $user = $request->user();
       // Вносим пришедшие данные в переменные
       $region_name = $request->region_name;
       $area_name = $request->area_name;
@@ -217,11 +217,11 @@ class CityController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function destroy($id)
+  public function destroy(Request $request, $id)
   { 
     // Удаляем город с обновлением
     // Находим область и район города
-    $user = Auth::user();
+    $user = $request->user();
     $del_city = City::findOrFail($id);
     if ($del_city) {
       $del_city->editor_id = $user->id;
