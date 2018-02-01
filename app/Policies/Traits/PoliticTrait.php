@@ -6,8 +6,9 @@ trait PoliticTrait
 {
 
         // Фильтрация для показа авторов
-    public function getstatus($entity_name, $model, $method)
+    public function getstatus($entity_name, $model, $method, $entity_dependence)
     {
+
 
         // Получаем данные из сессии
         $session  = session('access');
@@ -127,22 +128,28 @@ trait PoliticTrait
         } else {$nolimit_status = false;};
 
 
+        if($entity_dependence == false){$nolimit_status = true;};
+
 
         // Получаем статус наличия права в связке с филиалом (Есть или нет)
-        if(($method == 'update')&&($method == 'delete')&&($method == 'view')){
+        if(($method == 'update')||($method == 'delete')||($method == 'view')){
 
 
-            if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow']['departments'][$model->filial_id])) {
+            if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow']['filials'][$model->filial_id])) {
 
                 // Нет ли блокировки этого права?
-                if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny']['departments'][$model->filial_id])) {
+                if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny']['filials'][$model->filial_id])) {
 
                     //Разрешаем, так как блокировки нет!
                     $right_dep_status = true;
                     
-                } else {$right_dep_status = false;};
+                } else {
+                    $right_dep_status = false;
+                };
 
-            } else {$right_dep_status = false;};
+            } else {
+                $right_dep_status = false;
+            };
 
 
 
@@ -155,9 +162,13 @@ trait PoliticTrait
                     //Разрешаем, так как блокировки нет!
                     $right_status = true;
                     
-                } else {$right_status = false;};
+                } else {
+                    $right_status = false;
+                };
 
-            } else {$right_status = false;};
+            } else {
+                $right_status = false;
+            };
 
 
 
@@ -215,9 +226,15 @@ trait PoliticTrait
                 //Разрешаем, так как блокировки нет!
                 $authors_status = true;
                 
-            } else {$authors_status = false;};
+            } else {
+                $authors_status = false;
+                    abort(403, 'Не прошли - 7! ;)');
+            };
 
-        } else {$authors_status = false;};
+        } else {
+            $authors_status = false;
+            abort(403, 'Не прошли - 8! ;)');
+        };
 
 
         // По умолчанию (до проверки) мы не имеем права читать чужие записи
@@ -297,12 +314,12 @@ trait PoliticTrait
         // КОНЕЦ ПРОВЕРКИ РАЗРЕШЕНИЙ ПО АВТОРАМ ---------------------------------------------------------------------------------------------------------------------
         // ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        // dd($result_author);
 
         if(($result_author)&&($result)){
             $result = true;
         } else {
             $result = false;
+            abort(403, 'Не достаточно прав!');
         };
 
         // abort(403, "Мы тут");

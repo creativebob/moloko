@@ -27,6 +27,14 @@ class UserPolicy
     // Если true - предоставляем доступ
     // Если null - отправляем на проверку в последующих методах
     // если false - блокируем доступ
+
+    protected$entity_name = 'users';
+    protected $entity_dependence = true;
+
+    // Проверяем на бога. Имеет приоритет над всеми остльными методами
+    // Если true - предоставляем доступ
+    // Если null - отправляем на проверку в последующих методах
+    // если false - блокируем доступ
     
     public function before($user)
     {
@@ -36,31 +44,31 @@ class UserPolicy
 
     public function index(User $user)
     {
-        $result = $this->getstatus('users', null, 'index');
+        $result = $this->getstatus($this->entity_name, null, 'index', $this->entity_dependence);
         return $result;
     }
 
     public function view(User $user, User $model)
     {
-        $result = $this->getstatus('users', $model, 'view');
+        $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
         return $result;
     }
 
     public function create(User $user)
     {
-        $result = $this->getstatus('users', null, 'create');
+        $result = $this->getstatus($this->entity_name, null, 'create', $this->entity_dependence);
         return $result;
     }
 
     public function update(User $user, User $model)
     { 
-        $result = $this->getstatus('users', $model, 'update');
+        $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
 
     public function delete(User $user, User $model)
     {
-        $result = $this->getstatus('users', $model, 'delete');
+        $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
     }
 

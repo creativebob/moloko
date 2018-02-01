@@ -206,7 +206,6 @@ class RoleController extends Controller
 
         // Подключение политики
         $this->authorize('index', Role::class);
-        $this->authorize('update', Role::class);
 
         // Получаем авторизованного пользователя
         $user = $request->user();
