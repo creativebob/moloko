@@ -4,12 +4,11 @@ namespace App\Policies;
 
 use App\Policies\Traits\PoliticTrait;
 use App\User;
+use App\Role;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
-// use App\Http\Controllers\Session;
 
-class UserPolicy
+class RolePolicy
 {
     
     use HandlesAuthorization;
@@ -40,7 +39,7 @@ class UserPolicy
         return $result;
     }
 
-    public function view(User $user, User $model)
+    public function view(User $user, Role $model)
     {
         $result = $this->getstatus('users', $model, 'view');
         return $result;
@@ -52,13 +51,13 @@ class UserPolicy
         return $result;
     }
 
-    public function update(User $user, User $model)
+    public function update(User $user, Role $model)
     { 
         $result = $this->getstatus('users', $model, 'update');
         return $result;
     }
 
-    public function delete(User $user, User $model)
+    public function delete(User $user, Role $model)
     {
         $result = $this->getstatus('users', $model, 'delete');
         return $result;

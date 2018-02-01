@@ -84,9 +84,10 @@ class UserController extends Controller
         $method = __FUNCTION__;
 
         // Подключение политики
-        $this->authorize('create', User::class);
+        $this->authorize($method, User::class);
 
-        $answer = operator_right('users', true, $method);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, true, $method);
 
         // Получаем данные для авторизованного пользователя
         $user_auth = $request->user();

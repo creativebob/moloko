@@ -62,9 +62,8 @@
             } else {
 
                 // Видем только записи филиалов, которые нам предоставлены ролями
-                $dependence = true;
+                if($entity_dependence == true) {$dependence = true;} else {$dependence = false;};
             };
-
 
 
 
@@ -261,7 +260,7 @@
         if($session['user_info']['user_status'] == 1){
 
             if($session['user_info']['company_id'] == null){
-                
+
                 $departments = null;
             } else {
 

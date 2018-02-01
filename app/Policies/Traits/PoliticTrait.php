@@ -283,8 +283,12 @@ trait PoliticTrait
             $result_author = true;
         };
 
+
+            // dd($model->author_id);
+
         // Если запись своя - сразу даем зеленый свет!
-        if($user_id == $model->author){
+        if($user_id == $model->author_id){
+
             $result_author = true;
         // Если есть право читать чужие записи в режиме БЕЗ ОГРАНИЧЕНИЙ по филиалу
         };
