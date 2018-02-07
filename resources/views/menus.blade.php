@@ -321,7 +321,7 @@ $(function() {
   // Добавление пункта меню
   // Переносим id родителя и навигации в модалку
   $(document).on('click', '[data-open="menu-add"]', function() {
-    var parent = $(this).closest('.medium-item').attr('id').split('-')[1];
+    var parent = $(this).closest('.parent').attr('id').split('-')[1];
     var navigation = $(this).closest('.first-item').attr('id').split('-')[1];
     // alert(navigation + parent);
     if (parent == navigation) {

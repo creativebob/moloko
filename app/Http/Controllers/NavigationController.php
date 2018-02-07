@@ -10,37 +10,37 @@ use App\Site;
 
 // Валидация
 use App\Http\Requests\NavigationRequest;
-
+// Политика
+use App\Policies\NavigationPolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class NavigationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  // Сущность над которой производит операции контроллер
+  protected $entity_name = 'navigations';
+  protected $entity_dependence = false;
+
     public function index(Request $request, $site_alias)
     {
-      $user = $request->user();
-      if (isset($user->company_id)) {
-          // Если у пользователя есть компания
-          $navigations = Navigation::with('site')->where(['category_navigation_id' => 2, 'company_id' => $user->company_id])->paginate(30);
-          $sites = Site::whereCompany_id($user->company_id)->get();
+      // $user = $request->user();
+      // if (isset($user->company_id)) {
+      //     // Если у пользователя есть компания
+      //     $navigations = Navigation::with('site')->where(['category_navigation_id' => 2, 'company_id' => $user->company_id])->paginate(30);
+      //     $sites = Site::whereCompany_id($user->company_id)->get();
           
-        } else {
-          if ($request->user()->god == 1) {
-            // Если нет, то бог без компании
-            $navigations = Navigation::with('site')->where('category_navigation_id', 2)->paginate(30);
-            $sites = Site::get();
-          };
-        };
-        $sites_list = $sites->pluck('site_name', 'id');
-        // dd($sites_list);
-        $page_info = pageInfo('navigations');
-        return view('navigations', compact('navigations', 'page_info', 'sites_list'));
+      //   } else {
+      //     if ($request->user()->god == 1) {
+      //       // Если нет, то бог без компании
+      //       $navigations = Navigation::with('site')->where('category_navigation_id', 2)->paginate(30);
+      //       $sites = Site::get();
+      //     };
+      //   };
+      //   $sites_list = $sites->pluck('site_name', 'id');
+      //   // dd($sites_list);
+      //   $page_info = pageInfo('navigations');
+      //   return view('navigations', compact('navigations', 'page_info', 'sites_list'));
     }
 
     /**
@@ -61,12 +61,24 @@ class NavigationController extends Controller
      */
     public function store(NavigationRequest $request, $site_alias)
     {
+        // Получаем метод
+        $method = 'create';
+        // Подключение политики
+        $this->authorize($method, Navigation::class);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+
+        // Получаем данные для авторизованного пользователя
         $user = $request->user();
+        $user_id = $user->id;
+        $user_status = $user->god;
+        $company_id = $user->company_id;
+
         $navigation = new Navigation;
         $navigation->navigation_name = $request->navigation_name;
         $navigation->site_id = $request->site_id;
-        $navigation->company_id = $user->company_id;
-        $navigation->author_id = $user->id;
+        $navigation->company_id = $company_id;
+        $navigation->author_id = $user_id;
         $navigation->save();
         // Пишем сайт в сессию
         session(['current_site' => $request->site_id]);
@@ -96,7 +108,13 @@ class NavigationController extends Controller
      */
     public function edit($site_alias, $id)
     {
-        $navigation = Navigation::with('menus')->findOrFail($id);
+        // Получаем метод
+        $method = 'update';
+        // ГЛАВНЫЙ ЗАПРОС:
+        $navigation = Navigation::with('menus')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        // Подключение политики
+        $this->authorize($method, $navigation);
+        
         // Отдаем данные по навигации
         $result = [
           'navigation_name' => $navigation->navigation_name,
@@ -114,8 +132,15 @@ class NavigationController extends Controller
      */
     public function update(NavigationRequest $request, $site_alias, $id)
     {
+        // Получаем метод
+        $method = __FUNCTION__;
+        // Получаем авторизованного пользователя
         $user = $request->user();
-        $navigation = Navigation::findOrFail($id);
+        // ГЛАВНЫЙ ЗАПРОС:
+        $navigation = Navigation::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+        // Подключение политики
+        $this->authorize($method, $navigation);
+        $user = $request->user();
         $navigation->navigation_name = $request->navigation_name;
         $navigation->site_id = $request->site_id;
         $navigation->company_id = $user->company_id;
@@ -138,9 +163,12 @@ class NavigationController extends Controller
      */
     public function destroy(Request $request, $site_alias, $id)
     {
-      $user = $request->user();
-      $navigation = Navigation::findOrFail($id);
-      $site_id = $navigation->site_id;
+        // ГЛАВНЫЙ ЗАПРОС:
+        $navigation = Navigation::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        // Подключение политики
+        $this->authorize('delete', $site);
+        $site_id = $navigation->site_id;
+        $user = $request->user();
       if ($navigation) {
         $navigation->editor_id = $user->id;
         $navigation->save();

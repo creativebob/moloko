@@ -4,114 +4,100 @@ namespace App\Http\Controllers;
 
 use App\Vacancy;
 use App\Employee;
+use App\Position;
+use App\Staffer;
+use App\Department;
 use App\User;
 use App\Page;
 use App\Company;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
 // Валидация
 use App\Http\Requests\EmployeeRequest;
+// Политика
+use App\Policies\EmployeePolicy;
+use App\Policies\StafferPolicy;
+use App\Policies\PositionPolicy;
+use App\Policies\DepartmentPolicy;
+// Подключаем фасады
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  // Сущность над которой производит операции контроллер
+  protected $entity_name = 'employees';
+  protected $entity_dependence = false;
+
     public function index(Request $request)
     {
-      $user = $request->user();
-      if (isset($user->company_id)) {
-        // Если у пользователя есть компания
-        // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
-        $employees = Employee::with('staffer', 'staffer.position', 'staffer.filial', 'staffer.department', 'user')->whereCompany_id($user->company_id)->paginate(30);
+        // Получаем метод
+        $method = __FUNCTION__;
+        // Подключение политики
+        $this->authorize($method, Employee::class);
+        $this->authorize($method, Position::class);
+        $this->authorize($method, Staffer::class);
+        // $this->authorize($method, Department::class);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        // -------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -------------------------------------------------------------------------------------------
+        $employees = Employee::with('staffer', 'staffer.position', 'staffer.filial', 'staffer.department', 'user')
+        ->withoutGlobalScope($answer['moderator'])
+        ->moderatorFilter($answer['dependence'])
+        ->companiesFilter($answer['company_id'])
+        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer['all_authors'])
+        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+        ->orderBy('moderated', 'desc')
+        ->paginate(30);
         // Смотрим сколько филиалов в компании
+        $user = $request->user();
         $company = Company::with(['departments' => function($query) {
-                      $query->whereFilial_status(1);
-                    }])->findOrFail($user->company_id);
+          $query->whereFilial_status(1);
+        }])->findOrFail($user->company_id);
         $filials = count($company->departments);
-      } else {
-        if ($user->god == 1) {
-        // Если нет, то бог без компании
-        // $companies = Company::orderBy('company_name')->get()->pluck('company_name', 'id');
-        $employees = Employee::with('staffer')->paginate(30);
-        $filials = 2;
-        };
-      };
-      $page_info = pageInfo('employees');
-      return view('employees.index', compact('employees', 'page_info', 'filials'));
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+        return view('employees.index', compact('employees', 'page_info', 'filials'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Request $request, $id)
     {
+        // Получаем метод
+        $method = 'update';
+        // ГЛАВНЫЙ ЗАПРОС:
+        $employee = Employee::with('user')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        // Подключение политики
+        $this->authorize($method, $employee);
+        // Список меню для сайта
+        $answer = operator_right('sites', $this->entity_dependence, $method);
         $user = $request->user();
-
-      $employee = Employee::findOrFail($id);
-      $users = User::whereCompany_id($user->company_id)->orderBy('second_name')->get()->pluck('second_name', 'id');
-
-      // dd($staffer->user_id);
+        $users_list = $employee->user->pluck('second_name', 'id');
       
-      return view('employees.edit', compact('employee', 'users'));    
+      return view('employees.edit', compact('employee', 'users_list'));    
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //

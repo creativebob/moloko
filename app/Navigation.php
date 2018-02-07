@@ -17,14 +17,12 @@ use App\Scopes\Traits\ModeratorFilterTraitScopes;
 class Navigation extends Model
 {
   use SoftDeletes;
-  // Фильтры
-  use App\Scopes\ModerationScope;
-  use App\Scopes\Traits\CompaniesFilterTraitScopes;
-  use App\Scopes\Traits\AuthorsTraitScopes;
-  use App\Scopes\Traits\SystemitemTraitScopes;
-  use App\Scopes\Traits\FilialsTraitScopes;
-  use App\Scopes\Traits\ModerationTraitScopes;
-  use App\Scopes\Traits\ModeratorFilterTraitScopes;
+  // Подключаем Scopes для главного запроса
+  use CompaniesFilterTraitScopes;
+  use AuthorsTraitScopes;
+  use SystemitemTraitScopes;
+  use FilialsTraitScopes;
+  use ModeratorFilterTraitScopes;
   /**
    * Атрибуты, которые должны быть преобразованы в даты.
    *

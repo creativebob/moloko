@@ -82,6 +82,7 @@ Route::delete('/sites/{id}', 'SiteController@destroy')->middleware('auth')->name
 Route::get('/sites/{site_alias}', 'SiteController@sections')->middleware('auth')->name('sites.sections');
 // Группа с префиксом
 Route::prefix('/sites/{site_alias}')->group(function () {
+	// Странички
     Route::resource('/pages', 'PageController')->middleware('auth');
     // Навигация и меню
     Route::resource('/navigations', 'NavigationController')->middleware('auth');

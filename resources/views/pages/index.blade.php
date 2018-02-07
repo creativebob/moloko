@@ -103,7 +103,7 @@
           <td class="td-site-id">{{ $page->site->site_name or ' ... ' }}</td>
           <td class="td-page-author">@if(isset($page->author->first_name)) {{ $page->author->first_name . ' ' . $page->author->second_name }} @endif</td>
           <td class="td-delete">
-            @if (isset($page->site->company_id))
+            @if ($page->site->system_item !== 1)
               <a class="icon-delete sprite" data-open="item-delete"></a>
             @endif
           </td>
@@ -125,6 +125,11 @@
 @endsection
 
 @section('modals')
+{{-- Модалка удаления с refresh --}}
+@include('includes.modals.modal-delete')
+@endsection
+
+@section('scripts')
 <script type="text/javascript">
 $(function() {
   // Берем алиас сайта
@@ -142,7 +147,6 @@ $(function() {
   });
 });
 </script> 
-@section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.table-scripts')
 @endsection

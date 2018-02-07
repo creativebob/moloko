@@ -4,44 +4,46 @@ namespace App\Http\Controllers;
 
 // Подключаем модели
 use App\Region;
-
 // Валидация
 // use App\Http\Requests\Region;
-
+// Политика
+use App\Policies\RegionPolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class RegionController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
+  // Сущность над которой производит операции контроллер
+  protected $entity_name = 'regions';
+  protected $entity_dependence = false;
+
   public function index()
   {
     //
   }
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
   public function create()
   {
-      //
+    //
   }
-
   /**
-   * Добавляем регион в бд.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
+  * Добавляем регион в бд.
+  */
   public function store(Request $request)
   {
+    // Подключение политики
+    $this->authorize('create', Region::class);
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, 'create');
+
+    // Получаем данные для авторизованного пользователя
+    $user = $request->user();
+    $user_id = $user->id;
+    $user_status = $user->god;
+    $company_id = $user->company_id;
+    $filial_id = $request->filial_id;
+
     $region_database = $request->region_database;
     // По умолчанию значение 0
     if ($region_database == 0) {
@@ -63,20 +65,15 @@ class RegionController extends Controller
     };
     // Если область не найдена, то меняем значение на 1, пишем в базу и отдаем результат
     if ($region_database == 1) {
-
-      $user = $request->user();
       $region = new Region;
-
       $region->region_name = $request->region_name;
       $region->region_code = $request->region_code;
       $region->region_vk_external_id = $request->region_vk_external_id;
-      $region->author_id = $user->id;
-
+      $region->author_id = $user_id;
       $region->save();
 
       if ($region) {
         $region_id = $region->id;
-      
         $region = [
           'region_id' => $region_id,
           'region_name' => $region->region_name,
@@ -89,52 +86,31 @@ class RegionController extends Controller
     };
   }
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function show($id)
   {
-      //
+    //
   }
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function edit($id)
   {
-      //
+    //
   }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function update(Request $request, $id)
   {
-      //
+    //
   }
-
   /**
-   * Удаляем регион из бд.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+  * Удаляем регион из бд.
+  */
   public function destroy(Request $request, $id)
   {
     $user = $request->user();
     // Удаляем ajax
-    // Проверяем содержит ли район вложенные населенные пункты
-    $region = Region::with('areas', 'cities')->findOrFail($id);
+    // Проверяем содержит ли область вложенные населенные пункты
+    $region = Region::with('areas', 'cities')->:withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    // Подключение политики
+    $this->authorize('delete', $region);
     if ((count($region->areas) > 0) || (count($region->cities) > 0)) {
       // Если содержит, то даем сообщение об ошибке
       $data = [
@@ -163,15 +139,11 @@ class RegionController extends Controller
     };
     echo json_encode($data, JSON_UNESCAPED_UNICODE);
   }
-
-
   /**
-   * Получаем сторонние данные по области (из vk).
-   *
-   */
+  * Получаем сторонние данные по области (из vk).
+  */
   public function get_vk_region(Request $request)
   {
-    // Log::info('Передача области: '.$request->region);
     $region = $request->region; 
     $request_params = [
     'country_id' => '1',
@@ -181,8 +153,6 @@ class RegionController extends Controller
     ];
     $get_params = http_build_query($request_params);
     $result = (file_get_contents('https://api.vk.com/method/database.getRegions?'. $get_params));
-    // var_dump($result);
     echo $result;
-    
   }
 }

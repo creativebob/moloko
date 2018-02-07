@@ -2,27 +2,19 @@
 
 namespace App\Policies;
 
-use App\Policies\Traits\PoliticTrait;
 use App\User;
-use App\Company;
-
-use Illuminate\Support\Facades\Auth;
+use App\Department;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
+use App\Policies\Traits\PoliticTrait;
 
-class CompanyPolicy
+class DepartmentPolicy
 {
-    
-    use HandlesAuthorization;
+   use HandlesAuthorization;
     use PoliticTrait;
 
-    protected$entity_name = 'companies';
-    protected $entity_dependence = false;
-
-    public function before($user)
-    {
-        // if (Auth::user()->god == 1) {$result = true;} else {$result = null;};
-        // return $result;
-    }
+    protected $entity_name = 'departments';
+    protected $entity_dependence = true;
 
     public function index(User $user)
     {
@@ -30,7 +22,7 @@ class CompanyPolicy
         return $result;
     }
 
-    public function view(User $user, Company $model)
+    public function view(User $user, Department $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
         return $result;
@@ -42,13 +34,13 @@ class CompanyPolicy
         return $result;
     }
 
-    public function update(User $user, Company $model)
+    public function update(User $user, Department $model)
     { 
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
 
-    public function delete(User $user, Company $model)
+    public function delete(User $user, Department $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
@@ -56,5 +48,6 @@ class CompanyPolicy
 
     public function god(User $user)
     {
-      
+        if(Auth::user()->god){return true;} else {return false;};
+    }
 }

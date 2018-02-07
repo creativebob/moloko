@@ -7,7 +7,6 @@ use App\User;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
-// use App\Http\Controllers\Session;
 
 class UserPolicy
 {

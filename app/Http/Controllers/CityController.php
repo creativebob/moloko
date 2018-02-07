@@ -7,36 +7,76 @@ use App\Region;
 use App\Area;
 use App\City;
 use App\Page;
-
-// // Валидация
+// Валидация
 // use App\Http\Requests\UpdateCity;
-
+// Политика
+use App\Policies\CityPolicy;
+use App\Policies\AreaPolicy;
+use App\Policies\RegionPolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CityController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function index()
+  // Сущность над которой производит операции контроллер
+  protected $entity_name = 'cities';
+  protected $entity_dependence = false;
+
+  public function index(Request $request)
   {
-    $regions = Region::with('areas', 'areas.cities', 'cities')->get();
-    $page_info = pageInfo('cities');
+    // Получаем метод
+    $method = __FUNCTION__;
+    // Подключение политики
+    $this->authorize($method, Region::class);
+    $this->authorize($method, Area::class);
+    $this->authorize($method, City::class);
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right('regions', $this->entity_dependence, $method);
+    // dd($answer);
+    // -------------------------------------------------------------------------------------------
+    // ГЛАВНЫЙ ЗАПРОС
+    // -------------------------------------------------------------------------------------------
+    $regions = Region::with('areas', 'areas.cities', 'cities')
+      ->withoutGlobalScope($answer['moderator'])
+      ->moderatorFilter($answer['dependence'])
+      // ->companiesFilter($answer['company_id']) нет фильтра по компаниям
+      ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      ->authors($answer['all_authors'])
+      ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+      ->get();
+    // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
     return view('cities', compact('regions', 'page_info')); 
   }
   // Получаем сторонние данные по 
   public function current_city($region, $area)
   {
-    $regions = Region::with('areas', 'areas.cities', 'cities')->get();
+    // Подключение политики
+    $this->authorize('index', Region::class);
+    $this->authorize('index', Area::class);
+    $this->authorize('index', City::class);
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right('regions', $this->entity_dependence, $method);
+    // dd($answer);
+    // -------------------------------------------------------------------------------------------
+    // ГЛАВНЫЙ ЗАПРОС
+    // -------------------------------------------------------------------------------------------
+    $regions = Region::with('areas', 'areas.cities', 'cities')
+      ->withoutGlobalScope($answer['moderator'])
+      ->moderatorFilter($answer['dependence'])
+      // ->companiesFilter($answer['company_id']) нет фильтра по компаниям
+      ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      ->authors($answer['all_authors'])
+      ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+      ->get();
+    
     $data = [
       'region_id' => $region,
       'area_id' => $area,
     ];
-    $page_info = pageInfo('cities');
+    // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
     return view('cities', compact('regions', 'page_info', 'data')); 
   }
 
@@ -47,7 +87,7 @@ class CityController extends Controller
    */
   public function create()
   {
-      //
+    //
   }
 
   /**
@@ -58,6 +98,20 @@ class CityController extends Controller
    */
   public function store(Request $request)
   {
+    // Получаем метод
+    $method = 'create';
+    // Подключение политики
+    $this->authorize($method, Region::class);
+    $this->authorize($method, Area::class);
+    $this->authorize($method, City::class);
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    // Получаем данные для авторизованного пользователя
+    $user = $request->user();
+    $user_id = $user->id;
+    $user_status = $user->god;
+    $company_id = $user->company_id;
+    $filial_id = $request->filial_id;
     // Пишем город в бд
     $city_database = $request->city_database;
     // По умолчанию значение 0
@@ -107,7 +161,6 @@ class CityController extends Controller
     };
     // Если город не найден, то меняем значение на 1, пишем в базу и отдаем результат
     if ($city_database == 1) {
-      $user = $request->user();
       // Вносим пришедшие данные в переменные
       $region_name = $request->region_name;
       $area_name = $request->area_name;
@@ -142,7 +195,7 @@ class CityController extends Controller
           $area = new Area;
           $area->area_name = $area_name;
           $area->region_id = $region_id;
-          $area->author_id = $user->id;
+          $area->author_id = $user_id;
           $area->save();
           // Берем id записанного района
           $area_id = $area->id;
@@ -222,17 +275,19 @@ class CityController extends Controller
     // Удаляем город с обновлением
     // Находим область и район города
     $user = $request->user();
-    $del_city = City::findOrFail($id);
-    if ($del_city) {
-      $del_city->editor_id = $user->id;
-      $del_city->save(); 
+    $city = City::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    // Подключение политики
+    $this->authorize('delete', $city);
+    if ($city) {
+      $city->editor_id = $user->id;
+      $city->save(); 
       // Смотрим район
-      if (count($del_city->area) > 0) {
-        $area_id = $del_city->area->id;
-        $region_id = $del_city->area->region->id;
+      if (count($city->area) > 0) {
+        $area_id = $city->area->id;
+        $region_id = $city->area->region->id;
       } else {
         $area_id = 0;
-        $region_id = $del_city->region->id;
+        $region_id = $city->region->id;
       };
       $city = City::destroy($id);
       if ($city) {

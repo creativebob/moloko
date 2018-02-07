@@ -22,16 +22,39 @@ use Illuminate\Support\Facades\Log;
 
 class CompanyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // Сущность над которой производит операции контроллер
+    protected $entity_name = 'companies';
+
+
     public function index()
     {
-        // $this->authorize('index', Company::class);
 
-        $companies = Company::paginate(30);
+        // Получаем метод
+        $method = __FUNCTION__;
+
+        // Подключение политики
+        $this->authorize($method, User::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, true, $method);
+        // dd($answer);
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+        $companies = Company::withoutGlobalScope($answer['moderator'])
+        ->moderatorFilter($answer['dependence'])
+        ->companiesFilter($answer['company_id'])
+        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer['all_authors'])
+        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+        // ->orWhere('id', $request->user()->id) // Только для сущности USERS
+        ->orderBy('moderated', 'desc')
+        ->paginate(30);
+
+
+
         return view('companies.index', compact('companies'));
 
     }
