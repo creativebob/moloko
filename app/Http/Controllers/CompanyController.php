@@ -33,11 +33,11 @@ class CompanyController extends Controller
         $method = __FUNCTION__;
 
         // Подключение политики
-        $this->authorize($method, User::class);
+        $this->authorize($method, Company::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, true, $method);
-        dd($answer);
+        // dd($answer);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -45,18 +45,15 @@ class CompanyController extends Controller
 
         $companies = Company::withoutGlobalScope($answer['moderator'])
         ->moderatorFilter($answer['dependence'])
-        ->companiesFilter($answer['company_id'])
-        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer['all_authors'])
-        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+        // ->companiesFilter($answer['company_id'])
+        // ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        // ->authors($answer['all_authors'])
+        // ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
         // ->orWhere('id', $request->user()->id) // Только для сущности USERS
         ->orderBy('moderated', 'desc')
         ->paginate(30);
 
-
-
         return view('companies.index', compact('companies'));
-
     }
 
     /**
