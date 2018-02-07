@@ -3,16 +3,30 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
+use App\Scopes\ModerationScope;
+
+use App\Scopes\Traits\CompaniesFilterTraitScopes;
+use App\Scopes\Traits\AuthorsTraitScopes;
+use App\Scopes\Traits\SystemitemTraitScopes;
+use App\Scopes\Traits\FilialsTraitScopes;
+use App\Scopes\Traits\ModerationTraitScopes;
+use App\Scopes\Traits\ModeratorFilterTraitScopes;
 
 class Company extends Model
 {
-  use SoftDeletes;
-  /**
-   * Атрибуты, которые должны быть преобразованы в даты.
-   *
-   * @var array
-   */
+
+    use Notifiable;
+    use SoftDeletes;
+
+    // Подключаем Scopes для главного запроса
+    use CompaniesFilterTraitScopes;
+    use AuthorsTraitScopes;
+    use SystemitemTraitScopes;
+    use FilialsTraitScopes;
+    use ModeratorFilterTraitScopes;
 
 	public function user_info()
 	{
@@ -70,11 +84,5 @@ class Company extends Model
   {
     return $this->hasMany('App\Staffer');
   } 
-  /**
-  * Получаем филиалы компании.
-  */
-  // public function filials()
-  // {
-  //   return $this->hasMany('App\Department');
-  // } 
+
 }

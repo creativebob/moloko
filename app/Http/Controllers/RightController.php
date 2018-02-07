@@ -23,86 +23,74 @@ use Illuminate\Support\Facades\Log;
 
 class RightController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    // Сущность над которой производит операции контроллер
+    protected $entity_name = 'rights';
+
     public function index()
     {
-        // $this->authorize('index', Right::class);
 
-        $rights = Right::paginate(30);
+        // Получаем метод
+        $method = __FUNCTION__;
+
+        // Подключение политики
+        $this->authorize($method, Right::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, false, $method);
+        // dd($answer['dependence']);
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+        $rights = Right::withoutGlobalScope($answer['moderator'])
+        ->moderatorFilter($answer['dependence'])
+        ->companiesFilter($answer['company_id'])
+        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer['all_authors'])
+        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+        ->orderBy('moderated', 'desc')
+        ->paginate(30);
 
         return view('rights.index', compact('rights'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
-        // $this->authorize('create', Right::class);
-        // 
+
+        // Пока этот функционал не работатет, так как и не нужен пока...
         $right = new Right;
         $entity_list = Entity::get()->pluck('entity_name', 'id');
         return view('rights.create', compact('right', 'entity_list'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        $user = Auth::user();
-        $role->author_id = $user->id;
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         //

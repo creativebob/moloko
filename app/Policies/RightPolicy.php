@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
+use App\Policies\Traits\PoliticTrait;
 use App\Right;
 use App\User;
-use App\RightsRole;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -12,75 +12,50 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class RightPolicy
 {
     use HandlesAuthorization;
+    use PoliticTrait;
 
 
-    // public function before($user)
-    // {
-    //     if (Auth::user()->god == 1) {$result = true;} else {$result = null;};
-    //     return $result;
-    // }
+    protected$entity_name = 'rights';
+    protected $entity_dependence = false;
+
+    public function before($user)
+    {
+        // if (Auth::user()->god == 1) {$result = true;} else {$result = null;};
+        // return $result;
+    }
 
     public function index(User $user)
     {
-        foreach ($user->roles as $role) {
-            foreach ($role->rights as $right) {
-                // Перебор всех прав пользователя
-                if ($right->right_action == 'index-user') {$result = true; break;} else {$result = false;}
-            }
-        }
-
+        $result = $this->getstatus($this->entity_name, null, 'index', $this->entity_dependence);
         return $result;
-        // $current_access = Auth::user()->group_action_id;
-        // $access = Access::where(['access_group_id' => $current_access]);
-        // return $result = $access->where(['right_action' => 'index-right'])->count() == "1";
     }
 
-    /**
-     * Determine whether the user can view the right.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Right  $right
-     * @return mixed
-     */
-    public function view(User $user, Right $right)
+    public function view(User $user, Right $model)
     {
-        //
+        $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
+        return $result;
     }
 
-    /**
-     * Determine whether the user can create rights.
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
     public function create(User $user)
     {
-        $current_access = Auth::user()->group_action_id;
-        $access = Access::where(['access_group_id' => $current_access]);
-        return $result = $access->where(['right_action' => 'create-right'])->count() == "1";
+        $result = $this->getstatus($this->entity_name, null, 'create', $this->entity_dependence);
+        return $result;
     }
 
-    /**
-     * Determine whether the user can update the right.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Right  $right
-     * @return mixed
-     */
-    public function update(User $user, Right $right)
-    {
-        //
+    public function update(User $user, Right $model)
+    { 
+        $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
+        return $result;
     }
 
-    /**
-     * Determine whether the user can delete the right.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Right  $right
-     * @return mixed
-     */
-    public function delete(User $user, Right $right)
+    public function delete(User $user, Right $model)
     {
-        //
+        $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
+        return $result;
+    }
+
+    public function god(User $user)
+    {
+        if(Auth::user()->god){return true;} else {return false;};
     }
 }
