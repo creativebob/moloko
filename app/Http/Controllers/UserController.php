@@ -133,7 +133,7 @@ class UserController extends Controller
         $user->employee_id = $request->employee_id;
         $user->access_block = $request->access_block;
 
-        $user->author_id = $user_auth->id;
+        $user->author_id = $user_auth_id;
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
@@ -237,13 +237,10 @@ class UserController extends Controller
 
     public function edit(Request $request, $id)
     {
-
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
-
         // Подключение политики
         $this->authorize('update', $user);
-
         // Функция из Helper отдает массив со списками для SELECT
         $list_departments = getLS('users', 'view', 'departments');
         $list_filials = getLS('users', 'view', 'filials');

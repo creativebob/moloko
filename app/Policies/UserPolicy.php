@@ -28,13 +28,8 @@ class UserPolicy
     // Если null - отправляем на проверку в последующих методах
     // если false - блокируем доступ
 
-    protected$entity_name = 'users';
+    protected $entity_name = 'users';
     protected $entity_dependence = true;
-
-    // Проверяем на бога. Имеет приоритет над всеми остльными методами
-    // Если true - предоставляем доступ
-    // Если null - отправляем на проверку в последующих методах
-    // если false - блокируем доступ
     
     public function before($user)
     {

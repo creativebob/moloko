@@ -1696,7 +1696,7 @@ input[type=checkbox], input[type=radio] {
 }
 /* line 1745, ../sass/app.scss */
 .content .table-content thead th:hover {
-  cursor: pointer;
+  cursor: grabbing;
 }
 /* line 1748, ../sass/app.scss */
 .content .table-content thead th:focus {
@@ -1750,7 +1750,7 @@ input[type=checkbox], input[type=radio] {
 .content .table-content tbody .icon-drop {
   background-position: 0px -832px;
   opacity: 0;
-  cursor: pointer;
+  cursor: -webkit-grabbing;
 }
 /* line 1803, ../sass/app.scss */
 .content .table-content tbody .icon-edit {

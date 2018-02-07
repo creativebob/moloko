@@ -166,6 +166,7 @@ return [
 
         // Те, что подключаем сами, ручками )))
         Collective\Html\HtmlServiceProvider::class,
+        App\Providers\ComposerServiceProvider::class,
 
 
         /*

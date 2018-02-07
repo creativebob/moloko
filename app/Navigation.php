@@ -5,9 +5,26 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+// Фильтры
+use App\Scopes\ModerationScope;
+use App\Scopes\Traits\CompaniesFilterTraitScopes;
+use App\Scopes\Traits\AuthorsTraitScopes;
+use App\Scopes\Traits\SystemitemTraitScopes;
+use App\Scopes\Traits\FilialsTraitScopes;
+use App\Scopes\Traits\ModerationTraitScopes;
+use App\Scopes\Traits\ModeratorFilterTraitScopes;
+
 class Navigation extends Model
 {
-    use SoftDeletes;
+  use SoftDeletes;
+  // Фильтры
+  use App\Scopes\ModerationScope;
+  use App\Scopes\Traits\CompaniesFilterTraitScopes;
+  use App\Scopes\Traits\AuthorsTraitScopes;
+  use App\Scopes\Traits\SystemitemTraitScopes;
+  use App\Scopes\Traits\FilialsTraitScopes;
+  use App\Scopes\Traits\ModerationTraitScopes;
+  use App\Scopes\Traits\ModeratorFilterTraitScopes;
   /**
    * Атрибуты, которые должны быть преобразованы в даты.
    *

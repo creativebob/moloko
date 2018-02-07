@@ -11,51 +11,76 @@ use App\PositionRole;
 
 // Валидация
 use App\Http\Requests\PositionRequest;
-
+// Политика
+use App\Policies\PostionPolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Policies\PositionPolicy;
 
 class PositionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // Сущность над которой производит операции контроллер
+    protected $entity_name = 'positions';
+    protected $entity_dependence = false;
+
     public function index(Request $request)
     {
-      $user = $request->user();
-      if (isset($user->company_id)) {
-        // Если у пользователя есть компания
-        $positions = Position::with('author', 'page')->whereCompany_id($user->company_id)
-                ->orWhereNull('company_id')
-                ->paginate(30);
-      } else {
-        // Если нет, то бог без компании
-        if ($user->god == 1) {
-          $positions = Position::with('author', 'page')->paginate(30);
-        };
-      };
+      // Получаем метод
+      $method = __FUNCTION__;
+      // Подключение политики
+      $this->authorize($method, Position::class);
+      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+      $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+      // dd($answer);
+      // -------------------------------------------------------------------------------------------
+      // ГЛАВНЫЙ ЗАПРОС
+      // -------------------------------------------------------------------------------------------
+      $positions = Position::with('author', 'page')
+      ->withoutGlobalScope($answer['moderator'])
+      ->moderatorFilter($answer['dependence'])
+      ->companiesFilter($answer['company_id'])
+      ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      ->authors($answer['all_authors'])
+      ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+      ->orderBy('moderated', 'desc')
+      ->paginate(30);
+
+      // Инфо о странице
       $page_info = pageInfo('positions');
       return view('positions.index', compact('positions', 'page_info'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Request $request)
     {
-      $user = $request->user();
-      // $this->authorize('create', Position::class);
-      $pages = Page::whereSite_id(1)->pluck('page_name', 'id');
+      // Получаем метод
+      $method = __FUNCTION__;
+      // Подключение политики
+      $this->authorize(__FUNCTION__, Position::class);
+
+      // Список посадочных страниц для должности
+      $answer = operator_right('pages', $this->entity_dependence, $method);
+      $pages_list = Page::withoutGlobalScope($answer['moderator'])
+      ->moderatorFilter($answer['dependence'])
+      ->companiesFilter($answer['company_id'])
+      ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      ->authors($answer['all_authors'])
+      ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+      ->whereSite_id(1) // Только для должностей посадочная страница системного сайта
+      ->pluck('page_name', 'id');
+
+      // Список ролей для должности
+      $answer = operator_right('pages', $this->entity_dependence, $method);
+      $roles = Role::withoutGlobalScope($answer['moderator'])
+      ->moderatorFilter($answer['dependence'])
+      ->companiesFilter($answer['company_id'])
+      ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      ->authors($answer['all_authors'])
+      ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+      ->get();
+
       $position = new Position;
-      $roles = Role::whereCompany_id($user->company_id)->orWhereNull('company_id')->get();
-      return view('positions.create', compact('position', 'pages', 'roles'));  
+      return view('positions.create', compact('position', 'pages_list', 'roles'));  
     }
 
     /**
@@ -66,17 +91,36 @@ class PositionController extends Controller
      */
     public function store(PositionRequest $request)
     {
-      $user = $request->user();
-      // СОздаем новую должность
-      $position = new Position;
+      // Получаем метод
+      $method = __FUNCTION__;
+      // Подключение политики
+      $this->authorize($method, Position::class);
+      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+      $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
+      // Получаем данные для авторизованного пользователя
+      $user = $request->user();
+      $user_id = $user->id;
+      $user_status = $user->god;
+      $company_id = $user->company_id;
+      $filial_id = $request->filial_id;
+
+      // Создаем новую должность
+      $position = new Position;
       $position->position_name = $request->position_name;
       $position->page_id = $request->page_id;
-      $position->company_id = $user->company_id;
-      $position->author_id = $user->id;
-      // dd($request->roles);
+      $position->author_id = $user_id;
+      // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+      if($answer['automoderate'] == false){
+          $position->moderated = 1;
+      };
+      // Пишем ID компании авторизованного пользователя
+      if($company_id == null) {
+        abort(403, 'Необходимо авторизоваться под компанией');
+      };
+      $position->company_id = $company_id;
       $position->save();
-
+      // Если должность записалась
       if ($position) {
         $mass = [];
         // Смотрим список пришедших роллей
@@ -84,7 +128,7 @@ class PositionController extends Controller
           $mass[] = [
             'position_id' => $position->id,
             'role_id' => $role,
-            'author_id' => $user->id,
+            'author_id' => $user_id,
           ];
         }
         DB::table('position_role')->insert($mass);
@@ -94,46 +138,55 @@ class PositionController extends Controller
       };
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Request $request, $id)
     {
-      $position = Position::findOrFail($id);
-      $roles = Role::with('rights')->get();
-      // dd($roles);
-      $pages = Page::whereSite_id(1)->pluck('page_name', 'id');
-      return view('positions.edit', compact('position', 'pages', 'roles'));
+      // ГЛАВНЫЙ ЗАПРОС:
+      $position = Position::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+      // Подключение политики
+      $this->authorize('update', $position);
+
+      // Список посадочных страниц для должности
+      $answer = operator_right('pages', $this->entity_dependence, 'update');
+      $pages_list = Page::withoutGlobalScope($answer['moderator'])
+      ->moderatorFilter($answer['dependence'])
+      ->companiesFilter($answer['company_id'])
+      ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      ->authors($answer['all_authors'])
+      ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+      ->whereSite_id(1) // Только для должностей посадочная страница системного сайта
+      ->pluck('page_name', 'id');
+
+      // Список ролей для должности
+      $answer = operator_right('pages', $this->entity_dependence, 'update');
+      $roles = Role::withoutGlobalScope($answer['moderator'])
+      ->moderatorFilter($answer['dependence'])
+      ->companiesFilter($answer['company_id'])
+      ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      ->authors($answer['all_authors'])
+      ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+      ->get();
+
+      return view('positions.edit', compact('position', 'pages_list', 'roles'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(PositionRequest $request, $id)
     {
-      // Обновляем должность
+      // Получаем авторизованного пользователя
       $user = $request->user();
-      $position = Position::findOrFail($id);
+      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+      $answer = operator_right($this->entity_name, true, $method);
+      // ГЛАВНЫЙ ЗАПРОС:
+      $position = Position::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+      // Подключение политики
+      $this->authorize('update', $position);
       // Выбираем существующие роли для должности на данный момент
       $position_roles = $position->roles;
+      // Перезаписываем данные
       $position->position_name = $request->position_name;
       $position->page_id = $request->page_id;
       $position->company_id = $user->company_id;
@@ -186,11 +239,14 @@ class PositionController extends Controller
     public function destroy(Request $request, $id)
     {
       $user = $request->user();
-      $position = Position::findOrFail($id);
+      // ГЛАВНЫЙ ЗАПРОС:
+      $position = Position::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+      // Подключение политики
+      $this->authorize('delete', $position);
       if (isset($position)) {
         $position->editor_id = $user->id;
         $position->save();
-        // Удаляем страницу с обновлением
+        // Удаляем должность с обновлением
         $position = Position::destroy($id);
         if ($position) {
           return Redirect('/positions');
