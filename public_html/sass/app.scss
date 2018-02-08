@@ -1309,6 +1309,7 @@ input[type=checkbox], input[type=radio] {
     display: none;
     background-color: $content-bg-color;
     z-index: 1;
+    position: absolute;
     // overflow: hidden;
     // transition: 1s;
 

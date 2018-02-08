@@ -15,6 +15,8 @@ class CreateAreasTable extends Migration
     {
         Schema::create('areas', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
             $table->string('area_name', 30)->unique()->index()->comment('Название района');
             $table->integer('region_id')->unsigned()->comment('Id области, в которой находится район');
             $table->foreign('region_id')->references('id')->on('regions');

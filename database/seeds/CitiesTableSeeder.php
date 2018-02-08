@@ -18,6 +18,7 @@ class CitiesTableSeeder extends Seeder
 		        'region_id' => '1',
 		        'city_code' => '83952',
 		        'city_vk_external_id' => 57,
+                'system_item' => 1,
         	],
             [
                 'city_name' => 'Улан-Удэ',
@@ -25,6 +26,7 @@ class CitiesTableSeeder extends Seeder
                 'region_id' => '2',
                 'city_code' => null,
                 'city_vk_external_id' => 148,
+                'system_item' => 1,
             ],
             [
                 'city_name' => 'Красноярск',
@@ -32,6 +34,7 @@ class CitiesTableSeeder extends Seeder
                 'region_id' => '3',
                 'city_code' => null,
                 'city_vk_external_id' => 73,
+                'system_item' => 1,
             ],
 
         ]);

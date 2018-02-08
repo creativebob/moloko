@@ -389,8 +389,7 @@ $(function() {
           $('#tbody-city-add').append(data);
         }
       });
-    };
-    if (lenCity <= 2) {
+    } else {
       // Удаляем все значения, если символов меньше 3х
       $('#tbody-city-add>tr').remove();
       $('#city-id-field').val('');
@@ -416,39 +415,42 @@ $(function() {
     var lenRegion = region.length;
     // Если символов больше 3 - делаем запрос
     if (lenRegion > 3) {
-      // Сам ajax запрос
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "/region",
-        type: "POST",
-        data: {region: $('#region-name-field').val()},
-        beforeSend: function () {
-          $('.icon-load').removeClass('load');
-        },
-        success: function(date){
-          $('.icon-load').addClass('load');
-          // Удаляем все значения чтобы вписать новые
-          $('#tbody-region-add>tr').remove();
-          var result = $.parseJSON(date);
-          var count = result.response.count;
-          var data = '';
-          if (count == 0) {
-            data = "<tr><td>Ничего не найдено...</td></tr>";
-          };
-          if (count > 0) {
-            // Перебираем циклом
-            for (var i = 0; i < count; i++) {
-              data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"region-add\" data-region-vk-external-id=\"" + i + "\">" + result.response.items[i].id + "</a></td><td><a class=\"region-add\" data-region-name=\"" + i + "\">" + result.response.items[i].title + "</a></td></tr>";
+      // alert($('#region-name-field').val());
+      setTimeout(function () {
+        // Сам ajax запрос
+        $.ajax({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          url: "/region",
+          type: "POST",
+          data: {region: $('#region-name-field').val()},
+          beforeSend: function () {
+            $('.icon-load').removeClass('load');
+          },
+          success: function(date){
+            $('.icon-load').addClass('load');
+            // Удаляем все значения чтобы вписать новые
+            $('#tbody-region-add>tr').remove();
+            var result = $.parseJSON(date);
+            // alert(result);
+            var count = result.response.count;
+            var data = '';
+            if (count == 0) {
+              data = "<tr><td>Ничего не найдено...</td></tr>";
             };
-          };
-          // Выводим пришедшие данные на страницу
-          $('#tbody-region-add').append(data);
-        }
-      });
-    };
-    if (lenRegion <= 3) {
+            if (count > 0) {
+              // Перебираем циклом
+              for (var i = 0; i < count; i++) {
+                data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"region-add\" data-region-vk-external-id=\"" + i + "\">" + result.response.items[i].id + "</a></td><td><a class=\"region-add\" data-region-name=\"" + i + "\">" + result.response.items[i].title + "</a></td></tr>";
+              };
+            };
+            // Выводим пришедшие данные на страницу
+            $('#tbody-region-add').append(data);
+          }
+        });
+      }, 1000);
+    } else {
       // Удаляем все значения, если символов меньше 3х
       $('#tbody-region-add>tr').remove();
       $('.item-error').remove();
@@ -476,7 +478,7 @@ $(function() {
         success: function (data) {
           var result = $.parseJSON(data);
 
-          // alert(result.error_status);
+          alert(result.session);
 
           if (result.error_status == 1) {
             var error = showError (result.error_message);
@@ -631,7 +633,7 @@ $(function() {
       };
     };
    
-    // // Если добавили город с районом
+    // Если добавили город с районом
     // if ({{ $data['area_id'] }} !== 0) {
     //   // Подсвечиваем ссылку
     //   $('#areas-{{ $data['area_id'] }}').find('.medium-link').addClass('medium-active');

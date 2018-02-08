@@ -15,6 +15,9 @@ class CreateRegionsTable extends Migration
     {
         Schema::create('regions', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
+            
             $table->string('region_name', 30)->unique()->index()->comment('Название области');
             $table->integer('region_code')->unsigned()->nullable()->comment('Код области');
             $table->integer('region_vk_external_id')->unique()->unsigned()->nullable()->comment('Внешний Id (из базы vk)');

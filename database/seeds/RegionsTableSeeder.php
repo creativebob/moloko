@@ -16,18 +16,21 @@ class RegionsTableSeeder extends Seeder
 		        'region_name' => 'Иркутская область',
 		        'region_code' => 38,
 		        'region_vk_external_id' => 1127513,
+                'system_item' => 1,
 		        
         	],
             [
                 'region_name' => 'Бурятия',
                 'region_code' => null,
                 'region_vk_external_id' => null,
+                'system_item' => 1,
                 
             ],
             [
                 'region_name' => 'Красноярский край',
                 'region_code' => null,
                 'region_vk_external_id' => null,
+                'system_item' => 1,
                 
             ],
         ]);

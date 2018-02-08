@@ -7,8 +7,6 @@ use App\Region;
 use App\Area;
 use App\City;
 use App\Page;
-// Валидация
-// use App\Http\Requests\UpdateCity;
 // Политика
 use App\Policies\CityPolicy;
 use App\Policies\AreaPolicy;
@@ -16,6 +14,8 @@ use App\Policies\RegionPolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+// Валидация
+use App\Http\Requests\CityRequest;
 
 class CityController extends Controller
 {
@@ -96,7 +96,7 @@ class CityController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store(CityRequest $request)
   {
     // Получаем метод
     $method = 'create';
@@ -301,7 +301,7 @@ class CityController extends Controller
   }
 
   // Получаем список городов из базы вк
-  public function get_vk_city(Request $request)
+  public function get_vk_city(CityRequest $request)
   {
     $city = $request->city;
     $request_params = [
@@ -309,7 +309,7 @@ class CityController extends Controller
     'q' => $city,
     'need_all' => '0',
     'count' => '100',
-    'v' => '5.69'
+    'v' => '5.71'
     ];
     $get_params = http_build_query($request_params);
     $result = (file_get_contents('https://api.vk.com/method/database.getCities?'. $get_params));
@@ -356,7 +356,7 @@ class CityController extends Controller
       }
       echo json_encode($objRes, JSON_UNESCAPED_UNICODE);
     } else {
-      // Если секбокс "искать везде" включен, отдаем данные, пришедшие с vk 
+      // Если чекбокс "искать везде" включен, отдаем данные, пришедшие с vk 
       echo $result;
     }
   }
