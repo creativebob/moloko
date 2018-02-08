@@ -52,6 +52,7 @@ class CityController extends Controller
   // Получаем сторонние данные по 
   public function current_city($region, $area)
   {
+    $method = 'index';
     // Подключение политики
     $this->authorize('index', Region::class);
     $this->authorize('index', Area::class);
@@ -104,8 +105,6 @@ class CityController extends Controller
     $this->authorize($method, Region::class);
     $this->authorize($method, Area::class);
     $this->authorize($method, City::class);
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
     $user_id = $user->id;

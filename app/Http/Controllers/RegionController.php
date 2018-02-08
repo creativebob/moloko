@@ -44,9 +44,6 @@ class RegionController extends Controller
     $company_id = $user->company_id;
     $filial_id = $request->filial_id;
 
-    $ses = session('access');
-    $lol = $ses['user_info']['user_id'];
-
     $region_database = $request->region_database;
     // По умолчанию значение 0
     if ($region_database == 0) {

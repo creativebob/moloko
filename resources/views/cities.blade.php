@@ -478,7 +478,7 @@ $(function() {
         success: function (data) {
           var result = $.parseJSON(data);
 
-          alert(result.session);
+          // alert(result.session);
 
           if (result.error_status == 1) {
             var error = showError (result.error_message);
