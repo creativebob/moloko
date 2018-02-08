@@ -1743,7 +1743,7 @@ input[type=checkbox], input[type=radio] {
         }
       }
       th:hover {
-        cursor: pointer;
+        cursor: grabbing;
       }
       th:focus {
         outline: none;
@@ -1797,7 +1797,7 @@ input[type=checkbox], input[type=radio] {
       .icon-drop {
         background-position: 0px -832px;
         opacity: 0;
-        cursor: pointer;
+        cursor: -webkit-grabbing;
       }
 
       .icon-edit {

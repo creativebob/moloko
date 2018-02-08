@@ -4,104 +4,70 @@ namespace App\Http\Controllers;
 
 // Подключаем модели
 use App\Area;
-
+// Политика
+use App\Policies\AreaPolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AreaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-      //
-    }
+  // Сущность над которой производит операции контроллер
+  protected $entity_name = 'areas';
+  protected $entity_dependence = false;
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+  public function index()
+  {
+    //
+  }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+  public function create()
+  {
+    //
+  }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+  public function store(Request $request)
+  {
+    //
+  }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+  public function show($id)
+  {
+    //
+  }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+  public function edit($id)
+  {
+    //
+  }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request, $id)
-    {
-      $user = $request->user();
-      // Удаляем с обновлением
-      // Находим область и район города
-      $area = Area::with('cities')->findOrFail($id);
-      $region_id = $area->region_id;
-      // dd($area);
-      
-      if (count($area->cities) > 0) {
-        abort(403, 'Район не пустой!');
+  public function update(Request $request, $id)
+  {
+    //
+  }
+
+  public function destroy(Request $request, $id)
+  {
+    $user = $request->user();
+    // Удаляем с обновлением
+    // Находим область и район города
+    $area = Area::with('cities')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $region_id = $area->region_id;
+    // Подключение политики
+    $this->authorize('delete', $area);
+    // dd($area);
+    if (count($area->cities) > 0) {
+      abort(403, 'Район не пустой!');
+    } else {
+      $area->editor_id = $user->id;
+      $area->save();
+      // Удаляем район с обновлением
+      $area = Area::destroy($id);
+      if ($area) {
+        return Redirect('current_city/'.$region_id.'/0');
       } else {
-        $area->editor_id = $user->id;
-        $area->save();
-        $area = Area::destroy($id);
-        if ($area) {
-          return Redirect('current_city/'.$region_id.'/0');
-        } else {
-          abort(403, 'Ошибка при удалении района!');
-        }
+        abort(403, 'Ошибка при удалении района!');
       }
     }
+  }
 }

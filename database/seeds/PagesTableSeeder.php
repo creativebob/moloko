@@ -23,7 +23,7 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
             ],
             [
-                'page_name' => 'Пользователи',
+                'page_name' => 'Пользователи системы',
                 'site_id' => 1,
                 'page_title' => 'Пользователи системы',
                 'page_description' => 'Пользователи системы',
@@ -147,6 +147,15 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'index',
                 'company_id' => 1,
                 'system_item' => null,
+            ],
+            [
+                'page_name' => 'Списки',
+                'site_id' => 1,
+                'page_title' => 'Списки',
+                'page_description' => 'Списки любых сущностей',
+                'page_alias' => 'booklists',
+                'company_id' => null,
+                'system_item' => 1,
             ],
         ]);
     }

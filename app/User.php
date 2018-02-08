@@ -6,13 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+// Фильтры
 use App\Scopes\ModerationScope;
-
 use App\Scopes\Traits\CompaniesFilterTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
-use App\Scopes\Traits\ModerationTraitScopes;
 use App\Scopes\Traits\ModeratorFilterTraitScopes;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;

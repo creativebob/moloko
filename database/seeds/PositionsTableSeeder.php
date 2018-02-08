@@ -42,7 +42,7 @@ class PositionsTableSeeder extends Seeder
 		        'direction_status' => null,
 		        'company_id' => 1,
                 'system_item' => null,
-                'author_id' => 1,
+                'author_id' => 4,
         	],
         ]);
     }

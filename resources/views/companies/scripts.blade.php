@@ -21,5 +21,38 @@
     hide_on_select : true
   });
   
+  // Проверка существования компании
+  $(document).on('keyup', '.company_inn-field', function() {
+
+    var company_inn = document.getElementById('company_inn-field').value;
+    // alert(company_inn);
+
+    if(company_inn.length > 9){
+
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: "/companies/check_company",
+        type: "POST",
+        data: {company_inn: company_inn},
+        success: function (data) {
+
+          if(data == 0){
+
+          } else {
+            document.getElementById('company_inn-field').value = '';
+            alert(data);          
+          };
+
+        }
+      });
+
+    };
+
+  });
+
+
+
 </script>
 @endsection

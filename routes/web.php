@@ -24,6 +24,9 @@ Route::resource('/users', 'UserController')->middleware('auth');
 
 Route::resource('/companies', 'CompanyController')->middleware('auth');
 
+// Проверка существования компании в базе по ИНН
+Route::post('/companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');
+
 // Маршруты для правил доступа
 Route::resource('/rights', 'RightController')->middleware('auth');
 
@@ -71,6 +74,10 @@ Route::resource('/staff', 'StafferController')->middleware('auth');
 // Контроллер сотрудников
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
 
+// Контроллер списков
+Route::resource('booklists', 'BooklistController')->middleware('auth');
+
+
 // Контроллер отображения сайтов 
 Route::get('/sites', 'SiteController@index')->middleware('auth')->name('sites.index');
 Route::get('/sites/create', 'SiteController@create')->middleware('auth')->name('sites.create');
@@ -82,6 +89,7 @@ Route::delete('/sites/{id}', 'SiteController@destroy')->middleware('auth')->name
 Route::get('/sites/{site_alias}', 'SiteController@sections')->middleware('auth')->name('sites.sections');
 // Группа с префиксом
 Route::prefix('/sites/{site_alias}')->group(function () {
+	// Странички
     Route::resource('/pages', 'PageController')->middleware('auth');
     // Навигация и меню
     Route::resource('/navigations', 'NavigationController')->middleware('auth');

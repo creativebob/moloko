@@ -15,7 +15,7 @@ class DepartmentsTableSeeder extends Seeder
         	[
 		        'department_name' => 'Иркутский филиал',
                 'department_address' => 'ул. Шевцова, 5',
-		        'department_phone' => 8901543228877,
+		        'department_phone' => 89015432288,
                 'department_parent_id' => null,
                 'filial_id' => null,
 		        'filial_status' => 1,
@@ -45,7 +45,7 @@ class DepartmentsTableSeeder extends Seeder
             [
                 'department_name' => 'Улан-Удэнский филиал',
                 'department_address' => 'ул. Ленина, 45б',
-                'department_phone' => 8911543428877,
+                'department_phone' => 89115434288,
                 'department_parent_id' => null,
                 'filial_id' => null,
                 'filial_status' => 1,
@@ -65,7 +65,7 @@ class DepartmentsTableSeeder extends Seeder
              [
                 'department_name' => 'Красноярский филиал',
                 'department_address' => 'ул. Мира, 11',
-                'department_phone' => 8911543428811,
+                'department_phone' => 89115434289,
                 'department_parent_id' => null,
                 'filial_id' => null,
                 'filial_status' => 1,

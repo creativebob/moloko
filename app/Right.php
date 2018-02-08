@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+// Фильтры
 use App\Scopes\ModerationScope;
-
 use App\Scopes\Traits\CompaniesFilterTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
@@ -17,6 +17,7 @@ use App\Scopes\Traits\ModeratorFilterTraitScopes;
 
 class Right extends Model
 {
+
     use Notifiable;
     use SoftDeletes;
 
@@ -26,6 +27,7 @@ class Right extends Model
     use SystemitemTraitScopes;
     use FilialsTraitScopes;
     use ModeratorFilterTraitScopes;
+
 		
     // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
 

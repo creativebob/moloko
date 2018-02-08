@@ -2,8 +2,11 @@
 
 namespace App\Policies;
 
+use App\Booklist;
 use App\User;
-use App\booklists;
+use App\Policies\Traits\PoliticTrait;
+
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class BooklistPolicy

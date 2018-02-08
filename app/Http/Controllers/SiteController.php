@@ -11,7 +11,8 @@ use App\Company;
 
 // Валидация
 use App\Http\Requests\SiteRequest;
-
+// Политика
+use App\Policies\SitePolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,57 +20,81 @@ use Illuminate\Support\Facades\DB;
 
 class SiteController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
+  // Сущность над которой производит операции контроллер
+  protected $entity_name = 'sites';
+  protected $entity_dependence = false;
+
   public function index(Request $request)
   {
-    $user = $request->user();
-    if (isset($user->company_id)) {
-      // Если у пользователя есть компания
-      $sites = Site::with('author')->whereCompany_id($user->company_id)->paginate(30);
-    } else {
-      if ($user->god == 1) {
-        // Если нет, то бог без компании
-        $sites = Site::with('author')->paginate(30);
-      };
-    };
-    $page_info = pageInfo('sites');
+    // Получаем метод
+    $method = __FUNCTION__;
+    // Подключение политики
+    $this->authorize($method, Site::class);
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    // -------------------------------------------------------------------------------------------
+    // ГЛАВНЫЙ ЗАПРОС
+    // -------------------------------------------------------------------------------------------
+    $sites = Site::with('author')
+    ->withoutGlobalScope($answer['moderator'])
+    ->moderatorFilter($answer['dependence'])
+    ->companiesFilter($answer['company_id'])
+    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer['all_authors'])
+    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->orderBy('moderated', 'desc')
+    ->paginate(30);
+    // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
     return view('sites.index', compact('sites', 'page_info'));
   }
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
   public function create()
   {
-      $site = new Site;
-      $menus = Menu::whereNavigation_id(1)->get();
-      return view('sites.create', compact('site', 'menus'));  
+    // Получаем метод
+    $method = __FUNCTION__;
+    // Подключение политики
+    $this->authorize($method, Site::class);
+    // Список меню для сайта
+    $answer = operator_right('pages', $this->entity_dependence, $method);
+    $menus = Menu::withoutGlobalScope($answer['moderator'])
+    ->moderatorFilter($answer['dependence'])
+    ->companiesFilter($answer['company_id'])
+    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer['all_authors'])
+    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->whereNavigation_id(1) // Только для сайтов, разделы сайта
+    ->get();
+    $site = new Site;
+    return view('sites.create', compact('site', 'menus'));  
   }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
   public function store(SiteRequest $request)
   {
+    // Получаем метод
+    $method = 'create';
+    // Подключение политики
+    $this->authorize($method, Site::class);
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+
+    // Получаем данные для авторизованного пользователя
     $user = $request->user();
+    $user_id = $user->id;
+    $user_status = $user->god;
+    $company_id = $user->company_id;
+
     $site = new Site;
     $site->site_name = $request->site_name;
     $site->site_domen = $request->site_domen;
     $site_alias = explode('.', $request->site_domen);
     $site->site_alias = $site_alias[0];
     // Пишем ID компании авторизованного пользователя
-    if($user->company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
-    $site->company_id = $user->company_id;
-    $site->author_id = $user->id;
+    if($user->company_id == null) {
+      abort(403, 'Необходимо авторизоваться под компанией');
+    };
+    $site->company_id = $company_id;
+    $site->author_id = $user_id;
     $site->save();
     if ($site) {
       $mass = [];
@@ -88,41 +113,44 @@ class SiteController extends Controller
     };
   }
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function show($id)
   {
-      //
+    //
   }
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function edit($site_alias)
   {
-    $site = Site::whereSite_alias($site_alias)->first();
-    $menus = Menu::whereNavigation_id(1)->get();
+    // Получаем метод
+    $method = 'update';
+    // ГЛАВНЫЙ ЗАПРОС:
+    $site = Site::withoutGlobalScope(ModerationScope::class)->whereSite_alias($site_alias)->first();
+    // Подключение политики
+    $this->authorize($method, $site);
+    // Список меню для сайта
+    $answer = operator_right('sites', $this->entity_dependence, $method);
+    $menus = Menu::withoutGlobalScope($answer['moderator'])
+    ->moderatorFilter($answer['dependence'])
+    ->companiesFilter($answer['company_id'])
+    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer['all_authors'])
+    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->whereNavigation_id(1) // Только для сайтов, разделы сайта
+    ->get();
     return view('sites.edit', compact('site', 'menus'));
   }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function update(SiteRequest $request, $id)
   {
+    // Получаем метод
+    $method = __FUNCTION__;
+    // Получаем авторизованного пользователя
     $user = $request->user();
-    $site = Site::findOrFail($id);
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, true, $method);
+    // ГЛАВНЫЙ ЗАПРОС:
+    $site = Site::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+    // Подключение политики
+    $this->authorize('update', $site);
     $site->site_name = $request->site_name;
     $site_alias = explode('.', $request->site_domen);
     $site->site_alias = $site_alias[0];
@@ -153,16 +181,13 @@ class SiteController extends Controller
     };
   }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function destroy(Request $request, $id)
   {
     $user = $request->user();
-    $site = Site::findOrFail($id);
+    // ГЛАВНЫЙ ЗАПРОС:
+    $site = Site::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    // Подключение политики
+    $this->authorize('delete', $site);
     if ($site) {
       $site->editor_id = $user->id;
       $site->save();

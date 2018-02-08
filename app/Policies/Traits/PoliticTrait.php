@@ -9,7 +9,7 @@ trait PoliticTrait
     public function getstatus($entity_name, $model, $method, $entity_dependence)
     {
 
-
+ 
         // Получаем данные из сессии
         $session  = session('access');
         $user_id = $session['user_info']['user_id'];
@@ -208,6 +208,7 @@ trait PoliticTrait
         };
 
         // Получаем статус наличия права в связке с филиалом (Есть или нет)
+
         if(($method == 'delete')&&($model->system_item == 1)){
             abort(403, 'Удаление системных записей запрещено законом');
         };

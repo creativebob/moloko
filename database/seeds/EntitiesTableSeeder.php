@@ -22,23 +22,38 @@ class EntitiesTableSeeder extends Seeder
 		        'entity_alias' => 'companies',
                 'author_id' => 1,
         	],
-        	[
-		        'entity_name' => 'Отделы',
-		        'entity_alias' => 'departments',
+            [
+                'entity_name' => 'Штат',
+                'entity_alias' => 'staff',
                 'author_id' => 1,
-        	],
+            ],
+            [
+                'entity_name' => 'Отделы',
+                'entity_alias' => 'departments',
+                'author_id' => 1,
+            ],
+            [
+                'entity_name' => 'Должности',
+                'entity_alias' => 'positions',
+                'author_id' => 1,
+            ],
+            [
+                'entity_name' => 'Сотрудники',
+                'entity_alias' => 'employees',
+                'author_id' => 1,
+            ],
+            [
+                'entity_name' => 'Области',
+                'entity_alias' => 'regions',
+                'author_id' => 1,
+            ],
         	[
 		        'entity_name' => 'Районы',
 		        'entity_alias' => 'areas',
                 'author_id' => 1,
         	],
         	[
-		        'entity_name' => 'Регионы',
-		        'entity_alias' => 'regions',
-                'author_id' => 1,
-        	],
-        	[
-		        'entity_name' => 'Города',
+		        'entity_name' => 'Населенные пункты',
 		        'entity_alias' => 'cities',
                 'author_id' => 1,
         	],
@@ -52,36 +67,31 @@ class EntitiesTableSeeder extends Seeder
 		        'entity_alias' => 'entities',
                 'author_id' => 1,
         	],
+            [
+                'entity_name' => 'Сайты',
+                'entity_alias' => 'sites',
+                'author_id' => 1,
+            ],
         	[
 		        'entity_name' => 'Страницы',
 		        'entity_alias' => 'pages',
                 'author_id' => 1,
         	],
-        	[
-		        'entity_name' => 'Должности',
-		        'entity_alias' => 'positions',
+            [
+                'entity_name' => 'Навигации',
+                'entity_alias' => 'navigations',
                 'author_id' => 1,
-        	],
-        	[
-		        'entity_name' => 'Правила',
-		        'entity_alias' => 'rights',
-                'author_id' => 1,
-        	],
-        	[
-		        'entity_name' => 'Сайты',
-		        'entity_alias' => 'sites',
-                'author_id' => 1,
-        	],
-        	[
-		        'entity_name' => 'Сотрудники',
-		        'entity_alias' => 'employees',
-                'author_id' => 1,
-        	],
+            ],
             [
                 'entity_name' => 'Меню',
                 'entity_alias' => 'menus',
                 'author_id' => 1,
             ],
+        	[
+		        'entity_name' => 'Правила',
+		        'entity_alias' => 'rights',
+                'author_id' => 1,
+        	],
             [
                 'entity_name' => 'Роли',
                 'entity_alias' => 'roles',
@@ -92,6 +102,7 @@ class EntitiesTableSeeder extends Seeder
                 'entity_alias' => 'booklists',
                 'author_id' => 1,
             ],
+            
 
 
 

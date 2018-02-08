@@ -18,7 +18,7 @@
     {{ Form::text('position_name', $employee->staffer->position->position_name, ['class'=>'position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'readonly']) }}
     </label>
     <label>Сотрудник:
-      {{ Form::select('user_id', $users, $employee->user_id, ['id'=>'staffer-select', 'placeholder'=>'Вакансия', 'disabled']) }}
+      {{ Form::select('user_id', $users_list, $employee->user_id, ['id'=>'staffer-select', 'placeholder'=>'Вакансия', 'disabled']) }}
     </label>
     <div class="grid-x">
       <div class="small-12 medium-5 cell">

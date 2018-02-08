@@ -26,7 +26,7 @@
     {{ Form::text('position_name', null, ['class'=>'position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', $block]) }}
     </label>
     <label>Страница должности:
-      {{ Form::select('page_id', $pages, null, ['id'=>'page-select']) }}
+      {{ Form::select('page_id', $pages_list, null, ['id'=>'page-select']) }}
     </label>
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
@@ -39,7 +39,7 @@
               <li>
                 <div class="small-12 cell checkbox">
                   
-                   {{ Form::checkbox('roles[]', $role->id, null, ['id'=>'role-'.$role->id]) }}
+                  {{ Form::checkbox('roles[]', $role->id, null, ['id'=>'role-'.$role->id]) }}
                   <label for="role-{{ $role->id }}"><span>{{ $role->role_name }}</span></label>
                   @php
                   $allow = count($role->rights->where('directive', 'allow'));

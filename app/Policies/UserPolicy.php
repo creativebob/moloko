@@ -14,9 +14,22 @@ class UserPolicy
     use HandlesAuthorization;
     use PoliticTrait;
 
-    protected$entity_name = 'users';
-    protected $entity_dependence = true;
+    /**
+     * Determine whether the user can view the model.
+     *
+     * @param  \App\User  $user
+     * @param  \App\User  $model
+     * @return mixed
+     */
+    
+    // Проверяем на бога. Имеет приоритет над всеми остльными методами
+    // Если true - предоставляем доступ
+    // Если null - отправляем на проверку в последующих методах
+    // если false - блокируем доступ
 
+    protected $entity_name = 'users';
+    protected $entity_dependence = true;
+    
     public function before($user)
     {
         // if (Auth::user()->god == 1) {$result = true;} else {$result = null;};

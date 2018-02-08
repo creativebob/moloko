@@ -5,19 +5,47 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+// Фильтры
+use App\Scopes\ModerationScope;
+use App\Scopes\Traits\CompaniesFilterTraitScopes;
+use App\Scopes\Traits\AuthorsTraitScopes;
+use App\Scopes\Traits\SystemitemTraitScopes;
+use App\Scopes\Traits\FilialsTraitScopes;
+use App\Scopes\Traits\ModerationTraitScopes;
+use App\Scopes\Traits\ModeratorFilterTraitScopes;
+
 class Position extends Model
 {
 
   use SoftDeletes;
+  // Подключаем Scopes для главного запроса
+  use CompaniesFilterTraitScopes;
+  use AuthorsTraitScopes;
+  use SystemitemTraitScopes;
+  use FilialsTraitScopes;
+  use ModeratorFilterTraitScopes;
 
-    // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
+    /**
+     * Загрузка типажа мягкого удаления для модели.
+     *
+     * @return void
+     */
+    // public static function bootModeration()
+    // {
+    //   static::addGlobalScope(new ModerationScope);
+    // }
 
-    // Фильтрация для показа системных записей
-    public function scopeSystemItem($query, $system_item)
+
+    //   /**
+    //  * The "booting" method of the model.
+    //  *
+    //  * @return void
+    //  */
+    //  
+    protected static function boot()
     {
-        if(isset($system_item)){
-          return $query->where('system_item', '=', $system_item);
-        } else {return $query;};
+        parent::boot();
+        static::addGlobalScope(new ModerationScope);
     }
   
 

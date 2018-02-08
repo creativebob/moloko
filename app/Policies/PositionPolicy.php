@@ -4,84 +4,50 @@ namespace App\Policies;
 
 use App\User;
 use App\Position;
-use App\Access;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
+use App\Policies\Traits\PoliticTrait;
 
 class PositionPolicy
 {
     use HandlesAuthorization;
+    use PoliticTrait;
 
-    /**
-     * Determine whether the user can view the position.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Position  $position
-     * @return mixed
-     */
-    // Проверяем на бога. Имеет приоритет над всеми остльными методами
-    // Если true - предоставляем доступ
-    // Если null - отправляем на проверку в последующих методах
-    // если false - блокируем доступ
-    
-    public function before($user)
-    {
-      if ($user->god == 1) {$result = true;} else {$result = null;};
-      return $result;
-    }
+    protected $entity_name = 'positions';
+    protected $entity_dependence = false;
 
     public function index(User $user)
     {
-      // return Access::whereAccess_group_id($user->group_action_id)
-      //               ->whereRight_action('update-position')
-      //               ->first();
-    }
-    /**
-     * Determine whether the user can view the position.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Position  $position
-     * @return mixed
-     */
-    public function view(User $user, Position $position)
-    {
-      
+        $result = $this->getstatus($this->entity_name, null, 'index', $this->entity_dependence);
+        return $result;
     }
 
-    /**
-     * Determine whether the user can create positions.
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
+    public function view(User $user, Position $model)
+    {
+        $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
+        return $result;
+    }
+
     public function create(User $user)
     {
-      $access = Access::whereAccess_group_id($user->group_action_id);
-      return $access->whereRight_action('create-position')->first();
+        $result = $this->getstatus($this->entity_name, null, 'create', $this->entity_dependence);
+        return $result;
     }
 
-    /**
-     * Determine whether the user can update the position.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Position  $position
-     * @return mixed
-     */
-    public function update(User $user, Position $position)
-    {
-      $access = Access::whereAccess_group_id($user->group_action_id);
-      return $access->whereRight_action('update-position')->first();
+    public function update(User $user, Position $model)
+    { 
+        $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
+        return $result;
     }
 
-    /**
-     * Determine whether the user can delete the position.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Position  $position
-     * @return mixed
-     */
-    public function delete(User $user, Position $position)
+    public function delete(User $user, Position $model)
     {
-      $access = Access::whereAccess_group_id($user->group_action_id);
-      return $access->whereRight_action('delete-position')->first();
+        $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
+        return $result;
+    }
+
+    public function god(User $user)
+    {
+        if(Auth::user()->god){return true;} else {return false;};
     }
 }

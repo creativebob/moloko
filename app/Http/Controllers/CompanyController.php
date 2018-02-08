@@ -90,7 +90,7 @@ class CompanyController extends Controller
         $company->city_id = $request->city_id;
         $company->company_address = $request->company_address;
 
-        $company->company_inn = $request->inn;
+        $company->company_inn = $request->company_inn;
         $company->kpp = $request->kpp;
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
@@ -154,7 +154,7 @@ class CompanyController extends Controller
         $company->city_id = $request->city_id;
         $company->company_address = $request->company_address;
 
-        $company->company_inn = $request->inn;
+        $company->company_inn = $request->company_inn;
         $company->kpp = $request->kpp;
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
@@ -187,4 +187,15 @@ class CompanyController extends Controller
 
         Log::info('Удалили запись из таблица Компании. ID: ' . $id);
     }
+
+
+    public function checkcompany(Request $request)
+    {
+        $company = Company::where('company_inn', $request->company_inn)->first();
+
+        if(!isset($company)){
+            return 0;} else {
+            return $company->company_name;};
+    }
+
 }

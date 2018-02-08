@@ -8,18 +8,27 @@ trait FilialsTraitScopes
     public function scopeFilials($query, $filials, $dependence)
     {
 
-      // ПОКАЗ СПИСКА ПОЛЬЗОВАТЕЛЕЙ ---------------------------------------------------------------------------------------------------------------
-      if($filials != null){
-
-        if($dependence){
-            return $query->whereIn('filial_id', $filials);
-        } else {
-          return $query;
-        };
+      if($dependence == false){
+        
+        return $query;
 
       } else {
-          return $query;
+
+            // ПОКАЗ СПИСКА ПОЛЬЗОВАТЕЛЕЙ ---------------------------------------------------------------------------------------------------------------
+            if($filials != null){
+
+              if($dependence){
+                  return $query->whereIn('filial_id', $filials);
+              } else {
+                return $query;
+              };
+
+            } else {
+                return $query;
+            }
+
       }
+
 
     }
 

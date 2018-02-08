@@ -9,42 +9,47 @@ use App\Position;
 use App\Staffer;
 use App\Page;
 use App\Right;
-
+// Политика
+use App\Policies\DepartmentPolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
-
 use App\Http\Controllers\Session;
 
 class DepartmentController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
+  // Сущность над которой производит операции контроллер
+  protected $entity_name = 'departments';
+  protected $entity_dependence = true;
+
   public function index(Request $request)
   {
-// $this->authorize('index', User::class);
-    $user = $request->user();
-    $others_item['user_id'] = $user->id;
-    $system_item = null;
-    if (isset($user->company_id)) {
-      // Если у пользователя есть компания
-      $departments = Department::with(['staff', 'staff.position', 'staff.user'])
-              ->whereCompany_id($user->company_id)
-              ->systemItem($system_item) // Фильтр по системным записям
-              ->get();
-      $positions_list = Position::whereCompany_id($user->company_id)
-                        ->orWhereNull('company_id')->pluck('position_name', 'id');
-    } else {
-      // Если нет, то бог без компании
-      if ($user->god == 1) {
-        $departments = Department::with(['staff', 'staff.position', 'staff.user'])->get();
-        $positions_list = Position::pluck('position_name', 'id');
-      };
-    }
+    // Получаем метод
+    $method = __FUNCTION__;
+    // Подключение политики
+    $this->authorize($method, Department::class);
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    // -------------------------------------------------------------------------------------------
+    // ГЛАВНЫЙ ЗАПРОС
+    // -------------------------------------------------------------------------------------------
+    $departments = Department::with(['staff', 'staff.position', 'staff.user'])
+    ->withoutGlobalScope($answer['moderator'])
+    ->moderatorFilter($answer['dependence'])
+    ->companiesFilter($answer['company_id'])
+    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer['all_authors'])
+    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->orderBy('moderated', 'desc')
+    ->get();
+    // Получаем список должностей
+    $positions_list = Position::withoutGlobalScope($answer['moderator'])
+    ->moderatorFilter($answer['dependence'])
+    ->companiesFilter($answer['company_id'])
+    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer['all_authors'])
+    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->pluck('position_name', 'id');
     // dd($departments);
     $departments_db = $departments->toArray();
     //Создаем масив где ключ массива является ID меню
@@ -77,7 +82,8 @@ class DepartmentController extends Controller
     };
           
     $departments_list = $departments->pluck('department_name', 'id');
-    $page_info = pageInfo('departments');
+    // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
     // dd($departments_tree);
     return view('departments', compact('departments_tree', 'positions', 'positions_list', 'departments_list', 'page_info', 'pages', 'departments'));
   }
@@ -85,24 +91,32 @@ class DepartmentController extends Controller
   // Получаем сторонние данные по 
   public function current_department(Request $request, $section_id, $item_id)
   {
-    $user = $request->user();
-    $others_item['user_id'] = $user->id;
-    $system_item = null;
-    if (isset($user->company_id)) {
-      // Если у пользователя есть компания
-      $departments = Department::with(['staff', 'staff.position', 'staff.user'])
-              ->whereCompany_id($user->company_id)
-              ->systemItem($system_item) // Фильтр по системным записям
-              ->get();
-      $positions_list = Position::whereCompany_id($user->company_id)
-                        ->orWhereNull('company_id')->pluck('position_name', 'id');
-    } else {
-      // Если нет, то бог без компании
-      if ($user->god == 1) {
-        $departments = Department::with(['staff', 'staff.position', 'staff.user'])->get();
-        $positions_list = Position::pluck('position_name', 'id');
-      };
-    }
+    // Получаем метод
+    $method = __FUNCTION__;
+    // Подключение политики
+    $this->authorize($method, Department::class);
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    // -------------------------------------------------------------------------------------------
+    // ГЛАВНЫЙ ЗАПРОС
+    // -------------------------------------------------------------------------------------------
+    $departments = Department::with(['staff', 'staff.position', 'staff.user'])
+    ->withoutGlobalScope($answer['moderator'])
+    ->moderatorFilter($answer['dependence'])
+    ->companiesFilter($answer['company_id'])
+    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer['all_authors'])
+    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->orderBy('moderated', 'desc')
+    ->get();
+    // Получаем список должностей
+    $positions_list = Position::withoutGlobalScope($answer['moderator'])
+    ->moderatorFilter($answer['dependence'])
+    ->companiesFilter($answer['company_id'])
+    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer['all_authors'])
+    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->pluck('position_name', 'id');
     // dd($departments);
     $departments_db = $departments->toArray();
     //Создаем масив где ключ массива является ID меню
@@ -133,6 +147,7 @@ class DepartmentController extends Controller
       // dd($department);
     };
     $departments_list = $departments->pluck('department_name', 'id');
+    // Инфо о странице
     $page_info = pageInfo('departments');
     $data = [
       'section_name' => 'departments',
@@ -143,26 +158,24 @@ class DepartmentController extends Controller
     return view('departments', compact('departments_tree', 'positions', 'positions_list', 'data', 'departments_list', 'staff', 'page_info', 'departments')); 
   }
 
-
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
   public function create()
   {
     //
   }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
   public function store(Request $request)
   {
+    // Получаем метод
+    $method = 'create';
+    // Подключение политики
+    $this->authorize($method, Site::class);
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    // Получаем данные для авторизованного пользователя
     $user = $request->user();
+    $user_id = $user->id;
+    $user_status = $user->god;
+    $company_id = $user->company_id;
     // Пишем филиал
     if (isset($request->filial_database)) {
       // По умолчанию значение 0
@@ -204,16 +217,15 @@ class DepartmentController extends Controller
       // Если город найден, то меняем значение на 1, пишем в базу и отдаем результат
       if ($request->filial_database == 1) {
         $filial = new Department;
-        $filial->company_id = $user->company_id;
+        $filial->company_id = $company_id;
         $filial->city_id = $request->city_id;
         $filial->department_name = $request->filial_name;
         $filial->department_address = $request->filial_address;
         $filial->department_phone = cleanPhone($request->filial_phone);
         $filial->filial_status = 1;
-        $filial->author_id = $user->id;
+        $filial->author_id = $user_id;
         $filial->save();
         if($filial) {
-
           return Redirect('/current_department/'.$filial->id.'/0');
         } else {
           abort(403, 'Ошибка при записи филиала!');
@@ -227,12 +239,10 @@ class DepartmentController extends Controller
         // Проверка отдела в нашей базе данных
         $department_name = $request->department_name;
         $filial_id = $request->filial_id;
-
         $result = Department::where([
           ['department_name', 'like', $department_name.'%'],
           ['filial_id', '=', $filial_id],
         ])->first();
-
         if ($result) {
           $result = [
             'error_message' => 'Такой отдел уже существует',
@@ -247,10 +257,8 @@ class DepartmentController extends Controller
       };
       // Если отдел не найден, то меняем значение на 1, пишем в базу и отдаем результат
       if ($request->department_database == 1) {
-
         $department = new Department;
-
-        $department->company_id = $user->company_id;
+        $department->company_id = $company_id;
         $department->department_name = $request->department_name;
         if($request->department_address == '') {
         } else {
@@ -260,47 +268,33 @@ class DepartmentController extends Controller
         } else {
           $department->department_phone = cleanPhone($request->department_phone);
         };
-
         $department->filial_id = $request->filial_id;
         $department->department_parent_id = $request->parent_id;
-        $department->author_id = $user->id;
-              
-
+        $department->author_id = $user_id;
         $department->save();
-
         $department_id = $department->id;
-
         if($department){
-
           return Redirect('/current_department/'.$request->filial_id.'/'.$department_id);
-
         } else {
           abort(403, 'Ошибка при записи отдела!');
         };
       };
     };
   }
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+
   public function show($id)
   {
     
   }
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function edit($id)
   {
-    $department = Department::findOrFail($id);
-
+    // Получаем метод
+    $method = 'update';
+    // ГЛАВНЫЙ ЗАПРОС:
+   $department = Department::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    // Подключение политики
+    $this->authorize($method, $department);
     if ($department->filial_status == 1) {
       // Меняем филиал
       $result = [
@@ -345,24 +339,26 @@ class DepartmentController extends Controller
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function update(Request $request, $id)
   {
+    // Получаем метод
+    $method = __FUNCTION__;
+    // Получаем авторизованного пользователя
+    $user = $request->user();
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, true, $method);
+    // ГЛАВНЫЙ ЗАПРОС:
+    $filial = Department::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+    // Подключение политики
+    $this->authorize('update', $site);
     if ($request->filial_database == 1) {
-      $filial = Department::findOrFail($id);
-      $filial->company_id = $request->user()->company_id;
       $filial->city_id = $request->city_id;
       $filial->department_name = $request->filial_name;
       $filial->department_address = $request->filial_address;
       $filial->department_phone = cleanPhone($request->filial_phone);
       $filial->filial_status = 1;
       $filial->filial_id = $id;
+      $filial->editor_id = $user->id;
       $filial->save();
       if ($filial) {
         return Redirect('/current_department/'.$filial->id.'/0');
@@ -372,13 +368,13 @@ class DepartmentController extends Controller
     };
     if ($request->department_database == 1) {
       $department = Department::findOrFail($id);
-      $department->company_id = $request->user()->company_id;
       $department->city_id = $request->city_id;
       $department->department_name = $request->department_name;
       $department->department_address = $request->department_address;
       // $department->department_phone = cleanPhone($request->department_phone);
       $department->department_parent_id = $request->department_parent_id;
       $department->filial_id = $request->filial_id;
+      $department->editor_id = $user->id;
       $department->save();
       if ($department) {
         return Redirect('/current_department/'.$department->filial_id.'/'.$id);
@@ -388,16 +384,13 @@ class DepartmentController extends Controller
     };
   }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function destroy(Request $request, $id)
   {
+    // ГЛАВНЫЙ ЗАПРОС:
+   $department = Department::with('staff')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    // Подключение политики
+    $this->authorize('delete', $department);
     $user = $request->user();
-    $department = Department::with('staff')->findOrFail($id);
     if (count($department->staff) > 0) {
       abort(403, 'Филиал/отдел не пустой');
     } else {
