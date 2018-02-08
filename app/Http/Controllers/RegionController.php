@@ -71,6 +71,7 @@ class RegionController extends Controller
       $region->region_code = $request->region_code;
       $region->region_vk_external_id = $request->region_vk_external_id;
       $region->author_id = $user_id;
+      $region->system_item = 1;
       $region->save();
 
       if ($region) {
