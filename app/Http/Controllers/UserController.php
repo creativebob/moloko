@@ -53,9 +53,10 @@ class UserController extends Controller
         ->orderBy('moderated', 'desc')
         ->paginate(30);
 
-        // dd($users);
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
 
-	    return view('users.index', compact('users'));
+	    return view('users.index', compact('users', 'page_info'));
 	}
 
     public function create(Request $request)

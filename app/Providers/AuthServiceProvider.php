@@ -20,6 +20,7 @@ use App\Page;
 use App\Position;
 use App\Site;
 use App\Staffer;
+use App\Booklist;
 
 use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
@@ -40,6 +41,7 @@ use App\Policies\PagePolicy;
 use App\Policies\PositionPolicy;
 use App\Policies\SitePolicy;
 use App\Policies\StafferPolicy;
+use App\Policies\BooklistPolicy;
 
 use Illuminate\Support\Facades\Gate as GateContract;
 // use Illuminate\Support\Facades\Gate;
@@ -72,6 +74,7 @@ class AuthServiceProvider extends ServiceProvider
         Page::class => PagePolicy::class,
         Site::class => SitePolicy::class,
         Staffer::class => StafferPolicy::class,
+        Booklist::class => BooklistPolicy::class,
     ];
 
     /**

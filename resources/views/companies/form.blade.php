@@ -93,7 +93,7 @@
             <div class="grid-x grid-padding-x"> 
               <div class="small-12 medium-6 cell">
                 <label>ИНН
-                {{ Form::text('inn', $company->company_inn, ['class'=>'company_inn-field', 'maxlength'=>'10', 'pattern'=>'[0-9]{10}', 'autocomplete'=>'off']) }}
+                {{ Form::text('company_inn', $company->user_id, ['class'=>'company_inn-field', 'id'=>'company_inn-field', 'maxlength'=>'10', 'autocomplete'=>'off']) }}
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
@@ -116,11 +116,7 @@
                 {{ Form::text('account_correspondent', $company->account_correspondent, ['class'=>'account-correspondent-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
                 </label>
               </div>
-              <div class="small-12 medium-6 cell">
-                <label>ИНН
-                {{ Form::text('user_id', $company->user_id, ['class'=>'company_inn-field', 'maxlength'=>'10', 'autocomplete'=>'off']) }}
-                </label>
-              </div>
+
             </div>
         </div>
 

@@ -2,20 +2,19 @@
 
 namespace App\Policies;
 
-use App\Policies\Traits\PoliticTrait;
+use App\Booklist;
 use App\User;
-use App\Company;
+use App\Policies\Traits\PoliticTrait;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class CompanyPolicy
+class BooklistPolicy
 {
-    
     use HandlesAuthorization;
     use PoliticTrait;
 
-    protected$entity_name = 'companies';
+    protected $entity_name = 'booklists';
     protected $entity_dependence = false;
 
     public function before($user)
@@ -30,7 +29,7 @@ class CompanyPolicy
         return $result;
     }
 
-    public function view(User $user, Company $model)
+    public function view(User $user, Booklist $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
         return $result;
@@ -42,13 +41,13 @@ class CompanyPolicy
         return $result;
     }
 
-    public function update(User $user, Company $model)
+    public function update(User $user, Booklist $model)
     { 
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
 
-    public function delete(User $user, Company $model)
+    public function delete(User $user, Booklist $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
@@ -58,5 +57,4 @@ class CompanyPolicy
     {
         if(Auth::user()->god){return true;} else {return false;};
     }
-      
 }

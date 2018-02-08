@@ -33,7 +33,7 @@ class CompanyController extends Controller
         $method = __FUNCTION__;
 
         // Подключение политики
-        $this->authorize($method, User::class);
+        $this->authorize($method, Company::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, true, $method);
@@ -45,18 +45,15 @@ class CompanyController extends Controller
 
         $companies = Company::withoutGlobalScope($answer['moderator'])
         ->moderatorFilter($answer['dependence'])
-        ->companiesFilter($answer['company_id'])
-        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer['all_authors'])
-        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+        // ->companiesFilter($answer['company_id'])
+        // ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        // ->authors($answer['all_authors'])
+        // ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
         // ->orWhere('id', $request->user()->id) // Только для сущности USERS
         ->orderBy('moderated', 'desc')
         ->paginate(30);
 
-
-
         return view('companies.index', compact('companies'));
-
     }
 
     /**
@@ -93,7 +90,7 @@ class CompanyController extends Controller
         $company->city_id = $request->city_id;
         $company->company_address = $request->company_address;
 
-        $company->company_inn = $request->inn;
+        $company->company_inn = $request->company_inn;
         $company->kpp = $request->kpp;
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
@@ -157,7 +154,7 @@ class CompanyController extends Controller
         $company->city_id = $request->city_id;
         $company->company_address = $request->company_address;
 
-        $company->company_inn = $request->inn;
+        $company->company_inn = $request->company_inn;
         $company->kpp = $request->kpp;
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
@@ -190,4 +187,15 @@ class CompanyController extends Controller
 
         Log::info('Удалили запись из таблица Компании. ID: ' . $id);
     }
+
+
+    public function checkcompany(Request $request)
+    {
+        $company = Company::where('company_inn', $request->company_inn)->first();
+
+        if(!isset($company)){
+            return 0;} else {
+            return $company->company_name;};
+    }
+
 }
