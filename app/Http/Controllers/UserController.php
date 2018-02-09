@@ -53,6 +53,24 @@ class UserController extends Controller
         ->orderBy('moderated', 'desc')
         ->paginate(30);
 
+        // $user_auth = $request->user();
+        // foreach ($users as $user) {
+        //     if ($user_auth->can('update', $user)) {
+        //       $user
+        //     };
+        // }
+
+        // $model = new User;
+        
+        // $operations = [];
+        // if ($user_auth->can('update', $model)) {
+        //   $operations['update'] = 1;
+        // };
+
+        // if ($user_auth->can('delete', $model)) {
+        //    $operations['delete'] = 1; 
+        // };
+        // dd($users);
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
@@ -156,6 +174,8 @@ class UserController extends Controller
 
     public function update(UpdateUser $request, $id)
     {
+        // Получаем метод
+        $method = __FUNCTION__;
 
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
