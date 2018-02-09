@@ -2,75 +2,61 @@
 
 namespace App\Policies;
 
-use App\User;
 use App\Entity;
-use App\RightsRole;
+use App\Policies\Traits\PoliticTrait;
+use App\User;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class EntityPolicy
 {
-    use HandlesAuthorization;
-
-    /**
-     * Determine whether the user can view the entity.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Entity  $entity
-     * @return mixed
-     */
     
-    public function index(User $user, Entity $entity)
+    use HandlesAuthorization;
+    use PoliticTrait;
+    
+    protected $entity_name = 'entities';
+    protected $entity_dependence = true;
+    
+    public function before($user)
     {
-        $current_access = Auth::user()->group_action_id;
-        $access = Access::where(['access_group_id' => $current_access]);
-        return $result = $access->where(['right_action' => 'index-entity'])->count() == "1";
+        // if (Auth::user()->god == 1) {$result = true;} else {$result = null;};
+        // return $result;
     }
 
-
-
-    public function view(User $user, Entity $entity)
+    public function index(User $user)
     {
-
+        $result = $this->getstatus($this->entity_name, null, 'index', $this->entity_dependence);
+        return $result;
     }
 
-    /**
-     * Determine whether the user can create entities.
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
+    public function view(User $user, Entity $model)
+    {
+        $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
+        return $result;
+    }
+
     public function create(User $user)
     {
-        $current_access = Auth::user()->group_action_id;
-        $access = Access::where(['access_group_id' => $current_access]);
-        return $result = $access->where(['right_action' => 'create-entity'])->count() == "1";
+        $result = $this->getstatus($this->entity_name, null, 'create', $this->entity_dependence);
+        return $result;
     }
 
-    /**
-     * Determine whether the user can update the entity.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Entity  $entity
-     * @return mixed
-     */
-    public function update(User $user, Entity $entity)
-    {
-        $current_access = Auth::user()->group_action_id;
-        $access = Access::where(['access_group_id' => $current_access]);
-        return $result = $access->where(['right_action' => 'update-entity'])->count() == "1";
+    public function update(User $user, Entity $model)
+    { 
+        $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
+        return $result;
     }
 
-    /**
-     * Determine whether the user can delete the entity.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Entity  $entity
-     * @return mixed
-     */
-    public function delete(User $user, Entity $entity)
+    public function delete(User $user, Entity $model)
     {
-        //
+        $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
+        return $result;
     }
+
+    public function god(User $user)
+    {
+        if(Auth::user()->god){return true;} else {return false;};
+    }
+
 }

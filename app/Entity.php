@@ -11,7 +11,6 @@ use App\Scopes\Traits\CompaniesFilterTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
-use App\Scopes\Traits\ModerationTraitScopes;
 use App\Scopes\Traits\ModeratorFilterTraitScopes;
 
 class Entity extends Model

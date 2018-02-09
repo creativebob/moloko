@@ -18,6 +18,9 @@ class CreateListItemsTable extends Migration
 
             $table->integer('item_entity')->nullable()->unsigned()->comment('ID какой либо сущности');
 
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
+
             $table->integer('booklist_id')->nullable()->unsigned()->comment('Id списка');
             $table->foreign('booklist_id')->references('id')->on('booklists');
 

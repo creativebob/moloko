@@ -16,6 +16,10 @@ class CreateEntitiesTable extends Migration
         Schema::create('entities', function (Blueprint $table) {
             $table->increments('id');
             $table->string('entity_name')->index()->comment('Название сущности');
+
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
+            
             $table->string('entity_alias')->index()->comment('Название как в базе данных');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');

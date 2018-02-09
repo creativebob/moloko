@@ -28,61 +28,57 @@ class Company extends Model
   use FilialsTraitScopes;
   use ModeratorFilterTraitScopes;
 
-	public function user_info()
-	{
-		return $this->BelongsTo('App\User', 'director_user_id');
-	}
+  protected $dates = ['deleted_at'];
+  protected $fillable = [
 
-    protected $dates = ['deleted_at'];
-    protected $fillable = [
+      'company_name', 
+      'company_phone', 
+      'company_extra_phone', 
+      'city_id', 
+      'company_address', 
+      'company_inn', 
+      'kpp', 
+      'account_settlement', 
+      'account_correspondent', 
+      'bank', 
+      'director_user_id', 
+      'admin_user_id'
+  ];
 
-        'company_name', 
-        'company_phone', 
-        'company_extra_phone', 
-        'city_id', 
-        'company_address', 
-        'company_inn', 
-        'kpp', 
-        'account_settlement', 
-        'account_correspondent', 
-        'bank', 
-        'director_user_id', 
-        'admin_user_id'
-    ];
-  /**
-  * Получаем отделы компании.
-  */
+  // Связываем компанию с информацией о ее директоре
+  public function director()
+  {
+    return $this->BelongsTo('App\User', 'director_user_id');
+  }
+
   public function departments()
   {
     return $this->hasMany('App\Department');
   }
-  /**
-  * Получаем сайты компании.
-  */
+
   public function sites()
   {
     return $this->hasMany('App\Site');
   }
-  /**
-  * Получаем пользователей компании.
-  */
+
   public function users()
   {
     return $this->hasMany('App\User');
   }
-  /**
-  * Получаем роли компании.
-  */
+
   public function roles()
   {
     return $this->hasMany('App\Role');
   } 
-  /**
-  * Получаем штат компании.
-  */
+
   public function staff()
   {
     return $this->hasMany('App\Staffer');
   } 
+
+  public function author()
+  {
+    return $this->belongsTo('App\User', 'author_id');
+  }
 
 }
