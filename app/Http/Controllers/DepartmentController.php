@@ -11,6 +11,8 @@ use App\Page;
 use App\Right;
 // Политика
 use App\Policies\DepartmentPolicy;
+// Валидация
+use App\Http\Requests\DepartmentRequest;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -163,14 +165,12 @@ class DepartmentController extends Controller
     //
   }
 
-  public function store(Request $request)
+  public function store(DepartmentRequest $request)
   {
     // Получаем метод
     $method = 'create';
     // Подключение политики
-    $this->authorize($method, Site::class);
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    $this->authorize($method, Department::class);
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
     $user_id = $user->id;
