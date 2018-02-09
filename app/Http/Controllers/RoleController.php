@@ -126,7 +126,8 @@ class RoleController extends Controller
         $role = new Role;
         $role->role_name = $request->role_name;
         $role->role_description = $request->role_description;
-        if(isset($user->company_id)){ $role->company_id = $user->company_id;} else { $role->system_item = 1;};
+
+        if(isset($user->company_id)){$role->company_id = $user->company_id;} else { $role->system_item = 1;};
         $role->author_id = $user->id;
         $role->save();
 
