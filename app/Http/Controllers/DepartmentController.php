@@ -178,44 +178,13 @@ class DepartmentController extends Controller
     $company_id = $user->company_id;
     // Пишем филиал
     if (isset($request->filial_database)) {
-      // По умолчанию значение 0
-      if ($request->filial_database == 0) {
-        // Проверка города в нашей базе данных
-        $city_name = $request->city_name;
-        $cities = City::where('city_name', 'like', $city_name.'%')->get();
-        $count = $cities->count();
-        if ($count > 0) {
-          $objRes = (object) [];
-          foreach ($cities as $city) {
-            $city_id = $city->id;
-            $city_name = $city->city_name;
-            if ($city->area_id == null) {
-              $area_name = '';
-              $region_name = $city->region->region_name;
-            } else {
-              $area_name = $city->area->area_name;
-              $region_name = $city->area->region->region_name;
-            };
-            $objRes->city_id[] = $city_id;
-            $objRes->city_name[] = $city_name;
-            $objRes->area_name[] = $area_name;
-            $objRes->region_name[] = $region_name;
-          };
-          $result = [
-            'error_status' => 0,
-            'cities' => $objRes,
-            'count' => $count
-          ];
-        } else {
-          $result = [
-            'error_message' => 'Населенный пункт не существует в нашей базе данных, добавьте его!',
-            'error_status' => 1
-          ];
-        };
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-      };
       // Если город найден, то меняем значение на 1, пишем в базу и отдаем результат
       if ($request->filial_database == 1) {
+        // Получаем данные для авторизованного пользователя
+    $user = $request->user();
+    $user_id = $user->id;
+    $user_status = $user->god;
+    $company_id = $user->company_id;
         $filial = new Department;
         $filial->company_id = $company_id;
         $filial->city_id = $request->city_id;
@@ -223,7 +192,7 @@ class DepartmentController extends Controller
         $filial->department_address = $request->filial_address;
         $filial->department_phone = cleanPhone($request->filial_phone);
         $filial->filial_status = 1;
-        $filial->author_id = $user_id;
+        // $filial->author_id = $user_id;
         $filial->save();
         if($filial) {
           return Redirect('/current_department/'.$filial->id.'/0');
@@ -236,6 +205,11 @@ class DepartmentController extends Controller
     // Пишем отделы
     if (isset($request->department_database)) {
       if ($request->department_database == 0) {
+        // Получаем данные для авторизованного пользователя
+    $user = $request->user();
+    $user_id = $user->id;
+    $user_status = $user->god;
+    $company_id = $user->company_id;
         // Проверка отдела в нашей базе данных
         $department_name = $request->department_name;
         $filial_id = $request->filial_id;

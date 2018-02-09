@@ -29,12 +29,13 @@ class DepartmentRequest extends FormRequest
             'city_id' => 'integer|nullable', 
             'filial_name' => 'string|max:255|nullable',
             'filial_address' => 'string|max:255|nullable',
-            'filial_phone' => 'string|max:11|nullable', 
+            'filial_phone' => 'string|max:11|nullable',
+            'filial_id' => 'integer|nullable',  
             'department_database' => 'integer|nullable', 
             'department_name' => 'string|max:255|nullable',
             'department_address' => 'string|max:255|nullable',
             'department_phone' => 'string|max:11|nullable', 
-            'filial_id' => 'integer|nullable', 
+
             'parent_id' => 'integer|nullable', 
         ];
     }

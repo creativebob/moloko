@@ -85,10 +85,11 @@
               
             </div>
             <div class="small-12 medium-6 cell">
-              <label class="input-icon">Город
-                <input type="text" name="id_city" autocomplete="off">
-                <div class="sprite-input icon-password"></div>
-              </label>
+              <label class="input-icon">Введите город
+          {{ Form::text('city_name', $value = null, ['id'=>'city-name-field-add', 'autocomplete'=>'off', 'required']) }}
+          <div class="sprite-input-right icon-success load">лол</div>
+          <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
+        </label>
               <label>Адрес
               {{ Form::text('address', $user->address, ['class'=>'address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
               </label>

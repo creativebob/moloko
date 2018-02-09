@@ -58,6 +58,7 @@ Route::get('/returngod', 'UserController@returngod')->middleware('auth')->name('
 Route::resource('/cities', 'CityController')->middleware('auth');
 Route::resource('/areas', 'AreaController')->middleware('auth');
 Route::resource('/regions', 'RegionController')->middleware('auth');
+Route::post('/city_list', 'CityController@city_list')->middleware('auth');
 // Получаем области и города из vk
 Route::post('/city', 'CityController@get_vk_city')->middleware('auth');
 Route::post('/region', 'RegionController@get_vk_region')->middleware('auth');
