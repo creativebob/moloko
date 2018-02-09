@@ -1,5 +1,8 @@
 @extends('layouts.app')
-@include('entities.inhead')
+
+@section('inhead')
+  @include('includes.inhead-pickmeup')
+@endsection
 
 @section('title', 'Редактировать сущность')
 
@@ -23,6 +26,9 @@
   {{ Form::close() }}
 
 @endsection
-@include('entities.scripts')
+
+@section('scripts')
+  @include('includes.inputs-mask')
+@endsection
 
 

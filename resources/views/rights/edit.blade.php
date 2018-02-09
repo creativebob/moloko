@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@include('rights.inhead')
 
 @section('title', 'Редактировать пользователя')
 
@@ -23,6 +22,7 @@
   {{ Form::close() }}
 
 @endsection
-@include('rights.scripts')
 
-
+@section('scripts')
+  @include('includes.inputs-mask')
+@endsection

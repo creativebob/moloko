@@ -20,6 +20,9 @@
   {{ Form::close() }}
 
 @endsection
-@include('roles.scripts')
+
+@section('scripts')
+  @include('includes.inputs-mask')
+@endsection
 
 

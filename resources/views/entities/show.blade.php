@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@include('entities.inhead')
 
 @section('title', 'Просмотр сущности')
 
@@ -21,6 +20,9 @@
   {{ Form::close() }}
 
 @endsection
-@include('entities.scripts')
+
+@section('scripts')
+  @include('includes.inputs-mask')
+@endsection
 
 

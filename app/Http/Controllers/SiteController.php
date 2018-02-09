@@ -35,7 +35,7 @@ class SiteController extends Controller
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
-    $sites = Site::with('author')
+    $sites = Site::with('author', 'company')
     ->withoutGlobalScope($answer['moderator'])
     ->moderatorFilter($answer['dependence'])
     ->companiesFilter($answer['company_id'])

@@ -5,7 +5,9 @@
   @include('includes.table-inhead')
 @endsection
 
-@section('title', 'Пользователи')
+@section('title')
+  {{ $page_info->page_name }}
+@endsection
 
 @section('title-content')
 {{-- Таблица --}}
@@ -14,7 +16,10 @@
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
         <h2 class="header-content">{{ $page_info->page_name }}</h2>
-	      <a href="/users/create" class="icon-add sprite"></a>
+        @can('create', App\User::class)
+          <a href="/users/create" class="icon-add sprite"></a>
+        @endcan
+	      
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -26,90 +31,7 @@
 	  <div class="grid-x">
       <div class="small-12 cell filters" id="filters">
         <fieldset class="fieldset-filters inputs">
-          {{ Form::open(['route' => 'users.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
-            <legend>Фильтрация</legend>
-            <div class="grid-x grid-padding-x"> 
-              <div class="small-6 cell">
-                <label>Статус пользователя
-                  {{ Form::select('user_type', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-                  {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-                </label>
-              </div>
-
-              <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-               {{ Form::submit('Фильтрация', ['class'=>'button']) }}
-              </div>
-            </div>
-          {{ Form::close() }}
+          @include('users.filters')
         </fieldset>
       </div>
     </div>
@@ -150,7 +72,7 @@
           <td class="td-login">{{ $user->login }} </td>
 
 
-          {{-- Если пользователь бог, то показываем для него переключатель на авторизацию под полдьзователем --}}
+          {{-- Если пользователь бог, то показываем для него переключатель на авторизацию под пользователем --}}
           @if(Auth::user()->god == 1)
 
           @php
@@ -172,8 +94,12 @@
           <td class="td-access-block">{{ decor_access_block($user->access_block) }}</td>
 {{--           <td class="td-group_action_id">{{ $user->group_action->access_group_name }}</td>
           <td class="td-group_locality_id">{{ $user->group_locality->access_group_name }}</td> --}}
-          <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
-          <!-- <td class="td-delete">{{ link_to_route('users.destroy', " " , [$user->id], ['class'=>'icon-delete sprite']) }}</td> -->
+          <td class="td-delete">
+            @if (($user->system_item !== 1) && ($user->god !== 1))
+            <a class="icon-delete sprite" data-open="item-delete"></a>
+            @endif
+          </td>       
+
         </tr>
         @endforeach
       @endif

@@ -31,6 +31,10 @@
   {{ Form::close() }}
 @endsection
 
+@section('scripts')
+  @include('includes.inputs-mask')
+@endsection
+
 
 
 

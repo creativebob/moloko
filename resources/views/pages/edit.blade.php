@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@include('companies.inhead')
 
 @section('title', 'Редактировать страницу')
 
@@ -35,6 +34,10 @@
     
   {{ Form::close() }}
 
+@endsection
+
+@section('scripts')
+  @include('includes.inputs-mask')
 @endsection
 
 

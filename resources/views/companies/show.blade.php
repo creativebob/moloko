@@ -1,5 +1,8 @@
 @extends('layouts.app')
-@include('companies.inhead')
+
+@section('inhead')
+  @include('includes.inhead-pickmeup')
+@endsection
 
 @section('title', 'Просмотр компании')
 
@@ -21,6 +24,9 @@
   {{ Form::close() }}
 
 @endsection
-@include('companies.scripts')
+
+@section('scripts')
+  @include('includes.inputs-mask')
+@endsection
 
 

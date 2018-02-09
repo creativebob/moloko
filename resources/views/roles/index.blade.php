@@ -22,21 +22,11 @@
 	      <button type="button" class="icon-search sprite button"></button>
 	    </div>
 	  </div>
-	  {{-- Блок фильтров --}}
-	  <div class="grid-x">
+    {{-- Блок фильтров --}}
+    <div class="grid-x">
       <div class="small-12 cell filters" id="filters">
-        <fieldset class="fieldset-filters">
-
-          {{ Form::open(['route' => 'roles.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
-
-          <legend>Фильтрация</legend>
-            <div class="grid-x grid-padding-x">
-
-
-            </div>
-
-          {{ Form::close() }}
-
+        <fieldset class="fieldset-filters inputs">
+          @include('roles.filters')
         </fieldset>
       </div>
     </div>

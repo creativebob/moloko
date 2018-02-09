@@ -1,4 +1,3 @@
-@section('scripts')
 <script type="text/javascript" src="/js/jquery.inputmask.min.js"></script>
 <script type="text/javascript">
 
@@ -20,6 +19,4 @@
     position : "bottom",
     hide_on_select : true
   });
-  
 </script>
-@endsection

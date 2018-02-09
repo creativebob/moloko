@@ -1,5 +1,8 @@
 @extends('layouts.app')
-@include('users.inhead')
+
+@section('inhead')
+  @include('includes.inhead-pickmeup')
+@endsection
 
 @section('title', 'Редактировать пользователя')
 
@@ -23,7 +26,6 @@
   {{ Form::close() }}
 
 @endsection
-
 
 @section('modals')
 {{-- Модалка добавления роли --}}
@@ -61,6 +63,8 @@
 @include('includes.modals.modal-delete-ajax')
 @endsection
 
-@include('users.scripts')
+@section('scripts')
+  @include('includes.inputs-mask')
+@endsection
 
 

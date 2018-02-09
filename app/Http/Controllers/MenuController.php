@@ -7,7 +7,6 @@ use App\Menu;
 use App\Page;
 use App\Navigation;
 use App\Site;
-
 // Валидация
 use App\Http\Requests\MenuRequest;
 // Политика
@@ -31,8 +30,6 @@ class MenuController extends Controller
     $this->authorize($method, Menu::class);
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
-    // Получаем сайт
-    $site = Site::whereSite_alias($site_alias)->first();
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
@@ -43,7 +40,8 @@ class MenuController extends Controller
     ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer['all_authors'])
     ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
-    ->findOrFail($site->id);
+    ->whereSite_alias($site_alias)
+    ->first();
     $user = $request->user(); 
     // Создаем масив где ключ массива является ID меню
     $navigation_id = [];
@@ -92,8 +90,6 @@ class MenuController extends Controller
     $this->authorize($method, Menu::class);
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
-    // Получаем сайт
-    $site = Site::whereSite_alias($site_alias)->first();
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
@@ -104,7 +100,8 @@ class MenuController extends Controller
     ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer['all_authors'])
     ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
-    ->findOrFail($site->id);
+    ->whereSite_alias($site_alias)
+    ->first();
     $user = $request->user(); 
     // Создаем масив где ключ массива является ID меню
     $navigation_id = [];

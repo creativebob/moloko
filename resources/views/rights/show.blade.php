@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@include('rights.inhead')
 
 @section('title', 'Просмотр правила доступа')
 
@@ -21,6 +20,9 @@
   {{ Form::close() }}
 
 @endsection
-@include('rights.scripts')
+
+@section('scripts')
+  @include('includes.inputs-mask')
+@endsection
 
 

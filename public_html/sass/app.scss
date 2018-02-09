@@ -205,6 +205,7 @@ html, body {
 
 #wrapper {
   // border: 2px solid red;
+  height: 93vh;
 }
 
 .el, .el * {
@@ -1233,7 +1234,6 @@ input[type=checkbox], input[type=radio] {
 // Основной контент
 .content {
   padding: 30px 20px 44px 20px;
-  height: 95vh;
   z-index: 60;
   // width: 100%;
 
@@ -1321,6 +1321,7 @@ input[type=checkbox], input[type=radio] {
       legend {
         font-family: $PFDDPM;
         padding: 0 1rem;
+        margin-bottom: 1rem;
       }
     }
   }

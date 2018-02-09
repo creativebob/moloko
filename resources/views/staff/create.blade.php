@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('inhead')
+  @include('includes.inhead-pickmeup')
+@endsection
+
 @section('title', 'Новая должность')
 
 @section('title-content')
@@ -18,6 +22,14 @@
     @include('positions.form', ['submitButtonText' => 'Добавить должность', 'param' => ''])
   {{ Form::close() }}
 
+@endsection
+
+@section('scripts')
+  @include('includes.inputs-mask')
+@endsection
+
+@section('scripts')
+  @include('includes.inputs-mask')
 @endsection
 
 

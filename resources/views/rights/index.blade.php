@@ -23,31 +23,10 @@
 	    </div>
 	  </div>
 	  {{-- Блок фильтров --}}
-	  <div class="grid-x">
+    <div class="grid-x">
       <div class="small-12 cell filters" id="filters">
-        <fieldset class="fieldset-filters">
-
-          {{ Form::open(['route' => 'rights.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
-
-          <legend>Фильтрация</legend>
-            <div class="grid-x grid-padding-x"> 
-              <div class="small-6 cell">
-                <label>Статус пользователя
-                  {{ Form::select('category_right_id', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
-                </label>
-              </div>
-              <div class="small-6 cell">
-                <label>Блокировка доступа
-
-                </label>
-              </div>
-              <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-               {{ Form::submit('Фильтрация', ['class'=>'button']) }}
-              </div>
-            </div>
-
-          {{ Form::close() }}
-
+        <fieldset class="fieldset-filters inputs">
+          @include('rights.filters')
         </fieldset>
       </div>
     </div>

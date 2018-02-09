@@ -1,5 +1,8 @@
 @extends('layouts.app')
-@include('users.inhead')
+
+@section('inhead')
+  @include('includes.inhead-pickmeup')
+@endsection
 
 @section('title', 'Просмотр пользователя')
 
@@ -21,6 +24,9 @@
   {{ Form::close() }}
 
 @endsection
-@include('users.scripts')
+
+@section('scripts')
+  @include('includes.inputs-mask')
+@endsection
 
 

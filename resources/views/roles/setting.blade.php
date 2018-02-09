@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('inhead')
-{{-- Скрипты таблиц в шапке --}}
   @include('includes.table-inhead')
 @endsection
 
@@ -125,9 +124,6 @@
   </div>
 @endsection
 
-@section('scripts')
-  @include('roles.scripts')
-@endsection
 
 
 

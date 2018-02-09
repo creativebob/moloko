@@ -1,5 +1,8 @@
 @extends('layouts.app')
-@include('employees.inhead')
+
+@section('inhead')
+  @include('includes.inhead-pickmeup')
+@endsection
 
 @section('title', 'Редактировать сотрудника')
 
@@ -24,6 +27,8 @@
 
 @endsection
 
-@include('employees.scripts')
+@section('scripts')
+  @include('includes.inputs-mask')
+@endsection
 
 

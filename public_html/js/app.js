@@ -1,7 +1,5 @@
 $(document).foundation();
-
 // Умолчания глобальные
-
 // Время применения изменений
 var transitionTime = 200;
 // Ширина менеджера задач
@@ -13,8 +11,6 @@ var widthSidebarExpand = 240;
 // Блок фильтра
 // var heightFilterSmall = 140;
 
-
-
 var theadTh = $('.thead-width>tr>th');
 var tbodyTd = $('.tbody-width>tr:first>td');
 var oldContentWidth = 0;
@@ -25,7 +21,6 @@ var oldTdWidth = [];
 // Если есть табличка, то берем ширины ячеек
 
 function getMassWidth () {
-
 	if ($("table").is("#table-content")) {
 	  if (tbodyTd.length == theadTh.length) {
 	    for (var i = 0; i < tbodyTd.length; i++) {
@@ -38,9 +33,6 @@ function getMassWidth () {
 	  };
 	};
 };
-
-
-
 
 // Смотрим локальное хранилище, в каком состоянии был сайдбар
 var sidebar = localStorage.getItem('sidebar');
@@ -497,7 +489,7 @@ $('.icon-filter').click(function() {
 // $(window).scroll(function () {
 //    checkFilter ();
 // });
-
+// Ajax ошибка
 $.ajaxSetup({
   error: function() {
     alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
