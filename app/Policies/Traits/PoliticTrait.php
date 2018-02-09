@@ -35,7 +35,7 @@ trait PoliticTrait
 
         // Предупреждаем божественное влияние на create и store!
         if(($company_id == null)&&(($method == 'create')||($method == 'store')||($method == 'update'))){
-            abort(403, 'Вы не относитесь ни к одной компании. Авторизуйтесь!');
+            // abort(403, 'Вы не относитесь ни к одной компании. Авторизуйтесь!');
             return false;
         };
 

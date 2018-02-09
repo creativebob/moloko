@@ -19,7 +19,6 @@
         @can('create', App\User::class)
           <a href="/users/create" class="icon-add sprite"></a>
         @endcan
-	      
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -64,12 +63,21 @@
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($users))
+
         @foreach($users as $user)
         <tr class="parent @if($user->moderated == 1)no-moderation @endif" id="users-{{ $user->id }}" data-name="{{ $user->nickname }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $user->id }}"><label class="label-check" for="check-{{ $user->id }}"></label></td>
-          <td class="td-second-name">{{ link_to_route('users.edit', $user->second_name . " " . $user->first_name . " (". $user->nickname . ")", [$user->id]) }} </td>
-          <td class="td-login">{{ $user->login }} </td>
+          <td class="td-second-name">
+            @can('update', $user)
+            <a href="/users/{{ $user->id }}/edit">
+            @endcan
+            {{ $user->second_name . " " . $user->first_name . " (". $user->nickname . ")" }}
+            @can('update', $user)
+            </a> 
+            @endcan
+          </td>
+          <td class="td-login">{{ $user->login }}</td>
 
 
           {{-- Если пользователь бог, то показываем для него переключатель на авторизацию под пользователем --}}
@@ -96,7 +104,9 @@
           <td class="td-group_locality_id">{{ $user->group_locality->access_group_name }}</td> --}}
           <td class="td-delete">
             @if (($user->system_item !== 1) && ($user->god !== 1))
-            <a class="icon-delete sprite" data-open="item-delete"></a>
+              @can('delete', $user)
+              <a class="icon-delete sprite" data-open="item-delete"></a>
+              @endcan
             @endif
           </td>       
 
