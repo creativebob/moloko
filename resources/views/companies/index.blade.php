@@ -69,7 +69,7 @@
 
           <td class="td-company-address">{{ $company->company_address }} </td>
           <td class="td-company-phone">{{ decorPhone($company->company_phone) }} </td>
-          <td class="td-user_id">{{ $company->user_info->first_name or ' ... ' }} {{ $company->user_info->second_name or ' ... ' }} </td>
+          <td class="td-user_id">{{ $company->director->first_name or ' ... ' }} {{ $company->director->second_name or ' ... ' }} </td>
 
           <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
         </tr>

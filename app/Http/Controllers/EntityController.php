@@ -24,25 +24,42 @@ use Illuminate\Support\Facades\Log;
 
 class EntityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    // Сущность над которой производит операции контроллер
+    protected $entity_name = 'entities';
+    protected $entity_dependence = false;
+
     public function index()
     {
-        $model = new Entity;
-        // $this->authorize('index', $model);
 
-        $entities = Entity::paginate(30);
-        return view('entities.index', compact('entities'));
+        // Получаем метод
+        $method = __FUNCTION__;
+
+        // Подключение политики
+        $this->authorize($method, Entity::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, false, $method);
+        // dd($answer['dependence']);
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+        $entities = Entity::withoutGlobalScope($answer['moderator'])
+        ->moderatorFilter($answer['dependence'])
+        ->companiesFilter($answer['company_id'])
+        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer['all_authors'])
+        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+        ->orderBy('moderated', 'desc')
+        ->paginate(30);
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+        return view('entities.index', compact('entities', 'page_info'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         // $this->authorize('create', Entity::class);
@@ -51,12 +68,6 @@ class EntityController extends Controller
         return view('entities.create', compact('entity'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         // $this->authorize('create', Entity::class);
@@ -71,27 +82,14 @@ class EntityController extends Controller
         return redirect('entities');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $entity = Entity::findOrFail($id);
         // $this->authorize('update', $entity);
 
-
         return view('entities.show', compact('entity'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $entity = Entity::findOrFail($id);
@@ -100,13 +98,6 @@ class EntityController extends Controller
         return view('entities.show', compact('entity'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $entity = Entity::findOrFail($id);
@@ -118,12 +109,6 @@ class EntityController extends Controller
         return redirect('entities');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $entity = Entity::findOrFail($id);

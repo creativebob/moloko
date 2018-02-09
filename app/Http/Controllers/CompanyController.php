@@ -8,7 +8,6 @@ use App\Company;
 use App\Page;
 
 // Модели которые отвечают за работу с правами + политики
-use App\Role;
 use App\Policies\CompanyPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
@@ -22,11 +21,12 @@ use Illuminate\Support\Facades\Log;
 
 class CompanyController extends Controller
 {
+
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'companies';
 
 
-    public function index()
+    public function index(Request $request)
     {
 
         // Получаем метод
@@ -43,7 +43,8 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $companies = Company::withoutGlobalScope($answer['moderator'])
+        $companies = Company::with('author', 'director')
+        ->withoutGlobalScope($answer['moderator'])
         ->moderatorFilter($answer['dependence'])
         // ->companiesFilter($answer['company_id'])
         // ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -53,32 +54,41 @@ class CompanyController extends Controller
         ->orderBy('moderated', 'desc')
         ->paginate(30);
 
-        return view('companies.index', compact('companies'));
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('companies.index', compact('companies', 'page_info'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+    public function create(Request $request)
     {
-        // $this->authorize('create', Company::class);
+        // Получаем метод
+        $method = __FUNCTION__;
+
+        // Подключение политики
+        $this->authorize(__FUNCTION__, Company::class);
+
         $company = new Company;
         return view('companies.create', compact('company'));   
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        // $this->authorize('create', Company::class);
 
-        $user = Auth::user();
+        // Получаем метод
+        $method = __FUNCTION__;
+
+        // Подключение политики
+        $this->authorize('create', Company::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, false, $method);
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
         $company = new Company;
         $company->company_name = $request->company_name;
         $company->company_phone = cleanPhone($request->company_phone);
@@ -100,49 +110,48 @@ class CompanyController extends Controller
 
         $company->save();
         
-        return redirect('companies.index');
-
+        return redirect('companies');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
-        $company = Company::findOrFail($id);
-        // $this->authorize('view', $company);
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $company = Company::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize('view', $company);
         return view('companies.show', compact('company'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         $company = Company::findOrFail($id);
         // $this->authorize('update', $company);
 
-
         return view('companies.show', compact('company'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
-        $company = Company::findOrFail($id);
-        // $this->authorize('update', $company);
+
+        // Получаем метод
+        $method = __FUNCTION__;
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, false, $method);
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $company = Company::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize('update', $company);
 
         $company->company_name = $request->company_name;
         $company->company_phone = cleanPhone($request->company_phone);
@@ -165,27 +174,25 @@ class CompanyController extends Controller
         return redirect('companies');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
 
-        $company = User::findOrFail($id);
-        // $this->authorize('delete', $company);   
+        // ГЛАВНЫЙ ЗАПРОС:
+        $company = Company::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
 
-        // Удаляем пользователя с обновлением
+        // Подключение политики
+        $this->authorize('delete', $company);
+
         $company = Company::destroy($id);
-        if ($company) {
+
+        if($company) {
           return Redirect('/companies');
         } else {
           echo 'произошла ошибка';
         }; 
 
-        Log::info('Удалили запись из таблица Компании. ID: ' . $id);
+        Log::info('Удалили запись из таблицы Компании. ID: ' . $id);
     }
 
 

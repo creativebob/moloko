@@ -51,7 +51,7 @@ class RoleController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $roles = Role::with('rights')
+        $roles = Role::with('rights', 'company', 'author')
         ->withoutGlobalScope($answer['moderator'])
         ->moderatorFilter($answer['dependence'])
         ->companiesFilter($answer['company_id'])
@@ -87,8 +87,11 @@ class RoleController extends Controller
             $counts_directive_array[$role->id]['count_deny'] = $count_deny;
         };
 
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
         // dd($counts_directive_array);
-        return view('roles.index', compact('roles', 'counts_directive_array'));
+        return view('roles.index', compact('roles', 'counts_directive_array', 'page_info'));
     }
 
 
@@ -283,7 +286,6 @@ class RoleController extends Controller
 
             // Перебираем все операции действий в системе 
             foreach($actions as $action){
-
 
 
                 // РАБОТАЕМ С РАЗРЕШЕНИЯМИ: -----------------------------------------------------------------------------------------------

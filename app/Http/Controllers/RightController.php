@@ -44,7 +44,8 @@ class RightController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $rights = Right::withoutGlobalScope($answer['moderator'])
+        $rights = Right::with('actionentity')
+        ->withoutGlobalScope($answer['moderator'])
         ->moderatorFilter($answer['dependence'])
         ->companiesFilter($answer['company_id'])
         ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -53,7 +54,10 @@ class RightController extends Controller
         ->orderBy('moderated', 'desc')
         ->paginate(30);
 
-        return view('rights.index', compact('rights'));
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('rights.index', compact('rights', 'page_info'));
     }
 
 

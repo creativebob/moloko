@@ -56,7 +56,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy', 
-        // Page::class => PagePolicy::class,
+
         User::class => UserPolicy::class, 
         RightsRole::class => RightsRolePolicy::class, 
         Company::class => CompanyPolicy::class, 
@@ -76,24 +76,6 @@ class AuthServiceProvider extends ServiceProvider
         Staffer::class => StafferPolicy::class,
         Booklist::class => BooklistPolicy::class,
     ];
-
-    /**
-     * Register any authentication / authorization services.
-     *
-     * @return void
-     */
-
-    // public function boot()
-    // {
-
-    //     $this->registerPolicies();
-
-    //     Gate::define('index-user', function ($user, $access) {
-    //     return  $result = $access->where(['right_action' => 'view-user'])->count() == 1;
-
-    //     });
-
-    // }
 
     public function boot()
     {
