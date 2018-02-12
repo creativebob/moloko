@@ -6,8 +6,12 @@ trait CompaniesFilterTraitScopes
 {
 
     // Фильтрация для показа системных записей
-    public function scopeCompaniesFilter($query, $companies)
+    public function scopeCompaniesFilter($query, $answer)
     {
+
+        // Получаем из массива answer нужную информацию:
+        $companies = $answer['company_id'];
+
         // ФИЛЬТРАЦИЯ ПО КОМПАНИИ  -----------------------------------------------------------------------------------------------------------
 
         if($companies == null){

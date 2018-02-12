@@ -6,8 +6,11 @@ trait ModeratorFilterTraitScopes
 {
 
     // Фильтрация записей модерируемых записей по филиалу и автору
-    public function scopeModeratorFilter($query, $entity_dependence)
+    public function scopeModeratorFilter($query, $answer)
     {
+
+        $entity_dependence = $answer['dependence'];
+
         // Получаем данные из сессии
         $session  = session('access');
         $user_id = $session['user_info']['user_id'];

@@ -6,10 +6,16 @@ trait AuthorsTraitScopes
 {
 
     // Фильтрация для показа авторов
-    public function scopeAuthors($query, $all_authors)
+    public function scopeAuthors($query, $answer)
     {
-        $user_id = $all_authors['user_id'];
+
+        // Получаем из массива answer нужную информацию:
+        // $dependence = $answer['dependence'];
+        // $filials = $answer['filials'];
         
+        $all_authors = $answer['all_authors'];
+        
+        $user_id = $all_authors['user_id'];
 
         if($all_authors['authors_status']){
 

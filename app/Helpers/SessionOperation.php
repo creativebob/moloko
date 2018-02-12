@@ -4,7 +4,6 @@
 
         function operator_right($entity_name, $entity_dependence, $method) {
 
-
         // Получаем сессию
         $session  = session('access');
         if(!isset($session)){abort(403, 'Нет сессии!');};
@@ -168,6 +167,8 @@
 
         // ФОРМИРУЕМ РЕЗУЛЬТАТЫ И ОФОРМЛЯЕМ ИХ В ВИДЕ МАССИВА ДЛЯ ОТПРАВКИ В КОНТРОЛЛЕР
 
+
+        $answer['entity_name'] = $entity_name;
         $answer['dependence'] = $dependence;
         $answer['moderator'] = $moderator;
         $answer['system_item'] = $system_item;

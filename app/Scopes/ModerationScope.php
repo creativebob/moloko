@@ -24,6 +24,6 @@ class ModerationScope implements Scope
         $user_id = $session['user_info']['user_id'];
 
         $builder->where('moderated', null)
-        ->Orwhere(function ($builder) use ($user_id) {$builder->Where('moderated', 1)->Where('author_id', $user_id);});
+        ->orWhere(function ($builder) use ($user_id) {$builder->Where('moderated', 1)->Where('author_id', $user_id);});
     }
 }

@@ -5,8 +5,12 @@ namespace App\Scopes\Traits;
 trait FilialsTraitScopes
 {
     // Фильтрация по филиалу
-    public function scopeFilials($query, $filials, $dependence)
+    public function scopeFilials($query, $answer)
     {
+
+      // Получаем из массива answer нужную информацию:
+      $dependence = $answer['dependence'];
+      $filials = $answer['filials'];
 
       if($dependence == false){
         
