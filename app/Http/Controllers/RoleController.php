@@ -13,6 +13,9 @@ use App\Entity;
 use App\RoleUser;
 use App\ActionEntity;
 
+
+use App\Http\Controllers\Session;
+
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
 use App\Policies\RolePolicy;
@@ -26,8 +29,6 @@ use App\Http\Requests\UpdateUser;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
-
-
 
 class RoleController extends Controller
 {
@@ -208,8 +209,11 @@ class RoleController extends Controller
     public function setting(Request $request, $role_id)
     {
 
+        // ГЛАВНЫЙ ЗАПРОС:
+        $role = Role::withoutGlobalScope(ModerationScope::class)->findOrFail($role_id);
+
         // Подключение политики
-        $this->authorize('index', Role::class);
+        $this->authorize('update', $role);
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -393,10 +397,18 @@ class RoleController extends Controller
 
     public function setright(Request $request)
     {
-        $user = Auth::user();
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();      
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $role = Role::withoutGlobalScope(ModerationScope::class)->findOrFail($request->role_id);
+
+        // Подключение политики
+        $this->authorize('update', $role);
+
 
         $role_id = $request->role_id;
-
 
         // echo $request->rights;
         if (count($request->rights) > 0) {

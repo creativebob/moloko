@@ -4,7 +4,6 @@
 
         function operator_right($entity_name, $entity_dependence, $method) {
 
-
         // Получаем сессию
         $session  = session('access');
         if(!isset($session)){abort(403, 'Нет сессии!');};
