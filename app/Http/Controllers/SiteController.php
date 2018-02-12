@@ -37,11 +37,11 @@ class SiteController extends Controller
     // -------------------------------------------------------------------------------------------
     $sites = Site::with('author', 'company')
     ->withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer['dependence'])
-    ->companiesFilter($answer['company_id'])
-    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer['all_authors'])
-    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->moderatorFilter($answer)
+    ->companiesFilter($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
     ->orderBy('moderated', 'desc')
     ->paginate(30);
     // Инфо о странице
@@ -58,11 +58,11 @@ class SiteController extends Controller
     // Список меню для сайта
     $answer = operator_right('pages', $this->entity_dependence, $method);
     $menus = Menu::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer['dependence'])
-    ->companiesFilter($answer['company_id'])
-    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer['all_authors'])
-    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->moderatorFilter($answer)
+    ->companiesFilter($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
     ->whereNavigation_id(1) // Только для сайтов, разделы сайта
     ->get();
     $site = new Site;

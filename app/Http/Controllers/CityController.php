@@ -39,11 +39,11 @@ class CityController extends Controller
     // -------------------------------------------------------------------------------------------
     $regions = Region::with('areas', 'areas.cities', 'cities')
       ->withoutGlobalScope($answer['moderator'])
-      ->moderatorFilter($answer['dependence'])
+      ->moderatorFilter($answer)
       // ->companiesFilter($answer['company_id']) нет фильтра по компаниям
-      ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-      ->authors($answer['all_authors'])
-      ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+      ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      ->authors($answer)
+      ->systemItem($answer) // Фильтр по системным записям
       ->get();
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
@@ -65,11 +65,11 @@ class CityController extends Controller
     // -------------------------------------------------------------------------------------------
     $regions = Region::with('areas', 'areas.cities', 'cities')
       ->withoutGlobalScope($answer['moderator'])
-      ->moderatorFilter($answer['dependence'])
+      ->moderatorFilter($answer)
       // ->companiesFilter($answer['company_id']) нет фильтра по компаниям
-      ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-      ->authors($answer['all_authors'])
-      ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+      ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      ->authors($answer)
+      ->systemItem($answer) // Фильтр по системным записям
       ->get();
     
     $data = [

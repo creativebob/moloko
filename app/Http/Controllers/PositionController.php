@@ -37,11 +37,11 @@ class PositionController extends Controller
     // -------------------------------------------------------------------------------------------
     $positions = Position::with('author', 'page')
     ->withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer['dependence'])
-    ->companiesFilter($answer['company_id'])
-    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer['all_authors'])
-    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->moderatorFilter($answer)
+    ->companiesFilter($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
     ->orderBy('moderated', 'desc')
     ->paginate(30);
 
@@ -60,22 +60,22 @@ class PositionController extends Controller
     // Список посадочных страниц для должности
     $answer = operator_right('pages', $this->entity_dependence, $method);
     $pages_list = Page::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer['dependence'])
-    ->companiesFilter($answer['company_id'])
-    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer['all_authors'])
-    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->moderatorFilter($answer)
+    ->companiesFilter($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
     ->whereSite_id(1) // Только для должностей посадочная страница системного сайта
     ->pluck('page_name', 'id');
 
     // Список ролей для должности
     $answer = operator_right('pages', $this->entity_dependence, $method);
     $roles = Role::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer['dependence'])
-    ->companiesFilter($answer['company_id'])
-    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer['all_authors'])
-    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->moderatorFilter($answer)
+    ->companiesFilter($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
     ->get();
 
     $position = new Position;
@@ -147,22 +147,22 @@ class PositionController extends Controller
     // Список посадочных страниц для должности
     $answer = operator_right('pages', $this->entity_dependence, $method);
     $pages_list = Page::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer['dependence'])
-    ->companiesFilter($answer['company_id'])
-    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer['all_authors'])
-    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->moderatorFilter($answer)
+    ->companiesFilter($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
     ->whereSite_id(1) // Только для должностей посадочная страница системного сайта
     ->pluck('page_name', 'id');
 
     // Список ролей для должности
     $answer = operator_right('pages', $this->entity_dependence, 'update');
     $roles = Role::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer['dependence'])
-    ->companiesFilter($answer['company_id'])
-    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer['all_authors'])
-    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->moderatorFilter($answer)
+    ->companiesFilter($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
     ->get();
 
     return view('positions.edit', compact('position', 'pages_list', 'roles'));

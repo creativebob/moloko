@@ -45,7 +45,7 @@ class CompanyController extends Controller
 
         $companies = Company::with('author', 'director')
         ->withoutGlobalScope($answer['moderator'])
-        ->moderatorFilter($answer['dependence'])
+        ->moderatorFilter($answer)
         // ->companiesFilter($answer['company_id'])
         // ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         // ->authors($answer['all_authors'])

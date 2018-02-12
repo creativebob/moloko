@@ -6,8 +6,17 @@ trait SystemitemTraitScopes
 {
 
     // Фильтрация для показа системных записей
-    public function scopeSystemitem($query, $system_item, $user_status, $company_id)
+    public function scopeSystemitem($query, $answer)
     {
+
+        // Получаем из массива answer нужную информацию:
+        // $dependence = $answer['dependence'];
+        // $filials = $answer['filials'];
+
+        $system_item = $answer['system_item'];
+        $user_status = $answer['user_status'];
+        $company_id = $answer['company_id'];
+        $entity_name = $answer['entity_name'];
 
         // ЗАВИСИМОСТЬ ОТ СИСТЕМНЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------------------------------
         if(isset($system_item)){
@@ -15,7 +24,14 @@ trait SystemitemTraitScopes
             if($user_status == 1){
 
                 if($company_id == null){
-                    return $query->WhereNull('system_item')->orWhere('system_item', 1);
+
+                    // Если бог смотрит на список сайтов, то показываем только системные сайты: CRM System
+                    if($entity_name == 'sites'){
+                        return $query->Where('id', 1);
+                    } else {
+                        return $query->WhereNull('system_item')->orWhere('system_item', 1);
+                    };
+
                 } else
                 {
                     return $query->orWhere('system_item', 1); // Рабочая версия

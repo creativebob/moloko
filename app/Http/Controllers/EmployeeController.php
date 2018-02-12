@@ -44,11 +44,11 @@ class EmployeeController extends Controller
         // -------------------------------------------------------------------------------------------
         $employees = Employee::with('staffer', 'staffer.position', 'staffer.filial', 'staffer.department', 'user')
         ->withoutGlobalScope($answer['moderator'])
-        ->moderatorFilter($answer['dependence'])
-        ->companiesFilter($answer['company_id'])
-        ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer['all_authors'])
-        ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+        ->moderatorFilter($answer)
+        ->companiesFilter($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
         ->orderBy('moderated', 'desc')
         ->paginate(30);
         // Смотрим сколько филиалов в компании
