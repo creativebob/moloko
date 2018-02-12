@@ -24,8 +24,22 @@
 
 @endsection
 
+@section('modals')
+  {{-- Модалка добавления роли --}}
+  @include('includes.modals.modal-add-role')
+  {{-- Модалка удаления с ajax --}}
+  @include('includes.modals.modal-delete-ajax')
+@endsection
+
 @section('scripts')
+  @include('includes.scripts.city-list')
   @include('includes.inputs-mask')
+<script type="text/javascript">
+    // При добавлении филиала ищем город в нашей базе
+  $('#city-name-field-add').keyup(function() {
+    checkCity();
+  });
+</script>
 @endsection
 
 

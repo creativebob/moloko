@@ -81,22 +81,11 @@ class CityController extends Controller
     return view('cities', compact('regions', 'page_info', 'data')); 
   }
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
   public function create()
   {
     //
   }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
   public function store(CityRequest $request)
   {
     // Получаем метод
@@ -235,46 +224,21 @@ class CityController extends Controller
     };
   }
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function show($id)
   {
     //
   }
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function edit($id)
   {
     //
   }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function update(Request $request, $id)
   {
       //
   }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function destroy(Request $request, $id)
   { 
     // Удаляем город с обновлением
@@ -364,5 +328,44 @@ class CityController extends Controller
       // Если чекбокс "искать везде" включен, отдаем данные, пришедшие с vk 
       echo $result;
     }
+  }
+
+  // Получаем список городов из нашей базы
+  public function city_list(CityRequest $request)
+  {
+    // Проверка города в нашей базе данных
+    $city_name = $request->city_name;
+    $cities = City::where('city_name', 'like', $city_name.'%')->get();
+    $count = $cities->count();
+    if ($count > 0) {
+      $objRes = (object) [];
+      foreach ($cities as $city) {
+        $city_id = $city->id;
+        $city_name = $city->city_name;
+        if ($city->area_id == null) {
+          $area_name = '';
+          $region_name = $city->region->region_name;
+        } else {
+          $area_name = $city->area->area_name;
+          $region_name = $city->area->region->region_name;
+        };
+        $objRes->city_id[] = $city_id;
+        $objRes->city_name[] = $city_name;
+        $objRes->area_name[] = $area_name;
+        $objRes->region_name[] = $region_name;
+      };
+      $result = [
+        'error_status' => 0,
+        'cities' => $objRes,
+        'count' => $count
+      ];
+    } else {
+      $result = [
+        'error_message' => 'Населенный пункт не существует в нашей базе данных, добавьте его!',
+        'error_status' => 1
+      ];
+    };
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    // echo $request->city_name;
   }
 }

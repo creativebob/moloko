@@ -82,6 +82,7 @@ class UserController extends Controller
         // Получаем метод
         $method = __FUNCTION__;
 
+        $user_auth = $request->user();
         // Подключение политики
         $this->authorize(__FUNCTION__, User::class);
 
@@ -91,10 +92,11 @@ class UserController extends Controller
         // Функция из Helper отдает массив со списками для SELECT
         $list_departments = getLS('users', 'view', 'departments');
         $list_filials = getLS('users', 'view', 'departments');
+        $roles_list = Role::whereCompany_id($user_auth->company_id)->pluck('role_name', 'id');
 
     	$user = new User;
         $roles = new Role;
-    	return view('users.create', compact('user', 'roles', 'list_filials'));
+    	return view('users.create', compact('user', 'roles', 'list_filials', 'list_departments', 'roles_list'));
     }
 
     public function store(UpdateUser $request)
@@ -268,7 +270,7 @@ class UserController extends Controller
 
         $role = new Role;
         $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
-        $roles = Role::whereCompany_id($user->company_id)->pluck('role_name', 'id');
+        $roles_list = Role::whereCompany_id($user->company_id)->pluck('role_name', 'id');
 
         return view('users.edit', compact('user', 'role', 'role_users', 'roles', 'list_departments', 'list_filials'));
     }
