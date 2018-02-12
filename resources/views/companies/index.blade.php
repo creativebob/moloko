@@ -14,7 +14,9 @@
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
 	      <h2 class="header-content">Список компаний</h2>
+        @can('create', App\Company::class)
 	      <a href="/companies/create" class="icon-add sprite"></a>
+        @endcan
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -60,8 +62,23 @@
         <tr class="parent @if(Auth::user()->company_id == $company->id)active @endif" id="companies-{{ $company->id }}" data-name="{{ $company->company_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $company->id }}"><label class="label-check" for="check-{{ $company->id }}"></label></td>
-          <td class="td-company-name">{{ link_to_route('companies.edit', $company->company_name, [$company->id]) }} </td>
-
+          <td class="td-company-name">
+            @php
+              $edit = 0;
+            @endphp
+            @can('update', $company)
+              @php
+                $edit = 1;
+              @endphp
+            @endcan
+            @if($edit == 1)
+              <a href="/companies/{{ $company->id }}/edit">
+            @endif
+            {{ $company->company_name }}
+            @if($edit == 1)
+              </a> 
+            @endif
+          </td>
           {{-- Если пользователь бог, то показываем для него переключатель на компанию --}}
           @if(Auth::user()->god == 1)
             <td class="td-getauth">@if(Auth::user()->company_id != $company->id) {{ link_to_route('users.getauthcompany', 'Авторизоваться', ['company_id'=>$company->id], ['class' => 'tiny button']) }} @endif</td>
@@ -71,7 +88,12 @@
           <td class="td-company-phone">{{ decorPhone($company->company_phone) }} </td>
           <td class="td-user_id">{{ $company->director->first_name or ' ... ' }} {{ $company->director->second_name or ' ... ' }} </td>
 
-          <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
+          <td class="td-delete">
+          @if ($company->system_item != 1)
+            @can('delete', $company)
+            <a class="icon-delete sprite" data-open="item-delete"></a></td>  
+            @endcan
+          @endif     
         </tr>
         @endforeach
       @endif

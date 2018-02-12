@@ -60,29 +60,45 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($roles))
         @foreach($roles as $role)
+        @php
+          $edit = 0;
+        @endphp
+        @can('update', $role)
+          @php
+            $edit = 1;
+          @endphp
+        @endcan
         <tr class="parent @if(Auth::user()->role_id == $role->id)active @endif" id="roles-{{ $role->id }}" data-name="{{ $role->role_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $role->id }}"><label class="label-check" for="check-{{ $role->id }}"></label></td>
           <td class="td-role-name">
-            @can('update', $role)
-            <a href="/roles/{{ $role->id }}/edit">
-            @endcan
+            @if($edit == 1)
+              <a href="/roles/{{ $role->id }}/edit">
+            @endif
             {{ $role->role_name }}
-            @can('update', $role)
-            </a> 
-            @endcan
-            </td>
+            @if($edit == 1)
+              </a> 
+            @endif
+          </td>
           <td class="td-role-set">
+            @if($edit == 1)
             @if(!empty($counts_directive_array[$role->id]['disabled_role']))
               <a class="button tiny" disabled>Настройка</a>
             @else 
               {{ link_to_route('roles.setting', 'Настройка', [$role->id], ['class'=>'button tiny']) }}
-            @endif</td>
+            @endif
+            @endif
+          </td>
           <td class="td-role-company-id">@if(!empty($role->company->company_name)) {{ $role->company->company_name }} @else Системная  @endif</td>
           <td class="td-role-count"><span class="allow">{{ $counts_directive_array[$role->id]['count_allow'] }}</span> / <span class="deny"> {{ $counts_directive_array[$role->id]['count_deny'] }}</span></td>
           <td class="td-role-description">{{ $role->role_description }} </td>
           <td class="td-role-author">@if(!empty($role->author->first_name)) {{ $role->author->first_name . ' ' . $role->author->second_name }} @endif</td>
-          <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
+          <td class="td-delete">
+          @if ($role->system_item !== 1)
+            @can('delete', $role)
+            <a class="icon-delete sprite" data-open="item-delete"></a></td> 
+            @endcan
+          @endif       
         </tr>
         @endforeach
       @endif

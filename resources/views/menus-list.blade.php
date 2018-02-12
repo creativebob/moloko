@@ -14,11 +14,21 @@
 	    </div>
 	  </a>
 	  <ul class="icon-list">
-	  	<li><div class="icon-list-add sprite" data-open="menu-add"></div></li>
-		  <li><div class="icon-list-edit sprite" data-open="menu-edit"></div></li>
+	  	<li>
+	  		@can('create', App\Menu::class)
+                <div class="icon-list-add sprite" data-open="menu-add"></div>
+            @endcan
+	  	</li>
+		<li>
+			@can('update', collect($menu))
+			<div class="icon-list-edit sprite" data-open="menu-edit"></div>
+			@endcan
+		</li>
 	    <li>
-	    @if(!isset($menu['children']))
+	    @if(($navigation['system_item'] != 1) && (!isset($menu['children'])))
+	    	@can('delete', collect($menu))
 	      <div class="icon-list-delete sprite" data-open="item-delete"></div>
+	       @endcan
 	    @endif
 	    </li>
 	  </ul>
@@ -35,13 +45,23 @@
 	<li class="medium-item" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['menu_name'] }}">
 		<div class="medium-as-last">{{ $menu['menu_name'] }}
 		  <ul class="icon-list">
-		  	<li><div class="icon-list-add sprite" data-open="menu-add"></div></li>  
-		      <li><div class="icon-list-edit sprite" data-open="menu-edit"></div></li>
-		      <li>
-		        @if (!isset($menu['children']))
-		          <div class="icon-list-delete sprite" data-open="item-delete"></div>
-		        @endif
-		      </li>
+		  	<li>
+		  		@can('create', App\Menu::class)
+	                <div class="icon-list-add sprite" data-open="menu-add"></div>
+	            @endcan
+		  	</li>
+			<li>
+				@can('update', collect($menu))
+				<div class="icon-list-edit sprite" data-open="menu-edit"></div>
+				@endcan
+			</li>
+		    <li>
+		    @if(($navigation['system_item'] != 1) && (!isset($menu['children'])))
+		    	@can('delete', collect($menu))
+		      <div class="icon-list-delete sprite" data-open="item-delete"></div>
+		       @endcan
+		    @endif
+		    </li>
 		  </ul>
 		</div>
 	</li>

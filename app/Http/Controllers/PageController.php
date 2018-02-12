@@ -43,6 +43,8 @@ class PageController extends Controller
     ->whereSite_id($site->id) // Только для страниц сайта
     ->orderBy('moderated', 'desc')
     ->paginate(30);
+
+    // dd($answer);
     
 
     // $pages = Page::with(['author', 'site' => function($query) use ($site_alias) {

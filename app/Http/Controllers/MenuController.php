@@ -49,7 +49,7 @@ class MenuController extends Controller
     foreach ($site->navigations->toArray() as $navigation) {
       $navigation_id[$navigation['id']] = $navigation;
       $navigation_tree[$navigation['id']] = $navigation;
-      foreach ($navigation_id as $navigation) {
+      foreach ($site->navigations->toArray() as $navigation) {
         //Создаем масив где ключ массива является ID меню
         $navigation_id[$navigation['id']]['menus'] = [];
         foreach ($navigation['menus'] as $menu) {
@@ -70,6 +70,8 @@ class MenuController extends Controller
         };
       }
     }
+
+      // dd($navigation_tree);
     // $menus = [];
     // foreach ($site->navigations as $navigation) {
     //   $menus[$navigation->id] = $navigation->menus->where('page_id', null)->pluck('menu_name', 'id');

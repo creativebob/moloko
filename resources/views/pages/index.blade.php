@@ -17,7 +17,9 @@
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
 	      <h2 class="header-content">{{ $page_info->page_name . ' ' . $site->site_name }}</h2>
+        @can('create', App\Page::class)
 	      <a href="/sites/{{ $site_alias }}/pages/create" class="icon-add sprite"></a>
+        @endcan
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -73,8 +75,13 @@
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $page->id }}"><label class="label-check" for="check-{{ $page->id }}"></label></td>
           <td class="td-page-name">
-            <a href="/sites/{{ $page->site->site_alias }}/pages/{{ $page->page_alias }}/edit">{{ $page->page_name }}</a>
-           
+            @can('update', $page)
+              <a href="/sites/{{ $page->site->site_alias }}/pages/{{ $page->page_alias }}/edit">
+            @endcan
+            {{ $page->page_name }}
+            @can('update', $page)
+              </a>
+            @endcan
           </td>
           <td class="td-page-title">{{ $page->page_title }}</td>
           <td class="td-page-description">{{ $page->page_description }}</td>
@@ -82,8 +89,10 @@
           <td class="td-site-id">{{ $page->site->site_name or ' ... ' }}</td>
           <td class="td-page-author">@if(isset($page->author->first_name)) {{ $page->author->first_name . ' ' . $page->author->second_name }} @endif</td>
           <td class="td-delete">
-            @if ($page->site->system_item !== 1)
+            @if ($page->system_item != 1)
+              @can('delete', $page)
               <a class="icon-delete sprite" data-open="item-delete"></a>
+              @endcan
             @endif
           </td>
         </tr>

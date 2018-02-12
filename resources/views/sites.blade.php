@@ -17,7 +17,9 @@
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
 	      <h2 class="header-content">{{ $page_info->page_name }}</h2>
+        @can('create', App\Site::class)
 	      <a class="icon-add sprite" data-open="site-add"></a>
+        @endcan
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -82,14 +84,23 @@
         <tr class="parent" id="sites-{{ $site->id }}" data-name="{{ $site->site_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"><label class="label-check" for="check-{{ $site->id }}"></label></td>
-          <td class="td-site-name"><a href="/sites/{{ $site->site_alias }}">{{ $site->site_name }}</a></td>
+          <td class="td-site-name">
+          @can('update', $site)
+            <a href="/sites/{{ $site->site_alias }}">
+          @endcan
+          {{ $site->site_name }}
+          @can('update', $site)
+            </a> 
+          @endcan
           <td class="td-site-domen"><a href="http://{{ $site->site_domen }}" target="_blank">{{ $site->site_domen }}</a></td>
           <td class="td-company-name" data-company-id="{{ $site->company->id or '' }}">{{ $site->company->company_name or 'Системный сайт' }}</td>
           <td class="td-site-edit"><a class="tiny button" data-open="site-edit">Редактировать</a></td>
           <td class="td-site-author">@if(isset($site->author->first_name)) {{ $site->author->first_name . ' ' . $site->author->second_name }} @endif</td>
           <td class="td-delete">
-            @if (isset($site->company_id))
-            <a class="icon-delete sprite" data-open="item-delete"></a>
+            @if ($site->system_item !== 1)
+              @can('delete', $site)
+              <a class="icon-delete sprite" data-open="item-delete"></a>
+              @endcan
             @endif
           </td>   
         </tr>

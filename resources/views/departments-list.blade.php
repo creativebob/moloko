@@ -21,11 +21,21 @@
     </div>
   </a>
   <ul class="icon-list">
-    <li><div class="icon-list-add sprite" data-open="department-add"></div></li>
-    <li><div class="icon-list-edit sprite" data-open="department-edit"></div></li>
     <li>
-      @if ((count($department['staff']) == 0) && !isset($department['children']))
+      @can('create', App\Department::class)
+      <div class="icon-list-add sprite" data-open="department-add"></div>
+      @endcan
+    </li>
+    <li>
+      @can('update', collect($department))
+      <div class="icon-list-edit sprite" data-open="department-edit"></div>
+      @endcan
+    </li>
+    <li>
+      @if ((count($department['staff']) == 0) && !isset($department['children']) && ($department['system_item'] != 1))
+        @can('delete', collect($department))
         <div class="icon-list-delete sprite" data-open="item-delete"></div>
+        @endcan
       @endif
     </li>
   </ul>
@@ -42,7 +52,13 @@
             @endif
             </a> ) 
               <ul class="icon-list">
-                <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
+                <li>
+                @if ($staffer['system_item'] != 1)
+                  @can('delete', collect($staffer))
+                  <div class="icon-list-delete sprite" data-open="item-delete"></div>
+                  @endcan
+                @endif
+                </li>
               </ul>
             </div>
           </li>
@@ -53,7 +69,6 @@
           @include('departments-list', $department)
         @endforeach
       @endif
-      
     </ul>
   @endif
 </li>

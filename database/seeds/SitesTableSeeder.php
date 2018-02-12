@@ -18,6 +18,7 @@ class SitesTableSeeder extends Seeder
                 'site_alias' => 'crmsystem',
 		        'company_id' => null,
                 'author_id' => 1,
+                'system_item' => 1,
 		        
         	],
             [
@@ -26,6 +27,7 @@ class SitesTableSeeder extends Seeder
                 'site_alias' => 'vorotamars',
                 'company_id' => 1,
                 'author_id' => 4,
+                'system_item' => null,
                 
             ],
         ]);

@@ -17,7 +17,9 @@
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
 	      <h2 class="header-content">{{ $page_info->page_name }}</h2>
-	      <a href="/departments" class="icon-add sprite"></a>
+        @can('create', App\Department::class)
+	        <a href="/departments" class="icon-add sprite"></a>
+        @endcan
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -48,7 +50,6 @@
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-staffer-position">Название должности</th>
-
         @if ($filials > 1)
           <th class="td-staffer-filial">Филиал</th>
         @endif
@@ -66,14 +67,18 @@
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $staffer->id }}"><label class="label-check" for="check-{{ $staffer->id }}"></label></td>
           <td class="td-staffer-position">
-            <a href="/staff/{{ $staffer->id }}/edit"> 
+            @can('update', $staffer)
+            <a href="/staff/{{ $staffer->id }}/edit">
+            @endcan
               @if (isset($staffer->user))
                 {{ $staffer->user->second_name . ' ' . $staffer->user->first_name }}
               @else
                 Вакансия
               @endif
-              
-            </a>( {{ $staffer->position->position_name }} )
+            @can('update', $staffer)
+            </a>
+            @endcan
+            ( {{ $staffer->position->position_name }} )
           </td>
           @if ($filials > 1)
             <td class="td-staffer-filial">{{ $staffer->filial->department_name }}</td>

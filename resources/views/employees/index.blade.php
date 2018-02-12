@@ -68,11 +68,19 @@
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $employee->id }}"><label class="label-check" for="check-{{ $employee->id }}"></label></td>
           <td class="td-employee-name">
           @if ($employee->date_dismissal == null)
+            @can('update', $employee)
             <a href="/staff/{{ $employee->id }}/edit">
+            @endcan
           @else
+            @can('update', $employee)
             <a href="/employees/{{ $employee->id }}/edit">
+            @endcan
           @endif
-          {{ $employee->user->first_name }} {{ $employee->user->second_name }}</a></td>
+          {{ $employee->user->first_name }} {{ $employee->user->second_name }}
+          @can('update', $employee)
+            </a>
+          @endcan
+          </td>
           <td class="td-employee-position">
             {{ $employee->staffer->position->position_name }}
           </td>
@@ -93,12 +101,7 @@
             Работает
           @endif
           </td>
-          <td class="td-employee-dismissal-desc">{{ $employee->dismissal_desc }}</td>
-         <!--  <td class="td-delete">
-            @if (isset($employee->company_id))
-              <a class="icon-delete sprite" data-open="item-delete"></a>
-            @endif
-          </td>  -->      
+          <td class="td-employee-dismissal-desc">{{ $employee->dismissal_desc }}</td>    
         </tr>
         @endforeach
       @endif

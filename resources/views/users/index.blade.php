@@ -69,13 +69,21 @@
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $user->id }}"><label class="label-check" for="check-{{ $user->id }}"></label></td>
           <td class="td-second-name">
+            @php
+              $edit = 0;
+            @endphp
             @can('update', $user)
+              @php
+                $edit = 1;
+              @endphp
+            @endcan
+            @if($edit == 1)
             <a href="/users/{{ $user->id }}/edit">
-            @endcan
+            @endif
             {{ $user->second_name . " " . $user->first_name . " (". $user->nickname . ")" }}
-            @can('update', $user)
+            @if($edit == 1)
             </a> 
-            @endcan
+            @endif
           </td>
           <td class="td-login">{{ $user->login }}</td>
 
@@ -84,18 +92,11 @@
           @if(Auth::user()->god == 1)
 
           @php
-
             $count_roles = count($user->roles);
             if($count_roles < 1){$but_class = "tiny button warning"; $but_text = "Права не назначены";} else {$but_class = "tiny button"; $but_text = "Авторизоваться";};
-
           @endphp
-
-
             <td class="td-getauth">@if((Auth::user()->id != $user->id)&&!empty($user->company_id)) {{ link_to_route('users.getauthuser', $but_text, ['user_id'=>$user->id], ['class' => $but_class]) }} @endif</td>
           @endif
-
-
-<!--           <td class="td-first-name">{{ $user->first_name }}</td> -->
           <td class="td-phone">{{ $user->phone }}</td>
           <td class="td-email">{{ $user->email }}</td>
           <td class="td-contragent-status">{{ decor_user_type($user->user_type) }}</td>
@@ -103,13 +104,12 @@
 {{--           <td class="td-group_action_id">{{ $user->group_action->access_group_name }}</td>
           <td class="td-group_locality_id">{{ $user->group_locality->access_group_name }}</td> --}}
           <td class="td-delete">
-            @if (($user->system_item !== 1) && ($user->god !== 1))
+            @if (($user->system_item != 1) && ($user->god != 1))
               @can('delete', $user)
               <a class="icon-delete sprite" data-open="item-delete"></a>
               @endcan
             @endif
           </td>       
-
         </tr>
         @endforeach
       @endif

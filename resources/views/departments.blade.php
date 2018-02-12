@@ -14,7 +14,9 @@
     <div class="top-bar head-content">
       <div class="top-bar-left">
         <h2 class="header-content">{{ $page_info->page_name }}</h2>
+        @can('create', App\Department::class)
         <a class="icon-add sprite" data-open="filial-add"></a>
+        @endcan
       </div>
       <div class="top-bar-right">
         <a class="icon-filter sprite"></a>
@@ -26,7 +28,25 @@
     <div class="grid-x">
       <div class="small-12 cell filters" id="filters">
         <fieldset class="fieldset-filters inputs">
-          @include('users.filters')
+          {{ Form::open(['route' => 'users.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
+          <legend>Фильтрация</legend>
+          <div class="grid-x grid-padding-x"> 
+            <div class="small-6 cell">
+              <label>Статус пользователя
+                {{ Form::select('user_type', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
+              </label>
+            </div>
+            <div class="small-6 cell">
+              <label>Блокировка доступа
+                {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
+              </label>
+            </div>
+
+            <div class="small-12 medium-12 align-center cell tabs-button">
+              {{ Form::submit('Фильтрация', ['class'=>'button']) }}
+            </div>
+          </div>
+        {{ Form::close() }}
         </fieldset>
       </div>
     </div>
@@ -47,11 +67,21 @@
             {{-- Если филиал --}}
             <li class="first-item parent" id="departments-{{ $department['id'] }}" data-name="{{ $department['department_name'] }}">
               <ul class="icon-list">
-                <li><div class="icon-list-add sprite" data-open="department-add"></div></li>
-                <li><div class="icon-list-edit sprite" data-open="filial-edit"></div></li>
                 <li>
-                  @if ((count($department['staff']) == 0) && !isset($department['children']))
+                  @can('create', App\Department::class)
+                  <div class="icon-list-add sprite" data-open="department-add"></div>
+                  @endcan
+                </li>
+                <li>
+                  @can('update', collect($department))
+                  <div class="icon-list-edit sprite" data-open="filial-edit"></div>
+                  @endcan
+                </li>
+                <li>
+                  @if ((count($department['staff']) == 0) && !isset($department['children']) && ($navigation['system_item'] != 1))
+                  @can('delete', collect($department))
                     <div class="icon-list-delete sprite" data-open="item-delete"></div>
+                  @endcan
                   @endif
                 </li>
               </ul>
@@ -75,7 +105,13 @@
                       @endif
                       </a> ) 
                         <ul class="icon-list">
-                          <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
+                          <li>
+                            @if($staffer['system_item'] != 1)
+                              @can('delete', collect($staffer))
+                              <div class="icon-list-delete sprite" data-open="item-delete"></div>
+                              @endcan
+                            @endif
+                          </li>
                         </ul>
                       </div>
                     </li>
