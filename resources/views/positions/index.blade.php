@@ -17,7 +17,9 @@
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
 	      <h2 class="header-content">{{ $page_info->page_name }}</h2>
-	      <a href="/positions/create" class="icon-add sprite"></a>
+        @can('create', App\Position::class)
+	       <a href="/positions/create" class="icon-add sprite"></a>
+        @endcan
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -59,12 +61,22 @@
         <tr class="parent" id="positions-{{ $position->id }}" data-name="{{ $position->position_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $position->id }}"><label class="label-check" for="check-{{ $position->id }}"></label></td>
-          <td class="td-position-name">{{ link_to_route('positions.edit', $position->position_name, [$position->id]) }} </td>
+          <td class="td-position-name">
+            @can('update', $position)
+            <a href="/positions/{{ $position->id }}/edit">
+            @endcan
+            {{ $position->position_name }}
+            @can('update', $position)
+            </a> 
+            @endcan
+          </td>
           <td class="td-position-page">{{ $position->page->page_alias }}</td>
           <td class="td-position-author">@if(isset($position->author->first_name)) {{ $position->author->first_name . ' ' . $position->author->second_name }} @endif</td>
           <td class="td-delete">
-            @if (isset($position->company_id))
+            @if ($position->system_item !== 1)
+              @can('delete', $position)
               <a class="icon-delete sprite" data-open="item-delete"></a>
+              @endcan
             @endif
           </td>       
         </tr>

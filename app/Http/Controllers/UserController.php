@@ -272,7 +272,7 @@ class UserController extends Controller
         $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
         $roles_list = Role::whereCompany_id($user->company_id)->pluck('role_name', 'id');
 
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles', 'list_departments', 'list_filials'));
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'list_departments', 'list_filials'));
     }
 
     public function destroy(Request $request, $id)

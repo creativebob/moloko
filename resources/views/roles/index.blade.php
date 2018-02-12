@@ -5,7 +5,9 @@
   @include('includes.table-inhead')
 @endsection
 
-@section('title', 'Группы доступа')
+@section('title')
+  {{ $page_info->page_name }}
+@endsection
 
 @section('title-content')
 {{-- Таблица --}}
@@ -14,7 +16,9 @@
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
         <h2 class="header-content">{{ $page_info->page_name }}</h2>
+        @can('create', App\Role::class)
 	      <a href="/roles/create" class="icon-add sprite"></a>
+        @endcan
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -59,7 +63,15 @@
         <tr class="parent @if(Auth::user()->role_id == $role->id)active @endif" id="roles-{{ $role->id }}" data-name="{{ $role->role_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $role->id }}"><label class="label-check" for="check-{{ $role->id }}"></label></td>
-          <td class="td-role-name">{{ link_to_route('roles.edit', $role->role_name, [$role->id]) }}</td>
+          <td class="td-role-name">
+            @can('update', $role)
+            <a href="/roles/{{ $role->id }}/edit">
+            @endcan
+            {{ $role->role_name }}
+            @can('update', $role)
+            </a> 
+            @endcan
+            </td>
           <td class="td-role-set">
             @if(!empty($counts_directive_array[$role->id]['disabled_role']))
               <a class="button tiny" disabled>Настройка</a>

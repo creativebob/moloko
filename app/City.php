@@ -55,4 +55,11 @@ class City extends Model
   {
     return $this->hasMany('App\Department');
   }
+    /**
+  * Получаем пользователей.
+  */
+  public function users()
+  {
+    return $this->hasMany('App\User');
+  }
 }

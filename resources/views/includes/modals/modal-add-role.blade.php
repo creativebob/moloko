@@ -9,7 +9,7 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 medium-6 cell">
         <label>Роли
-          {{ Form::select('role_id', $roles_list, $roles, ['id'=>'select-roles']) }}
+          {{ Form::select('role_id', $roles_list, $roles_list, ['id'=>'select-roles']) }}
         </label>
       </div>
       <div class="small-10 medium-6 cell">

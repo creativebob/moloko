@@ -5,7 +5,9 @@
   @include('includes.table-inhead')
 @endsection
 
-@section('title', 'Сущности')
+@section('title')
+  {{ $page_info->page_name }}
+@endsection
 
 @section('title-content')
 {{-- Таблица --}}
@@ -13,8 +15,10 @@
   <div class="sticky sticky-topbar" id="head-sticky" data-sticky-on="small" data-sticky data-margin-top="2.4" data-top-anchor="head-content:top">
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
-	      <h2 class="header-content">Список сущностей в BD</h2>
+	      <h2 class="header-content">{{ $page_info->page_name }}</h2>
+        @can('create', App\Entity::class)
 	      <a href="/entities/create" class="icon-add sprite"></a>
+        @endcan
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -55,9 +59,21 @@
         <tr class="parent @if(Auth::user()->entity_id == $entity->id)active @endif" id="entities-{{ $entity->id }}" data-name="{{ $entity->entity_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $entity->id }}"><label class="label-check" for="check-{{ $entity->id }}"></label></td>
-          <td class="td-entity-name">{{ link_to_route('entities.edit', $entity->entity_name, [$entity->id]) }}</td>
+          <td class="td-entity-name">
+            @can('update', $entity)
+            <a href="/entities/{{ $entity->id }}/edit">
+            @endcan
+            {{ $entity->entity_name }}
+            @can('update', $entity)
+            </a> 
+            @endcan
           <td class="td-entity-alias">{{ $entity->entity_alias }} </td>
-          <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
+          <td class="td-delete">
+          @if ($entity->system_item !== 1)
+            @can('delete', $entity)
+            <a class="icon-delete sprite" data-open="item-delete"></a>
+            @endcan
+          @endif       
         </tr>
         @endforeach
       @endif

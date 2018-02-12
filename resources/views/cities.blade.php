@@ -14,7 +14,9 @@
     <div class="top-bar head-content">
       <div class="top-bar-left">
         <h2 class="header-content">{{ $page_info->page_name }}</h2>
-        <a class="icon-add sprite" data-open="region-add"></a>
+        @can('create', App\Region::class)
+          <a class="icon-add sprite" data-open="region-add"></a>
+        @endcan
       </div>
       <div class="top-bar-right">
         <a class="icon-filter sprite"></a>
@@ -25,12 +27,8 @@
     {{-- Блок фильтров --}}
     <div class="grid-x">
       <div class="small-12 cell filters" id="filters">
-        <fieldset class="fieldset-filters">
-          <legend>Фильтрация</legend>
-          <div>lol</div>
-          <div>lol</div>
-          <div>lol</div>
-          <div>lol</div>
+        <fieldset class="fieldset-filters inputs">
+          @include('users.filters')
         </fieldset>
       </div>
     </div>
@@ -47,13 +45,14 @@
       @foreach ($regions as $region)      
       <li class="first-item parent" id="regions-{{ $region->id }}" data-name="{{ $region->region_name }}">
         <ul class="icon-list">
+          @can('create', App\City::class)
           <li><div class="icon-list-add sprite" data-open="city-add"></div></li>
-          {{-- <li><div class="icon-list-edit sprite" data-open="region-edit"></div></li> --}}
-          <li>
-          @if((count($region->areas) + count($region->cities)) == 0)  
-            <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
+          @endcan
+          @if (($region->system_item !== 1) && ((count($region->areas) + count($region->cities)) == 0))
+            @can('delete', $region)
+            <li><div class="icon-list-delete sprite" data-open="item-delete-ajax"></div></li>
+            @endcan
           @endif
-          </li>
         </ul>
         <a data-list="{{ $region->id }}" class="first-link">
           <div class="list-title">
@@ -74,11 +73,11 @@
                 </div>
               </a>
               <ul class="icon-list">
-                <li>
-                @if(count($area->cities) == 0)
-                  <div class="icon-list-delete sprite" data-open="item-delete"></div>
+                @if((count($area->cities) == 0) && (($area->system_item !== 1)))
+                  @can('delete', $area)
+                  <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
+                  @endcan
                 @endif
-                </li>
               </ul>
               @if(count($area->cities) > 0)
               <ul class="menu vertical nested last-list">
@@ -86,7 +85,11 @@
                   <li class="last-item parent" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
                     <div class="last-link">{{ $city->city_name }}
                       <ul class="icon-list">
-                        <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
+                        @if($city->system_item !== 1)
+                          @can('delete', $city)
+                          <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
+                          @endcan
+                        @endif
                       </ul>
                     </div>
                 @endforeach
@@ -99,7 +102,9 @@
               <li class="medium-item parent" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
                 <div class="medium-as-last">{{ $city->city_name }}
                   <ul class="icon-list">
+                    @can('delete', $city)
                     <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
+                    @endcan
                   </ul>
                 </div>
               </li>
@@ -294,7 +299,6 @@
 
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-delete')
-
 {{-- Модалка удаления ajax --}}
 @include('includes.modals.modal-delete-ajax')
 @endsection
@@ -329,7 +333,6 @@ $(function() {
           $('#tbody-city-add>tr').remove();
           var result = $.parseJSON(date);
           var data = '';
-          
           if ($('#search-all-checkbox').prop('checked') == true) {
             var countRes = result.response.count;
             if (countRes == 0) {
@@ -403,7 +406,6 @@ $(function() {
     var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
     return error;
   };
-
   // Отображение области по ajax через api vk
   $('#region-name-field').keyup(function() {
     // Блокируем кнопку
@@ -464,7 +466,6 @@ $(function() {
     var regionName = $('[data-region-name="' + itemId + '"]').html();
     $('#region-id-field').val(regionId);
     $('#region-name-field').val(regionName);
-
     if($('#region-id-field').val() != '') {
       var region = {region_name:$('#region-name-field').val(), region_database:$('#region-database').val()};
       // Ajax
@@ -477,9 +478,7 @@ $(function() {
         data: region,
         success: function (data) {
           var result = $.parseJSON(data);
-
           // alert(result.session);
-
           if (result.error_status == 1) {
             var error = showError (result.error_message);
             $('#region-name-field').after(error);
@@ -510,9 +509,7 @@ $(function() {
       data: formRegion,
       success: function (data) {
         var result = $.parseJSON(data);
-
         result = "<li class=\"first-item parent\" id=\"regions-" + result.region_id + "\" data-name=\"" + result.region_name + "\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\"></div></li><li><div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div></li></ul><a data-list=\"" + result.region_id +"\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"first-item-name\">" + result.region_name + "</span><span class=\"number\">0</span></div></a>";
-
         // Выводим пришедшие данные на страницу
         $('#content-list').append(result);
         // Обнуляем модалку
@@ -524,7 +521,6 @@ $(function() {
       }
     });
   });
-  
   // Отображение города по ajax через api vk
   $('#city-name-field').keyup(function() {
     getCityVk ();
@@ -533,7 +529,6 @@ $(function() {
   $(document).on('change', '#search-all-checkbox', function() {
     getCityVk ();
   });
-
   // При клике на город в модальном окне заполняем инпуты
   $(document).on('click', '.city-add', function() {
     var itemId = $(this).closest('tr').data('tr');
@@ -545,7 +540,6 @@ $(function() {
     $('#city-name-field').val(cityName);
     $('#area-name').val(areaName);
     $('#region-name').val(regionName);
-
     if($('#city-id-field').val() != '') {
       var city = {city_name:$('#city-name-field').val(), city_database:$('#city-database').val(), area_name:$('#area-name').val()};
       // Ajax
@@ -631,23 +625,7 @@ $(function() {
       if (mediumItem.is('.last-list')) {
         $('#content-list').foundation('down', mediumItem);
       };
-    };
-   
-    // Если добавили город с районом
-    // if ({{ $data['area_id'] }} !== 0) {
-    //   // Подсвечиваем ссылку
-    //   $('#areas-{{ $data['area_id'] }}').find('.medium-link').addClass('medium-active');
-    //   // Находим средние элементы
-    //   var lastItem = $('#areas-{{ $data['area_id'] }}').find('.last-list');
-    //   $('#content-list').foundation('down', lastItem);
-    // };
-      // Перебираем родителей и посвечиваем их
-  //   var parents = $(this).parents('.medium-list');
-  //   for (var i = 0; i < parents.length; i++) {
-  //     $(parents[i]).parent('li').children('a').addClass('medium-active');
-  //   };
-  // });
-        
+    };    
   }
   @endif
 });

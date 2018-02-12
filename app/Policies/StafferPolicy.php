@@ -14,7 +14,7 @@ class StafferPolicy
     use PoliticTrait;
 
     protected $entity_name = 'staff';
-    protected $entity_dependence = false;
+    protected $entity_dependence = true;
 
     public function index(User $user)
     {
