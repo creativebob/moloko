@@ -1,0 +1,1148 @@
+[33mcommit 8c9c9e1c9ef3a7966514c0fb0e583400501b7f2f[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Merge: 4d5e6d7 f52fd36
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Feb 7 17:44:51 2018 +0800
+
+    Размножены контроллеры и политики, нужно тестить
+
+[33mcommit f52fd36711656108e0965f51948f1fc5b930f460[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Feb 7 10:03:37 2018 +0800
+
+    В процессе работы над rights контроллером и политикой
+
+[33mcommit 4d5e6d76eafb981962463d8e9e188219215cda4b[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Feb 7 09:50:05 2018 +0800
+
+    НАчало оптимизации контроллеров
+
+[33mcommit 96cb911a3ac89d8f3c8f08bf6d8f65cea25a6153[m
+Merge: 31d6229 3ee357a
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Feb 1 13:54:54 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 31d6229d24a1fe48eebaab3eeb55d542556d3dd9[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Feb 1 13:54:39 2018 +0800
+
+    Проба тестов
+
+[33mcommit 3ee357ac8adabe390d99ff58ed959fcbb42c8dfe[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Feb 1 13:54:11 2018 +0800
+
+    Сделан контроллер и политика на Roles
+
+[33mcommit b03c7bcd15cb8c400ce4a02d02bea8d78472826b[m
+Merge: 1e7c18f 4694a0c
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Feb 1 12:11:55 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 1e7c18fd88a12c178d61118a25e1fa43f7c5cec7[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Feb 1 12:11:44 2018 +0800
+
+    Работа над правами Role
+
+[33mcommit 4694a0c7a21fdb00788ad36e1bbb61a66a929f56[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Feb 1 12:10:24 2018 +0800
+
+    Поправлены меню подсветки
+
+[33mcommit 126c052319cd6b6fcbc76b5e0b2b20ff76058c61[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Feb 1 11:12:22 2018 +0800
+
+    Поправлены меню подсветки
+
+[33mcommit 7276d87328f0983a69d9c248aeffac147f9f0ac1[m
+Merge: 854eab5 5b08a49
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Feb 1 11:06:11 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 854eab59379111d7d235f64223d82129a8360ec7[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Feb 1 11:05:57 2018 +0800
+
+    Поправлены меню подсветки
+
+[33mcommit 5b08a49c75eb4fec38824fd90944e162b78e99d0[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 31 18:25:39 2018 +0800
+
+    Users Controller v0.1
+
+[33mcommit bff157fbb3151a159dabfff7d65570c330551b48[m
+Merge: 4760c7a 4cec0e8
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 31 17:57:55 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 4760c7a7e4b979518ce934dc14e78a4228c83ccc[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 31 17:57:42 2018 +0800
+
+    Готов контроллер user v0.1
+
+[33mcommit 4cec0e843198367e9e88121a27e49091ade7e354[m
+Merge: a1e9753 692b990
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Jan 31 17:25:52 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit a1e9753b3fd3cf79321af0c37946ade3a288b45e[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Jan 31 17:25:21 2018 +0800
+
+    Переработаны сайты
+
+[33mcommit 16dba0aef3c804322e9e481e2b62d3a63061fafc[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Mon Jan 29 18:09:56 2018 +0800
+
+    Отстройка работы прав
+
+[33mcommit 692b99037c9dde452339a22b562d12f33c5dfc78[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Sat Jan 27 02:09:04 2018 +0800
+
+    Исправляем баги в правах. Еще не все исправлены
+
+[33mcommit ecd1dd9dc8bc954e4f32ccaaafc21b5c6e5b5ee3[m
+Merge: 529b35a c78d38e
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Jan 26 18:06:00 2018 +0800
+
+    начата работа над переработкой сайтов
+
+[33mcommit c78d38e2015823a27f653f6d048f32a34e3ac315[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Jan 26 18:04:10 2018 +0800
+
+    Начата работа с Roles
+
+[33mcommit 529b35acb2cd0b55ccec2c562aadc4fa2adfdde5[m
+Merge: ab15289 c5e1f1c
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Jan 26 18:03:20 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit ab152896b4fb8bdfd1a7e77bb3e83e3ef4743e2a[m
+Merge: 612bf11 9f8a0ab
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Jan 26 18:03:06 2018 +0800
+
+    начата работа над переработкой сайтов
+
+[33mcommit c5e1f1c62bec6eec3062c28aee0923912b723c96[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Fri Jan 26 00:48:03 2018 +0800
+
+    Очередная серия правок на UserController
+
+[33mcommit b98eebcf17d27b4c1204bfc0e990803676bf9f96[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Jan 25 18:12:15 2018 +0800
+
+    Очередное ковыряние контрллера. Надоело же уже!
+
+[33mcommit 612bf1152be4be5794d3f961cd747ab09a39ca43[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Jan 25 13:11:21 2018 +0800
+
+    Начало Breadcrumbs
+
+[33mcommit 9f8a0abba0f224b0e5bbbef634ddae651d40f413[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Thu Jan 25 01:19:52 2018 +0800
+
+    Поправлены ошибки в Trait правах
+
+[33mcommit 60aecc280d4cc8718154978702bb75e0c625383b[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 24 18:37:39 2018 +0800
+
+    Запилил политику на users update
+
+[33mcommit 6603b9c23363bfd0eb9a472cf4af326a09d89954[m
+Merge: 24924d2 984872b
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 24 09:13:01 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 24924d2b596818ee89803350c77caa4cb085c1d8[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 24 09:12:55 2018 +0800
+
+    Изменения в контроллере users
+
+[33mcommit 984872b858366b5d48edf4947d938218404e0a44[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Tue Jan 23 23:32:06 2018 +0800
+
+    Домашние правки
+
+[33mcommit ec76c9f67d445545b595837c4339adf3a9714f70[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Tue Jan 23 18:13:36 2018 +0800
+
+    Работаем над контроллером user. Не видит робота на system
+
+[33mcommit 017843f3541508279a3173731ceb390b6afc2fff[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Tue Jan 23 00:42:30 2018 +0800
+
+    Переработка запросов с авторами
+
+[33mcommit 2d80adf6dd507945dda6fec91a5c2b6c7ae6c118[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Mon Jan 22 18:13:48 2018 +0800
+
+    Ковыряю контроллер user
+
+[33mcommit 72105ba8cd920e3862a5199f4b8ed754613fa71e[m
+Merge: f1fd502 7970db3
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Jan 19 18:07:29 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit f1fd502404d61eea27a1bc04cef5972ae6accbec[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Jan 19 18:07:19 2018 +0800
+
+    Пилим controller users
+
+[33mcommit 7970db3b92a7b4f60f4c31fe12f736c6c8e570a5[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Jan 19 17:57:57 2018 +0800
+
+    Начата работа над валидацией форм
+
+[33mcommit 0f335dd5de220251f63b6819b692ff42bd10edd9[m
+Merge: 47716a3 b570e4b
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Jan 19 15:15:59 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 47716a366e653ba485a634dbe053eb5552819b7b[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Jan 19 15:15:17 2018 +0800
+
+    Запилен контроллер для users на Index метод
+
+[33mcommit b570e4bb37f895f41a86e2af8804bccd68a6295e[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Jan 19 13:50:50 2018 +0800
+
+    Неисправлен баг с настройкой разрешений роли
+
+[33mcommit e9d35fc8da33b4b9dcf5474dae6b28ecb1395ae2[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Jan 19 13:19:50 2018 +0800
+
+    Правка городов
+
+[33mcommit ec02f72667e0d6a0801fd71a5d1f773524883451[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Jan 19 12:35:27 2018 +0800
+
+    Поправлена textarea и страница сотрудников и страниц сайта
+
+[33mcommit 8eb43da73eea187ff0b3346562b4ccda40f031d3[m
+Merge: 12e28a6 e5277c7
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Jan 19 11:08:58 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 12e28a651f9256a17d11f3da5ac1109f00899228[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Jan 19 11:07:24 2018 +0800
+
+    Добавлен чекбокс выбора всех прав для сущности
+
+[33mcommit e5277c751bbdc387588015fc8cdcd5f903f1aa44[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Fri Jan 19 02:19:11 2018 +0800
+
+    Замутил свой первый Trait. Вынес в Trait половину Scopes из Модели и из Контроллера. Стало круче )
+
+[33mcommit a28fc8db744b1d2ac18ff30ad6590331f5329eb0[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Jan 18 19:24:45 2018 +0800
+
+    Работа над контроллером Users. Стабильная версия
+
+[33mcommit 30d41297ce4472cbbcba83e21773eac6e4184343[m
+Merge: bc73e81 86a6e67
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Jan 18 14:59:31 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 86a6e67768add03e635d799f86237ad2664ebee6[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Jan 18 14:58:53 2018 +0800
+
+    Правка багов 1
+
+[33mcommit 58f2fb027537fd3a7d4eba9b1854ab361a9b47b4[m
+Merge: 8484872 3d0c3c3
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Jan 18 14:57:11 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit bc73e81b4d6d22e69e3e1e7ba3be82945068cdbc[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Jan 18 14:56:40 2018 +0800
+
+    Переработка контроллера users
+
+[33mcommit 8484872930597703a6c0ffc7567e74a2a826245e[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Jan 18 14:49:55 2018 +0800
+
+    Правка багов 1
+
+[33mcommit 3d0c3c369671323ad827ebf93b132a7d4af7f431[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Thu Jan 18 02:41:46 2018 +0800
+
+    Работа с контроллером User по настройке прав
+
+[33mcommit 08edbe53bba4deb5c40e3cbd4a8ab0c11f4f0e96[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 17 18:36:09 2018 +0800
+
+    Вечерний залив
+
+[33mcommit 2b4b8d373f0934ad25ab861dde38fb03dee488e9[m
+Merge: 8a135b4 ee25a1f
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 17 15:13:46 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit ee25a1f4ca149d8181be79f7443fa2883352907d[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Jan 17 15:13:03 2018 +0800
+
+    Еще правка штата
+
+[33mcommit 8a135b452d1504180035a9fbd97a0ccbb19d57e6[m
+Merge: dfa57a9 18cc94d
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 17 14:41:32 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit dfa57a9f3b658f5f1dcb5b2f768d054e0c9f8c6e[m
+Merge: ae588c4 63aa76e
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 17 14:41:21 2018 +0800
+
+    Перед Пулом
+
+[33mcommit 18cc94d68ebfd2c5fc8e521ba0fc0b3f1a9aea4b[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Jan 17 14:38:31 2018 +0800
+
+    Начало оптимизации населенных пунктов
+
+[33mcommit d851f18b4448bc96ee26ae10acd614479b493ae0[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Jan 17 11:56:42 2018 +0800
+
+    Поправлен штат
+
+[33mcommit ae588c4fa46ec8d5049a084f23bb3281902437af[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 17 11:45:48 2018 +0800
+
+    Пилим сортировку по модерации
+
+[33mcommit 63aa76ed2cad49e4948c0fb89b315b0e563bbcd9[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Jan 17 11:44:42 2018 +0800
+
+    Поправлена сортировка
+
+[33mcommit dbffe4203c1ed59c1763cd413a81ff01d5ccb604[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Jan 17 11:33:47 2018 +0800
+
+    Добавлен стлобец модерации
+
+[33mcommit 39d22dcdeca879a1c35e914ff76dfc9220d0c54d[m
+Merge: 5f8f62a ea2558d
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Jan 17 11:28:58 2018 +0800
+
+    Добавлено выделение модерации
+
+[33mcommit 5f8f62a76b09b4409a54efec1d0bc843e767a57d[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Jan 17 10:35:44 2018 +0800
+
+    Добавлен стлобец модерации
+
+[33mcommit ea2558d7c0319bfd3fcbd7254efa0141b4bc0620[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 17 10:34:24 2018 +0800
+
+    Добавлена модерация в сиды и миграции
+
+[33mcommit 830750bc0c03b9798966f9d6e29e168067078e3c[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Tue Jan 16 18:31:59 2018 +0800
+
+    Поправлены сиды
+
+[33mcommit 79ee8d10dd399548aed86491e0fa1d7bce749af4[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Tue Jan 16 18:31:13 2018 +0800
+
+    Поправлены сиды
+
+[33mcommit 00198b5f8893ce109c19e830e6b89f35ff59d548[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Tue Jan 16 18:16:12 2018 +0800
+
+    После слияния с версией Макса. Запилили Scope глобально на модерацию
+
+[33mcommit ebc131dfbcc039a4db8cc1d5baa31d89cd533476[m
+Merge: 09e81e7 ad1658c
+Author: Nestor <creativebob@mail.ru>
+Date:   Tue Jan 16 18:05:23 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 09e81e787916dd4e39eadb280ac7d70bda3647bd[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Tue Jan 16 18:05:13 2018 +0800
+
+    В миграции добавлены столбцы модерации. Контроллер прав почти готов
+
+[33mcommit ad1658c2b5c4f154e47c9f7906d00e605284545a[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Tue Jan 16 18:04:18 2018 +0800
+
+    Поправлены сиды
+
+[33mcommit 9e1285d13d1c15e645d6597bc15398a011478790[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Tue Jan 16 17:27:42 2018 +0800
+
+    Добавлена глобальная заготовка
+
+[33mcommit 2de6d2c8279ab812bffba2ddbaeec25b582570c6[m
+Merge: 9b46b31 992025e
+Author: Nestor <creativebob@mail.ru>
+Date:   Tue Jan 16 13:18:28 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 992025ec18cd37a7cfbb209fe6fc24c229450981[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Tue Jan 16 13:17:41 2018 +0800
+
+    Штат правка
+
+[33mcommit 9b46b31e97e54bd78f84840a72314d525b0e0c8b[m
+Merge: aa6ad47 4556d8f
+Author: Nestor <creativebob@mail.ru>
+Date:   Tue Jan 16 13:05:33 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit aa6ad474d936ca0a8bc9dc4b5c675563bc2abfdd[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Tue Jan 16 13:05:18 2018 +0800
+
+    Сделал просмоторщик сессии
+
+[33mcommit 4556d8fe2ea537cec412fb5cae0b1d6e5db3f4ef[m
+Merge: 768e748 4041238
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Tue Jan 16 12:44:40 2018 +0800
+
+    Мердж штата
+
+[33mcommit 768e74853f39e7850f57f9b75c103685875e7302[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Tue Jan 16 12:43:06 2018 +0800
+
+    Штат переработан
+
+[33mcommit 40412384ab9d29143849abad7898341a2df450aa[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Mon Jan 15 18:11:23 2018 +0800
+
+    Начата работа по настройке контроллера права: по филиалам
+
+[33mcommit ad9d90636646e2514771cc7be11550798f3bb4c1[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Mon Jan 15 00:50:58 2018 +0800
+
+    Внесены исправления переавторизации. Теперь права присваиваются без ошибки
+
+[33mcommit d2dcca71db15d3e94a0cb4665289e4f0a2ecb107[m
+Merge: c6b4547 ce0ea07
+Author: creativebob <creativebob@mail.ru>
+Date:   Fri Jan 12 22:29:29 2018 +0800
+
+    Странный коммит
+
+[33mcommit c6b4547e1ca7c40e1b6efa67ce6279bf58363c48[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Fri Jan 12 22:28:49 2018 +0800
+
+    Странный коммит
+
+[33mcommit 5e1b9c8b1c0af105c43891216a91079a73674ab7[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Fri Jan 12 22:24:31 2018 +0800
+
+    Странный коммит
+
+[33mcommit ce0ea0735cc795ab8f1b252935f99bf766983e97[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Jan 12 18:27:16 2018 +0800
+
+    Начата работа с главным контроллером по проверке прав
+
+[33mcommit 4c361cef49f3439c90bbef328c75bad2aa128f69[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Jan 12 15:24:39 2018 +0800
+
+    Стабильная версия - настройка прав роли
+
+[33mcommit 20487b818b653c3917bfbf216423d9a49bf8b840[m
+Merge: e930cb8 d456975
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Jan 12 15:20:48 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit e930cb87cdae418c9d5267acc7de77164a631ddc[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Jan 12 15:20:37 2018 +0800
+
+    Не стабильная версия
+
+[33mcommit d456975c0a9510facf0a3cd1f710fc42b98ed789[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Jan 12 15:15:59 2018 +0800
+
+    Хрень с чекбоксами
+
+[33mcommit 7bbb010cf1a62ef8ba7976807c476fff0be1ee0d[m
+Merge: 3012dc2 3a585e1
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Jan 12 14:51:52 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 3012dc27cf9997f953bc7d678fca51265e343e14[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Jan 12 14:51:37 2018 +0800
+
+    Перед мерджем с Максом. Завершена настройка прав.
+
+[33mcommit 3a585e1b51b1058f07333fb9f7ceca2c83bc2c88[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Jan 12 14:37:47 2018 +0800
+
+    Добавлен класс для заблокированного чекбокса
+
+[33mcommit 3353d3cee62c3af6bcaf7464848ceed08ef3d3e0[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Jan 12 14:10:44 2018 +0800
+
+    Первая стабильная версия меню
+
+[33mcommit 1f3f3595e92c0ed7e63b8a95fbbfb3aafe997301[m
+Merge: 0dc40d3 764441f
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Jan 11 13:52:12 2018 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 0dc40d3a8b7ea0fe818cf758d071ee44b505b74c[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Jan 11 13:52:01 2018 +0800
+
+    Доделано добавление раздела меню
+
+[33mcommit 764441ffcd1877c88d49d189ad3dcf299865cb0c[m
+Merge: 1421b52 04e94b4
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 10 18:10:30 2018 +0800
+
+    Push после мерджа с Максом
+
+[33mcommit 1421b528b515368c2846fcf084e0a36afa2f0bcb[m
+Merge: e1b94f7 f13f41b
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Jan 10 17:56:21 2018 +0800
+
+    Перепилена страница настройки прав
+
+[33mcommit 04e94b46c5e60f74ad425af6a8f4e7d8314fab13[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Jan 10 17:42:44 2018 +0800
+
+    Начало меню, нет модалок
+
+[33mcommit e1b94f7dcff8eccdf13aa3e0621515ba5d6b82ae[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Tue Jan 9 16:23:52 2018 +0800
+
+    После Новогодний коммит
+
+[33mcommit f13f41b6a98b0483a710b4e6f4323d503687f01d[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Tue Jan 9 16:22:50 2018 +0800
+
+    Начало разрабоки меню
+
+[33mcommit 312d93926460ea185ce0d5ecd4b5fd4f3a9b517a[m
+Merge: 96be6d1 d3142c8
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Dec 29 15:55:35 2017 +0800
+
+    Gjghfdktys cbls gj rjvgfyb.
+
+[33mcommit 96be6d1b7615d84081106a3e06474027319421eb[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Dec 29 14:31:58 2017 +0800
+
+    lol
+
+[33mcommit d3142c8d05820681650be2d1e5174a03c47f0dbf[m
+Merge: 7b4985a 6771963
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Dec 29 14:30:55 2017 +0800
+
+    Добавлен контроллер авторизации и запись прав пользователя в сессию
+
+[33mcommit 7b4985a375be0277141ac0a84a3dc0080b88a183[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Dec 29 12:23:30 2017 +0800
+
+    Реализована авторизация под юзером
+
+[33mcommit 6771963c9e75de2328a63c519a176d65de8fba00[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Dec 29 12:19:43 2017 +0800
+
+    Допилено добавление/удаление ролей определенного пользователя
+
+[33mcommit ae0ae4a877214a88c7d13e7e71d02007b71c4359[m
+Merge: 85113a0 0a61c65
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Dec 28 18:35:32 2017 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 85113a00040c65efbaf172af19cb4fba2bad3179[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Dec 28 18:35:14 2017 +0800
+
+    Сделана страница настройки прав роли. Очень долго грузит. Необходимо переработать скрипт.
+
+[33mcommit 0a61c658f1490de38fa28ee018c9427dbf23a32e[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Dec 28 18:34:13 2017 +0800
+
+    Работа над отображением ролей пользователя
+
+[33mcommit 71402a1cb515eea9a6f7c94c5389698f6e7a36d0[m
+Merge: 8723370 3d5288f
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Dec 28 17:02:54 2017 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 87233700644bb0f85cb0251f7b29b85a459fa07d[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Dec 28 17:02:48 2017 +0800
+
+    При назначении на должность пишутся права и филиал
+
+[33mcommit 3d5288fb5c50ad5df78248ae6c415d612038beae[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Dec 28 17:01:53 2017 +0800
+
+    Сделана страница настройки прав роли. Очень долго грузит. Необходимо переработать скрипт.
+
+[33mcommit b719d85e952eb10bd6eb94e5de359563bb908ee2[m
+Merge: 88e0a5e 522384d
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Dec 28 10:24:45 2017 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 88e0a5eb39c2f79695c416a3b68039a6ed88f5cc[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Dec 28 10:24:41 2017 +0800
+
+    Обновление ролей
+
+[33mcommit 522384da3f089da29297263a032a97de12f034b6[m
+Merge: edb42fe 41f7cf6
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Dec 28 10:22:59 2017 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit edb42fed10f6cfde84dda1b5f3937f1974749f39[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Dec 28 10:22:26 2017 +0800
+
+    Мердж с allow / dany
+
+[33mcommit 41f7cf65f2dec1d76a054fee48fc78a9300912c7[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Dec 27 18:15:42 2017 +0800
+
+    Допилены штат и сотрудники, возможны правки
+
+[33mcommit e3c515ec11739ef8166364e494f9b71c6eb13567[m
+Merge: 0943a7f 2c90534
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Dec 27 17:45:46 2017 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 0943a7fae871e9c5d912dc6e94b6f2945557ba8c[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Dec 27 17:45:36 2017 +0800
+
+    Перед получением филиалов в роли
+
+[33mcommit 2c9053427a9c849914c071aac125d69f2ea9ab91[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Dec 27 17:44:24 2017 +0800
+
+    Правка филиалов
+
+[33mcommit 6b35dbb8206bd5011bd85e9474ab6d8be6a28d5d[m
+Merge: baaa4ab f6e2a5c
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Dec 27 14:05:55 2017 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit baaa4abfd314d77f76d51b6a0f85bba0ef6ba255[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Dec 27 14:05:38 2017 +0800
+
+    Перед мерджем stuff
+
+[33mcommit f6e2a5c7538cdc7891108e3e950686627bf985e3[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Dec 27 14:04:13 2017 +0800
+
+    Добавлена колонка филиалов в таблицу штат
+
+[33mcommit 6199add511d4c3d1477a7d01e8edd5e73fcd1b0b[m
+Merge: 47e2892 cb1d957
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Dec 27 09:19:41 2017 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit cb1d9571cd612141b46b1cc9c595e475c86b91f5[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Tue Dec 26 18:44:39 2017 +0800
+
+    Работа над страницей настройки прав. Сделаны генераторы сидов
+
+[33mcommit 47e2892c5b04c0628d43dcf4f4226297782cdecf[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Mon Dec 25 18:37:06 2017 +0800
+
+    Базовая работа страниц сотрудников и штата
+
+[33mcommit 955b73a0cecd99ab3aa1fbba57bb2c12d100905b[m
+Merge: f215c8e 5296982
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Dec 22 19:15:52 2017 +0800
+
+    Рабочее создание ролей
+
+[33mcommit f215c8e6647e7680b726001444ee3dd5b5868f5d[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Dec 22 18:17:05 2017 +0800
+
+    Создано добавление ролей по филиалам
+
+[33mcommit 52969827d7bd966388988054abdf96f6e7f48eb3[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Dec 22 16:17:27 2017 +0800
+
+    Добавлено сохранение авторов в города, сайты, и отделы
+
+[33mcommit 6cb30e387e65fcc9f8f1e800aa94ed42a33fe74d[m
+Merge: 1574c24 f391832
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Dec 22 15:30:54 2017 +0800
+
+    Начаты сотрудники
+
+[33mcommit 1574c244d9713444bb92c8109cbb320c0506aa03[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Dec 22 14:18:50 2017 +0800
+
+    кривой мастер, качаю нормальный
+
+[33mcommit f391832fad417c936ae2b1814a334252ede5058b[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Fri Dec 22 00:22:00 2017 +0800
+
+    Созданы страницы на управление группами доступа. Ошибко в отображении меню на index
+
+[33mcommit 9b39b097012cd9f63acc03d693d99aa56ddc3335[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Dec 21 18:40:20 2017 +0800
+
+    Идет работа над скриптом контроллера в Departments
+
+[33mcommit b2f3dfe1ecf93f5eccb70809f57cd68f94cce491[m
+Merge: 15a4e69 227c625
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Dec 21 18:04:48 2017 +0800
+
+    После лютого мерджа
+
+[33mcommit 15a4e697c02228e92bb4c9af6f7de6912cf579f8[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Dec 21 16:58:04 2017 +0800
+
+    Суровый коммит перед мерджем двух не стабильных версий
+
+[33mcommit 227c625200cf9f5c926be212db9922a91f1765c4[m[33m ([m[1;32mmakc_berluskone[m[33m)[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Dec 20 16:08:13 2017 +0800
+
+    СТабиьная версия добавления/редкатирования филиалов/отделов, с багами
+
+[33mcommit 5676513dfd801050a54ee73ec313fdfb3fa2a7c9[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Dec 20 14:34:37 2017 +0800
+
+    Содана таблица сущностей
+
+[33mcommit d9ae92cf1e834464a5e09e0d80fb2c8362d3b19a[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Tue Dec 19 13:14:39 2017 +0800
+
+    Закончены сайты, страницы сайтов и должности
+
+[33mcommit a13f59ce41db909ff0fa359c2e04321edf89ec3b[m
+Merge: 071ac59 c8b7646
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Tue Dec 19 10:40:12 2017 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 071ac59743f8bff9b5ef494ca10261b684a1ed8e[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Tue Dec 19 10:30:57 2017 +0800
+
+    Добавлена авторизация бга в компании, перед мерджем с мастером
+
+[33mcommit c8b7646a866cb2f84f7763004340064808f7780d[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Tue Dec 19 10:24:12 2017 +0800
+
+    Сделана авторизация бога под любой компанией
+
+[33mcommit 1111dd037409094db763f6a662077a1656e90aef[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Mon Dec 18 18:29:43 2017 +0800
+
+    Выполнен функционал переавторизации компании
+
+[33mcommit 16ff25ebbaa12fb0f8b62478b7a5d9c8af6b048f[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Mon Dec 18 11:54:48 2017 +0800
+
+    Добавлены поля в Users Директор и Админ
+
+[33mcommit 91c4c04b477bb7ed1597ed930c5c2687cea2b1fe[m[33m ([m[1;31morigin/makc_berluskone[m[33m)[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Dec 15 18:26:55 2017 +0800
+
+    Создаты сайты и страницы сайтов
+
+[33mcommit 1a5d34db769ea9a642ec01b30793567475830e9b[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Dec 15 09:30:55 2017 +0800
+
+    Отделы и филалы более менее стабилные
+
+[33mcommit e3e9f99ccad1f13c22bf3d503a4288f80a9bd663[m
+Merge: 115fab7 f6a1715
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Dec 14 09:36:05 2017 +0800
+
+    Merge branch 'master' of https://github.com/creativebob/CRMSystem
+
+[33mcommit 115fab799afef4c33cf333ff7c7d8a8831095787[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Dec 14 09:35:41 2017 +0800
+
+    Правка страницы входа
+
+[33mcommit 98475ce1173c6a1560e875ced37ecdebe3a99d92[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Dec 14 09:29:39 2017 +0800
+
+    Мердж с мастером 2
+
+[33mcommit f6a1715687a99d022a832c75aeee77f5c535736e[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Thu Dec 14 01:11:15 2017 +0800
+
+    Стабильная версия страницы Компания: все функции работают. Права настроены.
+
+[33mcommit 5b84ae67da150cfee744a6eb0af3b47ed47bba8e[m
+Merge: e21234e 828af1f
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Dec 13 18:20:30 2017 +0800
+
+    После мерджа с мастером
+
+[33mcommit 828af1fc79ff42a0a34084da033fea403e0776ce[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Dec 13 18:07:48 2017 +0800
+
+    Проделана работа с правами: функциональные, бога. Идет процесс настройки редактирования Компаний. Не стабильная версия
+
+[33mcommit e21234ead3aef8e6225ee5b6c52dbff5f2350086[m
+Merge: d3b16d4 95e18d6
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Dec 13 11:19:20 2017 +0800
+
+    Поле мерджа с филиалами
+
+[33mcommit 95e18d606a138826952a48b521377571683072a1[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Dec 13 11:15:29 2017 +0800
+
+    Закончено многоуровневое меню, каммит на правку миграций
+
+[33mcommit dc251452b392c7d641ae9b9f98a27b533c9ac45d[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Tue Dec 12 18:28:51 2017 +0800
+
+    Доработка многоуровневой вложенности
+
+[33mcommit d3b16d449541d3612e1d6618957a105d44c222d2[m
+Merge: c8af4d7 9c93ec0
+Author: Nestor <creativebob@mail.ru>
+Date:   Tue Dec 12 18:25:05 2017 +0800
+
+    После обновления мастера
+
+[33mcommit c8af4d73b45576cf54dfca270c226c3ef6935db5[m[33m ([m[1;31morigin/nestor[m[33m)[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Tue Dec 12 18:18:35 2017 +0800
+
+    Начата работа над шаблоном управления Компаниями. Исправлена ошибка в миграциях. Добавлены сиды на компанию, область, регион, город
+
+[33mcommit d977cf3900df89b9125ab4759c61c2c1ab34d16a[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Mon Dec 11 18:39:40 2017 +0800
+
+    Начата работа над отделами
+
+[33mcommit 0c782a111b1a607c246dcf75edffe7be06a43c3c[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Mon Dec 11 18:09:08 2017 +0800
+
+    Начата работа по правам локализации. Добавлена таблица компании
+
+[33mcommit d3c39cb27d0a0c4299a4f0249d6aa5c3f404e5fe[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Dec 8 18:30:18 2017 +0800
+
+    Начата работа по валидации User. Осталось переопределить сообщения
+
+[33mcommit 1f6957280931691562dddbf05da046005c5cdf5e[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Dec 8 18:30:14 2017 +0800
+
+    Начало работы со страницей филиалов
+
+[33mcommit 87d0e0be0726bed18cb1d7d9d00e1d37893685db[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Dec 8 14:57:49 2017 +0800
+
+    Перед Pull
+
+[33mcommit 9c93ec0944ea1069fe2744ee719499581d1f2f04[m
+Merge: d5514b5 b549b28
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Dec 8 14:54:23 2017 +0800
+
+    После мерджа master и city_api_vk
+
+[33mcommit b549b28aa90c28e61ba7a1124d6eb19d8a707120[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Dec 8 13:51:24 2017 +0800
+
+    Начата работа по валидации Users
+
+[33mcommit d5514b52a77c5b3d792446d735166d0618824fd7[m[33m ([m[1;31morigin/city_api_vk[m[33m)[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Dec 8 13:48:24 2017 +0800
+
+    Кооммит перед мержем с мастером
+
+[33mcommit f9836ef94ee4456ecf7d804db2d747a3165187ea[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Fri Dec 8 01:41:19 2017 +0800
+
+    Существенно отредактирована логика работы с правами. В форме users заработали выпадающие списки. Немного обновлены Seed'ы
+
+[33mcommit 2d445048f1e223511fa83f13cd569f98644f83ee[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Dec 7 17:45:02 2017 +0800
+
+    Таблицы прав. Сидеры для таблицы прав. Начало работы с политиками
+
+[33mcommit be2dbc1efcda1f3d10061acccc6c86bc7c2d590b[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Dec 7 16:58:47 2017 +0800
+
+    Разработка удаления с перезагрузкой
+
+[33mcommit 4efa38567bd276ba278ad24a903d226129c19d4c[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Dec 6 17:32:56 2017 +0800
+
+    Функционал стабилен, баги при переключении поиска при фильтрации по нашей БД
+
+[33mcommit 4f004608cc35f688ac146eee5d1a90bfa219345e[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Mon Dec 4 00:30:48 2017 +0800
+
+    Реализованна пагинация на странице Users. Переработанны шаблоны страницы users: разбиты на многочисленные части.
+
+[33mcommit 1b973acd7a4c1b70e1e431284a2ef9ac4cbaf50d[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Fri Dec 1 18:52:54 2017 +0800
+
+    Почти готова сущность Users. Сделал редактирование. Подключил зависимость Forms от Collective. Серьезно переработан шаблон User.blade
+
+[33mcommit 689001c7e39d77b4557648b6cae33008951b8002[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Fri Dec 1 18:52:30 2017 +0800
+
+    Первый рабочий (не через модель) вариант выврода информации на страницу с населенными пунктами
+
+[33mcommit f4efb6857c4efd715f6e2feb68494cb49a6dc820[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Nov 30 18:43:23 2017 +0800
+
+    Реализован поиск области, добавление области в базу, и поиск по нашей базе
+
+[33mcommit 9f3bd76595528bd43cf39ee94181e0046c30e76a[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Nov 30 18:34:06 2017 +0800
+
+    Добавил LaravelCollective но прописал еще провайдеров, сделал роутинг на users через resourse
+
+[33mcommit 1b4d06429a373bbf7b95193544aca4b442010d7c[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Thu Nov 30 15:57:20 2017 +0800
+
+    РЕализован поиск областей и городов по Api Vk, добавление области ajax, поиск решения при клике по вновь добавленной области
+
+[33mcommit edb8056514a57cbbf7d12053ecfe0881c6f2cfef[m
+Merge: 8dc6766 5f0a437
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Nov 30 09:31:28 2017 +0800
+
+    Утренний мердж
+
+[33mcommit 8dc6766ceabf1d386c370ba26faf1bd69b38dbb5[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Thu Nov 30 09:26:19 2017 +0800
+
+    Страница Users - начата разработка
+
+[33mcommit 5f0a437bf8f1b9925a3b4d5292e035383a6630e5[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Thu Nov 30 00:20:41 2017 +0800
+
+    Решен вопрос преобразованием даты при добавлении в таблицу Users
+
+[33mcommit f6ae494941720e1a727557203f317bb752e6fdd2[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Wed Nov 29 18:35:01 2017 +0800
+
+    Реализован поиск области по api в vk, сохранение в нашу бд. Нужен вывод не дублирующейся информации на страницу cities
+
+[33mcommit 63e32254208a8c732bdee0a527aa2eda816b9b8f[m
+Author: Nestor <creativebob@users.noreply.github.com>
+Date:   Wed Nov 29 13:36:31 2017 +0800
+
+    Delete composer.lock
+    
+    Удалил composer.lock из репозитория на GitHub.com
+
+[33mcommit 5e1e345f5698355f163fc78927d07ce12fefeaeb[m
+Merge: 6cdb7a8 a666024
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Nov 29 13:14:54 2017 +0800
+
+    Добавление записи в Users, добавлен Helpers, авторизация по логину (второй)
+
+[33mcommit 6cdb7a86fe93eb0b93902a072dd42f4f46ba423c[m
+Author: Nestor <creativebob@mail.ru>
+Date:   Wed Nov 29 13:08:28 2017 +0800
+
+    Добавление записи в Users, добавлен Helpers, авторизация по логину
+
+[33mcommit a6660240ffd76cd836c7f267cef51ba263be55a1[m
+Author: creativebob <creativebob@mail.ru>
+Date:   Tue Nov 28 23:02:35 2017 +0800
+
+    Домашний коммит первого развертывания
+
+[33mcommit e21fdbe7a8e5403b70e6554f8cf13c1622b0c7b5[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Tue Nov 28 09:54:05 2017 +0800
+
+    Начало разработки получения городов из базы VK по API
+
+[33mcommit 56311cba9fa2533dc0f7a254a6402002f971619f[m
+Author: Makc_Berluskone <makc_berluskone@mail.ru>
+Date:   Mon Nov 27 18:35:34 2017 +0800
+
+    Начало ajax поиска города по api в базе vk
+
+[33mcommit bf29813caad2a718d6a30d84f5635f34b44a6cd0[m
+Author: MakcBerluskone <Makc_berluskone@mail.ru>
+Date:   Mon Nov 27 14:55:47 2017 +0800
+
+    Первая выгрузка проекта на GitHub
