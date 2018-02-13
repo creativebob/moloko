@@ -25,8 +25,14 @@
 @endsection
 
 @section('scripts')
+  @include('includes.scripts.city-list')
   @include('includes.inputs-mask')
-<script type="text/javascript">
+  <script type="text/javascript">
+    // При добавлении филиала ищем город в нашей базе
+  $('#city-name-field-add').keyup(function() {
+    checkCity();
+  });
+
   // Проверка существования компании
   $(document).on('keyup', '.company_inn-field', function() {
 

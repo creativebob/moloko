@@ -86,7 +86,7 @@
             </div>
             <div class="small-12 medium-6 cell">
               <label class="input-icon">Введите город
-          {{ Form::text('city_name', $value = null, ['id'=>'city-name-field-add', 'autocomplete'=>'off', 'required']) }}
+          {{ Form::text('city_id', $value = null, ['id'=>'city-name-field-add', 'autocomplete'=>'off', 'required']) }}
           <div class="sprite-input-right icon-success load">лол</div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>

@@ -228,11 +228,16 @@ class PositionController extends Controller
 
   public function destroy(Request $request, $id)
   {
-    $user = $request->user();
+    // Получаем метод
+    $method = 'delete';
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
     // ГЛАВНЫЙ ЗАПРОС:
-    $position = Position::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $position = Position::withoutGlobalScope($answer['moderator'])->findOrFail($id);
     // Подключение политики
     $this->authorize('delete', $position);
+    // Поулчаем авторизованного пользователя
+    $user = $request->user();
     if (isset($position)) {
       $position->editor_id = $user->id;
       $position->save();

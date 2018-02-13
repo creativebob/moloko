@@ -34,6 +34,7 @@
 @section('scripts')
   @include('includes.scripts.city-list')
   @include('includes.inputs-mask')
+  @include('includes.pickmeup')
 <script type="text/javascript">
     // При добавлении филиала ищем город в нашей базе
   $('#city-name-field-add').keyup(function() {

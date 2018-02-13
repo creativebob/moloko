@@ -65,7 +65,10 @@
          
           @if($department['filial_status'] == 1)
             {{-- Если филиал --}}
-            <li class="first-item parent" id="departments-{{ $department['id'] }}" data-name="{{ $department['department_name'] }}">
+            <li class="first-item parent 
+            @if (isset($department['children']) && isset($department['staff']))
+            parent-item
+            @endif" id="departments-{{ $department['id'] }}" data-name="{{ $department['department_name'] }}">
               <ul class="icon-list">
                 <li>
                   @can('create', App\Department::class)
@@ -73,15 +76,13 @@
                   @endcan
                 </li>
                 <li>
-                  @can('update', collect($department))
+                  @if($department['edit'] == 1)
                   <div class="icon-list-edit sprite" data-open="filial-edit"></div>
-                  @endcan
+                  @endif
                 </li>
                 <li>
-                  @if ((count($department['staff']) == 0) && !isset($department['children']) && ($navigation['system_item'] != 1))
-                  @can('delete', collect($department))
+                  @if ((count($department['staff']) == 0) && !isset($department['children']) && ($department['system_item'] != 1) && $department['delete'] == 1)
                     <div class="icon-list-delete sprite" data-open="item-delete"></div>
-                  @endcan
                   @endif
                 </li>
               </ul>
@@ -106,10 +107,8 @@
                       </a> ) 
                         <ul class="icon-list">
                           <li>
-                            @if($staffer['system_item'] != 1)
-                              @can('delete', collect($staffer))
+                            @if(($staffer['system_item'] != 1) && ($staffer['delete'] == 1) && !isset($staffer['user']))
                               <div class="icon-list-delete sprite" data-open="item-delete"></div>
-                              @endcan
                             @endif
                           </li>
                         </ul>
@@ -580,13 +579,13 @@ $(function() {
       $('#content-list').foundation('down', firstItem); 
     } else {
       // Перебираем родителей и подсвечиваем их
-      $.each($('#departments-{{ $data['item_id'] }}').parents('.parent').get().reverse(), function (index) {
+      $.each($('#departments-{{ $data['item_id'] }}').parents('.parent-item').get().reverse(), function (index) {
         $(this).children('.medium-link:first').addClass('medium-active');
         $(this).children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
         $('#content-list').foundation('down', $(this).closest('.medium-list'));
       });
       // Если родитель содержит не пустой элемент
-      if ($('#departments-{{ $data['item_id'] }}').parent('.parent').has('.parent')) {
+      if ($('#departments-{{ $data['item_id'] }}').parent('.parent').has('.parent-item')) {
         $('#content-list').foundation('down', $('#departments-{{ $data['item_id'] }}').closest('.medium-list'));
       };
       // Если элемент содержит вложенность, открываем его

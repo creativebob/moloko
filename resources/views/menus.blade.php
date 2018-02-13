@@ -64,7 +64,10 @@
         @foreach ($navigation_tree as $navigation)
           @if (isset($navigation['menus']))
             {{-- Если Подкатегория --}}
-            <li class="first-item parent" id="navigations-{{ $navigation['id'] }}" data-name="{{ $navigation['navigation_name'] }}">
+            <li class="first-item parent
+            @if (isset($navigation['menus']))
+            parent-item
+            @endif" id="navigations-{{ $navigation['id'] }}" data-name="{{ $navigation['navigation_name'] }}">
               <ul class="icon-list">
                 <li>
                   @can('create', App\Menu::class)
@@ -72,15 +75,13 @@
                   @endcan
                 </li>
                 <li>
-                  @can('update', collect($navigation))
+                  @if($navigation['edit'] == 1)
                   <div class="icon-list-edit sprite" data-open="navigation-edit"></div>
-                  @endcan
+                  @endif
                 </li>
                 <li>
-                  @if(($navigation['system_item'] != 1) && (count($navigation['menus']) == 0))
-                    @can('delete', collect($navigation))
+                  @if(($navigation['system_item'] != 1) && (count($navigation['menus']) == 0) && ($navigation['delete'] == 1))
                     <div class="icon-list-delete sprite" data-open="item-delete"></div>
-                    @endcan
                   @endif
                 </li>
               </ul>
@@ -530,17 +531,17 @@ $(function() {
         $('#content-list').foundation('down', firstItem);
       } else {
         // Перебираем родителей и подсвечиваем их
-        $.each($('#menus-{{ $data['item_id'] }}').parents('.medium-item').get().reverse(), function (index) {
+        $.each($('#menus-{{ $data['item_id'] }}').parents('.parent-item').get().reverse(), function (index) {
           $(this).children('.medium-link:first').addClass('medium-active');
           $(this).children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
           $('#content-list').foundation('down', $(this).closest('.medium-list'));
         });
         // Если родитель содержит не пустой элемент
-        if ($('#menus-{{ $data['item_id'] }}').parent('.medium-list').has('.parent')) {
+        if ($('#menus-{{ $data['item_id'] }}').parent('.parent-item').has('.parent')) {
           $('#content-list').foundation('down', $('#menus-{{ $data['item_id'] }}').closest('.medium-list'));
         };
         // Если элемент содержит вложенность, открываем его
-        if ($('#menus-{{ $data['item_id'] }}').hasClass('parent')) {
+        if ($('#menus-{{ $data['item_id'] }}').hasClass('parent-item')) {
           $('#menus-{{ $data['item_id'] }}').children('.medium-link:first').addClass('medium-active');
           $('#menus-{{ $data['item_id'] }}').children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
           $('#content-list').foundation('down', $('#menus-{{ $data['item_id'] }}').children('.medium-list:first'));

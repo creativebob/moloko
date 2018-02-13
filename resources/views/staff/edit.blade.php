@@ -29,6 +29,7 @@
 
 @section('scripts')
   @include('includes.inputs-mask')
+  @include('includes.pickmeup')
 @endsection
 
 

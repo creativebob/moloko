@@ -69,8 +69,9 @@
             </div>
             <div class="small-12 medium-6 cell">
               <label class="input-icon">Город
-                <input type="text" name="id_city" autocomplete="off">
-                <div class="sprite-input icon-password"></div>
+                {{ Form::text('city_id', $value = null, ['id'=>'city-name-field-add', 'autocomplete'=>'off', 'required']) }}
+                <div class="sprite-input-right icon-success load">лол</div>
+                <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
               </label>
               <label>Адрес
               {{ Form::text('company_address', $company->company_address, ['class'=>'company-address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}

@@ -137,7 +137,7 @@ class NavigationController extends Controller
         // Получаем авторизованного пользователя
         $user = $request->user();
         // ГЛАВНЫЙ ЗАПРОС:
-        $navigation = Navigation::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+        $navigation = Navigation::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
         // Подключение политики
         $this->authorize($method, $navigation);
         $user = $request->user();
@@ -166,7 +166,7 @@ class NavigationController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $navigation = Navigation::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
         // Подключение политики
-        $this->authorize('delete', $site);
+        $this->authorize('delete', $navigation);
         $site_id = $navigation->site_id;
         $user = $request->user();
       if ($navigation) {

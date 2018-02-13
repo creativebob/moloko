@@ -81,8 +81,12 @@ class EmployeeController extends Controller
     {
         // Получаем метод
         $method = 'update';
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, true, $method);
         // ГЛАВНЫЙ ЗАПРОС:
-        $employee = Employee::with('user')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        $employee = Employee::with('user')->withoutGlobalScope($answer['moderator'])->findOrFail($id);
         // Подключение политики
         $this->authorize($method, $employee);
         // Список меню для сайта
@@ -95,7 +99,28 @@ class EmployeeController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        // Получаем метод
+        $method = __FUNCTION__;
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, true, $method);
+        // ГЛАВНЫЙ ЗАПРОС:
+        $employee = Employee::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+        // Подключение политики
+        $this->authorize('update', $employee);
+        // Перезаписываем данные
+        $employee->date_employment = $request->date_employment;
+        $employee->date_dismissal = $request->date_dismissal;
+        $employee->dismissal_desc = $request->dismissal_desc;
+        $employee->editor_id = $user->id;
+        $employee->save();
+        // Если записалось
+        if ($employee) {
+          return Redirect('/employees');
+        } else {
+          abort(403, 'Ошибка редактирования сотрудника');
+        };
     }
 
     public function destroy($id)
