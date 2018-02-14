@@ -103,10 +103,8 @@ class EmployeeController extends Controller
         $method = __FUNCTION__;
         // Получаем авторизованного пользователя
         $user = $request->user();
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, $method);
         // ГЛАВНЫЙ ЗАПРОС:
-        $employee = Employee::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+        $employee = Employee::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
         // Подключение политики
         $this->authorize('update', $employee);
         // Перезаписываем данные
