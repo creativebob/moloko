@@ -3,7 +3,7 @@
 @section('inhead')
 <meta name="description" content="{{ $site->site_name }}" />
 {{-- Скрипты таблиц в шапке --}}
-  @include('includes.table-inhead')
+  @include('includes.scripts.table-inhead')
 @endsection
 
 @section('title')
@@ -136,5 +136,5 @@ $(function() {
 });
 </script> 
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.table-scripts')
+@include('includes.scripts.table-scripts')
 @endsection

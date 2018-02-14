@@ -94,7 +94,11 @@ class PositionController extends Controller
 
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
-    $user_id = $user->id;
+    if ($user->god == 1) {
+      $user_id = 1;
+    } else {
+      $user_id = $user->id;
+    };
     $user_status = $user->god;
     $company_id = $user->company_id;
 
@@ -175,6 +179,11 @@ class PositionController extends Controller
     $method = __FUNCTION__;
     // Получаем авторизованного пользователя
     $user = $request->user();
+    if ($user->god == 1) {
+      $user_id = 1;
+    } else {
+      $user_id = $user->id;
+    };
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, true, $method);
     // ГЛАВНЫЙ ЗАПРОС:
@@ -186,8 +195,8 @@ class PositionController extends Controller
     // Перезаписываем данные
     $position->position_name = $request->position_name;
     $position->page_id = $request->page_id;
-    $position->company_id = $user->company_id;
-    $position->editor_id = $user->id;
+    // $position->company_id = $user->company_id;
+    $position->editor_id = $user_id;
     $position->save();
     // Если записалось
     if ($position) {
@@ -230,7 +239,7 @@ class PositionController extends Controller
   public function destroy(Request $request, $id)
   {
     // ГЛАВНЫЙ ЗАПРОС:
-    $position = Position::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+    $position = Position::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
     // Подключение политики
     $this->authorize('delete', $position);
     // Поулчаем авторизованного пользователя

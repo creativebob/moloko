@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('inhead')
-  @include('includes.inhead-pickmeup')
-@endsection
-
 @section('title', 'Просмотр компании')
 
 @section('title-content')
@@ -25,8 +21,5 @@
 
 @endsection
 
-@section('scripts')
-  @include('includes.inputs-mask')
-@endsection
 
 

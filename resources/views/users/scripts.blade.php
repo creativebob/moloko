@@ -24,5 +24,5 @@
   });
 </script>
 {{-- Скрипт модалки удаления --}}
-@include('includes.modals.modal-delete-ajax-script')
+@include('includes.scripts.modal-delete-ajax-script')
 @endsection

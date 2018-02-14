@@ -33,8 +33,7 @@ class DepartmentRequest extends FormRequest
             'department_database' => 'integer|nullable', 
             'department_name' => 'string|max:255|nullable',
             'department_address' => 'string|max:255|nullable',
-            'department_phone' => 'string|max:11|nullable', 
-
+            'department_phone' => 'string|max:17|nullable', 
             'parent_id' => 'integer|nullable', 
         ];
     }

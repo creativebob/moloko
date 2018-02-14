@@ -24,8 +24,8 @@ class RegionRequest extends FormRequest
     public function rules()
     {
         return [
-            'region_name' => 'string|max:255|nullable',
-            'region_code' => 'integer|nullable',
+            'region_name' => 'string|max:255',
+            'region_code' => 'integer|max:4|nullable',
             'region_vk_external_id' => 'integer|nullable', 
             'region_database' => 'integer|nullable', 
         ];

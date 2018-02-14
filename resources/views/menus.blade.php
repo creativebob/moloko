@@ -565,5 +565,5 @@ $(function() {
 });
 </script>
 {{-- Скрипт подсветки многоуровневого меню --}}
-@include('includes.multilevel-menu-active-scripts')
+@include('includes.scripts.multilevel-menu-active-scripts')
 @endsection

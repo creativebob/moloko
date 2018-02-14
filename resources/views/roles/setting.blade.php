@@ -1,8 +1,4 @@
 @extends('layouts.app')
-@section('inhead')
-  @include('includes.table-inhead')
-@endsection
-
 
 @section('title', 'Настройка прав доступа пользователей')
 

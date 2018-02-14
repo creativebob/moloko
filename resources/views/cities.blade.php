@@ -509,7 +509,7 @@ $(function() {
       data: formRegion,
       success: function (data) {
         var result = $.parseJSON(data);
-        result = "<li class=\"first-item parent\" id=\"regions-" + result.region_id + "\" data-name=\"" + result.region_name + "\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\"></div></li><li><div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div></li></ul><a data-list=\"" + result.region_id +"\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"first-item-name\">" + result.region_name + "</span><span class=\"number\">0</span></div></a>";
+        result = "<li class=\"first-item parent\" id=\"regions-" + result.region_id + "\" data-name=\"" + result.region_name + "\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\"></div></li></ul><a data-list=\"" + result.region_id +"\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"first-item-name\">" + result.region_name + "</span><span class=\"number\">0</span></div></a>";
         // Выводим пришедшие данные на страницу
         $('#content-list').append(result);
         // Обнуляем модалку
@@ -631,8 +631,8 @@ $(function() {
 });
 </script>
 {{-- Скрипт подсветки многоуровневого меню --}}
-@include('includes.multilevel-menu-active-scripts')
+@include('includes.scripts.multilevel-menu-active-scripts')
 
 {{-- Скрипт модалки удаления ajax --}}
-@include('includes.modals.modal-delete-ajax-script')
+@include('includes.scripts.modal-delete-ajax-script')
 @endsection

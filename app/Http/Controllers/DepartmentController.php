@@ -232,7 +232,11 @@ class DepartmentController extends Controller
     $this->authorize($method, Department::class);
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
-    $user_id = $user->id;
+    if ($user->god == 1) {
+      $user_id = 1;
+    } else {
+      $user_id = $user->id;
+    };
     $user_status = $user->god;
     $company_id = $user->company_id;
     // Пишем филиал
@@ -240,10 +244,11 @@ class DepartmentController extends Controller
       // Если город найден, то меняем значение на 1, пишем в базу и отдаем результат
       if ($request->filial_database == 1) {
         // Получаем данные для авторизованного пользователя
-    $user = $request->user();
-    $user_id = $user->id;
-    $user_status = $user->god;
-    $company_id = $user->company_id;
+        $user = $request->user();
+        $user_id = $user->id;
+        $user_status = $user->god;
+        $company_id = $user->company_id;
+        
         $filial = new Department;
         $filial->company_id = $company_id;
         $filial->city_id = $request->city_id;
@@ -251,7 +256,7 @@ class DepartmentController extends Controller
         $filial->department_address = $request->filial_address;
         $filial->department_phone = cleanPhone($request->filial_phone);
         $filial->filial_status = 1;
-        // $filial->author_id = $user_id;
+        $filial->author_id = $user_id;
         $filial->save();
         if($filial) {
           return Redirect('/current_department/'.$filial->id.'/0');

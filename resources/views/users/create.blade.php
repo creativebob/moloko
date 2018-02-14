@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
-  @include('includes.inhead-pickmeup')
+  @include('includes.scripts.pickmeup-inhead')
 @endsection
 
 @section('title', 'Новый пользователь')
@@ -25,16 +25,14 @@
 @endsection
 
 @section('modals')
-  {{-- Модалка добавления роли --}}
-  @include('includes.modals.modal-add-role')
   {{-- Модалка удаления с ajax --}}
   @include('includes.modals.modal-delete-ajax')
 @endsection
 
 @section('scripts')
   @include('includes.scripts.city-list')
-  @include('includes.inputs-mask')
-  @include('includes.pickmeup')
+  @include('includes.scripts.inputs-mask')
+  @include('includes.scripts.pickmeup-script')
 @endsection
 
 

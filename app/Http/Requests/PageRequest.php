@@ -24,11 +24,11 @@ class PageRequest extends FormRequest
     public function rules()
     {
         return [
-            'page_name' => 'string|max:255', 
-            'page_title' => 'string|max:255', 
-            'page_description' => 'string', 
-            'page_alias' => 'string|max:255', 
-            'site_id' => 'integer', 
+            'page_name' => 'string|max:255|required', 
+            'page_title' => 'string|max:255|required', 
+            'page_description' => 'string|required', 
+            'page_alias' => 'string|max:255|required', 
+            'site_id' => 'integer|required', 
         ];
     }
 }

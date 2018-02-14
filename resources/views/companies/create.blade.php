@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('inhead')
-  @include('includes.inhead-pickmeup')
-@endsection
-
 @section('title', 'Новая компания')
 
 @section('title-content')
@@ -26,21 +22,14 @@
 
 @section('scripts')
   @include('includes.scripts.city-list')
-  @include('includes.inputs-mask')
+  @include('includes.scripts.inputs-mask')
+  
   <script type="text/javascript">
-    // При добавлении филиала ищем город в нашей базе
-  $('#city-name-field-add').keyup(function() {
-    checkCity();
-  });
-
   // Проверка существования компании
   $(document).on('keyup', '.company_inn-field', function() {
-
     var company_inn = document.getElementById('company_inn-field').value;
     // alert(company_inn);
-
     if(company_inn.length > 9){
-
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -49,19 +38,14 @@
         type: "POST",
         data: {company_inn: company_inn},
         success: function (data) {
-
           if(data == 0){
-
           } else {
             document.getElementById('company_inn-field').value = '';
             alert(data);          
           };
-
         }
       });
-
     };
-
   });
 </script>
 @endsection

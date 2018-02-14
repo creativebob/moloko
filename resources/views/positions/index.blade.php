@@ -3,7 +3,7 @@
 @section('inhead')
 <meta name="description" content="{{ $page_info->page_description }}" />
 {{-- Скрипты таблиц в шапке --}}
-  @include('includes.table-inhead')
+  @include('includes.scripts.table-inhead')
 @endsection
 
 @section('title')
@@ -103,8 +103,8 @@
 
 @section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.table-scripts')
+@include('includes.scripts.table-scripts')
 
 {{-- Скрипт модалки удаления --}}
-@include('includes.modals.modal-delete-script')
+@include('includes.scripts.modal-delete-script')
 @endsection

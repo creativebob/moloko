@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('inhead')
-  @include('includes.inhead-pickmeup')
-@endsection
-
 @section('title', 'Новая сущность')
 
 @section('title-content')
@@ -25,7 +21,7 @@
 @endsection
 
 @section('scripts')
-  @include('includes.inputs-mask')
+  @include('includes.scripts.inputs-mask')
 @endsection
 
 
