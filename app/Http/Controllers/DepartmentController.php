@@ -9,10 +9,10 @@ use App\Position;
 use App\Staffer;
 use App\Page;
 use App\Right;
-// Политика
-use App\Policies\DepartmentPolicy;
 // Валидация
 use App\Http\Requests\DepartmentRequest;
+// Политика
+use App\Policies\DepartmentPolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,23 +44,54 @@ class DepartmentController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->orderBy('moderated', 'desc')
     ->get();
+
+    $answer_positions = operator_right('positions', false, $method);
+    // dd($answer);
     // Получаем список должностей
-    $positions_list = Position::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
-    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
+    $positions_list = Position::withoutGlobalScope($answer_positions['moderator'])
+    ->moderatorFilter($answer_positions)
+    ->companiesFilter($answer_positions)
+    ->filials($answer_positions) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer_positions)
+    ->systemItem($answer_positions) // Фильтр по системным записям
     ->pluck('position_name', 'id');
     // dd($departments);
-    $departments_db = $departments->toArray();
+    // dd($departments);
     //Создаем масив где ключ массива является ID меню
+    $departments_rights = [];
+    $departments_rights = $departments->keyBy('id');
+    // foreach ($departments as $department) {
+    //   $departments_rights[$department['id']] = $department;
+    // };
+    // dd($departments_rights);
+    // Получаем данные для авторизованного пользователя
+    $user = $request->user();
+    // Проверяем прапва на редактирование и удаление
     $departments_id = [];
-    foreach ($departments_db as $department) {
-      $departments_id[$department['id']] = $department;
+    foreach ($departments_rights as $department) {
+      $edit = 0;
+      $delete = 0;
+      if ($user->can('update', $department)) {
+        $edit = 1;
+      };
+      if ($user->can('delete', $department)) {
+        $delete = 1;
+      };
+      $department_right = $department->toArray();
+      $departments_id[$department_right['id']] = $department_right;
+      $departments_id[$department_right['id']]['edit'] = $edit;
+      $departments_id[$department_right['id']]['delete'] = $delete;
+      // Проверяем прапва на удаление
+      foreach ($department->staff as $id => $staffer) {
+        $del_staff = 0;
+        if ($user->can('delete', $staffer)) {
+          $del_staff = 1;
+        };
+        $departments_id[$department_right['id']]['staff'][$id]['delete'] = $del_staff;
+      };
     };
-    //Функция построения дерева из массива от Tommy Lacroix
-    
+    // dd($departments_id);
+    // Функция построения дерева из массива от Tommy Lacroix
     $departments_tree = [];
     foreach ($departments_id as $id => &$node) {   
       //Если нет вложений
@@ -68,7 +99,7 @@ class DepartmentController extends Controller
         $departments_tree[$id] = &$node;
       } else { 
       //Если есть потомки то перебераем массив
-        $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
+        $departments_id[$node['department_parent_id']]  ['children'][$id] = &$node;
       }
     };
     foreach ($departments_tree as $department) {
@@ -94,7 +125,7 @@ class DepartmentController extends Controller
   public function current_department(Request $request, $section_id, $item_id)
   {
     // Получаем метод
-    $method = __FUNCTION__;
+    $method = 'index';
     // Подключение политики
     $this->authorize($method, Department::class);
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -120,13 +151,40 @@ class DepartmentController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->pluck('position_name', 'id');
     // dd($departments);
-    $departments_db = $departments->toArray();
     //Создаем масив где ключ массива является ID меню
-    $departments_id = [];
-    foreach ($departments_db as $department) {
-      $departments_id[$department['id']] = $department;
+    $departments_rights = [];
+    foreach ($departments as $department) {
+      $departments_rights[$department['id']] = $department;
     };
-    //Функция построения дерева из массива от Tommy Lacroix
+    // dd($departments_rights);
+    // Получаем данные для авторизованного пользователя
+    $user = $request->user();
+    // Проверяем прапва на редактирование и удаление
+    $departments_id = [];
+    foreach ($departments_rights as $department) {
+      $edit = 0;
+      $delete = 0;
+      if ($user->can('update', $department)) {
+        $edit = 1;
+      };
+      if ($user->can('delete', $department)) {
+        $delete = 1;
+      };
+      $department_right = $department->toArray();
+      $departments_id[$department_right['id']] = $department_right;
+      $departments_id[$department_right['id']]['edit'] = $edit;
+      $departments_id[$department_right['id']]['delete'] = $delete;
+      // Проверяем прапва на удаление
+      foreach ($department->staff as $id => $staffer) {
+        $del_staff = 0;
+        if ($user->can('delete', $staffer)) {
+          $del_staff = 1;
+        };
+        $departments_id[$department_right['id']]['staff'][$id]['delete'] = $del_staff;
+      };
+    };
+    // dd($departments_id);
+    // Функция построения дерева из массива от Tommy Lacroix
     $departments_tree = [];
     foreach ($departments_id as $id => &$node) {   
       //Если нет вложений
@@ -165,8 +223,9 @@ class DepartmentController extends Controller
     //
   }
 
-  public function store(DepartmentRequest $request)
+  public function store(Request $request)
   {
+    // dd($request);
     // Получаем метод
     $method = 'create';
     // Подключение политики
@@ -266,7 +325,7 @@ class DepartmentController extends Controller
     // Получаем метод
     $method = 'update';
     // ГЛАВНЫЙ ЗАПРОС:
-   $department = Department::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+   $department = Department::with('city')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
     // Подключение политики
     $this->authorize($method, $department);
     if ($department->filial_status == 1) {
@@ -324,7 +383,7 @@ class DepartmentController extends Controller
     // ГЛАВНЫЙ ЗАПРОС:
     $filial = Department::withoutGlobalScope($answer['moderator'])->findOrFail($id);
     // Подключение политики
-    $this->authorize('update', $site);
+    $this->authorize('update', $filial);
     if ($request->filial_database == 1) {
       $filial->city_id = $request->city_id;
       $filial->department_name = $request->filial_name;
@@ -360,8 +419,12 @@ class DepartmentController extends Controller
 
   public function destroy(Request $request, $id)
   {
+    // Получаем метод
+    $method = 'delete';
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
     // ГЛАВНЫЙ ЗАПРОС:
-   $department = Department::with('staff')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $department = Department::with('staff')->withoutGlobalScope($answer['moderator'])->findOrFail($id);
     // Подключение политики
     $this->authorize('delete', $department);
     $user = $request->user();
@@ -370,7 +433,7 @@ class DepartmentController extends Controller
     } else {
       if ($department->filial_status == null) {
         $filial_id = $department->filial_id;
-        $department_id = $department->id;
+        $department_id = $department->department_parent_id;
       } else {
         $department_id = 0;
       };

@@ -18,7 +18,7 @@
 
 @section('content')
 
-  {{ Form::open(['route' => 'users.store', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['route' => 'users.store', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
     @include('users.form', ['submitButtonText' => 'Добавить пользователя', 'param' => ''])
   {{ Form::close() }}
 
@@ -34,12 +34,7 @@
 @section('scripts')
   @include('includes.scripts.city-list')
   @include('includes.inputs-mask')
-<script type="text/javascript">
-    // При добавлении филиала ищем город в нашей базе
-  $('#city-name-field-add').keyup(function() {
-    checkCity();
-  });
-</script>
+  @include('includes.pickmeup')
 @endsection
 
 

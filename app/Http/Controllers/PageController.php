@@ -177,7 +177,7 @@ class PageController extends Controller
     // Получаем авторизованного пользователя
     $user = $request->user();
     // ГЛАВНЫЙ ЗАПРОС:
-    $page = Page::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+    $page = Page::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
     // Подключение политики
     $this->authorize('update', $page);
     $page->page_name = $request->page_name;

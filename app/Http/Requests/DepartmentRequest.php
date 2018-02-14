@@ -25,11 +25,10 @@ class DepartmentRequest extends FormRequest
     {
         return [
             'filial_database' => 'integer|nullable', 
-            'city_name' => 'string|max:255|nullable',
             'city_id' => 'integer|nullable', 
             'filial_name' => 'string|max:255|nullable',
             'filial_address' => 'string|max:255|nullable',
-            'filial_phone' => 'string|max:11|nullable',
+            'filial_phone' => 'string|max:17|nullable',
             'filial_id' => 'integer|nullable',  
             'department_database' => 'integer|nullable', 
             'department_name' => 'string|max:255|nullable',

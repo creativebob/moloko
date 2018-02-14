@@ -129,11 +129,11 @@ class SiteController extends Controller
     // Список меню для сайта
     $answer = operator_right('sites', $this->entity_dependence, $method);
     $menus = Menu::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer['dependence'])
-    ->companiesFilter($answer['company_id'])
-    ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer['all_authors'])
-    ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
+    ->moderatorFilter($answer)
+    ->companiesFilter($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
     ->whereNavigation_id(1) // Только для сайтов, разделы сайта
     ->get();
     return view('sites.edit', compact('site', 'menus'));
@@ -153,6 +153,7 @@ class SiteController extends Controller
     $this->authorize('update', $site);
     $site->site_name = $request->site_name;
     $site_alias = explode('.', $request->site_domen);
+    $site->site_domen = $request->site_domen;
     $site->site_alias = $site_alias[0];
     // $site->company_id =  $user->company_id;
     $site->editor_id = $user->id;

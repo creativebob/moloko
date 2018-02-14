@@ -62,7 +62,7 @@ class StafferController extends Controller
 
   public function create()
   {
-      //
+    //
   }
 
   public function store(StafferRequest $request)
@@ -114,8 +114,8 @@ class StafferController extends Controller
     $method = 'update';
     // ГЛАВНЫЙ ЗАПРОС:
     $staffer = Staffer::with(['employees' => function($query) {
-                          $query->whereDate_dismissal(null);
-                        }])
+      $query->whereDate_dismissal(null);
+    }])
     ->withoutGlobalScope(ModerationScope::class)
     ->findOrFail($id);
     // Подключение политики
@@ -219,7 +219,7 @@ class StafferController extends Controller
     }; 
   }
 
-  public function destroy($id)
+  public function destroy(Request $request, $id)
   {
     // ГЛАВНЫЙ ЗАПРОС:
     $staffer = Staffer::with('department')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);

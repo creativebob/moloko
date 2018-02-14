@@ -342,7 +342,7 @@ input[type=checkbox], input[type=radio] {
 }
 /* line 396, ../sass/app.scss */
 .input-icon .load {
-  display: none;
+  content: 'lol';
 }
 
 /* line 402, ../sass/app.scss */

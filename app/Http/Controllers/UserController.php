@@ -263,7 +263,7 @@ class UserController extends Controller
     public function edit(Request $request, $id)
     {
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        $user = User::with('city')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
         // Подключение политики
         $this->authorize('update', $user);
         // Функция из Helper отдает массив со списками для SELECT

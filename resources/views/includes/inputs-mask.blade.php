@@ -13,10 +13,4 @@
     $('.passport-date-field').mask('00.00.0000');
 
   });
-
-  // Прикручиваем календарь
-  $('.date-field').pickmeup({
-    position : "bottom",
-    hide_on_select : true
-  });
 </script>

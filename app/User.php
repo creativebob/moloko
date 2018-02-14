@@ -247,5 +247,13 @@ class User extends Authenticatable
     return $this->belongsToMany('App\RoleUser');
   }
 
+  /**
+  * Получаем город.
+  */
+  public function city()
+  {
+    return $this->belongsTo('App\City');
+  }
+
 
 }

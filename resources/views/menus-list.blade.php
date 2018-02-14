@@ -1,5 +1,8 @@
 @if (isset($menu['children']))
-	<li class="medium-item parent" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['menu_name'] }}">
+	<li class="medium-item parent
+	@if (isset($navigation['menus']))
+            parent-item
+            @endif" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['menu_name'] }}">
 	  <a class="medium-link">
 	    <div class="list-title">
 	      <div class="icon-open sprite"></div>
@@ -20,15 +23,13 @@
             @endcan
 	  	</li>
 		<li>
-			@can('update', collect($menu))
+			@if($menu['edit'] == 1)
 			<div class="icon-list-edit sprite" data-open="menu-edit"></div>
-			@endcan
+			@endif
 		</li>
 	    <li>
-	    @if(($navigation['system_item'] != 1) && (!isset($menu['children'])))
-	    	@can('delete', collect($menu))
+	    @if(($navigation['system_item'] != 1) && (!isset($menu['children'])) && ($menu['delete'] == 1))
 	      <div class="icon-list-delete sprite" data-open="item-delete"></div>
-	       @endcan
 	    @endif
 	    </li>
 	  </ul>
@@ -42,7 +43,7 @@
 	</li>
 @else
 	{{-- Конечный --}}
-	<li class="medium-item" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['menu_name'] }}">
+	<li class="medium-item parent" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['menu_name'] }}">
 		<div class="medium-as-last">{{ $menu['menu_name'] }}
 		  <ul class="icon-list">
 		  	<li>
@@ -51,15 +52,13 @@
 	            @endcan
 		  	</li>
 			<li>
-				@can('update', collect($menu))
+				@if($menu['edit'] == 1)
 				<div class="icon-list-edit sprite" data-open="menu-edit"></div>
-				@endcan
+				@endif
 			</li>
 		    <li>
-		    @if(($navigation['system_item'] != 1) && (!isset($menu['children'])))
-		    	@can('delete', collect($menu))
+		    @if(($navigation['system_item'] != 1) && (!isset($menu['children'])) && ($menu['delete'] == 1))
 		      <div class="icon-list-delete sprite" data-open="item-delete"></div>
-		       @endcan
 		    @endif
 		    </li>
 		  </ul>
