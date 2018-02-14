@@ -36,7 +36,7 @@ class UserController extends Controller
         $this->authorize($method, User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
         // dd($answer['dependence']);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ class UserController extends Controller
         $this->authorize(__FUNCTION__, User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
         // Функция из Helper отдает массив со списками для SELECT
         $list_departments = getLS('users', 'view', 'departments');
@@ -110,7 +110,7 @@ class UserController extends Controller
         $this->authorize('create', User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
         // Получаем данные для авторизованного пользователя
         $user_auth = $request->user();
@@ -185,7 +185,7 @@ class UserController extends Controller
         $user_auth = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::withoutGlobalScope($answer['moderator'])->findOrFail($id);

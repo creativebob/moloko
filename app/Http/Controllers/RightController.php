@@ -38,7 +38,7 @@ class RightController extends Controller
         $this->authorize($method, Right::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
         // dd($answer['dependence']);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------

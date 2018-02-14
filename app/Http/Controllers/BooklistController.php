@@ -25,7 +25,7 @@ class BooklistController extends Controller
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'booklists';
     protected $entity_dependence = false;
-    
+
     public function index(Request $request)
     {
         // Получаем метод
@@ -35,7 +35,7 @@ class BooklistController extends Controller
         $this->authorize($method, Booklist::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
         // dd($answer['dependence']);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------

@@ -39,7 +39,7 @@ class EntityController extends Controller
         $this->authorize($method, Entity::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, false, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
         // dd($answer['dependence']);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------

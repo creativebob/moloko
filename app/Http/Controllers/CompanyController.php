@@ -24,7 +24,7 @@ class CompanyController extends Controller
 
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'companies';
-
+    protected $entity_dependence = false;
 
     public function index(Request $request)
     {
@@ -36,7 +36,7 @@ class CompanyController extends Controller
         $this->authorize($method, Company::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
         // dd($answer);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ class CompanyController extends Controller
         $this->authorize('create', Company::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, false, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -146,7 +146,7 @@ class CompanyController extends Controller
         $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, false, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
         // ГЛАВНЫЙ ЗАПРОС:
         $company = Company::withoutGlobalScope($answer['moderator'])->findOrFail($id);
