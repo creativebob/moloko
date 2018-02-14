@@ -65,11 +65,19 @@
               
             </div>
             <div class="small-12 medium-6 cell">
-              <label class="input-icon">Введите город
-                {{ Form::text('city_name', null, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
+               <label class="input-icon">Введите город
+                @php
+                  $city_name = null;
+                  $city_id = null;
+                  if(isset($user->city)) {
+                    $city_name = $user->city->city_name;
+                    $city_id = $user->city->city_id;
+                  }
+                @endphp
+                {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
                 <div class="sprite-input-right icon-success"></div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
-                <input type="hidden" name="city_id" class="city-id-field">
+                {{ Form::hidden('city_id', $city_id, ['class'=>'city-id-field']) }}
               </label>
               <label>Адрес
               {{ Form::text('company_address', $company->company_address, ['class'=>'company-address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
