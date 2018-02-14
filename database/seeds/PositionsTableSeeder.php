@@ -17,7 +17,7 @@ class PositionsTableSeeder extends Seeder
                 'page_id' => 6,
 		        'direction_status' => 1,
 		        'company_id' => null,
-                'system_item' => 1,
+                'system_item' => null,
                 'author_id' => 1,
         	],
             [
@@ -25,7 +25,7 @@ class PositionsTableSeeder extends Seeder
                 'page_id' => 6,
                 'direction_status' => null,
                 'company_id' => null,
-                'system_item' => 1,
+                'system_item' => null,
                 'author_id' => 1,
             ],
             [
@@ -33,7 +33,7 @@ class PositionsTableSeeder extends Seeder
                 'page_id' => 6,
                 'direction_status' => null,
                 'company_id' => null,
-                'system_item' => 1,
+                'system_item' => null,
                 'author_id' => 1,
             ],
         	[

@@ -89,7 +89,7 @@
             @endif
             @endif
           </td>
-          <td class="td-role-company-id">@if(!empty($role->company->company_name)) {{ $role->company->company_name }} @else Системная  @endif</td>
+          <td class="td-role-company-id">@if(!empty($role->company->company_name)) {{ $role->company->company_name }} @else Шаблон @endif</td>
           <td class="td-role-count"><span class="allow">{{ $counts_directive_array[$role->id]['count_allow'] }}</span> / <span class="deny"> {{ $counts_directive_array[$role->id]['count_deny'] }}</span></td>
           <td class="td-role-description">{{ $role->role_description }} </td>
           <td class="td-role-author">@if(!empty($role->author->first_name)) {{ $role->author->first_name . ' ' . $role->author->second_name }} @endif</td>

@@ -11,6 +11,7 @@ use App\Scopes\Traits\CompaniesFilterTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
+use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorFilterTraitScopes;
 
 class Entity extends Model
@@ -21,6 +22,7 @@ class Entity extends Model
   use AuthorsTraitScopes;
   use SystemitemTraitScopes;
   use FilialsTraitScopes;
+  use TemplateTraitScopes;
   use ModeratorFilterTraitScopes;
   /**
    * Атрибуты, которые должны быть преобразованы в даты.

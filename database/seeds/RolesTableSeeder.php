@@ -12,11 +12,11 @@ class RolesTableSeeder extends Seeder
     public function run()
     {
         DB::table('roles')->insert([
-        	['role_name' => 'Полный доступ', 'company_id' => null, 'system_item' => 1], 
-        	['role_name' => 'Администратор', 'company_id' => null, 'system_item' => 1], 
-            ['role_name' => 'Директор', 'company_id' => null, 'system_item' => 1],  
-            ['role_name' => 'Менеджер', 'company_id' => null, 'system_item' => 1], 
-            ['role_name' => 'Web-разработчик', 'company_id' => 1, 'system_item' => null],  
+        	['role_name' => 'Полный доступ', 'company_id' => null, 'system_item' => null], 
+        	['role_name' => 'Администратор', 'company_id' => null, 'system_item' => null], 
+            ['role_name' => 'Директор', 'company_id' => null, 'system_item' => null], 
+            ['role_name' => 'Менеджер', 'company_id' => null, 'system_item' => null], 
+            ['role_name' => 'Web-разработчик', 'company_id' => 1, 'system_item' => null], 
         ]);
     }
 }
