@@ -1,11 +1,11 @@
 <script type="text/javascript">
   function checkCity() {
     // Получаем фрагмент текста
-    var city = $('#city-name-field-add').val();
+    var city = $('.city-check-field').val();
     // Смотрим сколько символов
     var lenCity = city.length;
     // Если символов больше 3 - делаем запрос
-    if (lenCity > 3) {
+    if (lenCity > 2) {
       // Сам ajax запрос
       $.ajax({
         headers: {
@@ -15,10 +15,10 @@
         type: "POST",
         data: {city_name: city},
         beforeSend: function () {
-          $('.icon-load').removeClass('load');
+          $('.icon-load').addClass('load');
         },
         success: function(date){
-          $('.icon-load').addClass('load');
+          $('.icon-load').removeClass('load');
           // Удаляем все значения чтобы вписать новые
           $('.table-over').remove();
           var result = $.parseJSON(date);
@@ -39,11 +39,39 @@
         }
       });
     };
-    if (lenCity <= 3) {
+    if (lenCity <= 2) {
       // Удаляем все значения, если символов меньше 3х
       $('.table-over').remove();
       $('.item-error').remove();
       // $('#city-name-field').val('');
     };
   };
+  // При добавлении филиала ищем город в нашей базе
+  $('.city-check-field').keyup(function() {
+    checkCity();
+  });
+
+  // При клике на город в модальном окне добавления филиала заполняем инпуты
+  $(document).on('click', '.form-check-city .city-add', function() {
+    var cityId = $(this).closest('tr').find('a.city-add').data('city-id');
+    var cityName = $(this).closest('tr').find('[data-city-id=' + cityId +']').html();
+    $('.city-id-field').val(cityId);
+    $('.city-check-field').val(cityName);
+    $('.table-over').remove();
+
+    $('#filial-database-add').val(1);
+    $('.icon-success').removeClass('load');
+  });
+
+  // При закрытии модалки очищаем поля
+  $(document).on('click', '.close-modal', function() {
+    $('.city-check-field').val('');
+    $('.city-id-field').val('');
+    $('.table-over').remove();
+    
+  });
+  // Удяляем результаты при потере фокуса
+  // $('.city-check-field').focusout(function(){
+  //   $('.table-over').remove();
+  // });
 </script>

@@ -29,6 +29,7 @@ class UsersTableSeeder extends Seeder
 	        	'filial_id' => null, 
 	        	'system_item' => 1, 
 	        	'author_id' => null, 
+	        	'city_id' => null, 
         	],
         	[
 	        	'login' => 'creativebob', 
@@ -45,7 +46,8 @@ class UsersTableSeeder extends Seeder
 	        	'god' => 1, 
 	        	'filial_id' => null, 
 	        	'system_item' => null, 
-	        	'author_id' => 1, 
+	        	'author_id' => 1,
+	        	'city_id' => null, 
         	],
         	[
 	        	'login' => 'makc_berluskone', 
@@ -63,6 +65,7 @@ class UsersTableSeeder extends Seeder
 	        	'filial_id' => null, 
 	        	'system_item' => null, 
 	        	'author_id' => 1, 
+	        	'city_id' => null, 
         	],
         	[
 	        	'login' => 'timoshenko', 
@@ -80,6 +83,7 @@ class UsersTableSeeder extends Seeder
 	        	'filial_id' => 1, 
 	        	'system_item' => null, 
 	        	'author_id' => 1, 
+	        	'city_id' => 1,
         	],
         	[
 	        	'login' => 'mironov', 
@@ -97,6 +101,7 @@ class UsersTableSeeder extends Seeder
 	        	'filial_id' => 1, 
 	        	'system_item' => null, 
 	        	'author_id' => 4, 
+	        	'city_id' => 1,
         	],
         	[
 	        	'login' => 'kondrachuk', 
@@ -114,6 +119,7 @@ class UsersTableSeeder extends Seeder
 	        	'filial_id' => 1, 
 	        	'system_item' => null, 
 	        	'author_id' => 4, 
+	        	'city_id' => 1,
         	],
         	[
 	        	'login' => 'davydenko', 
@@ -131,6 +137,7 @@ class UsersTableSeeder extends Seeder
 	        	'filial_id' => 1, 
 	        	'system_item' => null, 
 	        	'author_id' => 4, 
+	        	'city_id' => 1,
         	],
         	[
 	        	'login' => 'ylan1', 
@@ -147,6 +154,7 @@ class UsersTableSeeder extends Seeder
 	        	'god' => null, 
 	        	'system_item' => null, 
 	        	'author_id' => 4, 
+	        	'city_id' => 2,
         	],
         	[
 	        	'login' => 'ylan2', 
@@ -163,6 +171,7 @@ class UsersTableSeeder extends Seeder
 	        	'god' => null, 
 	        	'system_item' => null, 
 	        	'author_id' => 8, 
+	        	'city_id' => 2,
         	],
         	[
 	        	'login' => 'ylan3', 
@@ -179,6 +188,7 @@ class UsersTableSeeder extends Seeder
 	        	'god' => null, 
 	        	'system_item' => null, 
 	        	'author_id' => 8, 
+	        	'city_id' => 2,
         	],
         		[
 	        	'login' => 'kray1', 
@@ -195,6 +205,7 @@ class UsersTableSeeder extends Seeder
 	        	'god' => null, 
 	        	'system_item' => null, 
 	        	'author_id' => 4, 
+	        	'city_id' => 3,
         	],
         	[
 	        	'login' => 'kray2', 
@@ -211,6 +222,7 @@ class UsersTableSeeder extends Seeder
 	        	'god' => null, 
 	        	'system_item' => null, 
 	        	'author_id' => 11, 
+	        	'city_id' => 3,
         	],
         	[
 	        	'login' => 'kray3', 
@@ -227,6 +239,7 @@ class UsersTableSeeder extends Seeder
 	        	'god' => null, 
 	        	'system_item' => null, 
 	        	'author_id' => 12, 
+	        	'city_id' => 3,
         	],
         ]);
 

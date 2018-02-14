@@ -80,5 +80,12 @@ class Company extends Model
   {
     return $this->belongsTo('App\User', 'author_id');
   }
+  /**
+  * Получаем город.
+  */
+  public function city()
+  {
+    return $this->belongsTo('App\City');
+  }
 
 }

@@ -18,7 +18,7 @@
 
 @section('content')
 
-  {{ Form::open(['route' => 'companies.store', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['route' => 'companies.store', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
     @include('companies.form', ['submitButtonText' => 'Добавить компанию', 'param' => ''])
   {{ Form::close() }}
 

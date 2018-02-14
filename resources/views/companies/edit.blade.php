@@ -18,7 +18,7 @@
 
 @section('content')
 
-  {{ Form::model($company, ['route' => ['companies.update', $company->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($company, ['route' => ['companies.update', $company->id], 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
   {{ method_field('PATCH') }}
 
     @include('companies.form', ['submitButtonText' => 'Редактировать компанию', 'param'=>''])

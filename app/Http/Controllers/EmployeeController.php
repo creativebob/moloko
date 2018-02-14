@@ -26,7 +26,7 @@ class EmployeeController extends Controller
 {
   // Сущность над которой производит операции контроллер
   protected $entity_name = 'employees';
-  protected $entity_dependence = true;
+  protected $entity_dependence = false;
 
     public function index(Request $request)
     {

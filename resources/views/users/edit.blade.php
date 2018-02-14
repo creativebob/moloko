@@ -18,7 +18,7 @@
 
 @section('content')
 
-  {{ Form::model($user, ['route' => ['users.update', $user->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($user, ['route' => ['users.update', $user->id], 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
   {{ method_field('PATCH') }}
 
     @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>''])
@@ -38,12 +38,6 @@
   @include('includes.scripts.city-list')
   @include('includes.inputs-mask')
   @include('includes.pickmeup')
-  <script type="text/javascript">
-    // При добавлении филиала ищем город в нашей базе
-  $('#city-name-field-add').keyup(function() {
-    checkCity();
-  });
-</script>
 @endsection
 
 

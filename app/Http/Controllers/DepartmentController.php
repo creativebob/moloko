@@ -44,14 +44,18 @@ class DepartmentController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->orderBy('moderated', 'desc')
     ->get();
+
+    $answer_positions = operator_right('positions', false, $method);
+    // dd($answer);
     // Получаем список должностей
-    $positions_list = Position::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
-    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
+    $positions_list = Position::withoutGlobalScope($answer_positions['moderator'])
+    ->moderatorFilter($answer_positions)
+    ->companiesFilter($answer_positions)
+    ->filials($answer_positions) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer_positions)
+    ->systemItem($answer_positions) // Фильтр по системным записям
     ->pluck('position_name', 'id');
+    // dd($departments);
     // dd($departments);
     //Создаем масив где ключ массива является ID меню
     $departments_rights = [];
@@ -95,7 +99,7 @@ class DepartmentController extends Controller
         $departments_tree[$id] = &$node;
       } else { 
       //Если есть потомки то перебераем массив
-        $departments_id[$node['department_parent_id']]['children'][$id] = &$node;
+        $departments_id[$node['department_parent_id']]  ['children'][$id] = &$node;
       }
     };
     foreach ($departments_tree as $department) {
@@ -321,7 +325,7 @@ class DepartmentController extends Controller
     // Получаем метод
     $method = 'update';
     // ГЛАВНЫЙ ЗАПРОС:
-   $department = Department::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+   $department = Department::with('city')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
     // Подключение политики
     $this->authorize($method, $department);
     if ($department->filial_status == 1) {
