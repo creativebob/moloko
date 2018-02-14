@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\UpdateCompany;
+use App\Http\Requests\CompanyRequest;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
@@ -74,7 +74,7 @@ class CompanyController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(CompanyRequest $request)
     {
 
         // Получаем метод
@@ -92,6 +92,7 @@ class CompanyController extends Controller
         $company = new Company;
         $company->company_name = $request->company_name;
         $company->company_phone = cleanPhone($request->company_phone);
+        $company->company_email = $request->company_email;
 
         if(($request->company_extra_phone != NULL)&&($request->company_extra_phone != "")){
             $company->company_extra_phone = cleanPhone($request->company_extra_phone);
@@ -135,7 +136,7 @@ class CompanyController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(CompanyRequest $request, $id)
     {
 
         // Получаем метод
@@ -155,6 +156,7 @@ class CompanyController extends Controller
 
         $company->company_name = $request->company_name;
         $company->company_phone = cleanPhone($request->company_phone);
+        $company->company_email = $request->company_email;
 
         if(($request->company_extra_phone != NULL)&&($request->company_extra_phone != "")){
             $company->company_extra_phone = cleanPhone($request->company_extra_phone);

@@ -34,6 +34,7 @@ class Company extends Model
       'company_name', 
       'company_phone', 
       'company_extra_phone', 
+      'company_email', 
       'city_id', 
       'company_address', 
       'company_inn', 

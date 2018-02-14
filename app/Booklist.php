@@ -29,8 +29,8 @@ class Booklist extends Model
 		
   	protected $dates = ['deleted_at'];
     protected $fillable = [
-	    'list_name', 
-	    'list_description', 
+	    'booklist_name', 
+	    'booklist_description', 
     ];
 
   public function list_items()

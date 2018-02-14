@@ -13,8 +13,8 @@ class BooklistsTableSeeder extends Seeder
     {
         DB::table('booklists')->insert([
             [
-                'list_name' => 'Тестовый список',
-                'list_description' => 'Несколько людей из базы данных',
+                'booklists_name' => 'Тестовый список',
+                'booklists_description' => 'Несколько людей из базы данных',
                 'entity_id' => 1,
                 'company_id' => 1,
                 'author_id' => 1,

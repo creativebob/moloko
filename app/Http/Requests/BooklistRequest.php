@@ -24,7 +24,10 @@ class BooklistRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+
+            'booklists_name' => 'string|max:255', 
+            'booklists_description' => 'string|max:255|nullable', 
+            
         ];
     }
 }
