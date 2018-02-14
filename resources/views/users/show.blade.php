@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
-  @include('includes.inhead-pickmeup')
+  @include('includes.scripts.inhead-pickmeup')
 @endsection
 
 @section('title', 'Просмотр пользователя')
@@ -26,7 +26,7 @@
 @endsection
 
 @section('scripts')
-  @include('includes.inputs-mask')
+  @include('includes.scripts.inputs-mask')
 @endsection
 
 

@@ -1,10 +1,6 @@
 @extends('layouts.app')
 
-@section('inhead')
-  @include('includes.inhead-pickmeup')
-@endsection
-
-@section('title', 'Редактировать пользователя')
+@section('title', 'Редактировать компанию')
 
 @section('title-content')
 	<div class="top-bar head-content">
@@ -20,15 +16,14 @@
 
   {{ Form::model($company, ['route' => ['companies.update', $company->id], 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
   {{ method_field('PATCH') }}
-
     @include('companies.form', ['submitButtonText' => 'Редактировать компанию', 'param'=>''])
-    
   {{ Form::close() }}
 
 @endsection
 
 @section('scripts')
-  @include('includes.inputs-mask')
+  @include('includes.scripts.inputs-mask')
+  @include('includes.scripts.city-list')
 @endsection
 
 

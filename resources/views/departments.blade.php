@@ -243,7 +243,7 @@
                 <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
               </label>
               <label class="input-icon">Город
-                {{ Form::text('city_name', $value = null, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
+                {{ Form::text('city_name', $value = null, ['class'=>'city-check-field', 'autocomplete'=>'off']) }}
                 <div class="sprite-input-right icon-success"></div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
                 <input type="hidden" name="city_id" class="city-id-field">
@@ -314,7 +314,7 @@
           <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
         </label>
         <label class="input-icon">Город
-          {{ Form::text('city_name', $value = null, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
+          {{ Form::text('city_name', $value = null, ['class'=>'city-check-field', 'autocomplete'=>'off']) }}
           <div class="sprite-input-right icon-success"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
           <input type="hidden" name="city_id" class="city-id-field">
@@ -580,9 +580,9 @@ $(function() {
 });
 </script>
 {{-- Скрипт подсветки многоуровневого меню --}}
-@include('includes.multilevel-menu-active-scripts')
+@include('includes.scripts.multilevel-menu-active-scripts')
 {{-- Скрипт модалки удаления ajax --}}
-@include('includes.modals.modal-delete-ajax-script')
+@include('includes.scripts.modal-delete-ajax-script')
 {{-- Скрипт модалки удаления ajax --}}
-@include('includes.modals.modal-delete-script')
+@include('includes.scripts.modal-delete-script')
 @endsection

@@ -24,10 +24,10 @@ class MenuRequest extends FormRequest
     public function rules()
     {
         return [
-            'menu_name' => 'string|max:255', 
+            'menu_name' => 'string|max:255|required', 
             'menu_icon' => 'string|max:255|nullable',
             'menu_alias' => 'string|max:255|nullable',
-            'navigation_id' => 'integer', 
+            'navigation_id' => 'integer|required', 
             'menu_parent_id' => 'integer|nullable', 
             'page_id' => 'integer|nullable',             
         ];

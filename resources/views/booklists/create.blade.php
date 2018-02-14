@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@include('users.inhead')
 
 @section('title', 'Новый пользователь')
 

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
-  @include('includes.inhead-pickmeup')
+  @include('includes.scripts.pickmeup-inhead')
 @endsection
 
 @section('title', 'Редактировать пользователя')
@@ -36,8 +36,8 @@
 
 @section('scripts')
   @include('includes.scripts.city-list')
-  @include('includes.inputs-mask')
-  @include('includes.pickmeup')
+  @include('includes.scripts.inputs-mask')
+  @include('includes.scripts.pickmeup-script')
 @endsection
 
 
