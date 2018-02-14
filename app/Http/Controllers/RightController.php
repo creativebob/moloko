@@ -26,6 +26,7 @@ class RightController extends Controller
 
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'rights';
+    protected $entity_dependence = false;
 
     public function index()
     {
@@ -37,7 +38,7 @@ class RightController extends Controller
         $this->authorize($method, Right::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, false, $method);
+        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
         // dd($answer['dependence']);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------

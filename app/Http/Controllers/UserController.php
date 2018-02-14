@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\UpdateUser;
+use App\Http\Requests\UserRequest;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
@@ -25,6 +25,7 @@ class UserController extends Controller
 
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'users';
+    protected $entity_dependence = true;
 
     public function index(Request $request)
     {
@@ -35,7 +36,7 @@ class UserController extends Controller
         $this->authorize($method, User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, $method);
+        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
         // dd($answer['dependence']);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -88,7 +89,7 @@ class UserController extends Controller
         $this->authorize(__FUNCTION__, User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, $method);
+        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
 
         // Функция из Helper отдает массив со списками для SELECT
         $list_departments = getLS('users', 'view', 'departments');
@@ -100,7 +101,7 @@ class UserController extends Controller
     	return view('users.create', compact('user', 'roles', 'list_filials', 'list_departments', 'roles_list'));
     }
 
-    public function store(UpdateUser $request)
+    public function store(UserRequest $request)
     {
         // Получаем метод
         $method = __FUNCTION__;
@@ -109,7 +110,7 @@ class UserController extends Controller
         $this->authorize('create', User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, $method);
+        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
 
         // Получаем данные для авторизованного пользователя
         $user_auth = $request->user();
@@ -175,7 +176,7 @@ class UserController extends Controller
     }
 
 
-    public function update(UpdateUser $request, $id)
+    public function update(UserRequest $request, $id)
     {
         // Получаем метод
         $method = __FUNCTION__;
@@ -184,7 +185,7 @@ class UserController extends Controller
         $user_auth = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, $method);
+        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
 
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::withoutGlobalScope($answer['moderator'])->findOrFail($id);

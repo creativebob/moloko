@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class UpdateUser extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,9 +31,9 @@ class UpdateUser extends FormRequest
             // 'password' => 'required|string|min:6|confirmed',
 
             'nickname' => 'alpha|string|max:255|nullable', 
-            'first_name' => 'alpha|string|max:255|nullable', 
-            'second_name' => 'alpha|string|max:255|nullable', 
-            'patronymic' => 'alpha|string|max:255|nullable', 
+            'first_name' => 'string|max:255|nullable', 
+            'second_name' => 'string|max:255|nullable', 
+            'patronymic' => 'string|max:255|nullable', 
 
             'sex' => 'required', 
             'birthday' => 'date|after:01.01.1940|nullable', 

@@ -65,8 +65,8 @@
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-list-name">Имя списка</th>
-          <th class="td-list-description">Описание списка</th>
+          <th class="td-booklists-name">Имя списка</th>
+          <th class="td-booklists-description">Описание списка</th>
           <th class="td-entity-id">Имя сущности</th>
           <th class="td-company-name">Компания</th>
           <th class="td-author">Автор</th>
@@ -79,8 +79,8 @@
         <tr class="parent @if($booklist->moderated == 1)no-moderation @endif" id="booklists-{{ $booklist->id }}" data-name="{{ $booklist->booklist_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $booklist->id }}"><label class="label-check" for="check-{{ $booklist->id }}"></label></td>
-          <td class="td-list-name">{{ $booklist->list_name }} </td>
-          <td class="td-list-description">{{ $booklist->list_description }}</td>
+          <td class="td-list-name">{{ $booklist->booklists_name }} </td>
+          <td class="td-list-description">{{ $booklist->booklists_description }}</td>
           <td class="td-entity-id">{{ $booklist->entity->entity_name }}</td>
           <td class="td-company-name">{{ $booklist->company->company_name }}</td>
           <td class="td-author">@if(isset($booklist->author->first_name)) {{ $booklist->author->first_name . ' ' . $booklist->author->second_name }} @endif</td>

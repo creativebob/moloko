@@ -52,18 +52,15 @@
               </label>
             </div>
             <div class="small-12 medium-6 cell">
-              <label>Телефон
+              <label>Доп. телефон
                 {{ Form::text('company_extra_phone', $company->company_extra_phone, ['class'=>'phone-field company-extra-phone', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off']) }}
                 <span class="form-error">Введите все символы телефонного номера!</span>
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Почта
-                {{ Form::text('email', $company->company_email, ['class'=>'email-field company-email-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+                {{ Form::text('company_email', $company->company_email, ['class'=>'email-field company-email-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
                 <span class="form-error">Укажите почту</span>
-              </label>
-              <label>Пустой слот
-
               </label>
               
             </div>

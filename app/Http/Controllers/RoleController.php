@@ -13,7 +13,7 @@ use App\Entity;
 use App\RoleUser;
 use App\ActionEntity;
 
-
+use App\Http\Requests\RoleRequest;
 use App\Http\Controllers\Session;
 
 // Модели которые отвечают за работу с правами + политики
@@ -35,6 +35,7 @@ class RoleController extends Controller
 
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'roles';
+    protected $entity_dependence = false;
 
     public function index(Request $request)
     {
@@ -46,7 +47,7 @@ class RoleController extends Controller
         $this->authorize($method, Role::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, false, $method);
+        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -110,7 +111,7 @@ class RoleController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
         // Получаем метод
         $method = __FUNCTION__;
@@ -119,7 +120,7 @@ class RoleController extends Controller
         $this->authorize('create', Role::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, false, $method);
+        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -165,7 +166,7 @@ class RoleController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(RoleRequest $request, $id)
     {
 
         // Получаем метод
@@ -175,7 +176,7 @@ class RoleController extends Controller
         $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, $method);
+        $answer = operator_right($this->entity_name, $this->$entity_dependence, $method);
 
         // ГЛАВНЫЙ ЗАПРОС:
         $role = Role::withoutGlobalScope($answer['moderator'])->findOrFail($id);
