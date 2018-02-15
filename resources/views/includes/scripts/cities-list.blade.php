@@ -6,6 +6,7 @@
     var lenCity = city.length;
     // Если символов больше 3 - делаем запрос
     if (lenCity > 2) {
+      $('.find-status').removeClass('icon-find-ok');
       // Сам ajax запрос
       $.ajax({
         headers: {
@@ -24,7 +25,6 @@
           var result = $.parseJSON(date);
           var data = '';
           if (result.error_status == 0) {
-            $('.find-status').addClass('icon-find-ok');
             // Перебираем циклом
             data = "<table class=\"table-content-search table-over\"><tbody>";
             for (var i = 0; i < result.count; i++) {
@@ -63,7 +63,7 @@
     $('.city-check-field').val(cityName);
     $('.table-over').remove();
     $('#filial-database-add').val(1);
-    $('.find-status').removeClass('icon-find-ok');
+    $('.find-status').addClass('icon-find-ok');
   });
   // При закрытии модалки очищаем поля
   $(document).on('click', '.close-modal', function() {
