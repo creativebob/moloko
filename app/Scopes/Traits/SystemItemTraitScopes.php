@@ -2,13 +2,12 @@
 
 namespace App\Scopes\Traits;
 
-trait SystemitemTraitScopes
+trait SystemItemTraitScopes
 {
 
     // Фильтрация для показа системных записей
-    public function scopeSystemitem($query, $answer)
+    public function scopeSystemItem($query, $answer)
     {
-
         // Получаем из массива answer нужную информацию:
         // $dependence = $answer['dependence'];
         // $filials = $answer['filials'];
@@ -18,9 +17,8 @@ trait SystemitemTraitScopes
         $company_id = $answer['company_id'];
         $entity_name = $answer['entity_name'];
 
+
         // ЗАВИСИМОСТЬ ОТ СИСТЕМНЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------------------------------
-        
-        if(isset($system_item)){
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ПРОВЕРКА ДЛЯ БОГОВ --------------------------------------------------------------------------------------------------------------------------
@@ -37,14 +35,15 @@ trait SystemitemTraitScopes
                         return $query->WhereNull('system_item')->orWhere('system_item', 1);
                     };
 
+
                 } else
                 {
 
                     return $query
                     ->Where(function ($query) {$query
                     ->Where('company_id', null)            
-                    ->Where('system_item', 1)
-                    ->orWhere('system_item', null)
+                    ->orWhere('system_item', 1)
+                    ->orWhereNull('system_item')
                     ;});
 
                 };
@@ -54,33 +53,38 @@ trait SystemitemTraitScopes
         // ПРОВЕРКА ДЛЯ ОБЫЧНЫХ ПОЛЬЗОВАТЕЛЕЙ  ---------------------------------------------------------------------------------------------------------
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
+            //Выключаем отображение богов на странице списка пользователей
+            if($entity_name == 'users'){
+                $query = $query->Where('god', null);
+            };
+
+
             if(($user_status == null)&&($system_item == 1)){
 
                 // Если есть право смотреть системные
                 return $query
                 ->Where(function ($query) use ($company_id) {$query
-                ->Where('company_id', $company_id)            
+                ->Where('company_id', $company_id)  
                 ->orWhere('system_item', 1)
-                ->orWhere('system_item', null)
+                ->orWhereNull('system_item')
                 ;});
 
             };
+
+
 
             if(($user_status == null)&&($system_item == null)){
 
-                dd(324535);
+
                 // Если нет права смотреть системные
                 return $query
                 ->Where(function ($query) use ($company_id) {$query
-                ->Where('company_id', $company_id)            
+                ->Where('company_id', $company_id)   
                 ->Where('system_item', null)
                 ;});
+
             };
 
-        } else {
-            
-            return $query->WhereNull('system_item');
-        };
     }
 
 }

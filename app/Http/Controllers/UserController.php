@@ -49,7 +49,7 @@ class UserController extends Controller
         ->companiesFilter($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
+        ->systemItem($answer) // Фильтр по системным записям              
         ->orWhere('id', $request->user()->id) // Только для сущности USERS
         ->orderBy('moderated', 'desc')
         ->paginate(30);

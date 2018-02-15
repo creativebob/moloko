@@ -81,7 +81,7 @@
             @endif
           </td>
           <td class="td-site-domen"><a href="http://{{ $site->site_domen }}" target="_blank">{{ $site->site_domen }}</a></td>
-          <td class="td-company-name" data-company-id="{{ $site->company->id or '' }}">{{ $site->company->company_name or 'Системный сайт' }}</td>
+          <td class="td-site-company-id">@if(!empty($site->company->company_name)) {{ $site->company->company_name }} @else @if($site->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-site-edit">
             @if($edit == 1)
             <a class="tiny button" href="/sites/{{ $site->site_alias }}/edit">Редактировать</a>

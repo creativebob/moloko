@@ -82,7 +82,7 @@
           <td class="td-list-name">{{ $booklist->booklists_name }} </td>
           <td class="td-list-description">{{ $booklist->booklists_description }}</td>
           <td class="td-entity-id">{{ $booklist->entity->entity_name }}</td>
-          <td class="td-company-name">{{ $booklist->company->company_name }}</td>
+          <td class="td-booklist-company-id">@if(!empty($booklist->company->company_name)) {{ $booklist->company->company_name }} @else @if($booklist->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-author">@if(isset($booklist->author->first_name)) {{ $booklist->author->first_name . ' ' . $booklist->author->second_name }} @endif</td>
           <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
         </tr>

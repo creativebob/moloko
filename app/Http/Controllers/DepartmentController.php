@@ -54,6 +54,7 @@ class DepartmentController extends Controller
     ->filials($answer_positions) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer_positions)
     ->systemItem($answer_positions) // Фильтр по системным записям
+    ->template($answer_positions)
     ->pluck('position_name', 'id');
     // dd($departments);
     // dd($departments);

@@ -51,6 +51,7 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-position-name">Название должности</th>
           <th class="td-position-page">Alias страницы</th>
+          <th class="td-position-company">Компания</th>
           <th class="td-position-author">Автор</th>
           <th class="td-delete"></th>
         </tr>
@@ -71,6 +72,7 @@
             @endcan
           </td>
           <td class="td-position-page">{{ $position->page->page_alias }}</td>
+          <td class="td-position-company-id">@if(!empty($position->company->company_name)) {{ $position->company->company_name }} @else @if($position->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-position-author">@if(isset($position->author->first_name)) {{ $position->author->first_name . ' ' . $position->author->second_name }} @endif</td>
           <td class="td-delete">
             @if ($position->system_item !== 1)

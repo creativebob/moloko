@@ -29,17 +29,6 @@ class Right extends Model
     use TemplateTraitScopes;
     use ModeratorFilterTraitScopes;
 
-		
-    // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
-
-    // Фильтрация для показа системных записей
-    public function scopeSystemItem($query, $system_item)
-    {
-        if(isset($system_item)){
-          return $query->where('system_item', '=', $system_item);
-        } else {return $query;};
-    }
-
   		protected $dates = ['deleted_at'];
       protected $fillable = [
       'right_name', 

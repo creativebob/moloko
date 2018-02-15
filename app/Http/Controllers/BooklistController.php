@@ -48,6 +48,7 @@ class BooklistController extends Controller
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
+        ->template($answer)
         ->orderBy('moderated', 'desc')
         ->paginate(30);
 
