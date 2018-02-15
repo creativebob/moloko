@@ -33,6 +33,7 @@ class PageController extends Controller
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
+
      $pages = Page::with('site', 'author')
     ->withoutGlobalScope($answer['moderator'])
     ->moderatorFilter($answer)

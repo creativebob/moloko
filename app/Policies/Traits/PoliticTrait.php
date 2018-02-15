@@ -181,8 +181,6 @@ trait PoliticTrait
             };
 
 
-
-
             // Главная проверка (учитывая настройки зависимостей)
             if((($right_status)&&($nolimit_status)) || $right_dep_status){
                 $result = true;
@@ -210,6 +208,15 @@ trait PoliticTrait
             } else {$system_status = false;};
 
         } else {$system_status = false;};
+
+
+        // Гасим любую операцию над системной записью без компании
+        // 
+        // dd($user_status);
+        if(($model->system_item == 1)&&($model->company_id == null)&&($user_status == null)){
+        return false;
+
+        };
 
         // Проверка на возможность операций с системной записью
         if(($model->system_item == 1)&&($system_status == false)){
@@ -340,6 +347,7 @@ trait PoliticTrait
             $result = false;
             // abort(403, 'Доступ запрещен!!!');
         };
+
 
         if(($result_author)&&($result)){
             $result = true;
