@@ -47,16 +47,7 @@ class DepartmentController extends Controller
 
     $answer_positions = operator_right('positions', false, $method);
     // dd($answer);
-    // Получаем список должностей
-    $positions_list = Position::withoutGlobalScope($answer_positions['moderator'])
-    ->moderatorFilter($answer_positions)
-    ->companiesFilter($answer_positions)
-    ->filials($answer_positions) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer_positions)
-    ->systemItem($answer_positions) // Фильтр по системным записям
-    ->pluck('position_name', 'id');
-    // dd($departments);
-    // dd($departments);
+
     //Создаем масив где ключ массива является ID меню
     $departments_rights = [];
     $departments_rights = $departments->keyBy('id');
@@ -114,11 +105,11 @@ class DepartmentController extends Controller
       // dd($department);
     };
           
-    $departments_list = $departments->pluck('department_name', 'id');
+    
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
     // dd($departments_tree);
-    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'departments_list', 'page_info', 'pages', 'departments'));
+    return view('departments', compact('departments_tree', 'positions', 'page_info', 'pages', 'departments'));
   }
 
   // Получаем сторонние данные по 
@@ -364,6 +355,7 @@ class DepartmentController extends Controller
       } else {
         $department_phone = '';
       };
+      
       $result = [
         'city_id' => $city_id,
         'city_name' => $city_name,
@@ -453,6 +445,27 @@ class DepartmentController extends Controller
         abort(403, 'Ошибка при удалении филиала/отдела');
       };
     }
+  }
+
+  public function department_list(Request $request)
+  {
+    $filial_id = $request->filial_id;
+
+      $departments_list = Department::whereId($filial_id)
+      ->orWhere('filial_id', $filial_id)
+      ->pluck('department_name', 'id');
+
+      echo json_encode($departments_list, JSON_UNESCAPED_UNICODE);
+      // // Получаем список должностей
+      // $positions_list = Position::withoutGlobalScope($answer_positions['moderator'])
+      // ->moderatorFilter($answer_positions)
+      // ->companiesFilter($answer_positions)
+      // ->filials($answer_positions) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      // ->authors($answer_positions)
+      // ->systemItem($answer_positions) // Фильтр по системным записям
+      // ->template($answer_positions)
+      // ->pluck('position_name', 'id');
+      // dd($departments);
   }
 }
 

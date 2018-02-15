@@ -69,9 +69,9 @@
                 @php
                   $city_name = null;
                   $city_id = null;
-                  if(isset($user->city)) {
-                    $city_name = $user->city->city_name;
-                    $city_id = $user->city->city_id;
+                  if(isset($company->city)) {
+                    $city_name = $company->city->city_name;
+                    $city_id = $company->city->city_id;
                   }
                 @endphp
                 {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}

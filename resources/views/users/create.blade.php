@@ -30,7 +30,7 @@
 @endsection
 
 @section('scripts')
-  @include('includes.scripts.city-list')
+  @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
 @endsection

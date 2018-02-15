@@ -48,7 +48,6 @@ class AreaController extends Controller
 
   public function destroy(Request $request, $id)
   {
-    $user = $request->user();
     // Удаляем с обновлением
     // Находим область и район города
     $area = Area::with('cities')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
@@ -56,6 +55,7 @@ class AreaController extends Controller
     // Подключение политики
     $this->authorize('delete', $area);
     // dd($area);
+    $user = $request->user();
     if (count($area->cities) > 0) {
       abort(403, 'Район не пустой!');
     } else {

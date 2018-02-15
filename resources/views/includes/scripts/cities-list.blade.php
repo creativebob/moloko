@@ -11,7 +11,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/city_list",
+        url: "/cities_list",
         type: "POST",
         data: {city_name: city},
         beforeSend: function () {
@@ -47,6 +47,7 @@
       $('.item-error').remove();
       $('.find-status').removeClass('icon-find-ok');
       $('.find-status').removeClass('icon-find-no');
+      $('.city-id-field').val('');
       // $('#city-name-field').val('');
     };
   };
@@ -54,7 +55,6 @@
   $('.city-check-field').keyup(function() {
     checkCity();
   });
-
   // При клике на город в модальном окне добавления филиала заполняем инпуты
   $(document).on('click', '.form-check-city .city-add', function() {
     var cityId = $(this).closest('tr').find('a.city-add').data('city-id');
@@ -62,18 +62,14 @@
     $('.city-id-field').val(cityId);
     $('.city-check-field').val(cityName);
     $('.table-over').remove();
-
     $('#filial-database-add').val(1);
     $('.find-status').removeClass('icon-find-ok');
-    
   });
-
   // При закрытии модалки очищаем поля
   $(document).on('click', '.close-modal', function() {
     $('.city-check-field').val('');
     $('.city-id-field').val('');
     $('.table-over').remove();
-    
   });
   // Удяляем результаты при потере фокуса
   // $('.city-check-field').focusout(function(){

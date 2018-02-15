@@ -316,7 +316,6 @@
 $(function() {
   // Берем алиас сайта
   var siteAlias = '{{ $site_alias }}';
-  $('.phone-field').mask('8 (000) 000-00-00');
   // Функция появления окна с ошибкой
   function showError (msg) {
     var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";

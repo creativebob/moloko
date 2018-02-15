@@ -21,7 +21,7 @@
 @endsection
 
 @section('scripts')
-  @include('includes.scripts.city-list')
+  @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
   
   <script type="text/javascript">

@@ -58,7 +58,7 @@ Route::get('/returngod', 'UserController@returngod')->middleware('auth')->name('
 Route::resource('/cities', 'CityController')->middleware('auth');
 Route::resource('/areas', 'AreaController')->middleware('auth');
 Route::resource('/regions', 'RegionController')->middleware('auth');
-Route::post('/city_list', 'CityController@city_list')->middleware('auth');
+Route::post('/cities_list', 'CityController@cities_list')->middleware('auth');
 // Получаем области и города из vk
 Route::post('/city', 'CityController@get_vk_city')->middleware('auth');
 Route::post('/region', 'RegionController@get_vk_region')->middleware('auth');
@@ -68,6 +68,8 @@ Route::get('/current_city/{region}/{area}', 'CityController@current_city')->midd
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
 // Текущий добавленный/удаленный отдел
 Route::get('/current_department/{section_id}/{item_id}', 'DepartmentController@current_department')->middleware('auth');
+// Список отделов филиала и доступных должностей
+Route::post('/departments_list', 'DepartmentController@departments_list')->middleware('auth');
 // Должности
 Route::resource('/positions', 'PositionController')->middleware('auth');
 // Контроллер штата компании

@@ -331,7 +331,7 @@ class CityController extends Controller
   }
 
   // Получаем список городов из нашей базы
-  public function city_list(CityRequest $request)
+  public function cities_list(CityRequest $request)
   {
     // Проверка города в нашей базе данных
     $city_name = $request->city_name;
