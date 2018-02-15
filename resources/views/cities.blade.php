@@ -14,8 +14,8 @@
     <div class="top-bar head-content">
       <div class="top-bar-left">
         <h2 class="header-content">{{ $page_info->page_name }}</h2>
-        @can('create', App\Region::class)
-          <a class="icon-add sprite" data-open="region-add"></a>
+        @can('create', App\City::class)
+          <a class="icon-add sprite" data-open="city-add"></a>
         @endcan
       </div>
       <div class="top-bar-right">
@@ -44,7 +44,7 @@
     <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
       @foreach ($regions as $region)      
       <li class="first-item parent" id="regions-{{ $region->id }}" data-name="{{ $region->region_name }}">
-        <ul class="icon-list">
+        {{-- <ul class="icon-list">
           @can('create', App\City::class)
           <li><div class="icon-list-add sprite" data-open="city-add"></div></li>
           @endcan
@@ -53,7 +53,7 @@
             <li><div class="icon-list-delete sprite" data-open="item-delete-ajax"></div></li>
             @endcan
           @endif
-        </ul>
+        </ul> --}}
         <a data-list="{{ $region->id }}" class="first-link">
           <div class="list-title">
             <div class="icon-open sprite"></div>
@@ -72,25 +72,25 @@
                   <span class="number">{{ count($area->cities) }}</span>
                 </div>
               </a>
-              <ul class="icon-list">
+              {{-- <ul class="icon-list">
                 @if((count($area->cities) == 0) && (($area->system_item !== 1)))
                   @can('delete', $area)
                   <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
                   @endcan
                 @endif
-              </ul>
+              </ul> --}}
               @if(count($area->cities) > 0)
               <ul class="menu vertical nested last-list">
                 @foreach ($area->cities as $city)
                   <li class="last-item parent" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
                     <div class="last-link">{{ $city->city_name }}
-                      <ul class="icon-list">
+                      {{-- <ul class="icon-list">
                         @if($city->system_item !== 1)
                           @can('delete', $city)
                           <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
                           @endcan
                         @endif
-                      </ul>
+                      </ul> --}}
                     </div>
                 @endforeach
               </ul>
@@ -101,11 +101,11 @@
             @foreach ($region->cities as $city)
               <li class="medium-item parent" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
                 <div class="medium-as-last">{{ $city->city_name }}
-                  <ul class="icon-list">
+                  {{--<ul class="icon-list">
                     @can('delete', $city)
                     <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
                     @endcan
-                  </ul>
+                  </ul> --}}
                 </div>
               </li>
             @endforeach
@@ -121,7 +121,7 @@
 @endsection
 
 @section('modals')
-{{-- Модалка добавления области --}}
+{{-- Модалка добавления области
 <div class="reveal rev-large" id="region-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
@@ -133,7 +133,7 @@
       <div class="small-10 medium-4 cell">
         <label class="input-icon">Название области
           <input type="text" name="region_name" id="region-name-field" autocomplete="off" required>
-          <div class="sprite-input-right icon-load load"></div>
+          <div class="sprite-input-right find-status"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
         <input type="hidden" name="region_vk_external_id" id="region-id-field">
@@ -155,42 +155,7 @@
   {{ Form::close() }}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
-{{-- Конец модалки добавления области --}}
-
-{{-- Модалка редактирования области --}}
-<div class="reveal rev-large" id="region-edit" data-reveal>
-  <div class="grid-x">
-    <div class="small-12 cell modal-title">
-      <h5>ДОБАВЛЕНИЕ Области</h5>
-    </div>
-  </div>
-  <form action="/cities" method="post">
-    {{ csrf_field() }}
-    <div class="grid-x grid-padding-x modal-content inputs">
-      <div class="small-10 medium-4 cell">
-        <label>Название области
-          <input type="text" name="region_name" id="region-title-field" value="lol" autocomplete="off" required>
-          <span class="form-error">Уж постарайтесь, введните хотя бы 3 символа!</span>
-        </label>
-        <input type="hidden" name="region_vk_external_id" id="region-id-field" value="lol">
-      </div>
-      <div class="small-12 medium-8 cell">
-        <table class="table-content-search">
-          <caption>Результаты поиска в сторонней базе данных:</caption>
-          <tbody id="tbody-region-add">
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="grid-x align-center">
-      <div class="small-6 medium-4 cell">
-        <button class="button modal-button" id="submit-region-add" type="submit" disabled>Сохранить</button>
-      </div>
-    </div>
-  {!! Form::close() !!}
-  <div data-close class="icon-close-modal sprite close-modal"></div> 
-</div>
-{{-- Конец модалки редактирования области --}}
+Конец модалки добавления области --}}
 
 {{-- Модалка добавления города и района --}}
 <div class="reveal rev-large" id="city-add" data-reveal>
@@ -204,8 +169,8 @@
       <div class="small-10 medium-4 cell">
         <label class="input-icon">Название населенного пункта
           <input type="text" name="city_name" id="city-name-field" autocomplete="off" required>
-          <div class="sprite-input-right icon-load load"></div>
-          <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
+          <div class="sprite-input-right find-status"></div>
+          <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
         <label>Район
           <input type="text" name="area_name" id="area-name" readonly>
@@ -239,68 +204,8 @@
 </div>
 {{-- Конец модалки добавления города и района --}}
 
-{{-- Модалка редактирования --}}
-<div class="reveal rev-large" id="edit" data-reveal>
-  <div class="grid-x">
-    <div class="small-12 cell modal-title">
-      <h5>РЕДАКТИРОВАНИЕ НАСЕЛЕННОГО ПУНКТА</h5>
-    </div>
-  </div>
-  <div class="grid-x grid-padding-x modal-content inputs">
-    <div class="small-10 medium-4 cell">
-      <label>Область
-        <input type="text" name="" required>
-        <span class="form-error">Уж постарайтесь, придумайте что-нибудь!</span>
-      </label>
-      <label>Район
-        <input type="text" name="" required>
-        <span class="form-error">Уж постарайтесь, придумайте что-нибудь!</span>
-      </label>
-    </div>
-    <div class="small-12 medium-8 cell">
-      <div class="grid-x grid-padding-x">
-        <div class="small-10 medium-8 cell">
-          <label>Название населенного пункта
-            <input type="text" name="" required>
-            <span class="form-error">Уж постарайтесь, придумайте что-нибудь!</span>
-          </label>
-        </div>
-      </div>
-      <table class="table-content-search">
-        <caption>Результаты поиска в сторонней базе данных:</caption>
-        <tbody id="tbody-content-search">
-          <tr>
-            <td><a href="#">Кимильтей</a></td>
-            <td><a href="#">Куйтунский район</a></td>
-            <td><a href="#">Иркутская область</a></td>
-          </tr>
-          <tr>
-            <td><a href="#">Кимильтей</a></td>
-            <td><a href="#">Куйтунский район</a></td>
-            <td><a href="#">Иркутская область</a></td>
-          </tr>
-          <tr>
-            <td><a href="#">Кимильтей</a></td>
-            <td><a href="#">Куйтунский район</a></td>
-            <td><a href="#">Иркутская область</a></td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="grid-x ">
-        <div class="small-6 small-centered cell">
-          <a href="#" class="button modal-button">Сохранить</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div data-close class="icon-close-modal sprite close-modal"></div> 
-</div>
-{{-- Конец модалки редактирования --}}
-
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-delete')
-{{-- Модалка удаления ajax --}}
-@include('includes.modals.modal-delete-ajax')
 @endsection
 
 @section('scripts')
@@ -325,10 +230,10 @@ $(function() {
         type: "POST",
         data: city,
         beforeSend: function () {
-          $('.icon-load').removeClass('load');
+          $('.find-status').addClass('icon-load');
         },
         success: function(date){
-          $('.icon-load').addClass('load');
+          $('.find-status').removeClass('icon-load');
           // Удаляем все значения чтобы вписать новые
           $('#tbody-city-add>tr').remove();
           var result = $.parseJSON(date);
@@ -416,9 +321,10 @@ $(function() {
     // Смотрим сколько символов
     var lenRegion = region.length;
     // Если символов больше 3 - делаем запрос
+
     if (lenRegion > 3) {
       // alert($('#region-name-field').val());
-      setTimeout(function () {
+      // setTimeout(function () {
         // Сам ajax запрос
         $.ajax({
           headers: {
@@ -428,10 +334,10 @@ $(function() {
           type: "POST",
           data: {region: $('#region-name-field').val()},
           beforeSend: function () {
-            $('.icon-load').removeClass('load');
+            $('.find-status').addClass('icon-load');
           },
           success: function(date){
-            $('.icon-load').addClass('load');
+            $('.find-status').removeClass('icon-load');
             // Удаляем все значения чтобы вписать новые
             $('#tbody-region-add>tr').remove();
             var result = $.parseJSON(date);
@@ -439,9 +345,11 @@ $(function() {
             var count = result.response.count;
             var data = '';
             if (count == 0) {
+              $('.find-status').addClass('icon-find-no');
               data = "<tr><td>Ничего не найдено...</td></tr>";
             };
             if (count > 0) {
+              $('.find-status').addClass('icon-find-ok');
               // Перебираем циклом
               for (var i = 0; i < count; i++) {
                 data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"region-add\" data-region-vk-external-id=\"" + i + "\">" + result.response.items[i].id + "</a></td><td><a class=\"region-add\" data-region-name=\"" + i + "\">" + result.response.items[i].title + "</a></td></tr>";
@@ -451,12 +359,14 @@ $(function() {
             $('#tbody-region-add').append(data);
           }
         });
-      }, 1000);
+      // }, 1000);
     } else {
       // Удаляем все значения, если символов меньше 3х
       $('#tbody-region-add>tr').remove();
       $('.item-error').remove();
       $('#region-id-field').val('');
+      $('.find-status').removeClass('icon-find-ok');
+      $('.find-status').removeClass('icon-find-no');
     };
   });
   // При клике на регион в модальном окне заполняем инпуты

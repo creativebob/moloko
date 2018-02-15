@@ -79,6 +79,7 @@ class NavigationController extends Controller
         $navigation->site_id = $request->site_id;
         $navigation->company_id = $company_id;
         $navigation->author_id = $user_id;
+        $navigation->category_navigation_id = 2;
         $navigation->save();
         // Пишем сайт в сессию
         session(['current_site' => $request->site_id]);

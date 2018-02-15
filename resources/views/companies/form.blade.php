@@ -75,7 +75,7 @@
                   }
                 @endphp
                 {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
-                <div class="sprite-input-right icon-success"></div>
+                <div class="sprite-input-right find-status"></div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
                 {{ Form::hidden('city_id', $city_id, ['class'=>'city-id-field']) }}
               </label>

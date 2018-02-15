@@ -145,7 +145,7 @@
       <div class="small-10 small-offset-1 cell">
         <label class="input-icon">Введите город
           {{ Form::text('city_name', $value = null, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
-          <div class="sprite-input-right icon-success"></div>
+          <div class="sprite-input-right find-status"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
           <input type="hidden" name="city_id" class="city-id-field">
         </label>
@@ -186,7 +186,7 @@
       <div class="small-10 small-offset-1 cell">
          <label class="input-icon">Название города
           {{ Form::text('city_name', $value = null, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
-          <div class="sprite-input-right icon-success"></div>
+          <div class="sprite-input-right find-status"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
           <input type="hidden" name="city_id" class="city-id-field">
         </label>
@@ -244,7 +244,7 @@
               </label>
               <label class="input-icon">Город
                 {{ Form::text('city_name', $value = null, ['class'=>'city-check-field', 'autocomplete'=>'off']) }}
-                <div class="sprite-input-right icon-success"></div>
+                <div class="sprite-input-right find-status"></div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
                 <input type="hidden" name="city_id" class="city-id-field">
               </label>
@@ -315,7 +315,7 @@
         </label>
         <label class="input-icon">Город
           {{ Form::text('city_name', $value = null, ['class'=>'city-check-field', 'autocomplete'=>'off']) }}
-          <div class="sprite-input-right icon-success"></div>
+          <div class="sprite-input-right find-status"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
           <input type="hidden" name="city_id" class="city-id-field">
         </label>
