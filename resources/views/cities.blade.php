@@ -221,6 +221,7 @@ $(function() {
     var lenCity = $('#city-name-field').val().length;
     // Если символов больше 2 - делаем запрос
     if(lenCity > 2){
+      $('.find-status').removeClass('icon-find-ok');
       // Сам ajax запрос
       $.ajax({
         headers: {
@@ -241,6 +242,7 @@ $(function() {
           if ($('#search-all-checkbox').prop('checked') == true) {
             var countRes = result.response.count;
             if (countRes == 0) {
+              $('.find-status').addClass('icon-find-no');
               data = "<tr><td>Ничего не найдено...</td></tr>";
             };
             if (countRes > 0) {
@@ -265,11 +267,13 @@ $(function() {
           }; 
           if ($('#search-all-checkbox').prop('checked') == false) {
             if (result.count == 0) {
+              $('.find-status').addClass('icon-find-no');
               data = "<tr><td>Ничего не найдено...</td></tr>";
             } else {
               var countRes = result.region.length;
               // alert(result.region);
               if (countRes == 0) {
+                $('.find-status').addClass('icon-find-no');
                 data = "<tr><td>Ничего не найдено...</td></tr>";
               };
               if (countRes > 0) {
@@ -298,12 +302,16 @@ $(function() {
         }
       });
     } else {
-      // Удаляем все значения, если символов меньше 3х
+      // Удаляем все значения, если символов меньше 2х
       $('#tbody-city-add>tr').remove();
       $('#city-id-field').val('');
       $('#area-name').val('');
       $('#region-name').val('');
       $('.city-error').remove();
+      $('.find-status').removeClass('icon-find-ok');
+      $('.find-status').removeClass('icon-find-no');
+      $('#area-name').val('');
+      $('#region-name').val('');
     };
   };
   // Функция появления окна с ошибкой
@@ -446,6 +454,7 @@ $(function() {
     var cityName = $('[data-city-id="' + itemId + '"]').html();
     var areaName = $('[data-area-id="' + itemId + '"]').html();
     var regionName = $('[data-region-id="' + itemId + '"]').html();
+    $('.find-status').addClass('icon-find-ok');
     $('#city-id-field').val(cityId);
     $('#city-name-field').val(cityName);
     $('#area-name').val(areaName);
@@ -497,6 +506,8 @@ $(function() {
     $('#region-name-field').val('');
     $('#area-name').val('');
     $('#region-name').val('');
+    $('.find-status').removeClass('icon-find-ok');
+    $('.find-status').removeClass('icon-find-no');
   });
 
   // Мягкое удаление с refresh

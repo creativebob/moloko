@@ -440,12 +440,15 @@ $(function() {
       data: {filial_id: filial},
       success: function(date){
         var result = $.parseJSON(date);
-        
         var data = '';
-        $.each(function(result){
-          data = data + "<option value=" + result.id +">" + result.department_name + "</option>";
+        $.each(result, function(index, value) {
+          data = data + "<option value=\"" + index + "\">" + value + "</option>";
         });
-        alert(data);
+        $('.departments-list').append(data);
+
+
+
+        // alert(data);
         // $('#dep-city-name-field-edit').val(result.city_name);
         // $('.department-name-field').val(result.department_name);
         // $('.department-address-field').val(result.filial_address);
@@ -568,6 +571,7 @@ $(function() {
     $('.filial-phone-field').val('');
     $('.city-id-field').val('');
     $('.table-over').val('');
+    $('.departments-list').append(data);
     
   });
   // При закрытии окна с ошибкой очищаем модалку

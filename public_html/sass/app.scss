@@ -405,10 +405,14 @@ input[type=checkbox], input[type=radio] {
       background: url(img/loading.svg) no-repeat;
     }
     .icon-find-ok {
-      background: url(img/id-card.svg) no-repeat;
+      background-position: -16px -80px;
+      opacity: 1;
+      // background: url(img/id-card.svg) no-repeat;
     }
     .icon-find-no {
-      background: url(img/key.svg) no-repeat;
+      background-position: -32px -80px;
+      opacity: 1;
+      // background: url(img/key.svg) no-repeat;
     }
   }
 
