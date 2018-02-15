@@ -37,8 +37,8 @@ class SiteController extends Controller
     // -------------------------------------------------------------------------------------------
     $sites = Site::with('author', 'company')
     ->withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
@@ -58,8 +58,8 @@ class SiteController extends Controller
     // Список меню для сайта
     $answer = operator_right('pages', $this->entity_dependence, $method);
     $menus = Menu::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
@@ -129,8 +129,8 @@ class SiteController extends Controller
     // Список меню для сайта
     $answer = operator_right('sites', $this->entity_dependence, $method);
     $menus = Menu::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям

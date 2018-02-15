@@ -2,11 +2,11 @@
 
 namespace App\Scopes\Traits;
 
-trait ModeratorFilterTraitScopes
+trait ModeratorLimitTraitScopes
 {
 
     // Фильтрация записей модерируемых записей по филиалу и автору
-    public function scopeModeratorFilter($query, $answer)
+    public function scopeModeratorLimit($query, $answer)
     {
 
         $entity_dependence = $answer['dependence'];

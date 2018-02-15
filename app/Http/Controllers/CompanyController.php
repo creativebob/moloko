@@ -45,8 +45,8 @@ class CompanyController extends Controller
 
         $companies = Company::with('author', 'director')
         ->withoutGlobalScope($answer['moderator'])
-        ->moderatorFilter($answer)
-        // ->companiesFilter($answer['company_id'])
+        ->moderatorLimit($answer)
+        // ->companiesLimit($answer['company_id'])
         // ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         // ->authors($answer['all_authors'])
         // ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям

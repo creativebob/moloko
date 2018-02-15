@@ -6,22 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 // Фильтры
 use App\Scopes\ModerationScope;
-use App\Scopes\Traits\CompaniesFilterTraitScopes;
+use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
-use App\Scopes\Traits\ModeratorFilterTraitScopes;
+use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 class ActionEntity extends Model
 {
   // Подключаем Scopes для главного запроса
-  use CompaniesFilterTraitScopes;
+  use CompaniesLimitTraitScopes;
   use AuthorsTraitScopes;
   use SystemitemTraitScopes;
   use FilialsTraitScopes;
   use TemplateTraitScopes;  
-  use ModeratorFilterTraitScopes;
+  use ModeratorLimitTraitScopes;
 
   protected $table = 'action_entity';
 

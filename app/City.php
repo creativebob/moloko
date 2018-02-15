@@ -11,7 +11,7 @@ use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
-use App\Scopes\Traits\ModeratorFilterTraitScopes;
+use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 class City extends Model
 {
@@ -21,7 +21,7 @@ class City extends Model
   use SystemitemTraitScopes;
   use FilialsTraitScopes;
   use TemplateTraitScopes;
-  use ModeratorFilterTraitScopes;
+  use ModeratorLimitTraitScopes;
   /**
    * Атрибуты, которые должны быть преобразованы в даты.
    *

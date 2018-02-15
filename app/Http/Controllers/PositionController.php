@@ -37,8 +37,8 @@ class PositionController extends Controller
     // -------------------------------------------------------------------------------------------
     $positions = Position::with('author', 'page')
     ->withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
@@ -61,8 +61,8 @@ class PositionController extends Controller
     // Список посадочных страниц для должности
     $answer = operator_right('pages', $this->entity_dependence, $method);
     $pages_list = Page::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
@@ -72,8 +72,8 @@ class PositionController extends Controller
     // Список ролей для должности
     $answer = operator_right('pages', $this->entity_dependence, $method);
     $roles = Role::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
@@ -152,8 +152,8 @@ class PositionController extends Controller
     // Список посадочных страниц для должности
     $answer = operator_right('pages', $this->entity_dependence, $method);
     $pages_list = Page::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
@@ -163,8 +163,8 @@ class PositionController extends Controller
     // Список ролей для должности
     $answer = operator_right('pages', $this->entity_dependence, 'update');
     $roles = Role::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
