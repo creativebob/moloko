@@ -369,8 +369,9 @@ input[type=checkbox], input[type=radio] {
     outline: none;
   }
 }
-.input-icon {
-  position: relative;
+
+  .input-icon {
+      position: relative;
 
   .sprite-input-left {
     display: inline-block;
@@ -393,10 +394,23 @@ input[type=checkbox], input[type=radio] {
     right: 0;
     opacity: 0.5;
   }
-  .load {
-    content: 'lol';
+
+    .sprite-input-right {
+      top: 23px;
+      right: 8px;
+      opacity: 0.5;
+      transition: 0.5s ease opacity;
+    }
+    .icon-load {
+      background: url(img/loading.svg) no-repeat;
+    }
+    .icon-find-ok {
+      background: url(img/id-card.svg) no-repeat;
+    }
+    .icon-find-no {
+      background: url(img/key.svg) no-repeat;
+    }
   }
-}
 
 // Страница входа
 .enter-page {
@@ -1082,9 +1096,14 @@ input[type=checkbox], input[type=radio] {
       opacity: 0.5;
       transition: 0.5s ease opacity;
     }
-    .icon-loading {
+    .icon-load {
       background: url(img/loading.svg) no-repeat;
-      // background-position: 0px 0px;
+    }
+    .icon-find-ok {
+      background: url(img/id-card.svg) no-repeat;
+    }
+    .icon-find-no {
+      background: url(img/key.svg) no-repeat;
     }
   }
 }

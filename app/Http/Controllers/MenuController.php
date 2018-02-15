@@ -34,6 +34,7 @@ class MenuController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
     $site = Site::with(['pages', 'navigations', 'navigations.menus', 'navigations.menus.page'])
+    
     ->withoutGlobalScope($answer['moderator'])
     ->moderatorFilter($answer)
     ->companiesFilter($answer)
@@ -42,6 +43,7 @@ class MenuController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->whereSite_alias($site_alias)
     ->first();
+    // dd($site);
 
     $user = $request->user(); 
     // Создаем масив где ключ массива является ID меню

@@ -248,7 +248,7 @@ class DepartmentController extends Controller
         $user_id = $user->id;
         $user_status = $user->god;
         $company_id = $user->company_id;
-        
+
         $filial = new Department;
         $filial->company_id = $company_id;
         $filial->city_id = $request->city_id;
@@ -426,10 +426,8 @@ class DepartmentController extends Controller
   {
     // Получаем метод
     $method = 'delete';
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
     // ГЛАВНЫЙ ЗАПРОС:
-    $department = Department::with('staff')->withoutGlobalScope($answer['moderator'])->findOrFail($id);
+    $department = Department::with('staff')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
     // Подключение политики
     $this->authorize('delete', $department);
     $user = $request->user();

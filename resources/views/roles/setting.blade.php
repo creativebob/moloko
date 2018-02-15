@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('inhead')
+{{-- Скрипты таблиц в шапке --}}
+  @include('includes.scripts.table-inhead')
+@endsection
+
 @section('title', 'Настройка прав доступа пользователей')
 
 @section('title-content')

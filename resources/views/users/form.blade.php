@@ -86,7 +86,6 @@
             </div>
             <div class="small-12 medium-6 cell">
               <label class="input-icon">Введите город
-
                 @php
                   $city_name = null;
                   $city_id = null;
@@ -96,13 +95,12 @@
                   }
                 @endphp
                 {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
-                <div class="sprite-input-right icon-success"></div>
+                <div class="sprite-input-right find-status"></div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
                 {{ Form::hidden('city_id', $city_id, ['class'=>'city-id-field']) }}
-
               </label>
               <label>Адрес
-              {{ Form::text('address', $user->address, ['class'=>'address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+                {{ Form::text('address', $user->address, ['class'=>'address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>

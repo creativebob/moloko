@@ -15,15 +15,16 @@
         type: "POST",
         data: {city_name: city},
         beforeSend: function () {
-          $('.icon-load').addClass('load');
-        },
+            $('.find-status').addClass('icon-load');
+          },
         success: function(date){
-          $('.icon-load').removeClass('load');
+          $('.find-status').removeClass('icon-load');
           // Удаляем все значения чтобы вписать новые
           $('.table-over').remove();
           var result = $.parseJSON(date);
           var data = '';
           if (result.error_status == 0) {
+            $('.find-status').addClass('icon-find-ok');
             // Перебираем циклом
             data = "<table class=\"table-content-search table-over\"><tbody>";
             for (var i = 0; i < result.count; i++) {
@@ -32,7 +33,8 @@
             data = data + "</tbody><table>";
           };
           if (result.error_status == 1) {
-            data = "<table class=\"table-content-search table-over\"><tbody><tr><td>Населенный пункт не существует в нашей базе данных, добавьте его!</td></tr></tbody><table>";
+            $('.find-status').addClass('icon-find-no');
+            data = "<table class=\"table-content-search table-over\"><tbody><tr><td>Населенный пункт не найден в базе данных, @can('create', App\City::class)<a href=\"/cities\" target=\"_blank\">добавьте его!</a>@endcan @cannot('create', App\City::class)обратитесь к администратору!@endcannot</td></tr></tbody><table>";
           };
           // Выводим пришедшие данные на страницу
           $('.input-icon').after(data);
@@ -43,6 +45,8 @@
       // Удаляем все значения, если символов меньше 3х
       $('.table-over').remove();
       $('.item-error').remove();
+      $('.find-status').removeClass('icon-find-ok');
+      $('.find-status').removeClass('icon-find-no');
       // $('#city-name-field').val('');
     };
   };
@@ -60,7 +64,8 @@
     $('.table-over').remove();
 
     $('#filial-database-add').val(1);
-    $('.icon-success').removeClass('load');
+    $('.find-status').removeClass('icon-find-ok');
+    
   });
 
   // При закрытии модалки очищаем поля
