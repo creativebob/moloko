@@ -38,6 +38,7 @@
   @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
+  @include('includes.scripts.modal-delete-ajax-script')
 @endsection
 
 

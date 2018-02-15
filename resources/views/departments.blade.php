@@ -424,8 +424,12 @@ $(function() {
   // Добавление отдела или должности
   // Переносим id родителя и филиала в модалку
   $(document).on('click', '[data-open="department-add"]', function() {
-    var filial = $(this).closest('.parent').attr('id').split('-')[1];
-    // var filial = $(this).closest('.first-item').attr('id').split('-')[1];
+    var parent = $(this).closest('.parent').attr('id').split('-')[1];
+    var filial = $(this).closest('.first-item').attr('id').split('-')[1];
+
+    if (parent == filial) {
+      parent = 0;
+    }
 
     $.ajax({
       headers: {
@@ -436,9 +440,10 @@ $(function() {
       data: {filial_id: filial},
       success: function(date){
         var result = $.parseJSON(date);
-        var data = ';'
-        result.each(function(index){
-          data = data + "<option value=" + $(this).id +">" + $(this).department_name + "</option>";
+        
+        var data = '';
+        $.each(function(result){
+          data = data + "<option value=" + result.id +">" + result.department_name + "</option>";
         });
         alert(data);
         // $('#dep-city-name-field-edit').val(result.city_name);

@@ -459,14 +459,13 @@ class DepartmentController extends Controller
     }
   }
 
-  public function department_list(Request $request)
+  public function departments_list(Request $request)
   {
     $filial_id = $request->filial_id;
 
       $departments_list = Department::whereId($filial_id)
       ->orWhere('filial_id', $filial_id)
       ->pluck('department_name', 'id');
-
       echo json_encode($departments_list, JSON_UNESCAPED_UNICODE);
       // // Получаем список должностей
       // $positions_list = Position::withoutGlobalScope($answer_positions['moderator'])
@@ -480,5 +479,3 @@ class DepartmentController extends Controller
       // dd($departments);
   }
 }
-
-
