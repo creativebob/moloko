@@ -35,17 +35,30 @@ trait PoliticTrait
             };
         };
 
-        // Предупреждаем божественное влияние на create !
+        // Предупреждаем божественное влияние на create!
         if(($company_id == null)&&(($method == 'create')||($method == 'update'))){
 
             // Разрешаем богу кое что редактировать без компании
-            if(($entity_name == 'pages')||($entity_name == 'sities')||($entity_name == 'navigations')||($entity_name == 'menus')||($entity_name == 'roles')){
+            if(
+                ($entity_name == 'pages')||
+                ($entity_name == 'sities')||
+                ($entity_name == 'navigations')||
+                ($entity_name == 'menus')||
+                ($entity_name == 'roles')||
+                ($entity_name == 'companies')||
+                ($entity_name == 'cities')||   
+                ($entity_name == 'regions')||   
+                ($entity_name == 'areas')||       
+                ($entity_name == 'positions')||
+                ($entity_name == 'entities')
+            ){
 
             // Запрещаем редактировать остальные сущности
             } else {
                 return false;
             };
         };
+
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         // ОБЩИЕ ПРОВЕРКИ ДО ПРОВЕРКИ ОСНОВНЫХ ПРАВ -----------------------------------------------------------------------------------------------------------------
@@ -181,8 +194,6 @@ trait PoliticTrait
             };
 
 
-
-
             // Главная проверка (учитывая настройки зависимостей)
             if((($right_status)&&($nolimit_status)) || $right_dep_status){
                 $result = true;
@@ -210,6 +221,15 @@ trait PoliticTrait
             } else {$system_status = false;};
 
         } else {$system_status = false;};
+
+
+        // Гасим любую операцию над системной записью без компании
+        // 
+        // dd($user_status);
+        if(($model->system_item == 1)&&($model->company_id == null)&&($user_status == null)){
+        return false;
+
+        };
 
         // Проверка на возможность операций с системной записью
         if(($model->system_item == 1)&&($system_status == false)){
@@ -340,6 +360,7 @@ trait PoliticTrait
             $result = false;
             // abort(403, 'Доступ запрещен!!!');
         };
+
 
         if(($result_author)&&($result)){
             $result = true;

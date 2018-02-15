@@ -39,8 +39,8 @@ class CityController extends Controller
     // -------------------------------------------------------------------------------------------
     $regions = Region::with('areas', 'areas.cities', 'cities')
       ->withoutGlobalScope($answer['moderator'])
-      ->moderatorFilter($answer)
-      // ->companiesFilter($answer['company_id']) нет фильтра по компаниям
+      ->moderatorLimit($answer)
+      // ->companiesLimit($answer['company_id']) нет фильтра по компаниям
       ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
       ->authors($answer)
       ->systemItem($answer) // Фильтр по системным записям
@@ -65,8 +65,8 @@ class CityController extends Controller
     // -------------------------------------------------------------------------------------------
     $regions = Region::with('areas', 'areas.cities', 'cities')
       ->withoutGlobalScope($answer['moderator'])
-      ->moderatorFilter($answer)
-      // ->companiesFilter($answer['company_id']) нет фильтра по компаниям
+      ->moderatorLimit($answer)
+      // ->companiesLimit($answer['company_id']) нет фильтра по компаниям
       ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
       ->authors($answer)
       ->systemItem($answer) // Фильтр по системным записям

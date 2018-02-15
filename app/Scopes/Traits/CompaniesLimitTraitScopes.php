@@ -2,11 +2,11 @@
 
 namespace App\Scopes\Traits;
 
-trait CompaniesFilterTraitScopes
+trait CompaniesLimitTraitScopes
 {
 
     // Фильтрация для показа системных записей
-    public function scopeCompaniesFilter($query, $answer)
+    public function scopeCompaniesLimit($query, $answer)
     {
 
         // Получаем из массива answer нужную информацию:

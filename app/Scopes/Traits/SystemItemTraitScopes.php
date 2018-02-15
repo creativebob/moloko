@@ -2,13 +2,12 @@
 
 namespace App\Scopes\Traits;
 
-trait SystemitemTraitScopes
+trait SystemItemTraitScopes
 {
 
     // Фильтрация для показа системных записей
-    public function scopeSystemitem($query, $answer)
+    public function scopeSystemItem($query, $answer)
     {
-
         // Получаем из массива answer нужную информацию:
         // $dependence = $answer['dependence'];
         // $filials = $answer['filials'];
@@ -18,42 +17,74 @@ trait SystemitemTraitScopes
         $company_id = $answer['company_id'];
         $entity_name = $answer['entity_name'];
 
+
         // ЗАВИСИМОСТЬ ОТ СИСТЕМНЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------------------------------
-        if(isset($system_item)){
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ПРОВЕРКА ДЛЯ БОГОВ --------------------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
 
             if($user_status == 1){
 
                 if($company_id == null){
 
-                    // Если бог смотрит на список сайтов, то показываем только системные сайты: CRM System
+                    // Если бог смотрит на список сайтов, то показываем только системные сайт CRM System
                     if($entity_name == 'sites'){
                         return $query->Where('id', 1);
                     } else {
                         return $query->WhereNull('system_item')->orWhere('system_item', 1);
                     };
 
+
                 } else
                 {
-                    return $query->orWhere('system_item', 1); // Рабочая версия
+
+                    return $query
+                    ->Where(function ($query) {$query
+                    ->Where('company_id', null)            
+                    ->orWhere('system_item', 1)
+                    ->orWhereNull('system_item')
+                    ;});
 
                 };
             };
 
-            if(($user_status == null)&&($system_item == 1)){
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ПРОВЕРКА ДЛЯ ОБЫЧНЫХ ПОЛЬЗОВАТЕЛЕЙ  ---------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-                // $system_filials = collect(getLS('users', 'system', 'filials'))->keys()->toarray(); 
-
-                return $query
-                ->orWhere(function ($query) {$query
-                ->Where('company_id', null)            
-                ->Where('system_item', 1)
-                ;});
+            //Выключаем отображение богов на странице списка пользователей
+            if($entity_name == 'users'){
+                $query = $query->Where('god', null);
             };
 
-        } else {
-            
-            return $query->WhereNull('system_item');
-        };
+
+            if(($user_status == null)&&($system_item == 1)){
+
+                // Если есть право смотреть системные
+                return $query
+                ->Where(function ($query) use ($company_id) {$query
+                ->Where('company_id', $company_id)  
+                ->orWhere('system_item', 1)
+                ->orWhereNull('system_item')
+                ;});
+
+            };
+
+
+
+            if(($user_status == null)&&($system_item == null)){
+
+
+                // Если нет права смотреть системные
+                return $query
+                ->Where(function ($query) use ($company_id) {$query
+                ->Where('company_id', $company_id)   
+                ->Where('system_item', null)
+                ;});
+
+            };
+
     }
 
 }

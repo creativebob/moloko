@@ -40,8 +40,8 @@ class StafferController extends Controller
     // -------------------------------------------------------------------------------------------
     $staff = Staffer::with('filial', 'department', 'user', 'position', 'employees')
     ->withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
@@ -124,8 +124,8 @@ class StafferController extends Controller
     $answer = operator_right('sites', $this->entity_dependence, $method);
     $user = $request->user();
     $users = User::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям

@@ -37,8 +37,8 @@ class DepartmentController extends Controller
     // -------------------------------------------------------------------------------------------
     $departments = Department::with(['staff', 'staff.position', 'staff.user'])
     ->withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
@@ -47,6 +47,18 @@ class DepartmentController extends Controller
 
     $answer_positions = operator_right('positions', false, $method);
     // dd($answer);
+
+    // Получаем список должностей
+    // $positions_list = Position::withoutGlobalScope($answer_positions['moderator'])
+    // ->moderatorLimit($answer_positions)
+    // ->companiesLimit($answer_positions)
+    // ->filials($answer_positions) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    // ->authors($answer_positions)
+    // ->systemItem($answer_positions) // Фильтр по системным записям
+    // ->template($answer_positions)
+    // ->pluck('position_name', 'id');
+    // // dd($departments);
+    // // dd($departments);
 
     //Создаем масив где ключ массива является ID меню
     $departments_rights = [];
@@ -126,8 +138,8 @@ class DepartmentController extends Controller
     // -------------------------------------------------------------------------------------------
     $departments = Department::with(['staff', 'staff.position', 'staff.user'])
     ->withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
@@ -135,8 +147,8 @@ class DepartmentController extends Controller
     ->get();
     // Получаем список должностей
     $positions_list = Position::withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям

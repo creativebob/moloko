@@ -36,8 +36,8 @@ class MenuController extends Controller
     $site = Site::with(['pages', 'navigations', 'navigations.menus', 'navigations.menus.page'])
     
     ->withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
@@ -141,8 +141,8 @@ class MenuController extends Controller
     // -------------------------------------------------------------------------------------------
     $site = Site::with(['pages', 'navigations', 'navigations.menus', 'navigations.menus.page'])
     ->withoutGlobalScope($answer['moderator'])
-    ->moderatorFilter($answer)
-    ->companiesFilter($answer)
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям

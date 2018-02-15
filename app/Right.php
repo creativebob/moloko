@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Фильтры
 use App\Scopes\ModerationScope;
-use App\Scopes\Traits\CompaniesFilterTraitScopes;
+use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
-use App\Scopes\Traits\ModeratorFilterTraitScopes;
+use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 class Right extends Model
 {
@@ -22,23 +22,12 @@ class Right extends Model
     use SoftDeletes;
 
     // Подключаем Scopes для главного запроса
-    use CompaniesFilterTraitScopes;
+    use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
     use SystemitemTraitScopes;
     use FilialsTraitScopes;
     use TemplateTraitScopes;
-    use ModeratorFilterTraitScopes;
-
-		
-    // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
-
-    // Фильтрация для показа системных записей
-    public function scopeSystemItem($query, $system_item)
-    {
-        if(isset($system_item)){
-          return $query->where('system_item', '=', $system_item);
-        } else {return $query;};
-    }
+    use ModeratorLimitTraitScopes;
 
   		protected $dates = ['deleted_at'];
       protected $fillable = [

@@ -43,11 +43,12 @@ class BooklistController extends Controller
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
         $booklists = Booklist::withoutGlobalScope($answer['moderator'])
-        ->moderatorFilter($answer)
-        ->companiesFilter($answer)
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
+        ->template($answer)
         ->orderBy('moderated', 'desc')
         ->paginate(30);
 
