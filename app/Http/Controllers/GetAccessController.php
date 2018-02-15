@@ -32,6 +32,10 @@ class GetAccessController extends Controller
     public function set(Request $request)
     {
 
+        // Ссылка по умолчанию на страницу входа
+        $link = 'users.index';
+
+
         // Получаем пользователя в user
         $user = $request->user();
 
@@ -187,7 +191,6 @@ class GetAccessController extends Controller
 
             // Пишем в сессию массив с полученными правами!
             session(['access' => $access]);
-            $link = 'users.index';
 
             if(isset($request->link)){$link = $request->link;};
             return redirect()->route($link);

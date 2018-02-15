@@ -1,14 +1,11 @@
 {{ Form::open(['route' => 'companies.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
+
+
   <legend>Фильтрация</legend>
   <div class="grid-x grid-padding-x"> 
-    <div class="small-6 cell">
-      <label>Статус пользователя
-        {{ Form::select('user_type', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
-      </label>
-    </div>
-    <div class="small-6 cell">
-      <label>Блокировка доступа
-        {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
+    <div class="small-6 medium-4 large-3 cell">
+      <label>Город
+        {{ Form::select('city_id', $filter['cities_list'], null) }}
       </label>
     </div>
 

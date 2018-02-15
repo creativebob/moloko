@@ -63,4 +63,19 @@
 			return $ddd;
 	};
 
+
+    function getFilterCompany($filter_query){
+
+        $companies_cities_filter = $filter_query->unique('city_id');
+
+        $filter['cities_list'][0] =  '- не выбрано -';
+
+        foreach($companies_cities_filter as $company){
+            $filter['cities_list'][$company->city->id] =  $company->city->city_name;
+        }
+
+        return $filter;
+    }
+
+
 ?>
