@@ -48,7 +48,7 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-company-name">Название компании</th>
 
-          @if(Auth::user()->god == 1)<th class="td-getauth">Действие</th> @endif
+          @if($user->god == 1)<th class="td-getauth">Действие</th> @endif
 
           <th class="td-company-address">Адрес</th>
           <th class="td-company-phone">Телефон</th>
@@ -59,7 +59,7 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($companies))
         @foreach($companies as $company)
-        <tr class="parent @if(Auth::user()->company_id == $company->id)active @endif" id="companies-{{ $company->id }}" data-name="{{ $company->company_name }}">
+        <tr class="parent @if($user->company_id == $company->id)active @endif" id="companies-{{ $company->id }}" data-name="{{ $company->company_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $company->id }}"><label class="label-check" for="check-{{ $company->id }}"></label></td>
           <td class="td-company-name">
@@ -80,8 +80,8 @@
             @endif
           </td>
           {{-- Если пользователь бог, то показываем для него переключатель на компанию --}}
-          @if(Auth::user()->god == 1)
-            <td class="td-getauth">@if(Auth::user()->company_id != $company->id) {{ link_to_route('users.getauthcompany', 'Авторизоваться', ['company_id'=>$company->id], ['class' => 'tiny button']) }} @endif</td>
+          @if($user->god == 1)
+            <td class="td-getauth">@if($user->company_id != $company->id) {{ link_to_route('users.getauthcompany', 'Авторизоваться', ['company_id'=>$company->id], ['class' => 'tiny button']) }} @endif</td>
           @endif
 
           <td class="td-company-address">{{ $company->company_address }} </td>

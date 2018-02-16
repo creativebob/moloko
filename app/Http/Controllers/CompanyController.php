@@ -35,6 +35,9 @@ class CompanyController extends Controller
         // Подключение политики
         $this->authorize($method, Company::class);
 
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
         // dd($answer);
@@ -43,21 +46,24 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $companies = Company::with('author', 'director')
+        $companies = Company::with('author', 'director', 'city')
         ->withoutGlobalScope($answer['moderator'])
         ->moderatorLimit($answer)
-        // ->companiesLimit($answer['company_id'])
-        // ->filials($answer['filials'], $answer['dependence']) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        // ->authors($answer['all_authors'])
-        // ->systemItem($answer['system_item'], $answer['user_status'], $answer['company_id']) // Фильтр по системным записям
-        // ->orWhere('id', $request->user()->id) // Только для сущности USERS
+        ->companyFilter($request)
         ->orderBy('moderated', 'desc')
         ->paginate(30);
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+        $filter_query = Company::with('city')->withoutGlobalScope($answer['moderator'])->moderatorLimit($answer)->get();
+        $filter = getFilterCompany($filter_query);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('companies.index', compact('companies', 'page_info'));
+        return view('companies.index', compact('companies', 'page_info', 'filter', 'user'));
     }
 
 
@@ -131,7 +137,6 @@ class CompanyController extends Controller
     {
         $company = Company::with('city')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
         $this->authorize('update', $company);
-        // dd($company->city);
 
         return view('companies.edit', compact('company'));
     }

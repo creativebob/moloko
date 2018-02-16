@@ -47,6 +47,21 @@ class Company extends Model
       'admin_user_id'
   ];
 
+
+// Фильтрация для показа авторов
+    public function scopeCompanyFilter($query, $request)
+    {
+
+      //Фильтруем по городу
+      if($request->city_id){
+        $query = $query->where('city_id', $request->city_id);
+      };
+
+      return $query;
+
+    }
+
+
   // Связываем компанию с информацией о ее директоре
   public function director()
   {
@@ -82,9 +97,7 @@ class Company extends Model
   {
     return $this->belongsTo('App\User', 'author_id');
   }
-  /**
-  * Получаем город.
-  */
+
   public function city()
   {
     return $this->belongsTo('App\City');
