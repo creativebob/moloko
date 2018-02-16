@@ -76,6 +76,13 @@ class Position extends Model
   {
     return $this->hasMany('App\Employee');
   }
+  /**
+  * Получаем должность.
+  */
+  public function staff()
+  {
+    return $this->hasMany('App\Staffer');
+  }
 
     /**
   * Получаем роли.

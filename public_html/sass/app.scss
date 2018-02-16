@@ -369,9 +369,9 @@ input[type=checkbox], input[type=radio] {
     outline: none;
   }
 }
-
-  .input-icon {
-      position: relative;
+// Иконки
+label {
+  position: relative;
 
   .sprite-input-left {
     display: inline-block;
@@ -384,38 +384,35 @@ input[type=checkbox], input[type=radio] {
     opacity: 0.5;
   }
   .sprite-input-right {
-    
     display: inline-block;
     vertical-align: middle;
     width: 16px;
     height: 16px;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 23px;
+    right: 8px;
+    // opacity: 0.5;
+    transition: 0.5s ease opacity;
+  }
+
+  .icon-load {
+    background: url(img/loading.svg) no-repeat;
     opacity: 0.5;
   }
-
-    .sprite-input-right {
-      top: 23px;
-      right: 8px;
-      opacity: 0.5;
-      transition: 0.5s ease opacity;
-    }
-    .icon-load {
-      background: url(img/loading.svg) no-repeat;
-    }
-    .icon-find-ok {
-      background-position: -16px -80px;
-      opacity: 1;
-      // background: url(img/id-card.svg) no-repeat;
-    }
-    .icon-find-no {
-      background-position: -32px -80px;
-      opacity: 1;
-      // background: url(img/key.svg) no-repeat;
-    }
+  .icon-find-ok {
+    background-position: -16px -80px;
+    opacity: 1;
   }
-
+  .icon-find-no {
+    background-position: -32px -80px;
+    opacity: 1;
+  }
+}
+.department-error {
+  padding-bottom: 1rem;
+  color: #cc4b37;
+  display: none;
+}
 // Страница входа
 .enter-page {
   background-color: $white;
@@ -1092,24 +1089,8 @@ input[type=checkbox], input[type=radio] {
     background-position: -32px -608px;
   }  
 
-  .input-icon {
 
-    .sprite-input-right {
-      top: 23px;
-      right: 8px;
-      opacity: 0.5;
-      transition: 0.5s ease opacity;
-    }
-    .icon-load {
-      background: url(img/loading.svg) no-repeat;
-    }
-    .icon-find-ok {
-      background: url(img/id-card.svg) no-repeat;
-    }
-    .icon-find-no {
-      background: url(img/key.svg) no-repeat;
-    }
-  }
+   
 }
 .rev-small {
   width: 500px;
@@ -1167,6 +1148,7 @@ input[type=checkbox], input[type=radio] {
   position: absolute;
   background-color: white;
   width: 400px;
+  z-index: 50;
 }
 // Tabs
 .tabs-margin-top {

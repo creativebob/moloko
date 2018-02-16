@@ -1,7 +1,7 @@
 @extends('layouts.app')
  
 @section('inhead')
-<meta name="description" content="{{ $page_info->page_description }}" />
+  <meta name="description" content="{{ $page_info->page_description }}" />
 @endsection
 
 @section('title')
@@ -140,27 +140,26 @@
       <h5>ДОБАВЛЕНИЕ филиала</h5>
     </div>
   </div>
-  {{ Form::open(['url'=>'/departments', 'class' => 'form-check-city', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['url'=>'/departments', 'id' => 'form-filial-add', 'data-abide', 'novalidate']) }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label class="input-icon">Введите город
-          {{ Form::text('city_name', $value = null, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
+          {{ Form::text('city_name', null, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
           <div class="sprite-input-right find-status"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
           <input type="hidden" name="city_id" class="city-id-field">
         </label>
         </label>
         <label>Название филиала
-           {{ Form::text('filial_name', $value = null, ['class'=>'filial-name-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_name', null, ['class'=>'filial-name-field', 'autocomplete'=>'off', 'required']) }}
         </label>
         <label>Адресс филиала
-           {{ Form::text('filial_address', $value = null, ['class'=>'filial-address-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_address', null, ['class'=>'filial-address-field', 'autocomplete'=>'off', 'required']) }}
         </label>
         <label>Телефон филиала
-           {{ Form::text('filial_phone', $value = null, ['class'=>'filial-phone-field phone-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_phone', null, ['class'=>'filial-phone-field phone-field', 'autocomplete'=>'off', 'required']) }}
         </label>
-        
-        <input type="hidden" name="filial_database" id="filial-database-add" value="0">
+        <input type="hidden" name="filial_db" class="filial-db" value="0">
       </div>
     </div>
     <div class="grid-x align-center">
@@ -180,27 +179,27 @@
       <h5>Редактирование филиала</h5>
     </div>
   </div>
-  {{ Form::open(['class' => 'form-check-city', 'data-abide', 'novalidate']) }}
+  {{ Form::open([ 'data-abide', 'novalidate', 'id'=>'form-filial-edit']) }}
   {{ method_field('PATCH') }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
          <label class="input-icon">Название города
-          {{ Form::text('city_name', $value = null, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
+          {{ Form::text('city_name', null, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
           <div class="sprite-input-right find-status"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
           <input type="hidden" name="city_id" class="city-id-field">
         </label>
         </label>
         <label>Название филиала
-           {{ Form::text('filial_name', $value = null, ['class'=>'filial-name-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_name', null, ['class'=>'filial-name-field', 'autocomplete'=>'off', 'required']) }}
         </label>
         <label>Адресс филиала
-           {{ Form::text('filial_address', $value = null, ['class'=>'filial-address-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_address', null, ['class'=>'filial-address-field', 'autocomplete'=>'off', 'required']) }}
         </label>
         <label>Телефон филиала
-           {{ Form::text('filial_phone', $value = null, ['class'=>'filial-phone-field phone-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_phone', null, ['class'=>'filial-phone-field phone-field', 'autocomplete'=>'off', 'required']) }}
         </label>
-        <input type="hidden" name="filial_database" id="filial-database-edit" value="0">
+        <input type="hidden" name="filial_db" class="filial-db" value="1">
       </div>
     </div>
     <div class="grid-x align-center">
@@ -232,33 +231,34 @@
     <div class="tabs-content" data-tabs-content="tabs">
       <!-- Добавляем отдел -->
       <div class="tabs-panel is-active" id="add-department">
-        {{ Form::open(['url' => '/departments', 'class' => 'form-check-city']) }}
+        {{ Form::open(['url' => '/departments', 'id' => 'form-department-add']) }}
           <div class="grid-x grid-padding-x modal-content inputs">
             <div class="small-10 small-offset-1 cell">
               <label>Добавляем отдел в:
-                <select class="departments-list" name="department_id">
+                <select class="departments-list" name="department_parent_id">
             
                 </select>
+                <input type="hidden" name="filial_id" class="filial-id-field">
               </label>
               <label>Название отдела
-                {{ Form::text('department_name', $value = null, ['id'=>'department-name-field', 'autocomplete'=>'off', 'required']) }}
+                {{ Form::text('department_name', null, ['class'=>'department-name-field', 'autocomplete'=>'off', 'required']) }}
                 <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
+                <div class="sprite-input-right find-department"></div>
+                <div class="department-error">Данный отдел уже существует в этом филиале!</div>
               </label>
               <label class="input-icon">Введите город
-                {{ Form::text('city_name', $value = null, ['class'=>'city-check-field', 'autocomplete'=>'off']) }}
+                {{ Form::text('city_name', null, ['class'=>'city-check-field', 'autocomplete'=>'off']) }}
                 <div class="sprite-input-right find-status"></div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
                 <input type="hidden" name="city_id" class="city-id-field">
               </label>
               <label>Адресс отдела
-                {{ Form::text('department_address', $value = null, ['class'=>'department-address-field', 'autocomplete'=>'off']) }}
+                {{ Form::text('department_address', null, ['class'=>'department-address-field', 'autocomplete'=>'off']) }}
               </label>
               <label>Телефон отдела
-                {{ Form::text('department_phone', $value = null, ['class'=>'department-phone-field phone-field', 'autocomplete'=>'off']) }}
+                {{ Form::text('department_phone', null, ['class'=>'department-phone-field phone-field', 'autocomplete'=>'off']) }}
               </label>
-              <input type="hidden" name="department_database" id="department-database" value="0">
-              <input type="hidden" name="filial_id" id="dep-filial-id-field">
-              <input type="hidden" name="parent_id" id="dep-parent-id-field">
+              <input type="hidden" name="department_db" class="department-db" value="0">
             </div>
           </div>
           <div class="grid-x align-center">
@@ -274,17 +274,16 @@
           <div class="grid-x grid-padding-x modal-content inputs">
             <div class="small-10 small-offset-1 cell">
               <label>Добавляем должность в:
-                <select id="position-list" name="department_id">
+                <select class="departments-list" name="department_id">
             
                 </select>
+                <input type="hidden" name="filial_id" class="filial-id-field">
               </label>
               <label>Должность
-                <select name="position_id">
+                <select class="positions-list" name="position_id">
             
                 </select>
               </label>
-              <input type="hidden" name="filial_id" id="pos-filial-id-field">
-              <input type="hidden" name="parent_id" id="pos-parent-id-field">
             </div>
           </div>
           <div class="grid-x align-center">
@@ -316,25 +315,27 @@
           <select class="departments-list" name="department_parent_id">
             
           </select>
+          <input type="hidden" name="filial_id" class="filial-id-field">
         </label>
         <label>Название отдела
-          {{ Form::text('department_name', $value = null, ['class'=>'department-name-field', 'autocomplete'=>'off', 'required']) }}
+          {{ Form::text('department_name', null, ['class'=>'department-name-field', 'autocomplete'=>'off', 'required']) }}
+          <div class="sprite-input-right find-department"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
+          <div class="department-error">Данный отдел уже существует в этом филиале!</div>
         </label>
         <label class="input-icon">Введите город
-          {{ Form::text('city_name', $value = null, ['class'=>'city-check-field', 'autocomplete'=>'off']) }}
+          {{ Form::text('city_name', null, ['class'=>'city-check-field', 'autocomplete'=>'off']) }}
           <div class="sprite-input-right find-status"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
           <input type="hidden" name="city_id" class="city-id-field">
         </label>
         <label>Адресс отдела
-          {{ Form::text('department_address', $value = null, ['class'=>'department-address-field', 'autocomplete'=>'off']) }}
+          {{ Form::text('department_address', null, ['class'=>'department-address-field', 'autocomplete'=>'off']) }}
         </label>
         <label>Телефон отдела
-          {{ Form::text('department_phone', $value = null, ['class'=>'department-phone-field phone-field', 'autocomplete'=>'off']) }}
+          {{ Form::text('department_phone', null, ['class'=>'department-phone-field phone-field', 'autocomplete'=>'off']) }}
         </label>
-        <input type="hidden" name="department_database" id="department-db-edit" value="0">
-        <input type="hidden" name="filial_id" id="dep-filial-id-field-edit">
+        <input type="hidden" name="department_db" class="department-db" value="0">
       </div>
     </div>
     <div class="grid-x align-center">
@@ -355,82 +356,119 @@
 @endsection
 
 @section('scripts')
-@include('includes.scripts.cities-list')
-<script type="text/javascript" src="/js/jquery.inputmask.min.js"></script>
+  @include('includes.scripts.inputs-mask')
 <script type="text/javascript">
 $(function() {
-  $('.phone-field').mask('8 (000) 000-00-00');
   // Функция появления окна с ошибкой
-  function showError (msg) {
-    var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
-    return error;
-  };
-  // При клике на город в модальном окне добавления филиала заполняем инпуты
-  $(document).on('click', '.form-check-city .city-add', function() {
-    $('#filial-database-add').val(1);
-  });
-  // Редактируем филиал
-  $(document).on('click', '[data-open="filial-edit"]', function() {
-    // Блокируем кнопку
-    $('#submit-filial-edit').prop('disabled', false);
-      // Получаем данные о филиале
-      var id = $(this).closest('.parent').attr('id').split('-')[1];
-      $('#form-filial-edit').attr('action', '/departments/' + id);
+  // function showError (msg) {
+  //   var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
+  //   return error;
+  // };
+  // При добавлении филиала ищем город в нашей базе
+  function checkCity(city) {
+    // Смотрим сколько символов
+    var lenCity = city.length;
+    // Если символов больше 3 - делаем запрос
+    if (lenCity > 2) {
+      $('.find-status').removeClass('icon-find-ok');
+      $('.find-status').removeClass('sprite-16');
       // Сам ajax запрос
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/departments/" + id + "/edit",
-        type: "GET",
+        url: "/cities_list",
+        type: "POST",
+        data: {city_name: city},
+        beforeSend: function () {
+          $('.find-status').addClass('icon-load');
+        },
         success: function(date){
+          $('.find-status').removeClass('icon-load');
+          // Удаляем все значения чтобы вписать новые
+          $('.table-over').remove();
           var result = $.parseJSON(date);
-          $('.city-check-field').val(result.city_name);
-          $('.filial-name-field').val(result.filial_name);
-          $('.filial-address-field').val(result.filial_address);
-          $('.filial-phone-field').val(result.filial_phone);
-          $('.city-id-field').val(result.city_id);
-          $('#filial-database-edit').val(1);
+          var data = '';
+          if (result.error_status == 0) {
+            // Перебираем циклом
+            data = "<table class=\"table-content-search table-over\"><tbody>";
+            for (var i = 0; i < result.count; i++) {
+              data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"city-add\" data-city-id=\"" + result.cities.city_id[i] + "\">" + result.cities.city_name[i] + "</a></td><td><a class=\"city-add\">" + result.cities.area_name[i] + "</a></td><td><a class=\"city-add\">" + result.cities.region_name[i] + "</a></td></tr>";
+            };
+            data = data + "</tbody><table>";
+          };
+          if (result.error_status == 1) {
+            $('.find-status').addClass('icon-find-no');
+            $('.find-status').addClass('sprite-16');
+            data = "<table class=\"table-content-search table-over\"><tbody><tr><td>Населенный пункт не найден в базе данных, @can('create', App\City::class)<a href=\"/cities\" target=\"_blank\">добавьте его!</a>@endcan @cannot('create', App\City::class)обратитесь к администратору!@endcannot</td></tr></tbody><table>";
+          };
+          // Выводим пришедшие данные на страницу
+          $('.input-icon').after(data);
         }
       });
-  });
-  // При редактировании города филиала  
-  $('.city-check-field').keyup(function() {
-    // // Блокируем кнопку
-    // $('#submit-filial-edit').prop('disabled', true);
-    $('#filial-database-edit').val(0);
+    };
+    if (lenCity <= 2) {
+      // Удаляем все значения, если символов меньше 3х
+      $('.table-over').remove();
+      $('.item-error').remove();
+      $('.find-status').removeClass('icon-find-ok');
+      $('.find-status').removeClass('icon-find-no');
+      $('.find-status').removeClass('sprite-16');
+      $('.city-id-field').val('');
+      // $('#city-name-field').val('');
+    };
+  };
+  // При добавлении филиала ищем город в нашей базе
+  $('#form-filial-add .city-check-field').keyup(function() {
     // Получаем фрагмент текста
-    var city = $('.city-check-field').val();
-    var filialDb = $('#filial-database-edit').val();
-    checkCity(city, filialDb);
+    var city = $('#form-filial-add .city-check-field').val();
+    checkCity(city);
   });
-  // // При клике на город в модальном окне редактирования филиала заполняем инпуты
-  // $(document).on('click', '#form-filial-edit .city-add', function() {
-  //   var cityId = $(this).closest('tr').find('a.city-add').data('city-id');
-  //   var cityName = $(this).closest('tr').find('[data-city-id=' + cityId +']').html();
-  //   $('#city-id-field-edit').val(cityId);
-  //   $('#city-name-field-edit').val(cityName);
-  //   $('.table-over').remove();
-
-  //   $('#submit-filial-edit').prop('disabled', false);
-  //   $('#filial-database-edit').val(1);
-  //   $('.icon-success').removeClass('load');
-
-  //   if($('#city-id-field-edit').val() != '') {
-
-  //   };
-  // });
-
+  $('#form-filial-edit .city-check-field').keyup(function() {
+    // Получаем фрагмент текста
+    var city = $('#form-filial-edit .city-check-field').val();
+    checkCity(city);
+  });
+  $('#form-department-add .city-check-field').keyup(function() {
+    // Получаем фрагмент текста
+    var city = $('#form-department-add .city-check-field').val();
+    checkCity(city);
+  });
+  $('#form-department-edit .city-check-field').keyup(function() {
+    // Получаем фрагмент текста
+    var city = $('#form-department-edit .city-check-field').val();
+    checkCity(city);
+  });
+  // Редактируем филиал
+  $(document).on('click', '[data-open="filial-edit"]', function() {
+    // Блокируем кнопку
+    $('.submit-filial-edit').prop('disabled', false);
+    // Получаем данные о филиале
+    var id = $(this).closest('.parent').attr('id').split('-')[1];
+    $('#form-filial-edit').attr('action', '/departments/' + id);
+    // Сам ajax запрос
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/departments/" + id + "/edit",
+      type: "GET",
+      success: function(date){
+        var result = $.parseJSON(date);
+        $('#form-filial-edit .city-check-field').val(result.city_name);
+        $('#form-filial-edit .city-id-field').val(result.city_id);
+        $('.filial-name-field').val(result.filial_name);
+        $('.filial-address-field').val(result.filial_address);
+        $('.filial-phone-field').val(result.filial_phone);
+        $('.filial-db-edit').val(1);
+      }
+    });
+  });
   // Добавление отдела или должности
-  // Переносим id родителя и филиала в модалку
   $(document).on('click', '[data-open="department-add"]', function() {
     var parent = $(this).closest('.parent').attr('id').split('-')[1];
     var filial = $(this).closest('.first-item').attr('id').split('-')[1];
-
-    if (parent == filial) {
-      parent = 0;
-    }
-
+    $('.filial-id-field').val(filial);
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -441,85 +479,102 @@ $(function() {
       success: function(date){
         var result = $.parseJSON(date);
         var data = '';
+        var selected = '';
+        $.each(result, function(index, value) {
+          selected = '';
+          if (index == parent) {
+            selected = 'selected';
+          };
+          data = data + "<option value=\"" + index + "\" " + selected + ">" + value + "</option>";
+        });
+        $('.departments-list').append(data);
+      }
+    });
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/positions_list",
+      type: "POST",
+      data: {filial_id: filial},
+      success: function(date){
+        var result = $.parseJSON(date);
+        var data = '';
+        $.each(result, function(index, value) {
+          data = data + "<option value=\"" + index + "\">" + value + "</option>";
+        });
+        $('.positions-list').append(data);
+      }
+    });
+  });
+  // Редактируем отдел
+  $(document).on('click', '[data-open="department-edit"]', function() {
+    var parent = $(this).closest('.parent').attr('id').split('-')[1];
+    var filial = $(this).closest('.first-item').attr('id').split('-')[1];
+    $('.filial-id-field').val(filial);
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/departments_list",
+      type: "POST",
+      data: {filial_id: filial},
+      success: function(date){
+        var result = $.parseJSON(date);
+        var data = '';
+        var selected = '';
         $.each(result, function(index, value) {
           data = data + "<option value=\"" + index + "\">" + value + "</option>";
         });
         $('.departments-list').append(data);
-
-
-
-        // alert(data);
-        // $('#dep-city-name-field-edit').val(result.city_name);
-        // $('.department-name-field').val(result.department_name);
-        // $('.department-address-field').val(result.filial_address);
-        // $('.department-phone-field').val(result.filial_phone);
-        // $('#dep-city-id-field-edit').val(result.city_id);
-        // $('#department-db-edit').val(1);
-        // $('#dep-filial-id-field-edit').val(result.filial_id);
-        // $('.departments-list>[value="' + result.department_parent_id + '"]').prop('selected', true);
       }
     });
-    // Заполняем скрытые инпуты филиала и родителя
-    $('#dep-filial-id-field').val(filial);
-    $('#dep-parent-id-field').val(parent);
-    $('#pos-filial-id-field').val(filial);
-    $('#pos-parent-id-field').val(parent);
-    // Отмечам в какой пункт будем добавлять
-    $('.departments-list>[value="' + parent + '"]').prop('selected', true);
-    $('#position-list>[value="' + parent + '"]').prop('selected', true);
-  });
-
-  // Редактируем отдел
-  $(document).on('click', '[data-open="department-edit"]', function() {
     var id = $(this).closest('.parent').attr('id').split('-')[1];
     // Отмечам в какой пункт будем добавлять
     // $('#departments-list>[value="' + id + '"]').prop('selected', true);
     // Блокируем кнопку
     $('#submit-department-edit').prop('disabled', false);
-      // Получаем данные о филиале
-      $('#form-department-edit').attr('action', '/departments/' + id);
-      // Сам ajax запрос
-      // alert(id);
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "/departments/" + id + "/edit",
-        type: "GET",
-        success: function(date){
-          var result = $.parseJSON(date);
-          // alert(result);
-          $('#dep-city-name-field-edit').val(result.city_name);
-          $('.department-name-field').val(result.department_name);
-          $('.department-address-field').val(result.filial_address);
-          $('.department-phone-field').val(result.filial_phone);
-          $('#dep-city-id-field-edit').val(result.city_id);
-          $('#department-db-edit').val(1);
-          $('#dep-filial-id-field-edit').val(result.filial_id);
-          $('.departments-list>[value="' + result.department_parent_id + '"]').prop('selected', true);
-        }
-      });
+    // Получаем данные о филиале
+    $('#form-department-edit').attr('action', '/departments/' + id);
+    // Сам ajax запрос
+    // alert(id);
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/departments/" + id + "/edit",
+      type: "GET",
+      success: function(date){
+        var result = $.parseJSON(date);
+        // alert(result);
+        $('#form-department-edit .city-name-field').val(result.city_name);
+        $('#form-department-edit .city-id-field').val(result.city_id);
+        $('#form-department-edit .department-name-field').val(result.department_name);
+        $('#form-department-edit .department-address-field').val(result.filial_address);
+        $('#form-department-edit .department-phone-field').val(result.filial_phone);
+        $('.department-db').val(1);
+        $('#form-department-edit .filial-id-field').val(result.filial_id);
+        $('.departments-list>[value="' + result.department_parent_id + '"]').prop('selected', true);
+      }
+    });
   });
-  // При смнене пункта меняем id родителя
-  $(document).on('change', '.departments-list', function() {
-    var parent = $('.departments-list>option:selected').val();
-    $('#dep-parent-id-field').val(parent);
+  // При клике на город в модальном окне добавления филиала заполняем инпуты
+  $(document).on('click', '.city-add', function() {
+    var cityId = $(this).closest('tr').find('a.city-add').data('city-id');
+    var cityName = $(this).closest('tr').find('[data-city-id=' + cityId +']').html();
+    $('.city-id-field').val(cityId);
+    $('.city-check-field').val(cityName);
+    $('.table-over').remove();
+    $('.find-status').addClass('icon-find-ok');
+    $('.find-status').addClass('sprite-16');
+    $('.find-status').removeClass('icon-find-no');
   });
-  $(document).on('change', '#position-list', function() {
-    var parent = $('#position-list>option:selected').val();
-    $('#pos-parent-id-field').val(parent);
-  });
-
-  // Чекаем отдел в нашей бд
-  $('#department-name-field').keyup(function() {
+  function departmentCheck (department, submit) {
     // Блокируем кнопку
-    $('#submit-department-add').prop('disabled', true);
-    $('#department-database').val(0);
-    // Получаем фрагмент текста
-    var department = $('#department-name-field').val();
+    $(submit).prop('disabled', true);
+    $('.department-db').val(0);
     // Первая буква отдела заглавная
     department = department.charAt(0).toUpperCase() + department.substr(1);
-    // alert(department);
     // Смотрим сколько символов
     var lenDepartment = department.length;
     // Если символов больше 3 - делаем запрос
@@ -529,73 +584,74 @@ $(function() {
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/departments",
+        url: "/department_check",
         type: "POST",
-        data: {department_name: department, filial_id: $('#filial-id-field').val(), department_database: $('#department-database').val()},
+        data: {department_name: department, filial_id: $('.filial-id-field').val(), department_db: $('.department-db').val()},
         beforeSend: function () {
-          $('.icon-load').removeClass('load');
+          $('.find-department').addClass('icon-load');
         },
         success: function(date){
-          $('.icon-load').addClass('load');
+          $('.find-department').removeClass('icon-load');
           // Удаляем все значения чтобы вписать новые
-          $('#tbody-department-add>tr').remove();
           var result = $.parseJSON(date);
-          var data = '';
-          // alert(result.error_status);
+          // alert(date);
           if (result.error_status == 0) {
-            data = "<tr><td>Данный отдел уже сущестует в этой компании!</td></tr>";
             // Выводим пришедшие данные на страницу
-            $('#tbody-department-add').append(data);
+            $('.department-error').css('display', 'block');
           };
           if (result.error_status == 1) {
-            $('#department-database').val(1);
-            $('#submit-department-add').prop('disabled', false);
+            $('.department-error').css('display', 'none');
+            $('.department-db').val(1);
+            $(submit).prop('disabled', false);
           };
         }
       });
     };
     if (lenDepartment <= 2) {
       // Удаляем все значения, если символов меньше 3х
-      $('#tbody-department-add>tr').remove();
+      $('.department-error').css('display', 'none');
       $('.item-error').remove();
       // $('#city-name-field').val('');
     };
+  };
+  // Чекаем отдел в нашей бд
+  $('#form-department-add .department-name-field').keyup(function() {
+    var submit = '#submit-department-add';
+    // Получаем фрагмент текста
+    var department = $('#form-department-add .department-name-field').val();
+    departmentCheck (department, submit);
+  });
+  $('#form-department-edit .department-name-field').keyup(function() {
+    var submit = '#submit-department-edit';
+    // Получаем фрагмент текста
+    var department = $('#form-department-edit .department-name-field').val();
+    departmentCheck (department, submit);
   });
 
   // При закрытии модалки очищаем поля
   $(document).on('click', '.close-modal', function() {
-    $('#city-check-field').val('');
-    $('#city-name-field-edit').val('');
+    $('.city-check-field').val('');
+    $('.city-id-field').val('');
     $('.filial-name-field').val('');
     $('.filial-address-field').val('');
     $('.filial-phone-field').val('');
-    $('.city-id-field').val('');
-    $('.table-over').val('');
-    $('.departments-list').append(data);
-    
+    $('.department-name-field').val('');
+    $('.department-address-field').val('');
+    $('.department-phone-field').val('');
+    $('.departments-list').empty();
+    $('.positions-list').empty();
+    $('.table-over').remove();
+    $('.department-error').css('display', 'none');
+    $('.find-status').removeClass('icon-find-ok');
+    $('.find-status').removeClass('icon-find-no');
+    $('.find-status').removeClass('sprite-16');
   });
-  // При закрытии окна с ошибкой очищаем модалку
-  $(document).on('click', '.error-close', function() {
-    $('.item-error').remove();
-    $('#tbody-city-add>tr').remove();
-    $('#tbody-region-add>tr').remove();
-    $('#city-name-field').val('');
-    $('#region-name-field').val('');
-    $('#area-name').val('');
-    $('#region-name').val('');
-  });
-  // @if(!empty($data))
-  //   backlightItems ();
-  // @endif
   // Открываем меню и подменю, если только что добавили населенный пункт
   @if(!empty($data))
     // Общие правила
     // Подсвечиваем Филиал
     $('#departments-{{ $data['section_id'] }}').addClass('first-active').find('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
-     // Открываем только Филиал
-     
-
-   // Отображаем отдел и филиал, без должностей
+    // Отображаем отдел и филиал, без должностей
     if ({{ $data['item_id'] }} == 0) {
       var firstItem = $('#departments-{{ $data['section_id'] }}').find('.medium-list:first');
       // Открываем аккордион
@@ -616,7 +672,6 @@ $(function() {
         $('#departments-{{ $data['item_id'] }}').children('.medium-link:first').addClass('medium-active');
         $('#departments-{{ $data['item_id'] }}').children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
         $('#content-list').foundation('down', $('#departments-{{ $data['item_id'] }}').children('.medium-list:first'));
-        // alert('open');
       }
     };
   @endif

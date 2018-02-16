@@ -48,18 +48,6 @@ class DepartmentController extends Controller
     $answer_positions = operator_right('positions', false, $method);
     // dd($answer);
 
-    // Получаем список должностей
-    // $positions_list = Position::withoutGlobalScope($answer_positions['moderator'])
-    // ->moderatorLimit($answer_positions)
-    // ->companiesLimit($answer_positions)
-    // ->filials($answer_positions) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    // ->authors($answer_positions)
-    // ->systemItem($answer_positions) // Фильтр по системным записям
-    // ->template($answer_positions)
-    // ->pluck('position_name', 'id');
-    // // dd($departments);
-    // // dd($departments);
-
     //Создаем масив где ключ массива является ID меню
     $departments_rights = [];
     $departments_rights = $departments->keyBy('id');
@@ -116,8 +104,6 @@ class DepartmentController extends Controller
       $departments_tree[$department['id']]['count'] = $count;
       // dd($department);
     };
-          
-    
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
     // dd($departments_tree);
@@ -145,14 +131,6 @@ class DepartmentController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->orderBy('moderated', 'desc')
     ->get();
-    // Получаем список должностей
-    $positions_list = Position::withoutGlobalScope($answer['moderator'])
-    ->moderatorLimit($answer)
-    ->companiesLimit($answer)
-    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
-    ->pluck('position_name', 'id');
     // dd($departments);
     //Создаем масив где ключ массива является ID меню
     $departments_rights = [];
@@ -209,7 +187,6 @@ class DepartmentController extends Controller
       $departments_tree[$department['id']]['count'] = $count;
       // dd($department);
     };
-    $departments_list = $departments->pluck('department_name', 'id');
     // Инфо о странице
     $page_info = pageInfo('departments');
     $data = [
@@ -218,7 +195,7 @@ class DepartmentController extends Controller
       'section_id' => $section_id,
       'item_id' => $item_id,
     ];
-    return view('departments', compact('departments_tree', 'positions', 'positions_list', 'data', 'departments_list', 'staff', 'page_info', 'departments')); 
+    return view('departments', compact('departments_tree', 'positions', 'data', 'staff', 'page_info', 'departments')); 
   }
 
   public function create()
@@ -226,99 +203,67 @@ class DepartmentController extends Controller
     //
   }
 
-  public function store(Request $request)
+  public function store(DepartmentRequest $request)
   {
-    // dd($request);
     // Получаем метод
     $method = 'create';
     // Подключение политики
     $this->authorize($method, Department::class);
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
+    $company_id = $user->company_id;
     if ($user->god == 1) {
       $user_id = 1;
     } else {
       $user_id = $user->id;
     };
-    $user_status = $user->god;
-    $company_id = $user->company_id;
     // Пишем филиал
-    if (isset($request->filial_database)) {
+    if (isset($request->filial_db)) {
       // Если город найден, то меняем значение на 1, пишем в базу и отдаем результат
-      if ($request->filial_database == 1) {
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-        $user_id = $user->id;
-        $user_status = $user->god;
-        $company_id = $user->company_id;
-
-        $filial = new Department;
-        $filial->company_id = $company_id;
-        $filial->city_id = $request->city_id;
-        $filial->department_name = $request->filial_name;
-        $filial->department_address = $request->filial_address;
-        $filial->department_phone = cleanPhone($request->filial_phone);
-        $filial->filial_status = 1;
-        $filial->author_id = $user_id;
-        $filial->save();
-        if($filial) {
-          return Redirect('/current_department/'.$filial->id.'/0');
-        } else {
-          abort(403, 'Ошибка при записи филиала!');
-        };
-        
+      $filial = new Department;
+      $filial->company_id = $company_id;
+      $filial->city_id = $request->city_id;
+      $filial->department_name = $request->filial_name;
+      $filial->department_address = $request->filial_address;
+      $filial->department_phone = cleanPhone($request->filial_phone);
+      $filial->filial_status = 1;
+      $filial->author_id = $user_id;
+      $filial->save();
+      if($filial) {
+        return Redirect('/current_department/'.$filial->id.'/0');
+      } else {
+        abort(403, 'Ошибка при записи филиала!');
       };
     };
     // Пишем отделы
-    if (isset($request->department_database)) {
-      if ($request->department_database == 0) {
-        // Получаем данные для авторизованного пользователя
-    $user = $request->user();
-    $user_id = $user->id;
-    $user_status = $user->god;
-    $company_id = $user->company_id;
-        // Проверка отдела в нашей базе данных
-        $department_name = $request->department_name;
-        $filial_id = $request->filial_id;
-        $result = Department::where([
-          ['department_name', 'like', $department_name.'%'],
-          ['filial_id', '=', $filial_id],
-        ])->first();
-        if ($result) {
-          $result = [
-            'error_message' => 'Такой отдел уже существует',
-            'error_status' => 0,
-          ];
-        } else {
-          $result = [
-            'error_status' => 1
-          ];
-        };
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    if (isset($request->department_db)) {
+      // dd($request);
+      $department = new Department;
+      $department->company_id = $company_id;
+
+      $department_name_old = $request->department_name;
+      $first = mb_substr($department_name_old,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($department_name_old,1);//все кроме первой буквы
+      $first = mb_strtoupper($first, 'UTF-8');
+      $department_name = $first.$last;
+      $department->department_name = $department_name;
+      if($request->department_address == '') {
+      } else {
+        $department->department_address = $request->department_address;
       };
-      // Если отдел не найден, то меняем значение на 1, пишем в базу и отдаем результат
-      if ($request->department_database == 1) {
-        $department = new Department;
-        $department->company_id = $company_id;
-        $department->department_name = $request->department_name;
-        if($request->department_address == '') {
-        } else {
-          $department->department_address = $request->department_address;
-        };
-        if($request->department_phone == '') {
-        } else {
-          $department->department_phone = cleanPhone($request->department_phone);
-        };
-        $department->filial_id = $request->filial_id;
-        $department->department_parent_id = $request->parent_id;
-        $department->author_id = $user_id;
-        $department->save();
-        $department_id = $department->id;
-        if($department){
-          return Redirect('/current_department/'.$request->filial_id.'/'.$department_id);
-        } else {
-          abort(403, 'Ошибка при записи отдела!');
-        };
+      if($request->department_phone == '') {
+      } else {
+        $department->department_phone = cleanPhone($request->department_phone);
+      };
+      $department->filial_id = $request->filial_id;
+      $department->department_parent_id = $request->department_parent_id;
+      $department->author_id = $user_id;
+      $department->save();
+      $department_id = $department->id;
+      if($department){
+        return Redirect('/current_department/'.$request->filial_id.'/'.$department_id);
+      } else {
+        abort(403, 'Ошибка при записи отдела!');
       };
     };
   }
@@ -381,8 +326,9 @@ class DepartmentController extends Controller
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
-  public function update(Request $request, $id)
+  public function update(DepartmentRequest $request, $id)
   {
+    // dd($request);
     // Получаем метод
     $method = __FUNCTION__;
     // Получаем авторизованного пользователя
@@ -393,7 +339,7 @@ class DepartmentController extends Controller
     $filial = Department::withoutGlobalScope($answer['moderator'])->findOrFail($id);
     // Подключение политики
     $this->authorize('update', $filial);
-    if ($request->filial_database == 1) {
+    if ($request->filial_db == 1) {
       $filial->city_id = $request->city_id;
       $filial->department_name = $request->filial_name;
       $filial->department_address = $request->filial_address;
@@ -408,10 +354,16 @@ class DepartmentController extends Controller
         abort(403, 'Ошибка при оюновлении филиала!');
       };
     };
-    if ($request->department_database == 1) {
+    if ($request->department_db == 1) {
+      // dd($request);
       $department = Department::findOrFail($id);
       $department->city_id = $request->city_id;
-      $department->department_name = $request->department_name;
+      $department_name_old = $request->department_name;
+      $first = mb_substr($department_name_old,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($department_name_old,1);//все кроме первой буквы
+      $first = mb_strtoupper($first, 'UTF-8');
+      $department_name = $first.$last;
+      $department->department_name = $department_name;
       $department->department_address = $request->department_address;
       // $department->department_phone = cleanPhone($request->department_phone);
       $department->department_parent_id = $request->department_parent_id;
@@ -438,20 +390,24 @@ class DepartmentController extends Controller
     if (count($department->staff) > 0) {
       abort(403, 'Филиал/отдел не пустой');
     } else {
-      if ($department->filial_status == null) {
+      $filial_status = $department->filial_status;
+      if ($filial_status == null) {
         $filial_id = $department->filial_id;
-        $department_id = $department->department_parent_id;
+        $department_parent_id = $department->department_parent_id;
+        if ($department_parent_id == $filial_id) {
+          $department_parent_id = 0;
+        };
       } else {
-        $department_id = 0;
+        $department_parent_id = 0;
       };
       $department->editor_id = $user->id;
       $department->save();
       $department = Department::destroy($id);
       if ($department){
-        if ($department_id == 0) {
+        if ($filial_status == 1) {
           return Redirect('/departments');
         } else {
-          return Redirect('/current_department/'.$filial_id.'/'.$department_id);
+          return Redirect('/current_department/'.$filial_id.'/'.$department_parent_id);
         };
       } else {
         abort(403, 'Ошибка при удалении филиала/отдела');
@@ -461,21 +417,29 @@ class DepartmentController extends Controller
 
   public function departments_list(Request $request)
   {
-    $filial_id = $request->filial_id;
+    $departments_list = Department::whereId($request->filial_id)
+    ->orWhere('filial_id', $request->filial_id)
+    ->pluck('department_name', 'id');
+    echo json_encode($departments_list, JSON_UNESCAPED_UNICODE);
+  }
 
-      $departments_list = Department::whereId($filial_id)
-      ->orWhere('filial_id', $filial_id)
-      ->pluck('department_name', 'id');
-      echo json_encode($departments_list, JSON_UNESCAPED_UNICODE);
-      // // Получаем список должностей
-      // $positions_list = Position::withoutGlobalScope($answer_positions['moderator'])
-      // ->moderatorFilter($answer_positions)
-      // ->companiesFilter($answer_positions)
-      // ->filials($answer_positions) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-      // ->authors($answer_positions)
-      // ->systemItem($answer_positions) // Фильтр по системным записям
-      // ->template($answer_positions)
-      // ->pluck('position_name', 'id');
-      // dd($departments);
+  public function department_check(Request $request)
+  {
+    // Проверка отдела в нашей базе данных
+    $department = Department::where([
+      ['department_name', '=', $request->department_name],
+      ['filial_id', '=', $request->filial_id],
+    ])->first();
+    if ($department) {
+      $result = [
+        'error_message' => 'Такой отдел уже существует',
+        'error_status' => 0,
+      ];
+    } else {
+      $result = [
+        'error_status' => 1
+      ];
+    };
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 }
