@@ -64,22 +64,29 @@ Route::post('/city', 'CityController@get_vk_city')->middleware('auth');
 Route::post('/region', 'RegionController@get_vk_region')->middleware('auth');
 // Текущий добавленный/удаленный город
 Route::get('/current_city/{region}/{area}', 'CityController@current_city')->middleware('auth');
+
 // Контроллеры для отображения филиалов, отделов и должностей
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
 // Текущий добавленный/удаленный отдел
 Route::get('/current_department/{section_id}/{item_id}', 'DepartmentController@current_department')->middleware('auth');
-// Список отделов филиала и доступных должностей
+// Контроллеры для отображения филиалов, отделов и должностей
+Route::post('/department_check', 'DepartmentController@department_check')->middleware('auth');
+// Список отделов филиала
 Route::post('/departments_list', 'DepartmentController@departments_list')->middleware('auth');
+
 // Должности
 Route::resource('/positions', 'PositionController')->middleware('auth');
+// Список отделов филиала и доступных должностей
+Route::post('/positions_list', 'PositionController@positions_list')->middleware('auth');
+
 // Контроллер штата компании
 Route::resource('/staff', 'StafferController')->middleware('auth');
+
 // Контроллер сотрудников
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
 
 // Контроллер списков
 Route::resource('booklists', 'BooklistController')->middleware('auth');
-
 
 // Контроллер отображения сайтов 
 Route::get('/sites', 'SiteController@index')->middleware('auth')->name('sites.index');

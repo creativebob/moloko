@@ -7,6 +7,7 @@ use App\Position;
 use App\Page;
 use App\User;
 use App\Role;
+use App\Staffer;
 use App\PositionRole;
 // Валидация
 use App\Http\Requests\PositionRequest;
@@ -257,5 +258,32 @@ class PositionController extends Controller
     } else {
       abort(403, 'Должность не найдена');
     };
+  }
+
+  public function positions_list(Request $request)
+  {
+    // Получаем метод
+    $method = 'index';
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    // Смотрим на наличие должности в данном филиале, в массиве устанавливаем id должностей, которых не може тбыть более 1ой
+    $direction = Staffer::where(['position_id' => 1, 'filial_id' => $request->filial_id])->count();
+    $repeat = [];
+    if($direction == 1) {
+      $repeat[] = 1;
+    };
+    // -------------------------------------------------------------------------------------------
+    // ГЛАВНЫЙ ЗАПРОС
+    // -------------------------------------------------------------------------------------------
+    $positions_list = Position::with('staff')->withoutGlobalScope($answer['moderator'])
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
+    ->template($answer) // Выводим шаблоны в список
+    ->whereNotIn('id', $repeat)
+    ->pluck('position_name', 'id');
+    echo json_encode($positions_list, JSON_UNESCAPED_UNICODE);
   }
 }

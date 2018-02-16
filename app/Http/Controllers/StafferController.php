@@ -82,7 +82,7 @@ class StafferController extends Controller
 
     // Пишем вакансию в бд
     $position_id = $request->position_id;
-    $department_id = $request->parent_id;
+    $department_id = $request->department_id;
     $filial_id = $request->filial_id;
 
     $staffer = new Staffer;
@@ -97,6 +97,9 @@ class StafferController extends Controller
     $staffer->author_id = $user_id;
     $staffer->save();
     if ($staffer) {
+      if ($department_id == $filial_id) {
+        $department_id = 0;
+      };
       return Redirect('/current_department/'.$filial_id.'/'.$department_id);
     } else {
       abort(403, 'Ошибка при записи штата!');
