@@ -46,12 +46,29 @@ $(function() {
       console.log('Ставим главному статус ' + checkall.checked + ' и меняем спрайт');
     };
   };
+
+  $(document).on('click', '.td-checkbox', function() {
+
+    alert('sdfsdf');
+    // for(var i=0; i<checkboxes.length; i++) {
+    //   checkboxes[i].checked = this.checked;
+    //   console.log('Видим клик по главному, ставим его положение всем = ' + this.checked);
+    // };
+
+  });
+
+  // Ловим клики по чекбоксам и пишем в базу:
+  // Создаем дефолтный список данной сущности для юзера (booklist) и
+  // наполняем его позициями (list_items)
   checkall.onclick = function() {
     for(var i=0; i<checkboxes.length; i++) {
       checkboxes[i].checked = this.checked;
       console.log('Видим клик по главному, ставим его положение всем = ' + this.checked);
     };
   };
+
+
+
   console.log('Завершение функции чекбоксов');
   console.log('-----');
 });

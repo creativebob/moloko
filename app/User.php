@@ -55,6 +55,20 @@ class User extends Authenticatable
     }
 
 
+    // Фильтрация по городу
+    public function scopeUserFilter($query, $request)
+    {
+
+      //Фильтруем по городу
+      if($request->city_id){
+        $query = $query->where('city_id', $request->city_id);
+      };
+
+      return $query;
+    }
+
+
+
     // Фильтрация по статусу пользователя: клиент или сотрудник
     public function scopeUserType($query, $user_type)
     {

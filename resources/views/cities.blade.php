@@ -28,7 +28,7 @@
     <div class="grid-x">
       <div class="small-12 cell filters" id="filters">
         <fieldset class="fieldset-filters inputs">
-          @include('users.filters')
+
         </fieldset>
       </div>
     </div>

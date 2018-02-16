@@ -67,7 +67,7 @@
         @foreach($users as $user)
         <tr class="parent @if($user->moderated == 1)no-moderation @endif" id="users-{{ $user->id }}" data-name="{{ $user->nickname }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $user->id }}"><label class="label-check" for="check-{{ $user->id }}"></label></td>
+          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="check-{{ $user->id }}" id="check-{{ $user->id }}"><label class="label-check" for="check-{{ $user->id }}"></label></td>
           <td class="td-second-name">
             @php
               $edit = 0;
@@ -80,7 +80,7 @@
             @if($edit == 1)
             <a href="/users/{{ $user->id }}/edit">
             @endif
-            {{ $user->second_name . " " . $user->first_name . " (". $user->nickname . ")" }}
+            {{ $user->second_name . " " . $user->first_name . "  (". $user->nickname . ")" }}
             @if($edit == 1)
             </a> 
             @endif

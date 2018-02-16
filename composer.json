@@ -32,7 +32,8 @@
         "files": [
             "app/Helpers/StringOperation.php", 
             "app/Helpers/SessionOperation.php",
-            "app/Helpers/PageInfo.php" 
+            "app/Helpers/PageInfo.php",
+            "app/Helpers/Filters.php" 
         ]
     },
     "autoload-dev": {

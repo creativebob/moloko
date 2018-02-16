@@ -29,7 +29,7 @@ class UsersTableSeeder extends Seeder
 	        	'filial_id' => null, 
 	        	'system_item' => 1, 
 	        	'author_id' => null, 
-	        	'city_id' => null, 
+	        	'city_id' => 1, 
         	],
         	[
 	        	'login' => 'creativebob', 
@@ -47,7 +47,7 @@ class UsersTableSeeder extends Seeder
 	        	'filial_id' => null, 
 	        	'system_item' => null, 
 	        	'author_id' => 1,
-	        	'city_id' => null, 
+	        	'city_id' => 1, 
         	],
         	[
 	        	'login' => 'makc_berluskone', 
@@ -65,7 +65,7 @@ class UsersTableSeeder extends Seeder
 	        	'filial_id' => null, 
 	        	'system_item' => null, 
 	        	'author_id' => 1, 
-	        	'city_id' => null, 
+	        	'city_id' => 1, 
         	],
         	[
 	        	'login' => 'timoshenko', 

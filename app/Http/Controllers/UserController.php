@@ -51,8 +51,18 @@ class UserController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям              
         ->orWhere('id', $request->user()->id) // Только для сущности USERS
+        ->userFilter($request)
         ->orderBy('moderated', 'desc')
         ->paginate(30);
+
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+        $filter_query = User::with('city')->withoutGlobalScope($answer['moderator'])->moderatorLimit($answer)->get();
+        $filter = getFilterUser($filter_query);
+
 
         // $user_auth = $request->user();
         // foreach ($users as $user) {
@@ -76,7 +86,7 @@ class UserController extends Controller
         // 
         $page_info = pageInfo($this->entity_name);
 
-	    return view('users.index', compact('users', 'page_info'));
+	    return view('users.index', compact('users', 'page_info', 'filter', 'user'));
 	}
 
     public function create(Request $request)

@@ -48,7 +48,7 @@ class Company extends Model
   ];
 
 
-// Фильтрация для показа авторов
+    // Фильтрация по городу
     public function scopeCompanyFilter($query, $request)
     {
 
@@ -58,7 +58,6 @@ class Company extends Model
       };
 
       return $query;
-
     }
 
 
