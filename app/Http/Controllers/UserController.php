@@ -273,24 +273,31 @@ class UserController extends Controller
     public function edit(Request $request, $id)
     {
         $method = 'update';
+
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::with('city')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+
         // Подключение политики
-        $this->authorize('update', $user);
+        $this->authorize($method, $user);
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+
         // Функция из Helper отдает массив со списками для SELECT
         $list_departments = getLS('users', 'view', 'departments');
         $list_filials = getLS('users', 'view', 'filials');
 
         $role = new Role;
         $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
-        $roles_list = Role::withoutGlobalScope($answer['moderator'])
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям 
+
+
+        $answer_roles = operator_right('roles', true, 'index');
+        $roles_list = Role::withoutGlobalScope($answer_roles['moderator'])
+        ->moderatorLimit($answer_roles)
+        ->companiesLimit($answer_roles)
+        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer_roles)
+        ->systemItem($answer_roles) // Фильтр по системным записям 
         ->pluck('role_name', 'id');
 
         return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'list_departments', 'list_filials'));

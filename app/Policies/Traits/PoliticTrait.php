@@ -157,7 +157,12 @@ trait PoliticTrait
 
 
         // Получаем статус наличия права в связке с филиалом (Есть или нет)
-        if(($method == 'update')||($method == 'delete')||($method == 'view')){
+        if(
+            ($method == 'update')||
+            ($method == 'delete')||
+            ($method == 'view')||
+            ($method == 'moderator')
+        ){
 
 
             if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow']['filials'][$model->filial_id])) {
