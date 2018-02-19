@@ -61,6 +61,12 @@ class UserPolicy
         return $result;
     }
 
+    public function moderator(User $user, User $model)
+    {
+        $result = $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
+        return $result;
+    }
+
     public function god(User $user)
     {
         if(Auth::user()->god){return true;} else {return false;};

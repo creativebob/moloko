@@ -168,23 +168,25 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 medium-4 cell">
         <label class="input-icon">Название населенного пункта
-          <input type="text" name="city_name" id="city-name-field" autocomplete="off" required>
+          {{-- Form::text('city_name', null, ['class'=>'text-field', 'id'=>'city-name-field' 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', 'required']) --}}
+          <input type="text" name="city_name" id="city-name-field" autocomplete="off" pattern="[А-Яа-я0-9-_\s]{3,30}" required>
           <div class="sprite-input-right find-status"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
         <label>Район
-          <input type="text" name="area_name" id="area-name" readonly>
+          {{-- Form::text('area_name', null, ['class'=>'text-field', 'id'=>'area-name' 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-я0-9-_\s]{3,30}', 'readonly']) --}}
+          <input type="text" name="area_name" id="area-name" pattern="[А-Яа-яЁё0-9-_\s]{3,30}" readonly>
         </label>
         <label>Область
-          <input type="text" name="region_name" id="region-name" readonly>
+          {{-- Form::text('region_name', null, ['class'=>'text-field', 'id'=>'region_name' 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-я0-9-_\s]{3,30}', 'readonly']) --}}
+          <input type="text" name="region_name" id="region-name" pattern="[А-Яа-яЁё0-9-_\s]{3,30}" readonly>
         </label>
         <div class="small-12 cell checkbox">
           <input type="checkbox" name="search_all" id="search-all-checkbox">
           <label for="search-all-checkbox"><span class="search-checkbox">Искать везде</span></label>
         </div>
-        
-        <input type="hidden" name="city_vk_external_id" id="city-id-field">
-        <input type="hidden" name="city_database" id="city-database" value="0">
+        <input type="hidden" name="city_vk_external_id" id="city-id-field" pattern="[0-9]{1,20}">
+        <input type="hidden" name="city_database" id="city-database" value="0" pattern="[0-9]{1}">
       </div>
       <div class="small-12 medium-8 cell">
         <table class="table-content-search">
