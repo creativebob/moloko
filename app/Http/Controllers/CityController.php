@@ -47,7 +47,7 @@ class CityController extends Controller
       ->get();
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
-    return view('cities', compact('regions', 'page_info')); 
+    return view('cities.index', compact('regions', 'page_info')); 
   }
   // Получаем сторонние данные по 
   public function current_city($region, $area)
@@ -78,7 +78,7 @@ class CityController extends Controller
     ];
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
-    return view('cities', compact('regions', 'page_info', 'data')); 
+    return view('cities.index', compact('regions', 'page_info', 'data')); 
   }
 
   public function create()

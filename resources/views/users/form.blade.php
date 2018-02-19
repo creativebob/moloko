@@ -38,13 +38,13 @@
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Фамилия
-              {{ Form::text('first_name', $user->first_name, ['class'=>'first-name-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+              {{ Form::text('second_name', $user->second_name, ['class'=>'second-name-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё]{3,20}']) }}
               </label>
               <label>Имя
-              {{ Form::text('second_name', $user->second_name, ['class'=>'second-name-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+              {{ Form::text('first_name', $user->first_name, ['class'=>'first-name-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё]{3,20}']) }}
               </label>
               <label>Отчество
-              {{ Form::text('patronymic', $user->patronymic, ['class'=>'patronymic-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+              {{ Form::text('patronymic', $user->patronymic, ['class'=>'patronymic-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё]{3,20}']) }}
               </label>
             </div>
           </div>
@@ -75,7 +75,7 @@
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
               <label>Почта
-                {{ Form::text('email', $user->email, ['class'=>'email-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+                {{ Form::text('email', $user->email, ['class'=>'email-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[A-Za-z]{3,20}\@[A-Za-z]{7}\.[A-Za-z]{3}']) }}
                 <span class="form-error">Укажите почту</span>
               </label>
               <label>Телеграм ID
@@ -94,7 +94,7 @@
                     $city_id = $user->city->city_id;
                   }
                 @endphp
-                {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
+                {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required', 'pattern'=>'[А-Яа-яЁё0-9]{3,}']) }}
                 <div class="sprite-input-right find-status"></div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
                 {{ Form::hidden('city_id', $city_id, ['class'=>'city-id-field']) }}

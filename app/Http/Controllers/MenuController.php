@@ -124,7 +124,7 @@ class MenuController extends Controller
     $navigations = $site->navigations->pluck('navigation_name', 'id');
     $pages_list = $site->pages->pluck('page_name', 'id');
     $page_info = pageInfo($this->entity_name);
-    return view('menus', compact('site', 'navigation_tree', 'page_info', 'pages_list', 'site_alias', 'menus', 'navigations'));
+    return view('menus.index', compact('site', 'navigation_tree', 'page_info', 'pages_list', 'site_alias', 'menus', 'navigations'));
   }
 
   // После записи переходим на созданный пункт меню 
@@ -230,7 +230,7 @@ class MenuController extends Controller
       'item_id' => $item_id,
     ];
     // dd($data);
-    return view('menus', compact('site', 'navigation_tree', 'page_info', 'pages_list', 'data', 'site_alias', 'navigations')); 
+    return view('menus.index', compact('site', 'navigation_tree', 'page_info', 'pages_list', 'data', 'site_alias', 'navigations')); 
   }
 
   /**
