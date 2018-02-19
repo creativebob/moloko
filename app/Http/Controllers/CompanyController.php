@@ -73,10 +73,13 @@ class CompanyController extends Controller
         $method = __FUNCTION__;
 
         // Подключение политики
-        $this->authorize(__FUNCTION__, Company::class);
+        // $this->authorize(__FUNCTION__, Company::class);
+
+        // Подключение политики
+        $this->authorize('automoderate', Company::class);
 
         $company = new Company;
-        return view('companies.create', compact('company'));   
+        return view('companies.create', compact('company'));
     }
 
 
