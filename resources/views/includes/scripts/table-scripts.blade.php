@@ -50,10 +50,7 @@ $(function() {
   $(document).on('click', '.td-checkbox', function() {
 
     alert('sdfsdf');
-    // for(var i=0; i<checkboxes.length; i++) {
-    //   checkboxes[i].checked = this.checked;
-    //   console.log('Видим клик по главному, ставим его положение всем = ' + this.checked);
-    // };
+
 
   });
 
