@@ -15,15 +15,15 @@ class CitiesTableSeeder extends Seeder
         	[
 		        'city_name' => 'Иркутск',
 		        // 'area_id' => '',
-		        'region_id' => '1',
-		        'city_code' => '83952',
+		        'region_id' => 1,
+		        'city_code' => 83952,
 		        'city_vk_external_id' => 57,
                 'system_item' => 1,
         	],
             [
                 'city_name' => 'Улан-Удэ',
                 // 'area_id' => '',
-                'region_id' => '2',
+                'region_id' => 2,
                 'city_code' => null,
                 'city_vk_external_id' => 148,
                 'system_item' => 1,
@@ -31,9 +31,17 @@ class CitiesTableSeeder extends Seeder
             [
                 'city_name' => 'Красноярск',
                 // 'area_id' => '',
-                'region_id' => '3',
+                'region_id' => 3,
                 'city_code' => null,
                 'city_vk_external_id' => 73,
+                'system_item' => 1,
+            ],
+            [
+                'city_name' => 'Чита',
+                // 'area_id' => '',
+                'region_id' => 4,
+                'city_code' => null,
+                'city_vk_external_id' => 161,
                 'system_item' => 1,
             ],
 

@@ -279,19 +279,19 @@
       </fieldset> 
     </div>
 
-  @can ('moderator', $user)
-    @if ($user->moderated == 1)
-      <div class="small-12 cell checkbox">
-        {{ Form::checkbox('moderation_status', null, $user->moderated, ['id'=>'moderation-checkbox']) }}
-        <label for="moderation-checkbox"><span>Запись нуждается в модерации!</span></label>
-      </div>
-    @endif
-  @endcan
+    @can ('moderator', $user)
+      @if ($user->moderated == 1)
+        <div class="small-12 cell checkbox">
+          {{ Form::checkbox('moderation_status', null, $user->moderated, ['id'=>'moderation-checkbox']) }}
+          <label for="moderation-checkbox"><span>Временная запись!</span></label>
+        </div>
+      @endif
+    @endcan
 
     @can ('god', $user)
       <div class="small-12 cell checkbox">
         {{ Form::checkbox('system_item', null, $user->system_item, ['id'=>'system-checkbox']) }}
-        <label for="system-checkbox"><span>Сделать запись системной!</span></label>
+        <label for="system-checkbox"><span>Сделать запись системной.</span></label>
       </div>
     @endcan
 

@@ -6,6 +6,7 @@ use App\Policies\Traits\PoliticTrait;
 use App\User;
 use App\Role;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RolePolicy
