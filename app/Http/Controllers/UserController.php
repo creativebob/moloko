@@ -95,6 +95,7 @@ class UserController extends Controller
         $method = __FUNCTION__;
 
         $user_auth = $request->user();
+
         // Подключение политики
         $this->authorize(__FUNCTION__, User::class);
 
@@ -108,6 +109,10 @@ class UserController extends Controller
 
     	$user = new User;
         $roles = new Role;
+
+        // Подключение политики
+        $this->authorize('automoderate', $user);
+
     	return view('users.create', compact('user', 'roles', 'list_filials', 'list_departments', 'roles_list'));
     }
 

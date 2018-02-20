@@ -279,7 +279,7 @@
       </fieldset> 
     </div>
 
-  @can ('moderator', User::class)
+  @can ('moderator', $user)
     @if ($user->moderated == 1)
       <div class="small-12 cell checkbox">
         {{ Form::checkbox('moderation_status', null, $user->moderated, ['id'=>'moderation-checkbox']) }}

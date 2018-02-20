@@ -17,6 +17,7 @@ trait PoliticTrait
         $user_id = $session['user_info']['user_id'];
         $user_status = $session['user_info']['user_status'];
         $result = false;
+        $right_dep_status = false;
         $filial_id = $session['user_info']['filial_id'];
 
         if(((!isset($session['user_info']['company_id']))||(!isset($session['user_info']['filial_id']))||(!isset($session['user_info']['department_id'])))&&($user_status == null)){return false;};
@@ -80,6 +81,59 @@ trait PoliticTrait
                 };
             };
         };
+
+
+        // //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        // // MODERATOR  -----------------------------------------------------------------------------------------------------------------------------------------------
+        // //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        // if($method == 'moderator'){
+        //     if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {
+
+        //         // Нет ли блокировки этого права?
+        //         if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
+
+        //             //Разрешаем, так как блокировки нет!
+        //             return true;
+                    
+        //         } else {
+
+        //         return false;
+
+        //         };
+
+        //     } else {
+        //         return false;
+
+        //     };
+        // };
+
+
+
+        // //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        // // AUTOMODERATE  --------------------------------------------------------------------------------------------------------------------------------------------
+        // //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        // if($method == 'automoderate'){
+        //     if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {
+
+        //         // Нет ли блокировки этого права?
+        //         if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
+
+        //             //Разрешаем, так как блокировки нет!
+        //             return true;
+                    
+        //         } else {
+
+        //         return false;
+
+        //         };
+
+        //     } else {
+        //         return false;
+
+        //     };
+        // };
 
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -151,38 +205,41 @@ trait PoliticTrait
                 
             } else {$nolimit_status = false;};
 
-        } else {$nolimit_status = false;};
+        } else {
+            $nolimit_status = false;
+        };
 
-
-        if($entity_dependence == false){$nolimit_status = true;};
+        // Если сущность не зависит от филиалов, то переключаемся в режим 
+        // независимости от филиалов.
+        if($entity_dependence == false){
+            $nolimit_status = true;
+        };
 
 
         // Получаем статус наличия права в связке с филиалом (Есть или нет)
-        if(
-            ($method == 'update')||
-            ($method == 'delete')||
-            ($method == 'view')
-        ){  
+        if(($method == 'update')||($method == 'delete')||($method == 'view')||($method == 'moderator')||($method == 'automoderate')){
+
+            if($nolimit_status == false){
+
+                if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow']['filials'][$model->filial_id])) {
 
 
-            if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow']['filials'][$model->filial_id])) {
+                    // Нет ли блокировки этого права?
+                    if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny']['filials'][$model->filial_id])) {
 
+                        //Разрешаем, так как блокировки нет!
+                        $right_dep_status = true;
+                        
+                    } else {
+                        $right_dep_status = false;
+                    };
 
-                // Нет ли блокировки этого права?
-                if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny']['filials'][$model->filial_id])) {
-
-                    //Разрешаем, так как блокировки нет!
-                    $right_dep_status = true;
-                    
                 } else {
                     $right_dep_status = false;
                 };
-
-            } else {
-                $right_dep_status = false;
             };
 
-
+            // Смотрим наличие права (и отсутствие запрета) вне зависимости от филиала.
             if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {
 
                 // Нет ли блокировки этого права?
