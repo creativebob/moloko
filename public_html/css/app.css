@@ -139,17 +139,17 @@ body {
   background-color: #eeeeee;
 }
 
-/* line 202, ../sass/app.scss */
+/* line 203, ../sass/app.scss */
 html, body {
   height: 100%;
 }
 
-/* line 206, ../sass/app.scss */
+/* line 207, ../sass/app.scss */
 #wrapper {
   height: 93vh;
 }
 
-/* line 211, ../sass/app.scss */
+/* line 212, ../sass/app.scss */
 .el, .el * {
   /* ╨б╨▓╨╛╨╣╤Б╤В╨▓╨░ ╨╕╨╖╨╝╨╡╨╜╨╡╨╜╨╕╨╡ ╨║╨╛╤В╨╛╤А╤Л╤Е ╨╜╨╡╨╛╨▒╤Е╨╛╨┤╨╕╨╝╨╛ ╨╛╤В╤Б╨╗╨╡╨╢╨╕╨▓╨░╤В╤М */
   transition-property: width, height, padding, margin;
@@ -157,69 +157,54 @@ html, body {
   transition-duration: 1ms;
 }
 
-/* line 220, ../sass/app.scss */
-.noadd .aa {
-  display: none !important;
-}
-
-/* line 225, ../sass/app.scss */
-.noedit .ae {
-  display: none !important;
-}
-
-/* line 230, ../sass/app.scss */
-.nodel .ad {
-  display: none !important;
-}
-
-/* line 237, ../sass/app.scss */
+/* line 223, ../sass/app.scss */
 .block-refresh .title-bar {
   display: none;
 }
-/* line 240, ../sass/app.scss */
+/* line 226, ../sass/app.scss */
 .block-refresh ul {
   height: 0;
   overflow: hidden;
 }
-/* line 244, ../sass/app.scss */
+/* line 230, ../sass/app.scss */
 .block-refresh .task-manager .task-active {
   width: 240px;
 }
-/* line 247, ../sass/app.scss */
+/* line 233, ../sass/app.scss */
 .block-refresh .breadcrumbs {
   height: 36px;
 }
-/* line 250, ../sass/app.scss */
+/* line 236, ../sass/app.scss */
 .block-refresh .content {
   display: none;
 }
 
-/* line 257, ../sass/app.scss */
+/* line 241, ../sass/app.scss */
 .sidebar .expand {
   width: 240px;
 }
 
-/* line 262, ../sass/app.scss */
+/* line 245, ../sass/app.scss */
 .dropdown-pane {
   width: 222px;
 }
 
-/* line 267, ../sass/app.scss */
+/* line 251, ../sass/app.scss */
 input[type=checkbox], input[type=radio] {
   display: none;
 }
 
-/* line 271, ../sass/app.scss */
+/* line 255, ../sass/app.scss */
 [type='checkbox'] + label, [type='radio'] + label {
   margin: 0;
 }
 
-/* line 277, ../sass/app.scss */
+/* line 261, ../sass/app.scss */
 .checkbox label span {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 282, ../sass/app.scss */
+/* line 266, ../sass/app.scss */
 .checkbox label:before {
   display: inline-block;
   vertical-align: middle;
@@ -229,22 +214,22 @@ input[type=checkbox], input[type=radio] {
   background-position: 0px -480px;
   content: '';
 }
-/* line 291, ../sass/app.scss */
+/* line 275, ../sass/app.scss */
 .checkbox .disabled:before {
   opacity: 0.3;
   cursor: default;
 }
-/* line 295, ../sass/app.scss */
+/* line 279, ../sass/app.scss */
 .checkbox input[type=checkbox]:checked + label:before {
   background-position: -32px -480px;
 }
 
-/* line 299, ../sass/app.scss */
+/* line 283, ../sass/app.scss */
 :indeterminate + label:before {
   background-position: -64px -480px;
 }
 
-/* line 304, ../sass/app.scss */
+/* line 288, ../sass/app.scss */
 .checkbox-th label:before {
   display: inline-block;
   vertical-align: middle;
@@ -254,26 +239,26 @@ input[type=checkbox], input[type=radio] {
   background-position: 0px -416px;
   content: '';
 }
-/* line 313, ../sass/app.scss */
+/* line 297, ../sass/app.scss */
 .checkbox-th input[type=checkbox]:checked + label:before {
   background-position: -32px -416px;
 }
 
-/* line 317, ../sass/app.scss */
+/* line 301, ../sass/app.scss */
 :indeterminate + label:before {
   background-position: -64px -416px;
 }
 
-/* line 322, ../sass/app.scss */
+/* line 306, ../sass/app.scss */
 .radiobutton label {
   display: inline-block;
 }
-/* line 324, ../sass/app.scss */
+/* line 308, ../sass/app.scss */
 .radiobutton label span {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 329, ../sass/app.scss */
+/* line 313, ../sass/app.scss */
 .radiobutton label:before {
   display: inline-block;
   vertical-align: middle;
@@ -283,12 +268,12 @@ input[type=checkbox], input[type=radio] {
   background-position: 0px -576px;
   content: '';
 }
-/* line 338, ../sass/app.scss */
+/* line 322, ../sass/app.scss */
 .radiobutton input[type=radio]:checked + label:before {
   background-position: -32px -576px;
 }
 
-/* line 350, ../sass/app.scss */
+/* line 335, ../sass/app.scss */
 .sprite {
   display: inline-block;
   vertical-align: middle;
@@ -296,12 +281,12 @@ input[type=checkbox], input[type=radio] {
   height: 32px;
   background: url(sprites/sprite_menu.png) no-repeat;
 }
-/* line 357, ../sass/app.scss */
+/* line 342, ../sass/app.scss */
 .sprite :focus {
   outline: none;
 }
 
-/* line 361, ../sass/app.scss */
+/* line 346, ../sass/app.scss */
 .sprite-16 {
   display: inline-block;
   vertical-align: middle;
@@ -309,17 +294,180 @@ input[type=checkbox], input[type=radio] {
   height: 16px;
   background: url(sprites/sprite_16.png) no-repeat;
 }
-/* line 368, ../sass/app.scss */
+/* line 353, ../sass/app.scss */
 .sprite-16 :focus {
   outline: none;
 }
 
+/* line 359, ../sass/app.scss */
+.icon-login {
+  background: url(img/login.svg) no-repeat;
+}
+
+/* line 363, ../sass/app.scss */
+.icon-password {
+  background: url(img/password.svg) no-repeat;
+}
+
+/* line 369, ../sass/app.scss */
+.icon-load {
+  background: url(img/loading.svg) no-repeat;
+  opacity: 0.5;
+}
+
 /* line 373, ../sass/app.scss */
-label {
+.icon-find-ok {
+  background-position: -16px -80px;
+  opacity: 1;
+}
+
+/* line 377, ../sass/app.scss */
+.icon-find-no {
+  background-position: -32px -80px;
+  opacity: 1;
+}
+
+/* line 383, ../sass/app.scss */
+.icon-list-add {
+  background-position: -128px -768px;
+}
+
+/* line 386, ../sass/app.scss */
+.icon-list-add:hover {
+  background-position: -96px -768px;
+}
+
+/* line 389, ../sass/app.scss */
+.icon-list-edit {
+  background-position: -96px -800px;
+}
+
+/* line 392, ../sass/app.scss */
+.icon-list-edit:hover {
+  background-position: -128px -800px;
+}
+
+/* line 395, ../sass/app.scss */
+.icon-list-delete {
+  background-position: -96px -512px;
+}
+
+/* line 398, ../sass/app.scss */
+.icon-list-delete:hover {
+  background-position: -128px -512px;
+}
+
+/* line 403, ../sass/app.scss */
+.icon-add {
+  background-position: 0px -384px;
+  opacity: 0.2;
+  margin-left: 1rem;
+}
+
+/* line 409, ../sass/app.scss */
+.icon-add:hover {
+  background-position: 0px -384px;
+  opacity: 1;
+}
+
+/* line 414, ../sass/app.scss */
+.icon-filter {
+  background-position: 0px -352px;
+  float: left;
+  margin-right: 0.4rem;
+}
+
+/* line 419, ../sass/app.scss */
+.icon-filter:hover {
+  background-position: -32px -352px;
+}
+
+/* line 422, ../sass/app.scss */
+.active-filter {
+  background-position: -64px -352px;
+}
+
+/* line 427, ../sass/app.scss */
+.icon-close-modal {
+  background-position: 0px -608px;
+}
+
+/* line 430, ../sass/app.scss */
+.icon-close-modal:hover {
+  background-position: -32px -608px;
+}
+
+/* line 435, ../sass/app.scss */
+.icon-drop {
+  background-position: 0px -832px;
+  opacity: 0;
+  cursor: -webkit-grabbing;
+}
+
+/* line 441, ../sass/app.scss */
+.icon-edit {
+  background-position: -96px -800px;
+}
+
+/* line 444, ../sass/app.scss */
+.icon-edit:hover {
+  background-position: -128px -800px;
+}
+
+/* line 448, ../sass/app.scss */
+.icon-delete {
+  background-position: 0px -512px;
+}
+
+/* line 451, ../sass/app.scss */
+.icon-delete:hover {
+  background-position: -32px -512px;
+}
+
+/* line 456, ../sass/app.scss */
+.inputs label {
+  font-size: 0.875rem;
+  color: #666666;
   position: relative;
 }
-/* line 376, ../sass/app.scss */
-label .sprite-input-left {
+/* line 461, ../sass/app.scss */
+.inputs label input, .inputs label textarea {
+  margin-top: 0.25rem;
+  margin-bottom: 0.85rem;
+  height: 26px;
+  color: #666666;
+  background-color: #ffffff;
+  font-size: 0.8rem;
+  padding: 5px 12px;
+  border: 1px solid #999999;
+  box-shadow: none;
+}
+/* line 472, ../sass/app.scss */
+.inputs label textarea {
+  height: 8rem;
+}
+/* line 476, ../sass/app.scss */
+.inputs label .is-invalid-input:not(:focus) {
+  border-color: #cc4b37;
+  background-color: #f9ecea;
+}
+/* line 480, ../sass/app.scss */
+.inputs label select {
+  margin-top: 0.25rem;
+  margin-bottom: 0.7rem;
+  height: 26px;
+  background-color: #ffffff;
+  font-size: 0.8rem;
+  border: 1px solid #999999;
+  padding: 4px 4px 3px 16px;
+  background-position: 100% center;
+}
+/* line 492, ../sass/app.scss */
+.inputs label input:focus, .inputs label select:focus, .inputs label textarea:focus {
+  border: 1px solid #333333;
+}
+/* line 497, ../sass/app.scss */
+.inputs label .sprite-input-left {
   display: inline-block;
   vertical-align: middle;
   width: 16px;
@@ -329,8 +477,8 @@ label .sprite-input-left {
   left: 0;
   opacity: 0.5;
 }
-/* line 386, ../sass/app.scss */
-label .sprite-input-right {
+/* line 507, ../sass/app.scss */
+.inputs label .sprite-input-right {
   display: inline-block;
   vertical-align: middle;
   width: 16px;
@@ -340,47 +488,32 @@ label .sprite-input-right {
   right: 8px;
   transition: 0.5s ease opacity;
 }
-/* line 398, ../sass/app.scss */
-label .icon-load {
-  background: url(img/loading.svg) no-repeat;
-  opacity: 0.5;
-}
-/* line 402, ../sass/app.scss */
-label .icon-find-ok {
-  background-position: -16px -80px;
-  opacity: 1;
-}
-/* line 406, ../sass/app.scss */
-label .icon-find-no {
-  background-position: -32px -80px;
-  opacity: 1;
-}
 
-/* line 411, ../sass/app.scss */
+/* line 520, ../sass/app.scss */
 .department-error {
   padding-bottom: 1rem;
   color: #cc4b37;
   display: none;
 }
 
-/* line 417, ../sass/app.scss */
+/* line 526, ../sass/app.scss */
 .enter-page {
   background-color: #ffffff;
 }
 
-/* line 420, ../sass/app.scss */
+/* line 529, ../sass/app.scss */
 .enter {
   max-width: 15rem;
   margin: 10rem auto 0 auto;
   font-family: "SegoeUISemiLight";
   font-size: 0.75rem;
 }
-/* line 426, ../sass/app.scss */
+/* line 535, ../sass/app.scss */
 .enter .logo {
   display: block;
   margin: 0 auto 2rem auto;
 }
-/* line 431, ../sass/app.scss */
+/* line 540, ../sass/app.scss */
 .enter input {
   border: none;
   border-bottom: 1px solid #c2c2c2;
@@ -388,33 +521,25 @@ label .icon-find-no {
   padding-left: 2rem;
   box-shadow: none;
 }
-/* line 440, ../sass/app.scss */
+/* line 549, ../sass/app.scss */
 .enter .input-icon .sprite-input-left {
   top: 8px;
   left: 8px;
   opacity: 0.5;
   transition: 0.5s ease opacity;
 }
-/* line 446, ../sass/app.scss */
-.enter .input-icon .icon-login {
-  background: url(img/login.svg) no-repeat;
-}
-/* line 450, ../sass/app.scss */
-.enter .input-icon .icon-password {
-  background: url(img/password.svg) no-repeat;
-}
-/* line 455, ../sass/app.scss */
+/* line 557, ../sass/app.scss */
 .enter input:focus {
   border: none;
   border-bottom: 1px solid #000000;
   outline: none;
   box-shadow: none;
 }
-/* line 461, ../sass/app.scss */
+/* line 563, ../sass/app.scss */
 .enter input:focus + .sprite-input-left {
   opacity: 1;
 }
-/* line 464, ../sass/app.scss */
+/* line 566, ../sass/app.scss */
 .enter .button {
   width: 100%;
   text-transform: uppercase;
@@ -424,15 +549,15 @@ label .icon-find-no {
   margin-top: 1rem;
   margin-bottom: 0.4rem;
 }
-/* line 474, ../sass/app.scss */
+/* line 576, ../sass/app.scss */
 .enter .button:hover {
   background-color: #000000;
 }
-/* line 477, ../sass/app.scss */
+/* line 579, ../sass/app.scss */
 .enter .remember {
   margin-left: -8px;
 }
-/* line 480, ../sass/app.scss */
+/* line 582, ../sass/app.scss */
 .enter .forgot {
   display: block;
   margin-top: 0.8rem;
@@ -440,17 +565,17 @@ label .icon-find-no {
   text-decoration: underline;
   font-size: 0.7rem;
 }
-/* line 487, ../sass/app.scss */
+/* line 589, ../sass/app.scss */
 .enter .forgot:hover {
   text-decoration: none;
 }
 
-/* line 492, ../sass/app.scss */
+/* line 594, ../sass/app.scss */
 .header-z-index {
   z-index: 98;
 }
 
-/* line 495, ../sass/app.scss */
+/* line 597, ../sass/app.scss */
 .header {
   background-color: #333333;
   border-bottom: 1px solid #dcdcdc;
@@ -459,11 +584,11 @@ label .icon-find-no {
   position: relative;
   z-index: 98;
 }
-/* line 504, ../sass/app.scss */
+/* line 606, ../sass/app.scss */
 .header .left-head {
   margin: auto 0;
 }
-/* line 507, ../sass/app.scss */
+/* line 609, ../sass/app.scss */
 .header .left-head h1 {
   text-transform: uppercase;
   color: #ffffff;
@@ -473,52 +598,52 @@ label .icon-find-no {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 516, ../sass/app.scss */
+/* line 618, ../sass/app.scss */
 .header .left-head h1 span {
   color: #ff0000;
 }
-/* line 522, ../sass/app.scss */
+/* line 624, ../sass/app.scss */
 .header .right-head {
   text-align: right;
 }
-/* line 525, ../sass/app.scss */
+/* line 627, ../sass/app.scss */
 .header .right-head ul {
   background-color: #333333;
   float: right;
 }
-/* line 529, ../sass/app.scss */
+/* line 631, ../sass/app.scss */
 .header .right-head ul li {
   float: left;
   margin-right: 1rem;
 }
-/* line 533, ../sass/app.scss */
+/* line 635, ../sass/app.scss */
 .header .right-head ul li a {
   display: block;
   color: #ffffff;
   font-size: 0.8rem;
 }
-/* line 539, ../sass/app.scss */
+/* line 641, ../sass/app.scss */
 .header .right-head ul li a span {
   margin-right: 1rem;
 }
-/* line 542, ../sass/app.scss */
+/* line 644, ../sass/app.scss */
 .header .right-head ul li a img {
   vertical-align: middle;
   width: 25px;
   height: 25px;
 }
-/* line 551, ../sass/app.scss */
+/* line 653, ../sass/app.scss */
 .header .right-head .dropdown-pane {
   width: 14rem;
   padding: 0;
 }
-/* line 556, ../sass/app.scss */
+/* line 658, ../sass/app.scss */
 .header .right-head .profile-head {
   border: 1px solid #d0d0d0;
   box-sizing: border-box;
   width: 14rem;
 }
-/* line 562, ../sass/app.scss */
+/* line 664, ../sass/app.scss */
 .header .right-head .profile-head ul {
   background-color: #ffffff;
   color: #444444;
@@ -526,30 +651,30 @@ label .icon-find-no {
   text-align: left;
   width: 100%;
 }
-/* line 569, ../sass/app.scss */
+/* line 671, ../sass/app.scss */
 .header .right-head .profile-head ul li {
   margin: 0;
 }
-/* line 572, ../sass/app.scss */
+/* line 674, ../sass/app.scss */
 .header .right-head .profile-head ul li hr {
   margin: 0.2rem 0;
   color: #d0d0d0;
 }
-/* line 576, ../sass/app.scss */
+/* line 678, ../sass/app.scss */
 .header .right-head .profile-head ul li a {
   color: #444444;
   padding: 0.7rem 2.8rem;
 }
-/* line 580, ../sass/app.scss */
+/* line 682, ../sass/app.scss */
 .header .right-head .profile-head ul li a:hover {
   background-color: #eee;
 }
-/* line 586, ../sass/app.scss */
+/* line 688, ../sass/app.scss */
 .header .right-head .profile-list {
   display: block !important;
 }
 
-/* line 592, ../sass/app.scss */
+/* line 694, ../sass/app.scss */
 .sidebar {
   font-family: "PFDinDisplayPro-Reg";
   text-align: left;
@@ -560,18 +685,18 @@ label .icon-find-no {
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.35);
   z-index: 97;
 }
-/* line 602, ../sass/app.scss */
+/* line 704, ../sass/app.scss */
 .sidebar a {
   color: #eeeeee;
   font-weight: light;
   font-size: 1rem;
 }
-/* line 608, ../sass/app.scss */
+/* line 710, ../sass/app.scss */
 .sidebar .menu a {
   display: inline;
   padding: 0;
 }
-/* line 613, ../sass/app.scss */
+/* line 715, ../sass/app.scss */
 .sidebar .nav > ul > li {
   border-top: 1px solid #3f3f3f;
   border-bottom: 1px solid #2b2b2b;
@@ -579,7 +704,7 @@ label .icon-find-no {
   text-transform: uppercase;
   width: 100%;
 }
-/* line 620, ../sass/app.scss */
+/* line 722, ../sass/app.scss */
 .sidebar .nav > ul > li a {
   color: #eeeeee;
   font-weight: light;
@@ -588,30 +713,30 @@ label .icon-find-no {
   box-sizing: border-box;
   width: 210px;
 }
-/* line 628, ../sass/app.scss */
+/* line 730, ../sass/app.scss */
 .sidebar .nav > ul > li a span {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 633, ../sass/app.scss */
+/* line 735, ../sass/app.scss */
 .sidebar .nav > ul > li .active, .sidebar .nav > ul > li .active:hover {
   color: #ff5454 !important;
 }
-/* line 636, ../sass/app.scss */
+/* line 738, ../sass/app.scss */
 .sidebar .nav > ul > li .active span, .sidebar .nav > ul > li .active:hover span {
   color: #ffffff;
 }
-/* line 640, ../sass/app.scss */
+/* line 742, ../sass/app.scss */
 .sidebar .nav > ul > li .active::after {
   display: block;
   border-color: #ff5454 transparent transparent !important;
   right: 0rem;
 }
-/* line 645, ../sass/app.scss */
+/* line 747, ../sass/app.scss */
 .sidebar .nav > ul > li a:hover {
   color: #ffffff;
 }
-/* line 651, ../sass/app.scss */
+/* line 753, ../sass/app.scss */
 .sidebar .nav {
   height: auto;
   overflow: hidden;
@@ -620,44 +745,44 @@ label .icon-find-no {
   margin-top: 40px;
   margin-bottom: 82px;
 }
-/* line 661, ../sass/app.scss */
+/* line 763, ../sass/app.scss */
 .sidebar .nav > ul > li > ul {
   margin-left: 3rem;
 }
-/* line 664, ../sass/app.scss */
+/* line 766, ../sass/app.scss */
 .sidebar .nav > ul > li > ul li {
   border-bottom: none;
   text-transform: none;
   font-family: "SegoeUILight";
 }
-/* line 669, ../sass/app.scss */
+/* line 771, ../sass/app.scss */
 .sidebar .nav > ul > li > ul li a {
   padding: 0.4rem 1rem 0.4rem 0;
   font-size: 0.7rem;
   line-height: 1;
 }
-/* line 674, ../sass/app.scss */
+/* line 776, ../sass/app.scss */
 .sidebar .nav > ul > li > ul li a:after {
   display: block;
 }
-/* line 681, ../sass/app.scss */
+/* line 783, ../sass/app.scss */
 .sidebar .nav .accordion-menu > li a::after {
   display: none;
 }
-/* line 684, ../sass/app.scss */
+/* line 786, ../sass/app.scss */
 .sidebar .nav .accordion-menu li > ul li a::after {
   display: block;
   border-color: #bdbdbd transparent transparent;
   right: 0rem;
 }
-/* line 691, ../sass/app.scss */
+/* line 793, ../sass/app.scss */
 .sidebar .gen-menu-bot {
   position: absolute;
   bottom: 38px;
   height: 44px;
   width: 100%;
 }
-/* line 697, ../sass/app.scss */
+/* line 799, ../sass/app.scss */
 .sidebar .gen-menu-bot #sidebar-button {
   display: block;
   height: 100%;
@@ -666,136 +791,136 @@ label .icon-find-no {
   border-bottom: 1px solid #2b2b2b;
   cursor: pointer;
 }
-/* line 707, ../sass/app.scss */
+/* line 809, ../sass/app.scss */
 .sidebar .gen-menu-bot #sidebar-button #cursor {
   display: block;
   width: 32px;
   height: 32px;
   margin: 5px auto 0 auto;
 }
-/* line 715, ../sass/app.scss */
+/* line 817, ../sass/app.scss */
 .sidebar .sprite {
   margin-right: 1rem;
 }
-/* line 718, ../sass/app.scss */
+/* line 820, ../sass/app.scss */
 .sidebar .icon-mcc {
   background-position: -96px 0px;
 }
-/* line 721, ../sass/app.scss */
+/* line 823, ../sass/app.scss */
 .sidebar .icon-sale {
   background-position: -96px -32px;
 }
-/* line 724, ../sass/app.scss */
+/* line 826, ../sass/app.scss */
 .sidebar .icon-finance {
   background-position: -96px -64px;
 }
-/* line 727, ../sass/app.scss */
+/* line 829, ../sass/app.scss */
 .sidebar .icon-production {
   background-position: -96px -96px;
 }
-/* line 730, ../sass/app.scss */
+/* line 832, ../sass/app.scss */
 .sidebar .icon-marketing {
   background-position: -96px -128px;
 }
-/* line 733, ../sass/app.scss */
+/* line 835, ../sass/app.scss */
 .sidebar .icon-study {
   background-position: -96px -160px;
 }
-/* line 736, ../sass/app.scss */
+/* line 838, ../sass/app.scss */
 .sidebar .icon-guide {
   background-position: -96px -192px;
 }
-/* line 739, ../sass/app.scss */
+/* line 841, ../sass/app.scss */
 .sidebar .icon-chatbot {
   background-position: -96px -256px;
 }
-/* line 742, ../sass/app.scss */
+/* line 844, ../sass/app.scss */
 .sidebar .icon-settings {
   background-position: -96px -224px;
 }
-/* line 745, ../sass/app.scss */
+/* line 847, ../sass/app.scss */
 .sidebar .icon-arrow-forward {
   background-position: -160px -288px;
 }
-/* line 748, ../sass/app.scss */
+/* line 850, ../sass/app.scss */
 .sidebar .icon-arrow-back {
   background-position: -96px -288px;
 }
-/* line 753, ../sass/app.scss */
+/* line 855, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-mcc, .sidebar .gen-menu-bot > li > .active .icon-mcc {
   background-position: -160px 0px;
 }
-/* line 756, ../sass/app.scss */
+/* line 858, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-sale, .sidebar .gen-menu-bot > li > .active .icon-sale {
   background-position: -160px -32px;
 }
-/* line 759, ../sass/app.scss */
+/* line 861, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-finance, .sidebar .gen-menu-bot > li > .active .icon-finance {
   background-position: -160px -64px;
 }
-/* line 762, ../sass/app.scss */
+/* line 864, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-production, .sidebar .gen-menu-bot > li > .active .icon-production {
   background-position: -160px -96px;
 }
-/* line 765, ../sass/app.scss */
+/* line 867, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-marketing, .sidebar .gen-menu-bot > li > .active .icon-marketing {
   background-position: -160px -128px;
 }
-/* line 768, ../sass/app.scss */
+/* line 870, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-study, .sidebar .gen-menu-bot > li > .active .icon-study {
   background-position: -160px -160px;
 }
-/* line 771, ../sass/app.scss */
+/* line 873, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-guide, .sidebar .gen-menu-bot > li > .active .icon-guide {
   background-position: -160px -192px;
 }
-/* line 774, ../sass/app.scss */
+/* line 876, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-chatbot, .sidebar .gen-menu-bot > li > .active .icon-chatbot {
   background-position: -160px -256px;
 }
-/* line 777, ../sass/app.scss */
+/* line 879, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-settings, .sidebar .gen-menu-bot > li > .active .icon-settings {
   background-position: -160px -224px;
 }
-/* line 782, ../sass/app.scss */
+/* line 884, ../sass/app.scss */
 .sidebar .nav::-webkit-scrollbar {
   width: 0.5rem;
 }
-/* line 786, ../sass/app.scss */
+/* line 888, ../sass/app.scss */
 .sidebar .nav:hover {
   overflow-y: scroll;
 }
-/* line 789, ../sass/app.scss */
+/* line 891, ../sass/app.scss */
 .sidebar .nav:hover::-webkit-scrollbar {
   width: 0.5rem;
 }
-/* line 792, ../sass/app.scss */
+/* line 894, ../sass/app.scss */
 .sidebar .nav:hover::-webkit-scrollbar-thumb {
   border-width: 1px 1px 1px 2px;
   border-color: #777;
   background-color: #aaa;
   border-radius: 0.2rem;
 }
-/* line 798, ../sass/app.scss */
+/* line 900, ../sass/app.scss */
 .sidebar .nav:hover::-webkit-scrollbar-thumb:hover {
   border-width: 1px 1px 1px 2px;
   border-color: #555;
   background-color: #777;
 }
-/* line 804, ../sass/app.scss */
+/* line 906, ../sass/app.scss */
 .sidebar scrollbar[orient="vertical"] {
   max-width: 10px !important;
 }
-/* line 807, ../sass/app.scss */
+/* line 909, ../sass/app.scss */
 .sidebar scrollbar[orient="vertical"] > scrollbarbutton {
   max-height: 10px !important;
 }
-/* line 810, ../sass/app.scss */
+/* line 912, ../sass/app.scss */
 .sidebar thumb[orient="vertical"] {
   max-width: 10px !important;
 }
 
-/* line 815, ../sass/app.scss */
+/* line 917, ../sass/app.scss */
 .task-manager {
   position: fixed;
   right: 0;
@@ -808,50 +933,50 @@ label .icon-find-no {
   display: block;
   margin-right: -240px;
 }
-/* line 828, ../sass/app.scss */
+/* line 930, ../sass/app.scss */
 .task-manager .tabs-wrap {
   font-family: "SegoeUISemiLight";
 }
-/* line 832, ../sass/app.scss */
+/* line 934, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-title > a:focus, .task-manager .tabs-wrap .tabs-title > a[aria-selected='true'] {
   background-color: #4a4a4a;
   color: #ffffff;
 }
-/* line 837, ../sass/app.scss */
+/* line 939, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-list {
   margin-bottom: 2rem;
   border: none;
   background: none;
 }
-/* line 844, ../sass/app.scss */
+/* line 946, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-list li {
   border: 1px solid #4a4a4a;
   background-color: #333333;
   width: 50%;
 }
-/* line 849, ../sass/app.scss */
+/* line 951, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-list li a {
   color: #9c9c9c;
   padding: 5px 15px;
   font-size: 0.8rem;
   outline: none;
 }
-/* line 858, ../sass/app.scss */
+/* line 960, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-list li .is-active a {
   background-color: #ffffff;
 }
-/* line 865, ../sass/app.scss */
+/* line 967, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content {
   margin-top: 1.4rem;
   border: none;
   background: none;
 }
-/* line 872, ../sass/app.scss */
+/* line 974, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel {
   background: none;
   padding: 0;
 }
-/* line 876, ../sass/app.scss */
+/* line 978, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head {
   display: block;
   margin-bottom: 1rem;
@@ -859,27 +984,27 @@ label .icon-find-no {
   height: 1rem;
   overflow: hidden;
 }
-/* line 883, ../sass/app.scss */
+/* line 985, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head div {
   padding: 0 3px;
   display: inline-block;
   vertical-align: middle;
   float: left;
 }
-/* line 890, ../sass/app.scss */
+/* line 992, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head .icon-task {
   margin: -2px 0 0 -2px;
   background-position: -48px -32px;
   opacity: 0.6;
 }
-/* line 896, ../sass/app.scss */
+/* line 998, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head .task-date {
   font-family: "SegoeUISemiBold";
   font-size: 0.7rem;
   color: #cccccc;
   padding-right: 6px;
 }
-/* line 909, ../sass/app.scss */
+/* line 1010, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head hr {
   border: none;
   border-bottom: 1px solid #4a4a4a;
@@ -887,7 +1012,7 @@ label .icon-find-no {
   overflow: hidden;
   clear: none;
 }
-/* line 919, ../sass/app.scss */
+/* line 1020, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head .task-count {
   font-family: "SegoeUISemiLight";
   font-size: 0.7rem;
@@ -895,7 +1020,7 @@ label .icon-find-no {
   float: right;
   padding-left: 6px;
 }
-/* line 927, ../sass/app.scss */
+/* line 1028, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content {
   margin-top: 1rem;
   font-family: "SegoeUISemiLight";
@@ -903,40 +1028,40 @@ label .icon-find-no {
   font-size: 0.8rem;
   line-height: 1.4;
 }
-/* line 934, ../sass/app.scss */
+/* line 1035, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-content-head {
   font-family: "SegoeUISemiBold";
   font-size: 1rem;
   margin-bottom: 0.4rem;
 }
-/* line 939, ../sass/app.scss */
+/* line 1040, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-time {
   font-family: "PFDinDisplayPro-Light";
   color: #b5daff;
   margin-right: 0.4rem;
 }
-/* line 944, ../sass/app.scss */
+/* line 1045, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-set {
   font-family: "PFDinDisplayPro-Light";
   color: #888888;
 }
-/* line 949, ../sass/app.scss */
+/* line 1050, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-target {
   margin-top: 0.6rem;
 }
-/* line 953, ../sass/app.scss */
+/* line 1054, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-list {
   margin: 1rem 0 0 0;
 }
-/* line 956, ../sass/app.scss */
+/* line 1057, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-list .task-data {
   color: #888888;
 }
-/* line 959, ../sass/app.scss */
+/* line 1060, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-list .task-name-lead {
   color: #74b1f5;
 }
-/* line 963, ../sass/app.scss */
+/* line 1064, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-button {
   font-family: "SegoeUIRegular";
   font-size: 0.8rem;
@@ -946,17 +1071,17 @@ label .icon-find-no {
   width: 100%;
   border: none;
 }
-/* line 972, ../sass/app.scss */
+/* line 1073, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-button:hover {
   background-color: red;
 }
 
-/* line 983, ../sass/app.scss */
+/* line 1081, ../sass/app.scss */
 .task-active {
   margin-right: 0;
 }
 
-/* line 987, ../sass/app.scss */
+/* line 1085, ../sass/app.scss */
 .breadcrumbs {
   margin: 0;
   background-color: #ffffff;
@@ -964,7 +1089,7 @@ label .icon-find-no {
   height: auto;
   border-bottom: 1px solid #dcdcdc;
 }
-/* line 994, ../sass/app.scss */
+/* line 1092, ../sass/app.scss */
 .breadcrumbs li {
   text-transform: none;
   color: #888888;
@@ -972,67 +1097,25 @@ label .icon-find-no {
   font-size: 0.8rem;
   line-height: 1;
 }
-/* line 1001, ../sass/app.scss */
+/* line 1099, ../sass/app.scss */
 .breadcrumbs a {
   color: #5190ff;
 }
 
-/* line 1007, ../sass/app.scss */
-.inputs label {
-  font-size: 0.875rem;
-  color: #666666;
-}
-/* line 1011, ../sass/app.scss */
-.inputs label input, .inputs label textarea {
-  margin-top: 0.25rem;
-  margin-bottom: 0.85rem;
-  height: 26px;
-  color: #666666;
-  background-color: #ffffff;
-  font-size: 0.8rem;
-  padding: 5px 12px;
-  border: 1px solid #999999;
-  box-shadow: none;
-}
-/* line 1022, ../sass/app.scss */
-.inputs label textarea {
-  height: 8rem;
-}
-/* line 1026, ../sass/app.scss */
-.inputs label .is-invalid-input:not(:focus) {
-  border-color: #cc4b37;
-  background-color: #f9ecea;
-}
-/* line 1030, ../sass/app.scss */
-.inputs label select {
-  margin-top: 0.25rem;
-  margin-bottom: 0.7rem;
-  height: 26px;
-  background-color: #ffffff;
-  font-size: 0.8rem;
-  border: 1px solid #999999;
-  padding: 4px 4px 3px 16px;
-  background-position: 100% center;
-}
-/* line 1042, ../sass/app.scss */
-.inputs label input:focus, .inputs label select:focus, .inputs label textarea:focus {
-  border: 1px solid #333333;
-}
-
-/* line 1048, ../sass/app.scss */
+/* line 1105, ../sass/app.scss */
 .reveal {
   padding: 0;
   border: 1px solid #000000;
   border-radius: 0;
   background-color: #ffffff;
 }
-/* line 1055, ../sass/app.scss */
+/* line 1111, ../sass/app.scss */
 .reveal .modal-title {
   text-align: center;
   height: 3rem;
   background-color: #333333;
 }
-/* line 1060, ../sass/app.scss */
+/* line 1116, ../sass/app.scss */
 .reveal .modal-title h5 {
   text-transform: uppercase;
   font-size: 0.75rem;
@@ -1040,16 +1123,16 @@ label .icon-find-no {
   font-weight: normal;
   color: #ffffff;
 }
-/* line 1069, ../sass/app.scss */
+/* line 1125, ../sass/app.scss */
 .reveal .modal-content {
   padding: 2rem;
 }
-/* line 1072, ../sass/app.scss */
+/* line 1128, ../sass/app.scss */
 .reveal .modal-button {
   margin-top: 1rem;
   width: 100%;
 }
-/* line 1077, ../sass/app.scss */
+/* line 1133, ../sass/app.scss */
 .reveal .close-modal {
   position: absolute;
   top: 0;
@@ -1057,26 +1140,18 @@ label .icon-find-no {
   margin: 0.5rem;
   cursor: pointer;
 }
-/* line 1085, ../sass/app.scss */
-.reveal .icon-close-modal {
-  background-position: 0px -608px;
-}
-/* line 1088, ../sass/app.scss */
-.reveal .icon-close-modal:hover {
-  background-position: -32px -608px;
-}
 
-/* line 1095, ../sass/app.scss */
+/* line 1143, ../sass/app.scss */
 .rev-small {
   width: 500px;
 }
 
-/* line 1098, ../sass/app.scss */
+/* line 1146, ../sass/app.scss */
 .rev-large {
   width: 800px;
 }
 
-/* line 1104, ../sass/app.scss */
+/* line 1152, ../sass/app.scss */
 .table-content-search caption {
   font-family: "PFDinDisplayPro-Light";
   font-size: 0.875rem;
@@ -1085,17 +1160,17 @@ label .icon-find-no {
   padding: 0;
   margin-bottom: 1rem;
 }
-/* line 1114, ../sass/app.scss */
+/* line 1162, ../sass/app.scss */
 .table-content-search tbody {
   border: none;
   background: none;
 }
-/* line 1121, ../sass/app.scss */
+/* line 1169, ../sass/app.scss */
 .table-content-search tbody tr:nth-child(even) {
   border-bottom: 0;
   background-color: #f6f6f6;
 }
-/* line 1126, ../sass/app.scss */
+/* line 1174, ../sass/app.scss */
 .table-content-search tbody td {
   font-family: "SegoeUISemiLight";
   font-size: 0.8rem;
@@ -1103,20 +1178,20 @@ label .icon-find-no {
   line-height: 1;
   padding: 0.4rem 0;
 }
-/* line 1133, ../sass/app.scss */
+/* line 1181, ../sass/app.scss */
 .table-content-search tbody td a {
   color: #5190ff;
 }
-/* line 1139, ../sass/app.scss */
+/* line 1187, ../sass/app.scss */
 .table-content-search tbody .icon-delete {
   background-position: -32px -512px;
 }
-/* line 1142, ../sass/app.scss */
+/* line 1190, ../sass/app.scss */
 .table-content-search tbody .icon-delete:hover {
   background-position: 0px -512px;
 }
 
-/* line 1147, ../sass/app.scss */
+/* line 1195, ../sass/app.scss */
 .table-over {
   position: absolute;
   background-color: white;
@@ -1124,147 +1199,122 @@ label .icon-find-no {
   z-index: 50;
 }
 
-/* line 1154, ../sass/app.scss */
+/* line 1202, ../sass/app.scss */
 .tabs-margin-top {
   margin-top: 2rem;
 }
 
-/* line 1157, ../sass/app.scss */
+/* line 1205, ../sass/app.scss */
 .tabs-wrap {
   padding: 0 10px;
   font-family: "PFDinDisplayPro-Light";
 }
-/* line 1162, ../sass/app.scss */
+/* line 1210, ../sass/app.scss */
 .tabs-wrap .tabs-title > a:focus, .tabs-wrap .tabs-title > a[aria-selected='true'] {
   background-color: #ac4747;
   color: #ffffff;
 }
-/* line 1167, ../sass/app.scss */
+/* line 1215, ../sass/app.scss */
 .tabs-wrap .tabs-list {
   margin-bottom: 2rem;
   border: none;
   background: none;
 }
-/* line 1174, ../sass/app.scss */
+/* line 1222, ../sass/app.scss */
 .tabs-wrap .tabs-list li {
   border: 1px solid #eeeeee;
   background-color: #ffffff;
 }
-/* line 1178, ../sass/app.scss */
+/* line 1226, ../sass/app.scss */
 .tabs-wrap .tabs-list li a {
   color: #000000;
   padding: 5px 20px;
   font-size: 0.875rem;
   outline: none;
 }
-/* line 1187, ../sass/app.scss */
+/* line 1235, ../sass/app.scss */
 .tabs-wrap .tabs-list li .is-active a {
   background-color: #ffffff;
 }
-/* line 1194, ../sass/app.scss */
+/* line 1242, ../sass/app.scss */
 .tabs-wrap .tabs-content {
   border: none;
   background: none;
 }
-/* line 1200, ../sass/app.scss */
+/* line 1248, ../sass/app.scss */
 .tabs-wrap .tabs-content .tabs-panel {
   background: none;
   padding: 0;
 }
-/* line 1208, ../sass/app.scss */
+/* line 1256, ../sass/app.scss */
 .tabs-wrap .checkbox label {
   margin-left: -7px;
 }
-/* line 1211, ../sass/app.scss */
+/* line 1259, ../sass/app.scss */
 .tabs-wrap .checkbox #company-checkbox + label {
   margin-bottom: 1rem;
 }
-/* line 1215, ../sass/app.scss */
+/* line 1263, ../sass/app.scss */
 .tabs-wrap .radiobutton {
   color: #666666;
 }
-/* line 1218, ../sass/app.scss */
+/* line 1266, ../sass/app.scss */
 .tabs-wrap .radiobutton label {
   margin-left: -8px;
   margin-right: 8px;
 }
-/* line 1223, ../sass/app.scss */
+/* line 1271, ../sass/app.scss */
 .tabs-wrap .fieldset-access {
   border: 1px solid #b3b3b3;
   padding: 1rem 2rem 2rem;
 }
-/* line 1227, ../sass/app.scss */
+/* line 1275, ../sass/app.scss */
 .tabs-wrap .fieldset-access legend {
   font-family: "PFDinDisplayPro-Med";
   padding: 0 1rem;
 }
 
-/* line 1233, ../sass/app.scss */
+/* line 1281, ../sass/app.scss */
 .allow {
   color: green;
 }
 
-/* line 1236, ../sass/app.scss */
+/* line 1284, ../sass/app.scss */
 .deny {
   color: red;
 }
 
-/* line 1240, ../sass/app.scss */
+/* line 1288, ../sass/app.scss */
 .content {
   padding: 30px 20px 44px 20px;
   z-index: 60;
 }
-/* line 1246, ../sass/app.scss */
+/* line 1294, ../sass/app.scss */
 .content .top-bar, .content .top-bar ul {
   background-color: #eeeeee;
 }
-/* line 1250, ../sass/app.scss */
+/* line 1298, ../sass/app.scss */
 .content #head-sticky {
   z-index: 30;
 }
-/* line 1253, ../sass/app.scss */
+/* line 1301, ../sass/app.scss */
 .content .head-content {
   padding: 1rem 10px;
   z-index: 50;
   transition: width 0.3s ease;
 }
-/* line 1261, ../sass/app.scss */
+/* line 1309, ../sass/app.scss */
 .content .head-content .header-content {
   text-transform: uppercase;
   font-family: "PFDinTextCondPro-Regular";
   font-size: 1.8rem;
   float: left;
 }
-/* line 1267, ../sass/app.scss */
-.content .head-content .icon-add {
-  background-position: 0px -384px;
-  opacity: 0.2;
-  margin-left: 1rem;
-}
-/* line 1273, ../sass/app.scss */
-.content .head-content .icon-add:hover {
-  background-position: 0px -384px;
-  opacity: 1;
-}
-/* line 1278, ../sass/app.scss */
-.content .head-content .icon-filter {
-  background-position: 0px -352px;
-  float: left;
-  margin-right: 0.4rem;
-}
-/* line 1283, ../sass/app.scss */
-.content .head-content .active-filter {
-  background-position: -64px -352px;
-}
-/* line 1287, ../sass/app.scss */
-.content .head-content .icon-filter:hover {
-  background-position: -32px -352px;
-}
-/* line 1291, ../sass/app.scss */
+/* line 1319, ../sass/app.scss */
 .content .head-content [type='search'], .content .head-content button {
   margin: 0;
 }
-/* line 1294, ../sass/app.scss */
+/* line 1322, ../sass/app.scss */
 .content .head-content .search-field {
   border-radius: 0.2rem;
   width: 9rem;
@@ -1273,46 +1323,46 @@ label .icon-find-no {
   font-family: "PFDinDisplayPro-Thin";
   padding: 0 0.8rem;
 }
-/* line 1302, ../sass/app.scss */
+/* line 1330, ../sass/app.scss */
 .content .head-content .icon-search {
   background-position: 0px -448px;
 }
-/* line 1305, ../sass/app.scss */
+/* line 1333, ../sass/app.scss */
 .content .head-content .icon-search:hover {
   background-position: -32px -448px;
   background-color: #eeeeee;
 }
-/* line 1309, ../sass/app.scss */
+/* line 1337, ../sass/app.scss */
 .content .head-content .icon-search:focus {
   background-color: #eeeeee;
 }
-/* line 1313, ../sass/app.scss */
+/* line 1341, ../sass/app.scss */
 .content .filters {
   display: none;
   background-color: #eeeeee;
   z-index: 1;
   position: absolute;
 }
-/* line 1322, ../sass/app.scss */
+/* line 1350, ../sass/app.scss */
 .content .filters .fieldset-filters {
   border: 1px solid #b3b3b3;
   padding: 1rem 0.6rem 1.4rem;
 }
-/* line 1326, ../sass/app.scss */
+/* line 1354, ../sass/app.scss */
 .content .filters .fieldset-filters legend {
   font-family: "PFDinDisplayPro-Med";
   padding: 0 1rem;
   margin-bottom: 1rem;
 }
-/* line 1340, ../sass/app.scss */
+/* line 1368, ../sass/app.scss */
 .content .content-list {
   outline: none;
 }
-/* line 1343, ../sass/app.scss */
+/* line 1371, ../sass/app.scss */
 .content .content-list .is-accordion-submenu-parent:not(.has-submenu-toggle) > a::after {
   display: none;
 }
-/* line 1346, ../sass/app.scss */
+/* line 1374, ../sass/app.scss */
 .content .content-list .icon-list {
   display: block;
   opacity: 0;
@@ -1322,16 +1372,16 @@ label .icon-find-no {
   transition: 0.2s ease opacity;
   cursor: pointer;
 }
-/* line 1355, ../sass/app.scss */
+/* line 1383, ../sass/app.scss */
 .content .content-list .icon-list li {
   display: inline-block;
   width: 32px;
 }
-/* line 1361, ../sass/app.scss */
+/* line 1389, ../sass/app.scss */
 .content .content-list .icon-list:focus {
   outline-color: none;
 }
-/* line 1365, ../sass/app.scss */
+/* line 1393, ../sass/app.scss */
 .content .content-list .number {
   font-size: 0.7rem;
   margin-left: 0.6rem;
@@ -1340,194 +1390,170 @@ label .icon-find-no {
   opacity: 0;
   transition: 0.3s ease opacity;
 }
-/* line 1373, ../sass/app.scss */
+/* line 1401, ../sass/app.scss */
 .content .content-list .link-recursion {
   display: inline;
   padding: 0;
 }
-/* line 1378, ../sass/app.scss */
+/* line 1406, ../sass/app.scss */
 .content .content-list .first-item {
   background-color: #494949;
   margin-bottom: 2px;
   position: relative;
 }
-/* line 1384, ../sass/app.scss */
+/* line 1412, ../sass/app.scss */
 .content .content-list .first-item .first-link {
   font-family: "PFDinDisplayPro-Light";
   font-size: 1rem;
   color: #ffffff;
   padding: 8px;
 }
-/* line 1390, ../sass/app.scss */
+/* line 1418, ../sass/app.scss */
 .content .content-list .first-item .first-link .icon-open {
   background-position: -96px -704px;
   margin-right: 0.5rem;
   width: 32px;
   height: 32px;
 }
-/* line 1396, ../sass/app.scss */
+/* line 1424, ../sass/app.scss */
 .content .content-list .first-item .first-link span {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 1401, ../sass/app.scss */
+/* line 1429, ../sass/app.scss */
 .content .content-list .first-item .icon-list {
   opacity: 0;
   right: 2rem;
 }
-/* line 1405, ../sass/app.scss */
+/* line 1433, ../sass/app.scss */
 .content .content-list .first-item .icon-list li {
   padding: 8px 0;
 }
-/* line 1408, ../sass/app.scss */
-.content .content-list .first-item .icon-list li .icon-list-add {
-  background-position: -128px -768px;
-}
-/* line 1411, ../sass/app.scss */
-.content .content-list .first-item .icon-list li .icon-list-add:hover {
-  background-position: -96px -768px;
-}
-/* line 1414, ../sass/app.scss */
-.content .content-list .first-item .icon-list li .icon-list-edit {
-  background-position: -96px -800px;
-}
-/* line 1417, ../sass/app.scss */
-.content .content-list .first-item .icon-list li .icon-list-edit:hover {
-  background-position: -128px -800px;
-}
-/* line 1420, ../sass/app.scss */
-.content .content-list .first-item .icon-list li .icon-list-delete {
-  background-position: -96px -512px;
-}
-/* line 1423, ../sass/app.scss */
-.content .content-list .first-item .icon-list li .icon-list-delete:hover {
-  background-position: -128px -512px;
-}
-/* line 1430, ../sass/app.scss */
+/* line 1439, ../sass/app.scss */
 .content .content-list .first-active {
   background-color: #ae4747;
 }
-/* line 1433, ../sass/app.scss */
+/* line 1442, ../sass/app.scss */
 .content .content-list .first-active .first-link {
   background-color: #ae4747;
 }
-/* line 1436, ../sass/app.scss */
+/* line 1445, ../sass/app.scss */
 .content .content-list .first-active .first-link .icon-open {
   background-position: -128px -704px;
 }
-/* line 1439, ../sass/app.scss */
+/* line 1448, ../sass/app.scss */
 .content .content-list .first-active .first-link .number {
   background: rgba(255, 255, 255, 0.1);
   opacity: 1;
 }
-/* line 1444, ../sass/app.scss */
+/* line 1453, ../sass/app.scss */
 .content .content-list .first-active .icon-list {
   opacity: 1;
   z-index: 5;
   right: 2rem;
 }
-/* line 1449, ../sass/app.scss */
+/* line 1458, ../sass/app.scss */
 .content .content-list .first-active .icon-list li {
   padding: 8px 0;
 }
-/* line 1452, ../sass/app.scss */
+/* line 1461, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .sprite:focus {
   outline: none;
 }
-/* line 1455, ../sass/app.scss */
+/* line 1464, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .icon-list-add {
   background-position: -128px -768px;
 }
-/* line 1458, ../sass/app.scss */
+/* line 1467, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .icon-list-add:hover {
   background-position: -96px -768px;
 }
-/* line 1461, ../sass/app.scss */
+/* line 1470, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .icon-list-edit {
   background-position: -96px -800px;
 }
-/* line 1464, ../sass/app.scss */
+/* line 1473, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .icon-list-edit:hover {
   background-position: -128px -800px;
 }
-/* line 1467, ../sass/app.scss */
+/* line 1476, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .icon-list-delete {
   background-position: -96px -512px;
 }
-/* line 1470, ../sass/app.scss */
+/* line 1479, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .icon-list-delete:hover {
   background-position: -128px -512px;
 }
-/* line 1480, ../sass/app.scss */
+/* line 1489, ../sass/app.scss */
 .content .content-list .medium-list .medium-item {
   background-color: #ffffff;
   position: relative;
   padding-left: 2rem;
 }
-/* line 1485, ../sass/app.scss */
+/* line 1494, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list {
   right: 2rem;
   opacity: 1;
 }
-/* line 1490, ../sass/app.scss */
+/* line 1499, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li {
   padding: 0;
 }
-/* line 1493, ../sass/app.scss */
+/* line 1502, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li .icon-list-add {
   background-position: 0px -768px;
 }
-/* line 1496, ../sass/app.scss */
+/* line 1505, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li .icon-list-add:hover {
   background-position: -32px -768px;
 }
-/* line 1499, ../sass/app.scss */
+/* line 1508, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li .icon-list-edit {
   background-position: 0px -800px;
 }
-/* line 1502, ../sass/app.scss */
+/* line 1511, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li .icon-list-edit:hover {
   background-position: -32px -800px;
 }
-/* line 1505, ../sass/app.scss */
+/* line 1514, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li .icon-list-delete {
   background-position: 0px -512px;
 }
-/* line 1508, ../sass/app.scss */
+/* line 1517, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li .icon-list-delete:hover {
   background-position: -32px -512px;
 }
-/* line 1513, ../sass/app.scss */
+/* line 1522, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-link {
   font-family: "SegoeUISemiLight";
   font-size: 0.8rem;
   color: #000000;
   padding: 0 0 0 8px;
 }
-/* line 1521, ../sass/app.scss */
+/* line 1530, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-link .list-title span {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 1526, ../sass/app.scss */
+/* line 1535, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-link .icon-open {
   background-position: 0px -704px;
   opacity: 0.6;
 }
-/* line 1532, ../sass/app.scss */
+/* line 1541, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-active {
   width: 80%;
 }
-/* line 1535, ../sass/app.scss */
+/* line 1544, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-active .icon-open {
   background-position: -32px -704px;
 }
-/* line 1539, ../sass/app.scss */
+/* line 1548, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-active .list-title .number {
   background: rgba(0, 0, 0, 0.2);
   opacity: 1;
 }
-/* line 1546, ../sass/app.scss */
+/* line 1555, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last {
   position: relative;
   margin: 0 1.8rem 0 2rem;
@@ -1537,56 +1563,56 @@ label .icon-find-no {
   color: #000000;
   padding: 10px 0 10px 12px;
 }
-/* line 1556, ../sass/app.scss */
+/* line 1565, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last .icon-list {
   transition: 0.2s ease opacity;
   opacity: 0;
   right: 0.2rem;
 }
-/* line 1565, ../sass/app.scss */
+/* line 1574, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list {
   opacity: 1;
 }
-/* line 1569, ../sass/app.scss */
+/* line 1578, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li {
   padding: 0;
 }
-/* line 1572, ../sass/app.scss */
+/* line 1581, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-add {
   background-position: 0px -768px;
 }
-/* line 1575, ../sass/app.scss */
+/* line 1584, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-add:hover {
   background-position: -64px -768px;
 }
-/* line 1578, ../sass/app.scss */
+/* line 1587, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-edit {
   background-position: 0px -800px;
 }
-/* line 1581, ../sass/app.scss */
+/* line 1590, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-edit:hover {
   background-position: -32px -800px;
 }
-/* line 1584, ../sass/app.scss */
+/* line 1593, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-delete {
   background-position: 0px -512px;
 }
-/* line 1587, ../sass/app.scss */
+/* line 1596, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-delete:hover {
   background-position: -32px -512px;
 }
-/* line 1595, ../sass/app.scss */
+/* line 1604, ../sass/app.scss */
 .content .content-list .medium-list .nested {
   margin-left: -8px;
 }
-/* line 1600, ../sass/app.scss */
+/* line 1609, ../sass/app.scss */
 .content .content-list .last-list {
   border-left: 2px solid #ae4747;
   border-right: 2px solid #ae4747;
   overflow: hidden;
   margin-left: 0;
 }
-/* line 1611, ../sass/app.scss */
+/* line 1620, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link {
   position: relative;
   margin: 0 1.8rem 0 2.5rem;
@@ -1596,103 +1622,103 @@ label .icon-find-no {
   padding: 10px 1.4rem;
   color: #000000;
 }
-/* line 1620, ../sass/app.scss */
+/* line 1629, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link .icon-list {
   right: 0.1rem;
   opacity: 0;
 }
-/* line 1624, ../sass/app.scss */
+/* line 1633, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link .icon-list li {
   padding: 0;
 }
-/* line 1631, ../sass/app.scss */
+/* line 1640, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list {
   opacity: 1;
 }
-/* line 1636, ../sass/app.scss */
+/* line 1645, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-add {
   background-position: 0px -768px;
 }
-/* line 1639, ../sass/app.scss */
+/* line 1648, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-add:hover {
   background-position: -64px -768px;
 }
-/* line 1642, ../sass/app.scss */
+/* line 1651, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-edit {
   background-position: 0px -800px;
 }
-/* line 1645, ../sass/app.scss */
+/* line 1654, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-edit:hover {
   background-position: -32px -800px;
 }
-/* line 1648, ../sass/app.scss */
+/* line 1657, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-delete {
   background-position: 0px -512px;
 }
-/* line 1651, ../sass/app.scss */
+/* line 1660, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-delete:hover {
   background-position: -32px -512px;
 }
-/* line 1659, ../sass/app.scss */
+/* line 1668, ../sass/app.scss */
 .content .content-list .last-list .last-item:last-child .last-link {
   border-bottom: none;
 }
-/* line 1667, ../sass/app.scss */
+/* line 1676, ../sass/app.scss */
 .content .table-content .is-stuck {
   background-color: #eeeeee;
 }
-/* line 1669, ../sass/app.scss */
+/* line 1678, ../sass/app.scss */
 .content .table-content .is-stuck tr {
   display: block;
 }
-/* line 1681, ../sass/app.scss */
+/* line 1690, ../sass/app.scss */
 .content .tabs-wrap .tabs-content {
   margin: 0 -15px;
 }
-/* line 1687, ../sass/app.scss */
+/* line 1696, ../sass/app.scss */
 .content .table-content {
   border-collapse: separate;
   width: 100%;
 }
-/* line 1691, ../sass/app.scss */
+/* line 1700, ../sass/app.scss */
 .content .table-content caption {
   font-family: "PFDinDisplayPro-Med";
   text-align: center;
   font-size: 0.875rem;
   font-weight: normal;
 }
-/* line 1699, ../sass/app.scss */
+/* line 1708, ../sass/app.scss */
 .content .table-content td.details-control {
   background: url("../resources/details_open.png") no-repeat center center;
   cursor: pointer;
 }
-/* line 1703, ../sass/app.scss */
+/* line 1712, ../sass/app.scss */
 .content .table-content tr.shown td.details-control {
   background: url("../resources/details_close.png") no-repeat center center;
 }
-/* line 1708, ../sass/app.scss */
+/* line 1717, ../sass/app.scss */
 .content .table-content .td-checkbox, .content .table-content .td-drop, .content .table-content .td-delete {
   width: 32px;
 }
-/* line 1713, ../sass/app.scss */
+/* line 1722, ../sass/app.scss */
 .content .table-content thead, .content .table-content tbody, .content .table-content tfoot {
   border: none;
   background-color: #f6f6f6;
 }
-/* line 1718, ../sass/app.scss */
+/* line 1727, ../sass/app.scss */
 .content .table-content .tbody-margin {
   height: 1rem;
   background-color: #eeeeee;
 }
-/* line 1723, ../sass/app.scss */
+/* line 1732, ../sass/app.scss */
 .content .table-content thead th, .content .table-content tbody td {
   padding: 4px;
 }
-/* line 1726, ../sass/app.scss */
+/* line 1735, ../sass/app.scss */
 .content .table-content .td-checkbox, .content .table-content .td-delete {
   padding: 0;
 }
-/* line 1735, ../sass/app.scss */
+/* line 1744, ../sass/app.scss */
 .content .table-content thead th {
   font-family: "PFDinDisplayPro-Med";
   font-size: 0.8rem;
@@ -1704,55 +1730,55 @@ label .icon-find-no {
   background-repeat: repeat-x;
   background-position: bottom;
 }
-/* line 1748, ../sass/app.scss */
+/* line 1757, ../sass/app.scss */
 .content .table-content thead th .icon-drop {
   opacity: 0;
 }
-/* line 1752, ../sass/app.scss */
+/* line 1761, ../sass/app.scss */
 .content .table-content thead th:hover {
   cursor: grabbing;
 }
-/* line 1755, ../sass/app.scss */
+/* line 1764, ../sass/app.scss */
 .content .table-content thead th:focus {
   outline: none;
 }
-/* line 1758, ../sass/app.scss */
+/* line 1767, ../sass/app.scss */
 .content .table-content thead .td-drop {
   width: 32px;
   padding: 0;
 }
-/* line 1764, ../sass/app.scss */
+/* line 1773, ../sass/app.scss */
 .content .table-content tbody {
   overflow-x: hidden;
 }
-/* line 1768, ../sass/app.scss */
+/* line 1777, ../sass/app.scss */
 .content .table-content tbody tr .button {
   margin-bottom: 0;
 }
-/* line 1773, ../sass/app.scss */
+/* line 1782, ../sass/app.scss */
 .content .table-content tbody .no-moderation td {
   background-color: #ffcccc;
 }
-/* line 1778, ../sass/app.scss */
+/* line 1787, ../sass/app.scss */
 .content .table-content tbody tr:nth-child(even) {
   border-bottom: 0;
   background-color: #f6f6f6;
 }
-/* line 1783, ../sass/app.scss */
+/* line 1792, ../sass/app.scss */
 .content .table-content tbody tr:hover .icon-drop {
   opacity: 0.3;
   transition: 0.5s;
 }
-/* line 1787, ../sass/app.scss */
+/* line 1796, ../sass/app.scss */
 .content .table-content tbody tr:hover .icon-drop:hover {
   opacity: 0.6;
 }
-/* line 1792, ../sass/app.scss */
+/* line 1801, ../sass/app.scss */
 .content .table-content tbody .td-drop {
   width: 32px;
   padding: 0;
 }
-/* line 1796, ../sass/app.scss */
+/* line 1805, ../sass/app.scss */
 .content .table-content tbody td {
   font-family: "SegoeUISemiLight";
   font-size: 0.8rem;
@@ -1760,119 +1786,97 @@ label .icon-find-no {
   border-bottom: 1px solid #eeeeee;
   line-height: 1;
 }
-/* line 1804, ../sass/app.scss */
-.content .table-content tbody .icon-drop {
-  background-position: 0px -832px;
-  opacity: 0;
-  cursor: -webkit-grabbing;
-}
-/* line 1810, ../sass/app.scss */
-.content .table-content tbody .icon-edit {
-  background-position: -96px -800px;
-}
-/* line 1813, ../sass/app.scss */
-.content .table-content tbody .icon-edit:hover {
-  background-position: -128px -800px;
-}
-/* line 1817, ../sass/app.scss */
-.content .table-content tbody .icon-delete {
-  background-position: 0px -512px;
-}
-/* line 1820, ../sass/app.scss */
-.content .table-content tbody .icon-delete:hover {
-  background-position: -32px -512px;
-}
-/* line 1830, ../sass/app.scss */
+/* line 1821, ../sass/app.scss */
 .content .table-content .active tr:first-child td {
   text-align: right;
   padding: 0;
   background-color: #eeeeee;
   border: none;
 }
-/* line 1836, ../sass/app.scss */
+/* line 1827, ../sass/app.scss */
 .content .table-content .active tr:first-child td a {
   background-color: #5190ff;
   color: white;
   padding: 0 16px;
   display: inline-block;
 }
-/* line 1842, ../sass/app.scss */
+/* line 1833, ../sass/app.scss */
 .content .table-content .active tr:first-child td a .icon-search-table-close {
   background-position: -38px -678px;
   margin-right: 1rem;
   width: 20px;
   height: 20px;
 }
-/* line 1848, ../sass/app.scss */
+/* line 1839, ../sass/app.scss */
 .content .table-content .active tr:first-child td a span {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 1857, ../sass/app.scss */
+/* line 1848, ../sass/app.scss */
 .content .table-content .active tr:nth-child(2) td {
   border-top: 2px solid #5190ff;
 }
-/* line 1862, ../sass/app.scss */
+/* line 1853, ../sass/app.scss */
 .content .table-content .active tr:last-child td {
   border-bottom: 2px solid #5190ff;
 }
-/* line 1867, ../sass/app.scss */
+/* line 1858, ../sass/app.scss */
 .content .table-content .active tr:not(.tr-close) td:first-child {
   border-left: 2px solid #5190ff;
 }
-/* line 1870, ../sass/app.scss */
+/* line 1861, ../sass/app.scss */
 .content .table-content .active tr:not(.tr-close) td:last-child {
   border-right: 2px solid #5190ff;
 }
-/* line 1879, ../sass/app.scss */
+/* line 1870, ../sass/app.scss */
 .content .table-content .tr-border tr:first-child td {
   border-bottom: 4px solid #5190ff;
 }
-/* line 1882, ../sass/app.scss */
+/* line 1873, ../sass/app.scss */
 .content .table-content .tr-border tr:first-child td a .icon-search-table-close {
   background-position: -6px -678px;
 }
-/* line 1891, ../sass/app.scss */
+/* line 1882, ../sass/app.scss */
 .content .table-content .tr-border tr:not(.tr-close) td {
   line-height: 0;
   padding: 0;
   visibility: hidden;
   height: 0;
 }
-/* line 1899, ../sass/app.scss */
+/* line 1890, ../sass/app.scss */
 .content .table-content .tr-border tr:not(.tr-close) td label, .content .table-content .tr-border tr:not(.tr-close) td a {
   display: none;
 }
-/* line 1909, ../sass/app.scss */
+/* line 1900, ../sass/app.scss */
 .content #pagination {
   margin-top: 1rem;
 }
-/* line 1916, ../sass/app.scss */
+/* line 1907, ../sass/app.scss */
 .content #pagination .pagination-head .pagination-title {
   font-size: 0.8rem;
 }
-/* line 1919, ../sass/app.scss */
+/* line 1910, ../sass/app.scss */
 .content #pagination .pagination-head .pagination {
   margin-top: 0.4rem;
 }
-/* line 1924, ../sass/app.scss */
+/* line 1915, ../sass/app.scss */
 .content #pagination .right {
   text-align: right;
 }
-/* line 1927, ../sass/app.scss */
+/* line 1918, ../sass/app.scss */
 .content #pagination .right a {
   color: #646464;
 }
-/* line 1930, ../sass/app.scss */
+/* line 1921, ../sass/app.scss */
 .content #pagination .right a .icon-deleted {
   background-position: 0px -544px;
 }
-/* line 1936, ../sass/app.scss */
+/* line 1927, ../sass/app.scss */
 .content #pagination .right a:hover .icon-deleted {
   background-position: -32px -544px;
 }
 
-/* line 1944, ../sass/app.scss */
+/* line 1936, ../sass/app.scss */
 .footer {
   background-color: #333333;
   padding: 6px 0 6px 240px;
@@ -1881,11 +1885,11 @@ label .icon-find-no {
   width: 100%;
   z-index: 96;
 }
-/* line 1953, ../sass/app.scss */
+/* line 1944, ../sass/app.scss */
 .footer .right {
   text-align: right;
 }
-/* line 1956, ../sass/app.scss */
+/* line 1947, ../sass/app.scss */
 .footer .right li {
   display: inline;
   font-family: "SegoeUISemiBold";
@@ -1895,33 +1899,33 @@ label .icon-find-no {
   padding: 10px 0;
   margin-right: 2rem;
 }
-/* line 1965, ../sass/app.scss */
+/* line 1956, ../sass/app.scss */
 .footer .right li span {
   font-family: "SegoeUIBold";
   color: #ffffff;
 }
-/* line 1970, ../sass/app.scss */
+/* line 1961, ../sass/app.scss */
 .footer .right .foot-drop {
   padding: 0;
 }
-/* line 1973, ../sass/app.scss */
+/* line 1964, ../sass/app.scss */
 .footer .right .foot-drop .icon-footer {
   background-position: -96px -736px;
 }
-/* line 1976, ../sass/app.scss */
+/* line 1967, ../sass/app.scss */
 .footer .right .foot-drop .icon-footer:hover {
   background-position: -128px -736px;
 }
-/* line 1981, ../sass/app.scss */
+/* line 1972, ../sass/app.scss */
 .footer .right .active-foot-drop .icon-footer {
   background-position: -160px -736px;
 }
-/* line 1986, ../sass/app.scss */
+/* line 1977, ../sass/app.scss */
 .footer .foot-options {
   background-color: #333333;
   border: none;
 }
-/* line 1990, ../sass/app.scss */
+/* line 1981, ../sass/app.scss */
 .footer .foot-options span {
   font-family: "SegoeUIRegular";
   font-size: 0.7rem;
@@ -1929,100 +1933,100 @@ label .icon-find-no {
 }
 
 @media screen and (min-width: 1px) and (max-width: 639px) {
-  /* line 2000, ../sass/app.scss */
+  /* line 1991, ../sass/app.scss */
   .enter {
     margin: 2rem auto 2rem auto;
   }
 
-  /* line 2003, ../sass/app.scss */
+  /* line 1994, ../sass/app.scss */
   #wrapper {
     margin-left: 0;
   }
 
-  /* line 2008, ../sass/app.scss */
+  /* line 1998, ../sass/app.scss */
   .header {
     height: auto;
   }
-  /* line 2011, ../sass/app.scss */
+  /* line 2001, ../sass/app.scss */
   .header .title-bar {
     width: 2.5rem;
     float: left;
     padding: 0;
     background: #333333;
   }
-  /* line 2017, ../sass/app.scss */
+  /* line 2007, ../sass/app.scss */
   .header h1 {
     margin-left: 0.25rem;
   }
-  /* line 2022, ../sass/app.scss */
+  /* line 2012, ../sass/app.scss */
   .header ul li span {
     display: none;
   }
 
-  /* line 2029, ../sass/app.scss */
+  /* line 2019, ../sass/app.scss */
   .sidebar {
     position: fixed;
     width: 100%;
     display: block;
   }
-  /* line 2034, ../sass/app.scss */
+  /* line 2024, ../sass/app.scss */
   .sidebar .nav {
     margin-top: 0;
     height: 100%;
     padding-bottom: 3rem;
   }
-  /* line 2039, ../sass/app.scss */
+  /* line 2029, ../sass/app.scss */
   .sidebar .gen-menu-bot {
     display: none;
   }
 
-  /* line 2044, ../sass/app.scss */
+  /* line 2034, ../sass/app.scss */
   .task-active {
     width: 100%;
   }
 
-  /* line 2048, ../sass/app.scss */
+  /* line 2038, ../sass/app.scss */
   .task-manager {
     margin-bottom: 0;
   }
 
-  /* line 2052, ../sass/app.scss */
+  /* line 2042, ../sass/app.scss */
   .breadcrumbs {
     display: none;
   }
 
-  /* line 2056, ../sass/app.scss */
+  /* line 2046, ../sass/app.scss */
   .content {
     padding: 30px 0 20px 0;
   }
-  /* line 2069, ../sass/app.scss */
+  /* line 2059, ../sass/app.scss */
   .content .tabs-wrap .tabs-content {
     margin: 0;
     padding: 0 0.7rem;
   }
-  /* line 2073, ../sass/app.scss */
+  /* line 2063, ../sass/app.scss */
   .content .tabs-wrap .fieldset-access {
     padding: 1rem 0.6rem;
   }
-  /* line 2080, ../sass/app.scss */
+  /* line 2070, ../sass/app.scss */
   .content .content-list .first-active .icon-list {
     opacity: 0;
     display: none;
     z-index: -1;
   }
-  /* line 2088, ../sass/app.scss */
+  /* line 2078, ../sass/app.scss */
   .content .content-list .medium-list .medium-item .icon-list {
     opacity: 0;
     display: none;
     z-index: -1;
   }
 
-  /* line 2102, ../sass/app.scss */
+  /* line 2090, ../sass/app.scss */
   .first-active .first-link {
     -webkit-touch-action: cross-slide-x;
   }
 
-  /* line 2110, ../sass/app.scss */
+  /* line 2095, ../sass/app.scss */
   .footer {
     display: none;
   }

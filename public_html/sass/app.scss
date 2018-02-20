@@ -9,7 +9,7 @@
 @import "compass/typography";
 @import "compass/utilities";
 
-// Подключаем шрифты
+// ----------------------- Подключаем шрифты ----------------------------------------
 
 // PFDinDisplayPro
 @font-face {
@@ -79,7 +79,7 @@
   src: url(fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf) format('truetype');
 };
 
-// Переменные
+// ----------------------------------- Переменные --------------------------------------
 
 // Шрифты
 // PFDinDisplay
@@ -199,6 +199,7 @@ body {
   background-color: $body-bg-color;
 }
 
+// Настройки странички
 html, body {
   height: 100%;
 }
@@ -216,22 +217,7 @@ html, body {
   transition-duration: 1ms;
 }
 
-.noadd {
-  .aa {
-    display: none !important;
-  }
-}
-.noedit {
-  .ae {
-    display: none !important;
-  }
-}
-.nodel {
-  .ad {
-    display: none !important;
-  }
-}
-// Блокировка, чтоб не прыгало ничего при прогрузке страницы
+// ---------------  Блокировка, чтоб не прыгало ничего при прогрузке страницы -----------------
 .block-refresh {
 
   .title-bar {
@@ -251,18 +237,16 @@ html, body {
     display: none;
   }
 }
-
-
-
+// Ширина развернутого сайдбара
 .sidebar .expand{
   width: 240px;
 }
-
 // Меняем выпадающий список профиля
 .dropdown-pane {
   width: 222px;
 }
-// Меняем стандартные чекбоксы и радиобуттоны
+// --------------- Меняем стандартные чекбоксы и радиобуттоны ---------------------
+
 // Скрываем стандартный инпут
 input[type=checkbox], input[type=radio] {
   display:none;
@@ -346,7 +330,8 @@ input[type=checkbox], input[type=radio] {
 // .clean-pad-right {
 //   padding-right: 0 !important;
 // }
-// Спрайты
+
+// ------------------------------------------ Спрайты --------------------------------------------
 .sprite {
   display: inline-block;
   vertical-align: middle;
@@ -369,43 +354,167 @@ input[type=checkbox], input[type=radio] {
     outline: none;
   }
 }
-// Иконки
-label {
-  position: relative;
+// ----------------------------------------- Иконки ----------------------------------------------
+// Страница входа
+.icon-login {
+  background: url(img/login.svg) no-repeat;
+  // background-position: 0px 0px;
+}
+.icon-password {
+  background: url(img/password.svg) no-repeat;
+  // background-position: 0px -16px;
+}
 
-  .sprite-input-left {
-    display: inline-block;
-    vertical-align: middle;
-    width: 16px;
-    height: 16px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0.5;
-  }
-  .sprite-input-right {
-    display: inline-block;
-    vertical-align: middle;
-    width: 16px;
-    height: 16px;
-    position: absolute;
-    top: 23px;
-    right: 8px;
-    // opacity: 0.5;
-    transition: 0.5s ease opacity;
-  }
+// Поиск города
+.icon-load {
+  background: url(img/loading.svg) no-repeat;
+  opacity: 0.5;
+}
+.icon-find-ok {
+  background-position: -16px -80px;
+  opacity: 1;
+}
+.icon-find-no {
+  background-position: -32px -80px;
+  opacity: 1;
+}
 
-  .icon-load {
-    background: url(img/loading.svg) no-repeat;
-    opacity: 0.5;
-  }
-  .icon-find-ok {
-    background-position: -16px -80px;
-    opacity: 1;
-  }
-  .icon-find-no {
-    background-position: -32px -80px;
-    opacity: 1;
+// Иконки в строке таблицы
+.icon-list-add {
+  background-position: -128px -768px; 
+}
+.icon-list-add:hover {
+  background-position: -96px -768px; 
+}
+.icon-list-edit {
+  background-position: -96px -800px; 
+}
+.icon-list-edit:hover {
+  background-position: -128px -800px; 
+}
+.icon-list-delete {
+  background-position: -96px -512px; 
+}
+.icon-list-delete:hover {
+  background-position: -128px -512px;
+}
+
+// Иконка общего добаления
+.icon-add {
+  background-position: 0px -384px;
+  opacity: 0.2;
+  margin-left: 1rem;
+  // z-index: 10;
+}
+.icon-add:hover {
+  background-position: 0px -384px;
+  opacity: 1;
+}
+// Иконка фильтра
+.icon-filter {
+  background-position: 0px -352px;
+  float: left;
+  margin-right: 0.4rem;
+}
+.icon-filter:hover {
+  background-position: -32px -352px;
+}
+.active-filter {
+  background-position: -64px -352px;
+}
+
+// Закрытие модалки
+.icon-close-modal {
+  background-position: 0px -608px;
+}  
+.icon-close-modal:hover {
+  background-position: -32px -608px;
+}
+
+// Иконки в таблице
+.icon-drop {
+  background-position: 0px -832px;
+  opacity: 0;
+  cursor: -webkit-grabbing;
+}
+
+.icon-edit {
+  background-position: -96px -800px; 
+}  
+.icon-edit:hover {
+  background-position: -128px -800px; 
+} 
+
+.icon-delete {
+  background-position: 0px -512px;
+}  
+.icon-delete:hover {
+  background-position: -32px -512px;
+} 
+// ---------- Инпуты (вынесены за контент т.к. модальное окно образуется за контентом) ---------
+.inputs {
+  label {
+    font-size: 0.875rem;
+    color: $content-input-color;
+    position: relative;
+
+    input, textarea {
+      margin-top: 0.25rem;
+      margin-bottom: 0.85rem;
+      height: 26px;
+      color: $content-input-color;
+      background-color: $white;
+      font-size: 0.8rem;
+      padding: 5px 12px;
+      border: 1px solid $content-input-border-color;
+      box-shadow: none;
+    }
+    textarea {
+      height: 8rem;
+    }
+    // Сообщение об ошибке в инпутах
+    .is-invalid-input:not(:focus) {
+      border-color: #cc4b37;
+      background-color: #f9ecea;
+    }
+    select {
+      margin-top: 0.25rem;
+      margin-bottom: 0.7rem;
+      height: 26px;
+      background-color: $white;
+      font-size: 0.8rem;
+      border: 1px solid $content-input-border-color;
+      padding: 4px 4px 3px 16px;
+
+      // Меняем положение стрелочки фонды
+      background-position: 100% center;
+    }
+    input:focus, select:focus, textarea:focus {
+      border: 1px solid $content-input-focus-border-color;
+    }
+
+    // Расположение иконки в инпуте
+    .sprite-input-left {
+      display: inline-block;
+      vertical-align: middle;
+      width: 16px;
+      height: 16px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0.5;
+    }
+    .sprite-input-right {
+      display: inline-block;
+      vertical-align: middle;
+      width: 16px;
+      height: 16px;
+      position: absolute;
+      top: 23px;
+      right: 8px;
+      // opacity: 0.5;
+      transition: 0.5s ease opacity;
+    }
   }
 }
 .department-error {
@@ -413,7 +522,7 @@ label {
   color: #cc4b37;
   display: none;
 }
-// Страница входа
+// ---------------------------------------- Страница входа -------------------------------------
 .enter-page {
   background-color: $white;
 }
@@ -443,14 +552,7 @@ label {
       opacity: 0.5;
       transition: 0.5s ease opacity;
     }
-    .icon-login {
-      background: url(img/login.svg) no-repeat;
-      // background-position: 0px 0px;
-    }
-    .icon-password {
-      background: url(img/password.svg) no-repeat;
-      // background-position: 0px -16px;
-    }
+
   }
   input:focus {
     border: none;
@@ -488,7 +590,7 @@ label {
     text-decoration: none;
   }
 }
-// Шапка
+// ------------------------------------------- Шапка -------------------------------------------
 .header-z-index {
   z-index: 98;
 }
@@ -588,7 +690,7 @@ label {
     }
   } 
 }
-// Сайдбар
+// ------------------------------------------- Сайдбар ----------------------------------------
 .sidebar {
   font-family: $PFDDPR;
   text-align: left;
@@ -811,7 +913,7 @@ label {
   max-width:10px !important;
   }
 }
-// Менеджер задач
+// ---------------------------------------- Менеджер задач ------------------------------------
 .task-manager {
   position: fixed;
   right: 0;
@@ -824,16 +926,16 @@ label {
   display: block;
   margin-right: -240px;
 
-    // Tabs в менеджере задач
+  // Tabs в менеджере задач
   .tabs-wrap {
     font-family: $SUISL;
 
-    //Обнуляем фонду, в активном состоянии
+    // Обнуляем фонду, в активном состоянии
     .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
       background-color: $task-manager-tabs-active-bg-color;
       color: $task-manager-tabs-active-color;
     }
-    //Меню с заголовками
+    // Меню с заголовками
     .tabs-list {
       margin-bottom: 2rem;
 
@@ -861,7 +963,7 @@ label {
         }
       }
     }
-    //Контент tabs
+    // Контент tabs
     .tabs-content {
       margin-top: 1.4rem;
 
@@ -904,7 +1006,6 @@ label {
             // max-width: auto;
             // min-width: 20%;
            
-            
           }
           hr {
             border: none;
@@ -973,17 +1074,14 @@ label {
             background-color: red;
           }
         }
-
-
       }
     }
   }
-
 }
 .task-active {
   margin-right: 0;
 }
-// Хлебные крошки
+// ----------------------------------------- Хлебные крошки -----------------------------------
 .breadcrumbs {
   margin: 0; // Обнуляем класс фонды
   background-color: $breadcrumbs-bg-color;
@@ -1002,56 +1100,14 @@ label {
     color: $breadcrumbs-a-color;
   }
 }
-// Инпуты (вынесены за контент т.к. модальное окно образуется за контентом)
-.inputs {
-  label {
-    font-size: 0.875rem;
-    color: $content-input-color;
 
-    input, textarea {
-      margin-top: 0.25rem;
-      margin-bottom: 0.85rem;
-      height: 26px;
-      color: $content-input-color;
-      background-color: $white;
-      font-size: 0.8rem;
-      padding: 5px 12px;
-      border: 1px solid $content-input-border-color;
-      box-shadow: none;
-    }
-    textarea {
-      height: 8rem;
-    }
-    // Сообщение об ошибке в инпутах
-    .is-invalid-input:not(:focus) {
-      border-color: #cc4b37;
-      background-color: #f9ecea;
-    }
-    select {
-      margin-top: 0.25rem;
-      margin-bottom: 0.7rem;
-      height: 26px;
-      background-color: $white;
-      font-size: 0.8rem;
-      border: 1px solid $content-input-border-color;
-      padding: 4px 4px 3px 16px;
-
-      // Меняем положение стрелочки фонды
-      background-position: 100% center;
-    }
-    input:focus, select:focus, textarea:focus {
-      border: 1px solid $content-input-focus-border-color;
-    }
-  }
-}
-// Переопределяем модалку фонды
+// -------------------------------------- Переопределяем модалку фонды -------------------------
 .reveal {
   padding: 0;
   border: 1px solid $black;
   border-radius: 0;
   background-color: $white;
   
-
   .modal-title {
     text-align: center;
     height: 3rem;
@@ -1082,15 +1138,7 @@ label {
     cursor: pointer;
 
   }
- .icon-close-modal {
-    background-position: 0px -608px;
-  }  
-  .icon-close-modal:hover {
-    background-position: -32px -608px;
-  }  
-
-
-   
+  
 }
 .rev-small {
   width: 500px;
@@ -1098,7 +1146,7 @@ label {
 .rev-large {
   width: 800px;
 }
-// Таблица поиска в модалке
+// ------------------------------------- Таблица поиска в модалке ------------------------------
 .table-content-search {
 
   caption {
@@ -1150,7 +1198,7 @@ label {
   width: 400px;
   z-index: 50;
 }
-// Tabs
+// ------------------------------------------------ Tabs ---------------------------------------
 .tabs-margin-top {
   margin-top: 2rem;
 }
@@ -1236,7 +1284,7 @@ label {
 .deny {
   color: red;
 }
-// Основной контент
+// ---------------------------------------- Основной контент ----------------------------------
 .content {
   padding: 30px 20px 44px 20px;
   z-index: 60;
@@ -1264,29 +1312,9 @@ label {
       font-size: 1.8rem;
       float: left;
     }
-    .icon-add {
-      background-position: 0px -384px;
-      opacity: 0.2;
-      margin-left: 1rem;
-      // z-index: 10;
-    }
-    .icon-add:hover {
-      background-position: 0px -384px;
-      opacity: 1;
-    }
-    // Правая сторона
-    .icon-filter {
-      background-position: 0px -352px;
-      float: left;
-      margin-right: 0.4rem;
-    }
-    .active-filter {
-      background-position: -64px -352px;
 
-    }
-     .icon-filter:hover {
-      background-position: -32px -352px;
-    }
+    // Правая сторона
+
     // обнуляем отступ фонды от кнопок и инпутов
     [type='search'], button {
       margin: 0;
@@ -1404,25 +1432,6 @@ label {
 
         li {
           padding: 8px 0;
-          
-          .icon-list-add {
-            background-position: -128px -768px; 
-          }
-          .icon-list-add:hover {
-            background-position: -96px -768px; 
-          }
-          .icon-list-edit {
-            background-position: -96px -800px; 
-          }
-          .icon-list-edit:hover {
-            background-position: -128px -800px; 
-          }
-          .icon-list-delete {
-            background-position: -96px -512px; 
-          }
-          .icon-list-delete:hover {
-            background-position: -128px -512px;
-          }
         }
       }
     }
@@ -1801,25 +1810,7 @@ label {
         line-height: 1;
       }
 
-      .icon-drop {
-        background-position: 0px -832px;
-        opacity: 0;
-        cursor: -webkit-grabbing;
-      }
 
-      .icon-edit {
-        background-position: -96px -800px; 
-      }  
-      .icon-edit:hover {
-        background-position: -128px -800px; 
-      } 
-      
-      .icon-delete {
-        background-position: 0px -512px;
-      }  
-      .icon-delete:hover {
-        background-position: -32px -512px;
-      } 
     }
     // Активная таблица (схлапывающаяся)
     .active {
@@ -1941,6 +1932,7 @@ label {
   }
 }
 
+// --------------------------------------------- Футер ----------------------------------------
 .footer {
   background-color: $sidebar-bg-color;
   padding: 6px 0 6px 240px;
@@ -1948,7 +1940,6 @@ label {
   bottom: 0;
   width: 100%;
   z-index: 96;
-
 
   .right {
     text-align: right;
@@ -1995,16 +1986,15 @@ label {
   }
 }
 
-// Мобильное расширение
+// ------------------------------------- Мобильное расширение ---------------------------------
 @media screen and (min-width: 1px) and (max-width: 639px) {
   .enter {
     margin: 2rem auto 2rem auto;
   }
   #wrapper {
     margin-left: 0;
-
   }
-  // Хеадер
+  // -------------------------------------- Мобильный Хедер -----------------------------------
   .header {
     height: auto;
 
@@ -2025,7 +2015,7 @@ label {
       }
     }  
   }
-  // Раздвигаем сайдбар на всю ширину
+  // -------------------------Раздвигаем мобильный сайдбар на всю ширину ------------------------
   .sidebar {
     position: fixed;
     width: 100%;
@@ -2040,7 +2030,7 @@ label {
       display: none;
     }
   }
-  // Менеджер задач
+  // --------------------------------- Мобильный менеджер задач ---------------------------------
   .task-active {
 
     width: 100%;
@@ -2048,11 +2038,11 @@ label {
   .task-manager {
     margin-bottom: 0;
   }
-  // Хлебные крошки
+  // ---------------------------------- Мобильный Хлебные крошки ---------------------------------
   .breadcrumbs {
     display: none;
   }
-
+  // ------------------------------------- Мобильный контент -------------------------------------
   .content {
     padding: 30px 0 20px 0;
 
@@ -2094,19 +2084,14 @@ label {
       } 
     }
   }
+  // Активные первые элементы списка (Шапки)
+  .first-active {
 
-
-    // Активные первые элементы списка (Шапки)
-    .first-active {
-
-      .first-link {
-        -webkit-touch-action: cross-slide-x;
-      }
- 
+    .first-link {
+      -webkit-touch-action: cross-slide-x;
     }
-  
-
-
+  }
+  // --------------------------------------- Футер ----------------------------------------------
   .footer {
     display: none;
   }

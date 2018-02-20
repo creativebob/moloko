@@ -61,9 +61,9 @@ class UserPolicy
         return $result;
     }
 
-    public function moderator(User $user, User $model)
+    public function moderator(User $user)
     {
-        $result = $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
+        $result = $this->getstatus($this->entity_name, null, 'moderator', $this->entity_dependence);
         return $result;
     }
 
