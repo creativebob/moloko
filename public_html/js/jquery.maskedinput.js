@@ -32,7 +32,7 @@ $.mask = {
 	},
 	autoclear: true,
 	dataName: "rawMaskFn",
-	placeholder: '_'
+	placeholder: ''
 };
 
 $.fn.extend({

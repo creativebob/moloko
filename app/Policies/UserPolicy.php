@@ -51,6 +51,7 @@ class UserPolicy
 
     public function update(User $user, User $model)
     { 
+
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
@@ -75,6 +76,7 @@ class UserPolicy
 
     public function god(User $user)
     {
+        // dd('lol');
         if(Auth::user()->god){return true;} else {return false;};
     }
 }

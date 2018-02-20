@@ -196,9 +196,10 @@ trait PoliticTrait
 
         if(isset($session['all_rights']['nolimit-'. $entity_name .'-allow'])) {
 
+
             // Нет ли блокировки этого права?
             if(!isset($session['all_rights']['nolimit-'. $entity_name .'-deny'])) {
-
+  
                 //Разрешаем, так как блокировки нет!
                 $nolimit_status = true;
                 
@@ -221,6 +222,7 @@ trait PoliticTrait
             if($nolimit_status == false){
 
                 if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow']['filials'][$model->filial_id])) {
+
 
                     // Нет ли блокировки этого права?
                     if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny']['filials'][$model->filial_id])) {

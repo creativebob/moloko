@@ -75,7 +75,7 @@
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
               <label>Почта
-                {{ Form::text('email', $user->email, ['class'=>'email-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[A-Za-z]{3,20}\@[A-Za-z]{7}\.[A-Za-z]{3}']) }}
+                {{ Form::email('email', $user->email, ['class'=>'email-field', 'maxlength'=>'30', 'autocomplete'=>'off']) }}
                 <span class="form-error">Укажите почту</span>
               </label>
               <label>Телеграм ID
@@ -279,15 +279,16 @@
       </fieldset> 
     </div>
 
+  @can ('moderator', $user)
     @if ($user->moderated == 1)
       <div class="small-12 cell checkbox">
         {{ Form::checkbox('moderation_status', null, $user->moderated, ['id'=>'moderation-checkbox']) }}
         <label for="moderation-checkbox"><span>Запись нуждается в модерации!</span></label>
       </div>
     @endif
+  @endcan
 
-
-    @can ('god', User::class)
+    @can ('god', $user)
       <div class="small-12 cell checkbox">
         {{ Form::checkbox('system_item', null, $user->system_item, ['id'=>'system-checkbox']) }}
         <label for="system-checkbox"><span>Сделать запись системной!</span></label>
