@@ -285,17 +285,13 @@ trait PoliticTrait
 
 
         // Гасим любую операцию над системной записью без компании
-        // 
-        // dd($user_status);
         if(($model->system_item == 1)&&($model->company_id == null)&&($user_status == null)){
-        return false;
-
+            return false;
         };
 
         // Проверка на возможность операций с системной записью
         if(($model->system_item == 1)&&($system_status == false)){
             return false;
-            // abort(403, 'Вам не разрешена операция над системной записью');
         };
 
         // Получаем статус наличия права в связке с филиалом (Есть или нет)

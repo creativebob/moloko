@@ -110,9 +110,6 @@ class UserController extends Controller
     	$user = new User;
         $roles = new Role;
 
-        // Подключение политики
-        $this->authorize('automoderate', $user);
-
     	return view('users.create', compact('user', 'roles', 'list_filials', 'list_departments', 'roles_list'));
     }
 
