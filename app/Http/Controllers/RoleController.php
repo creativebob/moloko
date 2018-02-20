@@ -131,6 +131,12 @@ class RoleController extends Controller
 
         if(isset($user->company_id)){$role->company_id = $user->company_id;} else { $role->system_item = 1;};
         $role->author_id = $user->id;
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        if($answer['automoderate'] == false){
+            $user->moderated = 1;
+        };
+        
         $role->save();
 
         if($role){
