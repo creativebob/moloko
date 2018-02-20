@@ -134,7 +134,7 @@ class RoleController extends Controller
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
-            $user->moderated = 1;
+            $role->moderated = 1;
         };
         
         $role->save();
