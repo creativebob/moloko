@@ -38,7 +38,7 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Название компании
-              {{ Form::text('company_name', $company->company_name, ['class'=>'company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+              {{ Form::text('company_name', $company->company_name, ['class'=>'company-name-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9-_]{30}']) }}
               </label>
             </div>
           </div>
@@ -59,7 +59,7 @@
             </div>
             <div class="small-12 medium-6 cell">
               <label>Почта
-                {{ Form::text('company_email', $company->company_email, ['class'=>'email-field company-email-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+                {{ Form::text('company_email', $company->company_email, ['class'=>'email-field company-email-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[A-Za-z]{3,20}\@[A-Za-z]{7}\.[A-Za-z]{3}']) }}
                 <span class="form-error">Укажите почту</span>
               </label>
               
@@ -74,13 +74,13 @@
                     $city_id = $company->city->city_id;
                   }
                 @endphp
-                {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
+                {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'maxlength'=>'40', 'pattern'=>'[А-Яа-яЁё0-9-\s]{3,40}', 'required']) }}
                 <div class="sprite-input-right find-status"></div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
                 {{ Form::hidden('city_id', $city_id, ['class'=>'city-id-field']) }}
               </label>
               <label>Адрес
-              {{ Form::text('company_address', $company->company_address, ['class'=>'company-address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+              {{ Form::text('company_address', $company->company_address, ['class'=>'company-address-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9.,_-/]{3,60}']) }}
               </label>
             </div>
 
@@ -100,7 +100,7 @@
             <div class="grid-x grid-padding-x"> 
               <div class="small-12 medium-6 cell">
                 <label>ИНН
-                {{ Form::text('company_inn', $company->user_id, ['class'=>'company_inn-field', 'id'=>'company_inn-field', 'maxlength'=>'10', 'autocomplete'=>'off']) }}
+                {{ Form::text('company_inn', $company->user_id, ['class'=>'company_inn-field', 'id'=>'company_inn-field', 'maxlength'=>'10', 'pattern'=>'[0-9]{10}', 'autocomplete'=>'off']) }}
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
@@ -132,7 +132,13 @@
     <div class="small-12 medium-5 large-7 cell tabs-margin-top">
     </div>
 
-
+    @if ($company->moderated == 1)
+      <div class="small-12 cell checkbox">
+        {{ Form::checkbox('moderation_status', null, $company->moderated==1, ['id'=>'moderation-checkbox']) }}
+        <label for="moderation-checkbox"><span>Модерация</span></label>
+      </div>
+    @endif
+    
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}
     </div>

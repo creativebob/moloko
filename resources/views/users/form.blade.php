@@ -38,13 +38,13 @@
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Фамилия
-              {{ Form::text('first_name', $user->first_name, ['class'=>'first-name-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+              {{ Form::text('second_name', $user->second_name, ['class'=>'second-name-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё]{3,20}']) }}
               </label>
               <label>Имя
-              {{ Form::text('second_name', $user->second_name, ['class'=>'second-name-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+              {{ Form::text('first_name', $user->first_name, ['class'=>'first-name-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё]{3,20}']) }}
               </label>
               <label>Отчество
-              {{ Form::text('patronymic', $user->patronymic, ['class'=>'patronymic-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+              {{ Form::text('patronymic', $user->patronymic, ['class'=>'patronymic-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё]{3,20}']) }}
               </label>
             </div>
           </div>
@@ -75,7 +75,7 @@
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
               <label>Почта
-                {{ Form::text('email', $user->email, ['class'=>'email-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+                {{ Form::text('email', $user->email, ['class'=>'email-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[A-Za-z]{3,20}\@[A-Za-z]{7}\.[A-Za-z]{3}']) }}
                 <span class="form-error">Укажите почту</span>
               </label>
               <label>Телеграм ID
@@ -94,13 +94,13 @@
                     $city_id = $user->city->city_id;
                   }
                 @endphp
-                {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
+                {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'maxlength'=>'40', 'required', 'pattern'=>'[А-Яа-яЁё0-9-\s]{3,40}']) }}
                 <div class="sprite-input-right find-status"></div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
                 {{ Form::hidden('city_id', $city_id, ['class'=>'city-id-field']) }}
               </label>
               <label>Адрес
-                {{ Form::text('address', $user->address, ['class'=>'address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+                {{ Form::text('address', $user->address, ['class'=>'address-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9.,_-/]{3,60}']) }}
               </label>
             </div>
           </div>
@@ -158,7 +158,7 @@
           <div class="grid-x grid-padding-x tabs-margin-top"> 
             <div class="small-12 medium-6 cell">
               <label>Название компании
-              {{ Form::text('company_name', $user->company_name, ['class'=>'company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+              {{ Form::text('company_name', $user->company_name, ['class'=>'company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9.,_-/\s()]{3,40}']) }}
               </label>
             </div>
           </div>
@@ -218,15 +218,15 @@
         <div class="grid-x grid-padding-x"> 
           <div class="small-12 cell tabs-margin-top">
             <label>Логин
-              {{ Form::text('login', $user->login, ['class'=>'login-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'required']) }}
+              {{ Form::text('login', $user->login, ['class'=>'login-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'required', 'pattern'=>'[A-Za-z0-9._-]{6,30}']) }}
               <span class="form-error">Обязательно нужно логиниться!</span>
             </label>
             <label>Пароль
-              {{ Form::password('password', ['class' => 'password', 'maxlength' => '30', 'id' => 'password']) }}
+              {{ Form::password('password', ['class' => 'password password-field', 'maxlength' => '20', 'id' => 'password', 'pattern'=>'[A-Za-z0-9]{6,20}', 'autocomplete'=>'off']) }}
               <span class="form-error">Введите пароль и повторите его, ну а что поделать, меняем ведь данные!</span>
             </label>
             <label>Пароль повторно
-              {{ Form::password('password', ['class' => 'password', 'maxlength' => '30', 'id' => 'password', 'data-equalto' => 'password']) }}
+              {{ Form::password('password', ['class' => 'password password-field', 'maxlength' => '30', 'id' => 'password-repeat', 'data-equalto' => 'password', 'pattern'=>'[A-Za-z0-9]{6,20}', 'autocomplete'=>'off']) }}
               <span class="form-error">Пароли не совпадают!</span>
             </label>
           </div>
@@ -278,6 +278,22 @@
         </div>
       </fieldset> 
     </div>
+
+    @if ($user->moderated == 1)
+      <div class="small-12 cell checkbox">
+        {{ Form::checkbox('moderation_status', null, $user->moderated, ['id'=>'moderation-checkbox']) }}
+        <label for="moderation-checkbox"><span>Запись нуждается в модерации!</span></label>
+      </div>
+    @endif
+
+
+    @can ('god', User::class)
+      <div class="small-12 cell checkbox">
+        {{ Form::checkbox('system_item', null, $user->system_item, ['id'=>'system-checkbox']) }}
+        <label for="system-checkbox"><span>Сделать запись системной!</span></label>
+      </div>
+    @endcan
+
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}
     </div>

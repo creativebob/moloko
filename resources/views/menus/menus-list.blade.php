@@ -36,7 +36,7 @@
 	  @if(isset($menu['children']))
      	<ul class="menu vertical medium-list accordion-menu nested" data-accordion-menu data-allow-all-closed data-multi-open="false">
 	      @foreach($menu['children'] as $menu)
-	        @include('menus-list', $menu)
+	        @include('menus.menus-list', $menu)
 	      @endforeach
 	    </ul>
     @endif

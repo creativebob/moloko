@@ -65,7 +65,7 @@ parent-item
       @endif
       @if (isset($department['children']))
         @foreach($department['children'] as $department)
-          @include('departments-list', $department)
+          @include('departments.departments-list', $department)
         @endforeach
       @endif
     </ul>

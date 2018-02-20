@@ -107,7 +107,7 @@ class DepartmentController extends Controller
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
     // dd($departments_tree);
-    return view('departments', compact('departments_tree', 'positions', 'page_info', 'pages', 'departments'));
+    return view('departments.index', compact('departments_tree', 'positions', 'page_info', 'pages', 'departments'));
   }
 
   // Получаем сторонние данные по 
@@ -195,7 +195,7 @@ class DepartmentController extends Controller
       'section_id' => $section_id,
       'item_id' => $item_id,
     ];
-    return view('departments', compact('departments_tree', 'positions', 'data', 'staff', 'page_info', 'departments')); 
+    return view('departments.index', compact('departments_tree', 'positions', 'data', 'staff', 'page_info', 'departments')); 
   }
 
   public function create()

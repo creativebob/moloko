@@ -28,7 +28,7 @@
     <div class="grid-x">
       <div class="small-12 cell filters" id="filters">
         <fieldset class="fieldset-filters inputs">
-          {{ Form::open(['route' => 'users.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
+          {{ Form::open(['data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
           <legend>Фильтрация</legend>
           <div class="grid-x grid-padding-x"> 
             <div class="small-6 cell">
@@ -118,7 +118,7 @@
                 @endif
                 @if (isset($department['children']))
                   @foreach($department['children'] as $department)
-                    @include('departments-list', $department)
+                    @include('departments.departments-list', $department)
                   @endforeach
                 @endif
               </ul>
@@ -144,22 +144,21 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label class="input-icon">Введите город
-          {{ Form::text('city_name', null, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
+          {{ Form::text('city_name', null, ['class'=>'city-check-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-\s]{3,40}', 'required']) }}
           <div class="sprite-input-right find-status"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
-          <input type="hidden" name="city_id" class="city-id-field">
-        </label>
+          <input type="hidden" name="city_id" class="city-id-field" pattern="[0-9]{,3}">
         </label>
         <label>Название филиала
-           {{ Form::text('filial_name', null, ['class'=>'filial-name-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_name', null, ['class'=>'filial-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9\s]{3,40}', 'required']) }}
         </label>
         <label>Адресс филиала
-           {{ Form::text('filial_address', null, ['class'=>'filial-address-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_address', null, ['class'=>'filial-address-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9\s]{3,40}', 'required']) }}
         </label>
         <label>Телефон филиала
-           {{ Form::text('filial_phone', null, ['class'=>'filial-phone-field phone-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_phone', null, ['class'=>'filial-phone-field phone-field', 'autocomplete'=>'off', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'required']) }}
         </label>
-        <input type="hidden" name="filial_db" class="filial-db" value="0">
+        <input type="hidden" name="filial_db" class="filial-db" value="0" pattern="[0-9]{1}>
       </div>
     </div>
     <div class="grid-x align-center">

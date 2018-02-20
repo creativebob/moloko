@@ -44,15 +44,10 @@ $(function() {
       checkall.checked = checkedCount > 0;
       checkall.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
       console.log('Ставим главному статус ' + checkall.checked + ' и меняем спрайт');
+
+      alert('sdfsdf');
     };
   };
-
-  $(document).on('click', '.td-checkbox', function() {
-
-    alert('sdfsdf');
-
-
-  });
 
   // Ловим клики по чекбоксам и пишем в базу:
   // Создаем дефолтный список данной сущности для юзера (booklist) и
