@@ -355,6 +355,15 @@ input[type=checkbox], input[type=radio] {
   }
 }
 // ----------------------------------------- Иконки ----------------------------------------------
+// Страница входа
+.icon-login {
+  background: url(img/login.svg) no-repeat;
+  // background-position: 0px 0px;
+}
+.icon-password {
+  background: url(img/password.svg) no-repeat;
+  // background-position: 0px -16px;
+}
 // Поиск города
 .icon-load {
   background: url(img/loading.svg) no-repeat;
@@ -481,30 +490,29 @@ input[type=checkbox], input[type=radio] {
     input:focus, select:focus, textarea:focus {
       border: 1px solid $content-input-focus-border-color;
     }
-
-    // Расположение иконки в инпуте
-    .sprite-input-left {
-      display: inline-block;
-      vertical-align: middle;
-      width: 16px;
-      height: 16px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      opacity: 0.5;
-    }
-    .sprite-input-right {
-      display: inline-block;
-      vertical-align: middle;
-      width: 16px;
-      height: 16px;
-      position: absolute;
-      top: 23px;
-      right: 8px;
-      // opacity: 0.5;
-      transition: 0.5s ease opacity;
-    }
   }
+}
+// Расположение иконки в инпуте
+.sprite-input-left {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  // opacity: 0.5;
+}
+.sprite-input-right {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 23px;
+  right: 8px;
+  // opacity: 0.5;
+  transition: 0.5s ease opacity;
 }
 .department-error {
   padding-bottom: 1rem;
@@ -528,14 +536,6 @@ input[type=checkbox], input[type=radio] {
   label {
     position: relative;
     // Страница входа
-.icon-login {
-  background: url(img/login.svg) no-repeat;
-  // background-position: 0px 0px;
-}
-.icon-password {
-  background: url(img/password.svg) no-repeat;
-  // background-position: 0px -16px;
-}
   }
   input {
     border: none;
