@@ -60,6 +60,12 @@ class CompanyPolicy
         return $result;
     }
 
+    public function automoderate(User $user, Company $model)
+    {
+        $result = $this->getstatus($this->entity_name, $model, 'automoderate', $this->entity_dependence);
+        return $result;
+    }
+
     public function god(User $user)
     {
         if(Auth::user()->god){return true;} else {return false;};
