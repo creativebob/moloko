@@ -45,7 +45,7 @@ $(function() {
       checkall.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
       console.log('Ставим главному статус ' + checkall.checked + ' и меняем спрайт');
 
-      alert('sdfsdf');
+      alert('Переменную могу отдать куда тибе надабна');
     };
   };
 
@@ -58,8 +58,6 @@ $(function() {
       console.log('Видим клик по главному, ставим его положение всем = ' + this.checked);
     };
   };
-
-
 
   console.log('Завершение функции чекбоксов');
   console.log('-----');

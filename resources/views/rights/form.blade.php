@@ -79,6 +79,22 @@
 
       </fieldset> 
     </div>
+
+    @can ('moderator', $right)
+      @if ($right->moderated == 1)
+        <div class="small-12 cell checkbox">
+          {{ Form::checkbox('moderation_status', null, $right->moderated, ['id'=>'moderation-checkbox']) }}
+          <label for="moderation-checkbox"><span>Временная запись!</span></label>
+        </div>
+      @endif
+    @endcan
+
+    @can ('god', $right)
+      <div class="small-12 cell checkbox">
+        {{ Form::checkbox('system_item', null, $right->system_item, ['id'=>'system-checkbox']) }}
+        <label for="system-checkbox"><span>Сделать запись системной.</span></label>
+      </div>
+    @endcan
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}
     </div>

@@ -56,7 +56,7 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($entities))
         @foreach($entities as $entity)
-        <tr class="parent @if(Auth::user()->entity_id == $entity->id)active @endif" id="entities-{{ $entity->id }}" data-name="{{ $entity->entity_name }}">
+        <tr class="parent @if(Auth::user()->entity_id == $entity->id)active @endif  @if($entity->moderated == 1)no-moderation @endif" id="entities-{{ $entity->id }}" data-name="{{ $entity->entity_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $entity->id }}"><label class="label-check" for="check-{{ $entity->id }}"></label></td>
           <td class="td-entity-name">

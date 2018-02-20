@@ -39,7 +39,21 @@
     <div class="small-12 medium-5 large-7 cell tabs-margin-top">
     </div>
 
+    @can ('moderator', $role)
+      @if ($role->moderated == 1)
+        <div class="small-12 cell checkbox">
+          {{ Form::checkbox('moderation_status', null, $role->moderated, ['id'=>'moderation-checkbox']) }}
+          <label for="moderation-checkbox"><span>Временная запись!</span></label>
+        </div>
+      @endif
+    @endcan
 
+    @can ('god', $role)
+      <div class="small-12 cell checkbox">
+        {{ Form::checkbox('system_item', null, $role->system_item, ['id'=>'system-checkbox']) }}
+        <label for="system-checkbox"><span>Сделать запись системной.</span></label>
+      </div>
+    @endcan
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}
     </div>

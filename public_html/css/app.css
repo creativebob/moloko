@@ -300,127 +300,137 @@ input[type=checkbox], input[type=radio] {
 }
 
 /* line 359, ../sass/app.scss */
+.icon-login {
+  background: url(img/login.svg) no-repeat;
+}
+
+/* line 363, ../sass/app.scss */
+.icon-password {
+  background: url(img/password.svg) no-repeat;
+}
+
+/* line 368, ../sass/app.scss */
 .icon-load {
   background: url(img/loading.svg) no-repeat;
   opacity: 0.5;
 }
 
-/* line 363, ../sass/app.scss */
+/* line 372, ../sass/app.scss */
 .icon-find-ok {
   background-position: -16px -80px;
   opacity: 1;
 }
 
-/* line 367, ../sass/app.scss */
+/* line 376, ../sass/app.scss */
 .icon-find-no {
   background-position: -32px -80px;
   opacity: 1;
 }
 
-/* line 373, ../sass/app.scss */
+/* line 382, ../sass/app.scss */
 .icon-list-add {
   background-position: -128px -768px;
 }
 
-/* line 376, ../sass/app.scss */
+/* line 385, ../sass/app.scss */
 .icon-list-add:hover {
   background-position: -96px -768px;
 }
 
-/* line 379, ../sass/app.scss */
+/* line 388, ../sass/app.scss */
 .icon-list-edit {
   background-position: -96px -800px;
 }
 
-/* line 382, ../sass/app.scss */
+/* line 391, ../sass/app.scss */
 .icon-list-edit:hover {
   background-position: -128px -800px;
 }
 
-/* line 385, ../sass/app.scss */
+/* line 394, ../sass/app.scss */
 .icon-list-delete {
   background-position: -96px -512px;
 }
 
-/* line 388, ../sass/app.scss */
+/* line 397, ../sass/app.scss */
 .icon-list-delete:hover {
   background-position: -128px -512px;
 }
 
-/* line 393, ../sass/app.scss */
+/* line 402, ../sass/app.scss */
 .icon-add {
   background-position: 0px -384px;
   opacity: 0.2;
   margin-left: 1rem;
 }
 
-/* line 399, ../sass/app.scss */
+/* line 408, ../sass/app.scss */
 .icon-add:hover {
   background-position: 0px -384px;
   opacity: 1;
 }
 
-/* line 404, ../sass/app.scss */
+/* line 413, ../sass/app.scss */
 .icon-filter {
   background-position: 0px -352px;
   float: left;
   margin-right: 0.4rem;
 }
 
-/* line 409, ../sass/app.scss */
+/* line 418, ../sass/app.scss */
 .icon-filter:hover {
   background-position: -32px -352px;
 }
 
-/* line 412, ../sass/app.scss */
+/* line 421, ../sass/app.scss */
 .active-filter {
   background-position: -64px -352px;
 }
 
-/* line 417, ../sass/app.scss */
+/* line 426, ../sass/app.scss */
 .icon-close-modal {
   background-position: 0px -608px;
 }
 
-/* line 420, ../sass/app.scss */
+/* line 429, ../sass/app.scss */
 .icon-close-modal:hover {
   background-position: -32px -608px;
 }
 
-/* line 425, ../sass/app.scss */
+/* line 434, ../sass/app.scss */
 .icon-drop {
   background-position: 0px -832px;
   opacity: 0;
   cursor: -webkit-grabbing;
 }
 
-/* line 430, ../sass/app.scss */
+/* line 439, ../sass/app.scss */
 .icon-edit {
   background-position: -96px -800px;
 }
 
-/* line 433, ../sass/app.scss */
+/* line 442, ../sass/app.scss */
 .icon-edit:hover {
   background-position: -128px -800px;
 }
 
-/* line 437, ../sass/app.scss */
+/* line 446, ../sass/app.scss */
 .icon-delete {
   background-position: 0px -512px;
 }
 
-/* line 440, ../sass/app.scss */
+/* line 449, ../sass/app.scss */
 .icon-delete:hover {
   background-position: -32px -512px;
 }
 
-/* line 445, ../sass/app.scss */
+/* line 454, ../sass/app.scss */
 .inputs label {
   font-size: 0.875rem;
   color: #666666;
   position: relative;
 }
-/* line 450, ../sass/app.scss */
+/* line 459, ../sass/app.scss */
 .inputs label input, .inputs label textarea {
   margin-top: 0.25rem;
   margin-bottom: 0.85rem;
@@ -432,16 +442,16 @@ input[type=checkbox], input[type=radio] {
   border: 1px solid #999999;
   box-shadow: none;
 }
-/* line 461, ../sass/app.scss */
+/* line 470, ../sass/app.scss */
 .inputs label textarea {
   height: 8rem;
 }
-/* line 465, ../sass/app.scss */
+/* line 474, ../sass/app.scss */
 .inputs label .is-invalid-input:not(:focus) {
   border-color: #cc4b37;
   background-color: #f9ecea;
 }
-/* line 469, ../sass/app.scss */
+/* line 478, ../sass/app.scss */
 .inputs label select {
   margin-top: 0.25rem;
   margin-bottom: 0.7rem;
@@ -452,12 +462,13 @@ input[type=checkbox], input[type=radio] {
   padding: 4px 4px 3px 16px;
   background-position: 100% center;
 }
-/* line 481, ../sass/app.scss */
+/* line 490, ../sass/app.scss */
 .inputs label input:focus, .inputs label select:focus, .inputs label textarea:focus {
   border: 1px solid #333333;
 }
-/* line 486, ../sass/app.scss */
-.inputs label .sprite-input-left {
+
+/* line 496, ../sass/app.scss */
+.sprite-input-left {
   display: inline-block;
   vertical-align: middle;
   width: 16px;
@@ -465,10 +476,10 @@ input[type=checkbox], input[type=radio] {
   position: absolute;
   top: 0;
   left: 0;
-  opacity: 0.5;
 }
-/* line 496, ../sass/app.scss */
-.inputs label .sprite-input-right {
+
+/* line 506, ../sass/app.scss */
+.sprite-input-right {
   display: inline-block;
   vertical-align: middle;
   width: 16px;
@@ -479,41 +490,33 @@ input[type=checkbox], input[type=radio] {
   transition: 0.5s ease opacity;
 }
 
-/* line 509, ../sass/app.scss */
+/* line 517, ../sass/app.scss */
 .department-error {
   padding-bottom: 1rem;
   color: #cc4b37;
   display: none;
 }
 
-/* line 515, ../sass/app.scss */
+/* line 523, ../sass/app.scss */
 .enter-page {
   background-color: #ffffff;
 }
 
-/* line 518, ../sass/app.scss */
+/* line 526, ../sass/app.scss */
 .enter {
   max-width: 15rem;
   margin: 10rem auto 0 auto;
   font-family: "SegoeUISemiLight";
   font-size: 0.75rem;
 }
-/* line 524, ../sass/app.scss */
+/* line 532, ../sass/app.scss */
 .enter .logo {
   display: block;
   margin: 0 auto 2rem auto;
 }
-/* line 528, ../sass/app.scss */
+/* line 536, ../sass/app.scss */
 .enter label {
   position: relative;
-}
-/* line 531, ../sass/app.scss */
-.enter label .icon-login {
-  background: url(img/login.svg) no-repeat;
-}
-/* line 535, ../sass/app.scss */
-.enter label .icon-password {
-  background: url(img/password.svg) no-repeat;
 }
 /* line 540, ../sass/app.scss */
 .enter input {
