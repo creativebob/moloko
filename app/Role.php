@@ -5,8 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Scopes\ModerationScope;
-
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
@@ -36,6 +34,7 @@ class Role extends Model
       'role_description', 
       'category_right_id', 
     ];
+
 
     /**
   * Получаем пользователей.

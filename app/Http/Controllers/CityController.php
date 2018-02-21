@@ -27,10 +27,12 @@ class CityController extends Controller
   {
     // Получаем метод
     $method = __FUNCTION__;
+
     // Подключение политики
     $this->authorize($method, Region::class);
     $this->authorize($method, Area::class);
     $this->authorize($method, City::class);
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right('regions', $this->entity_dependence, $method);
     // dd($answer);
@@ -38,17 +40,19 @@ class CityController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
     $regions = Region::with('areas', 'areas.cities', 'cities')
-      ->withoutGlobalScope($answer['moderator'])
       ->moderatorLimit($answer)
       // ->companiesLimit($answer['company_id']) нет фильтра по компаниям
       ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
       ->authors($answer)
       ->systemItem($answer) // Фильтр по системным записям
       ->get();
+
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
     return view('cities.index', compact('regions', 'page_info')); 
   }
+
+
   // Получаем сторонние данные по 
   public function current_city($region, $area)
   {
@@ -64,7 +68,6 @@ class CityController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
     $regions = Region::with('areas', 'areas.cities', 'cities')
-      ->withoutGlobalScope($answer['moderator'])
       ->moderatorLimit($answer)
       // ->companiesLimit($answer['company_id']) нет фильтра по компаниям
       ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -94,6 +97,7 @@ class CityController extends Controller
     $this->authorize($method, Region::class);
     $this->authorize($method, Area::class);
     $this->authorize($method, City::class);
+
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
     $user_id = $user->id;
@@ -241,10 +245,18 @@ class CityController extends Controller
 
   public function destroy(Request $request, $id)
   { 
+
+    // Получаем метод
+    $method = 'delete';
+
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+
     // Удаляем город с обновлением
     // Находим область и район города
     $user = $request->user();
-    $city = City::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $city = City::moderatorLimit($answer)->findOrFail($id);
+
     // Подключение политики
     $this->authorize('delete', $city);
     if ($city) {
@@ -333,9 +345,16 @@ class CityController extends Controller
   // Получаем список городов из нашей базы
   public function cities_list(CityRequest $request)
   {
+
+    // Получаем метод
+    $method = 'index';
+
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right('cities', $this->entity_dependence, $method);
+
     // Проверка города в нашей базе данных
     $city_name = $request->city_name;
-    $cities = City::where('city_name', 'like', $city_name.'%')->get();
+    $cities = City::moderatorLimit($answer)->where('city_name', 'like', $city_name.'%')->get();
     $count = $cities->count();
     if ($count > 0) {
       $objRes = (object) [];

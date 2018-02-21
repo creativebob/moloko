@@ -42,8 +42,7 @@ class BooklistController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $booklists = Booklist::withoutGlobalScope($answer['moderator'])
-        ->moderatorLimit($answer)
+        $booklists = Booklist::moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)

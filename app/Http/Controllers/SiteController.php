@@ -36,7 +36,6 @@ class SiteController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
     $sites = Site::with('author', 'company')
-    ->withoutGlobalScope($answer['moderator'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -57,8 +56,7 @@ class SiteController extends Controller
     $this->authorize($method, Site::class);
     // Список меню для сайта
     $answer = operator_right('pages', $this->entity_dependence, $method);
-    $menus = Menu::withoutGlobalScope($answer['moderator'])
-    ->moderatorLimit($answer)
+    $menus = Menu::moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
@@ -123,13 +121,12 @@ class SiteController extends Controller
     // Получаем метод
     $method = 'update';
     // ГЛАВНЫЙ ЗАПРОС:
-    $site = Site::withoutGlobalScope(ModerationScope::class)->whereSite_alias($site_alias)->first();
+    $site = Site::moderatorLimit($answer)->whereSite_alias($site_alias)->first();
     // Подключение политики
     $this->authorize($method, $site);
     // Список меню для сайта
     $answer = operator_right('sites', $this->entity_dependence, $method);
-    $menus = Menu::withoutGlobalScope($answer['moderator'])
-    ->moderatorLimit($answer)
+    $menus = Menu::moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
@@ -148,7 +145,7 @@ class SiteController extends Controller
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, true, $method);
     // ГЛАВНЫЙ ЗАПРОС:
-    $site = Site::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+    $site = Site::moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize('update', $site);
     $site->site_name = $request->site_name;
@@ -186,7 +183,7 @@ class SiteController extends Controller
   {
     $user = $request->user();
     // ГЛАВНЫЙ ЗАПРОС:
-    $site = Site::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $site = Site::moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize('delete', $site);
     if ($site) {
@@ -211,7 +208,7 @@ class SiteController extends Controller
     public function sections($site_alias)
     { 
       // dd($site_alias);
-      $site = Site::with('menus', 'author')->whereSite_alias($site_alias)->first();
+      $site = Site::with('menus', 'author')->moderatorLimit($answer)->whereSite_alias($site_alias)->first();
       return view('sites.sections', compact('site'));
     }
 }

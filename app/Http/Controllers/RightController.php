@@ -46,7 +46,6 @@ class RightController extends Controller
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
         $rights = Right::with('actionentity')
-        ->withoutGlobalScope($answer['moderator'])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null

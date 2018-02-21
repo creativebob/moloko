@@ -34,8 +34,6 @@ class MenuController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
     $site = Site::with(['pages', 'navigations', 'navigations.menus', 'navigations.menus.page'])
-    
-    ->withoutGlobalScope($answer['moderator'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -140,7 +138,6 @@ class MenuController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
     $site = Site::with(['pages', 'navigations', 'navigations.menus', 'navigations.menus.page'])
-    ->withoutGlobalScope($answer['moderator'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -310,11 +307,11 @@ class MenuController extends Controller
     // Получаем метод
     $method = 'update';
     // ГЛАВНЫЙ ЗАПРОС:
-    $menu = Menu::withoutGlobalScope(ModerationScope::class)->findOrFail($id);;
+    $menu = Menu::moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize($method, $menu);
    
-    $navigation = Navigation::with('menus')->findOrFail($menu->navigation_id);
+    $navigation = Navigation::with('menus')->moderatorLimit($answer)->findOrFail($menu->navigation_id);
     $menus = $navigation->menus->pluck('menu_name', 'id');
     // dd($menus);
     $result = [
@@ -347,7 +344,7 @@ class MenuController extends Controller
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, true, $method);
     // ГЛАВНЫЙ ЗАПРОС:
-    $menu = Menu::with('navigation')->withoutGlobalScope($answer['moderator'])->findOrFail($id);
+    $menu = Menu::with('navigation')->moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize($method, $menu);
     $site_id = $menu->navigation->site_id;
@@ -376,7 +373,7 @@ class MenuController extends Controller
   public function destroy(Request $request, $site_alias, $id)
   {
     // ГЛАВНЫЙ ЗАПРОС:
-    $menu = Menu::with('navigation')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $menu = Menu::with('navigation')->moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize('delete', $menu);
     $user = $request->user();

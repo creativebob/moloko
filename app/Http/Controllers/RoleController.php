@@ -54,7 +54,6 @@ class RoleController extends Controller
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
         $roles = Role::with('rights', 'company', 'author')
-        ->withoutGlobalScope($answer['moderator'])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -136,7 +135,7 @@ class RoleController extends Controller
         if($answer['automoderate'] == false){
             $role->moderated = 1;
         };
-        
+
         $role->save();
 
         if($role){
@@ -152,7 +151,7 @@ class RoleController extends Controller
     {
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        $role = Role::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize('view', $role);
@@ -164,7 +163,7 @@ class RoleController extends Controller
     {
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        $role = Role::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize('update', $role);
@@ -185,7 +184,7 @@ class RoleController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+        $role = Role::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize('update', $role);
@@ -200,7 +199,7 @@ class RoleController extends Controller
     public function destroy($id)
     {
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        $role = Role::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize('delete', $role);
@@ -217,7 +216,7 @@ class RoleController extends Controller
     {
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::withoutGlobalScope(ModerationScope::class)->findOrFail($role_id);
+        $role = Role::moderatorLimit($answer)->findOrFail($role_id);
 
         // Подключение политики
         $this->authorize('update', $role);
@@ -398,7 +397,7 @@ class RoleController extends Controller
         // dd($main_mass_deny);
 
         // 
-        return view('roles.setting', compact('main_mass', 'main_mass_deny', 'actions', 'role_id'));
+        return view('roles.setting', compact('main_mass', 'main_mass_deny', 'actions', 'role_id', 'role'));
     }
 
 
@@ -409,7 +408,7 @@ class RoleController extends Controller
         $user = $request->user();      
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::withoutGlobalScope(ModerationScope::class)->findOrFail($request->role_id);
+        $role = Role::moderatorLimit($answer)->findOrFail($request->role_id);
 
         // Подключение политики
         $this->authorize('update', $role);

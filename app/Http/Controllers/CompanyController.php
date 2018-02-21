@@ -47,7 +47,7 @@ class CompanyController extends Controller
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
         $companies = Company::with('author', 'director', 'city')
-        ->withoutGlobalScope($answer['moderator'])
+        ->moderatorLimit($answer)
         ->moderatorLimit($answer)
         ->companyFilter($request)
         ->orderBy('moderated', 'desc')
@@ -57,7 +57,7 @@ class CompanyController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $filter_query = Company::with('city')->withoutGlobalScope($answer['moderator'])->moderatorLimit($answer)->get();
+        $filter_query = Company::with('city')->moderatorLimit($answer)->get();
         $filter = getFilterCompany($filter_query);
 
         // Инфо о странице
@@ -86,7 +86,7 @@ class CompanyController extends Controller
     {
 
         // Получаем метод
-        $method = __FUNCTION__;
+        $method = 'create';
 
         // Подключение политики
         $this->authorize('create', Company::class);
@@ -126,8 +126,14 @@ class CompanyController extends Controller
     public function show($id)
     {
 
+        // Получаем метод
+        $method = 'view';
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+
         // ГЛАВНЫЙ ЗАПРОС:
-        $company = Company::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        $company = Company::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize('view', $company);
@@ -137,7 +143,14 @@ class CompanyController extends Controller
 
     public function edit($id)
     {
-        $company = Company::with('city')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+
+        // Получаем метод
+        $method = 'update';
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+
+        $company = Company::with('city')->moderatorLimit($answer)->findOrFail($id);
         $this->authorize('update', $company);
 
         return view('companies.edit', compact('company'));
@@ -157,7 +170,7 @@ class CompanyController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $company = Company::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+        $company = Company::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize('update', $company);
@@ -188,8 +201,14 @@ class CompanyController extends Controller
     public function destroy($id)
     {
 
+        // Получаем метод
+        $method = 'delete';
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+
         // ГЛАВНЫЙ ЗАПРОС:
-        $company = Company::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        $company = Company::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize('delete', $company);

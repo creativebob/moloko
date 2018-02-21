@@ -49,7 +49,7 @@ class RegionController extends Controller
     if ($region_database == 0) {
       // Проверка области в нашей базе данных
       $region_name = $request->region_name;
-      $regions = Region::whereRegion_name($region_name)->first();
+      $regions = Region::moderatorLimit($answer)->whereRegion_name($region_name)->first();
       if ($regions) {
         $result = [
           'error_message' => 'Область уже добавлена в нашу базу!',
@@ -110,7 +110,7 @@ class RegionController extends Controller
     $user = $request->user();
     // Удаляем ajax
     // Проверяем содержит ли область вложенные населенные пункты
-    $region = Region::with('areas', 'cities')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $region = Region::with('areas', 'cities')->moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize('delete', $region);
     if ((count($region->areas) > 0) || (count($region->cities) > 0)) {

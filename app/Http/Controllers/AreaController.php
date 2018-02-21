@@ -48,10 +48,18 @@ class AreaController extends Controller
 
   public function destroy(Request $request, $id)
   {
+
+    // Получаем метод
+    $method = 'delete';
+
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right('areas', $this->entity_dependence, $method);
+
     // Удаляем с обновлением
     // Находим область и район города
-    $area = Area::with('cities')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $area = Area::with('cities')->moderatorLimit($answer)->findOrFail($id);
     $region_id = $area->region_id;
+    
     // Подключение политики
     $this->authorize('delete', $area);
     // dd($area);

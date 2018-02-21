@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 // Фильтры
-use App\Scopes\ModerationScope;
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
@@ -36,6 +35,7 @@ class RoleUser extends Model
       'position_id',
       'author_id',
     ];
+
   /*
     * Получаем категорию.
   */
@@ -43,10 +43,12 @@ class RoleUser extends Model
   {
     return $this->belongsTo('App\Department');
   }
+
   public function position()
   {
     return $this->belongsTo('App\Position');
   }
+
   public function role()
   {
     return $this->belongsTo('App\Role');

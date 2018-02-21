@@ -10,13 +10,16 @@ use App\Department;
 use App\User;
 use App\Page;
 use App\Company;
+
 // Валидация
 use App\Http\Requests\EmployeeRequest;
+
 // Политика
 use App\Policies\EmployeePolicy;
 use App\Policies\StafferPolicy;
 use App\Policies\PositionPolicy;
 use App\Policies\DepartmentPolicy;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +39,7 @@ class EmployeeController extends Controller
         $this->authorize($method, Employee::class);
         $this->authorize($method, Position::class);
         $this->authorize($method, Staffer::class);
+
         // $this->authorize($method, Department::class);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
@@ -43,7 +47,6 @@ class EmployeeController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
         $employees = Employee::with('staffer', 'staffer.position', 'staffer.filial', 'staffer.department', 'user')
-        ->withoutGlobalScope($answer['moderator'])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -51,12 +54,17 @@ class EmployeeController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->orderBy('moderated', 'desc')
         ->paginate(30);
+
         // Смотрим сколько филиалов в компании
         $user = $request->user();
-        $company = Company::with(['departments' => function($query) {
-          $query->whereFilial_status(1);
+        $answer_company = operator_right('companies', false, 'view');
+
+        $company = Company::with(['departments' => function($query) use ($answer_company) {
+          $query->moderatorLimit($answer_company)->whereFilial_status(1);
         }])->findOrFail($user->company_id);
+
         $filials = count($company->departments);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
         return view('employees.index', compact('employees', 'page_info', 'filials'));
@@ -86,7 +94,7 @@ class EmployeeController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, true, $method);
         // ГЛАВНЫЙ ЗАПРОС:
-        $employee = Employee::with('user')->withoutGlobalScope($answer['moderator'])->findOrFail($id);
+        $employee = Employee::with('user')->moderatorLimit($answer)->findOrFail($id);
         // Подключение политики
         $this->authorize($method, $employee);
         // Список меню для сайта
@@ -104,7 +112,7 @@ class EmployeeController extends Controller
         // Получаем авторизованного пользователя
         $user = $request->user();
         // ГЛАВНЫЙ ЗАПРОС:
-        $employee = Employee::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        $employee = Employee::moderatorLimit($answer)->findOrFail($id);
         // Подключение политики
         $this->authorize('update', $employee);
         // Перезаписываем данные

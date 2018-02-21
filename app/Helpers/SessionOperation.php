@@ -22,13 +22,13 @@
             {
 
                 // Буду иметь возможность модерировать записи - буду их видеть
-                $moderator = ModerationScope::class;
+                $moderator = true;
                 // dd($moderator);
 
             } else {
 
                 // Не буду видеть не отмодерированные записи и не смогу их модерировать
-                $moderator = null;
+                $moderator = false;
 
             };
 

@@ -12,18 +12,18 @@ class ModerationScope implements Scope
     /**
      * Apply the scope to a given Eloquent query builder.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $builder
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  \Illuminate\Database\Eloquent\Builder $builder
+     * @param  \Illuminate\Database\Eloquent\Model $model
      * @return void
      */
     public function apply(Builder $builder, Model $model)
     {
 
+        // dd($model);
         // Получаем данные из сессии
         $session  = session('access');
         $user_id = $session['user_info']['user_id'];
 
-        $builder->where('moderated', null)
-        ->orWhere(function ($builder) use ($user_id) {$builder->Where('moderated', 1)->Where('author_id', $user_id);});
+        $builder->where('moderated', null)->orWhere(function ($builder) use ($user_id) {$builder->Where('moderated', 1)->Where('author_id', $user_id);});
     }
 }
