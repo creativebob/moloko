@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
-  @include('includes.pickmeup-inhead')
+  @include('includes.scripts.pickmeup-inhead')
 @endsection
 
 @section('title', 'Редактировать сотрудника')

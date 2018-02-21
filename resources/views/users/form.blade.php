@@ -38,13 +38,13 @@
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Фамилия
-              {{ Form::text('second_name', $user->second_name, ['class'=>'second-name-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё]{3,20}']) }}
+              {{ Form::text('second_name', $user->second_name, ['class'=>'second-name-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'^[А-Яа-яЁё]+${3,20}']) }}
               </label>
               <label>Имя
-              {{ Form::text('first_name', $user->first_name, ['class'=>'first-name-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё]{3,20}']) }}
+              {{ Form::text('first_name', $user->first_name, ['class'=>'first-name-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'^[А-Яа-яЁё]+${3,20}']) }}
               </label>
               <label>Отчество
-              {{ Form::text('patronymic', $user->patronymic, ['class'=>'patronymic-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё]{3,20}']) }}
+              {{ Form::text('patronymic', $user->patronymic, ['class'=>'patronymic-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'^[А-Яа-яЁё]+${3,20}']) }}
               </label>
             </div>
           </div>
@@ -61,13 +61,13 @@
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                {{ Form::text('phone', $user->phone, ['class'=>'phone-field', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off', 'required']) }}
+                {{ Form::text('phone', $user->phone, ['class'=>'phone-mask', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off', 'required']) }}
                 <span class="form-error">Введите все символы телефонного номера!</span>
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                {{ Form::text('extra_phone', $user->extra_phone, ['class'=>'phone-field', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off']) }}
+                {{ Form::text('extra_phone', $user->extra_phone, ['class'=>'phone-mask', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off']) }}
                 <span class="form-error">Введите все символы телефонного номера!</span>
               </label>
             </div>
@@ -79,7 +79,7 @@
                 <span class="form-error">Укажите почту</span>
               </label>
               <label>Телеграм ID
-                {{ Form::text('telegram_id', $user->telegram_id, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
+                {{ Form::text('telegram_id', $user->telegram_id, ['class'=>'telegram-id-mask telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
                 <span class="form-error">Укажите номер Telegram</span>
               </label>
               
@@ -94,13 +94,13 @@
                     $city_id = $user->city->city_id;
                   }
                 @endphp
-                {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'maxlength'=>'40', 'required', 'pattern'=>'[А-Яа-яЁё0-9-\s]{3,40}']) }}
+                {{ Form::text('city_name', $city_name, ['class'=>'varchar-mask city-check-field', 'autocomplete'=>'off', 'maxlength'=>'40', 'required', 'pattern'=>'[А-Яа-яЁё0-9-\s]{3,40}']) }}
                 <div class="sprite-input-right find-status"></div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
                 {{ Form::hidden('city_id', $city_id, ['class'=>'city-id-field']) }}
               </label>
               <label>Адрес
-                {{ Form::text('address', $user->address, ['class'=>'address-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9.,_-/]{3,60}']) }}
+                {{ Form::text('address', $user->address, ['class'=>'varchar-mask address-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9.,_-/]{3,60}']) }}
               </label>
             </div>
           </div>
@@ -110,7 +110,7 @@
           <div class="grid-x grid-padding-x">
             <div class="small-5 medium-4 cell">
               <label>Дата рождения
-              {{ Form::text('birthday', $user->birthday, ['class'=>'birthday-field date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+              {{ Form::text('birthday', $user->birthday, ['class'=>'birthday-field date-mask', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
               </label>
             </div>
             <div class="small-6 small-offset-1 medium-6 medium-offset-2 cell radiobutton">Пол<br>
@@ -123,26 +123,26 @@
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Паспорт (серия, номер)
-              {{ Form::text('passport_number', $user->passport_number, ['class'=>'passport-number-field', 'pattern'=>'[0-9]{2} [0-9]{2} №[0-9]{6}', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+              {{ Form::text('passport_number', $user->passport_number, ['class'=>'passport-number-mask', 'pattern'=>'[0-9]{2} [0-9]{2} №[0-9]{6}', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
               </label>
             </div>
             <div class="small-5 medium-6 cell">
               <label>Когда выдан
-              {{ Form::text('passport_date', $user->passport_date, ['class'=>'passport-date-field date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+              {{ Form::text('passport_date', $user->passport_date, ['class'=>'passport-date-field date-mask', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-12 cell">
               <label>Кем выдан
-              {{ Form::text('passport_released', $user->passport_released, ['class'=>'passport-released-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+              {{ Form::text('passport_released', $user->passport_released, ['class'=>'vaarchar-field passport-released-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Адрес прописки
-              {{ Form::text('passport_address', $user->passport_address, ['class'=>'passport-address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+              {{ Form::text('passport_address', $user->passport_address, ['class'=>'varchar-field passport-address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
@@ -158,7 +158,7 @@
           <div class="grid-x grid-padding-x tabs-margin-top"> 
             <div class="small-12 medium-6 cell">
               <label>Название компании
-              {{ Form::text('company_name', $user->company_name, ['class'=>'company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9.,_-/\s()]{3,40}']) }}
+              {{ Form::text('company_name', $user->company_name, ['class'=>'varchar-field company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9.,_-/\s()]{3,40}']) }}
               </label>
             </div>
           </div>

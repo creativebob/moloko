@@ -38,7 +38,7 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Название компании
-              {{ Form::text('company_name', $company->company_name, ['class'=>'company-name-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9-_/s]{3,30}']) }}
+              {{ Form::text('company_name', $company->company_name, ['class'=>'varchar-mask company-name-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9/s]{3,30}']) }}
               </label>
             </div>
           </div>
@@ -47,13 +47,13 @@
 
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                {{ Form::text('company_phone', $company->company_phone, ['class'=>'phone-field company-phone', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off', 'required']) }}
+                {{ Form::text('company_phone', $company->company_phone, ['class'=>'phone-mask company-phone', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off', 'required']) }}
                 <span class="form-error">Введите все символы телефонного номера!</span>
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Доп. телефон
-                {{ Form::text('company_extra_phone', $company->company_extra_phone, ['class'=>'phone-field company-extra-phone', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off']) }}
+                {{ Form::text('company_extra_phone', $company->company_extra_phone, ['class'=>'phone-mask company-extra-phone', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off']) }}
                 <span class="form-error">Введите все символы телефонного номера!</span>
               </label>
             </div>
@@ -74,13 +74,13 @@
                     $city_id = $company->city->city_id;
                   }
                 @endphp
-                {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'maxlength'=>'30', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', 'required']) }}
+                {{ Form::text('city_name', $city_name, ['class'=>'varchar-mask city-check-field', 'autocomplete'=>'off', 'maxlength'=>'30', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', 'required']) }}
                 <div class="sprite-input-right find-status"></div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
                 {{ Form::hidden('city_id', $city_id, ['class'=>'city-id-field', 'maxlength'=>'3', 'pattern'=>'[0-9]{3}']) }}
               </label>
               <label>Адрес
-              {{ Form::text('company_address', $company->company_address, ['class'=>'company-address-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9.,_-\s/]{3,60}']) }}
+              {{ Form::text('company_address', $company->company_address, ['class'=>'varchar-mask company-address-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9.,_-\s/]{3,60}']) }}
               </label>
             </div>
 
@@ -110,7 +110,7 @@
               </div>
               <div class="small-12 medium-12 cell">
                 <label>Банк
-                {{ Form::text('bank', $company->bank, ['class'=>'bank-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9-_/s]{3,60}']) }}
+                {{ Form::text('bank', $company->bank, ['class'=>'varchar-mask bank-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9-_/s]{3,60}']) }}
                 </label>
               </div>
               <div class="small-12 medium-6 cell">

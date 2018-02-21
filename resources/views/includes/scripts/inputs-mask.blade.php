@@ -1,57 +1,49 @@
-<script type="text/javascript" src="/js/jquery.maskedinput.js"></script>
+﻿<script type="text/javascript" src="/js/jquery.maskedinput.js"></script>
 <script type="text/javascript">
 
 
   jQuery(function($) {
-
-    // Город, район и область
-    $('.varchar-field').mask('ччч?чччччччччччччччччччччччч');
-
-    // Адресс
-    $('.address-field').mask('ддд?ддддддддддддддддддддд');
-
-    // Имя, фамилия и отчество
-    $('.first-name-field, .second-name-field, .patronymic-field, .text-field').mask('яяя?яяяяяяяяяяяяяяяяяяяяяя');
-    // Дата рождения
-    $('.birthday-field').mask('99.99.9999');
+    // --------------------------------- Буквы --------------------------
+    // C дефисом ru
+    $('.text-ru-mask').mask('яяя?яяяяяяяяяяяяяяяяяяяяя');
+    // C дефисом en
+    $('.text-en-mask').mask('zzz?zzzzzzzzzzzzzzzzzzzzz');
     // Логин
-    $('.login-field').mask('llllll?llllllllllllllllllllllllllllll');
+    $('.login-mask').mask('llllll?llllllllllllllllllllllllllllll');
     // Пароль
-    // $('.password-field').mask('dddddd?dddddddddddddd');
+    // $('.password-mask').mask('dddddd?dddddddddddddd');
+    // Строка с пробелами, числами и символами
+    $('.varchar-mask').mask('ддд?дддддддддддддддддддддддддддддддддддддддддд');
+    // Строка с пробелами и символами
+    $('.string-mask').mask('ббб?ббббббббббббббббббббббббббббббббббббббббббб');
+    // -------------------------- Числа --------------------------------
+    // Дата
+    $('.date-mask').mask('99.99.9999');
+    // Строка с числами
+    $('.integer-mask').mask('999?999999999999999');
+    // Дата рождения
+    $('.birthday-mask').mask('99.99.9999');
     // Телефон
-    $('.phone-field').mask('8 (999) 999-99-99',{placeholder:"_"});
+    $('.phone-mask').mask('8 (999) 999-99-99',{placeholder:"_"});
     // Паспорт
-    $('.passport-number-field').mask('99 99 №999999');
-    // Дата выдачи паспорта
-    $('.passport-date-field').mask('99.99.9999');
+    $('.passport-number-mask').mask('99 99 №999999');
     // Телеграм id
-    $('.telegram-id-field').mask('999999999?999');
+    $('.telegram-id-mask').mask('999999999?999');
     // ИНН
-    $('.inn-field').mask('999999999999');
+    $('.inn-mask').mask('999?999999999');
     // Кпп
-    $('.kpp-field').mask('999999999');
+    $('.kpp-mask').mask('999?999999');
     // Расчетные счета
-    $('.account-correspondent-field').mask('99999999999999999999');
-    $('.account-settlement-field').mask('99999999999999999999');
-
-
-
+    $('.account-correspondent-mask').mask('999999?99999999999999');
+    $('.account-settlement-mask').mask('999999?99999999999999');
   });
 
   $(function() {
-
     // $('input').focus(function() {
     //   $(this).setCursorPosition(1);
     // });
-  
-  // Определяем маски для полей
-  // Текстовые поля
-  // $.mask.definitions['t']='[A-Za-z]';
-
-
-
-
-    
-
+    // Определяем маски для полей
+    // Текстовые поля
+    // $.mask.definitions['t']='[A-Za-z]';
   });
 </script>

@@ -15,16 +15,16 @@
     @endif
     <!-- Страница -->
     <label>Название страницы
-    {{ Form::text('page_name', $page->page_name, ['class'=>'page-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+    {{ Form::text('page_name', $page->page_name, ['class'=>'string-mask page-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
     <label>Заголовок страницы
-    {{ Form::text('page_title', $page->page_title, ['class'=>'page-title-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+    {{ Form::text('page_title', $page->page_title, ['class'=>'string-mask page-title-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
     <label>Описание страницы
-    {{ Form::textarea('page_description', $page->page_description, ['class'=>'page-description-field', 'autocomplete'=>'off', 'size' => '10x3']) }}
+    {{ Form::textarea('page_description', $page->page_description, ['class'=>'varchar-mask page-description-field', 'autocomplete'=>'off', 'size' => '10x3']) }}
     </label>
     <label>Алиас страницы
-    {{ Form::text('page_alias', $page->page_alias, ['class'=>'page-alias-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+    {{ Form::text('page_alias', $page->page_alias, ['class'=>'text-en-mask page-alias-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
     <input type="hidden" name="site_id" value="{{ $current_site->id }}">
   </div>

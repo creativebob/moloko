@@ -24,12 +24,12 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Название группы
-              {{ Form::text('role_name', $role->role_name, ['class'=>'role-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+              {{ Form::text('role_name', $role->role_name, ['class'=>'string-mask role-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Описание назначения группы
-              {{ Form::text('role_description', $role->role_description, ['class'=>'role-description-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+              {{ Form::text('role_description', $role->role_description, ['class'=>'varchar-mask role-description-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>

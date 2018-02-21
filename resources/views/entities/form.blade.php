@@ -24,12 +24,12 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Название сущности
-              {{ Form::text('entity_name', $entity->entity_name, ['class'=>'entity-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+              {{ Form::text('entity_name', $entity->entity_name, ['class'=>'text-ru-mask entity-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Название сущности в BD
-              {{ Form::text('entity_alias', $entity->entity_alias, ['class'=>'entity-alias-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+              {{ Form::text('entity_alias', $entity->entity_alias, ['class'=>'text-en-mask entity-alias-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>

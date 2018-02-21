@@ -15,7 +15,7 @@
     @endif
     <!-- Сотрудник -->
     <label>Название должности
-    {{ Form::text('position_name', $staffer->position->position_name, ['class'=>'position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'readonly']) }}
+    {{ Form::text('position_name', $staffer->position->position_name, ['class'=>'string-mask position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'readonly']) }}
     </label>
     <label>Сотрудник:
       @php
@@ -41,14 +41,14 @@
           @endif
         @endforeach
       
-        {{ Form::text('date_employment', $date_employment, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off', 'required']) }}
+        {{ Form::text('date_employment', $date_employment, ['class'=>'date_employment date-mask', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off', 'required']) }}
       @endif
     </label>
     <label>Дата увольнения
-      {{ Form::text('date_dismissal', null, ['class'=>'date_dismissal date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+      {{ Form::text('date_dismissal', null, ['class'=>'date_dismissal date-mask', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
     </label>
     <label>Причина увольнения
-    {{ Form::text('dismissal_desc', null, ['class'=>'position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+    {{ Form::text('dismissal_desc', null, ['class'=>'varchar-mask position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
     
   </div>

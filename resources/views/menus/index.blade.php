@@ -126,7 +126,7 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label class="input-icon">Введите название навигации
-          {{ Form::text('navigation_name', $value = null, ['autocomplete'=>'off', 'required']) }}
+          {{ Form::text('navigation_name', $value = null, ['class'=>'varchar-mask', 'autocomplete'=>'off', 'required']) }}
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
         <input type="hidden" name="site_id" value="{{ $site->id }}">
@@ -154,7 +154,7 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
          <label class="input-icon">Введите название навигации
-          {{ Form::text('navigation_name', $value = null, ['id'=>'navigation-name-field', 'autocomplete'=>'off', 'required']) }}
+          {{ Form::text('navigation_name', $value = null, ['class'=>'varchar-mask', 'id'=>'navigation-name-field', 'autocomplete'=>'off', 'required']) }}
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
         <input type="hidden" name="site_id" value="{{ $site->id }}">
@@ -193,11 +193,11 @@
           <div class="grid-x grid-padding-x modal-content inputs">
             <div class="small-10 small-offset-1 cell">
               <label>Название пункта меню
-                {{ Form::text('menu_name', $value = null, ['autocomplete'=>'off', 'required']) }}
+                {{ Form::text('menu_name', $value = null, ['class'=>'varchar-mask', 'autocomplete'=>'off', 'required']) }}
                 <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
               </label>
               <label>Введите ссылку
-                {{ Form::text('menu_alias', $value = null, ['autocomplete'=>'off']) }}
+                {{ Form::text('menu_alias', $value = null, ['class'=>'text-en-mask', 'autocomplete'=>'off']) }}
               </label>
               <label>Страница:
                 {{ Form::select('page_id', $pages_list, null, ['class'=>'pages-tree-select', 'placeholder'=>'Не выбрано']) }}
@@ -219,7 +219,7 @@
                 </select>
               </label>
               <label>Введите имя иконки
-                {{ Form::text('menu_icon', $value = null, ['autocomplete'=>'off']) }}
+                {{ Form::text('menu_icon', $value = null, ['class'=>'text-en-mask', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
@@ -260,11 +260,11 @@
           <div class="grid-x grid-padding-x modal-content inputs">
             <div class="small-10 small-offset-1 cell">
               <label>Название пункта меню
-                {{ Form::text('menu_name', $value = null, ['id'=>'menu-name', 'autocomplete'=>'off', 'required']) }}
+                {{ Form::text('menu_name', $value = null, ['class'=>'varchar-mask', 'id'=>'menu-name', 'autocomplete'=>'off', 'required']) }}
                 <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
               </label>
               <label>Введите ссылку
-                {{ Form::text('menu_alias', $value = null, ['id'=>'menu-alias', 'autocomplete'=>'off']) }}
+                {{ Form::text('menu_alias', $value = null, ['class'=>'text-en-mask', 'id'=>'menu-alias', 'autocomplete'=>'off']) }}
               </label>
               <label>Страница:
                 {{ Form::select('page_id', $pages_list, null, ['class'=>'pages-tree-select', 'class'=>'pages-tree-select', 'placeholder'=>'Не выбрано']) }}
@@ -286,7 +286,7 @@
                 </select>
               </label>
               <label>Введите имя иконки
-                {{ Form::text('menu_icon', $value = null, ['id'=>'menu-icon', 'autocomplete'=>'off']) }}
+                {{ Form::text('menu_icon', $value = null, ['class'=>'text-en-mask', 'id'=>'menu-icon', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
@@ -311,7 +311,7 @@
 @endsection
 
 @section('scripts')
-<script type="text/javascript" src="/js/jquery.inputmask.min.js"></script>
+  @include('includes.scripts.inputs-mask')
 <script type="text/javascript">
 $(function() {
   // Берем алиас сайта

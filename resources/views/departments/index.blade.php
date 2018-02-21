@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
  
 @section('inhead')
   <meta name="description" content="{{ $page_info->page_description }}" />
@@ -144,16 +144,16 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label class="input-icon">Введите город
-          {{ Form::text('city_name', null, ['class'=>'city-check-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-\s]{3,40}', 'required']) }}
+          {{ Form::text('city_name', null, ['class'=>'varchar-mask city-check-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-\s]{3,40}', 'required']) }}
           <div class="sprite-input-right find-status"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
           <input type="hidden" name="city_id" class="city-id-field" pattern="[0-9]{,3}">
         </label>
         <label>Название филиала
-           {{ Form::text('filial_name', null, ['class'=>'filial-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9\W\s]{3,40}', 'required']) }}
+           {{ Form::text('filial_name', null, ['class'=>'varchar-mask filial-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9\W\s]{3,40}', 'required']) }}
         </label>
         <label>Адресс филиала
-           {{ Form::text('filial_address', null, ['class'=>'filial-address-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9\W\s]{3,40}', 'required']) }}
+           {{ Form::text('filial_address', null, ['class'=>'varchar-mask filial-address-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9\W\s]{3,40}', 'required']) }}
         </label>
         <label>Телефон филиала
            {{ Form::text('filial_phone', null, ['class'=>'filial-phone-field phone-field', 'autocomplete'=>'off', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'required']) }}
@@ -190,13 +190,13 @@
         </label>
         </label>
         <label>Название филиала
-           {{ Form::text('filial_name', null, ['class'=>'filial-name-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_name', null, ['class'=>'varchar-mask filial-name-field', 'autocomplete'=>'off', 'required']) }}
         </label>
         <label>Адресс филиала
-           {{ Form::text('filial_address', null, ['class'=>'filial-address-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_address', null, ['class'=>'varchar-mask filial-address-field', 'autocomplete'=>'off', 'required']) }}
         </label>
         <label>Телефон филиала
-           {{ Form::text('filial_phone', null, ['class'=>'filial-phone-field phone-field', 'autocomplete'=>'off', 'required']) }}
+           {{ Form::text('filial_phone', null, ['class'=>'filial-phone-field phone-mask', 'autocomplete'=>'off', 'required']) }}
         </label>
         <input type="hidden" name="filial_db" class="filial-db" value="1">
       </div>
@@ -240,22 +240,22 @@
                 <input type="hidden" name="filial_id" class="filial-id-field">
               </label>
               <label>Название отдела
-                {{ Form::text('department_name', null, ['class'=>'department-name-field', 'autocomplete'=>'off', 'required']) }}
+                {{ Form::text('department_name', null, ['class'=>'varchar-mask department-name-field', 'autocomplete'=>'off', 'required']) }}
                 <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
                 <div class="sprite-input-right find-department"></div>
                 <div class="department-error">Данный отдел уже существует в этом филиале!</div>
               </label>
               <label class="input-icon">Введите город
-                {{ Form::text('city_name', null, ['class'=>'city-check-field', 'autocomplete'=>'off']) }}
+                {{ Form::text('city_name', null, ['class'=>'varchar-mask city-check-field', 'autocomplete'=>'off']) }}
                 <div class="sprite-input-right find-status"></div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
                 <input type="hidden" name="city_id" class="city-id-field">
               </label>
               <label>Адресс отдела
-                {{ Form::text('department_address', null, ['class'=>'department-address-field', 'autocomplete'=>'off']) }}
+                {{ Form::text('department_address', null, ['class'=>'varchar-mask department-address-field', 'autocomplete'=>'off']) }}
               </label>
               <label>Телефон отдела
-                {{ Form::text('department_phone', null, ['class'=>'department-phone-field phone-field', 'autocomplete'=>'off']) }}
+                {{ Form::text('department_phone', null, ['class'=>'department-phone-field phone-mask', 'autocomplete'=>'off']) }}
               </label>
               <input type="hidden" name="department_db" class="department-db" value="0">
             </div>
@@ -317,22 +317,22 @@
           <input type="hidden" name="filial_id" class="filial-id-field">
         </label>
         <label>Название отдела
-          {{ Form::text('department_name', null, ['class'=>'department-name-field', 'autocomplete'=>'off', 'required']) }}
+          {{ Form::text('department_name', null, ['class'=>'varchar-mask department-name-field', 'autocomplete'=>'off', 'required']) }}
           <div class="sprite-input-right find-department"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
           <div class="department-error">Данный отдел уже существует в этом филиале!</div>
         </label>
         <label class="input-icon">Введите город
-          {{ Form::text('city_name', null, ['class'=>'city-check-field', 'autocomplete'=>'off']) }}
+          {{ Form::text('city_name', null, ['class'=>'varchar-mask city-check-field', 'autocomplete'=>'off']) }}
           <div class="sprite-input-right find-status"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
           <input type="hidden" name="city_id" class="city-id-field">
         </label>
         <label>Адресс отдела
-          {{ Form::text('department_address', null, ['class'=>'department-address-field', 'autocomplete'=>'off']) }}
+          {{ Form::text('department_address', null, ['class'=>'varchar-mask department-address-field', 'autocomplete'=>'off']) }}
         </label>
         <label>Телефон отдела
-          {{ Form::text('department_phone', null, ['class'=>'department-phone-field phone-field', 'autocomplete'=>'off']) }}
+          {{ Form::text('department_phone', null, ['class'=>'department-phone-field phone-mask', 'autocomplete'=>'off']) }}
         </label>
         <input type="hidden" name="department_db" class="department-db" value="0">
       </div>

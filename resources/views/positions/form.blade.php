@@ -23,7 +23,7 @@
         $block = 'readonly';
       @endphp
     @endif
-    {{ Form::text('position_name', null, ['class'=>'position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', $block]) }}
+    {{ Form::text('position_name', null, ['class'=>'text-ru-mask position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', $block]) }}
     </label>
     <label>Страница должности:
       {{ Form::select('page_id', $pages_list, null, ['id'=>'page-select']) }}

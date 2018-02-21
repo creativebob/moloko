@@ -168,17 +168,17 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 medium-4 cell">
         <label class="input-icon">Название населенного пункта
-          {{-- Form::text('city_name', null, ['class'=>'varchar-field', 'id'=>'city-name-field' 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', 'required']) --}}
+          {{-- Form::text('city_name', null, ['class'=>'varchar-mask', 'id'=>'city-name-field' 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', 'required']) --}}
           <input type="text" name="city_name" id="city-name-field" autocomplete="off" pattern="[А-Яа-я0-9-_\s]{3,30}" required>
           <div class="sprite-input-right find-status"></div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
         <label>Район
-          {{-- Form::text('area_name', null, ['class'=>'varchar-field', 'id'=>'area-name' 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', 'readonly']) --}}
+          {{-- Form::text('area_name', null, ['class'=>'varchar-mask', 'id'=>'area-name' 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', 'readonly']) --}}
           <input type="text" name="area_name" id="area-name" pattern="[А-Яа-яЁё0-9-_\s]{3,30}" readonly>
         </label>
         <label>Область
-          {{-- Form::text('region_name', null, ['class'=>'varchar-field', 'id'=>'region_name' 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', 'readonly']) --}}
+          {{-- Form::text('region_name', null, ['class'=>'varchar-mask', 'id'=>'region_name' 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', 'readonly']) --}}
           <input type="text" name="region_name" id="region-name" pattern="[А-Яа-яЁё0-9-_\s]{3,30}" readonly>
         </label>
         <div class="small-12 cell checkbox">
