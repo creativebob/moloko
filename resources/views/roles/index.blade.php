@@ -94,7 +94,7 @@
           <td class="td-role-description">{{ $role->role_description }} </td>
           <td class="td-role-author">@if(!empty($role->author->first_name)) {{ $role->author->first_name . ' ' . $role->author->second_name }} @endif</td>
           <td class="td-delete">
-          @if ($role->system_item !== 1)
+          @if (($role->system_item !== 1) && ($role->company_id !== null))
             @can('delete', $role)
             <a class="icon-delete sprite" data-open="item-delete"></a></td> 
             @endcan

@@ -206,10 +206,10 @@
             </label>
           </div>
 
-          @if(!empty($list_filials))
+          @if(!empty($filials_list))
           <div class="small-12 cell">
             <label>Для филиала
-              {{ Form::select('filial_id', $list_filials, null) }}
+              {{ Form::select('filial_id', $filials_list, null) }}
             </label>
           </div>
           @endif

@@ -4,10 +4,14 @@
 
   jQuery(function($) {
 
+    // Город, район и область
+    $('.varchar-field').mask('ччч?чччччччччччччччччччччччч');
 
+    // Адресс
+    $('.address-field').mask('ддд?ддддддддддддддддддддд');
 
     // Имя, фамилия и отчество
-    $('.first-name-field, .second-name-field, .patronymic-field, .test-field').mask('яяя?яяяяяяяяяяяяяяяяяяяяяя');
+    $('.first-name-field, .second-name-field, .patronymic-field, .text-field').mask('яяя?яяяяяяяяяяяяяяяяяяяяяя');
     // Дата рождения
     $('.birthday-field').mask('99.99.9999');
     // Логин

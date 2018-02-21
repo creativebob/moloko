@@ -92,6 +92,14 @@ class EmployeesTableSeeder extends Seeder
                 'date_dismissal' => null,
                 'dismissal_desc' => null,
             ],
+            [   
+                'staffer_id' => 11,
+                'company_id' => 2,
+                'user_id' => 14,
+                'date_employment' => '2017-12-01',
+                'date_dismissal' => null,
+                'dismissal_desc' => null,
+            ],
 
         ]);
     }

@@ -16,6 +16,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 class Access_group extends Model
 {
+
 	use SoftDeletes;
 	// Подключаем Scopes для главного запроса
   	use CompaniesLimitTraitScopes;

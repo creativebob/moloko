@@ -100,14 +100,14 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
         // Функция из Helper отдает массив со списками для SELECT
-        $list_departments = getLS('users', 'view', 'departments');
-        $list_filials = getLS('users', 'view', 'departments');
+        $departments_list = getLS('users', 'view', 'departments');
+        $filials_list = getLS('users', 'view', 'departments');
         $roles_list = Role::whereCompany_id($user_auth->company_id)->pluck('role_name', 'id');
 
     	$user = new User;
         $roles = new Role;
 
-    	return view('users.create', compact('user', 'roles', 'list_filials', 'list_departments', 'roles_list'));
+    	return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list'));
     }
 
     public function store(UserRequest $request)
@@ -264,8 +264,8 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
         // Функция из Helper отдает массив со списками для SELECT
-        $list_departments = getLS('users', 'view', 'departments');
-        $list_filials = getLS('users', 'view', 'filials');
+        $departments_list = getLS('users', 'view', 'departments');
+        $filials_list = getLS('users', 'view', 'filials');
 
         $role = new Role;
         $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
@@ -279,7 +279,7 @@ class UserController extends Controller
         ->systemItem($answer_roles) // Фильтр по системным записям 
         ->pluck('role_name', 'id');
 
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'list_departments', 'list_filials'));
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
     }
 
     public function edit(Request $request, $id)
@@ -296,8 +296,8 @@ class UserController extends Controller
         $this->authorize($method, $user);
 
         // Функция из Helper отдает массив со списками для SELECT
-        $list_departments = getLS('users', 'index', 'departments');
-        $list_filials = getLS('users', 'index', 'filials');
+        $departments_list = getLS('users', 'index', 'departments');
+        $filials_list = getLS('users', 'index', 'filials');
 
         $role = new Role;
         $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
@@ -313,7 +313,7 @@ class UserController extends Controller
         ->template($answer_roles) // Выводим шаблоны в список
         ->pluck('role_name', 'id');
 
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'list_departments', 'list_filials'));
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
     }
 
     public function destroy(Request $request, $id)

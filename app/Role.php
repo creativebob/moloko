@@ -17,28 +17,24 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Role extends Model
 {
 
- 	  use SoftDeletes;
+	use SoftDeletes;
 
-    // Подключаем Scopes для главного запроса
-    use CompaniesLimitTraitScopes;
-    use AuthorsTraitScopes;
-    use SystemitemTraitScopes;
-    use FilialsTraitScopes;
-    use TemplateTraitScopes;
-    use ModeratorLimitTraitScopes;
+  // Подключаем Scopes для главного запроса
+  use CompaniesLimitTraitScopes;
+  use AuthorsTraitScopes;
+  use SystemitemTraitScopes;
+  use FilialsTraitScopes;
+  use TemplateTraitScopes;
+  use ModeratorLimitTraitScopes;
 
-    protected $dates = ['deleted_at'];
-    protected $fillable = [
-    	'id', 
-      'role_name', 
-      'role_description', 
-      'category_right_id', 
-    ];
+  protected $dates = ['deleted_at'];
+  protected $fillable = [
+  	'id', 
+    'role_name', 
+    'role_description', 
+    'category_right_id', 
+  ];
 
-
-    /**
-  * Получаем пользователей.
-  */
   public function users()
   {
     return $this->belongsToMany('App\User')->withPivot('department_id');
@@ -81,6 +77,4 @@ class Role extends Model
   {
     return $this->belongsToMany('App\Department', 'role_user', 'department_id');
   }
-
-
 }

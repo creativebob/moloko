@@ -109,6 +109,9 @@ class PositionController extends Controller
     if($answer['automoderate'] == false){
         $position->moderated = 1;
     };
+    if($answer['automoderate'] == false){
+        $position->moderated = 1;
+    };
     // Пишем ID компании авторизованного пользователя
     if($company_id == null) {
       abort(403, 'Необходимо авторизоваться под компанией');

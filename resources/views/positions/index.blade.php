@@ -75,7 +75,7 @@
           <td class="td-position-company-id">@if(!empty($position->company->company_name)) {{ $position->company->company_name }} @else @if($position->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-position-author">@if(isset($position->author->first_name)) {{ $position->author->first_name . ' ' . $position->author->second_name }} @endif</td>
           <td class="td-delete">
-            @if ($position->system_item !== 1)
+            @if (($position->system_item !== 1) && ($position->company_id !== null))
               @can('delete', $position)
               <a class="icon-delete sprite" data-open="item-delete"></a>
               @endcan

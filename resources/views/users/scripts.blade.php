@@ -23,6 +23,4 @@
     });
   });
 </script>
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-ajax-script')
 @endsection

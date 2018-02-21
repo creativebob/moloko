@@ -18,6 +18,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 class Company extends Model
 {
+
   use Notifiable;
   use SoftDeletes;
 

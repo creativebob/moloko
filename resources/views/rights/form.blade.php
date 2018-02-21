@@ -39,7 +39,7 @@
             <div class="grid-x grid-padding-x">
               <div class="small-12 cell tabs-margin-top">
                 <label>Сущность базы данных
-                  {{ Form::select('entity_id', $entity_list, $right->entity_id) }}
+                  {{ Form::select('entity_id', $entities_list, $right->entity_id) }}
                 </label>
               </div>
               <div class="small-12 cell checkbox">

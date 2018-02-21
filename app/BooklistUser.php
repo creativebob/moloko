@@ -15,6 +15,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 class BooklistUser extends Model
 {
+
   // Подключаем Scopes для главного запроса
   use CompaniesLimitTraitScopes;
   use AuthorsTraitScopes;
