@@ -36,7 +36,6 @@ class DepartmentController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
     $departments = Department::with(['staff', 'staff.position', 'staff.user'])
-    ->withoutGlobalScope($answer['moderator'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -123,7 +122,6 @@ class DepartmentController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
     $departments = Department::with(['staff', 'staff.position', 'staff.user'])
-    ->withoutGlobalScope($answer['moderator'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -277,8 +275,12 @@ class DepartmentController extends Controller
   {
     // Получаем метод
     $method = 'update';
+
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, true, $method);
+
     // ГЛАВНЫЙ ЗАПРОС:
-   $department = Department::with('city')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+   $department = Department::with('city')->moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize($method, $department);
     if ($department->filial_status == 1) {
@@ -336,7 +338,7 @@ class DepartmentController extends Controller
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, true, $method);
     // ГЛАВНЫЙ ЗАПРОС:
-    $filial = Department::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+    $filial = Department::moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize('update', $filial);
     if ($request->filial_db == 1) {
@@ -356,7 +358,7 @@ class DepartmentController extends Controller
     };
     if ($request->department_db == 1) {
       // dd($request);
-      $department = Department::findOrFail($id);
+      $department = Department::moderatorLimit($answer)->findOrFail($id);
       $department->city_id = $request->city_id;
       $department_name_old = $request->department_name;
       $first = mb_substr($department_name_old,0,1, 'UTF-8');//первая буква
@@ -380,10 +382,15 @@ class DepartmentController extends Controller
 
   public function destroy(Request $request, $id)
   {
+
     // Получаем метод
     $method = 'delete';
+
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, true, $method);
+
     // ГЛАВНЫЙ ЗАПРОС:
-    $department = Department::with('staff')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $department = Department::with('staff')->moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize('delete', $department);
     $user = $request->user();
@@ -417,7 +424,14 @@ class DepartmentController extends Controller
 
   public function departments_list(Request $request)
   {
-    $departments_list = Department::whereId($request->filial_id)
+
+    // Получаем метод
+    $method = 'index';
+
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, true, $method);
+
+    $departments_list = Department::moderatorLimit($answer)->whereId($request->filial_id)
     ->orWhere('filial_id', $request->filial_id)
     ->pluck('department_name', 'id');
     echo json_encode($departments_list, JSON_UNESCAPED_UNICODE);
@@ -425,11 +439,13 @@ class DepartmentController extends Controller
 
   public function department_check(Request $request)
   {
+
     // Проверка отдела в нашей базе данных
     $department = Department::where([
       ['department_name', '=', $request->department_name],
       ['filial_id', '=', $request->filial_id],
     ])->first();
+
     if ($department) {
       $result = [
         'error_message' => 'Такой отдел уже существует',

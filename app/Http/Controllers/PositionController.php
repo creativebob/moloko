@@ -37,7 +37,6 @@ class PositionController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
     $positions = Position::with('author', 'page')
-    ->withoutGlobalScope($answer['moderator'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -61,8 +60,7 @@ class PositionController extends Controller
 
     // Список посадочных страниц для должности
     $answer = operator_right('pages', $this->entity_dependence, $method);
-    $pages_list = Page::withoutGlobalScope($answer['moderator'])
-    ->moderatorLimit($answer)
+    $pages_list = Page::moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
@@ -72,8 +70,7 @@ class PositionController extends Controller
 
     // Список ролей для должности
     $answer = operator_right('pages', $this->entity_dependence, $method);
-    $roles = Role::withoutGlobalScope($answer['moderator'])
-    ->moderatorLimit($answer)
+    $roles = Role::moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
@@ -149,14 +146,13 @@ class PositionController extends Controller
     // Получаем метод
     $method = 'update';
     // ГЛАВНЫЙ ЗАПРОС:
-    $position = Position::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $position = Position::moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize($method, $position);
 
     // Список посадочных страниц для должности
     $answer = operator_right('pages', $this->entity_dependence, $method);
-    $pages_list = Page::withoutGlobalScope($answer['moderator'])
-    ->moderatorLimit($answer)
+    $pages_list = Page::moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
@@ -166,8 +162,7 @@ class PositionController extends Controller
 
     // Список ролей для должности
     $answer = operator_right('pages', $this->entity_dependence, 'update');
-    $roles = Role::withoutGlobalScope($answer['moderator'])
-    ->moderatorLimit($answer)
+    $roles = Role::moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
@@ -191,7 +186,7 @@ class PositionController extends Controller
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, true, $method);
     // ГЛАВНЫЙ ЗАПРОС:
-    $position = Position::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+    $position = Position::moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize('update', $position);
     // Выбираем существующие роли для должности на данный момент
@@ -243,7 +238,7 @@ class PositionController extends Controller
   public function destroy(Request $request, $id)
   {
     // ГЛАВНЫЙ ЗАПРОС:
-    $position = Position::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $position = Position::moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize('delete', $position);
     // Поулчаем авторизованного пользователя
@@ -278,8 +273,7 @@ class PositionController extends Controller
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
-    $positions_list = Position::with('staff')->withoutGlobalScope($answer['moderator'])
-    ->moderatorLimit($answer)
+    $positions_list = Position::with('staff')->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)

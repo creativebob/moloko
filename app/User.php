@@ -7,7 +7,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Фильтры
-use App\Scopes\ModerationScope;
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
@@ -31,25 +30,6 @@ class User extends Authenticatable
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
 
-    /**
-     * Загрузка типажа мягкого удаления для модели.
-     *
-     * @return void
-     */
-    // public static function bootModeration()
-    // {
-    //   static::addGlobalScope(new ModerationScope);
-    // }
-
-
-    //   /**
-    //  * The "booting" method of the model.
-    //  *
-    //  * @return void
-    //  */
-    //  
-
-
 
     // Фильтрация по городу
     public function scopeUserFilter($query, $request)
@@ -62,7 +42,6 @@ class User extends Authenticatable
 
       return $query;
     }
-
 
 
     // Фильтрация по статусу пользователя: клиент или сотрудник

@@ -39,7 +39,6 @@ class StafferController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
     $staff = Staffer::with('filial', 'department', 'user', 'position', 'employees')
-    ->withoutGlobalScope($answer['moderator'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -115,19 +114,21 @@ class StafferController extends Controller
   {
     // Получаем метод
     $method = 'update';
+
     // ГЛАВНЫЙ ЗАПРОС:
     $staffer = Staffer::with(['employees' => function($query) {
       $query->whereDate_dismissal(null);
     }])
-    ->withoutGlobalScope(ModerationScope::class)
+    ->moderatorLimit($answer)
     ->findOrFail($id);
+
     // Подключение политики
     $this->authorize($method, $staffer);
+
     // Список меню для сайта
     $answer = operator_right('sites', $this->entity_dependence, $method);
     $user = $request->user();
-    $users = User::withoutGlobalScope($answer['moderator'])
-    ->moderatorLimit($answer)
+    $users = User::moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
@@ -146,14 +147,19 @@ class StafferController extends Controller
   {
     // Получаем метод
     $method = __FUNCTION__;
+
     // Получаем авторизованного пользователя
     $user = $request->user();
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, true, $method);
+
     // ГЛАВНЫЙ ЗАПРОС:
-   $staffer = Staffer::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+   $staffer = Staffer::moderatorLimit($answer)->findOrFail($id);
+
     // Подключение политики
     $this->authorize('update', $staffer);
+
     // Если не пустая дата увольнения пришла
     if (isset($request->date_dismissal)) {
       // Снимаем с должности в штате
@@ -166,8 +172,10 @@ class StafferController extends Controller
       $employee->date_dismissal = $request->date_dismissal;
       $employee->dismissal_desc = $request->dismissal_desc;
       $employee->editor_id = $user->id;
+
       // Удаляем должность и права данного юзера
       $delete = RoleUser::where(['position_id' => $staffer->position_id, 'user_id' => $staffer->user_id])->delete();
+
     // Если даты увольнения нет
     } else {
       $user_id = $staffer->user_id;
@@ -225,7 +233,7 @@ class StafferController extends Controller
   public function destroy(Request $request, $id)
   {
     // ГЛАВНЫЙ ЗАПРОС:
-    $staffer = Staffer::with('department')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $staffer = Staffer::with('department')->moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize('delete', $staffer);
     // Удаляем должность из отдела с обновлением

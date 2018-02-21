@@ -57,7 +57,7 @@ class MenuSiteController extends Controller
      */
     public function edit($id)
     {
-        $sections = MenuSite::whereSite_id($id)->pluck('menu_id');
+        $sections = MenuSite::moderatorLimit($answer)->whereSite_id($id)->pluck('menu_id');
         // if (count($sections) > 0) {
         //     $mymass = [];
         //     for ($i=1; $i <= count($sections->toArray()); $i++) { 

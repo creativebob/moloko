@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\User;
 use App\RoleUser;
 use App\Http\Controllers\Session;
-use App\Scopes\ModerationScope;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
@@ -37,14 +36,12 @@ class UserController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
-        // dd($answer['dependence']);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $users = User::with('roles')
-        ->withoutGlobalScope($answer['moderator'])
+        $users = User::with('roles')  
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -60,7 +57,7 @@ class UserController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $filter_query = User::with('city')->withoutGlobalScope($answer['moderator'])->moderatorLimit($answer)->get();
+        $filter_query = User::with('city')->moderatorLimit($answer)->get();
         $filter = getFilterUser($filter_query);
 
 
@@ -200,7 +197,7 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::withoutGlobalScope($answer['moderator'])->findOrFail($id);
+        $user = User::moderatorLimit($answer)->findOrFail($id);
 
         $filial_id = $request->filial_id;
 
@@ -256,7 +253,7 @@ class UserController extends Controller
     {
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        $user = User::moderatorLimit($answer)->findOrFail($id);
 
         $method = 'view';
 
@@ -275,8 +272,7 @@ class UserController extends Controller
 
         $answer_roles = operator_right('roles', true, 'index');
 
-        $roles_list = Role::withoutGlobalScope($answer_roles['moderator'])
-        ->moderatorLimit($answer_roles)
+        $roles_list = Role::moderatorLimit($answer_roles)
         ->companiesLimit($answer_roles)
         ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer_roles)
@@ -294,7 +290,7 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('city')->withoutGlobalScope($answer['moderator'])->findOrFail($id);
+        $user = User::with('city')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize($method, $user);
@@ -307,10 +303,9 @@ class UserController extends Controller
         $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
 
         $answer_roles = operator_right('roles', true, 'index');
-        // dd($answer_roles);
-        
-        $roles_list = Role::withoutGlobalScope($answer_roles['moderator'])
-        ->moderatorLimit($answer_roles)
+
+
+        $roles_list = Role::moderatorLimit($answer_roles)
         ->companiesLimit($answer_roles)
         ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer_roles)
@@ -325,13 +320,13 @@ class UserController extends Controller
     {
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        $user = User::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize('delete', $user);
 
         // Удаляем пользователя с обновлением
-        $user = User::withoutGlobalScope(ModerationScope::class)->where('id', $id)->delete();
+        $user = User::moderatorLimit($answer)->where('id', $id)->delete();
 
         if($user) {return Redirect('/users');} else {abort(403,'Что-то пошло не так!');};
     }

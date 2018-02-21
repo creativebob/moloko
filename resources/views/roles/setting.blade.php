@@ -10,7 +10,7 @@
 @section('title-content')
 	<div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">НАСТРОЙКА ПРАВ ДОСТУПА</h2>
+       <h2 class="header-content">НАСТРОЙКА РОЛИ:  {{ $role->role_name }}</h2>
     </div>
     <div class="top-bar-right">
     </div>

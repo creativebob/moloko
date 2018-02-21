@@ -53,12 +53,7 @@ class NavigationController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(NavigationRequest $request, $site_alias)
     {
         // Получаем метод
@@ -90,29 +85,18 @@ class NavigationController extends Controller
         };
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($site_alias, $id)
     {
         // Получаем метод
         $method = 'update';
         // ГЛАВНЫЙ ЗАПРОС:
-        $navigation = Navigation::with('menus')->withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        $navigation = Navigation::with('menus')->moderatorLimit($answer)->findOrFail($id);
         // Подключение политики
         $this->authorize($method, $navigation);
         
@@ -124,13 +108,6 @@ class NavigationController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(NavigationRequest $request, $site_alias, $id)
     {
         // Получаем метод
@@ -138,7 +115,7 @@ class NavigationController extends Controller
         // Получаем авторизованного пользователя
         $user = $request->user();
         // ГЛАВНЫЙ ЗАПРОС:
-        $navigation = Navigation::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        $navigation = Navigation::moderatorLimit($answer)->findOrFail($id);
         // Подключение политики
         $this->authorize($method, $navigation);
         $user = $request->user();
@@ -156,16 +133,11 @@ class NavigationController extends Controller
         };
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request, $site_alias, $id)
     {
         // ГЛАВНЫЙ ЗАПРОС:
-        $navigation = Navigation::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+        $navigation = Navigation::moderatorLimit($answer)->findOrFail($id);
+
         // Подключение политики
         $this->authorize('delete', $navigation);
         $site_id = $navigation->site_id;

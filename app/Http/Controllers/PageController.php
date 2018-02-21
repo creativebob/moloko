@@ -29,13 +29,12 @@ class PageController extends Controller
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
     // Получаем сайт
-    $site = Site::whereSite_alias($site_alias)->first();
+    $site = Site::moderatorLimit($answer)->whereSite_alias($site_alias)->first();
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
 
      $pages = Page::with('site', 'author')
-    ->withoutGlobalScope($answer['moderator'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -76,14 +75,14 @@ class PageController extends Controller
     $user = $request->user();
 
     $sites_list = Site::with('site', 'author')
-    ->withoutGlobalScope($answer['moderator'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
     ->pluck('site_name', 'id');
-    $current_site = Site::whereSite_alias($site_alias)->first();
+
+    $current_site = Site::moderatorLimit($answer)->whereSite_alias($site_alias)->first();
     $page = new Page;
     return view('pages.create', compact('page', 'sites_list', 'current_site', 'site_alias'));  
   }
@@ -142,7 +141,7 @@ class PageController extends Controller
     $method = 'update';
     // ГЛАВНЫЙ ЗАПРОС:
     $page = Page::with(['site' => function ($query) use ($site_alias) {
-      $query->whereSite_alias($site_alias);
+      $query->moderatorLimit($answer)->whereSite_alias($site_alias);
     }])->wherePage_alias($page_alias)->first();
     // Подключение политики
     $this->authorize($method, $page);
@@ -150,7 +149,6 @@ class PageController extends Controller
     $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
     $sites_list = Site::with('site', 'author')
-    ->withoutGlobalScope($answer['moderator'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -178,7 +176,7 @@ class PageController extends Controller
     // Получаем авторизованного пользователя
     $user = $request->user();
     // ГЛАВНЫЙ ЗАПРОС:
-    $page = Page::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $page = Page::moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize('update', $page);
     $page->page_name = $request->page_name;
@@ -205,7 +203,7 @@ class PageController extends Controller
   public function destroy(Request $request, $site_alias, $id)
   { 
     // ГЛАВНЫЙ ЗАПРОС:
-    $page = Page::withoutGlobalScope(ModerationScope::class)->findOrFail($id);
+    $page = Page::moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
     $this->authorize('delete', $page);
     $site_id = $page->site_id;

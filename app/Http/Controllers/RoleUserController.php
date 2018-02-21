@@ -37,8 +37,6 @@ class RoleUserController extends Controller
      */
     public function store(Request $request)
     {
-        
-
         $user = $request->user();
 
         $role_user = new RoleUser;

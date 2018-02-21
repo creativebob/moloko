@@ -5,8 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Scopes\ModerationScope;
-
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
@@ -37,10 +35,6 @@ class Role extends Model
     'category_right_id', 
   ];
 
-
-  /**
-  * Получаем пользователей.
-  */
   public function users()
   {
     return $this->belongsToMany('App\User')->withPivot('department_id');
