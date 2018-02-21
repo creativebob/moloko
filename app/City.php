@@ -15,6 +15,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 class City extends Model
 {
+
 	use SoftDeletes;
   // Подключаем Scopes для главного запроса
   use AuthorsTraitScopes;

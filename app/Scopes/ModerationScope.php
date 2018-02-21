@@ -18,7 +18,7 @@ class ModerationScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-
+        // dd($model);
         // Получаем данные из сессии
         $session  = session('access');
         $user_id = $session['user_info']['user_id'];

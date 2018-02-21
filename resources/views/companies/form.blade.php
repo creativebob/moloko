@@ -38,7 +38,7 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Название компании
-              {{ Form::text('company_name', $company->company_name, ['class'=>'company-name-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9-_]{30}']) }}
+              {{ Form::text('company_name', $company->company_name, ['class'=>'company-name-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9-_/s]{3,30}']) }}
               </label>
             </div>
           </div>
@@ -59,7 +59,7 @@
             </div>
             <div class="small-12 medium-6 cell">
               <label>Почта
-                {{ Form::text('company_email', $company->company_email, ['class'=>'email-field company-email-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[A-Za-z]{3,20}\@[A-Za-z]{7}\.[A-Za-z]{3}']) }}
+                {{ Form::email('company_email', $company->company_email, ['class'=>'email-field company-email-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
                 <span class="form-error">Укажите почту</span>
               </label>
               
@@ -74,13 +74,13 @@
                     $city_id = $company->city->city_id;
                   }
                 @endphp
-                {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'maxlength'=>'40', 'pattern'=>'[А-Яа-яЁё0-9-\s]{3,40}', 'required']) }}
+                {{ Form::text('city_name', $city_name, ['class'=>'city-check-field', 'autocomplete'=>'off', 'maxlength'=>'30', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', 'required']) }}
                 <div class="sprite-input-right find-status"></div>
                 <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
-                {{ Form::hidden('city_id', $city_id, ['class'=>'city-id-field']) }}
+                {{ Form::hidden('city_id', $city_id, ['class'=>'city-id-field', 'maxlength'=>'3', 'pattern'=>'[0-9]{3}']) }}
               </label>
               <label>Адрес
-              {{ Form::text('company_address', $company->company_address, ['class'=>'company-address-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9.,_-/]{3,60}']) }}
+              {{ Form::text('company_address', $company->company_address, ['class'=>'company-address-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9.,_-\s/]{3,60}']) }}
               </label>
             </div>
 
@@ -110,7 +110,7 @@
               </div>
               <div class="small-12 medium-12 cell">
                 <label>Банк
-                {{ Form::text('bank', $company->bank, ['class'=>'bank-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+                {{ Form::text('bank', $company->bank, ['class'=>'bank-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9-_/s]{3,60}']) }}
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
@@ -123,7 +123,6 @@
                 {{ Form::text('account_correspondent', $company->account_correspondent, ['class'=>'account-correspondent-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
                 </label>
               </div>
-
             </div>
         </div>
 
@@ -135,7 +134,7 @@
     @can ('moderator', $company)
       @if ($company->moderated == 1)
         <div class="small-12 cell checkbox">
-          {{ Form::checkbox('moderation_status', null, $company->moderated, ['id'=>'moderation-checkbox']) }}
+          {{ Form::checkbox('moderation_status', 1, $company->moderated, ['id'=>'moderation-checkbox']) }}
           <label for="moderation-checkbox"><span>Временная запись!</span></label>
         </div>
       @endif
@@ -143,7 +142,7 @@
 
     @can ('god', $company)
       <div class="small-12 cell checkbox">
-        {{ Form::checkbox('system_item', null, $company->system_item, ['id'=>'system-checkbox']) }}
+        {{ Form::checkbox('system_item', 1, $company->system_item, ['id'=>'system-checkbox']) }}
         <label for="system-checkbox"><span>Сделать запись системной.</span></label>
       </div>
     @endcan

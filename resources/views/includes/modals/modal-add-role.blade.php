@@ -14,7 +14,7 @@
       </div>
       <div class="small-10 medium-6 cell">
         <label>Отделы
-          {{ Form::select('department_id', $list_departments, $list_departments, ['id'=>'select-departments']) }}
+          {{ Form::select('department_id', $departments_list, $departments_list, ['id'=>'select-departments']) }}
         </label>
         <input type="hidden" name="user_id" id="user-id" value="{{ $user->id }}">
       </div>

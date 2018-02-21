@@ -48,11 +48,7 @@ class User extends Authenticatable
     //  * @return void
     //  */
     //  
-    protected static function boot()
-    {
-        parent::boot();
-        static::addGlobalScope(new ModerationScope);
-    }
+
 
 
     // Фильтрация по городу

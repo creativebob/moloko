@@ -67,8 +67,8 @@ class RightController extends Controller
 
         // Пока этот функционал не работатет, так как и не нужен пока...
         $right = new Right;
-        $entity_list = Entity::get()->pluck('entity_name', 'id');
-        return view('rights.create', compact('right', 'entity_list'));
+        $entities_list = Entity::get()->pluck('entity_name', 'id');
+        return view('rights.create', compact('right', 'entities_list'));
     }
 
 

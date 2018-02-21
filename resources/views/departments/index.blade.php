@@ -150,10 +150,10 @@
           <input type="hidden" name="city_id" class="city-id-field" pattern="[0-9]{,3}">
         </label>
         <label>Название филиала
-           {{ Form::text('filial_name', null, ['class'=>'filial-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9\s]{3,40}', 'required']) }}
+           {{ Form::text('filial_name', null, ['class'=>'filial-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9\W\s]{3,40}', 'required']) }}
         </label>
         <label>Адресс филиала
-           {{ Form::text('filial_address', null, ['class'=>'filial-address-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9\s]{3,40}', 'required']) }}
+           {{ Form::text('filial_address', null, ['class'=>'filial-address-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9\W\s]{3,40}', 'required']) }}
         </label>
         <label>Телефон филиала
            {{ Form::text('filial_phone', null, ['class'=>'filial-phone-field phone-field', 'autocomplete'=>'off', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'required']) }}

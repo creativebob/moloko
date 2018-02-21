@@ -15,6 +15,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 class PositionRole extends Model
 {
+
 	// Подключаем Scopes для главного запроса
  	use CompaniesLimitTraitScopes;
   	use AuthorsTraitScopes;

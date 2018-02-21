@@ -64,6 +64,8 @@ class RoleController extends Controller
         ->orderBy('moderated', 'desc')
         ->paginate(30);
 
+        // dd($roles);
+
         // Получаем авторизованного пользователя
         $user = Auth::user();
 
@@ -91,6 +93,7 @@ class RoleController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
+
 
         // dd($counts_directive_array);
         return view('roles.index', compact('roles', 'counts_directive_array', 'page_info'));
