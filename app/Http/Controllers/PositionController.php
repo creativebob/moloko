@@ -43,7 +43,7 @@ class PositionController extends Controller
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
     ->template($answer) // Выводим шаблоны в список
-    ->orderBy('moderated', 'desc')
+    ->orderBy('moderation', 'desc')
     ->paginate(30);
 
     // Инфо о странице
@@ -107,10 +107,10 @@ class PositionController extends Controller
     $position->author_id = $user_id;
     // Если нет прав на создание полноценной записи - запись отправляем на модерацию
     if($answer['automoderate'] == false){
-        $position->moderated = 1;
+        $position->moderation = 1;
     };
     if($answer['automoderate'] == false){
-        $position->moderated = 1;
+        $position->moderation = 1;
     };
     // Пишем ID компании авторизованного пользователя
     if($company_id == null) {

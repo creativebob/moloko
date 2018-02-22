@@ -41,7 +41,7 @@ class PageController extends Controller
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
     ->whereSite_id($site->id) // Только для страниц сайта
-    ->orderBy('moderated', 'desc')
+    ->orderBy('moderation', 'desc')
     ->paginate(30);
 
     // dd($answer);

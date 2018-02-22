@@ -23,7 +23,7 @@ class CreateActionEntityTable extends Migration
             $table->foreign('action_id')->references('id')->on('actions');
 
             $table->string('alias_action_entity')->index()->comment('Действие над сущностью');
-            $table->integer('moderated')->nullable()->unsigned()->comment('Статус модерации');
+            $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
             $table->timestamps();
         });
     }

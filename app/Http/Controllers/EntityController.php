@@ -18,11 +18,6 @@ use Illuminate\Support\Facades\DB;
 // Запросы и их валидация
 use Illuminate\Http\Request;
 
-//Дополнение к контроллеру
-use App\Http\Controllers\Traits\ForAllControllerTrait;
-
-// use App\Http\Requests\Updateentity;
-
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
 
@@ -33,12 +28,10 @@ class EntityController extends Controller
     protected $entity_name = 'entities';
     protected $entity_dependence = false;
 
-    use ForAllControllerTrait;
-
     public function index()
     {
         // Проверяем право на просмотр списка сущностей
-        $this->authorize($this->getmethod(__FUNCTION__), Entity::class);
+        $this->authorize(getmethod(__FUNCTION__), Entity::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -52,7 +45,7 @@ class EntityController extends Controller
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('moderated', 'desc')
+        ->orderBy('moderation', 'desc')
         ->paginate(30);
 
         // Информация о странице
@@ -64,7 +57,7 @@ class EntityController extends Controller
     public function create()
     {
         // Проверяем право на доступ к странице создания сущности
-        $this->authorize($this->getmethod(__FUNCTION__), Entity::class);
+        $this->authorize(getmethod(__FUNCTION__), Entity::class);
 
         // Получаем новый экземпляр сущности
         $entity = new Entity;
@@ -76,7 +69,7 @@ class EntityController extends Controller
     public function store(Request $request)
     {
         // Проверяем право на создание сущности
-        $this->authorize($this->getmethod(__FUNCTION__), Entity::class);
+        $this->authorize(getmethod(__FUNCTION__), Entity::class);
 
         // Наполняем сущность данными
         $user = Auth::user();  
@@ -86,6 +79,19 @@ class EntityController extends Controller
  
         // Вносим общие данные
         $entity->author_id = $user->id;
+        $entity->system_item = $request->system_item;
+        $entity->moderation = $request->moderation;
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        if($answer['automoderate'] == false){$entity->moderation = 1;};
+
+        // Пишем ID компании авторизованного пользователя
+        if($company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
+        $entity->company_id = $company_id;
+
+        // Раскомментировать если требуется запись ID филиала авторизованного пользователя
+        // if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
+        // $entity->filial_id = $filial_id;
 
         $entity->save();
         return redirect('entities');
@@ -95,13 +101,13 @@ class EntityController extends Controller
     public function show($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $this->getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем сущность которую планируем просмотреть
         $entity = Entity::moderatorLimit($answer)->findOrFail($id);
 
         // Проверяем право на просмотр полученной сущности
-        $this->authorize($this->getmethod(__FUNCTION__), $entity);
+        $this->authorize(getmethod(__FUNCTION__), $entity);
 
         return view('entities.show', compact('entity'));
     }
@@ -110,13 +116,13 @@ class EntityController extends Controller
     public function edit($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $this->getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем сущность которую будем редактировать
         $entity = Entity::moderatorLimit($answer)->findOrFail($id);
 
         // Проверяем право на редактирование полученной сущности
-        $this->authorize($this->getmethod(__FUNCTION__), $entity);
+        $this->authorize(getmethod(__FUNCTION__), $entity);
 
         return view('entities.show', compact('entity'));
     }
@@ -125,13 +131,13 @@ class EntityController extends Controller
     public function update(Request $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $this->getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем сущность которую будем редактировать
         $entity = Entity::moderatorLimit($answer)->findOrFail($id);
 
         // Проверяем право на редактирование полученной сущности
-        $this->authorize($this->getmethod(__FUNCTION__), $entity);
+        $this->authorize(getmethod(__FUNCTION__), $entity);
 
         // Внесение изменений:
         $entity->entity_name = $request->entity_name;
@@ -145,13 +151,13 @@ class EntityController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $this->getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем сущность которую планируем удалить
         $entity = Entity::moderatorLimit($answer)->findOrFail($id);
 
         // Проверяем право на удаление полученной сущности
-        $this->authorize($this->getmethod(__FUNCTION__), $entity);         
+        $this->authorize(getmethod(__FUNCTION__), $entity);         
 
         // Удаляем сущность
         $entity = Entity::destroy($id);

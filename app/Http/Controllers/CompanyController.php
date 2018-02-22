@@ -50,7 +50,7 @@ class CompanyController extends Controller
         ->moderatorLimit($answer)
         ->moderatorLimit($answer)
         ->companyFilter($request)
-        ->orderBy('moderated', 'desc')
+        ->orderBy('moderation', 'desc')
         ->paginate(30);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
