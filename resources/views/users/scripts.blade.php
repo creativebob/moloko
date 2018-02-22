@@ -1,4 +1,3 @@
-@section('scripts')
 <script type="text/javascript">
   $(document).on('click', '#submit-role-add', function(event) {
     event.preventDefault();
@@ -23,4 +22,3 @@
     });
   });
 </script>
-@endsection
