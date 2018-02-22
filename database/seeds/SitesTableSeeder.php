@@ -19,7 +19,7 @@ class SitesTableSeeder extends Seeder
 		        'company_id' => null,
                 'author_id' => 1,
                 'system_item' => 1,
-                'moderated' => null,
+                'moderation' => null,
         	],
             [
                 'site_name' => 'Ворота "Марс"',
@@ -28,7 +28,7 @@ class SitesTableSeeder extends Seeder
                 'company_id' => 1,
                 'author_id' => 4,
                 'system_item' => null,
-                'moderated' => null,
+                'moderation' => null,
             ],
             [
                 'site_name' => 'Ибаный',
@@ -37,7 +37,7 @@ class SitesTableSeeder extends Seeder
                 'company_id' => 1,
                 'author_id' => 7,
                 'system_item' => null,
-                'moderated' => 1,
+                'moderation' => 1,
             ],
             [
                 'site_name' => 'Фенстер',
@@ -46,7 +46,7 @@ class SitesTableSeeder extends Seeder
                 'company_id' => 2,
                 'author_id' => 14,
                 'system_item' => null,
-                'moderated' => null,
+                'moderation' => null,
             ],
         ]);
     }

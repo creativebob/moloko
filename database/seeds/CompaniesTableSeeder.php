@@ -28,7 +28,7 @@ class CompaniesTableSeeder extends Seeder
 		        'director_user_id' => 4,  
                 // 'admin_user_id' => '1', 
                 'city_id' => 1,
-                'moderated' => null,
+                'moderation' => null,
         	],
             [
 
@@ -46,7 +46,7 @@ class CompaniesTableSeeder extends Seeder
                 'director_user_id' => null,  
                 // 'admin_user_id' => '1',  
                 'city_id' => 1,
-                'moderated' => null,
+                'moderation' => null,
             ],
             [
 
@@ -64,7 +64,7 @@ class CompaniesTableSeeder extends Seeder
                 'director_user_id' => null,  
                 // 'admin_user_id' => '1',  
                 'city_id' => 1,
-                'moderated' => 1,
+                'moderation' => 1,
             ],
         ]);
     }

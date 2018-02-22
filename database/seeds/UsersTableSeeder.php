@@ -30,7 +30,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => 1, 
 	        	'author_id' => null, 
 	        	'city_id' => 1, 
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         	[
 	        	'login' => 'creativebob', 
@@ -49,7 +49,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 1,
 	        	'city_id' => 1, 
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         	[
 	        	'login' => 'makc_berluskone', 
@@ -68,7 +68,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 1, 
 	        	'city_id' => 1, 
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         	[
 	        	'login' => 'timoshenko', 
@@ -87,7 +87,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 1, 
 	        	'city_id' => 1,
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         	[
 	        	'login' => 'mironov', 
@@ -106,7 +106,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 4, 
 	        	'city_id' => 1,
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         	[
 	        	'login' => 'kondrachuk', 
@@ -125,7 +125,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 4, 
 	        	'city_id' => 1,
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         	[
 	        	'login' => 'davydenko', 
@@ -144,7 +144,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 4, 
 	        	'city_id' => 1,
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         	[
 	        	'login' => 'ylan1', 
@@ -162,7 +162,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 4, 
 	        	'city_id' => 2,
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         	[
 	        	'login' => 'ylan2', 
@@ -180,7 +180,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 8, 
 	        	'city_id' => 2,
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         	[
 	        	'login' => 'ylan3', 
@@ -198,7 +198,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 8, 
 	        	'city_id' => 2,
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         		[
 	        	'login' => 'kray1', 
@@ -216,7 +216,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 4, 
 	        	'city_id' => 3,
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         	[
 	        	'login' => 'kray2', 
@@ -234,7 +234,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 11, 
 	        	'city_id' => 3,
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         	[
 	        	'login' => 'kray3', 
@@ -252,7 +252,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 12, 
 	        	'city_id' => 3,
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         	[
 	        	'login' => 'fenster', 
@@ -270,7 +270,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 1, 
 	        	'city_id' => 1,
-	        	'moderated' => null, 
+	        	'moderation' => null, 
         	],
         	[
 	        	'login' => 'test1', 
@@ -288,7 +288,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 5, 
 	        	'city_id' => 1,
-	        	'moderated' => 1, 
+	        	'moderation' => 1, 
         	],
         	[
 	        	'login' => 'test2', 
@@ -306,7 +306,7 @@ class UsersTableSeeder extends Seeder
 	        	'system_item' => null, 
 	        	'author_id' => 5, 
 	        	'city_id' => 1,
-	        	'moderated' => 1, 
+	        	'moderation' => 1, 
         	],
         ]);
 
