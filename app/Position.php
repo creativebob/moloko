@@ -26,35 +26,6 @@ class Position extends Model
   use TemplateTraitScopes;
   use ModeratorLimitTraitScopes;
 
-    /**
-     * Загрузка типажа мягкого удаления для модели.
-     *
-     * @return void
-     */
-    // public static function bootModeration()
-    // {
-    //   static::addGlobalScope(new ModerationScope);
-    // }
-
-
-    //   /**
-    //  * The "booting" method of the model.
-    //  *
-    //  * @return void
-    //  */
-    //  
-    protected static function boot()
-    {
-        parent::boot();
-        static::addGlobalScope(new ModerationScope);
-    }
-  
-
-  /**
-   * Атрибуты, которые должны быть преобразованы в даты.
-   *
-   * @var array
-   */
   protected $dates = ['deleted_at'];
   protected $fillable = [
     'position_name',

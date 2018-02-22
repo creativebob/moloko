@@ -56,12 +56,12 @@ class NavigationController extends Controller
 
     public function store(NavigationRequest $request, $site_alias)
     {
-        // Получаем метод
-        $method = 'create';
+
         // Подключение политики
-        $this->authorize($method, Navigation::class);
+        $this->authorize(getmethod(__FUNCTION__), Navigation::class);
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -92,39 +92,48 @@ class NavigationController extends Controller
 
     public function edit($site_alias, $id)
     {
-        // Получаем метод
-        $method = 'update';
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
         // ГЛАВНЫЙ ЗАПРОС:
         $navigation = Navigation::with('menus')->moderatorLimit($answer)->findOrFail($id);
+
         // Подключение политики
-        $this->authorize($method, $navigation);
+        $this->authorize(getmethod(__FUNCTION__), $navigation);
         
         // Отдаем данные по навигации
         $result = [
           'navigation_name' => $navigation->navigation_name,
           'menus' => $navigation->menus->where('page_id', null)->pluck('menu_name', 'id'),
         ];
+        
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     public function update(NavigationRequest $request, $site_alias, $id)
     {
-        // Получаем метод
-        $method = __FUNCTION__;
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
         // Получаем авторизованного пользователя
         $user = $request->user();
+
         // ГЛАВНЫЙ ЗАПРОС:
         $navigation = Navigation::moderatorLimit($answer)->findOrFail($id);
         // Подключение политики
-        $this->authorize($method, $navigation);
+        $this->authorize(getmethod(__FUNCTION__), $navigation);
         $user = $request->user();
         $navigation->navigation_name = $request->navigation_name;
         $navigation->site_id = $request->site_id;
         $navigation->company_id = $user->company_id;
         $navigation->editor_id = $user->id;
         $navigation->save();
+
         // Пишем сайт в сессию
         session(['current_site' => $request->site_id]);
+
         if ($navigation) {
           return Redirect('/sites/'.$site_alias.'/current_menu/'.$navigation->id.'/0');
         } else {
@@ -132,15 +141,22 @@ class NavigationController extends Controller
         };
     }
 
+
     public function destroy(Request $request, $site_alias, $id)
     {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
         // ГЛАВНЫЙ ЗАПРОС:
         $navigation = Navigation::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('delete', $navigation);
+        $this->authorize(getmethod(__FUNCTION__), $navigation);
+
         $site_id = $navigation->site_id;
         $user = $request->user();
+
       if ($navigation) {
         $navigation->editor_id = $user->id;
         $navigation->save();

@@ -55,6 +55,8 @@
           <th class="td-phone">Телефон</th>
           <th class="td-email">Почта</th>
           <th class="td-contragent-status">Статус</th>
+          <th class="td-staffer">Должность</th>
+
           <th class="td-access-block">Доступ</th>
 {{--           <th class="td-group-users-id">Уровень доступа</th>
           <th class="td-group-users-id">Локализация</th> --}}
@@ -97,9 +99,12 @@
           @endphp
             <td class="td-getauth">@if((Auth::user()->id != $user->id)&&!empty($user->company_id)) {{ link_to_route('users.getauthuser', $but_text, ['user_id'=>$user->id], ['class' => $but_class]) }} @endif</td>
           @endif
+
+
           <td class="td-phone">{{ $user->phone }}</td>
           <td class="td-email">{{ $user->email }}</td>
           <td class="td-contragent-status">{{ decor_user_type($user->user_type) }}</td>
+          <td class="td-staffer">@if(!empty($user->staff->first()->position->position_name)) {{ $user->staff->first()->position->position_name }} @endif</td>
           <td class="td-access-block">{{ decor_access_block($user->access_block) }}</td>
 {{--           <td class="td-group_action_id">{{ $user->group_action->access_group_name }}</td>
           <td class="td-group_locality_id">{{ $user->group_locality->access_group_name }}</td> --}}

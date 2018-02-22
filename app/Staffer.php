@@ -53,16 +53,12 @@ class Staffer extends Model
   {
     return $this->belongsTo('App\Department', 'filial_id');
   }
-  /**
-  * Получаем должность.
-  */
+
   public function position()
   {
     return $this->belongsTo('App\Position');
   }
-  /**
-  * Получаем юзера.
-  */
+
   public function user()
   {
     return $this->belongsTo('App\User');

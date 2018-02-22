@@ -29,12 +29,11 @@ class StafferController extends Controller
 
   public function index(Request $request)
   {
-    // Получаем метод
-    $method = __FUNCTION__;
+
     // Подключение политики
-    $this->authorize($method, Staffer::class);
+    $this->authorize(getmethod(__FUNCTION__), Staffer::class);
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
@@ -66,12 +65,11 @@ class StafferController extends Controller
 
   public function store(StafferRequest $request)
   {
-    // Получаем метод
-    $method = 'create';
+
     // Подключение политики
-    $this->authorize($method, Staffer::class);
+    $this->authorize($getmethod(__FUNCTION__), Staffer::class);
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
@@ -112,8 +110,8 @@ class StafferController extends Controller
 
   public function edit(Request $request, $id)
   {
-    // Получаем метод
-    $method = 'update';
+
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
     $staffer = Staffer::with(['employees' => function($query) {
@@ -123,10 +121,10 @@ class StafferController extends Controller
     ->findOrFail($id);
 
     // Подключение политики
-    $this->authorize($method, $staffer);
+    $this->authorize(getmethod(__FUNCTION__), $staffer);
 
     // Список меню для сайта
-    $answer = operator_right('sites', $this->entity_dependence, $method);
+    $answer = operator_right('users', true, 'index');
     $user = $request->user();
     $users = User::moderatorLimit($answer)
     ->companiesLimit($answer)
@@ -145,20 +143,18 @@ class StafferController extends Controller
 
   public function update(EmployeeRequest $request, $id)
   {
-    // Получаем метод
-    $method = __FUNCTION__;
 
     // Получаем авторизованного пользователя
     $user = $request->user();
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, true, $method);
+    $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
    $staffer = Staffer::moderatorLimit($answer)->findOrFail($id);
 
     // Подключение политики
-    $this->authorize('update', $staffer);
+    $this->authorize(getmethod(__FUNCTION__), $staffer);
 
     // Если не пустая дата увольнения пришла
     if (isset($request->date_dismissal)) {
@@ -232,10 +228,15 @@ class StafferController extends Controller
 
   public function destroy(Request $request, $id)
   {
+
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
+    
     // ГЛАВНЫЙ ЗАПРОС:
     $staffer = Staffer::with('department')->moderatorLimit($answer)->findOrFail($id);
     // Подключение политики
-    $this->authorize('delete', $staffer);
+    $this->authorize(getmethod(__FUNCTION__), $staffer);
+
     // Удаляем должность из отдела с обновлением
     // Находим филиал и отдел
     $user = $request->user();

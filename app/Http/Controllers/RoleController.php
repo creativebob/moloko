@@ -40,14 +40,11 @@ class RoleController extends Controller
     public function index(Request $request)
     {
 
-        // Получаем метод
-        $method = __FUNCTION__;
-
         // Подключение политики
-        $this->authorize($method, Role::class);
+        $this->authorize(getmethod(__FUNCTION__), Role::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -62,8 +59,6 @@ class RoleController extends Controller
         ->template($answer) // Выводим шаблоны в список
         ->orderBy('moderation', 'desc')
         ->paginate(30);
-
-        // dd($roles);
 
         // Получаем авторизованного пользователя
         $user = Auth::user();
@@ -102,11 +97,8 @@ class RoleController extends Controller
     public function create(Request $request)
     {
 
-        // Получаем метод
-        $method = __FUNCTION__;
-
         // Подключение политики
-        $this->authorize('create', Role::class);
+        $this->authorize(getmethod(__FUNCTION__), Role::class);
 
         $role = new Role;
         return view('roles.create', compact('role'));
@@ -115,14 +107,12 @@ class RoleController extends Controller
 
     public function store(RoleRequest $request)
     {
-        // Получаем метод
-        $method = __FUNCTION__;
 
         // Подключение политики
-        $this->authorize('create', Role::class);
+        $this->authorize(getmethod(__FUNCTION__), Role::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -149,15 +139,18 @@ class RoleController extends Controller
     }
 
 
-
     public function show($id)
     {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $role = Role::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize('view', $role);
+
         return view('roles.edit', compact('role'));
     }
 
@@ -165,11 +158,15 @@ class RoleController extends Controller
     public function edit($id)
     {
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
         // ГЛАВНЫЙ ЗАПРОС:
         $role = Role::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('update', $role);
+        $this->authorize(getmethod(__FUNCTION__), $role);
+
         return view('roles.edit', compact('role'));
     }
 
@@ -177,14 +174,11 @@ class RoleController extends Controller
     public function update(RoleRequest $request, $id)
     {
 
-        // Получаем метод
-        $method = __FUNCTION__;
-
         // Получаем авторизованного пользователя
         $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $role = Role::moderatorLimit($answer)->findOrFail($id);
@@ -196,37 +190,42 @@ class RoleController extends Controller
         $role->role_description = $request->role_description;
 
         $role->save();
+
         return redirect('roles');
     }
 
     public function destroy($id)
     {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
         // ГЛАВНЫЙ ЗАПРОС:
         $role = Role::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('delete', $role);
+        $this->authorize(getmethod(__FUNCTION__), $role);
 
         $role = Role::destroy($id);
         if ($role) {
           return Redirect('roles');
         } else {
           echo 'Произошла ошибка';
-        }; 
+        };
+
     }
 
     public function setting(Request $request, $role_id)
     {
-        // Получаем метод
-        $method = 'index';
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
         // ГЛАВНЫЙ ЗАПРОС:
         $role = Role::moderatorLimit($answer)->findOrFail($role_id);
 
         // Подключение политики
-        $this->authorize('update', $role);
+        $this->authorize(getmethod(__FUNCTION__), $role);
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -335,6 +334,8 @@ class RoleController extends Controller
                     $right_id = '';
                 };
 
+                if(($role->system_item == null)&&($role->company_id == null)){$disabled = 'disabled';};
+
                 // Формируем строку с данными для чекбоксов на одну сущность
                 $boxes[] = [
                     'action_method' => $box_allow_name, 
@@ -371,6 +372,7 @@ class RoleController extends Controller
                     };
                 };
 
+                if(($role->system_item == null)&&($role->company_id == null)){$disabled = 'disabled';};
 
                 // Формируем строку с данными для чекбоксов на одну сущность
                 $boxes_deny[] = [
@@ -391,19 +393,12 @@ class RoleController extends Controller
         // Формируем строку запретов
             $main_mass_deny[] = ['entity_name' => $entity->entity_name, 'entity_id' => $entity->id, 'boxes' => $boxes_deny];
 
-
             // Чистим массив - готовим для очередной итерации
             $boxes = [];
             $boxes_deny = [];
 
         }  // Завершение foreach (Наполняем массив данными)
 
-
-
-
-        // dd($main_mass_deny);
-
-        // 
         return view('roles.setting', compact('main_mass', 'main_mass_deny', 'actions', 'role_id', 'role'));
     }
 
@@ -411,13 +406,11 @@ class RoleController extends Controller
     public function setright(Request $request)
     {
 
-        // Получаем метод
-        $method = 'index';
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, 'update');
+
         // Получаем авторизованного пользователя
-        $user = $request->user();      
+        $user = $request->user();
 
         // ГЛАВНЫЙ ЗАПРОС:
         $role = Role::moderatorLimit($answer)->findOrFail($request->role_id);
@@ -425,74 +418,115 @@ class RoleController extends Controller
         // Подключение политики
         $this->authorize('update', $role);
 
-
         $role_id = $request->role_id;
 
-        // echo $request->rights;
-        if (count($request->rights) > 0) {
 
-            // если пришел массив правил, удаляем все что найдем
-            $delete_rights = RightRole::where(['role_id' => $role_id, 'system_item' => null])->whereIn('right_id', $request->rights)->delete();
-            
-             // echo $request->checkbox;
-            if ($request->checkbox == false) {
-                // Если чекбокс был снят то все
-                $data = [
-                    'status' => 0,
-                    'msg' => "Удалили права на сущность!",
-                ];
-            } else {
-                // Если чекбокс былвключен, то пишем пришедшие значения
-                // echo $delete_rights;
-                $mass = [];
-                // Смотрим список пришедших роллей
-                foreach ($request->rights as $right) {
-                  $mass[] = [
-                    'right_id' => $right,
-                    'role_id' => $role_id,
-                    'author_id' => $user->id,
-                  ];
-                };
-                DB::table('right_role')->insert($mass);
-                $data = [
-                    'status' => 1,
-                    'msg' => "Записали права на сущность!",
-                ];
-            };
-            // Отдаем результат
-            echo json_encode($data, JSON_UNESCAPED_UNICODE);
-            
-        } else {
 
-            $rightrole = RightRole::where('role_id', $request->role_id)->where('right_id', $request->right_id)->first();
 
-            if(isset($rightrole)){
-
-                    // Если запись права в роли не являеться системной, то удаляем ее.
-                    if($rightrole->system_item == null){
-                        $rightrole = RightRole::destroy($rightrole->id);
-                        echo "Есть такая запись! Сделали попытку ебнуть ее!";                
-                    };
-
-            } else {
-
-                    echo "Такой записи не было. Сделали попытку записать!";
-
-                    $rightrole = new RightRole;
-                    $rightrole->role_id = $request->role_id;
-                    $rightrole->right_id = $request->right_id;
-                    $rightrole->author_id = $user->id;
-
-                    $rightrole->save();
-
-                    if($rightrole){
-
-                    } else { echo "Все пошло по пизде!"; }
-
-            };
+        // СОЗДАНИЕ СВЯЗИ - НАЗНАЧЕНИЕ ПРАВА НА РОЛЬ:
+        // Для начала проверим, не работаем ли мы с системной или шаблонной ролью
+        if(($role->system_item == null)&&($role->company_id == null)){
+            echo "Шаблон изменить не возможно!";
         };
-        
-        
+
+
+        if(($role->system_item == 1)&&($role->company_id == null)){
+            echo "Иди на хуй!";
+        };
+
+        if(($role->system_item == null)&&($role->company_id != null)){
+
+            if (count($request->rights) > 0) {
+
+                // -----------------------------------------------------------------------------------------------------------------------------
+                // РАБОТАЕМ С ГРУППОВЫМ НАЗНАЧЕНИЕМ ПРАВА --------------------------------------------------------------------------------------
+                // -----------------------------------------------------------------------------------------------------------------------------
+
+
+                // если пришел массив правил, удаляем все что найдем
+                $delete_rights = RightRole::where(['role_id' => $role_id, 'system_item' => null])->whereIn('right_id', $request->rights)->delete();
+                
+                 // echo $request->checkbox;
+                if ($request->checkbox == false) {
+                    // Если чекбокс был снят то все
+                    $data = [
+                        'status' => 0,
+                        'msg' => "Удалили права на сущность!",
+                    ];
+                } else {
+                    // Если чекбокс былвключен, то пишем пришедшие значения
+                    // echo $delete_rights;
+                    $mass = [];
+                    // Смотрим список пришедших роллей
+                    foreach ($request->rights as $right) {
+                      $mass[] = [
+                        'right_id' => $right,
+                        'role_id' => $role_id,
+                        'author_id' => $user->id,
+                      ];
+                    };
+                    DB::table('right_role')->insert($mass);
+                    $data = [
+                        'status' => 1,
+                        'msg' => "Записали права на сущность!",
+                    ];
+                };
+
+
+
+                // Отдаем результат
+                echo json_encode($data, JSON_UNESCAPED_UNICODE);
+                
+            } else {
+
+                // -----------------------------------------------------------------------------------------------------------------------------
+                // РАБОТАЕМ С ОДИНОЧНЫМ НАЗНАЧЕНИЕМ ПРАВА --------------------------------------------------------------------------------------
+                // -----------------------------------------------------------------------------------------------------------------------------
+
+                // Получаем ID связи роли с правом
+                $rightrole = RightRole::where('role_id', $request->role_id)->where('right_id', $request->right_id)->first();
+
+                // Если такая связь НАЙДЕНА
+                if(isset($rightrole)){
+
+
+                        // Если запись права в роли не являеться системной, то удаляем ее.
+                        if($rightrole->system_item == 1){
+
+                            $rightrole = RightRole::destroy($rightrole->id);
+                            echo "Хуй ты тут что нибудь изменишь! Запись системная!";
+                                            
+                        };
+
+                        // Если запись права в роли не являеться системной, то удаляем ее.
+                        if($rightrole->system_item == null){
+
+                            $rightrole = RightRole::destroy($rightrole->id);
+                            echo "Есть такая запись! Наебнули к хуям!";
+
+                        };
+
+                // Если такая связь НЕ найдена
+                } else {
+
+                        echo "Такой записи не было. Сделали попытку записать!";
+
+                        $rightrole = new RightRole;
+                        $rightrole->role_id = $request->role_id;
+                        $rightrole->right_id = $request->right_id;
+                        $rightrole->author_id = $user->id;
+
+                        $rightrole->save();
+
+                        if($rightrole){
+
+                        } else { echo "Все пошло по пизде!"; }
+
+
+                };
+            };
+
+        };
 
     }
 
