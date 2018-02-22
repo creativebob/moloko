@@ -126,8 +126,7 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label class="input-icon">Введите название навигации
-          {{ Form::text('navigation_name', $value = null, ['class'=>'varchar-field', 'autocomplete'=>'off', 'required']) }}
-          <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
+          @include('includes.inputs.name', ['value'=>null, 'name'=>'navigation_name'])
         </label>
         <input type="hidden" name="site_id" value="{{ $site->id }}">
       </div>
@@ -154,7 +153,7 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
          <label class="input-icon">Введите название навигации
-          {{ Form::text('navigation_name', $value = null, ['class'=>'varchar-field', 'id'=>'navigation-name-field', 'autocomplete'=>'off', 'required']) }}
+          @include('includes.inputs.name', ['value'=>null, 'name'=>'navigation_name'])
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
         <input type="hidden" name="site_id" value="{{ $site->id }}">
@@ -193,11 +192,10 @@
           <div class="grid-x grid-padding-x modal-content inputs">
             <div class="small-10 small-offset-1 cell">
               <label>Название пункта меню
-                {{ Form::text('menu_name', $value = null, ['class'=>'varchar-field', 'autocomplete'=>'off', 'required']) }}
-                <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
+                @include('includes.inputs.name', ['name'=>'menu_name', 'value'=>null])
               </label>
               <label>Введите ссылку
-                {{ Form::text('menu_alias', $value = null, ['class'=>'text-en-field', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.text-en', ['name'=>'menu_alias', 'value'=>null, 'required'=>''])
               </label>
               <label>Страница:
                 {{ Form::select('page_id', $pages_list, null, ['class'=>'pages-tree-select', 'placeholder'=>'Не выбрано']) }}
@@ -219,7 +217,7 @@
                 </select>
               </label>
               <label>Введите имя иконки
-                {{ Form::text('menu_icon', $value = null, ['class'=>'text-en-field', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.text-en', ['name'=>'menu_icon', 'value'=>null, 'required'=>''])
               </label>
             </div>
           </div>
@@ -260,11 +258,11 @@
           <div class="grid-x grid-padding-x modal-content inputs">
             <div class="small-10 small-offset-1 cell">
               <label>Название пункта меню
-                {{ Form::text('menu_name', $value = null, ['class'=>'varchar-field', 'id'=>'menu-name', 'autocomplete'=>'off', 'required']) }}
+                @include('includes.inputs.name', ['name'=>'menu_name', 'value'=>null])
                 <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
               </label>
               <label>Введите ссылку
-                {{ Form::text('menu_alias', $value = null, ['class'=>'text-en-field', 'id'=>'menu-alias', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.text-en', ['name'=>'menu_alias', 'value'=>null, 'required'=>''])
               </label>
               <label>Страница:
                 {{ Form::select('page_id', $pages_list, null, ['class'=>'pages-tree-select', 'class'=>'pages-tree-select', 'placeholder'=>'Не выбрано']) }}
@@ -286,7 +284,7 @@
                 </select>
               </label>
               <label>Введите имя иконки
-                {{ Form::text('menu_icon', $value = null, ['class'=>'text-en-field', 'id'=>'menu-icon', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.text-en', ['name'=>'menu_icon', 'value'=>null, 'required'=>''])
               </label>
             </div>
           </div>
@@ -335,13 +333,9 @@ $(function() {
       type: "GET",
       success: function(date){
         var result = $.parseJSON(date);
-        $('#navigation-name-field').val(result.navigation_name);
+        $('#form-navigation-edit .name-field').val(result.navigation_name);
       }
     });
-  });
-  // При закрытии модалки очищаем поля
-  $(document).on('click', '.close-modal', function() {
-    $('#navigation-name-field').val('');
   });
 
   // Добавление пункта меню
@@ -398,9 +392,9 @@ $(function() {
           var result = $.parseJSON(date);
 
           // alert(result.menus);
-          $('#menu-name').val(result.menu_name);
-          $('#menu-icon').val(result.menu_icon);
-          $('#menu-alias').val(result.menu_alias);
+          $('#form-menu-edit [name="menu_name"]').val(result.menu_name);
+          $('#form-menu-edit [name="menu_icon"]').val(result.menu_icon);
+          $('#form-menu-edit [name="menu_alias"]').val(result.menu_alias);
           $('.menus-tree-select>option').remove();
           var data = "<option value  >Не выбрано</option>";
           $.each(result.menus, function(id, name) {
@@ -437,10 +431,10 @@ $(function() {
       }
     });
   });
+  // При закрытии модалки очищаем поля
   $(document).on('click', '.icon-close-modal', function() {
-    $('#menu-name').val('');
-    $('#menu-icon').val('');
-    $('#menu-alias').val('');
+    $('.name-field').val('');
+    $('.text-en-field').val('');
     $('.pages-tree-select>option:first-child').prop('selected', true);
     $('.navigations-tree-select>option:first-child').prop('selected', true);
     $('.menus-tree-select>option').remove();
@@ -456,66 +450,57 @@ $(function() {
   });
 
   // Чекаем отдел в нашей бд
-  $('#menu-name-field').keyup(function() {
-    // Блокируем кнопку
-    $('#submit-menu-add').prop('disabled', true);
-    $('#menu-database').val(0);
-    // Получаем фрагмент текста
-    var menu = $('#menu-name-field').val();
-    // Первая буква отдела заглавная
-    menu = menu.charAt(0).toUpperCase() + menu.substr(1);
-    // alert(menu);
-    // Смотрим сколько символов
-    var lenmenu = menu.length;
-    // Если символов больше 3 - делаем запрос
-    if (lenmenu > 2) {
-      // Сам ajax запрос
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "/menu",
-        type: "POST",
-        data: {menu_name: menu, section_id: $('#filial-id-field').val(), menu_database: $('#menu-database').val()},
-        beforeSend: function () {
-          $('.icon-load').removeClass('load');
-        },
-        success: function(date){
-          $('.icon-load').addClass('load');
-          // Удаляем все значения чтобы вписать новые
-          $('#tbody-menu-add>tr').remove();
-          var result = $.parseJSON(date);
-          var data = '';
-          // alert(result.error_status);
-          if (result.error_status == 0) {
-            data = "<tr><td>Данный отдел уже сущестует в этой компании!</td></tr>";
-            // Выводим пришедшие данные на страницу
-            $('#tbody-menu-add').append(data);
-          };
-          if (result.error_status == 1) {
-            $('#menu-database').val(1);
-            $('#submit-menu-add').prop('disabled', false);
-          };
-        }
-      });
-    };
-    if (lenmenu <= 2) {
-      // Удаляем все значения, если символов меньше 3х
-      $('#tbody-menu-add>tr').remove();
-      $('.item-error').remove();
-      // $('#city-name-field').val('');
-    };
-  });
-  // При закрытии окна с ошибкой очищаем модалку
-  $(document).on('click', '.error-close', function() {
-    $('.item-error').remove();
-    $('#tbody-city-add>tr').remove();
-    $('#tbody-region-add>tr').remove();
-    $('#city-name-field').val('');
-    $('#region-name-field').val('');
-    $('#area-name').val('');
-    $('#region-name').val('');
-  });
+  // $('#menu-name-field').keyup(function() {
+  //   // Блокируем кнопку
+  //   $('#submit-menu-add').prop('disabled', true);
+  //   $('#menu-database').val(0);
+  //   // Получаем фрагмент текста
+  //   var menu = $('#menu-name-field').val();
+  //   // Первая буква отдела заглавная
+  //   menu = menu.charAt(0).toUpperCase() + menu.substr(1);
+  //   // alert(menu);
+  //   // Смотрим сколько символов
+  //   var lenmenu = menu.length;
+  //   // Если символов больше 3 - делаем запрос
+  //   if (lenmenu > 2) {
+  //     // Сам ajax запрос
+  //     $.ajax({
+  //       headers: {
+  //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //       },
+  //       url: "/menu",
+  //       type: "POST",
+  //       data: {menu_name: menu, section_id: $('#filial-id-field').val(), menu_database: $('#menu-database').val()},
+  //       beforeSend: function () {
+  //         $('.icon-load').removeClass('load');
+  //       },
+  //       success: function(date){
+  //         $('.icon-load').addClass('load');
+  //         // Удаляем все значения чтобы вписать новые
+  //         $('#tbody-menu-add>tr').remove();
+  //         var result = $.parseJSON(date);
+  //         var data = '';
+  //         // alert(result.error_status);
+  //         if (result.error_status == 0) {
+  //           data = "<tr><td>Данный отдел уже сущестует в этой компании!</td></tr>";
+  //           // Выводим пришедшие данные на страницу
+  //           $('#tbody-menu-add').append(data);
+  //         };
+  //         if (result.error_status == 1) {
+  //           $('#menu-database').val(1);
+  //           $('#submit-menu-add').prop('disabled', false);
+  //         };
+  //       }
+  //     });
+  //   };
+  //   if (lenmenu <= 2) {
+  //     // Удаляем все значения, если символов меньше 3х
+  //     $('#tbody-menu-add>tr').remove();
+  //     $('.item-error').remove();
+  //     // $('#city-name-field').val('');
+  //   };
+  // });
+
   // Открываем меню и подменю, если только что добавили населенный пункт
   @if(!empty($data))
     function backlightItems ($data) {

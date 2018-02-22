@@ -94,6 +94,8 @@ class NavigationController extends Controller
     {
         // Получаем метод
         $method = 'update';
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
         // ГЛАВНЫЙ ЗАПРОС:
         $navigation = Navigation::with('menus')->moderatorLimit($answer)->findOrFail($id);
         // Подключение политики
@@ -113,6 +115,8 @@ class NavigationController extends Controller
         $method = __FUNCTION__;
         // Получаем авторизованного пользователя
         $user = $request->user();
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
         // ГЛАВНЫЙ ЗАПРОС:
         $navigation = Navigation::moderatorLimit($answer)->findOrFail($id);
         // Подключение политики

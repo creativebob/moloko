@@ -23,11 +23,11 @@
         $block = 'readonly';
       @endphp
     @endif
-      {{ Form::text('site_name', null, ['class'=>'text-ru-en-field', 'autocomplete'=>'off', 'required', $block]) }}
+      {{ Form::text('site_name', $site->site_name, ['class'=>'text-ru-en-field', 'autocomplete'=>'off', 'required', $block]) }}
       <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
     </label>
     <label>Домен сайта
-      {{ Form::text('site_domen', $value = null, ['class'=>'text-ru-en-field', 'autocomplete'=>'off']) }}
+      {{ Form::text('site_domen', $site->site_domen, ['class'=>'text-ru-en-field', 'autocomplete'=>'off']) }}
     </label>
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
@@ -44,13 +44,21 @@
     </fieldset> 
   </div>
 
-    @php
-      $item = $site;
-    @endphp
     {{-- Чекбокс модерации --}}
-    @include('includes.inputs.moderation-checkbox', $item)
+    @can ('moderator', $site)
+      @if ($site->moderation == 1)
+        <div class="small-12 cell checkbox">
+          @include('includes.inputs.moderation', ['value'=>$site->moderation, 'name'=>'moderation'])
+        </div>
+      @endif
+    @endcan
+
     {{-- Чекбокс системной записи --}}
-    @include('includes.inputs.system-item-checkbox', $item)  
+    @can ('god', $site)
+      <div class="small-12 cell checkbox">
+        @include('includes.inputs.system_item', ['value'=>$site->system_item, 'name'=>'system_item']) 
+      </div>
+    @endcan   
 
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}

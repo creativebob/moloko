@@ -57,13 +57,21 @@
 
   </div>
 
-    @php
-      $item = $position;
-    @endphp
     {{-- Чекбокс модерации --}}
-    @include('includes.inputs.moderation-checkbox', $item)
+    @can ('moderator', $position)
+      @if ($position->moderation == 1)
+        <div class="small-12 cell checkbox">
+          @include('includes.inputs.moderation', ['value'=>$position->moderation, 'name'=>'moderation'])
+        </div>
+      @endif
+    @endcan
+
     {{-- Чекбокс системной записи --}}
-    @include('includes.inputs.system-item-checkbox', $item)  
+    @can ('god', $position)
+      <div class="small-12 cell checkbox">
+        @include('includes.inputs.system_item', ['value'=>$position->system_item, 'name'=>'system_item']) 
+      </div>
+    @endcan   
 
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}

@@ -115,6 +115,9 @@ class StafferController extends Controller
     // Получаем метод
     $method = 'update';
 
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    
     // ГЛАВНЫЙ ЗАПРОС:
     $staffer = Staffer::with(['employees' => function($query) {
       $query->whereDate_dismissal(null);

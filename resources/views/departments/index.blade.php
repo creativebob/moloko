@@ -144,21 +144,19 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label class="input-icon">Введите город
-          {{ Form::text('city_name', null, ['class'=>'varchar-field city-check-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-\s]{3,40}', 'required']) }}
-          <div class="sprite-input-right find-status"></div>
-          <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
-          <input type="hidden" name="city_id" class="city-id-field" pattern="[0-9]{,3}">
+          @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name'])
+          @include('includes.inputs.city_id', ['value'=>null, 'name'=>'city_id'])
         </label>
         <label>Название филиала
-           {{ Form::text('filial_name', null, ['class'=>'varchar-field filial-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9\W\s]{3,40}', 'required']) }}
+          @include('includes.inputs.name', ['value'=>null, 'name'=>'filial_name'])
         </label>
         <label>Адресс филиала
-           {{ Form::text('filial_address', null, ['class'=>'varchar-field filial-address-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9\W\s]{3,40}', 'required']) }}
+           @include('includes.inputs.address', ['value'=>null, 'name'=>'filial_address'])
         </label>
         <label>Телефон филиала
-           {{ Form::text('filial_phone', null, ['class'=>'filial-phone-field phone-field', 'autocomplete'=>'off', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'required']) }}
+          @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone'])
         </label>
-        <input type="hidden" name="filial_db" class="filial-db" value="0" pattern="[0-9]{1}>
+        <input type="hidden" name="filial_db" class="filial-db" value="0" pattern="[0-9]{1}">
       </div>
     </div>
     <div class="grid-x align-center">
@@ -182,21 +180,18 @@
   {{ method_field('PATCH') }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
-         <label class="input-icon">Название города
-          {{ Form::text('city_name', null, ['class'=>'city-check-field', 'autocomplete'=>'off', 'required']) }}
-          <div class="sprite-input-right find-status"></div>
-          <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
-          <input type="hidden" name="city_id" class="city-id-field">
-        </label>
+        <label class="input-icon">Введите город
+          @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name'])
+          @include('includes.inputs.city_id', ['value'=>null, 'name'=>'city_id'])
         </label>
         <label>Название филиала
-           {{ Form::text('filial_name', null, ['class'=>'varchar-field filial-name-field', 'autocomplete'=>'off', 'required']) }}
+          @include('includes.inputs.name', ['value'=>null, 'name'=>'filial_name'])
         </label>
         <label>Адресс филиала
-           {{ Form::text('filial_address', null, ['class'=>'varchar-field filial-address-field', 'autocomplete'=>'off', 'required']) }}
+           @include('includes.inputs.address', ['value'=>null, 'name'=>'filial_address'])
         </label>
         <label>Телефон филиала
-           {{ Form::text('filial_phone', null, ['class'=>'filial-phone-field phone-field', 'autocomplete'=>'off', 'required']) }}
+          @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone'])
         </label>
         <input type="hidden" name="filial_db" class="filial-db" value="1">
       </div>
@@ -239,23 +234,20 @@
                 </select>
                 <input type="hidden" name="filial_id" class="filial-id-field">
               </label>
-              <label>Название отдела
-                {{ Form::text('department_name', null, ['class'=>'varchar-field department-name-field', 'autocomplete'=>'off', 'required']) }}
-                <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
-                <div class="sprite-input-right find-department"></div>
+
+               <label>Название отдела
+                @include('includes.inputs.name', ['value'=>null, 'name'=>'department_name'])
                 <div class="department-error">Данный отдел уже существует в этом филиале!</div>
               </label>
               <label class="input-icon">Введите город
-                {{ Form::text('city_name', null, ['class'=>'varchar-field city-check-field', 'autocomplete'=>'off']) }}
-                <div class="sprite-input-right find-status"></div>
-                <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
-                <input type="hidden" name="city_id" class="city-id-field">
+                @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name'])
+                @include('includes.inputs.city_id', ['value'=>null, 'name'=>'city_id'])
               </label>
               <label>Адресс отдела
-                {{ Form::text('department_address', null, ['class'=>'varchar-field department-address-field', 'autocomplete'=>'off']) }}
+                 @include('includes.inputs.address', ['value'=>null, 'name'=>'department_address'])
               </label>
               <label>Телефон отдела
-                {{ Form::text('department_phone', null, ['class'=>'department-phone-field phone-field', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone'])
               </label>
               <input type="hidden" name="department_db" class="department-db" value="0">
             </div>
@@ -317,22 +309,18 @@
           <input type="hidden" name="filial_id" class="filial-id-field">
         </label>
         <label>Название отдела
-          {{ Form::text('department_name', null, ['class'=>'varchar-field department-name-field', 'autocomplete'=>'off', 'required']) }}
-          <div class="sprite-input-right find-department"></div>
-          <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
+          @include('includes.inputs.name', ['value'=>null, 'name'=>'department_name'])
           <div class="department-error">Данный отдел уже существует в этом филиале!</div>
         </label>
         <label class="input-icon">Введите город
-          {{ Form::text('city_name', null, ['class'=>'varchar-field city-check-field', 'autocomplete'=>'off']) }}
-          <div class="sprite-input-right find-status"></div>
-          <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
-          <input type="hidden" name="city_id" class="city-id-field">
+          @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name'])
+          @include('includes.inputs.city_id', ['value'=>null, 'name'=>'city_id'])
         </label>
         <label>Адресс отдела
-          {{ Form::text('department_address', null, ['class'=>'varchar-field department-address-field', 'autocomplete'=>'off']) }}
+           @include('includes.inputs.address', ['value'=>null, 'name'=>'department_address'])
         </label>
         <label>Телефон отдела
-          {{ Form::text('department_phone', null, ['class'=>'department-phone-field phone-field', 'autocomplete'=>'off']) }}
+          @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone'])
         </label>
         <input type="hidden" name="department_db" class="department-db" value="0">
       </div>
@@ -456,10 +444,10 @@ $(function() {
         var result = $.parseJSON(date);
         $('#form-filial-edit .city-check-field').val(result.city_name);
         $('#form-filial-edit .city-id-field').val(result.city_id);
-        $('.filial-name-field').val(result.filial_name);
-        $('.filial-address-field').val(result.filial_address);
-        $('.filial-phone-field').val(result.filial_phone);
-        $('.filial-db-edit').val(1);
+        $('#form-filial-edit .name-field').val(result.filial_name);
+        $('#form-filial-edit .address-field').val(result.filial_address);
+        $('#form-filial-edit .phone-field').val(result.filial_phone);
+        $('#form-filial-edit .filial-db-edit').val(1);
       }
     });
   });
@@ -548,9 +536,9 @@ $(function() {
         // alert(result);
         $('#form-department-edit .city-name-field').val(result.city_name);
         $('#form-department-edit .city-id-field').val(result.city_id);
-        $('#form-department-edit .department-name-field').val(result.department_name);
-        $('#form-department-edit .department-address-field').val(result.filial_address);
-        $('#form-department-edit .department-phone-field').val(result.filial_phone);
+        $('#form-department-edit .name-field').val(result.department_name);
+        $('#form-department-edit .address-field').val(result.filial_address);
+        $('#form-department-edit .phone-field').val(result.filial_phone);
         $('.department-db').val(1);
         $('#form-department-edit .filial-id-field').val(result.filial_id);
         $('.departments-list>[value="' + result.department_parent_id + '"]').prop('selected', true);
@@ -631,12 +619,9 @@ $(function() {
   $(document).on('click', '.close-modal', function() {
     $('.city-check-field').val('');
     $('.city-id-field').val('');
-    $('.filial-name-field').val('');
-    $('.filial-address-field').val('');
-    $('.filial-phone-field').val('');
-    $('.department-name-field').val('');
-    $('.department-address-field').val('');
-    $('.department-phone-field').val('');
+    $('.name-field').val('');
+    $('.address-field').val('');
+    $('.phone-field').val('');
     $('.departments-list').empty();
     $('.positions-list').empty();
     $('.table-over').remove();

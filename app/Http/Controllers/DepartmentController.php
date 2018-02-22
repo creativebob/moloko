@@ -222,8 +222,8 @@ class DepartmentController extends Controller
       $filial->company_id = $company_id;
       $filial->city_id = $request->city_id;
       $filial->department_name = $request->filial_name;
-      $filial->department_address = $request->filial_address;
-      $filial->department_phone = cleanPhone($request->filial_phone);
+      $filial->address = $request->filial_address;
+      $filial->phone = cleanPhone($request->filial_phone);
       $filial->filial_status = 1;
       $filial->author_id = $user_id;
       $filial->save();
@@ -247,11 +247,11 @@ class DepartmentController extends Controller
       $department->department_name = $department_name;
       if($request->department_address == '') {
       } else {
-        $department->department_address = $request->department_address;
+        $department->address = $request->department_address;
       };
       if($request->department_phone == '') {
       } else {
-        $department->department_phone = cleanPhone($request->department_phone);
+        $department->phone = cleanPhone($request->department_phone);
       };
       $department->filial_id = $request->filial_id;
       $department->department_parent_id = $request->department_parent_id;
@@ -289,8 +289,8 @@ class DepartmentController extends Controller
         'city_id' => $department->city_id,
         'city_name' => $department->city->city_name,
         'filial_name' => $department->department_name,
-        'filial_address' => $department->department_address,
-        'filial_phone' => decorPhone($department->department_phone),
+        'filial_address' => $department->address,
+        'filial_phone' => decorPhone($department->phone),
       ];
     } else {
       // Меняем отдел
@@ -304,13 +304,13 @@ class DepartmentController extends Controller
       } else {
         $city_name = '';
       };
-      if (isset($department->department_address)) {
-        $department_address = $department->department_address;
+      if (isset($department->address)) {
+        $department_address = $department->address;
       } else {
         $department_address = '';
       };
-      if (isset($department->department_phone)) {
-        $department_phone = decorPhone($department->department_phone);
+      if (isset($department->phone)) {
+        $department_phone = decorPhone($department->phone);
       } else {
         $department_phone = '';
       };
@@ -344,8 +344,8 @@ class DepartmentController extends Controller
     if ($request->filial_db == 1) {
       $filial->city_id = $request->city_id;
       $filial->department_name = $request->filial_name;
-      $filial->department_address = $request->filial_address;
-      $filial->department_phone = cleanPhone($request->filial_phone);
+      $filial->address = $request->filial_address;
+      $filial->phone = cleanPhone($request->filial_phone);
       $filial->filial_status = 1;
       $filial->filial_id = $id;
       $filial->editor_id = $user->id;
@@ -366,8 +366,8 @@ class DepartmentController extends Controller
       $first = mb_strtoupper($first, 'UTF-8');
       $department_name = $first.$last;
       $department->department_name = $department_name;
-      $department->department_address = $request->department_address;
-      // $department->department_phone = cleanPhone($request->department_phone);
+      $department->address = $request->department_address;
+      $department->phone = cleanPhone($request->department_phone);
       $department->department_parent_id = $request->department_parent_id;
       $department->filial_id = $request->filial_id;
       $department->editor_id = $user->id;

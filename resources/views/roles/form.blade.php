@@ -24,12 +24,12 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Название группы
-              {{ Form::text('role_name', $role->role_name, ['class'=>'string-field role-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.string', ['name'=>'role_name', 'value'=>$role->role_name])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Описание назначения группы
-              {{ Form::text('role_description', $role->role_description, ['class'=>'varchar-field role-description-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.varchar', ['name'=>'role_description', 'value'=>$role->role_description])
               </label>
             </div>
           </div>
@@ -39,13 +39,21 @@
     <div class="small-12 medium-5 large-7 cell tabs-margin-top">
     </div>
 
-    @php
-      $item = $role;
-    @endphp
     {{-- Чекбокс модерации --}}
-    @include('includes.inputs.moderation-checkbox', $item)
+    @can ('moderator', $role)
+      @if ($role->moderation == 1)
+        <div class="small-12 cell checkbox">
+          @include('includes.inputs.moderation', ['value'=>$role->moderation, 'name'=>'moderation'])
+        </div>
+      @endif
+    @endcan
+
     {{-- Чекбокс системной записи --}}
-    @include('includes.inputs.system-item-checkbox', $item)  
+    @can ('god', $role)
+      <div class="small-12 cell checkbox">
+        @include('includes.inputs.system_item', ['value'=>$role->system_item, 'name'=>'system_item']) 
+      </div>
+    @endcan   
     
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}

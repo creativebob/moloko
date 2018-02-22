@@ -80,13 +80,21 @@
       </fieldset> 
     </div>
 
-    @php
-      $item = $right;
-    @endphp
     {{-- Чекбокс модерации --}}
-    @include('includes.inputs.moderation-checkbox', $item)
+    @can ('moderator', $right)
+      @if ($right->moderation == 1)
+        <div class="small-12 cell checkbox">
+          @include('includes.inputs.moderation', ['value'=>$right->moderation, 'name'=>'moderation'])
+        </div>
+      @endif
+    @endcan
+
     {{-- Чекбокс системной записи --}}
-    @include('includes.inputs.system-item-checkbox', $item)  
+    @can ('god', $right)
+      <div class="small-12 cell checkbox">
+        @include('includes.inputs.system_item', ['value'=>$right->system_item, 'name'=>'system_item']) 
+      </div>
+    @endcan    
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}

@@ -139,27 +139,32 @@ class PageController extends Controller
   {
     // Получаем метод
     $method = 'update';
-    // ГЛАВНЫЙ ЗАПРОС:
-    $page = Page::with(['site' => function ($query) use ($site_alias) {
-      $query->moderatorLimit($answer)->whereSite_alias($site_alias);
-    }])->wherePage_alias($page_alias)->first();
-    // Подключение политики
-    $this->authorize($method, $page);
-     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
-    $sites_list = Site::with('site', 'author')
-    ->moderatorLimit($answer)
-    ->companiesLimit($answer)
-    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
-    ->pluck('site_name', 'id');
+    // ГЛАВНЫЙ ЗАПРОС:
+    $page = Page::with(['site' => function ($query) use ($site_alias, $answer) {
+      $query->moderatorLimit($answer)->whereSite_alias($site_alias);
+    }])->wherePage_alias($page_alias)->first();
+
+    // Подключение политики
+    $this->authorize($method, $page);
+
+     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    // $answer_site = operator_right('sites', false, 'index');
+    // $sites_list = Site::with('site', 'author')
+    // ->moderatorLimit($answer_site)
+    // ->companiesLimit($answer_site)
+    // ->filials($answer_site) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    // ->authors($answer_site)
+    // ->systemItem($answer_site) // Фильтр по системным записям
+    // ->pluck('site_name', 'id');
 
     
     $current_site = $page->site;
     // dd($current_site);
-    return view('pages.edit', compact('page', 'sites_list', 'current_site', 'site_alias'));
+    return view('pages.edit', compact('page', 'current_site', 'site_alias'));
   }
 
   /**

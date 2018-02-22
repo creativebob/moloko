@@ -99,17 +99,17 @@ class CompanyController extends Controller
 
         $company = new Company;
         $company->company_name = $request->company_name;
-        $company->company_phone = cleanPhone($request->company_phone);
-        $company->company_email = $request->company_email;
+        $company->phone = cleanPhone($request->phone);
+        $company->email = $request->email;
 
-        if(($request->company_extra_phone != NULL)&&($request->company_extra_phone != "")){
-            $company->company_extra_phone = cleanPhone($request->company_extra_phone);
-        } else {$company->company_extra_phone = NULL;};
+        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
+            $company->extra_phone = cleanPhone($request->extra_phone);
+        } else {$company->extra_phone = NULL;};
 
         $company->city_id = $request->city_id;
-        $company->company_address = $request->company_address;
+        $company->address = $request->address;
 
-        $company->company_inn = $request->company_inn;
+        $company->company_inn = $request->inn;
         $company->kpp = $request->kpp;
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
@@ -176,17 +176,17 @@ class CompanyController extends Controller
         $this->authorize('update', $company);
 
         $company->company_name = $request->company_name;
-        $company->company_phone = cleanPhone($request->company_phone);
-        $company->company_email = $request->company_email;
+        $company->phone = cleanPhone($request->phone);
+        $company->email = $request->email;
 
-        if(($request->company_extra_phone != NULL)&&($request->company_extra_phone != "")){
-            $company->company_extra_phone = cleanPhone($request->company_extra_phone);
-        } else {$company->company_extra_phone = NULL;};
+        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
+            $company->extra_phone = cleanPhone($request->extra_phone);
+        } else {$company->extra_phone = NULL;};
 
         $company->city_id = $request->city_id;
-        $company->company_address = $request->company_address;
+        $company->address = $request->address;
 
-        $company->company_inn = $request->company_inn;
+        $company->inn = $request->inn;
         $company->kpp = $request->kpp;
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
@@ -227,7 +227,7 @@ class CompanyController extends Controller
 
     public function checkcompany(Request $request)
     {
-        $company = Company::where('company_inn', $request->company_inn)->first();
+        $company = Company::where('inn', $request->inn)->first();
 
         if(!isset($company)){
             return 0;} else {
