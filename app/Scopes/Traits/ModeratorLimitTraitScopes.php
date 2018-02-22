@@ -22,12 +22,12 @@ trait ModeratorLimitTraitScopes
             if($moderator == true){
 
                 return $query
-                ->where(function ($query) use ($user_id) {$query->whereNull('moderated')->orWhere('moderated', 1);});
+                ->where(function ($query) use ($user_id) {$query->whereNull('moderation')->orWhere('moderation', 1);});
 
             } else {
 
                 return $query
-                ->where(function ($query) use ($user_id) {$query->whereNull('moderated');})->orWhere(function ($query) use ($user_id) {$query->Where('moderated', 1)->Where('author_id', $user_id);});
+                ->where(function ($query) use ($user_id) {$query->whereNull('moderation');})->orWhere(function ($query) use ($user_id) {$query->Where('moderation', 1)->Where('author_id', $user_id);});
             };
 
 
@@ -37,15 +37,15 @@ trait ModeratorLimitTraitScopes
 
                 $moderator_filials = collect(getLS('users', 'moderator', 'filials'))->keys()->toarray();
                 return $query
-                ->where(function ($query) use ($moderator_filials) {$query->whereNull('moderated')->orwhere('moderated', 1)->WhereIn('filial_id', $moderator_filials);})
-                ->Orwhere(function ($query) use ($user_id) {$query->Where('moderated', 1)->Where('author_id', $user_id);});
+                ->where(function ($query) use ($moderator_filials) {$query->whereNull('moderation')->orwhere('moderation', 1)->WhereIn('filial_id', $moderator_filials);})
+                ->Orwhere(function ($query) use ($user_id) {$query->Where('moderation', 1)->Where('author_id', $user_id);});
 
             } else {
 
                 $moderator_filials = collect(getLS('users', 'moderator', 'filials'))->keys()->toarray();
                 return $query
-                ->where(function ($query) use ($moderator_filials) {$query->whereNull('moderated')->WhereIn('filial_id', $moderator_filials);})
-                ->Orwhere(function ($query) use ($user_id) {$query->Where('moderated', 1)->Where('author_id', $user_id);});
+                ->where(function ($query) use ($moderator_filials) {$query->whereNull('moderation')->WhereIn('filial_id', $moderator_filials);})
+                ->Orwhere(function ($query) use ($user_id) {$query->Where('moderation', 1)->Where('author_id', $user_id);});
 
             };
 
