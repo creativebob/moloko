@@ -24,12 +24,12 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Название сущности
-              {{ Form::text('entity_name', $entity->entity_name, ['class'=>'text-ru-field entity-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.text-ru', ['value'=>$entity->entity_name, 'name'=>'entity_name', 'required'=>'required'])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Название сущности в BD
-              {{ Form::text('entity_alias', $entity->entity_alias, ['class'=>'text-en-field entity-alias-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.text-en', ['value'=>$entity->entity_alias, 'name'=>'entity_alias', 'required'=>'required'])
               </label>
             </div>
           </div>
@@ -39,13 +39,21 @@
     <div class="small-12 medium-5 large-7 cell tabs-margin-top">
     </div>
 
-    @php
-      $item = $entity;
-    @endphp
     {{-- Чекбокс модерации --}}
-    @include('includes.inputs.moderation-checkbox', $item)
+    @can ('moderator', $entity)
+      @if ($entity->moderation == 1)
+        <div class="small-12 cell checkbox">
+          @include('includes.inputs.moderation', ['value'=>$entity->moderation, 'name'=>'moderation'])
+        </div>
+      @endif
+    @endcan
+
     {{-- Чекбокс системной записи --}}
-    @include('includes.inputs.system-item-checkbox', $item)  
+    @can ('god', $entity)
+      <div class="small-12 cell checkbox">
+        @include('includes.inputs.system', ['value'=>$entity->system_item, 'name'=>'system_item']) 
+      </div>
+    @endcan  
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}

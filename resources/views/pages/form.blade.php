@@ -15,16 +15,16 @@
     @endif
     <!-- Страница -->
     <label>Название страницы
-    {{ Form::text('page_name', $page->page_name, ['class'=>'string-field page-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+      @include('includes.inputs.string', ['name'=>'page_name', 'value'=>$page->page_name])
     </label>
     <label>Заголовок страницы
-    {{ Form::text('page_title', $page->page_title, ['class'=>'string-field page-title-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+      @include('includes.inputs.string', ['name'=>'page_title', 'value'=>$page->page_title])
     </label>
     <label>Описание страницы
-    {{ Form::textarea('page_description', $page->page_description, ['class'=>'varchar-field page-description-field', 'autocomplete'=>'off', 'size' => '10x3']) }}
+      @include('includes.inputs.textarea', ['name'=>'page_description', 'value'=>$page->page_description])
     </label>
     <label>Алиас страницы
-    {{ Form::text('page_alias', $page->page_alias, ['class'=>'text-en-field page-alias-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+      @include('includes.inputs.text-en', ['name'=>'page_alias', 'value'=>$page->page_alias, 'required'=>''])
     </label>
     <input type="hidden" name="site_id" value="{{ $current_site->id }}">
   </div>
@@ -32,13 +32,21 @@
 
   </div>
 
-    @php
-      $item = $page;
-    @endphp
     {{-- Чекбокс модерации --}}
-    @include('includes.inputs.moderation-checkbox', $item)
+    @can ('moderator', $page)
+      @if ($page->moderation == 1)
+        <div class="small-12 cell checkbox">
+          @include('includes.inputs.moderation', ['value'=>$page->moderation, 'name'=>'moderation'])
+        </div>
+      @endif
+    @endcan
+
     {{-- Чекбокс системной записи --}}
-    @include('includes.inputs.system-item-checkbox', $item)  
+    @can ('god', $page)
+      <div class="small-12 cell checkbox">
+        @include('includes.inputs.system', ['value'=>$page->system_item, 'name'=>'system_item']) 
+      </div>
+    @endcan   
 
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}

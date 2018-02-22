@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 // Фильтры
-use App\Scopes\ModerationScope;
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemitemTraitScopes;
@@ -34,12 +33,12 @@ class Company extends Model
   protected $fillable = [
 
       'company_name', 
-      'company_phone', 
-      'company_extra_phone', 
-      'company_email', 
+      'phone', 
+      'extra_phone', 
+      'email', 
       'city_id', 
-      'company_address', 
-      'company_inn', 
+      'address', 
+      'inn', 
       'kpp', 
       'account_settlement', 
       'account_correspondent', 

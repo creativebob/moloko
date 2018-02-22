@@ -1,11 +1,14 @@
 @extends('layouts.app')
  
 @section('inhead')
-{{-- Скрипты таблиц в шапке --}}
+  <meta name="description" content="{{ $page_info->page_description }}" />
+  {{-- Скрипты таблиц в шапке --}}
   @include('includes.scripts.table-inhead')
 @endsection
 
-@section('title', 'Пользователи')
+@section('title')
+  {{ $page_info->page_name }}
+@endsection
 
 @section('title-content')
 {{-- Таблица --}}

@@ -67,7 +67,8 @@ class StafferController extends Controller
   {
 
     // Подключение политики
-    $this->authorize($getmethod(__FUNCTION__), Staffer::class);
+    $this->authorize(getmethod(__FUNCTION__), Staffer::class);
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -113,6 +114,9 @@ class StafferController extends Controller
 
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+    
     // ГЛАВНЫЙ ЗАПРОС:
     $staffer = Staffer::with(['employees' => function($query) {
       $query->whereDate_dismissal(null);

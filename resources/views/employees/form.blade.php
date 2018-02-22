@@ -23,17 +23,17 @@
     <div class="grid-x">
       <div class="small-12 medium-5 cell">
         <label>Дата приема
-          {{ Form::text('date_employment', $employee->date_employment, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+          @include('includes.inputs.date', ['value'=>$employee->date_employment, 'name'=>'date_employment', 'required'=>'required'])
         </label>
       </div>
       <div class="small-12 medium-5 medium-offset-1 cell">
         <label>Дата увольнения
-          {{ Form::text('date_dismissal', $employee->date_dismissal, ['class'=>'date_dismissal date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+          @include('includes.inputs.date', ['value'=>$employee->date_dismissal, 'name'=>'date_dismissal', 'required'=>null])
         </label>
       </div>
     </div>
     <label>Причина увольнения
-    {{ Form::text('dismissal_desc', $employee->dismissal_desc, ['class'=>'varchar-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+      @include('includes.inputs.name', ['value'=>$employee->dismissal_desc, 'name'=>'dismissal_desc'])
     </label>
     
   </div>
@@ -41,13 +41,21 @@
 
   </div>
 
-    @php
-      $item = $employee;
-    @endphp
     {{-- Чекбокс модерации --}}
-    @include('includes.inputs.moderation-checkbox', $item)
+    @can ('moderator', $employee)
+      @if ($employee->moderation == 1)
+        <div class="small-12 cell checkbox">
+          @include('includes.inputs.moderation', ['value'=>$employee->moderation, 'name'=>'moderation'])
+        </div>
+      @endif
+    @endcan
+
     {{-- Чекбокс системной записи --}}
-    @include('includes.inputs.system-item-checkbox', $item)  
+    @can ('god', $employee)
+      <div class="small-12 cell checkbox">
+        @include('includes.inputs.system', ['value'=>$employee->system_item, 'name'=>'system_item']) 
+      </div>
+    @endcan 
 
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}

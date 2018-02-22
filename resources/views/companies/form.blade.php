@@ -47,45 +47,37 @@
 
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                {{ Form::text('company_phone', $company->company_phone, ['class'=>'phone-field company-phone', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off', 'required']) }}
-                <span class="form-error">Введите все символы телефонного номера!</span>
+                @include('includes.inputs.phone', ['value'=>$company->phone, 'name'=>'phone'])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Доп. телефон
-                {{ Form::text('company_extra_phone', $company->company_extra_phone, ['class'=>'phone-field company-extra-phone', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off']) }}
-                <span class="form-error">Введите все символы телефонного номера!</span>
+                @include('includes.inputs.phone', ['value'=>$company->extra_phone, 'name'=>'extra_phone'])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Почта
-                {{ Form::email('company_email', $company->company_email, ['class'=>'email-field company-email-field', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
-                <span class="form-error">Укажите почту</span>
-              </label>
-              
+                @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email'])
+              </label>  
             </div>
             <div class="small-12 medium-6 cell">
-               <label class="input-icon">Введите город
+              <label class="input-icon">Город
                 @php
                   $city_name = null;
                   $city_id = null;
-                  if(isset($company->city)) {
+                  if(isset($company->city->city_name)) {
                     $city_name = $company->city->city_name;
                     $city_id = $company->city->city_id;
                   }
                 @endphp
-                {{ Form::text('city_name', $city_name, ['class'=>'varchar-field city-check-field', 'autocomplete'=>'off', 'maxlength'=>'30', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', 'required']) }}
-                <div class="sprite-input-right find-status"></div>
-                <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
-                {{ Form::hidden('city_id', $city_id, ['class'=>'city-id-field', 'maxlength'=>'3', 'pattern'=>'[0-9]{3}']) }}
+                @include('includes.inputs.city_name', ['value'=>$city_name, 'name'=>'city_name'])
+                @include('includes.inputs.city_id', ['value'=>$city_id, 'name'=>'city_id'])
               </label>
               <label>Адрес
-              {{ Form::text('company_address', $company->company_address, ['class'=>'varchar-field company-address-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9.,_-\s/]{3,60}']) }}
+                @include('includes.inputs.address', ['value'=>$company->address, 'name'=>'address'])
               </label>
             </div>
-
           </div>
-
           <div class="grid-x grid-padding-x">
             <div class="small-12 cell checkbox">
               {{ Form::checkbox('orgform_status', 1, $company->orgform_status==1, ['id'=>'orgform-status-checkbox']) }}
@@ -100,27 +92,27 @@
             <div class="grid-x grid-padding-x"> 
               <div class="small-12 medium-6 cell">
                 <label>ИНН
-                {{ Form::text('company_inn', $company->user_id, ['class'=>'company_inn-field', 'id'=>'company_inn-field', 'maxlength'=>'10', 'pattern'=>'[0-9]{10}', 'autocomplete'=>'off']) }}
+                  @include('includes.inputs.inn', ['value'=>$company->inn, 'name'=>'inn'])
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
                 <label>КПП
-                {{ Form::text('kpp', $company->kpp, ['class'=>'kpp-field', 'maxlength'=>'9', 'pattern'=>'[0-9]{9}', 'autocomplete'=>'off']) }}
+                  @include('includes.inputs.kpp', ['value'=>$company->kpp, 'name'=>'kpp'])
                 </label>
               </div>
               <div class="small-12 medium-12 cell">
                 <label>Банк
-                {{ Form::text('bank', $company->bank, ['class'=>'varchar-field bank-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9-_/s]{3,60}']) }}
+                  @include('includes.inputs.bank', ['value'=>$company->bank, 'name'=>'bank'])
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
                 <label>Р/С
-                {{ Form::text('account_settlement', $company->account_settlement, ['class'=>'account-settlement-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
+                  @include('includes.inputs.account_settlement', ['value'=>$company->account_settlement, 'name'=>'account_settlement'])
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
                 <label>К/С
-                {{ Form::text('account_correspondent', $company->account_correspondent, ['class'=>'account-correspondent-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
+                  @include('includes.inputs.account_correspondent', ['value'=>$company->account_correspondent, 'name'=>'account_correspondent'])
                 </label>
               </div>
             </div>
@@ -131,13 +123,21 @@
     <div class="small-12 medium-5 large-7 cell tabs-margin-top">
     </div>
 
-    @php
-      $item = $company;
-    @endphp
     {{-- Чекбокс модерации --}}
-    @include('includes.inputs.moderation-checkbox', $item)
+    @can ('moderator', $company)
+      @if ($company->moderation == 1)
+        <div class="small-12 cell checkbox">
+          @include('includes.inputs.moderation', ['value'=>$company->moderation, 'name'=>'moderation'])
+        </div>
+      @endif
+    @endcan
+
     {{-- Чекбокс системной записи --}}
-    @include('includes.inputs.system-item-checkbox', $item)  
+    @can ('god', $company)
+      <div class="small-12 cell checkbox">
+        @include('includes.inputs.system', ['value'=>$company->system_item, 'name'=>'system_item']) 
+      </div>
+    @endcan 
     
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}

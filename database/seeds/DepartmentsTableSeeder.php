@@ -14,8 +14,8 @@ class DepartmentsTableSeeder extends Seeder
 		DB::table('departments')->insert([
         	[
 		        'department_name' => 'Иркутский филиал',
-                'department_address' => 'ул. Шевцова, 5',
-		        'department_phone' => 89015432288,
+                'address' => 'ул. Шевцова, 5',
+		        'phone' => 89015432288,
                 'department_parent_id' => null,
                 'filial_id' => null,
 		        'filial_status' => 1,
@@ -24,8 +24,8 @@ class DepartmentsTableSeeder extends Seeder
         	],
             [
                 'department_name' => 'Отдел продаж',
-                'department_address' => null,
-                'department_phone' => null,
+                'address' => null,
+                'phone' => null,
                 'department_parent_id' => 1,
                 'filial_id' => 1,
                 'filial_status' => null,
@@ -34,8 +34,8 @@ class DepartmentsTableSeeder extends Seeder
             ],
             [
                 'department_name' => 'Отдел маркетинга и автоматизации',
-                'department_address' => null,
-                'department_phone' => null,
+                'address' => null,
+                'phone' => null,
                 'department_parent_id' => 1,
                 'filial_id' => 1,
                 'filial_status' => null,
@@ -44,8 +44,8 @@ class DepartmentsTableSeeder extends Seeder
             ],
             [
                 'department_name' => 'Улан-Удэнский филиал',
-                'department_address' => 'ул. Ленина, 45б',
-                'department_phone' => 89115434288,
+                'address' => 'ул. Ленина, 45б',
+                'phone' => 89115434288,
                 'department_parent_id' => null,
                 'filial_id' => null,
                 'filial_status' => 1,
@@ -54,8 +54,8 @@ class DepartmentsTableSeeder extends Seeder
             ],
             [
                 'department_name' => 'Отдел продаж',
-                'department_address' => null,
-                'department_phone' => null,
+                'address' => null,
+                'phone' => null,
                 'department_parent_id' => 4,
                 'filial_id' => 4,
                 'filial_status' => null,
@@ -64,8 +64,8 @@ class DepartmentsTableSeeder extends Seeder
             ],
              [
                 'department_name' => 'Красноярский филиал',
-                'department_address' => 'ул. Мира, 11',
-                'department_phone' => 89115434289,
+                'address' => 'ул. Мира, 11',
+                'phone' => 89115434289,
                 'department_parent_id' => null,
                 'filial_id' => null,
                 'filial_status' => 1,
@@ -74,8 +74,8 @@ class DepartmentsTableSeeder extends Seeder
             ],
             [
                 'department_name' => 'Отдел продаж',
-                'department_address' => null,
-                'department_phone' => null,
+                'address' => null,
+                'phone' => null,
                 'department_parent_id' => 6,
                 'filial_id' => 6,
                 'filial_status' => null,
@@ -84,8 +84,8 @@ class DepartmentsTableSeeder extends Seeder
             ],
                         [
                 'department_name' => 'Иркутский филиал',
-                'department_address' => 'ул. Шевцова, 6',
-                'department_phone' => 89015432289,
+                'address' => 'ул. Шевцова, 6',
+                'phone' => 89015432289,
                 'department_parent_id' => null,
                 'filial_id' => null,
                 'filial_status' => 1,
@@ -94,8 +94,8 @@ class DepartmentsTableSeeder extends Seeder
             ],
             [
                 'department_name' => 'Отдел продаж',
-                'department_address' => null,
-                'department_phone' => null,
+                'address' => null,
+                'phone' => null,
                 'department_parent_id' => 8,
                 'filial_id' => 8,
                 'filial_status' => null,

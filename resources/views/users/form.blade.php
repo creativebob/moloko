@@ -38,17 +38,16 @@
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Фамилия
-              {{ Form::text('second_name', $user->second_name, ['class'=>'text-ru-field second-name-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё-]{3,20}']) }}
+                @include('includes.inputs.text-ru', ['name'=>'second_name', 'value'=>$user->second_name, 'required'=>'required'])
               </label>
               <label>Имя
-              {{ Form::text('first_name', $user->first_name, ['class'=>'text-ru-field first-name-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё-]{3,20}']) }}
+                @include('includes.inputs.text-ru', ['name'=>'first_name', 'value'=>$user->first_name, 'required'=>'required'])
               </label>
               <label>Отчество
-              {{ Form::text('patronymic', $user->patronymic, ['class'=>'text-ru-field patronymic-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё-]{3,20}']) }}
+                @include('includes.inputs.text-ru', ['name'=>'patronymic', 'value'=>$user->patronymic, 'required'=>''])
               </label>
             </div>
           </div>
-
 
 <!--           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
@@ -61,23 +60,20 @@
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                {{ Form::text('phone', $user->phone, ['class'=>'phone-field', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off', 'required']) }}
-                <span class="form-error">Введите все символы телефонного номера!</span>
+                @include('includes.inputs.phone', ['value'=>$user->phone, 'name'=>'phone'])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                {{ Form::text('extra_phone', $user->extra_phone, ['class'=>'phone-field', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'maxlength'=>'17', 'autocomplete'=>'off']) }}
-                <span class="form-error">Введите все символы телефонного номера!</span>
+                @include('includes.inputs.phone', ['value'=>$user->extra_phone, 'name'=>'extra_phone'])
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
               <label>Почта
-                {{ Form::email('email', $user->email, ['class'=>'email-field', 'maxlength'=>'30', 'autocomplete'=>'off']) }}
-                <span class="form-error">Укажите почту</span>
-              </label>
+              @include('includes.inputs.email', ['value'=>$user->email, 'name'=>'email'])
+              </label>         
               <label>Телеграм ID
                 {{ Form::text('telegram_id', $user->telegram_id, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
                 <span class="form-error">Укажите номер Telegram</span>
@@ -89,18 +85,16 @@
                 @php
                   $city_name = null;
                   $city_id = null;
-                  if(isset($user->city)) {
+                  if(isset($user->city->city_name)) {
                     $city_name = $user->city->city_name;
                     $city_id = $user->city->city_id;
                   }
                 @endphp
-                {{ Form::text('city_name', $city_name, ['class'=>'varchar-field city-check-field', 'autocomplete'=>'off', 'maxlength'=>'40', 'required', 'pattern'=>'[А-Яа-яЁё0-9-\s]{3,40}']) }}
-                <div class="sprite-input-right find-status"></div>
-                <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
-                {{ Form::hidden('city_id', $city_id, ['class'=>'city-id-field']) }}
+                @include('includes.inputs.city_name', ['value'=>$city_name, 'name'=>'city_name'])
+                @include('includes.inputs.city_id', ['value'=>$city_id, 'name'=>'city_id'])
               </label>
               <label>Адрес
-                {{ Form::text('address', $user->address, ['class'=>'varchar-field address-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9\.\,-_\/]{3,60}']) }}
+                @include('includes.inputs.address', ['value'=>$user->address, 'name'=>'address'])
               </label>
             </div>
           </div>
@@ -110,7 +104,7 @@
           <div class="grid-x grid-padding-x">
             <div class="small-5 medium-4 cell">
               <label>Дата рождения
-              {{ Form::text('birthday', $user->birthday, ['class'=>'birthday-field date-field', 'pattern'=>'[0-9]{2}\.[0-9]{2}\.[0-9]{4}', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.date', ['name'=>'birthday', 'value'=>$user->birthday, 'required'=>''])
               </label>
             </div>
             <div class="small-6 small-offset-1 medium-6 medium-offset-2 cell radiobutton">Пол<br>
@@ -128,7 +122,7 @@
             </div>
             <div class="small-5 medium-6 cell">
               <label>Когда выдан
-              {{ Form::text('passport_date', $user->passport_date, ['class'=>'passport-date-field date-field', 'pattern'=>'[0-9]{2}\.[0-9]{2}\.[0-9]{4}', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.date', ['name'=>'passport_date', 'value'=>$user->passport_date, 'required'=>''])
               </label>
             </div>
           </div>
@@ -142,7 +136,7 @@
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Адрес прописки
-              {{ Form::text('passport_address', $user->passport_address, ['class'=>'varchar-field passport-address-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.address', ['value'=>$user->passport_address, 'name'=>'passport_address'])
               </label>
             </div>
           </div>
@@ -165,31 +159,31 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>ИНН
-              {{ Form::text('inn', $user->inn, ['class'=>'inn-field', 'maxlength'=>'12', 'pattern'=>'[0-9]{12}', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.inn', ['value'=>$user->inn, 'name'=>'inn'])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>КПП
-              {{ Form::text('kpp', $user->kpp, ['class'=>'kpp-field', 'maxlength'=>'9', 'pattern'=>'[0-9]{9}', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.kpp', ['value'=>$user->kpp, 'name'=>'kpp'])
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-12 cell">
               <label>Банк
-              {{ Form::text('bank', $user->bank, ['class'=>'varchar-field bank-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.bank', ['value'=>$user->bank, 'name'=>'bank'])
               </label>
             </div>
           </div>
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Р/С
-              {{ Form::text('account_settlement', $user->account_settlement, ['class'=>'account-settlement-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.account_settlement', ['value'=>$user->account_settlement, 'name'=>'account_settlement'])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>К/С
-              {{ Form::text('account_correspondent', $user->account_correspondent, ['class'=>'account-correspondent-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
+                @include('includes.inputs.account_correspondent', ['value'=>$user->account_correspondent, 'name'=>'account_correspondent'])
               </label>
             </div>
           </div>
@@ -279,13 +273,21 @@
       </fieldset> 
     </div>
 
-    @php
-      $item = $user;
-    @endphp
     {{-- Чекбокс модерации --}}
-    @include('includes.inputs.moderation-checkbox', $item)
+    @can ('moderator', $user)
+      @if ($user->moderation == 1)
+        <div class="small-12 cell checkbox">
+          @include('includes.inputs.moderation', ['value'=>$user->moderation, 'name'=>'moderation'])
+        </div>
+      @endif
+    @endcan
+
     {{-- Чекбокс системной записи --}}
-    @include('includes.inputs.system-item-checkbox', $item)    
+    @can ('god', $user)
+      <div class="small-12 cell checkbox">
+        @include('includes.inputs.system', ['value'=>$user->system_item, 'name'=>'system_item'])
+      </div>
+    @endcan    
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}

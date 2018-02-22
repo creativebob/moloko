@@ -155,6 +155,7 @@ class PageController extends Controller
     $current_site = $page->site;
 
     return view('pages.edit', compact('page', 'sites_list', 'current_site', 'site_alias'));
+
   }
 
 

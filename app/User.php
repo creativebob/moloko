@@ -120,7 +120,7 @@ class User extends Authenticatable
                 $rest3 = mb_substr($value, 4, 3); // возвращает "abcd"
                 $rest4 = mb_substr($value, 7, 2); // возвращает "abcdef"
                 $rest5 = mb_substr($value, 9, 2); // возвращает "abcdef"
-                $result = $rest1."(".$rest2.") ".$rest3."-".$rest4."-".$rest5;
+                $result = $rest1." (".$rest2.") ".$rest3."-".$rest4."-".$rest5;
             };
         };
 
