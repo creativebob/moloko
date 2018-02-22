@@ -56,7 +56,7 @@
     {{-- Чекбокс системной записи --}}
     @can ('god', $site)
       <div class="small-12 cell checkbox">
-        @include('includes.inputs.system_item', ['value'=>$site->system_item, 'name'=>'system_item']) 
+        @include('includes.inputs.system', ['value'=>$site->system_item, 'name'=>'system_item']) 
       </div>
     @endcan   
 
