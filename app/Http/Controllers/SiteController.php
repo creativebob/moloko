@@ -41,7 +41,7 @@ class SiteController extends Controller
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
-    ->orderBy('moderated', 'desc')
+    ->orderBy('moderation', 'desc')
     ->paginate(30);
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
@@ -99,7 +99,7 @@ class SiteController extends Controller
 
     // Если нет прав на создание полноценной записи - запись отправляем на модерацию
     if($answer['automoderate'] == false){
-        $user->moderated = 1;
+        $user->moderation = 1;
     };
     // Пишем ID компании авторизованного пользователя
     if($user->company_id == null) {
