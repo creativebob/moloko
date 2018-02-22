@@ -71,6 +71,7 @@
         if(($method == 'edit')||($method == 'update')){return 'update';};
         if(($method == 'create')||($method == 'store')){return 'create';};
         if($method == 'destroy'){return 'delete';};
+        if($method == 'setting'){return 'update';};
 
          }
 

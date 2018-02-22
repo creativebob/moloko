@@ -13,6 +13,7 @@ use App\Entity;
 use App\ListUser;
 use App\Booklist;
 use App\List_item;
+use App\Position;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
@@ -113,10 +114,11 @@ class GetAccessController extends Controller
                 if($user->company_id == null){abort(403, "Пользователь не имеет связи с компанией");};
 
                 // Получаем данные на пользователя
-                $user = User::with(['staff', 'roles', 'roles.rights', 'roles.rights.actionentity', 'booklists', 'booklists.list_items', 'company'])->findOrFail($user->id);
+                $user = User::with(['staff', 'staff.position.page', 'roles', 'roles.rights', 'roles.rights.actionentity', 'booklists', 'booklists.list_items', 'company'])->findOrFail($user->id);
 
                 // Проверяем, устроен ли пользователь в компании
                 $user_department = $user->staff->first();
+                $user_redirect = $user->staff->first()->position->page->page_alias;
 
                 if(count($user_department) > 0){
                     $user_filial_id = $user_department->filial_id;
@@ -192,7 +194,13 @@ class GetAccessController extends Controller
             // Пишем в сессию массив с полученными правами!
             session(['access' => $access]);
 
+            if(isset($user_redirect)){
+                return redirect($user_redirect);
+            ;};
+
+
             if(isset($request->link)){$link = $request->link;};
+
             return redirect()->route($link);
 
         };

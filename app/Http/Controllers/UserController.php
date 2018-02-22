@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Position;
+use App\Staffer;
 use App\RoleUser;
 use App\Http\Controllers\Session;
 
@@ -28,20 +30,17 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        // Получаем метод
-        $method = __FUNCTION__;
-
         // Подключение политики
-        $this->authorize($method, User::class);
+        $this->authorize(getmethod(__FUNCTION__), User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $users = User::with('roles')  
+        $users = User::with('roles', 'staff', 'staff.position')  
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -52,35 +51,15 @@ class UserController extends Controller
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
-
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $filter_query = User::with('city')->moderatorLimit($answer)->get();
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_cities = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $filter_query = User::with('city')->moderatorLimit($answer_cities)->get();
         $filter = getFilterUser($filter_query);
 
-
-        // $user_auth = $request->user();
-        // foreach ($users as $user) {
-        //     if ($user_auth->can('update', $user)) {
-        //       $user
-        //     };
-        // }
-
-        // $model = new User;
-        
-        // $operations = [];
-        // if ($user_auth->can('update', $model)) {
-        //   $operations['update'] = 1;
-        // };
-
-        // if ($user_auth->can('delete', $model)) {
-        //    $operations['delete'] = 1; 
-        // };
-        // dd($users);
-        // Инфо о странице
-        // 
         $page_info = pageInfo($this->entity_name);
 
 	    return view('users.index', compact('users', 'page_info', 'filter', 'user'));
@@ -88,8 +67,6 @@ class UserController extends Controller
 
     public function create(Request $request)
     {
-        // Получаем метод
-        $method = __FUNCTION__;
 
         $user_auth = $request->user();
 
@@ -97,12 +74,15 @@ class UserController extends Controller
         $this->authorize(__FUNCTION__, User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Функция из Helper отдает массив со списками для SELECT
         $departments_list = getLS('users', 'view', 'departments');
         $filials_list = getLS('users', 'view', 'departments');
-        $roles_list = Role::whereCompany_id($user_auth->company_id)->pluck('role_name', 'id');
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_roles = operator_right('roles', 'true', 'index');
+        $roles_list = Role::whereCompany_id($user_auth->company_id)->moderatorLimit($answer_roles)->pluck('role_name', 'id');
 
     	$user = new User;
         $roles = new Role;
@@ -112,14 +92,12 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
-        // Получаем метод
-        $method = __FUNCTION__;
 
         // Подключение политики
-        $this->authorize('create', User::class);
+        $this->authorize(getmethod(__FUNCTION__), User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем данные для авторизованного пользователя
         $user_auth = $request->user();
@@ -187,14 +165,12 @@ class UserController extends Controller
 
     public function update(UserRequest $request, $id)
     {
-        // Получаем метод
-        $method = __FUNCTION__;
 
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::moderatorLimit($answer)->findOrFail($id);
@@ -202,7 +178,7 @@ class UserController extends Controller
         $filial_id = $request->filial_id;
 
         // Подключение политики
-        $this->authorize('update', $user);
+        $this->authorize(getmethod(__FUNCTION__), $user);
 
     	$user->login = $request->login;
     	$user->email = $request->email;
@@ -255,13 +231,11 @@ class UserController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::moderatorLimit($answer)->findOrFail($id);
 
-        $method = 'view';
-
         // Подключение политики
-        $this->authorize('view', $user);
+        $this->authorize(getmethod(__FUNCTION__), $user);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Функция из Helper отдает массив со списками для SELECT
         $departments_list = getLS('users', 'view', 'departments');
@@ -284,16 +258,15 @@ class UserController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $method = 'update';
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::with('city')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize($method, $user);
+        $this->authorize(getmethod(__FUNCTION__), $user);
 
         // Функция из Helper отдает массив со списками для SELECT
         $departments_list = getLS('users', 'index', 'departments');
@@ -303,7 +276,6 @@ class UserController extends Controller
         $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
 
         $answer_roles = operator_right('roles', true, 'index');
-
 
         $roles_list = Role::moderatorLimit($answer_roles)
         ->companiesLimit($answer_roles)
@@ -319,11 +291,14 @@ class UserController extends Controller
     public function destroy(Request $request, $id)
     {
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('delete', $user);
+        $this->authorize(getmethod(__FUNCTION__), $user);
 
         // Удаляем пользователя с обновлением
         $user = User::moderatorLimit($answer)->where('id', $id)->delete();
@@ -335,7 +310,6 @@ class UserController extends Controller
     // --------------------------------------------------------------------------------------------------------------------------------------------------------------
     // СПЕЦИФИЧЕСКИЕ МЕТОДЫ СУЩНОСТИ
     // --------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
     public function getauthcompany($company_id)
     {

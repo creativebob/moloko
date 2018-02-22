@@ -22,14 +22,16 @@ class PageController extends Controller
 
   public function index(Request $request, $site_alias)
   { 
-    // Получаем метод
-    $method = __FUNCTION__;
+
     // Подключение политики
-    $this->authorize($method, Page::class);
+    $this->authorize(getmethod(__FUNCTION__), Page::class);
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
     // Получаем сайт
     $site = Site::moderatorLimit($answer)->whereSite_alias($site_alias)->first();
+
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
@@ -56,22 +58,20 @@ class PageController extends Controller
     //   break;
     // };
     // Инфо о странице
+
     $page_info = pageInfo($this->entity_name);
     return view('pages.index', compact('pages', 'site', 'page_info', 'site_alias'));
   }
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
+
+
   public function create(Request $request, $site_alias)
   {
-    // Получаем метод
-    $method = __FUNCTION__;
+
     // Подключение политики
-    $this->authorize($method, Site::class);
+    $this->authorize(getmethod(__FUNCTION__), Site::class);
+
     // Список меню для сайта
-    $answer = operator_right('pages', $this->entity_dependence, $method);
+    $answer = operator_right('pages', $this->entity_dependence, getmethod(__FUNCTION__));
     $user = $request->user();
 
     $sites_list = Site::with('site', 'author')
@@ -87,14 +87,15 @@ class PageController extends Controller
     return view('pages.create', compact('page', 'sites_list', 'current_site', 'site_alias'));  
   }
 
+
   public function store(PageRequest $request, $site_alias)
   {
-    // Получаем метод
-    $method = 'create';
+
     // Подключение политики
-    $this->authorize($method, Page::class);
+    $this->authorize(getmethod(__FUNCTION__), Page::class);
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
@@ -111,6 +112,7 @@ class PageController extends Controller
     $page->company_id = $company_id;
     $page->author_id = $user_id;
     $page->save();
+
     if ($page) {
       return redirect('/sites/'.$site_alias.'/pages');
     } else {
@@ -118,72 +120,60 @@ class PageController extends Controller
     };
   }
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+
   public function show($id)
   {
     //
   }
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+
   public function edit(Request $request, $site_alias, $page_alias)
   {
-    // Получаем метод
-    $method = 'update';
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
-    $page = Page::with(['site' => function ($query) use ($site_alias, $answer) {
-      $query->moderatorLimit($answer)->whereSite_alias($site_alias);
-    }])->wherePage_alias($page_alias)->first();
+    $page = Page::with(['site' => function ($query) use ($site_alias) {
+      $query->whereSite_alias($site_alias);
+    }])->moderatorLimit($answer)->wherePage_alias($page_alias)->first();
 
     // Подключение политики
-    $this->authorize($method, $page);
+    $this->authorize(getmethod(__FUNCTION__), $page);
 
-     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    // $answer_site = operator_right('sites', false, 'index');
-    // $sites_list = Site::with('site', 'author')
-    // ->moderatorLimit($answer_site)
-    // ->companiesLimit($answer_site)
-    // ->filials($answer_site) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    // ->authors($answer_site)
-    // ->systemItem($answer_site) // Фильтр по системным записям
-    // ->pluck('site_name', 'id');
+    // Получаем из сессии необходимые данные для отображения списка сайтов
+    $answer_sities = operator_right('sities', false, 'index');
 
+    $sites_list = Site::with('site', 'author')
+    ->moderatorLimit($answer_sities)
+    ->companiesLimit($answer_sities)
+    ->filials($answer_sities) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer_sities)
+    ->systemItem($answer_sities) // Фильтр по системным записям
+    ->pluck('site_name', 'id');
     
     $current_site = $page->site;
-    // dd($current_site);
-    return view('pages.edit', compact('page', 'current_site', 'site_alias'));
+
+    return view('pages.edit', compact('page', 'sites_list', 'current_site', 'site_alias'));
+
   }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+
   public function update(PageRequest $request, $site_alias, $id)
   {
-    // Получаем метод
-    $method = __FUNCTION__;
+
+     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
     // Получаем авторизованного пользователя
     $user = $request->user();
+
     // ГЛАВНЫЙ ЗАПРОС:
     $page = Page::moderatorLimit($answer)->findOrFail($id);
+
     // Подключение политики
-    $this->authorize('update', $page);
+    $this->authorize(getmethod(__FUNCTION__), $page);
+
     $page->page_name = $request->page_name;
     $page->page_title = $request->page_title;
     $page->page_description = $request->page_description;
@@ -192,6 +182,7 @@ class PageController extends Controller
     $page->site_id = $request->site_id;
     $page->editor_id = $user->id;
     $page->save();
+
     if ($page) {
       return redirect('/sites/'.$site_alias.'/pages');
     } else {
@@ -199,18 +190,19 @@ class PageController extends Controller
     };
   }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+
   public function destroy(Request $request, $site_alias, $id)
-  { 
+  {
+
+     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
     // ГЛАВНЫЙ ЗАПРОС:
     $page = Page::moderatorLimit($answer)->findOrFail($id);
+
     // Подключение политики
-    $this->authorize('delete', $page);
+    $this->authorize(getmethod(__FUNCTION__), $page);
+
     $site_id = $page->site_id;
     $user = $request->user();
     if ($page) {

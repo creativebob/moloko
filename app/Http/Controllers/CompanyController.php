@@ -109,7 +109,7 @@ class CompanyController extends Controller
         $company->city_id = $request->city_id;
         $company->address = $request->address;
 
-        $company->company_inn = $request->inn;
+        $company->inn = $request->inn;
         $company->kpp = $request->kpp;
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
