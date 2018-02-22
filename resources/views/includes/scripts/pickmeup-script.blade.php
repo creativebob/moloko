@@ -1,6 +1,6 @@
 <script type="text/javascript">
   // Прикручиваем календарь
-  $('.date-mask').pickmeup({
+  $('.date-field').pickmeup({
     position : "bottom",
     hide_on_select : true
   });

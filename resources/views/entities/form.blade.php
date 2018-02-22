@@ -24,12 +24,12 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Название сущности
-              {{ Form::text('entity_name', $entity->entity_name, ['class'=>'text-ru-mask entity-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+              {{ Form::text('entity_name', $entity->entity_name, ['class'=>'text-ru-field entity-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Название сущности в BD
-              {{ Form::text('entity_alias', $entity->entity_alias, ['class'=>'text-en-mask entity-alias-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+              {{ Form::text('entity_alias', $entity->entity_alias, ['class'=>'text-en-field entity-alias-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
@@ -39,22 +39,13 @@
     <div class="small-12 medium-5 large-7 cell tabs-margin-top">
     </div>
 
-    @can ('moderator', $entity)
-      @if ($entity->moderated == 1)
-        <div class="small-12 cell checkbox">
-          {{ Form::checkbox('moderation_status', null, $entity->moderated, ['id'=>'moderation-checkbox']) }}
-          <label for="moderation-checkbox"><span>Временная запись!</span></label>
-        </div>
-      @endif
-    @endcan
-
-    @can ('god', $entity)
-      <div class="small-12 cell checkbox">
-        {{ Form::checkbox('system_item', null, $entity->system_item, ['id'=>'system-checkbox']) }}
-        <label for="system-checkbox"><span>Сделать запись системной.</span></label>
-      </div>
-    @endcan
-
+    @php
+      $item = $entity;
+    @endphp
+    {{-- Чекбокс модерации --}}
+    @include('includes.inputs.moderation-checkbox', $item)
+    {{-- Чекбокс системной записи --}}
+    @include('includes.inputs.system-item-checkbox', $item)  
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}

@@ -72,7 +72,7 @@
             
             if(isset($session['all_rights']['index-'.$entity_name.'-allow'])&&(!isset($session['all_rights']['index-'.$entity_name.'-deny'])))
             {
-
+            
                 // Получаем список ID филиалов в которых присутствует право на просмотр списка пользователей
                 $filials = collect($session['all_rights']['index-'.$entity_name.'-allow']['departments'])->keys()->toarray();
                 if(!isset($filials)){$filials = null;};
@@ -83,7 +83,7 @@
                 if(!isset($departments)){$departments = null;};
 
             } else {
-
+ 
                 if(!isset($filials)){$filials = null;};
                 if(!isset($departments)){$departments = null;};
                 abort(403, "Нет прав на операцию! Отсутствуют списки ID");

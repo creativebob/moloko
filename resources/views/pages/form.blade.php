@@ -15,16 +15,16 @@
     @endif
     <!-- Страница -->
     <label>Название страницы
-    {{ Form::text('page_name', $page->page_name, ['class'=>'string-mask page-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+    {{ Form::text('page_name', $page->page_name, ['class'=>'string-field page-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
     <label>Заголовок страницы
-    {{ Form::text('page_title', $page->page_title, ['class'=>'string-mask page-title-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+    {{ Form::text('page_title', $page->page_title, ['class'=>'string-field page-title-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
     <label>Описание страницы
-    {{ Form::textarea('page_description', $page->page_description, ['class'=>'varchar-mask page-description-field', 'autocomplete'=>'off', 'size' => '10x3']) }}
+    {{ Form::textarea('page_description', $page->page_description, ['class'=>'varchar-field page-description-field', 'autocomplete'=>'off', 'size' => '10x3']) }}
     </label>
     <label>Алиас страницы
-    {{ Form::text('page_alias', $page->page_alias, ['class'=>'text-en-mask page-alias-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+    {{ Form::text('page_alias', $page->page_alias, ['class'=>'text-en-field page-alias-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
     <input type="hidden" name="site_id" value="{{ $current_site->id }}">
   </div>
@@ -32,21 +32,14 @@
 
   </div>
 
-    @can ('moderator', $page)
-      @if ($page->moderated == 1)
-        <div class="small-12 cell checkbox">
-          {{ Form::checkbox('moderation_status', null, $page->moderated, ['id'=>'moderation-checkbox']) }}
-          <label for="moderation-checkbox"><span>Временная запись!</span></label>
-        </div>
-      @endif
-    @endcan
+    @php
+      $item = $page;
+    @endphp
+    {{-- Чекбокс модерации --}}
+    @include('includes.inputs.moderation-checkbox', $item)
+    {{-- Чекбокс системной записи --}}
+    @include('includes.inputs.system-item-checkbox', $item)  
 
-    @can ('god', $page)
-      <div class="small-12 cell checkbox">
-        {{ Form::checkbox('system_item', null, $page->system_item, ['id'=>'system-checkbox']) }}
-        <label for="system-checkbox"><span>Сделать запись системной.</span></label>
-      </div>
-    @endcan
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}
   </div>

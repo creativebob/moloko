@@ -217,7 +217,11 @@ class RoleController extends Controller
 
     public function setting(Request $request, $role_id)
     {
+        // Получаем метод
+        $method = 'index';
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
         // ГЛАВНЫЙ ЗАПРОС:
         $role = Role::moderatorLimit($answer)->findOrFail($role_id);
 
@@ -407,6 +411,11 @@ class RoleController extends Controller
     public function setright(Request $request)
     {
 
+        // Получаем метод
+        $method = 'index';
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
         // Получаем авторизованного пользователя
         $user = $request->user();      
 

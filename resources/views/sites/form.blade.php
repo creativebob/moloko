@@ -23,11 +23,11 @@
         $block = 'readonly';
       @endphp
     @endif
-      {{ Form::text('site_name', null, ['autocomplete'=>'off', 'required', $block]) }}
+      {{ Form::text('site_name', null, ['class'=>'text-ru-en-field', 'autocomplete'=>'off', 'required', $block]) }}
       <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
     </label>
     <label>Домен сайта
-      {{ Form::text('site_domen', $value = null, ['autocomplete'=>'off']) }}
+      {{ Form::text('site_domen', $value = null, ['class'=>'text-ru-en-field', 'autocomplete'=>'off']) }}
     </label>
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
@@ -44,21 +44,14 @@
     </fieldset> 
   </div>
 
-    @can ('moderator', $site)
-      @if ($site->moderated == 1)
-        <div class="small-12 cell checkbox">
-          {{ Form::checkbox('moderation_status', null, $site->moderated, ['id'=>'moderation-checkbox']) }}
-          <label for="moderation-checkbox"><span>Временная запись!</span></label>
-        </div>
-      @endif
-    @endcan
+    @php
+      $item = $site;
+    @endphp
+    {{-- Чекбокс модерации --}}
+    @include('includes.inputs.moderation-checkbox', $item)
+    {{-- Чекбокс системной записи --}}
+    @include('includes.inputs.system-item-checkbox', $item)  
 
-    @can ('god', $site)
-      <div class="small-12 cell checkbox">
-        {{ Form::checkbox('system_item', null, $site->system_item, ['id'=>'system-checkbox']) }}
-        <label for="system-checkbox"><span>Сделать запись системной.</span></label>
-      </div>
-    @endcan
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}
   </div>

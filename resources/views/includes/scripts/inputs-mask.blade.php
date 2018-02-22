@@ -5,37 +5,39 @@
   jQuery(function($) {
     // --------------------------------- Буквы --------------------------
     // C дефисом ru
-    $('.text-ru-mask').mask('яяя?яяяяяяяяяяяяяяяяяяяяя');
+    $('.text-ru-field').mask('яяя?яяяяяяяяяяяяяяяяяяяяя');
     // C дефисом en
-    $('.text-en-mask').mask('zzz?zzzzzzzzzzzzzzzzzzzzz');
+    $('.text-en-field').mask('zzz?zzzzzzzzzzzzzzzzzzzzz');
     // Логин
-    $('.login-mask').mask('llllll?llllllllllllllllllllllllllllll');
+    $('.login-field').mask('llllll?llllllllllllllllllllllllllllll');
     // Пароль
     // $('.password-mask').mask('dddddd?dddddddddddddd');
     // Строка с пробелами, числами и символами
-    $('.varchar-mask').mask('ддд?дддддддддддддддддддддддддддддддддддддддддд');
+    $('.varchar-field').mask('ддд?дддддддддддддддддддддддддддддддддддддддддд');
     // Строка с пробелами и символами
-    $('.string-mask').mask('ббб?ббббббббббббббббббббббббббббббббббббббббббб');
+    $('.string-field').mask('ббб?ббббббббббббббббббббббббббббббббббббббббббб');
+    // Строка с пробелами и символами
+    $('.text-ru-en-field').mask('ttt?tttttttttttttttttttttttt');
     // -------------------------- Числа --------------------------------
     // Дата
-    $('.date-mask').mask('99.99.9999');
+    $('.date-field').mask('99.99.9999');
     // Строка с числами
-    $('.integer-mask').mask('999?999999999999999');
+    $('.integer-field').mask('999?999999999999999');
     // Дата рождения
-    $('.birthday-mask').mask('99.99.9999');
+    $('.birthday-field').mask('99.99.9999');
     // Телефон
-    $('.phone-mask').mask('8 (999) 999-99-99',{placeholder:"_"});
+    $('.phone-field').mask('8 (999) 999-99-99',{placeholder:"_"});
     // Паспорт
-    $('.passport-number-mask').mask('99 99 №999999');
+    $('.passport-number-field').mask('99 99 №999999');
     // Телеграм id
-    $('.telegram-id-mask').mask('999999999?999');
+    $('.telegram-id-field').mask('999999999?999');
     // ИНН
-    $('.inn-mask').mask('999?999999999');
+    $('.inn-field').mask('999?999999999');
     // Кпп
-    $('.kpp-mask').mask('999?999999');
+    $('.kpp-field').mask('999?999999');
     // Расчетные счета
-    $('.account-correspondent-mask').mask('999999?99999999999999');
-    $('.account-settlement-mask').mask('999999?99999999999999');
+    $('.account-correspondent-field').mask('999999?99999999999999');
+    $('.account-settlement-field').mask('999999?99999999999999');
   });
 
   $(function() {

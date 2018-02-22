@@ -50,17 +50,22 @@ class SiteController extends Controller
 
   public function create()
   {
+
     // Получаем метод
     $method = __FUNCTION__;
+
     // Подключение политики
     $this->authorize($method, Site::class);
+
     // Список меню для сайта
-    $answer = operator_right('pages', $this->entity_dependence, $method);
+    $answer = operator_right('menus', false, 'index');
+
     $menus = Menu::moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
+    ->template($answer)
     ->whereNavigation_id(1) // Только для сайтов, разделы сайта
     ->get();
     $site = new Site;
@@ -69,10 +74,13 @@ class SiteController extends Controller
 
   public function store(SiteRequest $request)
   {
+    dd($request);
     // Получаем метод
     $method = 'create';
+
     // Подключение политики
     $this->authorize($method, Site::class);
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
 
@@ -82,11 +90,17 @@ class SiteController extends Controller
     $user_status = $user->god;
     $company_id = $user->company_id;
 
+    // Наполняем сущность данными
     $site = new Site;
     $site->site_name = $request->site_name;
     $site->site_domen = $request->site_domen;
     $site_alias = explode('.', $request->site_domen);
     $site->site_alias = $site_alias[0];
+
+    // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+    if($answer['automoderate'] == false){
+        $user->moderated = 1;
+    };
     // Пишем ID компании авторизованного пользователя
     if($user->company_id == null) {
       abort(403, 'Необходимо авторизоваться под компанией');
@@ -121,16 +135,18 @@ class SiteController extends Controller
     // Получаем метод
     $method = 'update';
     // ГЛАВНЫЙ ЗАПРОС:
+    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
     $site = Site::moderatorLimit($answer)->whereSite_alias($site_alias)->first();
     // Подключение политики
     $this->authorize($method, $site);
     // Список меню для сайта
-    $answer = operator_right('sites', $this->entity_dependence, $method);
-    $menus = Menu::moderatorLimit($answer)
-    ->companiesLimit($answer)
-    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
+    $answer_menu = operator_right('menus', false, $method);
+    $menus = Menu::moderatorLimit($answer_menu)
+    ->companiesLimit($answer_menu)
+    ->filials($answer_menu) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer_menu)
+    ->systemItem($answer_menu) // Фильтр по системным записям
+    ->template($answer)
     ->whereNavigation_id(1) // Только для сайтов, разделы сайта
     ->get();
     return view('sites.edit', compact('site', 'menus'));
@@ -207,8 +223,16 @@ class SiteController extends Controller
      */
     public function sections($site_alias)
     { 
-      // dd($site_alias);
+      // Получаем метод
+      $method = 'update';
+
+      // ГЛАВНЫЙ ЗАПРОС:
+      $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
       $site = Site::with('menus', 'author')->moderatorLimit($answer)->whereSite_alias($site_alias)->first();
+
+      // Подключение политики
+      $this->authorize('view', $site);
+
       return view('sites.sections', compact('site'));
     }
 }

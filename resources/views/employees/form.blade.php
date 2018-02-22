@@ -15,7 +15,7 @@
     @endif
     <!-- Сотрудник -->
     <label>Название должности
-    {{ Form::text('position_name', $employee->staffer->position->position_name, ['class'=>'varchar-mask position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'readonly']) }}
+    {{ Form::text('position_name', $employee->staffer->position->position_name, ['class'=>'varchar-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'readonly']) }}
     </label>
     <label>Сотрудник:
       {{ Form::select('user_id', $users_list, $employee->user_id, ['id'=>'staffer-select', 'placeholder'=>'Вакансия', 'disabled']) }}
@@ -23,17 +23,17 @@
     <div class="grid-x">
       <div class="small-12 medium-5 cell">
         <label>Дата приема
-          {{ Form::text('date_employment', $employee->date_employment, ['class'=>'date_employment date-mask', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+          {{ Form::text('date_employment', $employee->date_employment, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
         </label>
       </div>
       <div class="small-12 medium-5 medium-offset-1 cell">
         <label>Дата увольнения
-          {{ Form::text('date_dismissal', $employee->date_dismissal, ['class'=>'date_dismissal date-mask', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+          {{ Form::text('date_dismissal', $employee->date_dismissal, ['class'=>'date_dismissal date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
         </label>
       </div>
     </div>
     <label>Причина увольнения
-    {{ Form::text('dismissal_desc', $employee->dismissal_desc, ['class'=>'varchar-mask position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+    {{ Form::text('dismissal_desc', $employee->dismissal_desc, ['class'=>'varchar-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
     
   </div>
@@ -41,21 +41,14 @@
 
   </div>
 
-  @can ('moderator', $employee)
-    @if ($employee->moderated == 1)
-      <div class="small-12 cell checkbox">
-        {{ Form::checkbox('moderation_status', null, $employee->moderated, ['id'=>'moderation-checkbox']) }}
-        <label for="moderation-checkbox"><span>Временная запись!</span></label>
-      </div>
-    @endif
-  @endcan
+    @php
+      $item = $employee;
+    @endphp
+    {{-- Чекбокс модерации --}}
+    @include('includes.inputs.moderation-checkbox', $item)
+    {{-- Чекбокс системной записи --}}
+    @include('includes.inputs.system-item-checkbox', $item)  
 
-  @can ('god', $employee)
-    <div class="small-12 cell checkbox">
-      {{ Form::checkbox('system_item', null, $employee->system_item, ['id'=>'system-checkbox']) }}
-      <label for="system-checkbox"><span>Сделать запись системной.</span></label>
-    </div>
-  @endcan
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}
   </div>

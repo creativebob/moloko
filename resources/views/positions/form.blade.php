@@ -23,7 +23,7 @@
         $block = 'readonly';
       @endphp
     @endif
-    {{ Form::text('position_name', null, ['class'=>'text-ru-mask position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', $block]) }}
+    {{ Form::text('position_name', null, ['class'=>'text-ru-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', $block]) }}
     </label>
     <label>Страница должности:
       {{ Form::select('page_id', $pages_list, null, ['id'=>'page-select']) }}
@@ -57,21 +57,14 @@
 
   </div>
 
-    @can ('moderator', $position)
-      @if ($position->moderated == 1)
-        <div class="small-12 cell checkbox">
-          {{ Form::checkbox('moderation_status', null, $position->moderated, ['id'=>'moderation-checkbox']) }}
-          <label for="moderation-checkbox"><span>Временная запись!</span></label>
-        </div>
-      @endif
-    @endcan
+    @php
+      $item = $position;
+    @endphp
+    {{-- Чекбокс модерации --}}
+    @include('includes.inputs.moderation-checkbox', $item)
+    {{-- Чекбокс системной записи --}}
+    @include('includes.inputs.system-item-checkbox', $item)  
 
-    @can ('god', $position)
-      <div class="small-12 cell checkbox">
-        {{ Form::checkbox('system_item', null, $position->system_item, ['id'=>'system-checkbox']) }}
-        <label for="system-checkbox"><span>Сделать запись системной.</span></label>
-      </div>
-    @endcan
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}
   </div>
