@@ -60,7 +60,7 @@ class RoleController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->template($answer) // Выводим шаблоны в список
-        ->orderBy('moderated', 'desc')
+        ->orderBy('moderation', 'desc')
         ->paginate(30);
 
         // dd($roles);
@@ -136,7 +136,7 @@ class RoleController extends Controller
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
-            $role->moderated = 1;
+            $role->moderation = 1;
         };
 
         $role->save();

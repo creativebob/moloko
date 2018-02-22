@@ -35,7 +35,7 @@ class Role extends Model
     'category_right_id', 
   ];
 
-  public function users()
+  public function users()   
   {
     return $this->belongsToMany('App\User')->withPivot('department_id');
   }

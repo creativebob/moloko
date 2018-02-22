@@ -49,7 +49,7 @@ class UserController extends Controller
         ->systemItem($answer) // Фильтр по системным записям              
         ->orWhere('id', $request->user()->id) // Только для сущности USERS
         ->userFilter($request)
-        ->orderBy('moderated', 'desc')
+        ->orderBy('moderation', 'desc')
         ->paginate(30);
 
 
@@ -169,7 +169,7 @@ class UserController extends Controller
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
-            $user->moderated = 1;
+            $user->moderation = 1;
         };
 
         // Пишем ID компании авторизованного пользователя
@@ -243,7 +243,7 @@ class UserController extends Controller
         $user->filial_id = $request->filial_id;
 
         // Модерируем (Временно)
-        if($answer['automoderate']){$user->moderated = null;};
+        if($answer['automoderate']){$user->moderation = null;};
 
 		$user->save();
 		return redirect('users');

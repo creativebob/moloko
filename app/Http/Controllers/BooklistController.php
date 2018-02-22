@@ -48,7 +48,7 @@ class BooklistController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->template($answer)
-        ->orderBy('moderated', 'desc')
+        ->orderBy('moderation', 'desc')
         ->paginate(30);
 
         // Инфо о странице

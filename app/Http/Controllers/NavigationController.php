@@ -85,7 +85,6 @@ class NavigationController extends Controller
         };
     }
 
-
     public function show($id)
     {
         //

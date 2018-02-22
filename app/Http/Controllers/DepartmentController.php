@@ -41,7 +41,7 @@ class DepartmentController extends Controller
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
-    ->orderBy('moderated', 'desc')
+    ->orderBy('moderation', 'desc')
     ->get();
 
     $answer_positions = operator_right('positions', false, $method);
@@ -127,7 +127,7 @@ class DepartmentController extends Controller
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
-    ->orderBy('moderated', 'desc')
+    ->orderBy('moderation', 'desc')
     ->get();
     // dd($departments);
     //Создаем масив где ключ массива является ID меню
