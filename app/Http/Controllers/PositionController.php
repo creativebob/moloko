@@ -124,18 +124,26 @@ class PositionController extends Controller
     $position->save();
 
     // Если должность записалась
-    if ($position) {
+    if($position) {
+
       $mass = [];
-      // Смотрим список пришедших роллей
-      foreach ($request->roles as $role) {
-        $mass[] = [
-          'position_id' => $position->id,
-          'role_id' => $role,
-          'author_id' => $user_id,
-        ];
+
+      if($request->roles){
+
+        // Смотрим список пришедших роллей
+        foreach ($request->roles as $role) {
+
+          $mass[] = [
+            'position_id' => $position->id,
+            'role_id' => $role,
+            'author_id' => $user_id,
+          ];
+        }
+
+        DB::table('position_role')->insert($mass);
       }
 
-      DB::table('position_role')->insert($mass);
+
 
       return Redirect('/positions');
 
