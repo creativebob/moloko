@@ -24,23 +24,210 @@ class NavigationController extends Controller
 
     public function index(Request $request, $site_alias)
     {
-      // $user = $request->user();
-      // if (isset($user->company_id)) {
-      //     // Если у пользователя есть компания
-      //     $navigations = Navigation::with('site')->where(['category_navigation_id' => 2, 'company_id' => $user->company_id])->paginate(30);
-      //     $sites = Site::whereCompany_id($user->company_id)->get();
+      // Получаем метод
+      $method = __FUNCTION__;
+      // Подключение политики
+      $this->authorize($method, Navigation::class);
+      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+      $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+      // -------------------------------------------------------------------------------------------
+      // ГЛАВНЫЙ ЗАПРОС
+      // -------------------------------------------------------------------------------------------
+      $site = Site::with(['pages', 'navigations', 'navigations.menus', 'navigations.menus.page'])
+      ->moderatorLimit($answer)
+      ->companiesLimit($answer)
+      ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      ->authors($answer)
+      ->systemItem($answer) // Фильтр по системным записям
+      ->whereSite_alias($site_alias)
+      ->first();
+      // dd($site);
+
+      $user = $request->user(); 
+      // Создаем масив где ключ массива является ID меню
+      $navigation_id = [];
+      $navigation_tree = [];
+      foreach ($site->navigations as $navigation) {
+        $navigation_id[$navigation['id']] = $navigation;
+        $navigation_tree[$navigation['id']] = $navigation->toArray();
+        // Проверяем прапва на редактирование и удаление
+        $edit = 0;
+        $delete = 0;
+        if ($user->can('update', $navigation)) {
+          $edit = 1;
+        };
+        if ($user->can('delete', $navigation)) {
+          $delete = 1;
+        };
+        $navigation_right = $navigation->toArray();
+        $navigation_id[$navigation_right['id']] = $navigation_right;
+        $navigation_id[$navigation_right['id']]['edit'] = $edit;
+        $navigation_id[$navigation_right['id']]['delete'] = $delete;
+
+        $navigation_tree[$navigation_right['id']] = $navigation_right;
+        $navigation_tree[$navigation_right['id']]['edit'] = $edit;
+        $navigation_tree[$navigation_right['id']]['delete'] = $delete;
+
+        // Проверяем прапва на редактирование и удаление
+        foreach ($navigation->menus as $menu) {
+          $edit = 0;
+          $delete = 0;
+          if ($user->can('update', $menu)) {
+            $edit = 1;
+          };
+          if ($user->can('delete', $menu)) {
+            $delete = 1;
+          };
+          $menu_right = $menu->toArray();
           
-      //   } else {
-      //     if ($request->user()->god == 1) {
-      //       // Если нет, то бог без компании
-      //       $navigations = Navigation::with('site')->where('category_navigation_id', 2)->paginate(30);
-      //       $sites = Site::get();
-      //     };
-      //   };
-      //   $sites_list = $sites->pluck('site_name', 'id');
-      //   // dd($sites_list);
-      //   $page_info = pageInfo('navigations');
-      //   return view('navigations', compact('navigations', 'page_info', 'sites_list'));
+          $navigation_id[$navigation->id]['menus'][$menu->id] = $menu_right;
+          $navigation_id[$navigation->id]['menus'][$menu->id]['edit'] = $edit;
+          $navigation_id[$navigation->id]['menus'][$menu->id]['delete'] = $delete;
+
+          $navigation_tree[$navigation->id]['menus'][$menu->id] = $menu_right;
+          $navigation_tree[$navigation->id]['menus'][$menu->id]['edit'] = $edit;
+          $navigation_tree[$navigation->id]['menus'][$menu->id]['delete'] = $delete;
+        };
+       
+        foreach ($navigation_id as $navigation) {
+          // Создаем масив где ключ массива является ID меню
+          $navigation_id[$navigation['id']]['menus'] = [];
+          foreach ($navigation['menus'] as $menu) {
+            // dd($menu);
+            $navigation_id[$navigation['id']]['menus'][$menu['id']] = $menu;
+          };
+
+          // Функция построения дерева из массива от Tommy Lacroix
+          $navigation_tree[$navigation['id']]['menus'] = [];
+          foreach ($navigation_id[$navigation['id']]['menus'] as $menu => &$node) {   
+            //Если нет вложений
+            if (!$node['menu_parent_id']){
+              $navigation_tree[$navigation['id']]['menus'][$menu] = &$node;
+            } 
+            else { 
+            //Если есть потомки то перебераем массив
+            $navigation_id[$navigation['id']]['menus'][$node['menu_parent_id']]['children'][$menu] = &$node;
+            }
+          };
+        };
+        
+      };
+    // dd($navigation_tree);
+      // dd($navigation_id);
+      // $menus = [];
+      // foreach ($site->navigations as $navigation) {
+      //   $menus[$navigation->id] = $navigation->menus->where('page_id', null)->pluck('menu_name', 'id');
+      // };
+      // dd($navigation_tree);
+      $navigations = $site->navigations->pluck('navigation_name', 'id');
+      $pages_list = $site->pages->pluck('page_name', 'id');
+      $page_info = pageInfo($this->entity_name);
+      return view('navigations.index', compact('site', 'navigation_tree', 'page_info', 'pages_list', 'site_alias', 'menus', 'navigations'));
+    }
+
+    // После записи переходим на созданный пункт меню 
+    public function current_navigation(Request $request, $site_alias, $section_id, $item_id)
+    {
+      // Получаем метод
+      $method = 'index';
+      // Подключение политики
+      $this->authorize($method, Navigation::class);
+      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+      $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+      // -------------------------------------------------------------------------------------------
+      // ГЛАВНЫЙ ЗАПРОС
+      // -------------------------------------------------------------------------------------------
+      $site = Site::with(['pages', 'navigations', 'navigations.menus', 'navigations.menus.page'])
+      ->moderatorLimit($answer)
+      ->companiesLimit($answer)
+      ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      ->authors($answer)
+      ->systemItem($answer) // Фильтр по системным записям
+      ->whereSite_alias($site_alias)
+      ->first();
+     $user = $request->user(); 
+      // Создаем масив где ключ массива является ID меню
+      $navigation_id = [];
+      $navigation_tree = [];
+      foreach ($site->navigations as $navigation) {
+        $navigation_id[$navigation['id']] = $navigation;
+        $navigation_tree[$navigation['id']] = $navigation->toArray();
+        // Проверяем прапва на редактирование и удаление
+        $edit = 0;
+        $delete = 0;
+        if ($user->can('update', $navigation)) {
+          $edit = 1;
+        };
+        if ($user->can('delete', $navigation)) {
+          $delete = 1;
+        };
+        $navigation_right = $navigation->toArray();
+        $navigation_id[$navigation_right['id']] = $navigation_right;
+        $navigation_id[$navigation_right['id']]['edit'] = $edit;
+        $navigation_id[$navigation_right['id']]['delete'] = $delete;
+
+        $navigation_tree[$navigation_right['id']] = $navigation_right;
+        $navigation_tree[$navigation_right['id']]['edit'] = $edit;
+        $navigation_tree[$navigation_right['id']]['delete'] = $delete;
+
+        // Проверяем прапва на редактирование и удаление
+        foreach ($navigation->menus as $menu) {
+          $edit = 0;
+          $delete = 0;
+          if ($user->can('update', $menu)) {
+            $edit = 1;
+          };
+          if ($user->can('delete', $menu)) {
+            $delete = 1;
+          };
+          $menu_right = $menu->toArray();
+          
+          $navigation_id[$navigation->id]['menus'][$menu->id] = $menu_right;
+          $navigation_id[$navigation->id]['menus'][$menu->id]['edit'] = $edit;
+          $navigation_id[$navigation->id]['menus'][$menu->id]['delete'] = $delete;
+
+          $navigation_tree[$navigation->id]['menus'][$menu->id] = $menu_right;
+          $navigation_tree[$navigation->id]['menus'][$menu->id]['edit'] = $edit;
+          $navigation_tree[$navigation->id]['menus'][$menu->id]['delete'] = $delete;
+        };
+       
+        foreach ($navigation_id as $navigation) {
+          // Создаем масив где ключ массива является ID меню
+          $navigation_id[$navigation['id']]['menus'] = [];
+          foreach ($navigation['menus'] as $menu) {
+            // dd($menu);
+            $navigation_id[$navigation['id']]['menus'][$menu['id']] = $menu;
+          };
+
+          // Функция построения дерева из массива от Tommy Lacroix
+          $navigation_tree[$navigation['id']]['menus'] = [];
+          foreach ($navigation_id[$navigation['id']]['menus'] as $menu => &$node) {   
+            //Если нет вложений
+            if (!$node['menu_parent_id']){
+              $navigation_tree[$navigation['id']]['menus'][$menu] = &$node;
+            } 
+            else { 
+            //Если есть потомки то перебераем массив
+            $navigation_id[$navigation['id']]['menus'][$node['menu_parent_id']]['children'][$menu] = &$node;
+            }
+          };
+        };
+        
+      };    // $menus = [];
+      // foreach ($site->navigations as $navigation) {
+      //   $menus = $navigation->menus->where('page_id', null)->pluck('menu_name', 'id');
+      // };
+      $navigations = $site->navigations->pluck('navigation_name', 'id');
+      $pages_list = $site->pages->pluck('page_name', 'id');
+      $page_info = pageInfo($this->entity_name);
+      $data = [
+        'section_name' => 'navigations',
+        'item_name' => 'menus',
+        'section_id' => $section_id,
+        'item_id' => $item_id,
+      ];
+      // dd($data);
+      return view('navigations.index', compact('site', 'navigation_tree', 'page_info', 'pages_list', 'data', 'site_alias', 'navigations')); 
     }
 
     /**
@@ -79,7 +266,7 @@ class NavigationController extends Controller
         // Пишем сайт в сессию
         session(['current_site' => $request->site_id]);
         if ($navigation) {
-          return Redirect('/sites/'.$site_alias.'/current_menu/'.$navigation->id.'/0');
+          return Redirect('/sites/'.$site_alias.'/current_navigation/'.$navigation->id.'/0');
         } else {
           abort(403, 'Ошибка при записи навигации!');
         };
@@ -136,7 +323,7 @@ class NavigationController extends Controller
         session(['current_site' => $request->site_id]);
 
         if ($navigation) {
-          return Redirect('/sites/'.$site_alias.'/current_menu/'.$navigation->id.'/0');
+          return Redirect('/sites/'.$site_alias.'/current_navigation/'.$navigation->id.'/0');
         } else {
           abort(403, 'Ошибка при записи навигации!');
         };
@@ -164,7 +351,7 @@ class NavigationController extends Controller
         // Удаляем навигацию с обновлением
         $navigation = Navigation::destroy($id);
         if ($navigation) {
-          return Redirect('/sites/'.$site_alias.'/menus');
+          return Redirect('/sites/'.$site_alias.'navigations');
         } else {
           abort(403, 'Ошибка при удалении навигации');
         };

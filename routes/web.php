@@ -105,7 +105,7 @@ Route::prefix('/sites/{site_alias}')->group(function () {
     Route::resource('/navigations', 'NavigationController')->middleware('auth');
     Route::resource('/menus', 'MenuController')->middleware('auth');
     // Текущий добавленный/удаленный пункт меню
-	Route::get('/current_menu/{section_id}/{item_id}', 'MenuController@current_menu')->middleware('auth');
+	Route::get('/current_navigation/{section_id}/{item_id}', 'NavigationController@current_navigation')->middleware('auth');
 });
 // Route::resource('/menusite', 'MenuSiteController')->middleware('auth');
 // Отображение сессии

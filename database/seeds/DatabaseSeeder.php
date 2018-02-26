@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
 
     // Создаем связи между действиями и сущностями
     $this->call(ActionEntityTableSeeder::class);
+    $this->call(EntityPageTableSeeder::class);
     
     // Наполнение таблиц с правами
     $this->call(CategoryRightsTableSeeder::class);

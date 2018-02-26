@@ -80,4 +80,11 @@ class Page extends Model
   {
     return $this->belongsTo('App\User', 'author_id');
   }
+  /**
+  * Получаем сущности.
+  */
+  public function entities()
+  {
+    return $this->belongsToMany('App\Entity');
+  }
 }

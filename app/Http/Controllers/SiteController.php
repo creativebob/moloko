@@ -45,6 +45,8 @@ class SiteController extends Controller
     ->paginate(30);
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
+
+
     return view('sites.index', compact('sites', 'page_info'));
   }
 
