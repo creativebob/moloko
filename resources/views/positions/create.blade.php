@@ -22,6 +22,7 @@
 
 @section('scripts')
   @include('includes.scripts.inputs-mask')
+  @include('positions.scripts')
 @endsection
 
 

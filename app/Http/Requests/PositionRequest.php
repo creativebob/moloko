@@ -25,7 +25,9 @@ class PositionRequest extends FormRequest
     {
         return [
             'position_name' => 'string|max:255|required', 
-            'page_id' => 'integer|required',             
+            'page_id' => 'integer|required',
+            'roles' => 'array|required',  
+            'roles.*.role' => 'integer',        
         ];
     }
 }

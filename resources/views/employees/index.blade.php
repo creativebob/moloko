@@ -69,7 +69,7 @@
           <td class="td-employee-name">
           @if ($employee->date_dismissal == null)
             @can('update', $employee)
-            <a href="/staff/{{ $employee->id }}/edit">
+            <a href="/staff/{{ $employee->staffer->id }}/edit">
             @endcan
           @else
             @can('update', $employee)
