@@ -39,7 +39,7 @@ class Role extends Model
   {
     return $this->belongsToMany('App\User')->withPivot('department_id');
   }
-    /**
+  /**
   * Получаем права.
   */
   public function rights()

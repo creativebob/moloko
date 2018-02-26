@@ -53,5 +53,13 @@ class Entity extends Model
     return $this->hasMany('App\Actionentity');
   }
 
+  /**
+  * Получаем странички.
+  */
+  public function pages()
+  {
+    return $this->belongsToMany('App\Page');
+  }
+
 
 }
