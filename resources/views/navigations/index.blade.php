@@ -101,7 +101,7 @@
               @if (isset($navigation['menus']))
                 <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
                   @foreach($navigation['menus'] as $menu)
-                    @include('menus.menus-list', $menu)
+                    @include('navigations.navigations-list', $menu)
                   @endforeach
                 </ul>
               @endif

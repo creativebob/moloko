@@ -24,210 +24,105 @@ class MenuController extends Controller
 
   public function index(Request $request, $site_alias)
   {
-    // Получаем метод
-    $method = __FUNCTION__;
-    // Подключение политики
-    $this->authorize($method, Menu::class);
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
-    // -------------------------------------------------------------------------------------------
-    // ГЛАВНЫЙ ЗАПРОС
-    // -------------------------------------------------------------------------------------------
-    $site = Site::with(['pages', 'navigations', 'navigations.menus', 'navigations.menus.page'])
-    ->moderatorLimit($answer)
-    ->companiesLimit($answer)
-    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
-    ->whereSite_alias($site_alias)
-    ->first();
-    // dd($site);
+  //   // Получаем метод
+  //   $method = __FUNCTION__;
+  //   // Подключение политики
+  //   $this->authorize($method, Menu::class);
+  //   // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+  //   $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+  //   // -------------------------------------------------------------------------------------------
+  //   // ГЛАВНЫЙ ЗАПРОС
+  //   // -------------------------------------------------------------------------------------------
+  //   $site = Site::with(['pages', 'navigations', 'navigations.menus', 'navigations.menus.page'])
+  //   ->moderatorLimit($answer)
+  //   ->companiesLimit($answer)
+  //   ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+  //   ->authors($answer)
+  //   ->systemItem($answer) // Фильтр по системным записям
+  //   ->whereSite_alias($site_alias)
+  //   ->first();
+  //   // dd($site);
 
-    $user = $request->user(); 
-    // Создаем масив где ключ массива является ID меню
-    $navigation_id = [];
-    $navigation_tree = [];
-    foreach ($site->navigations as $navigation) {
-      $navigation_id[$navigation['id']] = $navigation;
-      $navigation_tree[$navigation['id']] = $navigation->toArray();
-      // Проверяем прапва на редактирование и удаление
-      $edit = 0;
-      $delete = 0;
-      if ($user->can('update', $navigation)) {
-        $edit = 1;
-      };
-      if ($user->can('delete', $navigation)) {
-        $delete = 1;
-      };
-      $navigation_right = $navigation->toArray();
-      $navigation_id[$navigation_right['id']] = $navigation_right;
-      $navigation_id[$navigation_right['id']]['edit'] = $edit;
-      $navigation_id[$navigation_right['id']]['delete'] = $delete;
+  //   $user = $request->user(); 
+  //   // Создаем масив где ключ массива является ID меню
+  //   $navigation_id = [];
+  //   $navigation_tree = [];
+  //   foreach ($site->navigations as $navigation) {
+  //     $navigation_id[$navigation['id']] = $navigation;
+  //     $navigation_tree[$navigation['id']] = $navigation->toArray();
+  //     // Проверяем прапва на редактирование и удаление
+  //     $edit = 0;
+  //     $delete = 0;
+  //     if ($user->can('update', $navigation)) {
+  //       $edit = 1;
+  //     };
+  //     if ($user->can('delete', $navigation)) {
+  //       $delete = 1;
+  //     };
+  //     $navigation_right = $navigation->toArray();
+  //     $navigation_id[$navigation_right['id']] = $navigation_right;
+  //     $navigation_id[$navigation_right['id']]['edit'] = $edit;
+  //     $navigation_id[$navigation_right['id']]['delete'] = $delete;
 
-      $navigation_tree[$navigation_right['id']] = $navigation_right;
-      $navigation_tree[$navigation_right['id']]['edit'] = $edit;
-      $navigation_tree[$navigation_right['id']]['delete'] = $delete;
+  //     $navigation_tree[$navigation_right['id']] = $navigation_right;
+  //     $navigation_tree[$navigation_right['id']]['edit'] = $edit;
+  //     $navigation_tree[$navigation_right['id']]['delete'] = $delete;
 
-      // Проверяем прапва на редактирование и удаление
-      foreach ($navigation->menus as $menu) {
-        $edit = 0;
-        $delete = 0;
-        if ($user->can('update', $menu)) {
-          $edit = 1;
-        };
-        if ($user->can('delete', $menu)) {
-          $delete = 1;
-        };
-        $menu_right = $menu->toArray();
+  //     // Проверяем прапва на редактирование и удаление
+  //     foreach ($navigation->menus as $menu) {
+  //       $edit = 0;
+  //       $delete = 0;
+  //       if ($user->can('update', $menu)) {
+  //         $edit = 1;
+  //       };
+  //       if ($user->can('delete', $menu)) {
+  //         $delete = 1;
+  //       };
+  //       $menu_right = $menu->toArray();
         
-        $navigation_id[$navigation->id]['menus'][$menu->id] = $menu_right;
-        $navigation_id[$navigation->id]['menus'][$menu->id]['edit'] = $edit;
-        $navigation_id[$navigation->id]['menus'][$menu->id]['delete'] = $delete;
+  //       $navigation_id[$navigation->id]['menus'][$menu->id] = $menu_right;
+  //       $navigation_id[$navigation->id]['menus'][$menu->id]['edit'] = $edit;
+  //       $navigation_id[$navigation->id]['menus'][$menu->id]['delete'] = $delete;
 
-        $navigation_tree[$navigation->id]['menus'][$menu->id] = $menu_right;
-        $navigation_tree[$navigation->id]['menus'][$menu->id]['edit'] = $edit;
-        $navigation_tree[$navigation->id]['menus'][$menu->id]['delete'] = $delete;
-      };
+  //       $navigation_tree[$navigation->id]['menus'][$menu->id] = $menu_right;
+  //       $navigation_tree[$navigation->id]['menus'][$menu->id]['edit'] = $edit;
+  //       $navigation_tree[$navigation->id]['menus'][$menu->id]['delete'] = $delete;
+  //     };
      
-      foreach ($navigation_id as $navigation) {
-        // Создаем масив где ключ массива является ID меню
-        $navigation_id[$navigation['id']]['menus'] = [];
-        foreach ($navigation['menus'] as $menu) {
-          // dd($menu);
-          $navigation_id[$navigation['id']]['menus'][$menu['id']] = $menu;
-        };
+  //     foreach ($navigation_id as $navigation) {
+  //       // Создаем масив где ключ массива является ID меню
+  //       $navigation_id[$navigation['id']]['menus'] = [];
+  //       foreach ($navigation['menus'] as $menu) {
+  //         // dd($menu);
+  //         $navigation_id[$navigation['id']]['menus'][$menu['id']] = $menu;
+  //       };
 
-        // Функция построения дерева из массива от Tommy Lacroix
-        $navigation_tree[$navigation['id']]['menus'] = [];
-        foreach ($navigation_id[$navigation['id']]['menus'] as $menu => &$node) {   
-          //Если нет вложений
-          if (!$node['menu_parent_id']){
-            $navigation_tree[$navigation['id']]['menus'][$menu] = &$node;
-          } 
-          else { 
-          //Если есть потомки то перебераем массив
-          $navigation_id[$navigation['id']]['menus'][$node['menu_parent_id']]['children'][$menu] = &$node;
-          }
-        };
-      };
+  //       // Функция построения дерева из массива от Tommy Lacroix
+  //       $navigation_tree[$navigation['id']]['menus'] = [];
+  //       foreach ($navigation_id[$navigation['id']]['menus'] as $menu => &$node) {   
+  //         //Если нет вложений
+  //         if (!$node['menu_parent_id']){
+  //           $navigation_tree[$navigation['id']]['menus'][$menu] = &$node;
+  //         } 
+  //         else { 
+  //         //Если есть потомки то перебераем массив
+  //         $navigation_id[$navigation['id']]['menus'][$node['menu_parent_id']]['children'][$menu] = &$node;
+  //         }
+  //       };
+  //     };
       
-    };
-  // dd($navigation_tree);
-    // dd($navigation_id);
-    // $menus = [];
-    // foreach ($site->navigations as $navigation) {
-    //   $menus[$navigation->id] = $navigation->menus->where('page_id', null)->pluck('menu_name', 'id');
-    // };
-    // dd($navigation_tree);
-    $navigations = $site->navigations->pluck('navigation_name', 'id');
-    $pages_list = $site->pages->pluck('page_name', 'id');
-    $page_info = pageInfo($this->entity_name);
-    return view('menus.index', compact('site', 'navigation_tree', 'page_info', 'pages_list', 'site_alias', 'menus', 'navigations'));
-  }
-
-  // После записи переходим на созданный пункт меню 
-  public function current_menu(Request $request, $site_alias, $section_id, $item_id)
-  {
-    // Получаем метод
-    $method = 'index';
-    // Подключение политики
-    $this->authorize($method, Menu::class);
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
-    // -------------------------------------------------------------------------------------------
-    // ГЛАВНЫЙ ЗАПРОС
-    // -------------------------------------------------------------------------------------------
-    $site = Site::with(['pages', 'navigations', 'navigations.menus', 'navigations.menus.page'])
-    ->moderatorLimit($answer)
-    ->companiesLimit($answer)
-    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
-    ->whereSite_alias($site_alias)
-    ->first();
-   $user = $request->user(); 
-    // Создаем масив где ключ массива является ID меню
-    $navigation_id = [];
-    $navigation_tree = [];
-    foreach ($site->navigations as $navigation) {
-      $navigation_id[$navigation['id']] = $navigation;
-      $navigation_tree[$navigation['id']] = $navigation->toArray();
-      // Проверяем прапва на редактирование и удаление
-      $edit = 0;
-      $delete = 0;
-      if ($user->can('update', $navigation)) {
-        $edit = 1;
-      };
-      if ($user->can('delete', $navigation)) {
-        $delete = 1;
-      };
-      $navigation_right = $navigation->toArray();
-      $navigation_id[$navigation_right['id']] = $navigation_right;
-      $navigation_id[$navigation_right['id']]['edit'] = $edit;
-      $navigation_id[$navigation_right['id']]['delete'] = $delete;
-
-      $navigation_tree[$navigation_right['id']] = $navigation_right;
-      $navigation_tree[$navigation_right['id']]['edit'] = $edit;
-      $navigation_tree[$navigation_right['id']]['delete'] = $delete;
-
-      // Проверяем прапва на редактирование и удаление
-      foreach ($navigation->menus as $menu) {
-        $edit = 0;
-        $delete = 0;
-        if ($user->can('update', $menu)) {
-          $edit = 1;
-        };
-        if ($user->can('delete', $menu)) {
-          $delete = 1;
-        };
-        $menu_right = $menu->toArray();
-        
-        $navigation_id[$navigation->id]['menus'][$menu->id] = $menu_right;
-        $navigation_id[$navigation->id]['menus'][$menu->id]['edit'] = $edit;
-        $navigation_id[$navigation->id]['menus'][$menu->id]['delete'] = $delete;
-
-        $navigation_tree[$navigation->id]['menus'][$menu->id] = $menu_right;
-        $navigation_tree[$navigation->id]['menus'][$menu->id]['edit'] = $edit;
-        $navigation_tree[$navigation->id]['menus'][$menu->id]['delete'] = $delete;
-      };
-     
-      foreach ($navigation_id as $navigation) {
-        // Создаем масив где ключ массива является ID меню
-        $navigation_id[$navigation['id']]['menus'] = [];
-        foreach ($navigation['menus'] as $menu) {
-          // dd($menu);
-          $navigation_id[$navigation['id']]['menus'][$menu['id']] = $menu;
-        };
-
-        // Функция построения дерева из массива от Tommy Lacroix
-        $navigation_tree[$navigation['id']]['menus'] = [];
-        foreach ($navigation_id[$navigation['id']]['menus'] as $menu => &$node) {   
-          //Если нет вложений
-          if (!$node['menu_parent_id']){
-            $navigation_tree[$navigation['id']]['menus'][$menu] = &$node;
-          } 
-          else { 
-          //Если есть потомки то перебераем массив
-          $navigation_id[$navigation['id']]['menus'][$node['menu_parent_id']]['children'][$menu] = &$node;
-          }
-        };
-      };
-      
-    };    // $menus = [];
-    // foreach ($site->navigations as $navigation) {
-    //   $menus = $navigation->menus->where('page_id', null)->pluck('menu_name', 'id');
-    // };
-    $navigations = $site->navigations->pluck('navigation_name', 'id');
-    $pages_list = $site->pages->pluck('page_name', 'id');
-    $page_info = pageInfo($this->entity_name);
-    $data = [
-      'section_name' => 'navigations',
-      'item_name' => 'menus',
-      'section_id' => $section_id,
-      'item_id' => $item_id,
-    ];
-    // dd($data);
-    return view('menus.index', compact('site', 'navigation_tree', 'page_info', 'pages_list', 'data', 'site_alias', 'navigations')); 
+  //   };
+  // // dd($navigation_tree);
+  //   // dd($navigation_id);
+  //   // $menus = [];
+  //   // foreach ($site->navigations as $navigation) {
+  //   //   $menus[$navigation->id] = $navigation->menus->where('page_id', null)->pluck('menu_name', 'id');
+  //   // };
+  //   // dd($navigation_tree);
+  //   $navigations = $site->navigations->pluck('navigation_name', 'id');
+  //   $pages_list = $site->pages->pluck('page_name', 'id');
+  //   $page_info = pageInfo($this->entity_name);
+  //   return view('menus.index', compact('site', 'navigation_tree', 'page_info', 'pages_list', 'site_alias', 'menus', 'navigations'));
   }
 
   /**
@@ -279,7 +174,7 @@ class MenuController extends Controller
     $menu->save();
     // dd($menu);
     if ($menu) {
-      return Redirect('/sites/'.$site_alias.'/current_menu/'.$menu->navigation_id.'/'.$menu->id);
+      return Redirect('/sites/'.$site_alias.'/current_navigation/'.$menu->navigation_id.'/'.$menu->id);
     } else {
       abort(403, 'Ошибка при записи раздела меню!');
     };
@@ -360,7 +255,7 @@ class MenuController extends Controller
     $menu->save();
     // dd($menu);
     if ($menu) {
-      return Redirect('/sites/'.$site_alias.'/current_menu/'.$menu->navigation_id.'/'.$menu->id);
+      return Redirect('/sites/'.$site_alias.'/current_navigation/'.$menu->navigation_id.'/'.$menu->id);
     } else {
       abort(403, 'Ошибка обновления раздела меню');
     };
@@ -392,7 +287,7 @@ class MenuController extends Controller
       $menu = Menu::destroy($id);
      // Удаляем с обновлением
       if ($menu) {
-        return Redirect('/sites/'.$site_alias.'/current_menu/'.$navigation_id.'/'.$parent_id);
+        return Redirect('/sites/'.$site_alias.'/current_navigation/'.$navigation_id.'/'.$parent_id);
       } else {
         abort(403, 'Ошибка при удалении меню');
       };
