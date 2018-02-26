@@ -10,6 +10,8 @@
     $('.text-en-field').mask('zzz?zzzzzzzzzzzzzzzzzzzzz');
     // Логин
     $('.login-field').mask('llllll?llllllllllllllllllllllllllllll');
+    // Должность
+    $('.position-field').mask('bbb?bbbbbbbbbbbbbbbbbbbbbbbbbbb');
     // Пароль
     // $('.password-mask').mask('dddddd?dddddddddddddd');
     // Строка с пробелами, числами и символами

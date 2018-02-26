@@ -23,7 +23,7 @@
         $block = 'readonly';
       @endphp
     @endif
-    {{ Form::text('position_name', null, ['class'=>'text-ru-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'required', $block]) }}
+    {{ Form::text('position_name', null, ['class'=>'position-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'required', $block]) }}
       <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
     </label>
     <label>Страница должности:
