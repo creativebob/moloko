@@ -49,28 +49,28 @@ class AreaController extends Controller
   public function destroy(Request $request, $id)
   {
 
-    // Получаем метод
-    $method = 'delete';
-
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right('areas', $this->entity_dependence, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // Удаляем с обновлением
     // Находим область и район города
-    $area = Area::with('cities')->moderatorLimit($answer)->findOrFail($id);
+    $area = Area::with('areas')->moderatorLimit($answer)->findOrFail($id);
     $region_id = $area->region_id;
     
     // Подключение политики
     $this->authorize('delete', $area);
-    // dd($area);
+
     $user = $request->user();
+
     if (count($area->cities) > 0) {
       abort(403, 'Район не пустой!');
     } else {
       $area->editor_id = $user->id;
       $area->save();
+
       // Удаляем район с обновлением
       $area = Area::destroy($id);
+      
       if ($area) {
         return Redirect('current_city/'.$region_id.'/0');
       } else {

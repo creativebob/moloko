@@ -122,6 +122,7 @@ class NavigationController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $navigation = Navigation::moderatorLimit($answer)->findOrFail($id);
+        
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $navigation);
         $user = $request->user();

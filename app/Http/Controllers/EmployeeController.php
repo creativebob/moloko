@@ -33,16 +33,14 @@ class EmployeeController extends Controller
 
     public function index(Request $request)
     {
-        // Получаем метод
-        $method = __FUNCTION__;
-        // Подключение политики
-        $this->authorize($method, Employee::class);
-        $this->authorize($method, Position::class);
-        $this->authorize($method, Staffer::class);
 
-        // $this->authorize($method, Department::class);
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Employee::class);
+        $this->authorize(getmethod(__FUNCTION__), Position::class);
+        $this->authorize(getmethod(__FUNCTION__), Staffer::class);
+        
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
@@ -87,40 +85,52 @@ class EmployeeController extends Controller
 
     public function edit(Request $request, $id)
     {
-        // Получаем метод
-        $method = 'update';
+
         // Получаем авторизованного пользователя
         $user = $request->user();
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, $method);
+        $answer = operator_right($this->entity_name,  $this->entity_dependence, getmethod(__FUNCTION__));
+
         // ГЛАВНЫЙ ЗАПРОС:
         $employee = Employee::with('user')->moderatorLimit($answer)->findOrFail($id);
+
         // Подключение политики
-        $this->authorize($method, $employee);
+        $this->authorize(getmethod(__FUNCTION__), $employee);
+
         // Список меню для сайта
-        $answer = operator_right('sites', $this->entity_dependence, $method);
+        $answer = operator_right('sites', false, 'index');
+
         $user = $request->user();
+
         $users_list = $employee->user->pluck('second_name', 'id');
       
       return view('employees.edit', compact('employee', 'users_list'));    
     }
 
+
     public function update(Request $request, $id)
     {
-        // Получаем метод
-        $method = __FUNCTION__;
+
         // Получаем авторизованного пользователя
         $user = $request->user();
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name,  $this->entity_dependence, getmethod(__FUNCTION__));
+
         // ГЛАВНЫЙ ЗАПРОС:
         $employee = Employee::moderatorLimit($answer)->findOrFail($id);
+
         // Подключение политики
-        $this->authorize('update', $employee);
+        $this->authorize(getmethod(__FUNCTION__), $employee);
+
         // Перезаписываем данные
         $employee->date_employment = $request->date_employment;
         $employee->date_dismissal = $request->date_dismissal;
         $employee->dismissal_desc = $request->dismissal_desc;
         $employee->editor_id = $user->id;
         $employee->save();
+        
         // Если записалось
         if ($employee) {
           return Redirect('/employees');

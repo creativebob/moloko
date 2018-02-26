@@ -29,17 +29,14 @@ class CompanyController extends Controller
     public function index(Request $request)
     {
 
-        // Получаем метод
-        $method = __FUNCTION__;
-
         // Подключение политики
-        $this->authorize($method, Company::class);
+        $this->authorize(getmethod(__FUNCTION__), Company::class);
 
         // Получаем авторизованного пользователя
         $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -69,11 +66,9 @@ class CompanyController extends Controller
 
     public function create(Request $request)
     {
-        // Получаем метод
-        $method = __FUNCTION__;
 
         //Подключение политики
-        $this->authorize(__FUNCTION__, Company::class);
+        $this->authorize(getmethod(__FUNCTION__), Company::class);
 
         // Подключение политики
         $company = new Company;
@@ -85,14 +80,11 @@ class CompanyController extends Controller
     public function store(CompanyRequest $request)
     {
 
-        // Получаем метод
-        $method = 'create';
-
         // Подключение политики
-        $this->authorize('create', Company::class);
+        $this->authorize(getmethod(__FUNCTION__), Company::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -126,11 +118,8 @@ class CompanyController extends Controller
     public function show($id)
     {
 
-        // Получаем метод
-        $method = 'view';
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $company = Company::moderatorLimit($answer)->findOrFail($id);
@@ -144,14 +133,11 @@ class CompanyController extends Controller
     public function edit($id)
     {
 
-        // Получаем метод
-        $method = 'update';
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $company = Company::with('city')->moderatorLimit($answer)->findOrFail($id);
-        $this->authorize('update', $company);
+        $this->authorize(getmethod(__FUNCTION__), $company);
 
         return view('companies.edit', compact('company'));
     }
@@ -160,20 +146,17 @@ class CompanyController extends Controller
     public function update(CompanyRequest $request, $id)
     {
 
-        // Получаем метод
-        $method = __FUNCTION__;
-
         // Получаем авторизованного пользователя
         $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $company = Company::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('update', $company);
+        $this->authorize(getmethod(__FUNCTION__), $company);
 
         $company->company_name = $request->company_name;
         $company->phone = cleanPhone($request->phone);
@@ -201,17 +184,14 @@ class CompanyController extends Controller
     public function destroy($id)
     {
 
-        // Получаем метод
-        $method = 'delete';
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $company = Company::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('delete', $company);
+        $this->authorize(getmethod(__FUNCTION__), $company);
 
         $company = Company::destroy($id);
 

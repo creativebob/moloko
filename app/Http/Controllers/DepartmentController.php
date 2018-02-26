@@ -26,15 +26,16 @@ class DepartmentController extends Controller
 
   public function index(Request $request)
   {
-    // Получаем метод
-    $method = __FUNCTION__;
+
     // Подключение политики
-    $this->authorize($method, Department::class);
+    $this->authorize(getmethod(__FUNCTION__), Department::class);
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
-    // -------------------------------------------------------------------------------------------
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+    // -----------------------------------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
-    // -------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------------
     $departments = Department::with(['staff', 'staff.position', 'staff.user'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
@@ -44,18 +45,20 @@ class DepartmentController extends Controller
     ->orderBy('moderation', 'desc')
     ->get();
 
-    $answer_positions = operator_right('positions', false, $method);
-    // dd($answer);
+    // Дополнительный запрос
+    $answer_positions = operator_right('positions', false, 'index');
 
     //Создаем масив где ключ массива является ID меню
     $departments_rights = [];
     $departments_rights = $departments->keyBy('id');
+
     // foreach ($departments as $department) {
     //   $departments_rights[$department['id']] = $department;
     // };
     // dd($departments_rights);
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
+
     // Проверяем прапва на редактирование и удаление
     $departments_id = [];
     foreach ($departments_rights as $department) {
@@ -80,6 +83,7 @@ class DepartmentController extends Controller
         $departments_id[$department_right['id']]['staff'][$id]['delete'] = $del_staff;
       };
     };
+
     // dd($departments_id);
     // Функция построения дерева из массива от Tommy Lacroix
     $departments_tree = [];
@@ -112,12 +116,13 @@ class DepartmentController extends Controller
   // Получаем сторонние данные по 
   public function current_department(Request $request, $section_id, $item_id)
   {
-    // Получаем метод
-    $method = 'index';
+
     // Подключение политики
-    $this->authorize($method, Department::class);
+    $this->authorize('index', Department::class);
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
@@ -129,7 +134,7 @@ class DepartmentController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->orderBy('moderation', 'desc')
     ->get();
-    // dd($departments);
+
     //Создаем масив где ключ массива является ID меню
     $departments_rights = [];
     foreach ($departments as $department) {
@@ -203,10 +208,10 @@ class DepartmentController extends Controller
 
   public function store(DepartmentRequest $request)
   {
-    // Получаем метод
-    $method = 'create';
+
     // Подключение политики
-    $this->authorize($method, Department::class);
+    $this->authorize(getmethod(__FUNCTION__), Department::class);
+
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
     $company_id = $user->company_id;
@@ -215,6 +220,7 @@ class DepartmentController extends Controller
     } else {
       $user_id = $user->id;
     };
+
     // Пишем филиал
     if (isset($request->filial_db)) {
       // Если город найден, то меняем значение на 1, пишем в базу и отдаем результат
@@ -227,12 +233,14 @@ class DepartmentController extends Controller
       $filial->filial_status = 1;
       $filial->author_id = $user_id;
       $filial->save();
+
       if($filial) {
         return Redirect('/current_department/'.$filial->id.'/0');
       } else {
         abort(403, 'Ошибка при записи филиала!');
       };
     };
+
     // Пишем отделы
     if (isset($request->department_db)) {
       // dd($request);
@@ -273,18 +281,19 @@ class DepartmentController extends Controller
 
   public function edit($id)
   {
-    // Получаем метод
-    $method = 'update';
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, true, $method);
+    $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
    $department = Department::with('city')->moderatorLimit($answer)->findOrFail($id);
+
     // Подключение политики
-    $this->authorize($method, $department);
+    $this->authorize(getmethod(__FUNCTION__), $department);
+
     if ($department->filial_status == 1) {
       // Меняем филиал
+
       $result = [
         'city_id' => $department->city_id,
         'city_name' => $department->city->city_name,
@@ -292,6 +301,7 @@ class DepartmentController extends Controller
         'filial_address' => $department->address,
         'filial_phone' => decorPhone($department->phone),
       ];
+
     } else {
       // Меняем отдел
       if (isset($department->city_id)) {
@@ -330,17 +340,19 @@ class DepartmentController extends Controller
 
   public function update(DepartmentRequest $request, $id)
   {
-    // dd($request);
-    // Получаем метод
-    $method = __FUNCTION__;
+
     // Получаем авторизованного пользователя
     $user = $request->user();
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, true, $method);
+    $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__))
+    ;
     // ГЛАВНЫЙ ЗАПРОС:
     $filial = Department::moderatorLimit($answer)->findOrFail($id);
+
     // Подключение политики
-    $this->authorize('update', $filial);
+    $this->authorize(getmethod(__FUNCTION__), $filial);
+
     if ($request->filial_db == 1) {
       $filial->city_id = $request->city_id;
       $filial->department_name = $request->filial_name;
@@ -350,14 +362,16 @@ class DepartmentController extends Controller
       $filial->filial_id = $id;
       $filial->editor_id = $user->id;
       $filial->save();
+
       if ($filial) {
         return Redirect('/current_department/'.$filial->id.'/0');
       } else {
         abort(403, 'Ошибка при оюновлении филиала!');
       };
     };
+
     if ($request->department_db == 1) {
-      // dd($request);
+
       $department = Department::moderatorLimit($answer)->findOrFail($id);
       $department->city_id = $request->city_id;
       $department_name_old = $request->department_name;
@@ -372,6 +386,7 @@ class DepartmentController extends Controller
       $department->filial_id = $request->filial_id;
       $department->editor_id = $user->id;
       $department->save();
+
       if ($department) {
         return Redirect('/current_department/'.$department->filial_id.'/'.$id);
       } else {
@@ -383,17 +398,17 @@ class DepartmentController extends Controller
   public function destroy(Request $request, $id)
   {
 
-    // Получаем метод
-    $method = 'delete';
-
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, true, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
     $department = Department::with('staff')->moderatorLimit($answer)->findOrFail($id);
+
     // Подключение политики
-    $this->authorize('delete', $department);
+    $this->authorize(getmethod(__FUNCTION__), $department);
+
     $user = $request->user();
+
     if (count($department->staff) > 0) {
       abort(403, 'Филиал/отдел не пустой');
     } else {
@@ -425,11 +440,8 @@ class DepartmentController extends Controller
   public function departments_list(Request $request)
   {
 
-    // Получаем метод
-    $method = 'index';
-
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, true, $method);
+    $answer = operator_right($this->entity_name, true, 'index');
 
     $departments_list = Department::moderatorLimit($answer)->whereId($request->filial_id)
     ->orWhere('filial_id', $request->filial_id)

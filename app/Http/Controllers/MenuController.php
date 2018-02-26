@@ -24,12 +24,12 @@ class MenuController extends Controller
 
   public function index(Request $request, $site_alias)
   {
-    // Получаем метод
-    $method = __FUNCTION__;
+
     // Подключение политики
-    $this->authorize($method, Menu::class);
+    $this->authorize(getmethod(__FUNCTION__), Menu::class);
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
@@ -41,9 +41,9 @@ class MenuController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->whereSite_alias($site_alias)
     ->first();
-    // dd($site);
 
-    $user = $request->user(); 
+    $user = $request->user();
+
     // Создаем масив где ключ массива является ID меню
     $navigation_id = [];
     $navigation_tree = [];
@@ -119,21 +119,23 @@ class MenuController extends Controller
     //   $menus[$navigation->id] = $navigation->menus->where('page_id', null)->pluck('menu_name', 'id');
     // };
     // dd($navigation_tree);
+
     $navigations = $site->navigations->pluck('navigation_name', 'id');
     $pages_list = $site->pages->pluck('page_name', 'id');
     $page_info = pageInfo($this->entity_name);
+
     return view('menus.index', compact('site', 'navigation_tree', 'page_info', 'pages_list', 'site_alias', 'menus', 'navigations'));
   }
 
   // После записи переходим на созданный пункт меню 
   public function current_menu(Request $request, $site_alias, $section_id, $item_id)
   {
-    // Получаем метод
-    $method = 'index';
+
     // Подключение политики
-    $this->authorize($method, Menu::class);
+    $this->authorize('index', Menu::class);
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
@@ -230,37 +232,28 @@ class MenuController extends Controller
     return view('menus.index', compact('site', 'navigation_tree', 'page_info', 'pages_list', 'data', 'site_alias', 'navigations')); 
   }
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
+
   public function create()
   {
 
   }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
+
   public function store(MenuRequest $request, $site_alias)
   {
-    // Получаем метод
-    $method = 'create';
+
     // Подключение политики
-    $this->authorize($method, Menu::class);
+    $this->authorize(getmethod(__FUNCTION__), Menu::class);
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
     $user_id = $user->id;
     $user_status = $user->god;
     $company_id = $user->company_id;
-    // dd($request);
+
     // Пишем раздел меню
     $menu = new Menu;
     $menu->menu_name = $request->menu_name;
@@ -277,6 +270,7 @@ class MenuController extends Controller
     $menu->company_id = $company_id;
     $menu->author_id = $user_id;
     $menu->save();
+
     // dd($menu);
     if ($menu) {
       return Redirect('/sites/'.$site_alias.'/current_menu/'.$menu->navigation_id.'/'.$menu->id);
@@ -285,12 +279,7 @@ class MenuController extends Controller
     };
   }
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+
   public function show($id)
   {
     
@@ -304,18 +293,19 @@ class MenuController extends Controller
    */
   public function edit(Request $request, $site_alias, $id)
   {
-    // Получаем метод
-    $method = 'update';
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
     // ГЛАВНЫЙ ЗАПРОС:
     $menu = Menu::moderatorLimit($answer)->findOrFail($id);
+
     // Подключение политики
-    $this->authorize($method, $menu);
+    $this->authorize(getmethod(__FUNCTION__), $menu);
    
     $navigation = Navigation::with('menus')->moderatorLimit($answer)->findOrFail($menu->navigation_id);
     $menus = $navigation->menus->pluck('menu_name', 'id');
-    // dd($menus);
+
     $result = [
       'menu_name' => $menu->menu_name,
       'menu_icon' => $menu->menu_icon,
@@ -328,27 +318,21 @@ class MenuController extends Controller
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+
   public function update(MenuRequest $request, $site_alias, $id)
   {
 
-    // dd($request);
-    // Получаем метод
-    $method = __FUNCTION__;
     // Получаем авторизованного пользователя
     $user = $request->user();
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, true, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
     // ГЛАВНЫЙ ЗАПРОС:
     $menu = Menu::with('navigation')->moderatorLimit($answer)->findOrFail($id);
+
     // Подключение политики
-    $this->authorize($method, $menu);
+    $this->authorize(getmethod(__FUNCTION__), $menu);
     $site_id = $menu->navigation->site_id;
     $menu->menu_name = $request->menu_name;
     $menu->menu_alias = $request->menu_alias;
@@ -358,6 +342,7 @@ class MenuController extends Controller
     $menu->page_id = $request->page_id;
     $menu->editor_id = $user->id;
     $menu->save();
+
     // dd($menu);
     if ($menu) {
       return Redirect('/sites/'.$site_alias.'/current_menu/'.$menu->navigation_id.'/'.$menu->id);
@@ -366,18 +351,19 @@ class MenuController extends Controller
     };
   }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+
   public function destroy(Request $request, $site_alias, $id)
   {
+
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
     // ГЛАВНЫЙ ЗАПРОС:
     $menu = Menu::with('navigation')->moderatorLimit($answer)->findOrFail($id);
+
     // Подключение политики
-    $this->authorize('delete', $menu);
+    $this->authorize(getmethod(__FUNCTION__), $menu);
+
     $user = $request->user();
     $navigation_id = $menu->navigation_id;
     $site_id = $menu->navigation->site_id;
@@ -386,12 +372,15 @@ class MenuController extends Controller
     } else {
       $parent_id = 0;
     };
+
     if ($menu) {
       $menu->editor_id = $user->id;
       $menu->save();
       $menu = Menu::destroy($id);
+
      // Удаляем с обновлением
       if ($menu) {
+
         return Redirect('/sites/'.$site_alias.'/current_menu/'.$navigation_id.'/'.$parent_id);
       } else {
         abort(403, 'Ошибка при удалении меню');

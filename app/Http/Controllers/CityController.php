@@ -25,17 +25,15 @@ class CityController extends Controller
 
   public function index(Request $request)
   {
-    // Получаем метод
-    $method = __FUNCTION__;
 
     // Подключение политики
-    $this->authorize($method, Region::class);
-    $this->authorize($method, Area::class);
-    $this->authorize($method, City::class);
+    $this->authorize(getmethod(__FUNCTION__), Region::class);
+    $this->authorize(getmethod(__FUNCTION__), Area::class);
+    $this->authorize(getmethod(__FUNCTION__), City::class);
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right('regions', $this->entity_dependence, $method);
-    // dd($answer);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
@@ -56,14 +54,15 @@ class CityController extends Controller
   // Получаем сторонние данные по 
   public function current_city($region, $area)
   {
-    $method = 'index';
+
     // Подключение политики
     $this->authorize('index', Region::class);
     $this->authorize('index', Area::class);
     $this->authorize('index', City::class);
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right('regions', $this->entity_dependence, $method);
-    // dd($answer);
+    $answer = operator_right('regions', $this->entity_dependence, getmethod(__FUNCTION__));
+
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
@@ -79,6 +78,7 @@ class CityController extends Controller
       'region_id' => $region,
       'area_id' => $area,
     ];
+
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
     return view('cities.index', compact('regions', 'page_info', 'data')); 
@@ -91,12 +91,11 @@ class CityController extends Controller
 
   public function store(CityRequest $request)
   {
-    // Получаем метод
-    $method = 'create';
+
     // Подключение политики
-    $this->authorize($method, Region::class);
-    $this->authorize($method, Area::class);
-    $this->authorize($method, City::class);
+    $this->authorize(getmethod(__FUNCTION__), Region::class);
+    $this->authorize(getmethod(__FUNCTION__), Area::class);
+    $this->authorize(getmethod(__FUNCTION__), City::class);
 
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
@@ -104,16 +103,20 @@ class CityController extends Controller
     $user_status = $user->god;
     $company_id = $user->company_id;
     $filial_id = $request->filial_id;
+
     // Пишем город в бд
     $city_database = $request->city_database;
+
     // По умолчанию значение 0
     if ($city_database == 0) {
+
       // Проверка города и района в нашей базе данных
       $area_name = $request->area_name;
       $city_name = $request->city_name;
 
       // если город без района
       if ($area_name == null) {
+
         $cities = City::where('city_name', $city_name)->first();
         if ($cities) {
           $result = [
@@ -126,8 +129,10 @@ class CityController extends Controller
           ];
         };
       } else {
-      // Если город с районом
+
+        // Если город с районом
         $area = Area::with('cities')->where('area_name', $area_name)->first();
+
         // Если район существует
         if ($area) {
           $cities = $area->cities->where('city_name', $city_name)->first();
@@ -151,6 +156,7 @@ class CityController extends Controller
       }
       echo json_encode($result, JSON_UNESCAPED_UNICODE);
     };
+
     // Если город не найден, то меняем значение на 1, пишем в базу и отдаем результат
     if ($city_database == 1) {
       // Вносим пришедшие данные в переменные
@@ -212,6 +218,7 @@ class CityController extends Controller
         $city->save();
         $city_id = $city->id;
       };
+      
       if ($region_id != 0 && $area_id != 0) {
         // Записываем город, его наличие в базе мы проверили ранее
         $city = new City;
@@ -246,19 +253,18 @@ class CityController extends Controller
   public function destroy(Request $request, $id)
   { 
 
-    // Получаем метод
-    $method = 'delete';
-
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // Удаляем город с обновлением
     // Находим область и район города
     $user = $request->user();
+
     $city = City::moderatorLimit($answer)->findOrFail($id);
 
     // Подключение политики
-    $this->authorize('delete', $city);
+    $this->authorize(getmethod(__FUNCTION__), $city);
+
     if ($city) {
       $city->editor_id = $user->id;
       $city->save(); 
@@ -346,14 +352,12 @@ class CityController extends Controller
   public function cities_list(CityRequest $request)
   {
 
-    // Получаем метод
-    $method = 'index';
-
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right('cities', $this->entity_dependence, $method);
+    $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
     // Проверка города в нашей базе данных
     $city_name = $request->city_name;
+
     $cities = City::moderatorLimit($answer)->where('city_name', 'like', $city_name.'%')->get();
     $count = $cities->count();
     if ($count > 0) {
