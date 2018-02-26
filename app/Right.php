@@ -34,17 +34,13 @@ class Right extends Model
 		  'right_action', 
 		  'category_right_id', 
     ];
-      /**
-  * Получаем права.
-  */
+
+
   public function roles()
   {
     return $this->belongsToMany('App\Role')->withPivot('category_right_id', 'directive', 'object_entity', 'right_name');
   }
 
-    /**
-  * Получаем категорию права.
-  */
   public function сategory_right()
   {
     return $this->belongsTo('App\Сategory_right');

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 trait PoliticTrait
 {
 
-        // Фильтрация для показа авторов
+    // Фильтрация для показа авторов
     public function getstatus($entity_name, $model, $method, $entity_dependence)
     {
 
@@ -141,17 +141,43 @@ trait PoliticTrait
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         // Разрешено ли просматривать списки
-        if($method == 'index'){
+        // if($method == 'index'){
+        //     if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {
+
+        //         // Нет ли блокировки этого права?
+        //         if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
+
+        //             //Разрешаем, так как блокировки нет!
+        //             return true;
+
+        //         } else {
+        //             return false;
+        //             // abort(403, 'Вам запрещено просматривать список!');
+        //         };
+
+        //     } else {
+        //         return false;
+        //         // abort(403, 'У вас нет прав на просмотр списка!');
+        //     };
+        // };
+
+        // Пропускае бога на index
+        if(($method == 'index')&&($user_status == 1)){return true;};
+
+
+
+        if(($method == 'index')&&($user_status != 1)){
+
+            // Получаем список филиалов в которых разрешено
             if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {
 
-                // Нет ли блокировки этого права?
-                if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
+                // Есть ли записи о филиалах
+                if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow']['filials'])) {
 
-                    //Разрешаем, так как блокировки нет!
-                    return true;
+                    $mass_filials_allow = $session['all_rights'][$method . '-'. $entity_name .'-allow']['filials'];
 
                 } else {
-                    return false; 
+                    return false;
                     // abort(403, 'Вам запрещено просматривать список!');
                 };
 
@@ -159,6 +185,34 @@ trait PoliticTrait
                 return false;
                 // abort(403, 'У вас нет прав на просмотр списка!');
             };
+
+
+
+            // Получаем список филиалов в которых разрешено
+            if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
+
+                // Есть ли записи о филиалах
+                if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny']['filials'])) {
+
+                    $mass_filials_deny = $session['all_rights'][$method . '-'. $entity_name .'-deny']['filials'];
+
+                } else {
+                    return false;
+                    // abort(403, 'Вам запрещено просматривать список!');
+                };
+
+            } else {
+                return false;
+                // abort(403, 'У вас нет прав на просмотр списка!');
+            };
+
+
+
+            $diff = collect($mass_filials_allow)->diff($mass_filials_deny)->toArray();
+
+            // dd($diff);
+            if(count($diff)>0){return true;} else{return false;};
+
         };
 
 

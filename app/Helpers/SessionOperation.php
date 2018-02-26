@@ -86,7 +86,7 @@
  
                 if(!isset($filials)){$filials = null;};
                 if(!isset($departments)){$departments = null;};
-                abort(403, "Нет прав на операцию! Отсутствуют списки ID");
+                // abort(403, "Нет прав на операцию! Отсутствуют списки ID");
 
             };
 

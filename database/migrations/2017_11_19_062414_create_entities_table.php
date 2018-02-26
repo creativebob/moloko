@@ -6,11 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateEntitiesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('entities', function (Blueprint $table) {
@@ -21,6 +17,7 @@ class CreateEntitiesTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
             
             $table->string('entity_alias')->index()->comment('Название как в базе данных');
+            $table->string('entity_model')->index()->comment('Название модели');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
@@ -33,11 +30,7 @@ class CreateEntitiesTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+
     public function down()
     {
         Schema::dropIfExists('entities');

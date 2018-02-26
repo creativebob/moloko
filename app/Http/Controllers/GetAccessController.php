@@ -194,6 +194,14 @@ class GetAccessController extends Controller
             // Пишем в сессию массив с полученными правами!
             session(['access' => $access]);
 
+
+            // if($user->can('index', User::class)) {
+            //     dd('Есть право!');
+            // } else {
+            //     dd('Нет прав!');
+            // };
+
+
             if(isset($user_redirect)){
                 return redirect($user_redirect);
             ;};

@@ -30,8 +30,10 @@ class EntityController extends Controller
 
     public function index()
     {
+
+
         // Проверяем право на просмотр списка сущностей
-        $this->authorize(getmethod(__FUNCTION__), Entity::class);
+        $this->authorize(getmethod(__FUNCTION__), 'App\Entity');
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -39,6 +41,7 @@ class EntityController extends Controller
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
+
 
         $entities = Entity::moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -50,6 +53,7 @@ class EntityController extends Controller
 
         // Информация о странице
         $page_info = pageInfo($this->entity_name);
+
         return view('entities.index', compact('entities', 'page_info'));
     }
 
@@ -71,8 +75,13 @@ class EntityController extends Controller
         // Проверяем право на создание сущности
         $this->authorize(getmethod(__FUNCTION__), Entity::class);
 
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
         // Наполняем сущность данными
         $user = Auth::user();  
+
         $entity = new entity;
         $entity->entity_name = $request->entity_name;
         $entity->entity_alias = $request->entity_alias;
@@ -86,8 +95,8 @@ class EntityController extends Controller
         if($answer['automoderate'] == false){$entity->moderation = 1;};
 
         // Пишем ID компании авторизованного пользователя
-        if($company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
-        $entity->company_id = $company_id;
+        if($user->company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
+        $entity->company_id = $user->company_id;
 
         // Раскомментировать если требуется запись ID филиала авторизованного пользователя
         // if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
