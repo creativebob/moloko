@@ -47,12 +47,12 @@
 
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                @include('includes.inputs.phone', ['value'=>$company->phone, 'name'=>'phone'])
+                @include('includes.inputs.phone', ['value'=>$company->phone, 'name'=>'phone', 'required'=>'required'])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Доп. телефон
-                @include('includes.inputs.phone', ['value'=>$company->extra_phone, 'name'=>'extra_phone'])
+                @include('includes.inputs.phone', ['value'=>$company->extra_phone, 'name'=>'extra_phone', 'required'=>''])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
@@ -70,7 +70,7 @@
                     $city_id = $company->city->city_id;
                   }
                 @endphp
-                @include('includes.inputs.city_name', ['value'=>$city_name, 'name'=>'city_name'])
+                @include('includes.inputs.city_name', ['value'=>$city_name, 'name'=>'city_name', 'required'=>'required'])
                 @include('includes.inputs.city_id', ['value'=>$city_id, 'name'=>'city_id'])
               </label>
               <label>Адрес

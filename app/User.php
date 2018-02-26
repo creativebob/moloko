@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 // Фильтры
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
-use App\Scopes\Traits\SystemitemTraitScopes;
+use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
@@ -25,7 +25,7 @@ class User extends Authenticatable
     // Подключаем Scopes для главного запроса
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
-    use SystemitemTraitScopes;
+    use SystemItemTraitScopes;
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;

@@ -144,7 +144,7 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label class="input-icon">Введите город
-          @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name'])
+          @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name', 'required'=>'required'])
           @include('includes.inputs.city_id', ['value'=>null, 'name'=>'city_id'])
         </label>
         <label>Название филиала
@@ -154,7 +154,7 @@
            @include('includes.inputs.address', ['value'=>null, 'name'=>'filial_address'])
         </label>
         <label>Телефон филиала
-          @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone'])
+          @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone', 'required'=>'required'])
         </label>
         <input type="hidden" name="filial_db" class="filial-db" value="0" pattern="[0-9]{1}">
       </div>
@@ -181,7 +181,7 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label class="input-icon">Введите город
-          @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name'])
+          @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name', 'required'=>'required'])
           @include('includes.inputs.city_id', ['value'=>null, 'name'=>'city_id'])
         </label>
         <label>Название филиала
@@ -191,7 +191,7 @@
            @include('includes.inputs.address', ['value'=>null, 'name'=>'filial_address'])
         </label>
         <label>Телефон филиала
-          @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone'])
+          @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone', 'required'=>'required'])
         </label>
         <input type="hidden" name="filial_db" class="filial-db" value="1">
       </div>
@@ -240,14 +240,14 @@
                 <div class="department-error">Данный отдел уже существует в этом филиале!</div>
               </label>
               <label class="input-icon">Введите город
-                @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name'])
+                @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name', 'required'=>''])
                 @include('includes.inputs.city_id', ['value'=>null, 'name'=>'city_id'])
               </label>
               <label>Адресс отдела
                  @include('includes.inputs.address', ['value'=>null, 'name'=>'department_address'])
               </label>
               <label>Телефон отдела
-                @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone'])
+                @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone', 'required'=>''])
               </label>
               <input type="hidden" name="department_db" class="department-db" value="0">
             </div>
@@ -313,14 +313,14 @@
           <div class="department-error">Данный отдел уже существует в этом филиале!</div>
         </label>
         <label class="input-icon">Введите город
-          @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name'])
+          @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name', 'required'=>''])
           @include('includes.inputs.city_id', ['value'=>null, 'name'=>'city_id'])
         </label>
         <label>Адресс отдела
            @include('includes.inputs.address', ['value'=>null, 'name'=>'department_address'])
         </label>
         <label>Телефон отдела
-          @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone'])
+          @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone', 'required'=>''])
         </label>
         <input type="hidden" name="department_db" class="department-db" value="0">
       </div>

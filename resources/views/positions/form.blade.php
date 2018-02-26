@@ -23,7 +23,8 @@
         $block = 'readonly';
       @endphp
     @endif
-    {{ Form::text('position_name', null, ['class'=>'text-ru-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', $block]) }}
+    {{ Form::text('position_name', null, ['class'=>'position-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'required', $block]) }}
+      <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
     </label>
     <label>Страница должности:
       {{ Form::select('page_id', $pages_list, null, ['id'=>'page-select']) }}
@@ -38,12 +39,11 @@
               @foreach ($roles as $role)
               <li>
                 <div class="small-12 cell checkbox">
-                  
-                  {{ Form::checkbox('roles[]', $role->id, null, ['id'=>'role-'.$role->id]) }}
+                  {{ Form::checkbox('roles[]', $role->id, null, ['id'=>'role-'.$role->id, 'class'=>'access-checkbox']) }}
                   <label for="role-{{ $role->id }}"><span>{{ $role->role_name }}</span></label>
                   @php
-                  $allow = count($role->rights->where('directive', 'allow'));
-                  $deny = count($role->rights->where('directive', 'deny'));
+                    $allow = count($role->rights->where('directive', 'allow'));
+                    $deny = count($role->rights->where('directive', 'deny'));
                   @endphp
                   <span class="allow">{{ $allow }}</span> / <span class="deny">{{ $deny }}</span>
                 </div>
@@ -54,7 +54,6 @@
           </div>
         </div>
       </fieldset> 
-
   </div>
 
     {{-- Чекбокс модерации --}}
@@ -74,7 +73,7 @@
     @endcan   
 
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-    {{ Form::submit($submitButtonText, ['class'=>'button']) }}
+    {{ Form::submit($submitButtonText, ['class'=>'button position-button', 'disabled']) }}
   </div>
 </div>
 

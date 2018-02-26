@@ -155,7 +155,7 @@ class StafferController extends Controller
     $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
-   $staffer = Staffer::moderatorLimit($answer)->findOrFail($id);
+    $staffer = Staffer::moderatorLimit($answer)->findOrFail($id);
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $staffer);

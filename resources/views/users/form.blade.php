@@ -60,12 +60,12 @@
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                @include('includes.inputs.phone', ['value'=>$user->phone, 'name'=>'phone'])
+                @include('includes.inputs.phone', ['value'=>$user->phone, 'name'=>'phone', 'required'=>'required'])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                @include('includes.inputs.phone', ['value'=>$user->extra_phone, 'name'=>'extra_phone'])
+                @include('includes.inputs.phone', ['value'=>$user->extra_phone, 'name'=>'extra_phone', 'required'=>''])
               </label>
             </div>
           </div>
@@ -90,7 +90,7 @@
                     $city_id = $user->city->city_id;
                   }
                 @endphp
-                @include('includes.inputs.city_name', ['value'=>$city_name, 'name'=>'city_name'])
+                @include('includes.inputs.city_name', ['value'=>$city_name, 'name'=>'city_name', 'required'=>'required'])
                 @include('includes.inputs.city_id', ['value'=>$city_id, 'name'=>'city_id'])
               </label>
               <label>Адрес
