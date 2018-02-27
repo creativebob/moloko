@@ -23,7 +23,7 @@
         $block = 'readonly';
       @endphp
     @endif
-      {{ Form::text('site_name', $site->site_name, ['class'=>'text-ru-en-field', 'autocomplete'=>'off', 'required', $block]) }}
+      {{ Form::text('site_name', $site->site_name, ['class'=>'position-field', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9\W\s]{3,40}', 'required', $block]) }}
       <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
     </label>
     <label>Домен сайта

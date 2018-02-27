@@ -114,8 +114,12 @@
     @include('includes.task-manager')
     {{-- Основной контент --}}
     <div id="wrapper">
-      {{-- Breadcrumbs --}}
-      @yield('breadcrumbs')
+      <div class="grid-x breadcrumbs">
+        <div class="small-12 cell"> 
+          {{-- Breadcrumbs --}}
+          @yield('breadcrumbs')
+        </div>
+      </div>
       {{-- Контент --}}
       <main class="content" id="content">
         {{-- Прилипающий заголовок --}}

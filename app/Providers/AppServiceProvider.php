@@ -26,22 +26,26 @@ class AppServiceProvider extends ServiceProvider
         // Получаем все пункты меню
         // Знаем что статика, поэтому указываем в таблице навигации id, получаем массив
         $sidebar = Menu::with('page', 'page.entities')->whereNavigation_id(2)->get()->toArray();
+        // dd($sidebar);
+        
         view()->composer('*', function($view) use ($sidebar) {
           // Получаем список сущностей из сессии
-          $session = [
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
-          ];
-          // dd($session);
-          // Меню для левого сайдбара
+          // $session = [
+          //   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+          // ];
 
+          $session = app('session')->get('access');
+          $entities_list = $session['settings']['entities_list']
+          // dd($entities_list);
+
+          // Меню для левого сайдбара
           // Создаем масив где ключ массива является ID меню
           $sidebar_id = [];
           foreach ($sidebar as $sidebar_item) {
-            
             if ($sidebar_item['page']['entities'] != null) {
               foreach ($sidebar_item['page']['entities'] as $entity) {
-                if (in_array($entity['id'], $session)) {
-                    $sidebar_id[$sidebar_item['id']] = $sidebar_item;
+                if (in_array($entity['id'], $entities_list)) {
+                  $sidebar_id[$sidebar_item['id']] = $sidebar_item;
                 }
               }
             } else {
@@ -84,6 +88,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+      //
     }
 }

@@ -49,6 +49,7 @@ class PositionController extends Controller
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
+
     return view('positions.index', compact('positions', 'page_info'));
   }
 
@@ -79,7 +80,10 @@ class PositionController extends Controller
     ->get();
 
     $position = new Position;
-    return view('positions.create', compact('position', 'pages_list', 'roles'));  
+
+    // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
+    return view('positions.create', compact('position', 'pages_list', 'roles', 'page_info'));  
   }
 
   public function store(PositionRequest $request)
@@ -189,7 +193,10 @@ class PositionController extends Controller
     ->template($answer_pages)
     ->get();
 
-    return view('positions.edit', compact('position', 'pages_list', 'roles'));
+    // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
+
+    return view('positions.edit', compact('position', 'pages_list', 'roles', 'page_info'));
   }
 
   public function update(PositionRequest $request, $id)

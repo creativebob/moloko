@@ -59,7 +59,9 @@ class PageController extends Controller
     // };
     // Инфо о странице
 
+    // Инфо о странице
     $page_info = pageInfo($this->entity_name);
+
     return view('pages.index', compact('pages', 'site', 'page_info', 'site_alias'));
   }
 
@@ -84,7 +86,11 @@ class PageController extends Controller
 
     $current_site = Site::moderatorLimit($answer)->whereSite_alias($site_alias)->first();
     $page = new Page;
-    return view('pages.create', compact('page', 'sites_list', 'current_site', 'site_alias'));  
+
+    // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
+
+    return view('pages.create', compact('page', 'sites_list', 'current_site', 'site_alias', 'page_info'));  
   }
 
 
@@ -154,7 +160,10 @@ class PageController extends Controller
     
     $current_site = $page->site;
 
-    return view('pages.edit', compact('page', 'sites_list', 'current_site', 'site_alias'));
+    // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
+
+    return view('pages.edit', compact('page', 'sites_list', 'current_site', 'site_alias', 'page_info'));
 
   }
 

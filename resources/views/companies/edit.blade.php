@@ -2,6 +2,8 @@
 
 @section('title', 'Редактировать компанию')
 
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $company->company_name))
+
 @section('title-content')
 	<div class="top-bar head-content">
     <div class="top-bar-left">

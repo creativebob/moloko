@@ -68,4 +68,11 @@ class Position extends Model
   {
     return $this->belongsTo('App\User', 'author_id');
   }
+  /**
+  * Получаем компанию
+  */
+   public function company()
+  {
+    return $this->belongsTo('App\Company');
+  }
 }

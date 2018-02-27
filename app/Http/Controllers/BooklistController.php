@@ -56,7 +56,8 @@ class BooklistController extends Controller
 
     public function create()
     {
-        //
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
     }
 
     public function store(Request $request)
@@ -71,7 +72,8 @@ class BooklistController extends Controller
 
     public function edit($id)
     {
-        //
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
     }
 
     public function update(Request $request, $id)

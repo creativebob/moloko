@@ -43,9 +43,9 @@ class SiteController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->orderBy('moderation', 'desc')
     ->paginate(30);
+
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
-
 
     return view('sites.index', compact('sites', 'page_info'));
   }
@@ -70,7 +70,11 @@ class SiteController extends Controller
     ->get();
 
     $site = new Site;
-    return view('sites.create', compact('site', 'menus'));  
+
+    // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
+
+    return view('sites.create', compact('site', 'menus', 'page_info'));  
   }
 
 
@@ -154,7 +158,10 @@ class SiteController extends Controller
     ->whereNavigation_id(1) // Только для сайтов, разделы сайта
     ->get();
 
-    return view('sites.edit', compact('site', 'menus'));
+    // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
+
+    return view('sites.edit', compact('site', 'menus', 'page_info'));
   }
 
   public function update(SiteRequest $request, $id)
@@ -247,6 +254,9 @@ class SiteController extends Controller
       // Подключение политики
       $this->authorize('view', $site);
 
-      return view('sites.sections', compact('site'));
+      // Инфо о странице
+      $page_info = pageInfo($this->entity_name);
+
+      return view('sites.sections', compact('site', 'page_info'));
     }
 }

@@ -22,8 +22,8 @@ Route::get('/getaccess/{link?}', 'GetAccessController@set')->middleware('auth')-
 
 Route::resource('/users', 'UserController')->middleware('auth');
 
+// Компании
 Route::resource('/companies', 'CompanyController')->middleware('auth');
-
 // Проверка существования компании в базе по ИНН
 Route::post('/companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');
 

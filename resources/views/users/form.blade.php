@@ -261,11 +261,11 @@
             </table>
            
           </div>
-          <div class="small-8 small-offset-2 medium-6 medium-offset-3 text-center cell">
+          <div class="small-8 small-offset-2 medium-8 medium-offset-2 tabs-margin-top text-center cell">
             <a class="button" data-open="role-add">Настройка доступа</a>
           </div>
 
-          <div class="small-12 cell checkbox">
+          <div class="small-12 text-center cell checkbox">
               {{ Form::checkbox('access_block', 1, $user->access_block == 1, ['id'=>'access-block-checkbox']) }}
             <label for="access-block-checkbox"><span>Блокировать доступ</span></label>
           </div>
@@ -276,7 +276,7 @@
     {{-- Чекбокс модерации --}}
     @can ('moderator', $user)
       @if ($user->moderation == 1)
-        <div class="small-12 cell checkbox">
+        <div class="small-12 small-text-center cell checkbox">
           @include('includes.inputs.moderation', ['value'=>$user->moderation, 'name'=>'moderation'])
         </div>
       @endif
@@ -289,7 +289,7 @@
       </div>
     @endcan    
 
-    <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
+    <div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}
     </div>
   </div>

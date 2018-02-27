@@ -4,9 +4,11 @@
 <meta name="description" content="Меню {{ $site->site_name }}" />
 @endsection
 
-@section('title')
-   Меню {{ $site->site_name }}
-@endsection
+@section('title', 'Меню '.$site->site_name)
+
+@section('breadcrumbs', Breadcrumbs::render('sections', $page_info, $site))
+
+@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('title-content')
 <div data-sticky-container id="head-content">

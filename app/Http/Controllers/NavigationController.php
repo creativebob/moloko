@@ -121,7 +121,11 @@ class NavigationController extends Controller
       // dd($navigation_tree);
       $navigations = $site->navigations->pluck('navigation_name', 'id');
       $pages_list = $site->pages->pluck('page_name', 'id');
+
+
+      // Инфо о странице
       $page_info = pageInfo($this->entity_name);
+
       return view('navigations.index', compact('site', 'navigation_tree', 'page_info', 'pages_list', 'site_alias', 'menus', 'navigations'));
     }
 
@@ -219,7 +223,10 @@ class NavigationController extends Controller
       // };
       $navigations = $site->navigations->pluck('navigation_name', 'id');
       $pages_list = $site->pages->pluck('page_name', 'id');
+
+      // Инфо о странице
       $page_info = pageInfo($this->entity_name);
+
       $data = [
         'section_name' => 'navigations',
         'item_name' => 'menus',

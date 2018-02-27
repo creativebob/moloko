@@ -102,4 +102,9 @@ class Company extends Model
     return $this->belongsTo('App\City');
   }
 
+  public function positions()
+  {
+    return $this->hasMany('App\Position');
+  }
+
 }

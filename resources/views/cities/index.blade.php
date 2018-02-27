@@ -8,6 +8,8 @@
   {{ $page_info->page_name }}
 @endsection
 
+@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+
 @section('title-content')
 <div data-sticky-container id="head-content">
   <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-options="stickyOn: small;" data-top-anchor="head-content:top">

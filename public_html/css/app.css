@@ -1745,7 +1745,7 @@ input[type=checkbox], input[type=radio] {
 }
 /* line 1761, ../sass/app.scss */
 .content .table-content thead th:hover {
-  cursor: grabbing;
+  cursor: pointer;
 }
 /* line 1764, ../sass/app.scss */
 .content .table-content thead th:focus {

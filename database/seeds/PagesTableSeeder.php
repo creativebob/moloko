@@ -21,6 +21,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'companies',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
             [
                 'page_name' => 'Пользователи системы',
@@ -30,6 +31,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'users',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
             [
                 'page_name' => 'Филиалы и отделы',
@@ -39,6 +41,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'departments',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
             [
                 'page_name' => 'Штат',
@@ -48,6 +51,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'staff',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
             [
                 'page_name' => 'Сотрудники',
@@ -57,6 +61,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'employees',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
             [
                 'page_name' => 'Тестовая страница для должностей',
@@ -66,6 +71,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'home',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
              [
                 'page_name' => 'Сайты',
@@ -75,6 +81,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'sites',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
             [
                 'page_name' => 'Населенные пункты',
@@ -84,6 +91,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'cities',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
             [
                 'page_name' => 'Должности',
@@ -93,6 +101,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'positions',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
             [
                 'page_name' => 'Сущности',
@@ -102,6 +111,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'entities',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
             [
                 'page_name' => 'Роли',
@@ -111,6 +121,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'roles',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
             [
                 'page_name' => 'Правила доступа',
@@ -120,6 +131,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'rights',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
             [
                 'page_name' => 'Страницы сайта',
@@ -129,6 +141,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'pages',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
             [
                 'page_name' => 'Навигация',
@@ -138,6 +151,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'navigations',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
             [
                 'page_name' => 'Главная',
@@ -147,6 +161,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'index',
                 'company_id' => 1,
                 'system_item' => null,
+                'author_id' => 4,
             ],
             [
                 'page_name' => 'Списки',
@@ -156,6 +171,7 @@ class PagesTableSeeder extends Seeder
                 'page_alias' => 'booklists',
                 'company_id' => null,
                 'system_item' => 1,
+                'author_id' => 1,
             ],
         ]);
     }
