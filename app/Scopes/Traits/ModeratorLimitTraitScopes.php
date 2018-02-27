@@ -16,7 +16,12 @@ trait ModeratorLimitTraitScopes
         // Получаем данные из сессии
         $session  = session('access');
         $user_id = $session['user_info']['user_id'];
+        $user_status = $session['user_info']['user_status'];
         // dd($entity_dependence);
+
+        // Если бог, то не отсеиваем неотмодерированные записи
+        if($user_status == 1){return $query;};
+
 
         if(($entity_dependence == false)||($entity_dependence == null)){
 
