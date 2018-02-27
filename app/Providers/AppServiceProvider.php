@@ -21,27 +21,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
       if (Schema::hasTable('menus')) {
-
-
-            // Передаем меню на все страницы приложения
-            $sidebar = Menu::with('page', 'page.entities')->whereNavigation_id(2)->get()->toArray();
-      }
-
-      view()->composer('*', function($view) use ($sidebar) {
-        // dd(app('session')->get('access'));
-        $session = [
-          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
-        ];
-        // dd($session);
-      
+        // Передаем меню на все страницы приложения
+        $sidebar = Menu::with('page', 'page.entities')->whereNavigation_id(2)->get()->toArray();
+        view()->composer('*', function($view) use ($sidebar) {
+          // dd(app('session')->get('access'));
+          $session = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+          ];
+          // dd($session);
         // Меню для левого сайдбара
         // Знаем что статика, поэтому указываем в таблице навигации первый id
-        
-
             // dd($sidebar);
-          if ($sidebar) {
             // Создаем масив где ключ массива является ID меню
             $sidebar_id = [];
             foreach ($sidebar as $sidebar_item) {
@@ -79,10 +70,9 @@ class AppServiceProvider extends ServiceProvider
             $view->with('sidebar_tree', $sidebar_final);   
             // View::share('sidebar_tree', $sidebar_tree);
             // Конец меню для левого сайдбара
-          } 
-        });
+          });
+        }
       }
-
     /**
      * Register any application services.
      *
