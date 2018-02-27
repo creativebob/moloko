@@ -156,7 +156,7 @@
            @include('includes.inputs.address', ['value'=>null, 'name'=>'filial_address'])
         </label>
         <label>Телефон филиала
-          @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone', 'required'=>'required'])
+          @include('includes.inputs.phone', ['value'=>null, 'name'=>'filial_phone', 'required'=>''])
         </label>
         <input type="hidden" name="filial_db" class="filial-db" value="0" pattern="[0-9]{1}">
       </div>

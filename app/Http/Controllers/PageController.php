@@ -160,10 +160,12 @@ class PageController extends Controller
     
     $current_site = $page->site;
 
+    $site = $page->site;
+
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
-    return view('pages.edit', compact('page', 'sites_list', 'current_site', 'site_alias', 'page_info'));
+    return view('pages.edit', compact('page', 'sites_list', 'current_site', 'site_alias', 'page_info', 'site'));
 
   }
 

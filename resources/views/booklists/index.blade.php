@@ -7,6 +7,8 @@
 
 @section('title', 'Пользователи')
 
+@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+
 @section('title-content')
 {{-- Таблица --}}
 <div data-sticky-container id="head-content">

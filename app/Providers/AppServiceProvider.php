@@ -30,19 +30,12 @@ class AppServiceProvider extends ServiceProvider
         
         view()->composer('*', function($view) use ($sidebar) {
           // Получаем список сущностей из сессии
-          // $session = [
-          //   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
-          // ];
-
           $session = app('session')->get('access');
           $entities_list = $session['settings']['entities_list'];
-
-          if(!isset($entities_list)){$entities_list = [];};
-
-
-
+          if (!isset($entities_list)) {
+            $entities_list = [];
+          };
           // dd($entities_list);
-
           // Меню для левого сайдбара
           // Создаем масив где ключ массива является ID меню
           $sidebar_id = [];

@@ -144,10 +144,10 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
             ],
             [
-                'page_name' => 'Навигация',
+                'page_name' => 'Навигации',
                 'site_id' => 1,
-                'page_title' => 'Навигация блока',
-                'page_description' => 'Навигация',
+                'page_title' => 'Навигации сайта',
+                'page_description' => 'Навигации',
                 'page_alias' => 'navigations',
                 'company_id' => null,
                 'system_item' => 1,
