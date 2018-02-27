@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
       view()->composer('*', function($view) use ($sidebar) {
         // dd(app('session')->get('access'));
         $session = [
-          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
         ];
         // dd($session);
       
@@ -41,8 +41,8 @@ class AppServiceProvider extends ServiceProvider
         
 
             // dd($sidebar);
-
-            //Создаем масив где ключ массива является ID меню
+          if ($sidebar) {
+            // Создаем масив где ключ массива является ID меню
             $sidebar_id = [];
             foreach ($sidebar as $sidebar_item) {
               
@@ -78,10 +78,10 @@ class AppServiceProvider extends ServiceProvider
             // dd($sidebar_final);
             $view->with('sidebar_tree', $sidebar_final);   
             // View::share('sidebar_tree', $sidebar_tree);
-        
-        // Конец меню для левого сайдбара
+            // Конец меню для левого сайдбара
+          } 
         });
-    }
+      }
 
     /**
      * Register any application services.
