@@ -47,6 +47,7 @@ class CityController extends Controller
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
+
     return view('cities.index', compact('regions', 'page_info')); 
   }
 
@@ -81,6 +82,7 @@ class CityController extends Controller
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
+    
     return view('cities.index', compact('regions', 'page_info', 'data')); 
   }
 

@@ -175,12 +175,7 @@ class MenuController extends Controller
 
      // Удаляем с обновлением
       if ($menu) {
-<<<<<<< HEAD
-
-        return Redirect('/sites/'.$site_alias.'/current_menu/'.$navigation_id.'/'.$parent_id);
-=======
         return Redirect('/sites/'.$site_alias.'/current_navigation/'.$navigation_id.'/'.$parent_id);
->>>>>>> 943b9c96be91100362c9ec22a57d670aaeda1c64
       } else {
         abort(403, 'Ошибка при удалении меню');
       };

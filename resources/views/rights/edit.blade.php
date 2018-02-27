@@ -2,6 +2,8 @@
 
 @section('title', 'Редактировать пользователя')
 
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $right->right_name))
+
 @section('title-content')
 	<div class="top-bar head-content">
     <div class="top-bar-left">

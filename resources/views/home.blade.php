@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+
 @section('content')
 <div class="container">
     <div class="row">

@@ -65,6 +65,7 @@ class EmployeeController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
+
         return view('employees.index', compact('employees', 'page_info', 'filials'));
     }
 
@@ -98,14 +99,13 @@ class EmployeeController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $employee);
 
-        // Список меню для сайта
-        $answer = operator_right('sites', false, 'index');
-
-        $user = $request->user();
-
+        // Список пользователей
         $users_list = $employee->user->pluck('second_name', 'id');
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
       
-      return view('employees.edit', compact('employee', 'users_list'));    
+        return view('employees.edit', compact('employee', 'users_list', 'page_info'));    
     }
 
 

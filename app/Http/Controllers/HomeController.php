@@ -16,6 +16,9 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    // Сущность над которой производит операции контроллер
+    protected $entity_name = 'home';
+
     /**
      * Show the application dashboard.
      *
@@ -23,6 +26,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+        
+        return view('home', compact('page_info'));
     }
 }

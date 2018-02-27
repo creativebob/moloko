@@ -109,6 +109,7 @@ class DepartmentController extends Controller
     };
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
+
     // dd($departments_tree);
     return view('departments.index', compact('departments_tree', 'positions', 'page_info', 'pages', 'departments'));
   }
@@ -192,6 +193,7 @@ class DepartmentController extends Controller
     };
     // Инфо о странице
     $page_info = pageInfo('departments');
+    
     $data = [
       'section_name' => 'departments',
       'item_name' => 'staff',

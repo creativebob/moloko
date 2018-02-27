@@ -7,6 +7,7 @@
     "require": {
         "php": ">=7.0.0",
         "barryvdh/laravel-debugbar": "^3.1",
+        "davejamesmiller/laravel-breadcrumbs": "^4.2",
         "doctrine/dbal": "^2.5",
         "fideloper/proxy": "~3.3",
         "laravel/dusk": "^2.0",

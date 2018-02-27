@@ -61,6 +61,7 @@ class UserController extends Controller
         $filter_query = User::with('city')->moderatorLimit($answer_cities)->get();
         $filter = getFilterUser($filter_query);
 
+        // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
 	    return view('users.index', compact('users', 'page_info', 'filter', 'user'));
@@ -88,7 +89,10 @@ class UserController extends Controller
     	$user = new User;
         $roles = new Role;
 
-    	return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list'));
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+    	return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list', 'page_info'));
     }
 
     public function store(UserRequest $request)
@@ -286,7 +290,10 @@ class UserController extends Controller
         ->template($answer_roles) // Выводим шаблоны в список
         ->pluck('role_name', 'id');
 
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info'));
     }
 
     public function destroy(Request $request, $id)

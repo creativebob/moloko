@@ -66,7 +66,10 @@ class EntityController extends Controller
         // Получаем новый экземпляр сущности
         $entity = new Entity;
 
-        return view('entities.create', compact('entity'));
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('entities.create', compact('entity', 'page_info'));
     }
 
 
@@ -133,7 +136,10 @@ class EntityController extends Controller
         // Проверяем право на редактирование полученной сущности
         $this->authorize(getmethod(__FUNCTION__), $entity);
 
-        return view('entities.show', compact('entity'));
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('entities.show', compact('entity', 'page_info'));
     }
 
 

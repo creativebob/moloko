@@ -4,9 +4,9 @@
   @include('includes.scripts.table-inhead')
 @endsection
 
-@section('title')
-  {{ $site->site_name }}
-@endsection
+@section('title', $site->site_name)
+
+@section('breadcrumbs', Breadcrumbs::render('site-sections', $page_info, $site))
 
 @section('title-content')
 {{-- Таблица --}}

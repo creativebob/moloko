@@ -53,8 +53,10 @@ class StafferController extends Controller
                 }])->findOrFail($user->company_id);
     $filials = count($company->departments);
     // dd($staff);
+
     // Инфо о странице
-    $page_info = pageInfo($this->entity_name);     
+    $page_info = pageInfo($this->entity_name);    
+
     return view('staff.index', compact('staff', 'page_info', 'filials'));
   }
 
@@ -142,7 +144,11 @@ class StafferController extends Controller
       $users_list[$user->id] = $user->second_name.' '.$user->first_name;
     };
     // dd($users_list);
-    return view('staff.edit', compact('staffer', 'users_list'));    
+
+    // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
+
+    return view('staff.edit', compact('staffer', 'users_list', 'page_info'));    
   }
 
   public function update(EmployeeRequest $request, $id)

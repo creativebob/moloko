@@ -73,7 +73,10 @@ class CompanyController extends Controller
         // Подключение политики
         $company = new Company;
 
-        return view('companies.create', compact('company'));
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('companies.create', compact('company', 'page_info'));
     }
 
 
@@ -139,7 +142,10 @@ class CompanyController extends Controller
         $company = Company::with('city')->moderatorLimit($answer)->findOrFail($id);
         $this->authorize(getmethod(__FUNCTION__), $company);
 
-        return view('companies.edit', compact('company'));
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('companies.edit', compact('company', 'page_info'));
     }
 
 

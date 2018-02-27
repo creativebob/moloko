@@ -67,7 +67,11 @@ class RightController extends Controller
         // Пока этот функционал не работатет, так как и не нужен пока...
         $right = new Right;
         $entities_list = Entity::get()->pluck('entity_name', 'id');
-        return view('rights.create', compact('right', 'entities_list'));
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('rights.create', compact('right', 'entities_list', 'page_info'));
     }
 
 
