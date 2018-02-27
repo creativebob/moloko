@@ -59,7 +59,7 @@ trait SystemItemTraitScopes
             };
 
 
-            if(($user_status == null)&&($system_item == 1)){
+            if(($user_status == null)&&($system_item == true)){
 
                 // Если есть право смотреть системные
                 return $query
@@ -73,7 +73,7 @@ trait SystemItemTraitScopes
 
 
 
-            if(($user_status == null)&&($system_item == null)){
+            if(($user_status == null)&&($system_item == false)){
 
 
                 // Если нет права смотреть системные

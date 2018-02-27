@@ -164,8 +164,11 @@ class GetAccessController extends Controller
 
                                 // При обработке права на просмотр чужих записей добавляем список авторов к праву
                                 if($right->alias_right == 'authors-users-allow'){$all_rights[$right->alias_right]['authors'] = $list_authors;};
+
                         }
                     }
+
+
 
                     if(!isset($all_rights)){
                         Auth::logout();
@@ -194,12 +197,28 @@ class GetAccessController extends Controller
             // Пишем в сессию массив с полученными правами!
             session(['access' => $access]);
 
+            // Создаем массив с сущностями к которым разрешен доступ на Index (Для отображения пунктов меню)
+            $entities_list = [];
 
-            // if($user->can('index', User::class)) {
-            //     dd('Есть право!');
-            // } else {
-            //     dd('Нет прав!');
-            // };
+            foreach($user->roles as $role) {
+                foreach($role->rights as $right){
+
+                    // Статичное указание ID действия 'index' - 2
+                    if($right->action_id == 2){
+
+                        if($user->can('index', 'App\\' . $right->actionentity->entity->entity_model)) {
+
+                            $entities_list[] = $right->actionentity->entity->id;
+
+                        };
+                    };
+                }
+            }
+
+            $access['settings']['entities_list'] = $entities_list;
+            
+            // Перезаписываем сессию
+            session(['access' => $access]);
 
 
             if(isset($user_redirect)){

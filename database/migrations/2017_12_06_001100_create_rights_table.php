@@ -28,6 +28,9 @@ class CreateRightsTable extends Migration
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 
+            $table->integer('action_id')->nullable()->unsigned()->comment('Id действия');
+            $table->foreign('action_id')->references('id')->on('actions');
+
             $table->string('directive')->index()->comment('Директива (allow/deny)');
             $table->string('alias_right')->index()->comment('Полный алиас права');
 

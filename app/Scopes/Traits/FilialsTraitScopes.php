@@ -22,12 +22,15 @@ trait FilialsTraitScopes
             if($filials != null){
 
               if($dependence){
+                
                   return $query->whereIn('filial_id', $filials);
               } else {
+
                 return $query;
               };
 
             } else {
+
                 return $query;
             }
 

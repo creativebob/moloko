@@ -34,13 +34,25 @@ Breadcrumbs::register('site-edit', function ($breadcrumbs, $page_info, $site) {
 // Сайт > Разделы
 Breadcrumbs::register('site-sections', function ($breadcrumbs, $page_info, $site) {
 	$breadcrumbs->parent('index', $page_info);
-    $breadcrumbs->push($site->site_name, url('/sites/{site_alias}'));
+    $breadcrumbs->push($site->site_name, url('/sites/'.$site->site_alias));
 });
 
-// Сайт > Разделы > Страницы
+// Сайт > Разделы > Раздел
 Breadcrumbs::register('sections', function ($breadcrumbs, $page_info, $site) {
 	$breadcrumbs->parent('site-sections', $page_info, $site);
-    $breadcrumbs->push($page_info->page_name, url('/sites/{site_alias}/pages'));
+    $breadcrumbs->push($page_info->page_name, url('/sites/'.$site->site_alias.'/'.$page_info->page_alias));
+});
+
+// Сайт > Разделы > Раздел > Создать
+Breadcrumbs::register('section-create', function ($breadcrumbs, $page_info, $site) {
+	$breadcrumbs->parent('sections', $page_info, $site);
+    $breadcrumbs->push('Добавление', url('/sites/'.$site->site_alias.'/'.$page_info->page_alias.'/create'));
+});
+
+// Сайт > Разделы > Раздел > Редактировать
+Breadcrumbs::register('section-edit', function ($breadcrumbs, $page_info, $site, $page) {
+	$breadcrumbs->parent('sections', $page_info, $site);
+    $breadcrumbs->push($page->page_name, url('/sites/'.$site->site_alias.'/'.$page_info->page_alias.'/{page_alias}/create'));
 });
 
 

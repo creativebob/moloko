@@ -10,7 +10,8 @@ trait ModeratorLimitTraitScopes
     {
 
         $entity_dependence = $answer['dependence'];
-        $moderator = $answer['moderator'];
+        $moderator = $answer['moderator']['result'];
+        $moderator_filials = $answer['moderator']['filials'];
 
         // Получаем данные из сессии
         $session  = session('access');
@@ -34,15 +35,15 @@ trait ModeratorLimitTraitScopes
         } else {
 
             if($moderator == true){
+                // dd($moderator_filials);
 
-                $moderator_filials = collect(getLS('users', 'moderator', 'filials'))->keys()->toarray();
                 return $query
-                ->where(function ($query) use ($moderator_filials) {$query->whereNull('moderation')->orwhere('moderation', 1)->WhereIn('filial_id', $moderator_filials);})
+                ->WhereNull('moderation')
+                ->Orwhere(function ($query) use ($moderator_filials) {$query->Where('moderation', 1)->WhereIn('filial_id', $moderator_filials);})
                 ->Orwhere(function ($query) use ($user_id) {$query->Where('moderation', 1)->Where('author_id', $user_id);});
 
             } else {
 
-                $moderator_filials = collect(getLS('users', 'moderator', 'filials'))->keys()->toarray();
                 return $query
                 ->where(function ($query) use ($moderator_filials) {$query->whereNull('moderation')->WhereIn('filial_id', $moderator_filials);})
                 ->Orwhere(function ($query) use ($user_id) {$query->Where('moderation', 1)->Where('author_id', $user_id);});
