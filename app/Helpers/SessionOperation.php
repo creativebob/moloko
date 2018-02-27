@@ -11,101 +11,23 @@
         if($session['user_info']['user_status'] == null){
 
 
-            // Получаем список авторов
-            // $list_authors = $session['list_authors'];
-
-
-            // ПРОВЕРЯЕМ ПРАВО НА ПРОСМОТР НЕ ОТМОДЕРИРОВАННЫХ ЗАПИСЕЙ  ------------------------------------------------------------------------------------------
-            // Проверяем право просмотра системных записей:
-            
-            if(isset($session['all_rights']['moderator-'.$entity_name.'-allow']) && (!isset($session['all_rights']['moderator-'.$entity_name.'-deny'])))
-            {
-
-                // Буду иметь возможность модерировать записи - буду их видеть
-                $moderator = true;
-                // dd($moderator);
-
-            } else {
-
-                // Не буду видеть не отмодерированные записи и не смогу их модерировать
-                $moderator = false;
-
-            };
-
-
-
-            // ПРОВЕРЯЕМ ПРАВО НА ПОЛНОЦЕННОЕ СОЗДАНИЕ ЗАПИСИ (Без необходимости последующего модерирования) -----------------------------------------------------
-            // Проверяем право просмотра системных записей:
-            
-            if(isset($session['all_rights']['automoderate-'.$entity_name.'-allow']) && (!isset($session['all_rights']['automoderate-'.$entity_name.'-deny'])))
-            {
-
-                // Пишем сразу
-                $automoderate = true;
-            } else {
-
-                // Пишем ущербную запись (требуеться модерация)
-                $automoderate = false;
-            };
-
-
-
             // ПРОВЕРЯЕМ ПРАВО НА ПРОСМОТР ВСЕХ ЗАПИСЕЙ КОМПАНИИ (ВСЕ ФИЛИАЛЫ)  -----------------------------------------------------------------------------------
             // Если выбрано "Нет ограичений" мы снимаем филиальную зависимость
 
-            if(isset($session['all_rights']['nolimit-'.$entity_name.'-allow']) && (!isset($session['all_rights']['nolimit-'.$entity_name.'-deny'])))
-            {
+            $mass_right = getRight('nolimit', $entity_name, $session);
+            $nolimit = $mass_right['result'];
 
-                // Видем все записи компании 
+            if($nolimit == true){
+
+                // Видим все записи компании 
                 $dependence = false;
+
             } else {
 
-                // Видем только записи филиалов, которые нам предоставлены ролями
+                // Видим только записи филиалов, которые нам предоставлены ролями
                 if($entity_dependence == true) {$dependence = true;} else {$dependence = false;};
-            };
-
-
-
-            // ПРОВЕРЯЕМ ПРАВО НА ПРОСМОТР ОБЩЕГО СПИСКА  --------------------------------------------------------------------------------------------------------
-            // Проверяем в правах (которые записаны в сессию) наличие права на просмотр общего списка пользователей 
-            // и отсутствие запрета. Если есть зависимость от филиала - получаем списки с ID.
-            
-            if(isset($session['all_rights']['index-'.$entity_name.'-allow'])&&(!isset($session['all_rights']['index-'.$entity_name.'-deny'])))
-            {
-            
-                // Получаем список ID филиалов в которых присутствует право на просмотр списка пользователей
-                $filials = collect($session['all_rights']['index-'.$entity_name.'-allow']['departments'])->keys()->toarray();
-                if(!isset($filials)){$filials = null;};
-
-
-                // Получаем список ID департаментов в которых присутствует право на просмотр списка пользователей
-                $departments = collect($session['all_rights']['index-'.$entity_name.'-allow']['filials'])->keys()->toarray();
-                if(!isset($departments)){$departments = null;};
-
-            } else {
- 
-                if(!isset($filials)){$filials = null;};
-                if(!isset($departments)){$departments = null;};
-                // abort(403, "Нет прав на операцию! Отсутствуют списки ID");
 
             };
-
-
-            // ЗАВИСИМОСТЬ ОТ СИСТЕМНЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------------------------------
-            // Проверяем право просмотра системных записей:
-            
-            if(isset($session['all_rights']['system-'.$entity_name.'-allow']) && (!isset($session['all_rights']['system-'.$entity_name.'-deny'])))
-            {
-
-                // Будем видеть системные записи
-                $system_item = 1;
-            } else {
-
-                // Не будем видеть системные записи
-                $system_item = null;
-            };
-
-
 
 
             // ВКЛЮЧЕНИЕ ИЛИ ОТКЛЮЧЕНИЕ РАСШИРЯЮЩЕГО СПИСКА АВТОРОВ ------------------------------------------------------------------------------------
@@ -113,15 +35,15 @@
             // Подключать ли пользователю список авторов?
             $use_authors = true; // Да
 
-
             // ПРОВЕРЯЕМ ПРАВО НА ПРОСМОТР ЗАПИСЕЙ ДРУГИХ АВТОРОВ  ----------------------------------------------------------------------------------------
             // Проверяем в правах (которые записаны в сессию) наличие права на просмотр чужих записей 
             // и отсутствие такого запрета
-            if(isset($session['all_rights']['authors-'.$entity_name.'-allow']) && (!isset($session['all_rights']['authors-'.$entity_name.'-deny'])))
-            {
+            
+            $mass_right = getRight('authors', $entity_name, $session);
+            $authors_status = $mass_right['result'];
+            // dd($mass_right);
 
-                // Если находим право на чтение чужих авторов - пишем статус true в $authors_status
-                $authors_status = true;
+            if($mass_right['result'] == true){
 
                 // Разрешено ли использовать список авторов
                 if($use_authors){
@@ -148,21 +70,24 @@
                     $list_authors = null;
 
                 };
+            };
 
-            } else {
+            if($mass_right['result'] == false){
 
                 // Если НЕ находим право на чтение чужих авторов - пишем статус false в $authors_status
                 $list_authors = null;
                 $authors_status = null;
+
             };
+
 
         } else {
 
             // ЕСЛИ МЫ БОГИ
 
             $dependence = false;
-            $moderator = ModerationScope::class;
-            $system_item = 1;
+            $moderator = true;
+            $system_item = true;
             $filials = null;
             $departments = null;
             $authors_status = true;
@@ -173,16 +98,19 @@
 
         // ФОРМИРУЕМ РЕЗУЛЬТАТЫ И ОФОРМЛЯЕМ ИХ В ВИДЕ МАССИВА ДЛЯ ОТПРАВКИ В КОНТРОЛЛЕР
 
+        $mass_right = getRight($method, $entity_name, $session);
+
+        $answer['result'] = $mass_right['result'];
 
         $answer['entity_name'] = $entity_name;
         $answer['dependence'] = $dependence;
-        $answer['moderator'] = $moderator;
-        $answer['system_item'] = $system_item;
-        $answer['filials'] = $filials;
-        $answer['departments'] = $departments;
+        $answer['system_item'] = getRight('system', $entity_name, $session);
+        $answer['moderator'] = getRight('moderator', $entity_name, $session);
+        $answer['automoderate'] = getRight('automoderate', $entity_name, $session);
+        $answer['filials'] = $mass_right['filials'];
+        $answer['departments'] = $mass_right['departments'];
         $answer['authors_status'] = $authors_status;
         $answer['list_authors'] = $list_authors;
-        $answer['automoderate'] = $automoderate;
         $answer['user_id'] = $session['user_info']['user_id'];
         $answer['user_status'] = $session['user_info']['user_status'];
         $answer['company_id'] = $session['user_info']['company_id'];
@@ -198,47 +126,8 @@
         return $answer;
     }
 
-    function getListsDepartments($company_id) {
-
-        // ПОДГОТОВКА СПИСКОВ ФИЛИАЛОВ И ОТДЕЛОВ КОМПАНИИ ДЛЯ SELECT ----------------------------------------------------------------------------
-        // Получаем сессию
-        
-        $session  = session('access');
-        if(!isset($session)){abort(403, 'Нет сессии!');};
-
-        // Если бог, то будем выбирать списки филиалов и отделов
-        if($session['user_info']['user_status'] == 1){
-
-            if($session['user_info']['company_id'] == null){abort(403, "Необходимо авторизоваться под компанией!");};
-            $departments = Department::whereCompany_id($company_id)->get();
-
-            foreach($departments as $department){
-                $list_departments[$department->id] = $department->department_name;
-                if($department->filial_status == 1){$list_filials[$department->id] = $department->department_name;};
-            };
-
-        } elseif($session['user_info']['user_status'] == null) {
-
-            //Если обычный пользователь, то смотрим списки в сессии
-            if(isset($session['all_rights']['update-users-allow']['filials'])){
-                $list_filials = $session['all_rights']['update-users-allow']['filials'];
-            } else {abort(403, 'Вы похоже не трудоустроены!');};
-
-            if(isset($session['all_rights']['update-users-allow']['departments'])){
-                $list_departments = $session['all_rights']['update-users-allow']['departments'];
-            } else {abort(403, 'Вы похоже не трудоустроены!');};
-
-        };
-
-        $lists_departments['list_filials'] = $list_filials;
-        $lists_departments['list_departments'] = $list_departments;
-
-        return $lists_departments;
-    }
-
 
     // Функция которая получает список разрешенных правами департаментов на указанное право
-
     function getLS($entity_name, $method, $type_list) {
 
             // Получаем сессию
@@ -247,8 +136,22 @@
 
             if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'][$type_list])) {
 
-                // Получаем список отделов
-                $departments = $session['all_rights'][$method . '-'. $entity_name .'-allow'][$type_list];
+
+
+                if((isset($session['all_rights']['nolimit-' . $entity_name . '-allow']))&&(!isset($session['all_rights']['nolimit-' . $entity_name . '-deny']))) {
+
+                    // Получаем список всех отделов компании
+                    $departments = $session['company_info']['filials'];
+
+
+                } else {
+
+                    // Получаем список доступных отделов
+                    $departments = $session['all_rights'][$method . '-'. $entity_name .'-allow'][$type_list];
+                    // dd($departments);
+                };
+
+
 
                 // Нет ли блокировки этого права?
                 if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny'][$type_list])) {
@@ -279,5 +182,73 @@
         if(!isset($departments)){$departments = null;};
         return $departments;
     }
+
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+    // ФУНКЦИЯ ПОЛУЧЕНИЯ ПРАВА ФИЛИАЛО НЕ ЗАВИСИМЫХ СУЩНОСТЕЙ ---------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    function getRight($method, $entity_name, $session){
+
+                // Получаем список филиалов в которых разрешено
+                if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {
+
+                    if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow']['filials'])) {
+                        $mass_filials_allow = $session['all_rights'][$method . '-'. $entity_name .'-allow']['filials'];
+                    } else {$mass_filials_allow = null;};
+                } else {$mass_filials_allow = null;};
+
+
+                // Получаем список филиалов в которых разрешено
+                if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
+
+                    if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny']['filials'])) {
+                        $mass_filials_deny = $session['all_rights'][$method . '-'. $entity_name .'-deny']['filials'];
+                    } else {$mass_filials_deny = null;};
+                } else {$mass_filials_deny = null;};
+
+
+                $filials_diff = collect($mass_filials_allow)->diff($mass_filials_deny)->keys()->toArray();
+                $filials = $filials_diff;
+
+
+                // Получаем список филиалов в которых разрешено
+                if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {
+
+                    if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow']['departments'])) {
+                        $mass_departments_allow = $session['all_rights'][$method . '-'. $entity_name .'-allow']['departments'];
+                    } else {$mass_departments_allow = null;};
+                } else {$mass_departments_allow = null;};
+
+
+                // Получаем список филиалов в которых разрешено
+                if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
+
+                    if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny']['departments'])) {
+                        $mass_departments_deny = $session['all_rights'][$method . '-'. $entity_name .'-deny']['departments'];
+                    } else {$mass_departments_deny = null;};
+                } else {$mass_departments_deny = null;};
+
+
+                $departments_diff = collect($mass_departments_allow)->diff($mass_departments_deny)->keys()->toArray();
+                $departments = $departments_diff;
+
+
+                if(count($departments) > 0){$result = true;} else {$result = false;};
+
+                if(($method == 'moderator')&&(count($departments)>0)){$moderator = true;} else {$moderator = false;};
+                if(($method == 'automoderate')&&(count($departments)>0)){$automoderate = true;} else {$automoderate = false;};
+
+
+                $mass_right['result'] = $result;
+                $mass_right['departments'] = $departments;
+                $mass_right['filials'] = $filials;
+
+                // dd($mass_right);
+                return $mass_right;
+
+
+            };
+
 
 ?>

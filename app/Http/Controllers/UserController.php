@@ -35,6 +35,7 @@ class UserController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        // dd($answer);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -81,7 +82,7 @@ class UserController extends Controller
         $filials_list = getLS('users', 'view', 'departments');
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_roles = operator_right('roles', 'true', 'index');
+        $answer_roles = operator_right('roles', false, 'index');
         $roles_list = Role::whereCompany_id($user_auth->company_id)->moderatorLimit($answer_roles)->pluck('role_name', 'id');
 
     	$user = new User;
@@ -244,7 +245,7 @@ class UserController extends Controller
         $role = new Role;
         $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
 
-        $answer_roles = operator_right('roles', true, 'index');
+        $answer_roles = operator_right('roles', false, 'index');
 
         $roles_list = Role::moderatorLimit($answer_roles)
         ->companiesLimit($answer_roles)
@@ -275,7 +276,7 @@ class UserController extends Controller
         $role = new Role;
         $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
 
-        $answer_roles = operator_right('roles', true, 'index');
+        $answer_roles = operator_right('roles', false, 'index');
 
         $roles_list = Role::moderatorLimit($answer_roles)
         ->companiesLimit($answer_roles)
