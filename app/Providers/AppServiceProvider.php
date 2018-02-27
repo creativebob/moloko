@@ -35,7 +35,12 @@ class AppServiceProvider extends ServiceProvider
           // ];
 
           $session = app('session')->get('access');
-          $entities_list = $session['settings']['entities_list']
+          $entities_list = $session['settings']['entities_list'];
+
+          if(!isset($entities_list)){$entities_list = [];};
+
+
+
           // dd($entities_list);
 
           // Меню для левого сайдбара
