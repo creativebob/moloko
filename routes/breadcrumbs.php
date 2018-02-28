@@ -19,21 +19,27 @@ Breadcrumbs::register('edit', function ($breadcrumbs, $page_info, $value) {
 
 // ------------------------------- Cайты -------------------------------------------
 
+
+// Все index'ы
+Breadcrumbs::register('sites', function ($breadcrumbs, $page_info) {
+    $breadcrumbs->push('Сайты', url('/sites'));
+});
+
 // Сайт > Создать
 Breadcrumbs::register('site-create', function ($breadcrumbs, $page_info) {
-	$breadcrumbs->parent('index', $page_info);
+	$breadcrumbs->parent('sites', $page_info);
     $breadcrumbs->push('Добавление', url('/sites/create'));
 });
 
 // Сайт > Редактировать
 Breadcrumbs::register('site-edit', function ($breadcrumbs, $page_info, $site) {
-	$breadcrumbs->parent('index', $page_info);
+	$breadcrumbs->parent('sites', $page_info);
     $breadcrumbs->push($site->site_name, url('/sites/{site_alias}/edit'));
 });
 
 // Сайт > Разделы
 Breadcrumbs::register('site-sections', function ($breadcrumbs, $page_info, $site) {
-	$breadcrumbs->parent('index', $page_info);
+	$breadcrumbs->parent('sites', $page_info);
     $breadcrumbs->push($site->site_name, url('/sites/'.$site->site_alias));
 });
 
