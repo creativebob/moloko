@@ -237,7 +237,11 @@ class DepartmentController extends Controller
       $filial->save();
 
       if($filial) {
-        return Redirect('/current_department/'.$filial->id.'/0');
+
+        // $link = 'current_department/'.$filial->id.'/0';
+        $link = 'departments';
+        return redirect('/getaccess/' . $link);
+
       } else {
         abort(403, 'Ошибка при записи филиала!');
       };
@@ -269,7 +273,12 @@ class DepartmentController extends Controller
       $department->save();
       $department_id = $department->id;
       if($department){
-        return Redirect('/current_department/'.$request->filial_id.'/'.$department_id);
+
+        // $link = 'current_department/'.$request->filial_id.'/'.$department_id;
+        $link = 'departments';
+        return redirect()->route('/getaccess/' . $link);
+
+        // return Redirect('/current_department/'.$request->filial_id.'/'.$department_id);
       } else {
         abort(403, 'Ошибка при записи отдела!');
       };
