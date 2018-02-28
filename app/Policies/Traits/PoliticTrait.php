@@ -47,10 +47,10 @@ trait PoliticTrait
 
             // Разрешаем богу кое что редактировать без компании
             if(
-                ($entity_name == 'pages')||
-                ($entity_name == 'sities')||
-                ($entity_name == 'navigations')||
-                ($entity_name == 'menus')||
+                // ($entity_name == 'pages')||
+                // ($entity_name == 'sities')||
+                // ($entity_name == 'navigations')||
+                // ($entity_name == 'menus')||
                 ($entity_name == 'roles')||
                 ($entity_name == 'companies')||
                 ($entity_name == 'cities')||   
@@ -64,6 +64,14 @@ trait PoliticTrait
             } else {
                 return false;
             };
+
+
+
+
+
+
+
+            
         };
 
 
