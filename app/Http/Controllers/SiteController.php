@@ -65,7 +65,6 @@ class SiteController extends Controller
     ->filials($answer_menus) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer_menus)
     ->systemItem($answer_menus) // Фильтр по системным записям
-    ->template($answer_menus)
     ->whereNavigation_id(1) // Только для сайтов, разделы сайта
     ->get();
 
@@ -154,7 +153,6 @@ class SiteController extends Controller
     ->filials($answer_menu) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer_menu)
     ->systemItem($answer_menu) // Фильтр по системным записям
-    ->template($answer)
     ->whereNavigation_id(1) // Только для сайтов, разделы сайта
     ->get();
 

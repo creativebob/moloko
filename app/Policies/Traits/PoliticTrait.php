@@ -31,6 +31,18 @@ trait PoliticTrait
             return true;
         };
 
+
+        // Бог авторизованный под компанией может редактировать
+        if(($user_status == 1)&&($company_id != null)){
+
+            if(isset($session['company_info']['filials'])){
+
+                return true;            
+            };
+        };
+
+
+
         // Бог авторизованный под компанией может редактировать
         if(($user_status == 1)&&($method == 'update')&&($company_id != null)){
 
@@ -51,27 +63,30 @@ trait PoliticTrait
                 // ($entity_name == 'sities')||
                 // ($entity_name == 'navigations')||
                 // ($entity_name == 'menus')||
-                ($entity_name == 'roles')||
-                ($entity_name == 'companies')||
-                ($entity_name == 'cities')||   
-                ($entity_name == 'regions')||   
-                ($entity_name == 'areas')||       
-                ($entity_name == 'positions')||
+                // ($entity_name == 'roles')||
+                // ($entity_name == 'companies')||
+                // ($entity_name == 'cities')||   
+                // ($entity_name == 'regions')||   
+                // ($entity_name == 'areas')||       
+                // ($entity_name == 'positions')||
                 ($entity_name == 'entities')
             ){
 
             // Запрещаем редактировать остальные сущности
+            return false;
+
+
+
             } else {
-                return false;
+
+
+                return true;
+
             };
 
 
 
 
-
-
-
-            
         };
 
 
