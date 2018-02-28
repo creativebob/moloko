@@ -85,8 +85,12 @@ Route::resource('/staff', 'StafferController')->middleware('auth');
 // Контроллер сотрудников
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
 
+// Контроллер секторов
+Route::resource('/sectors', 'SectorController')->middleware('auth');
+Route::post('/sector_check', 'SectorController@sector_check')->middleware('auth');
+
 // Контроллер списков
-Route::resource('booklists', 'BooklistController')->middleware('auth');
+Route::resource('/booklists', 'BooklistController')->middleware('auth');
 
 // Контроллер отображения сайтов 
 Route::get('/sites', 'SiteController@index')->middleware('auth')->name('sites.index');

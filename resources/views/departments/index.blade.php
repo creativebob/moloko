@@ -607,13 +607,13 @@ $(function() {
   $('#form-department-add .department-name-field').keyup(function() {
     var submit = '#submit-department-add';
     // Получаем фрагмент текста
-    var department = $('#form-department-add .department-name-field').val();
+    var department = $('#form-department-add .name-field').val();
     departmentCheck (department, submit);
   });
   $('#form-department-edit .department-name-field').keyup(function() {
     var submit = '#submit-department-edit';
     // Получаем фрагмент текста
-    var department = $('#form-department-edit .department-name-field').val();
+    var department = $('#form-department-edit .name-field').val();
     departmentCheck (department, submit);
   });
 

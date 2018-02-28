@@ -41,6 +41,15 @@
               {{ Form::text('company_name', $company->company_name, ['class'=>'varchar-field company-name-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9/s]{3,30}']) }}
               </label>
             </div>
+            <div class="small-12 medium-6 cell">
+              <label>Вид деятельности компании
+                <select name="sector_id" id="sector-select">
+                  @foreach ($sectors_list as $sector)
+                    <option value="{{ $sector['id'] }}" @if($sector['industry_status'] == 1) class="sector" @endif @if($company->sector_id == $sector['id']) selected @endif>{{ $sector['sector_name'] }}</option>
+                  @endforeach
+                </select>
+              </label>
+            </div>
           </div>
 
           <div class="grid-x grid-padding-x tabs-margin-top">

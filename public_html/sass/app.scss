@@ -519,6 +519,13 @@ input[type=checkbox], input[type=radio] {
   color: #cc4b37;
   display: none;
 }
+
+
+// ---------------------------------------------------------------------------------------------
+.sector {
+  background-color: grey;
+  font-weight: 700;
+}
 // ---------------------------------------- Страница входа -------------------------------------
 .enter-page {
   background-color: $white;

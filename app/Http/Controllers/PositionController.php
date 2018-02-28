@@ -9,6 +9,8 @@ use App\User;
 use App\Role;
 use App\Staffer;
 use App\PositionRole;
+use App\Sector;
+
 // Валидация
 use App\Http\Requests\PositionRequest;
 // Политика
@@ -81,9 +83,32 @@ class PositionController extends Controller
 
     $position = new Position;
 
+    // Получаем список секторов
+    $sectors = Sector::get()->keyBy('id')->toArray();
+    $sectors_cat = [];
+    foreach ($sectors as $id => &$node) {   
+      //Если нет вложений
+      if (!$node['sector_parent_id']){
+        $sectors_cat[$id] = &$node;
+      } else { 
+      //Если есть потомки то перебераем массив
+        $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
+      };
+    };
+    // dd($sectors_cat);
+    $sectors_list = [];
+    foreach ($sectors_cat as $id => &$node) {
+        $sectors_list[$id] = &$node;
+        if (isset($node['children'])) {
+            foreach ($node['children'] as $id => &$node) {
+                $sectors_list[$id] = &$node;
+            }
+        };
+    };
+
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
-    return view('positions.create', compact('position', 'pages_list', 'roles', 'page_info'));  
+    return view('positions.create', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info'));  
   }
 
   public function store(PositionRequest $request)
@@ -193,10 +218,33 @@ class PositionController extends Controller
     ->template($answer_pages)
     ->get();
 
+    // Получаем список секторов
+    $sectors = Sector::get()->keyBy('id')->toArray();
+    $sectors_cat = [];
+    foreach ($sectors as $id => &$node) {   
+      //Если нет вложений
+      if (!$node['sector_parent_id']){
+        $sectors_cat[$id] = &$node;
+      } else { 
+      //Если есть потомки то перебераем массив
+        $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
+      };
+    };
+    // dd($sectors_cat);
+    $sectors_list = [];
+    foreach ($sectors_cat as $id => &$node) {
+      $sectors_list[$id] = &$node;
+      if (isset($node['children'])) {
+        foreach ($node['children'] as $id => &$node) {
+          $sectors_list[$id] = &$node;
+        }
+      };
+    };
+
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
-    return view('positions.edit', compact('position', 'pages_list', 'roles', 'page_info'));
+    return view('positions.edit', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info'));
   }
 
   public function update(PositionRequest $request, $id)

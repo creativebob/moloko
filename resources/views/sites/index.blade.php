@@ -8,7 +8,7 @@
 
 @section('title', $page_info->page_name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('sites', $page_info))
 
 @section('title-content')
 {{-- Таблица --}}

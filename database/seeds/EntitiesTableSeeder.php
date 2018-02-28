@@ -138,6 +138,13 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
             ],
+            [
+                'entity_name' => 'Секторы',
+                'entity_alias' => 'sectors',
+                'entity_model' => 'Sector',
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
             
 
             // Связующие сущности

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Company;
 use App\Page;
+use App\Sector;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -73,10 +74,34 @@ class CompanyController extends Controller
         // Подключение политики
         $company = new Company;
 
+        // Получаем список секторов
+        $sectors = Sector::get()->keyBy('id')->toArray();
+        $sectors_cat = [];
+        foreach ($sectors as $id => &$node) {   
+          //Если нет вложений
+          if (!$node['sector_parent_id']){
+            $sectors_cat[$id] = &$node;
+          } else { 
+          //Если есть потомки то перебераем массив
+            $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
+          };
+        };
+        // dd($sectors_cat);
+        $sectors_list = [];
+        foreach ($sectors_cat as $id => &$node) {
+            $sectors_list[$id] = &$node;
+            if (isset($node['children'])) {
+                foreach ($node['children'] as $id => &$node) {
+                    $sectors_list[$id] = &$node;
+                }
+            };
+        };
+        // dd($sectors_list);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('companies.create', compact('company', 'page_info'));
+        return view('companies.create', compact('company', 'sectors_list', 'page_info'));
     }
 
 
@@ -109,7 +134,9 @@ class CompanyController extends Controller
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
 
-        $company->director_user_id = $user->company_id;
+        $company->sector_id = $request->sector_id;
+
+        // $company->director_user_id = $user->company_id;
         $company->author_id = $user->id;
 
         $company->save();
@@ -142,10 +169,33 @@ class CompanyController extends Controller
         $company = Company::with('city')->moderatorLimit($answer)->findOrFail($id);
         $this->authorize(getmethod(__FUNCTION__), $company);
 
+        // Получаем список секторов
+        $sectors = Sector::get()->keyBy('id')->toArray();
+        $sectors_cat = [];
+        foreach ($sectors as $id => &$node) {   
+          //Если нет вложений
+          if (!$node['sector_parent_id']){
+            $sectors_cat[$id] = &$node;
+          } else { 
+          //Если есть потомки то перебераем массив
+            $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
+          };
+        };
+        // dd($sectors_cat);
+        $sectors_list = [];
+        foreach ($sectors_cat as $id => &$node) {
+            $sectors_list[$id] = &$node;
+            if (isset($node['children'])) {
+                foreach ($node['children'] as $id => &$node) {
+                    $sectors_list[$id] = &$node;
+                }
+            };
+        };
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('companies.edit', compact('company', 'page_info'));
+        return view('companies.edit', compact('company', 'sectors_list', 'page_info'));
     }
 
 
@@ -180,7 +230,10 @@ class CompanyController extends Controller
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
         $company->bank = $request->bank;
-        $company->director_user_id = Auth::user()->company_id;
+
+        $company->sector_id = $request->sector_id;
+
+        // $company->director_user_id = Auth::user()->company_id;
 
         $company->save();
         return redirect('companies');

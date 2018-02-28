@@ -232,6 +232,16 @@ class MenusTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
             ],
+            [
+                'menu_name' => 'Секторы',
+                'menu_icon' => null,
+                'menu_alias' => 'sectors',
+                'menu_parent_id' => 4,
+                'page_id' => 17,
+                'navigation_id' => 2,
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
         // [
         //  'menu_name' => null,
         //        'menu_icon' => null,

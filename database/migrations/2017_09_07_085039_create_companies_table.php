@@ -39,6 +39,9 @@ class CreateCompaniesTable extends Migration
             $table->integer('admin_user_id')->nullable()->unsigned()->comment('Администратор компании');
             // $table->foreign('user_id')->references('id')->on('users');
 
+            $table->integer('sector_id')->nullable()->unsigned()->comment('Id сектора');
+            $table->foreign('sector_id')->references('id')->on('sectors');
+
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             // $table->foreign('author_id')->references('id')->on('users');
 

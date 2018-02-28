@@ -106,5 +106,10 @@ class Company extends Model
   {
     return $this->hasMany('App\Position');
   }
+  // Получаем сектор компании
+  public function sector()
+  {
+    return $this->belongsTo('App\Sector');
+  }
 
 }

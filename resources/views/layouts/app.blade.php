@@ -114,7 +114,7 @@
     @include('includes.task-manager')
     {{-- Основной контент --}}
     <div id="wrapper">
-      <div class="grid-x breadcrumbs">
+      <div class="grid-x breadcrumbs block-refresh">
         <div class="small-12 cell"> 
           {{-- Breadcrumbs --}}
           @yield('breadcrumbs')

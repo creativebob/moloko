@@ -173,6 +173,16 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
             ],
+            [
+                'page_name' => 'Секторы',
+                'site_id' => 1,
+                'page_title' => 'Секторы',
+                'page_description' => 'Секторы',
+                'page_alias' => 'sectors',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
         ]);
     }
 }

@@ -214,6 +214,7 @@ class GetAccessController extends Controller
                     };
                 }
             }
+            // dd($entities_list);
 
             $access['settings']['entities_list'] = $entities_list;
             

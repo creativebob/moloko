@@ -2,7 +2,7 @@
 
 @section('title', 'Новая страница')
 
-@section('breadcrumbs', Breadcrumbs::render('create', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('section-create', $page_info, $current_site))
 
 @section('title-content')
 	<div class="top-bar head-content">

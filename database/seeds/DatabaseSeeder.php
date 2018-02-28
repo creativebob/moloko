@@ -11,6 +11,9 @@ class DatabaseSeeder extends Seeder
    */
   public function run()
   {
+    // Сферы деятельности компаний и должностей
+    $this->call(SectorsTableSeeder::class);
+
     // Пользователи и компании
     $this->call(CompaniesTableSeeder::class);
 

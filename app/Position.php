@@ -75,4 +75,10 @@ class Position extends Model
   {
     return $this->belongsTo('App\Company');
   }
+
+  // Получаем сектор должности
+  public function sector()
+  {
+    return $this->belongsTo('App\Sector');
+  }
 }
