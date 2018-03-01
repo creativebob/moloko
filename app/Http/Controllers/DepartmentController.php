@@ -52,10 +52,6 @@ class DepartmentController extends Controller
     $departments_rights = [];
     $departments_rights = $departments->keyBy('id');
 
-    // foreach ($departments as $department) {
-    //   $departments_rights[$department['id']] = $department;
-    // };
-    // dd($departments_rights);
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
 
@@ -74,6 +70,7 @@ class DepartmentController extends Controller
       $departments_id[$department_right['id']] = $department_right;
       $departments_id[$department_right['id']]['edit'] = $edit;
       $departments_id[$department_right['id']]['delete'] = $delete;
+
       // Проверяем прапва на удаление
       foreach ($department->staff as $id => $staffer) {
         $del_staff = 0;
@@ -107,6 +104,7 @@ class DepartmentController extends Controller
       $departments_tree[$department['id']]['count'] = $count;
       // dd($department);
     };
+
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
@@ -359,31 +357,29 @@ class DepartmentController extends Controller
     $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__))
     ;
     // ГЛАВНЫЙ ЗАПРОС:
-    $filial = Department::moderatorLimit($answer)->findOrFail($id);
+    $department = Department::moderatorLimit($answer)->findOrFail($id);
 
     // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), $filial);
+    $this->authorize(getmethod(__FUNCTION__), $department);
 
     if ($request->filial_db == 1) {
-      $filial->city_id = $request->city_id;
-      $filial->department_name = $request->filial_name;
-      $filial->address = $request->filial_address;
-      $filial->phone = cleanPhone($request->filial_phone);
-      $filial->filial_status = 1;
-      $filial->filial_id = $id;
-      $filial->editor_id = $user->id;
-      $filial->save();
+      $department->city_id = $request->city_id;
+      $department->department_name = $request->filial_name;
+      $department->address = $request->filial_address;
+      $department->phone = cleanPhone($request->filial_phone);
+      $department->filial_status = 1;
+      $department->editor_id = $user->id;
+      $department->save();
 
-      if ($filial) {
-        return Redirect('/current_department/'.$filial->id.'/0');
+      if ($department) {
+        return Redirect('/current_department/'.$department->id.'/0');
       } else {
-        abort(403, 'Ошибка при оюновлении филиала!');
+        abort(403, 'Ошибка при обновлении филиала!');
       };
     };
 
     if ($request->department_db == 1) {
 
-      $department = Department::moderatorLimit($answer)->findOrFail($id);
       $department->city_id = $request->city_id;
       $department_name_old = $request->department_name;
       $first = mb_substr($department_name_old,0,1, 'UTF-8');//первая буква

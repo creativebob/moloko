@@ -239,7 +239,7 @@
 
                <label>Название отдела
                 @include('includes.inputs.name', ['value'=>null, 'name'=>'department_name'])
-                <div class="department-error">Данный отдел уже существует в этом филиале!</div>
+                <div class="item-error">Данный отдел уже существует в этом филиале!</div>
               </label>
               <label class="input-icon">Введите город
                 @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name', 'required'=>''])
@@ -312,7 +312,7 @@
         </label>
         <label>Название отдела
           @include('includes.inputs.name', ['value'=>null, 'name'=>'department_name'])
-          <div class="department-error">Данный отдел уже существует в этом филиале!</div>
+          <div class="item-error">Данный отдел уже существует в этом филиале!</div>
         </label>
         <label class="input-icon">Введите город
           @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name', 'required'=>''])
@@ -586,10 +586,10 @@ $(function() {
           // alert(date);
           if (result.error_status == 0) {
             // Выводим пришедшие данные на страницу
-            $('.department-error').css('display', 'block');
+            $('.item-error').css('display', 'block');
           };
           if (result.error_status == 1) {
-            $('.department-error').css('display', 'none');
+            $('.item-error').css('display', 'none');
             $('.department-db').val(1);
             $(submit).prop('disabled', false);
           };
@@ -598,7 +598,7 @@ $(function() {
     };
     if (lenDepartment <= 2) {
       // Удаляем все значения, если символов меньше 3х
-      $('.department-error').css('display', 'none');
+      $('.item-error').css('display', 'none');
       $('.item-error').remove();
       // $('#city-name-field').val('');
     };
@@ -627,7 +627,7 @@ $(function() {
     $('.departments-list').empty();
     $('.positions-list').empty();
     $('.table-over').remove();
-    $('.department-error').css('display', 'none');
+    $('.item-error').css('display', 'none');
     $('.find-status').removeClass('icon-find-ok');
     $('.find-status').removeClass('icon-find-no');
     $('.find-status').removeClass('sprite-16');

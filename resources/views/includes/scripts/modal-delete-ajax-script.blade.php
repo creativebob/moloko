@@ -10,7 +10,9 @@ $(document).on('click', '[data-open="item-delete-ajax"]', function() {
   $('.delete-button-ajax').attr('id', 'del-' + type + '-' + id);
 });
 // Подтверждение удаления и само удаление
-$(document).on('click', '.delete-button-ajax', function() {
+$(document).on('click', '.delete-button-ajax', function(event) {
+  // Блочим отправку формы
+  event.preventDefault();
   var type = $(this).attr('id').split('-')[1];
   var id = $(this).attr('id').split('-')[2];
   // Ajax
@@ -23,7 +25,7 @@ $(document).on('click', '.delete-button-ajax', function() {
     data: {'id': id},
     success: function (data) {
       var result = $.parseJSON(data);
-      if (result.status == 1) {
+      if (result.status == 0) {
         $('#' + result.type + '-' + result.id).remove();
         $('.delete-button').removeAttr('id');
       } else {

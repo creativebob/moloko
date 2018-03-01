@@ -43,11 +43,7 @@
             </div>
             <div class="small-12 medium-6 cell">
               <label>Вид деятельности компании
-                <select name="sector_id" id="sector-select">
-                  @foreach ($sectors_list as $sector)
-                    <option value="{{ $sector['id'] }}" @if($sector['industry_status'] == 1) class="sector" @endif @if($company->sector_id == $sector['id']) selected @endif>{{ $sector['sector_name'] }}</option>
-                  @endforeach
-                </select>
+                  @include('includes.inputs.sector', ['sector_id'=>$company->sector_id, 'name'=>'sector_id'])
               </label>
             </div>
           </div>
