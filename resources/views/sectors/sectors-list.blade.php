@@ -29,7 +29,7 @@ parent
       <div class="icon-list-edit sprite" data-open="medium-edit"></div>
       @endif
     </li>
-    <li>
+    <li class="del">
       @if (!isset($sector['children']) && ($sector['system_item'] != 1) && $sector['delete'] == 1)
         <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
       @endif

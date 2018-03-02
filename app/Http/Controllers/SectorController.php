@@ -84,135 +84,11 @@ class SectorController extends Controller
       // dd($sector);
     };
 
-    // Получаем список секторов
-    $sectors_db = Sector::get()->keyBy('id')->toArray();
-    $sectors_cat = [];
-    foreach ($sectors_db as $id => &$node) {   
-      //Если нет вложений
-      if (!$node['sector_parent_id']){
-        $sectors_cat[$id] = &$node;
-      } else { 
-      //Если есть потомки то перебераем массив
-        $sectors_db[$node['sector_parent_id']]['children'][$id] = &$node;
-      };
-    };
-    // dd($sectors_cat);
-    $sectors_list = [];
-    foreach ($sectors_cat as $id => &$node) {
-      $sectors_list[$id] = &$node;
-      if (isset($node['children'])) {
-        foreach ($node['children'] as $id => &$node) {
-          $sectors_list[$id] = &$node;
-        }
-      };
-    };
-
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
     // dd($sectors_tree);
-    return view('sectors.index', compact('sectors_tree', 'page_info', 'sectors', 'sectors_list'));
-  }
-
-  // Получаем сторонние данные по 
-  public function current_sector(Request $request, $section_id, $item_id)
-  {
-    // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), Sector::class);
-
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-    // -----------------------------------------------------------------------------------------------------------------------
-    // ГЛАВНЫЙ ЗАПРОС
-    // -----------------------------------------------------------------------------------------------------------------------
-    $sectors = Sector::moderatorLimit($answer)
-    ->companiesLimit($answer)
-    ->filials($answer) // $industrys должна существовать только для зависимых от филиала, иначе $industrys должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
-    ->orderBy('moderation', 'desc')
-    ->get();
-
-    // Создаем масив где ключ массива является ID меню
-    $sectors_rights = [];
-    $sectors_rights = $sectors->keyBy('id');
-
-    // Получаем данные для авторизованного пользователя
-    $user = $request->user();
-
-    // Проверяем прапва на редактирование и удаление
-    $sectors_id = [];
-    foreach ($sectors_rights as $sector) {
-      $edit = 0;
-      $delete = 0;
-      if ($user->can('update', $sector)) {
-        $edit = 1;
-      };
-      if ($user->can('delete', $sector)) {
-        $delete = 1;
-      };
-      $sector_right = $sector->toArray();
-      $sectors_id[$sector_right['id']] = $sector_right;
-      $sectors_id[$sector_right['id']]['edit'] = $edit;
-      $sectors_id[$sector_right['id']]['delete'] = $delete;
-    };
-
-    // dd($sectors_id);
-    // Функция построения дерева из массива от Tommy Lacroix
-    $sectors_tree = [];
-    foreach ($sectors_id as $id => &$node) {   
-      //Если нет вложений
-      if (!$node['sector_parent_id']){
-        $sectors_tree[$id] = &$node;
-      } else { 
-      //Если есть потомки то перебераем массив
-        $sectors_id[$node['sector_parent_id']]['children'][$id] = &$node;
-      }
-    };
-
-    foreach ($sectors_tree as $sector) {
-      $count = 0;
-      if (isset($sector['children'])) {
-        $count = count($sector['children']) + $count;
-      };
-      $sectors_tree[$sector['id']]['count'] = $count;
-      // dd($sector);
-    };
-
-    // Получаем список секторов
-    $sectors_db = Sector::get()->keyBy('id')->toArray();
-    $sectors_cat = [];
-    foreach ($sectors_db as $id => &$node) {   
-      //Если нет вложений
-      if (!$node['sector_parent_id']){
-        $sectors_cat[$id] = &$node;
-      } else { 
-      //Если есть потомки то перебераем массив
-        $sectors_db[$node['sector_parent_id']]['children'][$id] = &$node;
-      };
-    };
-    // dd($sectors_cat);
-    $sectors_list = [];
-    foreach ($sectors_cat as $id => &$node) {
-      $sectors_list[$id] = &$node;
-      if (isset($node['children'])) {
-        foreach ($node['children'] as $id => &$node) {
-          $sectors_list[$id] = &$node;
-        }
-      };
-    };
-
-    // Инфо о странице
-    $page_info = pageInfo($this->entity_name);
-    
-    $data = [
-      'section_name' => 'sectors',
-      'item_name' => 'staff',
-      'section_id' => $section_id,
-      'item_id' => $item_id,
-    ];
-    return view('sectors.index', compact('sectors_tree', 'data', 'page_info', 'sectors', 'sectors_list')); 
+    return view('sectors.index', compact('sectors_tree', 'page_info', 'sectors'));
   }
 
   public function create()
@@ -278,7 +154,7 @@ class SectorController extends Controller
         ];
       }
     }
-    
+
     // Если сектор
     if ($request->medium_item == 1) {
 
@@ -347,8 +223,8 @@ class SectorController extends Controller
       ];
     } else {
       $result = [
-        'sector_name' => $sector->sector_name,
-        'sector_parent_id' => $sector->sector_parent_id,
+        'name' => $sector->sector_name,
+        'parent_id' => $sector->sector_parent_id,
         'first_id' => $sector->industry_id,
       ];
     };
@@ -369,6 +245,7 @@ class SectorController extends Controller
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $sector);
 
+    // Если индустрия
     if ($request->first_item == 1) {
       $sector->sector_name = $request->name;
       $sector->editor_id = $user->id;
@@ -386,9 +263,32 @@ class SectorController extends Controller
           'error_message' => 'Ошибка при изменении индустрии!'
         ];
       }
-      echo json_encode($result, JSON_UNESCAPED_UNICODE);
     };
 
+    // Если сектор
+    if ($request->medium_item == 1) {
+      $sector->sector_name = $request->name;
+      $sector->sector_parent_id = $request->parent;
+      $sector->editor_id = $user->id;
+      $sector->save();
+
+      if ($sector) {
+        $result = [
+          'error_status' => 0,
+          'id' => $sector->id,
+          'name' => $sector->sector_name,
+          'parent' => $sector->sector_parent_id,
+        ];
+      } else {
+        $result = [
+          'error_status' => 1,
+          'error_message' => 'Ошибка при изменении сектора!'
+        ];
+      }
+    };
+
+    // Отдаем результат
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
   public function destroy(Request $request, $id)
@@ -398,6 +298,11 @@ class SectorController extends Controller
 
     // ГЛАВНЫЙ ЗАПРОС:
     $sector = Sector::moderatorLimit($answer)->findOrFail($id);
+
+    $parent = null;
+    if (isset($sector->sector_parent_id)) {
+      $parent = $sector->sector_parent_id;
+    }
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $sector);
@@ -430,12 +335,13 @@ class SectorController extends Controller
           'status'=> 0,
           'type' => 'sectors',
           'id' => $id,
+          'parent' => $parent,
           'msg' => 'Успешно удалено'
         ];
       } else {
         // В случае непредвиденной ошибки
         $data = [
-          'status' => 0,
+          'status' => 1,
           'msg' => 'Произошла непредвиденная ошибка, попробуйте перезагрузить страницу и попробуйте еще раз'
         ];
       };
@@ -446,7 +352,7 @@ class SectorController extends Controller
   public function sector_check(Request $request)
   {
     // Проверка отдела в нашей базе данных
-    $sector = Sector::where('sector_name',$request->name)->first();
+    $sector = Sector::where('sector_name', $request->name)->first();
 
     // Если такое название есть
     if ($sector) {
@@ -460,5 +366,49 @@ class SectorController extends Controller
       ];
     };
     return json_encode($result, JSON_UNESCAPED_UNICODE);
+  }
+
+  public function sectors_list(Request $request)
+  {
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+
+    // Главный запрос
+    $sectors = Sector::moderatorLimit($answer)
+    // ->whereNotIn(['id' => [$request->id], 'sector_parent_id' => [$request->id]])
+    ->get(['id','sector_name','industry_status','sector_parent_id'])
+    // ->pluck('id','sector_name','industry_status')
+    ->keyBy('id')
+    ->toArray();
+
+    // Получаем список секторов
+    $sectors_cat = [];
+    foreach ($sectors as $id => &$node) {  
+     
+        // Если нет вложений
+        if (!$node['sector_parent_id']){
+          $sectors_cat[$id] = &$node;
+        } else { 
+        // Если есть потомки то перебераем массив
+          $sectors_cat[$node['sector_parent_id']]['children'][$id] = &$node;
+        };
+      
+    };
+
+    // // dd($sectors_cat);
+    $sectors_list = [];
+    foreach ($sectors_cat as $id => &$node) {
+      if ($id != $request->id) { 
+        $sectors_list[$id] = &$node;
+        if (isset($node['children'])) {
+          foreach ($node['children'] as $id => &$node) {
+            $sectors_list[$id] = &$node;
+          }
+        };
+      };
+    };
+
+    echo json_encode($sectors_cat, JSON_UNESCAPED_UNICODE);
+    // dd($sectors_list);
   }
 }

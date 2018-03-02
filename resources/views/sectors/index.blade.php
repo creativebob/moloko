@@ -80,7 +80,7 @@
                   <div class="icon-list-edit sprite" data-open="first-edit"></div>
                   @endif
                 </li>
-                <li>
+                <li class="del">
                   @if (!isset($sector['children']) && ($sector['system_item'] != 1) && $sector['delete'] == 1)
                     <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
                   @endif
@@ -215,7 +215,10 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label>Расположение
-          @include('includes.inputs.sector', ['sector_id'=>null, 'name'=>'first_id'])
+          <select name="sector_parent_id" class="sectors-list">
+              
+          </select>
+          {{-- @include('includes.inputs.sector', ['sector_id'=>null, 'name'=>'first_id']) --}}
         </label>
         <label>Название сектора
           @include('includes.inputs.name', ['value'=>null, 'name'=>'sector_name'])
@@ -223,6 +226,7 @@
           <div class="item-error">Такой сектор уже существует!</div>
         </label>
         <input type="hidden" name="medium_parent_id" class="medium-parent-id-field">
+        <input type="hidden" name="medium_id" class="medium-id">
         <input type="hidden" name="medium_db" class="medium-db" value="0">
       </div>
     </div>
@@ -235,6 +239,9 @@
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 {{-- Конец модалки сектора --}}
+
+
+ 
 
 {{-- Модалка удаления ajax --}}
 @include('includes.modals.modal-delete-ajax')
@@ -432,9 +439,6 @@ $(function() {
   // Открываем модалку
   $(document).on('click', '[data-open="first-edit"]', function() {
 
-    // Блокируем кнопку
-    $('.submit-first-edit').prop('disabled', false);
-
     // Получаем данные о филиале
     var id = $(this).closest('.parent').attr('id').split('-')[1];
 
@@ -525,8 +529,6 @@ $(function() {
         var result = $.parseJSON(date);
         if (result.error_status == 0) {
 
-          
-
           // Если у родителя нет родительского класса
           if ($('#sectors-' + result.parent).hasClass('parent') == false) {
 
@@ -552,7 +554,7 @@ $(function() {
           if (result.edit == 1) {
             data = data + '<div class=\"icon-list-edit sprite\" data-open=\"medium-edit\"></div>';
           };
-          data = data + '</li><li>';
+          data = data + '</li><li class=\"del\">';
           if (result.delete == 1) {
             data = data + '<div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div>';
           };
@@ -565,8 +567,6 @@ $(function() {
           var count = $('#sectors-' + result.parent + ' .medium-list>li');
           $('#sectors-' + result.parent + ' .number:first').text(count.length);
 
-
-
         } else {
           var error = showError (result.error_message);
           $('#form-medium-add .name-field').after(error);
@@ -576,15 +576,44 @@ $(function() {
   });
 
   // Редактируем сектор
+  // Открываем модалку
   $(document).on('click', '[data-open="medium-edit"]', function() {
+    var id = $(this).closest('.item').attr('id').split('-')[1];
     var parent = $(this).closest('.parent').attr('id').split('-')[1];
     var first = $(this).closest('.first-item').attr('id').split('-')[1];
     $('.first-id-field').val(first);
-    var id = $(this).closest('.parent').attr('id').split('-')[1];
-    // Блокируем кнопку
-    $('#submit-medium-edit').prop('disabled', false);
-    // Получаем данные о филиале
-    $('#form-medium-edit').attr('action', '/sectors/' + id);
+    
+    // Получаем список секторов
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/sectors_list",
+      type: "POST",
+      data: {id: id},
+      success: function(date){
+        var result = $.parseJSON(date);
+        var data = '';
+        $.each(result, function(i, elem) {
+         
+          data = data + '<option value=\"' + elem['id'] + '\"';
+          if (elem['industry_status'] == 1) {
+            data = data + ' class="sector"';
+          };
+          if (elem['id'] == parent) {
+            data = data + ' selected';
+          };
+          data = data + '>';
+          if (elem['industry_status'] != 1) {
+            data = data + '&nbsp;&nbsp;';
+          };
+          data = data + elem['sector_name'] + '</option>';
+        });
+        $('.sectors-list').append(data);
+      }
+    });
+
+    // Получаем данные о medium
     // Сам ajax запрос
     $.ajax({
       headers: {
@@ -592,12 +621,75 @@ $(function() {
       },
       url: "/sectors/" + id + "/edit",
       type: "GET",
+      success: function(date) {
+        var result = $.parseJSON(date);
+        $('#form-medium-edit .name-field').val(result.name);
+        $('#form-medium-edit .medium-db').val(1);
+        $('#form-medium-edit .medium-parent-id-field').val(result.parent_id);
+        $('#form-medium-edit .medium-id').val(id);
+      }
+    });
+  });
+
+  // Меняем данные сектора
+  $(document).on('click', '#submit-medium-edit', function(event) {
+
+    // Блочим отправку формы
+    event.preventDefault();
+
+    // Получаем данные
+    var id = $('#form-medium-edit .medium-id').val();
+    var name = $('#form-medium-edit .name-field').val();
+    var medium_db = $('#form-medium-edit .medium-db').val();
+    var parent = $('#form-medium-edit .sectors-list').val();
+
+    // Первая буква сектора заглавная
+    name = newParagraph (name);
+    
+    // Сам ajax запрос
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/sectors/" + id,
+      type: "PATCH",
+      data: {name: name, medium_item: medium_db, parent: parent},
       success: function(date){
         var result = $.parseJSON(date);
-        $('#form-medium-edit .name-field').val(result.medium_name);
-        $('#form-medium-edit .medium-db').val(1);
-        $('#form-medium-edit option[value="' + result.first_id + '"]').attr("selected", "selected");
-        $('#form-medium-edit .medium-parent-id-field').val(result.medium_parent_id);
+
+        if (result.error_status == 0) {
+          $('#sectors-' + result.id + ' .medium-item-name').text(result.name);
+          $('#sectors-' + result.id).data('name', result.name);
+
+          // Если родитель изменился
+          if (result.parent != parent) {
+
+            // Если элемент не являлся родителем
+            if ($('#-sectors-' + result.parent).hasClass('parent') == false) {
+
+              // Меняем количество детей
+              var count = $('#sectors-' + result.parent + ' .medium-list>li');
+              $('#sectors-' + result.parent + ' .number:first').text(count.length);
+
+              // Если вложенных элеметнов нет, отображаем значок удаления
+              if (count.length == 0) {
+
+                // Убираем список
+                $('#sectors-' + result.parent).children('.medium-list:first').remove();
+
+                // Формируем иконку удаления
+                var del = '<div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div>';
+
+                // Вставляем
+                $('#sectors-' + result.parent + ' .del:first').append(del);
+              };
+            };
+
+          };
+        } else {
+          var error = showError (result.error_message);
+          $('#form-first-add .name-field').after(error);
+        }
       }
     });
   });
@@ -610,9 +702,7 @@ $(function() {
     $('.first-id-field').val('');
     $('.medium-parent-id-field').val('');
     $('.item-error').css('display', 'none');
-    $('#sectors-select>option').each(function(i,elem) {
-      $(elem).removeAttr('selected');
-    });
+    $('.sectors-list').empty();
   });
 
   // Открываем меню и подменю, если только что добавили населенный пункт

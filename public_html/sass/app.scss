@@ -522,10 +522,19 @@ input[type=checkbox], input[type=radio] {
 
 
 // ---------------------------------------------------------------------------------------------
-.sector {
-  background-color: grey;
-  font-weight: 700;
+.sectors-list {
+
+  option {
+
+  }
+
+  .sector {
+
+    font-weight: 700;
+  }
+
 }
+
 // ---------------------------------------- Страница входа -------------------------------------
 .enter-page {
   background-color: $white;
