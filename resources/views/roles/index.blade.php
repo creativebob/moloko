@@ -70,7 +70,7 @@
             $edit = 1;
           @endphp
         @endcan
-        <tr class="parent @if(Auth::user()->role_id == $role->id)active @endif  @if($role->moderation == 1)no-moderation @endif" id="roles-{{ $role->id }}" data-name="{{ $role->role_name }}">
+        <tr class="item @if(Auth::user()->role_id == $role->id)active @endif  @if($role->moderation == 1)no-moderation @endif" id="roles-{{ $role->id }}" data-name="{{ $role->role_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $role->id }}"><label class="label-check" for="check-{{ $role->id }}"></label></td>
           <td class="td-role-name">
@@ -96,11 +96,12 @@
           <td class="td-role-description">{{ $role->role_description }} </td>
           <td class="td-role-author">@if(!empty($role->author->first_name)) {{ $role->author->first_name . ' ' . $role->author->second_name }} @endif</td>
           <td class="td-delete">
-          @if (($role->system_item !== 1) && ($role->company_id !== null))
-            @can('delete', $role)
-            <a class="icon-delete sprite" data-open="item-delete"></a></td> 
-            @endcan
-          @endif       
+            @if (($role->system_item !== 1) && ($role->company_id !== null))
+              @can('delete', $role)
+              <a class="icon-delete sprite" data-open="item-delete"></a> 
+              @endcan
+            @endif  
+          </td>     
         </tr>
         @endforeach
       @endif

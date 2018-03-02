@@ -69,7 +69,7 @@
       @if(!empty($users))
 
         @foreach($users as $user)
-        <tr class="parent @if($user->moderation == 1)no-moderation @endif" id="users-{{ $user->id }}" data-name="{{ $user->first_name.' '.$user->second_name }}">
+        <tr class="item @if($user->moderation == 1)no-moderation @endif" id="users-{{ $user->id }}" data-name="{{ $user->first_name.' '.$user->second_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="check-{{ $user->id }}" id="check-{{ $user->id }}"><label class="label-check" for="check-{{ $user->id }}"></label></td>
           <td class="td-second-name">

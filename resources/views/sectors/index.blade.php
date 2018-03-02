@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
  
 @section('inhead')
   <meta name="description" content="{{ $page_info->page_description }}" />
@@ -15,7 +15,7 @@
       <div class="top-bar-left">
         <h2 class="header-content">{{ $page_info->page_name }}</h2>
         @can('create', App\Sector::class)
-        <a class="icon-add sprite" data-open="industry-add"></a>
+        <a class="icon-add sprite" data-open="first-add"></a>
         @endcan
       </div>
       <div class="top-bar-right">
@@ -64,25 +64,25 @@
         @foreach ($sectors_tree as $sector)
          
           @if($sector['industry_status'] == 1)
-            {{-- Если категория --}}
-            <li class="first-item parent 
-            @if (isset($sector['children'])))
-            parent-item
+            {{-- Если индустрия --}}
+            <li class="first-item item 
+            @if (isset($sector['children']))
+            parent
             @endif" id="sectors-{{ $sector['id'] }}" data-name="{{ $sector['sector_name'] }}">
               <ul class="icon-list">
                 <li>
                   @can('create', App\Sector::class)
-                  <div class="icon-list-add sprite" data-open="sector-add"></div>
+                  <div class="icon-list-add sprite" data-open="medium-add"></div>
                   @endcan
                 </li>
                 <li>
                   @if($sector['edit'] == 1)
-                  <div class="icon-list-edit sprite" data-open="industry-edit"></div>
+                  <div class="icon-list-edit sprite" data-open="first-edit"></div>
                   @endif
                 </li>
-                <li>
+                <li class="del">
                   @if (!isset($sector['children']) && ($sector['system_item'] != 1) && $sector['delete'] == 1)
-                    <div class="icon-list-delete sprite" data-open="item-delete"></div>
+                    <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
                   @endif
                 </li>
               </ul>
@@ -110,123 +110,138 @@
 @endsection
 
 @section('modals')
-{{-- Модалка добавления категории --}}
-<div class="reveal" id="industry-add" data-reveal>
+{{-- Модалка добавления индустрии --}}
+<div class="reveal" id="first-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>ДОБАВЛЕНИЕ категории</h5>
+      <h5>ДОБАВЛЕНИЕ индустрии</h5>
     </div>
   </div>
-  {{ Form::open(['url'=>'/sectors', 'id' => 'form-industry-add', 'data-abide', 'novalidate']) }}
+  
+  <form id="form-first-add" data-abide novalidate method="POST">
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
-        <label>Название категории
+        <label>Название индустрии
           @include('includes.inputs.name', ['value'=>null, 'name'=>'industry_name'])
+          <div class="sprite-input-right find-status"></div>
+          <div class="item-error">Такая индустрия уже существует!</div>
         </label>
-        <input type="hidden" name="industry_db" class="industry-db" value="0" pattern="[0-9]{1}">
+        <input type="hidden" name="first_db" class="first-db" value="0" pattern="[0-9]{1}">
       </div>
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-industry-add']) }}
+        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-first-add', 'data-close']) }}
       </div>
     </div>
-  {{ Form::close() }}
+  </form>
+  {{-- Form::open(['id'=>'form-first-add', 'data-abide', 'novalidate']) --}}
+  {{-- Form::close() --}}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
-{{-- Конец модалки добавления категории --}}
+{{-- Конец модалки добавления индустрии --}}
 
-{{-- Модалка редактирования категории --}}
-<div class="reveal" id="industry-edit" data-reveal>
+{{-- Модалка редактирования индустрии --}}
+<div class="reveal" id="first-edit" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>Редактирование категории</h5>
+      <h5>Редактирование индустрии</h5>
     </div>
   </div>
-  {{ Form::open([ 'data-abide', 'novalidate', 'id'=>'form-industry-edit']) }}
+  <form id="form-first-edit" data-abide novalidate>
   {{ method_field('PATCH') }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
-        <label>Название категории
+        <label>Название индустрии
           @include('includes.inputs.name', ['value'=>null, 'name'=>'industry_name'])
+          <div class="sprite-input-right find-status"></div>
+          <div class="item-error">Такая индустрия уже существует!</div>
         </label>
-        <input type="hidden" name="industry_db" class="industry-db" value="1">
+        <input type="hidden" name="first_id" class="first-id">
+        <input type="hidden" name="first_db" class="first-db" value="0">
       </div>
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-industry-edit']) }}
+        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-first-edit', 'data-close']) }}
       </div>
     </div>
-  {{ Form::close() }}
+  </form>
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
-{{-- Конец модалки редактирования категории --}}
+{{-- Конец модалки редактирования индустрии --}}
 
 {{-- Модалка добавления сектора --}}
-<div class="reveal" id="sector-add" data-reveal>
+<div class="reveal" id="medium-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>ДОБАВЛЕНИЕ сектора</h5>
     </div>
   </div>
-  <!-- Редактируем отдел -->
-  {{ Form::open(['id' => 'form-sector-add', 'class' => 'form-check-city']) }}
-  {{ method_field('PATCH') }}
+  <!-- Добавляем сектор -->
+  <form id="form-medium-add" data-abide novalidate method="POST">
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label>Название сектора
           @include('includes.inputs.name', ['value'=>null, 'name'=>'sector_name'])
-          <div class="sector-error">Данный отдел уже существует в этом филиале!</div>
+          <div class="sprite-input-right find-status"></div>
+          <div class="item-error">Такой сектор уже существует!</div>
         </label>
-        <input type="hidden" name="sector_parent_id" class="sector-parent-id-field">
-        <input type="hidden" name="industry_id" class="industry-id-field">
-        <input type="hidden" name="sector_db" class="sector-db" value="0">
+        <input type="hidden" name="medium_parent_id" class="medium-parent-id-field">
+        <input type="hidden" name="first_id" class="first-id-field">
+        <input type="hidden" name="medium_db" class="medium-db" value="0">
       </div>
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-sector-add']) }}
+        {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-medium-add']) }}
       </div>
     </div>
-  {{ Form::close() }}
+  </form>
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 {{-- Конец модалки добавления сектора --}}
 
 {{-- Модалка редактирования сектора --}}
-<div class="reveal" id="sector-edit" data-reveal>
+<div class="reveal" id="medium-edit" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>Редактирование сектора</h5>
     </div>
   </div>
   <!-- Редактируем отдел -->
-  {{ Form::open(['id' => 'form-sector-edit', 'class' => 'form-check-city']) }}
+  <form id="form-medium-edit" data-abide novalidate>
   {{ method_field('PATCH') }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
+        <label>Расположение
+          <select name="sector_parent_id" class="sectors-list">
+              
+          </select>
+          {{-- @include('includes.inputs.sector', ['sector_id'=>null, 'name'=>'first_id']) --}}
+        </label>
         <label>Название сектора
           @include('includes.inputs.name', ['value'=>null, 'name'=>'sector_name'])
-          <div class="sector-error">Данный отдел уже существует в этом филиале!</div>
+          <div class="sprite-input-right find-status"></div>
+          <div class="item-error">Такой сектор уже существует!</div>
         </label>
-        <input type="hidden" name="sector_parent_id" class="sector-parent-id-field">
-        <input type="hidden" name="industry_id" class="industry-id-field">
-        <input type="hidden" name="sector_db" class="sector-db" value="0">
+        <input type="hidden" name="medium_parent_id" class="medium-parent-id-field">
+        <input type="hidden" name="medium_id" class="medium-id">
+        <input type="hidden" name="medium_db" class="medium-db" value="0">
       </div>
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-sector-edit']) }}
+        {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-medium-edit']) }}
       </div>
     </div>
-  {{ Form::close() }}
+  </form>
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 {{-- Конец модалки сектора --}}
 
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
+
+ 
 
 {{-- Модалка удаления ajax --}}
 @include('includes.modals.modal-delete-ajax')
@@ -236,79 +251,39 @@
   @include('includes.scripts.inputs-mask')
 <script type="text/javascript">
 $(function() {
-  // Редактируем филиал
-  $(document).on('click', '[data-open="industry-edit"]', function() {
-    // Блокируем кнопку
-    $('.submit-industry-edit').prop('disabled', false);
-    // Получаем данные о филиале
-    var id = $(this).closest('.parent').attr('id').split('-')[1];
-    $('#form-industry-edit').attr('action', '/sectors/' + id);
-    // Сам ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/sectors/" + id + "/edit",
-      type: "GET",
-      success: function(date){
-        var result = $.parseJSON(date);
-        $('#form-industry-edit .city-check-field').val(result.city_name);
-        $('#form-industry-edit .city-id-field').val(result.city_id);
-        $('#form-industry-edit .name-field').val(result.industry_name);
-        $('#form-industry-edit .address-field').val(result.industry_address);
-        $('#form-industry-edit .phone-field').val(result.industry_phone);
-        $('#form-industry-edit .industry-db-edit').val(1);
-      }
-    });
-  });
-  // Добавление сектора или должности
-  $(document).on('click', '[data-open="sector-add"]', function() {
-    var parent = $(this).closest('.parent').attr('id').split('-')[1];
-    var industry = $(this).closest('.first-item').attr('id').split('-')[1];
-    $('#form-sector-add .industry-id-field').val(industry);
-    $('#form-sector-add .sector-parent-id-field').val(parent);
-  });
-  // Редактируем отдел
-  $(document).on('click', '[data-open="sector-edit"]', function() {
-    var parent = $(this).closest('.parent').attr('id').split('-')[1];
-    var industry = $(this).closest('.first-item').attr('id').split('-')[1];
-    $('.industry-id-field').val(industry);
-    var id = $(this).closest('.parent').attr('id').split('-')[1];
-    // Блокируем кнопку
-    $('#submit-sector-edit').prop('disabled', false);
-    // Получаем данные о филиале
-    $('#form-sector-edit').attr('action', '/sectors/' + id);
-    // Сам ajax запрос
-    // alert(id);
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/sectors/" + id + "/edit",
-      type: "GET",
-      success: function(date){
-        var result = $.parseJSON(date);
-        // alert(result);
-        $('#form-sector-edit .name-field').val(result.sector_name);
-        $('#form-sector-edit .sector-db').val(1);
-        $('#form-sector-edit .industry-id-field').val(result.industry_id);
-        $('#form-sector-edit .sector-parent-id-field').val(result.sector_parent_id);
-      }
-    });
-  });
+  // Функция появления окна с ошибкой
+  function showError (msg) {
+    var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
+    return error;
+  };
+  
+  // Обозначаем таймер для проверки
+  var timerId;
+  var time = 400;
 
+  // Первая буква заглавная
+  function newParagraph (name) {
+    name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
+    return name;
+  };
+ 
+  // ------------------- Проверка на совпадение имени --------------------------------------
 
+  // Проверка на совпадение в базе
+  function sectorCheck (name, submit, db) {
 
-  function sectorCheck (sector, submit) {
-    // Блокируем кнопку
-    $(submit).prop('disabled', true);
-    $('.sector-db').val(0);
-    // Первая буква сектора заглавная
-    sector = sector.charAt(0).toUpperCase() + sector.substr(1);
+    // Блокируем аттрибут базы данных
+    $(db).val(0);
+
     // Смотрим сколько символов
-    var lensector = sector.length;
+    var lenname = name.length;
+
     // Если символов больше 3 - делаем запрос
-    if (lensector > 2) {
+    if (lenname > 3) {
+
+      // Первая буква сектора заглавная
+      name = newParagraph (name);
+
       // Сам ajax запрос
       $.ajax({
         headers: {
@@ -316,57 +291,420 @@ $(function() {
         },
         url: "/sector_check",
         type: "POST",
-        data: {sector_name: sector, industry_id: $('.industry-id-field').val(), sector_db: $('#form-sector-add .sector-db').val()},
+        data: {name: name},
         beforeSend: function () {
-          $('.find-sector').addClass('icon-load');
+          $('.find-status').addClass('icon-load');
         },
         success: function(date){
-          $('.find-sector').removeClass('icon-load');
-          // Удаляем все значения чтобы вписать новые
+          $('.find-status').removeClass('icon-load');
           var result = $.parseJSON(date);
-          // alert(date);
-          if (result.error_status == 0) {
-            // Выводим пришедшие данные на страницу
-            $('.sector-error').css('display', 'block');
-          };
+
           if (result.error_status == 1) {
-            $('.sector-error').css('display', 'none');
-            $('.sector-db').val(1);
+            // Если ошибка
+            $(submit).prop('disabled', true);
+            $('.item-error').css('display', 'block');
+            $(db).val(0);
+          } else {
+            // Выводим пришедшие данные на страницу
             $(submit).prop('disabled', false);
+            $('.item-error').css('display', 'none');
+            $(db).val(1);
           };
         }
       });
     };
-    if (lensector <= 2) {
+    if (lenname <= 3) {
       // Удаляем все значения, если символов меньше 3х
-      $('.sector-error').css('display', 'none');
-      $('.item-error').remove();
-      // $('#city-name-field').val('');
+      $(submit).prop('disabled', false);
+      $('.item-error').css('display', 'none');
+      $(db).val(0);
     };
   };
-  // Чекаем отдел в нашей бд
-  $('#form-sector-add .name-field').keyup(function() {
-    var submit = '#submit-sector-add';
+
+  // Добаление индустрии
+  $('#form-first-add .name-field').keyup(function() {
     // Получаем фрагмент текста
-    var sector = $('#form-sector-add .name-field').val();
-    sectorCheck (sector, submit);
+    var name = $('#form-first-add .name-field').val();
+    // Указываем название кнопки
+    var submit = '#submit-first-add';
+    // Значение поля с разрешением
+    var db = '#form-first-add .first-db';
+    // Выполняем запрос
+    clearTimeout(timerId);   
+    timerId = setTimeout(function() {
+      sectorCheck (name, submit, db)
+   }, time); 
   });
-  $('#form-sector-edit .sector-name-field').keyup(function() {
-    var submit = '#submit-sector-edit';
+
+  // Изменение индустрии
+  $('#form-first-edit .name-field').keyup(function() {
     // Получаем фрагмент текста
-    var sector = $('#form-sector-edit .name-field').val();
-    sectorCheck (sector, submit);
+    var name = $('#form-first-edit .name-field').val();
+    // Указываем название кнопки
+    var submit = '#submit-first-edit';
+    // Значение поля с разрешением
+    var db = '#form-first-edit .first-db';
+    // Выполняем запрос
+    clearTimeout(timerId);   
+    timerId = setTimeout(function() {
+      sectorCheck (name, submit, db)
+   }, time); 
+  });
+
+  // Добаление сектора
+  $('#form-medium-add .name-field').keyup(function() {
+    // Получаем фрагмент текста
+    var name = $('#form-medium-add .name-field').val();
+    // Указываем название кнопки
+    var submit = '#submit-medium-add';
+    // Значение поля с разрешением
+    var db = '#form-medium-add .medium-db';
+    // Выполняем запрос
+    clearTimeout(timerId);   
+    timerId = setTimeout(function() {
+      sectorCheck (name, submit, db)
+   }, time); 
+  });
+
+  // Изменение сектора
+  $('#form-medium-edit .name-field').keyup(function() {
+    // Получаем фрагмент текста
+    var name = $('#form-medium-edit .name-field').val();
+    // Указываем название кнопки
+    var submit = '#submit-medium-edit';
+    // Значение поля с разрешением
+    var db = '#form-medium-edit .medium-db';
+    // Выполняем запрос
+    clearTimeout(timerId);   
+    timerId = setTimeout(function() {
+      sectorCheck (name, submit, db)
+   }, time); 
+  });
+
+
+  // ---------------------------- Добавление / изменение ----------------------------------
+
+  // Добавляем индустрию
+  $(document).on('click', '#submit-first-add', function(event) {
+
+    // Блочим отправку формы
+    event.preventDefault();
+
+    // Получаем данные
+    var name = $('#form-first-add .name-field').val();
+    var first_db = $('#form-first-add .first-db').val();
+
+    // Первая буква сектора заглавная
+    name = newParagraph (name);
+    
+    // Сам ajax запрос
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/sectors",
+      type: "POST",
+      data: {name: name, first_item: first_db},
+      success: function(date){
+        var result = $.parseJSON(date);
+        if (result.error_status == 0) {
+
+          // Формируем вставляемый пункт
+          var data = '<li class="first-item item" id=\"sectors-'+ result.id +'\" data-name=\"'+ result.name +'\"><ul class="icon-list"><li>';
+
+          if (result.create == 1) {
+            data = data + '<div class=\"icon-list-add sprite\" data-open=\"medium-add\"></div>';
+          };
+          data = data + '</li><li>';
+          if (result.edit == 1) {
+            data = data + '<div class=\"icon-list-edit sprite\" data-open=\"first-edit\"></div>';
+          };
+          data = data + '</li><li>';
+          if (result.delete == 1) {
+            data = data + '<div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div>';
+          };
+          data = data + '</li></ul><a data-list="" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"first-item-name\">' + result.name + '</span><span class=\"number\">0</span></div></a></li>';
+
+          // Вставляем
+          $('.content-list').append(data);
+        } else {
+          var error = showError (result.error_message);
+          $('#form-first-add .name-field').after(error);
+        }
+      }
+    });
+  });
+
+  // Редактируем индустрию
+  // Открываем модалку
+  $(document).on('click', '[data-open="first-edit"]', function() {
+
+    // Получаем данные о филиале
+    var id = $(this).closest('.parent').attr('id').split('-')[1];
+
+    // Сам ajax запрос
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/sectors/" + id + "/edit",
+      type: "GET",
+      success: function(date){
+        var result = $.parseJSON(date);
+        $('#form-first-edit .name-field').val(result.name);
+        $('#form-first-edit .first-id').val(result.id);
+        $('#form-first-edit .first-db').val(1);
+      }
+    });
+  });
+
+  // Меняем данные индустрии
+  $(document).on('click', '#submit-first-edit', function(event) {
+
+    // Блочим отправку формы
+    event.preventDefault();
+
+    // Получаем данные
+    var id = $('#form-first-edit .first-id').val();
+    var name = $('#form-first-edit .name-field').val();
+    var first_db = $('#form-first-edit .first-db').val();
+
+    // Первая буква сектора заглавная
+    name = newParagraph (name);
+    
+    // Сам ajax запрос
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/sectors/" + id,
+      type: "PATCH",
+      data: {name: name, first_item: first_db},
+      success: function(date){
+        var result = $.parseJSON(date);
+
+        if (result.error_status == 0) {
+          $('#sectors-' + result.id + ' .first-item-name').text(result.name);
+          $('#sectors-' + result.id).data('name', result.name);
+        } else {
+          var error = showError (result.error_message);
+          $('#form-first-add .name-field').after(error);
+        }
+      }
+    });
+  });
+
+  // Добавление сектора
+  // Открываем модалку
+  $(document).on('click', '[data-open="medium-add"]', function() {
+    var first = $(this).closest('.first-item').attr('id').split('-')[1];
+    var parent = $(this).closest('.item').attr('id').split('-')[1];
+    $('#form-medium-add .first-id-field').val(first);
+    $('#form-medium-add .medium-parent-id-field').val(parent);
+  });
+
+  // Добавляем сектор
+  $(document).on('click', '#submit-medium-add', function(event) {
+
+    // Блочим отправку формы
+    event.preventDefault();
+
+    // Получаем данные
+    var name = $('#form-medium-add .name-field').val();
+    var medium_db = $('#form-medium-add .medium-db').val();
+    var parent = $('#form-medium-add .medium-parent-id-field').val();
+
+    // Первая буква сектора заглавная
+    name = newParagraph (name);
+    
+    // Сам ajax запрос
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/sectors",
+      type: "POST",
+      data: {name: name, medium_item: medium_db, parent: parent},
+      success: function(date){
+        var result = $.parseJSON(date);
+        if (result.error_status == 0) {
+
+          // Если у родителя нет родительского класса
+          if ($('#sectors-' + result.parent).hasClass('parent') == false) {
+
+            // Добавляем родителю класс и список
+            $('#sectors-' + result.parent).addClass('parent');
+
+            // Формируем список
+            var list = '<ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false"></ul>';
+
+            // Вставляем
+            $('#sectors-' + result.parent).append(list);
+
+            // Убираем иконку удаления
+            $('#sectors-' + result.parent).children('.icon-list:first').find('.icon-list-delete').remove();
+          };
+
+          // Формируем вставляемый пункт
+          var data = '<li class="medium-item item" id=\"sectors-'+ result.id +'\" data-name=\"'+ result.name +'\"><a data-list="" class=\"medium-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"medium-item-name\">' + result.name + '</span><span class=\"number\">0</span></div></a><ul class="icon-list"><li>';
+          if (result.create == 1) {
+            data = data + '<div class=\"icon-list-add sprite\" data-open=\"medium-add\"></div>';
+          };
+          data = data + '</li><li>';
+          if (result.edit == 1) {
+            data = data + '<div class=\"icon-list-edit sprite\" data-open=\"medium-edit\"></div>';
+          };
+          data = data + '</li><li class=\"del\">';
+          if (result.delete == 1) {
+            data = data + '<div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div>';
+          };
+          data = data + '</li></ul></li>';
+
+          // Вставляем пункт
+          $('#sectors-' + result.parent + ' .medium-list').append(data);
+
+          // Меняем количество детей
+          var count = $('#sectors-' + result.parent + ' .medium-list>li');
+          $('#sectors-' + result.parent + ' .number:first').text(count.length);
+
+        } else {
+          var error = showError (result.error_message);
+          $('#form-medium-add .name-field').after(error);
+        }
+      }
+    });
+  });
+
+  // Редактируем сектор
+  // Открываем модалку
+  $(document).on('click', '[data-open="medium-edit"]', function() {
+    var id = $(this).closest('.item').attr('id').split('-')[1];
+    var parent = $(this).closest('.parent').attr('id').split('-')[1];
+    var first = $(this).closest('.first-item').attr('id').split('-')[1];
+    $('.first-id-field').val(first);
+    
+    // Получаем список секторов
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/sectors_list",
+      type: "POST",
+      data: {id: id},
+      success: function(date){
+        var result = $.parseJSON(date);
+        var data = '';
+        $.each(result, function(i, elem) {
+         
+          data = data + '<option value=\"' + elem['id'] + '\"';
+          if (elem['industry_status'] == 1) {
+            data = data + ' class="sector"';
+          };
+          if (elem['id'] == parent) {
+            data = data + ' selected';
+          };
+          data = data + '>';
+          if (elem['industry_status'] != 1) {
+            data = data + '&nbsp;&nbsp;';
+          };
+          data = data + elem['sector_name'] + '</option>';
+        });
+        $('.sectors-list').append(data);
+      }
+    });
+
+    // Получаем данные о medium
+    // Сам ajax запрос
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/sectors/" + id + "/edit",
+      type: "GET",
+      success: function(date) {
+        var result = $.parseJSON(date);
+        $('#form-medium-edit .name-field').val(result.name);
+        $('#form-medium-edit .medium-db').val(1);
+        $('#form-medium-edit .medium-parent-id-field').val(result.parent_id);
+        $('#form-medium-edit .medium-id').val(id);
+      }
+    });
+  });
+
+  // Меняем данные сектора
+  $(document).on('click', '#submit-medium-edit', function(event) {
+
+    // Блочим отправку формы
+    event.preventDefault();
+
+    // Получаем данные
+    var id = $('#form-medium-edit .medium-id').val();
+    var name = $('#form-medium-edit .name-field').val();
+    var medium_db = $('#form-medium-edit .medium-db').val();
+    var parent = $('#form-medium-edit .sectors-list').val();
+
+    // Первая буква сектора заглавная
+    name = newParagraph (name);
+    
+    // Сам ajax запрос
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/sectors/" + id,
+      type: "PATCH",
+      data: {name: name, medium_item: medium_db, parent: parent},
+      success: function(date){
+        var result = $.parseJSON(date);
+
+        if (result.error_status == 0) {
+          $('#sectors-' + result.id + ' .medium-item-name').text(result.name);
+          $('#sectors-' + result.id).data('name', result.name);
+
+          // Если родитель изменился
+          if (result.parent != parent) {
+
+            // Если элемент не являлся родителем
+            if ($('#-sectors-' + result.parent).hasClass('parent') == false) {
+
+              // Меняем количество детей
+              var count = $('#sectors-' + result.parent + ' .medium-list>li');
+              $('#sectors-' + result.parent + ' .number:first').text(count.length);
+
+              // Если вложенных элеметнов нет, отображаем значок удаления
+              if (count.length == 0) {
+
+                // Убираем список
+                $('#sectors-' + result.parent).children('.medium-list:first').remove();
+
+                // Формируем иконку удаления
+                var del = '<div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div>';
+
+                // Вставляем
+                $('#sectors-' + result.parent + ' .del:first').append(del);
+              };
+            };
+
+          };
+        } else {
+          var error = showError (result.error_message);
+          $('#form-first-add .name-field').after(error);
+        }
+      }
+    });
   });
 
   // При закрытии модалки очищаем поля
-  $(document).on('click', '.close-modal', function() {
+  $(document).on('click', '.close-modal, .modal-button', function() {
     $('.name-field').val('');
-    $('.table-over').remove();
-    $('.sector-error').css('display', 'none');
-    $('.find-status').removeClass('icon-find-ok');
-    $('.find-status').removeClass('icon-find-no');
-    $('.find-status').removeClass('sprite-16');
+    $('.first-db').val(0);
+    $('.medium-db').val(0);
+    $('.first-id-field').val('');
+    $('.medium-parent-id-field').val('');
+    $('.item-error').css('display', 'none');
+    $('.sectors-list').empty();
   });
+
   // Открываем меню и подменю, если только что добавили населенный пункт
   @if(!empty($data))
     // Общие правила
@@ -402,6 +740,4 @@ $(function() {
 @include('includes.scripts.multilevel-menu-active-scripts')
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.scripts.modal-delete-ajax-script')
-{{-- Скрипт модалки удаления ajax --}}
-@include('includes.scripts.modal-delete-script')
 @endsection

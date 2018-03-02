@@ -514,7 +514,7 @@ input[type=checkbox], input[type=radio] {
   // opacity: 0.5;
   transition: 0.5s ease opacity;
 }
-.department-error {
+.item-error {
   padding-bottom: 1rem;
   color: #cc4b37;
   display: none;
@@ -522,10 +522,19 @@ input[type=checkbox], input[type=radio] {
 
 
 // ---------------------------------------------------------------------------------------------
-.sector {
-  background-color: grey;
-  font-weight: 700;
+.sectors-list {
+
+  option {
+
+  }
+
+  .sector {
+
+    font-weight: 700;
+  }
+
 }
+
 // ---------------------------------------- Страница входа -------------------------------------
 .enter-page {
   background-color: $white;

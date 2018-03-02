@@ -493,7 +493,8 @@ $('.icon-filter').click(function() {
 $.ajaxSetup({
   error: function() {
     alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
-  }
+  },
+
 });
 
 
