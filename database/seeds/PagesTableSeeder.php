@@ -183,6 +183,16 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
             ],
+            [
+                'page_name' => 'Папки',
+                'site_id' => 1,
+                'page_title' => 'Папки',
+                'page_description' => 'Папки (директории)',
+                'page_alias' => 'folders',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
         ]);
     }
 }

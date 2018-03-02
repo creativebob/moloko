@@ -65,5 +65,9 @@ class DatabaseSeeder extends Seeder
     $this->call(BooklistsTableSeeder::class);
     $this->call(BooklistUserTableSeeder::class);
     $this->call(ListItemsTableSeeder::class);
+
+    // Папки
+    $this->call(FolderTableSeeder::class);
+
   }
 }

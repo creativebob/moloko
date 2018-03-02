@@ -7,6 +7,7 @@ use App\User;
 use App\Company;
 use App\Page;
 use App\Sector;
+use App\Folder;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -17,8 +18,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests\CompanyRequest;
 
+
+
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -140,6 +144,21 @@ class CompanyController extends Controller
         $company->author_id = $user->id;
 
         $company->save();
+
+        $folder = new Folder;
+        $folder->folder_name = $company->company_name;
+
+
+
+        //Создаем папку в файловой системе
+        $link_for_folder = 'public/companies/' . $company->id . '/users';
+
+        Storage::makeDirectory($link_for_folder);
+
+        $folder->folder_url = $link_for_folder;
+        $folder->folder_alias = 'users';
+        $folder->folder_parent_id = 2;
+        $folder->save();
         
         return redirect('companies');
     }
