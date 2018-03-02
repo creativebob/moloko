@@ -240,6 +240,7 @@ class SectorController extends Controller
     $sector->author_id = $user_id;
 
     // Смотрим что пришло
+    // Если индустрия
     if ($request->first_item == 1) {
 
       // Если индустрия
@@ -276,10 +277,50 @@ class SectorController extends Controller
           'error_message' => 'Ошибка при записи индустрии!'
         ];
       }
-      echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
     
+    // Если сектор
+    if ($request->medium_item == 1) {
 
+      // Если сектор
+      $sector->sector_name = $request->name;
+      $sector->sector_parent_id = $request->parent;
+      
+      $sector->save();
+
+      $create = 0;
+      $edit = 0;
+      $delete = 0;
+      if ($user->can('create', Sector::class)) {
+        $create = 1;
+      };
+      if ($user->can('update', $sector)) {
+        $edit = 1;
+      };
+      if ($user->can('delete', $sector)) {
+        $delete = 1;
+      };
+
+      if ($sector) {
+        $result = [
+          'error_status' => 0,
+          'id' => $sector->id,
+          'name' => $sector->sector_name,
+          'parent' => $sector->sector_parent_id,
+          'create' => $create,
+          'edit' => $edit,
+          'delete' => $delete
+        ];
+      } else {
+        $result = [
+          'error_status' => 1,
+          'error_message' => 'Ошибка при записи сектора!'
+        ];
+      }
+    }
+
+    // Отдаем результат
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
   public function show($id)
@@ -308,7 +349,7 @@ class SectorController extends Controller
       $result = [
         'sector_name' => $sector->sector_name,
         'sector_parent_id' => $sector->sector_parent_id,
-        'industry_id' => $sector->industry_id,
+        'first_id' => $sector->industry_id,
       ];
     };
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -405,7 +446,7 @@ class SectorController extends Controller
   public function sector_check(Request $request)
   {
     // Проверка отдела в нашей базе данных
-    $sector = Sector::where('sector_name',$request->sector_name)->first();
+    $sector = Sector::where('sector_name',$request->name)->first();
 
     // Если такое название есть
     if ($sector) {

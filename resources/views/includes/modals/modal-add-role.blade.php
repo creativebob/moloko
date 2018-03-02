@@ -9,12 +9,12 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 medium-6 cell">
         <label>Роли
-          {{ Form::select('role_id', $roles_list, $roles_list, ['id'=>'select-roles']) }}
+          {{ Form::select('role_id', $roles_list, null, ['id'=>'select-roles']) }}
         </label>
       </div>
       <div class="small-10 medium-6 cell">
         <label>Отделы
-          {{ Form::select('department_id', $departments_list, $departments_list, ['id'=>'select-departments']) }}
+          {{ Form::select('department_id', $departments_list, null, ['id'=>'select-departments']) }}
         </label>
         <input type="hidden" name="user_id" id="user-id" value="{{ $user->id }}">
       </div>

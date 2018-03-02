@@ -2,7 +2,7 @@
 // Мягкое удаление с ajax
 $(document).on('click', '[data-open="item-delete-ajax"]', function() {
   // находим описание сущности, id и название удаляемого элемента в родителе
-  var parent = $(this).closest('.parent');
+  var parent = $(this).closest('.item');
   var type = parent.attr('id').split('-')[0];
   var id = parent.attr('id').split('-')[1];
   var name = parent.data('name');
@@ -22,7 +22,7 @@ $(document).on('click', '.delete-button-ajax', function(event) {
     },
     url: '/' + type + '/' + id,
     type: "DELETE",
-    data: {'id': id},
+    data: {id: id},
     success: function (data) {
       var result = $.parseJSON(data);
       if (result.status == 0) {

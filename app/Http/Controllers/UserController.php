@@ -290,6 +290,8 @@ class UserController extends Controller
         ->template($answer_roles) // Выводим шаблоны в список
         ->pluck('role_name', 'id');
 
+        // dd($departments_list);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 

@@ -64,7 +64,7 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($companies))
         @foreach($companies as $company)
-        <tr class="parent @if($user->company_id == $company->id)active @endif  @if($company->moderation == 1)no-moderation @endif" id="companies-{{ $company->id }}" data-name="{{ $company->company_name }}">
+        <tr class="item @if($user->company_id == $company->id)active @endif  @if($company->moderation == 1)no-moderation @endif" id="companies-{{ $company->id }}" data-name="{{ $company->company_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $company->id }}"><label class="label-check" for="check-{{ $company->id }}"></label></td>
           <td class="td-company-name">
@@ -94,11 +94,12 @@
           <td class="td-user_id">{{ $company->director->first_name or ' ... ' }} {{ $company->director->second_name or ' ... ' }} </td>
 
           <td class="td-delete">
-          @if ($company->system_item != 1)
-            @can('delete', $company)
-            <a class="icon-delete sprite" data-open="item-delete"></a></td>  
-            @endcan
-          @endif     
+            @if ($company->system_item != 1)
+              @can('delete', $company)
+              <a class="icon-delete sprite" data-open="item-delete"></a>  
+              @endcan
+            @endif
+          </td> 
         </tr>
         @endforeach
       @endif

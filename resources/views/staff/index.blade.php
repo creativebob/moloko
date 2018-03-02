@@ -65,7 +65,7 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($staff))
         @foreach($staff as $staffer)
-        <tr class="parent @if($staffer->moderation == 1)no-moderation @endif" id="staff-{{ $staffer->id }}" data-name="{{ $staffer->position_name }}">
+        <tr class="item @if($staffer->moderation == 1)no-moderation @endif" id="staff-{{ $staffer->id }}" data-name="{{ $staffer->position_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $staffer->id }}"><label class="label-check" for="check-{{ $staffer->id }}"></label></td>
           <td class="td-staffer-position">
