@@ -737,12 +737,14 @@ $(function() {
               Foundation.reInit($('.content-list'));
               // $('#sectors-' + parentItem).foundation('down', '#sectors-' + parentItem);
               // $('#sectors-' + parentItem).foundation('down', $('#sectors-' + parentItem));
+
+              $('.first-active .icon-list:first').attr('area-hidden', 'false');
+              $('.first-active .icon-list:first').css('display', 'block');
             };
 
           };
 
-          $('.first-active .icon-list:first').attr('area-hidden', 'false');
-          $('.first-active .icon-list:first').css('display', 'block');
+          
 
         } else {
           var error = showError (result.error_message);
