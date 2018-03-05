@@ -62,7 +62,6 @@
     @if($sectors_tree)
       <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
         @foreach ($sectors_tree as $sector)
-         
           @if($sector['industry_status'] == 1)
             {{-- Если индустрия --}}
             <li class="first-item item 
@@ -82,7 +81,7 @@
                 </li>
                 <li class="del">
                   @if (!isset($sector['children']) && ($sector['system_item'] != 1) && $sector['delete'] == 1)
-                    <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
+                  <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
                   @endif
                 </li>
               </ul>
@@ -95,12 +94,12 @@
               </a>
             @if (isset($sector['children']))
               <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
-                  @foreach($sector['children'] as $sector)
-                    @include('sectors.sectors-list', $sector)
-                  @endforeach
+                @foreach($sector['children'] as $sector)
+                  @include('sectors.sectors-list', $sector)
+                @endforeach
               </ul>
             @endif
-          </li>
+            </li>
           @endif
         @endforeach
       </ul>
@@ -239,9 +238,6 @@
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 {{-- Конец модалки сектора --}}
-
-
- 
 
 {{-- Модалка удаления ajax --}}
 @include('includes.modals.modal-delete-ajax')
@@ -440,7 +436,7 @@ $(function() {
   $(document).on('click', '[data-open="first-edit"]', function() {
 
     // Получаем данные о филиале
-    var id = $(this).closest('.parent').attr('id').split('-')[1];
+    var id = $(this).closest('.item').attr('id').split('-')[1];
 
     // Сам ajax запрос
     $.ajax({
@@ -494,6 +490,50 @@ $(function() {
     });
   });
 
+  // Вставляем добавленный сектор и пересчитываем вложенные элементы
+  function addSector (id, name, parent, add, edit, del) {
+
+    // Если у родителя нет родительского класса
+    if ($('#sectors-' + parent).hasClass('parent') == false) {
+
+      // Добавляем родителю класс и список
+      $('#sectors-' + parent).addClass('parent');
+
+      // Формируем список
+      var list = '<ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false"></ul>';
+
+      // Вставляем
+      $('#sectors-' + parent).append(list);
+
+      // Убираем иконку удаления
+      $('#sectors-' + parent).children('.icon-list:first').find('.icon-list-delete').remove();
+    };
+
+    // Формируем вставляемый пункт
+    var data = '<li class="medium-item item" id=\"sectors-'+ id +'\" data-name=\"'+ name +'\"><a data-list="" class=\"medium-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"medium-item-name\">' + name + '</span><span class=\"number\">0</span></div></a><ul class=\"icon-list\"><li>';
+    if (add == 1) {
+      data = data + '<div class=\"icon-list-add sprite\" data-open=\"medium-add\"></div>';
+    };
+    data = data + '</li><li>';
+    if (edit == 1) {
+      data = data + '<div class=\"icon-list-edit sprite\" data-open=\"medium-edit\"></div>';
+    };
+    data = data + '</li><li class=\"del\">';
+    if (del == 1) {
+      data = data + '<div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div>';
+    };
+    data = data + '</li></ul></li>';
+
+    // Вставляем пункт
+    $('#sectors-' + parent + ' .medium-list').append(data);
+
+    // Меняем количество детей
+    var count = $('#sectors-' + parent + ' .medium-list>li');
+    $('#sectors-' + parent + ' .number:first').text(count.length);
+
+    var elem = new Foundation.AccordionMenu($('#sectors-' + id), null);
+  };
+
   // Добавление сектора
   // Открываем модалку
   $(document).on('click', '[data-open="medium-add"]', function() {
@@ -529,43 +569,8 @@ $(function() {
         var result = $.parseJSON(date);
         if (result.error_status == 0) {
 
-          // Если у родителя нет родительского класса
-          if ($('#sectors-' + result.parent).hasClass('parent') == false) {
-
-            // Добавляем родителю класс и список
-            $('#sectors-' + result.parent).addClass('parent');
-
-            // Формируем список
-            var list = '<ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false"></ul>';
-
-            // Вставляем
-            $('#sectors-' + result.parent).append(list);
-
-            // Убираем иконку удаления
-            $('#sectors-' + result.parent).children('.icon-list:first').find('.icon-list-delete').remove();
-          };
-
-          // Формируем вставляемый пункт
-          var data = '<li class="medium-item item" id=\"sectors-'+ result.id +'\" data-name=\"'+ result.name +'\"><a data-list="" class=\"medium-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"medium-item-name\">' + result.name + '</span><span class=\"number\">0</span></div></a><ul class="icon-list"><li>';
-          if (result.create == 1) {
-            data = data + '<div class=\"icon-list-add sprite\" data-open=\"medium-add\"></div>';
-          };
-          data = data + '</li><li>';
-          if (result.edit == 1) {
-            data = data + '<div class=\"icon-list-edit sprite\" data-open=\"medium-edit\"></div>';
-          };
-          data = data + '</li><li class=\"del\">';
-          if (result.delete == 1) {
-            data = data + '<div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div>';
-          };
-          data = data + '</li></ul></li>';
-
-          // Вставляем пункт
-          $('#sectors-' + result.parent + ' .medium-list').append(data);
-
-          // Меняем количество детей
-          var count = $('#sectors-' + result.parent + ' .medium-list>li');
-          $('#sectors-' + result.parent + ' .number:first').text(count.length);
+          // Вставляем сектор
+          addSector (result.id, result.name, result.parent, result.create, result.edit, result.delete);
 
         } else {
           var error = showError (result.error_message);
@@ -642,6 +647,7 @@ $(function() {
     var name = $('#form-medium-edit .name-field').val();
     var medium_db = $('#form-medium-edit .medium-db').val();
     var parent = $('#form-medium-edit .sectors-list').val();
+    var parentItem = $('#form-medium-edit .medium-parent-id-field').val();
 
     // Первая буква сектора заглавная
     name = newParagraph (name);
@@ -661,8 +667,34 @@ $(function() {
           $('#sectors-' + result.id + ' .medium-item-name').text(result.name);
           $('#sectors-' + result.id).data('name', result.name);
 
+          // alert(result.parent + ' ' + parentItem);
+
           // Если родитель изменился
-          if (result.parent != parent) {
+          if (result.parent != parentItem) {
+
+            // Удаляем предыдущее местоположение
+            // $('#sectors-' + id).foundation('_destroy');
+            $('#sectors-' + id).remove();
+
+            // Меняем количество детей
+            var count = $('#sectors-' + parentItem + ' .medium-list>li');
+            $('#sectors-' + parentItem + ' .number:first').text(count.length);
+
+            // Если вложенных элеметнов нет, отображаем значок удаления
+            if (count.length == 0) {
+
+              // Убираем список
+              $('#sectors-' + parentItem).children('.medium-list:first').remove();
+
+              // Формируем иконку удаления
+              var del = '<div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div>';
+
+              // Вставляем
+              $('#sectors-' + parentItem + ' .del:first').append(del);
+            };
+
+            // Вставляем сектор
+            addSector (result.id, result.name, result.parent, result.create, result.edit, result.delete);
 
             // Если элемент не являлся родителем
             if ($('#-sectors-' + result.parent).hasClass('parent') == false) {
@@ -684,8 +716,36 @@ $(function() {
                 $('#sectors-' + result.parent + ' .del:first').append(del);
               };
             };
+            // $('#sectors-' + result.parent).foundation()
+            
+            // Если родитель больше не имеет вложенности
+            if ($('#sectors-' + parentItem + ' .medium-list>li').length == 0) {
+              // alert(0);
+              // Удаляем родительский класс и список
+              $('#sectors-' + parentItem).removeClass('parent');
+              $('#sectors-' + parentItem).remove('.medium-list');
 
+              // Переинициализируем фонду
+              Foundation.reInit($('.content-list'));
+
+              // Своричиваем аккордионы
+              $('.content-list').foundation('hideAll');
+              
+            } else {
+              // alert(1);
+              // Переинициализируем фонду
+              Foundation.reInit($('.content-list'));
+              // $('#sectors-' + parentItem).foundation('down', '#sectors-' + parentItem);
+              // $('#sectors-' + parentItem).foundation('down', $('#sectors-' + parentItem));
+            };
+
+            // $('#sectors-' + result.parent + ' .icon-list:first').attr('area-hidden', false);
+            // $('.content-list').foundation('hideAll');
+            // $(document).foundation('up', $('#sectors-' + result.parent));
           };
+
+          $('.first-active').attr('area-hidden', 'false');
+
         } else {
           var error = showError (result.error_message);
           $('#form-first-add .name-field').after(error);

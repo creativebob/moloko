@@ -76,7 +76,7 @@ Route::get('/current_city/{region}/{area}', 'CityController@current_city')->midd
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
 // Текущий добавленный/удаленный отдел
 Route::get('/current_department/{section_id}/{item_id}', 'DepartmentController@current_department')->middleware('auth');
-// Контроллеры для отображения филиалов, отделов и должностей
+// Проверка на существование филиала/отдела
 Route::post('/department_check', 'DepartmentController@department_check')->middleware('auth');
 // Список отделов филиала
 Route::post('/departments_list', 'DepartmentController@departments_list')->middleware('auth');
@@ -96,6 +96,7 @@ Route::resource('/employees', 'EmployeeController')->middleware('auth');
 Route::resource('/sectors', 'SectorController')->middleware('auth');
 // Текущий добавленный/удаленный сектор
 Route::get('/current_sector/{section_id}/{item_id}', 'SectorController@current_sector')->middleware('auth');
+// Проверка на существование сектора
 Route::post('/sector_check', 'SectorController@sector_check')->middleware('auth');
 // Список секторов
 Route::post('/sectors_list', 'SectorController@sectors_list')->middleware('auth');
