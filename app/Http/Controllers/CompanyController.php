@@ -150,8 +150,13 @@ class CompanyController extends Controller
         $folder = new Folder;
         $folder->folder_name = $company->company_name;
 
+        if($company->company_alias != null){
+            $link_for_folder = 'public/companies/' . $company->company_alias;
+        } else {
+            $link_for_folder = 'public/companies/' . $company->id;
+        };
+
         // Создаем папку в файловой системе
-        $link_for_folder = 'public/companies/' . $company->id;
         Storage::makeDirectory($link_for_folder);
 
         // $folder->folder_url = $link_for_folder;
