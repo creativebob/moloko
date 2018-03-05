@@ -209,6 +209,11 @@ html, body {
   height: 93vh;
 }
 
+a, a:focus {
+  color: none !important; 
+  outline-color: none !important; 
+}
+
 .el, .el * {
   /* Свойства изменение которых необходимо отслеживать */
   transition-property: width, height, padding, margin;
@@ -1510,8 +1515,7 @@ input[type=checkbox], input[type=radio] {
         .icon-list {
           right: 2rem;
           opacity: 1;
-          
-
+        
           li {
             padding: 0;
 
@@ -1555,8 +1559,11 @@ input[type=checkbox], input[type=radio] {
         }
         // Активные средние элементы списка
         .medium-active {
-          width: 80%;
 
+          .medium-link {
+            width: 80%;
+          }
+         
           .icon-open {
             background-position: -32px -704px;
           }

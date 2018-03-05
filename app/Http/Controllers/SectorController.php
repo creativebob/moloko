@@ -119,7 +119,6 @@ class SectorController extends Controller
     // Если индустрия
     if ($request->first_item == 1) {
 
-      // Если индустрия
       $sector->sector_name = $request->name;
       $sector->industry_status = 1;
       
@@ -158,12 +157,12 @@ class SectorController extends Controller
     // Если сектор
     if ($request->medium_item == 1) {
 
-      // Если сектор
       $sector->sector_name = $request->name;
       $sector->sector_parent_id = $request->parent;
       
       $sector->save();
 
+      // Проверяем права
       $create = 0;
       $edit = 0;
       $delete = 0;
@@ -272,17 +271,35 @@ class SectorController extends Controller
       $sector->editor_id = $user->id;
       $sector->save();
 
+      // Проверяем права
+      $create = 0;
+      $edit = 0;
+      $delete = 0;
+      
+      if ($user->can('create', Sector::class)) {
+        $create = 1;
+      };
+      if ($user->can('update', $sector)) {
+        $edit = 1;
+      };
+      if ($user->can('delete', $sector)) {
+        $delete = 1;
+      };
+
       if ($sector) {
         $result = [
           'error_status' => 0,
           'id' => $sector->id,
           'name' => $sector->sector_name,
           'parent' => $sector->sector_parent_id,
+          'create' => $create,
+          'edit' => $edit,
+          'delete' => $delete,
         ];
       } else {
         $result = [
           'error_status' => 1,
-          'error_message' => 'Ошибка при изменении сектора!'
+          'error_message' => 'Ошибка при изменении сектора!',
         ];
       }
     };
@@ -386,7 +403,7 @@ class SectorController extends Controller
     foreach ($sectors as $id => &$node) {  
      
         // Если нет вложений
-        if (!$node['sector_parent_id']){
+        if (!$node['sector_parent_id']) {
           $sectors_cat[$id] = &$node;
         } else { 
         // Если есть потомки то перебераем массив
