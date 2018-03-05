@@ -20,6 +20,9 @@ Auth::routes();
 
 Route::get('/getaccess/{link?}', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
 
+// Директории
+Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');
+
 Route::resource('/users', 'UserController')->middleware('auth');
 
 // Компании
@@ -39,8 +42,12 @@ Route::post('/roles/setright', 'RoleController@setright')->middleware('auth')->n
 
 // Маршрут связи юзера с ролями и отделами
 Route::resource('/roleuser', 'RoleUserController')->middleware('auth');
+
 // Маршруты для сущностей
 Route::resource('/entities', 'EntityController')->middleware('auth');
+
+// Маршруты для папок (директорий)
+Route::resource('/folders', 'FolderController')->middleware('auth');
 
 // Авторизуемся под выбранной компанией
 Route::get('/getauthcompany/{company_id}', 'UserController@getauthcompany')->middleware('auth')->name('users.getauthcompany');

@@ -22,6 +22,7 @@ use App\Site;
 use App\Staffer;
 use App\Booklist;
 use App\Sector;
+use App\Folder;
 
 use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
@@ -44,6 +45,8 @@ use App\Policies\SitePolicy;
 use App\Policies\StafferPolicy;
 use App\Policies\BooklistPolicy;
 use App\Policies\SectorPolicy;
+use App\Policies\FolderPolicy;
+
 
 use Illuminate\Support\Facades\Gate as GateContract;
 // use Illuminate\Support\Facades\Gate;
@@ -78,6 +81,7 @@ class AuthServiceProvider extends ServiceProvider
         Staffer::class => StafferPolicy::class,
         Booklist::class => BooklistPolicy::class,
         Sector::class => SectorPolicy::class,
+        Folder::class => FolderPolicy::class,
     ];
 
     public function boot()

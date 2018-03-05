@@ -242,6 +242,17 @@ class MenusTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
             ],
+            [
+                'menu_name' => 'Папки',
+                'menu_icon' => null,
+                'menu_alias' => 'folders',
+                'menu_parent_id' => 4,
+                'page_id' => 18,
+                'navigation_id' => 2,
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
+            
         // [
         //  'menu_name' => null,
         //        'menu_icon' => null,

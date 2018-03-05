@@ -13,7 +13,7 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
-class Entity extends Model
+class Folder extends Model
 {
 
   use SoftDeletes;
@@ -28,24 +28,9 @@ class Entity extends Model
 
   protected $dates = ['deleted_at'];
   protected $fillable = [
-  	'entity_name',
-  	'entity_alias',
+  	'folder_name',
+  	'folder_alias',
+  	'folder_parent_id',
   ];
-
-  public function actions()
-  {
-    return $this->belongsToMany('App\Action', 'action_entity', 'entity_id', 'action_id');
-  }
-
-  public function actionentities()
-  {
-    return $this->hasMany('App\Actionentity');
-  }
-
-  public function pages()
-  {
-    return $this->belongsToMany('App\Page');
-  }
-
 
 }
