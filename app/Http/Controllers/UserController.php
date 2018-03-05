@@ -20,6 +20,7 @@ use App\Http\Requests\UserRequest;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -162,6 +163,21 @@ class UserController extends Controller
         // Пишем ID филиала авторизованного пользователя
         if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
         $user->filial_id = $filial_id;
+
+
+        // Создаем папку в файловой системе
+        $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'avatars';
+        Storage::makeDirectory($link_for_folder);
+
+        $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'photos';
+        Storage::makeDirectory($link_for_folder);
+
+        $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'video';
+        Storage::makeDirectory($link_for_folder);
+
+        $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'documents';
+        Storage::makeDirectory($link_for_folder);
+
 
         $user->save();
         return redirect('users');

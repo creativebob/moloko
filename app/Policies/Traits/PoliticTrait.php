@@ -60,16 +60,16 @@ trait PoliticTrait
 
             // Разрешаем богу кое что редактировать без компании
             if(
-                // ($entity_name == 'pages')||
-                // ($entity_name == 'sities')||
-                // ($entity_name == 'navigations')||
-                // ($entity_name == 'menus')||
-                // ($entity_name == 'roles')||
-                // ($entity_name == 'companies')||
-                // ($entity_name == 'cities')||   
-                // ($entity_name == 'regions')||   
-                // ($entity_name == 'areas')||       
-                // ($entity_name == 'positions')||
+                ($entity_name == 'pages')||
+                ($entity_name == 'sities')||
+                ($entity_name == 'navigations')||
+                ($entity_name == 'menus')||
+                ($entity_name == 'roles')||
+                ($entity_name == 'companies')||
+                ($entity_name == 'cities')||   
+                ($entity_name == 'regions')||   
+                ($entity_name == 'areas')||       
+                ($entity_name == 'positions')||
                 ($entity_name == 'entities')
             ){
 

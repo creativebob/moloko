@@ -15,6 +15,7 @@ class CompaniesTableSeeder extends Seeder
         	[
 
 		        'company_name' => 'Воротная компания "Марс"',
+                'company_alias' => 'vkmars',
 		        'phone' => '83952717775',
 		        // 'company_extra_phone' => '83952717775',
                 'email' => null,
@@ -34,6 +35,7 @@ class CompaniesTableSeeder extends Seeder
             [
 
                 'company_name' => 'Оконная компания "Фенстер"',
+                'company_alias' => 'fenster',
                 'phone' => '83952718765',
                 // 'company_extra_phone' => '83952717775',
                 'email' => null,
@@ -53,6 +55,7 @@ class CompaniesTableSeeder extends Seeder
             [
 
                 'company_name' => 'Фирма "Автомобили"',
+                'company_alias' => 'automobile',
                 'phone' => '83952712315',
                 // 'company_extra_phone' => '83952717775',
                 'email' => null,

@@ -7,6 +7,7 @@
       <ul class="tabs-list" data-tabs id="tabs">
         <li class="tabs-title is-active"><a href="#content-panel-1" aria-selected="true">Общая информация</a></li>
         <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Реквизиты</a></li>
+        <li class="tabs-title"><a data-tabs-target="content-panel-3" href="#content-panel-3">Настройка</a></li>
       </ul>
     </div>
   </div>
@@ -122,6 +123,18 @@
               </div>
             </div>
         </div>
+
+        <!-- Реквизиты -->
+        <div class="tabs-panel" id="content-panel-3">
+            <div class="grid-x grid-padding-x"> 
+              <div class="small-12 medium-6 cell">
+                <label>Алиас
+                  @include('includes.inputs.alias', ['value'=>$company->company_alias, 'name'=>'company_alias'])
+                </label>
+              </div>
+            </div>
+        </div>
+
 
       </div>
     </div>

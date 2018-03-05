@@ -16,6 +16,7 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id');
             $table->string('company_name', 40)->nullable()->index()->comment('Имя компании');
+            $table->string('company_alias', 40)->unique()->nullable()->index()->comment('Алиас компании');
 
             $table->bigInteger('phone')->unique()->nullable()->comment('Телефон компании');
             $table->bigInteger('extra_phone')->nullable()->comment('Дополнительный телефон');

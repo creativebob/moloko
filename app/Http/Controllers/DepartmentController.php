@@ -9,14 +9,21 @@ use App\Position;
 use App\Staffer;
 use App\Page;
 use App\Right;
+
 // Валидация
 use App\Http\Requests\DepartmentRequest;
+
 // Политика
 use App\Policies\DepartmentPolicy;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Session;
+
+// Прочие необходимые классы
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class DepartmentController extends Controller
 {
@@ -215,6 +222,7 @@ class DepartmentController extends Controller
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
     $company_id = $user->company_id;
+
     if ($user->god == 1) {
       $user_id = 1;
     } else {
@@ -237,8 +245,22 @@ class DepartmentController extends Controller
       if($filial) {
 
         // $link = 'current_department/'.$filial->id.'/0';
+
+        // Создаем папку в файловой системе
+        $link_for_folder = 'public/companies/' . $company_id . '/'. $filial->id . '/users';
+        Storage::makeDirectory($link_for_folder);
+
+        $link_for_folder = 'public/companies/' . $company_id . '/'. $filial->id . '/sites';
+        Storage::makeDirectory($link_for_folder);
+
+        $link_for_folder = 'public/companies/' . $company_id . '/'. $filial->id . '/goods';
+        Storage::makeDirectory($link_for_folder);
+
+        $link_for_folder = 'public/companies/' . $company_id . '/'. $filial->id . '/documents';
+        Storage::makeDirectory($link_for_folder);
+
         $link = 'departments';
-        return redirect('/getaccess/' . $link);
+        return redirect($link);
 
       } else {
         abort(403, 'Ошибка при записи филиала!');
@@ -272,9 +294,8 @@ class DepartmentController extends Controller
       $department_id = $department->id;
       if($department){
 
-        // $link = 'current_department/'.$request->filial_id.'/'.$department_id;
-        $link = 'departments';
-        return redirect()->route('/getaccess/' . $link);
+        $link = 'current_department/'.$request->filial_id.'/'.$department_id;
+        return redirect()->route($link);
 
         // return Redirect('/current_department/'.$request->filial_id.'/'.$department_id);
       } else {
