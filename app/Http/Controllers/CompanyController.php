@@ -149,12 +149,13 @@ class CompanyController extends Controller
 
         $folder = new Folder;
         $folder->folder_name = $company->company_name;
+        $link_for_folder = 'public/companies/' . $company->id;
 
-        if($company->company_alias != null){
-            $link_for_folder = 'public/companies/' . $company->company_alias;
-        } else {
-            $link_for_folder = 'public/companies/' . $company->id;
-        };
+        // if($company->company_alias != null){
+        //     $link_for_folder = 'public/companies/' . $company->company_alias;
+        // } else {
+        //     $link_for_folder = 'public/companies/' . $company->id;
+        // };
 
         // Создаем папку в файловой системе
         Storage::makeDirectory($link_for_folder);
@@ -239,7 +240,12 @@ class CompanyController extends Controller
 
         $company->company_name = $request->company_name;
         $company->company_alias = $request->company_alias;
-        
+
+        // $old_link_for_folder = $company->company_alias;
+        // $new_link_for_folder = 'public/companies/' . $request->company_alias;
+        // Переименовываем папку в файловой системе
+        // Storage::move($old_link_for_folder, $new_link_for_folder);
+
         $company->phone = cleanPhone($request->phone);
         $company->email = $request->email;
 
@@ -259,7 +265,6 @@ class CompanyController extends Controller
         $company->sector_id = $request->sector_id;
 
         // $company->director_user_id = Auth::user()->company_id;
-
         $company->save();
         return redirect('companies');
     }
