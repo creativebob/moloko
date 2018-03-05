@@ -11,7 +11,7 @@
     // Логин
     $('.login-field').mask('llllll?llllllllllllllllllllllllllllll');
     // Алиас
-    $('.alias-field').mask('iii?iiiiiiiiiiiii');
+    $('.alias-field').mask('sss?ssssssssssssssss');
     // Должность
     $('.position-field').mask('bbb?bbbbbbbbbbbbbbbbbbbbbbbbbbb');
     // Пароль
