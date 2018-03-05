@@ -10,6 +10,8 @@
     $('.text-en-field').mask('zzz?zzzzzzzzzzzzzzzzzzzzz');
     // Логин
     $('.login-field').mask('llllll?llllllllllllllllllllllllllllll');
+    // Алиас
+    $('.alias-field').mask('iii?iiiiiiiiiiiii');
     // Должность
     $('.position-field').mask('bbb?bbbbbbbbbbbbbbbbbbbbbbbbbbb');
     // Пароль
