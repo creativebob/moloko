@@ -739,12 +739,10 @@ $(function() {
               // $('#sectors-' + parentItem).foundation('down', $('#sectors-' + parentItem));
             };
 
-            // $('#sectors-' + result.parent + ' .icon-list:first').attr('area-hidden', false);
-            // $('.content-list').foundation('hideAll');
-            // $(document).foundation('up', $('#sectors-' + result.parent));
           };
 
-          $('.first-active').attr('area-hidden', 'false');
+          $('.first-active .icon-list:first').attr('area-hidden', 'false');
+          $('.first-active .icon-list:first').css('display', 'block');
 
         } else {
           var error = showError (result.error_message);
