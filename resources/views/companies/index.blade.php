@@ -14,6 +14,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
+
 <div data-sticky-container id="head-content">
   <div class="sticky sticky-topbar" id="head-sticky" data-sticky-on="small" data-sticky data-margin-top="2.4" data-top-anchor="head-content:top">
 	  <div class="top-bar head-content">

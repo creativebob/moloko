@@ -77,4 +77,21 @@
 
          }
 
+
+        // Отдает нужное название метода для отправки на проверку права
+        function getMassArguments($request, $name_argument){
+
+            if($request->server('argv') != null){
+                $mass_arg = explode("&", $request->server('argv')[0]);
+                foreach($mass_arg as $key=>$mystring){
+                    $id_city = str_after($mystring, $name_argument . '=');
+                    $mass_arg[$key] = $id_city;
+                }
+            } else {$mass_arg = null;};
+
+            return $mass_arg;
+
+        }
+
+
 ?>

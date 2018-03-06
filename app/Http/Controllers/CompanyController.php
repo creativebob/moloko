@@ -60,7 +60,11 @@ class CompanyController extends Controller
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
         $filter_query = Company::with('city')->moderatorLimit($answer)->get();
-        $filter = getFilterCompany($filter_query);
+        $filter_query = $filter_query->unique('city_id');
+
+        $filter['collection'] = $filter_query;
+        $filter['mass_id'] = $request->city_id; // Получаем список ID городов
+        $filter['list_select'] = getListFilterCompany($filter_query); // Получаем списки для SELECT
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
