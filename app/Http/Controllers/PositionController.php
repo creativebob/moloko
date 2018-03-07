@@ -284,7 +284,7 @@ class PositionController extends Controller
       if (isset($request->roles)) {
         $delete = PositionRole::wherePosition_id($id)->delete();
         $mass = [];
-        // Смотрим список пришедших роллей
+        // Смотрим список пришедших ролей
         foreach ($request->roles as $role) {
           $mass[] = [
             'position_id' => $id,

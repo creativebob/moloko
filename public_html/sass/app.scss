@@ -153,34 +153,34 @@ $breadcrumbs-border-color: #dcdcdc;
 $content-bg-color: #eeeeee;
 
 // Инпуты
-$content-input-color: #666666;
-$content-input-border-color: #999999;
-$content-input-focus-border-color: #333333;
+$input-color: #666666;
+$input-border-color: #999999;
+$input-focus-border-color: #333333;
 
   // Список (accordion menu)
-  $content-list-item-bg-color: #494949;
-  $content-list-item-color: #ffffff;
-  $content-list-item-li-bg-color: #ffffff;
-  $content-list-item-li-color: #000000;
-  $content-list-item-nested-border-bottom-color: #dddddd;
-  $content-list-item-active-bg-color: #ae4747;
+  $list-item-bg-color: #494949;
+  $list-item-color: #ffffff;
+  $list-item-li-bg-color: #ffffff;
+  $list-item-li-color: #000000;
+  $list-item-nested-border-bottom-color: #dddddd;
+  $list-item-active-bg-color: #ae4747;
 
 
   // Tabs (Несколько вкладок)
-  $content-tabs-active-bg-color: #ac4747;
-  $content-tabs-active-color: #ffffff;
-  $content-tabs-fieldset-border-color: #b3b3b3;
+  $tabs-active-bg-color: #ac4747;
+  $tabs-active-color: #ffffff;
+  $tabs-fieldset-border-color: #b3b3b3;
 
   // Таблица в контенте
-  $content-table-bg-color: #f6f6f6;
-  $content-table-td-border: #eeeeee;
-  $content-table-deleted-color: #646464;
-  $content-table-active-border-color-blue: #5190ff;
-  $content-table-no-moderation: #ffcccc;
+  $table-bg-color: #f6f6f6;
+  $table-td-border: #eeeeee;
+  $table-deleted-color: #646464;
+  $table-active-border-color-blue: #5190ff;
+  $table-no-moderation: #ffcccc;
 
   // Таблица поиска
-  $content-table-search-td-border-color: #dadada;
-  $content-table-search-td-color: #5190ff;
+  $table-search-td-border-color: #dadada;
+  $table-search-td-color: #5190ff;
 
 // Footer  
 $footer-color: #bdbdbd;
@@ -276,6 +276,11 @@ input[type=checkbox], input[type=radio] {
     background: url(sprites/sprite_menu.png) no-repeat;
     background-position: 0px -480px;
     content: '';
+
+    
+  }
+  label.white:before {
+    background-position: -96px -480px;
   }
   .disabled:before {
     opacity: 0.3;
@@ -283,10 +288,18 @@ input[type=checkbox], input[type=radio] {
   }
   input[type=checkbox]:checked + label:before {
     background-position: -32px -480px;
+    
+  }
+  input[type=checkbox]:checked + label.white:before {
+    background-position: -128px -480px;
   }
 }
 :indeterminate + label:before { // Неопределенное состояние
   background-position: -64px -480px;
+  
+}
+:indeterminate + label.white:before {
+  background-position: -160px -480px;
 }
 // Чекбокс (Выделить все)
 .checkbox-th {
@@ -656,7 +669,6 @@ input[type=checkbox], input[type=radio] {
 // Иконки в таблице
 .icon-drop {
   background-position: 0px -832px;
-  opacity: 0;
   cursor: -webkit-grabbing;
 }
 .icon-edit {
@@ -676,18 +688,18 @@ input[type=checkbox], input[type=radio] {
 .inputs {
   label {
     font-size: 0.875rem;
-    color: $content-input-color;
+    color: $input-color;
     position: relative;
 
     input, textarea {
       margin-top: 0.25rem;
       margin-bottom: 0.85rem;
       height: 26px;
-      color: $content-input-color;
+      color: $input-color;
       background-color: $white;
       font-size: 0.8rem;
       padding: 5px 12px;
-      border: 1px solid $content-input-border-color;
+      border: 1px solid $input-border-color;
       box-shadow: none;
     }
     textarea {
@@ -704,14 +716,14 @@ input[type=checkbox], input[type=radio] {
       height: 26px;
       background-color: $white;
       font-size: 0.8rem;
-      border: 1px solid $content-input-border-color;
+      border: 1px solid $input-border-color;
       padding: 4px 4px 3px 16px;
 
       // Меняем положение стрелочки фонды
       background-position: 100% center;
     }
     input:focus, select:focus, textarea:focus {
-      border: 1px solid $content-input-focus-border-color;
+      border: 1px solid $input-focus-border-color;
     }
   }
 }
@@ -742,8 +754,6 @@ input[type=checkbox], input[type=radio] {
   color: #cc4b37;
   display: none;
 }
-
-
 // ---------------------------------------------------------------------------------------------
 .sectors-list {
 
@@ -755,9 +765,7 @@ input[type=checkbox], input[type=radio] {
 
     font-weight: 700;
   }
-
 }
-
 // ---------------------------------------- Страница входа -------------------------------------
 .enter-page {
   background-color: $white;
@@ -1141,7 +1149,7 @@ input[type=checkbox], input[type=radio] {
     border-color: #555;
     background-color: #777;
   }
-  //Скрол для мозилы вроде
+  // Скрол для мозилы вроде
   scrollbar[orient="vertical"] {
   max-width:10px !important;
   }
@@ -1197,7 +1205,7 @@ input[type=checkbox], input[type=radio] {
         }
         .is-active {
           a{
-            background-color: $content-tabs-active-color;
+            background-color: $tabs-active-color;
           }
         }
       }
@@ -1339,7 +1347,6 @@ input[type=checkbox], input[type=radio] {
     color: $breadcrumbs-a-color;
   }
 }
-
 // -------------------------------------- Переопределяем модалку фонды -------------------------
 .reveal {
   padding: 0;
@@ -1377,7 +1384,6 @@ input[type=checkbox], input[type=radio] {
     cursor: pointer;
 
   }
-  
 }
 .rev-small {
   width: 500px;
@@ -1392,7 +1398,7 @@ input[type=checkbox], input[type=radio] {
     font-family: $PFDDPL;
     font-size: 0.875rem;
     font-weight: normal;
-    color: $content-input-color;
+    color: $input-color;
     padding: 0;
     margin-bottom: 1rem;
 
@@ -1407,18 +1413,18 @@ input[type=checkbox], input[type=radio] {
     // Убираем выделение каждой четной строки
     tr:nth-child(even) {
       border-bottom: 0;
-      background-color: $content-table-bg-color;
+      background-color: $table-bg-color;
     }
 
     td {
       font-family: $SUISL;
       font-size: 0.8rem;
-      border-bottom: 1px solid $content-table-search-td-border-color;
+      border-bottom: 1px solid $table-search-td-border-color;
       line-height: 1;
       padding: 0.4rem 0;
 
       a {
-        color: $content-table-search-td-color;
+        color: $table-search-td-color;
       }
      
 
@@ -1437,7 +1443,7 @@ input[type=checkbox], input[type=radio] {
   width: 400px;
   z-index: 50;
 }
-// ------------------------------------------------ Tabs ---------------------------------------
+// ------------------------------------------- Tabs -------------------------------------------
 .tabs-margin-top {
   margin-top: 2rem;
 }
@@ -1447,8 +1453,8 @@ input[type=checkbox], input[type=radio] {
 
   //Обнуляем фонду, в активном состоянии
   .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
-    background-color: $content-tabs-active-bg-color;
-    color: $content-tabs-active-color;
+    background-color: $tabs-active-bg-color;
+    color: $tabs-active-color;
   }
   //Меню с заголовками
   .tabs-list {
@@ -1472,7 +1478,7 @@ input[type=checkbox], input[type=radio] {
       }
       .is-active {
         a{
-          background-color: $content-tabs-active-color;
+          background-color: $tabs-active-color;
         }
       }
     }
@@ -1500,7 +1506,7 @@ input[type=checkbox], input[type=radio] {
     }
   }
   .radiobutton {
-    color: $content-input-color;
+    color: $input-color;
 
     label {
       margin-left: -8px;
@@ -1508,7 +1514,7 @@ input[type=checkbox], input[type=radio] {
     }
   }
   .fieldset-access {
-    border: 1px solid  $content-tabs-fieldset-border-color;
+    border: 1px solid  $tabs-fieldset-border-color;
     padding: 1rem 2rem 2rem;
 
     legend {
@@ -1517,6 +1523,7 @@ input[type=checkbox], input[type=radio] {
     }
   }
 }
+// ---------------------------------- Подсветка разрешений/запретов ---------------------------
 .allow {
   color: green;
 }
@@ -1587,7 +1594,7 @@ input[type=checkbox], input[type=radio] {
 
 
     .fieldset-filters {
-      border: 1px solid  $content-tabs-fieldset-border-color;
+      border: 1px solid  $tabs-fieldset-border-color;
       padding: 1rem 0.6rem 1.4rem;
 
       legend {
@@ -1603,7 +1610,7 @@ input[type=checkbox], input[type=radio] {
     
   // }
   
-  // Список (accordion menu) в контенте
+  // --------------------- Список (accordion menu) в контенте------------------------------
   .content-list {
     outline: none;
 
@@ -1624,11 +1631,25 @@ input[type=checkbox], input[type=radio] {
         width: 32px;
       }
     }
-    
+    .checkbox {
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      margin-left: 0;
+      z-index: 5;
+      padding: 8px 0 8px 4px;
+
+      .icon-drop {
+        opacity: 0.3;
+      }
+      .icon-drop:hover {
+        opacity: 1;
+      }
+
+    }
     .icon-list:focus {
       outline-color: none;
     }
-
     .number {
       font-size: 0.7rem;
       margin-left: 0.6rem;
@@ -1641,9 +1662,10 @@ input[type=checkbox], input[type=radio] {
       display: inline;
       padding: 0;
     }
+
     // Первые элементы списка (Шапки)
     .first-item {
-      background-color: $content-list-item-bg-color;
+      background-color: $list-item-bg-color;
       margin-bottom: 2px;
       position: relative;
 
@@ -1651,8 +1673,9 @@ input[type=checkbox], input[type=radio] {
       .first-link {
         font-family: $PFDDPL;
         font-size: 1rem;
-        color: $content-list-item-color;
+        color: $list-item-color;
         padding: 8px;
+        padding-left: 68px;
         
         .icon-open {
           background-position: -96px -704px;
@@ -1665,6 +1688,11 @@ input[type=checkbox], input[type=radio] {
           vertical-align: middle;
         }
       }
+      .link-small {
+        padding-left: 32px;
+      }
+
+      
       .icon-list {
         opacity: 0;
         right: 2rem;
@@ -1673,13 +1701,16 @@ input[type=checkbox], input[type=radio] {
           padding: 8px 0;
         }
       }
+      .icon-drop {
+        background-position: -96px -832px;
+      }
     }
     // Активные первые элементы списка (Шапки)
     .first-active {
-      background-color: $content-list-item-active-bg-color;
+      background-color: $list-item-active-bg-color;
 
       .first-link {
-        background-color: $content-list-item-active-bg-color;
+        background-color: $list-item-active-bg-color;
 
         .icon-open {
           background-position: -128px -704px;
@@ -1726,7 +1757,7 @@ input[type=checkbox], input[type=radio] {
 
       // Средние элементы списка
       .medium-item {
-        background-color: $content-list-item-li-bg-color;
+        background-color: $list-item-li-bg-color;
         position: relative;
         padding-left: 2rem;
 
@@ -1734,7 +1765,6 @@ input[type=checkbox], input[type=radio] {
           right: 2rem;
           opacity: 1;
           
-
           li {
             padding: 0;
 
@@ -1758,11 +1788,18 @@ input[type=checkbox], input[type=radio] {
             }
           }
         }
+        .checkbox {
+          padding: 0;
+        }
+        .icon-drop {
+          background-position: 0px -832px;
+        }
         .medium-link {
           font-family: $SUISL;
           font-size: 0.8rem;
-          color: $content-list-item-li-color;
+          color: $list-item-li-color;
           padding: 0 0 0 8px;
+          padding-left: 68px;
 
           .list-title {
 
@@ -1775,6 +1812,9 @@ input[type=checkbox], input[type=radio] {
             background-position: 0px -704px;
             opacity: 0.6;
           }
+        }
+        .link-small {
+          padding-left: 32px;
         }
         // Активные средние элементы списка
         .medium-active {
@@ -1795,10 +1835,10 @@ input[type=checkbox], input[type=radio] {
           position: relative;
           margin: 0 1.8rem 0 2rem;
           display: block;
-          // border-bottom: 1px solid $content-list-item-nested-border-bottom-color;
+          // border-bottom: 1px solid $list-item-nested-border-bottom-color;
           font-family: $SUISB;
           font-size: 0.8rem;
-          color: $content-list-item-li-color;
+          color: $list-item-li-color;
           padding: 10px 0 10px 12px;
 
           .icon-list {
@@ -1846,8 +1886,8 @@ input[type=checkbox], input[type=radio] {
     }
     // Конечный список
     .last-list {
-      border-left: 2px solid $content-list-item-active-bg-color;
-      border-right: 2px solid $content-list-item-active-bg-color;
+      border-left: 2px solid $list-item-active-bg-color;
+      border-right: 2px solid $list-item-active-bg-color;
       overflow: hidden;
 
       // Обнуляем отступ фонды
@@ -1859,11 +1899,11 @@ input[type=checkbox], input[type=radio] {
         .last-link {
           position: relative;
           margin: 0 1.8rem 0 2.5rem;
-          border-bottom: 1px solid $content-list-item-nested-border-bottom-color;
+          border-bottom: 1px solid $list-item-nested-border-bottom-color;
           font-family: $SUISB;
           font-size: 0.8rem;
           padding: 10px 1.4rem;
-          color: $content-list-item-li-color;
+          color: $list-item-li-color;
 
           .icon-list {
             right: 0.1rem;
@@ -1909,11 +1949,14 @@ input[type=checkbox], input[type=radio] {
         }
       }
     }
+    
   }
-  // Таблица в контенте
+  // ----------------------------- Таблица в контенте --------------------------------------
   .table-content {
+
     .is-stuck {
        background-color: $body-bg-color; 
+
       tr {
         display: block;
 
@@ -1925,13 +1968,6 @@ input[type=checkbox], input[type=radio] {
     }
   }
 
-  .tabs-wrap {
-    .tabs-content {
-      margin: 0 -15px;
-    } 
-  }
-
-
   .table-content {
     border-collapse: separate;
     width: 100%;
@@ -1941,7 +1977,7 @@ input[type=checkbox], input[type=radio] {
       text-align: center;
       font-size: 0.875rem;
       font-weight: normal;
-      // color: $content-input-color;
+      // color: $input-color;
     }
 
     td.details-control {
@@ -1960,7 +1996,7 @@ input[type=checkbox], input[type=radio] {
     // Убираем стандарнтый бордер и бекграунд фонды
     thead, tbody, tfoot {
         border: none;
-        background-color: $content-table-bg-color;
+        background-color: $table-bg-color;
     }
     // Отступ между tbody
     .tbody-margin {
@@ -2019,13 +2055,13 @@ input[type=checkbox], input[type=radio] {
       }
       .no-moderation {
         td {
-          background-color: $content-table-no-moderation;
+          background-color: $table-no-moderation;
         }
       }
       // Убираем выделение каждой четной строки
       tr:nth-child(even) {
         border-bottom: 0;
-        background-color: $content-table-bg-color;
+        background-color: $table-bg-color;
       }
       tr:hover {
         .icon-drop {
@@ -2044,8 +2080,8 @@ input[type=checkbox], input[type=radio] {
       td {
         font-family: $SUISL;
         font-size: 0.8rem;
-        border-top: 1px solid $content-table-td-border;
-        border-bottom: 1px solid $content-table-td-border;
+        border-top: 1px solid $table-td-border;
+        border-bottom: 1px solid $table-td-border;
         line-height: 1;
       }
 
@@ -2064,7 +2100,7 @@ input[type=checkbox], input[type=radio] {
           border: none;
 
           a {
-            background-color: $content-table-active-border-color-blue;
+            background-color: $table-active-border-color-blue;
             color: white;
             padding: 0 16px;
             display: inline-block;
@@ -2085,20 +2121,20 @@ input[type=checkbox], input[type=radio] {
       // Сама таблица
       tr:nth-child(2) {
         td{
-          border-top: 2px solid $content-table-active-border-color-blue;
+          border-top: 2px solid $table-active-border-color-blue;
         }
       }
       tr:last-child {
         td {
-          border-bottom: 2px solid $content-table-active-border-color-blue;
+          border-bottom: 2px solid $table-active-border-color-blue;
         }
       }
       tr:not(.tr-close) {
         td:first-child {
-          border-left: 2px solid $content-table-active-border-color-blue;
+          border-left: 2px solid $table-active-border-color-blue;
         }
         td:last-child {
-          border-right: 2px solid $content-table-active-border-color-blue;
+          border-right: 2px solid $table-active-border-color-blue;
         }
       }
     } 
@@ -2107,7 +2143,7 @@ input[type=checkbox], input[type=radio] {
 
       tr:first-child {
         td {
-          border-bottom: 4px solid $content-table-active-border-color-blue;
+          border-bottom: 4px solid $table-active-border-color-blue;
           a {
             .icon-search-table-close {
               background-position: -6px -678px;  
@@ -2132,12 +2168,16 @@ input[type=checkbox], input[type=radio] {
         }
       }
     }
-
-    
   }
+  // ---------------------------------------- Табы -----------------------------------------
+  .tabs-wrap {
+    .tabs-content {
+      margin: 0 -15px;
+    } 
+  }
+
   // Pagination
   #pagination {
-    
     margin-top: 1rem;
 
     // Левая сторона
@@ -2155,11 +2195,10 @@ input[type=checkbox], input[type=radio] {
     text-align: right;
 
       a {
-        color: $content-table-deleted-color;
+        color: $table-deleted-color;
 
         .icon-deleted {
-          background-position: 0px -544px;
-          
+          background-position: 0px -544px; 
         }
       }
       a:hover {

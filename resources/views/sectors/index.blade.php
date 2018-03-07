@@ -2,6 +2,7 @@
  
 @section('inhead')
   <meta name="description" content="{{ $page_info->page_description }}" />
+  <script src="/js/jquery-ui.js"></script>
 @endsection
 
 @section('title', $page_info->page_name)
@@ -33,7 +34,7 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-6 cell">
               <label>Статус пользователя
-                {{ Form::select('user_type', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
+                {{ Form::select('user_type', ['all' => 'Все пользователи', '1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
               </label>
             </div>
             <div class="small-6 cell">
@@ -58,9 +59,15 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
+    @php
+      $drop = 1;
+    @endphp
+    {{-- @can('drop', App\Sector::class)
+      $drop = 1;
+    @endcan --}}
 
     @if($sectors_tree)
-      <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
+      <ul class="vertical menu accordion-menu content-list sortable" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
         @foreach ($sectors_tree as $sector)
           @if($sector['industry_status'] == 1)
             {{-- Если индустрия --}}
@@ -85,7 +92,14 @@
                   @endif
                 </li>
               </ul>
-              <a data-list="" class="first-link">
+              <div class="drop-list checkbox">
+                @if ($drop == 1)
+                <div class="sprite icon-drop"></div>
+                @endif
+                <input type="checkbox" name="" id="check-{{ $sector['id'] }}">
+                <label class="label-check white" for="check-{{ $sector['id'] }}"></label> 
+              </div>
+              <a data-list="" class="first-link @if($drop == 0) link-small @endif">
                 <div class="list-title">
                   <div class="icon-open sprite"></div>
                   <span class="first-item-name">{{ $sector['sector_name'] }}</span>
@@ -93,7 +107,7 @@
                 </div>
               </a>
             @if (isset($sector['children']))
-              <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
+              <ul class="menu vertical medium-list accordion-menu sortable" data-accordion-menu data-allow-all-closed data-multi-open="false">
                 @foreach($sector['children'] as $sector)
                   @include('sectors.sectors-list', $sector)
                 @endforeach
@@ -419,10 +433,13 @@ $(function() {
           if (result.delete == 1) {
             data = data + '<div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div>';
           };
-          data = data + '</li></ul><a data-list="" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"first-item-name\">' + result.name + '</span><span class=\"number\">0</span></div></a></li>';
+          data = data + '</li></ul><div class=\"drop-list checkbox\"><div class=\"sprite icon-drop\"></div><input type=\"checkbox\" name=\"\" id=\"check-' + result.id + '\"><label class=\"label-check\" for=\"check-' + result.id + '\"></label></div><a data-list=\"\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"first-item-name\">' + result.name + '</span><span class=\"number\">0</span></div></a></li>';
 
           // Вставляем
           $('.content-list').append(data);
+
+          // Переинициализируем фонду
+          Foundation.reInit($('.content-list'));
         } else {
           var error = showError (result.error_message);
           $('#form-first-add .name-field').after(error);
@@ -500,7 +517,7 @@ $(function() {
       $('#sectors-' + parent).addClass('parent');
 
       // Формируем список
-      var list = '<ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false"></ul>';
+      var list = '<ul class=\"menu vertical medium-list accordion-menu sortable ui-sortable\" data-accordion-menu data-allow-all-closed data-multi-open=\"false\"></ul>';
 
       // Вставляем
       $('#sectors-' + parent).append(list);
@@ -510,7 +527,7 @@ $(function() {
     };
 
     // Формируем вставляемый пункт
-    var data = '<li class="medium-item item" id=\"sectors-'+ id +'\" data-name=\"'+ name +'\"><a data-list="" class=\"medium-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"medium-item-name\">' + name + '</span><span class=\"number\">0</span></div></a><ul class=\"icon-list\"><li>';
+    var data = '<li class=\"medium-item item\" id=\"sectors-'+ id +'\" data-name=\"'+ name +'\"><a data-list="" class=\"medium-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"medium-item-name\">' + name + '</span><span class=\"number\">0</span></div></a><ul class=\"icon-list\"><li>';
     if (add == 1) {
       data = data + '<div class=\"icon-list-add sprite\" data-open=\"medium-add\"></div>';
     };
@@ -522,16 +539,19 @@ $(function() {
     if (del == 1) {
       data = data + '<div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div>';
     };
-    data = data + '</li></ul></li>';
+    data = data + '</li></ul><div class=\"drop-list checkbox\"><div class=\"sprite icon-drop\"></div><input type=\"checkbox\" name=\"\" id=\"check-' + id + '\"><label class=\"label-check\" for=\"check-' + id + '\"></label></div></li>';
 
     // Вставляем пункт
     $('#sectors-' + parent + ' .medium-list').append(data);
 
+    var elem = new Foundation.AccordionMenu($('#sectors-' + parent + ' > .medium-list:first'), null);
+
+    // Закрываем все списки
+    $('#sectors-' + parent + ' > .medium-list:first > li').attr('aria-expanded', 'false');
+
     // Меняем количество детей
     var count = $('#sectors-' + parent + ' .medium-list>li');
     $('#sectors-' + parent + ' .number:first').text(count.length);
-
-    var elem = new Foundation.AccordionMenu($('#sectors-' + id), null);
   };
 
   // Добавление сектора
@@ -572,10 +592,25 @@ $(function() {
           // Вставляем сектор
           addSector (result.id, result.name, result.parent, result.create, result.edit, result.delete);
 
+          // $('#content-list ul').sortable('refresh'); 
+
+          // $('#content-list').sortable({connectWith: '#content-list'});
+
+          $('#content-list ul').sortable({
+              connectWith: '#content-list ul',
+              placeholder: 'myplaceholder'
+          });
+
+          // $('#content-list').sortable('refresh'); 
+          // $('.sortable').sortable("refreshPositions").children();
+          // Переинициализируем фонду
+          // Foundation.reInit($('.content-list'));
+          // $('.content-list').foundation();
+
         } else {
           var error = showError (result.error_message);
           $('#form-medium-add .name-field').after(error);
-        }
+        };
       }
     });
   });
@@ -728,8 +763,10 @@ $(function() {
               // Переинициализируем фонду
               Foundation.reInit($('.content-list'));
 
+              // Закрываем элемент, не имеющий вложенности
+              // $('.content-list').foundation('up', $('#sectors-' + parentItem));
               // Своричиваем аккордионы
-              $('.content-list').foundation('hideAll');
+              // $('.content-list').foundation('hideAll');
               
             } else {
               // alert(1);
@@ -738,8 +775,8 @@ $(function() {
               // $('#sectors-' + parentItem).foundation('down', '#sectors-' + parentItem);
               // $('#sectors-' + parentItem).foundation('down', $('#sectors-' + parentItem));
 
-              $('.first-active .icon-list:first').attr('area-hidden', 'false');
-              $('.first-active .icon-list:first').css('display', 'block');
+              $('.first-active .icon-list').attr('area-hidden', 'false');
+              $('.first-active .icon-list').css('display', 'block');
             };
 
           };
@@ -749,7 +786,7 @@ $(function() {
         } else {
           var error = showError (result.error_message);
           $('#form-first-add .name-field').after(error);
-        }
+        };
       }
     });
   });
@@ -800,4 +837,6 @@ $(function() {
 @include('includes.scripts.multilevel-menu-active-scripts')
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.scripts.modal-delete-ajax-script')
+{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+@include('includes.scripts.menu-scripts')
 @endsection
