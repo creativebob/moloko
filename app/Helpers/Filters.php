@@ -5,10 +5,10 @@
     // КОМПАНИЯ -----------------------------------------------------------------------------------------------------------
     // --------------------------------------------------------------------------------------------------------------------
     
-    function getFilterCompany($filter_query){
+    function getListFilterCompany($filter_query){
 
         $companies_cities_filter = $filter_query->unique('city_id');
-        $filter['cities_list'][0] =  '- не выбрано -';
+        // $filter['cities_list'][0] =  '- не выбрано -';
 
         foreach($companies_cities_filter as $company){
             $filter['cities_list'][$company->city->id] =  $company->city->city_name;
@@ -27,6 +27,7 @@
 
         $user_cities_filter = $filter_query->unique('city_id');
         $filter['cities_list'][0] =  '- не выбрано -';
+        
         // dd($filter);
         foreach($user_cities_filter as $user){
             $filter['cities_list'][$user->city->id] = $user->city->city_name;
