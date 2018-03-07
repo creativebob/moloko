@@ -10,11 +10,15 @@
     </div> --}}
 
     <div class="small-6 medium-4 large-3 cell checkbox">
-      @include('includes.inputs.checkboxer', ['mass_value'=>$filter, 'name'=>'cities'])
+      @include('includes.inputs.checkboxer', ['name'=>'city'])
+    </div>
+
+    <div class="small-6 medium-4 large-3 cell checkbox">
+      @include('includes.inputs.checkboxer', ['name'=>'author'])
     </div>
 
     <div class="small-12 medium-12 align-center cell tabs-button filter-submit">
-      {{ Form::submit('Фильтрация', ['class'=>'button']) }}
+      {{ Form::submit('Применить', ['class'=>'button']) }}
     </div>
 
 

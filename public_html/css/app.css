@@ -303,22 +303,12 @@ input[type=checkbox], input[type=radio] {
 }
 
 /* line 365, ../sass/app.scss */
-.link-city-filter {
-  width: 220px;
-  display: block;
-  color: #666666;
-  padding: 0.4rem 0.6rem 0.5rem 1.5rem;
-  border: 1px solid #ccc;
-  font-size: 0.8rem;
-}
-
-/* line 375, ../sass/app.scss */
 .filter-submit {
   margin-top: 2rem;
 }
 
-/* line 381, ../sass/app.scss */
-.supermenu {
+/* line 370, ../sass/app.scss */
+.checkboxer-menu {
   display: block;
   top: 0px;
   float: left;
@@ -331,8 +321,8 @@ input[type=checkbox], input[type=radio] {
   height: auto;
 }
 
-/* line 395, ../sass/app.scss */
-.supermenu li {
+/* line 384, ../sass/app.scss */
+.checkboxer-menu li {
   line-height: 1.2;
   float: left;
   background: #fff;
@@ -343,18 +333,18 @@ input[type=checkbox], input[type=radio] {
   width: 100%;
 }
 
-/* line 412, ../sass/app.scss */
-.supermenu > li:first-child {
+/* line 401, ../sass/app.scss */
+.checkboxer-menu > li:first-child {
   border-top: 1px solid transparent;
 }
 
-/* line 417, ../sass/app.scss */
-.supermenu > li:hover {
+/* line 406, ../sass/app.scss */
+.checkboxer-menu > li:hover {
   background: #efefef;
 }
 
-/* line 422, ../sass/app.scss */
-.supermenu > li > a {
+/* line 411, ../sass/app.scss */
+.checkboxer-menu > li > a {
   float: left;
   display: block;
   width: 230px;
@@ -368,27 +358,27 @@ input[type=checkbox], input[type=radio] {
   outline: none;
 }
 
-/* line 437, ../sass/app.scss */
-.supermenu > li.active {
+/* line 426, ../sass/app.scss */
+.checkboxer-menu > li.active {
   background-color: #eee;
 }
 
-/* line 442, ../sass/app.scss */
-.supermenu > li.active:hover {
+/* line 431, ../sass/app.scss */
+.checkboxer-menu > li.active:hover {
   background-color: #e1e1e1;
 }
 
-/* line 447, ../sass/app.scss */
-.supermenu > li:hover > a {
+/* line 436, ../sass/app.scss */
+.checkboxer-menu > li:hover > a {
   color: #000;
 }
 
-/* line 453, ../sass/app.scss */
-.supermenu li:first-child > a {
+/* line 442, ../sass/app.scss */
+.checkboxer-menu li:first-child > a {
   border-top: 1px solid transparent;
 }
 
-/* line 463, ../sass/app.scss */
+/* line 452, ../sass/app.scss */
 .sprite {
   display: inline-block;
   vertical-align: middle;
@@ -396,12 +386,12 @@ input[type=checkbox], input[type=radio] {
   height: 32px;
   background: url(sprites/sprite_menu.png) no-repeat;
 }
-/* line 470, ../sass/app.scss */
+/* line 459, ../sass/app.scss */
 .sprite :focus {
   outline: none;
 }
 
-/* line 474, ../sass/app.scss */
+/* line 463, ../sass/app.scss */
 .sprite-16 {
   display: inline-block;
   vertical-align: middle;
@@ -409,143 +399,250 @@ input[type=checkbox], input[type=radio] {
   height: 16px;
   background: url(sprites/sprite_16.png) no-repeat;
 }
-/* line 481, ../sass/app.scss */
+/* line 470, ../sass/app.scss */
 .sprite-16 :focus {
   outline: none;
 }
 
-/* line 487, ../sass/app.scss */
+/* line 476, ../sass/app.scss */
 .icon-login {
   background: url(img/login.svg) no-repeat;
 }
 
-/* line 491, ../sass/app.scss */
+/* line 480, ../sass/app.scss */
 .icon-password {
   background: url(img/password.svg) no-repeat;
 }
 
-/* line 496, ../sass/app.scss */
+/* line 485, ../sass/app.scss */
 .icon-load {
   background: url(img/loading.svg) no-repeat;
   opacity: 0.5;
 }
 
-/* line 500, ../sass/app.scss */
+/* line 489, ../sass/app.scss */
 .icon-find-ok {
   background-position: -16px -80px;
   opacity: 1;
 }
 
-/* line 504, ../sass/app.scss */
+/* line 493, ../sass/app.scss */
 .icon-find-no {
   background-position: -32px -80px;
   opacity: 1;
 }
 
-/* line 510, ../sass/app.scss */
+/* line 499, ../sass/app.scss */
 .icon-list-add {
   background-position: -128px -768px;
 }
 
-/* line 513, ../sass/app.scss */
+/* line 502, ../sass/app.scss */
 .icon-list-add:hover {
   background-position: -96px -768px;
 }
 
-/* line 516, ../sass/app.scss */
+/* line 505, ../sass/app.scss */
 .icon-list-edit {
   background-position: -96px -800px;
 }
 
-/* line 519, ../sass/app.scss */
+/* line 508, ../sass/app.scss */
 .icon-list-edit:hover {
   background-position: -128px -800px;
 }
 
-/* line 522, ../sass/app.scss */
+/* line 511, ../sass/app.scss */
 .icon-list-delete {
   background-position: -96px -512px;
 }
 
-/* line 525, ../sass/app.scss */
+/* line 514, ../sass/app.scss */
 .icon-list-delete:hover {
   background-position: -128px -512px;
 }
 
-/* line 530, ../sass/app.scss */
+/* line 519, ../sass/app.scss */
 .icon-add {
   background-position: 0px -384px;
   opacity: 0.2;
   margin-left: 1rem;
 }
 
-/* line 536, ../sass/app.scss */
+/* line 525, ../sass/app.scss */
 .icon-add:hover {
   background-position: 0px -384px;
   opacity: 1;
 }
 
-/* line 541, ../sass/app.scss */
+/* line 530, ../sass/app.scss */
 .icon-filter {
   background-position: 0px -352px;
   float: left;
   margin-right: 0.4rem;
 }
 
-/* line 546, ../sass/app.scss */
+/* line 535, ../sass/app.scss */
 .icon-filter:hover {
   background-position: -32px -352px;
 }
 
-/* line 549, ../sass/app.scss */
+/* line 538, ../sass/app.scss */
 .active-filter {
   background-position: -64px -352px;
 }
 
-/* line 554, ../sass/app.scss */
+/* line 542, ../sass/app.scss */
+.show-elem {
+  display: inline-block !important;
+}
+
+/* line 547, ../sass/app.scss */
+.hide-elem {
+  display: none !important;
+}
+
+/* line 552, ../sass/app.scss */
+.checkboxer-wrap {
+  width: 232px;
+  display: block;
+  color: #666666;
+  padding: 0rem 0rem 0rem 1rem;
+  border: 1px solid #ccc;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: #f5f5f5 !important;
+}
+
+/* line 564, ../sass/app.scss */
+.checkboxer-toggle {
+  width: auto;
+  height: 32px;
+  display: inline-block;
+}
+
+/* line 571, ../sass/app.scss */
+.checkboxer-clean {
+  width: 26px;
+  display: inline-block;
+}
+
+/* line 578, ../sass/app.scss */
+.checkboxer-pane {
+  border-top: 0px solid transparent;
+  max-height: 272px;
+  overflow-y: auto;
+}
+
+/* line 585, ../sass/app.scss */
+.checkboxer-pane::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+/* line 589, ../sass/app.scss */
+.checkboxer-button {
+  width: 34px;
+  display: inline-block;
+  text-align: right;
+}
+
+/* line 597, ../sass/app.scss */
+.checkboxer-title {
+  width: 169px;
+  display: inline-block;
+}
+
+/* line 604, ../sass/app.scss */
+.checkboxer-button span, .checkboxer-title span {
+  height: 32px;
+  display: inline-block;
+  padding-top: 0.5rem;
+}
+
+/* line 611, ../sass/app.scss */
+.checkboxer-title span.count {
+  margin-left: 0.3rem;
+}
+
+/* line 618, ../sass/app.scss */
+.icon-checkboxer {
+  background-position: 0px -672px;
+  opacity: 0.6;
+}
+
+/* line 622, ../sass/app.scss */
+.checkboxer-toggle:hover .icon-checkboxer {
+  background-position: 0px -672px;
+  opacity: 1;
+}
+
+/* line 628, ../sass/app.scss */
+.hover .icon-checkboxer {
+  background-position: -32px -672px;
+}
+
+/* line 631, ../sass/app.scss */
+.hover.checkboxer-toggle:hover .icon-checkboxer {
+  background-position: -32px -672px;
+  opacity: 1;
+}
+
+/* line 638, ../sass/app.scss */
+.icon-clean {
+  background-position: -6px -320px;
+  opacity: 0.6;
+  width: 20px;
+}
+
+/* line 644, ../sass/app.scss */
+.dropdown-pane.checkboxer-pane {
+  width: 232px;
+}
+
+/* line 649, ../sass/app.scss */
 .icon-close-modal {
   background-position: 0px -608px;
 }
 
-/* line 557, ../sass/app.scss */
+/* line 652, ../sass/app.scss */
 .icon-close-modal:hover {
   background-position: -32px -608px;
 }
 
-/* line 562, ../sass/app.scss */
+/* line 657, ../sass/app.scss */
 .icon-drop {
   background-position: 0px -832px;
   opacity: 0;
   cursor: -webkit-grabbing;
 }
 
-/* line 567, ../sass/app.scss */
+/* line 662, ../sass/app.scss */
 .icon-edit {
   background-position: -96px -800px;
 }
 
-/* line 570, ../sass/app.scss */
+/* line 665, ../sass/app.scss */
 .icon-edit:hover {
   background-position: -128px -800px;
 }
 
-/* line 574, ../sass/app.scss */
+/* line 669, ../sass/app.scss */
 .icon-delete {
   background-position: 0px -512px;
 }
 
-/* line 577, ../sass/app.scss */
+/* line 672, ../sass/app.scss */
 .icon-delete:hover {
   background-position: -32px -512px;
 }
 
-/* line 582, ../sass/app.scss */
+/* line 677, ../sass/app.scss */
 .inputs label {
   font-size: 0.875rem;
   color: #666666;
   position: relative;
 }
-/* line 587, ../sass/app.scss */
+/* line 682, ../sass/app.scss */
 .inputs label input, .inputs label textarea {
   margin-top: 0.25rem;
   margin-bottom: 0.85rem;
@@ -557,16 +654,16 @@ input[type=checkbox], input[type=radio] {
   border: 1px solid #999999;
   box-shadow: none;
 }
-/* line 598, ../sass/app.scss */
+/* line 693, ../sass/app.scss */
 .inputs label textarea {
   height: 8rem;
 }
-/* line 602, ../sass/app.scss */
+/* line 697, ../sass/app.scss */
 .inputs label .is-invalid-input:not(:focus) {
   border-color: #cc4b37;
   background-color: #f9ecea;
 }
-/* line 606, ../sass/app.scss */
+/* line 701, ../sass/app.scss */
 .inputs label select {
   margin-top: 0.25rem;
   margin-bottom: 0.7rem;
@@ -577,12 +674,12 @@ input[type=checkbox], input[type=radio] {
   padding: 4px 4px 3px 16px;
   background-position: 100% center;
 }
-/* line 618, ../sass/app.scss */
+/* line 713, ../sass/app.scss */
 .inputs label input:focus, .inputs label select:focus, .inputs label textarea:focus {
   border: 1px solid #333333;
 }
 
-/* line 624, ../sass/app.scss */
+/* line 719, ../sass/app.scss */
 .sprite-input-left {
   display: inline-block;
   vertical-align: middle;
@@ -593,7 +690,7 @@ input[type=checkbox], input[type=radio] {
   left: 0;
 }
 
-/* line 634, ../sass/app.scss */
+/* line 729, ../sass/app.scss */
 .sprite-input-right {
   display: inline-block;
   vertical-align: middle;
@@ -605,40 +702,40 @@ input[type=checkbox], input[type=radio] {
   transition: 0.5s ease opacity;
 }
 
-/* line 645, ../sass/app.scss */
+/* line 740, ../sass/app.scss */
 .item-error {
   padding-bottom: 1rem;
   color: #cc4b37;
   display: none;
 }
 
-/* line 659, ../sass/app.scss */
+/* line 754, ../sass/app.scss */
 .sectors-list .sector {
   font-weight: 700;
 }
 
-/* line 667, ../sass/app.scss */
+/* line 762, ../sass/app.scss */
 .enter-page {
   background-color: #ffffff;
 }
 
-/* line 670, ../sass/app.scss */
+/* line 765, ../sass/app.scss */
 .enter {
   max-width: 15rem;
   margin: 10rem auto 0 auto;
   font-family: "SegoeUISemiLight";
   font-size: 0.75rem;
 }
-/* line 676, ../sass/app.scss */
+/* line 771, ../sass/app.scss */
 .enter .logo {
   display: block;
   margin: 0 auto 2rem auto;
 }
-/* line 680, ../sass/app.scss */
+/* line 775, ../sass/app.scss */
 .enter label {
   position: relative;
 }
-/* line 684, ../sass/app.scss */
+/* line 779, ../sass/app.scss */
 .enter input {
   border: none;
   border-bottom: 1px solid #c2c2c2;
@@ -646,29 +743,29 @@ input[type=checkbox], input[type=radio] {
   padding-left: 2rem;
   box-shadow: none;
 }
-/* line 691, ../sass/app.scss */
+/* line 786, ../sass/app.scss */
 .enter .input-icon {
   position: relative;
 }
-/* line 694, ../sass/app.scss */
+/* line 789, ../sass/app.scss */
 .enter .input-icon .sprite-input-left {
   top: 8px;
   left: 8px;
   opacity: 0.5;
   transition: 0.5s ease opacity;
 }
-/* line 701, ../sass/app.scss */
+/* line 796, ../sass/app.scss */
 .enter input:focus {
   border: none;
   border-bottom: 1px solid #000000;
   outline: none;
   box-shadow: none;
 }
-/* line 707, ../sass/app.scss */
+/* line 802, ../sass/app.scss */
 .enter input:focus + .sprite-input-left {
   opacity: 1;
 }
-/* line 710, ../sass/app.scss */
+/* line 805, ../sass/app.scss */
 .enter .button {
   width: 100%;
   text-transform: uppercase;
@@ -678,15 +775,15 @@ input[type=checkbox], input[type=radio] {
   margin-top: 1rem;
   margin-bottom: 0.4rem;
 }
-/* line 720, ../sass/app.scss */
+/* line 815, ../sass/app.scss */
 .enter .button:hover {
   background-color: #000000;
 }
-/* line 723, ../sass/app.scss */
+/* line 818, ../sass/app.scss */
 .enter .remember {
   margin-left: -8px;
 }
-/* line 726, ../sass/app.scss */
+/* line 821, ../sass/app.scss */
 .enter .forgot {
   display: block;
   margin-top: 0.8rem;
@@ -694,17 +791,17 @@ input[type=checkbox], input[type=radio] {
   text-decoration: underline;
   font-size: 0.7rem;
 }
-/* line 733, ../sass/app.scss */
+/* line 828, ../sass/app.scss */
 .enter .forgot:hover {
   text-decoration: none;
 }
 
-/* line 738, ../sass/app.scss */
+/* line 833, ../sass/app.scss */
 .header-z-index {
   z-index: 98;
 }
 
-/* line 741, ../sass/app.scss */
+/* line 836, ../sass/app.scss */
 .header {
   background-color: #333333;
   border-bottom: 1px solid #dcdcdc;
@@ -713,11 +810,11 @@ input[type=checkbox], input[type=radio] {
   position: relative;
   z-index: 98;
 }
-/* line 750, ../sass/app.scss */
+/* line 845, ../sass/app.scss */
 .header .left-head {
   margin: auto 0;
 }
-/* line 753, ../sass/app.scss */
+/* line 848, ../sass/app.scss */
 .header .left-head h1 {
   text-transform: uppercase;
   color: #ffffff;
@@ -727,52 +824,52 @@ input[type=checkbox], input[type=radio] {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 762, ../sass/app.scss */
+/* line 857, ../sass/app.scss */
 .header .left-head h1 span {
   color: #ff0000;
 }
-/* line 768, ../sass/app.scss */
+/* line 863, ../sass/app.scss */
 .header .right-head {
   text-align: right;
 }
-/* line 771, ../sass/app.scss */
+/* line 866, ../sass/app.scss */
 .header .right-head ul {
   background-color: #333333;
   float: right;
 }
-/* line 775, ../sass/app.scss */
+/* line 870, ../sass/app.scss */
 .header .right-head ul li {
   float: left;
   margin-right: 1rem;
 }
-/* line 779, ../sass/app.scss */
+/* line 874, ../sass/app.scss */
 .header .right-head ul li a {
   display: block;
   color: #ffffff;
   font-size: 0.8rem;
 }
-/* line 785, ../sass/app.scss */
+/* line 880, ../sass/app.scss */
 .header .right-head ul li a span {
   margin-right: 1rem;
 }
-/* line 788, ../sass/app.scss */
+/* line 883, ../sass/app.scss */
 .header .right-head ul li a img {
   vertical-align: middle;
   width: 25px;
   height: 25px;
 }
-/* line 797, ../sass/app.scss */
+/* line 892, ../sass/app.scss */
 .header .right-head .dropdown-pane {
   width: 14rem;
   padding: 0;
 }
-/* line 802, ../sass/app.scss */
+/* line 897, ../sass/app.scss */
 .header .right-head .profile-head {
   border: 1px solid #d0d0d0;
   box-sizing: border-box;
   width: 14rem;
 }
-/* line 808, ../sass/app.scss */
+/* line 903, ../sass/app.scss */
 .header .right-head .profile-head ul {
   background-color: #ffffff;
   color: #444444;
@@ -780,30 +877,30 @@ input[type=checkbox], input[type=radio] {
   text-align: left;
   width: 100%;
 }
-/* line 815, ../sass/app.scss */
+/* line 910, ../sass/app.scss */
 .header .right-head .profile-head ul li {
   margin: 0;
 }
-/* line 818, ../sass/app.scss */
+/* line 913, ../sass/app.scss */
 .header .right-head .profile-head ul li hr {
   margin: 0.2rem 0;
   color: #d0d0d0;
 }
-/* line 822, ../sass/app.scss */
+/* line 917, ../sass/app.scss */
 .header .right-head .profile-head ul li a {
   color: #444444;
   padding: 0.7rem 2.8rem;
 }
-/* line 826, ../sass/app.scss */
+/* line 921, ../sass/app.scss */
 .header .right-head .profile-head ul li a:hover {
   background-color: #eee;
 }
-/* line 832, ../sass/app.scss */
+/* line 927, ../sass/app.scss */
 .header .right-head .profile-list {
   display: block !important;
 }
 
-/* line 838, ../sass/app.scss */
+/* line 933, ../sass/app.scss */
 .sidebar {
   font-family: "PFDinDisplayPro-Reg";
   text-align: left;
@@ -814,18 +911,18 @@ input[type=checkbox], input[type=radio] {
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.35);
   z-index: 97;
 }
-/* line 848, ../sass/app.scss */
+/* line 943, ../sass/app.scss */
 .sidebar a {
   color: #eeeeee;
   font-weight: light;
   font-size: 1rem;
 }
-/* line 854, ../sass/app.scss */
+/* line 949, ../sass/app.scss */
 .sidebar .menu a {
   display: inline;
   padding: 0;
 }
-/* line 859, ../sass/app.scss */
+/* line 954, ../sass/app.scss */
 .sidebar .nav > ul > li {
   border-top: 1px solid #3f3f3f;
   border-bottom: 1px solid #2b2b2b;
@@ -833,7 +930,7 @@ input[type=checkbox], input[type=radio] {
   text-transform: uppercase;
   width: 100%;
 }
-/* line 866, ../sass/app.scss */
+/* line 961, ../sass/app.scss */
 .sidebar .nav > ul > li a {
   color: #eeeeee;
   font-weight: light;
@@ -842,30 +939,30 @@ input[type=checkbox], input[type=radio] {
   box-sizing: border-box;
   width: 210px;
 }
-/* line 874, ../sass/app.scss */
+/* line 969, ../sass/app.scss */
 .sidebar .nav > ul > li a span {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 879, ../sass/app.scss */
+/* line 974, ../sass/app.scss */
 .sidebar .nav > ul > li .active, .sidebar .nav > ul > li .active:hover {
   color: #ff5454 !important;
 }
-/* line 882, ../sass/app.scss */
+/* line 977, ../sass/app.scss */
 .sidebar .nav > ul > li .active span, .sidebar .nav > ul > li .active:hover span {
   color: #ffffff;
 }
-/* line 886, ../sass/app.scss */
+/* line 981, ../sass/app.scss */
 .sidebar .nav > ul > li .active::after {
   display: block;
   border-color: #ff5454 transparent transparent !important;
   right: 0rem;
 }
-/* line 891, ../sass/app.scss */
+/* line 986, ../sass/app.scss */
 .sidebar .nav > ul > li a:hover {
   color: #ffffff;
 }
-/* line 897, ../sass/app.scss */
+/* line 992, ../sass/app.scss */
 .sidebar .nav {
   height: auto;
   overflow: hidden;
@@ -874,44 +971,44 @@ input[type=checkbox], input[type=radio] {
   margin-top: 40px;
   margin-bottom: 82px;
 }
-/* line 907, ../sass/app.scss */
+/* line 1002, ../sass/app.scss */
 .sidebar .nav > ul > li > ul {
   margin-left: 3rem;
 }
-/* line 910, ../sass/app.scss */
+/* line 1005, ../sass/app.scss */
 .sidebar .nav > ul > li > ul li {
   border-bottom: none;
   text-transform: none;
   font-family: "SegoeUILight";
 }
-/* line 915, ../sass/app.scss */
+/* line 1010, ../sass/app.scss */
 .sidebar .nav > ul > li > ul li a {
   padding: 0.4rem 1rem 0.4rem 0;
   font-size: 0.7rem;
   line-height: 1;
 }
-/* line 920, ../sass/app.scss */
+/* line 1015, ../sass/app.scss */
 .sidebar .nav > ul > li > ul li a:after {
   display: block;
 }
-/* line 927, ../sass/app.scss */
+/* line 1022, ../sass/app.scss */
 .sidebar .nav .accordion-menu > li a::after {
   display: none;
 }
-/* line 930, ../sass/app.scss */
+/* line 1025, ../sass/app.scss */
 .sidebar .nav .accordion-menu li > ul li a::after {
   display: block;
   border-color: #bdbdbd transparent transparent;
   right: 0rem;
 }
-/* line 937, ../sass/app.scss */
+/* line 1032, ../sass/app.scss */
 .sidebar .gen-menu-bot {
   position: absolute;
   bottom: 38px;
   height: 44px;
   width: 100%;
 }
-/* line 943, ../sass/app.scss */
+/* line 1038, ../sass/app.scss */
 .sidebar .gen-menu-bot #sidebar-button {
   display: block;
   height: 100%;
@@ -920,136 +1017,136 @@ input[type=checkbox], input[type=radio] {
   border-bottom: 1px solid #2b2b2b;
   cursor: pointer;
 }
-/* line 953, ../sass/app.scss */
+/* line 1048, ../sass/app.scss */
 .sidebar .gen-menu-bot #sidebar-button #cursor {
   display: block;
   width: 32px;
   height: 32px;
   margin: 5px auto 0 auto;
 }
-/* line 961, ../sass/app.scss */
+/* line 1056, ../sass/app.scss */
 .sidebar .sprite {
   margin-right: 1rem;
 }
-/* line 964, ../sass/app.scss */
+/* line 1059, ../sass/app.scss */
 .sidebar .icon-mcc {
   background-position: -96px 0px;
 }
-/* line 967, ../sass/app.scss */
+/* line 1062, ../sass/app.scss */
 .sidebar .icon-sale {
   background-position: -96px -32px;
 }
-/* line 970, ../sass/app.scss */
+/* line 1065, ../sass/app.scss */
 .sidebar .icon-finance {
   background-position: -96px -64px;
 }
-/* line 973, ../sass/app.scss */
+/* line 1068, ../sass/app.scss */
 .sidebar .icon-production {
   background-position: -96px -96px;
 }
-/* line 976, ../sass/app.scss */
+/* line 1071, ../sass/app.scss */
 .sidebar .icon-marketing {
   background-position: -96px -128px;
 }
-/* line 979, ../sass/app.scss */
+/* line 1074, ../sass/app.scss */
 .sidebar .icon-study {
   background-position: -96px -160px;
 }
-/* line 982, ../sass/app.scss */
+/* line 1077, ../sass/app.scss */
 .sidebar .icon-guide {
   background-position: -96px -192px;
 }
-/* line 985, ../sass/app.scss */
+/* line 1080, ../sass/app.scss */
 .sidebar .icon-chatbot {
   background-position: -96px -256px;
 }
-/* line 988, ../sass/app.scss */
+/* line 1083, ../sass/app.scss */
 .sidebar .icon-settings {
   background-position: -96px -224px;
 }
-/* line 991, ../sass/app.scss */
+/* line 1086, ../sass/app.scss */
 .sidebar .icon-arrow-forward {
   background-position: -160px -288px;
 }
-/* line 994, ../sass/app.scss */
+/* line 1089, ../sass/app.scss */
 .sidebar .icon-arrow-back {
   background-position: -96px -288px;
 }
-/* line 999, ../sass/app.scss */
+/* line 1094, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-mcc, .sidebar .gen-menu-bot > li > .active .icon-mcc {
   background-position: -160px 0px;
 }
-/* line 1002, ../sass/app.scss */
+/* line 1097, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-sale, .sidebar .gen-menu-bot > li > .active .icon-sale {
   background-position: -160px -32px;
 }
-/* line 1005, ../sass/app.scss */
+/* line 1100, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-finance, .sidebar .gen-menu-bot > li > .active .icon-finance {
   background-position: -160px -64px;
 }
-/* line 1008, ../sass/app.scss */
+/* line 1103, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-production, .sidebar .gen-menu-bot > li > .active .icon-production {
   background-position: -160px -96px;
 }
-/* line 1011, ../sass/app.scss */
+/* line 1106, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-marketing, .sidebar .gen-menu-bot > li > .active .icon-marketing {
   background-position: -160px -128px;
 }
-/* line 1014, ../sass/app.scss */
+/* line 1109, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-study, .sidebar .gen-menu-bot > li > .active .icon-study {
   background-position: -160px -160px;
 }
-/* line 1017, ../sass/app.scss */
+/* line 1112, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-guide, .sidebar .gen-menu-bot > li > .active .icon-guide {
   background-position: -160px -192px;
 }
-/* line 1020, ../sass/app.scss */
+/* line 1115, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-chatbot, .sidebar .gen-menu-bot > li > .active .icon-chatbot {
   background-position: -160px -256px;
 }
-/* line 1023, ../sass/app.scss */
+/* line 1118, ../sass/app.scss */
 .sidebar .nav > ul > li > .active .icon-settings, .sidebar .gen-menu-bot > li > .active .icon-settings {
   background-position: -160px -224px;
 }
-/* line 1028, ../sass/app.scss */
+/* line 1123, ../sass/app.scss */
 .sidebar .nav::-webkit-scrollbar {
   width: 0.5rem;
 }
-/* line 1032, ../sass/app.scss */
+/* line 1127, ../sass/app.scss */
 .sidebar .nav:hover {
   overflow-y: scroll;
 }
-/* line 1035, ../sass/app.scss */
+/* line 1130, ../sass/app.scss */
 .sidebar .nav:hover::-webkit-scrollbar {
   width: 0.5rem;
 }
-/* line 1038, ../sass/app.scss */
+/* line 1133, ../sass/app.scss */
 .sidebar .nav:hover::-webkit-scrollbar-thumb {
   border-width: 1px 1px 1px 2px;
   border-color: #777;
   background-color: #aaa;
   border-radius: 0.2rem;
 }
-/* line 1044, ../sass/app.scss */
+/* line 1139, ../sass/app.scss */
 .sidebar .nav:hover::-webkit-scrollbar-thumb:hover {
   border-width: 1px 1px 1px 2px;
   border-color: #555;
   background-color: #777;
 }
-/* line 1050, ../sass/app.scss */
+/* line 1145, ../sass/app.scss */
 .sidebar scrollbar[orient="vertical"] {
   max-width: 10px !important;
 }
-/* line 1053, ../sass/app.scss */
+/* line 1148, ../sass/app.scss */
 .sidebar scrollbar[orient="vertical"] > scrollbarbutton {
   max-height: 10px !important;
 }
-/* line 1056, ../sass/app.scss */
+/* line 1151, ../sass/app.scss */
 .sidebar thumb[orient="vertical"] {
   max-width: 10px !important;
 }
 
-/* line 1061, ../sass/app.scss */
+/* line 1156, ../sass/app.scss */
 .task-manager {
   position: fixed;
   right: 0;
@@ -1062,50 +1159,50 @@ input[type=checkbox], input[type=radio] {
   display: block;
   margin-right: -240px;
 }
-/* line 1074, ../sass/app.scss */
+/* line 1169, ../sass/app.scss */
 .task-manager .tabs-wrap {
   font-family: "SegoeUISemiLight";
 }
-/* line 1078, ../sass/app.scss */
+/* line 1173, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-title > a:focus, .task-manager .tabs-wrap .tabs-title > a[aria-selected='true'] {
   background-color: #4a4a4a;
   color: #ffffff;
 }
-/* line 1083, ../sass/app.scss */
+/* line 1178, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-list {
   margin-bottom: 2rem;
   border: none;
   background: none;
 }
-/* line 1090, ../sass/app.scss */
+/* line 1185, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-list li {
   border: 1px solid #4a4a4a;
   background-color: #333333;
   width: 50%;
 }
-/* line 1095, ../sass/app.scss */
+/* line 1190, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-list li a {
   color: #9c9c9c;
   padding: 5px 15px;
   font-size: 0.8rem;
   outline: none;
 }
-/* line 1104, ../sass/app.scss */
+/* line 1199, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-list li .is-active a {
   background-color: #ffffff;
 }
-/* line 1111, ../sass/app.scss */
+/* line 1206, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content {
   margin-top: 1.4rem;
   border: none;
   background: none;
 }
-/* line 1118, ../sass/app.scss */
+/* line 1213, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel {
   background: none;
   padding: 0;
 }
-/* line 1122, ../sass/app.scss */
+/* line 1217, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head {
   display: block;
   margin-bottom: 1rem;
@@ -1113,27 +1210,27 @@ input[type=checkbox], input[type=radio] {
   height: 1rem;
   overflow: hidden;
 }
-/* line 1129, ../sass/app.scss */
+/* line 1224, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head div {
   padding: 0 3px;
   display: inline-block;
   vertical-align: middle;
   float: left;
 }
-/* line 1136, ../sass/app.scss */
+/* line 1231, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head .icon-task {
   margin: -2px 0 0 -2px;
   background-position: -48px -32px;
   opacity: 0.6;
 }
-/* line 1142, ../sass/app.scss */
+/* line 1237, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head .task-date {
   font-family: "SegoeUISemiBold";
   font-size: 0.7rem;
   color: #cccccc;
   padding-right: 6px;
 }
-/* line 1154, ../sass/app.scss */
+/* line 1249, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head hr {
   border: none;
   border-bottom: 1px solid #4a4a4a;
@@ -1141,7 +1238,7 @@ input[type=checkbox], input[type=radio] {
   overflow: hidden;
   clear: none;
 }
-/* line 1164, ../sass/app.scss */
+/* line 1259, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head .task-count {
   font-family: "SegoeUISemiLight";
   font-size: 0.7rem;
@@ -1149,7 +1246,7 @@ input[type=checkbox], input[type=radio] {
   float: right;
   padding-left: 6px;
 }
-/* line 1172, ../sass/app.scss */
+/* line 1267, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content {
   margin-top: 1rem;
   font-family: "SegoeUISemiLight";
@@ -1157,40 +1254,40 @@ input[type=checkbox], input[type=radio] {
   font-size: 0.8rem;
   line-height: 1.4;
 }
-/* line 1179, ../sass/app.scss */
+/* line 1274, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-content-head {
   font-family: "SegoeUISemiBold";
   font-size: 1rem;
   margin-bottom: 0.4rem;
 }
-/* line 1184, ../sass/app.scss */
+/* line 1279, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-time {
   font-family: "PFDinDisplayPro-Light";
   color: #b5daff;
   margin-right: 0.4rem;
 }
-/* line 1189, ../sass/app.scss */
+/* line 1284, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-set {
   font-family: "PFDinDisplayPro-Light";
   color: #888888;
 }
-/* line 1194, ../sass/app.scss */
+/* line 1289, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-target {
   margin-top: 0.6rem;
 }
-/* line 1198, ../sass/app.scss */
+/* line 1293, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-list {
   margin: 1rem 0 0 0;
 }
-/* line 1201, ../sass/app.scss */
+/* line 1296, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-list .task-data {
   color: #888888;
 }
-/* line 1204, ../sass/app.scss */
+/* line 1299, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-list .task-name-lead {
   color: #74b1f5;
 }
-/* line 1208, ../sass/app.scss */
+/* line 1303, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-button {
   font-family: "SegoeUIRegular";
   font-size: 0.8rem;
@@ -1200,17 +1297,17 @@ input[type=checkbox], input[type=radio] {
   width: 100%;
   border: none;
 }
-/* line 1217, ../sass/app.scss */
+/* line 1312, ../sass/app.scss */
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-button:hover {
   background-color: red;
 }
 
-/* line 1225, ../sass/app.scss */
+/* line 1320, ../sass/app.scss */
 .task-active {
   margin-right: 0;
 }
 
-/* line 1229, ../sass/app.scss */
+/* line 1324, ../sass/app.scss */
 .breadcrumbs {
   margin: 0;
   background-color: #ffffff;
@@ -1218,7 +1315,7 @@ input[type=checkbox], input[type=radio] {
   height: auto;
   border-bottom: 1px solid #dcdcdc;
 }
-/* line 1236, ../sass/app.scss */
+/* line 1331, ../sass/app.scss */
 .breadcrumbs li {
   text-transform: none;
   color: #888888;
@@ -1226,25 +1323,25 @@ input[type=checkbox], input[type=radio] {
   font-size: 0.8rem;
   line-height: 1;
 }
-/* line 1243, ../sass/app.scss */
+/* line 1338, ../sass/app.scss */
 .breadcrumbs a {
   color: #5190ff;
 }
 
-/* line 1249, ../sass/app.scss */
+/* line 1344, ../sass/app.scss */
 .reveal {
   padding: 0;
   border: 1px solid #000000;
   border-radius: 0;
   background-color: #ffffff;
 }
-/* line 1255, ../sass/app.scss */
+/* line 1350, ../sass/app.scss */
 .reveal .modal-title {
   text-align: center;
   height: 3rem;
   background-color: #333333;
 }
-/* line 1260, ../sass/app.scss */
+/* line 1355, ../sass/app.scss */
 .reveal .modal-title h5 {
   text-transform: uppercase;
   font-size: 0.75rem;
@@ -1252,16 +1349,16 @@ input[type=checkbox], input[type=radio] {
   font-weight: normal;
   color: #ffffff;
 }
-/* line 1269, ../sass/app.scss */
+/* line 1364, ../sass/app.scss */
 .reveal .modal-content {
   padding: 2rem;
 }
-/* line 1272, ../sass/app.scss */
+/* line 1367, ../sass/app.scss */
 .reveal .modal-button {
   margin-top: 1rem;
   width: 100%;
 }
-/* line 1277, ../sass/app.scss */
+/* line 1372, ../sass/app.scss */
 .reveal .close-modal {
   position: absolute;
   top: 0;
@@ -1270,17 +1367,17 @@ input[type=checkbox], input[type=radio] {
   cursor: pointer;
 }
 
-/* line 1287, ../sass/app.scss */
+/* line 1382, ../sass/app.scss */
 .rev-small {
   width: 500px;
 }
 
-/* line 1290, ../sass/app.scss */
+/* line 1385, ../sass/app.scss */
 .rev-large {
   width: 800px;
 }
 
-/* line 1296, ../sass/app.scss */
+/* line 1391, ../sass/app.scss */
 .table-content-search caption {
   font-family: "PFDinDisplayPro-Light";
   font-size: 0.875rem;
@@ -1289,17 +1386,17 @@ input[type=checkbox], input[type=radio] {
   padding: 0;
   margin-bottom: 1rem;
 }
-/* line 1306, ../sass/app.scss */
+/* line 1401, ../sass/app.scss */
 .table-content-search tbody {
   border: none;
   background: none;
 }
-/* line 1313, ../sass/app.scss */
+/* line 1408, ../sass/app.scss */
 .table-content-search tbody tr:nth-child(even) {
   border-bottom: 0;
   background-color: #f6f6f6;
 }
-/* line 1318, ../sass/app.scss */
+/* line 1413, ../sass/app.scss */
 .table-content-search tbody td {
   font-family: "SegoeUISemiLight";
   font-size: 0.8rem;
@@ -1307,20 +1404,20 @@ input[type=checkbox], input[type=radio] {
   line-height: 1;
   padding: 0.4rem 0;
 }
-/* line 1325, ../sass/app.scss */
+/* line 1420, ../sass/app.scss */
 .table-content-search tbody td a {
   color: #5190ff;
 }
-/* line 1331, ../sass/app.scss */
+/* line 1426, ../sass/app.scss */
 .table-content-search tbody .icon-delete {
   background-position: -32px -512px;
 }
-/* line 1334, ../sass/app.scss */
+/* line 1429, ../sass/app.scss */
 .table-content-search tbody .icon-delete:hover {
   background-position: 0px -512px;
 }
 
-/* line 1339, ../sass/app.scss */
+/* line 1434, ../sass/app.scss */
 .table-over {
   position: absolute;
   background-color: white;
@@ -1328,122 +1425,122 @@ input[type=checkbox], input[type=radio] {
   z-index: 50;
 }
 
-/* line 1346, ../sass/app.scss */
+/* line 1441, ../sass/app.scss */
 .tabs-margin-top {
   margin-top: 2rem;
 }
 
-/* line 1349, ../sass/app.scss */
+/* line 1444, ../sass/app.scss */
 .tabs-wrap {
   padding: 0 10px;
   font-family: "PFDinDisplayPro-Light";
 }
-/* line 1354, ../sass/app.scss */
+/* line 1449, ../sass/app.scss */
 .tabs-wrap .tabs-title > a:focus, .tabs-wrap .tabs-title > a[aria-selected='true'] {
   background-color: #ac4747;
   color: #ffffff;
 }
-/* line 1359, ../sass/app.scss */
+/* line 1454, ../sass/app.scss */
 .tabs-wrap .tabs-list {
   margin-bottom: 2rem;
   border: none;
   background: none;
 }
-/* line 1366, ../sass/app.scss */
+/* line 1461, ../sass/app.scss */
 .tabs-wrap .tabs-list li {
   border: 1px solid #eeeeee;
   background-color: #ffffff;
 }
-/* line 1370, ../sass/app.scss */
+/* line 1465, ../sass/app.scss */
 .tabs-wrap .tabs-list li a {
   color: #000000;
   padding: 5px 20px;
   font-size: 0.875rem;
   outline: none;
 }
-/* line 1379, ../sass/app.scss */
+/* line 1474, ../sass/app.scss */
 .tabs-wrap .tabs-list li .is-active a {
   background-color: #ffffff;
 }
-/* line 1386, ../sass/app.scss */
+/* line 1481, ../sass/app.scss */
 .tabs-wrap .tabs-content {
   border: none;
   background: none;
 }
-/* line 1392, ../sass/app.scss */
+/* line 1487, ../sass/app.scss */
 .tabs-wrap .tabs-content .tabs-panel {
   background: none;
   padding: 0;
 }
-/* line 1400, ../sass/app.scss */
+/* line 1495, ../sass/app.scss */
 .tabs-wrap .checkbox label {
   margin-left: -7px;
 }
-/* line 1403, ../sass/app.scss */
+/* line 1498, ../sass/app.scss */
 .tabs-wrap .checkbox #company-checkbox + label {
   margin-bottom: 1rem;
 }
-/* line 1407, ../sass/app.scss */
+/* line 1502, ../sass/app.scss */
 .tabs-wrap .radiobutton {
   color: #666666;
 }
-/* line 1410, ../sass/app.scss */
+/* line 1505, ../sass/app.scss */
 .tabs-wrap .radiobutton label {
   margin-left: -8px;
   margin-right: 8px;
 }
-/* line 1415, ../sass/app.scss */
+/* line 1510, ../sass/app.scss */
 .tabs-wrap .fieldset-access {
   border: 1px solid #b3b3b3;
   padding: 1rem 2rem 2rem;
 }
-/* line 1419, ../sass/app.scss */
+/* line 1514, ../sass/app.scss */
 .tabs-wrap .fieldset-access legend {
   font-family: "PFDinDisplayPro-Med";
   padding: 0 1rem;
 }
 
-/* line 1425, ../sass/app.scss */
+/* line 1520, ../sass/app.scss */
 .allow {
   color: green;
 }
 
-/* line 1428, ../sass/app.scss */
+/* line 1523, ../sass/app.scss */
 .deny {
   color: red;
 }
 
-/* line 1432, ../sass/app.scss */
+/* line 1527, ../sass/app.scss */
 .content {
   padding: 30px 20px 44px 20px;
   z-index: 60;
 }
-/* line 1438, ../sass/app.scss */
+/* line 1533, ../sass/app.scss */
 .content .top-bar, .content .top-bar ul {
   background-color: #eeeeee;
 }
-/* line 1442, ../sass/app.scss */
+/* line 1537, ../sass/app.scss */
 .content #head-sticky {
   z-index: 30;
 }
-/* line 1445, ../sass/app.scss */
+/* line 1540, ../sass/app.scss */
 .content .head-content {
   padding: 1rem 10px;
   z-index: 50;
   transition: width 0.3s ease;
 }
-/* line 1453, ../sass/app.scss */
+/* line 1548, ../sass/app.scss */
 .content .head-content .header-content {
   text-transform: uppercase;
   font-family: "PFDinTextCondPro-Regular";
   font-size: 1.8rem;
   float: left;
 }
-/* line 1463, ../sass/app.scss */
+/* line 1558, ../sass/app.scss */
 .content .head-content [type='search'], .content .head-content button {
   margin: 0;
 }
-/* line 1466, ../sass/app.scss */
+/* line 1561, ../sass/app.scss */
 .content .head-content .search-field {
   border-radius: 0.2rem;
   width: 9rem;
@@ -1452,46 +1549,46 @@ input[type=checkbox], input[type=radio] {
   font-family: "PFDinDisplayPro-Thin";
   padding: 0 0.8rem;
 }
-/* line 1474, ../sass/app.scss */
+/* line 1569, ../sass/app.scss */
 .content .head-content .icon-search {
   background-position: 0px -448px;
 }
-/* line 1477, ../sass/app.scss */
+/* line 1572, ../sass/app.scss */
 .content .head-content .icon-search:hover {
   background-position: -32px -448px;
   background-color: #eeeeee;
 }
-/* line 1481, ../sass/app.scss */
+/* line 1576, ../sass/app.scss */
 .content .head-content .icon-search:focus {
   background-color: #eeeeee;
 }
-/* line 1485, ../sass/app.scss */
+/* line 1580, ../sass/app.scss */
 .content .filters {
   display: none;
   background-color: #eeeeee;
   z-index: 1;
   position: absolute;
 }
-/* line 1494, ../sass/app.scss */
+/* line 1589, ../sass/app.scss */
 .content .filters .fieldset-filters {
   border: 1px solid #b3b3b3;
   padding: 1rem 0.6rem 1.4rem;
 }
-/* line 1498, ../sass/app.scss */
+/* line 1593, ../sass/app.scss */
 .content .filters .fieldset-filters legend {
   font-family: "PFDinDisplayPro-Med";
   padding: 0 1rem;
   margin-bottom: 1rem;
 }
-/* line 1512, ../sass/app.scss */
+/* line 1607, ../sass/app.scss */
 .content .content-list {
   outline: none;
 }
-/* line 1515, ../sass/app.scss */
+/* line 1610, ../sass/app.scss */
 .content .content-list .is-accordion-submenu-parent:not(.has-submenu-toggle) > a::after {
   display: none;
 }
-/* line 1518, ../sass/app.scss */
+/* line 1613, ../sass/app.scss */
 .content .content-list .icon-list {
   display: block;
   opacity: 0;
@@ -1501,16 +1598,16 @@ input[type=checkbox], input[type=radio] {
   transition: 0.2s ease opacity;
   cursor: pointer;
 }
-/* line 1527, ../sass/app.scss */
+/* line 1622, ../sass/app.scss */
 .content .content-list .icon-list li {
   display: inline-block;
   width: 32px;
 }
-/* line 1533, ../sass/app.scss */
+/* line 1628, ../sass/app.scss */
 .content .content-list .icon-list:focus {
   outline-color: none;
 }
-/* line 1537, ../sass/app.scss */
+/* line 1632, ../sass/app.scss */
 .content .content-list .number {
   font-size: 0.7rem;
   margin-left: 0.6rem;
@@ -1519,170 +1616,170 @@ input[type=checkbox], input[type=radio] {
   opacity: 0;
   transition: 0.3s ease opacity;
 }
-/* line 1545, ../sass/app.scss */
+/* line 1640, ../sass/app.scss */
 .content .content-list .link-recursion {
   display: inline;
   padding: 0;
 }
-/* line 1550, ../sass/app.scss */
+/* line 1645, ../sass/app.scss */
 .content .content-list .first-item {
   background-color: #494949;
   margin-bottom: 2px;
   position: relative;
 }
-/* line 1556, ../sass/app.scss */
+/* line 1651, ../sass/app.scss */
 .content .content-list .first-item .first-link {
   font-family: "PFDinDisplayPro-Light";
   font-size: 1rem;
   color: #ffffff;
   padding: 8px;
 }
-/* line 1562, ../sass/app.scss */
+/* line 1657, ../sass/app.scss */
 .content .content-list .first-item .first-link .icon-open {
   background-position: -96px -704px;
   margin-right: 0.5rem;
   width: 32px;
   height: 32px;
 }
-/* line 1568, ../sass/app.scss */
+/* line 1663, ../sass/app.scss */
 .content .content-list .first-item .first-link span {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 1573, ../sass/app.scss */
+/* line 1668, ../sass/app.scss */
 .content .content-list .first-item .icon-list {
   opacity: 0;
   right: 2rem;
 }
-/* line 1577, ../sass/app.scss */
+/* line 1672, ../sass/app.scss */
 .content .content-list .first-item .icon-list li {
   padding: 8px 0;
 }
-/* line 1583, ../sass/app.scss */
+/* line 1678, ../sass/app.scss */
 .content .content-list .first-active {
   background-color: #ae4747;
 }
-/* line 1586, ../sass/app.scss */
+/* line 1681, ../sass/app.scss */
 .content .content-list .first-active .first-link {
   background-color: #ae4747;
 }
-/* line 1589, ../sass/app.scss */
+/* line 1684, ../sass/app.scss */
 .content .content-list .first-active .first-link .icon-open {
   background-position: -128px -704px;
 }
-/* line 1592, ../sass/app.scss */
+/* line 1687, ../sass/app.scss */
 .content .content-list .first-active .first-link .number {
   background: rgba(255, 255, 255, 0.1);
   opacity: 1;
 }
-/* line 1597, ../sass/app.scss */
+/* line 1692, ../sass/app.scss */
 .content .content-list .first-active .icon-list {
   opacity: 1;
   z-index: 5;
   right: 2rem;
 }
-/* line 1602, ../sass/app.scss */
+/* line 1697, ../sass/app.scss */
 .content .content-list .first-active .icon-list li {
   padding: 8px 0;
 }
-/* line 1605, ../sass/app.scss */
+/* line 1700, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .sprite:focus {
   outline: none;
 }
-/* line 1608, ../sass/app.scss */
+/* line 1703, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .icon-list-add {
   background-position: -128px -768px;
 }
-/* line 1611, ../sass/app.scss */
+/* line 1706, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .icon-list-add:hover {
   background-position: -96px -768px;
 }
-/* line 1614, ../sass/app.scss */
+/* line 1709, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .icon-list-edit {
   background-position: -96px -800px;
 }
-/* line 1617, ../sass/app.scss */
+/* line 1712, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .icon-list-edit:hover {
   background-position: -128px -800px;
 }
-/* line 1620, ../sass/app.scss */
+/* line 1715, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .icon-list-delete {
   background-position: -96px -512px;
 }
-/* line 1623, ../sass/app.scss */
+/* line 1718, ../sass/app.scss */
 .content .content-list .first-active .icon-list li .icon-list-delete:hover {
   background-position: -128px -512px;
 }
-/* line 1633, ../sass/app.scss */
+/* line 1728, ../sass/app.scss */
 .content .content-list .medium-list .medium-item {
   background-color: #ffffff;
   position: relative;
   padding-left: 2rem;
 }
-/* line 1638, ../sass/app.scss */
+/* line 1733, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list {
   right: 2rem;
   opacity: 1;
 }
-/* line 1643, ../sass/app.scss */
+/* line 1738, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li {
   padding: 0;
 }
-/* line 1646, ../sass/app.scss */
+/* line 1741, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li .icon-list-add {
   background-position: 0px -768px;
 }
-/* line 1649, ../sass/app.scss */
+/* line 1744, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li .icon-list-add:hover {
   background-position: -32px -768px;
 }
-/* line 1652, ../sass/app.scss */
+/* line 1747, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li .icon-list-edit {
   background-position: 0px -800px;
 }
-/* line 1655, ../sass/app.scss */
+/* line 1750, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li .icon-list-edit:hover {
   background-position: -32px -800px;
 }
-/* line 1658, ../sass/app.scss */
+/* line 1753, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li .icon-list-delete {
   background-position: 0px -512px;
 }
-/* line 1661, ../sass/app.scss */
+/* line 1756, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .icon-list li .icon-list-delete:hover {
   background-position: -32px -512px;
 }
-/* line 1666, ../sass/app.scss */
+/* line 1761, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-link {
   font-family: "SegoeUISemiLight";
   font-size: 0.8rem;
   color: #000000;
   padding: 0 0 0 8px;
 }
-/* line 1674, ../sass/app.scss */
+/* line 1769, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-link .list-title span {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 1679, ../sass/app.scss */
+/* line 1774, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-link .icon-open {
   background-position: 0px -704px;
   opacity: 0.6;
 }
-/* line 1685, ../sass/app.scss */
+/* line 1780, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-active {
   width: 80%;
 }
-/* line 1688, ../sass/app.scss */
+/* line 1783, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-active .icon-open {
   background-position: -32px -704px;
 }
-/* line 1692, ../sass/app.scss */
+/* line 1787, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-active .list-title .number {
   background: rgba(0, 0, 0, 0.2);
   opacity: 1;
 }
-/* line 1699, ../sass/app.scss */
+/* line 1794, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last {
   position: relative;
   margin: 0 1.8rem 0 2rem;
@@ -1692,56 +1789,56 @@ input[type=checkbox], input[type=radio] {
   color: #000000;
   padding: 10px 0 10px 12px;
 }
-/* line 1709, ../sass/app.scss */
+/* line 1804, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last .icon-list {
   transition: 0.2s ease opacity;
   opacity: 0;
   right: 0.2rem;
 }
-/* line 1718, ../sass/app.scss */
+/* line 1813, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list {
   opacity: 1;
 }
-/* line 1722, ../sass/app.scss */
+/* line 1817, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li {
   padding: 0;
 }
-/* line 1725, ../sass/app.scss */
+/* line 1820, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-add {
   background-position: 0px -768px;
 }
-/* line 1728, ../sass/app.scss */
+/* line 1823, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-add:hover {
   background-position: -64px -768px;
 }
-/* line 1731, ../sass/app.scss */
+/* line 1826, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-edit {
   background-position: 0px -800px;
 }
-/* line 1734, ../sass/app.scss */
+/* line 1829, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-edit:hover {
   background-position: -32px -800px;
 }
-/* line 1737, ../sass/app.scss */
+/* line 1832, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-delete {
   background-position: 0px -512px;
 }
-/* line 1740, ../sass/app.scss */
+/* line 1835, ../sass/app.scss */
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-delete:hover {
   background-position: -32px -512px;
 }
-/* line 1748, ../sass/app.scss */
+/* line 1843, ../sass/app.scss */
 .content .content-list .medium-list .nested {
   margin-left: -8px;
 }
-/* line 1753, ../sass/app.scss */
+/* line 1848, ../sass/app.scss */
 .content .content-list .last-list {
   border-left: 2px solid #ae4747;
   border-right: 2px solid #ae4747;
   overflow: hidden;
   margin-left: 0;
 }
-/* line 1764, ../sass/app.scss */
+/* line 1859, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link {
   position: relative;
   margin: 0 1.8rem 0 2.5rem;
@@ -1751,103 +1848,103 @@ input[type=checkbox], input[type=radio] {
   padding: 10px 1.4rem;
   color: #000000;
 }
-/* line 1773, ../sass/app.scss */
+/* line 1868, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link .icon-list {
   right: 0.1rem;
   opacity: 0;
 }
-/* line 1777, ../sass/app.scss */
+/* line 1872, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link .icon-list li {
   padding: 0;
 }
-/* line 1784, ../sass/app.scss */
+/* line 1879, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list {
   opacity: 1;
 }
-/* line 1789, ../sass/app.scss */
+/* line 1884, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-add {
   background-position: 0px -768px;
 }
-/* line 1792, ../sass/app.scss */
+/* line 1887, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-add:hover {
   background-position: -64px -768px;
 }
-/* line 1795, ../sass/app.scss */
+/* line 1890, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-edit {
   background-position: 0px -800px;
 }
-/* line 1798, ../sass/app.scss */
+/* line 1893, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-edit:hover {
   background-position: -32px -800px;
 }
-/* line 1801, ../sass/app.scss */
+/* line 1896, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-delete {
   background-position: 0px -512px;
 }
-/* line 1804, ../sass/app.scss */
+/* line 1899, ../sass/app.scss */
 .content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-delete:hover {
   background-position: -32px -512px;
 }
-/* line 1812, ../sass/app.scss */
+/* line 1907, ../sass/app.scss */
 .content .content-list .last-list .last-item:last-child .last-link {
   border-bottom: none;
 }
-/* line 1820, ../sass/app.scss */
+/* line 1915, ../sass/app.scss */
 .content .table-content .is-stuck {
   background-color: #eeeeee;
 }
-/* line 1822, ../sass/app.scss */
+/* line 1917, ../sass/app.scss */
 .content .table-content .is-stuck tr {
   display: block;
 }
-/* line 1834, ../sass/app.scss */
+/* line 1929, ../sass/app.scss */
 .content .tabs-wrap .tabs-content {
   margin: 0 -15px;
 }
-/* line 1840, ../sass/app.scss */
+/* line 1935, ../sass/app.scss */
 .content .table-content {
   border-collapse: separate;
   width: 100%;
 }
-/* line 1844, ../sass/app.scss */
+/* line 1939, ../sass/app.scss */
 .content .table-content caption {
   font-family: "PFDinDisplayPro-Med";
   text-align: center;
   font-size: 0.875rem;
   font-weight: normal;
 }
-/* line 1852, ../sass/app.scss */
+/* line 1947, ../sass/app.scss */
 .content .table-content td.details-control {
   background: url("../resources/details_open.png") no-repeat center center;
   cursor: pointer;
 }
-/* line 1856, ../sass/app.scss */
+/* line 1951, ../sass/app.scss */
 .content .table-content tr.shown td.details-control {
   background: url("../resources/details_close.png") no-repeat center center;
 }
-/* line 1861, ../sass/app.scss */
+/* line 1956, ../sass/app.scss */
 .content .table-content .td-checkbox, .content .table-content .td-drop, .content .table-content .td-delete {
   width: 32px;
 }
-/* line 1866, ../sass/app.scss */
+/* line 1961, ../sass/app.scss */
 .content .table-content thead, .content .table-content tbody, .content .table-content tfoot {
   border: none;
   background-color: #f6f6f6;
 }
-/* line 1871, ../sass/app.scss */
+/* line 1966, ../sass/app.scss */
 .content .table-content .tbody-margin {
   height: 1rem;
   background-color: #eeeeee;
 }
-/* line 1876, ../sass/app.scss */
+/* line 1971, ../sass/app.scss */
 .content .table-content thead th, .content .table-content tbody td {
   padding: 4px;
 }
-/* line 1879, ../sass/app.scss */
+/* line 1974, ../sass/app.scss */
 .content .table-content .td-checkbox, .content .table-content .td-delete {
   padding: 0;
 }
-/* line 1888, ../sass/app.scss */
+/* line 1983, ../sass/app.scss */
 .content .table-content thead th {
   font-family: "PFDinDisplayPro-Med";
   font-size: 0.8rem;
@@ -1859,55 +1956,55 @@ input[type=checkbox], input[type=radio] {
   background-repeat: repeat-x;
   background-position: bottom;
 }
-/* line 1901, ../sass/app.scss */
+/* line 1996, ../sass/app.scss */
 .content .table-content thead th .icon-drop {
   opacity: 0;
 }
-/* line 1905, ../sass/app.scss */
+/* line 2000, ../sass/app.scss */
 .content .table-content thead th:hover {
   cursor: pointer;
 }
-/* line 1908, ../sass/app.scss */
+/* line 2003, ../sass/app.scss */
 .content .table-content thead th:focus {
   outline: none;
 }
-/* line 1911, ../sass/app.scss */
+/* line 2006, ../sass/app.scss */
 .content .table-content thead .td-drop {
   width: 32px;
   padding: 0;
 }
-/* line 1917, ../sass/app.scss */
+/* line 2012, ../sass/app.scss */
 .content .table-content tbody {
   overflow-x: hidden;
 }
-/* line 1921, ../sass/app.scss */
+/* line 2016, ../sass/app.scss */
 .content .table-content tbody tr .button {
   margin-bottom: 0;
 }
-/* line 1926, ../sass/app.scss */
+/* line 2021, ../sass/app.scss */
 .content .table-content tbody .no-moderation td {
   background-color: #ffcccc;
 }
-/* line 1931, ../sass/app.scss */
+/* line 2026, ../sass/app.scss */
 .content .table-content tbody tr:nth-child(even) {
   border-bottom: 0;
   background-color: #f6f6f6;
 }
-/* line 1936, ../sass/app.scss */
+/* line 2031, ../sass/app.scss */
 .content .table-content tbody tr:hover .icon-drop {
   opacity: 0.3;
   transition: 0.5s;
 }
-/* line 1940, ../sass/app.scss */
+/* line 2035, ../sass/app.scss */
 .content .table-content tbody tr:hover .icon-drop:hover {
   opacity: 0.6;
 }
-/* line 1945, ../sass/app.scss */
+/* line 2040, ../sass/app.scss */
 .content .table-content tbody .td-drop {
   width: 32px;
   padding: 0;
 }
-/* line 1949, ../sass/app.scss */
+/* line 2044, ../sass/app.scss */
 .content .table-content tbody td {
   font-family: "SegoeUISemiLight";
   font-size: 0.8rem;
@@ -1915,97 +2012,97 @@ input[type=checkbox], input[type=radio] {
   border-bottom: 1px solid #eeeeee;
   line-height: 1;
 }
-/* line 1965, ../sass/app.scss */
+/* line 2060, ../sass/app.scss */
 .content .table-content .active tr:first-child td {
   text-align: right;
   padding: 0;
   background-color: #eeeeee;
   border: none;
 }
-/* line 1971, ../sass/app.scss */
+/* line 2066, ../sass/app.scss */
 .content .table-content .active tr:first-child td a {
   background-color: #5190ff;
   color: white;
   padding: 0 16px;
   display: inline-block;
 }
-/* line 1977, ../sass/app.scss */
+/* line 2072, ../sass/app.scss */
 .content .table-content .active tr:first-child td a .icon-search-table-close {
   background-position: -38px -678px;
   margin-right: 1rem;
   width: 20px;
   height: 20px;
 }
-/* line 1983, ../sass/app.scss */
+/* line 2078, ../sass/app.scss */
 .content .table-content .active tr:first-child td a span {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 1992, ../sass/app.scss */
+/* line 2087, ../sass/app.scss */
 .content .table-content .active tr:nth-child(2) td {
   border-top: 2px solid #5190ff;
 }
-/* line 1997, ../sass/app.scss */
+/* line 2092, ../sass/app.scss */
 .content .table-content .active tr:last-child td {
   border-bottom: 2px solid #5190ff;
 }
-/* line 2002, ../sass/app.scss */
+/* line 2097, ../sass/app.scss */
 .content .table-content .active tr:not(.tr-close) td:first-child {
   border-left: 2px solid #5190ff;
 }
-/* line 2005, ../sass/app.scss */
+/* line 2100, ../sass/app.scss */
 .content .table-content .active tr:not(.tr-close) td:last-child {
   border-right: 2px solid #5190ff;
 }
-/* line 2014, ../sass/app.scss */
+/* line 2109, ../sass/app.scss */
 .content .table-content .tr-border tr:first-child td {
   border-bottom: 4px solid #5190ff;
 }
-/* line 2017, ../sass/app.scss */
+/* line 2112, ../sass/app.scss */
 .content .table-content .tr-border tr:first-child td a .icon-search-table-close {
   background-position: -6px -678px;
 }
-/* line 2026, ../sass/app.scss */
+/* line 2121, ../sass/app.scss */
 .content .table-content .tr-border tr:not(.tr-close) td {
   line-height: 0;
   padding: 0;
   visibility: hidden;
   height: 0;
 }
-/* line 2034, ../sass/app.scss */
+/* line 2129, ../sass/app.scss */
 .content .table-content .tr-border tr:not(.tr-close) td label, .content .table-content .tr-border tr:not(.tr-close) td a {
   display: none;
 }
-/* line 2044, ../sass/app.scss */
+/* line 2139, ../sass/app.scss */
 .content #pagination {
   margin-top: 1rem;
 }
-/* line 2051, ../sass/app.scss */
+/* line 2146, ../sass/app.scss */
 .content #pagination .pagination-head .pagination-title {
   font-size: 0.8rem;
 }
-/* line 2054, ../sass/app.scss */
+/* line 2149, ../sass/app.scss */
 .content #pagination .pagination-head .pagination {
   margin-top: 0.4rem;
 }
-/* line 2059, ../sass/app.scss */
+/* line 2154, ../sass/app.scss */
 .content #pagination .right {
   text-align: right;
 }
-/* line 2062, ../sass/app.scss */
+/* line 2157, ../sass/app.scss */
 .content #pagination .right a {
   color: #646464;
 }
-/* line 2065, ../sass/app.scss */
+/* line 2160, ../sass/app.scss */
 .content #pagination .right a .icon-deleted {
   background-position: 0px -544px;
 }
-/* line 2071, ../sass/app.scss */
+/* line 2166, ../sass/app.scss */
 .content #pagination .right a:hover .icon-deleted {
   background-position: -32px -544px;
 }
 
-/* line 2080, ../sass/app.scss */
+/* line 2175, ../sass/app.scss */
 .footer {
   background-color: #333333;
   padding: 6px 0 6px 240px;
@@ -2014,11 +2111,11 @@ input[type=checkbox], input[type=radio] {
   width: 100%;
   z-index: 96;
 }
-/* line 2088, ../sass/app.scss */
+/* line 2183, ../sass/app.scss */
 .footer .right {
   text-align: right;
 }
-/* line 2091, ../sass/app.scss */
+/* line 2186, ../sass/app.scss */
 .footer .right li {
   display: inline;
   font-family: "SegoeUISemiBold";
@@ -2028,33 +2125,33 @@ input[type=checkbox], input[type=radio] {
   padding: 10px 0;
   margin-right: 2rem;
 }
-/* line 2100, ../sass/app.scss */
+/* line 2195, ../sass/app.scss */
 .footer .right li span {
   font-family: "SegoeUIBold";
   color: #ffffff;
 }
-/* line 2105, ../sass/app.scss */
+/* line 2200, ../sass/app.scss */
 .footer .right .foot-drop {
   padding: 0;
 }
-/* line 2108, ../sass/app.scss */
+/* line 2203, ../sass/app.scss */
 .footer .right .foot-drop .icon-footer {
   background-position: -96px -736px;
 }
-/* line 2111, ../sass/app.scss */
+/* line 2206, ../sass/app.scss */
 .footer .right .foot-drop .icon-footer:hover {
   background-position: -128px -736px;
 }
-/* line 2116, ../sass/app.scss */
+/* line 2211, ../sass/app.scss */
 .footer .right .active-foot-drop .icon-footer {
   background-position: -160px -736px;
 }
-/* line 2122, ../sass/app.scss */
+/* line 2217, ../sass/app.scss */
 .footer .foot-options {
   background-color: #333333;
   border: none;
 }
-/* line 2126, ../sass/app.scss */
+/* line 2221, ../sass/app.scss */
 .footer .foot-options span {
   font-family: "SegoeUIRegular";
   font-size: 0.7rem;
@@ -2062,100 +2159,100 @@ input[type=checkbox], input[type=radio] {
 }
 
 @media screen and (min-width: 1px) and (max-width: 639px) {
-  /* line 2136, ../sass/app.scss */
+  /* line 2231, ../sass/app.scss */
   .enter {
     margin: 2rem auto 2rem auto;
   }
 
-  /* line 2139, ../sass/app.scss */
+  /* line 2234, ../sass/app.scss */
   #wrapper {
     margin-left: 0;
   }
 
-  /* line 2143, ../sass/app.scss */
+  /* line 2238, ../sass/app.scss */
   .header {
     height: auto;
   }
-  /* line 2146, ../sass/app.scss */
+  /* line 2241, ../sass/app.scss */
   .header .title-bar {
     width: 2.5rem;
     float: left;
     padding: 0;
     background: #333333;
   }
-  /* line 2152, ../sass/app.scss */
+  /* line 2247, ../sass/app.scss */
   .header h1 {
     margin-left: 0.25rem;
   }
-  /* line 2157, ../sass/app.scss */
+  /* line 2252, ../sass/app.scss */
   .header ul li span {
     display: none;
   }
 
-  /* line 2164, ../sass/app.scss */
+  /* line 2259, ../sass/app.scss */
   .sidebar {
     position: fixed;
     width: 100%;
     display: block;
   }
-  /* line 2169, ../sass/app.scss */
+  /* line 2264, ../sass/app.scss */
   .sidebar .nav {
     margin-top: 0;
     height: 100%;
     padding-bottom: 3rem;
   }
-  /* line 2174, ../sass/app.scss */
+  /* line 2269, ../sass/app.scss */
   .sidebar .gen-menu-bot {
     display: none;
   }
 
-  /* line 2179, ../sass/app.scss */
+  /* line 2274, ../sass/app.scss */
   .task-active {
     width: 100%;
   }
 
-  /* line 2183, ../sass/app.scss */
+  /* line 2278, ../sass/app.scss */
   .task-manager {
     margin-bottom: 0;
   }
 
-  /* line 2187, ../sass/app.scss */
+  /* line 2282, ../sass/app.scss */
   .breadcrumbs {
     display: none;
   }
 
-  /* line 2191, ../sass/app.scss */
+  /* line 2286, ../sass/app.scss */
   .content {
     padding: 30px 0 20px 0;
   }
-  /* line 2204, ../sass/app.scss */
+  /* line 2299, ../sass/app.scss */
   .content .tabs-wrap .tabs-content {
     margin: 0;
     padding: 0 0.7rem;
   }
-  /* line 2208, ../sass/app.scss */
+  /* line 2303, ../sass/app.scss */
   .content .tabs-wrap .fieldset-access {
     padding: 1rem 0.6rem;
   }
-  /* line 2215, ../sass/app.scss */
+  /* line 2310, ../sass/app.scss */
   .content .content-list .first-active .icon-list {
     opacity: 0;
     display: none;
     z-index: -1;
   }
-  /* line 2223, ../sass/app.scss */
+  /* line 2318, ../sass/app.scss */
   .content .content-list .medium-list .medium-item .icon-list {
     opacity: 0;
     display: none;
     z-index: -1;
   }
 
-  /* line 2235, ../sass/app.scss */
+  /* line 2330, ../sass/app.scss */
   .first-active .first-link {
     -webkit-touch-action: cross-slide-x;
   }
 
-  /* line 2240, ../sass/app.scss */
+  /* line 2335, ../sass/app.scss */
   .footer {
     display: none;
   }

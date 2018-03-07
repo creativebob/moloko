@@ -62,9 +62,24 @@ class CompanyController extends Controller
         $filter_query = Company::with('city')->moderatorLimit($answer)->get();
         $filter_query = $filter_query->unique('city_id');
 
-        $filter['collection'] = $filter_query;
-        $filter['mass_id'] = $request->city_id; // Получаем список ID городов
-        $filter['list_select'] = getListFilterCompany($filter_query); // Получаем списки для SELECT
+        $filter_name = 'city';
+        $filter[$filter_name]['collection'] = $filter_query;
+        $filter[$filter_name]['mass_id'] = $request->city_id; // Получаем список ID городов
+        $filter[$filter_name]['list_select'] = getListFilterCompany($filter_query); // Получаем списки для SELECT
+
+
+
+        $filter_query = Company::with('author')->moderatorLimit($answer)->get();
+        $filter_query = $filter_query->unique('author_id');
+
+
+        $filter_name = 'author';
+        $filter[$filter_name]['collection'] = $filter_query;
+        $filter[$filter_name]['mass_id'] = $request->city_id; // Получаем список ID городов
+        $filter[$filter_name]['list_select'] = getListFilterAuthor($filter_query); // Получаем списки для SELECT
+
+        // dd($filter);
+
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

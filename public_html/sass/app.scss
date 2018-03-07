@@ -362,23 +362,12 @@ input[type=checkbox], input[type=radio] {
   width: 100%
 }
 
-.link-city-filter
-{
-  width: 220px;
-  display: block;
-  color: #666666;
-  padding: 0.4rem 0.6rem 0.5rem 1.5rem;
-  border: 1px solid #ccc;
-  font-size: 0.8rem;
-}
-
 .filter-submit
 {
   margin-top: 2rem;
 }
 
-
-.supermenu
+.checkboxer-menu
 {
   display: block;
   top: 0px;
@@ -392,7 +381,7 @@ input[type=checkbox], input[type=radio] {
   height: auto;
 }
 
-.supermenu li
+.checkboxer-menu li
 {
   line-height: 1.2;
   float: left;
@@ -404,22 +393,22 @@ input[type=checkbox], input[type=radio] {
   width: 100%;
 }
 
-.supermenu>li:last-child
+.checkboxer-menu>li:last-child
 {
   // border-bottom: 1px solid #ccc;
 }
 
-.supermenu>li:first-child
+.checkboxer-menu>li:first-child
 {
   border-top: 1px solid transparent;
 }
 
-.supermenu>li:hover
+.checkboxer-menu>li:hover
 {
   background: #efefef;
 }
 
-.supermenu>li>a
+.checkboxer-menu>li>a
 {
   float: left;
   display: block;
@@ -434,23 +423,23 @@ input[type=checkbox], input[type=radio] {
   outline: none;
 }
 
-.supermenu>li.active
+.checkboxer-menu>li.active
 {
   background-color: #eee;
 }
 
-.supermenu>li.active:hover
+.checkboxer-menu>li.active:hover
 {
   background-color: #e1e1e1;
 }
 
-.supermenu>li:hover>a
+.checkboxer-menu>li:hover>a
 {
   color: #000;
 
 }
 
-.supermenu li:first-child>a
+.checkboxer-menu li:first-child>a
 {
   border-top: 1px solid transparent;
 }
@@ -548,6 +537,112 @@ input[type=checkbox], input[type=radio] {
 }
 .active-filter {
   background-position: -64px -352px;
+}
+
+.show-elem
+{
+  display: inline-block !important;
+}
+
+.hide-elem
+{
+  display: none !important;
+}
+
+.checkboxer-wrap
+{
+  width: 232px;
+  display: block;
+  color: #666666;
+  padding: 0rem 0rem 0rem 1rem;
+  border: 1px solid #ccc;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: #f5f5f5 !important;
+}
+
+.checkboxer-toggle
+{
+  width: auto;
+  height: 32px;
+  display: inline-block;
+}
+
+.checkboxer-clean
+{
+  width: 26px;
+  display: inline-block;
+}
+
+
+.checkboxer-pane
+{
+  border-top: 0px solid transparent;
+  max-height: 272px;
+  overflow-y: auto;
+}
+
+.checkboxer-pane::-webkit-scrollbar {
+    width:0.5rem;
+}
+
+.checkboxer-button
+{
+  width: 34px;
+  display: inline-block;
+  text-align: right;
+
+}
+
+.checkboxer-title
+{
+  width: 169px;
+  display: inline-block;
+
+}
+
+.checkboxer-button span, .checkboxer-title span
+{
+  height: 32px;
+  display: inline-block;
+  padding-top: 0.5rem;
+}
+
+.checkboxer-title span.count
+{
+  margin-left: 0.3rem;
+}
+
+// Иконка checkboxer в фильтре
+// Состояние 1
+.icon-checkboxer {
+  background-position: 0px -672px;
+  opacity: 0.6;
+}
+.checkboxer-toggle:hover .icon-checkboxer {
+  background-position: 0px -672px;
+  opacity: 1;
+}
+
+// Состояние 2
+.hover .icon-checkboxer {
+  background-position: -32px -672px;
+}
+.hover.checkboxer-toggle:hover .icon-checkboxer {
+  background-position: -32px -672px;
+  opacity: 1;
+}
+
+// Иконка снятия checkbox'ов в checkboxer в фильтре
+// Состояние 1
+.icon-clean {
+  background-position: -6px -320px;
+  opacity: 0.6;
+  width: 20px;
+}
+
+.dropdown-pane.checkboxer-pane {
+  width: 232px;
 }
 
 // Закрытие модалки

@@ -61,6 +61,18 @@ class Company extends Model
       return $query;
     }
 
+    // Фильтрация по городу
+    public function scopeAuthorFilter($query, $request)
+    {
+
+        //Фильтруем по списку городов
+        if($request->author_id){
+          $query = $query->whereIn('author_id', $request->author_id);
+        };
+
+      return $query;
+    }
+
 
   // Связываем компанию с информацией о ее директоре
   public function director()
