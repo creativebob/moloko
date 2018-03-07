@@ -100,7 +100,7 @@ Route::get('/current_sector/{section_id}/{item_id}', 'SectorController@current_s
 Route::post('/sector_check', 'SectorController@sector_check')->middleware('auth');
 // Список секторов
 Route::post('/sectors_list', 'SectorController@sectors_list')->middleware('auth');
-// Route::get('/sectors_list/{id}', 'SectorController@sectors_list')->middleware('auth');
+Route::get('/sectors_list/{id}', 'SectorController@sectors_list')->middleware('auth');
 
 // Контроллер списков
 Route::resource('/booklists', 'BooklistController')->middleware('auth');

@@ -66,11 +66,11 @@ class SectorController extends Controller
     // Функция построения дерева из массива от Tommy Lacroix
     $sectors_tree = [];
     foreach ($sectors_id as $id => &$node) {   
-      //Если нет вложений
+      // Если нет вложений
       if (!$node['sector_parent_id']){
         $sectors_tree[$id] = &$node;
       } else { 
-      //Если есть потомки то перебераем массив
+      // Если есть потомки то перебераем массив
         $sectors_id[$node['sector_parent_id']]['children'][$id] = &$node;
       }
     };
@@ -392,11 +392,14 @@ class SectorController extends Controller
 
     // Главный запрос
     $sectors = Sector::moderatorLimit($answer)
-    // ->whereNotIn(['id' => [$request->id], 'sector_parent_id' => [$request->id]])
+    ->whereNotIn('id', [$request->id])
+    // ->whereNotIn('sector_parent_id', [$request->id])
     ->get(['id','sector_name','industry_status','sector_parent_id'])
     // ->pluck('id','sector_name','industry_status')
     ->keyBy('id')
     ->toArray();
+
+    // dd($sectors);
 
     // Получаем список секторов
     $sectors_cat = [];
@@ -412,20 +415,33 @@ class SectorController extends Controller
       
     };
 
-    // // dd($sectors_cat);
+    // dd($sectors_cat);
+
     $sectors_list = [];
     foreach ($sectors_cat as $id => &$node) {
-      if ($id != $request->id) { 
+      // if ($id != $request->id) { 
         $sectors_list[$id] = &$node;
         if (isset($node['children'])) {
           foreach ($node['children'] as $id => &$node) {
             $sectors_list[$id] = &$node;
           }
-        };
-      };
-    };
 
-    echo json_encode($sectors_cat, JSON_UNESCAPED_UNICODE);
-    // dd($sectors_list);
+        };
+
+      // };
+    };
+    $sectors_final = [];
+    foreach ($sectors_list as $id => &$node) {
+      if (isset($id['children'])) {
+
+        unset($id['children']);
+        
+      };
+      $sectors_final[$id] = &$node;
+    }
+    dd($sectors_final);
+
+    // echo json_encode($sectors_list, JSON_UNESCAPED_UNICODE);
+    
   }
 }
