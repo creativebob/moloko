@@ -51,7 +51,8 @@ class CompanyController extends Controller
         $companies = Company::with('author', 'director', 'city')
         ->moderatorLimit($answer)
         ->moderatorLimit($answer)
-        ->companyFilter($request)
+        ->cityFilter($request)
+        ->sectorFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
@@ -59,24 +60,36 @@ class CompanyController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $filter_query = Company::with('city')->moderatorLimit($answer)->get();
-        $filter_query = $filter_query->unique('city_id');
+        $filter_query = Company::with('city', 'sector')->moderatorLimit($answer)->get();
+        $filter_city = $filter_query->unique('city_id');
 
         $filter_name = 'city';
-        $filter[$filter_name]['collection'] = $filter_query;
-        $filter[$filter_name]['mass_id'] = $request->city_id; // Получаем список ID городов
-        $filter[$filter_name]['list_select'] = getListFilterCompany($filter_query); // Получаем списки для SELECT
+        $filter[$filter_name]['collection'] = $filter_city;
+
+        if($request->city_id == null){
+            $filter[$filter_name]['mass_id'] = null; // Получаем список ID городов
+            $filter[$filter_name]['count_mass'] = 0;
+        } else {
+            $filter[$filter_name]['mass_id'] = $request->city_id; // Получаем список ID городов
+            $filter[$filter_name]['count_mass'] = count($request->city_id);
+        };
+        $filter[$filter_name]['list_select'] = getListFilterCompany($filter_city); // Получаем списки для SELECT
 
 
 
-        $filter_query = Company::with('author')->moderatorLimit($answer)->get();
-        $filter_query = $filter_query->unique('author_id');
+        $filter_sector = $filter_query->unique('sector_id');
 
+        $filter_name = 'sector';
+        $filter[$filter_name]['collection'] = $filter_sector;
 
-        $filter_name = 'author';
-        $filter[$filter_name]['collection'] = $filter_query;
-        $filter[$filter_name]['mass_id'] = $request->city_id; // Получаем список ID городов
-        $filter[$filter_name]['list_select'] = getListFilterAuthor($filter_query); // Получаем списки для SELECT
+        if($request->sector_id == null){
+            $filter[$filter_name]['mass_id'] = null; // Получаем список ID городов
+            $filter[$filter_name]['count_mass'] = 0;
+        } else {
+            $filter[$filter_name]['mass_id'] = $request->sector_id; // Получаем список ID городов
+            $filter[$filter_name]['count_mass'] = count($request->sector_id);
+        };
+        $filter[$filter_name]['list_select'] = getListFilterSector($filter_sector); // Получаем списки для SELECT
 
         // dd($filter);
 

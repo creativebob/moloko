@@ -50,7 +50,7 @@ class Company extends Model
 
 
     // Фильтрация по городу
-    public function scopeCompanyFilter($query, $request)
+    public function scopeCityFilter($query, $request)
     {
 
         //Фильтруем по списку городов
@@ -60,6 +60,19 @@ class Company extends Model
 
       return $query;
     }
+
+    // Фильтрация по городу
+    public function scopeSectorFilter($query, $request)
+    {
+
+        //Фильтруем по списку городов
+        if($request->sector_id){
+          $query = $query->whereIn('sector_id', $request->sector_id);
+        };
+
+      return $query;
+    }
+
 
     // Фильтрация по городу
     public function scopeAuthorFilter($query, $request)
