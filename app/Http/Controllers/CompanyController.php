@@ -51,7 +51,8 @@ class CompanyController extends Controller
         $companies = Company::with('author', 'director', 'city')
         ->moderatorLimit($answer)
         ->moderatorLimit($answer)
-        ->companyFilter($request)
+        ->cityFilter($request)
+        ->sectorFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
@@ -59,26 +60,12 @@ class CompanyController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $filter_query = Company::with('city')->moderatorLimit($answer)->get();
-        $filter_query = $filter_query->unique('city_id');
+        $filter_query = Company::with('city', 'sector')->moderatorLimit($answer)->get();
+        $filter = [];
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
 
-        $filter_name = 'city';
-        $filter[$filter_name]['collection'] = $filter_query;
-        $filter[$filter_name]['mass_id'] = $request->city_id; // Получаем список ID городов
-        $filter[$filter_name]['list_select'] = getListFilterCompany($filter_query); // Получаем списки для SELECT
-
-
-
-        $filter_query = Company::with('author')->moderatorLimit($answer)->get();
-        $filter_query = $filter_query->unique('author_id');
-
-
-        $filter_name = 'author';
-        $filter[$filter_name]['collection'] = $filter_query;
-        $filter[$filter_name]['mass_id'] = $request->city_id; // Получаем список ID городов
-        $filter[$filter_name]['list_select'] = getListFilterAuthor($filter_query); // Получаем списки для SELECT
-
-        // dd($filter);
+        
 
 
         // Инфо о странице

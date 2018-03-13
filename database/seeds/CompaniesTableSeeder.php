@@ -31,6 +31,7 @@ class CompaniesTableSeeder extends Seeder
                 'city_id' => 1,
                 'moderation' => null,
                 'sector_id' => 8,
+                'author_id' => 1,
         	],
             [
 
@@ -51,6 +52,7 @@ class CompaniesTableSeeder extends Seeder
                 'city_id' => 1,
                 'moderation' => null,
                 'sector_id' => 9,
+                'author_id' => 1,
             ],
             [
 
@@ -71,6 +73,7 @@ class CompaniesTableSeeder extends Seeder
                 'city_id' => 1,
                 'moderation' => 1,
                 'sector_id' => 12,
+                'author_id' => 1,
             ],
         ]);
     }

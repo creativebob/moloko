@@ -6,13 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-// Фильтры
+// Заготовки
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
+
+// Фильтры
+use App\Scopes\Filters\CityFilter;
+
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -30,6 +34,8 @@ class User extends Authenticatable
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
 
+    // Фильтры
+    use CityFilter;
 
     // Фильтрация по городу
     public function scopeUserFilter($query, $request)
