@@ -2,7 +2,8 @@
  
 @section('inhead')
   <meta name="description" content="{{ $page_info->page_description }}" />
-  <script src="/js/jquery-ui.js"></script>
+  {{-- Скрипты меню в шапке --}}
+  @include('includes.scripts.menu-inhead')
 @endsection
 
 @section('title', $page_info->page_name)
@@ -59,6 +60,7 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
+
     @php
       $drop = 1;
     @endphp
@@ -71,10 +73,7 @@
         @foreach ($sectors_tree as $sector)
           @if($sector['industry_status'] == 1)
             {{-- Если индустрия --}}
-            <li class="first-item item 
-            @if (isset($sector['children']))
-            parent
-            @endif" id="sectors-{{ $sector['id'] }}" data-name="{{ $sector['sector_name'] }}">
+            <li class="first-item item @if (isset($sector['children'])) parent @endif" id="sectors-{{ $sector['id'] }}" data-name="{{ $sector['sector_name'] }}">
               <ul class="icon-list">
                 <li>
                   @can('create', App\Sector::class)
@@ -92,13 +91,6 @@
                   @endif
                 </li>
               </ul>
-              <div class="drop-list checkbox">
-                @if ($drop == 1)
-                <div class="sprite icon-drop"></div>
-                @endif
-                <input type="checkbox" name="" id="check-{{ $sector['id'] }}">
-                <label class="label-check white" for="check-{{ $sector['id'] }}"></label> 
-              </div>
               <a data-list="" class="first-link @if($drop == 0) link-small @endif">
                 <div class="list-title">
                   <div class="icon-open sprite"></div>
@@ -106,6 +98,13 @@
                   <span class="number">{{ $sector['count'] }}</span>
                 </div>
               </a>
+              <div class="drop-list checkbox">
+                @if ($drop == 1)
+                <div class="sprite icon-drop"></div>
+                @endif
+                <input type="checkbox" name="" id="check-{{ $sector['id'] }}">
+                <label class="label-check white" for="check-{{ $sector['id'] }}"></label> 
+              </div>
             @if (isset($sector['children']))
               <ul class="menu vertical medium-list accordion-menu sortable" data-accordion-menu data-allow-all-closed data-multi-open="false">
                 @foreach($sector['children'] as $sector)
@@ -216,7 +215,7 @@
 {{-- Конец модалки добавления сектора --}}
 
 {{-- Модалка редактирования сектора --}}
-<div class="reveal" id="medium-edit" data-reveal>
+<div class="reveal" id="medium-edit" data-reveal data-close-on-click="false">
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>Редактирование сектора</h5>
@@ -231,7 +230,6 @@
           <select name="sector_parent_id" class="sectors-list">
               
           </select>
-          {{-- @include('includes.inputs.sector', ['sector_id'=>null, 'name'=>'first_id']) --}}
         </label>
         <label>Название сектора
           @include('includes.inputs.name', ['value'=>null, 'name'=>'sector_name'])
@@ -258,7 +256,14 @@
 @endsection
 
 @section('scripts')
-  @include('includes.scripts.inputs-mask')
+{{-- Скрипт модалки удаления ajax --}}
+@include('includes.scripts.modal-delete-ajax-script')
+{{-- Маска ввода --}}
+@include('includes.scripts.inputs-mask')
+{{-- Скрипт чекбоксов и перетаскивания для меню --}}
+@include('includes.scripts.menu-scripts')
+{{-- Скрипт подсветки многоуровневого меню --}}
+@include('includes.scripts.multilevel-menu-active-scripts')
 <script type="text/javascript">
 $(function() {
   // Функция появления окна с ошибкой
@@ -390,7 +395,6 @@ $(function() {
       sectorCheck (name, submit, db)
    }, time); 
   });
-
 
   // ---------------------------- Добавление / изменение ----------------------------------
 
@@ -607,6 +611,7 @@ $(function() {
           // Foundation.reInit($('.content-list'));
           // $('.content-list').foundation();
 
+          $('#content-list').sortable('refresh');
         } else {
           var error = showError (result.error_message);
           $('#form-medium-add .name-field').after(error);
@@ -619,9 +624,18 @@ $(function() {
   // Открываем модалку
   $(document).on('click', '[data-open="medium-edit"]', function() {
     var id = $(this).closest('.item').attr('id').split('-')[1];
-    var parent = $(this).closest('.parent').attr('id').split('-')[1];
     var first = $(this).closest('.first-item').attr('id').split('-')[1];
     $('.first-id-field').val(first);
+
+    var parent;
+    if ($(this).closest('.item').hasClass('parent')) {
+      var parent = $(this).closest('.parent').parent().parent('.parent').attr('id').split('-')[1];
+    } else {
+      parent = $(this).closest('.parent').attr('id').split('-')[1];
+    };
+
+
+    // alert(parent);
     
     // Получаем список секторов
     $.ajax({
@@ -630,26 +644,10 @@ $(function() {
       },
       url: "/sectors_list",
       type: "POST",
-      data: {id: id},
+      data: {id: id, parent: parent},
       success: function(date){
         var result = $.parseJSON(date);
-        var data = '';
-        $.each(result, function(i, elem) {
-         
-          data = data + '<option value=\"' + elem['id'] + '\"';
-          if (elem['industry_status'] == 1) {
-            data = data + ' class="sector"';
-          };
-          if (elem['id'] == parent) {
-            data = data + ' selected';
-          };
-          data = data + '>';
-          if (elem['industry_status'] != 1) {
-            data = data + '&nbsp;&nbsp;';
-          };
-          data = data + elem['sector_name'] + '</option>';
-        });
-        $('.sectors-list').append(data);
+        $('.sectors-list').append(result);
       }
     });
 
@@ -699,7 +697,7 @@ $(function() {
         var result = $.parseJSON(date);
 
         if (result.error_status == 0) {
-          $('#sectors-' + result.id + ' .medium-item-name').text(result.name);
+          $('#sectors-' + result.id + ' .medium-item-name:first').text(result.name);
           $('#sectors-' + result.id).data('name', result.name);
 
           // alert(result.parent + ' ' + parentItem);
@@ -762,6 +760,8 @@ $(function() {
 
               // Переинициализируем фонду
               Foundation.reInit($('.content-list'));
+
+              $('#content-list').sortable('refresh');
 
               // Закрываем элемент, не имеющий вложенности
               // $('.content-list').foundation('up', $('#sectors-' + parentItem));
@@ -833,10 +833,4 @@ $(function() {
   @endif
 });
 </script>
-{{-- Скрипт подсветки многоуровневого меню --}}
-@include('includes.scripts.multilevel-menu-active-scripts')
-{{-- Скрипт модалки удаления ajax --}}
-@include('includes.scripts.modal-delete-ajax-script')
-{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.menu-scripts')
 @endsection

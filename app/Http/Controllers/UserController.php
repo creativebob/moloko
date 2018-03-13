@@ -320,6 +320,8 @@ class UserController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
+        // dd($departments_list);
+        
         return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info'));
     }
 

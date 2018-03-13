@@ -1,14 +1,14 @@
 @extends('layouts.app')
  
 @section('inhead')
-<meta name="description" content="Меню {{ $site->site_name }}" />
+  <meta name="description" content="Меню {{ $site->site_name }}" />
+  {{-- Скрипты меню в шапке --}}
+  @include('includes.scripts.menu-inhead')
 @endsection
 
 @section('title', 'Меню '.$site->site_name)
 
 @section('breadcrumbs', Breadcrumbs::render('sections', $page_info, $site))
-
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('title-content')
 <div data-sticky-container id="head-content">
@@ -61,15 +61,19 @@
 <div class="grid-x">
   <div class="small-12 cell">
     
+    @php
+      $drop = 1;
+    @endphp
+    {{-- @can('drop', App\Sector::class)
+      $drop = 1;
+    @endcan --}}
+
     @if($navigation_tree)
       <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
         @foreach ($navigation_tree as $navigation)
           @if (isset($navigation['menus']))
             {{-- Если Подкатегория --}}
-            <li class="first-item parent
-            @if (isset($navigation['menus']))
-            parent-item
-            @endif" id="navigations-{{ $navigation['id'] }}" data-name="{{ $navigation['navigation_name'] }}">
+            <li class="first-item item @if (isset($navigation['menus'])) parent @endif" id="navigations-{{ $navigation['id'] }}" data-name="{{ $navigation['navigation_name'] }}">
               <ul class="icon-list">
                 <li>
                   @can('create', App\Menu::class)
@@ -100,6 +104,13 @@
                   </span>
                 </div>
               </a>
+              <div class="drop-list checkbox">
+                @if ($drop == 1)
+                <div class="sprite icon-drop"></div>
+                @endif
+                <input type="checkbox" name="" id="check-{{ $navigation['id'] }}">
+                <label class="label-check white" for="check-{{ $navigation['id'] }}"></label> 
+              </div>
               @if (isset($navigation['menus']))
                 <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
                   @foreach($navigation['menus'] as $menu)

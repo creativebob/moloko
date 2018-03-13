@@ -2,11 +2,11 @@
  
 @section('inhead')
   <meta name="description" content="{{ $page_info->page_description }}" />
+  {{-- Скрипты меню в шапке --}}
+  @include('includes.scripts.menu-inhead')
 @endsection
 
-@section('title')
-  {{ $page_info->page_name }}
-@endsection
+@section('title', $page_info->page_name)
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
@@ -61,16 +61,20 @@
 <div class="grid-x">
   <div class="small-12 cell">
 
+    @php
+      $drop = 1;
+    @endphp
+    {{-- @can('drop', App\Sector::class)
+      $drop = 1;
+    @endcan --}}
+
     @if($departments_tree)
       <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
         @foreach ($departments_tree as $department)
          
           @if($department['filial_status'] == 1)
             {{-- Если филиал --}}
-            <li class="first-item parent 
-            @if (isset($department['children']) && isset($department['staff']))
-            parent-item
-            @endif" id="departments-{{ $department['id'] }}" data-name="{{ $department['department_name'] }}">
+            <li class="first-item item @if (isset($department['children']) && isset($department['staff'])) parent @endif" id="departments-{{ $department['id'] }}" data-name="{{ $department['department_name'] }}">
               <ul class="icon-list">
                 <li>
                   @can('create', App\Department::class)
@@ -95,25 +99,39 @@
                   <span class="number">{{ $department['count'] }}</span>
                 </div>
               </a>
+              <div class="drop-list checkbox">
+                @if ($drop == 1)
+                <div class="sprite icon-drop"></div>
+                @endif
+                <input type="checkbox" name="" id="check-{{ $department['id'] }}">
+                <label class="label-check white" for="check-{{ $department['id'] }}"></label> 
+              </div>
             @if (isset($department['staff']) || isset($department['children']))
               <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
                 @if (isset($department['staff']))
                   @foreach($department['staff'] as $staffer)
-                    <li class="medium-item parent" id="staff-{{ $staffer['id'] }}" data-name="{{ $staffer['position']['position_name'] }}">
-                      <div class="medium-as-last">{{ $staffer['position']['position_name'] }} ( <a href="/staff/{{ $staffer['id'] }}/edit" class="link-recursion">
-                      @if (isset($staffer['user_id']))
-                        {{ $staffer['user']['first_name'] }} {{ $staffer['user']['second_name'] }}
-                      @else
-                        Вакансия
-                      @endif
-                      </a> ) 
-                        <ul class="icon-list">
+                    <li class="medium-item item" id="staff-{{ $staffer['id'] }}" data-name="{{ $staffer['position']['position_name'] }}">
+                      <ul class="icon-list">
                           <li>
                             @if(($staffer['system_item'] != 1) && ($staffer['delete'] == 1) && !isset($staffer['user']))
                               <div class="icon-list-delete sprite" data-open="item-delete"></div>
                             @endif
                           </li>
                         </ul>
+                      <div class="medium-as-last">{{ $staffer['position']['position_name'] }} ( <a href="/staff/{{ $staffer['id'] }}/edit" class="link-recursion">
+                        @if (isset($staffer['user_id']))
+                          {{ $staffer['user']['first_name'] }} {{ $staffer['user']['second_name'] }}
+                        @else
+                          Вакансия
+                        @endif
+                        </a> )
+                      </div>
+                      <div class="drop-list checkbox">
+                        @if ($drop == 1)
+                        <div class="sprite icon-drop"></div>
+                        @endif
+                        <input type="checkbox" name="" id="check-{{ $staffer['id'] }}">
+                        <label class="label-check" for="check-{{ $staffer['id'] }}"></label> 
                       </div>
                     </li>
                   @endforeach
@@ -345,7 +363,16 @@
 @endsection
 
 @section('scripts')
-  @include('includes.scripts.inputs-mask')
+{{-- Маска ввода --}}
+@include('includes.scripts.inputs-mask')
+{{-- Скрипт чекбоксов и перетаскивания для меню --}}
+@include('includes.scripts.menu-scripts')
+{{-- Скрипт подсветки многоуровневого меню --}}
+@include('includes.scripts.multilevel-menu-active-scripts')
+{{-- Скрипт модалки удаления ajax --}}
+@include('includes.scripts.modal-delete-ajax-script')
+{{-- Скрипт модалки удаления ajax --}}
+@include('includes.scripts.modal-delete-script')
 <script type="text/javascript">
 $(function() {
   // Функция появления окна с ошибкой
@@ -663,10 +690,4 @@ $(function() {
   @endif
 });
 </script>
-{{-- Скрипт подсветки многоуровневого меню --}}
-@include('includes.scripts.multilevel-menu-active-scripts')
-{{-- Скрипт модалки удаления ajax --}}
-@include('includes.scripts.modal-delete-ajax-script')
-{{-- Скрипт модалки удаления ajax --}}
-@include('includes.scripts.modal-delete-script')
 @endsection

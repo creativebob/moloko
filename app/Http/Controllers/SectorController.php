@@ -392,56 +392,74 @@ class SectorController extends Controller
 
     // Главный запрос
     $sectors = Sector::moderatorLimit($answer)
-    ->whereNotIn('id', [$request->id])
-    // ->whereNotIn('sector_parent_id', [$request->id])
     ->get(['id','sector_name','industry_status','sector_parent_id'])
-    // ->pluck('id','sector_name','industry_status')
     ->keyBy('id')
     ->toArray();
 
     // dd($sectors);
 
-    // Получаем список секторов
+    // Формируем дерево вложенности
     $sectors_cat = [];
-    foreach ($sectors as $id => &$node) {  
-     
-        // Если нет вложений
-        if (!$node['sector_parent_id']) {
-          $sectors_cat[$id] = &$node;
-        } else { 
-        // Если есть потомки то перебераем массив
-          $sectors_cat[$node['sector_parent_id']]['children'][$id] = &$node;
-        };
-      
+    foreach ($sectors as $id => &$node) { 
+
+      // Если нет вложений
+      if (!$node['sector_parent_id']) {
+        $sectors_cat[$id] = &$node;
+      } else { 
+
+      // Если есть потомки то перебераем массив
+        $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
+      };
     };
 
     // dd($sectors_cat);
 
-    $sectors_list = [];
-    foreach ($sectors_cat as $id => &$node) {
-      // if ($id != $request->id) { 
-        $sectors_list[$id] = &$node;
-        if (isset($node['children'])) {
-          foreach ($node['children'] as $id => &$node) {
-            $sectors_list[$id] = &$node;
-          }
+    // Функция отрисовки option'ов
+    function tplMenu($sector, $padding, $parent, $id) {
 
-        };
+    // Убираем из списка пришедший пункт меню 
+    if ($sector['id'] != $id) {
 
-      // };
-    };
-    $sectors_final = [];
-    foreach ($sectors_list as $id => &$node) {
-      if (isset($id['children'])) {
-
-        unset($id['children']);
+      $selected = '';
+      if ($sector['id'] == $parent) {
+        $selected = ' selected';
+      }
+      if ($sector['industry_status'] == 1) {
+        $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['sector_name'].'</option>';
+      } else {
+        $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['sector_name'].'</option>';
+      }
+      
+      // Добавляем пробелы вложенному элементу
+      if (isset($sector['children'])) {
+        $i = 1;
+        for($j = 0; $j < $i; $j++){
+          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+        }     
+        $i++;
         
-      };
-      $sectors_final[$id] = &$node;
+        $menu .= showCat($sector['children'], $padding, $parent, $id);
+      }
+      return $menu;
     }
-    dd($sectors_final);
+  }
+    // Рекурсивно считываем наш шаблон
+    function showCat($data, $padding, $parent, $id){
+      $string = '';
+      $padding = $padding;
+      foreach($data as $item){
+        $string .= tplMenu($item, $padding, $parent, $id);
+      }
+      return $string;
+    }
 
-    // echo json_encode($sectors_list, JSON_UNESCAPED_UNICODE);
+    // Получаем HTML разметку
+    $sectors_final = showCat($sectors_cat, '', $request->parent, $request->id);
+
+    // Отдаем ajax
+    echo json_encode($sectors_final, JSON_UNESCAPED_UNICODE);
+
+    // dd($sectors_final);
     
   }
 }

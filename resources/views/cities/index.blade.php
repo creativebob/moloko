@@ -2,11 +2,11 @@
 
 @section('inhead')
   <meta name="description" content="{{ $page_info->page_description }}" />
+  {{-- Скрипты меню в шапке --}}
+  @include('includes.scripts.menu-inhead')
 @endsection
 
-@section('title')
-  {{ $page_info->page_name }}
-@endsection
+@section('title', $page_info->page_name)
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
@@ -42,10 +42,18 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
+
+    @php
+      $drop = 1;
+    @endphp
+    {{-- @can('drop', App\Region::class)
+      $drop = 1;
+    @endcan --}}
+
     @if(!empty($regions))
     <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
       @foreach ($regions as $region)      
-      <li class="first-item parent" id="regions-{{ $region->id }}" data-name="{{ $region->region_name }}">
+      <li class="first-item item @if ((count($region->areas) > 0) || (count($region->cities) > 0)) parent @endif" id="regions-{{ $region->id }}" data-name="{{ $region->region_name }}">
         {{-- <ul class="icon-list">
           @can('create', App\City::class)
           <li><div class="icon-list-add sprite" data-open="city-add"></div></li>
@@ -63,17 +71,17 @@
             <span class="number">{{ count($region->areas) + count($region->cities) }}</span>
           </div>
         </a>
+        <div class="drop-list checkbox">
+          @if ($drop == 1)
+          <div class="sprite icon-drop"></div>
+          @endif
+          <input type="checkbox" name="" id="region-check-{{ $region->id }}">
+          <label class="label-check white" for="region-check-{{ $region->id }}"></label> 
+        </div>
         @if((count($region->areas) > 0) || (count($region->cities) > 0))
         <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
           @foreach ($region->areas as $area)
-            <li class="medium-item parent" id="areas-{{ $area->id }}" data-name="{{ $area->area_name }}">
-              <a class="medium-link">
-                <div class="list-title">
-                  <div class="icon-open sprite"></div>
-                  <span>{{ $area->area_name }}</span>
-                  <span class="number">{{ count($area->cities) }}</span>
-                </div>
-              </a>
+            <li class="medium-item item @if (count($area->cities) > 0) parent @endif" id="areas-{{ $area->id }}" data-name="{{ $area->area_name }}">
               {{-- <ul class="icon-list">
                 @if((count($area->cities) == 0) && (($area->system_item !== 1)))
                   @can('delete', $area)
@@ -81,18 +89,38 @@
                   @endcan
                 @endif
               </ul> --}}
+              <a class="medium-link">
+                <div class="list-title">
+                  <div class="icon-open sprite"></div>
+                  <span>{{ $area->area_name }}</span>
+                  <span class="number">{{ count($area->cities) }}</span>
+                </div>
+              </a>
+              <div class="drop-list checkbox">
+                @if ($drop == 1)
+                <div class="sprite icon-drop"></div>
+                @endif
+                <input type="checkbox" name="" id="area-check-{{ $area->id }}">
+                <label class="label-check" for="area-check-{{ $area->id }}"></label> 
+              </div>
               @if(count($area->cities) > 0)
               <ul class="menu vertical nested last-list">
                 @foreach ($area->cities as $city)
-                  <li class="last-item parent" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
-                    <div class="last-link">{{ $city->city_name }}
-                      {{-- <ul class="icon-list">
-                        @if($city->system_item !== 1)
-                          @can('delete', $city)
-                          <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
-                          @endcan
-                        @endif
-                      </ul> --}}
+                  <li class="last-item item" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
+                    {{-- <ul class="icon-list">
+                      @if($city->system_item !== 1)
+                        @can('delete', $city)
+                        <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
+                        @endcan
+                      @endif
+                    </ul> --}}
+                    <a class="last-link">{{ $city->city_name }}</a>
+                    <div class="drop-list checkbox">
+                      @if ($drop == 1)
+                      <div class="sprite icon-drop"></div>
+                      @endif
+                      <input type="checkbox" name="" id="city-check-{{ $city->id }}">
+                      <label class="label-check" for="city-check-{{ $city->id }}"></label> 
                     </div>
                 @endforeach
               </ul>
@@ -101,13 +129,19 @@
           @endforeach
           @if(count($region->cities) > 0)
             @foreach ($region->cities as $city)
-              <li class="medium-item parent" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
-                <div class="medium-as-last">{{ $city->city_name }}
-                  {{--<ul class="icon-list">
-                    @can('delete', $city)
-                    <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
-                    @endcan
-                  </ul> --}}
+              <li class="medium-item item" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
+                {{--<ul class="icon-list">
+                  @can('delete', $city)
+                  <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
+                  @endcan
+                </ul> --}}
+                <a class="medium-as-last">{{ $city->city_name }}</a>
+                <div class="drop-list checkbox">
+                  @if ($drop == 1)
+                  <div class="sprite icon-drop"></div>
+                  @endif
+                  <input type="checkbox" name="" id="city-check-{{ $city->id }}">
+                  <label class="label-check" for="city-check-{{ $city->id }}"></label> 
                 </div>
               </li>
             @endforeach
@@ -213,6 +247,12 @@
 @endsection
 
 @section('scripts')
+{{-- Скрипт модалки удаления --}}
+@include('includes.scripts.modal-delete-script')
+{{-- Скрипт чекбоксов и перетаскивания для меню --}}
+@include('includes.scripts.menu-scripts')
+{{-- Скрипт подсветки многоуровневого меню --}}
+@include('includes.scripts.multilevel-menu-active-scripts')
 <script type="text/javascript">
 $(function() {
   // Функция получения городов из вк или с фильтром по нашей базе
@@ -555,9 +595,4 @@ $(function() {
   @endif
 });
 </script>
-{{-- Скрипт подсветки многоуровневого меню --}}
-@include('includes.scripts.multilevel-menu-active-scripts')
-
-{{-- Скрипт модалки удаления ajax --}}
-@include('includes.scripts.modal-delete-ajax-script')
 @endsection
