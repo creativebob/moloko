@@ -69,6 +69,8 @@ class UserController extends Controller
         $filter = [];
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
 
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 

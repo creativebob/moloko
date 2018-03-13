@@ -55,13 +55,22 @@
     }
 
 
-		function date_to_mysql($ddd)
-	{
-			/*  Подстраиваем дату под календарь  */	
-			list($dd, $dm, $dy) = sscanf($ddd, "%d.%d.%d");
-			$ddd = $dy."-".$dm."-".$dd;
-			return $ddd;
-	};
+	// 	function date_to_mysql($ddd)
+	// {
+	// 		/*  Подстраиваем дату под календарь  */	
+	// 		list($dd, $dm, $dy) = sscanf($ddd, "%d.%d.%d");
+	// 		$ddd = $dy."-".$dm."-".$dd;
+	// 		return $ddd;
+	// };
+
+        function date_to_mysql($value)
+    {
+            $date_parts = explode('.', $value);
+            $result = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+            return $result;
+    }
+
+
 
         // Отдает нужное название метода для отправки на проверку права
         function getmethod($method){

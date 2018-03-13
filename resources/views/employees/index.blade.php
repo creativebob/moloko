@@ -4,6 +4,7 @@
 <meta name="description" content="{{ $page_info->page_description }}" />
 {{-- Скрипты таблиц в шапке --}}
   @include('includes.scripts.table-inhead')
+  @include('includes.scripts.pickmeup-inhead')
 @endsection
 
 @section('title')
@@ -127,6 +128,10 @@
 @endsection
 
 @section('scripts')
+
+@include('includes.scripts.inputs-mask')
+@include('includes.scripts.pickmeup-script')
+
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.table-scripts')
 

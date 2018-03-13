@@ -65,7 +65,7 @@ class CompanyController extends Controller
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
 
-        
+
 
 
         // Инфо о странице

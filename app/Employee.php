@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-// Фильтры
+// Заготовки
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemItemTraitScopes;
@@ -13,10 +13,14 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
+// Фильтры
+use App\Scopes\Filters\DateIntervalFilter;
+
 class Employee extends Model
 {
 
   use SoftDeletes;
+
   // Подключаем Scopes для главного запроса
   use CompaniesLimitTraitScopes;
   use AuthorsTraitScopes;
@@ -24,6 +28,10 @@ class Employee extends Model
   use FilialsTraitScopes;
   use TemplateTraitScopes;
   use ModeratorLimitTraitScopes;
+
+  // Фильтры
+  use DateIntervalFilter;
+
   /**
    * Атрибуты, которые должны быть преобразованы в даты.
    *
