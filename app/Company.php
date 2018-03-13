@@ -7,13 +7,18 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-// Фильтры
+// Заготовки
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
+
+// Фильтры
+use App\Scopes\Filters\CityFilter;
+use App\Scopes\Filters\SectorFilter;
+
 
 class Company extends Model
 {
@@ -28,6 +33,10 @@ class Company extends Model
   use FilialsTraitScopes;
   use TemplateTraitScopes;
   use ModeratorLimitTraitScopes;
+
+  // Подключаем фильтры
+  use CityFilter;
+  use SectorFilter;
 
   protected $dates = ['deleted_at'];
   protected $fillable = [
@@ -47,32 +56,6 @@ class Company extends Model
       'director_user_id', 
       'admin_user_id'
   ];
-
-
-    // Фильтрация по городу
-    public function scopeCityFilter($query, $request)
-    {
-
-        //Фильтруем по списку городов
-        if($request->city_id){
-          $query = $query->whereIn('city_id', $request->city_id);
-        };
-
-      return $query;
-    }
-
-    // Фильтрация по городу
-    public function scopeSectorFilter($query, $request)
-    {
-
-        //Фильтруем по списку городов
-        if($request->sector_id){
-          $query = $query->whereIn('sector_id', $request->sector_id);
-        };
-
-      return $query;
-    }
-
 
     // Фильтрация по городу
     public function scopeAuthorFilter($query, $request)

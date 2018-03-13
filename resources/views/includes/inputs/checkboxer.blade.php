@@ -4,7 +4,7 @@
 <div class="checkboxer-wrap {{$name}}">
 	<div class="checkboxer-toggle" data-toggle="{{$name}}-dropdown-bottom-left">
 		<div class="checkboxer-title"> 
-			<span class="title">Выбрать город</span>
+			<span class="title">{{$filter[$name]['title']}}</span>
 			<span class="count_filter_{{$name}}" id="count_filter_{{$name}}">({{$filter[$name]['count_mass']}})</span>
 		</div>
 		<div class="checkboxer-button">
@@ -17,13 +17,13 @@
 		$entity_name = $name . '_name';
 	@endphp
 
-	<div class="checkboxer-clean {{ $show_status }}">
+	<div class="checkboxer-clean {{ $show_status }}" onclick="event.stopPropagation()">
 		<span class="sprite icon-clean"></span>
 	</div>
 
 </div>
 
-<div class="dropdown-pane checkboxer-pane hover" data-position="bottom" data-alignment="left" id="{{$name}}-dropdown-bottom-left" data-dropdown data-auto-focus="true" data-close-on-click="true" data-h-offset="-17" data-v-offset="1">
+<div class="dropdown-pane checkboxer-pane hover {{$name}}" data-position="bottom" data-alignment="left" id="{{$name}}-dropdown-bottom-left" data-dropdown data-auto-focus="true" data-close-on-click="true" data-h-offset="-17" data-v-offset="1">
 
 	<ul class="checkboxer-menu {{$name}}">
 		@foreach ($filter[$name]['collection'] as $key => $value)
@@ -42,6 +42,10 @@
 
   	$(".checkboxer-menu.{{$name}} :checkbox").click(function() {
 		{{$name}}.CheckBoxerAddDel(this);
+	});
+
+  	$(".{{$name}} .checkboxer-toggle").click(function() {
+		{{$name}}.CheckBoxerSetWidth(this);
 	});
 
  	$(".{{$name}} .checkboxer-clean").click(function() {

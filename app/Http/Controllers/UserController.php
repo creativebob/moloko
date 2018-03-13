@@ -49,7 +49,7 @@ class UserController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям              
         ->orWhere('id', $request->user()->id) // Только для сущности USERS
-        ->userFilter($request)
+        ->cityFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
@@ -57,10 +57,17 @@ class UserController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_cities = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-        $filter_query = User::with('city')->moderatorLimit($answer_cities)->get();
-        $filter = getFilterUser($filter_query);
+        $filter_query = User::with('city')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям              
+        ->orWhere('id', $request->user()->id) // Только для сущности USERS
+        ->get();
+
+        $filter = [];
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

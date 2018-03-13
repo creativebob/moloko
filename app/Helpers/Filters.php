@@ -4,34 +4,6 @@
     // --------------------------------------------------------------------------------------------------------------------
     // КОМПАНИЯ -----------------------------------------------------------------------------------------------------------
     // --------------------------------------------------------------------------------------------------------------------
-    
-    function getListFilterCompany($filter_query){
-
-        $companies_cities_filter = $filter_query->unique('city_id');
-        // $filter['cities_list'][0] =  '- не выбрано -';
-        if(count($companies_cities_filter)>0){
-
-            foreach($companies_cities_filter as $company){
-                $filter['cities_list'][$company->city->id] =  $company->city->city_name;
-            }
-
-        };
-        return $filter;
-    }
-
-    function getListFilterSector($filter_query){
-
-        $companies_sectors_filter = $filter_query->unique('sector_id');
-        // $filter['cities_list'][0] =  '- не выбрано -';
-        if(count($companies_sectors_filter)>0){
-
-            foreach($companies_sectors_filter as $company){
-                $filter['sectors_list'][$company->sector->id] =  $company->sector->sector_name;
-            }
-
-        };
-        return $filter;
-    }
 
 
     function getListFilterAuthor($filter_query){
@@ -70,6 +42,37 @@
 
         return $filter;
     }
+
+
+    function addFilter($filter, $filter_query, $request, $title, $name, $entity){
+
+        $filter_entity = $filter_query->unique($entity);
+
+        $filter_name = $name;
+        $filter[$filter_name]['collection'] = $filter_entity;
+
+        if($request->$entity == null){
+            $filter[$filter_name]['mass_id'] = null; // Получаем список ID городов
+            $filter[$filter_name]['count_mass'] = 0;
+        } else {
+            $filter[$filter_name]['mass_id'] = $request->$entity; // Получаем список ID городов
+            $filter[$filter_name]['count_mass'] = count($request->$entity);
+        };
+
+        $entity_name = $name . '_name';
+
+        if(count($filter_entity)>0){
+            foreach($filter_entity as $entity){
+                $list_filter['item_list'][$entity->$name->id] =  $entity->$name->$entity_name;
+            }
+        };
+
+        $filter[$filter_name]['list_select'] = $list_filter; 
+        $filter[$filter_name]['title'] = $title; // Назавние фильтра
+
+        return $filter;
+    }
+
 
 
 ?>

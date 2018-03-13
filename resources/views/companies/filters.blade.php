@@ -12,11 +12,11 @@
       </label>
     </div> --}}
 
-    <div class="small-6 medium-4 large-3 cell checkbox">
+    <div class="small-12 medium-4 large-2 cell checkbox checkboxer">
       @include('includes.inputs.checkboxer', ['name'=>'city'])
     </div>
 
-    <div class="small-6 medium-4 large-3 cell checkbox">
+    <div class="small-12 medium-4 large-2 cell checkbox checkboxer">
       @include('includes.inputs.checkboxer', ['name'=>'sector'])
     </div>
 

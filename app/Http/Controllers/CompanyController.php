@@ -61,37 +61,11 @@ class CompanyController extends Controller
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
         $filter_query = Company::with('city', 'sector')->moderatorLimit($answer)->get();
-        $filter_city = $filter_query->unique('city_id');
+        $filter = [];
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
 
-        $filter_name = 'city';
-        $filter[$filter_name]['collection'] = $filter_city;
-
-        if($request->city_id == null){
-            $filter[$filter_name]['mass_id'] = null; // Получаем список ID городов
-            $filter[$filter_name]['count_mass'] = 0;
-        } else {
-            $filter[$filter_name]['mass_id'] = $request->city_id; // Получаем список ID городов
-            $filter[$filter_name]['count_mass'] = count($request->city_id);
-        };
-        $filter[$filter_name]['list_select'] = getListFilterCompany($filter_city); // Получаем списки для SELECT
-
-
-
-        $filter_sector = $filter_query->unique('sector_id');
-
-        $filter_name = 'sector';
-        $filter[$filter_name]['collection'] = $filter_sector;
-
-        if($request->sector_id == null){
-            $filter[$filter_name]['mass_id'] = null; // Получаем список ID городов
-            $filter[$filter_name]['count_mass'] = 0;
-        } else {
-            $filter[$filter_name]['mass_id'] = $request->sector_id; // Получаем список ID городов
-            $filter[$filter_name]['count_mass'] = count($request->sector_id);
-        };
-        $filter[$filter_name]['list_select'] = getListFilterSector($filter_sector); // Получаем списки для SELECT
-
-        // dd($filter);
+        
 
 
         // Инфо о странице
