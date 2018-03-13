@@ -761,9 +761,11 @@ input[type=checkbox], input[type=radio] {
 
   }
 
-  .sector {
+  .first {
 
     font-weight: 700;
+    font-size: 0.9rem;
+    line-height: 1.2;
   }
 }
 // ---------------------------------------- Страница входа -------------------------------------
@@ -1640,7 +1642,7 @@ input[type=checkbox], input[type=radio] {
       padding: 8px 0 8px 4px;
 
       .icon-drop {
-        opacity: 0.3;
+        opacity: 0;
       }
       .icon-drop:hover {
         opacity: 1;
@@ -1702,9 +1704,28 @@ input[type=checkbox], input[type=radio] {
         }
       }
       .icon-drop {
+
         background-position: -96px -832px;
       }
+
+
     }
+
+    a:hover ~ .drop-list, .drop-list:hover, .icon-list:hover ~ .drop-list {
+
+      .icon-drop {
+        opacity: 0.3;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+
+      
+          
+
+          
+      }
     // Активные первые элементы списка (Шапки)
     .first-active {
       background-color: $list-item-active-bg-color;
@@ -1792,6 +1813,7 @@ input[type=checkbox], input[type=radio] {
           padding: 0;
         }
         .icon-drop {
+
           background-position: 0px -832px;
         }
         .medium-link {
@@ -1839,7 +1861,7 @@ input[type=checkbox], input[type=radio] {
           font-family: $SUISB;
           font-size: 0.8rem;
           color: $list-item-li-color;
-          padding: 10px 0 10px 12px;
+          padding: 10px 0 10px 3rem;
 
           .icon-list {
             transition: 0.2s ease opacity;
@@ -1881,7 +1903,7 @@ input[type=checkbox], input[type=radio] {
       }
       
       .nested {
-        margin-left: -8px;
+        // margin-left: -8px;
       }
     }
     // Конечный список
@@ -1902,7 +1924,7 @@ input[type=checkbox], input[type=radio] {
           border-bottom: 1px solid $list-item-nested-border-bottom-color;
           font-family: $SUISB;
           font-size: 0.8rem;
-          padding: 10px 1.4rem;
+          padding: 10px 1.4rem 10px 3.9rem;
           color: $list-item-li-color;
 
           .icon-list {
@@ -1942,6 +1964,10 @@ input[type=checkbox], input[type=radio] {
             }
           }
         }
+
+        .drop-list {
+          left: 1.8rem;
+        }
       }
       .last-item:last-child {
         .last-link {
@@ -1949,7 +1975,11 @@ input[type=checkbox], input[type=radio] {
         }
       }
     }
-    
+  }
+
+  .menu-drop-color {
+    background-color: $white;
+    height: 2rem;
   }
   // ----------------------------- Таблица в контенте --------------------------------------
   .table-content {
@@ -2049,6 +2079,10 @@ input[type=checkbox], input[type=radio] {
       overflow-x: hidden;
 
       tr {
+
+        .icon-drop {
+          opacity: 0;
+        }
         .button {
           margin-bottom: 0;
         }
@@ -2069,7 +2103,7 @@ input[type=checkbox], input[type=radio] {
           transition: 0.5s;
         }
         .icon-drop:hover {
-          opacity: 0.6;
+          opacity: 0.8;
         }
 
       }

@@ -4,7 +4,8 @@ $(function() {
   // Включаем перетаскивание
   $("#content-list, #content-list ul").sortable({
     // helper: fixHelper, // ширина вырванного элемента
-    handle: '.icon-drop' // указываем за какой элемент можно тянуть
+    handle: '.icon-drop', // указываем за какой элемент можно тянуть
+    placeholder: "menu-drop-color",
   });
 
 
