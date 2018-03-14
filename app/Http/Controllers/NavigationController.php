@@ -10,8 +10,10 @@ use App\Site;
 
 // Валидация
 use App\Http\Requests\NavigationRequest;
+use App\Http\Requests\MenuRequest;
 // Политика
 use App\Policies\NavigationPolicy;
+use App\Policies\MenuPolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,15 +56,44 @@ class NavigationController extends Controller
       $navigation_tree = [];
       $navigations = $site->navigations->keyBy('id');
 
-      // dd($navigations->toArray());
-      // kjk rtkdjfs
+      foreach ($navigations as $navigation) {
 
-      foreach ($navigations->toArray() as $navigation) {
-
-        // dd($navigation);
-
-        $navigation_tree[$navigation['id']] = $navigation;
+        $navigation_id[$navigation->id]['menus'] = $navigation->menus->keyBy('id')->toArray();
+        
         // Проверяем права на редактирование и удаление
+        foreach ($navigation_id[$navigation->id]['menus'] as $id => &$menu) {
+
+          $edit = 0;
+          $delete = 0;
+
+          if ($user->can('update', $navigation->menus->where('id', $id))) {
+            $edit = 1;
+          };
+
+          if ($user->can('delete', $navigation->menus->where('id', $id))) {
+            $delete = 1;
+          };
+
+          $navigation_id[$navigation->id]['menus'][$id]['edit'] = $edit;
+          $navigation_id[$navigation->id]['menus'][$id]['delete'] = $delete;
+
+          // Функция построения дерева из массива от Tommy Lacroix
+          // Если нет вложений
+          if (!$menu['menu_parent_id']){
+            $navigation_tree[$navigation->id]['menus'][$id] = &$menu;
+          } 
+          else { 
+          // Если есть потомки то перебераем массив
+          $navigation_id[$navigation->id]['menus'][$menu['menu_parent_id']]['children'][$id] = &$menu;
+          }
+        };
+        
+        // Записываем даныне навигации
+        $navigation_tree[$navigation->id]['id'] = $navigation->id;
+        $navigation_tree[$navigation->id]['navigation_name'] = $navigation->navigation_name;
+        $navigation_tree[$navigation->id]['system_item'] = $navigation->system_item;
+
+        // Проверяем права на редактирование и удаление навигации
         $edit = 0;
         $delete = 0;
         if ($user->can('update', $navigation)) {
@@ -71,70 +102,13 @@ class NavigationController extends Controller
         if ($user->can('delete', $navigation)) {
           $delete = 1;
         };
-        $navigation_right = $navigation;
 
-        $navigation_id[$navigation_right['id']] = $navigation_right;
-        $navigation_id[$navigation_right['id']]['edit'] = $edit;
-        $navigation_id[$navigation_right['id']]['delete'] = $delete;
-
-        $navigation_tree[$navigation_right['id']]  = $navigation_right;
-        $navigation_tree[$navigation_right['id']]['edit'] = $edit;
-        $navigation_tree[$navigation_right['id']]['delete'] = $delete;
-
-        // Проверяем прапва на редактирование и удаление
-        foreach ($navigation->menus as $menu) {
-          $edit = 0;
-          $delete = 0;
-          if ($user->can('update', $menu)) {
-            $edit = 1;
-          };
-          if ($user->can('delete', $menu)) {
-            $delete = 1;
-          };
-          $menu_right = $menu->toArray();
-          
-          $navigation_id[$navigation->id]['menus'][$menu->id] = $menu_right;
-          $navigation_id[$navigation->id]['menus'][$menu->id]['edit'] = $edit;
-          $navigation_id[$navigation->id]['menus'][$menu->id]['delete'] = $delete;
-
-          $navigation_tree[$navigation->id]['menus'][$menu->id] = $menu_right;
-          $navigation_tree[$navigation->id]['menus'][$menu->id]['edit'] = $edit;
-          $navigation_tree[$navigation->id]['menus'][$menu->id]['delete'] = $delete;
-        };
-       
-        foreach ($navigation_id as $navigation) {
-          // Создаем масив где ключ массива является ID меню
-          $navigation_id[$navigation['id']]['menus'] = [];
-          foreach ($navigation['menus'] as $menu) {
-            // dd($menu);
-            $navigation_id[$navigation['id']]['menus'][$menu['id']] = $menu;
-          };
-
-          // Функция построения дерева из массива от Tommy Lacroix
-          $navigation_tree[$navigation['id']]['menus'] = [];
-          foreach ($navigation_id[$navigation['id']]['menus'] as $menu => &$node) {   
-            //Если нет вложений
-            if (!$node['menu_parent_id']){
-              $navigation_tree[$navigation['id']]['menus'][$menu] = &$node;
-            } 
-            else { 
-            //Если есть потомки то перебераем массив
-            $navigation_id[$navigation['id']]['menus'][$node['menu_parent_id']]['children'][$menu] = &$node;
-            }
-          };
-        };
+        $navigation_tree[$navigation->id]['edit'] = $edit;
+        $navigation_tree[$navigation->id]['delete'] = $delete;
       };
 
-      // dd($navigation_tree);
-      dd($navigation_id);
-      // $menus = [];
-      // foreach ($site->navigations as $navigation) {
-      //   $menus[$navigation->id] = $navigation->menus->where('page_id', null)->pluck('menu_name', 'id');
-      // };
-      // dd($navigation_tree);
       $navigations = $site->navigations->pluck('navigation_name', 'id');
       $pages_list = $site->pages->pluck('page_name', 'id');
-
 
       // Инфо о странице
       $page_info = pageInfo($this->entity_name);
@@ -350,35 +324,34 @@ class NavigationController extends Controller
     }
 
 
-    public function destroy(Request $request, $site_alias, $id)
-    {
+  public function destroy(Request $request, $site_alias, $id)
+  {
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+    // ГЛАВНЫЙ ЗАПРОС:
+    $navigation = Navigation::moderatorLimit($answer)->findOrFail($id);
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $navigation = Navigation::moderatorLimit($answer)->findOrFail($id);
+    // Подключение политики
+    $this->authorize(getmethod(__FUNCTION__), $navigation);
 
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $navigation);
+    $site_id = $navigation->site_id;
+    $user = $request->user();
 
-        $site_id = $navigation->site_id;
-        $user = $request->user();
-
+    if ($navigation) {
+      $navigation->editor_id = $user->id;
+      $navigation->save();
+      // Удаляем навигацию с обновлением
+      $navigation = Navigation::destroy($id);
       if ($navigation) {
-        $navigation->editor_id = $user->id;
-        $navigation->save();
-        // Удаляем навигацию с обновлением
-        $navigation = Navigation::destroy($id);
-        if ($navigation) {
-          return Redirect('/sites/'.$site_alias.'navigations');
-        } else {
-          abort(403, 'Ошибка при удалении навигации');
-        };
+        return Redirect('/sites/'.$site_alias.'navigations');
       } else {
-        abort(403, 'Навигация не найдена');
+        abort(403, 'Ошибка при удалении навигации');
       };
-    }
+    } else {
+      abort(403, 'Навигация не найдена');
+    };
+  }
 
   public function navigations_sort(Request $request)
   {
