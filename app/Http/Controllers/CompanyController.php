@@ -8,6 +8,8 @@ use App\Company;
 use App\Page;
 use App\Sector;
 use App\Folder;
+use App\Booklist;
+use App\List_item;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -44,6 +46,21 @@ class CompanyController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
 
+        // $a = $this->entity_name;
+        // dd(Auth::user()->booklists);
+
+
+        // // $user_booklists = Auth::user()->booklists;
+        // dd($user_booklists);
+        // 
+
+        // $user_booklists = User::with('booklists.list_items')->where('id', $user->id)->get();
+        // 
+        // Важный блок:
+
+
+
+        // dd($items_booklists);
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -53,8 +70,11 @@ class CompanyController extends Controller
         ->moderatorLimit($answer)
         ->cityFilter($request)
         ->sectorFilter($request)
+        ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);
+
+        // dd($companies);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
@@ -62,11 +82,11 @@ class CompanyController extends Controller
 
         $filter_query = Company::with('city', 'sector')->moderatorLimit($answer)->get();
         $filter = [];
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', $this->entity_name);
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id', $this->entity_name);
+        $filter = addFilter($filter, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $this->entity_name);
 
-
-
+        // dd($filter);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

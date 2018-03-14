@@ -222,6 +222,14 @@ class User extends Authenticatable
 
 
     /**
+  * Получаем списки авторов
+  */
+  public function booklists_author()
+  {
+    return $this->hasMany('App\Booklist', 'author_id');
+  }
+
+    /**
   * Получаем штат.
   */
   public function staff()

@@ -14,6 +14,10 @@
       @include('includes.inputs.checkboxer', ['name'=>'sector'])
     </div>
 
+    <div class="small-12 medium-4 large-2 cell checkbox checkboxer">
+      @include('includes.inputs.checkboxer', ['name'=>'booklist'])
+    </div>
+
     <div class="small-12 medium-12 align-center cell tabs-button filter-submit">
       {{ Form::submit('Применить', ['class'=>'button']) }}
     </div>

@@ -47,5 +47,9 @@ class Entity extends Model
     return $this->belongsToMany('App\Page');
   }
 
+  public function booklists()
+  {
+    return $this->hasMany('App\Booklist');
+  }
 
 }

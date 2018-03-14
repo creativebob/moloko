@@ -18,6 +18,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 // Фильтры
 use App\Scopes\Filters\CityFilter;
 use App\Scopes\Filters\SectorFilter;
+use App\Scopes\Filters\BooklistFilter;
 
 
 class Company extends Model
@@ -37,6 +38,7 @@ class Company extends Model
   // Подключаем фильтры
   use CityFilter;
   use SectorFilter;
+  use BooklistFilter;
 
   protected $dates = ['deleted_at'];
   protected $fillable = [

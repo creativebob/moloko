@@ -44,28 +44,55 @@
     }
 
 
-    function addFilter($filter, $filter_query, $request, $title, $name, $entity){
-
-        $filter_entity = $filter_query->unique($entity);
-
+    function addFilter($filter, $filter_query, $request, $title, $name, $model, $entity_name){
+        $list_filter =[];
         $filter_name = $name;
+        $model_entity_name = $name . '_name';
+
+        // Только для Booklist
+        if($name == 'booklist'){
+
+            $filter_entity = $request->user()->booklists_author->where('entity_alias', $entity_name)->values();
+            // dd($filter_entity);
+
+            if(count($filter_entity)>0){
+
+                foreach($filter_entity as $booklist){
+                    $list_filter['item_list'][$booklist->id] = $booklist->booklist_name;
+                }
+
+
+            };
+
+
+        } else {
+
+            $filter_entity = $filter_query->unique($model); 
+            if(count($filter_entity)>0){
+
+                foreach($filter_entity as $model){
+                    $list_filter['item_list'][$model->$name->id] =  $model->$name->$model_entity_name;
+                }
+            };
+        };
+
+        // dd($filter_entity);
+
         $filter[$filter_name]['collection'] = $filter_entity;
 
-        if($request->$entity == null){
+        if($request->$model == null){
+
             $filter[$filter_name]['mass_id'] = null; // Получаем список ID городов
             $filter[$filter_name]['count_mass'] = 0;
         } else {
-            $filter[$filter_name]['mass_id'] = $request->$entity; // Получаем список ID городов
-            $filter[$filter_name]['count_mass'] = count($request->$entity);
+
+            $filter[$filter_name]['mass_id'] = $request->$model; // Получаем список ID
+            $filter[$filter_name]['count_mass'] = count($request->$model);
         };
 
-        $entity_name = $name . '_name';
 
-        if(count($filter_entity)>0){
-            foreach($filter_entity as $entity){
-                $list_filter['item_list'][$entity->$name->id] =  $entity->$name->$entity_name;
-            }
-        };
+
+
 
         $filter[$filter_name]['list_select'] = $list_filter; 
         $filter[$filter_name]['title'] = $title; // Назавние фильтра

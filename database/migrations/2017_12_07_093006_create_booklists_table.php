@@ -16,11 +16,13 @@ class CreateBooklistsTable extends Migration
         Schema::create('booklists', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('booklists_name')->nullable()->comment('Имя списка');
-            $table->string('booklists_description')->index()->nullable()->comment('Описание списка');
+            $table->string('booklist_name')->nullable()->comment('Имя списка');
+            $table->string('booklist_description')->index()->nullable()->comment('Описание списка');
 
             $table->integer('entity_id')->nullable()->unsigned()->comment('Id сущности');
             $table->foreign('entity_id')->references('id')->on('entities');
+
+            $table->string('entity_alias')->index()->comment('Имя сущности');
 
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
             $table->foreign('company_id')->references('id')->on('companies');
