@@ -491,9 +491,13 @@ $('.icon-filter').click(function() {
 // });
 // Ajax ошибка
 $.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  },
   error: function() {
     alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
   },
+
 
 });
 

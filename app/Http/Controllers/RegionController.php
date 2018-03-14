@@ -157,4 +157,17 @@ class RegionController extends Controller
     $result = (file_get_contents('https://api.vk.com/method/database.getRegions?'. $get_params));
     echo $result;
   }
+
+  public function regions_sort(Request $request)
+  {
+    $i = 1;
+    foreach ($request->regions as $item) {
+
+      $region = Region::findOrFail($item);
+      $region->sort = $i;
+      $region->save();
+
+      $i++;
+    }
+  }
 }

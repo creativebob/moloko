@@ -382,7 +382,6 @@ input[type=checkbox], input[type=radio] {
 
 .checkboxer-menu
 {
-  width: 100%;
   display: block;
   top: 0px;
   float: left;
@@ -404,11 +403,6 @@ input[type=checkbox], input[type=radio] {
   border-bottom: 1px solid transparent;
   list-style-type: none;
   height: 30px;
-  width: 100%;
-}
-
-.checkboxer-menu li label
-{
   width: 100%;
 }
 
@@ -568,57 +562,38 @@ input[type=checkbox], input[type=radio] {
   display: none !important;
 }
 
-
-.checkboxer
-{
-  position: relative;
-  padding: 0.5rem 0rem;
-}
-
 .checkboxer-wrap
 {
-  position: relative;
-  width: 100%;
+  width: 232px;
   display: block;
   color: #666666;
-  padding: 0rem 20px 0rem 1rem;
+  padding: 0rem 0rem 0rem 1rem;
   border: 1px solid #ccc;
   font-size: 0.8rem;
   cursor: pointer;
   background: #f5f5f5 !important;
-
 }
 
 .checkboxer-toggle
 {
-  width: 100%;
+  width: auto;
   height: 32px;
   display: inline-block;
 }
 
 .checkboxer-clean
 {
-  position: absolute;
-  top: 1px;
-  right: 24px;
-  width: 20px;
+  width: 26px;
   display: inline-block;
-  margin-right: 6px;
 }
+
 
 .checkboxer-pane
 {
   border-top: 0px solid transparent;
   max-height: 272px;
   overflow-y: auto;
-
 }
-
-// .dropdown-pane.checkboxer-pane
-// {
-//   width: 90% !important;
-//   margin-right: 1rem;
-// }
 
 .checkboxer-pane::-webkit-scrollbar {
     width:0.5rem;
@@ -627,16 +602,16 @@ input[type=checkbox], input[type=radio] {
 .checkboxer-button
 {
   width: 34px;
-  position: absolute;
-  display: block;
+  display: inline-block;
   text-align: right;
-  right: 0px;
-  top: 0px;
+
 }
 
 .checkboxer-title
 {
-  width: 100%;
+  width: 169px;
+  display: inline-block;
+
 }
 
 .checkboxer-button span, .checkboxer-title span
@@ -679,9 +654,9 @@ input[type=checkbox], input[type=radio] {
   width: 20px;
 }
 
-// .dropdown-pane.checkboxer-pane {
-//   width: 232px;
-// }
+.dropdown-pane.checkboxer-pane {
+  width: 232px;
+}
 
 // Закрытие модалки
 .icon-close-modal {

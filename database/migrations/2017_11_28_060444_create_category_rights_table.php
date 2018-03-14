@@ -17,6 +17,8 @@ class CreateCategoryRightsTable extends Migration
             $table->increments('id');
             $table->string('category_right_name')->index()->unique()->comment('Имя категории пользователей');
 
+            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 

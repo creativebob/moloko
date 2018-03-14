@@ -30,6 +30,8 @@ class CreateEmployeesTable extends Migration
 
             $table->string('dismissal_desc')->nullable()->comment('Причина увольнения');
 
+            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 

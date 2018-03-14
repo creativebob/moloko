@@ -43,6 +43,8 @@ class CreateCompaniesTable extends Migration
             $table->integer('sector_id')->nullable()->unsigned()->comment('Id сектора');
             $table->foreign('sector_id')->references('id')->on('sectors');
 
+            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             // $table->foreign('author_id')->references('id')->on('users');
 

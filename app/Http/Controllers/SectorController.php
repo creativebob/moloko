@@ -35,7 +35,7 @@ class SectorController extends Controller
     ->filials($answer) // $industrys должна существовать только для зависимых от филиала, иначе $industrys должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
-    ->orderBy('moderation', 'desc')
+    ->orderBy('sort', 'asc')
     ->get();
 
     // Создаем масив где ключ массива является ID меню
@@ -417,32 +417,32 @@ class SectorController extends Controller
     // Функция отрисовки option'ов
     function tplMenu($sector, $padding, $parent, $id) {
 
-    // Убираем из списка пришедший пункт меню 
-    if ($sector['id'] != $id) {
+      // Убираем из списка пришедший пункт меню 
+      if ($sector['id'] != $id) {
 
-      $selected = '';
-      if ($sector['id'] == $parent) {
-        $selected = ' selected';
-      }
-      if ($sector['industry_status'] == 1) {
-        $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['sector_name'].'</option>';
-      } else {
-        $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['sector_name'].'</option>';
-      }
-      
-      // Добавляем пробелы вложенному элементу
-      if (isset($sector['children'])) {
-        $i = 1;
-        for($j = 0; $j < $i; $j++){
-          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-        }     
-        $i++;
+        $selected = '';
+        if ($sector['id'] == $parent) {
+          $selected = ' selected';
+        }
+        if ($sector['industry_status'] == 1) {
+          $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['sector_name'].'</option>';
+        } else {
+          $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['sector_name'].'</option>';
+        }
         
-        $menu .= showCat($sector['children'], $padding, $parent, $id);
+        // Добавляем пробелы вложенному элементу
+        if (isset($sector['children'])) {
+          $i = 1;
+          for($j = 0; $j < $i; $j++){
+            $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+          }     
+          $i++;
+          
+          $menu .= showCat($sector['children'], $padding, $parent, $id);
+        }
+        return $menu;
       }
-      return $menu;
     }
-  }
     // Рекурсивно считываем наш шаблон
     function showCat($data, $padding, $parent, $id){
       $string = '';
@@ -460,6 +460,31 @@ class SectorController extends Controller
     echo json_encode($sectors_final, JSON_UNESCAPED_UNICODE);
 
     // dd($sectors_final);
-    
+  }
+
+  public function sectors_sort(Request $request)
+  {
+    $result = '';
+    $i = 1;
+    foreach ($request->sectors as $item) {
+
+      $sector = Sector::findOrFail($item);
+      $sector->sort = $i;
+      $sector->save();
+
+      // if ($sector) {
+      //   $result = [
+      //     'error_status' => 0,
+      //   ];
+      // } else {
+      //   $result = [
+      //     'error_status' => 1,
+      //     'msg' => 'Произошла непредвиденная ошибка, попробуйте перезагрузить страницу и попробуйте еще раз'
+      //   ];
+      // }
+      // return json_encode($result, JSON_UNESCAPED_UNICODE);
+
+      $i++;
+    }
   }
 }

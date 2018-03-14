@@ -27,6 +27,7 @@ $(function() {
   };
   // Включаем перетаскивание
   $("#table-content tbody").sortable({
+    axis: 'y',
     helper: fixHelper, // ширина вырванного элемента
     handle: 'td:first' // указываем за какой элемент можно тянуть
   });

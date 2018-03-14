@@ -40,7 +40,7 @@
     <label class="label-check" for="check-{{ $sector['id'] }}"></label> 
   </div>
   @if (isset($sector['children']))
-    <ul class="menu vertical medium-list accordion-menu sortable" data-accordion-menu data-allow-all-closed data-multi-open="false">
+    <ul class="menu vertical medium-list accordion-menu sortable" data-entity="sectors" data-accordion-menu data-allow-all-closed data-multi-open="false">
         @foreach($sector['children'] as $sector)
           @include('sectors.sectors-list', $sector)
         @endforeach

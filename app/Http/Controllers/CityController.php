@@ -37,12 +37,19 @@ class CityController extends Controller
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
-    $regions = Region::with('areas', 'areas.cities', 'cities')
+    $regions = Region::with(['areas'  => function ($query) {
+      $query->orderBy('sort', 'asc');
+    }, 'areas.cities' => function ($query) {
+      $query->orderBy('sort', 'asc');
+    }, 'cities' => function ($query) {
+      $query->orderBy('sort', 'asc');
+    }])
       ->moderatorLimit($answer)
       // ->companiesLimit($answer['company_id']) нет фильтра по компаниям
       ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
       ->authors($answer)
       ->systemItem($answer) // Фильтр по системным записям
+      ->orderBy('sort', 'asc')
       ->get();
 
     // Инфо о странице
@@ -73,6 +80,7 @@ class CityController extends Controller
       ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
       ->authors($answer)
       ->systemItem($answer) // Фильтр по системным записям
+      ->orderBy('sort', 'asc')
       ->get();
     
     $data = [
@@ -392,5 +400,18 @@ class CityController extends Controller
     };
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
     // echo $request->city_name;
+  }
+
+  public function cities_sort(Request $request)
+  {
+    $i = 1;
+    foreach ($request->cities as $item) {
+
+      $city = City::findOrFail($item);
+      $city->sort = $i;
+      $city->save();
+
+      $i++;
+    }
   }
 }

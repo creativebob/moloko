@@ -5,9 +5,7 @@
   @include('includes.scripts.table-inhead')
 @endsection
 
-@section('title')
-  {{ $page_info->page_name }}
-@endsection
+@section('title', $page_info->page_name)
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 

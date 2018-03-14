@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Подключаем модели
 use App\Area;
+use App\City;
 // Политика
 use App\Policies\AreaPolicy;
 // Подключаем фасады
@@ -75,6 +76,35 @@ class AreaController extends Controller
         return Redirect('current_city/'.$region_id.'/0');
       } else {
         abort(403, 'Ошибка при удалении района!');
+      }
+    }
+  }
+
+  public function areas_sort(Request $request)
+  {
+    
+    if (isset($request->areas)) {
+      $i = 1;
+      foreach ($request->areas as $item) {
+
+        $area = Area::findOrFail($item);
+        $area->sort = $i;
+        $area->save();
+
+        $i++;
+      }
+    }
+    
+    if (isset($request->cities)) {
+      $i = 1;
+
+      foreach ($request->cities as $item) {
+
+        $city = City::findOrFail($item);
+        $city->sort = $i;
+        $city->save();
+
+        $i++;
       }
     }
   }

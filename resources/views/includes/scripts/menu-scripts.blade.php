@@ -4,8 +4,33 @@ $(function() {
   // Включаем перетаскивание
   $("#content-list, #content-list ul").sortable({
     // helper: fixHelper, // ширина вырванного элемента
+    axis: 'y',
     handle: '.icon-drop', // указываем за какой элемент можно тянуть
-    placeholder: "menu-drop-color",
+    placeholder: "menu-drop-color", // высота и фон вырванного элемента
+    update: function( event, ui ) {
+      var data = $(this).sortable('serialize');
+
+      var entity = $(this).data('entity');
+
+      // alert(entity);
+      // alert(data);
+
+      // POST to server using $.post or $.ajax
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: data,
+        type: 'POST',
+        url: '/' + entity + '_sort',
+        // success: function(date){
+        //   var result = $.parseJSON(date);
+        //   if (result.error_status == 1) {
+        //     alert(result.msg);
+        //   };
+        // }
+      });
+    }
   });
 
 

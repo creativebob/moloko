@@ -22,6 +22,8 @@ class CreateRightRoleTable extends Migration
             $table->integer('role_id')->nullable()->unsigned()->comment('ID категории пользователя');
             $table->foreign('role_id')->references('id')->on('roles');
 
+            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 

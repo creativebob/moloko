@@ -29,11 +29,15 @@ class NavigationController extends Controller
       // Подключение политики
       $this->authorize($method, Navigation::class);
       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-      $answer = operator_right($this->entity_name, $this->entity_dependence, $method);
+      $answer = operator_right('sites', $this->entity_dependence, $method);
       // -------------------------------------------------------------------------------------------
       // ГЛАВНЫЙ ЗАПРОС
       // -------------------------------------------------------------------------------------------
-      $site = Site::with(['pages', 'navigations', 'navigations.menus', 'navigations.menus.page'])
+      $site = Site::with(['navigations' => function ($query) {
+        $query->orderBy('sort', 'asc');
+      }, 'navigations.menus' => function ($query) {
+        $query->orderBy('sort', 'asc');
+      }, 'navigations.menus.page'])
       ->moderatorLimit($answer)
       ->companiesLimit($answer)
       ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -41,16 +45,24 @@ class NavigationController extends Controller
       ->systemItem($answer) // Фильтр по системным записям
       ->whereSite_alias($site_alias)
       ->first();
+
       // dd($site);
 
       $user = $request->user(); 
       // Создаем масив где ключ массива является ID меню
       $navigation_id = [];
       $navigation_tree = [];
-      foreach ($site->navigations as $navigation) {
-        $navigation_id[$navigation['id']] = $navigation;
-        $navigation_tree[$navigation['id']] = $navigation->toArray();
-        // Проверяем прапва на редактирование и удаление
+      $navigations = $site->navigations->keyBy('id');
+
+      // dd($navigations->toArray());
+      // kjk rtkdjfs
+
+      foreach ($navigations->toArray() as $navigation) {
+
+        // dd($navigation);
+
+        $navigation_tree[$navigation['id']] = $navigation;
+        // Проверяем права на редактирование и удаление
         $edit = 0;
         $delete = 0;
         if ($user->can('update', $navigation)) {
@@ -59,12 +71,13 @@ class NavigationController extends Controller
         if ($user->can('delete', $navigation)) {
           $delete = 1;
         };
-        $navigation_right = $navigation->toArray();
+        $navigation_right = $navigation;
+
         $navigation_id[$navigation_right['id']] = $navigation_right;
         $navigation_id[$navigation_right['id']]['edit'] = $edit;
         $navigation_id[$navigation_right['id']]['delete'] = $delete;
 
-        $navigation_tree[$navigation_right['id']] = $navigation_right;
+        $navigation_tree[$navigation_right['id']]  = $navigation_right;
         $navigation_tree[$navigation_right['id']]['edit'] = $edit;
         $navigation_tree[$navigation_right['id']]['delete'] = $delete;
 
@@ -110,10 +123,10 @@ class NavigationController extends Controller
             }
           };
         };
-        
       };
-    // dd($navigation_tree);
-      // dd($navigation_id);
+
+      // dd($navigation_tree);
+      dd($navigation_id);
       // $menus = [];
       // foreach ($site->navigations as $navigation) {
       //   $menus[$navigation->id] = $navigation->menus->where('page_id', null)->pluck('menu_name', 'id');
@@ -366,4 +379,18 @@ class NavigationController extends Controller
         abort(403, 'Навигация не найдена');
       };
     }
+
+  public function navigations_sort(Request $request)
+  {
+    $result = '';
+    $i = 1;
+    foreach ($request->navigations as $item) {
+
+      $navigation = Navigation::findOrFail($item);
+      $navigation->sort = $i;
+      $navigation->save();
+
+      $i++;
+    }
+  }
 }

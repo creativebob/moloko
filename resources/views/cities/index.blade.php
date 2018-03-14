@@ -46,12 +46,12 @@
     @php
       $drop = 1;
     @endphp
-    {{-- @can('drop', App\Region::class)
+    {{-- @can('sort', App\Region::class)
       $drop = 1;
     @endcan --}}
 
     @if(!empty($regions))
-    <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
+    <ul class="vertical menu accordion-menu content-list" id="content-list" data-entity="regions" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
       @foreach ($regions as $region)      
       <li class="first-item item @if ((count($region->areas) > 0) || (count($region->cities) > 0)) parent @endif" id="regions-{{ $region->id }}" data-name="{{ $region->region_name }}">
         {{-- <ul class="icon-list">
@@ -79,7 +79,7 @@
           <label class="label-check white" for="region-check-{{ $region->id }}"></label> 
         </div>
         @if((count($region->areas) > 0) || (count($region->cities) > 0))
-        <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
+        <ul class="menu vertical medium-list accordion-menu" data-entity="areas" data-accordion-menu data-allow-all-closed data-multi-open="false">
           @foreach ($region->areas as $area)
             <li class="medium-item item @if (count($area->cities) > 0) parent @endif" id="areas-{{ $area->id }}" data-name="{{ $area->area_name }}">
               {{-- <ul class="icon-list">
@@ -104,7 +104,7 @@
                 <label class="label-check" for="area-check-{{ $area->id }}"></label> 
               </div>
               @if(count($area->cities) > 0)
-              <ul class="menu vertical nested last-list">
+              <ul class="menu vertical nested last-list" data-entity="cities">
                 @foreach ($area->cities as $city)
                   <li class="last-item item" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
                     {{-- <ul class="icon-list">

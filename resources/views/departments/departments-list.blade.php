@@ -46,7 +46,7 @@
   </div>
   
   @if (isset($department['staff']) || isset($department['children']))
-    <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
+    <ul class="menu vertical medium-list accordion-menu" data-entity="departments" data-accordion-menu data-allow-all-closed data-multi-open="false">
       @if (isset($department['staff']))
         @foreach($department['staff'] as $staffer)
           <li class="medium-item item" id="staff-{{ $staffer['id'] }}" data-name="{{ $staffer['position']['position_name'] }}">

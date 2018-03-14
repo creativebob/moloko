@@ -56,6 +56,9 @@ class UpdateUsersTable extends Migration
 
             $table->integer('god')->nullable()->unsigned()->comment('Божественное право')->default(null)->after('company_id');
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
+
+            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
@@ -107,7 +110,8 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('employee_id');
             $table->dropColumn('access_block');
             $table->dropColumn('god');
-            $table->dropColumn('moderation');         
+            $table->dropColumn('moderation');  
+            // $table->dropColumn('sort');        
 
             $table->dropForeign('users_company_id_foreign');
             $table->dropForeign('users_author_id_foreign');

@@ -22,6 +22,8 @@ class CreateRegionsTable extends Migration
             $table->integer('region_code')->unsigned()->nullable()->comment('Код области');
             $table->integer('region_vk_external_id')->unique()->unsigned()->nullable()->comment('Внешний Id (из базы vk)');
 
+            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 

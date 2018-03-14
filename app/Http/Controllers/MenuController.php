@@ -183,4 +183,18 @@ class MenuController extends Controller
       abort(403, 'Меню не найдено');
     };
   }
+
+  public function menus_sort(Request $request)
+  {
+    $result = '';
+    $i = 1;
+    foreach ($request->menus as $item) {
+
+      $menu = Menu::findOrFail($item);
+      $menu->sort = $i;
+      $menu->save();
+
+      $i++;
+    }
+  }
 }

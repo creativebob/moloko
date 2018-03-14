@@ -61,10 +61,20 @@ Route::get('/getgod', 'UserController@getgod')->middleware('auth')->name('users.
 // Получаем доступ бога
 Route::get('/returngod', 'UserController@returngod')->middleware('auth')->name('users.returngod');
 
-// Контроллеры для отображения населенных пунктов, районов и областей
-Route::resource('/cities', 'CityController')->middleware('auth');
-Route::resource('/areas', 'AreaController')->middleware('auth');
+// Контроллеры для отображения областей
 Route::resource('/regions', 'RegionController')->middleware('auth');
+// Сортировка областей
+Route::post('/regions_sort', 'RegionController@regions_sort')->middleware('auth');
+// Контроллеры для отображения районов    населенных пунктов
+Route::resource('/areas', 'AreaController')->middleware('auth');
+// Сортировка областей
+Route::post('/areas_sort', 'AreaController@areas_sort')->middleware('auth');
+// Контроллеры для отображения населенных пунктов    
+Route::resource('/cities', 'CityController')->middleware('auth');
+// Сортировка населенных пунктов
+Route::post('/cities_sort', 'CityController@cities_sort')->middleware('auth');
+
+
 Route::post('/cities_list', 'CityController@cities_list')->middleware('auth');
 // Получаем области и города из vk
 Route::post('/city', 'CityController@get_vk_city')->middleware('auth');
@@ -80,6 +90,8 @@ Route::get('/current_department/{section_id}/{item_id}', 'DepartmentController@c
 Route::post('/department_check', 'DepartmentController@department_check')->middleware('auth');
 // Список отделов филиала
 Route::post('/departments_list', 'DepartmentController@departments_list')->middleware('auth');
+// Сортировка населенных отделов
+Route::post('/departments_sort', 'DepartmentController@departments_sort')->middleware('auth');
 
 // Должности
 Route::resource('/positions', 'PositionController')->middleware('auth');
@@ -98,9 +110,10 @@ Route::resource('/sectors', 'SectorController')->middleware('auth');
 Route::get('/current_sector/{section_id}/{item_id}', 'SectorController@current_sector')->middleware('auth');
 // Проверка на существование сектора
 Route::post('/sector_check', 'SectorController@sector_check')->middleware('auth');
-// Список секторов
+// Select секторов
 Route::post('/sectors_list', 'SectorController@sectors_list')->middleware('auth');
-Route::get('/sectors_list/{id}', 'SectorController@sectors_list')->middleware('auth');
+// Сортировка секторов
+Route::post('/sectors_sort', 'SectorController@sectors_sort')->middleware('auth');
 
 // Контроллер списков
 Route::resource('/booklists', 'BooklistController')->middleware('auth');
@@ -120,10 +133,17 @@ Route::prefix('/sites/{site_alias}')->group(function () {
     Route::resource('/pages', 'PageController')->middleware('auth');
     // Навигация и меню
     Route::resource('/navigations', 'NavigationController')->middleware('auth');
+
     Route::resource('/menus', 'MenuController')->middleware('auth');
     // Текущий добавленный/удаленный пункт меню
 	Route::get('/current_navigation/{section_id}/{item_id}', 'NavigationController@current_navigation')->middleware('auth');
 });
+
+// Сортировка навигаций
+Route::post('/navigations_sort', 'NavigationController@navigations_sort')->middleware('auth');
+// Сортировка меню
+Route::post('/menus_sort', 'MenuController@menus_sort')->middleware('auth');
+
 // Route::resource('/menusite', 'MenuSiteController')->middleware('auth');
 // Отображение сессии
 Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');

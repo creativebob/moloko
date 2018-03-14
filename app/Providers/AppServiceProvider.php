@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
       if (Schema::hasTable('menus')) {
         // Получаем все пункты меню
         // Знаем что статика, поэтому указываем в таблице навигации id, получаем массив
-        $sidebar = Menu::with('page', 'page.entities')->whereNavigation_id(2)->get()->toArray();
+        $sidebar = Menu::with('page', 'page.entities')->whereNavigation_id(2)->orderBy('sort', 'asc')->get()->toArray();
         // dd($sidebar);
         
         view()->composer('*', function($view) use ($sidebar) {

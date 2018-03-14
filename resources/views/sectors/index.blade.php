@@ -64,12 +64,12 @@
     @php
       $drop = 1;
     @endphp
-    {{-- @can('drop', App\Sector::class)
+    {{-- @can('sort', App\Sector::class)
       $drop = 1;
     @endcan --}}
 
     @if($sectors_tree)
-      <ul class="vertical menu accordion-menu content-list sortable" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
+      <ul class="vertical menu accordion-menu content-list sortable" id="content-list" data-entity="sectors" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
         @foreach ($sectors_tree as $sector)
           @if($sector['industry_status'] == 1)
             {{-- Если индустрия --}}
@@ -106,7 +106,7 @@
                 <label class="label-check white" for="check-{{ $sector['id'] }}"></label> 
               </div>
             @if (isset($sector['children']))
-              <ul class="menu vertical medium-list accordion-menu sortable" data-accordion-menu data-allow-all-closed data-multi-open="false">
+              <ul class="menu vertical medium-list accordion-menu sortable" data-entity="sectors" data-accordion-menu data-allow-all-closed data-multi-open="false">
                 @foreach($sector['children'] as $sector)
                   @include('sectors.sectors-list', $sector)
                 @endforeach
@@ -600,10 +600,6 @@ $(function() {
 
           // $('#content-list').sortable({connectWith: '#content-list'});
 
-          $('#content-list ul').sortable({
-              connectWith: '#content-list ul',
-              placeholder: 'myplaceholder'
-          });
 
           // $('#content-list').sortable('refresh'); 
           // $('.sortable').sortable("refreshPositions").children();
@@ -611,7 +607,7 @@ $(function() {
           // Foundation.reInit($('.content-list'));
           // $('.content-list').foundation();
 
-          $('#content-list').sortable('refresh');
+          $('#content-list, #content-list ul').sortable('refresh');
         } else {
           var error = showError (result.error_message);
           $('#form-medium-add .name-field').after(error);

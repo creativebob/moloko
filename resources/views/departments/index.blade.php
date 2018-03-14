@@ -64,12 +64,12 @@
     @php
       $drop = 1;
     @endphp
-    {{-- @can('drop', App\Sector::class)
+    {{-- @can('sort', App\Sector::class)
       $drop = 1;
     @endcan --}}
 
     @if($departments_tree)
-      <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
+      <ul class="vertical menu accordion-menu content-list" id="content-list" data-entity="departments"  data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
         @foreach ($departments_tree as $department)
          
           @if($department['filial_status'] == 1)
@@ -107,7 +107,7 @@
                 <label class="label-check white" for="check-{{ $department['id'] }}"></label> 
               </div>
             @if (isset($department['staff']) || isset($department['children']))
-              <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
+              <ul class="menu vertical medium-list accordion-menu"  data-entity="departments"data-accordion-menu data-allow-all-closed data-multi-open="false">
                 @if (isset($department['staff']))
                   @foreach($department['staff'] as $staffer)
                     <li class="medium-item item" id="staff-{{ $staffer['id'] }}" data-name="{{ $staffer['position']['position_name'] }}">

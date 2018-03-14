@@ -64,12 +64,12 @@
     @php
       $drop = 1;
     @endphp
-    {{-- @can('drop', App\Sector::class)
+    {{-- @can('sort', App\Sector::class)
       $drop = 1;
     @endcan --}}
 
     @if($navigation_tree)
-      <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
+      <ul class="vertical menu accordion-menu content-list" id="content-list" data-entity="navigations" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
         @foreach ($navigation_tree as $navigation)
           @if (isset($navigation['menus']))
             {{-- Если Подкатегория --}}
@@ -112,7 +112,7 @@
                 <label class="label-check white" for="check-{{ $navigation['id'] }}"></label> 
               </div>
               @if (isset($navigation['menus']))
-                <ul class="menu vertical medium-list accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false">
+                <ul class="menu vertical medium-list accordion-menu" data-entity="menus" data-accordion-menu data-allow-all-closed data-multi-open="false">
                   @foreach($navigation['menus'] as $menu)
                     @include('navigations.navigations-list', $menu)
                   @endforeach
@@ -322,7 +322,14 @@
 @endsection
 
 @section('scripts')
-  @include('includes.scripts.inputs-mask')
+{{-- Скрипт модалки удаления ajax --}}
+@include('includes.scripts.modal-delete-ajax-script')
+{{-- Маска ввода --}}
+@include('includes.scripts.inputs-mask')
+{{-- Скрипт чекбоксов и перетаскивания для меню --}}
+@include('includes.scripts.menu-scripts')
+{{-- Скрипт подсветки многоуровневого меню --}}
+@include('includes.scripts.multilevel-menu-active-scripts')
 <script type="text/javascript">
 $(function() {
   // Берем алиас сайта
@@ -561,6 +568,4 @@ $(function() {
   });
 });
 </script>
-{{-- Скрипт подсветки многоуровневого меню --}}
-@include('includes.scripts.multilevel-menu-active-scripts')
 @endsection
