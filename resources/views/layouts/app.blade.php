@@ -20,21 +20,25 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{-- Add jQuery library --}}
+    <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
+    <script type="text/javascript" src="/js/jquery.latest.min.js"></script>
+
+    {{-- Дополнительные плагины/скрипиты/стили для конкретной страницы --}}
+    @yield('inhead')
+
     <link rel="stylesheet" href="{{ asset('/css/foundation.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    {{-- Add jQuery library --}}
-    <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
-    <script type="text/javascript" src="/js/jquery.latest.min.js"></script>
+
     {{-- Transition --}}
     <style type="text/css">
     .title-bar {
       display: none;
     }
     </style>
-    {{-- Дополнительные плагины/скрипиты/стили для конкретной страницы --}}
-    @yield('inhead')
     <title>@yield('title')</title>
   </head>
   {{-- Блочим все подергивания в блоке  --}}

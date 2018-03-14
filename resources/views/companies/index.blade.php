@@ -52,7 +52,7 @@
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-company-name">Название компании</th>
+          <th class="td-company-name" data-serversort="company_name" >Название компании</th>
 
           @if($user->god == 1)<th class="td-getauth">Действие</th> @endif
 
@@ -126,6 +126,10 @@
 @section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.table-scripts')
+
+@section('scripts')
+{{-- Скрипт серверной сортировки --}}
+@include('includes.scripts.serversort-script')
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
