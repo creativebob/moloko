@@ -1338,6 +1338,20 @@ input[type=checkbox], input[type=radio] {
 .content .content-list {
   outline: none;
 }
+.content .content-list .menu-drop-color {
+  background-color: #ffffff;
+  height: 2rem;
+}
+.content .content-list .no-moderation {
+  color: red;
+  display: inline-block;
+  margin-left: 1rem;
+}
+.content .content-list .system-item {
+  color: blue;
+  display: inline-block;
+  margin-left: 1rem;
+}
 .content .content-list .is-accordion-submenu-parent:not(.has-submenu-toggle) > a::after {
   display: none;
 }
@@ -1538,6 +1552,7 @@ input[type=checkbox], input[type=radio] {
   font-size: 0.8rem;
   color: #000000;
   padding: 10px 0 10px 3rem;
+  cursor: default;
 }
 .content .content-list .medium-list .medium-item .medium-as-last .icon-list {
   transition: 0.2s ease opacity;
@@ -1574,8 +1589,10 @@ input[type=checkbox], input[type=radio] {
   overflow: hidden;
   margin-left: 0;
 }
-.content .content-list .last-list .last-item .last-link {
+.content .content-list .last-list .last-item {
   position: relative;
+}
+.content .content-list .last-list .last-item .last-link {
   margin: 0 1.8rem 0 2.5rem;
   border-bottom: 1px solid #dddddd;
   font-family: "SegoeUISemiBold";
@@ -1616,10 +1633,6 @@ input[type=checkbox], input[type=radio] {
 }
 .content .content-list .last-list .last-item:last-child .last-link {
   border-bottom: none;
-}
-.content .menu-drop-color {
-  background-color: #ffffff;
-  height: 2rem;
 }
 .content .table-content .is-stuck {
   background-color: #eeeeee;

@@ -52,8 +52,8 @@
 		  <ul class="icon-list">
 		  	<li>
 		  		@can('create', App\Menu::class)
-	                <div class="icon-list-add sprite" data-open="menu-add"></div>
-	            @endcan
+            <div class="icon-list-add sprite" data-open="menu-add"></div>
+          @endcan
 		  	</li>
 				<li>
 					@if($menu['edit'] == 1)

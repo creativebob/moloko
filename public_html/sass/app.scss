@@ -1624,6 +1624,23 @@ input[type=checkbox], input[type=radio] {
   .content-list {
     outline: none;
 
+    .menu-drop-color {
+      background-color: $white;
+      height: 2rem;
+    }
+
+    .no-moderation {
+      color: red;
+      display: inline-block;
+      margin-left: 1rem;
+    }
+
+    .system-item {
+      color: blue;
+      display: inline-block;
+      margin-left: 1rem;
+    }
+
     .is-accordion-submenu-parent:not(.has-submenu-toggle) > a::after {
       display: none;
     }
@@ -1655,7 +1672,6 @@ input[type=checkbox], input[type=radio] {
       .icon-drop:hover {
         opacity: 1;
       }
-
     }
     .icon-list:focus {
       outline-color: none;
@@ -1715,8 +1731,6 @@ input[type=checkbox], input[type=radio] {
 
         background-position: -96px -832px;
       }
-
-
     }
 
     a:hover ~ .drop-list, .drop-list:hover, .icon-list:hover ~ .drop-list {
@@ -1727,13 +1741,8 @@ input[type=checkbox], input[type=radio] {
         &:hover {
           opacity: 1;
         }
-      }
-
-      
-          
-
-          
-      }
+      }  
+    }
     // Активные первые элементы списка (Шапки)
     .first-active {
       background-color: $list-item-active-bg-color;
@@ -1870,6 +1879,7 @@ input[type=checkbox], input[type=radio] {
           font-size: 0.8rem;
           color: $list-item-li-color;
           padding: 10px 0 10px 3rem;
+          cursor: default;
 
           .icon-list {
             transition: 0.2s ease opacity;
@@ -1925,9 +1935,10 @@ input[type=checkbox], input[type=radio] {
 
       // Элементы конечного списка
       .last-item {
+        position: relative;
       
         .last-link {
-          position: relative;
+          // position: relative;
           margin: 0 1.8rem 0 2.5rem;
           border-bottom: 1px solid $list-item-nested-border-bottom-color;
           font-family: $SUISB;
@@ -1976,6 +1987,8 @@ input[type=checkbox], input[type=radio] {
         .drop-list {
           left: 1.8rem;
         }
+
+        
       }
       .last-item:last-child {
         .last-link {
@@ -1985,10 +1998,7 @@ input[type=checkbox], input[type=radio] {
     }
   }
 
-  .menu-drop-color {
-    background-color: $white;
-    height: 2rem;
-  }
+ 
   // ----------------------------- Таблица в контенте --------------------------------------
   .table-content {
 

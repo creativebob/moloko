@@ -90,7 +90,7 @@ Route::get('/current_department/{section_id}/{item_id}', 'DepartmentController@c
 Route::post('/department_check', 'DepartmentController@department_check')->middleware('auth');
 // Список отделов филиала
 Route::post('/departments_list', 'DepartmentController@departments_list')->middleware('auth');
-// Сортировка населенных отделов
+// Сортировка отделов
 Route::post('/departments_sort', 'DepartmentController@departments_sort')->middleware('auth');
 
 // Должности
@@ -138,7 +138,6 @@ Route::prefix('/sites/{site_alias}')->group(function () {
     // Текущий добавленный/удаленный пункт меню
 	Route::get('/current_navigation/{section_id}/{item_id}', 'NavigationController@current_navigation')->middleware('auth');
 });
-
 // Сортировка навигаций
 Route::post('/navigations_sort', 'NavigationController@navigations_sort')->middleware('auth');
 // Сортировка меню

@@ -32,7 +32,7 @@ class SectorController extends Controller
     // -----------------------------------------------------------------------------------------------------------------------
     $sectors = Sector::moderatorLimit($answer)
     ->companiesLimit($answer)
-    ->filials($answer) // $industrys должна существовать только для зависимых от филиала, иначе $industrys должна null
+    ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
     ->orderBy('sort', 'asc')
@@ -105,6 +105,7 @@ class SectorController extends Controller
     $user = $request->user();
     $company_id = $user->company_id;
     if ($user->god == 1) {
+      // Если бог, то ставим автором робота
       $user_id = 1;
     } else {
       $user_id = $user->id;
@@ -114,6 +115,20 @@ class SectorController extends Controller
     $sector = new Sector;
     $sector->company_id = $company_id;
     $sector->author_id = $user_id;
+
+    // Проверка на системную запись
+    if (isset($request->system_item)) {
+      $sector->system_item = $request->system_item;
+    } else {
+      $sector->system_item = null;
+    }
+
+    // Смотрим модерацию
+    if (isset($request->moderation)) {
+      $sector->moderation = $request->moderation;
+    } else {
+      $sector->moderation = null;
+    }
 
     // Смотрим что пришло
     // Если индустрия
@@ -144,7 +159,9 @@ class SectorController extends Controller
           'name' => $sector->sector_name,
           'create' => $create,
           'edit' => $edit,
-          'delete' => $delete
+          'delete' => $delete,
+          'moderation' => $sector->moderation,
+          'system_item' => $sector->system_item,
         ];
       } else {
         $result = [
@@ -158,7 +175,7 @@ class SectorController extends Controller
     if ($request->medium_item == 1) {
 
       $sector->sector_name = $request->name;
-      $sector->sector_parent_id = $request->parent;
+      $sector->sector_parent_id = $request->medium_parent_id;
       
       $sector->save();
 
@@ -184,7 +201,9 @@ class SectorController extends Controller
           'parent' => $sector->sector_parent_id,
           'create' => $create,
           'edit' => $edit,
-          'delete' => $delete
+          'delete' => $delete,
+          'moderation' => $sector->moderation,
+          'system_item' => $sector->system_item,
         ];
       } else {
         $result = [
@@ -215,16 +234,20 @@ class SectorController extends Controller
     $this->authorize(getmethod(__FUNCTION__), $sector);
 
     if ($sector->industry_status == 1) {
-      // Меняем филиал
+      // Меняем индустрию
       $result = [
         'id' => $sector->id,
         'name' => $sector->sector_name,
+        'moderation' => $sector->moderation,
+        'system_item' => $sector->system_item,
       ];
     } else {
       $result = [
         'name' => $sector->sector_name,
         'parent_id' => $sector->sector_parent_id,
         'first_id' => $sector->industry_id,
+        'moderation' => $sector->moderation,
+        'system_item' => $sector->system_item,
       ];
     };
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -232,6 +255,7 @@ class SectorController extends Controller
 
   public function update(Request $request, $id)
   {
+
     // Получаем авторизованного пользователя
     $user = $request->user();
 
@@ -244,6 +268,20 @@ class SectorController extends Controller
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $sector);
 
+    // Проверка на системную запись
+    if ($request->system_item == 1) {
+      $sector->system_item = $request->system_item;
+    } else {
+      $sector->system_item = null;
+    }
+
+    // Смотрим модерацию
+    if ($request->moderation == 1) {
+      $sector->moderation = $request->moderation;
+    } else {
+      $sector->moderation = null;
+    }
+
     // Если индустрия
     if ($request->first_item == 1) {
       $sector->sector_name = $request->name;
@@ -255,6 +293,8 @@ class SectorController extends Controller
           'error_status' => 0,
           'id' => $sector->id,
           'name' => $sector->sector_name,
+          'moderation' => $sector->moderation,
+          'system_item' => $sector->system_item,
         ];
       } else {
         $result = [
@@ -267,7 +307,7 @@ class SectorController extends Controller
     // Если сектор
     if ($request->medium_item == 1) {
       $sector->sector_name = $request->name;
-      $sector->sector_parent_id = $request->parent;
+      $sector->sector_parent_id = $request->medium_parent_id;
       $sector->editor_id = $user->id;
       $sector->save();
 
@@ -295,6 +335,8 @@ class SectorController extends Controller
           'create' => $create,
           'edit' => $edit,
           'delete' => $delete,
+          'moderation' => $sector->moderation,
+          'system_item' => $sector->system_item,
         ];
       } else {
         $result = [
@@ -305,7 +347,7 @@ class SectorController extends Controller
     };
 
     // Отдаем результат
-    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    return json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
   public function destroy(Request $request, $id)

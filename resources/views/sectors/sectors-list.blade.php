@@ -30,6 +30,12 @@
       <div class="icon-open sprite"></div>
       <span class="medium-item-name">{{ $sector['sector_name'] }}</span>
       <span class="number">{{ $count }}</span>
+      @if ($sector['moderation'])
+      <span class="no-moderation">Не отмодерированная запись!</span>
+      @endif
+      @if ($sector['system_item'])
+      <span class="system-item">Системная запись!</span>
+      @endif
     </div>
   </a>
   <div class="drop-list checkbox">
@@ -40,11 +46,11 @@
     <label class="label-check" for="check-{{ $sector['id'] }}"></label> 
   </div>
   @if (isset($sector['children']))
-    <ul class="menu vertical medium-list accordion-menu sortable" data-entity="sectors" data-accordion-menu data-allow-all-closed data-multi-open="false">
-        @foreach($sector['children'] as $sector)
-          @include('sectors.sectors-list', $sector)
-        @endforeach
-    </ul>
+  <ul class="menu vertical medium-list accordion-menu sortable" data-entity="sectors" data-accordion-menu data-allow-all-closed data-multi-open="false">
+  @foreach($sector['children'] as $sector)
+    @include('sectors.sectors-list', $sector)
+  @endforeach
+  </ul>
   @endif
 </li>
 

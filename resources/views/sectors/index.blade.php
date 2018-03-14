@@ -96,6 +96,13 @@
                   <div class="icon-open sprite"></div>
                   <span class="first-item-name">{{ $sector['sector_name'] }}</span>
                   <span class="number">{{ $sector['count'] }}</span>
+                  @if ($sector['moderation'])
+                  <span class="no-moderation">Не отмодерированная запись!</span>
+                  @endif
+                  @if ($sector['system_item'])
+                  <span class="system-item">Системная запись!</span>
+                  @endif
+                  
                 </div>
               </a>
               <div class="drop-list checkbox">
@@ -131,14 +138,20 @@
   </div>
   
   <form id="form-first-add" data-abide novalidate method="POST">
-    <div class="grid-x grid-padding-x modal-content inputs">
-      <div class="small-10 small-offset-1 cell">
+    <div class="grid-x grid-padding-x align-center modal-content inputs">
+      <div class="small-10 cell">
         <label>Название индустрии
-          @include('includes.inputs.name', ['value'=>null, 'name'=>'industry_name'])
+          @include('includes.inputs.name', ['value'=>null, 'name'=>'name'])
           <div class="sprite-input-right find-status"></div>
           <div class="item-error">Такая индустрия уже существует!</div>
         </label>
-        <input type="hidden" name="first_db" class="first-db" value="0" pattern="[0-9]{1}">
+        <input type="hidden" name="first_item" class="first-item" value="0" pattern="[0-9]{1}">
+        @can('god', App\Sector::class)
+        <div class="checkbox">
+          {{ Form::checkbox('system_item', 1, null, ['id'=>'system-first-add']) }}
+          <label for="system-first-add"><span>Системная запись.</span></label>
+        </div>
+        @endcan
       </div>
     </div>
     <div class="grid-x align-center">
@@ -161,16 +174,22 @@
     </div>
   </div>
   <form id="form-first-edit" data-abide novalidate>
-  {{ method_field('PATCH') }}
-    <div class="grid-x grid-padding-x modal-content inputs">
-      <div class="small-10 small-offset-1 cell">
+    <div class="grid-x grid-padding-x align-center modal-content inputs">
+      <div class="small-10 cell">
         <label>Название индустрии
-          @include('includes.inputs.name', ['value'=>null, 'name'=>'industry_name'])
+          @include('includes.inputs.name', ['value'=>null, 'name'=>'name'])
           <div class="sprite-input-right find-status"></div>
           <div class="item-error">Такая индустрия уже существует!</div>
         </label>
         <input type="hidden" name="first_id" class="first-id">
-        <input type="hidden" name="first_db" class="first-db" value="0">
+        <input type="hidden" name="first_item" class="first-item" value="0">
+
+        @can('god', App\Sector::class)
+        <div class="checkbox">
+          {{ Form::checkbox('system_item', 1, null, ['id'=>'system-first-edit']) }}
+          <label for="system-first-edit"><span>Системная запись.</span></label>
+        </div>
+        @endcan
       </div>
     </div>
     <div class="grid-x align-center">
@@ -195,13 +214,19 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label>Название сектора
-          @include('includes.inputs.name', ['value'=>null, 'name'=>'sector_name'])
+          @include('includes.inputs.name', ['value'=>null, 'name'=>'name'])
           <div class="sprite-input-right find-status"></div>
           <div class="item-error">Такой сектор уже существует!</div>
         </label>
         <input type="hidden" name="medium_parent_id" class="medium-parent-id-field">
         <input type="hidden" name="first_id" class="first-id-field">
-        <input type="hidden" name="medium_db" class="medium-db" value="0">
+        <input type="hidden" name="medium_item" class="medium-item" value="0">
+        @can('god', App\Sector::class)
+        <div class="checkbox">
+          {{ Form::checkbox('system_item', 1, null, ['id'=>'system-medium-add']) }}
+          <label for="system-medium-add"><span>Системная запись.</span></label>
+        </div>
+        @endcan
       </div>
     </div>
     <div class="grid-x align-center">
@@ -232,13 +257,19 @@
           </select>
         </label>
         <label>Название сектора
-          @include('includes.inputs.name', ['value'=>null, 'name'=>'sector_name'])
+          @include('includes.inputs.name', ['value'=>null, 'name'=>'name'])
           <div class="sprite-input-right find-status"></div>
           <div class="item-error">Такой сектор уже существует!</div>
         </label>
         <input type="hidden" name="medium_parent_id" class="medium-parent-id-field">
         <input type="hidden" name="medium_id" class="medium-id">
-        <input type="hidden" name="medium_db" class="medium-db" value="0">
+        <input type="hidden" name="medium_item" class="medium-item" value="0">
+        @can('god', App\Sector::class)
+        <div class="checkbox">
+          {{ Form::checkbox('system_item', 1, null, ['id'=>'system-medium-edit']) }}
+          <label for="system-medium-edit"><span>Системная запись.</span></label>
+        </div>
+        @endcan
       </div>
     </div>
     <div class="grid-x align-center">
@@ -343,7 +374,7 @@ $(function() {
     // Указываем название кнопки
     var submit = '#submit-first-add';
     // Значение поля с разрешением
-    var db = '#form-first-add .first-db';
+    var db = '#form-first-add .first-item';
     // Выполняем запрос
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
@@ -358,7 +389,7 @@ $(function() {
     // Указываем название кнопки
     var submit = '#submit-first-edit';
     // Значение поля с разрешением
-    var db = '#form-first-edit .first-db';
+    var db = '#form-first-edit .first-item';
     // Выполняем запрос
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
@@ -373,7 +404,7 @@ $(function() {
     // Указываем название кнопки
     var submit = '#submit-medium-add';
     // Значение поля с разрешением
-    var db = '#form-medium-add .medium-db';
+    var db = '#form-medium-add .medium-item';
     // Выполняем запрос
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
@@ -388,7 +419,7 @@ $(function() {
     // Указываем название кнопки
     var submit = '#submit-medium-edit';
     // Значение поля с разрешением
-    var db = '#form-medium-edit .medium-db';
+    var db = '#form-medium-edit .medium-item';
     // Выполняем запрос
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
@@ -404,10 +435,6 @@ $(function() {
     // Блочим отправку формы
     event.preventDefault();
 
-    // Получаем данные
-    var name = $('#form-first-add .name-field').val();
-    var first_db = $('#form-first-add .first-db').val();
-
     // Первая буква сектора заглавная
     name = newParagraph (name);
     
@@ -418,7 +445,7 @@ $(function() {
       },
       url: "/sectors",
       type: "POST",
-      data: {name: name, first_item: first_db},
+      data: $('#form-first-add').serialize(),
       success: function(date){
         var result = $.parseJSON(date);
         if (result.error_status == 0) {
@@ -437,7 +464,14 @@ $(function() {
           if (result.delete == 1) {
             data = data + '<div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div>';
           };
-          data = data + '</li></ul><div class=\"drop-list checkbox\"><div class=\"sprite icon-drop\"></div><input type=\"checkbox\" name=\"\" id=\"check-' + result.id + '\"><label class=\"label-check\" for=\"check-' + result.id + '\"></label></div><a data-list=\"\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"first-item-name\">' + result.name + '</span><span class=\"number\">0</span></div></a></li>';
+          data = data + '</li></ul><div class=\"drop-list checkbox\"><div class=\"sprite icon-drop\"></div><input type=\"checkbox\" name=\"\" id=\"check-' + result.id + '\"><label class=\"label-check\" for=\"check-' + result.id + '\"></label></div><a data-list=\"\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"first-item-name\">' + result.name + '</span><span class=\"number\">0</span>'; 
+          if (result.moderation == 1) {
+            data = data + '<span class="no-moderation">Не отмодерированная запись!</span>';
+          };
+          if (result.system_item == 1) {
+            data = data + '<span class="system-item">Системная запись!</span>';
+          };
+          data = data +  '</div></a></li>';
 
           // Вставляем
           $('.content-list').append(data);
@@ -456,7 +490,7 @@ $(function() {
   // Открываем модалку
   $(document).on('click', '[data-open="first-edit"]', function() {
 
-    // Получаем данные о филиале
+    // Получаем данные о индустрии
     var id = $(this).closest('.item').attr('id').split('-')[1];
 
     // Сам ajax запрос
@@ -469,8 +503,15 @@ $(function() {
       success: function(date){
         var result = $.parseJSON(date);
         $('#form-first-edit .name-field').val(result.name);
-        $('#form-first-edit .first-id').val(result.id);
-        $('#form-first-edit .first-db').val(1);
+        $('#form-first-edit .first-item').val(1);
+        $('#form-first-edit .first-id').val(id);
+        if (result.moderation == 1) {
+          var data = '<div class="checkbox"><input type="checkbox" name="moderation" id="indystry-moderation" checked value="1"><label for="indystry-moderation"><span>Временная запись.</span></label></div>';
+          $('#form-first-edit .first-item').after(data);
+        };
+        if (result.system_item == 1) {
+          $('#system-first-edit').prop('checked', true);
+        };
       }
     });
   });
@@ -483,12 +524,10 @@ $(function() {
 
     // Получаем данные
     var id = $('#form-first-edit .first-id').val();
-    var name = $('#form-first-edit .name-field').val();
-    var first_db = $('#form-first-edit .first-db').val();
 
     // Первая буква сектора заглавная
     name = newParagraph (name);
-    
+
     // Сам ajax запрос
     $.ajax({
       headers: {
@@ -496,13 +535,30 @@ $(function() {
       },
       url: "/sectors/" + id,
       type: "PATCH",
-      data: {name: name, first_item: first_db},
+      data: $('#form-first-edit').serialize(),
       success: function(date){
         var result = $.parseJSON(date);
-
         if (result.error_status == 0) {
           $('#sectors-' + result.id + ' .first-item-name').text(result.name);
           $('#sectors-' + result.id).data('name', result.name);
+
+          // Проверка системной
+          if (result.system_item == 1) {
+            $('#sectors-' + result.id + ' .system-item:first').remove();
+            $('#sectors-' + result.id + ' .number:first').after('<span class="system-item">Системная запись!</span>');
+          } else {
+            $('#sectors-' + result.id + ' .system-item:first').remove();
+          };
+
+          // Проверка модерации
+          if (result.moderation == 1) {
+            $('#sectors-' + result.id + ' .no-moderation:first').remove();
+            $('#sectors-' + result.id + ' .number:first').after('<span class="no-moderation">Не отмодерированная запись!</span>');
+          } else {
+            $('#sectors-' + result.id + ' .no-moderation:first').remove();
+          };
+
+
         } else {
           var error = showError (result.error_message);
           $('#form-first-add .name-field').after(error);
@@ -512,50 +568,57 @@ $(function() {
   });
 
   // Вставляем добавленный сектор и пересчитываем вложенные элементы
-  function addSector (id, name, parent, add, edit, del) {
+  function addSector (result) {
 
     // Если у родителя нет родительского класса
-    if ($('#sectors-' + parent).hasClass('parent') == false) {
+    if ($('#sectors-' + result.parent).hasClass('parent') == false) {
 
       // Добавляем родителю класс и список
-      $('#sectors-' + parent).addClass('parent');
+      $('#sectors-' + result.parent).addClass('parent');
 
       // Формируем список
       var list = '<ul class=\"menu vertical medium-list accordion-menu sortable ui-sortable\" data-accordion-menu data-allow-all-closed data-multi-open=\"false\"></ul>';
 
       // Вставляем
-      $('#sectors-' + parent).append(list);
+      $('#sectors-' + result.parent).append(list);
 
       // Убираем иконку удаления
-      $('#sectors-' + parent).children('.icon-list:first').find('.icon-list-delete').remove();
+      $('#sectors-' + result.parent).children('.icon-list:first').find('.icon-list-delete').remove();
     };
 
     // Формируем вставляемый пункт
-    var data = '<li class=\"medium-item item\" id=\"sectors-'+ id +'\" data-name=\"'+ name +'\"><a data-list="" class=\"medium-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"medium-item-name\">' + name + '</span><span class=\"number\">0</span></div></a><ul class=\"icon-list\"><li>';
-    if (add == 1) {
+    var data = '<li class=\"medium-item item\" id=\"sectors-'+ result.id +'\" data-name=\"'+ result.name +'\"><a data-list="" class=\"medium-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"medium-item-name\">' + result.name + '</span><span class=\"number\">0</span>';
+    if (result.moderation == 1) {
+      data = data + '<span class="no-moderation">Не отмодерированная запись!</span>';
+    };
+    if (result.system_item == 1) {
+      data = data + '<span class="system-item">Системная запись!</span>';
+    };
+    data = data + '</div></a><ul class=\"icon-list\"><li>';
+    if (result.add == 1) {
       data = data + '<div class=\"icon-list-add sprite\" data-open=\"medium-add\"></div>';
     };
     data = data + '</li><li>';
-    if (edit == 1) {
+    if (result.edit == 1) {
       data = data + '<div class=\"icon-list-edit sprite\" data-open=\"medium-edit\"></div>';
     };
     data = data + '</li><li class=\"del\">';
-    if (del == 1) {
+    if (result.del == 1) {
       data = data + '<div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div>';
     };
-    data = data + '</li></ul><div class=\"drop-list checkbox\"><div class=\"sprite icon-drop\"></div><input type=\"checkbox\" name=\"\" id=\"check-' + id + '\"><label class=\"label-check\" for=\"check-' + id + '\"></label></div></li>';
+    data = data + '</li></ul><div class=\"drop-list checkbox\"><div class=\"sprite icon-drop\"></div><input type=\"checkbox\" name=\"\" id=\"check-' + result.id + '\"><label class=\"label-check\" for=\"check-' + result.id + '\"></label></div></li>';
 
     // Вставляем пункт
-    $('#sectors-' + parent + ' .medium-list').append(data);
+    $('#sectors-' + result.parent + ' .medium-list').append(data);
 
-    var elem = new Foundation.AccordionMenu($('#sectors-' + parent + ' > .medium-list:first'), null);
+    var elem = new Foundation.AccordionMenu($('#sectors-' + result.parent + ' > .medium-list:first'), null);
 
     // Закрываем все списки
-    $('#sectors-' + parent + ' > .medium-list:first > li').attr('aria-expanded', 'false');
+    $('#sectors-' + result.parent + ' > .medium-list:first > li').attr('aria-expanded', 'false');
 
     // Меняем количество детей
-    var count = $('#sectors-' + parent + ' .medium-list>li');
-    $('#sectors-' + parent + ' .number:first').text(count.length);
+    var count = $('#sectors-' + result.parent + ' .medium-list>li');
+    $('#sectors-' + result.parent + ' .number:first').text(count.length);
   };
 
   // Добавление сектора
@@ -575,9 +638,11 @@ $(function() {
 
     // Получаем данные
     var name = $('#form-medium-add .name-field').val();
-    var medium_db = $('#form-medium-add .medium-db').val();
+    var medium_item = $('#form-medium-add .medium-item').val();
     var parent = $('#form-medium-add .medium-parent-id-field').val();
 
+
+    alert($('#form-medium-add').serialize());
     // Первая буква сектора заглавная
     name = newParagraph (name);
     
@@ -588,13 +653,13 @@ $(function() {
       },
       url: "/sectors",
       type: "POST",
-      data: {name: name, medium_item: medium_db, parent: parent},
+      data: $('#form-medium-add').serialize(),
       success: function(date){
         var result = $.parseJSON(date);
         if (result.error_status == 0) {
 
           // Вставляем сектор
-          addSector (result.id, result.name, result.parent, result.create, result.edit, result.delete);
+          addSector (result);
 
           // $('#content-list ul').sortable('refresh'); 
 
@@ -658,9 +723,16 @@ $(function() {
       success: function(date) {
         var result = $.parseJSON(date);
         $('#form-medium-edit .name-field').val(result.name);
-        $('#form-medium-edit .medium-db').val(1);
+        $('#form-medium-edit .medium-item').val(1);
         $('#form-medium-edit .medium-parent-id-field').val(result.parent_id);
         $('#form-medium-edit .medium-id').val(id);
+        if (result.moderation == 1) {
+          var data = '<div class="checkbox"><input type="checkbox" name="moderation" id="indystry-moderation" checked value="1"><label for="indystry-moderation"><span>Временная запись.</span></label></div>';
+          $('#form-medium-edit .medium-item').after(data);
+        };
+        if (result.system_item == 1) {
+          $('#system-medium-edit').prop('checked', true);
+        };
       }
     });
   });
@@ -674,7 +746,7 @@ $(function() {
     // Получаем данные
     var id = $('#form-medium-edit .medium-id').val();
     var name = $('#form-medium-edit .name-field').val();
-    var medium_db = $('#form-medium-edit .medium-db').val();
+    var medium_item = $('#form-medium-edit .medium-item').val();
     var parent = $('#form-medium-edit .sectors-list').val();
     var parentItem = $('#form-medium-edit .medium-parent-id-field').val();
 
@@ -688,15 +760,13 @@ $(function() {
       },
       url: "/sectors/" + id,
       type: "PATCH",
-      data: {name: name, medium_item: medium_db, parent: parent},
+      data: {name: name, medium_item: medium_item, parent: parent},
       success: function(date){
         var result = $.parseJSON(date);
 
         if (result.error_status == 0) {
           $('#sectors-' + result.id + ' .medium-item-name:first').text(result.name);
           $('#sectors-' + result.id).data('name', result.name);
-
-          // alert(result.parent + ' ' + parentItem);
 
           // Если родитель изменился
           if (result.parent != parentItem) {
@@ -723,7 +793,7 @@ $(function() {
             };
 
             // Вставляем сектор
-            addSector (result.id, result.name, result.parent, result.create, result.edit, result.delete);
+            addSector (result);
 
             // Если элемент не являлся родителем
             if ($('#-sectors-' + result.parent).hasClass('parent') == false) {
@@ -774,10 +844,23 @@ $(function() {
               $('.first-active .icon-list').attr('area-hidden', 'false');
               $('.first-active .icon-list').css('display', 'block');
             };
-
           };
 
-          
+          // Проверка системной
+          if (result.system_item == 1) {
+            $('#sectors-' + result.id + ' .system-item:first').remove();
+            $('#sectors-' + result.id + ' .number:first').after('<span class="system-item">Системная запись!</span>');
+          } else {
+            $('#sectors-' + result.id + ' .system-item:first').remove();
+          };
+
+          // Проверка модерации
+          if (result.moderation == 1) {
+            $('#sectors-' + result.id + ' .no-moderation:first').remove();
+            $('#sectors-' + result.id + ' .number:first').after('<span class="no-moderation">Не отмодерированная запись!</span>');
+          } else {
+            $('#sectors-' + result.id + ' .no-moderation:first').remove();
+          };
 
         } else {
           var error = showError (result.error_message);
@@ -790,12 +873,14 @@ $(function() {
   // При закрытии модалки очищаем поля
   $(document).on('click', '.close-modal, .modal-button', function() {
     $('.name-field').val('');
-    $('.first-db').val(0);
-    $('.medium-db').val(0);
+    $('.first-item').val(0);
+    $('.medium-item').val(0);
     $('.first-id-field').val('');
     $('.medium-parent-id-field').val('');
     $('.item-error').css('display', 'none');
     $('.sectors-list').empty();
+    $('input[name=moderation]').closest('.checkbox').remove();
+    $('input[name=system_item]').prop('checked', false);
   });
 
   // Открываем меню и подменю, если только что добавили населенный пункт

@@ -43,7 +43,9 @@ class DepartmentController extends Controller
     // -----------------------------------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -----------------------------------------------------------------------------------------------------------------------
-    $departments = Department::with(['staff', 'staff.position', 'staff.user'])
+    $departments = Department::with(['staff' => function ($query) {
+      $query->orderBy('sort', 'asc');
+    }, 'staff.position', 'staff.user'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -501,14 +503,28 @@ class DepartmentController extends Controller
 
   public function departments_sort(Request $request)
   {
-    $i = 1;
-    foreach ($request->regions as $item) {
 
-      $region = Region::findOrFail($item);
-      $region->sort = $i;
-      $region->save();
+    if (isset($request->departments)) {
+      $i = 1;
+      foreach ($request->departments as $item) {
 
-      $i++;
+        $department = Department::findOrFail($item);
+        $department->sort = $i;
+        $department->save();
+
+        $i++;
+      }
+    }
+    if (isset($request->staff)) {
+      $i = 1;
+      foreach ($request->staff as $item) {
+
+        $staffer = Staffer::findOrFail($item);
+        $staffer->sort = $i;
+        $staffer->save();
+
+        $i++;
+      }
     }
   }
 }
