@@ -17,7 +17,7 @@
 			$('.checkboxer-menu.' + this.name + ' :checkbox').removeAttr("checked")
 			$('.' + this.name + ' .checkboxer-clean').addClass('hide-elem');
 			$('.' + this.name + ' .checkboxer-title').css("width", "100%");
-			$('.' + this.name + '.checkboxer-wrap').css("paddingRight", "20px");
+			$('.' + this.name + '.checkboxer-wrap').css("paddingRight", "40px");
 
 			this.count_mass = 0;
 			$('#count_filter_' + this.name).html('('+ this.count_mass +')');

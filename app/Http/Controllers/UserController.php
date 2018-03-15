@@ -50,13 +50,28 @@ class UserController extends Controller
         ->systemItem($answer) // Фильтр по системным записям              
         ->orWhere('id', $request->user()->id) // Только для сущности USERS
         ->cityFilter($request)
+        ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
-        // dd(Auth::user()->booklists);
+        $filter = [];
+        $filter = $this->filter($request);
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+	    return view('users.index', compact('users', 'page_info', 'filter', 'user'));
+	}
+
+    public function filter($request)
+    {
+
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
         // ---------------------------------------------------------------------------------------------------------------------------------------------
+        
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
         $filter_query = User::with('city')
         ->moderatorLimit($answer)
@@ -69,14 +84,11 @@ class UserController extends Controller
 
         $filter = [];
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
+        $filter = addFilter($filter, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $this->entity_name);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        return $filter;
+    }
 
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-	    return view('users.index', compact('users', 'page_info', 'filter', 'user'));
-	}
 
     public function create(Request $request)
     {
