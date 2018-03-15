@@ -27,35 +27,11 @@ $(document).on('click', '.delete-button-ajax', function(event) {
     url: '/' + type + '/' + id,
     type: "DELETE",
     data: {id: id},
-    success: function (data) {
-      var result = $.parseJSON(data);
-      if (result.status == 0) {
-        $('#' + result.type + '-' + result.id).remove();
-        $('.delete-button').removeAttr('id');
-
-        // Если элемент не являлся родителем
-        if (result.parent != null) {
-
-          // Меняем количество детей
-          var count = $('#sectors-' + result.parent + ' .medium-list>li');
-          $('#sectors-' + result.parent + ' .number:first').text(count.length);
-
-          // Если вложенных элеметнов нет, отображаем значок удаления
-          if (count.length == 0) {
-
-            // Убираем список
-            $('#sectors-' + result.parent).children('.medium-list:first').remove();
-
-            // Формируем иконку удаления
-            var del = '<div class=\"icon-list-delete sprite\" data-open=\"item-delete-ajax\"></div>';
-
-            // Вставляем
-            $('#sectors-' + result.parent + ' .del:first').append(del);
-          };
-        };
-      } else {
-        alert(result.msg);
-      };
+    success: function (html) {
+      $('#content-list').html(html);
+      // $('#content-list, #content-list ul').sortable('refresh');
+      // $('#content-list').foundation();
+      Foundation.reInit($('#content-list'));
     }
   });
 });

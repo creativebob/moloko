@@ -7,7 +7,7 @@
     $count = count($sector['children']);
   @endphp
 @endif
-<li class="medium-item item @if (isset($sector['children'])) parent @endif" id="sectors-{{ $sector['id'] }}" data-name="{{ $sector['sector_name'] }}">
+<li class="medium-item item @if (isset($sector['children'])) parent is-accordion-submenu-parent @endif" id="sectors-{{ $sector['id'] }}" data-name="{{ $sector['sector_name'] }}">
   <ul class="icon-list">
     <li>
       @can('create', App\Sector::class)
@@ -46,7 +46,7 @@
     <label class="label-check" for="check-{{ $sector['id'] }}"></label> 
   </div>
   @if (isset($sector['children']))
-  <ul class="menu vertical medium-list accordion-menu sortable" data-entity="sectors" data-accordion-menu data-allow-all-closed data-multi-open="false">
+  <ul class="menu vertical medium-list accordion-menu sortable" data-entity="sectors"  data-submenu data-accordion-menu data-allow-all-closed data-multi-open="false">
   @foreach($sector['children'] as $sector)
     @include('sectors.sectors-list', $sector)
   @endforeach

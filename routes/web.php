@@ -107,7 +107,7 @@ Route::resource('/employees', 'EmployeeController')->middleware('auth');
 // Контроллер секторов
 Route::resource('/sectors', 'SectorController')->middleware('auth');
 // Текущий добавленный/удаленный сектор
-Route::get('/current_sector/{section_id}/{item_id}', 'SectorController@current_sector')->middleware('auth');
+Route::any('/get_sectors', 'SectorController@get_content')->middleware('auth');
 // Проверка на существование сектора
 Route::post('/sector_check', 'SectorController@sector_check')->middleware('auth');
 // Select секторов
