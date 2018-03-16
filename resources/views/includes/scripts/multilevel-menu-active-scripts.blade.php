@@ -10,12 +10,13 @@
       $(this).closest('.first-item').removeClass('first-active');
     } else {
       // Иначе ставим элементу активный класс
-      $('.content-list .first-active').removeClass('first-active');
+      $('#content-list .first-active').removeClass('first-active');
       $(this).closest('.first-item').addClass('first-active');
     };
 
     // Сносим все активные медиумы
     $('.medium-active').removeClass('medium-active');
+    // $('.medium-item').attr('aria-expanded', 'false');
   });
 
   // Видим клик по среднему пункту
@@ -23,9 +24,8 @@
     if ($(this).hasClass('medium-active')) {
       // Если имеет активный класс - сносим его 
       $('.medium-active').removeClass('medium-active');
-      $(this).closest('.item').attr('aria-expanded', 'false');
-      var target = $(this).closest('.item').find('.last-list');
-      $('#content-list').foundation('toggle', target);
+      $(this).closest('.medium-item').attr('aria-expanded', 'false');
+      $('#content-list').foundation('toggle', $(this).closest('.medium-item').find('.last-list'));
     } else {
       // Иначе ставим элементу активный класс
       $('.medium-active').removeClass('medium-active');

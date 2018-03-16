@@ -1335,6 +1335,9 @@ input[type=checkbox], input[type=radio] {
   padding: 0 1rem;
   margin-bottom: 1rem;
 }
+.content .accordion-menu .nested.is-accordion-submenu {
+  margin-left: 0;
+}
 .content .content-list {
   outline: none;
 }
@@ -1352,34 +1355,39 @@ input[type=checkbox], input[type=radio] {
   display: inline-block;
   margin-left: 1rem;
 }
+.content .content-list a:hover .icon-drop {
+  opacity: 0.3;
+}
+.content .content-list a:hover .icon-drop:hover {
+  opacity: 1;
+}
 .content .content-list .is-accordion-submenu-parent:not(.has-submenu-toggle) > a::after {
   display: none;
 }
 .content .content-list .icon-list {
-  display: block;
   opacity: 0;
   position: absolute;
-  top: 0;
-  margin-top: 0;
+  right: 2rem;
   transition: 0.2s ease opacity;
   cursor: pointer;
+  z-index: 5;
 }
 .content .content-list .icon-list li {
   display: inline-block;
   width: 32px;
 }
-.content .content-list .checkbox {
+.content .content-list .drop-list {
   display: inline-block;
   position: absolute;
   top: 0;
-  margin-left: 0;
+  margin-left: -68px;
   z-index: 5;
   padding: 8px 0 8px 4px;
 }
-.content .content-list .checkbox .icon-drop {
+.content .content-list .drop-list .icon-drop {
   opacity: 0;
 }
-.content .content-list .checkbox .icon-drop:hover {
+.content .content-list .drop-list .icon-drop:hover {
   opacity: 1;
 }
 .content .content-list .icon-list:focus {
@@ -1422,21 +1430,11 @@ input[type=checkbox], input[type=radio] {
 .content .content-list .first-item .link-small {
   padding-left: 32px;
 }
-.content .content-list .first-item .icon-list {
-  opacity: 0;
-  right: 2rem;
-}
-.content .content-list .first-item .icon-list li {
-  padding: 8px 0;
-}
 .content .content-list .first-item .icon-drop {
   background-position: -96px -832px;
 }
-.content .content-list a:hover ~ .drop-list .icon-drop, .content .content-list .drop-list:hover .icon-drop, .content .content-list .icon-list:hover ~ .drop-list .icon-drop {
-  opacity: 0.3;
-}
-.content .content-list a:hover ~ .drop-list .icon-drop:hover, .content .content-list .drop-list:hover .icon-drop:hover, .content .content-list .icon-list:hover ~ .drop-list .icon-drop:hover {
-  opacity: 1;
+.content .content-list .first-item .icon-list {
+  top: 8px;
 }
 .content .content-list .first-active {
   background-color: #ae4747;
@@ -1451,64 +1449,39 @@ input[type=checkbox], input[type=radio] {
   background: rgba(255, 255, 255, 0.1);
   opacity: 1;
 }
-.content .content-list .first-active .icon-list {
-  opacity: 1;
+.content .content-list .first-active .first-link .icon-list {
   z-index: 5;
-  right: 2rem;
+  opacity: 1;
+  top: 0;
 }
-.content .content-list .first-active .icon-list li {
+.content .content-list .first-active .first-link .icon-list li {
   padding: 8px 0;
 }
-.content .content-list .first-active .icon-list li .sprite:focus {
+.content .content-list .first-active .first-link .icon-list li .sprite:focus {
   outline: none;
 }
-.content .content-list .first-active .icon-list li .icon-list-add {
+.content .content-list .first-active .first-link .icon-list li .icon-list-add {
   background-position: -128px -768px;
 }
-.content .content-list .first-active .icon-list li .icon-list-add:hover {
+.content .content-list .first-active .first-link .icon-list li .icon-list-add:hover {
   background-position: -96px -768px;
 }
-.content .content-list .first-active .icon-list li .icon-list-edit {
+.content .content-list .first-active .first-link .icon-list li .icon-list-edit {
   background-position: -96px -800px;
 }
-.content .content-list .first-active .icon-list li .icon-list-edit:hover {
+.content .content-list .first-active .first-link .icon-list li .icon-list-edit:hover {
   background-position: -128px -800px;
 }
-.content .content-list .first-active .icon-list li .icon-list-delete {
+.content .content-list .first-active .first-link .icon-list li .icon-list-delete {
   background-position: -96px -512px;
 }
-.content .content-list .first-active .icon-list li .icon-list-delete:hover {
+.content .content-list .first-active .first-link .icon-list li .icon-list-delete:hover {
   background-position: -128px -512px;
 }
 .content .content-list .medium-list .medium-item {
   background-color: #ffffff;
   position: relative;
   padding-left: 2rem;
-}
-.content .content-list .medium-list .medium-item .icon-list {
-  right: 2rem;
-  opacity: 1;
-}
-.content .content-list .medium-list .medium-item .icon-list li {
-  padding: 0;
-}
-.content .content-list .medium-list .medium-item .icon-list li .icon-list-add {
-  background-position: 0px -768px;
-}
-.content .content-list .medium-list .medium-item .icon-list li .icon-list-add:hover {
-  background-position: -32px -768px;
-}
-.content .content-list .medium-list .medium-item .icon-list li .icon-list-edit {
-  background-position: 0px -800px;
-}
-.content .content-list .medium-list .medium-item .icon-list li .icon-list-edit:hover {
-  background-position: -32px -800px;
-}
-.content .content-list .medium-list .medium-item .icon-list li .icon-list-delete {
-  background-position: 0px -512px;
-}
-.content .content-list .medium-list .medium-item .icon-list li .icon-list-delete:hover {
-  background-position: -32px -512px;
 }
 .content .content-list .medium-list .medium-item .checkbox {
   padding: 0;
@@ -1534,8 +1507,8 @@ input[type=checkbox], input[type=radio] {
 .content .content-list .medium-list .medium-item .link-small {
   padding-left: 32px;
 }
-.content .content-list .medium-list .medium-item .medium-active {
-  width: 80%;
+.content .content-list .medium-list .medium-item .icon-list {
+  top: 4px;
 }
 .content .content-list .medium-list .medium-item .medium-active .icon-open {
   background-position: -32px -704px;
@@ -1543,6 +1516,31 @@ input[type=checkbox], input[type=radio] {
 .content .content-list .medium-list .medium-item .medium-active .list-title .number {
   background: rgba(0, 0, 0, 0.2);
   opacity: 1;
+}
+.content .content-list .medium-list .medium-item .medium-active .icon-list {
+  opacity: 1;
+  top: 0;
+}
+.content .content-list .medium-list .medium-item .medium-active .icon-list li {
+  padding: 0;
+}
+.content .content-list .medium-list .medium-item .medium-active .icon-list li .icon-list-add {
+  background-position: 0px -768px;
+}
+.content .content-list .medium-list .medium-item .medium-active .icon-list li .icon-list-add:hover {
+  background-position: -32px -768px;
+}
+.content .content-list .medium-list .medium-item .medium-active .icon-list li .icon-list-edit {
+  background-position: 0px -800px;
+}
+.content .content-list .medium-list .medium-item .medium-active .icon-list li .icon-list-edit:hover {
+  background-position: -32px -800px;
+}
+.content .content-list .medium-list .medium-item .medium-active .icon-list li .icon-list-delete {
+  background-position: 0px -512px;
+}
+.content .content-list .medium-list .medium-item .medium-active .icon-list li .icon-list-delete:hover {
+  background-position: -32px -512px;
 }
 .content .content-list .medium-list .medium-item .medium-as-last {
   position: relative;
@@ -1582,6 +1580,9 @@ input[type=checkbox], input[type=radio] {
 }
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-delete:hover {
   background-position: -32px -512px;
+}
+.content .content-list .medium-list .nested {
+  margin-left: 0;
 }
 .content .content-list .last-list {
   border-left: 2px solid #ae4747;

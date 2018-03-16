@@ -84,28 +84,66 @@ class CompanyController extends Controller
         // Подключение политики
         $company = new Company;
 
-        // Получаем список секторов
-        $sectors = Sector::get()->keyBy('id')->toArray();
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('sectors', false, 'index');
+
+        // Главный запрос
+        $sectors = Sector::moderatorLimit($answer)
+        ->get(['id','sector_name','industry_status','sector_parent_id'])
+        ->keyBy('id')
+        ->toArray();
+
+        // Формируем дерево вложенности
         $sectors_cat = [];
-        foreach ($sectors as $id => &$node) {   
-          //Если нет вложений
-          if (!$node['sector_parent_id']){
+        foreach ($sectors as $id => &$node) { 
+
+          // Если нет вложений
+          if (!$node['sector_parent_id']) {
             $sectors_cat[$id] = &$node;
           } else { 
-          //Если есть потомки то перебераем массив
+
+          // Если есть потомки то перебераем массив
             $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
           };
         };
+
         // dd($sectors_cat);
-        $sectors_list = [];
-        foreach ($sectors_cat as $id => &$node) {
-            $sectors_list[$id] = &$node;
-            if (isset($node['children'])) {
-                foreach ($node['children'] as $id => &$node) {
-                    $sectors_list[$id] = &$node;
-                }
-            };
-        };
+
+        // Функция отрисовки option'ов
+        function tplMenu($sector, $padding) {
+
+            if ($sector['industry_status'] == 1) {
+              $menu = '<option value="'.$sector['id'].'" class="first">'.$sector['sector_name'].'</option>';
+            } else {
+              $menu = '<option value="'.$sector['id'].'">'.$padding.' '.$sector['sector_name'].'</option>';
+            }
+            
+            // Добавляем пробелы вложенному элементу
+            if (isset($sector['children'])) {
+              $i = 1;
+              for($j = 0; $j < $i; $j++){
+                $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+              }     
+              $i++;
+              
+              $menu .= showCat($sector['children'], $padding);
+            }
+            return $menu;
+        }
+        // Рекурсивно считываем наш шаблон
+        function showCat($data, $padding){
+          $string = '';
+          $padding = $padding;
+          foreach($data as $item){
+            $string .= tplMenu($item, $padding);
+          }
+          return $string;
+        }
+
+        // Получаем HTML разметку
+        $sectors_list = showCat($sectors_cat, '');
+
+
         // dd($sectors_list);
 
         // Инфо о странице
@@ -199,28 +237,76 @@ class CompanyController extends Controller
         $company = Company::with('city')->moderatorLimit($answer)->findOrFail($id);
         $this->authorize(getmethod(__FUNCTION__), $company);
 
-        // Получаем список секторов
-        $sectors = Sector::get()->keyBy('id')->toArray();
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('sectors', false, 'index');
+
+        // Главный запрос
+        $sectors = Sector::moderatorLimit($answer)
+        ->get(['id','sector_name','industry_status','sector_parent_id'])
+        ->keyBy('id')
+        ->toArray();
+
+        // Формируем дерево вложенности
         $sectors_cat = [];
-        foreach ($sectors as $id => &$node) {   
-          //Если нет вложений
-          if (!$node['sector_parent_id']){
+        foreach ($sectors as $id => &$node) { 
+
+          // Если нет вложений
+          if (!$node['sector_parent_id']) {
             $sectors_cat[$id] = &$node;
           } else { 
-          //Если есть потомки то перебераем массив
+
+          // Если есть потомки то перебераем массив
             $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
           };
         };
+
         // dd($sectors_cat);
-        $sectors_list = [];
-        foreach ($sectors_cat as $id => &$node) {
-            $sectors_list[$id] = &$node;
-            if (isset($node['children'])) {
-                foreach ($node['children'] as $id => &$node) {
-                    $sectors_list[$id] = &$node;
-                }
-            };
-        };
+
+        // Функция отрисовки option'ов
+        function tplMenu($sector, $padding, $id) {
+
+
+
+          $selected = '';
+          if ($sector['id'] == $id) {
+            // dd($id);
+            $selected = ' selected';
+          }
+          if ($sector['industry_status'] == 1) {
+            $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['sector_name'].'</option>';
+          } else {
+            $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['sector_name'].'</option>';
+          }
+            
+            // Добавляем пробелы вложенному элементу
+            if (isset($sector['children'])) {
+              $i = 1;
+              for($j = 0; $j < $i; $j++){
+                $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+              }     
+              $i++;
+              
+              $menu .= showCat($sector['children'], $padding, $id);
+            }
+            return $menu;
+        }
+        // Рекурсивно считываем наш шаблон
+        function showCat($data, $padding, $id){
+
+          $string = '';
+          $padding = $padding;
+          foreach($data as $item){
+            $string .= tplMenu($item, $padding, $id);
+          }
+          return $string;
+        }
+
+
+        // Получаем HTML разметку
+        $sectors_list = showCat($sectors_cat, '', $company->sector_id);
+
+
+        // dd($sectors_list);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -268,7 +354,10 @@ class CompanyController extends Controller
         $company->account_correspondent = $request->account_correspondent;
         $company->bank = $request->bank;
 
-        $company->sector_id = $request->sector_id;
+        if ($company->sector_id !== $request->sector_id) {
+          $company->sector_id = $request->sector_id;
+        }
+        
 
         // $company->director_user_id = Auth::user()->company_id;
         $company->save();

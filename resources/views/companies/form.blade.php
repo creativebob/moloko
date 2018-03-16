@@ -44,7 +44,11 @@
             </div>
             <div class="small-12 medium-6 cell">
               <label>Вид деятельности компании
-                  @include('includes.inputs.sector', ['sector_id'=>$company->sector_id, 'name'=>'sector_id'])
+                <select name="sector_id" class="sectors-list">
+                  @php
+                    echo $sectors_list;
+                  @endphp
+                </select>
               </label>
             </div>
           </div>

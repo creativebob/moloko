@@ -231,8 +231,7 @@
 @include('includes.scripts.modal-delete-ajax-script')
 {{-- Маска ввода --}}
 @include('includes.scripts.inputs-mask')
-{{-- Скрипт чекбоксов и перетаскивания для меню --}}
-@include('includes.scripts.menu-scripts')
+
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
 <script type="text/javascript">
@@ -384,14 +383,16 @@ $(function() {
       data: $(this).closest('.form-add').serialize(),
       success:function(html){
 
+        // $('#content-list').html(html);
+        // Foundation.reInit($('#content-list'));
+        $('#content-list').foundation('destroy');
+        $('#content-list').html(html);
+        // $('#content-list').html(html).foundation();
 
-        $('#content-list').foundation('_destroy');
-
-
-        $('#content-list').html(html).foundation();
 
         
-        $('#content-list').foundation();
+        
+        // $('#content-list').foundation();
 
         // Foundation.reflow($('#content-list'), 'accordion-menu');
         // Foundation.reInit($('#content-list'));

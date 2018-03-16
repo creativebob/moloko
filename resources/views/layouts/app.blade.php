@@ -113,9 +113,9 @@
       </div>
     </div>
     {{-- Основной сайдбар, весь функционал --}}
-    @include('includes.sidebar')
+    @include('layouts.sidebar')
     {{-- Менеджер задач --}}
-    @include('includes.task-manager')
+    @include('layouts.task-manager')
     {{-- Основной контент --}}
     <div id="wrapper">
       <div class="grid-x breadcrumbs block-refresh">
