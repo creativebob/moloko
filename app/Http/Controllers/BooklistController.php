@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Booklist;
+use App\List_item;
+
 use App\Http\Controllers\Session;
 use App\Scopes\ModerationScope;
 
@@ -39,6 +41,39 @@ class BooklistController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
+
+        // if($request->new_booklist){
+
+        //     // ГЛАВНЫЙ ЗАПРОС:
+
+        //     $booklist = Booklist::findOrFail($request->booklist_new_id);
+        //     $booklist->booklist_name = $request->new_booklist;
+        //     $booklist->author_id = Auth::user()->id;
+        //     $booklist->entity_alias = $request->entity_alias;
+        //     $booklist->save();
+
+        //     $booklist_id[] = $booklist->id;
+
+        //     $booklist = new Booklist;
+        //     $booklist->booklist_name = 'Default';
+        //     $booklist->author_id = Auth::user()->id;
+        //     $booklist->entity_alias = $request->entity_alias;
+        //     $booklist->save();
+
+        // } else {
+
+        //     $booklist_id = $request->booklist_id;
+        // };
+
+        if($request->new_booklist){
+
+            $request->new_booklist = 'Хуй';
+
+        } else {
+
+        };
+
+
         $booklists = Booklist::moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -62,7 +97,58 @@ class BooklistController extends Controller
 
     public function store(Request $request)
     {
-        //
+
+        // Подключение политики
+        // $this->authorize(getmethod(__FUNCTION__), Booklist::class);
+
+        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $booklist = Booklist::where('author_id', $user->id)
+        ->where('booklist_name', 'Default')
+        ->where('entity_alias', $request->entity_alias)
+        ->first();
+
+        if($booklist){
+
+            $booklist_id = $booklist->id;
+
+        } else {
+
+            $booklist = new Booklist;
+            $booklist->booklist_name = 'Default';
+            $booklist->author_id = $user->id;
+            $booklist->entity_alias = $request->entity_alias;
+            $booklist->save();
+
+            $booklist_id = $booklist->id;
+
+        };
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $list_item = List_item::where('booklist_id', $booklist_id)
+        ->where('item_entity', $request->item_entity)
+        ->first();
+
+        if($list_item){
+
+            $list_item_id = $list_item->id;
+            $list_item = List_item::destroy($list_item_id);
+        } else {
+
+            $list_item = new List_item;
+            $list_item->item_entity = $request->item_entity;
+            $list_item->booklist_id = $booklist_id;
+            $list_item->author_id = $user->id;
+            $list_item->save();
+        };
+
+
+
     }
 
     public function show($id)
@@ -78,7 +164,7 @@ class BooklistController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+
     }
 
     public function destroy($id)

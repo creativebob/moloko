@@ -40,13 +40,45 @@ $(function() {
 
   for(var i=0; i<checkboxes.length; i++) {
     checkboxes[i].onclick = function() {
-      var checkedCount = document.querySelectorAll('input.table-check:checked').length;
-      console.log('Берем выделенные чекбоксы  = ' + checkedCount);
-      checkall.checked = checkedCount > 0;
-      checkall.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
-      console.log('Ставим главному статус ' + checkall.checked + ' и меняем спрайт');
 
-      alert('Переменную могу отдать куда тибе надабна');
+
+  var parent = $(this).closest('.item');
+  var entity_alias = parent.attr('id').split('-')[0];
+  var item_entity = parent.attr('id').split('-')[1];
+
+
+  var checkedCount = document.querySelectorAll('input.table-check:checked').length;
+  console.log('Берем выделенные чекбоксы  = ' + checkedCount);
+  checkall.checked = checkedCount > 0;
+  checkall.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
+  console.log('Ставим главному статус ' + checkall.checked + ' и меняем спрайт');
+
+
+      // alert('Переменную могу отдать куда тибе надабна');
+
+  // Ajax
+  $.ajax({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    url: '/booklists',
+    type: "POST",
+    data: {item_entity: item_entity, entity_alias: entity_alias},
+    success: function (data) {
+      alert(data);
+
+      var result = $.parseJSON(data);
+      if (result.status == 0) {
+
+      } else {
+
+        // alert(result.msg);
+
+      };
+    }
+  });
+
+
     };
   };
 

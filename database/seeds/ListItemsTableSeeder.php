@@ -20,6 +20,18 @@ class ListItemsTableSeeder extends Seeder
                 'item_entity' => 6,
                 'booklist_id' => 1,
             ],
+            [
+                'item_entity' => 7,
+                'booklist_id' => 2,
+            ],
+            [
+                'item_entity' => 8,
+                'booklist_id' => 2,
+            ],
+            [
+                'item_entity' => 9,
+                'booklist_id' => 3,
+            ],
         ]);
     }
 }

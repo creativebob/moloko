@@ -16,7 +16,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Фильтры
 use App\Scopes\Filters\CityFilter;
-
+use App\Scopes\Filters\BooklistFilter;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -33,7 +33,8 @@ class User extends Authenticatable
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-
+    use BooklistFilter;
+    
     // Фильтры
     use CityFilter;
 
@@ -220,6 +221,14 @@ class User extends Authenticatable
     return $this->belongsToMany('App\Booklist');
   }
 
+
+    /**
+  * Получаем списки авторов
+  */
+  public function booklists_author()
+  {
+    return $this->hasMany('App\Booklist', 'author_id');
+  }
 
     /**
   * Получаем штат.

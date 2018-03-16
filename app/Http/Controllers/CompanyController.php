@@ -8,6 +8,8 @@ use App\Company;
 use App\Page;
 use App\Sector;
 use App\Folder;
+use App\Booklist;
+use App\List_item;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -42,6 +44,7 @@ class CompanyController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
         // dd($answer);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -53,25 +56,36 @@ class CompanyController extends Controller
         ->moderatorLimit($answer)
         ->cityFilter($request)
         ->sectorFilter($request)
+        ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-
-        $filter_query = Company::with('city', 'sector')->moderatorLimit($answer)->get();
         $filter = [];
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
-
-
-
+        $filter = $this->filter($request);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
         return view('companies.index', compact('companies', 'page_info', 'filter', 'user'));
+    }
+
+    public function filter($request)
+    {
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+
+        $filter = [];
+        $filter_query = Company::with('city', 'sector')->moderatorLimit($answer)->get();
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
+        $filter = addFilter($filter, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $this->entity_name);
+
+        return $filter;
     }
 
 

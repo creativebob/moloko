@@ -282,6 +282,7 @@ input[type=checkbox], input[type=radio] {
 }
 
 .checkboxer-menu {
+  width: 100%;
   display: block;
   top: 0px;
   float: left;
@@ -301,7 +302,10 @@ input[type=checkbox], input[type=radio] {
   border-top: 1px solid #eee;
   border-bottom: 1px solid transparent;
   list-style-type: none;
-  height: 30px;
+  width: 100%;
+}
+
+.checkboxer-menu li label {
   width: 100%;
 }
 
@@ -445,11 +449,52 @@ input[type=checkbox], input[type=radio] {
   display: none !important;
 }
 
+.booklist_button {
+  margin-top: 2px;
+  display: inline-block;
+  position: absolute;
+  top: 4px;
+  padding: 2px 6px;
+  background-color: transparent;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  text-align: center;
+  transition: background-color ease 0.2s;
+  color: #ffffff;
+}
+
+.booklist_button.plus {
+  right: 40px;
+}
+
+.booklist_button.minus {
+  right: 5px;
+}
+
+.count_booklist_button {
+  position: relative;
+  top: -1px;
+}
+
+label:hover .booklist_button {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+label:hover .booklist_button:hover {
+  background-color: #1779ba;
+}
+
+.checkboxer {
+  position: relative;
+  padding: 0.5rem 0rem;
+}
+
 .checkboxer-wrap {
-  width: 232px;
+  position: relative;
+  width: 100%;
   display: block;
   color: #666666;
-  padding: 0rem 0rem 0rem 1rem;
+  padding: 0rem 20px 0rem 1rem;
   border: 1px solid #ccc;
   font-size: 0.8rem;
   cursor: pointer;
@@ -457,14 +502,18 @@ input[type=checkbox], input[type=radio] {
 }
 
 .checkboxer-toggle {
-  width: auto;
+  width: 100%;
   height: 32px;
   display: inline-block;
 }
 
 .checkboxer-clean {
-  width: 26px;
+  position: absolute;
+  top: 1px;
+  right: 24px;
+  width: 20px;
   display: inline-block;
+  margin-right: 6px;
 }
 
 .checkboxer-pane {
@@ -479,13 +528,15 @@ input[type=checkbox], input[type=radio] {
 
 .checkboxer-button {
   width: 34px;
-  display: inline-block;
+  position: absolute;
+  display: block;
   text-align: right;
+  right: 0px;
+  top: 0px;
 }
 
 .checkboxer-title {
-  width: 169px;
-  display: inline-block;
+  width: 100%;
 }
 
 .checkboxer-button span, .checkboxer-title span {
@@ -523,10 +574,6 @@ input[type=checkbox], input[type=radio] {
   width: 20px;
 }
 
-.dropdown-pane.checkboxer-pane {
-  width: 232px;
-}
-
 .icon-close-modal {
   background-position: 0px -608px;
 }
@@ -561,7 +608,7 @@ input[type=checkbox], input[type=radio] {
   color: #666666;
   position: relative;
 }
-.inputs label input, .inputs label textarea {
+.inputs input, .inputs textarea {
   margin-top: 0.25rem;
   margin-bottom: 0.85rem;
   height: 26px;
@@ -572,14 +619,14 @@ input[type=checkbox], input[type=radio] {
   border: 1px solid #999999;
   box-shadow: none;
 }
-.inputs label textarea {
+.inputs textarea {
   height: 8rem;
 }
-.inputs label .is-invalid-input:not(:focus) {
+.inputs .is-invalid-input:not(:focus) {
   border-color: #cc4b37;
   background-color: #f9ecea;
 }
-.inputs label select {
+.inputs select {
   margin-top: 0.25rem;
   margin-bottom: 0.7rem;
   height: 26px;
@@ -589,8 +636,24 @@ input[type=checkbox], input[type=radio] {
   padding: 4px 4px 3px 16px;
   background-position: 100% center;
 }
-.inputs label input:focus, .inputs label select:focus, .inputs label textarea:focus {
+.inputs input:focus, .inputs select:focus, .inputs textarea:focus {
   border: 1px solid #333333;
+}
+.inputs .input-group-label:first-child {
+  margin-top: 0.25rem;
+  margin-bottom: 0.85rem;
+  height: 26px;
+  color: #666666;
+  background-color: #f5f5f5;
+  font-size: 0.8rem;
+  padding: 5px 12px;
+  border: 1px solid #ccc;
+  box-shadow: none;
+}
+.inputs .input-group-button input {
+  background-color: #000000;
+  border-color: #000000;
+  color: #ffffff;
 }
 
 .sprite-input-left {
