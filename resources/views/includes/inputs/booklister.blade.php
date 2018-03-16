@@ -45,13 +45,28 @@
 					{{ Form::checkbox($name . '_id[]', $value->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->id]) }}
 					<label for="{{$name}}-{{ $value->id }}">
 						<span>{{ str_limit($value->$entity_name, $limit = 18, $end = ' ...') }}</span>
+						<span title="Добавить позиции в список" class="booklist_button plus">+
+							<span class="count_booklist_button">14</span>
+						</span>
+						<span title="Исключить позиции из списка" class="booklist_button minus">-
+							<span class="count_booklist_button">3</span>
+						</span>
 					</label>
 				@endif
 
 			</li>
-
 		@endforeach
 	</ul>
+
+				<div class="input-group inputs">
+				  {{-- <span class="input-group-label">Элементов: 34</span> --}}
+				  <input class="input-group-field" type="text" name="new_booklist">
+				  <input type="hidden" name="entity_alias" value="users">
+				  <input type="hidden" name="booklist_new_id" value="{{$checkboxer_mass[$name]['collection']->where('booklist_name', 'Default')->first()->id}}">
+				  <div class="input-group-button">
+				    <input type="submit" class="button" value="Создать список">
+				  </div>
+				</div>
 
 </div>
 

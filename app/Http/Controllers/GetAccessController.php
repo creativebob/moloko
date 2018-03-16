@@ -120,7 +120,7 @@ class GetAccessController extends Controller
                 $user_department = $user->staff->first();
                 $user_redirect = $user->staff->first()->position->page->page_alias;
 
-                if(count($user_department) > 0){
+                if($user_department != null){
                     $user_filial_id = $user_department->filial_id;
                     $user_department_id = $user_department->department_id;             
                 } else {abort(403, "Пользователь не устроен в компании!");};
