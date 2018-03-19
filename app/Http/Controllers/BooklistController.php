@@ -65,14 +65,6 @@ class BooklistController extends Controller
         //     $booklist_id = $request->booklist_id;
         // };
 
-        if($request->new_booklist){
-
-            $request->new_booklist = 'Хуй';
-
-        } else {
-
-        };
-
 
         $booklists = Booklist::moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -171,6 +163,53 @@ class BooklistController extends Controller
     {
         //
     }
+
+    public function setbooklist(Request $request)
+    {
+
+        if($request->new_booklist_name){
+
+            $booklist = Booklist::where('author_id', $request->user()->id)
+            ->where('booklist_name', 'Default')
+            ->where('entity_alias', $request->entity_alias)
+            ->first();
+
+            if($booklist){
+
+                $booklist->booklist_name = $request->new_booklist_name;
+                $booklist->save();
+
+                $booklist_id = $booklist->id;
+
+
+                $booklist = new Booklist;
+                $booklist->booklist_name = 'Default';
+                $booklist->author_id = $request->user()->id;
+                $booklist->entity_alias = $request->entity_alias;
+                $booklist->save(); 
+
+                $value = []; 
+                $filter_query = null;
+
+                $value = addFilter($value, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $request->entity_alias);
+                // echo json_encode($value, JSON_UNESCAPED_UNICODE);
+
+                $name = 'booklist';
+
+                return view('includes.inputs.booklister', ['name'=>$name, 'value'=>$value]);
+
+            } else {
+
+                 echo "Не нашли дефолтный";
+            };
+
+
+        } else {
+            echo "Нихуя не пришло!";
+        };
+
+    }
+
 
 
 }

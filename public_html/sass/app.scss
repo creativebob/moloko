@@ -819,6 +819,17 @@ label:hover .booklist_button:hover
       color: $white;
     }
 
+    .input-group-button a
+    {
+      background-color: $black;
+      border-color: $black;
+      color: $white;
+      height: 26px;
+      margin-top: 4px;
+      padding-top: 5px;
+      font-size: 0.8rem;
+    }
+
 }
 // Расположение иконки в инпуте
 .sprite-input-left {

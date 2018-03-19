@@ -46,7 +46,7 @@
 					<label for="{{$name}}-{{ $value->id }}">
 						<span>{{ str_limit($value->$entity_name, $limit = 18, $end = ' ...') }}</span>
 						<span title="Добавить позиции в список" class="booklist_button plus">+
-							<span class="count_booklist_button">14</span>
+							<span class="count_booklist_button" id="">14</span>
 						</span>
 						<span title="Исключить позиции из списка" class="booklist_button minus">-
 							<span class="count_booklist_button">3</span>
@@ -60,11 +60,10 @@
 
 				<div class="input-group inputs">
 				  {{-- <span class="input-group-label">Элементов: 34</span> --}}
-				  <input class="input-group-field" type="text" name="new_booklist">
+				  <input class="input-group-field" type="text" name="new_booklist" id="new_booklist">
 				  <input type="hidden" name="entity_alias" value="users">
-				  <input type="hidden" name="booklist_new_id" value="{{$checkboxer_mass[$name]['collection']->where('booklist_name', 'Default')->first()->id}}">
 				  <div class="input-group-button">
-				    <input type="submit" class="button" value="Создать список">
+				    <a href="#" class="button" id="button_send_booklister">Создать список</a>
 				  </div>
 				</div>
 
@@ -85,6 +84,45 @@
  	$(".{{$name}} .checkboxer-clean").click(function() {
 		{{$name}}.CheckBoxerClean();
 	});
+
+  	var button_send_booklister = document.getElementById('button_send_booklister');
+
+	button_send_booklister.onclick = function() {
+
+  		var new_booklist_name = document.getElementById('new_booklist').value;
+  		var entity_alias = $('#table-content').data('entity-alias');
+
+		  $.ajax({
+
+		    headers: {
+		      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		    },
+		    url: '/setbooklist',
+		    type: "POST",
+		    data: {new_booklist_name: new_booklist_name, entity_alias: entity_alias},
+		    success: function (html) {
+
+		      // alert(html); 
+
+			$('#{{$name}}-dropdown-bottom-left').foundation('_destroy');
+
+			$(".checkboxer-menu.{{$name}} :checkbox").off( "click");
+			$(".{{$name}} .checkboxer-toggle").off( "click");
+			$(".{{$name}} .checkboxer-clean").off( "click");		
+		    // alert(delete booklist);
+
+		    $('#booklister').html(html);
+		    var elem = $('#{{$name}}-dropdown-bottom-left');
+		    var booklister = new Foundation.Dropdown(elem);
+		    $(elem).foundation('open');
+
+			{{$name}}.CheckBoxerSetWidth(elem);
+
+		    }
+
+		  });
+
+  	};
 
 </script>
 @endif
