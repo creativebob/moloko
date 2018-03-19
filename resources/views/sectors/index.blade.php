@@ -382,20 +382,8 @@ $(function() {
       type: "POST",
       data: $(this).closest('.form-add').serialize(),
       success:function(html){
-
-        // $('#content-list').html(html);
-        // Foundation.reInit($('#content-list'));
         $('#content-list').foundation('destroy');
         $('#content-list').html(html);
-        // $('#content-list').html(html).foundation();
-
-
-        
-        
-        // $('#content-list').foundation();
-
-        // Foundation.reflow($('#content-list'), 'accordion-menu');
-        // Foundation.reInit($('#content-list'));
       }
     });
   });
@@ -518,35 +506,6 @@ $(function() {
     $('.form-error').removeClass('is-visible');
   });
 
-  // Открываем меню и подменю, если только что добавили населенный пункт
-  @if(!empty($data))
-    // Общие правила
-    // Подсвечиваем Филиал
-    $('#sectors-{{ $data['section_id'] }}').addClass('first-active').find('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
-    // Отображаем отдел и филиал, без должностей
-    if ({{ $data['item_id'] }} == 0) {
-      var firstItem = $('#sectors-{{ $data['section_id'] }}').find('.medium-list:first');
-      // Открываем аккордион
-      $('#content-list').foundation('down', firstItem); 
-    } else {
-      // Перебираем родителей и подсвечиваем их
-      $.each($('#sectors-{{ $data['item_id'] }}').parents('.parent-item').get().reverse(), function (index) {
-        $(this).children('.medium-link:first').addClass('medium-active');
-        $(this).children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
-        $('#content-list').foundation('down', $(this).closest('.medium-list'));
-      });
-      // Если родитель содержит не пустой элемент
-      if ($('#sectors-{{ $data['item_id'] }}').parent('.parent').has('.parent-item')) {
-        $('#content-list').foundation('down', $('#sectors-{{ $data['item_id'] }}').closest('.medium-list'));
-      };
-      // Если элемент содержит вложенность, открываем его
-      if ($('#sectors-{{ $data['item_id'] }}').hasClass('parent')) {
-        $('#sectors-{{ $data['item_id'] }}').children('.medium-link:first').addClass('medium-active');
-        $('#sectors-{{ $data['item_id'] }}').children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
-        $('#content-list').foundation('down', $('#sectors-{{ $data['item_id'] }}').children('.medium-list:first'));
-      }
-    };
-  @endif
 });
 </script>
 @endsection

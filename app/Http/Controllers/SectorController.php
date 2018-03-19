@@ -166,7 +166,6 @@ class SectorController extends Controller
     // dd($sectors_tree);
 
     // Отдаем Ajax
-
     return view('sectors.industry-list', ['sectors_tree' => $sectors_tree, 'id' => $request->id]);
   }
 

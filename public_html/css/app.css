@@ -1418,24 +1418,25 @@ label:hover .booklist_button:hover {
   display: inline-block;
   margin-left: 1rem;
 }
-.content .content-list a:hover .icon-drop {
+.content .content-list a:hover ~ .drop-list .icon-drop, .content .content-list .drop-list:hover .icon-drop, .content .content-list .icon-list:hover ~ .drop-list .icon-drop {
   opacity: 0.3;
 }
-.content .content-list a:hover .icon-drop:hover {
+.content .content-list a:hover ~ .drop-list .icon-drop:hover, .content .content-list .drop-list:hover .icon-drop:hover, .content .content-list .icon-list:hover ~ .drop-list .icon-drop:hover {
   opacity: 1;
 }
 .content .content-list .is-accordion-submenu-parent:not(.has-submenu-toggle) > a::after {
   display: none;
 }
 .content .content-list .icon-list {
-  opacity: 0;
   position: absolute;
   right: 2rem;
   transition: 0.2s ease opacity;
   cursor: pointer;
   z-index: 5;
+  top: 0;
+  opacity: 0;
 }
-.content .content-list .icon-list li {
+.content .content-list .icon-list div {
   display: inline-block;
   width: 32px;
 }
@@ -1443,7 +1444,6 @@ label:hover .booklist_button:hover {
   display: inline-block;
   position: absolute;
   top: 0;
-  margin-left: -68px;
   z-index: 5;
   padding: 8px 0 8px 4px;
 }
@@ -1468,6 +1468,10 @@ label:hover .booklist_button:hover {
   display: inline;
   padding: 0;
 }
+.content .content-list .empty-item {
+  height: 8px;
+  background-color: #ffffff;
+}
 .content .content-list .first-item {
   background-color: #494949;
   margin-bottom: 2px;
@@ -1477,8 +1481,7 @@ label:hover .booklist_button:hover {
   font-family: "PFDinDisplayPro-Light";
   font-size: 1rem;
   color: #ffffff;
-  padding: 8px;
-  padding-left: 68px;
+  padding: 8px 150px 8px 68px;
 }
 .content .content-list .first-item .first-link .icon-open {
   background-position: -96px -704px;
@@ -1496,9 +1499,6 @@ label:hover .booklist_button:hover {
 .content .content-list .first-item .icon-drop {
   background-position: -96px -832px;
 }
-.content .content-list .first-item .icon-list {
-  top: 8px;
-}
 .content .content-list .first-active {
   background-color: #ae4747;
 }
@@ -1512,33 +1512,29 @@ label:hover .booklist_button:hover {
   background: rgba(255, 255, 255, 0.1);
   opacity: 1;
 }
-.content .content-list .first-active .first-link .icon-list {
-  z-index: 5;
+.content .content-list .first-active .icon-list {
   opacity: 1;
-  top: 0;
-}
-.content .content-list .first-active .first-link .icon-list li {
   padding: 8px 0;
 }
-.content .content-list .first-active .first-link .icon-list li .sprite:focus {
+.content .content-list .first-active .icon-list div .sprite:focus {
   outline: none;
 }
-.content .content-list .first-active .first-link .icon-list li .icon-list-add {
+.content .content-list .first-active .icon-list div .icon-list-add {
   background-position: -128px -768px;
 }
-.content .content-list .first-active .first-link .icon-list li .icon-list-add:hover {
+.content .content-list .first-active .icon-list div .icon-list-add:hover {
   background-position: -96px -768px;
 }
-.content .content-list .first-active .first-link .icon-list li .icon-list-edit {
+.content .content-list .first-active .icon-list div .icon-list-edit {
   background-position: -96px -800px;
 }
-.content .content-list .first-active .first-link .icon-list li .icon-list-edit:hover {
+.content .content-list .first-active .icon-list div .icon-list-edit:hover {
   background-position: -128px -800px;
 }
-.content .content-list .first-active .first-link .icon-list li .icon-list-delete {
+.content .content-list .first-active .icon-list div .icon-list-delete {
   background-position: -96px -512px;
 }
-.content .content-list .first-active .first-link .icon-list li .icon-list-delete:hover {
+.content .content-list .first-active .icon-list div .icon-list-delete:hover {
   background-position: -128px -512px;
 }
 .content .content-list .medium-list .medium-item {
@@ -1559,7 +1555,7 @@ label:hover .booklist_button:hover {
   padding: 0 0 0 8px;
   padding-left: 68px;
 }
-.content .content-list .medium-list .medium-item .medium-link .list-title span {
+.content .content-list .medium-list .medium-item .medium-link span {
   display: inline-block;
   vertical-align: middle;
 }
@@ -1571,39 +1567,7 @@ label:hover .booklist_button:hover {
   padding-left: 32px;
 }
 .content .content-list .medium-list .medium-item .icon-list {
-  top: 4px;
-}
-.content .content-list .medium-list .medium-item .medium-active .icon-open {
-  background-position: -32px -704px;
-}
-.content .content-list .medium-list .medium-item .medium-active .list-title .number {
-  background: rgba(0, 0, 0, 0.2);
-  opacity: 1;
-}
-.content .content-list .medium-list .medium-item .medium-active .icon-list {
-  opacity: 1;
-  top: 0;
-}
-.content .content-list .medium-list .medium-item .medium-active .icon-list li {
   padding: 0;
-}
-.content .content-list .medium-list .medium-item .medium-active .icon-list li .icon-list-add {
-  background-position: 0px -768px;
-}
-.content .content-list .medium-list .medium-item .medium-active .icon-list li .icon-list-add:hover {
-  background-position: -32px -768px;
-}
-.content .content-list .medium-list .medium-item .medium-active .icon-list li .icon-list-edit {
-  background-position: 0px -800px;
-}
-.content .content-list .medium-list .medium-item .medium-active .icon-list li .icon-list-edit:hover {
-  background-position: -32px -800px;
-}
-.content .content-list .medium-list .medium-item .medium-active .icon-list li .icon-list-delete {
-  background-position: 0px -512px;
-}
-.content .content-list .medium-list .medium-item .medium-active .icon-list li .icon-list-delete:hover {
-  background-position: -32px -512px;
 }
 .content .content-list .medium-list .medium-item .medium-as-last {
   position: relative;
@@ -1617,31 +1581,58 @@ label:hover .booklist_button:hover {
 }
 .content .content-list .medium-list .medium-item .medium-as-last .icon-list {
   transition: 0.2s ease opacity;
-  opacity: 0;
   right: 0.2rem;
 }
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list {
   opacity: 1;
 }
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div {
   padding: 0;
 }
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-add {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div .icon-list-add {
   background-position: 0px -768px;
 }
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-add:hover {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div .icon-list-add:hover {
   background-position: -64px -768px;
 }
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-edit {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div .icon-list-edit {
   background-position: 0px -800px;
 }
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-edit:hover {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div .icon-list-edit:hover {
   background-position: -32px -800px;
 }
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-delete {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div .icon-list-delete {
   background-position: 0px -512px;
 }
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list li .icon-list-delete:hover {
+.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div .icon-list-delete:hover {
+  background-position: -32px -512px;
+}
+.content .content-list .medium-list .medium-active > .medium-link .icon-open {
+  background-position: -32px -704px;
+}
+.content .content-list .medium-list .medium-active > .medium-link .number {
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 1;
+}
+.content .content-list .medium-list .medium-active > .icon-list {
+  opacity: 1;
+}
+.content .content-list .medium-list .medium-active > .icon-list div .icon-list-add {
+  background-position: 0px -768px;
+}
+.content .content-list .medium-list .medium-active > .icon-list div .icon-list-add:hover {
+  background-position: -32px -768px;
+}
+.content .content-list .medium-list .medium-active > .icon-list div .icon-list-edit {
+  background-position: 0px -800px;
+}
+.content .content-list .medium-list .medium-active > .icon-list div .icon-list-edit:hover {
+  background-position: -32px -800px;
+}
+.content .content-list .medium-list .medium-active > .icon-list div .icon-list-delete {
+  background-position: 0px -512px;
+}
+.content .content-list .medium-list .medium-active > .icon-list div .icon-list-delete:hover {
   background-position: -32px -512px;
 }
 .content .content-list .medium-list .nested {
@@ -1666,13 +1657,9 @@ label:hover .booklist_button:hover {
 }
 .content .content-list .last-list .last-item .last-link .icon-list {
   right: 0.1rem;
-  opacity: 0;
 }
 .content .content-list .last-list .last-item .last-link .icon-list li {
   padding: 0;
-}
-.content .content-list .last-list .last-item .last-link:hover .icon-list {
-  opacity: 1;
 }
 .content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-add {
   background-position: 0px -768px;

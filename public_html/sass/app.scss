@@ -1729,8 +1729,8 @@ label:hover .booklist_button:hover
       margin-left: 1rem;
     }
 
-    // При наведении отображаели элемент сортировки
-    a:hover {
+    // При наведении отображаем элемент сортировки
+    a:hover ~ .drop-list, .drop-list:hover, .icon-list:hover ~ .drop-list {
 
       .icon-drop {
         opacity: 0.3;
@@ -1744,24 +1744,27 @@ label:hover .booklist_button:hover
     .is-accordion-submenu-parent:not(.has-submenu-toggle) > a::after {
       display: none;
     }
+
     .icon-list {
-      opacity: 0;
       position: absolute;
       right: 2rem;
       transition: 0.2s ease opacity;
       cursor: pointer;
       z-index: 5;
+      top: 0;
+      opacity: 0;
 
-      li {
+      div {
         display: inline-block;
         width: 32px;
       }
     }
+
     .drop-list {
       display: inline-block;
       position: absolute;
       top: 0;
-      margin-left: -68px;
+      // left: 0;
       z-index: 5;
       padding: 8px 0 8px 4px;
 
@@ -1772,9 +1775,11 @@ label:hover .booklist_button:hover
         opacity: 1;
       }
     }
+
     .icon-list:focus {
       outline-color: none;
     }
+
     .number {
       font-size: 0.7rem;
       margin-left: 0.6rem;
@@ -1783,12 +1788,18 @@ label:hover .booklist_button:hover
       opacity: 0;
       transition: 0.3s ease opacity;
     }
+
     .link-recursion {
       display: inline;
       padding: 0;
     }
 
-    // Первые элементы списка (Шапки)
+    .empty-item {
+      height: 8px;
+      background-color: $list-item-li-bg-color;
+    }
+
+    // Первые элементы списка
     .first-item {
       background-color: $list-item-bg-color;
       margin-bottom: 2px;
@@ -1799,8 +1810,8 @@ label:hover .booklist_button:hover
         font-family: $PFDDPL;
         font-size: 1rem;
         color: $list-item-color;
-        padding: 8px;
-        padding-left: 68px;
+        padding: 8px 150px 8px 68px;
+        // padding-left: 68px;
         
         .icon-open {
           background-position: -96px -704px;
@@ -1817,18 +1828,11 @@ label:hover .booklist_button:hover
         padding-left: 32px;
       }
       .icon-drop {
-
         background-position: -96px -832px;
       }
-
-      .icon-list {
-        top: 8px;
-      }
-
-
     }
 
-    // Активные первые элементы списка (Шапки)
+    // Активные первые элементы списка
     .first-active {
       background-color: $list-item-active-bg-color;
 
@@ -1842,39 +1846,36 @@ label:hover .booklist_button:hover
           background: rgba(255, 255, 255, 0.1);
           opacity: 1;
         }
-        .icon-list {
-          z-index: 5;
-          opacity: 1;
-          top: 0;
+      }
+      .icon-list {
+        opacity: 1;
+        padding: 8px 0;
 
-          li {
-            padding: 8px 0;
-
-            .sprite:focus {
-              outline: none;
-            }
-            .icon-list-add {
-              background-position: -128px -768px; 
-            }
-            .icon-list-add:hover {
-              background-position: -96px -768px; 
-            }
-            .icon-list-edit {
-              background-position: -96px -800px; 
-            }
-            .icon-list-edit:hover {
-              background-position: -128px -800px; 
-            }
-            .icon-list-delete {
-              background-position: -96px -512px; 
-            }
-            .icon-list-delete:hover {
-              background-position: -128px -512px;
-            }
+        div {
+          
+          .sprite:focus {
+            outline: none;
+          }
+          .icon-list-add {
+            background-position: -128px -768px; 
+          }
+          .icon-list-add:hover {
+            background-position: -96px -768px; 
+          }
+          .icon-list-edit {
+            background-position: -96px -800px; 
+          }
+          .icon-list-edit:hover {
+            background-position: -128px -800px; 
+          }
+          .icon-list-delete {
+            background-position: -96px -512px; 
+          }
+          .icon-list-delete:hover {
+            background-position: -128px -512px;
           }
         }
       }
-     
     }
     // Средний список
     .medium-list {
@@ -1885,12 +1886,11 @@ label:hover .booklist_button:hover
         position: relative;
         padding-left: 2rem;
 
-        
         .checkbox {
           padding: 0;
         }
-        .icon-drop {
 
+        .icon-drop {
           background-position: 0px -832px;
         }
         .medium-link {
@@ -1900,13 +1900,12 @@ label:hover .booklist_button:hover
           padding: 0 0 0 8px;
           padding-left: 68px;
 
-          .list-title {
 
-            span {
-              display: inline-block;
-              vertical-align: middle;
-            }
+          span {
+            display: inline-block;
+            vertical-align: middle;
           }
+
           .icon-open {
             background-position: 0px -704px;
             opacity: 0.6;
@@ -1916,49 +1915,9 @@ label:hover .booklist_button:hover
           padding-left: 32px;
         }
         .icon-list {
-          top: 4px;
+          padding: 0;
         }
-        // Активные средние элементы списка
-        .medium-active {
-          // width: 80%;
-
-          .icon-open {
-            background-position: -32px -704px;
-          }
-          .list-title {
-            .number {
-              background: rgba(0, 0, 0, 0.2);
-              opacity: 1;
-            }
-          }
-          .icon-list {
-          opacity: 1;
-          top: 0;
-          
-          li {
-            padding: 0;
-
-            .icon-list-add {
-              background-position: 0px -768px; 
-            }
-            .icon-list-add:hover {
-              background-position: -32px -768px; 
-            }
-            .icon-list-edit {
-              background-position: 0px -800px; 
-            }
-            .icon-list-edit:hover {
-              background-position: -32px -800px; 
-            }
-            .icon-list-delete {
-              background-position: 0px -512px; 
-            }
-            .icon-list-delete:hover {
-              background-position: -32px -512px;
-            }
-          }
-        }
-        }
+        
         // Средний элемент не имеющий вложенного списка
         .medium-as-last {
           position: relative;
@@ -1973,7 +1932,7 @@ label:hover .booklist_button:hover
 
           .icon-list {
             transition: 0.2s ease opacity;
-            opacity: 0;
+            // opacity: 0;
             right: 0.2rem;
           }
         } 
@@ -1981,10 +1940,9 @@ label:hover .booklist_button:hover
           // cursor: pointer;
 
           .icon-list {
-            
             opacity: 1;
 
-            li {
+            div {
               padding: 0;
 
               .icon-list-add {
@@ -2005,6 +1963,47 @@ label:hover .booklist_button:hover
               .icon-list-delete:hover {
                 background-position: -32px -512px;
               }
+            }
+          }
+        }
+      }
+
+      // Активные средние элементы списка
+      .medium-active {
+        // width: 80%;
+
+        > .medium-link {
+          .icon-open {
+            background-position: -32px -704px;
+          }
+          .number {
+            background: rgba(0, 0, 0, 0.2);
+            opacity: 1;
+          }
+        }
+        
+        > .icon-list {
+          opacity: 1;
+        
+          div {
+            
+            .icon-list-add {
+              background-position: 0px -768px; 
+            }
+            .icon-list-add:hover {
+              background-position: -32px -768px; 
+            }
+            .icon-list-edit {
+              background-position: 0px -800px; 
+            }
+            .icon-list-edit:hover {
+              background-position: -32px -800px; 
+            }
+            .icon-list-delete {
+              background-position: 0px -512px; 
+            }
+            .icon-list-delete:hover {
+              background-position: -32px -512px;
             }
           }
         }
@@ -2038,7 +2037,7 @@ label:hover .booklist_button:hover
 
           .icon-list {
             right: 0.1rem;
-            opacity: 0;
+            // opacity: 0;
 
             li {
               padding: 0;
@@ -2048,7 +2047,7 @@ label:hover .booklist_button:hover
         .last-link:hover {
 
           .icon-list {
-            opacity: 1;
+            // opacity: 1;
             
             li {
               
