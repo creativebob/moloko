@@ -122,6 +122,7 @@
                       <input type="checkbox" name="" id="city-check-{{ $city->id }}">
                       <label class="label-check" for="city-check-{{ $city->id }}"></label> 
                     </div>
+                  </li>
                 @endforeach
               </ul>
               @endif

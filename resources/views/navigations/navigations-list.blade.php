@@ -38,7 +38,7 @@
       <label class="label-check" for="check-{{ $menu['id'] }}"></label> 
     </div>
 	  @if(isset($menu['children']))
-     	<ul class="menu vertical medium-list accordion-menu nested" data-accordion-menu data-allow-all-closed data-multi-open="false">
+     	<ul class="menu vertical medium-list accordion-menu nested" data-entity="menus" data-accordion-menu data-allow-all-closed data-multi-open="false">
 	      @foreach($menu['children'] as $menu)
 	        @include('navigations.navigations-list', $menu)
 	      @endforeach
@@ -52,8 +52,8 @@
 		  <ul class="icon-list">
 		  	<li>
 		  		@can('create', App\Menu::class)
-	                <div class="icon-list-add sprite" data-open="menu-add"></div>
-	            @endcan
+            <div class="icon-list-add sprite" data-open="menu-add"></div>
+          @endcan
 		  	</li>
 				<li>
 					@if($menu['edit'] == 1)
