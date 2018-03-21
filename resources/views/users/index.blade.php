@@ -144,12 +144,18 @@
 @section('modals')
   {{-- Модалка удаления с refresh --}}
   @include('includes.modals.modal-delete')
+
+  {{-- Модалка удаления с refresh --}}
+  @include('includes.modals.modal-delete-ajax')
+
 @endsection
 
 @section('scripts')
   {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
   @include('includes.scripts.table-scripts')
-  
+
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-delete-script')
+  @include('includes.scripts.delete-ajax-script')
+
 @endsection

@@ -41,7 +41,6 @@ class BooklistController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-
         // if($request->new_booklist){
 
         //     // ГЛАВНЫЙ ЗАПРОС:
@@ -140,7 +139,6 @@ class BooklistController extends Controller
         };
 
 
-
     }
 
     public function show($id)
@@ -159,9 +157,41 @@ class BooklistController extends Controller
 
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+
+        if($request->ajax()){
+            // return response()->json(['ajax']);
+
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+            // ГЛАВНЫЙ ЗАПРОС:
+            $booklist = Booklist::moderatorLimit($answer)->findOrFail($id);
+
+            // Подключение политики
+            $this->authorize(getmethod(__FUNCTION__), $booklist);
+
+            // Удаляем пользователя с обновлением
+            $booklist = Booklist::moderatorLimit($answer)->where('id', $id)->delete();
+
+            if($booklist) {
+
+                $value = []; 
+                $filter_query = null;
+                $value = addFilter($value, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $request->entity_alias);
+                $name = 'booklist';
+
+                return view('includes.inputs.booklister', ['name'=>$name, 'value'=>$value]);
+
+            } else {
+                echo "Нихуя";
+            };
+
+        }
+
+                echo "Это не Аякс";
+
     }
 
     public function setbooklist(Request $request)
@@ -204,7 +234,6 @@ class BooklistController extends Controller
 
             $value = []; 
             $filter_query = null;
-
             $value = addFilter($value, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $request->entity_alias);
             $name = 'booklist';
 
@@ -215,5 +244,6 @@ class BooklistController extends Controller
         };
 
     }
+
 
 }

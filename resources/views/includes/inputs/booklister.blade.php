@@ -46,7 +46,7 @@
 	<ul class="checkboxer-menu {{$name}}" data-name="{{$name}}">
 
 		@foreach ($main_mass as $key => $value)
-			<li>
+			<li class="item" id="booklists-{{$value->id}}" data-name="{{$value->$entity_name}}">
 
 				@if($value->$entity_name != 'Default')
 
@@ -63,7 +63,7 @@
 						<span class="count_booklist_button">{{ $checkboxer_mass['booklist']['booklists'][$value->id]['minus'] }}</span>
 					</span>
 
-					<em class="icon-delete sprite booklist_delete" data-open="item-delete" data-booklist_id = "{{$value->id}}" aria-controls="item-delete" aria-haspopup="true" tabindex="0"></em>
+					<em class="icon-delete sprite booklist_delete" data-open="item-delete-ajax" data-booklist_id = "{{$value->id}}" aria-controls="item-delete" aria-haspopup="true" tabindex="0"></em>
 
 				@endif
 
@@ -90,25 +90,25 @@
 	});
 
 
-  	$(".{{$name}} .booklist_delete").click(function() {
+ //  	$(".{{$name}} .booklist_delete").click(function() {
 
-  			var booklist_id = $('.booklist_delete').data('booklist_id');
-  			$.ajax({
+ //  			var booklist_id = $('.booklist_delete').data('booklist_id');
+ //  			$.ajax({
 
-		    headers: {
-		      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		    },
-		    url: '/booklists/' + booklist_id,
-		    type: "DELETE",
-		    success: function (html) {
+	// 	    headers: {
+	// 	      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	// 	    },
+	// 	    url: '/booklists/' + booklist_id,
+	// 	    type: "DELETE",
+	// 	    success: function (html) {
 
-		    	alert('Удаляем');
-				button_send_booklister();
-		    }
+	// 	    	alert('Удаляем');
+	// 			button_send_booklister();
+	// 	    }
 
-		  });
+	// 	  });
 
-	});
+	// });
 
 
 
