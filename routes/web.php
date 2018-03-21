@@ -121,6 +121,8 @@ Route::post('/sectors_sort', 'SectorController@sectors_sort')->middleware('auth'
 // Контроллер списков
 Route::resource('/booklists', 'BooklistController')->middleware('auth');
 
+Route::post('/setbooklist', 'BooklistController@setbooklist')->middleware('auth')->name('booklists.setbooklist');
+
 // Контроллер отображения сайтов 
 Route::get('/sites', 'SiteController@index')->middleware('auth')->name('sites.index');
 Route::get('/sites/create', 'SiteController@create')->middleware('auth')->name('sites.create');

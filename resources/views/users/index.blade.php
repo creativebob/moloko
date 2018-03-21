@@ -45,7 +45,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="table-content" data-sticky-container>
+    <table class="table-content tablesorter" id="table-content" data-sticky-container data-entity-alias="users">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
@@ -68,10 +68,13 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($users))
 
+
         @foreach($users as $user)
         <tr class="item @if($user->moderation == 1)no-moderation @endif" id="users-{{ $user->id }}" data-name="{{ $user->first_name.' '.$user->second_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="user_id" id="check-{{ $user->id }}"><label class="label-check" for="check-{{ $user->id }}"></label></td>
+          <td class="td-checkbox checkbox">
+            <input type="checkbox" class="table-check" name="user_id" id="check-{{ $user->id }}" @if (array_key_exists($user->id, $booklist_default)) checked @endif>
+            <label class="label-check" for="check-{{ $user->id }}"></label></td>
           <td class="td-second-name">
             @php
               $edit = 0;

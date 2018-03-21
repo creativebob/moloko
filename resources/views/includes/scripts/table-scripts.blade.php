@@ -46,15 +46,13 @@ $(function() {
   var entity_alias = parent.attr('id').split('-')[0];
   var item_entity = parent.attr('id').split('-')[1];
 
-
   var checkedCount = document.querySelectorAll('input.table-check:checked').length;
-  console.log('Берем выделенные чекбоксы  = ' + checkedCount);
+  console.log('Берем выделенные чекбоксы = ' + checkedCount);
   checkall.checked = checkedCount > 0;
   checkall.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
   console.log('Ставим главному статус ' + checkall.checked + ' и меняем спрайт');
 
-
-      // alert('Переменную могу отдать куда тибе надабна');
+  // alert('Переменную могу отдать куда тибе надабна');
 
   // Ajax
   $.ajax({
@@ -65,7 +63,7 @@ $(function() {
     type: "POST",
     data: {item_entity: item_entity, entity_alias: entity_alias},
     success: function (data) {
-      alert(data);
+      // alert(data);
 
       var result = $.parseJSON(data);
       if (result.status == 0) {

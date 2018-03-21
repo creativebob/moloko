@@ -655,6 +655,15 @@ label:hover .booklist_button:hover {
   border-color: #000000;
   color: #ffffff;
 }
+.inputs .input-group-button a {
+  background-color: #000000;
+  border-color: #000000;
+  color: #ffffff;
+  height: 26px;
+  margin-top: 4px;
+  padding-top: 5px;
+  font-size: 0.8rem;
+}
 
 .sprite-input-left {
   display: inline-block;

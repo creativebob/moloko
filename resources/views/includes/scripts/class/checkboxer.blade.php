@@ -30,8 +30,6 @@
 			$('.' + this.name + '.checkboxer-wrap').css("paddingRight", "60px");
 		}	
 
-
-
 		CheckBoxerSetWidth(){
 
 			this.width = $('.' + this.name + '.checkboxer-wrap').css("width");

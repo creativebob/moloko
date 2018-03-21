@@ -86,7 +86,7 @@
 
         if($request->$column == null){
 
-            $filter[$filter_name]['mass_id'] = null; // Получаем список ID городов
+            $filter[$filter_name]['mass_id'] = null;
             $filter[$filter_name]['count_mass'] = 0;
         } else {
 
