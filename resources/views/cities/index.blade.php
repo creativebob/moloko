@@ -42,116 +42,9 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
-
-    @php
-      $drop = 1;
-    @endphp
-    {{-- @can('sort', App\Region::class)
-      $drop = 1;
-    @endcan --}}
-
-    @if(!empty($regions))
-    <ul class="vertical menu accordion-menu content-list" id="content-list" data-entity="regions" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
-      @foreach ($regions as $region)      
-      <li class="first-item item @if ((count($region->areas) > 0) || (count($region->cities) > 0)) parent @endif" id="regions-{{ $region->id }}" data-name="{{ $region->region_name }}">
-        {{-- <ul class="icon-list">
-          @can('create', App\City::class)
-          <li><div class="icon-list-add sprite" data-open="city-add"></div></li>
-          @endcan
-          @if (($region->system_item !== 1) && ((count($region->areas) + count($region->cities)) == 0))
-            @can('delete', $region)
-            <li><div class="icon-list-delete sprite" data-open="item-delete-ajax"></div></li>
-            @endcan
-          @endif
-        </ul> --}}
-        <a data-list="{{ $region->id }}" class="first-link">
-          <div class="list-title">
-            <div class="icon-open sprite"></div>
-            <span class="first-item-name">{{ $region->region_name }}</span>
-            <span class="number">{{ count($region->areas) + count($region->cities) }}</span>
-          </div>
-        </a>
-        <div class="drop-list checkbox">
-          @if ($drop == 1)
-          <div class="sprite icon-drop"></div>
-          @endif
-          <input type="checkbox" name="" id="region-check-{{ $region->id }}">
-          <label class="label-check white" for="region-check-{{ $region->id }}"></label> 
-        </div>
-        @if((count($region->areas) > 0) || (count($region->cities) > 0))
-        <ul class="menu vertical medium-list accordion-menu" data-entity="areas" data-accordion-menu data-allow-all-closed data-multi-open="false">
-          @foreach ($region->areas as $area)
-            <li class="medium-item item @if (count($area->cities) > 0) parent @endif" id="areas-{{ $area->id }}" data-name="{{ $area->area_name }}">
-              {{-- <ul class="icon-list">
-                @if((count($area->cities) == 0) && (($area->system_item !== 1)))
-                  @can('delete', $area)
-                  <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
-                  @endcan
-                @endif
-              </ul> --}}
-              <a class="medium-link">
-                <div class="list-title">
-                  <div class="icon-open sprite"></div>
-                  <span>{{ $area->area_name }}</span>
-                  <span class="number">{{ count($area->cities) }}</span>
-                </div>
-              </a>
-              <div class="drop-list checkbox">
-                @if ($drop == 1)
-                <div class="sprite icon-drop"></div>
-                @endif
-                <input type="checkbox" name="" id="area-check-{{ $area->id }}">
-                <label class="label-check" for="area-check-{{ $area->id }}"></label> 
-              </div>
-              @if(count($area->cities) > 0)
-              <ul class="menu vertical nested last-list" data-entity="cities">
-                @foreach ($area->cities as $city)
-                  <li class="last-item item" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
-                    {{-- <ul class="icon-list">
-                      @if($city->system_item !== 1)
-                        @can('delete', $city)
-                        <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
-                        @endcan
-                      @endif
-                    </ul> --}}
-                    <a class="last-link">{{ $city->city_name }}</a>
-                    <div class="drop-list checkbox">
-                      @if ($drop == 1)
-                      <div class="sprite icon-drop"></div>
-                      @endif
-                      <input type="checkbox" name="" id="city-check-{{ $city->id }}">
-                      <label class="label-check" for="city-check-{{ $city->id }}"></label> 
-                    </div>
-                  </li>
-                @endforeach
-              </ul>
-              @endif
-            </li>
-          @endforeach
-          @if(count($region->cities) > 0)
-            @foreach ($region->cities as $city)
-              <li class="medium-item item" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
-                {{--<ul class="icon-list">
-                  @can('delete', $city)
-                  <li><div class="icon-list-delete sprite" data-open="item-delete"></div></li>
-                  @endcan
-                </ul> --}}
-                <a class="medium-as-last">{{ $city->city_name }}</a>
-                <div class="drop-list checkbox">
-                  @if ($drop == 1)
-                  <div class="sprite icon-drop"></div>
-                  @endif
-                  <input type="checkbox" name="" id="city-check-{{ $city->id }}">
-                  <label class="label-check" for="city-check-{{ $city->id }}"></label> 
-                </div>
-              </li>
-            @endforeach
-          @endif
-        </ul>
-        @endif
-      </li>
-      @endforeach
-    </ul>
+    @if($regions)
+      {{-- Шаблон вывода и динамического обновления --}}
+      @include('cities.cities-list', $regions)
     @endif
   </div>
 </div>
@@ -194,20 +87,21 @@
 </div>
 Конец модалки добавления области --}}
 
-{{-- Модалка добавления города и района --}}
+{{-- Модалка добавления города --}}
 <div class="reveal rev-large" id="city-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>ДОБАВЛЕНИЕ НАСЕЛЕННОГО ПУНКТА</h5>
     </div>
   </div>
-  {{ Form::open(['url' => '/cities', 'id' => 'form-city-add']) }}
+  {{ Form::open(['id' => 'form-add']) }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 medium-4 cell">
         <label class="input-icon">Название населенного пункта
           {{-- Form::text('city_name', null, ['class'=>'varchar-field', 'id'=>'city-name-field' 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', 'required']) --}}
           <input type="text" name="city_name" id="city-name-field" autocomplete="off" pattern="[А-Яа-я0-9-_\s]{3,30}" required>
           <div class="sprite-input-right find-status"></div>
+          <div class="item-error">Такой населенный пункт уже существует!</div>
           <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
         <label>Район
@@ -223,7 +117,7 @@
           <label for="search-all-checkbox"><span class="search-checkbox">Искать везде</span></label>
         </div>
         <input type="hidden" name="city_vk_external_id" id="city-id-field" pattern="[0-9]{1,20}">
-        <input type="hidden" name="city_database" id="city-database" value="0" pattern="[0-9]{1}">
+        <input type="hidden" name="city_db" id="city-db" value="0" pattern="[0-9]{1}">
       </div>
       <div class="small-12 medium-8 cell">
         <table class="table-content-search">
@@ -235,135 +129,238 @@
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        <button data-close class="button modal-button" id="submit-city-add" type="submit" disabled>Сохранить</button>
+        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-add', 'data-close', 'disabled']) }}
       </div>
     </div>
   {{ Form::close() }}
-  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+  <div data-close class="icon-close-modal sprite close-modal"></div> 
 </div>
 {{-- Конец модалки добавления города и района --}}
 
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
+{{-- Модалка удаления ajax --}}
+@include('includes.modals.modal-delete-ajax')
 @endsection
 
 @section('scripts')
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
-{{-- Скрипт чекбоксов и перетаскивания для меню --}}
-@include('includes.scripts.menu-scripts')
+{{-- Скрипт модалки удаления ajax --}}
+@include('includes.scripts.delete-ajax-script')
+{{-- Маска ввода --}}
+@include('includes.scripts.inputs-mask')
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
 <script type="text/javascript">
 $(function() {
+
+  // Обозначаем таймер для проверки
+  var timerId;
+  var time = 400;
+
   // Функция получения городов из вк или с фильтром по нашей базе
   function getCityVk () {  
-    $('#submit-city-add').prop('disabled', true);
-    $('#city-database').val(0);
-    // Получаем фрагмент текста
-    var city = {city:$('#city-name-field').val(), checkbox:$('#search-all-checkbox').prop('checked')};
-    // Смотрим сколько символов
-    var lenCity = $('#city-name-field').val().length;
-    // Если символов больше 2 - делаем запрос
-    if(lenCity > 2){
-      $('.find-status').removeClass('icon-find-ok');
-      // Сам ajax запрос
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "/city",
-        type: "POST",
-        data: city,
-        beforeSend: function () {
-          $('.find-status').addClass('icon-load');
-        },
-        success: function(date){
-          $('.find-status').removeClass('icon-load');
-          // Удаляем все значения чтобы вписать новые
-          $('#tbody-city-add>tr').remove();
-          var result = $.parseJSON(date);
-          var data = '';
-          if ($('#search-all-checkbox').prop('checked') == true) {
-            var countRes = result.response.count;
-            if (countRes == 0) {
-              $('.find-status').addClass('icon-find-no');
-              data = "<tr><td>Ничего не найдено...</td></tr>";
-            };
-            if (countRes > 0) {
-              // Перебираем циклом
-              for (var i = 0; i < countRes; i++) {
-              // Если области нет
-              if (result.response.items[i].region == undefined) {
-                var regionName = '';
-              } else {
-                var regionName = result.response.items[i].region;
-              };
-              // Если района нет
-              if (result.response.items[i].area == undefined) {
-                var areaName = '';
-              } else {
-                var areaName = result.response.items[i].area;
-              };
-              // Формируем содержимое
-              data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"city-add\" data-city-id=\"" + i + "\" data-city-vk-external-id=\"" + result.response.items[i].id + "\">" + result.response.items[i].title + "</a></td><td><a class=\"city-add\" data-area-id=\"" + i + "\" data-area-name=\"" + result.response.items[i].area + "\">" + areaName + "</a></td><td><a class=\"city-add\" data-region-id=\"" + i + "\" data-region-name=\"" + result.response.items[i].region + "\">" + regionName + "</a></td></tr>";
-              };
-            };
-          }; 
-          if ($('#search-all-checkbox').prop('checked') == false) {
-            if (result.count == 0) {
-              $('.find-status').addClass('icon-find-no');
-              data = "<tr><td>Ничего не найдено...</td></tr>";
-            } else {
-              var countRes = result.region.length;
-              // alert(result.region);
-              if (countRes == 0) {
-                $('.find-status').addClass('icon-find-no');
-                data = "<tr><td>Ничего не найдено...</td></tr>";
-              };
-              if (countRes > 0) {
-                // Перебираем циклом
-                for (var i = 0; i < countRes; i++) {
-                  // Если области нет
-                  if (result.region[i] == null) {
-                    var regionName = '';
-                  } else {
-                    var regionName = result.region[i];
-                  };
-                  // Если района нет
-                  if (result.area[i] == null) {
-                    var areaName = '';
-                  } else {
-                    var areaName = result.area[i];
-                  };
-                  // Формируем содержимое
-                  data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"city-add\" data-city-id=\"" + i + "\" data-city-vk-external-id=\"" + result.id[i] + "\">" + result.title[i] + "</a></td><td><a class=\"city-add\" data-area-id=\"" + i + "\" data-area-name=\"" + result.area[i] +"\">"+ areaName +"</a></td><td><a class=\"city-add\" data-region-id=\"" + i + "\" data-region-name=\"" + result.region[i] + "\">" + regionName + "</a></td></tr>";
-                };
-              };
-            }
+    $('.find-status').removeClass('icon-find-ok');
+    // Сам ajax запрос
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/city_vk",
+      type: "POST",
+      data: {city: $('#city-name-field').val(), checkbox:$('#search-all-checkbox').prop('checked')},
+      beforeSend: function () {
+        $('.find-status').addClass('icon-load');
+      },
+      success: function(date){
+        $('.find-status').removeClass('icon-load');
+        // Удаляем все значения чтобы вписать новые
+        $('#tbody-city-add>tr').remove();
+        // Парсим
+        var result = $.parseJSON(date);
+        var data = '';
+        if (result.response.count > 0) {
+          // Перебираем циклом
+          for (var i = 0; i < result.response.count; i++) {
+          // Если области нет
+          if (result.response.items[i].region == undefined) {
+            var regionName = '';
+          } else {
+            var regionName = result.response.items[i].region;
           };
-          // Вставляем
-          $('#tbody-city-add').append(data);
-        }
-      });
-    } else {
-      // Удаляем все значения, если символов меньше 2х
-      $('#tbody-city-add>tr').remove();
-      $('#city-id-field').val('');
-      $('#area-name').val('');
-      $('#region-name').val('');
-      $('.city-error').remove();
-      $('.find-status').removeClass('icon-find-ok');
-      $('.find-status').removeClass('icon-find-no');
-      $('#area-name').val('');
-      $('#region-name').val('');
-    };
+          // Если района нет
+          if (result.response.items[i].area == undefined) {
+            var areaName = '';
+          } else {
+            var areaName = result.response.items[i].area;
+          };
+          // Формируем содержимое
+          data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"city-add\" data-city-id=\"" + i + "\" data-city-vk-external-id=\"" + result.response.items[i].id + "\">" + result.response.items[i].title + "</a></td><td><a class=\"city-add\" data-area-id=\"" + i + "\" data-area-name=\"" + result.response.items[i].area + "\">" + areaName + "</a></td><td><a class=\"city-add\" data-region-id=\"" + i + "\" data-region-name=\"" + result.response.items[i].region + "\">" + regionName + "</a></td></tr>";
+          };
+        } else {
+          $('.find-status').addClass('icon-find-no');
+          data = "<tr><td>Ничего не найдено...</td></tr>";
+        };
+        // Вставляем
+        $('#tbody-city-add').append(data);
+      }
+    });
   };
   // Функция появления окна с ошибкой
   function showError (msg) {
     var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
     return error;
   };
+
+  // Отображение городов из api vk
+  $('#city-name-field').keyup(function() {
+    $('.item-error').css('display', 'none');
+    $('#city-db').val(0);
+    $('#submit-add').prop('disabled', true);
+    $('#area-name').val('');
+    $('#region-name').val('');
+    // Смотрим сколько символов
+    var lenCity = $('#city-name-field').val().length;
+    // Если символов больше 2 - делаем запрос
+    if(lenCity > 2) {
+      // Выполняем запрос
+      clearTimeout(timerId);   
+      timerId = setTimeout(function() {
+        getCityVk ();
+      }, time); 
+    } else {
+      // Удаляем все значения, если символов меньше 2х
+      $('#tbody-city-add>tr').remove();
+      $('#city-db').val(0);
+      // $('#form-add')[0].reset();
+      $('#city-id-field').val('');
+      $('#area-name').val('');
+      $('#region-name').val('');
+      $('#region-name').val('');
+      $('.item-error').css('display', 'none');
+      $('.city-error').remove();
+      $('.find-status').removeClass('icon-find-ok');
+      $('.find-status').removeClass('icon-find-no');
+    };
+  });
+
+  // Отправляем запрос при клике на чекбокс
+  $(document).on('change', '#search-all-checkbox', function() {
+    // Смотрим сколько символов
+    var lenCity = $('#city-name-field').val().length;
+    // Если символов больше 2 - делаем запрос
+    if(lenCity > 2) {
+      // Выполняем запрос
+      clearTimeout(timerId);   
+      timerId = setTimeout(function() {
+        getCityVk ();
+      }, time); 
+    };
+  });
+
+  // При клике на город в модальном окне заполняем инпуты
+  $(document).on('click', '.city-add', function() {
+
+    var itemId = $(this).closest('tr').data('tr');
+    $('#city-id-field').val($('[data-city-id="' + itemId + '"]').data('city-vk-external-id'));
+    var cityName = $('[data-city-id="' + itemId + '"]').html();
+    var areaName = $('[data-area-id="' + itemId + '"]').html();
+    var regionName = $('[data-region-id="' + itemId + '"]').html();
+    $('#city-name-field').val(cityName);
+    $('#area-name').val(areaName);
+    $('#region-name').val(regionName);
+    
+    // alert($('#form-add').serialize());
+
+    // Выполняем запрос
+    clearTimeout(timerId);   
+    timerId = setTimeout(function() {
+      if($('#city-id-field').val() != '') {
+        // Ajax
+        $.ajax({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          url: "/city_check",
+          type: "POST",
+          data: {city_name: cityName, area_name: areaName},
+          success: function (data) {
+            var result = $.parseJSON(data);
+            // Город не существует
+            if (result.error_status == 0) {
+              $('#city-db').val(1);
+              $('#submit-add').prop('disabled', false);
+              $('.item-error').css('display', 'none');
+              $('.find-status').addClass('icon-find-ok');
+              
+            } else {
+              // Город существует
+              $('#submit-add').prop('disabled', true);
+              $('#city-database').val(0);
+              $('.item-error').css('display', 'block');
+            };
+          }
+        });
+      };
+    }, 200); 
+  });
+
+  // Добавляем город
+  $(document).on('click', '#submit-add', function(event) {
+    event.preventDefault();
+
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/cities',
+      type: "POST",
+      data: $(this).closest('#form-add').serialize(),
+      success:function(html){
+        $('#content-list').html(html);
+        Foundation.reInit($('#content-list')); 
+      }
+    });
+  });
+
+  // При закрытии модалки очищаем поля
+  $(document).on('click', '.close-modal, #submit-add', function() {
+    $('#tbody-city-add>tr').remove();
+    $('#form-add')[0].reset();
+    $('#city-db').val(0);
+    // $('#city-id-field').val('');
+    // $('#city-name-field').val('');
+    // $('#area-name').val('');
+    // $('#region-name').val('');
+    // $('.item-error').remove();
+    // $('#tbody-region-add>tr').remove();
+    // $('#region-id-field').val('');
+    // $('#region-name-field').val('');
+  });
+  // При закрытии окна с ошибкой очищаем модалку
+  $(document).on('click', '.error-close', function() {
+    $('.item-error').remove();
+    $('#tbody-city-add>tr').remove();
+    $('#tbody-region-add>tr').remove();
+    $('#form-add')[0].reset();
+    $('#city-db').val(0);
+    // $('#city-name-field').val('');
+    // $('#region-name-field').val('');
+    // $('#area-name').val('');
+    // $('#region-name').val('');
+    $('.find-status').removeClass('icon-find-ok');
+    $('.find-status').removeClass('icon-find-no');
+  });
+
+  // Мягкое удаление с refresh
+  $(document).on('click', '[data-open="item-delete"]', function() {
+    // находим описание сущности, id и название удаляемого элемента в родителе
+    var parent = $(this).closest('.parent');
+    var type = parent.attr('id').split('-')[0];
+    var id = parent.attr('id').split('-')[1];
+    var name = parent.data('name');
+    $('.title-delete').text(name);
+    $('.delete-button').attr('id', 'del-' + type + '-' + id);
+    $('#form-item-del').attr('action', '/' + type + '/' + id);
+  });
+
   // Отображение области по ajax через api vk
   $('#region-name-field').keyup(function() {
     // Блокируем кнопку
@@ -484,116 +481,6 @@ $(function() {
       }
     });
   });
-  // Отображение города по ajax через api vk
-  $('#city-name-field').keyup(function() {
-    getCityVk ();
-  });
-  // Оптравляем запрос при клике на чекбокс
-  $(document).on('change', '#search-all-checkbox', function() {
-    getCityVk ();
-  });
-  // При клике на город в модальном окне заполняем инпуты
-  $(document).on('click', '.city-add', function() {
-    var itemId = $(this).closest('tr').data('tr');
-    var cityId = $('[data-city-id="' + itemId + '"]').data('city-vk-external-id');
-    var cityName = $('[data-city-id="' + itemId + '"]').html();
-    var areaName = $('[data-area-id="' + itemId + '"]').html();
-    var regionName = $('[data-region-id="' + itemId + '"]').html();
-    $('.find-status').addClass('icon-find-ok');
-    $('#city-id-field').val(cityId);
-    $('#city-name-field').val(cityName);
-    $('#area-name').val(areaName);
-    $('#region-name').val(regionName);
-    if($('#city-id-field').val() != '') {
-      var city = {city_name:$('#city-name-field').val(), city_database:$('#city-database').val(), area_name:$('#area-name').val()};
-      // Ajax
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "/cities",
-        type: "POST",
-        data: city,
-        success: function (data) {
-          var result = $.parseJSON(data);
-          if (result.error_status == 1) {
-            var error = showError (result.error_message);
-            $('#city-name-field').after(error);
-            $('#city-database').val(0);
-          };
-          if (result.error_status == 0) {
-            $('#city-database').val(1);
-            $('.item-error').remove();
-            $('#submit-city-add').prop('disabled', false);
-          };
-        }
-      });
-    };
-  });
-  // При закрытии модалки очищаем поля
-  $(document).on('click', '.add-item', function() {
-    $('#tbody-city-add>tr').remove();
-    $('#city-id-field').val('');
-    $('#city-name-field').val('');
-    $('#area-name').val('');
-    $('#region-name').val('');
-    $('.item-error').remove();
-    $('#tbody-region-add>tr').remove();
-    $('#region-id-field').val('');
-    $('#region-name-field').val('');
-  });
-  // При закрытии окна с ошибкой очищаем модалку
-  $(document).on('click', '.error-close', function() {
-    $('.item-error').remove();
-    $('#tbody-city-add>tr').remove();
-    $('#tbody-region-add>tr').remove();
-    $('#city-name-field').val('');
-    $('#region-name-field').val('');
-    $('#area-name').val('');
-    $('#region-name').val('');
-    $('.find-status').removeClass('icon-find-ok');
-    $('.find-status').removeClass('icon-find-no');
-  });
-
-  // Мягкое удаление с refresh
-  $(document).on('click', '[data-open="item-delete"]', function() {
-    // находим описание сущности, id и название удаляемого элемента в родителе
-    var parent = $(this).closest('.parent');
-    var type = parent.attr('id').split('-')[0];
-    var id = parent.attr('id').split('-')[1];
-    var name = parent.data('name');
-    $('.title-delete').text(name);
-    $('.delete-button').attr('id', 'del-' + type + '-' + id);
-    $('#form-item-del').attr('action', '/' + type + '/' + id);
-  });
-
-  // Открываем меню и подменю, если только что добавили населенный пункт
-  @if(!empty($data))
-  if ({{ $data != null }})  {
-
-    // Общие правила
-    // Подсвечиваем область
-    $('#regions-' + {{ $data['region_id'] }}).addClass('first-active').find('.icon-list:first-child').attr('aria-hidden', 'false').css('display', 'block');
-    // Открываем область
-    var firstItem = $('#regions-' + {{ $data['region_id'] }}).find('.medium-list');
-    // Открываем аккордионы
-    $('#content-list').foundation('down', firstItem);
-
-    // Если удален город, имеющий район
-    if ({{ $data['area_id'] }} !== 0) {
-      // Подсвечиваем ссылку
-      $('#areas-{{ $data['area_id'] }}').find('.medium-link').addClass('medium-active');
-      // Открываем меню удаления в середине
-       $('#areas-{{ $data['area_id'] }}').find('.icon-list').attr('aria-hidden', 'false').css('display', 'block');
-
-      // Находим средние элементы
-      var mediumItem = $('#areas-{{ $data['area_id'] }}').find('.last-list');
-      if (mediumItem.is('.last-list')) {
-        $('#content-list').foundation('down', mediumItem);
-      };
-    };    
-  }
-  @endif
 });
 </script>
 @endsection

@@ -1,0 +1,99 @@
+@if (isset($menu['children']))
+	<li class="medium-item item @if (isset($navigation['menus'])) parent @endif" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['menu_name'] }}">
+		<a class="medium-link">
+      <div class="icon-open sprite"></div>
+      <span>{{ $menu['menu_name'] }}</span>
+      <span class="number">
+      @if (isset($menu['children']))
+        {{ count($menu['children']) }}
+      @else
+        0
+      @endif
+      </span>
+	  </a>
+		<ul class="icon-list">
+	  	<li>
+	  		@can('create', App\Menu::class)
+        <div class="icon-list-add sprite" data-open="menu-add"></div>
+        @endcan
+	  	</li>
+			<li>
+				@if($menu['edit'] == 1)
+				<div class="icon-list-edit sprite" data-open="menu-edit"></div>
+				@endif
+			</li>
+	    <li>
+	    @if(($navigation['system_item'] != 1) && (!isset($menu['children'])) && ($menu['delete'] == 1))
+	      <div class="icon-list-delete sprite" data-open="item-delete"></div>
+	    @endif
+	    </li>
+	  </ul>
+	  
+	  <div class="drop-list checkbox">
+      @if ($drop == 1)
+      <div class="sprite icon-drop"></div>
+      @endif
+      <input type="checkbox" name="" id="check-{{ $menu['id'] }}">
+      <label class="label-check" for="check-{{ $menu['id'] }}"></label> 
+    </div>
+    <ul class="menu vertical medium-list nested" data-accordion-menu data-multi-open="false">
+	  @if(isset($menu['children']))
+      @foreach($menu['children'] as $menu)
+        @include('navigations.menus-list', $menu)
+      @endforeach
+	  @else
+      <li class="empty-item"></li>
+    @endif
+    </ul>
+	</li>
+@else
+{{-- Конечный --}}
+<li class="medium-item item" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['menu_name'] }}">
+	<a class="medium-as-last">
+    <span>{{ $menu['menu_name'] }}</span>
+    @if ($menu['moderation'])
+    <span class="no-moderation">Не отмодерированная запись!</span>
+    @endif
+    @if ($menu['system_item'])
+    <span class="system-item">Системная запись!</span>
+    @endif
+  </a>
+  <div class="icon-list">
+	  <div>
+	    @can('create', App\Menu::class)
+	    <div class="icon-list-add sprite" data-open="medium-add"></div>
+	    @endcan
+	  </div>
+	  <div>
+	    @if($menu['edit'] == 1)
+	    <div class="icon-list-edit sprite" data-open="first-edit"></div>
+	    @endif
+	  </div>
+	  <div class="del">
+	    @if(($menu['system_item'] != 1) && ($menu['delete'] == 1))
+	    <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
+	    @endif
+	  </div>
+	</div>
+  <div class="drop-list checkbox">
+    @if ($drop == 1)
+    <div class="sprite icon-drop"></div>
+    @endif
+    <input type="checkbox" name="" id="menu-check-{{ $menu['id'] }}">
+    <label class="label-check" for="menu-check-{{ $menu['id'] }}"></label> 
+  </div>
+</li>
+@endif
+
+
+  
+
+
+
+
+
+
+
+ 
+
+         

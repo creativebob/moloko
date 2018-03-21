@@ -6,14 +6,12 @@
   $drop = 1;
 @endcan --}}
 
-
 <ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-multi-open="false" data-slide-speed="250">
 @foreach ($sectors_tree as $sector)
   @if($sector['industry_status'] == 1)
     {{-- Если индустрия --}}
     <li class="first-item item @if (isset($sector['children'])) parent @endif" id="sectors-{{ $sector['id'] }}" data-name="{{ $sector['sector_name'] }}">
-      
-      <a data-list="" class="first-link @if($drop == 0) link-small @endif">
+      <a class="first-link @if($drop == 0) link-small @endif">
         <div class="icon-open sprite"></div>
         <span class="first-item-name">{{ $sector['sector_name'] }}</span>
         <span class="number">{{ $sector['count'] }}</span>
@@ -66,59 +64,40 @@
 
 {{-- Скрипт чекбоксов и перетаскивания для меню --}}
 @include('includes.scripts.menu-scripts')
-<script src="/js/vendor/foundation.js"></script>
-<script type="text/javascript">
-
 
 @if(!empty($id))
-$('#content-list').foundation();
+<script type="text/javascript">
+
   // Если первый элемент
   if ($('#sectors-{{ $id }}').hasClass('first-item')) {
-    // Открываем элемент
-    if ($('#sectors-{{ $id }}').hasClass('parent')) {
-      $('#sectors-{{ $id }}').children('.medium-list').addClass('is-active');
-    //   $('#content-list').foundation('toggle', $('#sectors-{{ $id }}').children('.medium-list:first'));
-    };
-    // // Присваиваем активный класс
+    // Присваиваем активный класс
     $('#sectors-{{ $id }}').addClass('first-active');
-
-    // $('#sectors-{{ $id }}').attr('aria-expanded', 'true');
-    // $('#sectors-{{ $id }}').children('.icon-list:first').attr('aria-hidden', 'false');
-    // $('#sectors-{{ $id }}').children('.icon-list:first').css('display', 'block');
+    // Открываем элемент
+    $('#sectors-{{ $id }}').children('.medium-list').addClass('is-active');
   };
+
   // Если средний элемент
   if ($('#sectors-{{ $id }}').hasClass('medium-item')) {
+    // Присваиваем элементу активный клас и открываем его и вышестоящий
+    $('#sectors-{{ $id }}').addClass('medium-active');
+    $('#sectors-{{ $id }}').parent('.medium-list').addClass('is-active');
+    $('#sectors-{{ $id }}').children('.medium-list').addClass('is-active');
+
     // Перебираем родителей
-    $.each($('#sectors-{{ $id }}').parents('.parent'), function (index) {
+    $.each($('#sectors-{{ $id }}').parents('.item'), function (index) {
+
       // Если первый элемент, присваиваем активный класс
       if ($(this).hasClass('first-item')) {
         $(this).addClass('first-active');
       };
+
       // Если средний элемент, присваиваем активный класс
       if ($(this).hasClass('medium-item')) {
         $(this).addClass('medium-active');
         $(this).parent('.medium-list').addClass('is-active');
       };
-
-      // $(this).children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block'); 
-      // $(this).children('.icon-list:first').attr('aria-expanded', 'true');
     });
-    $('#sectors-{{ $id }}').addClass('medium-active');
-    $('#sectors-{{ $id }}').parent('.medium-list').addClass('is-active');
-    // if ($('#sectors-{{ $id }}').hasClass('parent')) {
-    //   $('#content-list').foundation('down', $('#sectors-{{ $id }}').children('.medium-list:first'));
-    // };
-    // alert('Средний элемент {{ $id }}');
-    // Перебираем родителей и подсвечиваем их
-    // $.each($('#sectors-{{ $id }}').parents('.medium-list').get(), function (index) {
-    //   $(this).addClass('is-active');
-    // });
-      // $(this).children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block'); 
-    
-    
   };    
-@endif
 </script>
-
-
+@endif
   

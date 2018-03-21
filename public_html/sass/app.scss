@@ -1750,7 +1750,7 @@ label:hover .booklist_button:hover
       right: 2rem;
       transition: 0.2s ease opacity;
       cursor: pointer;
-      z-index: 5;
+      z-index: -1;
       top: 0;
       opacity: 0;
 
@@ -1824,6 +1824,10 @@ label:hover .booklist_button:hover
           vertical-align: middle;
         }
       }
+      .icon-list {
+        padding: 8px 0;
+
+      }
       .link-small {
         padding-left: 32px;
       }
@@ -1847,9 +1851,10 @@ label:hover .booklist_button:hover
           opacity: 1;
         }
       }
-      .icon-list {
+      > .icon-list {
         opacity: 1;
         padding: 8px 0;
+        z-index: 5;
 
         div {
           
@@ -1877,6 +1882,7 @@ label:hover .booklist_button:hover
         }
       }
     }
+
     // Средний список
     .medium-list {
 
@@ -1940,7 +1946,8 @@ label:hover .booklist_button:hover
           // cursor: pointer;
 
           .icon-list {
-            opacity: 1;
+            opacity: 0;
+
 
             div {
               padding: 0;
@@ -1984,6 +1991,7 @@ label:hover .booklist_button:hover
         
         > .icon-list {
           opacity: 1;
+          z-index: 5;
         
           div {
             
@@ -2013,6 +2021,7 @@ label:hover .booklist_button:hover
         margin-left: 0;
       }
     }
+
     // Конечный список
     .last-list {
       border-left: 2px solid $list-item-active-bg-color;
@@ -2025,6 +2034,7 @@ label:hover .booklist_button:hover
       // Элементы конечного списка
       .last-item {
         position: relative;
+        background-color: $list-item-li-bg-color;
       
         .last-link {
           // position: relative;
@@ -2034,60 +2044,57 @@ label:hover .booklist_button:hover
           font-size: 0.8rem;
           padding: 10px 1.4rem 10px 3.9rem;
           color: $list-item-li-color;
+          cursor: default;
 
-          .icon-list {
-            right: 0.1rem;
-            // opacity: 0;
-
-            li {
-              padding: 0;
-            }
-          }
+          // .icon-list {
+          //   right: 0.1rem;
+          //   // opacity: 0;
+          //   div {
+          //     padding: 0;
+          //   }
+          // }
         }
         .last-link:hover {
 
-          .icon-list {
-            // opacity: 1;
+          // .icon-list {
+          //   // opacity: 1;
             
-            li {
+          //   div {
               
-              .icon-list-add {
-                background-position: 0px -768px; 
-              }
-              .icon-list-add:hover {
-                background-position: -64px -768px; 
-              }
-              .icon-list-edit {
-                background-position: 0px -800px; 
-              }
-              .icon-list-edit:hover {
-                background-position: -32px -800px; 
-              }
-              .icon-list-delete {
-                background-position: 0px -512px; 
-              }
-              .icon-list-delete:hover {
-                background-position: -32px -512px;
-              }
-            }
-          }
+          //     .icon-list-add {
+          //       background-position: 0px -768px; 
+          //     }
+          //     .icon-list-add:hover {
+          //       background-position: -64px -768px; 
+          //     }
+          //     .icon-list-edit {
+          //       background-position: 0px -800px; 
+          //     }
+          //     .icon-list-edit:hover {
+          //       background-position: -32px -800px; 
+          //     }
+          //     .icon-list-delete {
+          //       background-position: 0px -512px; 
+          //     }
+          //     .icon-list-delete:hover {
+          //       background-position: -32px -512px;
+          //     }
+          //   }
+          // }
         }
 
         .drop-list {
           left: 1.8rem;
         }
-
-        
-      }
-      .last-item:last-child {
-        .last-link {
-          border-bottom: none;
+        &:last-child {
+          .last-link {
+            border-bottom: none;
+          }
         }
       }
     }
   }
 
- 
   // ----------------------------- Таблица в контенте --------------------------------------
   .table-content {
 
