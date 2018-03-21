@@ -6,11 +6,11 @@
   $drop = 1;
 @endcan --}}
 
-<ul class="vertical menu accordion-menu content-list" id="sectors" data-accordion-menu data-multi-open="false" data-slide-speed="250">
+<ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250">
 @foreach ($sectors_tree as $sector)
   @if($sector['industry_status'] == 1)
     {{-- Если индустрия --}}
-    <li class="first-item item @if (isset($sector['children'])) parent @endif" id="sectors-{{ $sector['id'] }}" data-name="{{ $sector['sector_name'] }}">
+    <li class="first-item item @if (isset($sector['children'])) parent @endif" id="sectors-{{ $sector['id'] }}-content" data-name="{{ $sector['sector_name'] }}">
       <a class="first-link @if($drop == 0) link-small @endif">
         <div class="icon-open sprite"></div>
         <span class="first-item-name">{{ $sector['sector_name'] }}</span>
@@ -69,22 +69,22 @@
 <script type="text/javascript">
 
   // Если первый элемент
-  if ($('#sectors-{{ $id }}').hasClass('first-item')) {
+  if ($('#sectors-{{ $id }}-content').hasClass('first-item')) {
     // Присваиваем активный класс
-    $('#sectors-{{ $id }}').addClass('first-active');
+    $('#sectors-{{ $id }}-content').addClass('first-active');
     // Открываем элемент
-    $('#sectors-{{ $id }}').children('.medium-list').addClass('is-active');
+    $('#sectors-{{ $id }}-content').children('.medium-list').addClass('is-active');
   };
 
   // Если средний элемент
-  if ($('#sectors-{{ $id }}').hasClass('medium-item')) {
+  if ($('#sectors-{{ $id }}-content').hasClass('medium-item')) {
     // Присваиваем элементу активный клас и открываем его и вышестоящий
-    $('#sectors-{{ $id }}').addClass('medium-active');
-    $('#sectors-{{ $id }}').parent('.medium-list').addClass('is-active');
-    $('#sectors-{{ $id }}').children('.medium-list').addClass('is-active');
+    $('#sectors-{{ $id }}-content').addClass('medium-active');
+    $('#sectors-{{ $id }}-content').parent('.medium-list').addClass('is-active');
+    $('#sectors-{{ $id }}-content').children('.medium-list').addClass('is-active');
 
     // Перебираем родителей
-    $.each($('#sectors-{{ $id }}').parents('.item'), function (index) {
+    $.each($('#sectors-{{ $id }}-content').parents('.item'), function (index) {
 
       // Если первый элемент, присваиваем активный класс
       if ($(this).hasClass('first-item')) {

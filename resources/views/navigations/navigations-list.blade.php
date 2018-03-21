@@ -5,7 +5,7 @@
   $drop = 1;
 @endcan --}}
 
-<ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-multi-open="false" data-slide-speed="250">
+<ul class="vertical menu accordion-menu content-list" id="navigations" data-accordion-menu data-multi-open="false" data-slide-speed="250">
   @foreach ($navigations_tree as $navigation)
   {{-- Если Подкатегория --}}
   <li class="first-item item @if (isset($navigation['menus'])) parent @endif" id="navigations-{{ $navigation['id'] }}" data-name="{{ $navigation['navigation_name'] }}">

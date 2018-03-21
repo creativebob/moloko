@@ -125,7 +125,7 @@
         </div>
       </div>
       {{-- Контент --}}
-      <main class="content" id="content">
+      <main class="content">
         {{-- Прилипающий заголовок --}}
         @yield('title-content')
         {{-- Основой контент --}}

@@ -59,7 +59,7 @@ class CityController extends Controller
   }
 
 
-    public function get_content(Request $request)
+  public function get_content(Request $request)
   {
    // Подключение политики
     $this->authorize(getmethod('index'), Region::class);

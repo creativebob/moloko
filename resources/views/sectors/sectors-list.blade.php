@@ -7,7 +7,7 @@
     $count = count($sector['children']);
   @endphp
 @endif
-<li class="medium-item item @if (isset($sector['children'])) parent @endif" id="sectors-{{ $sector['id'] }}" data-name="{{ $sector['sector_name'] }}">
+<li class="medium-item item @if (isset($sector['children'])) parent @endif" id="sectors-{{ $sector['id'] }}-content" data-name="{{ $sector['sector_name'] }}">
   <a class="medium-link @if($drop == 0) link-small @endif">
     <div class="icon-open sprite"></div>
     <span class="medium-item-name">{{ $sector['sector_name'] }}</span>
