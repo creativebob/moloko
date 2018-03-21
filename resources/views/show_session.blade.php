@@ -12,8 +12,7 @@
                           @php
 
                             dd(session('access'));
-
-
+                            
                             $session_god = session('god'); 
                             $session_access = session('access');
                             $user_filial_id = $session_access['user_info']['filial_id'];
