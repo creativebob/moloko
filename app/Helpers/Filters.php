@@ -1,5 +1,7 @@
 <?php
 
+    use App\Booklist;
+    use App\List_item;
     //Формируем необходимые для фильтра выпадающие списки и прочее
     // --------------------------------------------------------------------------------------------------------------------
     // КОМПАНИЯ -----------------------------------------------------------------------------------------------------------
@@ -66,6 +68,56 @@
 
             $filter[$filter_name]['mode'] = 'model'; // Назавние фильтра
 
+            // СОЗДАЕМ МАССИВЫ СПИСКОВ ДЛЯ БУКЛИСТОВ
+
+            $booklists_user = Booklist::with('list_items')
+            ->where('author_id', $request->user()->id)
+            ->where('entity_alias', $entity_name)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+            // dd($booklists_user);
+
+            $booklists = [];
+
+            // sortByDesc('id')
+
+            // Получаем список Default
+            $booklists_default = $booklists_user->where('booklist_name', 'Default')->first();
+
+            if($booklists_default != null){
+            
+                $booklists_default = $booklists_default->list_items->pluck('item_entity')->toArray();
+                foreach ($booklists_user as $booklist){
+
+                    $booklist_id = $booklist->id;
+
+                    if($booklist->booklist_name == 'Default'){$booklists[$booklist_id]['status'] = 'Default';} else {$booklists[$booklist_id]['status'] = 'Simple';};
+
+                    $booklists['default'] = $booklists_default;
+                    $booklists['default_count'] = count($booklists_default);
+                    $booklists[$booklist_id]['collection'] = $booklist;
+
+                    $booklists[$booklist_id]['mass_items'] = $booklist->list_items->pluck('item_entity')->toArray();
+
+                    $booklists[$booklist_id]['plus'] = collect($booklists_default)->diff($booklists[$booklist_id]['mass_items'])->count();
+                    $booklists[$booklist_id]['plus_mass'] = collect($booklists_default)->diff($booklists[$booklist_id]['mass_items']);
+
+                    $booklists[$booklist_id]['minus'] = collect($booklists[$booklist_id]['mass_items'])->intersect($booklists_default)->count();
+                    $booklists[$booklist_id]['minus_mass'] = collect($booklists[$booklist_id]['mass_items'])->intersect($booklists_default);
+
+                }
+
+                $filter[$filter_name]['booklists'] = $booklists;
+                // dd($filter);
+
+            } else {
+
+            // Если списка Default нет, то пишем null
+                $filter[$filter_name]['booklists'] = null;
+            }
+
+
         } else {
 
             $filter_entity = $filter_query->unique($column); 
@@ -101,6 +153,7 @@
 
         return $filter;
     }
+
 
 
 ?>

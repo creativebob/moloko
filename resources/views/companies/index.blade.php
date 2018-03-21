@@ -47,7 +47,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="table-content" data-sticky-container>
+    <table class="table-content tablesorter" id="table-content" data-sticky-container data-entity-alias="companies">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
@@ -67,7 +67,15 @@
         @foreach($companies as $company)
         <tr class="item @if($user->company_id == $company->id)active @endif  @if($company->moderation == 1)no-moderation @endif" id="companies-{{ $company->id }}" data-name="{{ $company->company_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $company->id }}"><label class="label-check" for="check-{{ $company->id }}"></label></td>
+          <td class="td-checkbox checkbox">
+
+            <input type="checkbox" class="table-check" name="" id="check-{{ $company->id }}"
+            @if(!empty($filter['booklist']['booklists']['default']))
+              @if (in_array($user->id, $filter['booklist']['booklists']['default'])) checked 
+              @endif
+            @endif 
+            >
+            <label class="label-check" for="check-{{ $company->id }}"></label></td>
           <td class="td-company-name">
             @php
               $edit = 0;

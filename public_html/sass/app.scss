@@ -390,6 +390,11 @@ input[type=checkbox], input[type=radio] {
   margin-top: 2rem;
 }
 
+.booklist .input-group
+{
+  margin-bottom: 0rem;
+}
+
 .checkboxer-menu
 {
   width: 100%;
@@ -577,28 +582,57 @@ input[type=checkbox], input[type=radio] {
   display: none !important;
 }
 
+.booklist li 
+{
+  position: relative;
+}
+
 .booklist_button
 {
   margin-top: 2px;
   display: inline-block;
   position: absolute;
   top: 4px;
-  padding: 2px 6px;
+  padding: 2px 7px 5px 7px;
   background-color: rgba(0,0,0,0);
   border-radius: 4px;
   font-size: 0.7rem;
   text-align: center;
   transition: background-color ease 0.2s;
   color: $white;
+  cursor: pointer;
 }
 
+.booklist_delete
+{
+  margin-top: 2px;
+  display: inline-block;
+  position: absolute;
+  top: -1px;
+  padding: 2px 7px 5px 7px;
+  transition: opacity ease 0.2s;
+  color: $white;
+  cursor: pointer;
+  outline: none;
+  opacity: 0;
+}
+
+.booklist li:hover .booklist_delete
+{
+  opacity: 1;
+}
 
 .booklist_button.plus
 {
-  right: 40px;
+  right: 72px;
 }
 
 .booklist_button.minus
+{
+  right: 37px;
+}
+
+.booklist_delete
 {
   right: 5px;
 }
@@ -606,15 +640,15 @@ input[type=checkbox], input[type=radio] {
 .count_booklist_button
 {
   position: relative;
-  top: -1px;
+  top: 1px;
 }
 
-label:hover .booklist_button
+.booklist li:hover .booklist_button
 {
   background-color: rgba(0,0,0,0.3);
 }
 
-label:hover .booklist_button:hover
+.booklist li:hover .booklist_button:hover
 {
   background-color: $crm-blue;
 }

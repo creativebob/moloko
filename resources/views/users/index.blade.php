@@ -68,13 +68,17 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($users))
 
-
         @foreach($users as $user)
         <tr class="item @if($user->moderation == 1)no-moderation @endif" id="users-{{ $user->id }}" data-name="{{ $user->first_name.' '.$user->second_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
-            <input type="checkbox" class="table-check" name="user_id" id="check-{{ $user->id }}" @if (array_key_exists($user->id, $booklist_default)) checked @endif>
-            <label class="label-check" for="check-{{ $user->id }}"></label></td>
+
+            <input type="checkbox" class="table-check" name="user_id" id="check-{{ $user->id }}"
+            @if(!empty($filter['booklist']['booklists']['default']))
+              @if (in_array($user->id, $filter['booklist']['booklists']['default'])) checked 
+              @endif
+            @endif 
+            ><label class="label-check" for="check-{{ $user->id }}"></label></td>
           <td class="td-second-name">
             @php
               $edit = 0;
@@ -145,6 +149,7 @@
 @section('scripts')
   {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
   @include('includes.scripts.table-scripts')
+  
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-delete-script')
 @endsection

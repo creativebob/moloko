@@ -64,48 +64,8 @@ class UserController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        // $booklists_user = $user->where('author_id'->with('list_items')->where('entity_alias', $this->entity_name);
-        // 
-        $booklists_user = Booklist::with('list_items')->where('author_id', $request->user()->id)->where('entity_alias', $this->entity_name)->get();
-        $booklists = [];
 
-
-        // foreach ($booklists_user as $booklist){
-
-        //     $booklist_id = $booklist->id;
-        //     if($booklist->booklist_name == 'Default'){$booklists[$booklist_id]['status'] = 'Default';} else {$booklists[$booklist_id]['status'] = 'Simple';};
-
-        //     $booklists[$booklist_id]['collection'] = $booklist;
-        //     $booklists[$booklist_id]['mass_items'] = $booklist->list_items->pluck('item_entity')->toArray();
-        //     $booklists[$booklist_id]['count'] = $booklist->count();
-
-        // }
-
-        // foreach ($booklists as $book){
-        //     $book['mass_items']->
-        // }
-
-
-        // $diff = $collection->diff();
-
-
-        $booklists_default = $booklists_user->where('booklist_name', 'Default')->first();
-
-
-        if($booklists_default != null){
-
-            $booklist_id_default = $booklists_default->id;
-
-            // $booklist_default = List_item::where('booklist_id', $booklist_id_default)->get();
-            $booklist_default = List_item::where('booklist_id', $booklist_id_default)->get()->pluck('item_entity')->flip()->toArray();
-        } else {
-                
-            $booklist_default = null;  
-        };
-
-        // dd($booklists);
-
-	    return view('users.index', compact('users', 'page_info', 'filter', 'user', 'booklist_default'));
+	    return view('users.index', compact('users', 'page_info', 'filter', 'user'));
 	}
 
     public function filter($request)

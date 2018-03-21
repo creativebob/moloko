@@ -52,6 +52,15 @@ $(function() {
   checkall.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
   console.log('Ставим главному статус ' + checkall.checked + ' и меняем спрайт');
 
+  checkall.onclick = function() {
+    for(var i=0; i<checkboxes.length; i++) {
+      checkboxes[i].checked = this.checked;
+      console.log('Видим клик по главному, ставим его положение всем = ' + this.checked);
+    };
+  };
+
+
+
   // alert('Переменную могу отдать куда тибе надабна');
 
   // Ajax
@@ -83,16 +92,20 @@ $(function() {
   // Ловим клики по чекбоксам и пишем в базу:
   // Создаем дефолтный список данной сущности для юзера (booklist) и
   // наполняем его позициями (list_items)
-  checkall.onclick = function() {
-    for(var i=0; i<checkboxes.length; i++) {
-      checkboxes[i].checked = this.checked;
-      console.log('Видим клик по главному, ставим его положение всем = ' + this.checked);
-    };
-  };
 
   console.log('Завершение функции чекбоксов');
   console.log('-----');
 });
+
+  // Очищаем все чекбоксы
+  function cleanAllCheckboxes() {
+    var checkboxes = document.querySelectorAll('input.table-check');
+    for(var i=0; i<checkboxes.length; i++) {
+      checkboxes[i].checked = false;
+    };
+  };
+  
+
 // Размер шапки таблицы при скролле
 $(window).scroll(function () {
   if ($('#thead-sticky').hasClass('is-stuck')) {
