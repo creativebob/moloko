@@ -60,10 +60,9 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
-
     @if($sectors_tree)
       {{-- Шаблон вывода и динамического обновления --}}
-      @include('sectors.industry-list', compact($sectors_tree))
+      @include('sectors.industry-list', $sectors_tree)
     @endif
   </div>
 </div>
@@ -192,9 +191,7 @@
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label>Расположение
-          <select name="sector_parent_id" class="sectors-list">
-              
-          </select>
+          <select name="sector_parent_id" class="sectors-list"></select>
         </label>
         <label>Название сектора
           @include('includes.inputs.name', ['value'=>null, 'name'=>'name'])
@@ -228,10 +225,9 @@
 
 @section('scripts')
 {{-- Скрипт модалки удаления ajax --}}
-@include('includes.scripts.modal-delete-ajax-script')
+@include('includes.scripts.delete-ajax-script')
 {{-- Маска ввода --}}
 @include('includes.scripts.inputs-mask')
-
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
 <script type="text/javascript">
@@ -253,8 +249,6 @@ $(function() {
   };
  
   // ------------------- Проверка на совпадение имени --------------------------------------
-
-  // Проверка на совпадение в базе
   function sectorCheck (name, submit, db) {
 
     // Блокируем аттрибут базы данных
@@ -283,9 +277,8 @@ $(function() {
         success: function(date){
           $('.find-status').removeClass('icon-load');
           var result = $.parseJSON(date);
-
+          // Если ошибка
           if (result.error_status == 1) {
-            // Если ошибка
             $(submit).prop('disabled', true);
             $('.item-error').css('display', 'block');
             $(db).val(0);
@@ -298,8 +291,8 @@ $(function() {
         }
       });
     };
+    // Удаляем все значения, если символов меньше 3х
     if (lenname <= 3) {
-      // Удаляем все значения, если символов меньше 3х
       $(submit).prop('disabled', false);
       $('.item-error').css('display', 'none');
       $(db).val(0);
@@ -372,6 +365,8 @@ $(function() {
     var parent = parent = $(this).closest('.item').attr('id').split('-')[1];;
     $('#form-medium-add .medium-parent-id-field').val(parent);
   });
+
+  // Добавляем
   $(document).on('click', '.submit-add', function(event) {
 
     $.ajax({
@@ -382,8 +377,9 @@ $(function() {
       type: "POST",
       data: $(this).closest('.form-add').serialize(),
       success:function(html){
-        $('#content-list').foundation('destroy');
         $('#content-list').html(html);
+        Foundation.reInit($('#content-list'));
+        $('.form-add').foundation('resetForm');  
       }
     });
   });
@@ -474,7 +470,6 @@ $(function() {
 
   // Отправляем Ajax
   $(document).on('click', '.submit-edit', function(event) {
-
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -484,9 +479,8 @@ $(function() {
       data: $(this).closest('.form-edit').serialize(),
       success:function(html){
         $('#content-list').html(html);
-        // $('#content-list, #content-list ul').sortable('refresh');
-        // $('#content-list').foundation();
-        Foundation.reInit($('#content-list'));  
+        Foundation.reInit($('#content-list'));
+        $('.form-edit').foundation('resetForm'); 
       }
     });
   });
@@ -502,10 +496,7 @@ $(function() {
     $('.sectors-list').empty();
     $('input[name=moderation]').closest('.checkbox').remove();
     $('input[name=system_item]').prop('checked', false);
-    $('.name-field').removeClass('is-invalid-input');
-    $('.form-error').removeClass('is-visible');
   });
-
 });
 </script>
 @endsection

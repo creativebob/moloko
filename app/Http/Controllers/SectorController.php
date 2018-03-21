@@ -98,7 +98,7 @@ class SectorController extends Controller
 
   public function get_content(Request $request)
   {
-    // Подключение политики
+    // Политика
     $this->authorize(getmethod('index'), Sector::class);
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -160,13 +160,9 @@ class SectorController extends Controller
       $sectors_tree[$sector['id']]['count'] = $count;
     };
 
-    // Инфо о странице
-    $page_info = pageInfo($this->entity_name);
-
-    // dd($sectors_tree);
-
+    
     // Отдаем Ajax
-    return view('sectors.industry-list', ['sectors_tree' => $sectors_tree, 'id' => $request->id]);
+    return view('sectors.industry-list', ['sectors_tree' => $sectors_tree, 'id' => $request->item_id]);
   }
 
   public function create()
@@ -225,7 +221,7 @@ class SectorController extends Controller
 
     if ($sector) {
       // Переадресовываем на index
-      return redirect()->action('SectorController@get_content', ['id' => $sector->id]);
+      return redirect()->action('SectorController@get_content', ['item_id' => $sector->id]);
     } else {
       $result = [
         'error_status' => 1,
@@ -315,7 +311,7 @@ class SectorController extends Controller
 
     if ($sector) {
       // Переадресовываем на index
-      return redirect()->action('SectorController@get_content', ['id' => $sector->id]);
+      return redirect()->action('SectorController@get_content', ['item_id' => $sector->id]);
     } else {
       $result = [
         'error_status' => 1,
@@ -325,19 +321,13 @@ class SectorController extends Controller
   }
 
   public function destroy(Request $request, $id)
-  {
+  { 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
     $sector = Sector::moderatorLimit($answer)->findOrFail($id);
-
-    $parent = null;
-    if (isset($sector->sector_parent_id)) {
-      $parent = $sector->sector_parent_id;
-    }
-    $id = $sector->id;
-
+    
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $sector);
 
@@ -355,8 +345,14 @@ class SectorController extends Controller
         'error_status' => 1,
         'error_message' => 'Данная область содержит населенные пункты, удаление невозможно'
       ];
-      // Если нет, мягко удаляем
+      
     } else {
+      // Если нет, мягко удаляем
+      if ($sector->industry_status == 1) {
+        $parent = null;
+      } else {
+        $parent = $sector->sector_parent_id;
+      }
 
       $sector->editor_id = $user->id;
       $sector->save();
@@ -366,7 +362,7 @@ class SectorController extends Controller
 
       if ($sector) {
         // Переадресовываем на index
-        return redirect()->action('SectorController@get_content', ['id' => $id]);
+        return redirect()->action('SectorController@get_content', ['item_id' => $parent]);
       } else {
         $result = [
           'error_status' => 1,
@@ -376,6 +372,7 @@ class SectorController extends Controller
     };
   }
 
+  // Проверка наличия в базе
   public function sector_check(Request $request)
   {
     // Проверка отдела в нашей базе данных
@@ -395,6 +392,7 @@ class SectorController extends Controller
     return json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
+  // Список секторов
   public function sectors_list(Request $request)
   {
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -472,6 +470,7 @@ class SectorController extends Controller
     // dd($sectors_final);
   }
 
+  // Сортировка
   public function sectors_sort(Request $request)
   {
     $result = '';

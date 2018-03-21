@@ -17,7 +17,7 @@
       <div class="top-bar-left">
         <h2 class="header-content">{{ $site->site_name }}</h2>
         @can('create', App\Navigation::class)
-        <a class="icon-add sprite" data-open="navigation-add"></a>
+        <a class="icon-add sprite" data-open="first-add"></a>
         @endcan
       </div>
       <div class="top-bar-right">
@@ -60,82 +60,24 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    
-    @php
-      $drop = 1;
-    @endphp
-    {{-- @can('sort', App\Sector::class)
-      $drop = 1;
-    @endcan --}}
-
-    @if($navigation_tree)
-      <ul class="vertical menu accordion-menu content-list" id="content-list" data-entity="navigations" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
-        @foreach ($navigation_tree as $navigation)
-          @if (isset($navigation['menus']))
-            {{-- Если Подкатегория --}}
-            <li class="first-item item @if (isset($navigation['menus'])) parent @endif" id="navigations-{{ $navigation['id'] }}" data-name="{{ $navigation['navigation_name'] }}">
-              <ul class="icon-list">
-                <li>
-                  @can('create', App\Menu::class)
-                  <div class="icon-list-add sprite" data-open="menu-add"></div>
-                  @endcan
-                </li>
-                <li>
-                  @if($navigation['edit'] == 1)
-                  <div class="icon-list-edit sprite" data-open="navigation-edit"></div>
-                  @endif
-                </li>
-                <li>
-                  @if(($navigation['system_item'] != 1) && (count($navigation['menus']) == 0) && ($navigation['delete'] == 1))
-                    <div class="icon-list-delete sprite" data-open="item-delete"></div>
-                  @endif
-                </li>
-              </ul>
-              <a data-list="" class="first-link">
-                <div class="list-title">
-                  <div class="icon-open sprite"></div>
-                  <span class="first-item-name">{{ $navigation['navigation_name'] }}</span>
-                  <span class="number">
-                    @if (isset($navigation['menus']))
-                      {{ count($navigation['menus']) }}
-                    @else
-                      0
-                    @endif
-                  </span>
-                </div>
-              </a>
-              <div class="drop-list checkbox">
-                @if ($drop == 1)
-                <div class="sprite icon-drop"></div>
-                @endif
-                <input type="checkbox" name="" id="check-{{ $navigation['id'] }}">
-                <label class="label-check white" for="check-{{ $navigation['id'] }}"></label> 
-              </div>
-              @if (isset($navigation['menus']))
-                <ul class="menu vertical medium-list accordion-menu" data-entity="menus" data-accordion-menu data-allow-all-closed data-multi-open="false">
-                  @foreach($navigation['menus'] as $menu)
-                    @include('navigations.navigations-list', $menu)
-                  @endforeach
-                </ul>
-              @endif
-            </li>
-          @endif
-        @endforeach
-      </ul>
+    @if($navigations_tree)
+      {{-- Шаблон вывода и динамического обновления --}}
+      @include('navigations.navigations-list', $navigations_tree)
     @endif
+    
   </div>
 </div>
 @endsection
 
 @section('modals')
 {{-- Модалка добавления навигации --}}
-<div class="reveal" id="navigation-add" data-reveal>
+<div class="reveal" id="first-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>ДОБАВЛЕНИЕ навигации</h5>
     </div>
   </div>
-  {{ Form::open(['url' => '/sites/'.$site_alias.'/navigations', 'id' => 'form-navigation-add', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['id' => 'form-аfirst-add', 'data-abide', 'novalidate']) }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
         <label class="input-icon">Введите название навигации
@@ -146,7 +88,7 @@
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-navigation-add']) }}
+        {{ Form::submit('Сохранить', ['class'=>'button modal-button submit-add', 'id'=>'submit-navigation-add', 'data-close']) }}
       </div>
     </div>
   {{ Form::close() }}
@@ -155,13 +97,13 @@
 {{-- Конец модалки добавления навигации --}}
 
 {{-- Модалка редактирования навигации --}}
-<div class="reveal" id="navigation-edit" data-reveal>
+<div class="reveal" id="first-edit" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>Редактирование навигации</h5>
     </div>
   </div>
-  {{ Form::open(['id' => 'form-navigation-edit', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['id' => 'form-first-edit', 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
     <div class="grid-x grid-padding-x modal-content inputs">
       <div class="small-10 small-offset-1 cell">
@@ -174,7 +116,7 @@
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-navigation-edit']) }}
+        {{ Form::submit('Сохранить', ['class'=>'button modal-button', 'id'=>'submit-navigation-edit', 'data-close']) }}
       </div>
     </div>
   {{ Form::close() }}
@@ -183,7 +125,7 @@
 {{-- Конец модалки редактирования навигации --}}
 
 {{-- Модалка добавления пункта меню --}}
-<div class="reveal" id="menu-add" data-reveal>
+<div class="reveal" id="medium-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>ДОБАВЛЕНИЕ пункта меню</h5>
@@ -248,7 +190,7 @@
 {{-- Конец модалки добавления пункта меню --}}
 
 {{-- Модалка редактирования пункта меню --}}
-<div class="reveal" id="menu-edit" data-reveal>
+<div class="reveal" id="medium-edit" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>Редактирование пункта меню</h5>
@@ -323,7 +265,7 @@
 
 @section('scripts')
 {{-- Скрипт модалки удаления ajax --}}
-@include('includes.scripts.modal-delete-ajax-script')
+@include('includes.scripts.delete-ajax-script')
 {{-- Маска ввода --}}
 @include('includes.scripts.inputs-mask')
 {{-- Скрипт чекбоксов и перетаскивания для меню --}}
@@ -340,10 +282,9 @@ $(function() {
     return error;
   };
   // Редактируем навигацию
-  $(document).on('click', '[data-open="navigation-edit"]', function() {
+  $(document).on('click', '[data-open="first-edit"]', function() {
     // Получаем данные о разделе
-    var id = $(this).closest('.parent').attr('id').split('-')[1];
-    $('#form-navigation-edit').attr('action', '/sites/' + siteAlias + '/navigations/' + id);
+    var id = $(this).closest('.item').attr('id').split('-')[1];
     // Ajax запрос
     $.ajax({
       headers: {
@@ -353,14 +294,14 @@ $(function() {
       type: "GET",
       success: function(date){
         var result = $.parseJSON(date);
-        $('#form-navigation-edit .name-field').val(result.navigation_name);
+        $('#form-first-edit .name-field').val(result.navigation_name);
       }
     });
   });
 
   // Добавление пункта меню
   // Переносим id родителя и навигации в модалку
-  $(document).on('click', '[data-open="menu-add"]', function() {
+  $(document).on('click', '[data-open="medium-add"]', function() {
     var parent = $(this).closest('.parent').attr('id').split('-')[1];
     var navigation = $(this).closest('.first-item').attr('id').split('-')[1];
     // alert(navigation + parent);

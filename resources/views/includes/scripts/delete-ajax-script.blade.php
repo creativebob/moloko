@@ -29,9 +29,8 @@ $(document).on('click', '.delete-button-ajax', function(event) {
     data: {id: id},
     success: function (html) {
       $('#content-list').html(html);
-      // $('#content-list, #content-list ul').sortable('refresh');
-      // $('#content-list').foundation();
       Foundation.reInit($('#content-list'));
+      $('.delete-button-ajax').removeAttr('id');
     }
   });
 });

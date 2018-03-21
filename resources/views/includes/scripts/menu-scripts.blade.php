@@ -31,21 +31,10 @@ $(function() {
       });
     }
   });
+  
   // Чекбоксы
   $(document).on('click', '.label-check', function () {
     // alert('Это больше КЕК, ил все таки ЛОЛ?');
   });
-
-  // $(document).on('click', '#content-list .icon-drop, #content-list .label-check, #content-list .sprite', function (event) {
-
-  //   // event.stopImmediatePropagation();
-
-  //   // $("#content-list a").on("up.zf.accordion", function(event) {
-  //   //   return false;
-
-  //   // }); 
-
-  //   alert(event.target);
-  // });
 });
 </script>

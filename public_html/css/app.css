@@ -1471,7 +1471,7 @@ input[type=checkbox], input[type=radio] {
   right: 2rem;
   transition: 0.2s ease opacity;
   cursor: pointer;
-  z-index: 5;
+  z-index: -1;
   top: 0;
   opacity: 0;
 }
@@ -1532,6 +1532,9 @@ input[type=checkbox], input[type=radio] {
   display: inline-block;
   vertical-align: middle;
 }
+.content .content-list .first-item .icon-list {
+  padding: 8px 0;
+}
 .content .content-list .first-item .link-small {
   padding-left: 32px;
 }
@@ -1551,29 +1554,30 @@ input[type=checkbox], input[type=radio] {
   background: rgba(255, 255, 255, 0.1);
   opacity: 1;
 }
-.content .content-list .first-active .icon-list {
+.content .content-list .first-active > .icon-list {
   opacity: 1;
   padding: 8px 0;
+  z-index: 5;
 }
-.content .content-list .first-active .icon-list div .sprite:focus {
+.content .content-list .first-active > .icon-list div .sprite:focus {
   outline: none;
 }
-.content .content-list .first-active .icon-list div .icon-list-add {
+.content .content-list .first-active > .icon-list div .icon-list-add {
   background-position: -128px -768px;
 }
-.content .content-list .first-active .icon-list div .icon-list-add:hover {
+.content .content-list .first-active > .icon-list div .icon-list-add:hover {
   background-position: -96px -768px;
 }
-.content .content-list .first-active .icon-list div .icon-list-edit {
+.content .content-list .first-active > .icon-list div .icon-list-edit {
   background-position: -96px -800px;
 }
-.content .content-list .first-active .icon-list div .icon-list-edit:hover {
+.content .content-list .first-active > .icon-list div .icon-list-edit:hover {
   background-position: -128px -800px;
 }
-.content .content-list .first-active .icon-list div .icon-list-delete {
+.content .content-list .first-active > .icon-list div .icon-list-delete {
   background-position: -96px -512px;
 }
-.content .content-list .first-active .icon-list div .icon-list-delete:hover {
+.content .content-list .first-active > .icon-list div .icon-list-delete:hover {
   background-position: -128px -512px;
 }
 .content .content-list .medium-list .medium-item {
@@ -1623,7 +1627,7 @@ input[type=checkbox], input[type=radio] {
   right: 0.2rem;
 }
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list {
-  opacity: 1;
+  opacity: 0;
 }
 .content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div {
   padding: 0;
@@ -1655,6 +1659,7 @@ input[type=checkbox], input[type=radio] {
 }
 .content .content-list .medium-list .medium-active > .icon-list {
   opacity: 1;
+  z-index: 5;
 }
 .content .content-list .medium-list .medium-active > .icon-list div .icon-list-add {
   background-position: 0px -768px;
@@ -1685,6 +1690,7 @@ input[type=checkbox], input[type=radio] {
 }
 .content .content-list .last-list .last-item {
   position: relative;
+  background-color: #ffffff;
 }
 .content .content-list .last-list .last-item .last-link {
   margin: 0 1.8rem 0 2.5rem;
@@ -1693,30 +1699,7 @@ input[type=checkbox], input[type=radio] {
   font-size: 0.8rem;
   padding: 10px 1.4rem 10px 3.9rem;
   color: #000000;
-}
-.content .content-list .last-list .last-item .last-link .icon-list {
-  right: 0.1rem;
-}
-.content .content-list .last-list .last-item .last-link .icon-list li {
-  padding: 0;
-}
-.content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-add {
-  background-position: 0px -768px;
-}
-.content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-add:hover {
-  background-position: -64px -768px;
-}
-.content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-edit {
-  background-position: 0px -800px;
-}
-.content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-edit:hover {
-  background-position: -32px -800px;
-}
-.content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-delete {
-  background-position: 0px -512px;
-}
-.content .content-list .last-list .last-item .last-link:hover .icon-list li .icon-list-delete:hover {
-  background-position: -32px -512px;
+  cursor: default;
 }
 .content .content-list .last-list .last-item .drop-list {
   left: 1.8rem;

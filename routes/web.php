@@ -71,16 +71,19 @@ Route::resource('/areas', 'AreaController')->middleware('auth');
 Route::post('/areas_sort', 'AreaController@areas_sort')->middleware('auth');
 // Контроллеры для отображения населенных пунктов    
 Route::resource('/cities', 'CityController')->middleware('auth');
+// Текущий добавленный/удаленный город
+Route::any('/get_cities', 'CityController@get_content')->middleware('auth');
+// Проверка на существование города
+Route::post('/city_check', 'CityController@city_check')->middleware('auth');
 // Сортировка населенных пунктов
 Route::post('/cities_sort', 'CityController@cities_sort')->middleware('auth');
-
-
+// Таблица городов
 Route::post('/cities_list', 'CityController@cities_list')->middleware('auth');
 // Получаем области и города из vk
-Route::post('/city', 'CityController@get_vk_city')->middleware('auth');
+Route::post('/city_vk', 'CityController@get_vk_city')->middleware('auth');
+// Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
 Route::post('/region', 'RegionController@get_vk_region')->middleware('auth');
-// Текущий добавленный/удаленный город
-Route::get('/current_city/{region}/{area}', 'CityController@current_city')->middleware('auth');
+
 
 // Контроллеры для отображения филиалов, отделов и должностей
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
