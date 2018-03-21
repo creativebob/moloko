@@ -314,8 +314,8 @@ $(function() {
       type: "POST",
       data: $(this).closest('#form-add').serialize(),
       success:function(html){
-        $('#content-list').html(html);
-        Foundation.reInit($('#content-list')); 
+        $('#regions').html(html);
+        Foundation.reInit($('#regions')); 
       }
     });
   });
@@ -471,7 +471,7 @@ $(function() {
         var result = $.parseJSON(data);
         result = "<li class=\"first-item parent\" id=\"regions-" + result.region_id + "\" data-name=\"" + result.region_name + "\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\"></div></li></ul><a data-list=\"" + result.region_id +"\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"first-item-name\">" + result.region_name + "</span><span class=\"number\">0</span></div></a>";
         // Выводим пришедшие данные на страницу
-        $('#content-list').append(result);
+        $('#regions').append(result);
         // Обнуляем модалку
         $('#region-name-field').val('');
         $('#region-id-field').val('');
