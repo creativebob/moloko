@@ -88,7 +88,7 @@ class CityController extends Controller
       ->get();
 
      // Отдаем Ajax
-    return view('cities.cities-list', ['regions' => $regions, 'id' => $request->item_id]);
+    return view('cities.cities-list', ['regions' => $regions, 'id' => $request->id]);
   }
 
   public function create()
@@ -182,7 +182,7 @@ class CityController extends Controller
       
       if ($city) {
         // Переадресовываем на index
-        return redirect()->action('CityController@get_content', ['item_id' => $city_id]);
+        return redirect()->action('CityController@get_content', ['id' => $city_id]);
       } else {
         $result = [
           'error_status' => 1,
@@ -241,7 +241,7 @@ class CityController extends Controller
       };
       $city = City::destroy($id);
       if ($city) {
-        return redirect()->action('CityController@get_content', ['item_id' => $parent]);
+        return redirect()->action('CityController@get_content', ['id' => $parent]);
       } else {
         abort(403, 'Ошибка при удалении!');
       };    

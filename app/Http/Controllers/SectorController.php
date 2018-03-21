@@ -162,7 +162,7 @@ class SectorController extends Controller
 
     
     // Отдаем Ajax
-    return view('sectors.industry-list', ['sectors_tree' => $sectors_tree, 'id' => $request->item_id]);
+    return view('sectors.industry-list', ['sectors_tree' => $sectors_tree, 'id' => $request->id]);
   }
 
   public function create()
@@ -221,7 +221,7 @@ class SectorController extends Controller
 
     if ($sector) {
       // Переадресовываем на index
-      return redirect()->action('SectorController@get_content', ['item_id' => $sector->id]);
+      return redirect()->action('SectorController@get_content', ['id' => $sector->id]);
     } else {
       $result = [
         'error_status' => 1,
@@ -311,7 +311,7 @@ class SectorController extends Controller
 
     if ($sector) {
       // Переадресовываем на index
-      return redirect()->action('SectorController@get_content', ['item_id' => $sector->id]);
+      return redirect()->action('SectorController@get_content', ['id' => $sector->id]);
     } else {
       $result = [
         'error_status' => 1,
@@ -362,7 +362,7 @@ class SectorController extends Controller
 
       if ($sector) {
         // Переадресовываем на index
-        return redirect()->action('SectorController@get_content', ['item_id' => $parent]);
+        return redirect()->action('SectorController@get_content', ['id' => $parent]);
       } else {
         $result = [
           'error_status' => 1,
