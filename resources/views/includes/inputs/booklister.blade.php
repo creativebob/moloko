@@ -46,7 +46,7 @@
 	<ul class="checkboxer-menu {{$name}}" data-name="{{$name}}">
 
 		@foreach ($main_mass as $key => $value)
-			<li class="item" id="booklists-{{$value->id}}" data-name="{{$value->$entity_name}}">
+			<li class="item" id="booklists-{{$value->id}}-booklists" data-name="{{$value->$entity_name}}">
 
 				@if($value->$entity_name != 'Default')
 
@@ -136,7 +136,7 @@
 			$(".{{$name}} .checkboxer-clean").off( "click");		
 		    // alert(delete booklist);
 
-		    $('#booklister').html(html);
+		    $('#booklists').html(html);
 		    var elem = $('#{{$name}}-dropdown-bottom-left');
 		    var booklister = new Foundation.Dropdown(elem);
 		    $(elem).foundation('open');
@@ -154,6 +154,8 @@
 		  });
 
   	};
+
+
 
 
 </script>

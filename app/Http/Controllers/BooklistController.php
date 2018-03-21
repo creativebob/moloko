@@ -177,6 +177,10 @@ class BooklistController extends Controller
 
             if($booklist) {
 
+
+                // Убиваем все элементы в List_items
+                $items_booklists = List_item::where('booklist_id', $id)->delete();
+
                 $value = []; 
                 $filter_query = null;
                 $value = addFilter($value, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $request->entity_alias);
