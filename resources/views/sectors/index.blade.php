@@ -377,8 +377,8 @@ $(function() {
       type: "POST",
       data: $(this).closest('.form-add').serialize(),
       success:function(html){
-        $('#sectors').html(html);
-        Foundation.reInit($('#sectors'));
+        $('#content').html(html);
+        Foundation.reInit($('#content'));
         $('.form-add').foundation('resetForm');  
       }
     });
@@ -478,8 +478,8 @@ $(function() {
       type: "PATCH",
       data: $(this).closest('.form-edit').serialize(),
       success:function(html){
-        $('#sectors').html(html);
-        Foundation.reInit($('#sectors'));
+        $('#content').html(html);
+        Foundation.reInit($('#content'));
         $('.form-edit').foundation('resetForm'); 
       }
     });

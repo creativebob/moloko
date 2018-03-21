@@ -10,7 +10,7 @@
       $(this).closest('.first-item').removeClass('first-active');
     } else {
       // Иначе ставим элементу активный класс
-      $('#content-list .first-item').removeClass('first-active');
+      $('.content-list .first-item').removeClass('first-active');
       $(this).closest('.first-item').addClass('first-active');
     };
 

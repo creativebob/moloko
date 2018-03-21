@@ -314,8 +314,8 @@ $(function() {
       type: "POST",
       data: $(this).closest('#form-add').serialize(),
       success:function(html){
-        $('#regions').html(html);
-        Foundation.reInit($('#regions')); 
+        $('#content').html(html);
+        Foundation.reInit($('#content')); 
       }
     });
   });
@@ -334,6 +334,7 @@ $(function() {
     // $('#region-id-field').val('');
     // $('#region-name-field').val('');
   });
+  
   // При закрытии окна с ошибкой очищаем модалку
   $(document).on('click', '.error-close', function() {
     $('.item-error').remove();
@@ -349,138 +350,138 @@ $(function() {
     $('.find-status').removeClass('icon-find-no');
   });
 
-  // Мягкое удаление с refresh
-  $(document).on('click', '[data-open="item-delete"]', function() {
-    // находим описание сущности, id и название удаляемого элемента в родителе
-    var parent = $(this).closest('.parent');
-    var type = parent.attr('id').split('-')[0];
-    var id = parent.attr('id').split('-')[1];
-    var name = parent.data('name');
-    $('.title-delete').text(name);
-    $('.delete-button').attr('id', 'del-' + type + '-' + id);
-    $('#form-item-del').attr('action', '/' + type + '/' + id);
-  });
+  // // Мягкое удаление с refresh
+  // $(document).on('click', '[data-open="item-delete"]', function() {
+  //   // находим описание сущности, id и название удаляемого элемента в родителе
+  //   var parent = $(this).closest('.parent');
+  //   var type = parent.attr('id').split('-')[0];
+  //   var id = parent.attr('id').split('-')[1];
+  //   var name = parent.data('name');
+  //   $('.title-delete').text(name);
+  //   $('.delete-button').attr('id', 'del-' + type + '-' + id);
+  //   $('#form-item-del').attr('action', '/' + type + '/' + id);
+  // });
 
-  // Отображение области по ajax через api vk
-  $('#region-name-field').keyup(function() {
-    // Блокируем кнопку
-    $('#submit-region-add').prop('disabled', true);
-    $('#region-database').val(0);
-    // Получаем фрагмент текста
-    var region = $('#region-name-field').val();
-    // Смотрим сколько символов
-    var lenRegion = region.length;
-    // Если символов больше 3 - делаем запрос
+  // // Отображение области по ajax через api vk
+  // $('#region-name-field').keyup(function() {
+  //   // Блокируем кнопку
+  //   $('#submit-region-add').prop('disabled', true);
+  //   $('#region-database').val(0);
+  //   // Получаем фрагмент текста
+  //   var region = $('#region-name-field').val();
+  //   // Смотрим сколько символов
+  //   var lenRegion = region.length;
+  //   // Если символов больше 3 - делаем запрос
 
-    if (lenRegion > 3) {
-      // alert($('#region-name-field').val());
-      // setTimeout(function () {
-        // Сам ajax запрос
-        $.ajax({
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
-          url: "/region",
-          type: "POST",
-          data: {region: $('#region-name-field').val()},
-          beforeSend: function () {
-            $('.find-status').addClass('icon-load');
-          },
-          success: function(date){
-            $('.find-status').removeClass('icon-load');
-            // Удаляем все значения чтобы вписать новые
-            $('#tbody-region-add>tr').remove();
-            var result = $.parseJSON(date);
-            // alert(result);
-            var count = result.response.count;
-            var data = '';
-            if (count == 0) {
-              $('.find-status').addClass('icon-find-no');
-              data = "<tr><td>Ничего не найдено...</td></tr>";
-            };
-            if (count > 0) {
-              $('.find-status').addClass('icon-find-ok');
-              // Перебираем циклом
-              for (var i = 0; i < count; i++) {
-                data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"region-add\" data-region-vk-external-id=\"" + i + "\">" + result.response.items[i].id + "</a></td><td><a class=\"region-add\" data-region-name=\"" + i + "\">" + result.response.items[i].title + "</a></td></tr>";
-              };
-            };
-            // Выводим пришедшие данные на страницу
-            $('#tbody-region-add').append(data);
-          }
-        });
-      // }, 1000);
-    } else {
-      // Удаляем все значения, если символов меньше 3х
-      $('#tbody-region-add>tr').remove();
-      $('.item-error').remove();
-      $('#region-id-field').val('');
-      $('.find-status').removeClass('icon-find-ok');
-      $('.find-status').removeClass('icon-find-no');
-    };
-  });
-  // При клике на регион в модальном окне заполняем инпуты
-  $(document).on('click', '.region-add', function() {
-    var itemId = $(this).closest('tr').data('tr');
-    var regionId = $('[data-region-vk-external-id="' + itemId + '"]').html();
-    var regionName = $('[data-region-name="' + itemId + '"]').html();
-    $('#region-id-field').val(regionId);
-    $('#region-name-field').val(regionName);
-    if($('#region-id-field').val() != '') {
-      var region = {region_name:$('#region-name-field').val(), region_database:$('#region-database').val()};
-      // Ajax
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "/regions",
-        type: "POST",
-        data: region,
-        success: function (data) {
-          var result = $.parseJSON(data);
-          // alert(result.session);
-          if (result.error_status == 1) {
-            var error = showError (result.error_message);
-            $('#region-name-field').after(error);
-          };
-          if (result.error_status == 0) {
-            $('#region-database').val(1);
-            $('#submit-region-add').prop('disabled', false);
-          };
-        }
-      });
-    };
-  });
-  // Сохраняем область в базу и отображаем на странице по ajax   
-  $('#submit-region-add').click(function (event) {
-    //чтобы не перезагружалась форма
-    event.preventDefault(); 
-    // Дергаем все данные формы
-    var formRegion = $('#form-region-add').serialize();
-    // var region = {region_vk_external_id: $('#region-id-field').val(), region_name:$('#region-name-field').val()};
-    // Ajax
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/regions",
-      type: "POST",
-      // data: region,
-      data: formRegion,
-      success: function (data) {
-        var result = $.parseJSON(data);
-        result = "<li class=\"first-item parent\" id=\"regions-" + result.region_id + "\" data-name=\"" + result.region_name + "\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\"></div></li></ul><a data-list=\"" + result.region_id +"\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"first-item-name\">" + result.region_name + "</span><span class=\"number\">0</span></div></a>";
-        // Выводим пришедшие данные на страницу
-        $('#regions').append(result);
-        // Обнуляем модалку
-        $('#region-name-field').val('');
-        $('#region-id-field').val('');
-        $('#region-database').val(0);
-        $('#submit-region-add').prop('disabled', true);
-        $('#tbody-region-add>tr').remove();
-      }
-    });
-  });
+  //   if (lenRegion > 3) {
+  //     // alert($('#region-name-field').val());
+  //     // setTimeout(function () {
+  //       // Сам ajax запрос
+  //       $.ajax({
+  //         headers: {
+  //           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //         },
+  //         url: "/region",
+  //         type: "POST",
+  //         data: {region: $('#region-name-field').val()},
+  //         beforeSend: function () {
+  //           $('.find-status').addClass('icon-load');
+  //         },
+  //         success: function(date){
+  //           $('.find-status').removeClass('icon-load');
+  //           // Удаляем все значения чтобы вписать новые
+  //           $('#tbody-region-add>tr').remove();
+  //           var result = $.parseJSON(date);
+  //           // alert(result);
+  //           var count = result.response.count;
+  //           var data = '';
+  //           if (count == 0) {
+  //             $('.find-status').addClass('icon-find-no');
+  //             data = "<tr><td>Ничего не найдено...</td></tr>";
+  //           };
+  //           if (count > 0) {
+  //             $('.find-status').addClass('icon-find-ok');
+  //             // Перебираем циклом
+  //             for (var i = 0; i < count; i++) {
+  //               data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"region-add\" data-region-vk-external-id=\"" + i + "\">" + result.response.items[i].id + "</a></td><td><a class=\"region-add\" data-region-name=\"" + i + "\">" + result.response.items[i].title + "</a></td></tr>";
+  //             };
+  //           };
+  //           // Выводим пришедшие данные на страницу
+  //           $('#tbody-region-add').append(data);
+  //         }
+  //       });
+  //     // }, 1000);
+  //   } else {
+  //     // Удаляем все значения, если символов меньше 3х
+  //     $('#tbody-region-add>tr').remove();
+  //     $('.item-error').remove();
+  //     $('#region-id-field').val('');
+  //     $('.find-status').removeClass('icon-find-ok');
+  //     $('.find-status').removeClass('icon-find-no');
+  //   };
+  // });
+  // // При клике на регион в модальном окне заполняем инпуты
+  // $(document).on('click', '.region-add', function() {
+  //   var itemId = $(this).closest('tr').data('tr');
+  //   var regionId = $('[data-region-vk-external-id="' + itemId + '"]').html();
+  //   var regionName = $('[data-region-name="' + itemId + '"]').html();
+  //   $('#region-id-field').val(regionId);
+  //   $('#region-name-field').val(regionName);
+  //   if($('#region-id-field').val() != '') {
+  //     var region = {region_name:$('#region-name-field').val(), region_database:$('#region-database').val()};
+  //     // Ajax
+  //     $.ajax({
+  //       headers: {
+  //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //       },
+  //       url: "/regions",
+  //       type: "POST",
+  //       data: region,
+  //       success: function (data) {
+  //         var result = $.parseJSON(data);
+  //         // alert(result.session);
+  //         if (result.error_status == 1) {
+  //           var error = showError (result.error_message);
+  //           $('#region-name-field').after(error);
+  //         };
+  //         if (result.error_status == 0) {
+  //           $('#region-database').val(1);
+  //           $('#submit-region-add').prop('disabled', false);
+  //         };
+  //       }
+  //     });
+  //   };
+  // });
+  // // Сохраняем область в базу и отображаем на странице по ajax   
+  // $('#submit-region-add').click(function (event) {
+  //   //чтобы не перезагружалась форма
+  //   event.preventDefault(); 
+  //   // Дергаем все данные формы
+  //   var formRegion = $('#form-region-add').serialize();
+  //   // var region = {region_vk_external_id: $('#region-id-field').val(), region_name:$('#region-name-field').val()};
+  //   // Ajax
+  //   $.ajax({
+  //     headers: {
+  //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //     },
+  //     url: "/regions",
+  //     type: "POST",
+  //     // data: region,
+  //     data: formRegion,
+  //     success: function (data) {
+  //       var result = $.parseJSON(data);
+  //       result = "<li class=\"first-item parent\" id=\"regions-" + result.region_id + "\" data-name=\"" + result.region_name + "\"><ul class=\"icon-list\"><li><div class=\"icon-list-add sprite\" data-open=\"city-add\"></div></li></ul><a data-list=\"" + result.region_id +"\" class=\"first-link\"><div class=\"list-title\"><div class=\"icon-open sprite\"></div><span class=\"first-item-name\">" + result.region_name + "</span><span class=\"number\">0</span></div></a>";
+  //       // Выводим пришедшие данные на страницу
+  //       $('#regions').append(result);
+  //       // Обнуляем модалку
+  //       $('#region-name-field').val('');
+  //       $('#region-id-field').val('');
+  //       $('#region-database').val(0);
+  //       $('#submit-region-add').prop('disabled', true);
+  //       $('#tbody-region-add>tr').remove();
+  //     }
+  //   });
+  // });
 });
 </script>
 @endsection
