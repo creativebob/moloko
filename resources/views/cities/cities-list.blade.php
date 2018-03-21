@@ -6,7 +6,7 @@
   $drop = 1;
 @endcan --}}
 
-<ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-multi-open="false" data-slide-speed="250">
+<ul class="vertical menu accordion-menu content-list" id="regions" data-accordion-menu data-multi-open="false" data-slide-speed="250">
   @foreach ($regions as $region)      
   <li class="first-item item @if ((count($region->areas) > 0) || (count($region->cities) > 0)) parent @endif" id="regions-{{ $region->id }}" data-name="{{ $region->region_name }}">
     <a class="first-link @if($drop == 0) link-small @endif">

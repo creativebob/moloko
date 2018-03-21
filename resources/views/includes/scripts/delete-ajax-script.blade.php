@@ -26,10 +26,9 @@ $(document).on('click', '.delete-button-ajax', function(event) {
     },
     url: '/' + entity_alias + '/' + id,
     type: "DELETE",
-    data: {id: id},
     success: function (html) {
-      $('#content-list').html(html);
-      Foundation.reInit($('#content-list'));
+      $('#' + entity_alias).html(html);
+      Foundation.reInit($('#' + entity_alias));
       $('.delete-button-ajax').removeAttr('id');
     }
   });

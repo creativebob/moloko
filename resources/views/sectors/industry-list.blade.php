@@ -6,7 +6,7 @@
   $drop = 1;
 @endcan --}}
 
-<ul class="vertical menu accordion-menu content-list" id="content-list" data-accordion-menu data-multi-open="false" data-slide-speed="250">
+<ul class="vertical menu accordion-menu content-list" id="sectors" data-accordion-menu data-multi-open="false" data-slide-speed="250">
 @foreach ($sectors_tree as $sector)
   @if($sector['industry_status'] == 1)
     {{-- Если индустрия --}}

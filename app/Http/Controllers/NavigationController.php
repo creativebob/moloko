@@ -313,7 +313,6 @@ class NavigationController extends Controller
       };
   }
 
-
   public function destroy(Request $request, $site_alias, $id)
   {
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
