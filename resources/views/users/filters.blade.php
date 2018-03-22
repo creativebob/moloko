@@ -1,4 +1,4 @@
-{{ Form::open(['route' => 'users.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
+{{ Form::open(['route' => 'users.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id'=>'filter-form']) }}
 
 {{-- Подключаем класс Checkboxer --}}
 @include('includes.scripts.class.checkboxer')
@@ -19,7 +19,7 @@
 	<legend>Мои списки:</legend>
 		<div class="grid-x">
 			
-			<div class="small-12 medium-12 large-12 cell checkbox checkboxer" id="booklister">
+			<div class="small-12 medium-12 large-12 cell checkbox checkboxer" id="booklists">
 	  			@include('includes.inputs.booklister', ['name'=>'booklist', 'value'=>$filter])
 			</div>
 

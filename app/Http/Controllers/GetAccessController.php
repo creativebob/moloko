@@ -148,6 +148,8 @@ class GetAccessController extends Controller
                         };
                     } else {$list_authors = null;};
 
+                    if(!isset($list_authors)){$list_authors = null;}; 
+
                     // -------------------------------------------------------------------------------------------------------
 
                     foreach($user->roles as $role) {
