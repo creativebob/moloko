@@ -722,7 +722,7 @@ input[type=checkbox], input[type=radio] {
   display: none;
 }
 
-.sectors-list .first {
+.first {
   font-weight: 700;
   font-size: 0.9rem;
   line-height: 1.2;
@@ -1612,44 +1612,6 @@ input[type=checkbox], input[type=radio] {
 .content .content-list .medium-list .medium-item .icon-list {
   padding: 0;
 }
-.content .content-list .medium-list .medium-item .medium-as-last {
-  position: relative;
-  margin: 0 1.8rem 0 2rem;
-  display: block;
-  font-family: "SegoeUISemiBold";
-  font-size: 0.8rem;
-  color: #000000;
-  padding: 10px 0 10px 3rem;
-  cursor: default;
-}
-.content .content-list .medium-list .medium-item .medium-as-last .icon-list {
-  transition: 0.2s ease opacity;
-  right: 0.2rem;
-}
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list {
-  opacity: 0;
-}
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div {
-  padding: 0;
-}
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div .icon-list-add {
-  background-position: 0px -768px;
-}
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div .icon-list-add:hover {
-  background-position: -64px -768px;
-}
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div .icon-list-edit {
-  background-position: 0px -800px;
-}
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div .icon-list-edit:hover {
-  background-position: -32px -800px;
-}
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div .icon-list-delete {
-  background-position: 0px -512px;
-}
-.content .content-list .medium-list .medium-item .medium-as-last:hover .icon-list div .icon-list-delete:hover {
-  background-position: -32px -512px;
-}
 .content .content-list .medium-list .medium-active > .medium-link .icon-open {
   background-position: -32px -704px;
 }
@@ -1681,6 +1643,55 @@ input[type=checkbox], input[type=radio] {
 }
 .content .content-list .medium-list .nested {
   margin-left: 0;
+}
+.content .content-list .medium-list .medium-as-last {
+  background-color: #ffffff;
+  position: relative;
+  padding-left: 2rem;
+  cursor: pointer;
+}
+.content .content-list .medium-list .medium-as-last .checkbox {
+  padding: 0;
+}
+.content .content-list .medium-list .medium-as-last .icon-drop {
+  background-position: 0px -832px;
+}
+.content .content-list .medium-list .medium-as-last .icon-list {
+  padding: 0;
+}
+.content .content-list .medium-list .medium-as-last .medium-as-last-link {
+  position: relative;
+  margin: 0 1.8rem 0 2rem;
+  display: block;
+  font-family: "SegoeUISemiBold";
+  font-size: 0.8rem;
+  color: #000000;
+  padding: 10px 6.5rem 10px 3rem;
+}
+.content .content-list .medium-list .medium-as-last:hover .icon-list {
+  opacity: 1;
+  z-index: 5;
+}
+.content .content-list .medium-list .medium-as-last:hover .icon-list div {
+  padding: 0;
+}
+.content .content-list .medium-list .medium-as-last:hover .icon-list div .icon-list-add {
+  background-position: 0px -768px;
+}
+.content .content-list .medium-list .medium-as-last:hover .icon-list div .icon-list-add:hover {
+  background-position: -32px -768px;
+}
+.content .content-list .medium-list .medium-as-last:hover .icon-list div .icon-list-edit {
+  background-position: 0px -800px;
+}
+.content .content-list .medium-list .medium-as-last:hover .icon-list div .icon-list-edit:hover {
+  background-position: -32px -800px;
+}
+.content .content-list .medium-list .medium-as-last:hover .icon-list div .icon-list-delete {
+  background-position: 0px -512px;
+}
+.content .content-list .medium-list .medium-as-last:hover .icon-list div .icon-list-delete:hover {
+  background-position: -32px -512px;
 }
 .content .content-list .last-list {
   border-left: 2px solid #ae4747;

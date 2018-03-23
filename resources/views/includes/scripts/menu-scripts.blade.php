@@ -3,7 +3,7 @@
 $(function() {
 
   // Включаем перетаскивание
-  $("#content-list, #content-list ul").sortable({
+  $("#content, #content ul").sortable({
     axis: 'y',
     handle: '.icon-drop', // указываем за какой элемент можно тянуть
     placeholder: "menu-drop-color", // высота и фон вырванного элемента

@@ -893,18 +893,11 @@ input[type=checkbox], input[type=radio] {
   display: none;
 }
 // ---------------------------------------------------------------------------------------------
-.sectors-list {
+.first {
 
-  option {
-
-  }
-
-  .first {
-
-    font-weight: 700;
-    font-size: 0.9rem;
-    line-height: 1.2;
-  }
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.2;
 }
 // ---------------------------------------- Страница входа -------------------------------------
 .enter-page {
@@ -1968,56 +1961,6 @@ input[type=checkbox], input[type=radio] {
         .icon-list {
           padding: 0;
         }
-        
-        // Средний элемент не имеющий вложенного списка
-        .medium-as-last {
-          position: relative;
-          margin: 0 1.8rem 0 2rem;
-          display: block;
-          // border-bottom: 1px solid $list-item-nested-border-bottom-color;
-          font-family: $SUISB;
-          font-size: 0.8rem;
-          color: $list-item-li-color;
-          padding: 10px 0 10px 3rem;
-          cursor: default;
-
-          .icon-list {
-            transition: 0.2s ease opacity;
-            // opacity: 0;
-            right: 0.2rem;
-          }
-        } 
-        .medium-as-last:hover {
-          // cursor: pointer;
-
-          .icon-list {
-            opacity: 0;
-
-
-            div {
-              padding: 0;
-
-              .icon-list-add {
-                background-position: 0px -768px; 
-              }
-              .icon-list-add:hover {
-                background-position: -64px -768px; 
-              }
-              .icon-list-edit {
-                background-position: 0px -800px; 
-              }
-              .icon-list-edit:hover {
-                background-position: -32px -800px; 
-              }
-              .icon-list-delete {
-                background-position: 0px -512px; 
-              }
-              .icon-list-delete:hover {
-                background-position: -32px -512px;
-              }
-            }
-          }
-        }
       }
 
       // Активные средние элементы списка
@@ -2064,6 +2007,71 @@ input[type=checkbox], input[type=radio] {
       
       .nested {
         margin-left: 0;
+      }
+
+      // Средний элемент не имеющий вложенного списка
+      .medium-as-last {
+        background-color: $list-item-li-bg-color;
+        position: relative;
+        padding-left: 2rem;
+        cursor: pointer;
+
+        .checkbox {
+          padding: 0;
+        }
+
+        .icon-drop {
+          background-position: 0px -832px;
+        }
+
+        .icon-list {
+          padding: 0;
+          // transition: 0.2s ease opacity;
+          // // opacity: 0;
+          // right: 0.2rem;
+        }
+
+        .medium-as-last-link {
+          position: relative;
+          margin: 0 1.8rem 0 2rem;
+          display: block;
+          // border-bottom: 1px solid $list-item-nested-border-bottom-color;
+          font-family: $SUISB;
+          font-size: 0.8rem;
+          color: $list-item-li-color;
+          padding: 10px 6.5rem 10px 3rem;
+
+        } 
+        &:hover {
+
+          .icon-list {
+            opacity: 1;
+            z-index: 5;
+
+            div {
+              padding: 0;
+
+              .icon-list-add {
+                background-position: 0px -768px; 
+              }
+              .icon-list-add:hover {
+                background-position: -32px -768px; 
+              }
+              .icon-list-edit {
+                background-position: 0px -800px; 
+              }
+              .icon-list-edit:hover {
+                background-position: -32px -800px; 
+              }
+              .icon-list-delete {
+                background-position: 0px -512px; 
+              }
+              .icon-list-delete:hover {
+                background-position: -32px -512px;
+              }
+            }
+          }
+        }
       }
     }
 

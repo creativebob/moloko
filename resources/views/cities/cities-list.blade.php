@@ -8,7 +8,7 @@
 
 <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250">
   @foreach ($regions as $region)      
-  <li class="first-item item @if ((count($region->areas) > 0) || (count($region->cities) > 0)) parent @endif" id="regions-{{ $region->id }}-content" data-name="{{ $region->region_name }}">
+  <li class="first-item item @if ((count($region->areas) > 0) || (count($region->cities) > 0)) parent @endif" id="regions-{{ $region->id }}" data-name="{{ $region->region_name }}">
     <a class="first-link @if($drop == 0) link-small @endif">
       <div class="icon-open sprite"></div>
       <span class="first-item-name">{{ $region->region_name }}</span>
@@ -43,7 +43,7 @@
     <ul class="menu vertical medium-list" data-entity="areas" data-accordion-menu data-multi-open="false">
     @if((count($region->areas) > 0) || (count($region->cities) > 0))
       @foreach ($region->areas as $area)
-        <li class="medium-item item @if (count($area->cities) > 0) parent @endif" id="areas-{{ $area->id }}-content" data-name="{{ $area->area_name }}">
+        <li class="medium-item item @if (count($area->cities) > 0) parent @endif" id="areas-{{ $area->id }}" data-name="{{ $area->area_name }}">
           <a class="medium-link">
             <div class="icon-open sprite"></div>
             <span>{{ $area->area_name }}</span>
@@ -65,7 +65,7 @@
           <ul class="menu vertical nested last-list" data-entity="cities">
           @if(count($area->cities) > 0)
             @foreach ($area->cities as $city)
-              <li class="last-item item" id="cities-{{ $city->id }}-content" data-name="{{ $city->city_name }}">
+              <li class="last-item item" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
                 <a class="last-link">
                   <span>{{ $city->city_name }}</span>
                   @if ($city->moderation == 1)
@@ -90,8 +90,8 @@
       @endforeach
       @if(count($region->cities) > 0)
         @foreach ($region->cities as $city)
-          <li class="medium-item item" id="cities-{{ $city->id }}-content" data-name="{{ $city->city_name }}">
-            <a class="medium-as-last">
+          <li class="medium-as-last item" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
+            <a class="medium-as-last-link">
               <span>{{ $city->city_name }}</span>
               @if ($city->moderation == 1)
               <span class="no-moderation">Не отмодерированная запись!</span>
@@ -122,20 +122,20 @@
 @if(!empty($id))
 <script type="text/javascript">
   // Если средний элемент
-  if ($('#cities-{{ $id }}-content').hasClass('medium-item')) {
+  if ($('#cities-{{ $id }}').hasClass('medium-item')) {
     // Открываем элемент
-    $('#cities-{{ $id }}-content').parent('.medium-list').addClass('is-active');
-    $('#cities-{{ $id }}-content').closest('.first-item').addClass('first-active');
+    $('#cities-{{ $id }}').parent('.medium-list').addClass('is-active');
+    $('#cities-{{ $id }}').closest('.first-item').addClass('first-active');
   };
 
   // Если последний элемент
-  if ($('#cities-{{ $id }}-content').hasClass('last-item')) {
+  if ($('#cities-{{ $id }}').hasClass('last-item')) {
     // Присваиваем элементу активный клас и открываем его и вышестоящий
-    $('#cities-{{ $id }}-content').addClass('medium-active');
-    $('#cities-{{ $id }}-content').parent('.last-list').addClass('is-active');
+    $('#cities-{{ $id }}').addClass('medium-active');
+    $('#cities-{{ $id }}').parent('.last-list').addClass('is-active');
 
     // Перебираем родителей
-    $.each($('#cities-{{ $id }}-content').parents('.item'), function (index) {
+    $.each($('#cities-{{ $id }}').parents('.item'), function (index) {
 
       // Если первый элемент, присваиваем активный класс
       if ($(this).hasClass('first-item')) {
