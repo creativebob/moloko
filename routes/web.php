@@ -140,6 +140,8 @@ Route::prefix('/sites/{site_alias}')->group(function () {
     Route::resource('/navigations', 'NavigationController')->middleware('auth');
     // Текущий добавленный/удаленный сектор
 	Route::any('/get_navigations', 'NavigationController@get_content')->middleware('auth');
+	// Проверка на существование навигации
+	Route::post('/navigation_check', 'NavigationController@navigation_check')->middleware('auth');
 
     Route::resource('/menus', 'MenuController')->middleware('auth');
     // Текущий добавленный/удаленный пункт меню

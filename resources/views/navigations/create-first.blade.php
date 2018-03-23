@@ -6,7 +6,7 @@
   </div>
   {{ Form::open(['id' => 'form-first-add', 'data-abide', 'novalidate']) }}
 
-    @include('navigations.modals.navigation', ['submitButtonText' => 'Добавить навигацию', 'id'=>'submit-first-add'])
+    @include('navigations.modals.first', ['submitButtonText' => 'Добавить навигацию', 'id'=>'submit-first-add'])
 
   {{ Form::close() }}
 <div data-close class="icon-close-modal sprite close-modal"></div> 

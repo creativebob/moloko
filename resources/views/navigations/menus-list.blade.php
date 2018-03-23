@@ -10,6 +10,12 @@
         0
       @endif
       </span>
+      @if ($menu['moderation'])
+	    <span class="no-moderation">Не отмодерированная запись!</span>
+	    @endif
+	    @if ($menu['system_item'])
+	    <span class="system-item">Системная запись!</span>
+	    @endif
 	  </a>
 	  <div class="drop-list checkbox">
       @if ($drop == 1)

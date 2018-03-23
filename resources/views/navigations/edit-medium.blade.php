@@ -16,7 +16,7 @@
   <div class="tabs-content" data-tabs-content="tabs">
     {{ Form::model($menu, ['id' => 'form-medium-edit', 'data-abide', 'novalidate']) }}
 
-      @include('navigations.modals.menu', ['submitButtonText' => 'Редактировать пункт', 'id'=>'submit-medium-edit'])
+      @include('navigations.modals.medium', ['submitButtonText' => 'Редактировать пункт', 'id'=>'submit-medium-edit'])
 
     {{ Form::close() }}
   </div>

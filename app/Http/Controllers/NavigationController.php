@@ -215,7 +215,7 @@ class NavigationController extends Controller
 
     $navigation = new Navigation;
 
-    return view('navigations.create-navigation', ['navigation' => $navigation, 'site' => $site]); 
+    return view('navigations.create-first', ['navigation' => $navigation, 'site' => $site]); 
   }
 
 
@@ -235,7 +235,20 @@ class NavigationController extends Controller
     $company_id = $user->company_id;
 
     $navigation = new Navigation;
-    $navigation->navigation_name = $request->navigation_name;
+
+    // Модерация и системная запись
+    $navigation->system_item = $request->system_item;
+    $navigation->moderation = $request->moderation;
+
+    if ($request->first_item == 1) {
+      $first = mb_substr($request->navigation_name,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($request->navigation_name,1);//все кроме первой буквы
+      $first = mb_strtoupper($first, 'UTF-8');
+      $last = mb_strtolower($last, 'UTF-8');
+      $navigation_name = $first.$last;
+      $navigation->navigation_name = $navigation_name;
+    }
+    
     $navigation->site_id = $request->site_id;
     $navigation->company_id = $company_id;
     $navigation->author_id = $user_id;
@@ -287,7 +300,7 @@ class NavigationController extends Controller
     ->whereSite_alias($site_alias)
     ->first();
 
-    return view('navigations.edit-navigation', ['navigation' => $navigation, 'site' => $site]);
+    return view('navigations.edit-first', ['navigation' => $navigation, 'site' => $site]);
   }
 
   public function update(NavigationRequest $request, $site_alias, $id)
@@ -306,7 +319,20 @@ class NavigationController extends Controller
     $this->authorize(getmethod(__FUNCTION__), $navigation);
 
     $user = $request->user();
-    $navigation->navigation_name = $request->navigation_name;
+
+    // Модерация и системная запись
+    $navigation->system_item = $request->system_item;
+    $navigation->moderation = $request->moderation;
+    
+    if ($request->first_item == 1) {
+      $first = mb_substr($request->navigation_name,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($request->navigation_name,1);//все кроме первой буквы
+      $first = mb_strtoupper($first, 'UTF-8');
+      $last = mb_strtolower($last, 'UTF-8');
+      $navigation_name = $first.$last;
+      $navigation->navigation_name = $navigation_name;
+    }
+
     $navigation->site_id = $request->site_id;
     $navigation->company_id = $user->company_id;
     $navigation->editor_id = $user->id;
@@ -368,6 +394,28 @@ class NavigationController extends Controller
         ];
       }
     };
+  }
+
+  // Проверка наличия в базе
+  public function navigation_check(Request $request, $site_alias)
+  {
+    // Проверка отдела в нашей базе данных
+    $navigation = Navigation::with(['site' => function ($query) use ($site_alias) {
+      $query->where('site_name', $site_alias);
+    }])->where('navigation_name', $request->name)->first();
+
+    // Если такое название есть
+    if ($navigation) {
+      $result = [
+        'error_status' => 1,
+      ];
+    // Если нет
+    } else {
+      $result = [
+        'error_status' => 0
+      ];
+    };
+    return json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
   public function navigations_sort(Request $request)

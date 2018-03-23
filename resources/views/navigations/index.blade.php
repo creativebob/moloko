@@ -87,7 +87,9 @@ $(function() {
   // Берем алиас сайта
   var siteAlias = '{{ $site_alias }}';
 
-  // Удаление ajax
+
+
+  // ------------------------------ Удаление ajax -------------------------------------------
   $(document).on('click', '[data-open="item-delete-ajax"]', function() {
     // Находим описание сущности, id и название удаляемого элемента в родителе
     var parent = $(this).closest('.item');
@@ -128,7 +130,69 @@ $(function() {
     return error;
   };
 
+  // ------------------- Проверка на совпадение имени --------------------------------------
+  // Обозначаем таймер для проверки
+  var timerId;
+  var time = 400;
+
+  // Первая буква заглавная
+  function newParagraph (name) {
+    name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
+    return name;
+  };
+ 
+  function navigationCheck (name, submit, db) {
+
+    // Блокируем аттрибут базы данных
+    $(db).val(0);
+
+    // Смотрим сколько символов
+    var lenname = name.length;
+
+    // Если символов больше 3 - делаем запрос
+    if (lenname > 3) {
+
+      // Первая буква сектора заглавная
+      name = newParagraph (name);
+
+      // Сам ajax запрос
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/sites/'+ siteAlias + '/navigation_check',
+        type: "POST",
+        data: {name: name},
+        beforeSend: function () {
+          $('.find-status').addClass('icon-load');
+        },
+        success: function(date){
+          $('.find-status').removeClass('icon-load');
+          var result = $.parseJSON(date);
+          // Если ошибка
+          if (result.error_status == 1) {
+            $(submit).prop('disabled', true);
+            $('.item-error').css('display', 'block');
+            $(db).val(0);
+          } else {
+            // Выводим пришедшие данные на страницу
+            $(submit).prop('disabled', false);
+            $('.item-error').css('display', 'none');
+            $(db).val(1);
+          };
+        }
+      });
+    };
+    // Удаляем все значения, если символов меньше 3х
+    if (lenname <= 3) {
+      $(submit).prop('disabled', false);
+      $('.item-error').css('display', 'none');
+      $(db).val(0);
+    };
+  };
+
   // -------------------------------- Добавляем навигацию -------------------------------------
+  // Открываем модалку
   $(document).on('click', '[data-open="first-add"]', function() {
     $.ajax({
       headers: {
@@ -142,6 +206,21 @@ $(function() {
         $('#first-add').foundation('open');
       }
     }); 
+  });
+
+  // Проверка существования
+  $(document).on('keyup', '#form-first-add .name-field', function() {
+    // Получаем фрагмент текста
+    var name = $('#form-first-add .name-field').val();
+    // Указываем название кнопки
+    var submit = '#submit-first-add';
+    // Значение поля с разрешением
+    var db = '#form-first-add .first-item';
+    // Выполняем запрос
+    clearTimeout(timerId);   
+    timerId = setTimeout(function() {
+      navigationCheck (name, submit, db)
+   }, time); 
   });
 
   // Добавляем
@@ -184,6 +263,21 @@ $(function() {
     });
   });
 
+  // Проверка существования
+  $(document).on('keyup', '#form-first-edit .name-field', function() {
+    // Получаем фрагмент текста
+    var name = $('#form-first-edit .name-field').val();
+    // Указываем название кнопки
+    var submit = '#submit-first-edit';
+    // Значение поля с разрешением
+    var db = '#form-first-edit .first-item';
+    // Выполняем запрос
+    clearTimeout(timerId);   
+    timerId = setTimeout(function() {
+      navigationCheck (name, submit, db)
+   }, time); 
+  });
+
   // Меняем данные
   $(document).on('click', '#submit-first-edit', function(event) {
     event.preventDefault();
@@ -207,7 +301,7 @@ $(function() {
   });
 
   // -------------------------------- Добавление пункта меню -----------------------------------
-  // Переносим id родителя и навигации в модалку
+  // Открываем модалку
   $(document).on('click', '[data-open="medium-add"]', function() {
     var parent = $(this).closest('.item').attr('id').split('-')[1];
     var navigation = $(this).closest('.first-item').attr('id').split('-')[1];

@@ -103,6 +103,7 @@ class CompanyController extends Controller
 
         // Главный запрос
         $sectors = Sector::moderatorLimit($answer)
+        ->orderBy('sort', 'asc')
         ->get(['id','sector_name','industry_status','sector_parent_id'])
         ->keyBy('id')
         ->toArray();
@@ -256,6 +257,7 @@ class CompanyController extends Controller
 
         // Главный запрос
         $sectors = Sector::moderatorLimit($answer)
+        ->orderBy('sort', 'asc')
         ->get(['id','sector_name','industry_status','sector_parent_id'])
         ->keyBy('id')
         ->toArray();

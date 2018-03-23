@@ -16,7 +16,7 @@
   <div class="tabs-content" data-tabs-content="tabs">
     {{ Form::open(['id' => 'form-medium-add', 'data-abide', 'novalidate']) }}
 
-      @include('navigations.modals.menu', ['submitButtonText' => 'Добавить пункт', 'id'=>'submit-medium-add'])
+      @include('navigations.modals.medium', ['submitButtonText' => 'Добавить пункт', 'id'=>'submit-medium-add'])
 
     {{ Form::close() }}
   </div>

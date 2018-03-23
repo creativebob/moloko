@@ -141,7 +141,7 @@ class MenuController extends Controller
     // echo $navigation_list;
     $menu = new Menu;
 
-    return view('navigations.create-menu', ['menu' => $menu, 'navigation_list' => $navigation_list, 'pages_list' => $pages_list, 'site' => $site]); 
+    return view('navigations.create-medium', ['menu' => $menu, 'navigation_list' => $navigation_list, 'pages_list' => $pages_list, 'site' => $site]); 
 
   }
 
@@ -161,9 +161,16 @@ class MenuController extends Controller
 
     // Пишем раздел меню
     $menu = new Menu;
+
+    // Модерация и системная запись
+    $menu->system_item = $request->system_item;
+    $menu->moderation = $request->moderation;
+
     $menu->menu_name = $request->menu_name;
     $menu->menu_icon = $request->menu_icon;
     $menu->menu_alias = $request->menu_alias;
+
+    // Если родителем является навигация
     if ($request->navigation_id == $request->menu_parent_id) {
       $menu->navigation_id = $request->navigation_id;
       $menu->menu_parent_id = null;
@@ -171,6 +178,7 @@ class MenuController extends Controller
       $menu->navigation_id = $request->navigation_id;
       $menu->menu_parent_id = $request->menu_parent_id;
     }
+
     $menu->page_id = $request->page_id;
     $menu->company_id = $company_id;
     $menu->author_id = $user_id;
@@ -328,7 +336,7 @@ class MenuController extends Controller
 
     // echo $pages_list;
 
-    return view('navigations.edit-menu', ['menu' => $menu, 'navigation_list' => $navigation_list, 'pages_list' => $pages_list, 'site' => $site]); 
+    return view('navigations.edit-medium', ['menu' => $menu, 'navigation_list' => $navigation_list, 'pages_list' => $pages_list, 'site' => $site]); 
   }
 
   public function update(MenuRequest $request, $site_alias, $id)
@@ -349,6 +357,12 @@ class MenuController extends Controller
     $menu->menu_name = $request->menu_name;
     $menu->menu_alias = $request->menu_alias;
     $menu->menu_icon = $request->menu_icon;
+
+    // Модерация и системная запись
+    $menu->system_item = $request->system_item;
+    $menu->moderation = $request->moderation;
+
+    // Если родителем является навигация
     if ($request->navigation_id == $request->menu_parent_id) {
       $menu->navigation_id = $request->navigation_id;
       $menu->menu_parent_id = null;

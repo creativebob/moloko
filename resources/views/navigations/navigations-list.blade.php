@@ -86,7 +86,7 @@
       // Присваиваем элементу активный клас и открываем его и вышестоящий
       $('#menus-{{ $id }}').addClass('medium-active');
       $('#menus-{{ $id }}').parent('.medium-list').addClass('is-active');
-      $('#sectors-{{ $id }}').children('.medium-list').addClass('is-active');
+      $('#menus-{{ $id }}').children('.medium-list').addClass('is-active');
     };
     if ($('#menus-{{ $id }}').hasClass('medium-as-last')) {
       // Открываем вышестоящий

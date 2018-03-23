@@ -17,6 +17,18 @@
           @endphp
         </select>
       </label>
+      @if ($menu->moderation == 1)
+      <div class="checkbox">
+        {{ Form::checkbox('moderation', 1, $menu->moderation, ['id' => 'moderation']) }}
+        <label for="moderation"><span>Временная запись.</span></label>
+      </div>
+      @endif
+      @can('god', App\Menu::class)
+      <div class="checkbox">
+        {{ Form::checkbox('system_item', 1, $menu->system_item, ['id' => 'system-item']) }}
+        <label for="system-item"><span>Системная запись.</span></label>
+      </div>
+      @endcan
     </div>
   </div>
 </div>
@@ -37,6 +49,7 @@
       {{ Form::hidden('navigation_id', $menu->navigation_id) }}
       {{ Form::hidden('site_id', $site->id) }}
       {{ Form::hidden('menu_id', $menu->id, ['id'=>'menu_id']) }}
+      
     </div>
   </div>
 </div>
