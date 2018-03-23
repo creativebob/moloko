@@ -95,6 +95,9 @@
 
                     $booklists['default'] = $booklists_default;
                     $booklists['default_count'] = count($booklists_default);
+                    $booklists['request_mass'] = $request->booklist_id;
+
+
                     $booklists[$booklist_id]['collection'] = $booklist;
 
                     $booklists[$booklist_id]['mass_items'] = $booklist->list_items->pluck('item_entity')->toArray();
@@ -132,7 +135,7 @@
             $filter[$filter_name]['mode'] = 'id'; // Назавние фильтра
         };
 
-        // dd($filter_entity);
+
 
         $filter[$filter_name]['collection'] = $filter_entity;
 
@@ -140,6 +143,7 @@
 
             $filter[$filter_name]['mass_id'] = null;
             $filter[$filter_name]['count_mass'] = 0;
+            
         } else {
 
             $filter[$filter_name]['mass_id'] = $request->$column; // Получаем список ID

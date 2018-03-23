@@ -127,18 +127,20 @@
 @endsection
 
 @section('modals')
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
+  {{-- Модалка удаления с refresh --}}
+  @include('includes.modals.modal-delete')
+
+  {{-- Модалка удаления с refresh --}}
+  @include('includes.modals.modal-delete-ajax')
+
 @endsection
 
 @section('scripts')
-{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.table-scripts')
+  {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+  @include('includes.scripts.table-scripts')
 
-@section('scripts')
-{{-- Скрипт серверной сортировки --}}
-@include('includes.scripts.serversort-script')
+  {{-- Скрипт модалки удаления --}}
+  @include('includes.scripts.modal-delete-script')
+  @include('includes.scripts.delete-ajax-script')
 
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
 @endsection

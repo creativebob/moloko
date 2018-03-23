@@ -617,6 +617,11 @@ input[type=checkbox], input[type=radio] {
   opacity: 0;
 }
 
+.dblrename input
+{
+  margin-bottom: 0.25rem !important;
+}
+
 .booklist li:hover .booklist_delete
 {
   opacity: 1;

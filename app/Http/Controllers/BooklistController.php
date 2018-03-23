@@ -243,8 +243,6 @@ class BooklistController extends Controller
 
         if($request->operation_booklist){
 
-
-
             $booklists_user = Booklist::with('list_items')
             ->where('author_id', $request->user()->id)
             ->where('entity_alias', $request->entity_alias)
@@ -291,13 +289,27 @@ class BooklistController extends Controller
 
         };
 
-            $value = []; 
-            $filter_query = null;
-            $value = addFilter($value, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $request->entity_alias);
-            $name = 'booklist';
+        $value = []; 
+        $filter_query = null;
+        $value = addFilter($value, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $request->entity_alias);
+        $name = 'booklist';
 
-            return view('includes.inputs.booklister', ['name'=>$name, 'value'=>$value]);
+        return view('includes.inputs.booklister', ['name'=>$name, 'value'=>$value]);
 
     }
+
+    public function updatebooklist(Request $request)
+    {
+
+        $value = []; 
+        $filter_query = null;
+        $value = addFilter($value, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $request->entity_alias);
+        $name = 'booklist';
+
+        return view('includes.inputs.booklister', ['name'=>$name, 'value'=>$value]);
+
+    }
+
+
 
 }
