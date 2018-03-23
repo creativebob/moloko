@@ -6,10 +6,9 @@ $(document).on('click', '[data-open="item-delete-ajax"]', function() {
   var parent = $(this).closest('.item');
   var entity_alias = parent.attr('id').split('-')[0];
   var id = parent.attr('id').split('-')[1];
-  var block = parent.attr('id').split('-')[2];
   var name = parent.data('name');
   $('.title-delete').text(name);
-  $('.delete-button-ajax').attr('id', 'del-' + entity_alias + '-' + id + '-' + block);
+  $('.delete-button-ajax').attr('id', 'del-' + entity_alias + '-' + id);
 });
 
 // Подтверждение удаления и само удаление
@@ -19,7 +18,6 @@ $(document).on('click', '.delete-button-ajax', function(event) {
   event.preventDefault();
   var entity_alias = $(this).attr('id').split('-')[1];
   var id = $(this).attr('id').split('-')[2];
-  var block = $(this).attr('id').split('-')[3];
 
   // Ajax
   $.ajax({
@@ -29,8 +27,8 @@ $(document).on('click', '.delete-button-ajax', function(event) {
     url: '/' + entity_alias + '/' + id,
     type: "DELETE",
     success: function (html) {
-      $('#' + block).html(html);
-      Foundation.reInit($('#' + block));
+      $('#content').html(html);
+      Foundation.reInit($('#content'));
       $('.delete-button-ajax').removeAttr('id');
     }
   });

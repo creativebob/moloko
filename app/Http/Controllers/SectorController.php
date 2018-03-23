@@ -165,9 +165,91 @@ class SectorController extends Controller
     return view('sectors.industry-list', ['sectors_tree' => $sectors_tree, 'id' => $request->id]);
   }
 
-  public function create()
+  public function create(Request $request)
   {
-    //
+    // Подключение политики
+    $this->authorize(getmethod(__FUNCTION__), Sector::class);
+
+    $sector = new Sector;
+
+    if (isset($request->sector_parent_id)) {
+
+      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+      $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+
+      // Главный запрос
+      $sectors = Sector::moderatorLimit($answer)
+      ->orderBy('sort', 'asc')
+      ->get(['id','sector_name','industry_status','sector_parent_id'])
+      ->keyBy('id')
+      ->toArray();
+
+      // dd($sectors);
+
+      // Формируем дерево вложенности
+      $sectors_cat = [];
+      foreach ($sectors as $id => &$node) { 
+
+        // Если нет вложений
+        if (!$node['sector_parent_id']) {
+          $sectors_cat[$id] = &$node;
+        } else { 
+
+        // Если есть потомки то перебераем массив
+          $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
+        };
+      };
+
+      // dd($sectors_cat);
+
+      // Функция отрисовки option'ов
+      function tplMenu($sector, $padding, $parent) {
+
+        $selected = '';
+        if ($sector['id'] == $parent) {
+          $selected = ' selected';
+        }
+        if ($sector['industry_status'] == 1) {
+          $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['sector_name'].'</option>';
+        } else {
+          $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['sector_name'].'</option>';
+        }
+        
+        // Добавляем пробелы вложенному элементу
+        if (isset($sector['children'])) {
+          $i = 1;
+          for($j = 0; $j < $i; $j++){
+            $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+          }     
+          $i++;
+          
+          $menu .= showCat($sector['children'], $padding, $parent);
+        }
+        return $menu;
+        
+      }
+      // Рекурсивно считываем наш шаблон
+      function showCat($data, $padding, $parent){
+        $string = '';
+        $padding = $padding;
+        foreach($data as $item){
+          $string .= tplMenu($item, $padding, $parent);
+        }
+        return $string;
+      }
+
+      // Получаем HTML разметку
+      $sectors_list = showCat($sectors_cat, '', $request->sector_parent_id);
+
+      // echo $sectors_list;
+
+
+      return view('sectors.create-medium', ['sector' => $sector, 'sectors_list' => $sectors_list]);
+    } else {
+      return view('sectors.create-first', ['sector' => $sector]);
+    }
+
+    
   }
 
   public function store(Request $request)
@@ -190,34 +272,33 @@ class SectorController extends Controller
     $sector->company_id = $company_id;
     $sector->author_id = $user_id;
 
-    // Проверка на системную запись
-    if (isset($request->system_item)) {
-      $sector->system_item = $request->system_item;
-    } else {
-      $sector->system_item = null;
-    }
-
-    // Смотрим модерацию
-    if (isset($request->moderation)) {
-      $sector->moderation = $request->moderation;
-    } else {
-      $sector->moderation = null;
-    }
+    // Модерация и системная запись
+    $sector->system_item = $request->system_item;
+    $sector->moderation = $request->moderation;
+    $sector->sector_parent_id = $request->sector_parent_id;
 
     // Смотрим что пришло
     // Если индустрия
     if ($request->first_item == 1) {
-      $sector->sector_name = $request->name;
+      $first = mb_substr($request->sector_name,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($request->sector_name,1);//все кроме первой буквы
+      $first = mb_strtoupper($first, 'UTF-8');
+      $last = mb_strtolower($last, 'UTF-8');
+      $sector_name = $first.$last;
+      $sector->sector_name = $sector_name;
       $sector->industry_status = 1;
-      $sector->save();
     }
 
     // Если сектор
     if ($request->medium_item == 1) {
-      $sector->sector_name = $request->name;
-      $sector->sector_parent_id = $request->medium_parent_id;
-      $sector->save();
+      $first = mb_substr($request->sector_name,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($request->sector_name,1);//все кроме первой буквы
+      $first = mb_strtoupper($first, 'UTF-8');
+      $last = mb_strtolower($last, 'UTF-8');
+      $sector_name = $first.$last;
+      $sector->sector_name = $sector_name;
     }
+    $sector->save();
 
     if ($sector) {
       // Переадресовываем на index
@@ -248,66 +329,125 @@ class SectorController extends Controller
 
     if ($sector->industry_status == 1) {
       // Меняем индустрию
-      $result = [
-        'id' => $sector->id,
-        'name' => $sector->sector_name,
-        'moderation' => $sector->moderation,
-        'system_item' => $sector->system_item,
-      ];
+      return view('sectors.edit-first', ['sector' => $sector]);
     } else {
-      $result = [
-        'name' => $sector->sector_name,
-        'parent_id' => $sector->sector_parent_id,
-        'first_id' => $sector->industry_id,
-        'moderation' => $sector->moderation,
-        'system_item' => $sector->system_item,
-      ];
+      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+      $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+
+      // Главный запрос
+      $sectors = Sector::moderatorLimit($answer)
+      ->orderBy('sort', 'asc')
+      ->get(['id','sector_name','industry_status','sector_parent_id'])
+      ->keyBy('id')
+      ->toArray();
+
+      // dd($sectors);
+
+      // Формируем дерево вложенности
+      $sectors_cat = [];
+      foreach ($sectors as $id => &$node) { 
+
+        // Если нет вложений
+        if (!$node['sector_parent_id']) {
+          $sectors_cat[$id] = &$node;
+        } else { 
+
+        // Если есть потомки то перебераем массив
+          $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
+        };
+      };
+
+      // dd($sectors_cat);
+
+      // Функция отрисовки option'ов
+      function tplMenu($sector, $padding, $parent, $id) {
+
+        // Убираем из списка пришедший пункт меню 
+        if ($sector['id'] != $id) {
+
+          $selected = '';
+          if ($sector['id'] == $parent) {
+            $selected = ' selected';
+          }
+          if ($sector['industry_status'] == 1) {
+            $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['sector_name'].'</option>';
+          } else {
+            $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['sector_name'].'</option>';
+          }
+          
+          // Добавляем пробелы вложенному элементу
+          if (isset($sector['children'])) {
+            $i = 1;
+            for($j = 0; $j < $i; $j++){
+              $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+            }     
+            $i++;
+            
+            $menu .= showCat($sector['children'], $padding, $parent, $id);
+          }
+          return $menu;
+        }
+      }
+      // Рекурсивно считываем наш шаблон
+      function showCat($data, $padding, $parent, $id){
+        $string = '';
+        $padding = $padding;
+        foreach($data as $item){
+          $string .= tplMenu($item, $padding, $parent, $id);
+        }
+        return $string;
+      }
+
+      // Получаем HTML разметку
+      $sectors_list = showCat($sectors_cat, '', $sector->sector_parent_id, $sector->id);
+
+
+
+      return view('sectors.edit-medium', ['sector' => $sector, 'sectors_list' => $sectors_list]);
     };
-    echo json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
   public function update(Request $request, $id)
-  {
-    // Получаем авторизованного пользователя
-    $user = $request->user();
-
+  {    
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__))
-    ;
+    $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
+
     // ГЛАВНЫЙ ЗАПРОС:
     $sector = Sector::moderatorLimit($answer)->findOrFail($id);
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $sector);
 
-    // Проверка на системную запись
-    if ($request->system_item == 1) {
-      $sector->system_item = $request->system_item;
-    } else {
-      $sector->system_item = null;
-    }
+    // Получаем авторизованного пользователя
+    $user = $request->user();
 
-    // Смотрим модерацию
-    if ($request->moderation == 1) {
-      $sector->moderation = $request->moderation;
-    } else {
-      $sector->moderation = null;
-    }
-
+    // Модерация и системная запись
+    $sector->system_item = $request->system_item;
+    $sector->moderation = $request->moderation;
+    $sector->sector_parent_id = $request->sector_parent_id;
+    $sector->editor_id = $user->id;
+    
     // Если индустрия
     if ($request->first_item == 1) {
-      $sector->sector_name = $request->name;
-      $sector->editor_id = $user->id;
-      $sector->save();
+      $first = mb_substr($request->sector_name,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($request->sector_name,1);//все кроме первой буквы
+      $first = mb_strtoupper($first, 'UTF-8');
+      $last = mb_strtolower($last, 'UTF-8');
+      $sector_name = $first.$last;
+      $sector->sector_name = $sector_name;
     }
 
     // Если сектор
     if ($request->medium_item == 1) {
-      $sector->sector_name = $request->name;
-      $sector->sector_parent_id = $request->sector_parent_id;
-      $sector->editor_id = $user->id;
-      $sector->save();
+      $first = mb_substr($request->sector_name,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($request->sector_name,1);//все кроме первой буквы
+      $first = mb_strtoupper($first, 'UTF-8');
+      $last = mb_strtolower($last, 'UTF-8');
+      $sector_name = $first.$last;
+      $sector->sector_name = $sector_name;
     }
+
+    $sector->save();
 
     if ($sector) {
       // Переадресовываем на index
@@ -462,12 +602,12 @@ class SectorController extends Controller
     }
 
     // Получаем HTML разметку
-    $sectors_final = showCat($sectors_cat, '', $request->parent, $request->id);
+    $sectors_list = showCat($sectors_cat, '', $request->parent, $request->id);
 
     // Отдаем ajax
-    echo json_encode($sectors_final, JSON_UNESCAPED_UNICODE);
+    echo json_encode($sectors_list, JSON_UNESCAPED_UNICODE);
 
-    // dd($sectors_final);
+    // dd($sectors_list);
   }
 
   // Сортировка

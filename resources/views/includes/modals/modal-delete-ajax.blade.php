@@ -15,9 +15,9 @@
       <button data-close class="button modal-button delete-button-ajax" type="submit">Удалить</button>
     </div>
     <div class="small-6 medium-4 cell">
-      <button data-close class="button modal-button" id="save-button" type="submit">Отменить</button>
+      <button data-close class="button modal-button" id="save-button" type="submit">Отмена</button>
     </div>
   </div>
-  <div data-close class="icon-close-modal sprite close-modal"></div> 
+<!--   <div data-close class="icon-close-modal sprite close-modal"></div>  -->
 </div>
 {{-- Конец модалки удаления ajax --}}

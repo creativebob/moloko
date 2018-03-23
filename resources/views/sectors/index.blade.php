@@ -69,156 +69,7 @@
 @endsection
 
 @section('modals')
-{{-- Модалка добавления индустрии --}}
-<div class="reveal" id="first-add" data-reveal>
-  <div class="grid-x">
-    <div class="small-12 cell modal-title">
-      <h5>ДОБАВЛЕНИЕ индустрии</h5>
-    </div>
-  </div>
-  
-  {{ Form::open(['id'=>'form-first-add', 'class'=>'form-add', 'data-abide', 'novalidate']) }}
-  {{-- <form id="form-first-add" class="form-add" data-abide novalidate> --}}
-    <div class="grid-x grid-padding-x align-center modal-content inputs">
-      <div class="small-10 cell">
-        <label>Название индустрии
-          @include('includes.inputs.name', ['value'=>null, 'name'=>'name'])
-          <div class="sprite-input-right find-status"></div>
-          <div class="item-error">Такая индустрия уже существует!</div>
-        </label>
-        <input type="hidden" name="first_item" class="first-item" value="0" pattern="[0-9]{1}">
-        @can('god', App\Sector::class)
-        <div class="checkbox">
-          {{ Form::checkbox('system_item', 1, null, ['id'=>'system-first-add']) }}
-          <label for="system-first-add"><span>Системная запись.</span></label>
-        </div>
-        @endcan
-      </div>
-    </div>
-    <div class="grid-x align-center">
-      <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['class'=>'button modal-button submit-add', 'data-close']) }}
-      </div>
-    </div>
-  {{-- </form> --}}
-  {{ Form::close() }}
-  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
-</div>
-{{-- Конец модалки добавления индустрии --}}
-
-{{-- Модалка редактирования индустрии --}}
-<div class="reveal" id="first-edit" data-reveal>
-  <div class="grid-x">
-    <div class="small-12 cell modal-title">
-      <h5>Редактирование индустрии</h5>
-    </div>
-  </div>
-  {{ Form::open(['id'=>'form-first-edit', 'class'=>'form-edit', 'data-abide', 'novalidate']) }}
-    <div class="grid-x grid-padding-x align-center modal-content inputs">
-      <div class="small-10 cell">
-        <label>Название индустрии
-          @include('includes.inputs.name', ['value'=>null, 'name'=>'name'])
-          <div class="sprite-input-right find-status"></div>
-          <div class="item-error">Такая индустрия уже существует!</div>
-        </label>
-        <input type="hidden" name="id" class="item-id">
-        <input type="hidden" name="first_item" class="first-item" value="0">
-
-        @can('god', App\Sector::class)
-        <div class="checkbox">
-          {{ Form::checkbox('system_item', 1, null, ['id'=>'system-first-edit']) }}
-          <label for="system-first-edit"><span>Системная запись.</span></label>
-        </div>
-        @endcan
-      </div>
-    </div>
-    <div class="grid-x align-center">
-      <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['class'=>'button modal-button submit-edit', 'data-close']) }}
-      </div>
-    </div>
-  {{ Form::close() }}
-  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
-</div>
-{{-- Конец модалки редактирования индустрии --}}
-
-{{-- Модалка добавления сектора --}}
-<div class="reveal" id="medium-add" data-reveal>
-  <div class="grid-x">
-    <div class="small-12 cell modal-title">
-      <h5>ДОБАВЛЕНИЕ сектора</h5>
-    </div>
-  </div>
-  <!-- Добавляем сектор -->
-  {{ Form::open(['id'=>'form-medium-add', 'class'=>'form-add', 'data-abide', 'novalidate']) }}
-    <div class="grid-x grid-padding-x modal-content inputs">
-      <div class="small-10 small-offset-1 cell">
-        <label>Название сектора
-          @include('includes.inputs.name', ['value'=>null, 'name'=>'name'])
-          <div class="sprite-input-right find-status"></div>
-          <div class="item-error">Такой сектор уже существует!</div>
-        </label>
-        <input type="hidden" name="medium_parent_id" class="medium-parent-id-field">
-        <input type="hidden" name="first_id" class="first-id-field">
-        <input type="hidden" name="medium_item" class="medium-item" value="0">
-        @can('god', App\Sector::class)
-        <div class="checkbox">
-          {{ Form::checkbox('system_item', 1, null, ['id'=>'system-medium-add']) }}
-          <label for="system-medium-add"><span>Системная запись.</span></label>
-        </div>
-        @endcan
-      </div>
-    </div>
-    <div class="grid-x align-center">
-      <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['class'=>'button modal-button submit-add', 'data-close']) }}
-      </div>
-    </div>
-  {{ Form::close() }}
-  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
-</div>
-{{-- Конец модалки добавления сектора --}}
-
-{{-- Модалка редактирования сектора --}}
-<div class="reveal" id="medium-edit" data-reveal data-close-on-click="false">
-  <div class="grid-x">
-    <div class="small-12 cell modal-title">
-      <h5>Редактирование сектора</h5>
-    </div>
-  </div>
-  <!-- Редактируем отдел -->
-  {{ Form::open(['id'=>'form-medium-edit', 'class'=>'form-edit', 'data-abide', 'novalidate']) }}
-    <div class="grid-x grid-padding-x modal-content inputs">
-      <div class="small-10 small-offset-1 cell">
-        <label>Расположение
-          <select name="sector_parent_id" class="sectors-list"></select>
-        </label>
-        <label>Название сектора
-          @include('includes.inputs.name', ['value'=>null, 'name'=>'name'])
-          <div class="sprite-input-right find-status"></div>
-          <div class="item-error">Такой сектор уже существует!</div>
-        </label>
-        <input type="hidden" name="medium_parent_id" class="medium-parent-id-field">
-        <input type="hidden" name="id" class="item-id">
-        <input type="hidden" name="medium_item" class="medium-item" value="0">
-        @can('god', App\Sector::class)
-        <div class="checkbox">
-          {{ Form::checkbox('system_item', 1, null, ['id'=>'system-medium-edit']) }}
-          <label for="system-medium-edit"><span>Системная запись.</span></label>
-        </div>
-        @endcan
-      </div>
-    </div>
-    <div class="grid-x align-center">
-      <div class="small-6 medium-4 cell">
-        {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button submit-edit']) }}
-      </div>
-    </div>
-  {{ Form::close() }}
-  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
-</div>
-{{-- Конец модалки сектора --}}
-
+<section id="modal"></section>
 {{-- Модалка удаления ajax --}}
 @include('includes.modals.modal-delete-ajax')
 @endsection
@@ -299,12 +150,31 @@ $(function() {
     };
   };
 
-  // Добаление индустрии
-  $('#form-first-add .name-field').keyup(function() {
+  // ---------------------------- Индустрия -----------------------------------------------
+
+  // ----------- Добавление -------------
+  // Открываем модалку
+  $(document).on('click', '[data-open="first-add"]', function() {
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/sectors/create',
+      type: "GET",
+      success: function(html){
+        $('#modal').html(html);
+        $('#first-add').foundation();
+        $('#first-add').foundation('open');
+      }
+    }); 
+  });
+
+  // Проверка существования
+  $(document).on('keyup', '#form-first-add .name-field', function() {
     // Получаем фрагмент текста
     var name = $('#form-first-add .name-field').val();
     // Указываем название кнопки
-    var submit = '#submit-first-add';
+    var submit = '.submit-add';
     // Значение поля с разрешением
     var db = '#form-first-add .first-item';
     // Выполняем запрос
@@ -314,12 +184,35 @@ $(function() {
    }, time); 
   });
 
-  // Изменение индустрии
-  $('#form-first-edit .name-field').keyup(function() {
+  // ----------- Изменение -------------
+
+  // Открываем модалку
+  $(document).on('click', '[data-open="first-edit"]', function() {
+    // Получаем данные о разделе
+    var id = $(this).closest('.item').attr('id').split('-')[1];
+
+
+    // Ajax запрос
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/sectors/" + id + "/edit",
+      type: "GET",
+      success: function(html) {
+        $('#modal').html(html);
+        $('#first-edit').foundation();
+        $('#first-edit').foundation('open');
+      }
+    });
+  });
+
+  // Проверка существования
+  $(document).on('keyup', '#form-first-edit .name-field', function() {
     // Получаем фрагмент текста
     var name = $('#form-first-edit .name-field').val();
     // Указываем название кнопки
-    var submit = '#submit-first-edit';
+    var submit = '.submit-edit';
     // Значение поля с разрешением
     var db = '#form-first-edit .first-item';
     // Выполняем запрос
@@ -329,12 +222,41 @@ $(function() {
    }, time); 
   });
 
-  // Добаление сектора
-  $('#form-medium-add .name-field').keyup(function() {
+  // ------------------------------- Сектор --------------------------------------------
+
+  // ----------- Добавление -------------
+  // Модалка
+  $(document).on('click', '[data-open="medium-add"]', function() {
+
+    var parent;
+    if ($(this).closest('.first-item').hasClass('parent')) {
+      parent = $(this).closest('.item').attr('id').split('-')[1];
+    } else {
+      parent = $(this).closest('.item').attr('id').split('-')[1];
+    };
+    
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/sectors/create',
+      type: "GET",
+      data: {sector_parent_id: parent},
+      success: function(html){
+        // alert(html);
+        $('#modal').html(html);
+        $('#medium-add').foundation();
+        $('#medium-add').foundation('open');
+      }
+    }); 
+  });
+
+  // Проверка существования
+  $(document).on('keyup', '#form-medium-add .name-field', function() {
     // Получаем фрагмент текста
     var name = $('#form-medium-add .name-field').val();
     // Указываем название кнопки
-    var submit = '#submit-medium-add';
+    var submit = '.submit-add';
     // Значение поля с разрешением
     var db = '#form-medium-add .medium-item';
     // Выполняем запрос
@@ -344,12 +266,33 @@ $(function() {
    }, time); 
   });
 
-  // Изменение сектора
-  $('#form-medium-edit .name-field').keyup(function() {
+  // ----------- Изменение -------------
+  // Открываем модалку
+  $(document).on('click', '[data-open="medium-edit"]', function() {
+    // Получаем данные о разделе
+    var id = $(this).closest('.item').attr('id').split('-')[1];
+
+    // Ajax запрос
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/sectors/" + id + "/edit",
+      type: "GET",
+      success: function(html) {
+        $('#modal').html(html);
+        $('#medium-edit').foundation();
+        $('#medium-edit').foundation('open');
+      }
+    });
+  });
+
+  // Проверка существования
+  $(document).on('keyup', '#form-medium-edit .name-field', function() {
     // Получаем фрагмент текста
     var name = $('#form-medium-edit .name-field').val();
     // Указываем название кнопки
-    var submit = '#submit-medium-edit';
+    var submit = '.submit-edit';
     // Значение поля с разрешением
     var db = '#form-medium-edit .medium-item';
     // Выполняем запрос
@@ -359,143 +302,50 @@ $(function() {
    }, time); 
   });
 
-  // ---------------------------- Добавление ---------------------------------------
-  // Открываем модалку сектора
-  $(document).on('click', '[data-open="medium-add"]', function() {
-    var parent = parent = $(this).closest('.item').attr('id').split('-')[1];;
-    $('#form-medium-add .medium-parent-id-field').val(parent);
-  });
-
-  // Добавляем
+  // ------------------------ Кнопка добавления ---------------------------------------
   $(document).on('click', '.submit-add', function(event) {
+    event.preventDefault();
 
+    // alert($(this).closest('form').serialize());
+    // Ajax запрос
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
       url: '/sectors',
       type: "POST",
-      data: $(this).closest('.form-add').serialize(),
-      success:function(html){
+      data: $(this).closest('form').serialize(),
+      success:function(html) {
         $('#content').html(html);
         Foundation.reInit($('#content'));
-        $('.form-add').foundation('resetForm');  
-      }
-    });
-  });
-  // ----------------------------- Изменение ----------------------------------------
-  
-  // Редактируем индустрию
-  // Открываем модалку
-  $(document).on('click', '[data-open="first-edit"]', function() {
-
-    // Получаем данные о индустрии
-    var id = $(this).closest('.item').attr('id').split('-')[1];
-
-    // Сам ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/sectors/" + id + "/edit",
-      type: "GET",
-      success: function(date){
-        var result = $.parseJSON(date);
-        $('#form-first-edit .name-field').val(result.name);
-        $('#form-first-edit .first-item').val(1);
-        $('#form-first-edit .item-id').val(id);
-        if (result.moderation == 1) {
-          var data = '<div class="checkbox"><input type="checkbox" name="moderation" id="indystry-moderation" checked value="1"><label for="indystry-moderation"><span>Временная запись.</span></label></div>';
-          $('#form-first-edit .first-item').after(data);
-        };
-        if (result.system_item == 1) {
-          $('#system-first-edit').prop('checked', true);
-        };
       }
     });
   });
 
-  // Редактируем сектор
-  // Открываем модалку
-  $(document).on('click', '[data-open="medium-edit"]', function() {
-    var id = $(this).closest('.item').attr('id').split('-')[1];
-    var first = $(this).closest('.first-item').attr('id').split('-')[1];
-    $('.first-id-field').val(first);
-
-    var parent;
-    if ($(this).closest('.item').hasClass('parent')) {
-      var parent = $(this).closest('.parent').parent().parent('.parent').attr('id').split('-')[1];
-    } else {
-      parent = $(this).closest('.parent').attr('id').split('-')[1];
-    };
-    
-    // Получаем список секторов
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/sectors_list",
-      type: "POST",
-      data: {id: id, parent: parent},
-      success: function(date){
-        var result = $.parseJSON(date);
-        $('.sectors-list').append(result);
-      }
-    });
-
-    // Получаем данные о medium
-    // Сам ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/sectors/" + id + "/edit",
-      type: "GET",
-      success: function(date) {
-        var result = $.parseJSON(date);
-        $('#form-medium-edit .name-field').val(result.name);
-        $('#form-medium-edit .medium-item').val(1);
-        $('#form-medium-edit .medium-parent-id-field').val(result.parent_id);
-        $('#form-medium-edit .item-id').val(id);
-        if (result.moderation == 1) {
-          var data = '<div class="checkbox"><input type="checkbox" name="moderation" id="indystry-moderation" checked value="1"><label for="indystry-moderation"><span>Временная запись.</span></label></div>';
-          $('#form-medium-edit .medium-item').after(data);
-        };
-        if (result.system_item == 1) {
-          $('#system-medium-edit').prop('checked', true);
-        };
-      }
-    });
-  });
-
-  // Отправляем Ajax
+    // ------------------------ Кнопка обновления ---------------------------------------
   $(document).on('click', '.submit-edit', function(event) {
+    event.preventDefault();
+
+    var id = $('#sector-id').val();
+
+    // Ajax запрос
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/sectors/' + $(this).closest('.form-edit').find('.item-id:first').val(),
+      url: '/sectors/' + id,
       type: "PATCH",
-      data: $(this).closest('.form-edit').serialize(),
-      success:function(html){
+      data: $(this).closest('form').serialize(),
+      success:function(html) {
         $('#content').html(html);
         Foundation.reInit($('#content'));
-        $('.form-edit').foundation('resetForm'); 
       }
     });
   });
 
-  // При закрытии модалки очищаем поля
-  $(document).on('click', '.close-modal, .modal-button', function() {
-    $('.name-field').val('');
-    $('.first-item').val(0);
-    $('.medium-item').val(0);
-    $('.first-id-field').val('');
-    $('.medium-parent-id-field').val('');
-    $('.item-error').css('display', 'none');
-    $('.sectors-list').empty();
-    $('input[name=moderation]').closest('.checkbox').remove();
-    $('input[name=system_item]').prop('checked', false);
+  // ---------------------------------- Закрытие модалки -----------------------------------
+  $(document).on('click', '.icon-close-modal, .submit-add, .submit-edit', function() {
+    $(this).closest('.reveal-overlay').remove();
   });
 });
 </script>
