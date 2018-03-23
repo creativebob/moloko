@@ -46,24 +46,27 @@
 	<ul class="checkboxer-menu {{$name}}" data-name="{{$name}}">
 
 		@foreach ($main_mass as $key => $value)
-			<li>
+			<li class="item" id="booklists-{{$value->id}}-booklists" data-name="{{$value->$entity_name}}">
 
 				@if($value->$entity_name != 'Default')
 
 					{{ Form::checkbox($name . '_id[]', $value->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->id]) }}
 					<label for="{{$name}}-{{ $value->id }}">
-						<span>{{ str_limit($value->$entity_name, $limit = 18, $end = ' ...') }}</span>
+						<span>{{ str_limit($value->$entity_name, $limit = 30, $end = ' ...') }} ({{$checkboxer_mass['booklist']['booklists'][$value->id]['mass_count']}})</span>
 					</label>
 
-					<span title="Добавить позиции в список" class="booklist_button plus">+
+					<span title="Добавить позиции в список" class="booklist_button plus" data-booklist_id_send="{{$value->id}}">+
 						<span class="count_booklist_button">{{ $checkboxer_mass['booklist']['booklists'][$value->id]['plus'] }}</span>
 					</span>
 
-					<span title="Исключить позиции из списка" class="booklist_button minus">-
+					<span title="Исключить позиции из списка" class="booklist_button minus" data-booklist_id_send="{{$value->id}}">-
 						<span class="count_booklist_button">{{ $checkboxer_mass['booklist']['booklists'][$value->id]['minus'] }}</span>
 					</span>
 
-					<em class="icon-delete sprite booklist_delete" data-open="item-delete" data-booklist_id = "{{$value->id}}" aria-controls="item-delete" aria-haspopup="true" tabindex="0"></em>
+					<em class="icon-delete sprite booklist_delete" data-booklist_id = "{{$value->id}}" aria-controls="item-delete" aria-haspopup="true" tabindex="0"></em>
+
+					{{-- <em class="icon-delete sprite booklist_delete" data-open="item-delete-ajax" data-booklist_id = "{{$value->id}}" aria-controls="item-delete" aria-haspopup="true" tabindex="0"></em> --}}
+
 
 				@endif
 
@@ -90,9 +93,12 @@
 	});
 
 
-  	$(".{{$name}} .booklist_delete").click(function() {
+ 	// Удаление элемента из Буклиста
+  	$(".booklist .booklist_delete").click(function() {
 
   			var booklist_id = $('.booklist_delete').data('booklist_id');
+  			var entity_alias = $('#table-content').data('entity-alias');
+
   			$.ajax({
 
 		    headers: {
@@ -100,10 +106,13 @@
 		    },
 		    url: '/booklists/' + booklist_id,
 		    type: "DELETE",
+		    data: {entity_alias:entity_alias},
 		    success: function (html) {
 
-		    	alert('Удаляем');
-				button_send_booklister();
+				cleanBooklister();
+		    	$('#booklists').html(html);
+		    	iniBooklister();
+
 		    }
 
 		  });
@@ -111,12 +120,43 @@
 	});
 
 
+  	// Добавление или исключение отмеченных элементов в Буклист
+  	$(".booklist_button").click(function() {
 
+  		if($(this).hasClass('plus')){var operation_booklist = "plus";};
+  		if($(this).hasClass('minus')){var operation_booklist = "minus";};
+  		var booklist_id_send = $(this).data('booklist_id_send');
+  		var entity_alias = $('#table-content').data('entity-alias');
+  		var count_elem = $(this).children('span').text();
+  		
+  		// Делаем запрос только если элемент не равен нулю
+  		if(count_elem != 0){
+
+  			$.ajax({
+
+		    headers: {
+		      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		    },
+		    url: '/setbooklist',
+		    type: "POST",
+		    data: {entity_alias:entity_alias, operation_booklist:operation_booklist, booklist_id_send:booklist_id_send},
+		    success: function (html) {
+
+				cleanBooklister();
+		    	$('#booklists').html(html);
+		    	iniBooklister();
+		    }
+
+		  });
+  		}
+	});
+
+  	// Создание нового буклиста
 	function button_send_booklister() {
 
   		var new_booklist_name = document.getElementById('new_booklist').value;
   		var entity_alias = $('#table-content').data('entity-alias');
-		// alert(new_booklist_name + ' ' + entity_alias);
+
 		  $.ajax({
 
 		    headers: {
@@ -127,33 +167,78 @@
 		    data: {new_booklist_name: new_booklist_name, entity_alias: entity_alias},
 		    success: function (html) {
 
-		      // alert(html); 
-
-			$('#{{$name}}-dropdown-bottom-left').foundation('_destroy');
-
-			$(".checkboxer-menu.{{$name}} :checkbox").off( "click");
-			$(".{{$name}} .checkboxer-toggle").off( "click");
-			$(".{{$name}} .checkboxer-clean").off( "click");		
-		    // alert(delete booklist);
-
-		    $('#booklister').html(html);
-		    var elem = $('#{{$name}}-dropdown-bottom-left');
-		    var booklister = new Foundation.Dropdown(elem);
-		    $(elem).foundation('open');
-
-		    cleanAllCheckboxes();
-
-			{{$name}}.CheckBoxerSetWidth(elem);
-
-
-			// Создаем массивы списков на клиенте
-
-
+				cleanBooklister();
+		    	$('#booklists').html(html);
+		    	iniBooklister();
+		    	cleanAllCheckboxes();
 		    }
 
 		  });
-
   	};
+
+  	// Подгрузка буклиста
+  	$(".checkboxer-wrap.booklist").click(function() {
+
+
+  		var entity_alias = $('#table-content').data('entity-alias');
+
+  		if($('.booklist').hasClass('is-open')){var booklist_open = true;} else {var booklist_open = false;};
+
+		  $.ajax({
+
+		    headers: {
+		      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		    },
+		    url: '/setbooklist',
+		    type: "POST",
+		    data: {entity_alias: entity_alias},
+		    success: function (html) {
+
+				cleanBooklister();
+		    	$('#booklists').html(html);
+
+			    var elem = $('#{{$name}}-dropdown-bottom-left');
+			    var booklister = new Foundation.Dropdown(elem);
+
+		    	if(booklist_open == false){
+		    		$(elem).foundation('open');
+		    	};
+
+				{{$name}}.CheckBoxerSetWidth(elem);
+		    }
+
+		  });
+	});
+
+  	// Инициализация Буклиста
+  	function iniBooklister(){
+
+		    var elem = $('#{{$name}}-dropdown-bottom-left');
+		    var booklister = new Foundation.Dropdown(elem);
+		    $(elem).foundation('open');
+			{{$name}}.CheckBoxerSetWidth(elem);
+  	};
+
+  	// Удаление Буклиста
+   	function cleanBooklister(){
+
+			$('#{{$name}}-dropdown-bottom-left').foundation('_destroy');
+			$(".checkboxer-menu.{{$name}} :checkbox").off( "click");
+			$(".{{$name}} .checkboxer-toggle").off( "click");
+			$(".{{$name}} .checkboxer-clean").off( "click");		
+  	}; 	
+
+
+	$(document).ready(function() {
+	      $('#filter-form #new_booklist').keydown(function(event){
+	        if(event.keyCode == 13) {
+		        event.preventDefault();
+				button_send_booklister();
+		        return false;
+	      }
+	   });
+	});
+
 
 
 </script>

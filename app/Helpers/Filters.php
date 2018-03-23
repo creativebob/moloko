@@ -37,7 +37,6 @@
         $user_cities_filter = $filter_query->unique('city_id');
         $filter['cities_list'][0] =  '- не выбрано -';
 
-
             foreach($user_cities_filter as $user){
                 $filter['cities_list'][$user->city->id] = $user->city->city_name;
             }
@@ -99,6 +98,7 @@
                     $booklists[$booklist_id]['collection'] = $booklist;
 
                     $booklists[$booklist_id]['mass_items'] = $booklist->list_items->pluck('item_entity')->toArray();
+                    $booklists[$booklist_id]['mass_count'] = count($booklist->list_items->pluck('item_entity')->toArray());
 
                     $booklists[$booklist_id]['plus'] = collect($booklists_default)->diff($booklists[$booklist_id]['mass_items'])->count();
                     $booklists[$booklist_id]['plus_mass'] = collect($booklists_default)->diff($booklists[$booklist_id]['mass_items']);
@@ -143,7 +143,8 @@
         } else {
 
             $filter[$filter_name]['mass_id'] = $request->$column; // Получаем список ID
-            $filter[$filter_name]['count_mass'] = count($request->$column);
+            if(is_array($request->$column)){$filter[$filter_name]['count_mass'] = count($request->$column);} else {$filter[$filter_name]['count_mass'] = 0;};
+            
         };
 
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
+
 use App\User;
 use App\Booklist;
 use App\List_item;
@@ -40,7 +42,6 @@ class BooklistController extends Controller
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
-
 
         // if($request->new_booklist){
 
@@ -140,7 +141,6 @@ class BooklistController extends Controller
         };
 
 
-
     }
 
     public function show($id)
@@ -159,9 +159,44 @@ class BooklistController extends Controller
 
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+
+        if($request->ajax()){
+            // return response()->json(['ajax']);
+
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+            // ГЛАВНЫЙ ЗАПРОС:
+            $booklist = Booklist::moderatorLimit($answer)->findOrFail($id);
+
+            // Подключение политики
+            $this->authorize(getmethod(__FUNCTION__), $booklist);
+
+            // Удаляем пользователя с обновлением
+            $booklist = Booklist::moderatorLimit($answer)->where('id', $id)->delete();
+
+            if($booklist){
+
+                // Убиваем все элементы в List_items
+                $items_booklists = List_item::where('booklist_id', $id)->delete();
+
+                $value = [];
+                $filter_query = null;
+                $value = addFilter($value, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $request->entity_alias);
+                $name = 'booklist';
+
+                return view('includes.inputs.booklister', ['name'=>$name, 'value'=>$value]);
+
+            } else {
+                echo "Нихуя";
+            };
+
+        }
+
+        echo "Это не Аякс";
+
     }
 
     public function setbooklist(Request $request)
@@ -202,17 +237,66 @@ class BooklistController extends Controller
                 $booklist->save();
             };
 
+
+        };
+
+
+        if($request->operation_booklist){
+
+
+
+            $booklists_user = Booklist::with('list_items')
+            ->where('author_id', $request->user()->id)
+            ->where('entity_alias', $request->entity_alias)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+            // Получаем список Default
+            $booklists_default = $booklists_user->where('booklist_name', 'Default')->first()->list_items->pluck('item_entity')->toArray();
+
+            // Получаем список переданный
+            $booklist_operation = $booklists_user->where('id', $request->booklist_id_send)->first()->list_items->pluck('item_entity')->toArray();
+            // print_r($booklist_operation);
+
+            //Если пользователь хочет добавить к списку отмеченные элементы
+            if($request->operation_booklist == 'plus'){
+            // print_r($booklist_operation);
+
+                $plus_mass = collect($booklists_default)->diff($booklist_operation);
+
+                if($plus_mass){
+
+                    // Смотрим список пришедших роллей
+                    foreach ($plus_mass as $elem) {
+
+                      $mass[] = [
+                        'item_entity' => $elem,
+                        'booklist_id' => $request->booklist_id_send,
+                        'author_id' => $request->user()->id,
+                      ];
+
+                    }
+
+                    DB::table('list_items')->insert($mass);
+                };
+            };
+
+            //Если пользователь хочет удалить из списка отмеченные элементы
+            if($request->operation_booklist == 'minus'){
+
+                // Убиваем все элементы в List_items
+                $items_booklists = List_item::where('booklist_id', $request->booklist_id_send)->whereIn('item_entity', $booklists_default)->delete();
+
+            };       
+
+        };
+
             $value = []; 
             $filter_query = null;
-
             $value = addFilter($value, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $request->entity_alias);
             $name = 'booklist';
 
             return view('includes.inputs.booklister', ['name'=>$name, 'value'=>$value]);
-
-        } else {
-            echo "Нихуя не пришло!";
-        };
 
     }
 
