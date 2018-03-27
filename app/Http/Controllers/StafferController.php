@@ -62,7 +62,7 @@ class StafferController extends Controller
 
   public function create()
   {
-    //
+    return redirect()->action('DepartmentController@index');
   }
 
   public function store(StafferRequest $request)
@@ -123,7 +123,7 @@ class StafferController extends Controller
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
     
     // ГЛАВНЫЙ ЗАПРОС:
-    $staffer = Staffer::with(['employees' => function($query) {
+    $staffer = Staffer::with(['position', 'employees' => function($query) {
       $query->whereDate_dismissal(null);
     }])
     ->moderatorLimit($answer)
@@ -132,14 +132,14 @@ class StafferController extends Controller
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $staffer);
 
-    // Список меню для сайта
-    $answer = operator_right('users', true, 'index');
+    // Список пользователей
+    $answer_users = operator_right('users', true, 'index');
     $user = $request->user();
-    $users = User::moderatorLimit($answer)
-    ->companiesLimit($answer)
-    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
+    $users = User::moderatorLimit($answer_users)
+    ->companiesLimit($answer_users)
+    ->filials($answer_users) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer_users)
+    ->systemItem($answer_users) // Фильтр по системным записям
     ->orderBy('second_name')
     ->get();
     $users_list = [];

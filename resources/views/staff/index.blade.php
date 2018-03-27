@@ -1,46 +1,20 @@
 @extends('layouts.app')
- 
+
 @section('inhead')
 <meta name="description" content="{{ $page_info->page_description }}" />
 {{-- Скрипты таблиц в шапке --}}
-  @include('includes.scripts.table-inhead')
+@include('includes.scripts.table-inhead')
 @endsection
 
-@section('title')
-  {{ $page_info->page_name }}
-@endsection
+@section('title', $page_info->page_name)
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('title-content')
 {{-- Таблица --}}
-<div data-sticky-container id="head-content">
-  <div class="sticky sticky-topbar" id="head-sticky" data-sticky-on="small" data-sticky data-margin-top="2.4" data-top-anchor="head-content:top">
-	  <div class="top-bar head-content">
-	    <div class="top-bar-left">
-	      <h2 class="header-content">{{ $page_info->page_name }}</h2>
-        @can('create', App\Department::class)
-	        <a href="/departments" class="icon-add sprite"></a>
-        @endcan
-	    </div>
-	    <div class="top-bar-right">
-	      <a class="icon-filter sprite"></a>
-	      <input class="search-field" type="search" name="search_field" placeholder="Поиск" />
-	      <button type="button" class="icon-search sprite button"></button>
-	    </div>
-	  </div>
-	  {{-- Блок фильтров --}}
-    <div class="grid-x">
-      <div class="small-12 cell filters" id="filters">
-        <fieldset class="fieldset-filters inputs">
-          @include('staff.filters')
-        </fieldset>
-      </div>
-    </div>
-	</div>
-</div>
+@include('includes.title-content.table', ['page_info' => $page_info, 'class' => App\Department::class])
 @endsection
- 
+
 @section('content')
 
 {{-- Таблица --}}
@@ -52,9 +26,9 @@
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-staffer-position">Название должности</th>
-        @if ($filials > 1)
+          @if ($filials > 1)
           <th class="td-staffer-filial">Филиал</th>
-        @endif
+          @endif
           <th class="td-staffer-department">Отдел</th>
           <th class="td-staffer-phone">Телефон</th>
           <th class="td-staffer-date-employment">Дата приема</th>
@@ -63,7 +37,7 @@
         </tr>
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
-      @if(!empty($staff))
+        @if(!empty($staff))
         @foreach($staff as $staffer)
         <tr class="item @if($staffer->moderation == 1)no-moderation @endif" id="staff-{{ $staffer->id }}" data-name="{{ $staffer->position_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
@@ -71,34 +45,34 @@
           <td class="td-staffer-position">
             @can('update', $staffer)
             <a href="/staff/{{ $staffer->id }}/edit">
-            @endcan
+              @endcan
               @if (isset($staffer->user))
-                {{ $staffer->user->second_name . ' ' . $staffer->user->first_name }}
+              {{ $staffer->user->second_name . ' ' . $staffer->user->first_name }}
               @else
-                Вакансия
+              Вакансия
               @endif
-            @can('update', $staffer)
+              @can('update', $staffer)
             </a>
             @endcan
             ( {{ $staffer->position->position_name }} )
           </td>
           @if ($filials > 1)
-            <td class="td-staffer-filial">{{ $staffer->filial->department_name }}</td>
+          <td class="td-staffer-filial">{{ $staffer->filial->department_name }}</td>
           @endif
           <td class="td-staffer-department">
-          @if ($staffer->filial->department_name !== $staffer->department->department_name)
+            @if ($staffer->filial->department_name !== $staffer->department->department_name)
             {{ $staffer->department->department_name }}
-          @endif
+            @endif
           </td>
           <td class="td-staffer-phone">
             @if (isset($staffer->user))
-              {{ $staffer->user->phone }}
-            @endif</td>
+            {{ $staffer->user->phone }}
+          @endif</td>
           <td class="td-staffer-date-employment">
             @foreach ($staffer->employees as $employee)
-              @if (($employee->user_id == $staffer->user_id) && ($employee->date_dismissal == null))
-                {{ $employee->date_employment }}
-              @endif
+            @if (($employee->user_id == $staffer->user_id) && ($employee->date_dismissal == null))
+            {{ $employee->date_employment }}
+            @endif
             @endforeach
           </td>
           
@@ -109,7 +83,7 @@
           </td>  -->      
         </tr>
         @endforeach
-      @endif
+        @endif
       </tbody>
     </table>
   </div>

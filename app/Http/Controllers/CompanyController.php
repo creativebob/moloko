@@ -128,7 +128,7 @@ class CompanyController extends Controller
         function tplMenu($sector, $padding) {
 
             if ($sector['industry_status'] == 1) {
-              $menu = '<option value="'.$sector['id'].'" class="first">'.$sector['sector_name'].'</option>';
+              $menu = '<option value="'.$sector['id'].'" class="first" disabled>'.$sector['sector_name'].'</option>';
             } else {
               $menu = '<option value="'.$sector['id'].'">'.$padding.' '.$sector['sector_name'].'</option>';
             }
@@ -289,7 +289,7 @@ class CompanyController extends Controller
             $selected = ' selected';
           }
           if ($sector['industry_status'] == 1) {
-            $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['sector_name'].'</option>';
+            $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.' disabled>'.$sector['sector_name'].'</option>';
           } else {
             $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['sector_name'].'</option>';
           }

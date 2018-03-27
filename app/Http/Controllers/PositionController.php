@@ -129,14 +129,15 @@ class PositionController extends Controller
       $user_id = $user->id;
     };
 
-    $user_status = $user->god;
     $company_id = $user->company_id;
 
     // Создаем новую должность
     $position = new Position;
+    $position->company_id = $company_id;
     $position->position_name = $request->position_name;
     $position->page_id = $request->page_id;
     $position->author_id = $user_id;
+    $position->sector_id = $user->company->sector_id;
 
     // Если нет прав на создание полноценной записи - запись отправляем на модерацию
     if($answer['automoderate'] == false){
@@ -148,7 +149,7 @@ class PositionController extends Controller
       abort(403, 'Необходимо авторизоваться под компанией');
     };
 
-    $position->company_id = $company_id;
+    
 
     $position->save();
 

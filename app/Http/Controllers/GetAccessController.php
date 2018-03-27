@@ -191,9 +191,11 @@ class GetAccessController extends Controller
             if($user->company != null){
                 $access['company_info']['company_id'] = $user->company_id;
                 $access['company_info']['company_name'] = $user->company->company_name;
+                $access['company_info']['sector_id'] = $user->company->sector_id;
             } else {
                 $access['company_info']['company_id'] = '';
                 $access['company_info']['company_name'] = '';
+                $access['company_info']['sector_id'] = '';
             };
 
             // Пишем в сессию массив с полученными правами!

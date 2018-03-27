@@ -11,49 +11,8 @@
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('title-content')
-<div data-sticky-container id="head-content">
-  <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-options="stickyOn: small;" data-top-anchor="head-content:top">
-    <div class="top-bar head-content">
-      <div class="top-bar-left">
-        <h2 class="header-content">{{ $page_info->page_name }}</h2>
-        @can('create', App\Department::class)
-        <a class="icon-add sprite" data-open="first-add"></a>
-        @endcan
-      </div>
-      <div class="top-bar-right">
-        <a class="icon-filter sprite"></a>
-        <input class="search-field" type="search" name="search-field" placeholder="Поиск" />
-        <button type="button" class="icon-search sprite button"></button>
-      </div>
-    </div>
-    {{-- Блок фильтров --}}
-    <div class="grid-x">
-      <div class="small-12 cell filters" id="filters">
-        <fieldset class="fieldset-filters inputs">
-          {{ Form::open(['data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
-          <legend>Фильтрация</legend>
-          <div class="grid-x grid-padding-x"> 
-            <div class="small-6 cell">
-              <label>Статус пользователя
-                {{ Form::select('user_type', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
-              </label>
-            </div>
-            <div class="small-6 cell">
-              <label>Блокировка доступа
-                {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-              </label>
-            </div>
-
-            <div class="small-12 medium-12 align-center cell tabs-button">
-              {{ Form::submit('Фильтрация', ['class'=>'button']) }}
-            </div>
-          </div>
-          {{ Form::close() }}
-        </fieldset>
-      </div>
-    </div>
-  </div>
-</div>
+{{-- Меню --}}
+@include('includes.title-content.menu', ['page_info' => $page_info, 'class' => App\Department::class])
 @endsection
 
 @section('content')

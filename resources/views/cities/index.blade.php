@@ -11,31 +11,8 @@
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('title-content')
-<div data-sticky-container id="head-content">
-  <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-options="stickyOn: small;" data-top-anchor="head-content:top">
-    <div class="top-bar head-content">
-      <div class="top-bar-left">
-        <h2 class="header-content">{{ $page_info->page_name }}</h2>
-        @can('create', App\City::class)
-          <a class="icon-add sprite" data-open="city-add"></a>
-        @endcan
-      </div>
-      <div class="top-bar-right">
-        <a class="icon-filter sprite"></a>
-        <input class="search-field" type="search" name="search-field" placeholder="Поиск" />
-        <button type="button" class="icon-search sprite button"></button>
-      </div>
-    </div>
-    {{-- Блок фильтров --}}
-    <div class="grid-x">
-      <div class="small-12 cell filters" id="filters">
-        <fieldset class="fieldset-filters inputs">
-          
-        </fieldset>
-      </div>
-    </div>
-  </div>
-</div>
+{{-- Меню --}}
+@include('includes.title-content.menu', ['page_info' => $page_info, 'class' => App\City::class])
 @endsection
  
 @section('content')
@@ -88,7 +65,7 @@
 Конец модалки добавления области --}}
 
 {{-- Модалка добавления города --}}
-<div class="reveal rev-large" id="city-add" data-reveal>
+<div class="reveal rev-large" id="first-add" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>ДОБАВЛЕНИЕ НАСЕЛЕННОГО ПУНКТА</h5>

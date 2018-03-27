@@ -6,12 +6,12 @@
 
 @section('title', 'Редактировать сотрудника')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, 'Уволить сотрудника'))
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $staffer->position->position_name))
 
 @section('title-content')
 	<div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">уволить сотрудника</h2>
+       <h2 class="header-content">{{ $staffer->position->position_name }}</h2>
     </div>
     <div class="top-bar-right">
     </div>
