@@ -23,7 +23,7 @@
   {{ Form::model($user, ['route' => ['users.update', $user->id], 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
   {{ method_field('PATCH') }}
 
-    @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>''])
+    @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>'', 'form' => 1])
     
   {{ Form::close() }}
 
@@ -41,7 +41,7 @@
   @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
-  @include('includes.scripts.modal-delete-ajax-script')
+  @include('includes.scripts.delete-ajax-script')
 @endsection
 
 

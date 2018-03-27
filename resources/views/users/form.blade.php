@@ -226,7 +226,9 @@
           </div>
         </div>
         <div class="grid-x grid-padding-x">
+          @if ($form == 1)
           <div class="small-12 cell tabs-margin-top">
+
             <table class="table-content">
               <caption>Уровень доступа</caption>
               <thead>
@@ -241,7 +243,7 @@
               <tbody class="roleuser-table">
                 @if(!empty($role_users))
                 @foreach ($role_users as $role_user)
-                  <tr class="parent" id="roleuser-{{ $role_user->id }}" data-name="{{ $role_user->role->role_name }}">
+                  <tr class="item" id="roleuser-{{ $role_user->id }}" data-name="{{ $role_user->role->role_name }}">
                     <td>{{ $role_user->role->role_name }}</td>
                     <td>{{ $role_user->department->department_name }}</td>
                     <td>
@@ -264,7 +266,7 @@
           <div class="small-8 small-offset-2 medium-8 medium-offset-2 tabs-margin-top text-center cell">
             <a class="button" data-open="role-add">Настройка доступа</a>
           </div>
-
+          @endif
           <div class="small-12 text-center cell checkbox">
               {{ Form::checkbox('access_block', 1, $user->access_block == 1, ['id'=>'access-block-checkbox']) }}
             <label for="access-block-checkbox"><span>Блокировать доступ</span></label>
