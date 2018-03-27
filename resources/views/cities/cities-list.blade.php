@@ -120,9 +120,18 @@
 @include('includes.scripts.menu-scripts')
 
 @if(!empty($id))
+
+{{ $id }}
 <script type="text/javascript">
   // Если средний элемент
   if ($('#cities-{{ $id }}').hasClass('medium-item')) {
+    // Открываем элемент
+    $('#cities-{{ $id }}').parent('.medium-list').addClass('is-active');
+    $('#cities-{{ $id }}').closest('.first-item').addClass('first-active');
+  };
+
+  // Если город без района
+  if ($('#cities-{{ $id }}').hasClass('medium-as-last')) {
     // Открываем элемент
     $('#cities-{{ $id }}').parent('.medium-list').addClass('is-active');
     $('#cities-{{ $id }}').closest('.first-item').addClass('first-active');
