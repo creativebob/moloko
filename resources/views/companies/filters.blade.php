@@ -25,7 +25,7 @@
   <legend>Мои списки:</legend>
     <div class="grid-x">
       
-      <div class="small-12 medium-12 large-12 cell checkbox checkboxer" id="booklister">
+      <div class="small-12 medium-12 large-12 cell checkbox checkboxer" id="booklists">
           @include('includes.inputs.booklister', ['name'=>'booklist', 'value'=>$filter])
       </div>
 

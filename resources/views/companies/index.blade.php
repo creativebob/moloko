@@ -102,6 +102,10 @@
 @section('modals')
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-delete')
+
+{{-- Модалка удаления с refresh --}}
+@include('includes.modals.modal-delete-ajax')
+
 @endsection
 
 @section('scripts')
@@ -111,6 +115,5 @@
 {{-- Скрипт серверной сортировки --}}
 @include('includes.scripts.serversort-script')
 
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
+
 @endsection

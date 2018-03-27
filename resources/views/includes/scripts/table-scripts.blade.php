@@ -40,7 +40,7 @@ $(function() {
 
   for(var i=0; i<checkboxes.length; i++) {
     checkboxes[i].onclick = function() {
-
+  counter_checkbox = counter_checkbox + 1;
 
   var parent = $(this).closest('.item');
   var entity_alias = parent.attr('id').split('-')[0];
@@ -97,14 +97,14 @@ $(function() {
   console.log('-----');
 });
 
-  // Очищаем все чекбоксы
-  function cleanAllCheckboxes() {
-    var checkboxes = document.querySelectorAll('input.table-check');
-    for(var i=0; i<checkboxes.length; i++) {
-      checkboxes[i].checked = false;
-    };
+
+// Очищаем все чекбоксы
+function cleanAllCheckboxes() {
+  var checkboxes = document.querySelectorAll('input.table-check');
+  for(var i=0; i<checkboxes.length; i++) {
+    checkboxes[i].checked = false;
   };
-  
+};
 
 // Размер шапки таблицы при скролле
 $(window).scroll(function () {
@@ -112,4 +112,8 @@ $(window).scroll(function () {
     fixedThead ();
   };
 });
+
+counter_checkbox = 0;
+storage_counter_checkbox = 0;
+
 </script>

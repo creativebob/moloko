@@ -6,6 +6,7 @@
 	$checkboxer_mass = $value;
 	$default_count = $checkboxer_mass['booklist']['booklists']['default_count'];
 	$main_mass = $checkboxer_mass[$name]['collection']->sortByDesc('id');
+	$request_mass = $checkboxer_mass['booklist']['booklists']['request_mass'];
 @endphp
 
 @if(!empty($checkboxer_mass[$name]))
@@ -50,9 +51,24 @@
 
 				@if($value->$entity_name != 'Default')
 
-					{{ Form::checkbox($name . '_id[]', $value->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->id]) }}
+					@php
+					 	$checked = '';
+						if(isset($request_mass)){
+
+							if(in_array($value->id, $request_mass)){$checked = 'checked';};
+
+						};
+
+					@endphp
+
+					{{ Form::checkbox($name . '_id[]', $value->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->id, $checked]) }}
 					<label for="{{$name}}-{{ $value->id }}">
-						<span>{{ str_limit($value->$entity_name, $limit = 30, $end = ' ...') }} ({{$checkboxer_mass['booklist']['booklists'][$value->id]['mass_count']}})</span>
+						<span class="rename_field_{{$value->id}} dblrename" data-booklist_id="{{$value->id}}">
+
+							<span class="text_rename">{{ str_limit($value->$entity_name, $limit = 30, $end = ' ...')}}</span>
+							<span class="count_rename"> ({{$checkboxer_mass['booklist']['booklists'][$value->id]['mass_count']}})</span>
+
+						</span>
 					</label>
 
 					<span title="Добавить позиции в список" class="booklist_button plus" data-booklist_id_send="{{$value->id}}">+
@@ -64,9 +80,6 @@
 					</span>
 
 					<em class="icon-delete sprite booklist_delete" data-booklist_id = "{{$value->id}}" aria-controls="item-delete" aria-haspopup="true" tabindex="0"></em>
-
-					{{-- <em class="icon-delete sprite booklist_delete" data-open="item-delete-ajax" data-booklist_id = "{{$value->id}}" aria-controls="item-delete" aria-haspopup="true" tabindex="0"></em> --}}
-
 
 				@endif
 
@@ -179,36 +192,168 @@
   	// Подгрузка буклиста
   	$(".checkboxer-wrap.booklist").click(function() {
 
+	  		if($('.booklist').hasClass('is-open')){var booklist_open = true;} else {var booklist_open = false;};
 
-  		var entity_alias = $('#table-content').data('entity-alias');
+	  		// Проверка на наличие изменений. 
+  			if(counter_checkbox != storage_counter_checkbox){
 
-  		if($('.booklist').hasClass('is-open')){var booklist_open = true;} else {var booklist_open = false;};
+  			// Маркер изменений. Фиксируем изменения, чтоб в следующий раз не делать запрос
+  			// при отсутствии изменений
+  			storage_counter_checkbox = counter_checkbox;
 
-		  $.ajax({
+  			var booklist_id = $('.booklist input:checkbox:checked').map(function() {return this.value;
+  			}).get();
 
-		    headers: {
-		      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		    },
-		    url: '/setbooklist',
-		    type: "POST",
-		    data: {entity_alias: entity_alias},
-		    success: function (html) {
+  			// alert(booklist_mass);
 
-				cleanBooklister();
-		    	$('#booklists').html(html);
 
-			    var elem = $('#{{$name}}-dropdown-bottom-left');
-			    var booklister = new Foundation.Dropdown(elem);
+				$('#{{$name}}-dropdown-bottom-left').foundation('_destroy');
+  				var entity_alias = $('#table-content').data('entity-alias');
+				$.ajax({
 
-		    	if(booklist_open == false){
-		    		$(elem).foundation('open');
-		    	};
+					headers: {
+					    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+					},
+					url: '/updatebooklist',
+					type: "GET",
+					data: {entity_alias: entity_alias, booklist_id: booklist_id},
+					success: function (html) {
 
-				{{$name}}.CheckBoxerSetWidth(elem);
-		    }
+						// alert(html);
 
-		  });
+						cleanBooklister();
+					    $('#booklists').html(html);
+
+						var elem = $('#{{$name}}-dropdown-bottom-left');
+						var booklister = new Foundation.Dropdown(elem);
+
+					   	if(booklist_open == false){
+					    	$(elem).foundation('open');
+					    };
+
+						{{$name}}.CheckBoxerSetWidth(elem);
+					}
+				});
+		 	};
 	});
+
+  	$(".checkboxer-wrap.booklist").click(function() {
+
+	  		if($('.booklist').hasClass('is-open')){var booklist_open = true;} else {var booklist_open = false;};
+
+	  		// Проверка на наличие изменений. 
+  			if(counter_checkbox != storage_counter_checkbox){
+
+  			// Маркер изменений. Фиксируем изменения, чтоб в следующий раз не делать запрос
+  			// при отсутствии изменений
+  			storage_counter_checkbox = counter_checkbox;
+
+  			var booklist_id = $('.booklist input:checkbox:checked').map(function() {return this.value;
+  			}).get();
+
+  			// alert(booklist_mass);
+
+
+				$('#{{$name}}-dropdown-bottom-left').foundation('_destroy');
+
+  				var entity_alias = $('#table-content').data('entity-alias');
+
+				$.ajax({
+
+					headers: {
+					    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+					},
+					url: '/updatebooklist',
+					type: "GET",
+					data: {entity_alias: entity_alias, booklist_id: booklist_id},
+					success: function (html) {
+
+						// alert(html);
+
+						cleanBooklister();
+					    $('#booklists').html(html);
+
+						var elem = $('#{{$name}}-dropdown-bottom-left');
+						var booklister = new Foundation.Dropdown(elem);
+
+					   	if(booklist_open == false){
+					    	$(elem).foundation('open');
+					    };
+
+						{{$name}}.CheckBoxerSetWidth(elem);
+					}
+				});
+		 	};
+	});
+
+
+
+  	$(".dblrename").dblclick(function() {
+  	// $(document).on('dblclick', '.dblrename', function() {
+
+  		// Собираем данные
+  		var booklist_id = $(this).data('booklist_id');
+  		var text_rename = $('.rename_field_' + booklist_id + ' .text_rename');
+  		var count_rename = $('.rename_field_' + booklist_id + ' .count_rename').text();
+
+  		// Создаем и вставляем Input для переименования
+  		var elem = '<input type="text" placeholder="Имя списка" value="' + text_rename.text() + '" id="rename_input_' + booklist_id + '">';
+  		$('.rename_field_' + booklist_id).html(elem);
+		$('#rename_input_' + booklist_id).focus();
+
+  		// Создаем функцию на потерю фокуса
+		$('#rename_input_' + booklist_id).focusout(function(){
+			var user_text = $(this).val();
+			$('#rename_input_' + booklist_id).remove();
+  			var elem2 = '<span class="text_rename">' + user_text + '</span><span class="count_rename">' + count_rename + '</span>';
+  			$('.rename_field_' + booklist_id).html(elem2);
+		});
+
+
+	  	// 	if($('.booklist').hasClass('is-open')){var booklist_open = true;} else {var booklist_open = false;};
+
+
+  		// 	// Маркер изменений. Фиксируем изменения, чтоб в следующий раз не делать запрос
+  		// 	// при отсутствии изменений
+  		// 	storage_counter_checkbox = counter_checkbox;
+
+  		// 	var booklist_id = $('.booklist input:checkbox:checked').map(function() {return this.value;
+  		// 	}).get();
+
+  		// 	// alert(booklist_mass);
+
+
+				// $('#{{$name}}-dropdown-bottom-left').foundation('_destroy');
+
+  		// 		var entity_alias = $('#table-content').data('entity-alias');
+  				
+				// $.ajax({
+
+				// 	headers: {
+				// 	    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				// 	},
+				// 	url: '/updatebooklist',
+				// 	type: "GET",
+				// 	data: {entity_alias: entity_alias, booklist_id: booklist_id},
+				// 	success: function (html) {
+
+				// 		// alert(html);
+
+				// 		cleanBooklister();
+				// 	    $('#booklists').html(html);
+
+				// 		var elem = $('#{{$name}}-dropdown-bottom-left');
+				// 		var booklister = new Foundation.Dropdown(elem);
+
+				// 	   	if(booklist_open == false){
+				// 	    	$(elem).foundation('open');
+				// 	    };
+
+				// 		{{$name}}.CheckBoxerSetWidth(elem);
+				// 	}
+				// });
+	});
+
 
   	// Инициализация Буклиста
   	function iniBooklister(){
@@ -239,7 +384,7 @@
 	   });
 	});
 
-
+	var count_default_booklist = {{$default_count}};
 
 </script>
 @endif

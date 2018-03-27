@@ -63,7 +63,7 @@ class UserController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-
+        // dd($page_info);
 
 	    return view('users.index', compact('users', 'page_info', 'filter', 'user'));
 	}
