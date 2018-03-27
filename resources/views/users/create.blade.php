@@ -21,7 +21,7 @@
 @section('content')
 
   {{ Form::open(['route' => 'users.store', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
-    @include('users.form', ['submitButtonText' => 'Добавить пользователя', 'param' => ''])
+    @include('users.form', ['submitButtonText' => 'Добавить пользователя', 'param' => '', 'form' => null])
   {{ Form::close() }}
 
 @endsection

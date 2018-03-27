@@ -114,6 +114,4 @@
 
 {{-- Скрипт серверной сортировки --}}
 @include('includes.scripts.serversort-script')
-
-
 @endsection
