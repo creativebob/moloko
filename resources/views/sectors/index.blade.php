@@ -1,9 +1,9 @@
 @extends('layouts.app')
- 
+
 @section('inhead')
-  <meta name="description" content="{{ $page_info->page_description }}" />
-  {{-- Скрипты меню в шапке --}}
-  @include('includes.scripts.menu-inhead')
+<meta name="description" content="{{ $page_info->page_description }}" />
+{{-- Скрипты меню в шапке --}}
+@include('includes.scripts.menu-inhead')
 @endsection
 
 @section('title', $page_info->page_name)
@@ -48,21 +48,21 @@
               {{ Form::submit('Фильтрация', ['class'=>'button']) }}
             </div>
           </div>
-        {{ Form::close() }}
+          {{ Form::close() }}
         </fieldset>
       </div>
     </div>
   </div>
 </div>
 @endsection
- 
+
 @section('content')
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
     @if($sectors_tree)
-      {{-- Шаблон вывода и динамического обновления --}}
-      @include('sectors.industry-list', $sectors_tree)
+    {{-- Шаблон вывода и динамического обновления --}}
+    @include('sectors.industry-list', $sectors_tree)
     @endif
   </div>
 </div>
@@ -82,7 +82,7 @@
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
 <script type="text/javascript">
-$(function() {
+  $(function() {
   // Функция появления окна с ошибкой
   function showError (msg) {
     var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
@@ -98,7 +98,7 @@ $(function() {
     name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
     return name;
   };
- 
+
   // ------------------- Проверка на совпадение имени --------------------------------------
   function sectorCheck (name, submit, db) {
 
@@ -181,7 +181,7 @@ $(function() {
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
       sectorCheck (name, submit, db)
-   }, time); 
+    }, time); 
   });
 
   // ----------- Изменение -------------
@@ -219,7 +219,7 @@ $(function() {
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
       sectorCheck (name, submit, db)
-   }, time); 
+    }, time); 
   });
 
   // ------------------------------- Сектор --------------------------------------------
@@ -263,7 +263,7 @@ $(function() {
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
       sectorCheck (name, submit, db)
-   }, time); 
+    }, time); 
   });
 
   // ----------- Изменение -------------
@@ -299,7 +299,7 @@ $(function() {
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
       sectorCheck (name, submit, db)
-   }, time); 
+    }, time); 
   });
 
   // ------------------------ Кнопка добавления ---------------------------------------
@@ -322,7 +322,7 @@ $(function() {
     });
   });
 
-    // ------------------------ Кнопка обновления ---------------------------------------
+  // ------------------------ Кнопка обновления ---------------------------------------
   $(document).on('click', '.submit-edit', function(event) {
     event.preventDefault();
 

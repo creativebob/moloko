@@ -248,8 +248,6 @@ class SectorController extends Controller
     } else {
       return view('sectors.create-first', ['sector' => $sector]);
     }
-
-    
   }
 
   public function store(Request $request)
@@ -509,7 +507,7 @@ class SectorController extends Controller
           'error_message' => 'Ошибка при записи сектора!'
         ];
       }
-    };
+    }
   }
 
   // Проверка наличия в базе

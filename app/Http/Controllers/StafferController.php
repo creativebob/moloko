@@ -67,7 +67,6 @@ class StafferController extends Controller
 
   public function store(StafferRequest $request)
   {
-
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Staffer::class);
 
@@ -76,9 +75,13 @@ class StafferController extends Controller
 
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
-    $user_id = $user->id;
-    $user_status = $user->god;
     $company_id = $user->company_id;
+
+    if ($user->god == 1) {
+      $user_id = 1;
+    } else {
+      $user_id = $user->id;
+    };
 
     // Пишем вакансию в бд
     $position_id = $request->position_id;
@@ -87,20 +90,20 @@ class StafferController extends Controller
 
     $staffer = new Staffer;
     // Пишем ID компании авторизованного пользователя
-    if ($user->company_id == null) {
+    if ($company_id == null) {
       abort(403, 'Необходимо авторизоваться под компанией');
     };
+
     $staffer->company_id = $company_id;
-    $staffer->position_id = $position_id;
-    $staffer->department_id = $department_id;
-    $staffer->filial_id = $filial_id;
+    $staffer->position_id = $request->position_id;
+    $staffer->department_id = $request->department_id;
+    $staffer->filial_id = $request->filial_id;
     $staffer->author_id = $user_id;
     $staffer->save();
+
     if ($staffer) {
-      if ($department_id == $filial_id) {
-        $department_id = 0;
-      };
-      return Redirect('/current_department/'.$filial_id.'/'.$department_id);
+      // Переадресовываем на index
+      return redirect()->action('DepartmentController@get_content', ['id' => $staffer->id, 'item' => 'staffer']);
     } else {
       abort(403, 'Ошибка при записи штата!');
     };
@@ -244,24 +247,22 @@ class StafferController extends Controller
     
     // ГЛАВНЫЙ ЗАПРОС:
     $staffer = Staffer::with('department')->moderatorLimit($answer)->findOrFail($id);
+    $department_id = $staffer->department_id;
+
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $staffer);
 
     // Удаляем должность из отдела с обновлением
     // Находим филиал и отдел
     $user = $request->user();
-    if (isset($staffer->department->filial_id)) {
-      $filial_id = $staffer->department->filial_id;
-      $department_id = $staffer->department_id;
-    } else {
-      $filial_id = $staffer->department_id;
-      $department_id = 0;
-    };
+    
+
+
     $staffer->editor_id = $user->id;
     $staffer->save();
     $staffer = Staffer::destroy($id);
     if ($staffer) {
-      return Redirect('/current_department/'.$filial_id.'/'.$department_id);
+       return redirect()->action('DepartmentController@get_content', ['id' => $department_id, 'item' => 'department']);
     } else {
       abort(403, 'Ошибка при удалении штата');
     };  

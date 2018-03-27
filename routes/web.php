@@ -87,6 +87,8 @@ Route::post('/region', 'RegionController@get_vk_region')->middleware('auth');
 
 // Контроллеры для отображения филиалов, отделов и должностей
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
+// Текущий добавленный/удаленный сектор
+Route::any('/get_departments', 'DepartmentController@get_content')->middleware('auth');
 // Текущий добавленный/удаленный отдел
 Route::get('/current_department/{section_id}/{item_id}', 'DepartmentController@current_department')->middleware('auth');
 // Проверка на существование филиала/отдела
@@ -138,7 +140,7 @@ Route::prefix('/sites/{site_alias}')->group(function () {
     Route::resource('/pages', 'PageController')->middleware('auth');
     // Навигация и меню
     Route::resource('/navigations', 'NavigationController')->middleware('auth');
-    // Текущий добавленный/удаленный сектор
+    // Текущая добавленная/удаленная навигация
 	Route::any('/get_navigations', 'NavigationController@get_content')->middleware('auth');
 	// Проверка на существование навигации
 	Route::post('/navigation_check', 'NavigationController@navigation_check')->middleware('auth');

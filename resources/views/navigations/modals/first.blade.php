@@ -2,7 +2,6 @@
   <div class="small-10 cell">
     <label class="input-icon">Введите название навигации
       @include('includes.inputs.name', ['value'=>$navigation->name, 'name'=>'navigation_name'])
-      <div class="sprite-input-right find-status"></div>
       <div class="item-error">Такая навигация уже существует!</div>
     </label>
     @if ($navigation->moderation == 1)

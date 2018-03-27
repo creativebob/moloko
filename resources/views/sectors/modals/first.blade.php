@@ -2,7 +2,6 @@
   <div class="small-10 cell">
     <label>Название индустрии
       @include('includes.inputs.name', ['value'=>$sector->sector_name, 'name'=>'sector_name'])
-      <div class="sprite-input-right find-status"></div>
       <div class="item-error">Такая индустрия уже существует!</div>
     </label>
     {{ Form::hidden('first_item', 0, ['class' => 'first-item', 'pattern' => '[0-9]{1}']) }}

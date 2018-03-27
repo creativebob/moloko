@@ -1,9 +1,9 @@
 @extends('layouts.app')
- 
+
 @section('inhead')
-  <meta name="description" content="Меню {{ $site->site_name }}" />
-  {{-- Скрипты меню в шапке --}}
-  @include('includes.scripts.menu-inhead')
+<meta name="description" content="Меню {{ $site->site_name }}" />
+{{-- Скрипты меню в шапке --}}
+@include('includes.scripts.menu-inhead')
 @endsection
 
 @section('title', 'Меню '.$site->site_name)
@@ -48,21 +48,21 @@
               {{ Form::submit('Фильтрация', ['class'=>'button']) }}
             </div>
           </div>
-        {{ Form::close() }}
+          {{ Form::close() }}
         </fieldset>
       </div>
     </div>
   </div>
 </div>
 @endsection
- 
+
 @section('content')
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
     @if($navigations_tree)
-      {{-- Шаблон вывода и динамического обновления --}}
-      @include('navigations.navigations-list', $navigations_tree)
+    {{-- Шаблон вывода и динамического обновления --}}
+    @include('navigations.navigations-list', $navigations_tree)
     @endif
   </div>
 </div>
@@ -71,7 +71,6 @@
 @section('modals')
 {{-- Модалки --}}
 <section id="modal"></section>
-
 {{-- Модалка удаления ajax --}}
 @include('includes.modals.modal-delete-ajax')
 @endsection
@@ -82,7 +81,7 @@
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
 <script type="text/javascript">
-$(function() {
+  $(function() {
 
   // Берем алиас сайта
   var siteAlias = '{{ $site_alias }}';
@@ -140,17 +139,17 @@ $(function() {
     name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
     return name;
   };
- 
+  
   function navigationCheck (name, submit, db) {
 
     // Блокируем аттрибут базы данных
     $(db).val(0);
 
     // Смотрим сколько символов
-    var lenname = name.length;
+    var lenName = name.length;
 
     // Если символов больше 3 - делаем запрос
-    if (lenname > 3) {
+    if (lenName > 3) {
 
       // Первая буква сектора заглавная
       name = newParagraph (name);
@@ -182,9 +181,8 @@ $(function() {
           };
         }
       });
-    };
-    // Удаляем все значения, если символов меньше 3х
-    if (lenname <= 3) {
+    } else {
+      // Удаляем все значения, если символов меньше 3х
       $(submit).prop('disabled', false);
       $('.item-error').css('display', 'none');
       $(db).val(0);
@@ -219,8 +217,8 @@ $(function() {
     // Выполняем запрос
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
-      navigationCheck (name, submit, db)
-   }, time); 
+      navigationCheck (name, submit, db);
+    }, time); 
   });
 
   // Добавляем
@@ -274,8 +272,8 @@ $(function() {
     // Выполняем запрос
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
-      navigationCheck (name, submit, db)
-   }, time); 
+      navigationCheck (name, submit, db);
+    }, time); 
   });
 
   // Меняем данные

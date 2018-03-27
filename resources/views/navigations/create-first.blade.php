@@ -1,4 +1,4 @@
-<div class="reveal" id="first-add" data-reveal>
+<div class="reveal" id="first-add" data-reveal data-close-on-click="false">
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>ДОБАВЛЕНИЕ навигации</h5>

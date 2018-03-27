@@ -1,4 +1,4 @@
-<div class="reveal" id="medium-edit" data-reveal>
+<div class="reveal" id="medium-edit" data-reveal data-close-on-click="false">
 <div class="grid-x">
   <div class="small-12 cell modal-title">
     <h5>Редактирование пункта меню</h5>

@@ -26,12 +26,45 @@ class Department extends Model
   use ModeratorLimitTraitScopes;
 
 
-    // Фильтрация для показа системных записей
-    public function scopeOnlyFilial($query)
-    {
-          return $query->Where('filial_status', '1');
-    }
-  
+  // Фильтрация для показа системных записей
+  public function scopeOnlyFilial($query)
+  {
+    return $query->Where('filial_status', '1');
+  }
+
+  public function getPhone($value) {
+
+    if(strlen($value) == 11 ){
+      if(mb_substr($value, 0, 4) == "8395"){
+        $rest1 = mb_substr($value, 5/2, 2); // возвращает "abcd"
+        $rest2 = mb_substr($value, 7/2, 2); // возвращает "abcd"
+        $rest3 = mb_substr($value, 9/2, 2); // возвращает "abcd"
+        $result = $rest1."-".$rest2."-".$rest3;
+      } else {
+        // $value = strtolower($value, "UTF-8");
+        $rest1 = mb_substr($value, 0, 1); // возвращает "bcdef"
+        $rest2 = mb_substr($value, 1, 3); // возвращает "bcd"
+        $rest3 = mb_substr($value, 4, 3); // возвращает "abcd"
+        $rest4 = mb_substr($value, 7, 2); // возвращает "abcdef"
+        $rest5 = mb_substr($value, 9, 2); // возвращает "abcdef"
+        $result = $rest1." (".$rest2.") ".$rest3."-".$rest4."-".$rest5;
+      };
+    };
+
+    if(strlen($value) < 6){
+      $result = "Номер не указан";
+    };
+
+    return $result;
+  }
+
+  public function setPhone($value) {
+    $ptn = "/[^0-9]/";
+    $rpltxt = "";
+    $result = preg_replace($ptn, $rpltxt, $value);
+    return $result;
+  }
+
   /**
    * Атрибуты, которые должны быть преобразованы в даты.
    *

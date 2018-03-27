@@ -27,6 +27,7 @@ $(document).on('click', '.delete-button-ajax', function(event) {
     url: '/' + entity_alias + '/' + id,
     type: "DELETE",
     success: function (html) {
+      // alert(html);
       $('#content').html(html);
       Foundation.reInit($('#content'));
       $('.delete-button-ajax').removeAttr('id');

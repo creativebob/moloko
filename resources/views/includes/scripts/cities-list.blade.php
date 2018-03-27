@@ -1,4 +1,8 @@
 <script type="text/javascript">
+  // Обозначаем таймер для проверки
+  var timerId;
+  var time = 400;
+
   function checkCity() {
     // Получаем фрагмент текста
     var city = $('.city-check-field').val();
@@ -6,8 +10,8 @@
     var lenCity = city.length;
     // Если символов больше 3 - делаем запрос
     if (lenCity > 2) {
-      $('.find-status').removeClass('icon-find-ok');
-      $('.find-status').removeClass('sprite-16');
+      $('#city-check').removeClass('icon-find-ok');
+      $('#city-check').removeClass('sprite-16');
       // Сам ajax запрос
       $.ajax({
         headers: {
@@ -17,10 +21,10 @@
         type: "POST",
         data: {city_name: city},
         beforeSend: function () {
-          $('.find-status').addClass('icon-load');
+          $('#city-check').addClass('icon-load');
         },
         success: function(date){
-          $('.find-status').removeClass('icon-load');
+          $('#city-check').removeClass('icon-load');
           // Удаляем все значения чтобы вписать новые
           $('.table-over').remove();
           var result = $.parseJSON(date);
@@ -36,8 +40,8 @@
           };
           if (result.error_status == 1) {
             crash = 1;
-            $('.find-status').addClass('icon-find-no');
-            $('.find-status').addClass('sprite-16');
+            $('#city-check').addClass('icon-find-no');
+            $('#city-check').addClass('sprite-16');
             data = "<table class=\"table-content-search table-over\"><tbody><tr><td>Населенный пункт не найден в базе данных, @can('create', App\City::class)<a href=\"/cities\" target=\"_blank\">добавьте его!</a>@endcan @cannot('create', App\City::class)обратитесь к администратору!@endcannot</td></tr></tbody><table>";
           };
           // Выводим пришедшие данные на страницу
@@ -49,16 +53,33 @@
       // Удаляем все значения, если символов меньше 3х
       $('.table-over').remove();
       $('.item-error').remove();
-      $('.find-status').removeClass('icon-find-ok');
-      $('.find-status').removeClass('icon-find-no');
-      $('.find-status').removeClass('sprite-16');
+      $('#city-check').removeClass('icon-find-ok');
+      $('#city-check').removeClass('icon-find-no');
+      $('#city-check').removeClass('sprite-16');
       $('.city-id-field').val('');
       // $('#city-name-field').val('');
     };
   };
   // При добавлении филиала ищем город в нашей базе
-  $('.city-check-field').keyup(function() {
-    checkCity();
+  $(document).on('keyup', '.city-check-field', function() {
+    // Получаем фрагмент текста
+    var city = $('.city-check-field').val();
+    // Если символов больше 3 - делаем запрос
+    if (city.length > 2) {
+      // Выполняем запрос
+      clearTimeout(timerId);   
+      timerId = setTimeout(function() {
+        checkCity(city);
+      }, time); 
+    } else {
+      // Удаляем все значения, если символов меньше 3х
+      $('.table-over').remove();
+      $('.item-error').remove();
+      $('#city-check').removeClass('icon-find-ok');
+      $('#city-check').removeClass('icon-find-no');
+      $('#city-check').removeClass('sprite-16');
+      $('.city-id-field').val('');
+    };
   });
   // При клике на город в модальном окне добавления филиала заполняем инпуты
   $(document).on('click', '.city-add', function() {
@@ -67,9 +88,9 @@
     $('.city-id-field').val(cityId);
     $('.city-check-field').val(cityName);
     $('.table-over').remove();
-    $('.find-status').addClass('icon-find-ok');
-    $('.find-status').addClass('sprite-16');
-    $('.find-status').removeClass('icon-find-no');
+    $('#city-check').addClass('icon-find-ok');
+    $('#city-check').addClass('sprite-16');
+    $('#city-check').removeClass('icon-find-no');
   });
   // При закрытии модалки очищаем поля
   $(document).on('click', '.close-modal', function() {
