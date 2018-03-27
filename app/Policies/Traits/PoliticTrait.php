@@ -55,40 +55,39 @@ trait PoliticTrait
             };
         };
 
-        // Предупреждаем божественное влияние на create!
-        if(($company_id == null)&&(($method == 'create')||($method == 'update'))){
-
-            // Разрешаем богу кое что редактировать без компании
-            if(
-                ($entity_name == 'pages')||
-                ($entity_name == 'sities')||
-                ($entity_name == 'navigations')||
-                ($entity_name == 'menus')||
-                ($entity_name == 'roles')||
-                ($entity_name == 'companies')||
-                ($entity_name == 'cities')||   
-                ($entity_name == 'regions')||   
-                ($entity_name == 'areas')||       
-                ($entity_name == 'positions')||
-                ($entity_name == 'entities')
-            ){
-
-            // Запрещаем редактировать остальные сущности
-            return false;
-
-
-
-            } else {
-
-
-                return true;
-
-            };
-
-
-
-
+        // Бог авторизованный под компанией может создавать
+        if(($user_status == 1)&&($method == 'create')&&($company_id != null)){
+            return true;            
         };
+
+        // Предупреждаем божественное влияние на create!
+        // if(($company_id == null)&&(($method == 'create')||($method == 'update'))){
+
+        //     // Запрещаем богу кое что редактировать без компании
+        //     if(
+        //         ($entity_name == 'pages')||
+        //         ($entity_name == 'sities')||
+        //         ($entity_name == 'navigations')||
+        //         ($entity_name == 'menus')||
+        //         ($entity_name == 'roles')||
+        //         // ($entity_name == 'companies')||
+        //         ($entity_name == 'cities')||   
+        //         ($entity_name == 'regions')||   
+        //         ($entity_name == 'areas')||       
+        //         ($entity_name == 'positions')||
+        //         ($entity_name == 'entities')
+        //     ){
+
+        //     // Запрещаем редактировать остальные сущности
+        //     return false;
+
+        //     } else {
+
+        //         return true;
+
+        //     };
+
+        // };
 
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------

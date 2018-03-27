@@ -331,7 +331,10 @@ class DepartmentController extends Controller
 
       return view('departments.create-medium', ['departments_list' => $departments_list, 'positions_list' => $positions_list]);
     } else {
+
       $department = new Department;
+      // return redirect('getaccess/departments.index');
+      // Auth::logout();
 
       return view('departments.create-first', ['department' => $department]);
     }
