@@ -15,19 +15,10 @@
     @endif
     <!-- Сайт -->
     <label>Название сайта
-    @php
-      $block = null;
-    @endphp
-    @if ($site->system_item == 1)
-      @php
-        $block = 'readonly';
-      @endphp
-    @endif
-      {{ Form::text('site_name', $site->site_name, ['class'=>'position-field', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9\W\s]{3,40}', 'required', $block]) }}
-      <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
+      @include('includes.inputs.name', ['value'=>$site->site_name, 'name'=>'site_name', 'required'=>'required'])
     </label>
-    <label>Домен сайта
-      {{ Form::text('site_domen', $site->site_domen, ['class'=>'text-ru-en-field', 'autocomplete'=>'off']) }}
+    <label>Домен сайта {{ $site->site_domen }}
+      @include('includes.inputs.varchar', ['value'=>$site->site_domen, 'name'=>'site_domen', 'required'=>'required'])
     </label>
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">

@@ -17,7 +17,7 @@
     // Пароль
     // $('.password-mask').mask('dddddd?dddddddddddddd');
     // Строка с пробелами, числами и символами
-    $('.varchar-field').mask('ддд?дддддддддддддддддддддддддддддддддддддддддд');
+    $('.varchar-field').mask('bbb?bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
     // Строка с пробелами и символами
     $('.string-field').mask('ббб?ббббббббббббббббббббббббббббббббббббббббббб');
     // Строка с пробелами и символами

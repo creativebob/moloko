@@ -3,24 +3,23 @@
     <label class="input-icon">Введите город
       @php
       $city_name = null;
-      @endphp
-      @if (isset($department->city->city_name))
-      @php
+      $city_id = null;
+      if(isset($department->city->city_name)) {
       $city_name = $department->city->city_name;
+      $city_id = $department->city->city_id;
+      }
       @endphp
-      @endif
-      @include('includes.inputs.city_name', ['value'=>$city_name, 'name'=>'city_name', 'required'=>'required'])
-      @include('includes.inputs.city_id', ['value'=>$department->city_id, 'name'=>'city_id'])
+      @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
     </label>
     <label>Название филиала
-      @include('includes.inputs.name', ['value'=>$department->department_name, 'name'=>'department_name'])
+      @include('includes.inputs.name', ['value'=>$department->department_name, 'name'=>'department_name', 'required'=>'required'])
       <div class="item-error">Такой филиал уже существует в организации!</div>
     </label>
     <label>Адресс филиала
-     @include('includes.inputs.address', ['value'=>$department->address, 'name'=>'address'])
+     @include('includes.inputs.address', ['value'=>$department->address, 'name'=>'address', 'required'=>'required'])
    </label>
    <label>Телефон филиала
-    @include('includes.inputs.phone', ['value'=>$department->phone, 'name'=>'phone', 'required'=>''])
+    @include('includes.inputs.phone', ['value'=>$department->phone, 'name'=>'phone', 'required'=>'required'])
   </label>
   @if ($department->moderation == 1)
   <div class="checkbox">

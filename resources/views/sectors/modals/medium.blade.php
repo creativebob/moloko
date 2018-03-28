@@ -8,7 +8,7 @@
       </select>
     </label>
     <label>Название сектора
-      @include('includes.inputs.name', ['value'=>$sector->sector_name, 'name'=>'sector_name'])
+      @include('includes.inputs.name', ['value'=>$sector->sector_name, 'name'=>'sector_name', 'required'=>'required'])
       <div class="sprite-input-right find-status"></div>
       <div class="item-error">Такой сектор уже существует!</div>
     </label>

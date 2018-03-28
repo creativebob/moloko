@@ -39,7 +39,7 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Название компании
-              {{ Form::text('company_name', $company->company_name, ['class'=>'varchar-field company-name-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9/s]{3,30}']) }}
+                @include('includes.inputs.name', ['value'=>$company->company_name, 'name'=>'company_name', 'required'=>'required'])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
@@ -67,24 +67,23 @@
             </div>
             <div class="small-12 medium-6 cell">
               <label>Почта
-                @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email'])
+                @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email', 'required'=>''])
               </label>  
             </div>
             <div class="small-12 medium-6 cell">
               <label class="input-icon">Город
                 @php
-                  $city_name = null;
-                  $city_id = null;
-                  if(isset($company->city->city_name)) {
-                    $city_name = $company->city->city_name;
-                    $city_id = $company->city->city_id;
-                  }
+                $city_name = null;
+                $city_id = null;
+                if(isset($company->city->city_name)) {
+                $city_name = $company->city->city_name;
+                $city_id = $company->city->city_id;
+                }
                 @endphp
-                @include('includes.inputs.city_name', ['value'=>$city_name, 'name'=>'city_name', 'required'=>'required'])
-                @include('includes.inputs.city_id', ['value'=>$city_id, 'name'=>'city_id'])
+                @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
               </label>
               <label>Адрес
-                @include('includes.inputs.address', ['value'=>$company->address, 'name'=>'address'])
+                @include('includes.inputs.address', ['value'=>$company->address, 'name'=>'address', 'required'=>''])
               </label>
             </div>
           </div>
@@ -102,27 +101,27 @@
             <div class="grid-x grid-padding-x"> 
               <div class="small-12 medium-6 cell">
                 <label>ИНН
-                  @include('includes.inputs.inn', ['value'=>$company->inn, 'name'=>'inn'])
+                  @include('includes.inputs.inn', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
                 <label>КПП
-                  @include('includes.inputs.kpp', ['value'=>$company->kpp, 'name'=>'kpp'])
+                  @include('includes.inputs.kpp', ['value'=>$company->kpp, 'name'=>'kpp', 'required'=>''])
                 </label>
               </div>
               <div class="small-12 medium-12 cell">
                 <label>Банк
-                  @include('includes.inputs.bank', ['value'=>$company->bank, 'name'=>'bank'])
+                  @include('includes.inputs.bank', ['value'=>$company->bank, 'name'=>'bank', 'required'=>''])
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
                 <label>Р/С
-                  @include('includes.inputs.account_settlement', ['value'=>$company->account_settlement, 'name'=>'account_settlement'])
+                  @include('includes.inputs.account_settlement', ['value'=>$company->account_settlement, 'name'=>'account_settlement', 'required'=>''])
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
                 <label>К/С
-                  @include('includes.inputs.account_correspondent', ['value'=>$company->account_correspondent, 'name'=>'account_correspondent'])
+                  @include('includes.inputs.account_correspondent', ['value'=>$company->account_correspondent, 'name'=>'account_correspondent', 'required'=>''])
                 </label>
               </div>
             </div>
@@ -133,7 +132,7 @@
             <div class="grid-x grid-padding-x"> 
               <div class="small-12 medium-6 cell">
                 <label>Алиас
-                  @include('includes.inputs.alias', ['value'=>$company->company_alias, 'name'=>'company_alias'])
+                  @include('includes.inputs.alias', ['value'=>$company->company_alias, 'name'=>'company_alias', 'required'=>''])
                 </label>
               </div>
             </div>

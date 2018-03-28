@@ -15,16 +15,16 @@
     @endif
     <!-- Страница -->
     <label>Название страницы
-      @include('includes.inputs.string', ['name'=>'page_name', 'value'=>$page->page_name])
+      @include('includes.inputs.string', ['name'=>'page_name', 'value'=>$page->page_name, 'required'=>'required'])
     </label>
     <label>Заголовок страницы
-      @include('includes.inputs.string', ['name'=>'page_title', 'value'=>$page->page_title])
+      @include('includes.inputs.string', ['name'=>'page_title', 'value'=>$page->page_title, 'required'=>'required'])
     </label>
     <label>Описание страницы
-      @include('includes.inputs.textarea', ['name'=>'page_description', 'value'=>$page->page_description])
+      @include('includes.inputs.textarea', ['name'=>'page_description', 'value'=>$page->page_description, 'required'=>''])
     </label>
     <label>Алиас страницы
-      @include('includes.inputs.text-en', ['name'=>'page_alias', 'value'=>$page->page_alias, 'required'=>''])
+      @include('includes.inputs.text-en', ['name'=>'page_alias', 'value'=>$page->page_alias, 'required'=>'required'])
     </label>
     <input type="hidden" name="site_id" value="{{ $current_site->id }}">
   </div>

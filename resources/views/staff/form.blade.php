@@ -47,6 +47,7 @@
       </div>
       <div class="small-6 cell">
         <label>Дата увольнения
+          {{-- @include('includes.inputs.date', ['name'=>'date_dismissal', 'value'=>$user->birthday, 'required'=>'']) --}}
           {{ Form::text('date_dismissal', null, ['class'=>'date_dismissal date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
         </label>
       </div>

@@ -68,6 +68,8 @@ class SiteController extends Controller
     ->whereNavigation_id(1) // Только для сайтов, разделы сайта
     ->get();
 
+    // dd($menus);
+
     $site = new Site;
 
     // Инфо о странице
@@ -158,6 +160,8 @@ class SiteController extends Controller
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
+
+    // dd($site);
 
     return view('sites.edit', compact('site', 'menus', 'page_info'));
   }
