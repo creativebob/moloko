@@ -328,17 +328,8 @@ class CityController extends Controller
                 ];
               }
             }
-          } 
-          // else {
-          //   $answer->response->items[] = (object) [
-          //     'region' => $title,
-          //     'id' => $id,
-          //   ];
-          //   break;
-          // }
+          }
         }
-
-        // dd($my_count);
         
         if (isset($answer->response->items)) {
           // Если нашлись наши области в пришедших, считаем количество items
