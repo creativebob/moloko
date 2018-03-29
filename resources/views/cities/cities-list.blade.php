@@ -121,6 +121,14 @@
 
 @if(!empty($id))
 <script type="text/javascript">
+
+  // Если первый элемент
+  if ($('#regions-{{ $id }}').hasClass('first-item')) {
+    // Открываем элемент
+    $('#regions-{{ $id }}').addClass('first-active');
+    $('#regions-{{ $id }}').children('.medium-list').addClass('is-active');
+  };
+
   // Если средний элемент
   if ($('#cities-{{ $id }}').hasClass('medium-item')) {
     // Открываем элемент
