@@ -116,7 +116,7 @@ class CityController extends Controller
       // $filial_id = $user->filial_id;
 
       // Если пришел город
-      if (isset($request->city_name)) {
+      if (isset($request->region_name)) {
 
         // Вносим пришедшие данные в переменные
         $region_name = $request->region_name;
@@ -184,7 +184,7 @@ class CityController extends Controller
 
         // Если пришел город без области (Москва, Питер)
         $region = new Region;
-        $region->region_name = $request->region_name;
+        $region->region_name = $request->city_name;
         $region->region_vk_external_id = $request->item_vk_external_id;
         $region->author_id = $user_id;
         $region->system_item = 1;
@@ -296,12 +296,13 @@ class CityController extends Controller
       if ($count == 0) {
         $answer->response->count = 0;
       } else {
-      // Перебираем пришедшие с vk
+
+        // Перебираем пришедшие с vk
         foreach ($items as $item) {
           $title = $item->title;
           $id = $item->id;
 
-        // Если есть область
+          // Если есть область
           if (isset($item->region)) {
             $region_name = $item->region;
 
@@ -315,38 +316,38 @@ class CityController extends Controller
             // Находим наши области
             foreach ($regions as $region) {
               // dd($region);
+
               // Если имена областей совпали, заносим в наш обьект с результатами
               if ($region_name == $region->region_name) {
-
+ 
                 $answer->response->items[] = (object) [
                   'region' => $region_name,
                   'area' => $area_name,
                   'title' => $title,
                   'id' => $id,
                 ];
-              } else {
-                $count = 0;
-                break;
               }
             }
-          } else {
-            $answer->response->items[] = (object) [
-              'region' => $title,
-              'id' => $id,
-            ];
-            break;
-          }
+          } 
+          // else {
+          //   $answer->response->items[] = (object) [
+          //     'region' => $title,
+          //     'id' => $id,
+          //   ];
+          //   break;
+          // }
         }
+
+        // dd($my_count);
         
-        if (isset($count)) {
-          // Если совпадений не нашлось
-          $answer->response->count = $count;
-        } else {
-          // Иначе считаем количество items
+        if (isset($answer->response->items)) {
+          // Если нашлись наши области в пришедших, считаем количество items
           $answer->response->count = count($answer->response->items);
+        } else {
+          // Если совпадений не нашлось
+          $answer->response->count = 0;
         }
       }
-
       $result = json_encode($answer, JSON_UNESCAPED_UNICODE);
     }
     echo $result;

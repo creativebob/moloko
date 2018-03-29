@@ -11,7 +11,6 @@
 |
 */
 
-
 Route::get('/', function () {
   return view('layouts.enter');
 });
@@ -81,11 +80,10 @@ Route::post('/cities_sort', 'CityController@cities_sort')->middleware('auth');
 Route::post('/cities_list', 'CityController@cities_list')->middleware('auth');
 // Получаем области и города из vk
 Route::post('/city_vk', 'CityController@get_vk_city')->middleware('auth');
-
-Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
-
 Route::post('/region', 'RegionController@get_vk_region')->middleware('auth');
 
+// Тестовый маршрут проверки пришедших с вк данных
+Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
 
 // Контроллеры для отображения филиалов, отделов и должностей
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
