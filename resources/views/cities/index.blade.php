@@ -175,7 +175,7 @@ $(function() {
             var titleName = result.response.items[i].title;
           };
           // Формируем содержимое
-          data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"city-add\" data-city-id=\"" + i + "\" data-item-vk-external-id=\"" + result.response.items[i].id + "\">" + titleName + "</a></td><td><a class=\"city-add\" data-area-id=\"" + i + "\" data-area-name=\"" + result.response.items[i].area + "\">" + areaName + "</a></td><td><a class=\"city-add\" data-region-id=\"" + i + "\" data-region-name=\"" + result.response.items[i].region + "\">" + regionName + "</a></td></tr>";
+          data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"city-add\" data-city-id=\"" + i + "\" data-city_vk_external_id=\"" + result.response.items[i].id + "\">" + titleName + "</a></td><td><a class=\"city-add\" data-area-id=\"" + i + "\" data-area-name=\"" + result.response.items[i].area + "\">" + areaName + "</a></td><td><a class=\"city-add\" data-region-id=\"" + i + "\" data-region-name=\"" + result.response.items[i].region + "\">" + regionName + "</a></td></tr>";
           };
         } else {
           $('.find-status').addClass('icon-find-no');
@@ -242,7 +242,7 @@ $(function() {
   $(document).on('click', '.city-add', function() {
 
     var itemId = $(this).closest('tr').data('tr');
-    $('#city-id-field').val($('[data-city-id="' + itemId + '"]').data('item-vk-external-id'));
+    $('#city-id-field').val($('[data-city-id="' + itemId + '"]').data('city_vk_external_id'));
     var cityName = $('[data-city-id="' + itemId + '"]').html();
     var areaName = $('[data-area-id="' + itemId + '"]').html();
     var regionName = $('[data-region-id="' + itemId + '"]').html();
@@ -265,6 +265,7 @@ $(function() {
           type: "POST",
           data: $('#form-add').serialize(),
           success: function (data) {
+            // alert(data);
             var result = $.parseJSON(data);
             // Город не существует
             if (result.error_status == 0) {
