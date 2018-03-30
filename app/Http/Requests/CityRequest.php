@@ -32,7 +32,7 @@ class CityRequest extends FormRequest
             'city_code' => 'integer|nullable',
             'region_id' => 'integer|nullable', 
             'area_id' => 'integer|nullable', 
-            'item_vk_external_id' => 'integer', 
+            'city_vk_external_id' => 'integer', 
             'city_database' => 'integer|nullable',
 
         ];

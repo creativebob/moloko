@@ -434,10 +434,15 @@ class CityController extends Controller
         }])->where('area_name', $request->area_name)->first();
           // Если в районе существует город, даем ошибку
         if ($area) {
-          $result = [
-            'error_status' => 1,
-            'item' => $area
-          ];
+          if (count($area->cities) > 0) {
+            $result = [
+              'error_status' => 1,
+            ];
+          } else {
+            $result = [
+              'error_status' => 0
+            ];
+          }
         } else {
           $result = [
             'error_status' => 0
