@@ -255,16 +255,16 @@ class CityController extends Controller
   public function destroy(Request $request, $id)
   { 
 
-  // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-  // Удаляем город с обновлением
-  // Находим область и район города
+    // Удаляем город с обновлением
+    // Находим область и район города
     $user = $request->user();
 
     $city = City::moderatorLimit($answer)->findOrFail($id);
 
-  // Подключение политики
+    // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $city);
 
     if ($city->area_id != null) {

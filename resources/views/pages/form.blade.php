@@ -26,7 +26,7 @@
     <label>Алиас страницы
       @include('includes.inputs.text-en', ['name'=>'page_alias', 'value'=>$page->page_alias, 'required'=>'required'])
     </label>
-    <input type="hidden" name="site_id" value="{{ $current_site->id }}">
+    {{ Form::hidden('site_id', $current_site->id) }}
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
 

@@ -28,7 +28,10 @@ class PageRequest extends FormRequest
             'page_title' => 'string|max:255|required', 
             'page_description' => 'string|required', 
             'page_alias' => 'string|max:255|required', 
-            'site_id' => 'integer|required', 
+            'site_id' => 'integer|required',
+
+            'moderation' => 'integer|max:1|nullable',
+            'system_item' => 'integer|max:1|nullable', 
         ];
     }
 }

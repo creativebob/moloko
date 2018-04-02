@@ -28,6 +28,9 @@ class RoleRequest extends FormRequest
             'role_name' => 'string|max:255', 
             'role_description' => 'string|max:255|nullable', 
 
+            'moderation' => 'integer|max:1|nullable',
+            'system_item' => 'integer|max:1|nullable', 
+
         ];
     }
 }

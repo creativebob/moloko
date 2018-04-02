@@ -38,13 +38,13 @@
           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Фамилия
-                @include('includes.inputs.text-ru', ['name'=>'second_name', 'value'=>$user->second_name, 'required'=>'required'])
+                @include('includes.inputs.name', ['name'=>'second_name', 'value'=>$user->second_name, 'required'=>'required'])
               </label>
               <label>Имя
-                @include('includes.inputs.text-ru', ['name'=>'first_name', 'value'=>$user->first_name, 'required'=>'required'])
+                @include('includes.inputs.name', ['name'=>'first_name', 'value'=>$user->first_name, 'required'=>'required'])
               </label>
               <label>Отчество
-                @include('includes.inputs.text-ru', ['name'=>'patronymic', 'value'=>$user->patronymic, 'required'=>''])
+                @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$user->patronymic, 'required'=>''])
               </label>
             </div>
           </div>
@@ -177,12 +177,12 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Р/С
-                @include('includes.inputs.account_settlement', ['value'=>$user->account_settlement, 'name'=>'account_settlement', 'required'=>''])
+                @include('includes.inputs.account', ['value'=>$user->account_settlement, 'name'=>'account_settlement', 'required'=>''])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>К/С
-                @include('includes.inputs.account_correspondent', ['value'=>$user->account_correspondent, 'name'=>'account_correspondent', 'required'=>''])
+                @include('includes.inputs.account', ['value'=>$user->account_correspondent, 'name'=>'account_correspondent', 'required'=>''])
               </label>
             </div>
           </div>

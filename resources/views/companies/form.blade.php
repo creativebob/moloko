@@ -116,12 +116,12 @@
               </div>
               <div class="small-12 medium-6 cell">
                 <label>Р/С
-                  @include('includes.inputs.account_settlement', ['value'=>$company->account_settlement, 'name'=>'account_settlement', 'required'=>''])
+                  @include('includes.inputs.account', ['value'=>$company->account_settlement, 'name'=>'account_settlement', 'required'=>''])
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
                 <label>К/С
-                  @include('includes.inputs.account_correspondent', ['value'=>$company->account_correspondent, 'name'=>'account_correspondent', 'required'=>''])
+                  @include('includes.inputs.account', ['value'=>$company->account_correspondent, 'name'=>'account_correspondent', 'required'=>''])
                 </label>
               </div>
             </div>

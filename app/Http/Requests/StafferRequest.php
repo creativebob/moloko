@@ -27,6 +27,9 @@ class StafferRequest extends FormRequest
             'position_id' => 'integer', 
             'department_id' => 'integer|nullable', 
             'filial_id' => 'integer', 
+
+            'moderation' => 'integer|max:1|nullable',
+            'system_item' => 'integer|max:1|nullable', 
         ];
     }
 }

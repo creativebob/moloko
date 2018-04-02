@@ -17,7 +17,7 @@
     // Пароль
     // $('.password-mask').mask('dddddd?dddddddddddddd');
     // Строка с пробелами, числами и символами
-    $('.varchar-field').mask('bbb?bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+    $('.varchar-field').mask('***?******************************************');
     // Строка с пробелами и символами
     $('.string-field').mask('ббб?ббббббббббббббббббббббббббббббббббббббббббб');
     // Строка с пробелами и символами
@@ -36,12 +36,11 @@
     // Телеграм id
     $('.telegram-id-field').mask('999999999?999');
     // ИНН
-    $('.inn-field').mask('999?999999999');
+    $('.inn-field').mask('9999999999?99');
     // Кпп
     $('.kpp-field').mask('999?999999');
     // Расчетные счета
-    $('.account-correspondent-field').mask('999999?99999999999999');
-    $('.account-settlement-field').mask('999999?99999999999999');
+    $('.account-field').mask('99999999999999999999');
   });
 
   $(function() {

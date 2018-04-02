@@ -24,7 +24,7 @@ class EmployeeRequest extends FormRequest
     public function rules()
     {
         return [
-            'date_employment' => 'date|after:01.01.1940|required', 
+            'date_employment' => 'date|after:01.01.1940', 
             'date_dismissal' => 'date|after:01.01.1940|nullable', 
             'dismissal_desc' => 'string|nullable', 
         ];

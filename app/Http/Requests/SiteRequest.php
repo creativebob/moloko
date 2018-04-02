@@ -26,6 +26,9 @@ class SiteRequest extends FormRequest
         return [
             'site_name' => 'string|max:255|required', 
             'site_domen' => 'string|max:255|required', 
+
+            'moderation' => 'integer|max:1|nullable',
+            'system_item' => 'integer|max:1|nullable', 
         ];
     }
 }
