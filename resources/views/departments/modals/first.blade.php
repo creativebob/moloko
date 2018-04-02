@@ -6,9 +6,10 @@
       $city_id = null;
       if(isset($department->city->city_name)) {
       $city_name = $department->city->city_name;
-      $city_id = $department->city->city_id;
+      $city_id = $department->city->id;
       }
       @endphp
+      {{ $city_id}}
       @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
     </label>
     <label>Название филиала

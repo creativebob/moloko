@@ -77,7 +77,7 @@
                 $city_id = null;
                 if(isset($company->city->city_name)) {
                 $city_name = $company->city->city_name;
-                $city_id = $company->city->city_id;
+                $city_id = $company->city->id;
                 }
                 @endphp
                 @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])

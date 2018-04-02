@@ -340,7 +340,7 @@ class DepartmentController extends Controller
     }
   }
 
-  public function store(Request $request)
+  public function store(DepartmentRequest $request)
   {
 
     // Подключение политики
@@ -551,7 +551,7 @@ class DepartmentController extends Controller
     $last = mb_substr($request->department_name,1); //все кроме первой буквы
     $first = mb_strtoupper($first, 'UTF-8');
     $department->department_name = $first.$last;
-
+    
     $department->address = $request->address;
     if (isset($request->phone)) {
       $department->phone = cleanPhone($request->phone);
