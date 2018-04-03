@@ -59,7 +59,8 @@ class CompanyController extends Controller
         ->paginate(30);
 
         $filter_query = Company::with('city', 'sector')->moderatorLimit($answer)->get();
-        $filter = []; $filter['status'] = Null;
+        $filter['status'] = null;
+
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
 
@@ -68,6 +69,8 @@ class CompanyController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
+
+        // dd($filter);
 
         return view('companies.index', compact('companies', 'page_info', 'filter', 'user'));
     }

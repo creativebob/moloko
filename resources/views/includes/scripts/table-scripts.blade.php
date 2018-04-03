@@ -1,91 +1,87 @@
 <script type="text/javascript">
-$(function() {
-  // Сортировка строк таблицы
-  $("#table-content").tablesorter({ 
-  // передаем аргументы для заголовков и назначаем объект 
-    headers: { 
-      // работаем со второй колонкой (подсчет идет с нуля) 
-      0: { 
-      // запрет сортировки указанием свойства 
-      sorter: false 
-      }, 
-    // работаем со третьей колонкой (подсчет идет с нуля) 
-      1: { 
-    // запрещаем, использовав свойство 
-      sorter: false 
+  $(function() {
+    // Сортировка строк таблицы
+    $("#table-content").tablesorter({ 
+      // передаем аргументы для заголовков и назначаем объект 
+      headers: { 
+        // работаем со второй колонкой (подсчет идет с нуля) 
+        0: { 
+          // запрет сортировки указанием свойства 
+          sorter: false 
+        }, 
+        // работаем со третьей колонкой (подсчет идет с нуля) 
+        1: { 
+          // запрещаем, использовав свойство 
+          sorter: false 
+        },
       },
-    },
-    // sortList: [[2,0]],
-    cssHeader: "thead-header"
-  });  
-  // Оставляем ширину у вырванного из потока элемента
-  var fixHelper = function(e, ui) {
-    ui.children().each(function() {
-      $(this).width($(this).width());
-    });
-    return ui;
-  };
-  // Включаем перетаскивание
-  $("#table-content tbody").sortable({
-    axis: 'y',
-    helper: fixHelper, // ширина вырванного элемента
-    handle: 'td:first' // указываем за какой элемент можно тянуть
-  });
-
-  // Чекбоксы
-  console.log('Запуск функции чекбоксов');
-  var checkboxes = document.querySelectorAll('input.table-check');
-  var checkall = document.getElementById('check-all');
-  console.log('Видим общее количество чекбоксов = ' + checkboxes.length);
-
-  for(var i=0; i<checkboxes.length; i++) {
-    checkboxes[i].onclick = function() {
-  counter_checkbox = counter_checkbox + 1;
-
-  var parent = $(this).closest('.item');
-  var entity_alias = parent.attr('id').split('-')[0];
-  var item_entity = parent.attr('id').split('-')[1];
-
-  var checkedCount = document.querySelectorAll('input.table-check:checked').length;
-  console.log('Берем выделенные чекбоксы = ' + checkedCount);
-  checkall.checked = checkedCount > 0;
-  checkall.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
-  console.log('Ставим главному статус ' + checkall.checked + ' и меняем спрайт');
-
-  checkall.onclick = function() {
-    for(var i=0; i<checkboxes.length; i++) {
-      checkboxes[i].checked = this.checked;
-      console.log('Видим клик по главному, ставим его положение всем = ' + this.checked);
+      // sortList: [[2,0]],
+      cssHeader: "thead-header"
+    });  
+    // Оставляем ширину у вырванного из потока элемента
+    var fixHelper = function(e, ui) {
+      ui.children().each(function() {
+        $(this).width($(this).width());
+      });
+      return ui;
     };
-  };
+    // Включаем перетаскивание
+    $("#table-content tbody").sortable({
+      axis: 'y',
+      helper: fixHelper, // ширина вырванного элемента
+      handle: 'td:first' // указываем за какой элемент можно тянуть
+    });
 
+    // Чекбоксы
+    console.log('Запуск функции чекбоксов');
+    var checkboxes = document.querySelectorAll('input.table-check');
+    var checkall = document.getElementById('check-all');
+    console.log('Видим общее количество чекбоксов = ' + checkboxes.length);
 
+    for(var i=0; i<checkboxes.length; i++) {
+      checkboxes[i].onclick = function() {
+      counter_checkbox = counter_checkbox + 1;
 
-  // alert('Переменную могу отдать куда тибе надабна');
+      var parent = $(this).closest('.item');
+      var entity_alias = parent.attr('id').split('-')[0];
+      var item_entity = parent.attr('id').split('-')[1];
 
-  // Ajax
-  $.ajax({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/booklists',
-    type: "POST",
-    data: {item_entity: item_entity, entity_alias: entity_alias},
-    success: function (data) {
-      // alert(data);
+      var checkedCount = document.querySelectorAll('input.table-check:checked').length;
+      console.log('Берем выделенные чекбоксы = ' + checkedCount);
+      checkall.checked = checkedCount > 0;
+      checkall.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
+      console.log('Ставим главному статус ' + checkall.checked + ' и меняем спрайт');
 
-      var result = $.parseJSON(data);
-      if (result.status == 0) {
-
-      } else {
-
-        // alert(result.msg);
-
+      checkall.onclick = function() {
+        for(var i=0; i<checkboxes.length; i++) {
+          checkboxes[i].checked = this.checked;
+          console.log('Видим клик по главному, ставим его положение всем = ' + this.checked);
+        };
       };
-    }
-  });
 
+      // alert('Переменную могу отдать куда тибе надабна');
 
+      // Ajax
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/booklists',
+        type: "POST",
+        data: {item_entity: item_entity, entity_alias: entity_alias},
+        success: function (data) {
+          // alert(data);
+
+          var result = $.parseJSON(data);
+          if (result.status == 0) {
+
+          } else {
+
+            // alert(result.msg);
+
+          };
+        }
+      });
     };
   };
 

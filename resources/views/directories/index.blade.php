@@ -5,36 +5,13 @@
   @include('includes.scripts.table-inhead')
 @endsection
 
-@section('title')
-  {{ $page_info->page_name }}
-@endsection
+@section('title', $page_info->page_name)
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('title-content')
 {{-- Таблица --}}
-<div data-sticky-container id="head-content">
-  <div class="sticky sticky-topbar" id="head-sticky" data-sticky-on="small" data-sticky data-margin-top="2.4" data-top-anchor="head-content:top">
-	  <div class="top-bar head-content">
-	    <div class="top-bar-left">
-	      <h2 class="header-content">{{ $page_info->page_name }}</h2>
-	    </div>
-	    <div class="top-bar-right">
-	      <a class="icon-filter sprite"></a>
-	      <input class="search-field" type="search" name="search_field" placeholder="Поиск" />
-	      <button type="button" class="icon-search sprite button"></button>
-	    </div>
-	  </div>
-    {{-- Блок фильтров --}}
-    <div class="grid-x">
-      <div class="small-12 cell filters" id="filters">
-        <fieldset class="fieldset-filters inputs">
-
-        </fieldset>
-      </div>
-    </div>
-	</div>
-</div>
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Directory::class, 'type' => 'table'])
 @endsection
  
 @section('content')
@@ -42,7 +19,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="table-content" data-sticky-container>
+    <table class="table-content tablesorter" id="content" data-sticky-container>
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>

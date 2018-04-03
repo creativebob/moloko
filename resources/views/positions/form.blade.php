@@ -15,15 +15,7 @@
     @endif
     <!-- Должность -->
     <label>Название должности
-    @php
-      $block = null;
-    @endphp
-    @if ($position->system_item == 1)
-      @php
-        $block = 'readonly';
-      @endphp
-    @endif
-    {{ Form::text('position_name', null, ['class'=>'position-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'required', $block]) }}
+      @include('includes.inputs.name', ['value'=>$position->position_name, 'name'=>'position_name', 'required'=>'required'])
       <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
     </label>
     <label>Страница должности:

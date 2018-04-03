@@ -13,7 +13,7 @@ class SectorRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+      return true;
     }
 
     /**
@@ -23,12 +23,15 @@ class SectorRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-              'category_db' => 'integer|nullable',
-              'sector_db' => 'integer|nullable', 
-              'sector_name' => 'string|max:255',
-              'sector_id' => 'integer|nullable', 
-              'category_id' => 'integer|nullable', 
-        ];
+      return [
+        'category_db' => 'integer|nullable',
+        'sector_db' => 'integer|nullable', 
+        'sector_name' => 'string|max:255',
+        'sector_id' => 'integer|nullable', 
+        'category_id' => 'integer|nullable', 
+
+        'moderation' => 'integer|max:1|nullable',
+        'system_item' => 'integer|max:1|nullable', 
+      ];
     }
-}
+  }

@@ -142,7 +142,7 @@
   		if($(this).hasClass('plus')){var operation_booklist = "plus";};
   		if($(this).hasClass('minus')){var operation_booklist = "minus";};
   		var booklist_id_send = $(this).data('booklist_id_send');
-  		var entity_alias = $('#table-content').data('entity-alias');
+  		var entity_alias = $('#content').data('entity-alias');
   		var count_elem = $(this).children('span').text();
   		
   		// Делаем запрос только если элемент не равен нулю
@@ -171,7 +171,7 @@
 	function button_send_booklister() {
 
   		var new_booklist_name = document.getElementById('new_booklist').value;
-  		var entity_alias = $('#table-content').data('entity-alias');
+  		var entity_alias = $('#content').data('entity-alias');
 
 		  $.ajax({
 
@@ -211,7 +211,7 @@
 
 
 				$('#{{$name}}-dropdown-bottom-left').foundation('_destroy');
-  				var entity_alias = $('#table-content').data('entity-alias');
+  				var entity_alias = $('#content').data('entity-alias');
 				$.ajax({
 
 					headers: {
@@ -259,7 +259,7 @@
 
 				$('#{{$name}}-dropdown-bottom-left').foundation('_destroy');
 
-  				var entity_alias = $('#table-content').data('entity-alias');
+  				var entity_alias = $('#content').data('entity-alias');
 
 				$.ajax({
 
@@ -313,48 +313,6 @@
 		});
 
 
-	  	// 	if($('.booklist').hasClass('is-open')){var booklist_open = true;} else {var booklist_open = false;};
-
-
-  		// 	// Маркер изменений. Фиксируем изменения, чтоб в следующий раз не делать запрос
-  		// 	// при отсутствии изменений
-  		// 	storage_counter_checkbox = counter_checkbox;
-
-  		// 	var booklist_id = $('.booklist input:checkbox:checked').map(function() {return this.value;
-  		// 	}).get();
-
-  		// 	// alert(booklist_mass);
-
-
-				// $('#{{$name}}-dropdown-bottom-left').foundation('_destroy');
-
-  		// 		var entity_alias = $('#table-content').data('entity-alias');
-  				
-				// $.ajax({
-
-				// 	headers: {
-				// 	    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-				// 	},
-				// 	url: '/updatebooklist',
-				// 	type: "GET",
-				// 	data: {entity_alias: entity_alias, booklist_id: booklist_id},
-				// 	success: function (html) {
-
-				// 		// alert(html);
-
-				// 		cleanBooklister();
-				// 	    $('#booklists').html(html);
-
-				// 		var elem = $('#{{$name}}-dropdown-bottom-left');
-				// 		var booklister = new Foundation.Dropdown(elem);
-
-				// 	   	if(booklist_open == false){
-				// 	    	$(elem).foundation('open');
-				// 	    };
-
-				// 		{{$name}}.CheckBoxerSetWidth(elem);
-				// 	}
-				// });
 	});
 
 

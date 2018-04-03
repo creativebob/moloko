@@ -12,7 +12,8 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content.table', ['page_info' => $page_info, 'class' => App\Page::class])
+@include('includes.title-content', ['page_info' => $page_info, 'page_alias' => 'sites/'.$site->site_alias.'/'.$page_info->page_alias, 'class' => App\Page::class, 'type' => 'table'])
+
 @endsection
 
 @section('breadcrumbs')
@@ -30,7 +31,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="table-content" data-sticky-container>
+    <table class="table-content tablesorter" id="content" data-sticky-container>
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>

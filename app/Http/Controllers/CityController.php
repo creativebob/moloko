@@ -44,7 +44,7 @@ class CityController extends Controller
     }, 'cities' => function ($query) {
       $query->orderBy('sort', 'asc');
     }])
-      ->moderatorLimit($answer)
+    ->moderatorLimit($answer)
       // ->companiesLimit($answer['company_id']) нет фильтра по компаниям
       ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
       ->authors($answer)
@@ -53,140 +53,185 @@ class CityController extends Controller
       ->get();
 
     // Инфо о странице
-    $page_info = pageInfo($this->entity_name);
+      $page_info = pageInfo($this->entity_name);
 
-    return view('cities.index', compact('regions', 'page_info')); 
-  }
+      return view('cities.index', compact('regions', 'page_info')); 
+    }
 
 
-  public function get_content(Request $request)
-  {
-   // Подключение политики
-    $this->authorize(getmethod('index'), Region::class);
-    $this->authorize(getmethod('index'), Area::class);
-    $this->authorize(getmethod('index'), City::class);
+    public function get_content(Request $request)
+    {
+    // Подключение политики
+      $this->authorize(getmethod('index'), Region::class);
+      $this->authorize(getmethod('index'), Area::class);
+      $this->authorize(getmethod('index'), City::class);
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+      $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
 
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
-    $regions = Region::with(['areas'  => function ($query) {
-      $query->orderBy('sort', 'asc');
-    }, 'areas.cities' => function ($query) {
-      $query->orderBy('sort', 'asc');
-    }, 'cities' => function ($query) {
-      $query->orderBy('sort', 'asc');
-    }])
+      $regions = Region::with(['areas'  => function ($query) {
+        $query->orderBy('sort', 'asc');
+      }, 'areas.cities' => function ($query) {
+        $query->orderBy('sort', 'asc');
+      }, 'cities' => function ($query) {
+        $query->orderBy('sort', 'asc');
+      }])
       ->moderatorLimit($answer)
-      // ->companiesLimit($answer['company_id']) нет фильтра по компаниям
-      ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-      ->authors($answer)
-      ->systemItem($answer) // Фильтр по системным записям
-      ->orderBy('sort', 'asc')
-      ->get();
+    // ->companiesLimit($answer['company_id']) нет фильтра по компаниям
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
+    ->orderBy('sort', 'asc')
+    ->get();
 
-     // Отдаем Ajax
+    // Отдаем Ajax
     return view('cities.cities-list', ['regions' => $regions, 'id' => $request->id]);
   }
 
   public function create()
   {
-    //
+  //
   }
 
   public function store(CityRequest $request)
   {
     if ($request->city_db == 1) {
 
-      // Подключение политики
+    // Подключение политики
       $this->authorize(getmethod(__FUNCTION__), Region::class);
       $this->authorize(getmethod(__FUNCTION__), Area::class);
       $this->authorize(getmethod(__FUNCTION__), City::class);
 
-      // Получаем данные для авторизованного пользователя
+    // Получаем данные для авторизованного пользователя
       $user = $request->user();
       if ($user->god == 1) {
         $user_id = 1;
       } else {
         $user_id = $user->id;
       }
-      // $company_id = $user->company_id;
-      // $filial_id = $user->filial_id;
+    // $company_id = $user->company_id;
+    // $filial_id = $user->filial_id;
+
+      // Если пришел город
+      if (isset($request->region_name)) {
 
       // Вносим пришедшие данные в переменные
-      $region_name = $request->region_name;
-      $area_name = $request->area_name;
-      $city_name = $request->city_name;
+        $region_name = $request->region_name;
+        $area_name = $request->area_name;
+        $city_name = $request->city_name;
+
       // Смотрим область
-      $region = Region::where('region_name', $region_name)->first();
-      if ($region) {
+        $region = Region::where('region_name', $region_name)->first();
+        if ($region) {
         // Если существует, берем id существующий
-        $region_id = $region->id;
-      } else {
-        if ($region_name == null) {
-          // Если области нет
-          $region_id = 0;
+          $region_id = $region->id;
         } else {
+          if ($region_name == null) {
+        // Если области нет
+            $region_id = 0;
+          } else {
           // Записываем новую область
+            $region = new Region;
+            $region->region_name = $region_name;
+            $region->author_id = $user_id;
+            $region->system_item = 1;
+            $region->save();
+          // Берем id записанной области
+            $region_id = $region->id;
+          }
+        }
+      // Смотрим район
+        $area = Area::where('area_name', $area_name)->first();
+        if ($area) {
+        // Если существует, берем id существующей
+          $area_id = $area->id;
+        } else {
+          if ($area_name == null) {
+            $area_id = 0;
+          } else {
+          // Записываем новый район
+            $area = new Area;
+            $area->area_name = $area_name;
+            $area->region_id = $region_id;
+            $area->author_id = $user_id;
+            $area->system_item = 1;
+            $area->save();
+          // Берем id записанного района
+            $area_id = $area->id;
+          }
+        }
+
+      // Записываем город, его наличие в базе мы проверили ранее
+        $city = new City;
+        $city->city_name = $city_name;
+        $city->city_code = $request->city_code;
+
+      // Если у города нет района
+        if ($area_id != 0) {
+          $city->area_id = $area_id;
+        } else {
+          $city->region_id = $region_id;
+        }
+        $city->city_vk_external_id = $request->city_vk_external_id;
+        $city->author_id = $user->id;
+        $city->system_item = 1;
+        $city->save();
+        $city_id = $city->id;
+      } else {
+
+      // Вносим пришедшие данные в переменные
+        $city_name = $request->city_name;
+
+      // Если пришел город без области (Москва, Питер)
+      // Смотрим область
+        $region = Region::where('region_name', 'Города Федерального значения')->first();
+        if ($region) {
+        // Если существует, берем id существующий
+          $region_id = $region->id;
+        } else {
+
+        // Записываем новую область
           $region = new Region;
-          $region->region_name = $region_name;
+          $region->region_name = 'Города Федерального значения';
           $region->author_id = $user_id;
           $region->system_item = 1;
           $region->save();
-          // Берем id записанной области
+
+        // Берем id записанной области
           $region_id = $region->id;
-        };
-      }
-      // Смотрим район
-      $area = Area::where('area_name', $area_name)->first();
-      if ($area) {
-        // Если существует, берем id существующей
-        $area_id = $area->id;
-      } else {
-        if ($area_name == null) {
-          $area_id = 0;
+        }
+
+        if (isset($region_id)) {
+
+          // Записываем город, его наличие в базе мы проверили ранее
+          $city = new City;
+          $city->city_name = $city_name;
+          $city->city_code = $request->city_code;
+          $city->city_vk_external_id = $request->city_vk_external_id;
+          $city->region_id = $region_id;
+          $city->author_id = $user->id;
+          $city->system_item = 1;
+          $city->save();
+          $city_id = $city->id;
+
         } else {
-          // Записываем новый район
-          $area = new Area;
-          $area->area_name = $area_name;
-          $area->region_id = $region_id;
-          $area->author_id = $user_id;
-          $area->system_item = 1;
-          $area->save();
-          // Берем id записанного района
-          $area_id = $area->id;
-        };
+          $result = [
+            'error_status' => 1,
+            'error_message' => 'Ошибка при записи населенного пункта!'
+          ];
+        }
       }
-      // Если у города нет области
-      // if (condition) {
-      //   # code...
-      // };
-      
-      // Записываем город, его наличие в базе мы проверили ранее
-      $city = new City;
-      $city->city_name = $city_name;
-      $city->city_code = $request->city_code;
-      // Если у города нет района
-      if ($area_id != 0) {
-        $city->area_id = $area_id;
-      } else {
-        $city->region_id = $region_id;
-      }
-      $city->city_vk_external_id = $request->city_vk_external_id;
-      $city->author_id = $user->id;
-      $city->system_item = 1;
-      $city->save();
-      $city_id = $city->id;
-      
-      if ($city) {
-        // Переадресовываем на index
+
+      if (isset($city_id)) {
+      // Переадресовываем на index
         return redirect()->action('CityController@get_content', ['id' => $city_id]);
       } else {
         $result = [
           'error_status' => 1,
-          'error_message' => 'Ошибка при записи сектора!'
+          'error_message' => 'Ошибка при записи населенного пункта!'
         ];
       }
     }
@@ -204,7 +249,7 @@ class CityController extends Controller
 
   public function update(Request $request, $id)
   {
-      //
+  //
   }
 
   public function destroy(Request $request, $id)
@@ -231,7 +276,7 @@ class CityController extends Controller
     if ($city) {
       $city->editor_id = $user->id;
       $city->save(); 
-      // Смотрим район
+    // Смотрим район
       if (count($city->area) > 0) {
         $area_id = $city->area->id;
         $region_id = $city->area->region->id;
@@ -253,64 +298,81 @@ class CityController extends Controller
   // Получаем список городов из базы вк
   public function get_vk_city(CityRequest $request)
   {
+    // Отправляем запров вк
     $city = $request->city;
     $request_params = [
-    'country_id' => '1',
-    'q' => $city,
-    'need_all' => '0',
-    'count' => '100',
-    'v' => '5.71'
+      'country_id' => '1',
+      'q' => $city,
+      'need_all' => '0',
+      'count' => '250',
+      'v' => '5.71'
     ];
     $get_params = http_build_query($request_params);
     $result = (file_get_contents('https://api.vk.com/method/database.getCities?'. $get_params));
 
+    // dd($result);
+
     // Если чекбокс не включен, то выдаем результат только по нашим областям
     if ($request->checkbox == 'false') {
+
       // Выбираем все наши области
       $regions = Region::select('region_name')->get();
+
       // Декодим пришедшие данные
       $vk_cities = json_decode($result);
       $items = $vk_cities->response->items;
       $count = $vk_cities->response->count;
 
-      $response = (object) ['response' => (object) []];
-      if ($count == 0) {
-        $response->response->count = 0;
-      } else {
-        // Находим наши области
-        foreach ($regions as $region) {
-          $region_name = $region->region_name;
-          // Перебираем пришедшие с vk
-          foreach ($items as $item) {
-            $title = $item->title;
-            $id = $item->id;
-            //Если нет области
-            if (empty($item->region)) {
-              $region = null;
-            } else {
-              $region = $item->region;
-            };
-            // Если нет района
-            if (empty($item->area)) {
-              $area = null;
-            } else {
-              $area = $item->area;
-            };
-            // Если имена областей совпали, заносим в наш обьект с результатами
-            if ($region_name == $region) {
+      // dd($count);
 
-              $response->response->items[] = (object) [
-                'region' => $region,
-                'area' => $area,
-                'title' => $title,
-                'id' => $id,
-              ];
-            };
-          };
-        };
-        $response->response->count = count($response->response->items);
+      $answer = (object) ['response' => (object) []];
+      if ($count == 0) {
+        $answer->response->count = 0;
+      } else {
+
+        // Перебираем пришедшие с vk
+        foreach ($items as $item) {
+          $title = $item->title;
+          $id = $item->id;
+
+          // Если есть область
+          if (isset($item->region)) {
+            $region_name = $item->region;
+
+            // Если есть район
+            if (isset($item->area)) {
+              $area_name = $item->area;
+            } else {
+              $area_name = null;
+            }
+
+            // Находим наши области
+            foreach ($regions as $region) {
+              // dd($region);
+
+              // Если имена областей совпали, заносим в наш обьект с результатами
+              if ($region_name == $region->region_name) {
+
+                $answer->response->items[] = (object) [
+                  'region' => $region_name,
+                  'area' => $area_name,
+                  'title' => $title,
+                  'id' => $id,
+                ];
+              }
+            }
+          }
+        }
+
+        if (isset($answer->response->items)) {
+          // Если нашлись наши области в пришедших, считаем количество items
+          $answer->response->count = count($answer->response->items);
+        } else {
+          // Если совпадений не нашлось
+          $answer->response->count = 0;
+        }
       }
-      $result = json_encode($response, JSON_UNESCAPED_UNICODE);
+      $result = json_encode($answer, JSON_UNESCAPED_UNICODE);
     }
     echo $result;
   }
@@ -362,40 +424,69 @@ class CityController extends Controller
   // Проверяем наличие города в базе
   public function city_check(CityRequest $request)
   {
-    if (isset($request->area_name)) {
-      // Если район существует
-      $city_name = $request->city_name;
-      $area = Area::with(['cities' => function($query) use ($city_name) {
-        $query->where('city_name', $city_name);
-      }])->where('area_name', $request->area_name)->first();
-      // Если в районе существует город, даем ошибку
-      if ($area) {
-        $result = [
-          'error_status' => 1,
-          'item' => $area
-        ];
+    $city_name = $request->city_name;
+
+    if (isset($request->region_name)) {
+      if (isset($request->area_name)) {
+        // Если район существует
+        $area = Area::with(['cities' => function($query) use ($city_name) {
+          $query->where('city_name', $city_name);
+        }])->where('area_name', $request->area_name)->first();
+          // Если в районе существует город, даем ошибку
+        if ($area) {
+          if (count($area->cities) > 0) {
+            $result = [
+              'error_status' => 1,
+            ];
+          } else {
+            $result = [
+              'error_status' => 0
+            ];
+          }
+        } else {
+          $result = [
+            'error_status' => 0
+          ];
+        }
       } else {
-        $result = [
-          'error_status' => 0
-        ];
-      };
+        // Если город без района
+        $city = City::where('city_name', $request->city_name)->first();
+        if ($city) {
+          $result = [
+            'error_status' => 1,
+          ];
+        } else {
+          $result = [
+            'error_status' => 0
+          ];
+        }
+      }
     } else {
-      // Если город без района
-      $city = City::where('city_name', $request->city_name)->first();
-      if ($city) {
-        $result = [
-          'error_status' => 1,
-        ];
+
+      $region = Region::with(['cities' => function($query) use ($city_name) {
+        $query->where('city_name', $city_name);
+      }])->where('region_name', 'Города Федерального значения')->first();
+
+      if ($region) {
+        if (count($region->cities) > 0) {
+          $result = [
+            'error_status' => 1,
+          ];
+        } else {
+          $result = [
+            'error_status' => 0
+          ];
+        }
       } else {
         $result = [
           'error_status' => 0
         ];
-      };
+      }
     }
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
-  // Сортировка
+// Сортировка
   public function cities_sort(Request $request)
   {
     $i = 1;

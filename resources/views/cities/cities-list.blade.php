@@ -121,6 +121,7 @@
 
 @if(!empty($id))
 <script type="text/javascript">
+
   // Если средний элемент
   if ($('#cities-{{ $id }}').hasClass('medium-item')) {
     // Открываем элемент

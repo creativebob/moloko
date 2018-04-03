@@ -27,7 +27,10 @@ class PositionRequest extends FormRequest
             'position_name' => 'string|max:255|required', 
             'page_id' => 'integer|required',
             'roles' => 'array|required',  
-            'roles.*.role' => 'integer',        
+            'roles.*.role' => 'integer',  
+
+            'moderation' => 'integer|max:1|nullable',
+            'system_item' => 'integer|max:1|nullable',       
         ];
     }
 }

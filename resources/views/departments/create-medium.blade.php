@@ -27,15 +27,22 @@
               </select>
             </label>
             <label>Название отдела
-              @include('includes.inputs.name', ['value'=>null, 'name'=>'department_name'])
+              @include('includes.inputs.name', ['value'=>null, 'name'=>'department_name', 'required'=>'required'])
               <div class="item-error">Данный отдел уже существует в этом филиале!</div>
             </label>
             <label class="input-icon">Введите город
-              @include('includes.inputs.city_name', ['value'=>null, 'name'=>'city_name', 'required'=>''])
-              @include('includes.inputs.city_id', ['value'=>null, 'name'=>'city_id'])
+              @php
+                $city_name = null;
+                $city_id = null;
+                if(isset($department->city->city_name)) {
+                  $city_name = $department->city->city_name;
+                  $city_id = $department->city->city_id;
+                }
+              @endphp
+              @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
             </label>
             <label>Адресс отдела
-              @include('includes.inputs.address', ['value'=>null, 'name'=>'address'])
+              @include('includes.inputs.address', ['value'=>null, 'name'=>'address', 'required'=>''])
             </label>
             <label>Телефон отдела
               @include('includes.inputs.phone', ['value'=>null, 'name'=>'phone', 'required'=>''])

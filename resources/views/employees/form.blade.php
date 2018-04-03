@@ -28,12 +28,12 @@
       </div>
       <div class="small-12 medium-5 medium-offset-1 cell">
         <label>Дата увольнения
-          @include('includes.inputs.date', ['value'=>$employee->date_dismissal, 'name'=>'date_dismissal', 'required'=>null])
+          @include('includes.inputs.date', ['value'=>$employee->date_dismissal, 'name'=>'date_dismissal', 'required'=>''])
         </label>
       </div>
     </div>
     <label>Причина увольнения
-      @include('includes.inputs.name', ['value'=>$employee->dismissal_desc, 'name'=>'dismissal_desc'])
+      @include('includes.inputs.name', ['value'=>$employee->dismissal_desc, 'name'=>'dismissal_desc', 'required'=>''])
     </label>
     
   </div>

@@ -13,7 +13,7 @@ class NavigationRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+      return true;
     }
 
     /**
@@ -23,9 +23,13 @@ class NavigationRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'navigation_name' => 'string|max:255|required', 
-            'site_id' => 'integer|required',           
-        ];
+      return [
+        'navigation_name' => 'string|max:255|required', 
+        'site_id' => 'integer|required',
+        'first_item' => 'integer',
+
+        'moderation' => 'integer|max:1|nullable',
+        'system_item' => 'integer|max:1|nullable',          
+      ];
     }
-}
+  }

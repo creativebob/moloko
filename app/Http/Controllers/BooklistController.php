@@ -237,7 +237,6 @@ class BooklistController extends Controller
                 $booklist->save();
             };
 
-
         };
 
 

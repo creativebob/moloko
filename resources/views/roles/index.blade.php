@@ -5,15 +5,13 @@
   @include('includes.scripts.table-inhead')
 @endsection
 
-@section('title')
-  {{ $page_info->page_name }}
-@endsection
+@section('title', $page_info->page_name)
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content.table', ['page_info' => $page_info, 'class' => App\Role::class])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Role::class, 'type' => 'table'])
 @endsection
  
 @section('content')

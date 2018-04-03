@@ -37,7 +37,10 @@ class CompanyRequest extends FormRequest
             'account_correspondent' => 'string|nullable', 
             'bank' => 'string|max:255|nullable', 
             'inn' => 'max:12|nullable', 
-            'kpp' => 'max:255|nullable', 
+            'kpp' => 'max:255|nullable',
+
+            'moderation' => 'integer|max:1|nullable',
+            'system_item' => 'integer|max:1|nullable',  
         ];
     }
 }

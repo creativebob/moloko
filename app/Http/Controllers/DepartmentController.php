@@ -338,7 +338,7 @@ class DepartmentController extends Controller
     }
   }
 
-  public function store(Request $request)
+  public function store(DepartmentRequest $request)
   {
 
     // Подключение политики
@@ -530,7 +530,6 @@ class DepartmentController extends Controller
 
   public function update(DepartmentRequest $request, $id)
   {
-
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
     

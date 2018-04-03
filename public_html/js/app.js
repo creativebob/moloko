@@ -480,9 +480,21 @@ function checkFilter () {
 };
 
 // Блок фильтра
-$('.icon-filter').click(function() {
-	$(this).toggleClass("active-filter");
-	checkFilter ();
+$(document).on('click', '.icon-filter', function() {
+  $(this).toggleClass("active-filter");
+  checkFilter ();
+});
+// $('.icon-filter').click(function() {
+  
+// });
+
+$(document).on('click', '.filter-close', function() {
+  $('.icon-filter').removeClass("active-filter");
+  $('#filters').css('display', 'none');
+  $('#thead-sticky').attr('data-margin-top', 6.2);
+  $('#thead-sticky').css('marginTop', '6.2em');
+
+
 });
 
 
