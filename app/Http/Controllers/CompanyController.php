@@ -45,8 +45,6 @@ class CompanyController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // dd($answer);
-
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -60,36 +58,22 @@ class CompanyController extends Controller
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
-        $filter = [];
-        $filter = $this->filter($request);
+        $filter_query = Company::with('city', 'sector')->moderatorLimit($answer)->get();
+        $filter['status'] = null;
+
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
+
+        // Добавляем данные по спискам (Требуется на каждом контроллере)
+        $filter = addFilter($filter, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $this->entity_name);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
         // dd($filter);
-        
+
         return view('companies.index', compact('companies', 'page_info', 'filter', 'user'));
     }
-
-    public function filter($request)
-    {
-
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
-
-        $filter = [];
-        $filter_query = Company::with('city', 'sector')->moderatorLimit($answer)->get();
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
-        $filter = addFilter($filter, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $this->entity_name);
-
-        return $filter;
-    }
-
 
     public function create(Request $request)
     {
@@ -122,6 +106,7 @@ class CompanyController extends Controller
           // Если есть потомки то перебераем массив
             $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
           };
+
         };
 
         // dd($sectors_cat);

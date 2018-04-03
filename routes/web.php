@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/getaccess/{link?}', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
+Route::any('/getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
 
 // Директории
 Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');

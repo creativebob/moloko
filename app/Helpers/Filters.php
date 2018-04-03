@@ -55,7 +55,6 @@
         if($name == 'booklist'){
 
             $filter_entity = $request->user()->booklists_author->where('entity_alias', $entity_name)->values();
-            // dd($filter_entity);
 
             if(count($filter_entity)>0){
 
@@ -124,6 +123,7 @@
         } else {
 
             $filter_entity = $filter_query->unique($column); 
+
             if(count($filter_entity)>0){
 
                 foreach($filter_entity as $entity){
@@ -131,11 +131,8 @@
                 }
             };
 
-
             $filter[$filter_name]['mode'] = 'id'; // Назавние фильтра
         };
-
-
 
         $filter[$filter_name]['collection'] = $filter_entity;
 
@@ -147,18 +144,21 @@
         } else {
 
             $filter[$filter_name]['mass_id'] = $request->$column; // Получаем список ID
-            if(is_array($request->$column)){$filter[$filter_name]['count_mass'] = count($request->$column);} else {$filter[$filter_name]['count_mass'] = 0;};
+            if(is_array($request->$column)){
+                $filter[$filter_name]['count_mass'] = count($request->$column);
+                $filter['status'] = 'active';
+
+            } else {
+                $filter[$filter_name]['count_mass'] = 0;
+            };
             
         };
-
 
         $filter[$filter_name]['list_select'] = $list_filter; 
         $filter[$filter_name]['title'] = $title; // Назавние фильтра
 
-
+        // dd($filter);
         return $filter;
     }
-
-
 
 ?>

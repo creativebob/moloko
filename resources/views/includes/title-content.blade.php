@@ -34,8 +34,7 @@
 		@if (isset($filter))
 		<div class="grid-x">
 			<div class="small-12 cell filters fieldset-filters" id="filters">
-
-				{{ Form::open(['url' => $page_info->page_alias, 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'class' => 'grid-x grid-padding-x inputs']) }}
+				{{ Form::open(['url' => $page_info->page_alias, 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 				{{-- Подключаем класс Checkboxer --}}
 				@include('includes.scripts.class.checkboxer')
 				@include($page_info->page_alias.'.filters')
