@@ -439,9 +439,14 @@ input[type=checkbox], input[type=radio] {
 
 .icon-filter:hover {
   background-position: -32px -352px;
+  opacity: 0.7;
 }
 
 .active-filter {
+  background-position: -32px -352px !important;
+}
+
+.filtration-active {
   background-position: -64px -352px;
 }
 
@@ -642,7 +647,7 @@ input[type=checkbox], input[type=radio] {
   color: #666666;
   position: relative;
 }
-.inputs input, .inputs textarea {
+.inputs input:not([type="submit"]), .inputs textarea {
   margin-top: 0.25rem;
   margin-bottom: 0.85rem;
   height: 26px;
@@ -1432,14 +1437,19 @@ input[type=checkbox], input[type=radio] {
   z-index: 1;
   position: absolute;
 }
-.content .filters .fieldset-filters {
+.content .fieldset-filters {
   border: 1px solid #b3b3b3;
-  padding: 1rem 0.6rem 1.4rem;
+  padding-top: 1rem;
 }
-.content .filters .fieldset-filters legend {
+.content .fieldset-filters legend {
   font-family: "PFDinDisplayPro-Med";
   padding: 0 1rem;
   margin-bottom: 1rem;
+}
+.content .fieldset-filters .filter-close {
+  background-color: whitesmoke;
+  height: 2rem;
+  cursor: pointer;
 }
 .content .accordion-menu .nested.is-accordion-submenu {
   margin-left: 0;

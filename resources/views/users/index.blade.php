@@ -5,15 +5,13 @@
   @include('includes.scripts.table-inhead')
 @endsection
 
-@section('title')
-  {{ $page_info->page_name }}
-@endsection
+@section('title', $page_info->page_name)
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content.table', ['page_info' => $page_info, 'class' => App\User::class])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\User::class, 'type' => 'table'])
 @endsection
  
 @section('content')
@@ -21,7 +19,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="table-content" data-sticky-container data-entity-alias="users">
+    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="users">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>

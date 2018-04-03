@@ -12,31 +12,8 @@
 
 @section('title-content')
 {{-- Таблица --}}
-<div data-sticky-container id="head-content">
-  <div class="sticky sticky-topbar" id="head-sticky" data-sticky-on="small" data-sticky data-margin-top="2.4" data-top-anchor="head-content:top">
-    <div class="top-bar head-content">
-      <div class="top-bar-left">
-        <h2 class="header-content">{{ $page_info->page_name }}</h2>
-        @can('create', App\Page::class)
-        <a href="/sites/{{ $site->site_alias }}/pages/create" class="icon-add sprite"></a>
-        @endcan
-      </div>
-      <div class="top-bar-right">
-        <a class="icon-filter sprite"></a>
-        <input class="search-field" type="search" name="search_field" placeholder="Поиск" />
-        <button type="button" class="icon-search sprite button"></button>
-      </div>
-    </div>
-    {{-- Блок фильтров --}}
-    <div class="grid-x">
-      <div class="small-12 cell filters" id="filters">
-        <fieldset class="fieldset-filters inputs">
-          @include($page_info->page_alias.'.filters')
-        </fieldset>
-      </div>
-    </div>
-  </div>
-</div>
+@include('includes.title-content', ['page_info' => $page_info, 'page_alias' => 'sites/'.$site->site_alias.'/'.$page_info->page_alias, 'class' => App\Page::class, 'type' => 'table'])
+
 @endsection
 
 @section('breadcrumbs')
@@ -54,7 +31,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="table-content" data-sticky-container>
+    <table class="table-content tablesorter" id="content" data-sticky-container>
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>

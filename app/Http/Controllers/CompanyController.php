@@ -66,6 +66,8 @@ class CompanyController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
+        // dd($filter);
+        
         return view('companies.index', compact('companies', 'page_info', 'filter', 'user'));
     }
 

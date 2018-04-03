@@ -3,11 +3,11 @@
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
 
-@import "compass/reset";
-@import "compass/css3";
-@import "compass/layout";
-@import "compass/typography";
-@import "compass/utilities";
+ @import "compass/reset";
+ @import "compass/css3";
+ @import "compass/layout";
+ @import "compass/typography";
+ @import "compass/utilities";
 
 // ----------------------- Подключаем шрифты ----------------------------------------
 
@@ -567,8 +567,13 @@ input[type=checkbox], input[type=radio] {
 }
 .icon-filter:hover {
   background-position: -32px -352px;
+  opacity: 0.7;
 }
 .active-filter {
+  background-position: -32px -352px !important;
+}
+
+.filtration-active {
   background-position: -64px -352px;
 }
 
@@ -710,7 +715,7 @@ input[type=checkbox], input[type=radio] {
 // }
 
 .checkboxer-pane::-webkit-scrollbar {
-    width:0.5rem;
+  width:0.5rem;
 }
 
 .checkboxer-button
@@ -802,20 +807,20 @@ input[type=checkbox], input[type=radio] {
     position: relative;
   }
 
-    input, textarea {
-      margin-top: 0.25rem;
-      margin-bottom: 0.85rem;
-      height: 26px;
-      color: $input-color;
-      background-color: $white;
-      font-size: 0.8rem;
-      padding: 5px 12px;
-      border: 1px solid $input-border-color;
-      box-shadow: none;
-    }
-    textarea {
-      height: 8rem;
-    }
+  input:not([type="submit"]), textarea {
+    margin-top: 0.25rem;
+    margin-bottom: 0.85rem;
+    height: 26px;
+    color: $input-color;
+    background-color: $white;
+    font-size: 0.8rem;
+    padding: 5px 12px;
+    border: 1px solid $input-border-color;
+    box-shadow: none;
+  }
+  textarea {
+    height: 8rem;
+  }
     // Сообщение об ошибке в инпутах
     .is-invalid-input:not(:focus) {
       border-color: #cc4b37;
@@ -869,7 +874,7 @@ input[type=checkbox], input[type=radio] {
       font-size: 0.8rem;
     }
 
-}
+  }
 // Расположение иконки в инпуте
 .sprite-input-left {
   display: inline-block;
@@ -1190,7 +1195,7 @@ input[type=checkbox], input[type=radio] {
       border-top: 1px solid $sidebar-li-border-bot;
       border-bottom: 1px solid $sidebar-li-border-top;
       cursor: pointer;
-         
+
       #cursor {
         display: block;
         width: 32px;
@@ -1289,13 +1294,13 @@ input[type=checkbox], input[type=radio] {
   }
   // Скрол для мозилы вроде
   scrollbar[orient="vertical"] {
-  max-width:10px !important;
+    max-width:10px !important;
   }
   scrollbar[orient="vertical"] > scrollbarbutton {
-  max-height:10px !important;
+    max-height:10px !important;
   } 
   thumb[orient="vertical"] {
-  max-width:10px !important;
+    max-width:10px !important;
   }
 }
 // ---------------------------------------- Менеджер задач ------------------------------------
@@ -1366,20 +1371,20 @@ input[type=checkbox], input[type=radio] {
           float: none;
           height: 1rem;
           overflow: hidden;
-            
-            div {
-              padding: 0 3px;
-              display: inline-block;
-              vertical-align: middle;
-              float: left;
-            }
+
+          div {
+            padding: 0 3px;
+            display: inline-block;
+            vertical-align: middle;
+            float: left;
+          }
 
           .icon-task {
             margin: -2px 0 0 -2px;
             background-position: -48px -32px;
             opacity: 0.6;
           }
-         
+
           .task-date {
             font-family: $SUISB;
             font-size: 0.7rem;
@@ -1390,7 +1395,7 @@ input[type=checkbox], input[type=radio] {
           .task-hr {
             // max-width: auto;
             // min-width: 20%;
-           
+
           }
           hr {
             border: none;
@@ -1401,7 +1406,7 @@ input[type=checkbox], input[type=radio] {
             overflow: hidden;
             clear: none;
 
-            }
+          }
           .task-count{
             font-family: $SUISL;
             font-size: 0.7rem;
@@ -1564,7 +1569,7 @@ input[type=checkbox], input[type=radio] {
       a {
         color: $table-search-td-color;
       }
-     
+
 
     }
     .icon-delete {
@@ -1731,21 +1736,30 @@ input[type=checkbox], input[type=radio] {
     // transition: 1s;
 
 
-    .fieldset-filters {
-      border: 1px solid  $tabs-fieldset-border-color;
-      padding: 1rem 0.6rem 1.4rem;
 
-      legend {
-        font-family: $PFDDPM;
-        padding: 0 1rem;
-        margin-bottom: 1rem;
-      }
+  }
+
+  .fieldset-filters {
+    border: 1px solid  $tabs-fieldset-border-color;
+    padding-top: 1rem;
+
+    legend {
+      font-family: $PFDDPM;
+      padding: 0 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .filter-close {
+      background-color: rgb(245, 245, 245);
+      height: 2rem;
+      cursor: pointer;
+
     }
   }
   // .filters-active {
   //   height: 60px;
   //   overflow: visible;
-    
+
   // }
   
   // --------------------- Список (accordion menu) в контенте------------------------------
@@ -1900,7 +1914,7 @@ input[type=checkbox], input[type=radio] {
         z-index: 5;
 
         div {
-          
+
           .sprite:focus {
             outline: none;
           }
@@ -1985,9 +1999,9 @@ input[type=checkbox], input[type=radio] {
         > .icon-list {
           opacity: 1;
           z-index: 5;
-        
+
           div {
-            
+
             .icon-list-add {
               background-position: 0px -768px; 
             }
@@ -2093,7 +2107,7 @@ input[type=checkbox], input[type=radio] {
       .last-item {
         position: relative;
         background-color: $list-item-li-bg-color;
-      
+
         .last-link {
           // position: relative;
           margin: 0 1.8rem 0 2.5rem;
@@ -2116,9 +2130,9 @@ input[type=checkbox], input[type=radio] {
 
           // .icon-list {
           //   // opacity: 1;
-            
+
           //   div {
-              
+
           //     .icon-list-add {
           //       background-position: 0px -768px; 
           //     }
@@ -2157,28 +2171,28 @@ input[type=checkbox], input[type=radio] {
   .table-content {
 
     .is-stuck {
-       background-color: $body-bg-color; 
+     background-color: $body-bg-color; 
 
-      tr {
-        display: block;
+     tr {
+      display: block;
 
       //   th {
       //     display: block;
       //     float: left;
       //   }
-      }
     }
   }
+}
 
-  .table-content {
-    border-collapse: separate;
-    width: 100%;
+.table-content {
+  border-collapse: separate;
+  width: 100%;
 
-    caption {
-      font-family: $PFDDPM;
-      text-align: center;
-      font-size: 0.875rem;
-      font-weight: normal;
+  caption {
+    font-family: $PFDDPM;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: normal;
       // color: $input-color;
     }
 
@@ -2197,8 +2211,8 @@ input[type=checkbox], input[type=radio] {
     }
     // Убираем стандарнтый бордер и бекграунд фонды
     thead, tbody, tfoot {
-        border: none;
-        background-color: $table-bg-color;
+      border: none;
+      background-color: $table-bg-color;
     }
     // Отступ между tbody
     .tbody-margin {
@@ -2298,7 +2312,7 @@ input[type=checkbox], input[type=radio] {
 
       // Ярлычок для схлапывания
       tr:first-child {
-        
+
         td {
           text-align: right;
           padding: 0;
@@ -2398,7 +2412,7 @@ input[type=checkbox], input[type=radio] {
     }
     // Правая сторона
     .right {
-    text-align: right;
+      text-align: right;
 
       a {
         color: $table-deleted-color;
@@ -2542,13 +2556,13 @@ input[type=checkbox], input[type=radio] {
     .tabs-wrap {
 
      .tabs-content {
-        margin: 0; 
-        padding: 0 0.7rem;
-      }
-      .fieldset-access {
-        padding: 1rem 0.6rem;
-      }
+      margin: 0; 
+      padding: 0 0.7rem;
     }
+    .fieldset-access {
+      padding: 1rem 0.6rem;
+    }
+  }
     // Блочим элементы добавления/редактирования/удаления
     .content-list {
       .first-active {
