@@ -23,13 +23,15 @@
 				@endcan
 			</div>
 			<div class="top-bar-right">
-				{{-- @if ($filter['status'] == 'active') filtration-active @endif --}}
-				<a class="icon-filter sprite"></a>
+				@if (isset($filter))
+				<a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
+				@endif
 				<input class="search-field" type="search" name="search_field" placeholder="Поиск" />
 				<button type="button" class="icon-search sprite button"></button>
 			</div>
 		</div>
 		{{-- Блок фильтров --}}
+		@if (isset($filter))
 		<div class="grid-x">
 			<div class="small-12 cell filters fieldset-filters" id="filters">
 
@@ -51,5 +53,6 @@
 
 			</div>
 		</div>
+		@endif
 	</div>
 </div>
