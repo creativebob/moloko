@@ -47,7 +47,7 @@
 	<ul class="checkboxer-menu {{$name}}" data-name="{{$name}}">
 
 		@foreach ($main_mass as $key => $value)
-			<li class="item" id="booklists-{{$value->id}}-booklists" data-name="{{$value->$entity_name}}">
+			<li class="item" id="booklists-{{$value->id}}" data-name="{{$value->$entity_name}}">
 
 				@if($value->$entity_name != 'Default')
 
@@ -109,8 +109,11 @@
  	// Удаление элемента из Буклиста
   	$(".booklist .booklist_delete").click(function() {
 
-  			var booklist_id = $('.booklist_delete').data('booklist_id');
-  			var entity_alias = $('#table-content').data('entity-alias');
+  			// var booklist_id = $('.booklist_delete').data('booklist_id');
+  			// var entity_alias = $('#table-content').data('entity-alias');
+
+			var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
+			var booklist_id = $(this).closest('.item').attr('id').split('-')[1];
 
   			$.ajax({
 
@@ -373,7 +376,6 @@
 			$(".{{$name}} .checkboxer-clean").off( "click");		
   	}; 	
 
-
 	$(document).ready(function() {
 	      $('#filter-form #new_booklist').keydown(function(event){
 	        if(event.keyCode == 13) {
@@ -384,7 +386,7 @@
 	   });
 	});
 
-	var count_default_booklist = {{$default_count}};
+	var count_default_booklist = @if(isset($default_count)){{$default_count}} @else 0 @endif;
 
 </script>
 @endif

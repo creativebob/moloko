@@ -233,7 +233,18 @@ class GetAccessController extends Controller
 
             if(isset($request->link)){$link = $request->link;};
 
-            return redirect()->route($link);
+
+            if(isset($request->action_method)){$action_method = $request->action_method;};
+            if(isset($request->action_array)){$action_array = $request->action_array;};
+
+            // if((isset($action_method))&&(isset($action_method))){
+
+            //     return redirect()->action($action_method, $action_array);
+
+            // } else {
+                
+                return redirect()->route($link);                
+            // };
 
         };
     }

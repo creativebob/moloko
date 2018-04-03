@@ -333,8 +333,6 @@ class DepartmentController extends Controller
     } else {
 
       $department = new Department;
-      // return redirect('getaccess/departments.index');
-      // Auth::logout();
 
       return view('departments.create-first', ['department' => $department]);
     }
@@ -408,8 +406,15 @@ class DepartmentController extends Controller
         // $link = 'departments';
         // return redirect($link);
       }
+
       // Переадресовываем на index
       return redirect()->action('DepartmentController@get_content', ['id' => $department->id, 'item' => 'department']);
+
+      // $action_method = "DepartmentController@get_content";
+      // $action_arrray = ['id' => $department->id, 'item' => 'department'];
+
+      // return redirect()->action('GetAccessController@set', ['action_method' => $action_method, 'action_arrray' => $action_arrray]);
+      
     } else {
       abort(403, 'Ошибка при записи отдела!');
     };
