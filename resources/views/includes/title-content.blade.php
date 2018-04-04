@@ -23,13 +23,15 @@
 				@endcan
 			</div>
 			<div class="top-bar-right">
-				{{-- @if ($filter['status'] == 'active') filtration-active @endif --}}
-				<a class="icon-filter sprite @if(!empty($filter['status']))@if($filter['status'] == 'active') filtration-active @endif @endif"></a>
+				@if (isset($filter))
+				<a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
+				@endif
 				<input class="search-field" type="search" name="search_field" placeholder="Поиск" />
 				<button type="button" class="icon-search sprite button"></button>
 			</div>
 		</div>
 		{{-- Блок фильтров --}}
+		@if (isset($filter))
 		<div class="grid-x">
 			<div class="small-12 cell filters fieldset-filters" id="filters">
 				{{ Form::open(['url' => $page_info->page_alias, 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
@@ -50,5 +52,6 @@
 
 			</div>
 		</div>
+		@endif
 	</div>
 </div>
