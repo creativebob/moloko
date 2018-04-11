@@ -14,6 +14,7 @@ class NavigationsTableSeeder extends Seeder
          DB::table('navigations')->insert([
             [
                 'navigation_name' => 'Разделы управления сайтом',
+                'navigation_alias' => null,
                 'site_id' => null, 
                 'system_item' => 1,  
                 'company_id' => null,
@@ -21,20 +22,23 @@ class NavigationsTableSeeder extends Seeder
             ],
             [
                 'navigation_name' => 'Левый сайдбар',
+                'navigation_alias' => null,
                 'site_id' => 1, 
                 'system_item' => 1,  
                 'company_id' => null,
                 'category_navigation_id' => 2,         
             ],
             [
-                'navigation_name' => 'Главная навигация',
+                'navigation_name' => 'Главное меню',
+                'navigation_alias' => 'general',
                 'site_id' => 2,  
                 'system_item' => null, 
                 'company_id' => 1,
                 'category_navigation_id' => 2,            
             ],
             [
-                'navigation_name' => 'Меню слева',
+                'navigation_name' => 'Меню продукции',
+                'navigation_alias' => 'products',
                 'site_id' => 2, 
                 'system_item' => null,  
                 'company_id' => 1,
