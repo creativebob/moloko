@@ -19,6 +19,8 @@ class CreateSitesTable extends Migration
             $table->string('site_domen', 30)->nullable()->comment('Домен сайта');
             $table->string('site_alias')->nullable()->index()->comment('Алиас сайта');
 
+            $table->string('api_token', 60)->unique()->nullable()->comment('Токен');
+
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 

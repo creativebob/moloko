@@ -158,7 +158,7 @@ class PagesTableSeeder extends Seeder
         'site_id' => 2,
         'page_title' => 'Воротная компания "Марс"',
         'page_description' => 'Откатные, секционые, распашные ворота.',
-        'page_alias' => 'index',
+        'page_alias' => 'company',
         'company_id' => 1,
         'system_item' => null,
         'author_id' => 4,
