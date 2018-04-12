@@ -136,41 +136,35 @@ class SiteController extends Controller
   // Получаем сайт по api
   public function show(Request $request, $domen)
   {
-    
-
-    // return $request->token;
-
     $site = Site::where('api_token', $request->token)->first();
     if ($site) {
-      // return Cache::remember('site', 1, function() use ($domen) {
-      return Site::with(['company', 'navigations.menus.page' => function ($query) {
-        $query->orderBy('sort', 'asc');
-      }])->whereSite_domen($domen)->orderBy('sort', 'asc')->first();
-    // });
+      return Cache::remember('site', 1, function() use ($domen) {
+        return Site::with(['company', 'navigations.menus.page' => function ($query) {
+          $query->orderBy('sort', 'asc');
+        }])->whereSite_domen($domen)->orderBy('sort', 'asc')->first();
+      });
     } else {
-      return 'Нет доступа, холмс!';
+      return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
     }
-    
-    
   }
 
 
-    public function edit($site_alias)
-    {
+  public function edit($site_alias)
+  {
 
     // ГЛАВНЫЙ ЗАПРОС:
-      $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-      $site = Site::moderatorLimit($answer)->whereSite_alias($site_alias)->first();
+    $site = Site::moderatorLimit($answer)->whereSite_alias($site_alias)->first();
 
     // Подключение политики
-      $this->authorize(getmethod(__FUNCTION__), $site);
+    $this->authorize(getmethod(__FUNCTION__), $site);
 
     // Список меню для сайта
-      $answer_menu = operator_right('menus', false, 'index');
+    $answer_menu = operator_right('menus', false, 'index');
 
-      $menus = Menu::moderatorLimit($answer_menu)
-      ->companiesLimit($answer_menu)
+    $menus = Menu::moderatorLimit($answer_menu)
+    ->companiesLimit($answer_menu)
     ->filials($answer_menu) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer_menu)
     ->systemItem($answer_menu) // Фильтр по системным записям
