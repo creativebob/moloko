@@ -138,16 +138,15 @@ class SiteController extends Controller
   {
     $site = Site::where('api_token', $request->token)->first();
     if ($site) {
-      return Cache::remember('site', 1, function() use ($domen) {
-        return Site::with(['company', 'navigations.menus.page' => function ($query) {
+      // return Cache::remember('site', 1, function() use ($domen) {
+        return Site::with(['company', 'pages', 'navigations.menus.page', 'navigations.menus' => function ($query) {
           $query->orderBy('sort', 'asc');
         }])->whereSite_domen($domen)->orderBy('sort', 'asc')->first();
-      });
+      // });
     } else {
       return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
     }
   }
-
 
   public function edit($site_alias)
   {

@@ -44,6 +44,22 @@ class NavigationsTableSeeder extends Seeder
         'company_id' => 1,
         'category_navigation_id' => 2,            
       ],
+      [
+        'navigation_name' => 'Структура',
+        'navigation_alias' => 'footer',
+        'site_id' => 2, 
+        'system_item' => null,  
+        'company_id' => 1,
+        'category_navigation_id' => 2,            
+      ],
+      [
+        'navigation_name' => 'Соц-медиа',
+        'navigation_alias' => 'media',
+        'site_id' => 2, 
+        'system_item' => null,  
+        'company_id' => 1,
+        'category_navigation_id' => 2,            
+      ],
 
     ]);
    }
