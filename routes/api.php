@@ -2,8 +2,6 @@
 
 use Illuminate\Http\Request;
 
-use App\Site;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,7 +13,14 @@ use App\Site;
 |
 */
 
-Route::get('/site/{domen}', 'SiteController@show');
+Route::get('/site', 'SiteController@show');
+
+Route::get('/vacancies', 'StafferController@vacancies');
+Route::get('/team', 'StafferController@team');
+Route::get('/news', 'NewsController@news');
+Route::get('/news/{link}', 'NewsController@show');
+
+Route::get('/{alias}', 'PageController@api');
  
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

@@ -230,4 +230,10 @@ class PageController extends Controller
       abort(403, 'Страница не найдена');
     };
   }
+
+  // Получаем сайт по api
+  public function api(Request $request)
+  {
+    return null;
+  }
 }

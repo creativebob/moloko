@@ -13,10 +13,9 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
-class Site extends Model
+class News extends Model
 {
-  
-  use SoftDeletes;
+   use SoftDeletes;
   // Подключаем Scopes для главного запроса
   use CompaniesLimitTraitScopes;
   use AuthorsTraitScopes;
@@ -31,31 +30,19 @@ class Site extends Model
    */
   protected $dates = ['deleted_at'];
   protected $fillable = [
-    'site_name',
-    'site_domen',
+    'news_name',
+    'news_alias',
     'company_id',
   ];
+
   /**
-   * Получаем страницы.
-   */
-  public function pages()
-  {
-    return $this->hasMany('App\Page');
-  }
-    /**
-  * Получаем пункты меню.
+  * Получаем сайт.
   */
-  public function menus()
+  public function site()
   {
-    return $this->belongsToMany('App\Menu');
+    return $this->belongsTo('App\Site');
   }
-  /**
-   * Получаем навигации.
-   */
-  public function navigations()
-  {
-    return $this->hasMany('App\Navigation');
-  }
+
   /**
   * Получаем компанию.
   */
@@ -63,19 +50,12 @@ class Site extends Model
   {
     return $this->belongsTo('App\Company');
   }
-  /**
-  * Получаем новости.
-  */
-  public function news()
-  {
-    return $this->hasMany('App\News');
-  }
-  /**
-  * Получаем автора
-  */
-   public function author()
+
+
+  public function author()
   {
     return $this->belongsTo('App\User', 'author_id');
   }
-  
+
+
 }

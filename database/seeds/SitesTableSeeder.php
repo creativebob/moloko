@@ -30,7 +30,7 @@ class SitesTableSeeder extends Seeder
                 'author_id' => 4,
                 'system_item' => null,
                 'moderation' => null,
-                'api_token' => str_random(60),
+                'api_token' => 'rqjl8HY4vh4EpU211BBaxT1zjooIv5k3s6uzaU0nE6xpeUtpe2n6ioBtpriu',
             ],
             [
                 'site_name' => 'Ибаный',
