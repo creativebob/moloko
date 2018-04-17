@@ -19,7 +19,7 @@ class CreateSectorsTable extends Migration
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
 
             $table->string('sector_name')->index()->comment('Название области');
-            $table->integer('sector_parent_id')->unsigned()->nullable()->comment('Id отдела, в котором находится отдел');
+            $table->integer('sector_parent_id')->nullable()->unsigned()->comment('Id отдела, в котором находится отдел');
             $table->foreign('sector_parent_id')->references('id')->on('sectors');
             $table->integer('industry_status')->unsigned()->nullable()->comment('Статус категории');
 

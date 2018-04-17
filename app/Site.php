@@ -64,6 +64,13 @@ class Site extends Model
     return $this->belongsTo('App\Company');
   }
   /**
+  * Получаем новости.
+  */
+  public function news()
+  {
+    return $this->hasMany('App\News');
+  }
+  /**
   * Получаем автора
   */
    public function author()

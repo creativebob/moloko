@@ -60,64 +60,57 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 }
 
 @font-face {
-  font-family: 'PFDinDisplayPro-Light';
-  font-style: normal;
-  src: url(fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf) format("truetype");
+  font-family: "PFDinDisplayPro-Light";
+  src: url(/css/fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'PFDinDisplayPro-Med';
-  font-style: normal;
-  src: url(fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf) format("truetype");
+  font-family: "PFDinDisplayPro-Med";
+  src: url(/css/fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'PFDinDisplayPro-Reg';
-  font-style: normal;
-  src: url(fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf) format("truetype");
+  font-family: "PFDinDisplayPro-Reg";
+  src: url(/css/fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'PFDinDisplayPro-Thin';
-  font-style: normal;
-  src: url(fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf) format("truetype");
+  font-family: "PFDinDisplayPro-Thin";
+  src: url(/css/fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'PFDinTextPro-Regular';
-  font-style: normal;
-  src: url(fonts/DinTextPro/PFDinTextPro-Regular.ttf) format("truetype");
+  font-family: "PFDinTextPro-Regular";
+  src: url(/css/fonts/DinTextPro/PFDinTextPro-Regular.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'PFDinTextCondPro-Regular';
-  font-style: normal;
-  src: url(fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf) format("truetype");
+  font-family: "PFDinTextCondPro-Regular";
+  src: url(/css/fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'SegoeUIBold';
-  font-style: normal;
-  src: url(fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf) format("truetype");
+  font-family: "SegoeUIBold";
+  src: url(/css/fonts/SegoeUI/SegoeUIBold//SegoeUIBold.eot);
+  src: url(/css/fonts/SegoeUI/SegoeUIBold//SegoeUIBold.eot?#iefix) format('embedded-opentype'), url(/css/fonts/SegoeUI/SegoeUIBold/SegoeUIBold.woff) format('woff'), url(/css/fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'SegoeUIItalic';
-  font-style: italic;
-  src: url(fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf) format("truetype");
+  font-family: "SegoeUIItalic";
+  src: url(/css/fonts/SegoeUI/SegoeUIItalic//SegoeUIItalic.eot);
+  src: url(/css/fonts/SegoeUI/SegoeUIItalic//SegoeUIItalic.eot?#iefix) format('embedded-opentype'), url(/css/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.woff) format('woff'), url(/css/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'SegoeUILight';
-  font-style: normal;
-  src: url(fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf) format("truetype");
+  font-family: "SegoeUILight";
+  src: url(/css/fonts/SegoeUI/SegoeUILight//SegoeUILight.eot);
+  src: url(/css/fonts/SegoeUI/SegoeUILight//SegoeUILight.eot?#iefix) format('embedded-opentype'), url(/css/fonts/SegoeUI/SegoeUILight/SegoeUILight.woff) format('woff'), url(/css/fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'SegoeUISemiLight';
-  font-style: normal;
-  src: url(fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf) format("truetype");
+  font-family: "SegoeUISemiLight";
+  src: url(/css/fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'SegoeUIRegular';
-  font-style: normal;
-  src: url(fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf) format("truetype");
+  font-family: "SegoeUIRegular";
+  src: url(/css/fonts/SegoeUI/SegoeUIRegular//SegoeUIRegular.eot);
+  src: url(/css/fonts/SegoeUI/SegoeUIRegular//SegoeUIRegular.eot?#iefix) format('embedded-opentype'), url(/css/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.woff) format('woff'), url(/css/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'SegoeUISemiBold';
-  font-style: normal;
-  src: url(fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf) format("truetype");
+  font-family: "SegoeUISemiBold";
+  src: url(/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot);
+  src: url(/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot?#iefix) format('embedded-opentype'), url(/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff) format('woff'), url(/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf) format('truetype');
 }
 html {
   font-family: "SegoeUISemiLight";

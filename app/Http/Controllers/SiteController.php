@@ -11,11 +11,14 @@ use App\Company;
 
 // Валидация
 use App\Http\Requests\SiteRequest;
+
 // Политика
 use App\Policies\SitePolicy;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class SiteController extends Controller
@@ -100,10 +103,11 @@ class SiteController extends Controller
     $site->site_domen = $request->site_domen;
     $site_alias = explode('.', $request->site_domen);
     $site->site_alias = $site_alias[0];
+    $site->api_token = str_random(60);
 
     // Если нет прав на создание полноценной записи - запись отправляем на модерацию
     if($answer['automoderate'] == false){
-        $user->moderation = 1;
+      $user->moderation = 1;
     };
     // Пишем ID компании авторизованного пользователя
     if($user->company_id == null) {
@@ -129,12 +133,20 @@ class SiteController extends Controller
     };
   }
 
-
-  public function show($id)
+  // Получаем сайт по api
+  public function show(Request $request)
   {
-    //
+    $site = Site::where('api_token', $request->token)->first();
+    if ($site) {
+      // return Cache::remember('site', 1, function() use ($domen) {
+        return Site::with(['company', 'pages', 'navigations.menus.page', 'navigations.menus' => function ($query) {
+          $query->orderBy('sort', 'asc');
+        }])->whereSite_domen($request->domen)->orderBy('sort', 'asc')->first();
+      // });
+    } else {
+      return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
+    }
   }
-
 
   public function edit($site_alias)
   {
@@ -245,20 +257,20 @@ class SiteController extends Controller
   }
 
 
-    public function sections($site_alias)
-    { 
+  public function sections($site_alias)
+  { 
 
       // ГЛАВНЫЙ ЗАПРОС:
-      $answer = operator_right($this->entity_name, $this->entity_dependence, 'update');
+    $answer = operator_right($this->entity_name, $this->entity_dependence, 'update');
 
-      $site = Site::with('menus', 'author')->moderatorLimit($answer)->whereSite_alias($site_alias)->first();
+    $site = Site::with('menus', 'author')->moderatorLimit($answer)->whereSite_alias($site_alias)->first();
 
       // Подключение политики
-      $this->authorize('view', $site);
+    $this->authorize('view', $site);
 
       // Инфо о странице
-      $page_info = pageInfo($this->entity_name);
+    $page_info = pageInfo($this->entity_name);
 
-      return view('sites.sections', compact('site', 'page_info'));
-    }
+    return view('sites.sections', compact('site', 'page_info'));
+  }
 }

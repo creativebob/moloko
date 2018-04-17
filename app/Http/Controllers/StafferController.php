@@ -7,6 +7,7 @@ use App\Staffer;
 use App\Employee;
 use App\Page;
 use App\User;
+use App\Site;
 use App\Company;
 use App\Department;
 use App\RoleUser;
@@ -266,5 +267,36 @@ class StafferController extends Controller
     } else {
       abort(403, 'Ошибка при удалении штата');
     };  
+  }
+
+  // Получаем вакансии по api
+  public function vacancies (Request $request)
+  {
+
+    $site = Site::with(['company.staff.position', 'company.staff' => function ($query) {
+      $query->whereNull('user_id');
+    }])->where('api_token', $request->token)->first();
+    if ($site) {
+      // return Cache::remember('staff', 1, function() use ($domen) {
+        return $site->company->staff;
+      // });
+    } else {
+      return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
+    }
+  }
+  // Получаем команду по api
+  public function team (Request $request)
+  {
+
+    $site = Site::with(['company.staff.position', 'company.staff.user', 'company.staff' => function ($query) {
+      $query->whereNotNull('user_id');
+    }])->where('api_token', $request->token)->first();
+    if ($site) {
+      // return Cache::remember('staff', 1, function() use ($domen) {
+        return $site->company->staff;
+      // });
+    } else {
+      return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
+    }
   }
 }

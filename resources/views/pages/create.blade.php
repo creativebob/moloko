@@ -35,6 +35,7 @@
 
 @section('scripts')
   @include('includes.scripts.inputs-mask')
+  @include('pages.scripts')
 @endsection
 
 

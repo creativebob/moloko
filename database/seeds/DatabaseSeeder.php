@@ -69,5 +69,8 @@ class DatabaseSeeder extends Seeder
     // Папки
     $this->call(FolderTableSeeder::class);
 
+    // Новости
+    $this->call(NewsTableSeeder::class);
+
   }
 }

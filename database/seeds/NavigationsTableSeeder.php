@@ -11,38 +11,56 @@ class NavigationsTableSeeder extends Seeder
      */
     public function run()
     {
-         DB::table('navigations')->insert([
-            [
-                'navigation_name' => 'Разделы управления сайтом',
-                'site_id' => null, 
-                'system_item' => 1,  
-                'company_id' => null,
-                'category_navigation_id' => 1,         
-            ],
-            [
-                'navigation_name' => 'Левый сайдбар',
-                'site_id' => 1, 
-                'system_item' => 1,  
-                'company_id' => null,
-                'category_navigation_id' => 2,         
-            ],
-            [
-                'navigation_name' => 'Главная навигация',
-                'site_id' => 2,  
-                'system_item' => null, 
-                'company_id' => 1,
-                'category_navigation_id' => 2,            
-            ],
-            [
-                'navigation_name' => 'Меню слева',
-                'site_id' => 2, 
-                'system_item' => null,  
-                'company_id' => 1,
-                'category_navigation_id' => 2,            
-            ],
-            
-           
+     DB::table('navigations')->insert([
+      [
+        'navigation_name' => 'Разделы управления сайтом',
+        'navigation_alias' => null,
+        'site_id' => null, 
+        'system_item' => 1,  
+        'company_id' => null,
+        'category_navigation_id' => 1,         
+      ],
+      [
+        'navigation_name' => 'Левый сайдбар',
+        'navigation_alias' => null,
+        'site_id' => 1, 
+        'system_item' => 1,  
+        'company_id' => null,
+        'category_navigation_id' => 2,         
+      ],
+      [
+        'navigation_name' => 'Главное меню',
+        'navigation_alias' => 'general',
+        'site_id' => 2,  
+        'system_item' => null, 
+        'company_id' => 1,
+        'category_navigation_id' => 2,            
+      ],
+      [
+        'navigation_name' => 'Меню продукции',
+        'navigation_alias' => 'products',
+        'site_id' => 2, 
+        'system_item' => null,  
+        'company_id' => 1,
+        'category_navigation_id' => 2,            
+      ],
+      [
+        'navigation_name' => 'Структура',
+        'navigation_alias' => 'footer',
+        'site_id' => 2, 
+        'system_item' => null,  
+        'company_id' => 1,
+        'category_navigation_id' => 2,            
+      ],
+      [
+        'navigation_name' => 'Соц-медиа',
+        'navigation_alias' => 'media',
+        'site_id' => 2, 
+        'system_item' => null,  
+        'company_id' => 1,
+        'category_navigation_id' => 2,            
+      ],
 
-        ]);
-    }
-}
+    ]);
+   }
+ }

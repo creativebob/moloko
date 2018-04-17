@@ -20,6 +20,7 @@ class SitesTableSeeder extends Seeder
                 'author_id' => 1,
                 'system_item' => 1,
                 'moderation' => null,
+                'api_token' => str_random(60),
         	],
             [
                 'site_name' => 'Ворота "Марс"',
@@ -29,6 +30,7 @@ class SitesTableSeeder extends Seeder
                 'author_id' => 4,
                 'system_item' => null,
                 'moderation' => null,
+                'api_token' => 'rqjl8HY4vh4EpU211BBaxT1zjooIv5k3s6uzaU0nE6xpeUtpe2n6ioBtpriu',
             ],
             [
                 'site_name' => 'Ибаный',
@@ -38,6 +40,7 @@ class SitesTableSeeder extends Seeder
                 'author_id' => 7,
                 'system_item' => null,
                 'moderation' => 1,
+                'api_token' => str_random(60),
             ],
             [
                 'site_name' => 'Фенстер',
@@ -47,6 +50,7 @@ class SitesTableSeeder extends Seeder
                 'author_id' => 14,
                 'system_item' => null,
                 'moderation' => null,
+                'api_token' => str_random(60),
             ],
         ]);
     }

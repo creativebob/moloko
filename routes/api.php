@@ -13,6 +13,16 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::get('/site', 'SiteController@show');
+
+Route::get('/vacancies', 'StafferController@vacancies');
+Route::get('/team', 'StafferController@team');
+Route::get('/news', 'NewsController@news');
+Route::get('/news/{link}', 'NewsController@show');
+
+Route::get('/{alias}', 'PageController@api');
+ 
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

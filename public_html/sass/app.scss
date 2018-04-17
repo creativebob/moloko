@@ -8,93 +8,91 @@
  @import "compass/layout";
  @import "compass/typography";
  @import "compass/utilities";
+ @import "breakpoint";
+
+
+ // ------------------------------ Медиа ширины -------------------------------
+$small: 640px;
+$medium: 1024px;
+// $fence-sm: $small $medium;
 
 // ----------------------- Подключаем шрифты ----------------------------------------
 
 // PFDinDisplayPro
-@font-face {
-  font-family: 'PFDinDisplayPro-Light';
-  font-style: normal;
-  src: url(fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf) format('truetype');
-};
-@font-face {
-  font-family: 'PFDinDisplayPro-Med';
-  font-style: normal;
-  src: url(fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf) format('truetype');
-};
-@font-face {
-  font-family: 'PFDinDisplayPro-Reg';
-  font-style: normal;
-  src: url(fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf) format('truetype');
-};
-@font-face {
-  font-family: 'PFDinDisplayPro-Thin';
-  font-style: normal;
-  src: url(fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf) format('truetype');
-};
+@include font-face("PFDinDisplayPro-Light", font-files(
+  "/css/fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf"
+  ) 
+);
+@include font-face("PFDinDisplayPro-Med", font-files(
+  "/css/fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf"
+  ) 
+);
+@include font-face("PFDinDisplayPro-Reg", font-files(
+  "/css/fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf"
+  ) 
+);
+@include font-face("PFDinDisplayPro-Thin", font-files(
+  "/css/fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf"
+  ) 
+);
 
-// PFDinTextPro
-@font-face {
-  font-family: 'PFDinTextPro-Regular';
-  font-style: normal;
-  src: url(fonts/DinTextPro/PFDinTextPro-Regular.ttf) format('truetype');
-};
-
-// DinTextCondensedPro
-@font-face {
-  font-family: 'PFDinTextCondPro-Regular';
-  font-style: normal;
-  src: url(fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf) format('truetype');
-};
-
-// SegoeUI
-@font-face {
-  font-family: 'SegoeUIBold';
-  font-style: normal;
-  src: url(fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf) format('truetype');
-};
-@font-face {
-  font-family: 'SegoeUIItalic';
-  font-style: italic;
-  src: url(fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf) format('truetype');
-};
-@font-face {
-  font-family: 'SegoeUILight';
-  font-style: normal;
-  src: url(fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf) format('truetype');
-};
-@font-face {
-  font-family: 'SegoeUISemiLight';
-  font-style: normal;
-  src: url(fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf) format('truetype');
-};
-@font-face {
-  font-family: 'SegoeUIRegular';
-  font-style: normal;
-  src: url(fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf) format('truetype');
-};
-@font-face {
-  font-family: 'SegoeUISemiBold';
-  font-style: normal;
-  src: url(fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf) format('truetype');
-};
-
-// ----------------------------------- Переменные --------------------------------------
-
-// Шрифты
-// PFDinDisplay
 $PFDDPL: "PFDinDisplayPro-Light";
 $PFDDPM: "PFDinDisplayPro-Med";
 $PFDDPR: "PFDinDisplayPro-Reg";
 $PFDDPT: "PFDinDisplayPro-Thin";
 
 // PFDinTextPro
+@include font-face("PFDinTextPro-Regular", font-files(
+  "/css/fonts/DinTextPro/PFDinTextPro-Regular.ttf"
+  ) 
+);
+
 $PFDTPR: "PFDinTextPro-Regular";
 
-// PFDinTextCondensedPro
+// DinTextCondensedPro
+@include font-face("PFDinTextCondPro-Regular", font-files(
+  "/css/fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf"
+  ) 
+);
+
 $PFDTCPR: "PFDinTextCondPro-Regular";
 
 // SegoeUI
+@include font-face("SegoeUIBold", font-files(
+  "/css/fonts/SegoeUI/SegoeUIBold/SegoeUIBold.woff", 
+  "/css/fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf"
+  ), 
+  "/css/fonts/SegoeUI/SegoeUIBold//SegoeUIBold.eot" /* относительный путь к .eot файлу для IE */
+);
+@include font-face("SegoeUIItalic", font-files(
+  "/css/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.woff", 
+  "/css/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf"
+  ), 
+  "/css/fonts/SegoeUI/SegoeUIItalic//SegoeUIItalic.eot" /* относительный путь к .eot файлу для IE */
+);
+@include font-face("SegoeUILight", font-files(
+  "/css/fonts/SegoeUI/SegoeUILight/SegoeUILight.woff", 
+  "/css/fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf"
+  ), 
+  "/css/fonts/SegoeUI/SegoeUILight//SegoeUILight.eot" /* относительный путь к .eot файлу для IE */
+);
+@include font-face("SegoeUISemiLight", font-files(
+  "/css/fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf"
+  )
+);
+@include font-face("SegoeUIRegular", font-files(
+  "/css/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.woff", 
+  "/css/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf"
+  ), 
+  "/css/fonts/SegoeUI/SegoeUIRegular//SegoeUIRegular.eot" /* относительный путь к .eot файлу для IE */
+);
+@include font-face("SegoeUISemiBold", font-files(
+  "/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff", 
+  "/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf"
+  ), 
+  "/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot" /* относительный путь к .eot файлу для IE */
+);
+
 $SUIB: "SegoeUIBold";
 $SUII: "SegoeUIItalic";
 $SUIL: "SegoeUILight";
@@ -102,7 +100,7 @@ $SUISL: "SegoeUISemiLight";
 $SUIR: "SegoeUIRegular";
 $SUISB: "SegoeUISemiBold";
 
-
+// ----------------------------------- Переменные --------------------------------------
 
 // Цвета
 $mars-red: #ff0000;

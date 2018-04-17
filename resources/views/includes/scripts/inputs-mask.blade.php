@@ -7,7 +7,7 @@
     // C дефисом ru
     $('.text-ru-field').mask('яяя?яяяяяяяяяяяяяяяяяяяяя');
     // C дефисом en
-    $('.text-en-field').mask('zzz?zzzzzzzzzzzzzzzzzzzzz');
+    $('.text-en-field').mask('zzz?zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
     // Логин
     $('.login-field').mask('llllll?llllllllllllllllllllllllllllll');
     // Алиас
