@@ -202,6 +202,8 @@ class UserController extends Controller
     public function update(UserRequest $request, $id)
     {
 
+      // dd($request);
+
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
 

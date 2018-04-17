@@ -47,6 +47,10 @@
                 @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$user->patronymic, 'required'=>''])
               </label>
             </div>
+            <div calss="small-12 medium-6 cell">
+              {{ Form::file('photo') }}
+              <img id="photo">
+            </div>
           </div>
 
 <!--           <div class="grid-x grid-padding-x">

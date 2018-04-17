@@ -15,6 +15,12 @@ Route::get('/', function () {
   return view('layouts.enter');
 });
 
+Route::get('/img/{path}', 'ImageController@show')->where('path', '.*');
+
+Route::get('/lol', function () {
+  return view('demo');
+});
+
 Auth::routes();
 
 Route::any('/getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
