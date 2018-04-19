@@ -114,6 +114,7 @@ class PageController extends Controller
     $page->page_title = $request->page_title;
     $page->page_description = $request->page_description;
     $page->page_alias = $request->page_alias;
+    $page->page_content = $request->page_content;
     $page->site_id = $request->site_id;
     $page->company_id = $company_id;
     $page->author_id = $user_id;
@@ -189,6 +190,7 @@ class PageController extends Controller
     $page->page_title = $request->page_title;
     $page->page_description = $request->page_description;
     $page->page_alias = $request->page_alias;
+    $page->page_content = $request->page_content;
     $page->company_id = $user->company_id;
     $page->site_id = $request->site_id;
     $page->editor_id = $user->id;

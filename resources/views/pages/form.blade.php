@@ -26,13 +26,13 @@
     <label>Алиас страницы
       @include('includes.inputs.text-en', ['name'=>'page_alias', 'value'=>$page->page_alias, 'required'=>'required'])
     </label>
-    <label>Контент:
-      {{ Form::textarea('content', 'This is my textarea to be replaced with CKEditor.', ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
-    </label>
+    
     {{ Form::hidden('site_id', $current_site->id) }}
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
-
+    <label>Контент:
+      {{ Form::textarea('page_content', $page->page_content, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+    </label>
   </div>
 
     {{-- Чекбокс модерации --}}

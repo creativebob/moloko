@@ -29,26 +29,26 @@ class UserController extends Controller
 {
 
     // Сущность над которой производит операции контроллер
-    protected $entity_name = 'users';
-    protected $entity_dependence = true;
+  protected $entity_name = 'users';
+  protected $entity_dependence = true;
 
-    public function index(Request $request)
-    {
+  public function index(Request $request)
+  {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), User::class);
+    $this->authorize(getmethod(__FUNCTION__), User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $users = User::with('roles', 'staff', 'staff.position')  
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
+    $users = User::with('roles', 'staff', 'staff.position')  
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям              
@@ -80,11 +80,24 @@ class UserController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-	    return view('users.index', compact('users', 'page_info', 'filter', 'user'));
-	}
+        $user_auth = $request->user();
 
-    public function create(Request $request)
-    {
+        // dd(Storage::disk('public')->get($user_auth->photo));
+
+
+// dd(public_path('app/public/1/1/1/3/3/3'));
+        // $ava = Storage::disk('public')->get(storage_path('app\public'.$user_auth->photo));
+        // dd($ava);
+
+        // dd(storage_path('app\public'));
+
+        // dd(Storage::disk('public')->url($user_auth->photo));
+
+        return view('users.index', compact('users', 'page_info', 'filter', 'user'));
+      }
+
+      public function create(Request $request)
+      {
 
         $user_auth = $request->user();
 
@@ -102,17 +115,17 @@ class UserController extends Controller
         $answer_roles = operator_right('roles', false, 'index');
         $roles_list = Role::whereCompany_id($user_auth->company_id)->moderatorLimit($answer_roles)->pluck('role_name', 'id');
 
-    	$user = new User;
+        $user = new User;
         $roles = new Role;
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-    	return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list', 'page_info'));
-    }
+        return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list', 'page_info'));
+      }
 
-    public function store(UserRequest $request)
-    {
+      public function store(UserRequest $request)
+      {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), User::class);
@@ -144,7 +157,7 @@ class UserController extends Controller
         $user->phone = cleanPhone($request->phone);
 
         if(($request->extra_phone != Null)&&($request->extra_phone != "")){
-            $user->extra_phone = cleanPhone($request->extra_phone);
+          $user->extra_phone = cleanPhone($request->extra_phone);
         };
 
         $user->telegram_id = $request->telegram_id;
@@ -168,7 +181,7 @@ class UserController extends Controller
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
-            $user->moderation = 1;
+          $user->moderation = 1;
         };
 
         // Пишем ID компании авторизованного пользователя
@@ -196,13 +209,13 @@ class UserController extends Controller
 
         $user->save();
         return redirect('users');
-    }
+      }
 
 
-    public function update(UserRequest $request, $id)
-    {
+      public function update(UserRequest $request, $id)
+      {
 
-      // dd($request);
+      // dd(storage_path());
 
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
@@ -211,60 +224,71 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::moderatorLimit($answer)->findOrFail($id);
+        $user = User::with('company')->moderatorLimit($answer)->findOrFail($id);
 
         $filial_id = $request->filial_id;
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
 
-    	$user->login = $request->login;
-    	$user->email = $request->email;
-    	$user->password = bcrypt($request->password);
-    	$user->nickname = $request->nickname;
+        $user->login = $request->login;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->nickname = $request->nickname;
 
-    	$user->first_name = $request->first_name;
-    	$user->second_name = $request->second_name;
-    	$user->patronymic = $request->patronymic;
-		$user->sex = $request->sex;
-	 	$user->birthday = $request->birthday;
+        $user->first_name = $request->first_name;
+        $user->second_name = $request->second_name;
+        $user->patronymic = $request->patronymic;
+        $user->sex = $request->sex;
+        $user->birthday = $request->birthday;
 
-    	$user->phone = cleanPhone($request->phone);
+        $user->phone = cleanPhone($request->phone);
 
-    	if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-    		$user->extra_phone = cleanPhone($request->extra_phone);
-    	} else {$user->extra_phone = NULL;};
+        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
+          $user->extra_phone = cleanPhone($request->extra_phone);
+        } else {$user->extra_phone = NULL;};
 
-    	$user->telegram_id = $request->telegram_id;
-    	$user->city_id = $request->city_id;
-    	$user->address = $request->address;
+        $user->telegram_id = $request->telegram_id;
+        $user->city_id = $request->city_id;
+        $user->address = $request->address;
 
-    	$user->orgform_status = $request->orgform_status;
+        $user->orgform_status = $request->orgform_status;
 
-    	$user->user_inn = $request->inn;
+        $user->user_inn = $request->inn;
 
-    	$user->passport_address = $request->passport_address;
-    	$user->passport_number = $request->passport_number;
-    	$user->passport_released = $request->passport_released;
-    	$user->passport_date = $request->passport_date;
+        $user->passport_address = $request->passport_address;
+        $user->passport_number = $request->passport_number;
+        $user->passport_released = $request->passport_released;
+        $user->passport_date = $request->passport_date;
 
-    	$user->user_type = $request->user_type;
+        $user->user_type = $request->user_type;
         
-    	$user->lead_id = $request->lead_id;
-    	$user->employee_id = $request->employee_id;
-    	$user->access_block = $request->access_block;
+        $user->lead_id = $request->lead_id;
+        $user->employee_id = $request->employee_id;
+        $user->access_block = $request->access_block;
 
         $user->filial_id = $request->filial_id;
+
+
+
+        if($request->hasFile('photo')) {
+
+          $path = $request->file('photo')->storeAs(
+            'companies/'.$user->company->company_alias.'/users/'.$user->login.'/img', 'avatar.jpg', 'public'
+          );
+
+          $user->photo = '/storage/'.$path;
+        }
 
         // Модерируем (Временно)
         if($answer['automoderate']){$user->moderation = null;};
 
-		$user->save();
-		return redirect('users');
-    }
+        $user->save();
+        return redirect('users');
+      }
 
-    public function show(Request $request, $id)
-    {
+      public function show(Request $request, $id)
+      {
 
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::moderatorLimit($answer)->findOrFail($id);
@@ -292,10 +316,10 @@ class UserController extends Controller
         ->pluck('role_name', 'id');
 
         return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
-    }
+      }
 
-    public function edit(Request $request, $id)
-    {
+      public function edit(Request $request, $id)
+      {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -331,10 +355,10 @@ class UserController extends Controller
         // dd($departments_list);
         
         return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info'));
-    }
+      }
 
-    public function destroy(Request $request, $id)
-    {
+      public function destroy(Request $request, $id)
+      {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -349,15 +373,15 @@ class UserController extends Controller
         $user = User::moderatorLimit($answer)->where('id', $id)->delete();
 
         if($user) {return Redirect('/users');} else {abort(403,'Что-то пошло не так!');};
-    }
+      }
 
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------------
     // СПЕЦИФИЧЕСКИЕ МЕТОДЫ СУЩНОСТИ
     // --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    public function getauthcompany($company_id)
-    {
+      public function getauthcompany($company_id)
+      {
 
         // Только для бога
         $this->authorize('god', User::class);
@@ -367,42 +391,42 @@ class UserController extends Controller
         $auth_user->save();
 
         return redirect('/getaccess/companies.index');
-    }
+      }
 
 
-    public function getauthuser($user_id)
-    {
+      public function getauthuser($user_id)
+      {
 
         // Только для бога
         $this->authorize('god', User::class);
         session(['god' => Auth::user()->id]);
         Auth::loginUsingId($user_id);
         return redirect('/getaccess');
-    }
+      }
 
-    public function getgod()
-    {
+      public function getgod()
+      {
             // Только для бога
-            $this->authorize('god', User::class);
+        $this->authorize('god', User::class);
 
-            $user = User::findOrFail(Auth::user()->id);
-            $user->company_id = null;
-            $user->save();
+        $user = User::findOrFail(Auth::user()->id);
+        $user->company_id = null;
+        $user->save();
 
-            return redirect('/getaccess');
-    }
+        return redirect('/getaccess');
+      }
 
-    public function returngod(Request $request)
-    {
-        
+      public function returngod(Request $request)
+      {
+
         if ($request->session()->has('god')) {
 
-            $god_id = $request->session()->get('god');
-            $request->session()->forget('god');
-            Auth::loginUsingId($god_id);
+          $god_id = $request->session()->get('god');
+          $request->session()->forget('god');
+          Auth::loginUsingId($god_id);
         }
 
         return redirect('/getaccess');
-    }
+      }
 
-}
+    }

@@ -12,8 +12,8 @@
 
 
  // ------------------------------ Медиа ширины -------------------------------
-$small: 640px;
-$medium: 1024px;
+ $small: 640px;
+ $medium: 1024px;
 // $fence-sm: $small $medium;
 
 // ----------------------- Подключаем шрифты ----------------------------------------
@@ -63,19 +63,19 @@ $PFDTCPR: "PFDinTextCondPro-Regular";
   "/css/fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf"
   ), 
   "/css/fonts/SegoeUI/SegoeUIBold//SegoeUIBold.eot" /* относительный путь к .eot файлу для IE */
-);
+  );
 @include font-face("SegoeUIItalic", font-files(
   "/css/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.woff", 
   "/css/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf"
   ), 
   "/css/fonts/SegoeUI/SegoeUIItalic//SegoeUIItalic.eot" /* относительный путь к .eot файлу для IE */
-);
+  );
 @include font-face("SegoeUILight", font-files(
   "/css/fonts/SegoeUI/SegoeUILight/SegoeUILight.woff", 
   "/css/fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf"
   ), 
   "/css/fonts/SegoeUI/SegoeUILight//SegoeUILight.eot" /* относительный путь к .eot файлу для IE */
-);
+  );
 @include font-face("SegoeUISemiLight", font-files(
   "/css/fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf"
   )
@@ -85,13 +85,13 @@ $PFDTCPR: "PFDinTextCondPro-Regular";
   "/css/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf"
   ), 
   "/css/fonts/SegoeUI/SegoeUIRegular//SegoeUIRegular.eot" /* относительный путь к .eot файлу для IE */
-);
+  );
 @include font-face("SegoeUISemiBold", font-files(
   "/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff", 
   "/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf"
   ), 
   "/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot" /* относительный путь к .eot файлу для IE */
-);
+  );
 
 $SUIB: "SegoeUIBold";
 $SUII: "SegoeUIItalic";
@@ -356,6 +356,38 @@ input[type=checkbox], input[type=radio] {
 // .clean-pad-right {
 //   padding-right: 0 !important;
 // }
+
+// .file_upload{
+//   position: relative;
+//   overflow: hidden;
+//     font-size: 1em;        /* example */
+//     height: 2em;           /* example */
+//     line-height: 2em       /* the same as height */
+//   }
+
+//   .file_upload > a{
+//     float: right;
+//     width: 8em;            /* example */
+//     height: 100%
+// }
+// .file_upload > mark{
+//     padding-left: 1em      /* example */
+// }
+
+// .file_upload input[type=file]{
+//     position: absolute;
+//     left: 0;
+//     top: 0;
+//     width: 100%;
+//     height: 100%;
+//     transform: scale(20);
+//     letter-spacing: 10em;     /* IE 9 fix */
+//     -ms-transform: scale(20); /* IE 9 fix */
+//     opacity: 0;
+//     cursor: pointer
+// }
+
+
 
 
 // ------------------------------------------ Оформление суперменю --------------------------------------------
@@ -799,6 +831,7 @@ input[type=checkbox], input[type=radio] {
 } 
 // ---------- Инпуты (вынесены за контент т.к. модальное окно образуется за контентом) ---------
 .inputs {
+
   label {
     font-size: 0.875rem;
     color: $input-color;
@@ -815,6 +848,9 @@ input[type=checkbox], input[type=radio] {
     padding: 5px 12px;
     border: 1px solid $input-border-color;
     box-shadow: none;
+  }
+  input[type=file]{
+    height: 2rem;
   }
   textarea {
     height: 8rem;
@@ -873,6 +909,12 @@ input[type=checkbox], input[type=radio] {
     }
 
   }
+
+
+#cke_content-ckeditor {
+  margin-top: 0.25rem;
+  border: 1px solid #999999;
+}
 // Расположение иконки в инпуте
 .sprite-input-left {
   display: inline-block;
@@ -1029,10 +1071,15 @@ input[type=checkbox], input[type=radio] {
           span {
             margin-right: 1rem;
           }
+
           img {
             vertical-align: middle;
             width: 25px;
             height: 25px;
+          }
+
+          .avatar {
+            @include border-radius(100%);
           }
         }
       }
