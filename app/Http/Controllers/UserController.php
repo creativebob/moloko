@@ -390,9 +390,8 @@ class UserController extends Controller
         $auth_user->company_id = $company_id;
         $auth_user->save();
 
-        return redirect('/getaccess/companies.index');
-      }
-
+        return redirect('/getaccess');
+    }
 
       public function getauthuser($user_id)
       {
