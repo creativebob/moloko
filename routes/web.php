@@ -30,6 +30,9 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 
 Route::resource('/users', 'UserController')->middleware('auth');
 
+// Альбомы
+Route::resource('/albums', 'AlbumController')->middleware('auth');
+
 // Компании
 Route::resource('/companies', 'CompanyController')->middleware('auth');
 // Проверка существования компании в базе по ИНН

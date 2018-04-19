@@ -152,7 +152,14 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
             ],  
-
+            [
+                'entity_name' => 'Альбомы',
+                'entity_alias' => 'albums',
+                'entity_model' => 'Album',
+                'system_item' => 1,
+                'author_id' => 1,
+            ], 
+            
             // Связующие сущности
 
             // [

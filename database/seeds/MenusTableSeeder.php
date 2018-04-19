@@ -551,7 +551,17 @@ class MenusTableSeeder extends Seeder
         'system_item' => null,
         'author_id' => 1,
       ],
-
+      [
+        'menu_name' => 'Альбомы',
+        'menu_icon' => null,
+        'menu_alias' => 'albums',
+        'menu_parent_id' => 3,
+        'page_id' => 36,
+        'navigation_id' => 2,
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+      ],
 
 
 

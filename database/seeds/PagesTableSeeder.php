@@ -363,6 +363,16 @@ class PagesTableSeeder extends Seeder
         'system_item' => null,
         'author_id' => 4,
       ],
+      [
+        'page_name' => 'Альбомы',
+        'site_id' => 1,
+        'page_title' => 'Альбомы',
+        'page_description' => 'Альбомы фотографий компании',
+        'page_alias' => 'albums',
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+      ],
       
     ]);
 }

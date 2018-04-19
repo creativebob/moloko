@@ -38,10 +38,10 @@
 				{{-- Подключаем класс Checkboxer --}}
 				@include('includes.scripts.class.checkboxer')
 				@include($page_info->page_alias.'.filters')
-				<div class="small-12 medium-6 cell text-left">
+				<div class="small-12 cell text-left">
 					{{ Form::submit('Фильтрация', ['class'=>'button']) }}
 				</div>
-				<div class="small-12 medium-6 cell text-right">
+				<div class="small-12 cell text-right">
 					{{ Form::submit('Сбросить', ['url' => $page_info->page_alias, 'class'=>'button']) }}
 				</div>
 				{{ Form::close() }}
