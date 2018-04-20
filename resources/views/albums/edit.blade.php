@@ -1,17 +1,13 @@
 @extends('layouts.app')
 
-@section('inhead')
-  @include('includes.scripts.pickmeup-inhead')
-@endsection
+@section('title', 'Редактировать альбом')
 
-@section('title', 'Редактировать пользователя')
-
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $user->second_name.' '.$user->first_name))
+@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $album))
 
 @section('title-content')
-	<div class="top-bar head-content">
+  <div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">РЕДАКТИРОВАТЬ ПОЛЬЗОВАТЕЛЯ</h2>
+       <h2 class="header-content">РЕДАКТИРОВАТЬ альбом</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -20,28 +16,15 @@
 
 @section('content')
 
-  {{ Form::model($user, ['route' => ['users.update', $user->id], 'data-abide', 'novalidate', 'class' => 'form-check-city', 'enctype'=>'multipart/form-data']) }}
+  {{ Form::model($album, ['route' => ['sites.update', $album->id], 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
-    @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>'', 'form' => 1])
+    @include('albums.form', ['submitButtonText' => 'Редактировать альбом', 'param'=>''])
     
   {{ Form::close() }}
 
 @endsection
 
-@section('modals')
-  {{-- Модалка добавления роли --}}
-  @include('includes.modals.modal-add-role')
-  {{-- Модалка удаления с ajax --}}
-  @include('includes.modals.modal-delete-ajax')
-@endsection
-
 @section('scripts')
-  @include('users.scripts')
-  @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
-  @include('includes.scripts.pickmeup-script')
-  @include('includes.scripts.delete-ajax-script')
 @endsection
-
-

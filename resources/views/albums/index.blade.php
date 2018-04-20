@@ -5,7 +5,7 @@
   @include('includes.scripts.table-inhead')
 @endsection
 
-@section('title', $page_info->page_name)
+@section('title', $page_info->name)
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
@@ -26,6 +26,7 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th>Обложка</th>
           <th class="td-album-name">Название альбомa</th>
+          <th class="td-album-edit">Редактировать</th>
           <th class="td-album-description">Описание</th>
           <th class="td-album-date">Сведения</th>
           <th class="td-album-company-id">Компания</th>
@@ -49,7 +50,8 @@
             @endif 
             ><label class="label-check" for="check-{{ $album->id }}"></label></td>
           <td><img src="{{ $album->album_avatar }}" alt="Фотография альбома"></td>
-          <td class="td-album-name">{{ $album->album_name }}</td>
+          <td class="td-album-name"><a href="/albums/{{ $album->alias }}/photos">{{ $album->name }}</a></td>
+          <td class="td-album-edit"><a class="tiny button" href="/albums/{{ $album->alias }}/edit">Редактировать</a></td>
           <td class="td-album-description">{{ $album->album_description }}</td>
           <td class="td-album-extra-info">
             <span>ID альбома: {{ $album->id }}</span><br>

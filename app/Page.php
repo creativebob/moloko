@@ -30,26 +30,26 @@ class Page extends Model
    * @var array
    */
   protected $dates = ['deleted_at'];
-	public function setMydateAttribute($value){
-	    $date_parts = explode('.', $value);
-	    $this->attributes['mydate'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
-	}
-  protected $fillable = [
-    'page_name', 
-  	'site_id ', 
-  	'page_title', 
-  	'page_description', 
-  	'page_alias', 
-  ];
+  public function setMydateAttribute($value){
+   $date_parts = explode('.', $value);
+   $this->attributes['mydate'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+ }
+ protected $fillable = [
+  'page_name', 
+  'site_id ', 
+  'page_title', 
+  'page_description', 
+  'page_alias', 
+];
 
   // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
   // Фильтрация по статусу пользователя: клиент или сотрудник
-  public function scopeSiteId($query, $site_id)
-  {
-    if(isset($site_id)){
-      return $query->where('site_id', $site_id);
-    }
+public function scopeSiteId($query, $site_id)
+{
+  if(isset($site_id)){
+    return $query->where('site_id', $site_id);
   }
+}
   // КОНЕЦ БЛОКА ОПИСАНИЯ ФИЛЬТРОВ
 
   /**
@@ -76,7 +76,7 @@ class Page extends Model
   /**
   * Получаем автора
   */
-   public function author()
+  public function author()
   {
     return $this->belongsTo('App\User', 'author_id');
   }
@@ -87,4 +87,5 @@ class Page extends Model
   {
     return $this->belongsToMany('App\Entity');
   }
+
 }

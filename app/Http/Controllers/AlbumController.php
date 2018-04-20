@@ -13,6 +13,7 @@ use App\Http\Controllers\Session;
 use App\Role;
 use App\Policies\AlbumPolicy;
 use Illuminate\Support\Facades\Gate;
+
 use Illuminate\Support\Facades\Auth;
 
 // Запросы и их валидация
@@ -79,7 +80,7 @@ class AlbumController extends Controller
     public function create(Request $request)
     {
 
-        dd(public_path());
+        // dd(public_path());
 
         $user = $request->user();
 
@@ -129,10 +130,35 @@ class AlbumController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($alias)
     {
-        //
-    }
+
+    // ГЛАВНЫЙ ЗАПРОС:
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $album = Album::moderatorLimit($answer)->whereAlias($alias)->first();
+
+    // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $album);
+
+    // Список меню для сайта
+        $answer_menu = operator_right('menus', false, 'index');
+
+    //     $menus = Menu::moderatorLimit($answer_menu)
+    //     ->companiesLimit($answer_menu)
+    // ->filials($answer_menu) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    // ->authors($answer_menu)
+    // ->systemItem($answer_menu) // Фильтр по системным записям
+    // ->whereNavigation_id(1) // Только для сайтов, разделы сайта
+    // ->get();
+
+    // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
+
+    // dd($album);
+
+    return view('albums.edit', compact('album', 'page_info'));
+}
 
     /**
      * Update the specified resource in storage.

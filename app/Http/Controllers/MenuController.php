@@ -22,12 +22,12 @@ class MenuController extends Controller
   protected $entity_name = 'menus';
   protected $entity_dependence = false;
 
-  public function index(Request $request, $site_alias)
+  public function index(Request $request, $alias)
   {
 
   }
 
-  public function create(Request $request, $site_alias)
+  public function create(Request $request, $alias)
   {   
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Menu::class);
@@ -54,7 +54,7 @@ class MenuController extends Controller
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
-    // ->whereSite_alias($site_alias)
+    // ->wherealias($alias)
     ->first();
 
     
@@ -76,17 +76,17 @@ class MenuController extends Controller
 
         // Функция построения дерева из массива от Tommy Lacroix
         // Если нет вложений
-        if (!$item['menu_parent_id']){
+        if (!$item['parent_id']){
           $navigations_tree[$navigation->id]['children'][$id] = &$item;
         } else { 
         // Если есть потомки то перебераем массив
-        $navigation_id[$navigation->id]['children'][$item['menu_parent_id']]['children'][$id] = &$item;
+        $navigation_id[$navigation->id]['children'][$item['parent_id']]['children'][$id] = &$item;
         }
       }
 
       // Записываем даныне навигации
       $navigations_tree[$navigation->id]['id'] = $navigation->id;
-      $navigations_tree[$navigation->id]['navigation_name'] = $navigation->navigation_name;
+      $navigations_tree[$navigation->id]['name'] = $navigation->name;
     }
 
     
@@ -99,8 +99,8 @@ class MenuController extends Controller
         $selected = ' selected';
       }
 
-      if (isset($item['navigation_name'])) {
-        $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['navigation_name'].'</option>';
+      if (isset($item['name'])) {
+        $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
       } else {
         $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['menu_name'].'</option>';
       }
@@ -135,7 +135,7 @@ class MenuController extends Controller
 
     $pages_list = '';
     foreach ($site->pages as $page) {
-      $pages_list = $pages_list . '<option value="'.$page->id.'">'.$page->page_name.'</option>';
+      $pages_list = $pages_list . '<option value="'.$page->id.'">'.$page->name.'</option>';
     }
 
     // echo $navigation_list;
@@ -145,7 +145,7 @@ class MenuController extends Controller
 
   }
 
-  public function store(MenuRequest $request, $site_alias)
+  public function store(MenuRequest $request, $alias)
   {
 
     // Подключение политики
@@ -166,17 +166,17 @@ class MenuController extends Controller
     $menu->system_item = $request->system_item;
     $menu->moderation = $request->moderation;
 
-    $menu->menu_name = $request->menu_name;
-    $menu->menu_icon = $request->menu_icon;
-    $menu->menu_alias = $request->menu_alias;
+    $menu->name = $request->menu_name;
+    $menu->icon = $request->menu_icon;
+    $menu->alias = $request->menu_alias;
 
     // Если родителем является навигация
     if ($request->navigation_id == $request->menu_parent_id) {
       $menu->navigation_id = $request->navigation_id;
-      $menu->menu_parent_id = null;
+      $menu->parent_id = null;
     } else {
       $menu->navigation_id = $request->navigation_id;
-      $menu->menu_parent_id = $request->menu_parent_id;
+      $menu->parent_id = $request->menu_parent_id;
     }
 
     $menu->page_id = $request->page_id;
@@ -187,7 +187,7 @@ class MenuController extends Controller
     // dd($menu);
     if ($menu) {
       // Переадресовываем на index
-      return redirect()->action('NavigationController@get_content', ['id' => $menu->id, 'site_alias' => $site_alias, 'item' => 'menu']);
+      return redirect()->action('NavigationController@get_content', ['id' => $menu->id, 'alias' => $alias, 'item' => 'menu']);
     } else {
       $result = [
         'error_status' => 1,
@@ -208,7 +208,7 @@ class MenuController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function edit(Request $request, $site_alias, $id)
+  public function edit(Request $request, $alias, $id)
   {
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -222,8 +222,8 @@ class MenuController extends Controller
     $this->authorize(getmethod(__FUNCTION__), $menu);
 
     $item_id = $id;
-    if (isset($menu->menu_parent_id)) {
-      $item_parent = $menu->menu_parent_id;
+    if (isset($menu->parent_id)) {
+      $item_parent = $menu->parent_id;
     } else {
       $item_parent = $menu->navigation_id;
     }
@@ -247,7 +247,7 @@ class MenuController extends Controller
     ->filials($answer_site) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer_site)
     ->systemItem($answer_site) // Фильтр по системным записям
-    // ->whereSite_alias($site_alias)
+    // ->wherealias($alias)
     ->first();
 
     // dd($site);
@@ -267,17 +267,17 @@ class MenuController extends Controller
 
         // Функция построения дерева из массива от Tommy Lacroix
         // Если нет вложений
-        if (!$item['menu_parent_id']){
+        if (!$item['parent_id']){
           $navigations_tree[$navigation->id]['children'][$id] = &$item;
         } else { 
         // Если есть потомки то перебераем массив
-        $navigation_id[$navigation->id]['children'][$item['menu_parent_id']]['children'][$id] = &$item;
+        $navigation_id[$navigation->id]['children'][$item['parent_id']]['children'][$id] = &$item;
         }
       }
 
       // Записываем даныне навигации
       $navigations_tree[$navigation->id]['id'] = $navigation->id;
-      $navigations_tree[$navigation->id]['navigation_name'] = $navigation->navigation_name;
+      $navigations_tree[$navigation->id]['name'] = $navigation->name;
     }
 
     // dd($navigations_tree);
@@ -292,8 +292,8 @@ class MenuController extends Controller
         if ($item['id'] == $parent) {
           $selected = ' selected';
         }
-        if (isset($item['navigation_name'])) {
-          $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['navigation_name'].'</option>';
+        if (isset($item['name'])) {
+          $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
         } else {
           $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['menu_name'].'</option>';
         }
@@ -339,7 +339,7 @@ class MenuController extends Controller
     return view('navigations.edit-medium', ['menu' => $menu, 'navigation_list' => $navigation_list, 'pages_list' => $pages_list, 'site' => $site]); 
   }
 
-  public function update(MenuRequest $request, $site_alias, $id)
+  public function update(MenuRequest $request, $alias, $id)
   {
 
     // Получаем авторизованного пользователя
@@ -354,9 +354,9 @@ class MenuController extends Controller
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $menu);
     $site_id = $menu->navigation->site_id;
-    $menu->menu_name = $request->menu_name;
-    $menu->menu_alias = $request->menu_alias;
-    $menu->menu_icon = $request->menu_icon;
+    $menu->name = $request->menu_name;
+    $menu->alias = $request->menu_alias;
+    $menu->icon = $request->menu_icon;
 
     // Модерация и системная запись
     $menu->system_item = $request->system_item;
@@ -365,10 +365,10 @@ class MenuController extends Controller
     // Если родителем является навигация
     if ($request->navigation_id == $request->menu_parent_id) {
       $menu->navigation_id = $request->navigation_id;
-      $menu->menu_parent_id = null;
+      $menu->parent_id = null;
     } else {
       $menu->navigation_id = $request->navigation_id;
-      $menu->menu_parent_id = $request->menu_parent_id;
+      $menu->parent_id = $request->menu_parent_id;
     }
     $menu->page_id = $request->page_id;
     $menu->editor_id = $user->id;
@@ -377,7 +377,7 @@ class MenuController extends Controller
     // dd($menu);
     if ($menu) {
       // Переадресовываем на index
-      return redirect()->action('NavigationController@get_content', ['id' => $menu->id, 'site_alias' => $site_alias, 'item' => 'menu']);
+      return redirect()->action('NavigationController@get_content', ['id' => $menu->id, 'alias' => $alias, 'item' => 'menu']);
     } else {
       $result = [
         'error_status' => 1,
@@ -387,7 +387,7 @@ class MenuController extends Controller
   }
 
 
-  public function destroy(Request $request, $site_alias, $id)
+  public function destroy(Request $request, $alias, $id)
   {
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -402,8 +402,8 @@ class MenuController extends Controller
     $user = $request->user();
     $navigation_id = $menu->navigation_id;
     $site_id = $menu->navigation->site_id;
-    if (isset($menu->menu_parent_id)) {
-      $parent_id = $menu->menu_parent_id;
+    if (isset($menu->parent_id)) {
+      $parent_id = $menu->parent_id;
     } else {
       $parent_id = 0;
     };
@@ -415,7 +415,7 @@ class MenuController extends Controller
 
      // Удаляем с обновлением
       if ($menu) {
-        return Redirect('/sites/'.$site_alias.'/current_navigation/'.$navigation_id.'/'.$parent_id);
+        return Redirect('/sites/'.$alias.'/current_navigation/'.$navigation_id.'/'.$parent_id);
       } else {
         abort(403, 'Ошибка при удалении меню');
       };

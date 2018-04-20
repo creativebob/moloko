@@ -7,6 +7,7 @@ use App\User;
 
 use App\Album;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
 
 class AlbumPolicy
 {

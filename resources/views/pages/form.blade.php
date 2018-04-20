@@ -15,23 +15,23 @@
     @endif
     <!-- Страница -->
     <label>Название страницы
-      @include('includes.inputs.string', ['name'=>'page_name', 'value'=>$page->page_name, 'required'=>'required'])
+      @include('includes.inputs.string', ['name'=>'page_name', 'value'=>$page->name, 'required'=>'required'])
     </label>
     <label>Заголовок страницы
-      @include('includes.inputs.string', ['name'=>'page_title', 'value'=>$page->page_title, 'required'=>'required'])
+      @include('includes.inputs.string', ['name'=>'page_title', 'value'=>$page->title, 'required'=>'required'])
     </label>
     <label>Описание страницы
-      @include('includes.inputs.textarea', ['name'=>'page_description', 'value'=>$page->page_description, 'required'=>''])
+      @include('includes.inputs.textarea', ['name'=>'page_description', 'value'=>$page->description, 'required'=>''])
     </label>
     <label>Алиас страницы
-      @include('includes.inputs.text-en', ['name'=>'page_alias', 'value'=>$page->page_alias, 'required'=>'required'])
+      @include('includes.inputs.text-en', ['name'=>'page_alias', 'value'=>$page->alias, 'required'=>'required'])
     </label>
     
-    {{ Form::hidden('site_id', $current_site->id) }}
+    {{ Form::hidden('site_id', $site->id) }}
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
     <label>Контент:
-      {{ Form::textarea('page_content', $page->page_content, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+      {{ Form::textarea('page_content', $page->content, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
     </label>
   </div>
 

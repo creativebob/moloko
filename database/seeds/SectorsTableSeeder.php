@@ -96,10 +96,6 @@ class SectorsTableSeeder extends Seeder
                 'author_id' => 1,
                 // 'industry_id' => 3,
         	],
-        	
-
-
- 
         ]);
     }
 }

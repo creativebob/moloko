@@ -42,6 +42,7 @@
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
   @include('includes.scripts.delete-ajax-script')
+  @include('includes.scripts.upload-file')
 @endsection
 
 

@@ -7,7 +7,7 @@
   @include('includes.scripts.pickmeup-inhead')
 @endsection
 
-@section('title', $page_info->page_name)
+@section('title', $page_info->name)
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 

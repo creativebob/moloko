@@ -16,8 +16,8 @@ class CreateNavigationsTable extends Migration
         Schema::create('navigations', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('navigation_name')->nullable()->comment('Имя категории меню');
-            $table->string('navigation_alias')->nullable()->comment('Алиас категории меню');
+            $table->string('name')->nullable()->comment('Имя категории меню');
+            $table->string('alias')->nullable()->comment('Алиас категории меню');
 
             $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта меню');
             $table->foreign('site_id')->references('id')->on('sites');

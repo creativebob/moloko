@@ -45,6 +45,12 @@ class Album extends Model
 	return $this->belongsTo('App\Company');
 	}
 
+    // Получаем фото
+    public function photos()
+    {
+    return $this->hasMany('App\Photo');
+    }
+
 	// Получаем автора
 	public function author()
 	{
