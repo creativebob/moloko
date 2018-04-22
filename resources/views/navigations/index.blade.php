@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="Меню {{ $site->site_name }}" />
+<meta name="description" content="{{ $page_info->name. ' ' . $site->name }}" />
 {{-- Скрипты меню в шапке --}}
 @include('includes.scripts.menu-inhead')
 @endsection
 
-@section('title', 'Меню '.$site->site_name)
+@section('title', $page_info->title . ' ' . $site->name)
 
-@section('breadcrumbs', Breadcrumbs::render('sections', $page_info, $site))
+@section('breadcrumbs', Breadcrumbs::render('section', $parent_page_info, $site, $page_info))
 
 @section('title-content')
 {{-- Меню --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Navigation::class, 'type' => 'menu'])
+@include('includes.title-content', ['page_info' => $page_info, 'page_alias' => 'sites/'.$site->alias.'/'.$page_info->alias, 'class' => App\Navigation::class, 'type' => 'section-table', 'name' => $site->name])
 @endsection
 
 @section('content')
@@ -43,7 +43,7 @@
   $(function() {
 
   // Берем алиас сайта
-  var siteAlias = '{{ $site_alias }}';
+  var siteAlias = '{{ $alias }}';
 
 
 

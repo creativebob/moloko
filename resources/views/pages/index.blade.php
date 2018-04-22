@@ -6,25 +6,13 @@
   @include('includes.scripts.table-inhead')
 @endsection
 
-@section('title', $page_info->page_name . ' ' . $site->site_name)
+@section('title', $page_info->name . ' ' . $site->name)
 
-@section('breadcrumbs', Breadcrumbs::render('sections', $page_info, $site))
+@section('breadcrumbs', Breadcrumbs::render('section', $parent_page_info, $site, $page_info))
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'page_alias' => 'sites/'.$site->site_alias.'/'.$page_info->page_alias, 'class' => App\Page::class, 'type' => 'table'])
-
-@endsection
-
-@section('breadcrumbs')
-<div class="grid-x breadcrumbs">
-  <div class="small-12 cell"> 
-    <ul>
-      <li><a href="/sites">Сайты</a></li>
-      <li>{{ $site->site_name }}</li>
-    </ul>
-  </div>
-</div>
+@include('includes.title-content', ['page_info' => $page_info, 'page_alias' => 'sites/'.$site->alias.'/'.$page_info->alias, 'class' => App\Page::class, 'type' => 'section-table', 'name' => $site->name])
 @endsection
  
 @section('content')
@@ -48,22 +36,22 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($pages))
         @foreach($pages as $page)
-        <tr class="item @if($page->moderation == 1)no-moderation @endif" id="pages-{{ $page->id }}" data-name="{{ $page->page_name }}">
+        <tr class="item @if($page->moderation == 1)no-moderation @endif" id="pages-{{ $page->id }}" data-name="{{ $page->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $page->id }}"><label class="label-check" for="check-{{ $page->id }}"></label></td>
           <td class="td-page-name">
             @can('update', $page)
-              <a href="/sites/{{ $page->site->site_alias }}/pages/{{ $page->page_alias }}/edit">
+              <a href="/sites/{{ $page->site->alias }}/pages/{{ $page->alias }}/edit">
             @endcan
-            {{ $page->page_name }}
+            {{ $page->name }}
             @can('update', $page)
               </a>
             @endcan
           </td>
-          <td class="td-page-title">{{ $page->page_title }}</td>
-          <td class="td-page-description">{{ $page->page_description }}</td>
-          <td class="td-page-alias">{{ $page->page_alias }}</td>
-          <td class="td-site-id">{{ $page->site->site_name or ' ... ' }}</td>
+          <td class="td-page-title">{{ $page->title }}</td>
+          <td class="td-page-description">{{ $page->description }}</td>
+          <td class="td-page-alias">{{ $page->alias }}</td>
+          <td class="td-site-id">{{ $page->site->name or ' ... ' }}</td>
           <td class="td-page-author">@if(isset($page->author->first_name)) {{ $page->author->first_name . ' ' . $page->author->second_name }} @endif</td>
           <td class="td-delete">
             @if ($page->system_item != 1)
@@ -98,7 +86,7 @@
 <script type="text/javascript">
 $(function() {
   // Берем алиас сайта
-  var siteAlias = '{{ $site_alias }}';
+  var siteAlias = '{{ $alias }}';
  // Мягкое удаление с refresh
   $(document).on('click', '[data-open="item-delete"]', function() {
     // находим описание сущности, id и название удаляемого элемента в родителе

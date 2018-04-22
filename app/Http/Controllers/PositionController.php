@@ -63,13 +63,14 @@ class PositionController extends Controller
 
     // Список посадочных страниц для должности
     $answer_pages = operator_right('pages', false, 'index');
+
     $pages_list = Page::moderatorLimit($answer_pages)
     ->whereSite_id(1) // Только для должностей посадочная страница системного сайта
     // ->companiesLimit($answer_pages)
     ->authors($answer_pages)
     ->systemItem($answer_pages) // Фильтр по системным записям
     ->template($answer_pages)
-    ->pluck('page_name', 'id');
+    ->pluck('name', 'id');
 
     // Список ролей для должности
     $answer_roles = operator_right('roles', false, 'index');
@@ -108,6 +109,7 @@ class PositionController extends Controller
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
+
     return view('positions.create', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info'));  
   }
 
@@ -207,7 +209,7 @@ class PositionController extends Controller
     ->authors($answer_pages)
     ->systemItem($answer_pages) // Фильтр по системным записям
     ->template($answer_pages)
-    ->pluck('page_name', 'id');
+    ->pluck('name', 'id');
 
     // Список ролей для должности
     $answer_roles = operator_right('roles', false, 'index');

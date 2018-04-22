@@ -651,6 +651,9 @@ input[type=checkbox], input[type=radio] {
   border: 1px solid #999999;
   box-shadow: none;
 }
+.inputs input[type=file] {
+  height: 2rem;
+}
 .inputs textarea {
   height: 8rem;
 }
@@ -695,6 +698,11 @@ input[type=checkbox], input[type=radio] {
   margin-top: 4px;
   padding-top: 5px;
   font-size: 0.8rem;
+}
+
+#cke_content-ckeditor {
+  margin-top: 0.25rem;
+  border: 1px solid #999999;
 }
 
 .sprite-input-left {
@@ -848,6 +856,11 @@ input[type=checkbox], input[type=radio] {
   vertical-align: middle;
   width: 25px;
   height: 25px;
+}
+.header .right-head ul li a .avatar {
+  -moz-border-radius: 100%;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
 }
 .header .right-head .dropdown-pane {
   width: 14rem;

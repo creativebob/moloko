@@ -8,8 +8,10 @@ use App\Site;
 
 // Валидация
 use App\Http\Requests\PageRequest;
+
 // Политика
 use App\Policies\PagePolicy;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,17 +22,18 @@ class PageController extends Controller
   protected $entity_name = 'pages';
   protected $entity_dependence = false;
 
-  public function index(Request $request, $site_alias)
+  public function index(Request $request, $alias)
   { 
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Page::class);
 
+    // Получаем сайт
+    $answer_site = operator_right('sites', $this->entity_dependence, getmethod(__FUNCTION__));
+    $site = Site::moderatorLimit($answer_site)->whereAlias($alias)->first();
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-    // Получаем сайт
-    $site = Site::moderatorLimit($answer)->whereSite_alias($site_alias)->first();
 
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
@@ -62,11 +65,14 @@ class PageController extends Controller
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
-    return view('pages.index', compact('pages', 'site', 'page_info', 'site_alias'));
+    // Так как сущность имеет определенного родителя
+    $parent_page_info = pageInfo('sites');
+
+    return view('pages.index', compact('pages', 'site', 'page_info', 'parent_page_info', 'alias'));
   }
 
 
-  public function create(Request $request, $site_alias)
+  public function create(Request $request, $alias)
   {
 
     // Подключение политики
@@ -76,25 +82,24 @@ class PageController extends Controller
     $answer = operator_right('pages', $this->entity_dependence, getmethod(__FUNCTION__));
     $user = $request->user();
 
-    $sites_list = Site::with('site', 'author')
-    ->moderatorLimit($answer)
-    ->companiesLimit($answer)
-    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
-    ->pluck('site_name', 'id');
 
-    $current_site = Site::moderatorLimit($answer)->whereSite_alias($site_alias)->first();
+    // Получаем сайт
+    $answer_site = operator_right('sites', $this->entity_dependence, getmethod('index'));
+    $site = Site::moderatorLimit($answer_site)->whereAlias($alias)->first();
+
     $page = new Page;
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
-    return view('pages.create', compact('page', 'sites_list', 'current_site', 'site_alias', 'page_info'));  
+    // Так как сущность имеет определенного родителя
+    $parent_page_info = pageInfo('sites');
+
+    return view('pages.create', compact('page', 'site', 'alias', 'page_info', 'parent_page_info'));  
   }
 
 
-  public function store(PageRequest $request, $site_alias)
+  public function store(PageRequest $request, $alias)
   {
 
     // Подключение политики
@@ -114,13 +119,14 @@ class PageController extends Controller
     $page->page_title = $request->page_title;
     $page->page_description = $request->page_description;
     $page->page_alias = $request->page_alias;
+    $page->page_content = $request->page_content;
     $page->site_id = $request->site_id;
     $page->company_id = $company_id;
     $page->author_id = $user_id;
     $page->save();
 
     if ($page) {
-      return redirect('/sites/'.$site_alias.'/pages');
+      return redirect('/sites/'.$alias.'/pages');
     } else {
       abort(403, 'Ошибка при записи страницы!');
     };
@@ -133,44 +139,35 @@ class PageController extends Controller
   }
 
 
-  public function edit(Request $request, $site_alias, $page_alias)
+  public function edit(Request $request, $alias, $page_alias)
   {
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
-    $page = Page::with(['site' => function ($query) use ($site_alias) {
-      $query->whereSite_alias($site_alias);
-    }])->moderatorLimit($answer)->wherePage_alias($page_alias)->first();
+    $page = Page::with(['site' => function ($query) use ($alias) {
+      $query->whereAlias($alias);
+    }])->moderatorLimit($answer)->whereAlias($page_alias)->first();
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $page);
-
-    // Получаем из сессии необходимые данные для отображения списка сайтов
-    $answer_sities = operator_right('sities', false, 'index');
-
-    $sites_list = Site::with('site', 'author')
-    ->moderatorLimit($answer_sities)
-    ->companiesLimit($answer_sities)
-    ->filials($answer_sities) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer_sities)
-    ->systemItem($answer_sities) // Фильтр по системным записям
-    ->pluck('site_name', 'id');
-    
-    $current_site = $page->site;
 
     $site = $page->site;
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
-    return view('pages.edit', compact('page', 'sites_list', 'current_site', 'site_alias', 'page_info', 'site'));
+    // Так как сущность имеет определенного родителя
+    $parent_page_info = pageInfo('sites');
+
+
+    return view('pages.edit', compact('page', 'parent_page_info', 'page_info', 'site'));
 
   }
 
 
-  public function update(PageRequest $request, $site_alias, $id)
+  public function update(PageRequest $request, $alias, $id)
   {
 
      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -189,20 +186,21 @@ class PageController extends Controller
     $page->page_title = $request->page_title;
     $page->page_description = $request->page_description;
     $page->page_alias = $request->page_alias;
+    $page->page_content = $request->page_content;
     $page->company_id = $user->company_id;
     $page->site_id = $request->site_id;
     $page->editor_id = $user->id;
     $page->save();
 
     if ($page) {
-      return redirect('/sites/'.$site_alias.'/pages');
+      return redirect('/sites/'.$alias.'/pages');
     } else {
       abort(403, 'Ошибка при записи страницы!');
     };
   }
 
 
-  public function destroy(Request $request, $site_alias, $id)
+  public function destroy(Request $request, $alias, $id)
   {
 
      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -222,7 +220,7 @@ class PageController extends Controller
       // Удаляем страницу с обновлением
       $page = Page::destroy($id);
       if ($page) {
-        return Redirect('/sites/'.$site_alias.'/pages');
+        return Redirect('/sites/'.$alias.'/pages');
       } else {
         abort(403, 'Ошибка при удалении страницы');
       };

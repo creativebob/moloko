@@ -13,9 +13,9 @@ class SitesTableSeeder extends Seeder
     {
 		 DB::table('sites')->insert([
         	[
-		        'site_name' => 'Crm System',
-		        'site_domen' => 'crmsystem.vkmars.ru',
-                'site_alias' => 'crmsystem',
+		        'name' => 'Crm System',
+		        'domen' => 'crmsystem.vkmars.ru',
+                'alias' => 'crmsystem',
 		        'company_id' => null,
                 'author_id' => 1,
                 'system_item' => 1,
@@ -23,9 +23,9 @@ class SitesTableSeeder extends Seeder
                 'api_token' => str_random(60),
         	],
             [
-                'site_name' => 'Ворота "Марс"',
-                'site_domen' => 'vorotamars.ru',
-                'site_alias' => 'vorotamars',
+                'name' => 'Ворота "Марс"',
+                'domen' => 'vorotamars.ru',
+                'alias' => 'vorotamars',
                 'company_id' => 1,
                 'author_id' => 4,
                 'system_item' => null,
@@ -33,9 +33,9 @@ class SitesTableSeeder extends Seeder
                 'api_token' => 'rqjl8HY4vh4EpU211BBaxT1zjooIv5k3s6uzaU0nE6xpeUtpe2n6ioBtpriu',
             ],
             [
-                'site_name' => 'Ибаный',
-                'site_domen' => 'lol.ru',
-                'site_alias' => 'lol',
+                'name' => 'Ибаный',
+                'domen' => 'lol.ru',
+                'alias' => 'lol',
                 'company_id' => 1,
                 'author_id' => 7,
                 'system_item' => null,
@@ -43,9 +43,9 @@ class SitesTableSeeder extends Seeder
                 'api_token' => str_random(60),
             ],
             [
-                'site_name' => 'Фенстер',
-                'site_domen' => 'f-okna.ru',
-                'site_alias' => 'f-okna',
+                'name' => 'Фенстер',
+                'domen' => 'f-okna.ru',
+                'alias' => 'f-okna',
                 'company_id' => 2,
                 'author_id' => 14,
                 'system_item' => null,

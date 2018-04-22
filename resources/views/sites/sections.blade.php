@@ -4,9 +4,9 @@
   @include('includes.scripts.table-inhead')
 @endsection
 
-@section('title', $site->site_name)
+@section('title', $site->name)
 
-@section('breadcrumbs', Breadcrumbs::render('site-sections', $page_info, $site))
+@section('breadcrumbs', Breadcrumbs::render('sections', $page_info, $site))
 
 @section('title-content')
 {{-- Таблица --}}
@@ -14,7 +14,7 @@
   <div class="sticky sticky-topbar" id="head-sticky" data-sticky-on="small" data-sticky data-margin-top="2.4" data-top-anchor="head-content:top">
 	  <div class="top-bar head-content">
 	    <div class="top-bar-left">
-	      <h2 class="header-content">{{ $site->site_name }}</h2>
+	      <h2 class="header-content">{{ $site->name }}</h2>
 	    </div>
 	    <div class="top-bar-right">
 	      <a class="icon-filter sprite"></a>
@@ -76,7 +76,7 @@
         <tr class="parent" id="sites-{{ $site->id }}" data-name="{{ $site->site_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"><label class="label-check" for="check-{{ $site->id }}"></label></td>
-          <td class="td-menu-name"><a href="/sites/{{ $site->site_alias }}/{{ $menu->menu_alias }}">{{ $menu->menu_name }}</a></td>
+          <td class="td-menu-name"><a href="/sites/{{ $site->alias }}/{{ $menu->alias }}">{{ $menu->name }}</a></td>
           <td class="td-site-author">@if(isset($site->author->first_name)) {{ $site->author->first_name . ' ' . $site->author->second_name }} @endif</td>
           <td class="td-delete">
             @if (isset($site->company_id))

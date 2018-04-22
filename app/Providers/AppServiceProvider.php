@@ -56,11 +56,11 @@ class AppServiceProvider extends ServiceProvider
           $sidebar_tree = [];
           foreach ($sidebar_id as $id => &$node) {   
             // Если нет вложений
-            if (!$node['menu_parent_id']){
+            if (!$node['parent_id']){
               $sidebar_tree[$id] = &$node;
             } else { 
             // Если есть потомки то перебераем массив
-              $sidebar_id[$node['menu_parent_id']]['children'][$id] = &$node;
+              $sidebar_id[$node['parent_id']]['children'][$id] = &$node;
             }
           };
 

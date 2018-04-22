@@ -15,12 +15,12 @@ class CreateMenusTable extends Migration
   {
     Schema::create('menus', function (Blueprint $table) {
       $table->increments('id');
-      $table->string('menu_name')->nullable()->comment('Имя категории меню');
-      $table->string('menu_icon')->nullable()->comment('Имя иконки меню');
-      $table->string('menu_alias')->nullable()->comment('Ссылка на страницу');
+      $table->string('name')->nullable()->comment('Имя категории меню');
+      $table->string('icon')->nullable()->comment('Имя иконки меню');
+      $table->string('alias')->nullable()->comment('Ссылка на страницу');
 
-      $table->integer('menu_parent_id')->unsigned()->nullable()->comment('Id родителя пункта меню');
-      $table->foreign('menu_parent_id')->references('id')->on('menus');
+      $table->integer('parent_id')->unsigned()->nullable()->comment('Id родителя пункта меню');
+      $table->foreign('parent_id')->references('id')->on('menus');
 
       $table->integer('navigation_id')->unsigned()->nullable()->comment('Id названия меню');
       $table->foreign('navigation_id')->references('id')->on('navigations');

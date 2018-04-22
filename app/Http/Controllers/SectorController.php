@@ -7,8 +7,10 @@ use App\Sector;
 
 // Валидация
 use App\Http\Requests\SectorRequest;
+
 // Политика
 use App\Policies\SectorPolicy;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

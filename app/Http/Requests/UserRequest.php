@@ -35,7 +35,7 @@ class UserRequest extends FormRequest
             'second_name' => 'string|max:255|nullable', 
             'patronymic' => 'string|max:255|nullable', 
 
-            'sex' => 'required', 
+            'sex' => 'nullable', 
             'birthday' => 'date|after:01.01.1940|nullable', 
 
             'phone' => 'string|max:17|required', 

@@ -1,5 +1,5 @@
 @if (isset($sidebar['children']))
-<li><a data-link="{{ $sidebar['id'] }}"><span>{{ $sidebar['menu_name'] }}</span></a>
+<li><a data-link="{{ $sidebar['id'] }}"><span>{{ $sidebar['name'] }}</span></a>
 	  @if (isset($sidebar['children']))
 	    <ul class="menu vertical nested">
 	      @foreach($sidebar['children'] as $sidebar)
@@ -12,7 +12,7 @@
 @else
 	{{-- Если конечный пункт --}}
 	<li>
-		<a href="/{{ $sidebar['menu_alias'] }}" data-link="{{ $sidebar['id'] }}">{{ $sidebar['menu_name'] }}</a>
+		<a href="/{{ $sidebar['alias'] }}" data-link="{{ $sidebar['id'] }}">{{ $sidebar['name'] }}</a>
 	</li>
 @endif
 

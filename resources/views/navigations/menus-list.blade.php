@@ -1,8 +1,8 @@
 @if (isset($menu['children']))
-<li class="medium-item item @if (isset($navigation['menus'])) parent @endif" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['menu_name'] }}">
+<li class="medium-item item @if (isset($navigation['menus'])) parent @endif" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['name'] }}">
 	<a class="medium-link">
 		<div class="icon-open sprite"></div>
-		<span>{{ $menu['menu_name'] }}</span>
+		<span>{{ $menu['name'] }}</span>
 		<span class="number">
 			@if (isset($menu['children']))
 			{{ count($menu['children']) }}
@@ -53,9 +53,9 @@
 </li>
 @else
 {{-- Конечный --}}
-<li class="medium-as-last item" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['menu_name'] }}">
+<li class="medium-as-last item" id="menus-{{ $menu['id'] }}" data-name="{{ $menu['name'] }}">
 	<a class="medium-as-last-link">
-		<span>{{ $menu['menu_name'] }}</span>
+		<span>{{ $menu['name'] }}</span>
 		@if ($menu['moderation'])
 		<span class="no-moderation">Не отмодерированная запись!</span>
 		@endif
