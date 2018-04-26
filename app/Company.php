@@ -123,4 +123,11 @@ class Company extends Model
     return $this->belongsTo('App\Sector');
   }
 
+  // Получаем 
+  public function worktime()
+  {
+    return $this->belongsTo('App\Worktime');
+  }
+
+
 }

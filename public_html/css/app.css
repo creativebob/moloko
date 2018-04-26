@@ -1080,6 +1080,18 @@ input[type=checkbox], input[type=radio] {
   max-width: 10px !important;
 }
 
+.worktime_edit {
+  width: 0;
+}
+
+.worktime_edit input.time-field {
+  margin-bottom: 0rem;
+}
+
+.time-field {
+  width: 60px;
+}
+
 .task-manager {
   position: fixed;
   right: 0;

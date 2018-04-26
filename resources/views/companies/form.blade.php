@@ -7,7 +7,8 @@
       <ul class="tabs-list" data-tabs id="tabs">
         <li class="tabs-title is-active"><a href="#content-panel-1" aria-selected="true">Общая информация</a></li>
         <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Реквизиты</a></li>
-        <li class="tabs-title"><a data-tabs-target="content-panel-3" href="#content-panel-3">Настройка</a></li>
+        <li class="tabs-title"><a data-tabs-target="content-panel-3" href="#content-panel-3">График работы</a></li>
+        <li class="tabs-title"><a data-tabs-target="content-panel-4" href="#content-panel-4">Настройка</a></li>
       </ul>
     </div>
   </div>
@@ -129,35 +130,149 @@
 
         <!-- Реквизиты -->
         <div class="tabs-panel" id="content-panel-3">
+
+            <div class="grid-x grid-padding-x">
+              <div class="small-12 medium-6 cell">
+
+              <table class="worktime_edit unstriped stack">
+                <tr>
+                  <td>Понедельник</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
+                    </div>
+                  </td>
+                  <td>-</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->kpp, 'name'=>'kpp', 'required'=>''])
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Вторник</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
+                    </div>
+                  </td>
+                  <td>-</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->kpp, 'name'=>'kpp', 'required'=>''])
+                    </divtime                  </td>
+                </tr>
+                <tr>
+                  <td>Среда</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
+                    </div>
+                  </td>
+                  <td>-</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->kpp, 'name'=>'kpp', 'required'=>''])
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Четверг</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
+                    </div>
+                  </td>
+                  <td>-</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->kpp, 'name'=>'kpp', 'required'=>''])
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Пятница</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
+                    </div>
+                  </td>
+                  <td>-</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->kpp, 'name'=>'kpp', 'required'=>''])
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Суббота</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
+                    </div>
+                  </td>
+                  <td>-</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->kpp, 'name'=>'kpp', 'required'=>''])
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Воскресенье</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
+                    </div>
+                  </td>
+                  <td>-</td>
+                  <td>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.time', ['value'=>$company->kpp, 'name'=>'kpp', 'required'=>''])
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+             </div>
+            </div>
+        </div>
+
+
+        <!-- Реквизиты -->
+        <div class="tabs-panel" id="content-panel-4">
             <div class="grid-x grid-padding-x"> 
               <div class="small-12 medium-6 cell">
                 <label>Алиас
                   @include('includes.inputs.alias', ['value'=>$company->company_alias, 'name'=>'company_alias', 'required'=>''])
                 </label>
               </div>
+
+                {{-- Чекбокс модерации --}}
+                @can ('moderator', $company)
+                  @if ($company->moderation == 1)
+                    <div class="small-12 cell checkbox">
+                      @include('includes.inputs.moderation', ['value'=>$company->moderation, 'name'=>'moderation'])
+                    </div>
+                  @endif
+                @endcan
+
+                {{-- Чекбокс системной записи --}}
+                @can ('god', $company)
+                  <div class="small-12 cell checkbox">
+                    @include('includes.inputs.system', ['value'=>$company->system_item, 'name'=>'system_item']) 
+                  </div>
+                @endcan 
+
+
             </div>
+
         </div>
 
       </div>
     </div>
     <div class="small-12 medium-5 large-7 cell tabs-margin-top">
     </div>
-
-    {{-- Чекбокс модерации --}}
-    @can ('moderator', $company)
-      @if ($company->moderation == 1)
-        <div class="small-12 cell checkbox">
-          @include('includes.inputs.moderation', ['value'=>$company->moderation, 'name'=>'moderation'])
-        </div>
-      @endif
-    @endcan
-
-    {{-- Чекбокс системной записи --}}
-    @can ('god', $company)
-      <div class="small-12 cell checkbox">
-        @include('includes.inputs.system', ['value'=>$company->system_item, 'name'=>'system_item']) 
-      </div>
-    @endcan 
     
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}
