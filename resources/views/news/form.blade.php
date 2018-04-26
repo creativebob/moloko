@@ -40,7 +40,7 @@
       {{ Form::file('photo') }}
     </label>
     <div class="text-center">
-      <img id="photo" @if (isset($cur_news->photo_id)) src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/{{ $cur_news->photo->name }}" @endif>
+      <img id="photo" @if (isset($cur_news->photo_id)) src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/original/{{ $cur_news->photo->name }}" @endif>
     </div>
     <label>Алиас новости
       @include('includes.inputs.text-en', ['name'=>'alias', 'value'=>$cur_news->alias, 'required'=>'required'])
@@ -55,6 +55,23 @@
     <label>Контент:
       {{ Form::textarea('content', $cur_news->сontent, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
     </label>
+    <table class="table-content tabs-margin-top">
+      <caption>Прикрепленные альбомы</caption>
+      <thead>
+        <tr>
+          <th>Альбом</th>
+          <th>Категория</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @include('news.albums', $cur_news)
+      </tbody>
+    </table>
+    {{ Form::hidden('cur_news_id', $cur_news->id, ['id' => 'cur-news-id']) }}
+    <div class="text-center">
+      <a class="button tabs-margin-top" data-open="albums">Прикрепить альбом</a>
+    </div>
   </div>
 
   {{-- Чекбокс модерации --}}
@@ -73,14 +90,40 @@
   </div>
   @endcan
 
-
-<!--   <div class="small-12 cell checkbox">
-
+  <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
+    {{ Form::submit($submitButtonText, ['class'=>'button']) }}
   </div>
--->
-
-<div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-  {{ Form::submit($submitButtonText, ['class'=>'button']) }}
 </div>
+
+
+<div class="reveal" id="albums" data-reveal data-close-on-click="false">
+  <div class="grid-x">
+    <div class="small-12 cell modal-title">
+      <h5>ДОБАВЛЕНИЕ филиала</h5>
+    </div>
+  </div>
+  {{ Form::open(['id'=>'form-album-add', 'data-abide', 'novalidate']) }}
+  <div class="grid-x grid-padding-x align-center modal-content inputs">
+    <div class="small-10 cell">
+      <label>Выберите категорию альбома
+        <select name="albums_category_id" id="albums-categories-select">
+          @php
+          echo $albums_categories_list;
+          @endphp
+        </select>
+      </label>
+      <label>Выберите альбом
+        <select name="album_id" id="albums-select" disabled>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="grid-x align-center">
+    <div class="small-6 medium-4 cell text-center">
+      {{ Form::submit('Добавить альбом', ['data-close', 'class'=>'button modal-button']) }}
+    </div>
+  </div>
+  {{ Form::close() }}
+  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 

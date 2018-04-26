@@ -100,4 +100,10 @@ class News extends Model
     return $this->belongsTo('App\User', 'author_id');
   }
 
+  // Получаем альбом
+  public function albums()
+  {
+     return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'news');
+  }
+
 }

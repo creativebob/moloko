@@ -26,10 +26,10 @@ class CreatePhotosTable extends Migration
             $table->string('path')->nullable()->comment('Путь к фото');
             $table->string('alias')->nullable()->comment('Алиас фото');
 
-            $table->integer('width')->comment('Ширина фото');
-            $table->integer('height')->comment('Высота фото');
-            $table->decimal('size', 10, 2)->comment('Размер фото');
-            $table->string('extension')->comment('Расширение фото');
+            $table->integer('width')->nullable()->comment('Ширина фото');
+            $table->integer('height')->nullable()->comment('Высота фото');
+            $table->decimal('size', 10, 2)->nullable()->comment('Размер фото');
+            $table->string('extension')->nullable()->comment('Расширение фото');
 
             $table->integer('photo_access')->nullable()->unsigned()->comment('0 - личный, 1 - публичный');
             

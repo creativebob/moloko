@@ -54,7 +54,7 @@
           <td class="td-news-preview">{{ str_limit($cur_news->preview, 50) }}</td>
           <td class="td-news-photo">
           @if (isset($cur_news->photo_id))
-            <img src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/{{ $cur_news->photo->name }}">
+            <img src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/small/{{ $cur_news->photo->name }}">
           @else
             Нет превью
           @endif</td>

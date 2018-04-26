@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use App\News;
 use App\Site;
 use App\Photo;
+use App\AlbumsCategory;
+use App\AlbumEntity;
 
 // Валидация
 use App\Http\Requests\NewsRequest;
@@ -16,6 +18,8 @@ use App\Policies\NewsPolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+use Intervention\Image\ImageManagerStatic as Image;
 
 class NewsController extends Controller
 {
@@ -88,13 +92,74 @@ class NewsController extends Controller
 
     $cur_news = new News;
 
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer_albums_categories = operator_right('albums_categories', false, 'index');
+
+        // Главный запрос
+    $albums_categories = AlbumsCategory::moderatorLimit($answer_albums_categories)
+    ->orderBy('sort', 'asc')
+    ->get(['id','name','category_status','parent_id'])
+    ->keyBy('id')
+    ->toArray();
+
+        // Формируем дерево вложенности
+    $albums_categories_cat = [];
+    foreach ($albums_categories as $id => &$node) { 
+
+          // Если нет вложений
+      if (!$node['parent_id']) {
+        $albums_categories_cat[$id] = &$node;
+      } else { 
+
+          // Если есть потомки то перебераем массив
+        $albums_categories[$node['parent_id']]['children'][$id] = &$node;
+      };
+
+    };
+
+        // dd($albums_categories_cat);
+
+        // Функция отрисовки option'ов
+    function tplMenu($albums_category, $padding) {
+
+      if ($albums_category['category_status'] == 1) {
+        $menu = '<option value="'.$albums_category['id'].'" class="first">'.$albums_category['name'].'</option>';
+      } else {
+        $menu = '<option value="'.$albums_category['id'].'">'.$padding.' '.$albums_category['name'].'</option>';
+      }
+
+            // Добавляем пробелы вложенному элементу
+      if (isset($albums_category['children'])) {
+        $i = 1;
+        for($j = 0; $j < $i; $j++){
+          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+        }     
+        $i++;
+
+        $menu .= showCat($albums_category['children'], $padding);
+      }
+      return $menu;
+    }
+        // Рекурсивно считываем наш шаблон
+    function showCat($data, $padding){
+      $string = '';
+      $padding = $padding;
+      foreach($data as $item){
+        $string .= tplMenu($item, $padding);
+      }
+      return $string;
+    }
+
+        // Получаем HTML разметку
+    $albums_categories_list = showCat($albums_categories_cat, '');
+
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
     // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('sites');
 
-    return view('news.create', compact('cur_news', 'site', 'alias', 'page_info', 'parent_page_info'));  
+    return view('news.create', compact('cur_news', 'site', 'alias', 'page_info', 'parent_page_info', 'albums_categories_list'));  
   }
 
   public function store(Request $request, $alias)
@@ -160,7 +225,31 @@ class NewsController extends Controller
       $photo->author_id = $user_id;
       $photo->save();
 
-      $upload_success = $image->storeAs($directory, $image_name, 'public');
+      $upload_success = $image->storeAs($directory.'/original', $image_name, 'public');
+
+      // $small = Image::make($request->photo)->grab(150, 99);
+      $small = Image::make($request->photo)->widen(150);
+      $save_path = storage_path('app/public/'.$directory.'/small');
+      if (!file_exists($save_path)) {
+        mkdir($save_path, 666, true);
+      }
+      $small->save(storage_path('app/public/'.$directory.'/small/'.$image_name));
+
+      // $medium = Image::make($request->photo)->grab(900, 596);
+      $medium = Image::make($request->photo)->widen(900);
+      $save_path = storage_path('app/public/'.$directory.'/medium');
+      if (!file_exists($save_path)) {
+        mkdir($save_path, 666, true);
+      }
+      $medium->save(storage_path('app/public/'.$directory.'/medium/'.$image_name));
+
+      // $large = Image::make($request->photo)->grab(1200, 795);
+      $large = Image::make($request->photo)->widen(1200);
+      $save_path = storage_path('app/public/'.$directory.'/large');
+      if (!file_exists($save_path)) {
+        mkdir($save_path, 666, true);
+      }
+      $large->save(storage_path('app/public/'.$directory.'/large/'.$image_name));
 
       $cur_news->photo_id = $photo->id;
       $cur_news->save();
@@ -196,7 +285,7 @@ class NewsController extends Controller
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
-    $cur_news = News::with(['site' => function ($query) use ($alias) {
+    $cur_news = News::with(['albums.albums_category', 'site' => function ($query) use ($alias) {
       $query->whereAlias($alias);
     }])->moderatorLimit($answer)->whereAlias($news_alias)->first();
 
@@ -205,13 +294,76 @@ class NewsController extends Controller
 
     $site = $cur_news->site;
 
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer_albums_categories = operator_right('albums_categories', false, 'index');
+
+        // Главный запрос
+    $albums_categories = AlbumsCategory::moderatorLimit($answer_albums_categories)
+    ->orderBy('sort', 'asc')
+    ->get(['id','name','category_status','parent_id'])
+    ->keyBy('id')
+    ->toArray();
+
+        // Формируем дерево вложенности
+    $albums_categories_cat = [];
+    foreach ($albums_categories as $id => &$node) { 
+
+          // Если нет вложений
+      if (!$node['parent_id']) {
+        $albums_categories_cat[$id] = &$node;
+      } else { 
+
+          // Если есть потомки то перебераем массив
+        $albums_categories[$node['parent_id']]['children'][$id] = &$node;
+      };
+
+    };
+
+        // dd($albums_categories_cat);
+
+        // Функция отрисовки option'ов
+    function tplMenu($albums_category, $padding) {
+
+      if ($albums_category['category_status'] == 1) {
+        $menu = '<option value="'.$albums_category['id'].'" class="first">'.$albums_category['name'].'</option>';
+      } else {
+        $menu = '<option value="'.$albums_category['id'].'">'.$padding.' '.$albums_category['name'].'</option>';
+      }
+
+            // Добавляем пробелы вложенному элементу
+      if (isset($albums_category['children'])) {
+        $i = 1;
+        for($j = 0; $j < $i; $j++){
+          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+        }     
+        $i++;
+
+        $menu .= showCat($albums_category['children'], $padding);
+      }
+      return $menu;
+    }
+        // Рекурсивно считываем наш шаблон
+    function showCat($data, $padding){
+      $string = '';
+      $padding = $padding;
+      foreach($data as $item){
+        $string .= tplMenu($item, $padding);
+      }
+      return $string;
+    }
+
+        // Получаем HTML разметку
+    $albums_categories_list = showCat($albums_categories_cat, '');
+
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
     // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('sites');
 
-    return view('news.edit', compact('cur_news', 'parent_page_info', 'page_info', 'site'));
+    // dd($cur_news);
+
+    return view('news.edit', compact('cur_news', 'parent_page_info', 'page_info', 'site', 'albums_categories_list'));
   }
 
   public function update(Request $request, $alias, $id)
@@ -258,7 +410,31 @@ class NewsController extends Controller
       $photo->author_id = $user_id;
       $photo->save();
 
-      $upload_success = $image->storeAs($directory, $image_name, 'public');
+      $upload_success = $image->storeAs($directory.'/original', $image_name, 'public');
+
+      // $small = Image::make($request->photo)->grab(150, 99);
+      $small = Image::make($request->photo)->widen(150);
+      $save_path = storage_path('app/public/'.$directory.'/small');
+      if (!file_exists($save_path)) {
+        mkdir($save_path, 666, true);
+      }
+      $small->save(storage_path('app/public/'.$directory.'/small/'.$image_name));
+
+      // $medium = Image::make($request->photo)->grab(900, 596);
+      $medium = Image::make($request->photo)->widen(900);
+      $save_path = storage_path('app/public/'.$directory.'/medium');
+      if (!file_exists($save_path)) {
+        mkdir($save_path, 666, true);
+      }
+      $medium->save(storage_path('app/public/'.$directory.'/medium/'.$image_name));
+
+      // $large = Image::make($request->photo)->grab(1200, 795);
+      $large = Image::make($request->photo)->widen(1200);
+      $save_path = storage_path('app/public/'.$directory.'/large');
+      if (!file_exists($save_path)) {
+        mkdir($save_path, 666, true);
+      }
+      $large->save(storage_path('app/public/'.$directory.'/large/'.$image_name));
 
       $cur_news->photo_id = $photo->id;
     }
@@ -330,5 +506,51 @@ class NewsController extends Controller
     } else {
       return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
     }
+  }
+
+  public function album_store(Request $request)
+  {
+    // Подключение политики
+    $this->authorize(getmethod('store'), News::class);
+
+    $news_album = new AlbumEntity;
+    $news_album->album_id = $request->album_id;
+    $news_album->entity_id = cur_news_id;
+    $news_album->entity = 'news';
+    $news_album->save();
+
+    if ($news_album) {
+      // Переадресовываем на index
+      return redirect()->action('NewsController@get_albums', ['cur_news_id' => $news_album->entity_id]);
+    } else {
+      $result = [
+        'error_status' => 1,
+        'error_message' => 'Ошибка при записи!'
+      ];
+    }
+  }
+
+  public function get_albums(Request $request)
+  {
+    // Подключение политики
+    $this->authorize(getmethod('index'), News::class);
+
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+    // -------------------------------------------------------------------------------------------
+    // ГЛАВНЫЙ ЗАПРОС
+    // -------------------------------------------------------------------------------------------
+    $cur_news = News::with('albums.albums_category')
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
+    ->whereId($request->cur_news_id) // Только для страниц сайта
+    ->first();
+
+     // Отдаем Ajax
+    return view('news.albums', ['cur_news' => $cur_news]);
+
   }
 }

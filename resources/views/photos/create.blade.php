@@ -38,12 +38,31 @@
 @include('includes.scripts.pickmeup-script')
 @include('includes.scripts.upload-file')
 <script>
+	var minImageWidth = 1200,
+  minImageHeight = 795;
 	Dropzone.options.myDropzone = {
 		paramName: 'photo',
-    maxFilesize: 5, // MB
+    maxFilesize: 8, // MB
     maxFiles: 20,
     acceptedFiles: ".jpeg,.jpg,.png,.gif",
     addRemoveLinks: true,
+    init: function() {
+    	this.on("success", function(file, responseText) {
+    		file.previewTemplate.setAttribute('id',responseText[0].id);
+    	});
+    	this.on("thumbnail", function(file) {
+    		if (file.width < minImageWidth || file.height < minImageHeight) {
+    			file.rejectDimensions()
+    		}
+    		else {
+    			file.acceptDimensions();
+    		}
+    	});
+    },
+    accept: function(file, done) {
+    	file.acceptDimensions = done;
+    	file.rejectDimensions = function() { done("Размер фото мал, нужно минимум 1200 px в ширину"); };
+    }
   };
 </script>
 @endsection

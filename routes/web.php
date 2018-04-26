@@ -63,6 +63,8 @@ Route::prefix('/albums/{alias}')->group(function () {
   // Загрузка фоток через ajax через dropzone.js
 });
 
+// Получение альбомов по категории
+Route::any('/albums_list', 'AlbumController@albums_list')->middleware('auth');
 
 
 

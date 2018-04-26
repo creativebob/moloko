@@ -26,6 +26,8 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
+use Intervention\Image\ImageManagerStatic as Image;
+
 class UserController extends Controller
 {
 
@@ -207,14 +209,14 @@ class UserController extends Controller
         // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'documents';
         // Storage::makeDirectory($link_for_folder);
 
-      $company_id = $user_auth->company_id;
-      if ($user_auth->god == 1) {
+        $company_id = $user_auth->company_id;
+        if ($user_auth->god == 1) {
       // Если бог, то ставим автором робота
-        $user_id = 1;
-        $company_id = null;
-      } else {
-        $user_id = $user_auth->id;
-      }
+          $user_id = 1;
+          $company_id = null;
+        } else {
+          $user_id = $user_auth->id;
+        }
 
         if ($request->hasFile('photo')) {
           $photo = new Photo;
@@ -224,21 +226,30 @@ class UserController extends Controller
           $photo->extension = $extension;
           $image_name = 'avatar.'.$extension;
 
-          $photo->path = '/'.$directory.'/'.$image_name;
+          // $photo->path = '/'.$directory.'/'.$image_name;
 
           $params = getimagesize($request->file('photo'));
           $photo->width = $params[0];
           $photo->height = $params[1];
 
           $size = filesize($request->file('photo'))/1024;
-          $photo->size = number_format($size, 2, '.', ' ');
+          $photo->size = number_format($size, 2, '.', '');
 
           $photo->name = $image_name;
           $photo->company_id = $company_id;
           $photo->author_id = $user_id;
           $photo->save();
 
-          $upload_success = $image->storeAs($directory, $image_name, 'public');
+          $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
+
+          $avater = Image::make($request->photo)->widen(30);
+          $save_path = storage_path('app/public/'.$directory);
+          if (!file_exists($save_path)) {
+            mkdir($save_path, 666, true);
+          }
+          $avater->save(storage_path('app/public/'.$directory.'/'.$image_name));
+
+          
 
           $user->photo = $photo->path;
           $user->photo_id = $photo->id;
@@ -306,39 +317,46 @@ class UserController extends Controller
 
 
         $company_id = $user_auth->company_id;
-      if ($user_auth->god == 1) {
+        if ($user_auth->god == 1) {
       // Если бог, то ставим автором робота
-        $user_id = 1;
-        $company_id = null;
-      } else {
-        $user_id = $user_auth->id;
-      }
+          $user_id = 1;
+          $company_id = null;
+        } else {
+          $user_id = $user_auth->id;
+        }
 
         if ($request->hasFile('photo')) {
           $photo = new Photo;
           $image = $request->file('photo');
-          $directory = $user_auth->company->company_alias.'/media/albums/'.$user_auth->login;
+          $directory = $user_auth->company->id.'/media/albums/'.$user_auth->login;
           $extension = $image->getClientOriginalExtension();
           $photo->extension = $extension;
           $image_name = 'avatar.'.$extension;
 
-          $photo->path = '/storage/'.$directory.'/'.$image_name;
+          // $photo->path = '/'.$directory.'/'.$image_name;
 
           $params = getimagesize($request->file('photo'));
           $photo->width = $params[0];
           $photo->height = $params[1];
 
           $size = filesize($request->file('photo'))/1024;
-          $photo->size = number_format($size, 2, ',', ' ');
+          $photo->size = number_format($size, 2, '.', '');
 
           $photo->name = $image_name;
           $photo->company_id = $company_id;
           $photo->author_id = $user_id;
           $photo->save();
 
-          $upload_success = $image->storeAs($directory, $image_name, 'public');
+          $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
 
-          $user->photo = $photo->path;
+          $avater = Image::make($request->photo)->widen(30);
+          $save_path = storage_path('app/public/'.$directory);
+          if (!file_exists($save_path)) {
+            mkdir($save_path, 666, true);
+          }
+          $avater->save(storage_path('app/public/'.$directory.'/'.$image_name));
+
+          // $user->photo = $photo->path;
           $user->photo_id = $photo->id;
         }   
 

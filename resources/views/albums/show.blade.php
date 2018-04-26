@@ -88,7 +88,7 @@
             ><label class="label-check" for="check-{{ $photo->id }}"></label></td>
             <td class="td-photo">
               <a href="/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit">
-                <img src="/storage/{{ $photo->company->id }}/media/albums/{{ $album->id }}/{{ $photo->name }}" alt="Фотография альбома">
+                <img src="/storage/{{ $photo->company->id }}/media/albums/{{ $album->id }}/small/{{ $photo->name }}" alt="Фотография альбома">
               </a>
             </td>
             <td class="td-photo-link">{{ url('/storage/'.$photo->company->id.'/media/albums/'.$album->id.'/'.$photo->name) }}</td>

@@ -105,11 +105,11 @@ class AlbumController extends Controller
 
         $album = new Album;
 
-         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('albums_categories', false, 'index');
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_albums_categories = operator_right('albums_categories', false, 'index');
 
         // Главный запрос
-        $albums_categories = AlbumsCategory::moderatorLimit($answer)
+        $albums_categories = AlbumsCategory::moderatorLimit($answer_albums_categories)
         ->orderBy('sort', 'asc')
         ->get(['id','name','category_status','parent_id'])
         ->keyBy('id')
@@ -463,4 +463,25 @@ class AlbumController extends Controller
       abort(403, 'Сайт не найден');
     }
   }
+
+    // Список секторов
+  public function albums_list(Request $request)
+  {
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+
+    // Главный запрос
+    $albums = Album::moderatorLimit($answer)
+    ->where('albums_category_id', $request->id)
+    ->get();
+
+   $albums_list = '';
+   foreach ($albums as $album) {
+      $albums_list = $albums_list . '<option value="'.$album->id.'">'.$album->name.'</option>';
+   }
+   
+    // Отдаем ajax
+    echo $albums_list;
   }
+
+}

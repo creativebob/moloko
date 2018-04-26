@@ -261,5 +261,10 @@ class User extends Authenticatable
     return $this->belongsTo('App\City');
   }
 
+  public function avatar()
+  {
+    return $this->belongsTo('App\Photo', 'photo_id', 'id');
+  }
+
 
 }
