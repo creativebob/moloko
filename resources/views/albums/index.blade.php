@@ -27,6 +27,7 @@
           <th>Обложка</th>
           <th class="td-album-name">Название альбомa</th>
           <th class="td-album-edit">Редактировать</th>
+          <th class="td-album-category">Категория</th>
           <th class="td-album-description">Описание</th>
           <th class="td-album-date">Сведения</th>
           <th class="td-album-company-id">Компания</th>
@@ -39,7 +40,7 @@
       @if(!empty($albums))
 
         @foreach($albums as $album)
-        <tr class="item @if($album->moderation == 1)no-moderation @endif" id="albums-{{ $album->id }}" data-name="{{ $album->album_name }}">
+        <tr class="item @if($album->moderation == 1)no-moderation @endif" id="albums-{{ $album->id }}" data-name="{{ $album->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
 
@@ -49,22 +50,32 @@
               @endif
             @endif 
             ><label class="label-check" for="check-{{ $album->id }}"></label></td>
-          <td><img src="{{ $album->album_avatar }}" alt="Фотография альбома"></td>
-          <td class="td-album-name"><a href="/albums/{{ $album->alias }}/photos">{{ $album->name }}</a></td>
+          <td>
+            <a href="/albums/{{ $album->alias }}">
+              @if (isset($album->avatar))
+              <img src="/storage/{{ $album->company->id }}/media/albums/{{ $album->id }}/{{ $album->avatar }}" alt="{{ $album->name }}">
+              @else
+              нет фото
+              @endif
+            </a>
+          </td>
+          <td class="td-album-name"><a href="/albums/{{ $album->alias }}">{{ $album->name }}</a></td>
           <td class="td-album-edit"><a class="tiny button" href="/albums/{{ $album->alias }}/edit">Редактировать</a></td>
-          <td class="td-album-description">{{ $album->album_description }}</td>
+          <td class="td-album-category">{{ $album->albums_category->name }}</td>
+          <td class="td-album-description">{{ $album->description }}</td>
           <td class="td-album-extra-info">
-            <span>ID альбома: {{ $album->id }}</span><br>
-            <span>Доступ: {{ $album->album_access }}</span><br>
-            <span>Кол-во фотографий: {{ 3  }}</span><br>
-            <span>Дата создания: {{ date('d.m.Y', strtotime($album->created_at)) }}</span><br>
-            <span>Размер, Mb: {{ 56.23 }}</span><br>
+            <ul>
+              <li>Доступ: {{ $album->access == 1 ? 'Личный' : 'Общий' }}</li>
+              <li>Кол-во фотографий: {{ $album->photos_count }}</li>
+              <li>Дата создания: {{ date('d.m.Y', strtotime($album->created_at)) }}</li>
+              <li>Размер, Мб: {{ $album->photos->sum('size')/1024 }}</li>
+            </ul>
           </td>
           <td class="td-album-company-id">@if(!empty($album->company->company_name)) {{ $album->company->company_name }} @else @if($album->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-album-author">@if(isset($album->author->first_name)) {{ $album->author->first_name . ' ' . $album->author->second_name }} @endif</td>
 
           <td class="td-delete">
-            @if (($album->system_item != 1) && ($user->god != 1))
+            @if ($album->system_item != 1)
               @can('delete', $album)
               <a class="icon-delete sprite" data-open="item-delete"></a>
               @endcan

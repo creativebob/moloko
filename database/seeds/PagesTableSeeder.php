@@ -393,6 +393,16 @@ class PagesTableSeeder extends Seeder
         'system_item' => 1,
         'author_id' => 1,
       ],
+      [
+        'name' => 'Новости',
+        'site_id' => 1,
+        'title' => 'Новости',
+        'description' => 'Новости',
+        'alias' => 'news',
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+      ],
       
     ]);
 }

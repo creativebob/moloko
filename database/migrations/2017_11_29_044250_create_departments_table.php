@@ -28,7 +28,7 @@ class CreateDepartmentsTable extends Migration
             $table->integer('filial_id')->unsigned()->nullable()->comment('Id филиала, пишется каждому отделу');
             $table->foreign('filial_id')->references('id')->on('departments');
 
-            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');

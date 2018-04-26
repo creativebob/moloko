@@ -15,7 +15,7 @@ class AlbumsTableSeeder extends Seeder
     		[
     			'name' => 'Тест',
     			'alias' => 'test',
-    			'albums_categories_id' => 1,
+    			'albums_category_id' => 1,
     			'company_id' => 1, 
     			'author_id' => 4, 
     		],

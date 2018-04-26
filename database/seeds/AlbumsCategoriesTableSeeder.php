@@ -11,36 +11,43 @@ class AlbumsCategoriesTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('albums_categories')->insert([
-        	[
-                'company_id' => 1,
-		        'albums_category_name' => 'Фотоальбом',
-		        'albums_category_parent_id' => null,
-                'category_status' => 1,
-                'author_id' => 1,
-        	],
-        	[
-                'company_id' => 1,
-		        'albums_category_name' => 'Личный',
-		        'albums_category_parent_id' => 1,
-                'category_status' => null,
-                'author_id' => 1,
-        	],
-            [
-                'company_id' => 1,
-                'albums_category_name' => 'Видеоальбом',
-                'albums_category_parent_id' => null,
-                'category_status' => 1,
-                'author_id' => 1,
-            ],
-            [
-                'company_id' => 1,
-                'albums_category_name' => 'Комментарии',
-                'albums_category_parent_id' => null,
-                'category_status' => 1,
-                'author_id' => 1,
-            ],
+      DB::table('albums_categories')->insert([
+       [
+        'company_id' => 1,
+        'name' => 'Портфолио',
+        'parent_id' => null,
+        'category_status' => 1,
+        'author_id' => 1,
+      ],
+      [
+        'company_id' => 1,
+        'name' => 'Товары',
+        'parent_id' => null,
+        'category_status' => 1,
+        'author_id' => 1,
+      ],
+      [
+        'company_id' => 1,
+        'name' => 'Готовые обьекты',
+        'parent_id' => null,
+        'category_status' => 1,
+        'author_id' => 1,
+      ],
+      [
+        'company_id' => 1,
+        'name' => 'Новости',
+        'parent_id' => null,
+        'category_status' => 1,
+        'author_id' => 1,
+      ],
+      [
+        'company_id' => 1,
+        'name' => 'Жизнь компании',
+        'parent_id' => null,
+        'category_status' => 1,
+        'author_id' => 1,
+      ],
 
-        ]);
+    ]);
     }
-}
+  }

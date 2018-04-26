@@ -44,10 +44,15 @@ class Photo extends Model
     return $this->belongsTo('App\Company');
     }
 
+    public function cur_news()
+    {
+    return $this->hasOne('App\News');
+    }
+
     // Получаем альбом
 	public function album()
 	{
-	return $this->belongsTo('App\Album');
+	   return $this->belongsToMany('App\Album', 'album_media', 'media_id', 'album_id')->where('entity', 'photo');
 	}
 
 	// Получаем автора

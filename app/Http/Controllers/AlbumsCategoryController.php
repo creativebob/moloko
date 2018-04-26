@@ -71,11 +71,11 @@ class AlbumsCategoryController extends Controller
     $albums_categories_tree = [];
     foreach ($albums_categories_id as $id => &$node) {   
       // Если нет вложений
-      if (!$node['albums_category_parent_id']){
+      if (!$node['parent_id']){
         $albums_categories_tree[$id] = &$node;
       } else { 
       // Если есть потомки то перебераем массив
-        $albums_categories_id[$node['albums_category_parent_id']]['children'][$id] = &$node;
+        $albums_categories_id[$node['parent_id']]['children'][$id] = &$node;
       }
     };
 
@@ -148,11 +148,11 @@ class AlbumsCategoryController extends Controller
     $albums_categories_tree = [];
     foreach ($albums_categories_id as $id => &$node) {   
       // Если нет вложений
-      if (!$node['albums_category_parent_id']){
+      if (!$node['parent_id']){
         $albums_categories_tree[$id] = &$node;
       } else { 
       // Если есть потомки то перебераем массив
-        $albums_categories_id[$node['albums_category_parent_id']]['children'][$id] = &$node;
+        $albums_categories_id[$node['parent_id']]['children'][$id] = &$node;
       }
     };
 
@@ -174,7 +174,7 @@ class AlbumsCategoryController extends Controller
 
     $albums_category = new AlbumsCategory;
 
-    if (isset($request->albums_category_parent_id)) {
+    if (isset($request->parent_id)) {
 
       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
       $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
@@ -182,7 +182,7 @@ class AlbumsCategoryController extends Controller
       // Главный запрос
       $albums_categories = AlbumsCategory::moderatorLimit($answer)
       ->orderBy('sort', 'asc')
-      ->get(['id','albums_category_name','category_status','albums_category_parent_id'])
+      ->get(['id','name','category_status','parent_id'])
       ->keyBy('id')
       ->toArray();
 
@@ -193,12 +193,12 @@ class AlbumsCategoryController extends Controller
       foreach ($albums_categories as $id => &$node) { 
 
         // Если нет вложений
-        if (!$node['albums_category_parent_id']) {
+        if (!$node['parent_id']) {
           $albums_categories_cat[$id] = &$node;
         } else { 
 
         // Если есть потомки то перебераем массив
-          $albums_categories[$node['albums_category_parent_id']]['children'][$id] = &$node;
+          $albums_categories[$node['parent_id']]['children'][$id] = &$node;
         };
       };
 
@@ -212,9 +212,9 @@ class AlbumsCategoryController extends Controller
           $selected = ' selected';
         }
         if ($albums_category['category_status'] == 1) {
-          $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['albums_category_name'].'</option>';
+          $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['name'].'</option>';
         } else {
-          $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['albums_category_name'].'</option>';
+          $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['name'].'</option>';
         }
         
         // Добавляем пробелы вложенному элементу
@@ -241,7 +241,7 @@ class AlbumsCategoryController extends Controller
       }
 
       // Получаем HTML разметку
-      $albums_categories_list = showCat($albums_categories_cat, '', $request->albums_category_parent_id);
+      $albums_categories_list = showCat($albums_categories_cat, '', $request->parent_id);
 
       // echo $albums_categories_list;
 
@@ -285,24 +285,24 @@ class AlbumsCategoryController extends Controller
       // Смотрим что пришло
       // Если категория
       if ($request->first_item == 1) {
-      $first = mb_substr($request->albums_category_name,0,1, 'UTF-8');//первая буква
-      $last = mb_substr($request->albums_category_name,1);//все кроме первой буквы
+      $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($request->name,1);//все кроме первой буквы
       $first = mb_strtoupper($first, 'UTF-8');
       $last = mb_strtolower($last, 'UTF-8');
       $albums_category_name = $first.$last;
-      $albums_category->albums_category_name = $albums_category_name;
+      $albums_category->name = $albums_category_name;
       $albums_category->category_status = 1;
     }
 
       // Если категория альбомов
     if ($request->medium_item == 1) {
-      $first = mb_substr($request->albums_category_name,0,1, 'UTF-8');//первая буква
-      $last = mb_substr($request->albums_category_name,1);//все кроме первой буквы
+      $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($request->name,1);//все кроме первой буквы
       $first = mb_strtoupper($first, 'UTF-8');
       $last = mb_strtolower($last, 'UTF-8');
       $albums_category_name = $first.$last;
-      $albums_category->albums_category_name = $albums_category_name;
-      $albums_category->albums_category_parent_id = $request->albums_category_parent_id;
+      $albums_category->name = $albums_category_name;
+      $albums_category->parent_id = $request->parent_id;
     }
     $albums_category->save();
 
@@ -355,7 +355,7 @@ class AlbumsCategoryController extends Controller
       // Главный запрос
         $albums_categories = AlbumsCategory::moderatorLimit($answer)
         ->orderBy('sort', 'asc')
-        ->get(['id','albums_category_name','category_status','albums_category_parent_id'])
+        ->get(['id','name','category_status','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -366,12 +366,12 @@ class AlbumsCategoryController extends Controller
         foreach ($albums_categories as $id => &$node) { 
 
         // Если нет вложений
-          if (!$node['albums_category_parent_id']) {
+          if (!$node['parent_id']) {
             $albums_categories_cat[$id] = &$node;
           } else { 
 
         // Если есть потомки то перебераем массив
-            $albums_categories[$node['albums_category_parent_id']]['children'][$id] = &$node;
+            $albums_categories[$node['parent_id']]['children'][$id] = &$node;
           };
         };
 
@@ -388,9 +388,9 @@ class AlbumsCategoryController extends Controller
               $selected = ' selected';
             }
             if ($albums_category['category_status'] == 1) {
-              $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['albums_category_name'].'</option>';
+              $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['name'].'</option>';
             } else {
-              $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['albums_category_name'].'</option>';
+              $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['name'].'</option>';
             }
 
           // Добавляем пробелы вложенному элементу
@@ -417,7 +417,7 @@ class AlbumsCategoryController extends Controller
         }
 
       // Получаем HTML разметку
-        $albums_categories_list = showCat($albums_categories_cat, '', $albums_category->albums_category_parent_id, $albums_category->id);
+        $albums_categories_list = showCat($albums_categories_cat, '', $albums_category->parent_id, $albums_category->id);
 
         return view('albums_categories.edit-medium', ['albums_category' => $albums_category, 'albums_categories_list' => $albums_categories_list]);
       }
@@ -447,27 +447,27 @@ class AlbumsCategoryController extends Controller
       // Модерация и системная запись
       $albums_category->system_item = $request->system_item;
       $albums_category->moderation = $request->moderation;
-      $albums_category->albums_category_parent_id = $request->albums_category_parent_id;
+      $albums_category->parent_id = $request->albums_category_parent_id;
       $albums_category->editor_id = $user->id;
 
       // Если индустрия
       if ($request->first_item == 1) {
-        $first = mb_substr($request->albums_category_name,0,1, 'UTF-8');//первая буква
-        $last = mb_substr($request->albums_category_name,1);//все кроме первой буквы
+        $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
+        $last = mb_substr($request->name,1);//все кроме первой буквы
         $first = mb_strtoupper($first, 'UTF-8');
         $last = mb_strtolower($last, 'UTF-8');
         $albums_category_name = $first.$last;
-        $albums_category->albums_category_name = $albums_category_name;
+        $albums_category->name = $albums_category_name;
       }
 
       // Если сектор
       if ($request->medium_item == 1) {
-        $first = mb_substr($request->albums_category_name,0,1, 'UTF-8');//первая буква
-        $last = mb_substr($request->albums_category_name,1);//все кроме первой буквы
+        $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
+        $last = mb_substr($request->name,1);//все кроме первой буквы
         $first = mb_strtoupper($first, 'UTF-8');
         $last = mb_strtolower($last, 'UTF-8');
         $albums_category_name = $first.$last;
-        $albums_category->albums_category_name = $albums_category_name;
+        $albums_category->name = $albums_category_name;
         
       }
 
@@ -504,7 +504,7 @@ class AlbumsCategoryController extends Controller
 
     // Удаляем ajax
     // Проверяем содержит ли индустрия вложения
-      $albums_category_parent = AlbumsCategory::moderatorLimit($answer)->whereAlbums_category_parent_id($id)->first();
+      $albums_category_parent = AlbumsCategory::moderatorLimit($answer)->whereParent_id($id)->first();
 
     // Получаем авторизованного пользователя
       $user = $request->user();
@@ -522,7 +522,7 @@ class AlbumsCategoryController extends Controller
         if ($albums_category->category_status == 1) {
           $parent = null;
         } else {
-          $parent = $albums_category->albums_category_parent_id;
+          $parent = $albums_category->parent_id;
         }
 
         $albums_category->editor_id = $user->id;
@@ -547,7 +547,7 @@ class AlbumsCategoryController extends Controller
     public function albums_category_check(Request $request)
     {
     // Проверка отдела в нашей базе данных
-      $albums_category = AlbumsCategory::where('albums_category_name', $request->name)->first();
+      $albums_category = AlbumsCategory::where('name', $request->name)->first();
 
     // Если такое название есть
       if ($albums_category) {
@@ -571,7 +571,7 @@ class AlbumsCategoryController extends Controller
 
     // Главный запрос
     $albums_categories = AlbumsCategory::moderatorLimit($answer)
-    ->get(['id','albums_category_name','category_status','albums_category_parent_id'])
+    ->get(['id','name','category_status','parent_id'])
     ->keyBy('id')
     ->toArray();
 
@@ -582,12 +582,12 @@ class AlbumsCategoryController extends Controller
     foreach ($albums_categories as $id => &$node) { 
 
       // Если нет вложений
-      if (!$node['albums_category_parent_id']) {
+      if (!$node['parent_id']) {
         $albums_categories_cat[$id] = &$node;
       } else { 
 
       // Если есть потомки то перебераем массив
-        $albums_categories[$node['albums_category_parent_id']]['children'][$id] = &$node;
+        $albums_categories[$node['parent_id']]['children'][$id] = &$node;
       };
     };
 
@@ -604,9 +604,9 @@ class AlbumsCategoryController extends Controller
           $selected = ' selected';
         }
         if ($albums_category['category_status'] == 1) {
-          $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['albums_category_name'].'</option>';
+          $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['name'].'</option>';
         } else {
-          $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['albums_category_name'].'</option>';
+          $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['name'].'</option>';
         }
         
         // Добавляем пробелы вложенному элементу

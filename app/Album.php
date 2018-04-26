@@ -20,41 +20,52 @@ use App\Scopes\Filters\BooklistFilter;
 
 class Album extends Model
 {
-    use Notifiable;
-    use SoftDeletes;
+  use Notifiable;
+  use SoftDeletes;
 
-    // Подключаем Scopes для главного запроса
-    use CompaniesLimitTraitScopes;
-    use AuthorsTraitScopes;
-    use SystemItemTraitScopes;
-    use FilialsTraitScopes;
-    use TemplateTraitScopes;
-    use ModeratorLimitTraitScopes;
-    use BooklistFilter;
+  // Подключаем Scopes для главного запроса
+  use CompaniesLimitTraitScopes;
+  use AuthorsTraitScopes;
+  use SystemItemTraitScopes;
+  use FilialsTraitScopes;
+  use TemplateTraitScopes;
+  use ModeratorLimitTraitScopes;
+  use BooklistFilter;
 
-    protected $dates = ['deleted_at'];
+  protected $dates = ['deleted_at'];
 
-    protected $fillable = [
+  protected $fillable = [
 
-    ];
-
+  ];
 
 	// Получаем компанию
-	public function company()
-	{
-	return $this->belongsTo('App\Company');
-	}
+  public function company()
+  {
+    return $this->belongsTo('App\Company');
+  }
 
-    // Получаем фото
-    public function photos()
-    {
-    return $this->hasMany('App\Photo');
-    }
+  // Получаем категорию
+  public function albums_category()
+  {
+    return $this->belongsTo('App\AlbumsCategory');
+  }
+
+  // Получаем фото
+  public function photos()
+  {
+    return $this->belongsToMany('App\Photo', 'album_media', 'album_id', 'media_id')->where('entity', 'photo');
+  }
+
+    // Получаем видео
+    // public function videos()
+    // {
+    // return $this->belongsToMany('App\Video', 'album_media', 'media_id')->where('entity', 'video');
+    // }
 
 	// Получаем автора
-	public function author()
-	{
-	return $this->belongsTo('App\User', 'author_id');
-	}
+  public function author()
+  {
+   return $this->belongsTo('App\User', 'author_id');
+  }
 
 }

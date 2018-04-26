@@ -21,16 +21,16 @@ class CreateAlbumsTable extends Migration
 
             $table->string('name')->index()->comment('Название альбома');
 
-            $table->integer('albums_categories_id')->nullable()->unsigned()->comment('Id категории в которой находиться альбом');
-            $table->foreign('albums_categories_id')->references('id')->on('albums_categories');
+            $table->integer('albums_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться альбом');
+            $table->foreign('albums_category_id')->references('id')->on('albums_categories');
 
-            $table->integer('album_access')->nullable()->unsigned()->comment('0 - личный, 1 - публичный');
+            $table->integer('access')->nullable()->unsigned()->comment('0 - личный, 1 - публичный');
             $table->string('alias')->index()->comment('Алиас альбома');
 
-            $table->string('album_avatar')->index()->nullable()->comment('Обложка альбома');
-            $table->string('album_description')->index()->nullable()->comment('Описание альбома');
+            $table->string('avatar')->index()->nullable()->comment('Обложка альбома');
+            $table->string('description')->index()->nullable()->comment('Описание альбома');
 
-            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');

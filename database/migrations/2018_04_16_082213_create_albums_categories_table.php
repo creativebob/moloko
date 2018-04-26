@@ -19,14 +19,14 @@ class CreateAlbumsCategoriesTable extends Migration
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->string('albums_category_name')->index()->comment('Название категории альбомов');
+            $table->string('name')->index()->comment('Название категории альбомов');
 
-            $table->integer('albums_category_parent_id')->nullable()->unsigned()->comment('Id категории альбома');
-            $table->foreign('albums_category_parent_id')->references('id')->on('albums_categories');
+            $table->integer('parent_id')->nullable()->unsigned()->comment('Id категории альбома');
+            $table->foreign('parent_id')->references('id')->on('albums_categories');
 
             $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
 
-            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');

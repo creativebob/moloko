@@ -7,7 +7,7 @@
 <!-- <script src="/js/plugins/clipboard/dist/clipboard.min.js"></script> -->
 @endsection
 
-@section('title', 'Новый пользователь')
+@section('title', 'Новая фотография')
 
 @section('breadcrumbs', Breadcrumbs::render('section-create', $parent_page_info, $album, $page_info))
 
@@ -24,7 +24,6 @@
 
 @section('content')
 {{ Form::open(['url' => '/albums/'.$alias.'/photos', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
-@include('photos.form', ['submitButtonText' => 'Добавить фотографию', 'param' => ''])
 {{ Form::close() }}
 @endsection
 
@@ -39,15 +38,14 @@
 @include('includes.scripts.pickmeup-script')
 @include('includes.scripts.upload-file')
 <script>
-
 	Dropzone.options.myDropzone = {
 		paramName: 'photo',
-        maxFilesize: 5, // MB
-        maxFiles: 20,
-        acceptedFiles: ".jpeg,.jpg,.png,.gif",
-      };
-    </script>
-
+    maxFilesize: 5, // MB
+    maxFiles: 20,
+    acceptedFiles: ".jpeg,.jpg,.png,.gif",
+    addRemoveLinks: true,
+  };
+</script>
 @endsection
 
 

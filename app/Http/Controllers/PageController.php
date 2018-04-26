@@ -71,12 +71,11 @@ class PageController extends Controller
     return view('pages.index', compact('pages', 'site', 'page_info', 'parent_page_info', 'alias'));
   }
 
-
   public function create(Request $request, $alias)
   {
 
     // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), Site::class);
+    $this->authorize(getmethod(__FUNCTION__), PAge::class);
 
     // Список меню для сайта
     $answer = operator_right('pages', $this->entity_dependence, getmethod(__FUNCTION__));
@@ -98,10 +97,8 @@ class PageController extends Controller
     return view('pages.create', compact('page', 'site', 'alias', 'page_info', 'parent_page_info'));  
   }
 
-
   public function store(PageRequest $request, $alias)
   {
-
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Page::class);
 
@@ -115,11 +112,11 @@ class PageController extends Controller
     $company_id = $user->company_id;
 
     $page = new Page;
-    $page->page_name = $request->page_name;
-    $page->page_title = $request->page_title;
-    $page->page_description = $request->page_description;
-    $page->page_alias = $request->page_alias;
-    $page->page_content = $request->page_content;
+    $page->name = $request->name;
+    $page->title = $request->title;
+    $page->description = $request->description;
+    $page->alias = $request->alias;
+    $page->content = $request->content;
     $page->site_id = $request->site_id;
     $page->company_id = $company_id;
     $page->author_id = $user_id;
@@ -129,7 +126,7 @@ class PageController extends Controller
       return redirect('/sites/'.$alias.'/pages');
     } else {
       abort(403, 'Ошибка при записи страницы!');
-    };
+    }
   }
 
 
@@ -161,16 +158,14 @@ class PageController extends Controller
     // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('sites');
 
-
     return view('pages.edit', compact('page', 'parent_page_info', 'page_info', 'site'));
-
   }
 
 
   public function update(PageRequest $request, $alias, $id)
   {
 
-     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // Получаем авторизованного пользователя
@@ -182,11 +177,11 @@ class PageController extends Controller
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $page);
 
-    $page->page_name = $request->page_name;
-    $page->page_title = $request->page_title;
-    $page->page_description = $request->page_description;
-    $page->page_alias = $request->page_alias;
-    $page->page_content = $request->page_content;
+    $page->name = $request->name;
+    $page->title = $request->title;
+    $page->description = $request->description;
+    $page->alias = $request->alias;
+    $page->content = $request->content;
     $page->company_id = $user->company_id;
     $page->site_id = $request->site_id;
     $page->editor_id = $user->id;
@@ -196,7 +191,7 @@ class PageController extends Controller
       return redirect('/sites/'.$alias.'/pages');
     } else {
       abort(403, 'Ошибка при записи страницы!');
-    };
+    }
   }
 
 
@@ -226,7 +221,7 @@ class PageController extends Controller
       };
     } else {
       abort(403, 'Страница не найдена');
-    };
+    }
   }
 
   // Получаем сайт по api

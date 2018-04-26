@@ -70,7 +70,7 @@
                   @if(isset(Auth::user()->company_id))
                     {{ $company_name }}  | 
                   @endif
-                  {{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }} {{ $count_authors }}</span><img src="{{ isset(Auth::user()->photo) ? url(Auth::user()->photo) : '/storage/icon-pig.png' }}" alt="" class="avatar">
+                  {{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }} {{ $count_authors }}</span><img src="{{ isset(Auth::user()->photo) ? '/storage'.Auth::user()->photo : '/storage/icon-pig.png' }}" alt="" class="avatar">
                 </a>
               </li>
             </ul>

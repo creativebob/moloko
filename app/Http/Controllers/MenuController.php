@@ -295,7 +295,7 @@ class MenuController extends Controller
         if (isset($item['name'])) {
           $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
         } else {
-          $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['menu_name'].'</option>';
+          $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
         }
         // Добавляем пробелы вложенному элементу
         if (isset($item['children'])) {
@@ -331,7 +331,7 @@ class MenuController extends Controller
       if ($page_id == $page->id) {
         $selected = ' selected';
       }
-      $pages_list = $pages_list . '<option value="'.$page->id.'"'.$selected.'>'.$page->page_name.'</option>';
+      $pages_list = $pages_list . '<option value="'.$page->id.'"'.$selected.'>'.$page->name.'</option>';
     }
 
     // echo $pages_list;

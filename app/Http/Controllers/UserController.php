@@ -8,6 +8,7 @@ use App\Staffer;
 use App\RoleUser;
 use App\List_item;
 use App\Booklist;
+use App\Photo;
 
 use App\Http\Controllers\Session;
 
@@ -182,7 +183,7 @@ class UserController extends Controller
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
           $user->moderation = 1;
-        };
+        }
 
         // Пишем ID компании авторизованного пользователя
         if($company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
@@ -194,28 +195,61 @@ class UserController extends Controller
 
 
         // Создаем папку в файловой системе
-        $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'avatars';
-        Storage::makeDirectory($link_for_folder);
+        // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'avatars';
+        // Storage::makeDirectory($link_for_folder);
 
-        $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'photos';
-        Storage::makeDirectory($link_for_folder);
+        // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'photos';
+        // Storage::makeDirectory($link_for_folder);
 
-        $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'video';
-        Storage::makeDirectory($link_for_folder);
+        // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'video';
+        // Storage::makeDirectory($link_for_folder);
 
-        $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'documents';
-        Storage::makeDirectory($link_for_folder);
+        // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'documents';
+        // Storage::makeDirectory($link_for_folder);
 
+      $company_id = $user_auth->company_id;
+      if ($user_auth->god == 1) {
+      // Если бог, то ставим автором робота
+        $user_id = 1;
+        $company_id = null;
+      } else {
+        $user_id = $user_auth->id;
+      }
+
+        if ($request->hasFile('photo')) {
+          $photo = new Photo;
+          $image = $request->file('photo');
+          $directory = $user_auth->company->id.'/media/albums/'.$user_auth->login;
+          $extension = $image->getClientOriginalExtension();
+          $photo->extension = $extension;
+          $image_name = 'avatar.'.$extension;
+
+          $photo->path = '/'.$directory.'/'.$image_name;
+
+          $params = getimagesize($request->file('photo'));
+          $photo->width = $params[0];
+          $photo->height = $params[1];
+
+          $size = filesize($request->file('photo'))/1024;
+          $photo->size = number_format($size, 2, '.', ' ');
+
+          $photo->name = $image_name;
+          $photo->company_id = $company_id;
+          $photo->author_id = $user_id;
+          $photo->save();
+
+          $upload_success = $image->storeAs($directory, $image_name, 'public');
+
+          $user->photo = $photo->path;
+          $user->photo_id = $photo->id;
+        }   
 
         $user->save();
         return redirect('users');
       }
 
-
       public function update(UserRequest $request, $id)
       {
-
-      // dd(storage_path());
 
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
@@ -271,14 +305,42 @@ class UserController extends Controller
 
 
 
-        if($request->hasFile('photo')) {
+        $company_id = $user_auth->company_id;
+      if ($user_auth->god == 1) {
+      // Если бог, то ставим автором робота
+        $user_id = 1;
+        $company_id = null;
+      } else {
+        $user_id = $user_auth->id;
+      }
 
-          $path = $request->file('photo')->storeAs(
-            'companies/'.$user->company->company_alias.'/users/'.$user->login.'/img', 'avatar.jpg', 'public'
-          );
+        if ($request->hasFile('photo')) {
+          $photo = new Photo;
+          $image = $request->file('photo');
+          $directory = $user_auth->company->company_alias.'/media/albums/'.$user_auth->login;
+          $extension = $image->getClientOriginalExtension();
+          $photo->extension = $extension;
+          $image_name = 'avatar.'.$extension;
 
-          $user->photo = '/storage/'.$path;
-        }
+          $photo->path = '/storage/'.$directory.'/'.$image_name;
+
+          $params = getimagesize($request->file('photo'));
+          $photo->width = $params[0];
+          $photo->height = $params[1];
+
+          $size = filesize($request->file('photo'))/1024;
+          $photo->size = number_format($size, 2, ',', ' ');
+
+          $photo->name = $image_name;
+          $photo->company_id = $company_id;
+          $photo->author_id = $user_id;
+          $photo->save();
+
+          $upload_success = $image->storeAs($directory, $image_name, 'public');
+
+          $user->photo = $photo->path;
+          $user->photo_id = $photo->id;
+        }   
 
         // Модерируем (Временно)
         if($answer['automoderate']){$user->moderation = null;};
@@ -391,7 +453,7 @@ class UserController extends Controller
         $auth_user->save();
 
         return redirect('/getaccess');
-    }
+      }
 
       public function getauthuser($user_id)
       {

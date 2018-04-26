@@ -1,7 +1,7 @@
 <div class="grid-x grid-padding-x align-center modal-content inputs">
   <div class="small-10 cell">
     <label>Название категории
-      @include('includes.inputs.name', ['value'=>$albums_category->albums_category_name, 'name'=>'albums_category_name', 'required'=>'required'])
+      @include('includes.inputs.name', ['value'=>$albums_category->name, 'name'=>'name', 'required'=>'required'])
       <div class="item-error">Такая категория уже существует!</div>
     </label>
     {{ Form::hidden('first_item', 0, ['class' => 'first-item', 'pattern' => '[0-9]{1}']) }}

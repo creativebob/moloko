@@ -46,16 +46,19 @@ Route::post('/albums_categories_sort', 'AlbumsCategoryController@albums_categori
 Route::resource('/albums', 'AlbumController')->middleware('auth');
 Route::get('/albums', 'AlbumController@index')->middleware('auth')->name('albums.index');
 Route::get('/albums/create', 'AlbumController@create')->middleware('auth')->name('albums.create');
+Route::get('/albums/{alias}', 'AlbumController@show')->middleware('auth')->name('albums.show');
 Route::post('/albums', 'AlbumController@store')->middleware('auth')->name('albums.store');
 Route::get('/albums/{alias}/edit', 'AlbumController@edit')->middleware('auth')->name('albums.edit');
 Route::patch('/albums/{id}', 'AlbumController@update')->middleware('auth')->name('albums.update');
 Route::delete('/albums/{id}', 'AlbumController@destroy')->middleware('auth')->name('albums.destroy');
 
-Route::get('/albums/{alias}', 'AlbumController@sections')->middleware('auth')->name('albums.photos');
+// Route::get('/albums/{alias}', 'AlbumController@sections')->middleware('auth')->name('albums.photos');
 // Группа с префиксом
 Route::prefix('/albums/{alias}')->group(function () {
   // Фотографии
   Route::resource('/photos', 'PhotoController')->middleware('auth');
+
+
 
   // Загрузка фоток через ajax через dropzone.js
 });
@@ -175,22 +178,24 @@ Route::post('/sites', 'SiteController@store')->middleware('auth')->name('sites.s
 Route::get('/sites/{alias}/edit', 'SiteController@edit')->middleware('auth')->name('sites.edit');
 Route::patch('/sites/{id}', 'SiteController@update')->middleware('auth')->name('sites.update');
 Route::delete('/sites/{id}', 'SiteController@destroy')->middleware('auth')->name('sites.destroy');
-
 Route::get('/sites/{alias}', 'SiteController@sections')->middleware('auth')->name('sites.sections');
 // Группа с префиксом
 Route::prefix('/sites/{alias}')->group(function () {
 	// Странички
   Route::resource('/pages', 'PageController')->middleware('auth');
-    // Навигация и меню
+  // Навигация и меню
   Route::resource('/navigations', 'NavigationController')->middleware('auth');
-    // Текущая добавленная/удаленная навигация
+  // Текущая добавленная/удаленная навигация
   Route::any('/get_navigations', 'NavigationController@get_content')->middleware('auth');
 	// Проверка на существование навигации
   Route::post('/navigation_check', 'NavigationController@navigation_check')->middleware('auth');
 
   Route::resource('/menus', 'MenuController')->middleware('auth');
-    // Текущий добавленный/удаленный пункт меню
+  // Текущий добавленный/удаленный пункт меню
   Route::get('/current_navigation/{section_id}/{item_id}', 'NavigationController@current_navigation')->middleware('auth');
+
+  // Новости
+  Route::resource('/news', 'NewsController')->middleware('auth');
 });
 
 // Route::any('/modal', 'MenuController@modal')->middleware('auth');

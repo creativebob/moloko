@@ -173,6 +173,20 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
             ], 
+            [
+                'entity_name' => 'Медиа альбомов',
+                'entity_alias' => 'album_media',
+                'entity_model' => 'AlbumMedia',
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
+            [
+                'entity_name' => 'Новости',
+                'entity_alias' => 'news',
+                'entity_model' => 'News',
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
             
             // Связующие сущности
 

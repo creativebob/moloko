@@ -17,6 +17,12 @@ Breadcrumbs::register('edit', function ($breadcrumbs, $page_info, $name) {
   $breadcrumbs->push($name, url('/'.$page_info->alias.'/{id}/edit'));
 });
 
+// index > Смотреть (Show)
+Breadcrumbs::register('show', function ($breadcrumbs, $page_info, $name) {
+  $breadcrumbs->parent('index', $page_info);
+  $breadcrumbs->push($name, url('/'.$page_info->alias.'/'.$name));
+});
+
 // ---------------------------------- Алиасы и разделы --------------------------------------------
 
 // index > Редактировать с  алиасом

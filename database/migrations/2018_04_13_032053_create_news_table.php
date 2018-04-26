@@ -19,15 +19,19 @@ class CreateNewsTable extends Migration
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
             
-            $table->string('news_name')->index()->comment('Название новости');
+            $table->string('name')->index()->comment('Название новости');
             $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта');
             $table->foreign('site_id')->references('id')->on('sites');
-            $table->string('news_title')->comment('Title для новости');
-            $table->text('news_preview')->nullable()->comment('Превью для новости');
-            $table->text('news_description')->nullable()->comment('Description для новости');
-            $table->string('news_alias')->index()->nullable()->comment('Алиас');
+            $table->string('title')->comment('Title для новости');
+            $table->text('preview')->nullable()->comment('Превью для новости');
+            $table->integer('photo_id')->nullable()->unsigned()->comment('Фото для превью для новости');
+            $table->text('content')->nullable()->comment('Контент новости');
+            $table->string('alias')->index()->nullable()->comment('Алиас');
 
-            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+            $table->date('date_publish_begin')->index()->comment('Дата начала публикации');
+            $table->date('date_publish_end')->index()->comment('Дата окончания публикации');
+
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');

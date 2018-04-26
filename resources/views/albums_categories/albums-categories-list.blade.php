@@ -7,10 +7,10 @@
     $count = count($albums_category['children']);
   @endphp
 @endif
-<li class="medium-item item @if (isset($albums_category['children'])) parent @endif" id="albums_categories-{{ $albums_category['id'] }}" data-name="{{ $albums_category['albums_category_name'] }}">
+<li class="medium-item item @if (isset($albums_category['children'])) parent @endif" id="albums_categories-{{ $albums_category['id'] }}" data-name="{{ $albums_category['name'] }}">
   <a class="medium-link @if($drop == 0) link-small @endif">
     <div class="icon-open sprite"></div>
-    <span class="medium-item-name">{{ $albums_category['albums_category_name'] }}</span>
+    <span class="medium-item-name">{{ $albums_category['name'] }}</span>
     <span class="number">{{ $count }}</span>
     @if ($albums_category['moderation'])
     <span class="no-moderation">Не отмодерированная запись!</span>

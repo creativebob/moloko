@@ -10,10 +10,10 @@
 @foreach ($albums_categories_tree as $albums_category)
   @if($albums_category['category_status'] == 1)
     {{-- Если индустрия --}}
-    <li class="first-item item @if (isset($albums_category['children'])) parent @endif" id="albums_categories-{{ $albums_category['id'] }}" data-name="{{ $albums_category['albums_category_name'] }}">
+    <li class="first-item item @if (isset($albums_category['children'])) parent @endif" id="albums_categories-{{ $albums_category['id'] }}" data-name="{{ $albums_category['name'] }}">
       <a class="first-link @if($drop == 0) link-small @endif">
         <div class="icon-open sprite"></div>
-        <span class="first-item-name">{{ $albums_category['albums_category_name'] }}</span>
+        <span class="first-item-name">{{ $albums_category['name'] }}</span>
         <span class="number">{{ $albums_category['count'] }}</span>
         @if ($albums_category['moderation'])
         <span class="no-moderation">Не отмодерированная запись!</span>
