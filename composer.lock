@@ -1374,8 +1374,6 @@
                 "storage"
             ],
             "time": "2018-04-06T09:58:14+00:00"
-<<<<<<< HEAD
-=======
         },
         {
             "name": "league/glide",
@@ -1522,7 +1520,6 @@
             "description": "Glide adapter for Symfony",
             "homepage": "http://glide.thephpleague.com",
             "time": "2018-02-10T14:10:07+00:00"
->>>>>>> 40afee26658749aee176d3a3ef8343f20ad05025
         },
         {
             "name": "maximebf/debugbar",
@@ -2055,18 +2052,6 @@
         },
         {
             "name": "psy/psysh",
-<<<<<<< HEAD
-            "version": "v0.8.18",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "5357b1cffc8fb375d6a9e3c86d5c82dd38a40834"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/5357b1cffc8fb375d6a9e3c86d5c82dd38a40834",
-                "reference": "5357b1cffc8fb375d6a9e3c86d5c82dd38a40834",
-=======
             "version": "v0.9.3",
             "source": {
                 "type": "git",
@@ -2077,7 +2062,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/bobthecow/psysh/zipball/79c280013cf0b30fa23f3ba8bd3649218075adf4",
                 "reference": "79c280013cf0b30fa23f3ba8bd3649218075adf4",
->>>>>>> 40afee26658749aee176d3a3ef8343f20ad05025
                 "shasum": ""
             },
             "require": {
@@ -2136,11 +2120,7 @@
                 "interactive",
                 "shell"
             ],
-<<<<<<< HEAD
-            "time": "2018-04-02T05:41:44+00:00"
-=======
             "time": "2018-04-18T12:32:50+00:00"
->>>>>>> 40afee26658749aee176d3a3ef8343f20ad05025
         },
         {
             "name": "ramsey/uuid",
