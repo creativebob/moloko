@@ -110,4 +110,9 @@ class Department extends Model
     return $this->hasMany('App\Role');
   } 
 
+  public function users()
+  {
+    return $this->hasMany('App\User');
+  }
+
 }

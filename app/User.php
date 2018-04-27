@@ -209,8 +209,10 @@ class User extends Authenticatable
   */
   public function roles()
   {
-    return $this->belongsToMany('App\Role')->withPivot('department_id');
+    return $this->hasMany('App\RoleUser');
   }
+
+  
 
 
     /**

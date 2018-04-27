@@ -25,6 +25,7 @@ use App\Http\Requests\UserRequest;
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -88,7 +89,7 @@ class UserController extends Controller
         // dd(Storage::disk('public')->get($user_auth->photo));
 
 
-// dd(public_path('app/public/1/1/1/3/3/3'));
+            // dd(public_path('app/public/1/1/1/3/3/3'));
         // $ava = Storage::disk('public')->get(storage_path('app\public'.$user_auth->photo));
         // dd($ava);
 
@@ -256,12 +257,172 @@ class UserController extends Controller
         }   
 
         $user->save();
-        return redirect('users');
+        if ($user) {
+          // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
+          if (isset($request->access)) {
+            $delete = RoleUser::whereUser_id($user->id)->delete();
+
+            $mass = [];
+            foreach ($request->access as $string) {
+              $item = explode(',', $string);
+
+              if ($item[2] == 'null') {
+                $position = null;
+              } else {
+                $position = $item[2];
+              }
+
+              $mass[] = [
+                'role_id' => $item[0],
+                'department_id' => $item[1],
+                'user_id' => $user->id,
+                'position_id' => $position,
+              ];
+            }
+
+          // dd($mass);
+            DB::table('role_user')->insert($mass);
+
+          } else {
+            // Если удалили последнюю роль для должности и пришел пустой массив
+            $delete = RoleUser::whereUser_id($user->id)->delete();
+          }
+          return redirect('users');
+        } else {
+          abort(403, 'Ошибка при обновлении пользователя!');
+        }
+      }
+
+      public function show(Request $request, $id)
+      {
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = User::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $user);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Функция из Helper отдает массив со списками для SELECT
+        $departments_list = getLS('users', 'view', 'departments');
+        $filials_list = getLS('users', 'view', 'filials');
+
+        $role = new Role;
+        $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
+
+        $answer_roles = operator_right('roles', false, 'index');
+
+        $roles_list = Role::moderatorLimit($answer_roles)
+        ->companiesLimit($answer_roles)
+        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer_roles)
+        ->systemItem($answer_roles) // Фильтр по системным записям 
+        ->pluck('role_name', 'id');
+
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
+      }
+
+      public function edit(Request $request, $id)
+      {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = User::with('city', 'roles', 'roles.role', 'roles.position', 'roles.department')->moderatorLimit($answer)->findOrFail($id);
+
+        
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $user);
+
+        // Функция из Helper отдает массив со списками для SELECT
+        $departments_list = getLS('users', 'index', 'departments');
+        $filials_list = getLS('users', 'index', 'filials');
+
+        $role = new Role;
+
+        $answer_roles = operator_right('roles', false, 'index');
+
+        $roles_list = Role::moderatorLimit($answer_roles)
+        ->companiesLimit($answer_roles)
+        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer_roles)
+        ->systemItem($answer_roles) // Фильтр по системным записям 
+        ->template($answer_roles) // Выводим шаблоны в список
+        ->pluck('role_name', 'id');
+
+        dd($departments_list);
+
+         // Формируем дерево вложенности
+      $sectors_cat = [];
+      foreach ($sectors as $id => &$node) { 
+
+        // Если нет вложений
+        if (!$node['sector_parent_id']) {
+          $sectors_cat[$id] = &$node;
+        } else { 
+
+        // Если есть потомки то перебераем массив
+          $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
+        };
+      };
+
+      // dd($sectors_cat);
+
+      // Функция отрисовки option'ов
+      function tplMenu($sector, $padding, $parent) {
+
+        $selected = '';
+        if ($sector['id'] == $parent) {
+          $selected = ' selected';
+        }
+        if ($sector['industry_status'] == 1) {
+          $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['sector_name'].'</option>';
+        } else {
+          $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['sector_name'].'</option>';
+        }
+        
+        // Добавляем пробелы вложенному элементу
+        if (isset($sector['children'])) {
+          $i = 1;
+          for($j = 0; $j < $i; $j++){
+            $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+          }     
+          $i++;
+          
+          $menu .= showCat($sector['children'], $padding, $parent);
+        }
+        return $menu;
+        
+      }
+      // Рекурсивно считываем наш шаблон
+      function showCat($data, $padding, $parent){
+        $string = '';
+        $padding = $padding;
+        foreach($data as $item){
+          $string .= tplMenu($item, $padding, $parent);
+        }
+        return $string;
+      }
+
+      // Получаем HTML разметку
+      $sectors_list = showCat($sectors_cat, '', $request->sector_parent_id);
+
+        // dd($departments_list);
+        // dd($user->roles[0]->role->role_name);
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        // dd($departments_list);
+        
+        
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info'));
       }
 
       public function update(UserRequest $request, $id)
       {
-
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
 
@@ -364,77 +525,44 @@ class UserController extends Controller
         if($answer['automoderate']){$user->moderation = null;};
 
         $user->save();
-        return redirect('users');
-      }
 
-      public function show(Request $request, $id)
-      {
+        // dd($request->access);
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::moderatorLimit($answer)->findOrFail($id);
+        if ($user) {
+          // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
+          if (isset($request->access)) {
+            $delete = RoleUser::whereUser_id($user->id)->delete();
 
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $user);
+            $mass = [];
+            foreach ($request->access as $string) {
+              $item = explode(',', $string);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+              if ($item[2] == 'null') {
+                $position = null;
+              } else {
+                $position = $item[2];
+              }
 
-        // Функция из Helper отдает массив со списками для SELECT
-        $departments_list = getLS('users', 'view', 'departments');
-        $filials_list = getLS('users', 'view', 'filials');
+              $mass[] = [
+                'role_id' => $item[0],
+                'department_id' => $item[1],
+                'user_id' => $user->id,
+                'position_id' => $position,
+              ];
+            }
 
-        $role = new Role;
-        $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
+          // dd($mass);
+            DB::table('role_user')->insert($mass);
 
-        $answer_roles = operator_right('roles', false, 'index');
+          } else {
+        // Если удалили последнюю роль для должности и пришел пустой массив
+            $delete = RoleUser::whereUser_id($user->id)->delete();
+          }
+          return redirect('users');
+        } else {
+          abort(403, 'Ошибка при обновлении пользователя!');
+        }
 
-        $roles_list = Role::moderatorLimit($answer_roles)
-        ->companiesLimit($answer_roles)
-        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям 
-        ->pluck('role_name', 'id');
-
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
-      }
-
-      public function edit(Request $request, $id)
-      {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('city')->moderatorLimit($answer)->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $user);
-
-        // Функция из Helper отдает массив со списками для SELECT
-        $departments_list = getLS('users', 'index', 'departments');
-        $filials_list = getLS('users', 'index', 'filials');
-
-        $role = new Role;
-        $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
-
-        $answer_roles = operator_right('roles', false, 'index');
-
-        $roles_list = Role::moderatorLimit($answer_roles)
-        ->companiesLimit($answer_roles)
-        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям 
-        ->template($answer_roles) // Выводим шаблоны в список
-        ->pluck('role_name', 'id');
-
-        // dd($departments_list);
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        // dd($departments_list);
-        
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info'));
       }
 
       public function destroy(Request $request, $id)

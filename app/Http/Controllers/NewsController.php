@@ -18,6 +18,7 @@ use App\Policies\NewsPolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -159,6 +160,8 @@ class NewsController extends Controller
     // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('sites');
 
+
+
     return view('news.create', compact('cur_news', 'site', 'alias', 'page_info', 'parent_page_info', 'albums_categories_list'));  
   }
 
@@ -218,7 +221,7 @@ class NewsController extends Controller
       $photo->height = $params[1];
 
       $size = filesize($request->file('photo'))/1024;
-      $photo->size = number_format($size, 2, '.', ' ');
+      $photo->size = number_format($size, 2, '.', '');
 
       $photo->name = $image_name;
       $photo->company_id = $company_id;
@@ -256,6 +259,18 @@ class NewsController extends Controller
     }
 
     if ($cur_news) {
+
+      // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
+      if (isset($request->albums)) {
+        $albums = [];
+        foreach ($request->albums as $album) {
+          $albums[$album] = [
+            'entity' => $this->entity_name,
+          ];
+        }
+
+        $cur_news->albums()->attach($albums);
+      }
       return redirect('/sites/'.$alias.'/news');
     } else {
       abort(403, 'Ошибка при записи новости!');
@@ -275,7 +290,6 @@ class NewsController extends Controller
     } else {
       return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
     }
-
   }
 
   public function edit(Request $request, $alias, $news_alias)
@@ -361,13 +375,12 @@ class NewsController extends Controller
     // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('sites');
 
-    // dd($cur_news);
-
     return view('news.edit', compact('cur_news', 'parent_page_info', 'page_info', 'site', 'albums_categories_list'));
   }
 
   public function update(Request $request, $alias, $id)
   {
+    // dd($request->albums[0]);
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -403,7 +416,7 @@ class NewsController extends Controller
       $photo->height = $params[1];
 
       $size = filesize($request->file('photo'))/1024;
-      $photo->size = number_format($size, 2, '.', ' ');
+      $photo->size = number_format($size, 2, '.', '');
 
       $photo->name = $image_name;
       $photo->company_id = $company_id;
@@ -459,6 +472,26 @@ class NewsController extends Controller
     $cur_news->save();
 
     if ($cur_news) {
+
+      // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
+      if (isset($request->albums)) {
+
+        $albums = [];
+        foreach ($request->albums as $album) {
+          $albums[$album] = [
+            'entity' => $this->entity_name,
+          ];
+        }
+        $cur_news->albums()->sync($albums);
+
+      } else {
+        // $albums[] = [
+        //     'entity' => $this->entity_name,
+        // ];
+        // $cur_news->albums()->detach($albums);
+        // Если удалили последний альбом для новости и пришел пустой массив
+        $delete = AlbumEntity::where(['entity_id' => $id, 'entity' => 'news'])->delete();
+      }
       return redirect('/sites/'.$alias.'/news');
     } else {
       abort(403, 'Ошибка при обновлении новости!');
@@ -494,7 +527,7 @@ class NewsController extends Controller
     }
   }
 
-    // Получаем новости по api
+  // Получаем новости по api
   public function news (Request $request)
   {
 
@@ -515,7 +548,7 @@ class NewsController extends Controller
 
     $news_album = new AlbumEntity;
     $news_album->album_id = $request->album_id;
-    $news_album->entity_id = cur_news_id;
+    $news_album->entity_id = $cur_news_id;
     $news_album->entity = 'news';
     $news_album->save();
 
@@ -551,6 +584,5 @@ class NewsController extends Controller
 
      // Отдаем Ajax
     return view('news.albums', ['cur_news' => $cur_news]);
-
   }
 }

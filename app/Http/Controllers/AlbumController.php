@@ -464,7 +464,7 @@ class AlbumController extends Controller
     }
   }
 
-    // Список секторов
+    // Список албомов
   public function albums_list(Request $request)
   {
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -482,6 +482,19 @@ class AlbumController extends Controller
    
     // Отдаем ajax
     echo $albums_list;
+  }
+
+  // Список получаем альбом
+  public function get_album(Request $request)
+  {
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+
+    // Главный запрос
+    $album = Album::moderatorLimit($answer)->findOrFail($request->album_id);
+
+     // Отдаем Ajax
+    return view('news.albums', ['album' => $album]);
   }
 
 }

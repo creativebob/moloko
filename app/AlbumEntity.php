@@ -27,4 +27,9 @@ class AlbumEntity extends Model
 
     protected $table = 'album_entity'; 
 
+    public function album()
+  {
+    return $this->belongsTo('App\Album');
+  }
+
 }

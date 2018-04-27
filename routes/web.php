@@ -64,10 +64,10 @@ Route::prefix('/albums/{alias}')->group(function () {
 });
 
 // Получение альбомов по категории
-Route::any('/albums_list', 'AlbumController@albums_list')->middleware('auth');
+Route::post('/albums_list', 'AlbumController@albums_list')->middleware('auth');
 
-
-
+// Получение альбома
+Route::post('/get_album', 'AlbumController@get_album')->middleware('auth');
 
 
 // Компании
@@ -84,6 +84,9 @@ Route::resource('/roles', 'RoleController')->middleware('auth');
 
 Route::get('/roles/{id}/setting', 'RoleController@setting')->middleware('auth')->name('roles.setting');
 Route::post('/roles/setright', 'RoleController@setright')->middleware('auth')->name('roles.setright');
+
+// Получение роли дял пользоователя
+Route::any('/get_role', 'RoleController@get_role')->middleware('auth');
 
 // Маршрут связи юзера с ролями и отделами
 Route::resource('/roleuser', 'RoleUserController')->middleware('auth');
