@@ -21,7 +21,7 @@
     </div>
     <div class="grid-x align-center">
       <div class="small-6 medium-4 cell">
-        <button data-close class="button modal-button" id="submit-role-add" type="submit">Сохранить</button>
+         {{ Form::submit('Добавить роль', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-role-add']) }}
       </div>
     </div>
   {{ Form::close() }}

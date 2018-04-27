@@ -193,9 +193,9 @@ class CompanyController extends Controller
 
         $company->save();
 
-        $folder = new Folder;
-        $folder->folder_name = $company->company_name;
-        $link_for_folder = 'public/companies/' . $company->id;
+        // $folder = new Folder;
+        // $folder->folder_name = $company->company_name;
+        // $link_for_folder = 'public/companies/' . $company->id;
 
         // if($company->company_alias != null){
         //     $link_for_folder = 'public/companies/' . $company->company_alias;
@@ -204,7 +204,7 @@ class CompanyController extends Controller
         // };
 
         // Создаем папку в файловой системе
-        Storage::makeDirectory($link_for_folder);
+        Storage::disk('public')->makeDirectory($company->id.'/media');
 
         // $folder->folder_url = $link_for_folder;
         // $folder->folder_alias = 'users';

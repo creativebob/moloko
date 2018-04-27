@@ -30,10 +30,48 @@ class News extends Model
    */
   protected $dates = ['deleted_at'];
   protected $fillable = [
-    'news_name',
-    'news_alias',
+    'name',
+    'alias',
     'company_id',
   ];
+
+  public function setDatePublishBeginAttribute($value) {
+    if($value == Null){
+        return $value;
+    } else {
+        $date_parts = explode('.', $value);
+        $this->attributes['date_publish_begin'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+    };
+  }
+
+  public function getDatePublishBeginAttribute($value) {
+    if($value == Null){
+        return $value;
+    } else {
+      $date_parts = explode('-', $value);
+      $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
+      return $value;
+    };
+  }
+
+  public function setDatePublishEndAttribute($value) {
+    if($value == Null){
+        return $value;
+    } else {
+        $date_parts = explode('.', $value);
+        $this->attributes['date_publish_end'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+    };
+  }
+
+  public function getDatePublishEndAttribute($value) {
+    if($value == Null){
+        return $value;
+    } else {
+      $date_parts = explode('-', $value);
+      $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
+      return $value;
+    };
+  }
 
   /**
   * Получаем сайт.
@@ -51,11 +89,21 @@ class News extends Model
     return $this->belongsTo('App\Company');
   }
 
+  public function photo()
+  {
+    return $this->belongsTo('App\Photo');
+  }
+
 
   public function author()
   {
     return $this->belongsTo('App\User', 'author_id');
   }
 
+  // Получаем альбом
+  public function albums()
+  {
+     return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'news');
+  }
 
 }

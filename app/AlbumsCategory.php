@@ -31,8 +31,8 @@ class AlbumsCategory extends Model
    */
 	 protected $dates = ['deleted_at'];
 	 protected $fillable = [
-	 	'albums_category_name',
-	 	'albums_category_parent_id',
+	 	'name',
+	 	'parent_id',
 	 	'category_status',
 	 ];
 
@@ -42,6 +42,11 @@ class AlbumsCategory extends Model
     public function companies()
     {
     	return $this->hasMany('App\Company');
+    }
+
+    public function albums()
+    {
+    	return $this->hasMany('App\Album');
     }
 
   }

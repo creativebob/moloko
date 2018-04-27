@@ -1,2 +1,2 @@
 {{-- Строка --}}
-{{ Form::textarea($name, $value, ['class'=>'varchar-field', 'autocomplete'=>'off', 'size' => '10x3']) }}
+{{ Form::textarea($name, $value, ['autocomplete'=>'off', 'size' => '10x3']) }}

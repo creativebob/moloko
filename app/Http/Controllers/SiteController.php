@@ -117,6 +117,10 @@ class SiteController extends Controller
     $site->author_id = $user_id;
     $site->save();
     if ($site) {
+
+      // Создаем папку в файловой системе
+      Storage::disk('public')->makeDirectory($site->company->company_alias.'/media/news');
+
       $mass = [];
       // Смотрим список пришедших разделов
       foreach ($request->menus as $menu) {
@@ -130,7 +134,7 @@ class SiteController extends Controller
       return Redirect('/sites');
     } else {
       abort(403, 'Ошибка записи сайта');
-    };
+    }
   }
 
   // Получаем сайт по api
@@ -180,7 +184,6 @@ class SiteController extends Controller
 
   public function update(SiteRequest $request, $id)
   {
-
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -222,7 +225,7 @@ class SiteController extends Controller
       return Redirect('/sites');
     } else {
       abort(403, 'Ошибка обновления сайта');
-    };
+    }
   }
 
 
@@ -253,7 +256,7 @@ class SiteController extends Controller
       };
     } else {
       abort(403, 'Сайт не найден');
-    };
+    }
   }
 
 

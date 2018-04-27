@@ -453,12 +453,12 @@ var Dropzone = function (_Emitter) {
         /**
          * If `addRemoveLinks` is true, the text to be used for the cancel upload link.
          */
-        dictCancelUpload: "Cancel upload",
+        dictCancelUpload: "Прервать загрузку",
 
         /**
          * The text that is displayed if an upload was manually canceled
          */
-        dictUploadCanceled: "Upload canceled.",
+        dictUploadCanceled: "ЗАгрузка прервана",
 
         /**
          * If `addRemoveLinks` is true, the text to be used for confirmation when cancelling upload.
@@ -468,7 +468,7 @@ var Dropzone = function (_Emitter) {
         /**
          * If `addRemoveLinks` is true, the text to be used to remove a file.
          */
-        dictRemoveFile: "Remove file",
+        dictRemoveFile: "Удалить",
 
         /**
          * If this is not null, then the user will be prompted before removing a file.

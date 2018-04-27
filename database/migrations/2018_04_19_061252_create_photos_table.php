@@ -20,23 +20,20 @@ class CreatePhotosTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('name')->index()->comment('Название фото');
+            $table->string('title')->nullable()->comment('Заголовок фото');
             $table->string('description')->nullable()->comment('Описание фото');
 
             $table->string('path')->nullable()->comment('Путь к фото');
             $table->string('alias')->nullable()->comment('Алиас фото');
 
-            $table->string('width')->nullable()->comment('Ширина фото');
-            $table->string('height')->nullable()->comment('Высота фото');
-            $table->string('size')->nullable()->comment('Размер фото');
+            $table->integer('width')->nullable()->comment('Ширина фото');
+            $table->integer('height')->nullable()->comment('Высота фото');
+            $table->decimal('size', 10, 2)->nullable()->comment('Размер фото');
             $table->string('extension')->nullable()->comment('Расширение фото');
-
-            $table->integer('album_id')->nullable()->unsigned()->comment('Id категории в которой находиться альбом');
-            $table->foreign('album_id')->references('id')->on('albums');
 
             $table->integer('photo_access')->nullable()->unsigned()->comment('0 - личный, 1 - публичный');
             
-
-            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');

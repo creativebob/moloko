@@ -12,7 +12,7 @@
 
 @section('title-content')
 {{-- Меню --}}
-@include('includes.title-content', ['page_info' => $page_info, 'page_alias' => 'sites/'.$site->alias.'/'.$page_info->alias, 'class' => App\Navigation::class, 'type' => 'section-table', 'name' => $site->name])
+@include('includes.title-content', ['page_info' => $page_info, 'page_alias' => 'sites/'.$site->alias.'/'.$page_info->alias, 'class' => App\Navigation::class, 'type' => 'sections-menu', 'name' => $site->name])
 @endsection
 
 @section('content')

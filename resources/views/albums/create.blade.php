@@ -4,7 +4,7 @@
   @include('includes.scripts.pickmeup-inhead')
 @endsection
 
-@section('title', 'Новый пользователь')
+@section('title', 'Новый альбом')
 
 @section('breadcrumbs', Breadcrumbs::render('create', $page_info))
 
@@ -21,7 +21,7 @@
 
 @section('content')
 
-  {{ Form::open(['route' => 'users.store', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+  {{ Form::open(['url' => '/albums', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
     @include('albums.form', ['submitButtonText' => 'Добавить альбом', 'param' => '', 'form' => null])
   {{ Form::close() }}
 

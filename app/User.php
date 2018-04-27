@@ -209,8 +209,10 @@ class User extends Authenticatable
   */
   public function roles()
   {
-    return $this->belongsToMany('App\Role')->withPivot('department_id');
+    return $this->hasMany('App\RoleUser');
   }
+
+  
 
 
     /**
@@ -259,6 +261,11 @@ class User extends Authenticatable
   public function city()
   {
     return $this->belongsTo('App\City');
+  }
+
+  public function avatar()
+  {
+    return $this->belongsTo('App\Photo', 'photo_id', 'id');
   }
 
 

@@ -5,8 +5,8 @@
 			<div class="top-bar-left">
 				
 				@can('create', $class)
-
 				@switch($type)
+
 				@case('table')
 				@if (isset($page_alias))
 				<h2 class="header-content">{{ $page_info->title }}</h2>
@@ -27,8 +27,12 @@
 				<a class="icon-add sprite" data-open="first-add"></a>
 				@break
 
-				@endswitch
+				@case('sections-menu')
+				<h2 class="header-content">{{ $page_info->title .' &laquo;'. $name .'&raquo;' }}</h2>
+				<a class="icon-add sprite" data-open="first-add"></a>
+				@break
 
+				@endswitch
 				@endcan
 			</div>
 			<div class="top-bar-right">
