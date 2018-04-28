@@ -174,9 +174,9 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
             ], 
             [
-                'entity_name' => 'Медиа альбомов',
-                'entity_alias' => 'album_media',
-                'entity_model' => 'AlbumMedia',
+                'entity_name' => 'Сущности с прикрепленными альбомами',
+                'entity_alias' => 'album_entity',
+                'entity_model' => 'AlbumEntity',
                 'system_item' => 1,
                 'author_id' => 1,
             ],

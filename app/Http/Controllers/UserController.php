@@ -332,8 +332,6 @@ class UserController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::with('city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department')->moderatorLimit($answer)->findOrFail($id);
 
-        
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
 
@@ -354,15 +352,8 @@ class UserController extends Controller
         ->pluck('role_name', 'id');
 
         // dd($departments_list);
-
-        
-        // dd($departments_list);
-        // dd($user->roles[0]->role->role_name);
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-
-        // dd($departments_list);
-        
         // dd($user);
         
         return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info'));
