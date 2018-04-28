@@ -357,4 +357,19 @@ class PhotoController extends Controller
         abort(403, 'Фотография не найдена');
       }
     }
+
+    // Сортировка
+    public function photos_sort(Request $request)
+    {
+      $result = '';
+      $i = 1;
+      foreach ($request->photos as $item) {
+
+        $photo = Photo::findOrFail($item);
+        $photo->sort = $i;
+        $photo->save();
+
+        $i++;
+      }
+    }
   }

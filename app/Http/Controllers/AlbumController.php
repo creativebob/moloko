@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+// Подключаем модели
 use App\Album;
 use App\Photo;
 use App\AlbumMedia;
@@ -9,7 +10,6 @@ use App\User;
 use App\List_item;
 use App\Booklist;
 use App\AlbumsCategory;
-
 
 use App\Http\Controllers\Session;
 
@@ -39,7 +39,7 @@ class AlbumController extends Controller
   {
 
         // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), User::class);
+    $this->authorize(getmethod(__FUNCTION__), Album::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -204,7 +204,7 @@ class AlbumController extends Controller
       $album = new Album;
       $album->name = $request->name;
       $album->alias = $request->alias;
-      $album->albums_category_id = $request->albums_category;
+      $album->albums_category_id = $request->albums_category_id;
       $album->access = $request->access;
       $album->description = $request->description;
  
@@ -253,7 +253,9 @@ class AlbumController extends Controller
       // --------------------------------------------------------------------------------------------------------------------------------------
       // ГЛАВНЫЙ ЗАПРОС
       // --------------------------------------------------------------------------------------------------------------------------------------
-      $album = Album::with('author', 'photos')
+      $album = Album::with(['author', 'photos' => function ($query) {
+        $query->orderBy('sort', 'asc');
+      }])
       ->whereAlias($alias)
       ->moderatorLimit($answer)
       ->companiesLimit($answer)
@@ -303,10 +305,10 @@ class AlbumController extends Controller
       $this->authorize(getmethod(__FUNCTION__), $album);
 
        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('albums_categories', false, 'index');
+      $answer_category = operator_right('albums_categories', false, 'index');
 
         // Категории
-        $albums_categories = AlbumsCategory::moderatorLimit($answer)
+      $albums_categories = AlbumsCategory::moderatorLimit($answer_category)
         ->orderBy('sort', 'asc')
         ->get(['id','name','category_status','parent_id'])
         ->keyBy('id')
@@ -406,7 +408,7 @@ class AlbumController extends Controller
 
       $album->name = $request->name;
       $album->alias = $request->alias;
-      $album->albums_category_id = $request->albums_category;
+      $album->albums_category_id = $request->albums_category_id;
       $album->access = $request->access;
       $album->description = $request->description;
 
@@ -414,7 +416,7 @@ class AlbumController extends Controller
       $album->system_item = $request->system_item;
       $album->moderation = $request->moderation;
 
-      $album->author_id = $user_id;
+      $album->editor_id = $user_id;
       $album->save();
       if ($album) {
 
@@ -496,5 +498,20 @@ class AlbumController extends Controller
      // Отдаем Ajax
     return view('news.albums', ['album' => $album]);
   }
+
+  // Сортировка
+    public function albums_sort(Request $request)
+    {
+      $result = '';
+      $i = 1;
+      foreach ($request->albums as $item) {
+
+        $album = Album::findOrFail($item);
+        $album->sort = $i;
+        $album->save();
+
+        $i++;
+      }
+    }
 
 }

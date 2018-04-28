@@ -52,6 +52,7 @@ class NewsController extends Controller
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
     ->whereSite_id($site->id) // Только для страниц сайта
+    ->orderBy('sort', 'asc')
     ->orderBy('moderation', 'desc')
     ->paginate(30);
 
@@ -584,5 +585,20 @@ class NewsController extends Controller
 
      // Отдаем Ajax
     return view('news.albums', ['cur_news' => $cur_news]);
+  }
+
+  // Сортировка
+  public function news_sort(Request $request)
+  {
+    $result = '';
+    $i = 1;
+    foreach ($request->news as $item) {
+
+      $cur_news = News::findOrFail($item);
+      $cur_news->sort = $i;
+      $cur_news->save();
+
+      $i++;
+    }
   }
 }

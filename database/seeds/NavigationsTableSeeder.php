@@ -18,7 +18,7 @@ class NavigationsTableSeeder extends Seeder
         'site_id' => null, 
         'system_item' => 1,  
         'company_id' => null,
-        'category_navigation_id' => 1,         
+        'navigations_category_id' => 1,         
       ],
       [
         'name' => 'Левый сайдбар',
@@ -26,7 +26,7 @@ class NavigationsTableSeeder extends Seeder
         'site_id' => 1, 
         'system_item' => 1,  
         'company_id' => null,
-        'category_navigation_id' => 2,         
+        'navigations_category_id' => 2,         
       ],
       [
         'name' => 'Главное меню',
@@ -34,7 +34,7 @@ class NavigationsTableSeeder extends Seeder
         'site_id' => 2,  
         'system_item' => null, 
         'company_id' => 1,
-        'category_navigation_id' => 2,            
+        'navigations_category_id' => 2,            
       ],
       [
         'name' => 'Меню продукции',
@@ -42,7 +42,7 @@ class NavigationsTableSeeder extends Seeder
         'site_id' => 2, 
         'system_item' => null,  
         'company_id' => 1,
-        'category_navigation_id' => 2,            
+        'navigations_category_id' => 2,            
       ],
       [
         'name' => 'Структура',
@@ -50,7 +50,7 @@ class NavigationsTableSeeder extends Seeder
         'site_id' => 2, 
         'system_item' => null,  
         'company_id' => 1,
-        'category_navigation_id' => 2,            
+        'navigations_category_id' => 2,            
       ],
       [
         'name' => 'Соц-медиа',
@@ -58,7 +58,7 @@ class NavigationsTableSeeder extends Seeder
         'site_id' => 2, 
         'system_item' => null,  
         'company_id' => 1,
-        'category_navigation_id' => 2,            
+        'navigations_category_id' => 2,            
       ],
 
     ]);

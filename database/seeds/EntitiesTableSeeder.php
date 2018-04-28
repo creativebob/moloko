@@ -187,6 +187,21 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
             ],
+
+            [
+                'entity_name' => 'Продукция',
+                'entity_alias' => 'products',
+                'entity_model' => 'Product',
+                'system_item' => 1,
+                'author_id' => 1,
+            ], 
+            [
+                'entity_name' => 'Категории продукции',
+                'entity_alias' => 'products_categories',
+                'entity_model' => 'ProductsCategory',
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
             
             // Связующие сущности
 

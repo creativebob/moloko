@@ -447,7 +447,7 @@ class AlbumsCategoryController extends Controller
       // Модерация и системная запись
       $albums_category->system_item = $request->system_item;
       $albums_category->moderation = $request->moderation;
-      $albums_category->parent_id = $request->albums_category_parent_id;
+      $albums_category->parent_id = $request->parent_id;
       $albums_category->editor_id = $user->id;
 
       // Если индустрия
@@ -546,8 +546,10 @@ class AlbumsCategoryController extends Controller
     // Проверка наличия в базе
     public function albums_category_check(Request $request)
     {
+      // Получаем авторизованного пользователя
+      $user = $request->user();
     // Проверка отдела в нашей базе данных
-      $albums_category = AlbumsCategory::where('name', $request->name)->first();
+      $albums_category = AlbumsCategory::where(['name' => $request->name, 'company_id' => $user->company_id])->first();
 
     // Если такое название есть
       if ($albums_category) {
@@ -651,19 +653,6 @@ class AlbumsCategoryController extends Controller
       $albums_category = AlbumsCategory::findOrFail($item);
       $albums_category->sort = $i;
       $albums_category->save();
-
-      // if ($albums_category) {
-      //   $result = [
-      //     'error_status' => 0,
-      //   ];
-      // } else {
-      //   $result = [
-      //     'error_status' => 1,
-      //     'msg' => 'Произошла непредвиденная ошибка, попробуйте перезагрузить страницу и попробуйте еще раз'
-      //   ];
-      // }
-      // return json_encode($result, JSON_UNESCAPED_UNICODE);
-
       $i++;
     }
   }

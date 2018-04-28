@@ -113,4 +113,5 @@ $(function() {
 </script> 
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.table-scripts')
+@include('includes.scripts.table-sort')
 @endsection
