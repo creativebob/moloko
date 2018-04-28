@@ -18,19 +18,7 @@
       // sortList: [[2,0]],
       cssHeader: "thead-header"
     });  
-    // Оставляем ширину у вырванного из потока элемента
-    var fixHelper = function(e, ui) {
-      ui.children().each(function() {
-        $(this).width($(this).width());
-      });
-      return ui;
-    };
-    // Включаем перетаскивание
-    $("#table-content tbody").sortable({
-      axis: 'y',
-      helper: fixHelper, // ширина вырванного элемента
-      handle: 'td:first' // указываем за какой элемент можно тянуть
-    });
+    
 
     // Чекбоксы
     console.log('Запуск функции чекбоксов');

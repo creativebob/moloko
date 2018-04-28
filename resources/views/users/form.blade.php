@@ -255,8 +255,8 @@
               </tr>
             </thead>
             <tbody class="roleuser-table">
-              @if (!empty($user->roles))
-              @foreach ($user->roles as $role_user)
+              @if (!empty($user->role_user))
+              @foreach ($user->role_user as $role_user)
               @include('users.roles', $role_user)
               @endforeach
               @endif

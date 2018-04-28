@@ -39,9 +39,9 @@ class AlbumsCategory extends Model
     /**
   * Получаем компании.
   */
-    public function companies()
+    public function company()
     {
-    	return $this->hasMany('App\Company');
+    	return $this->belongsTo('App\Company');
     }
 
     public function albums()

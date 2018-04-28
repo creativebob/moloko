@@ -23,7 +23,7 @@ class AlbumPolicy
      */
 
     protected $entity_name = 'albums';
-    protected $entity_dependence = true;
+    protected $entity_dependence = false;
     
     public function before($user)
     {

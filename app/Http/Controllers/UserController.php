@@ -330,9 +330,7 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('city', 'roles', 'roles.role', 'roles.position', 'roles.department')->moderatorLimit($answer)->findOrFail($id);
-
-        
+        $user = User::with('city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
@@ -353,70 +351,10 @@ class UserController extends Controller
         ->template($answer_roles) // Выводим шаблоны в список
         ->pluck('role_name', 'id');
 
-        dd($departments_list);
-
-         // Формируем дерево вложенности
-      $sectors_cat = [];
-      foreach ($sectors as $id => &$node) { 
-
-        // Если нет вложений
-        if (!$node['sector_parent_id']) {
-          $sectors_cat[$id] = &$node;
-        } else { 
-
-        // Если есть потомки то перебераем массив
-          $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
-        };
-      };
-
-      // dd($sectors_cat);
-
-      // Функция отрисовки option'ов
-      function tplMenu($sector, $padding, $parent) {
-
-        $selected = '';
-        if ($sector['id'] == $parent) {
-          $selected = ' selected';
-        }
-        if ($sector['industry_status'] == 1) {
-          $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['sector_name'].'</option>';
-        } else {
-          $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['sector_name'].'</option>';
-        }
-        
-        // Добавляем пробелы вложенному элементу
-        if (isset($sector['children'])) {
-          $i = 1;
-          for($j = 0; $j < $i; $j++){
-            $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-          }     
-          $i++;
-          
-          $menu .= showCat($sector['children'], $padding, $parent);
-        }
-        return $menu;
-        
-      }
-      // Рекурсивно считываем наш шаблон
-      function showCat($data, $padding, $parent){
-        $string = '';
-        $padding = $padding;
-        foreach($data as $item){
-          $string .= tplMenu($item, $padding, $parent);
-        }
-        return $string;
-      }
-
-      // Получаем HTML разметку
-      $sectors_list = showCat($sectors_cat, '', $request->sector_parent_id);
-
         // dd($departments_list);
-        // dd($user->roles[0]->role->role_name);
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-
-        // dd($departments_list);
-        
+        // dd($user);
         
         return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info'));
       }

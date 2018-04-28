@@ -157,5 +157,5 @@
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-delete-script')
   @include('includes.scripts.delete-ajax-script')
-
+@include('includes.scripts.table-sort')
   @endsection

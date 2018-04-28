@@ -31,6 +31,9 @@ use App\AlbumsCategory;
 use App\Photo;
 use App\Folder;
 
+use App\Product;
+use App\ProductsCategory;
+
 use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
 use App\Policies\CompanyPolicy;
@@ -59,6 +62,9 @@ use App\Policies\AlbumPolicy;
 use App\Policies\AlbumsCategoryPolicy;
 use App\Policies\PhotoPolicy;
 use App\Policies\FolderPolicy;
+
+use App\Policies\ProductPolicy;
+use App\Policies\ProductsCategoryPolicy;
 
 
 use Illuminate\Support\Facades\Gate as GateContract;
@@ -99,6 +105,8 @@ class AuthServiceProvider extends ServiceProvider
         AlbumsCategory::class => AlbumsCategoryPolicy::class,
         Photo::class => PhotoPolicy::class,
         Folder::class => FolderPolicy::class,
+        Product::class => ProductPolicy::class,
+        ProductsCategory::class => ProductsCategoryPolicy::class,
     ];
 
     public function boot()

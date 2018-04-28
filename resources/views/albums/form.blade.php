@@ -27,7 +27,7 @@
       </div>
       <div class="small-12 medium-6 cell">
         <label>Категория ольбома
-          <select name="albums_category">
+          <select name="albums_category_id">
             @php
             echo $albums_categories_list;
             @endphp
