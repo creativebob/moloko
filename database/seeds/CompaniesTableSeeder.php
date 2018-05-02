@@ -88,7 +88,7 @@ class CompaniesTableSeeder extends Seeder
                 'director_user_id' => null,  
                 // 'admin_user_id' => '1',  
                 'city_id' => 1,
-                'moderation' => 1,
+                'moderation' => null,
                 'sector_id' => 12,
                 'author_id' => 1,
             ],

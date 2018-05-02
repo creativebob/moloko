@@ -32,6 +32,18 @@ class MenuSiteTableSeeder extends Seeder
                 'menu_id' => 20,
 		        'site_id' => 2,
             ],
+            [
+                'menu_id' => 18,
+                'site_id' => 5,
+            ],
+            [
+                'menu_id' => 19,
+                'site_id' => 5,
+            ],
+            [
+                'menu_id' => 20,
+                'site_id' => 5,
+            ],
         ]);
     }
 }
