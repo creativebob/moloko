@@ -52,6 +52,16 @@ class SitesTableSeeder extends Seeder
                 'moderation' => null,
                 'api_token' => str_random(60),
             ],
+            [
+                'name' => 'Шторка',
+                'domen' => 'shtorka',
+                'alias' => 'storka',
+                'company_id' => 4,
+                'author_id' => 14,
+                'system_item' => null,
+                'moderation' => null,
+                'api_token' => 'Y0M3jVi8tgRmUalSTe5zbLpBsHW0324xOyimn0MUa5zaoVrtuEfv8iskaV2x',
+            ],
         ]);
     }
 }
