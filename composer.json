@@ -9,6 +9,7 @@
     "barryvdh/laravel-debugbar": "^3.1",
     "davejamesmiller/laravel-breadcrumbs": "^4.2",
     "doctrine/dbal": "^2.5",
+    "elforastero/transliterate": "^1.1",
     "fideloper/proxy": "~3.3",
     "intervention/image": "dev-master",
     "laravel/framework": "5.5.*",

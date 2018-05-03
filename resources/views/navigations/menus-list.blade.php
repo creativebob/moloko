@@ -16,6 +16,9 @@
 		@if ($menu['system_item'])
 		<span class="system-item">Системная запись!</span>
 		@endif
+		@if ($menu['display'] != 1)
+		<span class="no-moderation">Не отображается на сайте</span>
+		@endif
 	</a>
 	<div class="drop-list checkbox">
 		@if ($drop == 1)
@@ -61,6 +64,9 @@
 		@endif
 		@if ($menu['system_item'])
 		<span class="system-item">Системная запись!</span>
+		@endif
+		@if ($menu['display'] != 1)
+		<span class="no-moderation">Не отображается на сайте</span>
 		@endif
 	</a>
 	<div class="icon-list">

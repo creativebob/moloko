@@ -83,6 +83,11 @@ class Company extends Model
     return $this->hasMany('App\Department');
   }
 
+  public function filials()
+  {
+    return $this->hasMany('App\Department')->where('filial_status', 1);
+  }
+
   public function sites()
   {
     return $this->hasMany('App\Site');

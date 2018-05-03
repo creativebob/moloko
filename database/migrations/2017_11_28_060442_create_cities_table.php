@@ -19,6 +19,7 @@ class CreateCitiesTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('city_name')->index()->comment('Название населенного пункта');
+            $table->string('alias')->nullable()->index()->comment('Алиас населенного пункта');
             $table->integer('area_id')->unsigned()->nullable()->comment('Район населенного пункта');
             $table->foreign('area_id')->references('id')->on('areas');
             $table->integer('region_id')->unsigned()->nullable()->comment('Область населенного пункта');

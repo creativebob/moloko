@@ -7,15 +7,21 @@ use App\Region;
 use App\Area;
 use App\City;
 use App\Page;
+
 // Политика
 use App\Policies\CityPolicy;
 use App\Policies\AreaPolicy;
 use App\Policies\RegionPolicy;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 // Валидация
 use App\Http\Requests\CityRequest;
+
+// Транслитерация
+use Transliterate;
 
 class CityController extends Controller
 {
@@ -164,12 +170,22 @@ class CityController extends Controller
           }
         }
 
-      // Записываем город, его наличие в базе мы проверили ранее
+        $count = City::whereCity_name($city_name)->count();
+        
+        // Записываем город, его наличие в базе мы проверили ранее
         $city = new City;
         $city->city_name = $city_name;
         $city->city_code = $request->city_code;
 
-      // Если у города нет района
+        if ($count > 0) {
+          $count = $count + 1;
+          $city_name = $city_name . $count;
+        }
+        $city->alias = Transliterate::make($city_name, ['type' => 'url', 'lowercase' => true]);
+
+        // TO DO при удалении города с дублирующимся алиасом нужно проверять на наличие алиаса в базе, иначе начнется путаница
+
+        // Если у города нет района
         if ($area_id != 0) {
           $city->area_id = $area_id;
         } else {
@@ -206,10 +222,18 @@ class CityController extends Controller
 
         if (isset($region_id)) {
 
+          $count = City::whereCity_name($city_name)->count();
+          
           // Записываем город, его наличие в базе мы проверили ранее
           $city = new City;
           $city->city_name = $city_name;
           $city->city_code = $request->city_code;
+          if ($count > 0) {
+            $count = $count + 1;
+            $city_name = $city_name . $count;
+          }
+          $city->alias = Transliterate::make($city_name, ['type' => 'url', 'lowercase' => true]);
+
           $city->city_vk_external_id = $request->city_vk_external_id;
           $city->region_id = $region_id;
           $city->author_id = $user->id;

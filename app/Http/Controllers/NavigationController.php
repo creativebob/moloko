@@ -86,6 +86,7 @@ class NavigationController extends Controller
       $navigations_tree[$navigation->id]['id'] = $navigation->id;
       $navigations_tree[$navigation->id]['name'] = $navigation->name;
       $navigations_tree[$navigation->id]['system_item'] = $navigation->system_item;
+      $navigations_tree[$navigation->id]['display'] = $navigation->display;
       $navigations_tree[$navigation->id]['moderation'] = $navigation->moderation;
 
       // Проверяем права на редактирование и удаление навигации
@@ -176,6 +177,7 @@ class NavigationController extends Controller
       // Записываем даныне навигации
       $navigations_tree[$navigation->id]['id'] = $navigation->id;
       $navigations_tree[$navigation->id]['name'] = $navigation->name;
+      $navigations_tree[$navigation->id]['display'] = $navigation->display;
       $navigations_tree[$navigation->id]['system_item'] = $navigation->system_item;
       $navigations_tree[$navigation->id]['moderation'] = $navigation->moderation;
 
@@ -252,6 +254,7 @@ class NavigationController extends Controller
       $navigation->name = $navigation_name;
     }
     
+    $navigation->display = $request->display;
     $navigation->site_id = $request->site_id;
     $navigation->company_id = $company_id;
     $navigation->author_id = $user_id;
@@ -336,6 +339,7 @@ class NavigationController extends Controller
       $navigation->name = $navigation_name;
     }
 
+    $navigation->display = $request->display;
     $navigation->site_id = $request->site_id;
     $navigation->company_id = $user->company_id;
     $navigation->editor_id = $user->id;

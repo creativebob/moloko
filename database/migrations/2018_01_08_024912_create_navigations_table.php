@@ -28,6 +28,8 @@ class CreateNavigationsTable extends Migration
             $table->integer('navigations_category_id')->nullable()->unsigned()->comment('ID категории навигации');
             $table->foreign('navigations_category_id')->references('id')->on('navigations_categories');
 
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
