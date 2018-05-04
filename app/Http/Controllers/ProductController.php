@@ -236,12 +236,30 @@ class ProductController extends Controller
     {
     // ГЛАВНЫЙ ЗАПРОС:
       $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-      $product = Product::moderatorLimit($answer)->findOrFail($id);
+      $product = Product::with(['unit', 'country', 'products_category'])->moderatorLimit($answer)->findOrFail($id);
 
 
 
     // Подключение политики
       $this->authorize(getmethod(__FUNCTION__), $product);
+
+      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_units = operator_right('units', false, 'index');
+
+        // Главный запрос
+        $units_list = Unit::orderBy('sort', 'asc')
+        ->get()
+        ->pluck('name', 'id');
+
+        // dd($units_list);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_countries = operator_right('countries', false, 'index');
+
+        // Главный запрос
+        $countries_list = Country::orderBy('sort', 'asc')
+        ->get()
+        ->pluck('name', 'id');
 
        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_category = operator_right('products_categories', false, 'index');
@@ -313,7 +331,7 @@ class ProductController extends Controller
     // Инфо о странице
       $page_info = pageInfo($this->entity_name);
 
-      return view('products.edit', compact('product', 'page_info', 'products_categories_list'));
+      return view('products.edit', compact('product', 'page_info', 'products_categories_list', 'units_list', 'countries_list'));
     }
 
     public function update(Request $request, $id)
