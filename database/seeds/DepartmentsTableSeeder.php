@@ -63,13 +63,13 @@ class DepartmentsTableSeeder extends Seeder
                 'company_id' => 1,
             ],
              [
-                'department_name' => 'Красноярский филиал',
+                'department_name' => 'Читинский филиал',
                 'address' => 'ул. Мира, 11',
                 'phone' => 89115434289,
                 'department_parent_id' => null,
                 'filial_id' => null,
                 'filial_status' => 1,
-                'city_id' => 3,
+                'city_id' => 4,
                 'company_id' => 1,
             ],
             [

@@ -19,6 +19,7 @@
         0
       @endif
       </span>
+      <span>( {{ $navigation['navigations_category']['name'] }} )</span>
       @if ($navigation['moderation'])
       <span class="no-moderation">Не отмодерированная запись!</span>
       @endif

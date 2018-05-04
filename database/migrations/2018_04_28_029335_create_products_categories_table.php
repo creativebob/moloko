@@ -25,7 +25,7 @@ class CreateProductsCategoriesTable extends Migration
             $table->foreign('parent_id')->references('id')->on('products_categories');
 
             $table->integer('products_type_id')->nullable()->unsigned()->comment('ID типа продукции');
-            // $table->foreign('products_type_id')->references('id')->on('products_types');
+            $table->foreign('products_type_id')->references('id')->on('products_types');
 
             $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
 

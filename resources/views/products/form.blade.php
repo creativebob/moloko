@@ -21,6 +21,9 @@
         <label>Название товара
           @include('includes.inputs.name', ['value'=>$product->name, 'name'=>'name', 'required'=>'required'])
         </label>
+        <label>Артикул товара
+          @include('includes.inputs.name', ['value'=>$product->article, 'name'=>'alricle', 'required'=>'required'])
+        </label>
       </div>
       <div class="small-12 medium-6 cell">
         <label>Категория товара
@@ -30,9 +33,22 @@
             @endphp
           </select>
         </label>
+        <label>Себестоимость товара (руб.)
+          @include('includes.inputs.name', ['value'=>$product->cost, 'name'=>'cost', 'required'=>'required'])
+        </label>
+      </div>
+      <div class="small-12 medium-6 cell">
+        <label>Единица измерения
+          {{ Form::select('unit_id', $units_list, $product->unit_id)}}
+        </label>
+      </div>
+        <div class="small-12 medium-6 cell">
+        <label>Страна производитель
+          {{ Form::select('country_id', $countries_list, $product->country_id)}}
+        </label>
       </div>
       <div class="small-12 cell">
-        <label>Описание альбома
+        <label>Описание товара
           @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$product->description, 'required'=>''])
         </label>
       </div>

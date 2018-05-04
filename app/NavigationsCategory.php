@@ -2,7 +2,6 @@
 
 namespace App;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -14,7 +13,7 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
-class ProductsCategory extends Model
+class NavigationsCategory extends Model
 {
 	use SoftDeletes;
   // Подключаем Scopes для главного запроса
@@ -45,13 +44,8 @@ class ProductsCategory extends Model
     	return $this->belongsTo('App\Company');
     }
 
-    public function products()
+    public function navigations()
     {
-    	return $this->hasMany('App\Product');
-    }
-
-    public function products_type()
-    {
-      return $this->belongsTo('App\ProductsType');
+    	return $this->hasMany('App\Navigation');
     }
 }

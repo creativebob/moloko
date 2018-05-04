@@ -12,6 +12,9 @@
       <div class="sprite-input-right find-status"></div>
       <div class="item-error">Такой уже существует!</div>
     </label>
+    <label>Тип продукции
+      {{ Form::select('products_type_id', $products_types_list, $products_category->products_type_id)}}
+    </label>
     {{ Form::hidden('products_category_id', $products_category->id, ['id' => 'products-category-id']) }}
     {{ Form::hidden('medium_item', 0, ['class' => 'medium-item', 'pattern' => '[0-9]{1}']) }}
     @if ($products_category->moderation == 1)

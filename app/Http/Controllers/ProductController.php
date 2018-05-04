@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\User;
 use App\ProductsCategory;
+use App\Unit;
+use App\Country;
 
 // Валидация
 // use App\Http\Requests\ProductRequest;
@@ -62,9 +64,6 @@ class ProductController extends Controller
 
      public function create(Request $request)
       {
-
-        // dd(public_path());
-
         $user = $request->user();
 
         // Подключение политики
@@ -73,11 +72,33 @@ class ProductController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+        // dd($answer);
+
         // Функция из Helper отдает массив со списками для SELECT
         $departments_list = getLS('users', 'view', 'departments');
         $filials_list = getLS('users', 'view', 'departments');
 
         $product = new Product;
+
+        // dd($product);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_units = operator_right('units', false, 'index');
+
+        // Главный запрос
+        $units_list = Unit::orderBy('sort', 'asc')
+        ->get()
+        ->pluck('name', 'id');
+
+        // dd($units_list);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_countries = operator_right('countries', false, 'index');
+
+        // Главный запрос
+        $countries_list = Country::orderBy('sort', 'asc')
+        ->get()
+        ->pluck('name', 'id');
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_products_categories = operator_right('products_categories', false, 'index');
@@ -141,12 +162,12 @@ class ProductController extends Controller
         $products_categories_list = showCat($products_categories_cat, '');
 
 
-        // dd($products_categories_list);
+        // dd($countries_list);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('products.create', compact('user', 'product', 'departments_list', 'roles_list', 'page_info', 'products_categories_list'));
+        return view('products.create', compact('user', 'product', 'departments_list', 'roles_list', 'page_info', 'products_categories_list', 'countries_list', 'units_list'));
       }
 
      public function store(Request $request)

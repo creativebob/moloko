@@ -19,6 +19,12 @@ class CreateNavigationsCategoriesTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
             
             $table->string('name')->nullable()->comment('Имя категории навигации');
+            $table->string('tag')->nullable()->comment('Имя категории навигации');
+
+            $table->integer('parent_id')->nullable()->unsigned()->comment('Id родителя');
+            $table->foreign('parent_id')->references('id')->on('navigations_categories');
+
+            $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 

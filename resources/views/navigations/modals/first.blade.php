@@ -4,6 +4,13 @@
       @include('includes.inputs.name', ['value'=>$navigation->name, 'name'=>'navigation_name', 'required'=>'required'])
       <div class="item-error">Такая навигация уже существует!</div>
     </label>
+    <label>Категория навигации
+      <select name="navigations_category_id">
+        @php
+        echo $navigations_categories_list;
+        @endphp
+      </select>
+    </label>
     <div class="checkbox">
       {{ Form::checkbox('display', 1, $navigation->display, ['id' => 'display']) }}
       <label for="display"><span>Отображать на сайте</span></label>

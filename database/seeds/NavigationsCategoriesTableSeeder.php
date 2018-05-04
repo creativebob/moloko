@@ -13,15 +13,27 @@ class NavigationsCategoriesTableSeeder extends Seeder
     {
       DB::table('navigations_categories')->insert([
       [
-        'name' => 'Управление сайтом',
+        'name' => 'Навигация по сайту',
+        'tag' => 'main',
+        'category_status' => 1,
         'system_item' => 1,
       ], 
       [
-        'name' => 'Навигации сайта',
+        'name' => 'Главное меню',
+        'tag' => 'general',
+        'category_status' => 1,
         'system_item' => 1,
       ], 
       [
-        'name' => 'Фотогалерея',
+        'name' => 'Соц. сети',
+        'tag' => 'social',
+        'category_status' => 1,
+        'system_item' => 1,
+      ], 
+      [
+        'name' => 'Футер',
+        'tag' => 'footer',
+        'category_status' => 1,
         'system_item' => 1,
       ], 
 

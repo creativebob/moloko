@@ -7,6 +7,7 @@ use App\Navigation;
 use App\Menu;
 use App\Page;
 use App\Site;
+use App\NavigationsCategory;
 
 // Валидация
 use App\Http\Requests\NavigationRequest;
@@ -39,7 +40,7 @@ class NavigationController extends Controller
       $query->orderBy('sort', 'asc');
     }, 'navigations.menus' => function ($query) {
       $query->orderBy('sort', 'asc');
-    }, 'navigations.menus.page'])
+    }, 'navigations.menus.page', 'navigations.navigations_category'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -78,7 +79,7 @@ class NavigationController extends Controller
           $navigations_tree[$navigation->id]['menus'][$id] = &$menu;
         } else { 
         // Если есть потомки то перебераем массив
-        $navigation_id[$navigation->id]['menus'][$menu['parent_id']]['children'][$id] = &$menu;
+          $navigation_id[$navigation->id]['menus'][$menu['parent_id']]['children'][$id] = &$menu;
         }
       }
       
@@ -88,6 +89,7 @@ class NavigationController extends Controller
       $navigations_tree[$navigation->id]['system_item'] = $navigation->system_item;
       $navigations_tree[$navigation->id]['display'] = $navigation->display;
       $navigations_tree[$navigation->id]['moderation'] = $navigation->moderation;
+      $navigations_tree[$navigation->id]['navigations_category'] = $navigation->navigations_category;
 
       // Проверяем права на редактирование и удаление навигации
       $edit = 0;
@@ -131,7 +133,7 @@ class NavigationController extends Controller
       $query->orderBy('sort', 'asc');
     }, 'navigations.menus' => function ($query) {
       $query->orderBy('sort', 'asc');
-    }, 'navigations.menus.page'])
+    }, 'navigations.menus.page', 'navigations.navigations_category'])
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -170,7 +172,7 @@ class NavigationController extends Controller
           $navigations_tree[$navigation->id]['menus'][$id] = &$menu;
         } else { 
         // Если есть потомки то перебераем массив
-        $navigation_id[$navigation->id]['menus'][$menu['parent_id']]['children'][$id] = &$menu;
+          $navigation_id[$navigation->id]['menus'][$menu['parent_id']]['children'][$id] = &$menu;
         }
       }
       
@@ -180,6 +182,7 @@ class NavigationController extends Controller
       $navigations_tree[$navigation->id]['display'] = $navigation->display;
       $navigations_tree[$navigation->id]['system_item'] = $navigation->system_item;
       $navigations_tree[$navigation->id]['moderation'] = $navigation->moderation;
+      $navigations_tree[$navigation->id]['navigations_category'] = $navigation->navigations_category;
 
       // Проверяем права на редактирование и удаление навигации
       $edit = 0;
@@ -220,7 +223,68 @@ class NavigationController extends Controller
 
     $navigation = new Navigation;
 
-    return view('navigations.create-first', ['navigation' => $navigation, 'site' => $site]); 
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer_navigations_categories = operator_right('navigations_categories', false, 'index');
+
+    // Главный запрос
+    $navigations_categories = NavigationsCategory::moderatorLimit($answer_navigations_categories)
+    ->orderBy('sort', 'asc')
+    ->get(['id','name','category_status','parent_id'])
+    ->keyBy('id')
+    ->toArray();
+
+    // Формируем дерево вложенности
+    $navigations_categories_cat = [];
+    foreach ($navigations_categories as $id => &$node) { 
+
+          // Если нет вложений
+      if (!$node['parent_id']) {
+        $navigations_categories_cat[$id] = &$node;
+      } else { 
+
+          // Если есть потомки то перебераем массив
+        $navigations_categories[$node['parent_id']]['children'][$id] = &$node;
+      };
+
+    };
+
+        // dd($navigations_categories_cat);
+
+        // Функция отрисовки option'ов
+    function tplMenu($navigations_category, $padding) {
+
+      if ($navigations_category['category_status'] == 1) {
+        $menu = '<option value="'.$navigations_category['id'].'" class="first">'.$navigations_category['name'].'</option>';
+      } else {
+        $menu = '<option value="'.$navigations_category['id'].'">'.$padding.' '.$navigations_category['name'].'</option>';
+      }
+
+            // Добавляем пробелы вложенному элементу
+      if (isset($navigations_category['children'])) {
+        $i = 1;
+        for($j = 0; $j < $i; $j++){
+          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+        }     
+        $i++;
+
+        $menu .= showCat($navigations_category['children'], $padding);
+      }
+      return $menu;
+    }
+        // Рекурсивно считываем наш шаблон
+    function showCat($data, $padding){
+      $string = '';
+      $padding = $padding;
+      foreach($data as $item){
+        $string .= tplMenu($item, $padding);
+      }
+      return $string;
+    }
+
+        // Получаем HTML разметку
+    $navigations_categories_list = showCat($navigations_categories_cat, '');
+
+    return view('navigations.create-first', ['navigation' => $navigation, 'site' => $site, 'navigations_categories_list' => $navigations_categories_list]); 
   }
 
 
@@ -254,6 +318,7 @@ class NavigationController extends Controller
       $navigation->name = $navigation_name;
     }
     
+    $navigation->navigations_category_id = $request->navigations_category_id;
     $navigation->display = $request->display;
     $navigation->site_id = $request->site_id;
     $navigation->company_id = $company_id;
@@ -306,7 +371,75 @@ class NavigationController extends Controller
     ->whereAlias($alias)
     ->first();
 
-    return view('navigations.edit-first', ['navigation' => $navigation, 'site' => $site]);
+
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_category = operator_right('navigations_categories', false, 'index');
+
+        // Категории
+        $navigations_categories = NavigationsCategory::moderatorLimit($answer_category)
+        ->orderBy('sort', 'asc')
+        ->get(['id','name','category_status','parent_id'])
+        ->keyBy('id')
+        ->toArray();
+
+        // Формируем дерево вложенности
+        $navigations_categories_cat = [];
+        foreach ($navigations_categories as $id => &$node) { 
+
+          // Если нет вложений
+          if (!$node['parent_id']) {
+            $navigations_categories_cat[$id] = &$node;
+          } else { 
+
+          // Если есть потомки то перебераем массив
+            $navigations_categories[$node['parent_id']]['children'][$id] = &$node;
+          };
+
+        };
+
+        // dd($navigations_categories_cat);
+
+        // Функция отрисовки option'ов
+        function tplMenu($navigations_category, $padding, $id) {
+
+          $selected = '';
+          if ($navigations_category['id'] == $id) {
+            // dd($id);
+            $selected = ' selected';
+          }
+
+          if ($navigations_category['category_status'] == 1) {
+            $menu = '<option value="'.$navigations_category['id'].'" class="first"'.$selected.'>'.$navigations_category['name'].'</option>';
+          } else {
+            $menu = '<option value="'.$navigations_category['id'].'"'.$selected.'>'.$padding.' '.$navigations_category['name'].'</option>';
+          }
+
+            // Добавляем пробелы вложенному элементу
+          if (isset($navigations_category['children'])) {
+            $i = 1;
+            for($j = 0; $j < $i; $j++){
+              $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+            }     
+            $i++;
+
+            $menu .= showCat($navigations_category['children'], $padding, $id);
+          }
+          return $menu;
+        }
+        // Рекурсивно считываем наш шаблон
+        function showCat($data, $padding, $id){
+          $string = '';
+          $padding = $padding;
+          foreach($data as $item){
+            $string .= tplMenu($item, $padding, $id);
+          }
+          return $string;
+        }
+
+        // Получаем HTML разметку
+        $navigations_categories_list = showCat($navigations_categories_cat, '', $navigation->navigations_category_id);
+
+    return view('navigations.edit-first', ['navigation' => $navigation, 'site' => $site, 'navigations_categories_list' => $navigations_categories_list]);
   }
 
   public function update(NavigationRequest $request, $alias, $id)
@@ -339,6 +472,7 @@ class NavigationController extends Controller
       $navigation->name = $navigation_name;
     }
 
+    $navigation->navigations_category_id = $request->navigations_category_id;
     $navigation->display = $request->display;
     $navigation->site_id = $request->site_id;
     $navigation->company_id = $user->company_id;

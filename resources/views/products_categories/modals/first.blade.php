@@ -4,6 +4,10 @@
       @include('includes.inputs.name', ['value'=>$products_category->name, 'name'=>'name', 'required'=>'required'])
       <div class="item-error">Такая категория уже существует!</div>
     </label>
+    <label>Тип продукции
+      {{ Form::select('products_type_id', $products_types_list, $products_category->products_type_id)}}
+    </label>
+
     {{ Form::hidden('first_item', 0, ['class' => 'first-item', 'pattern' => '[0-9]{1}']) }}
     {{ Form::hidden('products_category_id', $products_category->id, ['id' => 'products-category-id']) }}
     @if ($products_category->moderation == 1)
