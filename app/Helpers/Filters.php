@@ -161,4 +161,48 @@
         return $filter;
     }
 
+
+    // Пилим checkboxer
+    function getCheckboxerData($result_query, $title, $name, $column, $entity_name = 'none'){
+
+        $checkboxer_mass = [];
+        $filter_entity = $result_query->unique($column); 
+
+            if(count($filter_entity)>0){
+
+                // foreach($filter_entity as $entity){
+                //     $list_filter['item_list'][$entity->$name->id] =  $entity->$name->$model_entity_name;
+                // }
+            };
+
+            $checkboxer_mass['mode'] = 'id'; // Назавние фильтра
+
+
+            $checkboxer_mass['collection'] = $filter_entity;
+
+            if($request->$column == null){
+
+                $checkboxer_mass['mass_id'] = null;
+                $checkboxer_mass['count_mass'] = 0;
+                
+            } else {
+
+                $checkboxer_mass['mass_id'] = $request->$column; // Получаем список ID
+                if(is_array($request->$column)){
+                    $checkboxer_mass['count_mass'] = count($request->$column);
+
+                } else {
+                    $checkboxer_mass['count_mass'] = 0;
+                };
+                
+            };
+
+            $checkboxer_mass['list_select'] = $list_filter; 
+            $checkboxer_mass['title'] = $title; // Назавние фильтра
+
+            // dd($filter);
+            return $checkboxer_mass;
+
+        };
+
 ?>

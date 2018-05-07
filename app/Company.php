@@ -118,14 +118,26 @@ class Company extends Model
     return $this->belongsTo('App\City');
   }
 
+  public function schedules()
+  {
+    return $this->belongsToMany('App\Schedule', 'schedule_entity', 'entity_id', 'schedule_id')->where('entity', 'companies');
+  }
+
   public function positions()
   {
     return $this->hasMany('App\Position');
   }
+  
   // Получаем сектор компании
   public function sector()
   {
     return $this->belongsTo('App\Sector');
+  }
+
+  // Получаем 
+  public function worktime()
+  {
+    return $this->hasMany('App\Worktime');
   }
 
 }
