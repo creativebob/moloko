@@ -111,6 +111,13 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
             ],
             [
+                'entity_name' => 'Категории навигаци',
+                'entity_alias' => 'navigations_category',
+                'entity_model' => 'NavigationsCategory',
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
+            [
                 'entity_name' => 'Меню',
                 'entity_alias' => 'menus',
                 'entity_model' => 'Menu',
@@ -174,9 +181,9 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
             ], 
             [
-                'entity_name' => 'Медиа альбомов',
-                'entity_alias' => 'album_media',
-                'entity_model' => 'AlbumMedia',
+                'entity_name' => 'Сущности с прикрепленными альбомами',
+                'entity_alias' => 'album_entity',
+                'entity_model' => 'AlbumEntity',
                 'system_item' => 1,
                 'author_id' => 1,
             ],
@@ -187,6 +194,41 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
             ],
+            [
+                'entity_name' => 'Типы продукции',
+                'entity_alias' => 'products_types',
+                'entity_model' => 'ProductsType',
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
+            [
+                'entity_name' => 'Категории продукции',
+                'entity_alias' => 'products_categories',
+                'entity_model' => 'ProductsCategory',
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
+            [
+                'entity_name' => 'Продукция',
+                'entity_alias' => 'products',
+                'entity_model' => 'Product',
+                'system_item' => 1,
+                'author_id' => 1,
+            ], 
+            [
+                'entity_name' => 'Единицы измерения',
+                'entity_alias' => 'units',
+                'entity_model' => 'Unit',
+                'system_item' => 1,
+                'author_id' => 1,
+            ], 
+            [
+                'entity_name' => 'Страны',
+                'entity_alias' => 'countries',
+                'entity_model' => 'Country',
+                'system_item' => 1,
+                'author_id' => 1,
+            ], 
             
             // Связующие сущности
 

@@ -19,11 +19,15 @@
         0
       @endif
       </span>
+      <span>( {{ $navigation['navigations_category']['name'] }} )</span>
       @if ($navigation['moderation'])
       <span class="no-moderation">Не отмодерированная запись!</span>
       @endif
       @if ($navigation['system_item'])
       <span class="system-item">Системная запись!</span>
+      @endif
+      @if ($navigation['display'] != 1)
+      <span class="no-moderation">Не отображается на сайте</span>
       @endif
     </a>
     <div class="icon-list">

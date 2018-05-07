@@ -13,7 +13,7 @@
         <select name="page_id" class="pages-select" placeholder="Не выбрано">
           <option value="">Не выбрано</option>
           @php
-            echo $pages_list;
+          echo $pages_list;
           @endphp
         </select>
       </label>
@@ -39,13 +39,17 @@
       <label>Добавляем пункт в:
         <select name="menu_parent_id" class="menu_list">
           @php
-            echo $navigation_list;
+          echo $navigation_list;
           @endphp
         </select>
       </label>
       <label>Введите имя иконки
         @include('includes.inputs.text-en', ['name'=>'menu_icon', 'value'=>$menu->menu_icon, 'required'=>''])
       </label>
+      <div class="checkbox">
+        {{ Form::checkbox('display', 1, $menu->display, ['id' => 'display']) }}
+        <label for="display"><span>Отображать на сайте</span></label>
+      </div>
       {{ Form::hidden('navigation_id', $menu->navigation_id) }}
       {{ Form::hidden('site_id', $site->id) }}
       {{ Form::hidden('menu_id', $menu->id, ['id'=>'menu_id']) }}
@@ -58,4 +62,3 @@
     {{ Form::submit($submitButtonText, ['data-close', 'class'=>'button modal-button', 'id'=>$id]) }}
   </div>
 </div>
-  

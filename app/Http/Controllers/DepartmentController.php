@@ -19,11 +19,12 @@ use App\Policies\DepartmentPolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Session;
-
-// Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+
+// Прочие необходимые классы
+use App\Http\Controllers\Session;
+
 
 class DepartmentController extends Controller
 {

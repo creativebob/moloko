@@ -49,10 +49,7 @@ class Role extends Model
     /**
   * Получаем должности.
   */
-  public function positions()
-  {
-    return $this->belongsToMany('App\Position');
-  }
+
     /**
   * Получаем категорию.
   */
@@ -73,8 +70,15 @@ class Role extends Model
     return $this->belongsTo('App\User', 'author_id');
   }
 
+
+    public function positions()
+  {
+    return $this->belongsToMany('App\Position', 'role_user', 'role_id', 'position_id');
+  }
+
   public function departments()
   {
-    return $this->belongsToMany('App\Department', 'role_user', 'department_id');
+    return $this->belongsToMany('App\Department', 'role_user', 'role_id', 'department_id');
   }
+  
 }

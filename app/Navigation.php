@@ -51,6 +51,13 @@ class Navigation extends Model
   {
     return $this->belongsTo('App\Site');
   }
+
+
+ // Категории навигации
+  public function navigations_category()
+  {
+    return $this->belongsTo('App\NavigationsCategory');
+  }
   /**
   * Получаем автора
   */

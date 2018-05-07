@@ -21,14 +21,9 @@
 @section('content')
 
   {{ Form::open(['route' => 'users.store', 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
-    @include('users.form', ['submitButtonText' => 'Добавить пользователя', 'param' => '', 'form' => null])
+    @include('users.form', ['submitButtonText' => 'Добавить пользователя', 'param' => ''])
   {{ Form::close() }}
 
-@endsection
-
-@section('modals')
-  {{-- Модалка удаления с ajax --}}
-  @include('includes.modals.modal-delete-ajax')
 @endsection
 
 @section('scripts')
@@ -36,6 +31,8 @@
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
   @include('includes.scripts.upload-file')
+  @include('includes.scripts.delete-from-page-script')
+  @include('users.scripts')
 @endsection
 
 

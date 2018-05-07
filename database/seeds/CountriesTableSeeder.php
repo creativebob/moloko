@@ -15,19 +15,13 @@ class CountriesTableSeeder extends Seeder
 				'moderation' => null, 
 			],
 			[
-				'name' => 'Австралия', 
+				'name' => 'Белоруссия', 
 				'system_item' => 1, 
 				'author_id' => 1, 
 				'moderation' => null, 
 			],
 			[
-				'name' => 'Австрия', 
-				'system_item' => 1, 
-				'author_id' => 1, 
-				'moderation' => null, 
-			],
-			[
-				'name' => 'Азербайджан', 
+				'name' => 'Германия', 
 				'system_item' => 1, 
 				'author_id' => 1, 
 				'moderation' => null, 

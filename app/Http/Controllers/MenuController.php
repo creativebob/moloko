@@ -179,6 +179,7 @@ class MenuController extends Controller
       $menu->parent_id = $request->menu_parent_id;
     }
 
+    $menu->display = $request->display;
     $menu->page_id = $request->page_id;
     $menu->company_id = $company_id;
     $menu->author_id = $user_id;
@@ -370,6 +371,8 @@ class MenuController extends Controller
       $menu->navigation_id = $request->navigation_id;
       $menu->parent_id = $request->menu_parent_id;
     }
+
+    $menu->display = $request->display;
     $menu->page_id = $request->page_id;
     $menu->editor_id = $user->id;
     $menu->save();

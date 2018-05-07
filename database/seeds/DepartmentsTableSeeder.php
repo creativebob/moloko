@@ -14,8 +14,8 @@ class DepartmentsTableSeeder extends Seeder
 		DB::table('departments')->insert([
         	[
 		        'department_name' => 'Иркутский филиал',
-                'address' => 'ул. Шевцова, 5',
-		        'phone' => 89015432288,
+                'address' => 'ул. Шевцова, 5, оф. 202',
+		        'phone' => 83952717775,
                 'department_parent_id' => null,
                 'filial_id' => null,
 		        'filial_status' => 1,
@@ -63,13 +63,13 @@ class DepartmentsTableSeeder extends Seeder
                 'company_id' => 1,
             ],
              [
-                'department_name' => 'Красноярский филиал',
+                'department_name' => 'Читинский филиал',
                 'address' => 'ул. Мира, 11',
                 'phone' => 89115434289,
                 'department_parent_id' => null,
                 'filial_id' => null,
                 'filial_status' => 1,
-                'city_id' => 3,
+                'city_id' => 4,
                 'company_id' => 1,
             ],
             [

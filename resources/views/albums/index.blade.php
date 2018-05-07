@@ -11,7 +11,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\User::class, 'type' => 'table'])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Album::class, 'type' => 'table'])
 @endsection
  
 @section('content')
@@ -53,7 +53,7 @@
           <td>
             <a href="/albums/{{ $album->alias }}">
               @if (isset($album->avatar))
-              <img src="/storage/{{ $album->company->id }}/media/albums/{{ $album->id }}/{{ $album->avatar }}" alt="{{ $album->name }}">
+              <img src="/storage/{{ $album->company->id }}/media/albums/{{ $album->id }}/small/{{ $album->avatar }}" alt="{{ $album->name }}">
               @else
               нет фото
               @endif
@@ -114,5 +114,5 @@
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-delete-script')
   @include('includes.scripts.delete-ajax-script')
-
+  @include('includes.scripts.table-sort')
 @endsection

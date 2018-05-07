@@ -63,10 +63,35 @@ Route::prefix('/albums/{alias}')->group(function () {
   // Загрузка фоток через ajax через dropzone.js
 });
 
+// Сортировка альбомов
+Route::post('/photos_sort', 'PhotoController@photos_sort')->middleware('auth');
+
+// Получение альбомов по категории
+Route::post('/albums_list', 'AlbumController@albums_list')->middleware('auth');
+
+// Получение альбома
+Route::post('/get_album', 'AlbumController@get_album')->middleware('auth');
+
+// Сортировка альбомов
+Route::post('/albums_sort', 'AlbumController@albums_sort')->middleware('auth');
 
 
+// Продукция
+Route::resource('products', 'ProductController')->middleware('auth');
+// Сортировка альбомов
+Route::post('/products_sort', 'ProductController@products_sort')->middleware('auth');
 
 
+// Контроллер категорий продукции
+Route::resource('/products_categories', 'ProductsCategoryController')->middleware('auth');
+// Текущая добавленная/удаленная категория альбомов
+Route::any('/get_products_categories', 'ProductsCategoryController@get_content')->middleware('auth');
+// Проверка на существование категории альбомов
+Route::post('/products_category_check', 'ProductsCategoryController@products_category_check')->middleware('auth');
+// Select категорий альбомов
+Route::post('/products_categories_list', 'ProductsCategoryController@products_categories_list')->middleware('auth');
+// Сортировка категорий альбомов
+Route::post('/products_categories_sort', 'ProductsCategoryController@products_categories_sort')->middleware('auth');
 
 // Компании
 Route::resource('/companies', 'CompanyController')->middleware('auth');
@@ -82,6 +107,9 @@ Route::resource('/roles', 'RoleController')->middleware('auth');
 
 Route::get('/roles/{id}/setting', 'RoleController@setting')->middleware('auth')->name('roles.setting');
 Route::post('/roles/setright', 'RoleController@setright')->middleware('auth')->name('roles.setright');
+
+// Получение роли дял пользоователя
+Route::any('/get_role', 'RoleController@get_role')->middleware('auth');
 
 // Маршрут связи юзера с ролями и отделами
 Route::resource('/roleuser', 'RoleUserController')->middleware('auth');
@@ -197,6 +225,9 @@ Route::prefix('/sites/{alias}')->group(function () {
   // Новости
   Route::resource('/news', 'NewsController')->middleware('auth');
 });
+
+// Сортировка отделов
+Route::post('/news_sort', 'NewsController@news_sort')->middleware('auth');
 
 // Route::any('/modal', 'MenuController@modal')->middleware('auth');
 // Сортировка навигаций

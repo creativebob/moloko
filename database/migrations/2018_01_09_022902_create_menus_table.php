@@ -28,7 +28,7 @@ class CreateMenusTable extends Migration
       $table->integer('page_id')->unsigned()->nullable()->comment('Id страницы пункта меню');
       $table->foreign('page_id')->references('id')->on('pages');
 
-      $table->integer('table_id')->unsigned()->nullable()->comment('Id таблицы пункта меню');
+      $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
       $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
       $table->foreign('company_id')->references('id')->on('companies');

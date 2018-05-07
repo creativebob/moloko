@@ -52,7 +52,7 @@ class Photo extends Model
     // Получаем альбом
 	public function album()
 	{
-	   return $this->belongsToMany('App\Album', 'album_media', 'media_id', 'album_id')->where('entity', 'photo');
+	   return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'photo');
 	}
 
 	// Получаем автора
@@ -60,4 +60,9 @@ class Photo extends Model
 	{
 	return $this->belongsTo('App\User', 'author_id');
 	}
+
+    public function user()
+  {
+    return $this->hasOne('App\User');
+  }
 }

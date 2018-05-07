@@ -57,12 +57,12 @@
               <input name="photo" type="file">
             </label> -->
 <!--             <label for="exampleFileUpload" class="button">Upload File</label>
-            <input type="file" name="photo" id="exampleFileUpload"> -->
-            <div class="text-center">
-              <img id="photo">
-            </div>
-          </div>
-        </div>
+  <input type="file" name="photo" id="exampleFileUpload"> -->
+  <div class="text-center">
+    <img id="photo">
+  </div>
+</div>
+</div>
 
 <!--           <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
@@ -240,7 +240,7 @@
         </div>
       </div>
       <div class="grid-x grid-padding-x">
-        @if ($form == 1)
+        @if (isset($user->login))
         <div class="small-12 cell tabs-margin-top">
 
           <table class="table-content">
@@ -255,21 +255,9 @@
               </tr>
             </thead>
             <tbody class="roleuser-table">
-              @if(!empty($role_users))
-              @foreach ($role_users as $role_user)
-              <tr class="item" id="roleuser-{{ $role_user->id }}" data-name="{{ $role_user->role->role_name }}">
-                <td>{{ $role_user->role->role_name }}</td>
-                <td>{{ $role_user->department->department_name }}</td>
-                <td>
-                  @if (isset($role_user->position->position_name))
-                  {{ $role_user->position->position_name }}
-                  @else
-                  Спецправо
-                  @endif
-                </td>
-                <td>Инфа</td>
-                <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete-ajax"></a></td>
-              </tr>
+              @if (!empty($user->role_user))
+              @foreach ($user->role_user as $role_user)
+              @include('users.roles', $role_user)
               @endforeach
               @endif
 

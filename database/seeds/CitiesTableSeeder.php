@@ -14,6 +14,7 @@ class CitiesTableSeeder extends Seeder
         DB::table('cities')->insert([
         	[
 		        'city_name' => 'Иркутск',
+                'alias' => 'irkutsk',
 		        // 'area_id' => '',
 		        'region_id' => 1,
 		        'city_code' => 83952,
@@ -22,6 +23,7 @@ class CitiesTableSeeder extends Seeder
         	],
             [
                 'city_name' => 'Улан-Удэ',
+                'alias' => 'ulanude',
                 // 'area_id' => '',
                 'region_id' => 2,
                 'city_code' => null,
@@ -30,6 +32,7 @@ class CitiesTableSeeder extends Seeder
             ],
             [
                 'city_name' => 'Красноярск',
+                'alias' => 'krasnoyarsk',
                 // 'area_id' => '',
                 'region_id' => 3,
                 'city_code' => null,
@@ -38,6 +41,7 @@ class CitiesTableSeeder extends Seeder
             ],
             [
                 'city_name' => 'Чита',
+                'alias' => 'chita',
                 // 'area_id' => '',
                 'region_id' => 4,
                 'city_code' => null,

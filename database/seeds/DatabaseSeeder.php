@@ -57,7 +57,7 @@ class DatabaseSeeder extends Seeder
     $this->call(EmployeesTableSeeder::class);
 
     // Меню
-    $this->call(CategoriesNavigationsTableSeeder::class);
+    $this->call(NavigationsCategoriesTableSeeder::class);
     $this->call(NavigationsTableSeeder::class);
     $this->call(MenusTableSeeder::class);
     $this->call(MenuSiteTableSeeder::class);
@@ -79,6 +79,11 @@ class DatabaseSeeder extends Seeder
 
     // Единицы измерения
     $this->call(UnitsTableSeeder::class);
+
+    // Товары
+    $this->call(ProductsTypesTableSeeder::class);
+    $this->call(ProductsCategoriesTableSeeder::class);
+    $this->call(ProductsTableSeeder::class);
 
   }
 }

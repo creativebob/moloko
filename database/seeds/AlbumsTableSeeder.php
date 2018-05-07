@@ -19,6 +19,20 @@ class AlbumsTableSeeder extends Seeder
     			'company_id' => 1, 
     			'author_id' => 4, 
     		],
+            [
+                'name' => 'Лол',
+                'alias' => 'lol',
+                'albums_category_id' => 2,
+                'company_id' => 1, 
+                'author_id' => 4, 
+            ],
+            [
+                'name' => 'Кек',
+                'alias' => 'kek',
+                'albums_category_id' => 3,
+                'company_id' => 1, 
+                'author_id' => 4, 
+            ],
     	]);
     }
 }

@@ -911,10 +911,10 @@ input[type=checkbox], input[type=radio] {
   }
 
 
-#cke_content-ckeditor {
-  margin-top: 0.25rem;
-  border: 1px solid #999999;
-}
+  #cke_content-ckeditor {
+    margin-top: 0.25rem;
+    border: 1px solid #999999;
+  }
 // Расположение иконки в инпуте
 .sprite-input-left {
   display: inline-block;
@@ -2248,6 +2248,13 @@ input[type=checkbox], input[type=radio] {
 .table-content {
   border-collapse: separate;
   width: 100%;
+
+  .table-drop-color {
+
+    // td {
+      background-color: $white;
+    // }
+  }
 
   caption {
     font-family: $PFDDPM;

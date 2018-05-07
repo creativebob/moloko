@@ -1760,6 +1760,9 @@ input[type=checkbox], input[type=radio] {
   border-collapse: separate;
   width: 100%;
 }
+.content .table-content .table-drop-color {
+  background-color: #ffffff;
+}
 .content .table-content caption {
   font-family: "PFDinDisplayPro-Med";
   text-align: center;

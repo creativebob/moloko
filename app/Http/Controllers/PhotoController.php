@@ -8,7 +8,7 @@ use App\Album;
 use App\User;
 use App\List_item;
 use App\Booklist;
-use App\AlbumMedia;
+use App\AlbumEntity;
 
 use App\Http\Controllers\Session;
 
@@ -24,10 +24,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-use Intervention\Image\Facades\Image as Image;
+// use Intervention\Image\Facades\Image as Image;
 
 // use Intervention\Image\ImageManagerStatic as Image;
 // use Image;
+
+use Intervention\Image\ImageManagerStatic as Image;
 
 class PhotoController extends Controller
 {
@@ -147,8 +149,6 @@ class PhotoController extends Controller
       $photo = new Photo;
 
       $image = $request->file('photo');
-
-
         // $filename = str_random(5).date_format($time,'d').rand(1,9).date_format($time,'h').".".$extension;
       $directory = $user->company->id.'/media/albums/'.$album->id;
 
@@ -164,7 +164,7 @@ class PhotoController extends Controller
       $photo->height = $params[1];
 
       $size = filesize($image)/1024;
-      $photo->size = number_format($size, 2, '.', ' ');
+      $photo->size = number_format($size, 2, '.', '');
 
       $photo->name = $image_name;
       $photo->company_id = $company_id;
@@ -173,41 +173,42 @@ class PhotoController extends Controller
 
       // $album->photos()->attach($photo->id);
 
-      $media = new AlbumMedia;
+      $media = new AlbumEntity;
       $media->album_id = $album->id;
-      $media->media_id = $photo->id;
+      $media->entity_id = $photo->id;
       $media->entity = 'photo';
       $media->save();
 
-      // $small = $image;
-
-      // $small = Image::make('storage/'.$directory.'/small/'.$image_name)->widen(150);
-
-      $small = Image::make($image);
-      $small->resize(150, 99);
-      Storage::disk('public')->put($directory.'/small/'.$image_name, $small->stream()->__toString());
-
-      // $small = Image::make($image);
-      // $small
-      // Storage::disk('public')->move($directory.'/small/'.$image_name, (string) $small->encode());
-
-      // $small = Image::make($image->getRealPath());
-      // $small->resize(150, 99);
-      // // $small->storeAs($directory.'/small', $image_name, 'public');
-      // $small->save(storage_path('app/public/'.$directory.'/small/'.$image_name));
-
-      // Image::make(storage_path('app/public/'.$directory.'/small/'.$image_name))->resize(150, 99)->save(storage_path('app/public/'.$directory.'/small/'.$image_name));
-
-      // $manager = new ImageManager(array('driver' => 'public'));
-
-      // $small = $manager->make($directory.'/small/')->resize(150, 99);
-      // $img = $small->save($image_name);
-      // $medium = $manager->make($directory.'/medium/'.$image_name)->resize(900, 596);
-      // $large = $manager->make($directory.'/large/'.$image_name)->resize(1200, 795);
-
-
       $upload_success = $image->storeAs($directory.'/original', $image_name, 'public');
-        // dd($photo);
+
+      // $small = Image::make($request->photo)->grab(150, 99);
+      $small = Image::make($request->photo)->widen(150);
+      $save_path = storage_path('app/public/'.$directory.'/small');
+      if (!file_exists($save_path)) {
+        mkdir($save_path, 666, true);
+      }
+      $small->save(storage_path('app/public/'.$directory.'/small/'.$image_name));
+
+      // $medium = Image::make($request->photo)->grab(900, 596);
+      $medium = Image::make($request->photo)->widen(900);
+      $save_path = storage_path('app/public/'.$directory.'/medium');
+      if (!file_exists($save_path)) {
+        mkdir($save_path, 666, true);
+      }
+      $medium->save(storage_path('app/public/'.$directory.'/medium/'.$image_name));
+
+      // $large = Image::make($request->photo)->grab(1200, 795);
+      $large = Image::make($request->photo)->widen(1200);
+      $save_path = storage_path('app/public/'.$directory.'/large');
+      if (!file_exists($save_path)) {
+        mkdir($save_path, 666, true);
+      }
+      $large->save(storage_path('app/public/'.$directory.'/large/'.$image_name));
+
+      
+      // } 
+      // Storage::disk('public')->put($directory.'/small/'.$image_name, $small->stream()->__toString());
+      //   // dd($photo);
 
       if ($upload_success) {
         return response()->json($upload_success, 200);
@@ -354,6 +355,21 @@ class PhotoController extends Controller
         };
       } else {
         abort(403, 'Фотография не найдена');
+      }
+    }
+
+    // Сортировка
+    public function photos_sort(Request $request)
+    {
+      $result = '';
+      $i = 1;
+      foreach ($request->photos as $item) {
+
+        $photo = Photo::findOrFail($item);
+        $photo->sort = $i;
+        $photo->save();
+
+        $i++;
       }
     }
   }

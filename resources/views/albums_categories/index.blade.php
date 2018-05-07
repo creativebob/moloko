@@ -200,7 +200,7 @@
       },
       url: '/albums_categories/create',
       type: "GET",
-      data: {albums_category_parent_id: parent},
+      data: {parent_id: parent},
       success: function(html){
         $('#modal').html(html);
         $('#medium-add').foundation();

@@ -25,6 +25,9 @@ use App\Http\Requests\UserRequest;
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+
+use Intervention\Image\ImageManagerStatic as Image;
 
 class UserController extends Controller
 {
@@ -86,7 +89,7 @@ class UserController extends Controller
         // dd(Storage::disk('public')->get($user_auth->photo));
 
 
-// dd(public_path('app/public/1/1/1/3/3/3'));
+            // dd(public_path('app/public/1/1/1/3/3/3'));
         // $ava = Storage::disk('public')->get(storage_path('app\public'.$user_auth->photo));
         // dd($ava);
 
@@ -207,14 +210,14 @@ class UserController extends Controller
         // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'documents';
         // Storage::makeDirectory($link_for_folder);
 
-      $company_id = $user_auth->company_id;
-      if ($user_auth->god == 1) {
+        $company_id = $user_auth->company_id;
+        if ($user_auth->god == 1) {
       // Если бог, то ставим автором робота
-        $user_id = 1;
-        $company_id = null;
-      } else {
-        $user_id = $user_auth->id;
-      }
+          $user_id = 1;
+          $company_id = null;
+        } else {
+          $user_id = $user_auth->id;
+        }
 
         if ($request->hasFile('photo')) {
           $photo = new Photo;
@@ -224,33 +227,140 @@ class UserController extends Controller
           $photo->extension = $extension;
           $image_name = 'avatar.'.$extension;
 
-          $photo->path = '/'.$directory.'/'.$image_name;
+          // $photo->path = '/'.$directory.'/'.$image_name;
 
           $params = getimagesize($request->file('photo'));
           $photo->width = $params[0];
           $photo->height = $params[1];
 
           $size = filesize($request->file('photo'))/1024;
-          $photo->size = number_format($size, 2, '.', ' ');
+          $photo->size = number_format($size, 2, '.', '');
 
           $photo->name = $image_name;
           $photo->company_id = $company_id;
           $photo->author_id = $user_id;
           $photo->save();
 
-          $upload_success = $image->storeAs($directory, $image_name, 'public');
+          $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
+
+          $avater = Image::make($request->photo)->widen(30);
+          $save_path = storage_path('app/public/'.$directory);
+          if (!file_exists($save_path)) {
+            mkdir($save_path, 666, true);
+          }
+          $avater->save(storage_path('app/public/'.$directory.'/'.$image_name));
+
+          
 
           $user->photo = $photo->path;
           $user->photo_id = $photo->id;
         }   
 
         $user->save();
-        return redirect('users');
+        if ($user) {
+          // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
+          if (isset($request->access)) {
+            $delete = RoleUser::whereUser_id($user->id)->delete();
+
+            $mass = [];
+            foreach ($request->access as $string) {
+              $item = explode(',', $string);
+
+              if ($item[2] == 'null') {
+                $position = null;
+              } else {
+                $position = $item[2];
+              }
+
+              $mass[] = [
+                'role_id' => $item[0],
+                'department_id' => $item[1],
+                'user_id' => $user->id,
+                'position_id' => $position,
+              ];
+            }
+
+          // dd($mass);
+            DB::table('role_user')->insert($mass);
+
+          } else {
+            // Если удалили последнюю роль для должности и пришел пустой массив
+            $delete = RoleUser::whereUser_id($user->id)->delete();
+          }
+          return redirect('users');
+        } else {
+          abort(403, 'Ошибка при обновлении пользователя!');
+        }
+      }
+
+      public function show(Request $request, $id)
+      {
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = User::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $user);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Функция из Helper отдает массив со списками для SELECT
+        $departments_list = getLS('users', 'view', 'departments');
+        $filials_list = getLS('users', 'view', 'filials');
+
+        $role = new Role;
+        $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
+
+        $answer_roles = operator_right('roles', false, 'index');
+
+        $roles_list = Role::moderatorLimit($answer_roles)
+        ->companiesLimit($answer_roles)
+        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer_roles)
+        ->systemItem($answer_roles) // Фильтр по системным записям 
+        ->pluck('role_name', 'id');
+
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
+      }
+
+      public function edit(Request $request, $id)
+      {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = User::with('city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department')->moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $user);
+
+        // Функция из Helper отдает массив со списками для SELECT
+        $departments_list = getLS('users', 'index', 'departments');
+        $filials_list = getLS('users', 'index', 'filials');
+
+        $role = new Role;
+
+        $answer_roles = operator_right('roles', false, 'index');
+
+        $roles_list = Role::moderatorLimit($answer_roles)
+        ->companiesLimit($answer_roles)
+        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer_roles)
+        ->systemItem($answer_roles) // Фильтр по системным записям 
+        ->template($answer_roles) // Выводим шаблоны в список
+        ->pluck('role_name', 'id');
+
+        // dd($departments_list);
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+        // dd($user);
+        
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info'));
       }
 
       public function update(UserRequest $request, $id)
       {
-
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
 
@@ -306,39 +416,46 @@ class UserController extends Controller
 
 
         $company_id = $user_auth->company_id;
-      if ($user_auth->god == 1) {
+        if ($user_auth->god == 1) {
       // Если бог, то ставим автором робота
-        $user_id = 1;
-        $company_id = null;
-      } else {
-        $user_id = $user_auth->id;
-      }
+          $user_id = 1;
+          $company_id = null;
+        } else {
+          $user_id = $user_auth->id;
+        }
 
         if ($request->hasFile('photo')) {
           $photo = new Photo;
           $image = $request->file('photo');
-          $directory = $user_auth->company->company_alias.'/media/albums/'.$user_auth->login;
+          $directory = $user_auth->company->id.'/media/albums/'.$user_auth->login;
           $extension = $image->getClientOriginalExtension();
           $photo->extension = $extension;
           $image_name = 'avatar.'.$extension;
 
-          $photo->path = '/storage/'.$directory.'/'.$image_name;
+          // $photo->path = '/'.$directory.'/'.$image_name;
 
           $params = getimagesize($request->file('photo'));
           $photo->width = $params[0];
           $photo->height = $params[1];
 
           $size = filesize($request->file('photo'))/1024;
-          $photo->size = number_format($size, 2, ',', ' ');
+          $photo->size = number_format($size, 2, '.', '');
 
           $photo->name = $image_name;
           $photo->company_id = $company_id;
           $photo->author_id = $user_id;
           $photo->save();
 
-          $upload_success = $image->storeAs($directory, $image_name, 'public');
+          $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
 
-          $user->photo = $photo->path;
+          $avater = Image::make($request->photo)->widen(30);
+          $save_path = storage_path('app/public/'.$directory);
+          if (!file_exists($save_path)) {
+            mkdir($save_path, 666, true);
+          }
+          $avater->save(storage_path('app/public/'.$directory.'/'.$image_name));
+
+          // $user->photo = $photo->path;
           $user->photo_id = $photo->id;
         }   
 
@@ -346,77 +463,44 @@ class UserController extends Controller
         if($answer['automoderate']){$user->moderation = null;};
 
         $user->save();
-        return redirect('users');
-      }
 
-      public function show(Request $request, $id)
-      {
+        // dd($request->access);
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::moderatorLimit($answer)->findOrFail($id);
+        if ($user) {
+          // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
+          if (isset($request->access)) {
+            $delete = RoleUser::whereUser_id($user->id)->delete();
 
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $user);
+            $mass = [];
+            foreach ($request->access as $string) {
+              $item = explode(',', $string);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+              if ($item[2] == 'null') {
+                $position = null;
+              } else {
+                $position = $item[2];
+              }
 
-        // Функция из Helper отдает массив со списками для SELECT
-        $departments_list = getLS('users', 'view', 'departments');
-        $filials_list = getLS('users', 'view', 'filials');
+              $mass[] = [
+                'role_id' => $item[0],
+                'department_id' => $item[1],
+                'user_id' => $user->id,
+                'position_id' => $position,
+              ];
+            }
 
-        $role = new Role;
-        $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
+          // dd($mass);
+            DB::table('role_user')->insert($mass);
 
-        $answer_roles = operator_right('roles', false, 'index');
+          } else {
+        // Если удалили последнюю роль для должности и пришел пустой массив
+            $delete = RoleUser::whereUser_id($user->id)->delete();
+          }
+          return redirect('users');
+        } else {
+          abort(403, 'Ошибка при обновлении пользователя!');
+        }
 
-        $roles_list = Role::moderatorLimit($answer_roles)
-        ->companiesLimit($answer_roles)
-        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям 
-        ->pluck('role_name', 'id');
-
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
-      }
-
-      public function edit(Request $request, $id)
-      {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('city')->moderatorLimit($answer)->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $user);
-
-        // Функция из Helper отдает массив со списками для SELECT
-        $departments_list = getLS('users', 'index', 'departments');
-        $filials_list = getLS('users', 'index', 'filials');
-
-        $role = new Role;
-        $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
-
-        $answer_roles = operator_right('roles', false, 'index');
-
-        $roles_list = Role::moderatorLimit($answer_roles)
-        ->companiesLimit($answer_roles)
-        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям 
-        ->template($answer_roles) // Выводим шаблоны в список
-        ->pluck('role_name', 'id');
-
-        // dd($departments_list);
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        // dd($departments_list);
-        
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info'));
       }
 
       public function destroy(Request $request, $id)

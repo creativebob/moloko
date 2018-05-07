@@ -7,15 +7,21 @@ use App\Region;
 use App\Area;
 use App\City;
 use App\Page;
+
 // Политика
 use App\Policies\CityPolicy;
 use App\Policies\AreaPolicy;
 use App\Policies\RegionPolicy;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 // Валидация
 use App\Http\Requests\CityRequest;
+
+// Транслитерация
+use Transliterate;
 
 class CityController extends Controller
 {
@@ -100,134 +106,146 @@ class CityController extends Controller
   {
     if ($request->city_db == 1) {
 
-    // Подключение политики
+      // Подключение политики
       $this->authorize(getmethod(__FUNCTION__), Region::class);
       $this->authorize(getmethod(__FUNCTION__), Area::class);
       $this->authorize(getmethod(__FUNCTION__), City::class);
 
-    // Получаем данные для авторизованного пользователя
+      // Получаем данные для авторизованного пользователя
       $user = $request->user();
       if ($user->god == 1) {
         $user_id = 1;
       } else {
         $user_id = $user->id;
       }
-    // $company_id = $user->company_id;
-    // $filial_id = $user->filial_id;
+      // $company_id = $user->company_id;
+      // $filial_id = $user->filial_id;
 
-      // Если пришел город
+      
+      $city_name = $request->city_name;
+
+      // Если пришла область
       if (isset($request->region_name)) {
 
-      // Вносим пришедшие данные в переменные
+        // Вносим пришедшие данные в переменные
         $region_name = $request->region_name;
-        $area_name = $request->area_name;
-        $city_name = $request->city_name;
 
-      // Смотрим область
+        // Смотрим область
         $region = Region::where('region_name', $region_name)->first();
         if ($region) {
-        // Если существует, берем id существующий
+
+          // Если существует, берем id существующий
           $region_id = $region->id;
         } else {
-          if ($region_name == null) {
-        // Если области нет
-            $region_id = 0;
-          } else {
           // Записываем новую область
-            $region = new Region;
-            $region->region_name = $region_name;
-            $region->author_id = $user_id;
-            $region->system_item = 1;
-            $region->save();
-          // Берем id записанной области
+          $region = new Region;
+          $region->region_name = $region_name;
+          $region->author_id = $user_id;
+          $region->system_item = 1;
+          $region->save();
+
+          if ($region) {
+            // Берем id записанной области
             $region_id = $region->id;
-          }
-        }
-      // Смотрим район
-        $area = Area::where('area_name', $area_name)->first();
-        if ($area) {
-        // Если существует, берем id существующей
-          $area_id = $area->id;
-        } else {
-          if ($area_name == null) {
-            $area_id = 0;
           } else {
-          // Записываем новый район
-            $area = new Area;
-            $area->area_name = $area_name;
-            $area->region_id = $region_id;
-            $area->author_id = $user_id;
-            $area->system_item = 1;
-            $area->save();
-          // Берем id записанного района
-            $area_id = $area->id;
+            $result = [
+              'error_status' => 1,
+              'error_message' => 'Ошибка при записи области!'
+            ];
           }
         }
-
-      // Записываем город, его наличие в базе мы проверили ранее
-        $city = new City;
-        $city->city_name = $city_name;
-        $city->city_code = $request->city_code;
-
-      // Если у города нет района
-        if ($area_id != 0) {
-          $city->area_id = $area_id;
-        } else {
-          $city->region_id = $region_id;
-        }
-        $city->city_vk_external_id = $request->city_vk_external_id;
-        $city->author_id = $user->id;
-        $city->system_item = 1;
-        $city->save();
-        $city_id = $city->id;
       } else {
+        // Если пришел город без области (Москва, Питер)
 
-      // Вносим пришедшие данные в переменные
-        $city_name = $request->city_name;
-
-      // Если пришел город без области (Москва, Питер)
-      // Смотрим область
+        // Смотрим область
         $region = Region::where('region_name', 'Города Федерального значения')->first();
         if ($region) {
-        // Если существует, берем id существующий
+          // Если существует, берем id существующий
           $region_id = $region->id;
         } else {
-
-        // Записываем новую область
+          // Записываем новую область
           $region = new Region;
           $region->region_name = 'Города Федерального значения';
           $region->author_id = $user_id;
           $region->system_item = 1;
           $region->save();
 
-        // Берем id записанной области
-          $region_id = $region->id;
-        }
-
-        if (isset($region_id)) {
-
-          // Записываем город, его наличие в базе мы проверили ранее
-          $city = new City;
-          $city->city_name = $city_name;
-          $city->city_code = $request->city_code;
-          $city->city_vk_external_id = $request->city_vk_external_id;
-          $city->region_id = $region_id;
-          $city->author_id = $user->id;
-          $city->system_item = 1;
-          $city->save();
-          $city_id = $city->id;
-
-        } else {
-          $result = [
-            'error_status' => 1,
-            'error_message' => 'Ошибка при записи населенного пункта!'
-          ];
+          if ($region) {
+            // Берем id записанной области
+            $region_id = $region->id;
+          } else {
+            $result = [
+              'error_status' => 1,
+              'error_message' => 'Ошибка при записи области!'
+            ];
+          }
         }
       }
 
-      if (isset($city_id)) {
-      // Переадресовываем на index
-        return redirect()->action('CityController@get_content', ['id' => $city_id]);
+      // Если пришел район
+      if (isset($request->area_name)) {
+
+        // Вносим пришедшие данные в переменные
+        $area_name = $request->area_name;
+
+        // Смотрим район
+        $area = Area::where('area_name', $area_name)->first();
+        if ($area) {
+         // Если существует, берем id существующей
+          $region_id = 0;
+          $area_id = $area->id;
+        } else {
+
+          // Записываем новый район
+          $area = new Area;
+          $area->area_name = $area_name;
+          $area->region_id = $region_id;
+          $area->author_id = $user_id;
+          $area->system_item = 1;
+          $area->save();
+
+          if ($area) {
+            // Берем id записанного района
+            $region_id = 0;
+            $area_id = $area->id;
+          } else {
+            $result = [
+              'error_status' => 1,
+              'error_message' => 'Ошибка при записи района!'
+            ];
+          } 
+        }
+      } else {
+        $area_id = 0;
+      }
+
+      $count = City::whereCity_name($city_name)->count();
+
+      // Записываем город, его наличие в базе мы проверили ранее
+      $city = new City;
+      $city->city_name = $city_name;
+      $city->city_code = $request->city_code;
+      if ($count > 0) {
+        $count = $count + 1;
+        $city_name = $city_name . $count;
+      }
+      $city->alias = Transliterate::make($city_name, ['type' => 'url', 'lowercase' => true]);
+
+      $city->city_vk_external_id = $request->city_vk_external_id;
+      if ($region_id != 0) {
+        $city->region_id = $region_id;
+      }
+      if ($area_id != 0) {
+        $city->area_id = $area_id;
+      }
+      $city->author_id = $user->id;
+      $city->system_item = 1;
+      $city->save();
+
+
+      if ($city) {
+        // Переадресовываем на index
+        return redirect()->action('CityController@get_content', ['id' => $city->id]);
       } else {
         $result = [
           'error_status' => 1,
@@ -239,7 +257,7 @@ class CityController extends Controller
 
   public function show($id)
   {
-    //
+
   }
 
   public function edit($id)

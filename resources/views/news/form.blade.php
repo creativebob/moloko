@@ -40,7 +40,7 @@
       {{ Form::file('photo') }}
     </label>
     <div class="text-center">
-      <img id="photo" @if (isset($cur_news->photo_id)) src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/{{ $cur_news->photo->name }}" @endif>
+      <img id="photo" @if (isset($cur_news->photo_id)) src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/original/{{ $cur_news->photo->name }}" @endif>
     </div>
     <label>Алиас новости
       @include('includes.inputs.text-en', ['name'=>'alias', 'value'=>$cur_news->alias, 'required'=>'required'])
@@ -55,6 +55,27 @@
     <label>Контент:
       {{ Form::textarea('content', $cur_news->сontent, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
     </label>
+    <table class="table-content tabs-margin-top">
+      <caption>Прикрепленные альбомы</caption>
+      <thead>
+        <tr>
+          <th>Альбом</th>
+          <th>Категория</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (!empty($cur_news->albums))
+        @foreach ($cur_news->albums as $album)
+        @include('news.albums', $album)
+        @endforeach
+        @endif
+      </tbody>
+    </table>
+    {{ Form::hidden('cur_news_id', $cur_news->id, ['id' => 'cur-news-id']) }}
+    <div class="text-center">
+      <a class="button tabs-margin-top" data-open="album-add">Прикрепить альбом</a>
+    </div>
   </div>
 
   {{-- Чекбокс модерации --}}
@@ -73,14 +94,9 @@
   </div>
   @endcan
 
-
-<!--   <div class="small-12 cell checkbox">
-
+  <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
+    {{ Form::submit($submitButtonText, ['class'=>'button']) }}
   </div>
--->
+</div>
 
-<div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-  {{ Form::submit($submitButtonText, ['class'=>'button']) }}
-</div>
-</div>
 

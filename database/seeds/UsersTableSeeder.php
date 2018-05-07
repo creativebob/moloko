@@ -61,7 +61,7 @@ class UsersTableSeeder extends Seeder
     			'phone' => 88888888888, 
     			'user_type' => 1, 
     			'access_block' => 0, 
-    			'company_id' => null,
+    			'company_id' => 1,
     			'filial_id' => null, 
     			'god' => 1, 
     			'filial_id' => null, 
