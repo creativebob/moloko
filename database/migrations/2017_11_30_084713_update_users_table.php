@@ -35,7 +35,10 @@ class UpdateUsersTable extends Migration
 
             $table->string('address', 60)->nullable()->comment('Адрес')->after('city_id');
 
-            $table->integer('orgform_status')->nullable()->comment('Представляет компанию 1 или частное лицо 0')->after('address');
+            $table->string('photo')->nullable()->comment('Фото')->after('address');
+             $table->integer('photo_id')->nullable()->unsigned()->comment('Id аватарки')->after('photo');
+
+            $table->integer('orgform_status')->nullable()->comment('Представляет компанию 1 или частное лицо 0')->after('photo_id');
             $table->bigInteger('user_inn')->nullable()->unsigned()->comment('ИНН')->after('orgform_status');
 
             $table->string('passport_number')->nullable()->unique()->comment('Номер паспорта')->after('user_inn');
@@ -57,7 +60,7 @@ class UpdateUsersTable extends Migration
             $table->integer('god')->nullable()->unsigned()->comment('Божественное право')->default(null)->after('company_id');
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
-            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
@@ -96,6 +99,9 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('telegram_id');
             $table->dropColumn('city_id');
             $table->dropColumn('address');
+
+            $table->dropColumn('photo');
+            $table->dropColumn('photo_id');
 
             $table->dropColumn('orgform_status');
             $table->dropColumn('user_inn');

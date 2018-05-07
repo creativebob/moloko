@@ -117,6 +117,7 @@ class Company extends Model
   {
     return $this->hasMany('App\Position');
   }
+  
   // Получаем сектор компании
   public function sector()
   {
@@ -126,8 +127,7 @@ class Company extends Model
   // Получаем 
   public function worktime()
   {
-    return $this->belongsTo('App\Worktime');
+    return $this->hasMany('App\Worktime');
   }
-
 
 }

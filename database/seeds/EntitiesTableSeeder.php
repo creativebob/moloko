@@ -159,6 +159,34 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
             ], 
+            [
+                'entity_name' => 'Категории альбомов',
+                'entity_alias' => 'albums_categories',
+                'entity_model' => 'AlbumsCategory',
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
+            [
+                'entity_name' => 'Фотографии',
+                'entity_alias' => 'photos',
+                'entity_model' => 'Photo',
+                'system_item' => 1,
+                'author_id' => 1,
+            ], 
+            [
+                'entity_name' => 'Медиа альбомов',
+                'entity_alias' => 'album_media',
+                'entity_model' => 'AlbumMedia',
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
+            [
+                'entity_name' => 'Новости',
+                'entity_alias' => 'news',
+                'entity_model' => 'News',
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
             
             // Связующие сущности
 

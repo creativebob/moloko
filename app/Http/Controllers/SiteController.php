@@ -99,10 +99,10 @@ class SiteController extends Controller
 
     // Наполняем сущность данными
     $site = new Site;
-    $site->site_name = $request->site_name;
-    $site->site_domen = $request->site_domen;
+    $site->name = $request->site_name;
+    $site->domen = $request->site_domen;
     $site_alias = explode('.', $request->site_domen);
-    $site->site_alias = $site_alias[0];
+    $site->alias = $site_alias[0];
     $site->api_token = str_random(60);
 
     // Если нет прав на создание полноценной записи - запись отправляем на модерацию
@@ -117,6 +117,10 @@ class SiteController extends Controller
     $site->author_id = $user_id;
     $site->save();
     if ($site) {
+
+      // Создаем папку в файловой системе
+      Storage::disk('public')->makeDirectory($site->company->company_alias.'/media/news');
+
       $mass = [];
       // Смотрим список пришедших разделов
       foreach ($request->menus as $menu) {
@@ -130,7 +134,7 @@ class SiteController extends Controller
       return Redirect('/sites');
     } else {
       abort(403, 'Ошибка записи сайта');
-    };
+    }
   }
 
   // Получаем сайт по api
@@ -141,20 +145,20 @@ class SiteController extends Controller
       // return Cache::remember('site', 1, function() use ($domen) {
         return Site::with(['company', 'pages', 'navigations.menus.page', 'navigations.menus' => function ($query) {
           $query->orderBy('sort', 'asc');
-        }])->whereSite_domen($request->domen)->orderBy('sort', 'asc')->first();
+        }])->whereDomen($request->domen)->orderBy('sort', 'asc')->first();
       // });
     } else {
       return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
     }
   }
 
-  public function edit($site_alias)
+  public function edit($alias)
   {
 
     // ГЛАВНЫЙ ЗАПРОС:
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-    $site = Site::moderatorLimit($answer)->whereSite_alias($site_alias)->first();
+    $site = Site::moderatorLimit($answer)->whereAlias($alias)->first();
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $site);
@@ -180,7 +184,6 @@ class SiteController extends Controller
 
   public function update(SiteRequest $request, $id)
   {
-
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -193,10 +196,10 @@ class SiteController extends Controller
     // Получаем авторизованного пользователя
     $user = $request->user();
 
-    $site->site_name = $request->site_name;
+    $site->name = $request->site_name;
     $site_alias = explode('.', $request->site_domen);
-    $site->site_domen = $request->site_domen;
-    $site->site_alias = $site_alias[0];
+    $site->domen = $request->site_domen;
+    $site->alias = $site_alias[0];
     // $site->company_id =  $user->company_id;
     $site->editor_id = $user->id;
     $site->save();
@@ -222,7 +225,7 @@ class SiteController extends Controller
       return Redirect('/sites');
     } else {
       abort(403, 'Ошибка обновления сайта');
-    };
+    }
   }
 
 
@@ -253,17 +256,16 @@ class SiteController extends Controller
       };
     } else {
       abort(403, 'Сайт не найден');
-    };
+    }
   }
 
 
-  public function sections($site_alias)
+  public function sections($alias)
   { 
-
-      // ГЛАВНЫЙ ЗАПРОС:
+    // ГЛАВНЫЙ ЗАПРОС:
     $answer = operator_right($this->entity_name, $this->entity_dependence, 'update');
 
-    $site = Site::with('menus', 'author')->moderatorLimit($answer)->whereSite_alias($site_alias)->first();
+    $site = Site::with('menus', 'author')->moderatorLimit($answer)->whereAlias($alias)->first();
 
       // Подключение политики
     $this->authorize('view', $site);

@@ -15,10 +15,10 @@
     @endif
     <!-- Сайт -->
     <label>Название сайта
-      @include('includes.inputs.name', ['value'=>$site->site_name, 'name'=>'site_name', 'required'=>'required'])
+      @include('includes.inputs.name', ['value'=>$site->name, 'name'=>'site_name', 'required'=>'required'])
     </label>
     <label>Домен сайта {{ $site->site_domen }}
-      @include('includes.inputs.varchar', ['value'=>$site->site_domen, 'name'=>'site_domen', 'required'=>'required'])
+      @include('includes.inputs.varchar', ['value'=>$site->domen, 'name'=>'site_domen', 'required'=>'required'])
     </label>
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">

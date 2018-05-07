@@ -10,6 +10,7 @@
     "davejamesmiller/laravel-breadcrumbs": "^4.2",
     "doctrine/dbal": "^2.5",
     "fideloper/proxy": "~3.3",
+    "intervention/image": "dev-master",
     "laravel/framework": "5.5.*",
     "laravel/tinker": "~1.0",
     "laravelcollective/html": "^5.4.0",
@@ -62,6 +63,9 @@
     "post-autoload-dump": [
       "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
       "@php artisan package:discover"
+    ],
+    "post-install-cmd": [
+      "ln -sr storage/app/public public/storage"
     ]
   },
   "config": {

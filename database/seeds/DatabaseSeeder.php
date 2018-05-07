@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
     $this->call(CompaniesTableSeeder::class);
 
     // Наполнение локализаций
+    $this->call(CountriesTableSeeder::class);
     $this->call(RegionsTableSeeder::class);
     $this->call(AreasTableSeeder::class);
     $this->call(CitiesTableSeeder::class);
@@ -71,6 +72,13 @@ class DatabaseSeeder extends Seeder
 
     // Новости
     $this->call(NewsTableSeeder::class);
+
+    // Альбомы
+    $this->call(AlbumsCategoriesTableSeeder::class);
+    $this->call(AlbumsTableSeeder::class);
+
+    // Единицы измерения
+    $this->call(UnitsTableSeeder::class);
 
   }
 }

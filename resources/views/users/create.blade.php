@@ -20,7 +20,7 @@
 
 @section('content')
 
-  {{ Form::open(['route' => 'users.store', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+  {{ Form::open(['route' => 'users.store', 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
     @include('users.form', ['submitButtonText' => 'Добавить пользователя', 'param' => '', 'form' => null])
   {{ Form::close() }}
 
@@ -35,6 +35,7 @@
   @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
+  @include('includes.scripts.upload-file')
 @endsection
 
 

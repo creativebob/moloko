@@ -26,7 +26,7 @@ class CreateCitiesTable extends Migration
             $table->integer('city_code')->unsigned()->nullable()->comment('Код населенного пункта');
             $table->integer('city_vk_external_id')->unique()->unsigned()->nullable()->comment('Внешний Id (из базы vk)');
 
-            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');

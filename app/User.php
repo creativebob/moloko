@@ -69,7 +69,6 @@ class User extends Authenticatable
 
     // КОНЕЦ БЛОКА ОПИСАНИЯ ФИЛЬТРОВ
 
-
     public function setBirthdayAttribute($value) {
         if($value == Null){
             return $value;

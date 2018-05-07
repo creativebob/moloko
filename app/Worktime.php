@@ -51,6 +51,14 @@ class Worktime extends Model
 
     ];
 
+    // public function getWorktimeBeginAttribute($sec) {
+    //     if($sec == Null){
+    //         return $sec;
+    //     } else 
+    //         {
+    //     		return secToString($sec);
+    //         };
+    // }
 
 }
 

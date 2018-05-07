@@ -16,8 +16,8 @@ class CreateNavigationsTable extends Migration
         Schema::create('navigations', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('navigation_name')->nullable()->comment('Имя категории меню');
-            $table->string('navigation_alias')->nullable()->comment('Алиас категории меню');
+            $table->string('name')->nullable()->comment('Имя категории меню');
+            $table->string('alias')->nullable()->comment('Алиас категории меню');
 
             $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта меню');
             $table->foreign('site_id')->references('id')->on('sites');
@@ -28,7 +28,7 @@ class CreateNavigationsTable extends Migration
             $table->integer('category_navigation_id')->nullable()->unsigned()->comment('ID категории навигации');
             $table->foreign('category_navigation_id')->references('id')->on('categories_navigations');
 
-            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');

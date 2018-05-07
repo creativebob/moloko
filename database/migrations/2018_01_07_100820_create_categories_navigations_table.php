@@ -20,7 +20,7 @@ class CreateCategoriesNavigationsTable extends Migration
             
             $table->string('category_navigation_name')->nullable()->comment('Имя категории навигации');
 
-            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');

@@ -8,10 +8,10 @@
 <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250">
   @foreach ($navigations_tree as $navigation)
   {{-- Если Подкатегория --}}
-  <li class="first-item item @if (isset($navigation['menus'])) parent @endif" id="navigations-{{ $navigation['id'] }}" data-name="{{ $navigation['navigation_name'] }}">
+  <li class="first-item item @if (isset($navigation['menus'])) parent @endif" id="navigations-{{ $navigation['id'] }}" data-name="{{ $navigation['name'] }}">
     <a class="first-link @if($drop == 0) link-small @endif">
       <div class="icon-open sprite"></div>
-      <span class="first-item-name">{{ $navigation['navigation_name'] }}</span>
+      <span class="first-item-name">{{ $navigation['name'] }}</span>
       <span class="number">
       @if (isset($navigation['menus']))
         {{ count($navigation['menus']) }}

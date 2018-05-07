@@ -14,15 +14,21 @@ use App\Area;
 use App\City;
 use App\Department;
 use App\Employee;
-use App\Menu;
-use App\Navigation;
-use App\Page;
-use App\Position;
+
 use App\Site;
+use App\Page;
+use App\Navigation;
+use App\Menu;
+use App\News;
+
+use App\Position;
+
 use App\Staffer;
 use App\Booklist;
 use App\Sector;
 use App\Album;
+use App\AlbumsCategory;
+use App\Photo;
 use App\Folder;
 
 use App\Policies\UserPolicy;
@@ -38,15 +44,20 @@ use App\Policies\AreaPolicy;
 use App\Policies\CityPolicy;
 use App\Policies\DepartmentPolicy;
 use App\Policies\EmployeePolicy;
-use App\Policies\MenuPolicy;
-use App\Policies\NavigationPolicy;
-use App\Policies\PagePolicy;
-use App\Policies\PositionPolicy;
+
 use App\Policies\SitePolicy;
+use App\Policies\PagePolicy;
+use App\Policies\NavigationPolicy;
+use App\Policies\MenuPolicy;
+use App\Policies\NewsPolicy;
+
+use App\Policies\PositionPolicy;
 use App\Policies\StafferPolicy;
 use App\Policies\BooklistPolicy;
 use App\Policies\SectorPolicy;
 use App\Policies\AlbumPolicy;
+use App\Policies\AlbumsCategoryPolicy;
+use App\Policies\PhotoPolicy;
 use App\Policies\FolderPolicy;
 
 
@@ -80,10 +91,13 @@ class AuthServiceProvider extends ServiceProvider
         Navigation::class => NavigationPolicy::class,
         Page::class => PagePolicy::class,
         Site::class => SitePolicy::class,
+        News::class => NewsPolicy::class,
         Staffer::class => StafferPolicy::class,
         Booklist::class => BooklistPolicy::class,
         Sector::class => SectorPolicy::class,
         Album::class => AlbumPolicy::class,
+        AlbumsCategory::class => AlbumsCategoryPolicy::class,
+        Photo::class => PhotoPolicy::class,
         Folder::class => FolderPolicy::class,
     ];
 

@@ -25,6 +25,8 @@ use App\Http\Requests\CompanyRequest;
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class CompanyController extends Controller
 {
@@ -145,15 +147,21 @@ class CompanyController extends Controller
         // Получаем HTML разметку
         $sectors_list = showCat($sectors_cat, '');
 
-
         // dd($sectors_list);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('companies.create', compact('company', 'sectors_list', 'page_info'));
-    }
+        // Формируем пуcто
+        $worktime = [];
+        for ($n = 1; $n < 8; $n++){
 
+            $worktime[$n]['begin'] = null;
+            $worktime[$n]['end'] = null;
+        }
+
+        return view('companies.create', compact('company', 'sectors_list', 'page_info', 'worktime'));
+    }
 
     public function store(CompanyRequest $request)
     {
@@ -193,9 +201,65 @@ class CompanyController extends Controller
 
         $company->save();
 
-        $folder = new Folder;
-        $folder->folder_name = $company->company_name;
-        $link_for_folder = 'public/companies/' . $company->id;
+
+        // Создать связь сотрудника, филиала и ролей должности
+        // $mass = [];
+
+        // foreach ($staffer->position->roles as $role) {
+        //   $mass[] = [
+
+        //     'company_id' => $request->
+        //     'weekday' => $request->
+        //     'worktime_begin' => $request->
+        //     'worktime_interval' => $request->
+        //     'timeout' => $request->
+        //     'timeout_interval' => $request->
+        //     'author_id' => $user->id,
+
+        //   ];
+        // }
+
+        // DB::table('role_user')->insert($mass); 
+        // 
+        // 
+
+        // $worktime = new Worktime;
+
+        $mass_time = [
+            'weekday' => '1',
+            'worktime_begin' => timeToSec($request->mon_begin),
+            'worktime_interval' => timeToSec($request->mon_end) - timeToSec($request->mon_begin)
+        ];
+
+        dd($mass_time);
+
+        // $mon_begin = $request->mon_begin;
+        // $mon_end = $request->mon_end;
+
+        // $tue_begin = $request->tue_begin;
+        // $tue_end = $request->tue_end;
+
+        // $wed_begin = $request->wed_begin;
+        // $wed_end = $request->wed_end;
+
+        // $thu_begin = $request->thu_begin;
+        // $thu_end = $request->thu_end;
+
+        // $fri_begin = $request->fri_begin;
+        // $fri_end = $request->fri_end;
+
+        // $sat_begin = $request->sat_begin;
+        // $sat_end = $request->sat_end;
+
+        // $sun_begin = $request->sun_begin;
+        // $sun_end = $request->sun_end;
+        
+        dd($mass_time);
+
+
+        // $folder = new Folder;
+        // $folder->folder_name = $company->company_name;
+        // $link_for_folder = 'public/companies/' . $company->id;
 
         // if($company->company_alias != null){
         //     $link_for_folder = 'public/companies/' . $company->company_alias;
@@ -204,7 +268,7 @@ class CompanyController extends Controller
         // };
 
         // Создаем папку в файловой системе
-        Storage::makeDirectory($link_for_folder);
+        Storage::disk('public')->makeDirectory($company->id.'/media');
 
         // $folder->folder_url = $link_for_folder;
         // $folder->folder_alias = 'users';
@@ -236,7 +300,7 @@ class CompanyController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $company = Company::with('city')->moderatorLimit($answer)->findOrFail($id);
+        $company = Company::with('city', 'worktime')->moderatorLimit($answer)->findOrFail($id);
         $this->authorize(getmethod(__FUNCTION__), $company);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -308,13 +372,41 @@ class CompanyController extends Controller
         // Получаем HTML разметку
         $sectors_list = showCat($sectors_cat, '', $company->sector_id);
 
+        $worktime_mass = $company->worktime->keyBy('weekday');
 
-        // dd($sectors_list);
+
+        for($x = 1; $x<8; $x++){
+
+
+            if(isset($worktime_mass[$x]->worktime_begin)){
+
+                $worktime_begin = $worktime_mass[$x]->worktime_begin;
+                $str_worktime_begin = secToTime($worktime_begin);
+                $worktime[$x]['begin'] = $str_worktime_begin;
+            } else {
+
+                $worktime[$x]['begin'] = null;
+            };
+
+            if(isset($worktime_mass[$x]->worktime_interval)){
+
+                $worktime_interval = $worktime_mass[$x]->worktime_interval;
+                $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);
+                $worktime[$x]['end'] = $str_worktime_interval;
+            } else {
+
+                $worktime[$x]['end'] = null;
+            }
+
+        };
+
+            // dd($worktime);
+
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('companies.edit', compact('company', 'sectors_list', 'page_info'));
+        return view('companies.edit', compact('company', 'sectors_list', 'page_info', 'worktime'));
     }
 
 

@@ -16,22 +16,24 @@ class CreateAlbumsTable extends Migration
         Schema::create('albums', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
+            $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->string('album_name')->index()->comment('Название альбома');
+            $table->string('name')->index()->comment('Название альбома');
 
-            $table->integer('albums_categories_id')->nullable()->unsigned()->comment('Id категории в которой находиться альбом');
-            $table->foreign('albums_categories_id')->references('id')->on('albums_categories');
+            $table->integer('albums_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться альбом');
+            $table->foreign('albums_category_id')->references('id')->on('albums_categories');
 
-            $table->integer('album_access')->nullable()->unsigned()->comment('0 - личный, 1 - публичный');
-            $table->string('album_alias')->index()->comment('Алиас альбома');
+            $table->integer('access')->nullable()->unsigned()->comment('0 - личный, 1 - публичный');
+            $table->string('alias')->index()->comment('Алиас альбома');
 
-            $table->string('album_avatar')->index()->comment('Обложка альбома');
-            $table->string('album_description')->index()->comment('Описание альбома');
+            $table->string('avatar')->index()->nullable()->comment('Обложка альбома');
+            $table->string('description')->index()->nullable()->comment('Описание альбома');
 
-            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');

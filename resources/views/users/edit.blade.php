@@ -20,7 +20,7 @@
 
 @section('content')
 
-  {{ Form::model($user, ['route' => ['users.update', $user->id], 'data-abide', 'novalidate', 'class' => 'form-check-city', 'enctype'=>'multipart/form-data']) }}
+  {{ Form::model($user, ['route' => ['users.update', $user->id], 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
   {{ method_field('PATCH') }}
 
     @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>'', 'form' => 1])
@@ -42,6 +42,7 @@
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
   @include('includes.scripts.delete-ajax-script')
+  @include('includes.scripts.upload-file')
 @endsection
 
 

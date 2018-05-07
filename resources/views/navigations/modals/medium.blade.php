@@ -3,11 +3,11 @@
   <div class="grid-x grid-padding-x align-center modal-content inputs">
     <div class="small-10  cell">
       <label>Название пункта меню
-        @include('includes.inputs.name', ['name'=>'menu_name', 'value'=>$menu->menu_name, 'required'=>'required'])
+        @include('includes.inputs.name', ['name'=>'menu_name', 'value'=>$menu->name, 'required'=>'required'])
         <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
       </label>
       <label>Введите ссылку
-        @include('includes.inputs.text-en', ['name'=>'menu_alias', 'value'=>$menu->menu_alias, 'required'=>''])
+        @include('includes.inputs.text-en', ['name'=>'menu_alias', 'value'=>$menu->alias, 'required'=>''])
       </label>
       <label>Страница:
         <select name="page_id" class="pages-select" placeholder="Не выбрано">

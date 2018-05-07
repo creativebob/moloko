@@ -3,9 +3,9 @@
     @if($sidebar_tree)
       <ul class="vertical menu accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
         @foreach ($sidebar_tree as $sidebar)
-          @if($sidebar['menu_parent_id'] == null)
+          @if($sidebar['parent_id'] == null)
           {{-- Если родитель --}}
-            <li><a data-link="{{ $sidebar['id'] }}"><div class="{{ $sidebar['menu_icon'] }} sprite"></div><span>{{ $sidebar['menu_name'] }}</span></a>
+            <li><a data-link="{{ $sidebar['id'] }}"><div class="{{ $sidebar['icon'] }} sprite"></div><span>{{ $sidebar['name'] }}</span></a>
               @if (isset($sidebar['children']))
                 <ul class="menu vertical">
                   @foreach($sidebar['children'] as $sidebar)

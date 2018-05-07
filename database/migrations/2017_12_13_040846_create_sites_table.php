@@ -15,16 +15,16 @@ class CreateSitesTable extends Migration
     {
         Schema::create('sites', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('site_name', 30)->nullable()->index()->comment('Название сайта');
-            $table->string('site_domen', 30)->nullable()->comment('Домен сайта');
-            $table->string('site_alias')->nullable()->index()->comment('Алиас сайта');
+            $table->string('name', 30)->nullable()->index()->comment('Название сайта');
+            $table->string('domen', 30)->nullable()->comment('Домен сайта');
+            $table->string('alias')->nullable()->index()->comment('Алиас сайта');
 
             $table->string('api_token', 60)->unique()->nullable()->comment('Токен');
 
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');

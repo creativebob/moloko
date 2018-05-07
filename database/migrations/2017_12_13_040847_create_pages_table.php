@@ -19,14 +19,16 @@ class CreatePagesTable extends Migration
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
             
-            $table->string('page_name')->index()->comment('Название страницы');
+            $table->string('name')->index()->comment('Название страницы');
             $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта');
             $table->foreign('site_id')->references('id')->on('sites');
-            $table->string('page_title')->comment('Title для страницы');
-            $table->text('page_description')->comment('Description для страницы');
-            $table->string('page_alias')->index()->comment('Алиас');
+            $table->string('title')->comment('Title для страницы');
+            $table->text('description')->comment('Description для страницы');
+            $table->string('alias')->index()->comment('Алиас');
 
-            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+            $table->text('content')->nullable()->comment('Контент страницы');
+
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');

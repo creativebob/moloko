@@ -6,9 +6,9 @@
   @include('includes.scripts.table-inhead')
 @endsection
 
-@section('title', $page_info->page_name)
+@section('title', $page_info->name)
 
-@section('breadcrumbs', Breadcrumbs::render('sites', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('title-content')
 {{-- Таблица --}}
@@ -45,24 +45,24 @@
             $edit = 1;
           @endphp
         @endcan
-        <tr class="item @if($site->moderation == 1)no-moderation @endif" id="sites-{{ $site->id }}" data-name="{{ $site->site_name }}">
+        <tr class="item @if($site->moderation == 1)no-moderation @endif" id="sites-{{ $site->id }}" data-name="{{ $site->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"><label class="label-check" for="check-{{ $site->id }}"></label></td>
           <td class="td-site-name">
             @if($edit == 1)
-              <a href="/sites/{{ $site->site_alias }}">
+              <a href="/sites/{{ $site->alias }}">
             @endif
-            {{ $site->site_name }}
+            {{ $site->name }}
             @if($edit == 1)
               </a> 
             @endif
           </td>
-          <td class="td-site-domen"><a href="http://{{ $site->site_domen }}" target="_blank">{{ $site->site_domen }}</a></td>
+          <td class="td-site-domen"><a href="http://{{ $site->domen }}" target="_blank">{{ $site->domen }}</a></td>
           <td class="td-site-api-token">{{ $site->api_token }}</td>
           <td class="td-site-company-id">@if(!empty($site->company->company_name)) {{ $site->company->company_name }} @else @if($site->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-site-edit">
             @if($edit == 1)
-            <a class="tiny button" href="/sites/{{ $site->site_alias }}/edit">Редактировать</a>
+            <a class="tiny button" href="/sites/{{ $site->alias }}/edit">Редактировать</a>
             @endif
           </td>
           <td class="td-site-author">@if(isset($site->author->first_name)) {{ $site->author->first_name . ' ' . $site->author->second_name }} @endif</td>

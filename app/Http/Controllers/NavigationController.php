@@ -24,7 +24,7 @@ class NavigationController extends Controller
   protected $entity_name = 'navigations';
   protected $entity_dependence = false;
 
-  public function index(Request $request, $site_alias)
+  public function index(Request $request, $alias)
   {
     // Подключение политики
     $this->authorize( getmethod(__FUNCTION__), Navigation::class);
@@ -45,7 +45,7 @@ class NavigationController extends Controller
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
-    ->whereSite_alias($site_alias)
+    ->whereAlias($alias)
     ->first();
 
     // dd($site);
@@ -74,17 +74,17 @@ class NavigationController extends Controller
 
         // Функция построения дерева из массива от Tommy Lacroix
         // Если нет вложений
-        if (!$menu['menu_parent_id']){
+        if (!$menu['parent_id']){
           $navigations_tree[$navigation->id]['menus'][$id] = &$menu;
         } else { 
         // Если есть потомки то перебераем массив
-        $navigation_id[$navigation->id]['menus'][$menu['menu_parent_id']]['children'][$id] = &$menu;
+        $navigation_id[$navigation->id]['menus'][$menu['parent_id']]['children'][$id] = &$menu;
         }
       }
       
       // Записываем даныне навигации
       $navigations_tree[$navigation->id]['id'] = $navigation->id;
-      $navigations_tree[$navigation->id]['navigation_name'] = $navigation->navigation_name;
+      $navigations_tree[$navigation->id]['name'] = $navigation->name;
       $navigations_tree[$navigation->id]['system_item'] = $navigation->system_item;
       $navigations_tree[$navigation->id]['moderation'] = $navigation->moderation;
 
@@ -100,19 +100,22 @@ class NavigationController extends Controller
       $navigations_tree[$navigation->id]['edit'] = $edit;
       $navigations_tree[$navigation->id]['delete'] = $delete;
     }
-    $navigations = $site->navigations->pluck('navigation_name', 'id');
-    $pages_list = $site->pages->pluck('page_name', 'id');
+    $navigations = $site->navigations->pluck('name', 'id');
+    $pages_list = $site->pages->pluck('name', 'id');
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
+    // Так как сущность имеет определенного родителя
+    $parent_page_info = pageInfo('sites');
+
     // dd($navigations_tree);
 
-    return view('navigations.index', compact('site', 'navigations_tree', 'page_info', 'pages_list', 'site_alias', 'menus', 'navigations'));
+    return view('navigations.index', compact('site', 'navigations_tree', 'page_info' , 'parent_page_info', 'pages_list', 'alias', 'menus', 'navigations'));
   }
 
   // После записи переходим на созданный пункт меню 
-  public function get_content(Request $request, $site_alias)
+  public function get_content(Request $request, $alias)
   {
     // Подключение политики
     $this->authorize('index', Navigation::class);
@@ -133,7 +136,7 @@ class NavigationController extends Controller
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
-    ->whereSite_alias($site_alias)
+    ->whereAlias($alias)
     ->first();
 
     // dd($site);
@@ -162,17 +165,17 @@ class NavigationController extends Controller
 
         // Функция построения дерева из массива от Tommy Lacroix
         // Если нет вложений
-        if (!$menu['menu_parent_id']){
+        if (!$menu['parent_id']){
           $navigations_tree[$navigation->id]['menus'][$id] = &$menu;
         } else { 
         // Если есть потомки то перебераем массив
-        $navigation_id[$navigation->id]['menus'][$menu['menu_parent_id']]['children'][$id] = &$menu;
+        $navigation_id[$navigation->id]['menus'][$menu['parent_id']]['children'][$id] = &$menu;
         }
       }
       
       // Записываем даныне навигации
       $navigations_tree[$navigation->id]['id'] = $navigation->id;
-      $navigations_tree[$navigation->id]['navigation_name'] = $navigation->navigation_name;
+      $navigations_tree[$navigation->id]['name'] = $navigation->name;
       $navigations_tree[$navigation->id]['system_item'] = $navigation->system_item;
       $navigations_tree[$navigation->id]['moderation'] = $navigation->moderation;
 
@@ -193,7 +196,7 @@ class NavigationController extends Controller
     return view('navigations.navigations-list', ['navigations_tree' => $navigations_tree, 'item' => $request->item, 'id' => $request->id]); 
   }
 
-  public function create(Request $request, $site_alias)
+  public function create(Request $request, $alias)
   {
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Navigation::class);
@@ -210,7 +213,7 @@ class NavigationController extends Controller
     ->filials($answer_site) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer_site)
     ->systemItem($answer_site) // Фильтр по системным записям
-    ->whereSite_alias($site_alias)
+    ->whereAlias($alias)
     ->first();
 
     $navigation = new Navigation;
@@ -219,7 +222,7 @@ class NavigationController extends Controller
   }
 
 
-  public function store(NavigationRequest $request, $site_alias)
+  public function store(NavigationRequest $request, $alias)
   {
 
     // Подключение политики
@@ -246,7 +249,7 @@ class NavigationController extends Controller
       $first = mb_strtoupper($first, 'UTF-8');
       $last = mb_strtolower($last, 'UTF-8');
       $navigation_name = $first.$last;
-      $navigation->navigation_name = $navigation_name;
+      $navigation->name = $navigation_name;
     }
     
     $navigation->site_id = $request->site_id;
@@ -259,7 +262,7 @@ class NavigationController extends Controller
     // session(['current_site' => $request->site_id]);
     if ($navigation) {
       // Переадресовываем на index
-      return redirect()->action('NavigationController@get_content', ['id' => $navigation->id, 'site_alias' => $site_alias, 'item' => 'navigation']);
+      return redirect()->action('NavigationController@get_content', ['id' => $navigation->id, 'alias' => $alias, 'item' => 'navigation']);
     } else {
       $result = [
         'error_status' => 1,
@@ -273,7 +276,7 @@ class NavigationController extends Controller
       //
   }
 
-  public function edit(Request $request, $site_alias, $id)
+  public function edit(Request $request, $alias, $id)
   {
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -297,13 +300,13 @@ class NavigationController extends Controller
     ->filials($answer_site) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer_site)
     ->systemItem($answer_site) // Фильтр по системным записям
-    ->whereSite_alias($site_alias)
+    ->whereAlias($alias)
     ->first();
 
     return view('navigations.edit-first', ['navigation' => $navigation, 'site' => $site]);
   }
 
-  public function update(NavigationRequest $request, $site_alias, $id)
+  public function update(NavigationRequest $request, $alias, $id)
   {
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -330,7 +333,7 @@ class NavigationController extends Controller
       $first = mb_strtoupper($first, 'UTF-8');
       $last = mb_strtolower($last, 'UTF-8');
       $navigation_name = $first.$last;
-      $navigation->navigation_name = $navigation_name;
+      $navigation->name = $navigation_name;
     }
 
     $navigation->site_id = $request->site_id;
@@ -340,7 +343,7 @@ class NavigationController extends Controller
 
     if ($navigation) {
       // Переадресовываем на index
-      return redirect()->action('NavigationController@get_content', ['id' => $navigation->id, 'site_alias' => $site_alias, 'item' => 'navigation']);
+      return redirect()->action('NavigationController@get_content', ['id' => $navigation->id, 'alias' => $alias, 'item' => 'navigation']);
     } else {
       $result = [
         'error_status' => 1,
@@ -349,7 +352,7 @@ class NavigationController extends Controller
     }
   }
 
-  public function destroy(Request $request, $site_alias, $id)
+  public function destroy(Request $request, $alias, $id)
   {
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -386,7 +389,7 @@ class NavigationController extends Controller
 
       if ($navigation) {
         // Переадресовываем на index
-        return redirect()->action('NavigationController@get_content', ['site_alias' => $site_alias, 'item' => 'navigation']);
+        return redirect()->action('NavigationController@get_content', ['alias' => $alias, 'item' => 'navigation']);
       } else {
         $result = [
           'error_status' => 1,
@@ -397,12 +400,12 @@ class NavigationController extends Controller
   }
 
   // Проверка наличия в базе
-  public function navigation_check(Request $request, $site_alias)
+  public function navigation_check(Request $request, $alias)
   {
     // Проверка отдела в нашей базе данных
-    $navigation = Navigation::with(['site' => function ($query) use ($site_alias) {
-      $query->where('site_name', $site_alias);
-    }])->where('navigation_name', $request->name)->first();
+    $navigation = Navigation::with(['site' => function ($query) use ($alias) {
+      $query->where('alias', $alias);
+    }])->where('name', $request->name)->first();
 
     // Если такое название есть
     if ($navigation) {

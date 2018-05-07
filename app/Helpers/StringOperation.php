@@ -19,6 +19,25 @@
 		return $result;
 	};
 
+    function secToTime($sec) {
+                $hour = floor($sec/3600);
+                $sec = $sec - ($hour*3600);
+                $min = floor($sec/60);
+                $sec = $sec - ($min*60);
+                if($hour < 10){$hour = '0' . $hour;}
+                if($min < 10){$min = '0' . $min;}
+                return $hour.":".$min;
+    };
+
+    function timeToSec($time) {
+
+                $mass = explode(":", $time);  
+                $hour = $mass[0];
+                $min = $mass[1];
+                $sec = $hour*60*60 + $min*60;
+
+                return $sec;
+    };
 
 	/**
 	 * @param  Принимает 11 значное число: номер телефона

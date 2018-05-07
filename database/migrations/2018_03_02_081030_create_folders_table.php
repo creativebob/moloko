@@ -26,7 +26,7 @@ class CreateFoldersTable extends Migration
 
             $table->integer('filial_id')->nullable()->unsigned()->comment('ID филиала компании');
 
-            $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
