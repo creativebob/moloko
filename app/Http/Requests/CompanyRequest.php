@@ -40,7 +40,8 @@ class CompanyRequest extends FormRequest
             'kpp' => 'max:255|nullable',
 
             'moderation' => 'integer|max:1|nullable',
-            'system_item' => 'integer|max:1|nullable',  
+            'system_item' => 'integer|max:1|nullable',
+              
         ];
     }
 }

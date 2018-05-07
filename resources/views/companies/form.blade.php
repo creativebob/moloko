@@ -254,17 +254,6 @@
       </div>
 
 
-      <!-- Настройки -->
-      <div class="tabs-panel" id="content-panel-4">
-        <div class="grid-x grid-padding-x"> 
-          <div class="small-12 medium-6 cell">
-            <label>Алиас
-              @include('includes.inputs.alias', ['value'=>$company->company_alias, 'name'=>'company_alias', 'required'=>''])
-            </label>
-          </div>
-        </div>
-      </div>
-
     </div>
 
     <div class="small-12 medium-5 large-7 cell tabs-margin-top">

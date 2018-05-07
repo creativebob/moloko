@@ -229,6 +229,21 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
             ], 
+            [
+                'entity_name' => 'Расписания',
+                'entity_alias' => 'schedules',
+                'entity_model' => 'Schedule',
+                'system_item' => 1,
+                'author_id' => 1,
+            ], 
+            // [
+            //     'entity_name' => 'Рабочее время дня',
+            //     'entity_alias' => 'worktimes',
+            //     'entity_model' => 'Worktime',
+            //     'system_item' => 1,
+            //     'author_id' => 1,
+            // ], 
+
             
             // Связующие сущности
 

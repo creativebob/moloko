@@ -19,7 +19,7 @@ use App\Scopes\Filters\BooklistFilter;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Worktime extends Model
+class Schedule extends Model
 {
 
     use Notifiable;
@@ -41,31 +41,17 @@ class Worktime extends Model
 
     protected $fillable = [
 
-        'weekday', 
-        'worktime_begin', 
-        'worktime_interval', 
-        'timeout_begin', 
-        'timeout_interval', 
+        'name', 
+        'description', 
         'company_id', 
         'moderation', 
 
     ];
 
-  public function schedule()
+  public function worktimes()
   {
-    return $this->belongsTo('App\Schedule');
+    return $this->hasMany('App\Worktime');
   }
 
 
-
-    // public function getWorktimeBeginAttribute($sec) {
-    //     if($sec == Null){
-    //         return $sec;
-    //     } else 
-    //         {
-    //     		return secToString($sec);
-    //         };
-    // }
-
 }
-

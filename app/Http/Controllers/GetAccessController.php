@@ -192,6 +192,8 @@ class GetAccessController extends Controller
                 $access['company_info']['company_id'] = $user->company_id;
                 $access['company_info']['company_name'] = $user->company->company_name;
                 $access['company_info']['sector_id'] = $user->company->sector_id;
+                $access['company_info']['schedule'] = $user->company->schedule;
+
             } else {
                 $access['company_info']['company_id'] = '';
                 $access['company_info']['company_name'] = '';

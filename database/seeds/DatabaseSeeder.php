@@ -14,6 +14,10 @@ class DatabaseSeeder extends Seeder
     // Сферы деятельности компаний и должностей
     $this->call(SectorsTableSeeder::class);
 
+    // Графики работы
+    $this->call(SchedulesTableSeeder::class);
+    $this->call(WorktimesTableSeeder::class);
+
     // Пользователи и компании
     $this->call(CompaniesTableSeeder::class);
 
@@ -84,6 +88,9 @@ class DatabaseSeeder extends Seeder
     $this->call(ProductsTypesTableSeeder::class);
     $this->call(ProductsCategoriesTableSeeder::class);
     $this->call(ProductsTableSeeder::class);
+
+    // Связь: Расписания с сущностями
+    $this->call(ScheduleEntityTableSeeder::class);
 
   }
 }

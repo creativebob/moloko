@@ -10,6 +10,9 @@ use App\Sector;
 use App\Folder;
 use App\Booklist;
 use App\List_item;
+use App\Schedule;
+use App\Worktime;
+use App\ScheduleEntity;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -155,7 +158,6 @@ class CompanyController extends Controller
         // Формируем пуcто
         $worktime = [];
         for ($n = 1; $n < 8; $n++){
-
             $worktime[$n]['begin'] = null;
             $worktime[$n]['end'] = null;
         }
@@ -174,6 +176,80 @@ class CompanyController extends Controller
 
         // Получаем авторизованного пользователя
         $user = $request->user();
+
+        $schedule = new Schedule;
+        $schedule->company_id = $user->company_id;
+        $schedule->name = 'График работы для ' . $user->company->company_name;
+        $schedule->description = null;
+        $schedule->save();
+        
+        $mass_time = [];
+
+        if(($request->mon_begin != null) && ($request->mon_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule->id,
+                'weekday' => '1',
+                'worktime_begin' => timeToSec($request->mon_begin),
+                'worktime_interval' => timeToSec($request->mon_end) - timeToSec($request->mon_begin)
+            ];
+        };
+
+        if(($request->tue_begin != null) && ($request->tue_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule->id,
+                'weekday' => '2',
+                'worktime_begin' => timeToSec($request->tue_begin),
+                'worktime_interval' => timeToSec($request->tue_end) - timeToSec($request->tue_begin)
+            ];
+        };
+
+        if(($request->wed_begin != null) && ($request->wed_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule->id,
+                'weekday' => '3',
+                'worktime_begin' => timeToSec($request->wed_begin),
+                'worktime_interval' => timeToSec($request->wed_end) - timeToSec($request->wed_begin)
+            ];
+        };
+
+        if(($request->thu_begin != null) && ($request->thu_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule->id,
+                'weekday' => '4',
+                'worktime_begin' => timeToSec($request->thu_begin),
+                'worktime_interval' => timeToSec($request->thu_end) - timeToSec($request->thu_begin)
+            ];
+        };
+
+        if(($request->fri_begin != null) && ($request->fri_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule->id,
+                'weekday' => '5',
+                'worktime_begin' => timeToSec($request->fri_begin),
+                'worktime_interval' => timeToSec($request->fri_end) - timeToSec($request->fri_begin)
+            ];
+        };
+
+        if(($request->sat_begin != null) && ($request->sat_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule->id,
+                'weekday' => '6',
+                'worktime_begin' => timeToSec($request->sat_begin),
+                'worktime_interval' => timeToSec($request->sat_end) - timeToSec($request->sat_begin)
+            ];
+        };
+
+        if(($request->sun_begin != null) && ($request->sun_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule->id,
+                'weekday' => '7',
+                'worktime_begin' => timeToSec($request->sun_begin),
+                'worktime_interval' => timeToSec($request->sun_end) - timeToSec($request->sun_begin)
+            ];
+        };
+
+        DB::table('worktimes')->insert($mass_time);
+
 
         $company = new Company;
         $company->company_name = $request->company_name;
@@ -195,6 +271,7 @@ class CompanyController extends Controller
         $company->account_correspondent = $request->account_correspondent;
 
         $company->sector_id = $request->sector_id;
+        $company->schedule_id = $schedule->id;
 
         // $company->director_user_id = $user->company_id;
         $company->author_id = $user->id;
@@ -202,59 +279,12 @@ class CompanyController extends Controller
         $company->save();
 
 
-        // Создать связь сотрудника, филиала и ролей должности
-        // $mass = [];
-
-        // foreach ($staffer->position->roles as $role) {
-        //   $mass[] = [
-
-        //     'company_id' => $request->
-        //     'weekday' => $request->
-        //     'worktime_begin' => $request->
-        //     'worktime_interval' => $request->
-        //     'timeout' => $request->
-        //     'timeout_interval' => $request->
-        //     'author_id' => $user->id,
-
-        //   ];
-        // }
-
-        // DB::table('role_user')->insert($mass); 
-        // 
-        // 
-
-        // $worktime = new Worktime;
-
-        $mass_time = [
-            'weekday' => '1',
-            'worktime_begin' => timeToSec($request->mon_begin),
-            'worktime_interval' => timeToSec($request->mon_end) - timeToSec($request->mon_begin)
-        ];
-
-        dd($mass_time);
-
-        // $mon_begin = $request->mon_begin;
-        // $mon_end = $request->mon_end;
-
-        // $tue_begin = $request->tue_begin;
-        // $tue_end = $request->tue_end;
-
-        // $wed_begin = $request->wed_begin;
-        // $wed_end = $request->wed_end;
-
-        // $thu_begin = $request->thu_begin;
-        // $thu_end = $request->thu_end;
-
-        // $fri_begin = $request->fri_begin;
-        // $fri_end = $request->fri_end;
-
-        // $sat_begin = $request->sat_begin;
-        // $sat_end = $request->sat_end;
-
-        // $sun_begin = $request->sun_begin;
-        // $sun_end = $request->sun_end;
-        
-        dd($mass_time);
+        // Создаем связь расписания с компанией
+        $schedule_entity = new ScheduleEntity;
+        $schedule_entity->schedule_id = $schedule->id;
+        $schedule_entity->entity_id = $company->id;
+        $schedule_entity->entity = 'companies';
+        $schedule_entity->save();
 
 
         // $folder = new Folder;
@@ -300,8 +330,10 @@ class CompanyController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $company = Company::with('city', 'worktime')->moderatorLimit($answer)->findOrFail($id);
+        $company = Company::with('city', 'schedules.worktimes')->moderatorLimit($answer)->findOrFail($id);
         $this->authorize(getmethod(__FUNCTION__), $company);
+
+        // dd($company);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('sectors', false, 'index');
@@ -372,8 +404,9 @@ class CompanyController extends Controller
         // Получаем HTML разметку
         $sectors_list = showCat($sectors_cat, '', $company->sector_id);
 
-        $worktime_mass = $company->worktime->keyBy('weekday');
-
+        if(isset($company->schedules->first()->worktimes)){
+            $worktime_mass = $company->schedules->first()->worktimes->keyBy('weekday');
+        }
 
         for($x = 1; $x<8; $x++){
 
@@ -453,9 +486,99 @@ class CompanyController extends Controller
           $company->sector_id = $request->sector_id;
         }
         
-
         // $company->director_user_id = Auth::user()->company_id;
         $company->save();
+
+        // Если не существует расписания для компании - создаем его
+        if($company->schedules->count() < 1){
+
+            $schedule = new Schedule;
+            $schedule->company_id = $user->company_id;
+            $schedule->name = 'График работы для ' . $company->company_name;
+            $schedule->description = null;
+            $schedule->save();
+
+            // Создаем связь расписания с компанией
+            $schedule_entity = new ScheduleEntity;
+            $schedule_entity->schedule_id = $schedule->id;
+            $schedule_entity->entity_id = $company->id;
+            $schedule_entity->entity = 'companies';
+            $schedule_entity->save();
+
+            $schedule_id = $schedule->id;
+        } else {
+
+            $schedule_id = $company->schedules->first()->id;
+        };
+
+        $mass_time = [];
+        if(($request->mon_begin != null) && ($request->mon_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule_id,
+                'weekday' => '1',
+                'worktime_begin' => timeToSec($request->mon_begin),
+                'worktime_interval' => timeToSec($request->mon_end) - timeToSec($request->mon_begin)
+            ];
+        };
+
+        if(($request->tue_begin != null) && ($request->tue_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule_id,
+                'weekday' => '2',
+                'worktime_begin' => timeToSec($request->tue_begin),
+                'worktime_interval' => timeToSec($request->tue_end) - timeToSec($request->tue_begin)
+            ];
+        };
+
+        if(($request->wed_begin != null) && ($request->wed_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule_id,
+                'weekday' => '3',
+                'worktime_begin' => timeToSec($request->wed_begin),
+                'worktime_interval' => timeToSec($request->wed_end) - timeToSec($request->wed_begin)
+            ];
+        };
+
+        if(($request->thu_begin != null) && ($request->thu_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule_id,
+                'weekday' => '4',
+                'worktime_begin' => timeToSec($request->thu_begin),
+                'worktime_interval' => timeToSec($request->thu_end) - timeToSec($request->thu_begin)
+            ];
+        };
+
+        if(($request->fri_begin != null) && ($request->fri_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule_id,
+                'weekday' => '5',
+                'worktime_begin' => timeToSec($request->fri_begin),
+                'worktime_interval' => timeToSec($request->fri_end) - timeToSec($request->fri_begin)
+            ];
+        };
+
+        if(($request->sat_begin != null) && ($request->sat_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule_id,
+                'weekday' => '6',
+                'worktime_begin' => timeToSec($request->sat_begin),
+                'worktime_interval' => timeToSec($request->sat_end) - timeToSec($request->sat_begin)
+            ];
+        };
+
+        if(($request->sun_begin != null) && ($request->sun_end != null)){
+            $mass_time[] = [
+                'schedule_id' => $schedule_id,
+                'weekday' => '7',
+                'worktime_begin' => timeToSec($request->sun_begin),
+                'worktime_interval' => timeToSec($request->sun_end) - timeToSec($request->sun_begin)
+            ];
+        };
+
+
+        $worktimes = Worktime::where('schedule_id', $schedule_id)->forceDelete();
+        DB::table('worktimes')->insert($mass_time);
+
         return redirect('companies');
     }
 
