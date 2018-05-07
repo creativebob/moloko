@@ -8,6 +8,7 @@ use App\Site;
 use App\Photo;
 use App\AlbumsCategory;
 use App\AlbumEntity;
+use App\CityEntity;
 
 // Валидация
 use App\Http\Requests\NewsRequest;
@@ -19,8 +20,13 @@ use App\Policies\NewsPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
+// Фотографии
 use Intervention\Image\ImageManagerStatic as Image;
+
+// Транслитерация
+use Transliterate;
 
 class NewsController extends Controller
 {
@@ -188,7 +194,11 @@ class NewsController extends Controller
     $cur_news->name = $request->name;
     $cur_news->title = $request->title;
     $cur_news->preview = $request->preview;
-    $cur_news->alias = $request->alias;
+    if (isset($request->alias)) {
+      $cur_news->alias = $request->alias;
+    } else {
+      $cur_news->alias = Transliterate::make($title, ['type' => 'url', 'lowercase' => true]);
+    }
     $cur_news->content = $request->content;
 
     // Модерация и системная запись
@@ -201,6 +211,8 @@ class NewsController extends Controller
     if($answer['automoderate'] == false){
       $cur_news->moderation = 1;
     }
+
+    $cur_news->display = $request->display;
 
     $cur_news->site_id = $request->site_id;
     $cur_news->company_id = $company_id;
@@ -272,6 +284,18 @@ class NewsController extends Controller
 
         $cur_news->albums()->attach($albums);
       }
+
+      // Когда новость обновилась, смотрим пришедние для нее города и сравниваем с существующими
+      if (isset($request->cities)) {
+        $cities = [];
+        foreach ($request->cities as $city) {
+          $cities[$city] = [
+            'entity' => $this->entity_name,
+          ];
+        }
+
+        $cur_news->cities()->attach($cities);
+      }
       return redirect('/sites/'.$alias.'/news');
     } else {
       abort(403, 'Ошибка при записи новости!');
@@ -279,10 +303,10 @@ class NewsController extends Controller
   }
 
   // Показываем новость на сайте
-  public function show(Request $request, $link)
+  public function show(Request $request, $city, $link)
   {
-    $site = Site::with(['news.author', 'news' => function ($query) use ($link) {
-      $query->where('alias', $link);
+    $site = Site::with(['news.author', 'news.author.staff', 'news' => function ($query) use ($link) {
+      $query->where(['alias' => $link, 'display' => 1]);
     }])->where('api_token', $request->token)->first();
     if ($site) {
       // return Cache::remember('staff', 1, function() use ($domen) {
@@ -300,19 +324,26 @@ class NewsController extends Controller
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
-    $cur_news = News::with(['albums.albums_category', 'site' => function ($query) use ($alias) {
+    $cur_news = News::with(['albums.albums_category', 'cities', 'company.filials.city', 'site' => function ($query) use ($alias) {
       $query->whereAlias($alias);
     }])->moderatorLimit($answer)->whereAlias($news_alias)->first();
+
+
+    // dd($cur_news->author->staff->first()->position->position_name);
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $cur_news);
 
     $site = $cur_news->site;
+    $filials = $cur_news->company->filials;
+    // $cities = $cur_news->cities->pluck('id')->toArray();
+
+    // dd($cities);
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer_albums_categories = operator_right('albums_categories', false, 'index');
 
-        // Главный запрос
+    // Главный запрос
     $albums_categories = AlbumsCategory::moderatorLimit($answer_albums_categories)
     ->orderBy('sort', 'asc')
     ->get(['id','name','category_status','parent_id'])
@@ -331,12 +362,11 @@ class NewsController extends Controller
           // Если есть потомки то перебераем массив
         $albums_categories[$node['parent_id']]['children'][$id] = &$node;
       };
-
     };
 
-        // dd($albums_categories_cat);
+    // dd($albums_categories_cat);
 
-        // Функция отрисовки option'ов
+    // Функция отрисовки option'ов
     function tplMenu($albums_category, $padding) {
 
       if ($albums_category['category_status'] == 1) {
@@ -376,7 +406,7 @@ class NewsController extends Controller
     // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('sites');
 
-    return view('news.edit', compact('cur_news', 'parent_page_info', 'page_info', 'site', 'albums_categories_list'));
+    return view('news.edit', compact('cur_news', 'parent_page_info', 'page_info', 'site', 'albums_categories_list', 'filials', 'cities'));
   }
 
   public function update(Request $request, $alias, $id)
@@ -466,6 +496,8 @@ class NewsController extends Controller
     $cur_news->date_publish_begin = $request->date_publish_begin;
     $cur_news->date_publish_end = $request->date_publish_end;
 
+    $cur_news->display = $request->display;
+
     $cur_news->company_id = $user->company_id;
     $cur_news->site_id = $request->site_id;
     $cur_news->editor_id = $user->id;
@@ -491,7 +523,27 @@ class NewsController extends Controller
         // ];
         // $cur_news->albums()->detach($albums);
         // Если удалили последний альбом для новости и пришел пустой массив
-        $delete = AlbumEntity::where(['entity_id' => $id, 'entity' => 'news'])->delete();
+        $delete = AlbumEntity::where(['entity_id' => $id, 'entity' => $this->entity_name])->delete();
+      }
+
+      // Когда новость обновилась, смотрим пришедние для нее города и сравниваем с существующими
+      if (isset($request->cities)) {
+
+        $cities = [];
+        foreach ($request->cities as $city) {
+          $cities[$city] = [
+            'entity' => $this->entity_name,
+          ];
+        }
+        $cur_news->cities()->sync($cities);
+
+      } else {
+        // $albums[] = [
+        //     'entity' => $this->entity_name,
+        // ];
+        // $cur_news->albums()->detach($albums);
+        // Если удалили последний альбом для новости и пришел пустой массив
+        $delete = CityEntity::where(['entity_id' => $id, 'entity' => $this->entity_name])->delete();
       }
       return redirect('/sites/'.$alias.'/news');
     } else {
@@ -529,17 +581,42 @@ class NewsController extends Controller
   }
 
   // Получаем новости по api
-  public function news (Request $request)
+  public function news (Request $request, $city)
   {
 
-    $site = Site::with('news.author', 'news.photo')->where('api_token', $request->token)->first();
-    if ($site) {
-      // return Cache::remember('staff', 1, function() use ($domen) {
-      return $site->news;
-      // });
-    } else {
-      return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
-    }
+    $token = $request->token;
+
+    // Cache::forget($domen.'-news');
+
+   
+
+      $site = Site::with(['news' => function ($query) {
+        $query->whereDisplay(1);
+      }, 'news.cities' => function($query) use ($city) {
+        $query->whereAlias($city);
+      }, 'news.company', 'news.author', 'news.photo'])->where('api_token', $token)->first();
+      
+      if ($site) {
+        // return Cache::forever($domen.'-news', $site, function() use ($city, $token) {
+        $news = [];
+        foreach ($site->news as $cur_news) {
+          if (in_array($city, $cur_news->cities->pluck('alias')->toArray())) {
+            $news[] = $cur_news;
+          }
+        }
+    // $token = $request->token;
+    // $news = News::with(['site' => function($query) use ($token) {
+    //   $query->where('api_token', $token);
+    // }, 'cities' => function($query) use ($city) {
+    //   $query->where('alias', $city);
+    // }, 'photo', 'author', 'company'])->get();
+    // if ($news) {
+        return $news;
+        // });
+      } else {
+        return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
+      }
+    
   }
 
   public function album_store(Request $request)

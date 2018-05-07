@@ -11,7 +11,7 @@
 @section('title-content')
 <div class="top-bar head-content">
   <div class="top-bar-left">
-    <h2 class="header-content">РЕДАКТИРОВАние новость "{{ $cur_news->name }}"</h2>
+    <h2 class="header-content">РЕДАКТИРОВАние новости "{{ $cur_news->name }}"</h2>
  </div>
  <div class="top-bar-right">
  </div>

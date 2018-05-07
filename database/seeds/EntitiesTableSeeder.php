@@ -229,6 +229,13 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
             ], 
+             [
+                'entity_name' => 'Сущности связанные с городами',
+                'entity_alias' => 'city_entity',
+                'entity_model' => 'CityEntity',
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
             
             // Связующие сущности
 

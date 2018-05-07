@@ -61,7 +61,7 @@
           <td class="td-news-alias">{{ $cur_news->alias }}</td>
           <td class="td-site-name">{{ $cur_news->site->name or ' ... ' }}</td>
           <td class="td-view">
-            <a class="button" href="http://{{ $cur_news->site->alias }}/news/{{ $cur_news->alias }}" target="_blank">Чек</a>
+            <a class="button" href="http://{{ $cur_news->site->alias }}/{{ $cur_news->cities[0]->alias }}/news/{{ $cur_news->alias }}" target="_blank">Чек</a>
           </td>
           <td class="td-news-author">@if(isset($cur_news->author->first_name)) {{ $cur_news->author->first_name . ' ' . $cur_news->author->second_name }} @endif</td>
           <td class="td-delete">

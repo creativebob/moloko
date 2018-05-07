@@ -330,7 +330,7 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department')->moderatorLimit($answer)->findOrFail($id);
+        $user = User::with('city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
@@ -368,7 +368,7 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('company')->moderatorLimit($answer)->findOrFail($id);
+        $user = User::with('company', 'photo')->moderatorLimit($answer)->findOrFail($id);
 
         $filial_id = $request->filial_id;
 

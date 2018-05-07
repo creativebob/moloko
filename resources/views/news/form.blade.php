@@ -76,27 +76,60 @@
     <div class="text-center">
       <a class="button tabs-margin-top" data-open="album-add">Прикрепить альбом</a>
     </div>
-  </div>
 
-  {{-- Чекбокс модерации --}}
-  @can ('moderator', $cur_news)
-  @if ($cur_news->moderation == 1)
-  <div class="small-12 cell checkbox">
-    @include('includes.inputs.moderation', ['value'=>$cur_news->moderation, 'name'=>'moderation'])
-  </div>
-  @endif
-  @endcan
+    <div class="grid-x">
+      <div class="small-12 medium-6 cell">
+        <div class="checkboxer-wrap">
+          <div class="checkboxer-toggle" data-toggle="dropdown-city" data-name="">
+            <div class="checkboxer-title">
+              <span class="title">Выбор города</span>
+            </div>
+              <div class="checkboxer-button">
+                <span class="sprite icon-checkboxer"></span>
+              </div>
+            </div>
+          </div>
+          <div class="dropdown-pane checkboxer-pane hover" data-position="bottom" data-alignment="left" id="dropdown-city" data-dropdown data-auto-focus="true" data-close-on-click="true" data-h-offset="-17" data-v-offset="2">
 
-  {{-- Чекбокс системной записи --}}
-  @can ('god', $cur_news)
-  <div class="small-12 cell checkbox">
-    @include('includes.inputs.system', ['value'=>$cur_news->system_item, 'name'=>'system_item']) 
-  </div>
-  @endcan
+            <ul class="checkbox">
+              @foreach ($filials as $filial)
+              <li>
+                {{ Form::checkbox('cities[]', $filial->city->id, null, ['id' => 'city-'.$filial->city->id]) }}
+                <label for="city-{{ $filial->city->id }}"><span>{{ $filial->city->city_name }}</span></label>
+              </li>
+              @endforeach
+            </ul>
 
-  <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-    {{ Form::submit($submitButtonText, ['class'=>'button']) }}
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="small-12 cell checkbox">
+      {{ Form::checkbox('display', 1, $cur_news->display, ['id' => 'display']) }}
+      <label for="display"><span>Отображать на сайте</span></label>
+    </div>
+
+    {{-- Чекбокс модерации --}}
+    @can ('moderator', $cur_news)
+    @if ($cur_news->moderation == 1)
+    <div class="small-12 cell checkbox">
+      @include('includes.inputs.moderation', ['value'=>$cur_news->moderation, 'name'=>'moderation'])
+    </div>
+    @endif
+    @endcan
+
+    {{-- Чекбокс системной записи --}}
+    @can ('god', $cur_news)
+    <div class="small-12 cell checkbox">
+      @include('includes.inputs.system', ['value'=>$cur_news->system_item, 'name'=>'system_item']) 
+    </div>
+    @endcan
+
+    <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
+      {{ Form::submit($submitButtonText, ['class'=>'button']) }}
+    </div>
   </div>
-</div>
 
 
