@@ -30,6 +30,7 @@
           <th class="td-news-photo">Превью</th>
           <th class="td-news-alias">Алиас</th>
           <th class="td-site-name">Сайт</th>
+          <th class="td-date_publish_begin">Дата начала</th>
           <th class="td-view">Просмотр</th>
           <th class="td-news-author">Автор</th>
           <th class="td-delete"></th>
@@ -60,6 +61,7 @@
           @endif</td>
           <td class="td-news-alias">{{ $cur_news->alias }}</td>
           <td class="td-site-name">{{ $cur_news->site->name or ' ... ' }}</td>
+          <td class="td-date_publish_begin">{{ $cur_news->date_publish_begin }}</td>
           <td class="td-view">
             <a class="button" href="http://{{ $cur_news->site->alias }}/{{ $cur_news->cities[0]->alias }}/news/{{ $cur_news->alias }}" target="_blank">Чек</a>
           </td>

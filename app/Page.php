@@ -35,11 +35,11 @@ class Page extends Model
    $this->attributes['mydate'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
  }
  protected $fillable = [
-  'page_name', 
+  'name', 
   'site_id ', 
-  'page_title', 
-  'page_description', 
-  'page_alias', 
+  'title', 
+  'description', 
+  'alias', 
 ];
 
   // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
@@ -53,7 +53,7 @@ public function scopeSiteId($query, $site_id)
   // КОНЕЦ БЛОКА ОПИСАНИЯ ФИЛЬТРОВ
 
   /**
-  * Получаем сайт страницы.
+  * Получаем сайт.
   */
   public function site()
   {

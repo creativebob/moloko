@@ -107,11 +107,30 @@ class PageController extends Controller
 
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
-    $user_id = $user->id;
-    $user_status = $user->god;
+
+    // Смотрим компанию пользователя
     $company_id = $user->company_id;
+    if($company_id == null) {
+      abort(403, 'Необходимо авторизоваться под компанией');
+    }
+
+    if ($user->god == 1) {
+      // Если бог, то ставим автором робота
+      $user_id = 1;
+    } else {
+      $user_id = $user->id;
+    }
 
     $page = new Page;
+
+    // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+    if ($answer['automoderate'] == false){
+      $page->moderation = 1;
+    }
+
+    // Системная запись
+    $page->system_item = $request->system_item;
+
     $page->name = $request->name;
     $page->title = $request->title;
     $page->description = $request->description;
@@ -129,28 +148,32 @@ class PageController extends Controller
     }
   }
 
-
   public function show($id)
   {
     //
   }
 
-
   public function edit(Request $request, $alias, $page_alias)
   {
-
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+    // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+    $answer = operator_right('sites', false, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
-    $page = Page::with(['site' => function ($query) use ($alias) {
-      $query->whereAlias($alias);
-    }])->moderatorLimit($answer)->whereAlias($page_alias)->first();
+    // $page = Page::with('site')->moderatorLimit($answer)->whereAlias($page_alias)->first();
+    // dd($page);
+    // Вытаскиваем через сайт, так как алиасы могут дублироваться
+    $site = Site::with(['pages' => function ($query) use ($page_alias) {
+      $query->whereAlias($page_alias);
+    }])->moderatorLimit($answer)->whereAlias($alias)->first();
+
+    // $site = $page->site[0];
+    // dd($page);
+
+    $page = $site->pages[0];
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $page);
-
-    $site = $page->site;
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
@@ -164,12 +187,24 @@ class PageController extends Controller
 
   public function update(PageRequest $request, $alias, $id)
   {
+    // Получаем данные для авторизованного пользователя
+    $user = $request->user();
+
+    // Смотрим компанию пользователя
+    $company_id = $user->company_id;
+    if($company_id == null) {
+      abort(403, 'Необходимо авторизоваться под компанией');
+    }
+
+    if ($user->god == 1) {
+      // Если бог, то ставим автором робота
+      $user_id = 1;
+    } else {
+      $user_id = $user->id;
+    }
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-    // Получаем авторизованного пользователя
-    $user = $request->user();
 
     // ГЛАВНЫЙ ЗАПРОС:
     $page = Page::moderatorLimit($answer)->findOrFail($id);
@@ -177,14 +212,23 @@ class PageController extends Controller
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $page);
 
+    // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+    if ($answer['automoderate'] == false) {
+      $page->moderation = 1;
+    } else {
+      $page->moderation = $request->moderation;
+    }
+
+    // Системная запись
+    $page->system_item = $request->system_item;
+
     $page->name = $request->name;
     $page->title = $request->title;
     $page->description = $request->description;
     $page->alias = $request->alias;
     $page->content = $request->content;
-    $page->company_id = $user->company_id;
     $page->site_id = $request->site_id;
-    $page->editor_id = $user->id;
+    $page->editor_id = $user_id;
     $page->save();
 
     if ($page) {
@@ -194,11 +238,9 @@ class PageController extends Controller
     }
   }
 
-
   public function destroy(Request $request, $alias, $id)
   {
-
-     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:

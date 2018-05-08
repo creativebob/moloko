@@ -191,7 +191,6 @@ class AlbumController extends Controller
 
       // Получаем данные для авторизованного пользователя
       $user = $request->user();
-      $user = $request->user();
       $company_id = $user->company_id;
       if ($user->god == 1) {
         // Если бог, то ставим автором робота

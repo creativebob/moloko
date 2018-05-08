@@ -4,7 +4,7 @@
 @include('includes.scripts.pickmeup-inhead')
 @endsection
 
-@section('title', 'Новая страница')
+@section('title', 'Новая новость')
 
 @section('breadcrumbs', Breadcrumbs::render('section-create', $parent_page_info, $site, $page_info))
 

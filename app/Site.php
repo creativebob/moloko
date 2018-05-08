@@ -31,8 +31,8 @@ class Site extends Model
    */
   protected $dates = ['deleted_at'];
   protected $fillable = [
-    'site_name',
-    'site_domen',
+    'name',
+    'domen',
     'company_id',
   ];
   /**
