@@ -31,6 +31,8 @@ class CreateNewsTable extends Migration
             $table->date('date_publish_begin')->index()->comment('Дата начала публикации');
             $table->date('date_publish_end')->index()->comment('Дата окончания публикации');
 
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');

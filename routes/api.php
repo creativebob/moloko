@@ -15,14 +15,14 @@ use Illuminate\Http\Request;
 
 Route::get('/site', 'SiteController@show');
 
-Route::get('/vacancies', 'StafferController@vacancies');
-Route::get('/team', 'StafferController@team');
-Route::get('/news', 'NewsController@news');
-Route::get('/news/{link}', 'NewsController@show');
+Route::get('/{city}/vacancies', 'StafferController@api_index_vacancies');
+Route::get('/{city}/team', 'StafferController@api_index_team');
 
-Route::get('/{alias}', 'PageController@api');
+Route::get('/{city}/news', 'NewsController@api_index');
+Route::get('/{city}/news/{link}', 'NewsController@api_show');
+
+Route::get('/{city}/{alias}', 'PageController@api');
  
-
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

@@ -76,6 +76,7 @@ class DatabaseSeeder extends Seeder
 
     // Новости
     $this->call(NewsTableSeeder::class);
+    $this->call(CityEntityTableSeeder::class);
 
     // Альбомы
     $this->call(AlbumsCategoriesTableSeeder::class);

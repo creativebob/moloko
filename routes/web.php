@@ -219,8 +219,6 @@ Route::prefix('/sites/{alias}')->group(function () {
   Route::post('/navigation_check', 'NavigationController@navigation_check')->middleware('auth');
 
   Route::resource('/menus', 'MenuController')->middleware('auth');
-  // Текущий добавленный/удаленный пункт меню
-  Route::get('/current_navigation/{section_id}/{item_id}', 'NavigationController@current_navigation')->middleware('auth');
 
   // Новости
   Route::resource('/news', 'NewsController')->middleware('auth');

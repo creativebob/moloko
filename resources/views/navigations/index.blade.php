@@ -19,10 +19,12 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
+    <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250">
     @if($navigations_tree)
     {{-- Шаблон вывода и динамического обновления --}}
     @include('navigations.navigations-list', $navigations_tree)
     @endif
+    </ul>
   </div>
 </div>
 @endsection
@@ -44,8 +46,6 @@
 
   // Берем алиас сайта
   var siteAlias = '{{ $alias }}';
-
-
 
   // ------------------------------ Удаление ajax -------------------------------------------
   $(document).on('click', '[data-open="item-delete-ajax"]', function() {
@@ -267,7 +267,6 @@
       // Если id родителя совпадает с id навигации, значит родитель навигация
       parent = null;
     };
-
 
     $.ajax({
       headers: {

@@ -203,6 +203,7 @@ class User extends Authenticatable
     return $this->belongsTo('App\Company');
   }
 
+
     /**
   * Получаем роли.
   */
@@ -243,6 +244,19 @@ class User extends Authenticatable
   public function staff()
   {
     return $this->hasMany('App\Staffer');
+  }
+
+   public function news()
+  {
+    return $this->hasMany('App\News');
+  }
+
+    /**
+  * Получаем должность.
+  */
+  public function staffer()
+  {
+    return $this->hasMany('App\Staffer')->first();
   }
     /**
   * Получаем сотрудников.

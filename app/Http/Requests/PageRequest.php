@@ -24,10 +24,10 @@ class PageRequest extends FormRequest
     public function rules()
     {
         return [
-            'page_name' => 'string|max:255|required', 
-            'page_title' => 'string|max:255|required', 
-            'page_description' => 'string|required', 
-            'page_alias' => 'string|max:255|required', 
+            'name' => 'string|max:255|required', 
+            'title' => 'string|max:255|required', 
+            'description' => 'string|required', 
+            'alias' => 'string|max:255|required', 
             'site_id' => 'integer|required',
 
             'moderation' => 'integer|max:1|nullable',

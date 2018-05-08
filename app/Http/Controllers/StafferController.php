@@ -269,8 +269,12 @@ class StafferController extends Controller
     };  
   }
 
+
+
+  // ---------------------------------------------- API --------------------------------------------------
+
   // Получаем вакансии по api
-  public function vacancies (Request $request)
+  public function api_index_vacancies (Request $request)
   {
 
     $site = Site::with(['company.staff.position', 'company.staff' => function ($query) {
@@ -285,7 +289,7 @@ class StafferController extends Controller
     }
   }
   // Получаем команду по api
-  public function team (Request $request)
+  public function api_index_team (Request $request)
   {
 
     $site = Site::with(['company.staff.position', 'company.staff.user', 'company.staff' => function ($query) {

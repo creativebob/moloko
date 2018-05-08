@@ -36,6 +36,7 @@ class MenuController extends Controller
     $navigation_id = $request->navigation_id;
 
     // echo $navigation_id;
+    // $navigation_id = 17;
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right('site', $this->entity_dependence, 'index');
@@ -43,7 +44,6 @@ class MenuController extends Controller
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
-
     $site = Site::with(['navigations' => function ($query) use ($navigation_id) {
       $query->where('id', $navigation_id)->orderBy('sort', 'asc');
     }, 'navigations.menus' => function ($query) {
@@ -54,10 +54,8 @@ class MenuController extends Controller
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
-    // ->wherealias($alias)
+    ->wherealias($alias)
     ->first();
-
-    
 
     // dd($site);
 
@@ -99,16 +97,16 @@ class MenuController extends Controller
         $selected = ' selected';
       }
 
-      if (isset($item['name'])) {
-        $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
+      if (isset($item['navigation_id'])) {
+        $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$item['name'].'</option>';
       } else {
-        $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['menu_name'].'</option>';
+        $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
       }
       // Добавляем пробелы вложенному элементу
       if (isset($item['children'])) {
         $i = 1;
         for($j = 0; $j < $i; $j++){
-          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+          $padding .= '&nbsp;&nbsp;&nbsp;';
         }     
         $i++;
         
@@ -156,15 +154,30 @@ class MenuController extends Controller
 
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
-    $user_id = $user->id;
-    $company_id = $user->company_id;
 
-    // Пишем раздел меню
+    // Смотрим компанию пользователя
+    $company_id = $user->company_id;
+    if($company_id == null) {
+      abort(403, 'Необходимо авторизоваться под компанией');
+    }
+
+    if ($user->god == 1) {
+      // Если бог, то ставим автором робота
+      $user_id = 1;
+    } else {
+      $user_id = $user->id;
+    }
+
+    // Наполняем сущность данными
     $menu = new Menu;
 
-    // Модерация и системная запись
+    // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+    if ($answer['automoderate'] == false){
+      $navigation->moderation = 1;
+    }
+
+    // Системная запись
     $menu->system_item = $request->system_item;
-    $menu->moderation = $request->moderation;
 
     $menu->name = $request->menu_name;
     $menu->icon = $request->menu_icon;
@@ -185,14 +198,13 @@ class MenuController extends Controller
     $menu->author_id = $user_id;
     $menu->save();
 
-    // dd($menu);
     if ($menu) {
       // Переадресовываем на index
       return redirect()->action('NavigationController@get_content', ['id' => $menu->id, 'alias' => $alias, 'item' => 'menu']);
     } else {
       $result = [
         'error_status' => 1,
-        'error_message' => 'Ошибка при записи сектора!'
+        'error_message' => 'Ошибка при записи пункта меню!'
       ];
     }
   }
@@ -216,7 +228,6 @@ class MenuController extends Controller
 
     // ГЛАВНЫЙ ЗАПРОС:
     $menu = Menu::moderatorLimit($answer)->findOrFail($id);
-
     // echo $menu;
     
     // Подключение политики
@@ -248,7 +259,7 @@ class MenuController extends Controller
     ->filials($answer_site) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer_site)
     ->systemItem($answer_site) // Фильтр по системным записям
-    // ->wherealias($alias)
+    ->wherealias($alias)
     ->first();
 
     // dd($site);
@@ -280,7 +291,6 @@ class MenuController extends Controller
       $navigations_tree[$navigation->id]['id'] = $navigation->id;
       $navigations_tree[$navigation->id]['name'] = $navigation->name;
     }
-
     // dd($navigations_tree);
 
     // Функция отрисовки option'ов
@@ -293,10 +303,12 @@ class MenuController extends Controller
         if ($item['id'] == $parent) {
           $selected = ' selected';
         }
-        if (isset($item['name'])) {
-          $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
+
+        // dd($item);
+        if (isset($item['navigation_id'])) {
+          $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$item['name'].'</option>';
         } else {
-          $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
+          $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
         }
         // Добавляем пробелы вложенному элементу
         if (isset($item['children'])) {
@@ -311,6 +323,7 @@ class MenuController extends Controller
         return $menu;
       }
     }
+
     // Рекурсивно считываем наш шаблон
     function showCat($data, $padding, $parent, $id){
       $string = '';
@@ -323,7 +336,6 @@ class MenuController extends Controller
 
     // Получаем HTML разметку
     $navigation_list = showCat($navigations_tree, '', $item_parent, $item_id);
-
     // dd($navigation_list);
 
     $pages_list = '';
@@ -342,9 +354,21 @@ class MenuController extends Controller
 
   public function update(MenuRequest $request, $alias, $id)
   {
-
-    // Получаем авторизованного пользователя
+    // Получаем данные для авторизованного пользователя
     $user = $request->user();
+
+    // Смотрим компанию пользователя
+    $company_id = $user->company_id;
+    if($company_id == null) {
+      abort(403, 'Необходимо авторизоваться под компанией');
+    }
+
+    if ($user->god == 1) {
+      // Если бог, то ставим автором робота
+      $user_id = 1;
+    } else {
+      $user_id = $user->id;
+    }
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -354,14 +378,22 @@ class MenuController extends Controller
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $menu);
+
+
+    // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+    if ($answer['automoderate'] == false){
+      $menu->moderation = 1;
+    } else {
+      $menu->moderation = $request->moderation;
+    }
+
+    // Системная запись
+    $menu->system_item = $request->system_item;
+
     $site_id = $menu->navigation->site_id;
     $menu->name = $request->menu_name;
     $menu->alias = $request->menu_alias;
     $menu->icon = $request->menu_icon;
-
-    // Модерация и системная запись
-    $menu->system_item = $request->system_item;
-    $menu->moderation = $request->moderation;
 
     // Если родителем является навигация
     if ($request->navigation_id == $request->menu_parent_id) {
@@ -374,7 +406,7 @@ class MenuController extends Controller
 
     $menu->display = $request->display;
     $menu->page_id = $request->page_id;
-    $menu->editor_id = $user->id;
+    $menu->editor_id = $user_id;
     $menu->save();
 
     // dd($menu);
@@ -384,7 +416,7 @@ class MenuController extends Controller
     } else {
       $result = [
         'error_status' => 1,
-        'error_message' => 'Ошибка при записи сектора!'
+        'error_message' => 'Ошибка при обновлени пункта меню!'
       ];
     }
   }
@@ -402,16 +434,17 @@ class MenuController extends Controller
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $menu);
 
-    $user = $request->user();
+    
     $navigation_id = $menu->navigation_id;
     $site_id = $menu->navigation->site_id;
     if (isset($menu->parent_id)) {
       $parent_id = $menu->parent_id;
     } else {
       $parent_id = 0;
-    };
+    }
 
     if ($menu) {
+      $user = $request->user();
       $menu->editor_id = $user->id;
       $menu->save();
       $menu = Menu::destroy($id);
@@ -432,11 +465,9 @@ class MenuController extends Controller
     $result = '';
     $i = 1;
     foreach ($request->menus as $item) {
-
       $menu = Menu::findOrFail($item);
       $menu->sort = $i;
       $menu->save();
-
       $i++;
     }
   }
