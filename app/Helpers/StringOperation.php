@@ -134,6 +134,65 @@ function timeToSec($time) {
           }
 
 
+        // -----------------------------------------------------------------------------------------------
+        // ПРИНИМАЕМ РАСПИСАНИЕ И ГОТОВИМ К ЗАПИСИ В БАЗУ ------------------------------------------------
+        // -----------------------------------------------------------------------------------------------
+
+        // Получает массив времени на неделю (начало/окончание расписания) полностью оформленный и готовый для записи 
+        // через DB в таблицу worktimes. Функции нужны следующие аргументы:
+        // $request  - запрос приложения
+        // $schedule_id - ID расписания для которого сохраняеться время.
+ 
+        function getWorktimes($request, $schedule_id){
+
+            // Получаем из запроса все данные из полей расписания работы в один массив
+            $schedule_mass[0]['worktime_begin'] = $request->mon_begin;
+            $schedule_mass[0]['worktime_end'] = $request->mon_end;
+            $schedule_mass[1]['worktime_begin'] = $request->tue_begin;
+            $schedule_mass[1]['worktime_end'] = $request->tue_end;
+            $schedule_mass[2]['worktime_begin'] = $request->wed_begin;
+            $schedule_mass[2]['worktime_end'] = $request->wed_end;
+            $schedule_mass[3]['worktime_begin'] = $request->thu_begin;
+            $schedule_mass[3]['worktime_end'] = $request->thu_end;
+            $schedule_mass[4]['worktime_begin'] = $request->fri_begin;
+            $schedule_mass[4]['worktime_end'] = $request->fri_end;
+            $schedule_mass[5]['worktime_begin'] = $request->sat_begin;
+            $schedule_mass[5]['worktime_end'] = $request->sat_end;
+            $schedule_mass[6]['worktime_begin'] = $request->sun_begin;
+            $schedule_mass[6]['worktime_end'] = $request->sun_end;
 
 
-          ?>
+            // Переводим указанное время в секунды (а также делаем кое-какие проверки и доп.операции) 
+            // и сохраняем в другой массив.
+
+            // Готовим массив
+            $mass_time = [];
+
+            // Перебираем каждый день недели
+            for($n = 0; $n < 7; $n++){
+
+                // Проверяем наличие данных
+                if(($schedule_mass[$n]['worktime_begin'] != null) && ($schedule_mass[$n]['worktime_end'] != null)){
+
+                    $worktime_begin = timeToSec($schedule_mass[$n]['worktime_begin']);
+                    $worktime_end = timeToSec($schedule_mass[$n]['worktime_end']);
+
+                    // Делаем корректировку данных - если время работы переходит на следующие сутки (Например, с 09:00 до 03:00)
+                    if($worktime_end < $worktime_begin){
+                       $worktime_end = (86400 - $worktime_begin) + $worktime_end;
+                    } else {$worktime_end = $worktime_end - $worktime_begin;};
+
+                    $mass_time[] = [
+                        'schedule_id' => $schedule_id,
+                        'weekday' => $n + 1,
+                        'worktime_begin' => $worktime_begin,
+                        'worktime_interval' => $worktime_end
+                    ];
+                };    
+            };
+
+            // Отдаем готовый массив
+            return $mass_time;
+        };
+
+?>

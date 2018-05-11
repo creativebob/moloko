@@ -155,12 +155,9 @@ class CompanyController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        // Формируем пуcто
+        // Формируем пуcтой массив
         $worktime = [];
-        for ($n = 1; $n < 8; $n++){
-            $worktime[$n]['begin'] = null;
-            $worktime[$n]['end'] = null;
-        }
+        for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
 
         return view('companies.create', compact('company', 'sectors_list', 'page_info', 'worktime'));
     }
@@ -182,74 +179,13 @@ class CompanyController extends Controller
         $schedule->name = 'График работы для ' . $user->company->company_name;
         $schedule->description = null;
         $schedule->save();
-        
-        $mass_time = [];
+        $schedule_id = $schedule->id;
 
-        if(($request->mon_begin != null) && ($request->mon_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule->id,
-                'weekday' => '1',
-                'worktime_begin' => timeToSec($request->mon_begin),
-                'worktime_interval' => timeToSec($request->mon_end) - timeToSec($request->mon_begin)
-            ];
-        };
+        // Функция getWorktimes ловит все поля расписания из запроса и готовит к записи в worktimes
+        $mass_time = getWorktimes($request, $schedule_id);
 
-        if(($request->tue_begin != null) && ($request->tue_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule->id,
-                'weekday' => '2',
-                'worktime_begin' => timeToSec($request->tue_begin),
-                'worktime_interval' => timeToSec($request->tue_end) - timeToSec($request->tue_begin)
-            ];
-        };
-
-        if(($request->wed_begin != null) && ($request->wed_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule->id,
-                'weekday' => '3',
-                'worktime_begin' => timeToSec($request->wed_begin),
-                'worktime_interval' => timeToSec($request->wed_end) - timeToSec($request->wed_begin)
-            ];
-        };
-
-        if(($request->thu_begin != null) && ($request->thu_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule->id,
-                'weekday' => '4',
-                'worktime_begin' => timeToSec($request->thu_begin),
-                'worktime_interval' => timeToSec($request->thu_end) - timeToSec($request->thu_begin)
-            ];
-        };
-
-        if(($request->fri_begin != null) && ($request->fri_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule->id,
-                'weekday' => '5',
-                'worktime_begin' => timeToSec($request->fri_begin),
-                'worktime_interval' => timeToSec($request->fri_end) - timeToSec($request->fri_begin)
-            ];
-        };
-
-        if(($request->sat_begin != null) && ($request->sat_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule->id,
-                'weekday' => '6',
-                'worktime_begin' => timeToSec($request->sat_begin),
-                'worktime_interval' => timeToSec($request->sat_end) - timeToSec($request->sat_begin)
-            ];
-        };
-
-        if(($request->sun_begin != null) && ($request->sun_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule->id,
-                'weekday' => '7',
-                'worktime_begin' => timeToSec($request->sun_begin),
-                'worktime_interval' => timeToSec($request->sun_end) - timeToSec($request->sun_begin)
-            ];
-        };
-
+        // Записываем в базу все расписание.
         DB::table('worktimes')->insert($mass_time);
-
 
         $company = new Company;
         $company->company_name = $request->company_name;
@@ -424,7 +360,16 @@ class CompanyController extends Controller
             if(isset($worktime_mass[$x]->worktime_interval)){
 
                 $worktime_interval = $worktime_mass[$x]->worktime_interval;
-                $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);
+
+                if(($worktime_begin + $worktime_interval) > 86400){
+
+                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
+                }
+                else {
+
+                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);                       
+                };
+
                 $worktime[$x]['end'] = $str_worktime_interval;
             } else {
 
@@ -511,72 +456,13 @@ class CompanyController extends Controller
             $schedule_id = $company->schedules->first()->id;
         };
 
-        $mass_time = [];
-        if(($request->mon_begin != null) && ($request->mon_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule_id,
-                'weekday' => '1',
-                'worktime_begin' => timeToSec($request->mon_begin),
-                'worktime_interval' => timeToSec($request->mon_end) - timeToSec($request->mon_begin)
-            ];
-        };
+        // Функция getWorktimes ловит все поля расписания из запроса и готовит к записи в worktimes
+        $mass_time = getWorktimes($request, $schedule_id);
 
-        if(($request->tue_begin != null) && ($request->tue_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule_id,
-                'weekday' => '2',
-                'worktime_begin' => timeToSec($request->tue_begin),
-                'worktime_interval' => timeToSec($request->tue_end) - timeToSec($request->tue_begin)
-            ];
-        };
-
-        if(($request->wed_begin != null) && ($request->wed_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule_id,
-                'weekday' => '3',
-                'worktime_begin' => timeToSec($request->wed_begin),
-                'worktime_interval' => timeToSec($request->wed_end) - timeToSec($request->wed_begin)
-            ];
-        };
-
-        if(($request->thu_begin != null) && ($request->thu_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule_id,
-                'weekday' => '4',
-                'worktime_begin' => timeToSec($request->thu_begin),
-                'worktime_interval' => timeToSec($request->thu_end) - timeToSec($request->thu_begin)
-            ];
-        };
-
-        if(($request->fri_begin != null) && ($request->fri_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule_id,
-                'weekday' => '5',
-                'worktime_begin' => timeToSec($request->fri_begin),
-                'worktime_interval' => timeToSec($request->fri_end) - timeToSec($request->fri_begin)
-            ];
-        };
-
-        if(($request->sat_begin != null) && ($request->sat_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule_id,
-                'weekday' => '6',
-                'worktime_begin' => timeToSec($request->sat_begin),
-                'worktime_interval' => timeToSec($request->sat_end) - timeToSec($request->sat_begin)
-            ];
-        };
-
-        if(($request->sun_begin != null) && ($request->sun_end != null)){
-            $mass_time[] = [
-                'schedule_id' => $schedule_id,
-                'weekday' => '7',
-                'worktime_begin' => timeToSec($request->sun_begin),
-                'worktime_interval' => timeToSec($request->sun_end) - timeToSec($request->sun_begin)
-            ];
-        };
-
-
+        // Удаляем все записи времени в worktimes для этого расписания
         $worktimes = Worktime::where('schedule_id', $schedule_id)->forceDelete();
+
+        // Вставляем новое время в расписание
         DB::table('worktimes')->insert($mass_time);
 
         return redirect('companies');

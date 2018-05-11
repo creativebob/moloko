@@ -41,7 +41,121 @@ class CompanyRequest extends FormRequest
 
             'moderation' => 'integer|max:1|nullable',
             'system_item' => 'integer|max:1|nullable',
+
+
+            // Валидация полей времени в расписании
+
+            'mon_begin' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ), 
+
+            'mon_end' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ), 
               
+            'tue_begin' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ), 
+
+            'tue_end' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ), 
+
+            'wed_begin' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ), 
+
+            'wed_end' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ), 
+            'thu_begin' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ), 
+
+            'thu_end' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ), 
+              
+            'fri_begin' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ), 
+
+            'fri_end' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ), 
+
+            'sat_begin' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ), 
+
+            'sat_end' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ), 
+
+            'sun_begin' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ), 
+
+            'sun_end' => 
+                array(
+                    'required',
+                    'max:5',
+                    'nullable',
+                    'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
+                ),  
         ];
+
     }
 }
