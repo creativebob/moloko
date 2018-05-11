@@ -66,10 +66,10 @@ class NavigationController extends Controller
 
         $edit = 0;
         $delete = 0;
-        if ($user->can('update', $navigation->menus->where('id', $id))) {
+        if ($user->can('update', $navigation->menus->where('id', $id)->first())) {
           $edit = 1;
         }
-        if ($user->can('delete', $navigation->menus->where('id', $id))) {
+        if ($user->can('delete', $navigation->menus->where('id', $id)->first())) {
           $delete = 1;
         }
         $navigation_id[$navigation->id]['menus'][$id]['edit'] = $edit;
@@ -122,6 +122,8 @@ class NavigationController extends Controller
     //   return view('navigations.navigations-list', ['navigations_tree' => $navigations_tree, 'item' => $request->item, 'id' => $request->id]); 
     // }
 
+    // dd($navigations_tree);
+
     return view('navigations.index', compact('site', 'navigations_tree', 'page_info' , 'parent_page_info', 'pages_list', 'alias', 'menus', 'navigations'));
   }
 
@@ -165,10 +167,10 @@ class NavigationController extends Controller
 
         $edit = 0;
         $delete = 0;
-        if ($user->can('update', $navigation->menus->where('id', $id))) {
+        if ($user->can('update', $navigation->menus->where('id', $id)->first())) {
           $edit = 1;
         }
-        if ($user->can('delete', $navigation->menus->where('id', $id))) {
+        if ($user->can('delete', $navigation->menus->where('id', $id)->first())) {
           $delete = 1;
         }
         $navigation_id[$navigation->id]['menus'][$id]['edit'] = $edit;
@@ -310,12 +312,8 @@ class NavigationController extends Controller
       abort(403, 'Необходимо авторизоваться под компанией');
     }
 
-    if ($user->god == 1) {
-      // Если бог, то ставим автором робота
-      $user_id = 1;
-    } else {
-      $user_id = $user->id;
-    }
+    // Скрываем бога
+    $user_id = hideGod($user);
 
     // Наполняем сущность данными
     $navigation = new Navigation;
@@ -470,12 +468,8 @@ class NavigationController extends Controller
       abort(403, 'Необходимо авторизоваться под компанией');
     }
 
-    if ($user->god == 1) {
-      // Если бог, то ставим автором робота
-      $user_id = 1;
-    } else {
-      $user_id = $user->id;
-    }
+    // Скрываем бога
+    $user_id = hideGod($user);
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -546,8 +540,12 @@ class NavigationController extends Controller
     } else {
       // Получаем авторизованного пользователя
       $user = $request->user();
+
+      // Скрываем бога
+      $user_id = hideGod($user);
+      
       // Если нет, мягко удаляем
-      $navigation->editor_id = $user->id;
+      $navigation->editor_id = $user_id;
       $navigation->save();
 
       // Если нет, мягко удаляем

@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 // Фотографии
 use Intervention\Image\ImageManagerStatic as Image;
@@ -79,6 +80,8 @@ class NewsController extends Controller
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
+
+    // dd($news);
 
     // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('sites');
@@ -235,7 +238,7 @@ class NewsController extends Controller
       $photo->extension = $extension;
       $image_name = 'preview.'.$extension;
 
-      $photo->path = '/'.$directory.'/'.$image_name;
+      // $photo->path = '/'.$directory.'/'.$image_name;
 
       $params = getimagesize($request->file('photo'));
       $photo->width = $params[0];
@@ -405,7 +408,7 @@ class NewsController extends Controller
     // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('sites');
 
-    return view('news.edit', compact('cur_news', 'parent_page_info', 'page_info', 'site', 'albums_categories_list', 'filials', 'cities'));
+    return view('news.edit', compact('cur_news', 'parent_page_info', 'page_info', 'site', 'albums_categories_list', 'filials', 'cities', 'alias'));
   }
 
   public function update(Request $request, $alias, $id)
@@ -438,7 +441,7 @@ class NewsController extends Controller
       $photo->extension = $extension;
       $image_name = 'preview.'.$extension;
 
-      $photo->path = '/'.$directory.'/'.$image_name;
+      // $photo->path = '/'.$directory.'/'.$image_name;
 
       $params = getimagesize($request->file('photo'));
       $photo->width = $params[0];
@@ -563,27 +566,72 @@ class NewsController extends Controller
 
     $site_id = $cur_news->site_id;
     if ($cur_news) {
+      // Получаем данные для авторизованного пользователя
       $user = $request->user();
       $cur_news->editor_id = $user->id;
       $cur_news->save();
 
       // Удаляем связи
-      $cur_news->albums()->detach();
-      $cur_news->cities()->detach();
+      $albums = $cur_news->albums()->detach();
+      if ($albums == false) {
+        abort(403, 'Ошибка удаления связей с альбомами');
+      }
+      $cities = $cur_news->cities()->detach();
+      if ($cities == false) {
+        abort(403, 'Ошибка удаления связей с городами');
+      }
+
+      // Удаляем файлы
+      $directory = $cur_news->company_id.'/media/news/'.$cur_news->id;
+      $del_dir = Storage::disk('public')->deleteDirectory($directory);
+      
+      // $image_name = $cur_news->photo->name;
+      
+      // $del_item = Storage::disk('public')->delete([$directory.'/small/'.$image_name, $directory.'/medium/'.$image_name, $directory.'/large/'.$image_name, $directory.'/original/'.$image_name]);
+
+      // $small = Storage::disk('public')->delete($directory.'/small/'.$image_name);
+      // $medium = Storage::disk('public')->delete(storage_path('app/public/'.$directory.'/medium/'.$image_name));
+      // $large = Storage::disk('public')->delete(storage_path('app/public/'.$directory.'/large/'.$image_name));
+      // $original = Storage::disk('public')->delete(storage_path('app/public/'.$directory.'/original/'.$image_name));
+
+      // dd($original);
+
+      $cur_news->photo()->delete();
 
       // Удаляем страницу с обновлением
       $cur_news = News::destroy($id);
-
-
 
       if ($cur_news) {
         return Redirect('/sites/'.$alias.'/news');
       } else {
         abort(403, 'Ошибка при удалении новости');
-      };
+      }
     } else {
       abort(403, 'Новость не найдена');
     }
+  }
+
+  // Проверка наличия в базе
+  public function news_check (Request $request, $alias)
+  {
+    // Проверка навигации по сайту в нашей базе данных
+    $news_alias = $request->alias;
+    $site = Site::withCount(['news' => function($query) use ($news_alias) {
+      $query->whereAlias($news_alias);
+    }])->whereAlias($alias)->first();
+
+    // Если такая навигация есть
+    if ($site->news_count > 0) {
+      $result = [
+        'error_status' => 1,
+      ];
+    // Если нет
+    } else {
+      $result = [
+        'error_status' => 0,
+      ];
+    }
+    return json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
   

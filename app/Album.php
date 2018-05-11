@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Заготовки
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
@@ -21,7 +20,6 @@ use App\Scopes\Filters\BooklistFilter;
 class Album extends Model
 {
   use Notifiable;
-  use SoftDeletes;
 
   // Подключаем Scopes для главного запроса
   use CompaniesLimitTraitScopes;
@@ -32,7 +30,6 @@ class Album extends Model
   use ModeratorLimitTraitScopes;
   use BooklistFilter;
 
-  protected $dates = ['deleted_at'];
 
   protected $fillable = [
 
@@ -54,6 +51,12 @@ class Album extends Model
   public function photos()
   {
     return $this->belongsToMany('App\Photo', 'album_entity', 'album_id', 'entity_id')->where('entity', 'photo');
+  }
+
+   // Получаем фото
+  public function photo()
+  {
+    return $this->belongsTo('App\Photo');
   }
 
     // Получаем видео

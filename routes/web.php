@@ -31,7 +31,7 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 Route::resource('/users', 'UserController')->middleware('auth');
 
 
-// Контроллер категорий альбомов
+// ---------------------------------- Категории альбомов -------------------------------------------
 Route::resource('/albums_categories', 'AlbumsCategoryController')->middleware('auth');
 // Текущая добавленная/удаленная категория альбомов
 Route::any('/get_albums_categories', 'AlbumsCategoryController@get_content')->middleware('auth');
@@ -42,7 +42,8 @@ Route::post('/albums_categories_list', 'AlbumsCategoryController@albums_categori
 // Сортировка категорий альбомов
 Route::post('/albums_categories_sort', 'AlbumsCategoryController@albums_categories_sort')->middleware('auth');
 
-// Альбомы
+
+// --------------------------------------- Альбомы -----------------------------------------------
 Route::resource('/albums', 'AlbumController')->middleware('auth');
 Route::get('/albums', 'AlbumController@index')->middleware('auth')->name('albums.index');
 Route::get('/albums/create', 'AlbumController@create')->middleware('auth')->name('albums.create');
@@ -52,48 +53,44 @@ Route::get('/albums/{alias}/edit', 'AlbumController@edit')->middleware('auth')->
 Route::patch('/albums/{id}', 'AlbumController@update')->middleware('auth')->name('albums.update');
 Route::delete('/albums/{id}', 'AlbumController@destroy')->middleware('auth')->name('albums.destroy');
 
-// Route::get('/albums/{alias}', 'AlbumController@sections')->middleware('auth')->name('albums.photos');
-// Группа с префиксом
-Route::prefix('/albums/{alias}')->group(function () {
-  // Фотографии
-  Route::resource('/photos', 'PhotoController')->middleware('auth');
-
-
-
-  // Загрузка фоток через ajax через dropzone.js
-});
-
-// Сортировка альбомов
-Route::post('/photos_sort', 'PhotoController@photos_sort')->middleware('auth');
-
 // Получение альбомов по категории
 Route::post('/albums_list', 'AlbumController@albums_list')->middleware('auth');
-
 // Получение альбома
 Route::post('/get_album', 'AlbumController@get_album')->middleware('auth');
-
 // Сортировка альбомов
 Route::post('/albums_sort', 'AlbumController@albums_sort')->middleware('auth');
 
+// Route::get('/albums/{alias}', 'AlbumController@sections')->middleware('auth')->name('albums.photos');
+// Группа с префиксом
+Route::prefix('/albums/{alias}')->group(function () {
 
-// Продукция
+  // ----------------------------------- Фотографии -----------------------------------------------
+  Route::resource('/photos', 'PhotoController')->middleware('auth');
+  // Загрузка фоток через ajax через dropzone.js
+});
+
+// Сортировка фоток
+Route::post('/photos_sort', 'PhotoController@photos_sort')->middleware('auth');
+
+
+// ------------------------------------- Продукция -------------------------------------------------
 Route::resource('products', 'ProductController')->middleware('auth');
 // Сортировка альбомов
 Route::post('/products_sort', 'ProductController@products_sort')->middleware('auth');
 
 
-// Контроллер категорий продукции
+// ------------------------------------ Категории продукции --------------------------------------
 Route::resource('/products_categories', 'ProductsCategoryController')->middleware('auth');
-// Текущая добавленная/удаленная категория альбомов
+// Текущая добавленная/удаленная категория продукции
 Route::any('/get_products_categories', 'ProductsCategoryController@get_content')->middleware('auth');
-// Проверка на существование категории альбомов
+// Проверка на существование категории продукции
 Route::post('/products_category_check', 'ProductsCategoryController@products_category_check')->middleware('auth');
-// Select категорий альбомов
+// Select категорий продукции
 Route::post('/products_categories_list', 'ProductsCategoryController@products_categories_list')->middleware('auth');
-// Сортировка категорий альбомов
+// Сортировка категорий продукции
 Route::post('/products_categories_sort', 'ProductsCategoryController@products_categories_sort')->middleware('auth');
 
-// Компании
+// --------------------------------------- Компании -----------------------------------------------
 Route::resource('/companies', 'CompanyController')->middleware('auth');
 // Проверка существования компании в базе по ИНН
 Route::post('/companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');
@@ -132,15 +129,19 @@ Route::get('/getgod', 'UserController@getgod')->middleware('auth')->name('users.
 // Получаем доступ бога
 Route::get('/returngod', 'UserController@returngod')->middleware('auth')->name('users.returngod');
 
-// Контроллеры для отображения областей
+// ---------------------------------------- Области -------------------------------------------------
 Route::resource('/regions', 'RegionController')->middleware('auth');
 // Сортировка областей
 Route::post('/regions_sort', 'RegionController@regions_sort')->middleware('auth');
-// Контроллеры для отображения районов    населенных пунктов
+// Получаем области из vk
+Route::post('/region', 'RegionController@get_vk_region')->middleware('auth');
+
+// ---------------------------------------- Районы --------------------------------------------------
 Route::resource('/areas', 'AreaController')->middleware('auth');
-// Сортировка областей
+// Сортировка районов
 Route::post('/areas_sort', 'AreaController@areas_sort')->middleware('auth');
-// Контроллеры для отображения населенных пунктов    
+
+// ----------------------------------- Населенные пункты -------------------------------------------
 Route::resource('/cities', 'CityController')->middleware('auth');
 // Текущий добавленный/удаленный город
 Route::any('/get_cities', 'CityController@get_content')->middleware('auth');
@@ -150,14 +151,13 @@ Route::post('/city_check', 'CityController@city_check')->middleware('auth');
 Route::post('/cities_sort', 'CityController@cities_sort')->middleware('auth');
 // Таблица городов
 Route::post('/cities_list', 'CityController@cities_list')->middleware('auth');
-// Получаем области и города из vk
+// Получаем города из vk
 Route::post('/city_vk', 'CityController@get_vk_city')->middleware('auth');
-Route::post('/region', 'RegionController@get_vk_region')->middleware('auth');
 
 // Тестовый маршрут проверки пришедших с вк данных
 // Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
 
-// Контроллеры для отображения филиалов, отделов и должностей
+// ----------------------------------------- Филиалы и отделы --------------------------------------
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
 // Текущий добавленный/удаленный сектор
 Route::any('/get_departments', 'DepartmentController@get_content')->middleware('auth');
@@ -170,18 +170,18 @@ Route::post('/departments_list', 'DepartmentController@departments_list')->middl
 // Сортировка отделов
 Route::post('/departments_sort', 'DepartmentController@departments_sort')->middleware('auth');
 
-// Должности
+// ----------------------------------------- Должности --------------------------------------------
 Route::resource('/positions', 'PositionController')->middleware('auth');
 // Список отделов филиала и доступных должностей
 Route::post('/positions_list', 'PositionController@positions_list')->middleware('auth');
 
-// Контроллер штата компании
+// -------------------------------------- Штат компании ---------------------------------------------
 Route::resource('/staff', 'StafferController')->middleware('auth');
 
-// Контроллер сотрудников
+// --------------------------------------- Сотрудники ---------------------------------------------
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
 
-// Контроллер секторов
+// ----------------------------------------- Секторы -----------------------------------------------
 Route::resource('/sectors', 'SectorController')->middleware('auth');
 // Текущий добавленный/удаленный сектор
 Route::any('/get_sectors', 'SectorController@get_content')->middleware('auth');
@@ -192,14 +192,14 @@ Route::post('/sectors_list', 'SectorController@sectors_list')->middleware('auth'
 // Сортировка секторов
 Route::post('/sectors_sort', 'SectorController@sectors_sort')->middleware('auth');
 
-// Контроллер списков
+// ------------------------------------------ Списки -----------------------------------------------
 Route::resource('/booklists', 'BooklistController')->middleware('auth');
 
 Route::post('/setbooklist', 'BooklistController@setbooklist')->middleware('auth')->name('booklists.setbooklist');
 Route::get('/updatebooklist', 'BooklistController@setbooklist')->middleware('auth')->name('booklists.updatebooklist');
 
 
-// Контроллер отображения сайтов 
+// ----------------------------------------- Сайты ----------------------------------------------
 Route::get('/sites', 'SiteController@index')->middleware('auth')->name('sites.index');
 Route::get('/sites/create', 'SiteController@create')->middleware('auth')->name('sites.create');
 Route::post('/sites', 'SiteController@store')->middleware('auth')->name('sites.store');
@@ -207,34 +207,45 @@ Route::get('/sites/{alias}/edit', 'SiteController@edit')->middleware('auth')->na
 Route::patch('/sites/{id}', 'SiteController@update')->middleware('auth')->name('sites.update');
 Route::delete('/sites/{id}', 'SiteController@destroy')->middleware('auth')->name('sites.destroy');
 Route::get('/sites/{alias}', 'SiteController@sections')->middleware('auth')->name('sites.sections');
-// Группа с префиксом
+// Проверка на существование домена сайта
+Route::post('/site_check', 'SiteController@site_check')->middleware('auth');
+
+// Разделы сайта
 Route::prefix('/sites/{alias}')->group(function () {
-	// Странички
+
+	// --------------------------------------- Страницы ---------------------------------------------
   Route::resource('/pages', 'PageController')->middleware('auth');
-  // Навигация и меню
+  // Проверка на существование страницы
+  Route::post('/page_check', 'PageController@page_check')->middleware('auth');
+
+  // --------------------------------------- Навигации --------------------------------------------
   Route::resource('/navigations', 'NavigationController')->middleware('auth');
   // Текущая добавленная/удаленная навигация
   Route::any('/get_navigations', 'NavigationController@get_content')->middleware('auth');
 	// Проверка на существование навигации
   Route::post('/navigation_check', 'NavigationController@navigation_check')->middleware('auth');
 
+  // -------------------------------------------Меню ---------------------------------------------
   Route::resource('/menus', 'MenuController')->middleware('auth');
 
-  // Новости
+  // ---------------------------------------- Новости --------------------------------------------
   Route::resource('/news', 'NewsController')->middleware('auth');
+  // Проверка на существование новости
+  Route::post('/news_check', 'NewsController@news_check')->middleware('auth');
 });
 
-// Сортировка отделов
-Route::post('/news_sort', 'NewsController@news_sort')->middleware('auth');
 
-// Route::any('/modal', 'MenuController@modal')->middleware('auth');
+
 // Сортировка навигаций
 Route::post('/navigations_sort', 'NavigationController@navigations_sort')->middleware('auth');
 // Сортировка меню
 Route::post('/menus_sort', 'MenuController@menus_sort')->middleware('auth');
+// Сортировка новостей
+Route::post('/news_sort', 'NewsController@news_sort')->middleware('auth');
 
-// Route::resource('/menusite', 'MenuSiteController')->middleware('auth');
-// Отображение сессии
+// Route::any('/modal', 'MenuController@modal')->middleware('auth');
+
+// ------------------------------------- Отображение сессии -----------------------------------------
 Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');
 
 Auth::routes();

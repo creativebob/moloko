@@ -32,10 +32,9 @@ class Menu extends Model
   // protected $table = 'menu';
   protected $dates = ['deleted_at'];
   protected $fillable = [
-  	'menu_name',
-    'menu_parent_id',
+  	'name',
+    'parent_id',
     'page_id',
-    'table_id',
 
   ];
 

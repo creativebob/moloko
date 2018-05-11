@@ -27,7 +27,8 @@ class CreateAlbumsTable extends Migration
             $table->integer('access')->nullable()->unsigned()->comment('0 - личный, 1 - публичный');
             $table->string('alias')->index()->comment('Алиас альбома');
 
-            $table->string('avatar')->index()->nullable()->comment('Обложка альбома');
+            $table->string('photo_id')->index()->nullable()->comment('Обложка альбома');
+            
             $table->string('description')->index()->nullable()->comment('Описание альбома');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -40,7 +41,6 @@ class CreateAlbumsTable extends Migration
 
             $table->timestamps();
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
-            $table->softDeletes();
         });
     }
 

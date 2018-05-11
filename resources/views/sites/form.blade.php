@@ -19,7 +19,10 @@
     </label>
     <label>Домен сайта {{ $site->site_domen }}
       @include('includes.inputs.varchar', ['value'=>$site->domen, 'name'=>'site_domen', 'required'=>'required'])
+      <div class="sprite-input-right find-status" id="name-check"></div>
+      <div class="item-error">Такой сайт уже существует!</div>
     </label>
+    {{ Form::hidden('check', 0, ['id'=>'check']) }}
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
     <fieldset class="fieldset-access">

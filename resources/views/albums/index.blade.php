@@ -52,8 +52,8 @@
             ><label class="label-check" for="check-{{ $album->id }}"></label></td>
           <td>
             <a href="/albums/{{ $album->alias }}">
-              @if (isset($album->avatar))
-              <img src="/storage/{{ $album->company->id }}/media/albums/{{ $album->id }}/small/{{ $album->avatar }}" alt="{{ $album->name }}">
+              @if (isset($album->photo_id))
+              <img src="/storage/{{ $album->company_id }}/media/albums/{{ $album->id }}/small/{{ $album->photo->name }}" alt="{{ $album->name }}">
               @else
               нет фото
               @endif

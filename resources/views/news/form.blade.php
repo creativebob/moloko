@@ -43,12 +43,14 @@
       <img id="photo" @if (isset($cur_news->photo_id)) src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/original/{{ $cur_news->photo->name }}" @endif>
     </div>
     <label>Алиас новости
-      @include('includes.inputs.text-en', ['name'=>'alias', 'value'=>$cur_news->alias, 'required'=>'required'])
+      @include('includes.inputs.varchar', ['name'=>'alias', 'value'=>$cur_news->alias, 'required'=>'required'])
+      <div class="sprite-input-right find-status" id="name-check"></div>
+      <div class="item-error">Такая новость уже существует!</div>
     </label>
     @if (isset($cur_news->alias))
     <a class="button" href="http://{{ $cur_news->site->alias }}/news/{{ $cur_news->alias }}" target="_blank">Просмотр новости</a>
     @endif
-    
+    {{ Form::hidden('check', 0, ['id'=>'check']) }}
     {{ Form::hidden('site_id', $site->id) }}
   </div>
   <div class="small-12 medium-5 large-7 cell">

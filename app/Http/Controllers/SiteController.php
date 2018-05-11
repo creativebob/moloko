@@ -101,12 +101,8 @@ class SiteController extends Controller
       abort(403, 'Необходимо авторизоваться под компанией');
     }
 
-    if ($user->god == 1) {
-      // Если бог, то ставим автором робота
-      $user_id = 1;
-    } else {
-      $user_id = $user->id;
-    }
+    // Скрываем бога
+    $user_id = hideGod($user);
 
     // Наполняем сущность данными
     $site = new Site;
@@ -197,12 +193,8 @@ class SiteController extends Controller
       abort(403, 'Необходимо авторизоваться под компанией');
     }
 
-    if ($user->god == 1) {
-      // Если бог, то ставим автором робота
-      $user_id = 1;
-    } else {
-      $user_id = $user->id;
-    }
+    // Скрываем бога
+    $user_id = hideGod($user);
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -259,7 +251,10 @@ class SiteController extends Controller
     if ($site) {
       // Получаем пользователя
       $user = $request->user();
-      $site->editor_id = $user->id;
+      // Скрываем бога
+      $user_id = hideGod($user);
+
+      $site->editor_id = $user_id;
       $site->save();
       // Удаляем сайт с обновлением
       $site = Site::destroy($id);
@@ -288,5 +283,25 @@ class SiteController extends Controller
     $page_info = pageInfo($this->entity_name);
 
     return view('sites.sections', compact('site', 'page_info'));
+  }
+
+  // Проверка наличия в базе
+  public function site_check(Request $request)
+  {
+    // Проверка навигации по сайту в нашей базе данных
+    $site = Site::whereDomen($request->domen)->first();
+
+    // Если такой сайт существует
+    if ($site) {
+      $result = [
+        'error_status' => 1,
+      ];
+    // Если нет
+    } else {
+      $result = [
+        'error_status' => 0,
+      ];
+    }
+    return json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 }

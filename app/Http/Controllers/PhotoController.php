@@ -139,12 +139,9 @@ class PhotoController extends Controller
         // Получаем данные для авторизованного пользователя
       $user = $request->user();
       $company_id = $user->company_id;
-      if ($user->god == 1) {
-        // Если бог, то ставим автором робота
-        $user_id = 1;
-      } else {
-        $user_id = $user->id;
-      }
+
+      // Скрываем бога
+      $user_id = hideGod($user);
 
       $photo = new Photo;
 
@@ -263,28 +260,25 @@ class PhotoController extends Controller
     {
 
 
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
       $answer_album = operator_right('albums', false, getmethod('index'));
       $album = Album::moderatorLimit($answer_album)->whereAlias($alias)->first();
 
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
       $answer = operator_right('albums', false, getmethod(__FUNCTION__));
       $photo = Photo::moderatorLimit($answer)->findOrFail($id);
 
-    // Подключение политики
+      // Подключение политики
       $this->authorize(getmethod(__FUNCTION__), $photo);
 
-    // Получаем данные для авторизованного пользователя
+      // Получаем данные для авторизованного пользователя
       $user = $request->user();
-      if ($user->god == 1) {
-        // Если бог, то ставим автором робота
-        $user_id = 1;
-      } else {
-        $user_id = $user->id;
-      }
+
+      // Скрываем бога
+      $user_id = hideGod($user);
 
       if ($request->avatar == 1) {
-        $album->avatar = $photo->name;
+        $album->photo_id = $id;
         $album->save();
       }
 
@@ -326,33 +320,27 @@ class PhotoController extends Controller
       // ГЛАВНЫЙ ЗАПРОС:
       $photo = Photo::moderatorLimit($answer)->findOrFail($id);
 
-
-
       // Подключение политики
       $this->authorize(getmethod(__FUNCTION__), $photo);
-
-      $user = $request->user();
-
-      if ($user->god == 1) {
-        // Если бог, то ставим автором робота
-        $user_id = 1;
-      } else {
-        $user_id = $user->id;
-      }
 
       if ($photo) {
 
         $storage = Storage::disk('public')->delete($photo->path);
         // dd($storage);
+        $user = $request->user();
+
+        // Скрываем бога
+        $user_id = hideGod($user);
         $photo->editor_id = $user_id;
         $photo->save();
+        
         // Удаляем страницу с обновлением
         $photo = Photo::destroy($id);
         if ($photo) {
           return Redirect('albums/'.$alias.'/photos');
         } else {
           abort(403, 'Ошибка при удалении фотографии');
-        };
+        }
       } else {
         abort(403, 'Фотография не найдена');
       }
@@ -364,11 +352,9 @@ class PhotoController extends Controller
       $result = '';
       $i = 1;
       foreach ($request->photos as $item) {
-
         $photo = Photo::findOrFail($item);
         $photo->sort = $i;
         $photo->save();
-
         $i++;
       }
     }
