@@ -442,10 +442,10 @@ class AlbumController extends Controller
 
           return Redirect('albums');
         } else {
-          abort(403, 'Ошибка при удалении сайта');
+          abort(403, 'Ошибка при удалении альбома');
         }
       } else {
-        abort(403, 'Сайт не найден');
+        abort(403, 'Альбом не найден');
       }
     }
 

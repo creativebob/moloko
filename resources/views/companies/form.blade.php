@@ -66,15 +66,15 @@
               @php
               $city_name = null;
               $city_id = null;
-              if(isset($company->city->city_name)) {
-              $city_name = $company->city->city_name;
-              $city_id = $company->city->id;
+              if(isset($company->location->city->name)) {
+              $city_name = $company->location->city->name;
+              $city_id = $company->location->city->id;
               }
               @endphp
               @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
             </label>
             <label>Адрес
-              @include('includes.inputs.address', ['value'=>$company->address, 'name'=>'address', 'required'=>''])
+              @include('includes.inputs.address', ['value'=>$company->location->address, 'name'=>'address', 'required'=>''])
             </label>
           </div>
           <div class="small-12 cell checkbox">
