@@ -15,7 +15,7 @@ class CreatePositionsTable extends Migration
     {
         Schema::create('positions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('position_name')->index()->comment('Название должности');
+            $table->string('name')->index()->comment('Название должности');
             $table->integer('page_id')->unsigned()->nullable()->comment('Id страницы приземления');
             $table->foreign('page_id')->references('id')->on('pages');
             $table->integer('direction_status')->unsigned()->nullable()->comment('Руководящая должность или нет');

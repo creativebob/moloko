@@ -24,7 +24,7 @@ class NavigationRequest extends FormRequest
     public function rules()
     {
       return [
-        'navigation_name' => 'string|max:255|required', 
+        'name' => 'string|max:255|required', 
         'site_id' => 'integer|required',
         'first_item' => 'integer',
 

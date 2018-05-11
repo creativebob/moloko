@@ -43,7 +43,7 @@
 
             <input type="checkbox" class="table-check" name="album_id" id="check-{{ $product->id }}"><label class="label-check" for="check-{{ $product->id }}"></label></td>
           <td>
-            <a href="/prodicts/{{ $product->id }}/edit">
+            <a href="/products/{{ $product->id }}/edit">
               @if (isset($product->avatar))
 
               @else
@@ -54,7 +54,7 @@
           <td class="td-name"><a href="/products/{{ $product->id }}/edit">{{ $product->name }}</a></td>
           <td class="td-edit"><a class="tiny button" href="/products/{{ $product->id }}/edit">Редактировать</a></td>
           <td class="td-category">{{ $product->products_category->name }}</td>
-          <td class="td-company-id">@if(!empty($product->company->company_name)) {{ $product->company->company_name }} @else @if($product->system_item == null) Шаблон @else Системная @endif @endif</td>
+          <td class="td-company-id">@if(!empty($product->company->name)) {{ $product->company->name }} @else @if($product->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-author">@if(isset($product->author->first_name)) {{ $product->author->first_name . ' ' . $product->author->second_name }} @endif</td>
 
           <td class="td-delete">

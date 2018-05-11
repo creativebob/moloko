@@ -6,7 +6,7 @@
   $drop = 1;
 @endcan --}}
 
-<ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250">
+
 @foreach ($albums_categories_tree as $albums_category)
   @if($albums_category['category_status'] == 1)
     {{-- Если индустрия --}}
@@ -60,7 +60,7 @@
     </li>
   @endif
 @endforeach
-</ul>
+
 
 {{-- Скрипт чекбоксов и перетаскивания для меню --}}
 @include('includes.scripts.menu-scripts')

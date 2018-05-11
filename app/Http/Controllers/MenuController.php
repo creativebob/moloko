@@ -32,7 +32,7 @@ class MenuController extends Controller
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Menu::class);
 
-    $item_parent = $request->menu_parent_id;
+    $item_parent = $request->parent_id;
     $navigation_id = $request->navigation_id;
 
     // echo $navigation_id;
@@ -175,17 +175,17 @@ class MenuController extends Controller
     // Системная запись
     $menu->system_item = $request->system_item;
 
-    $menu->name = $request->menu_name;
-    $menu->icon = $request->menu_icon;
-    $menu->alias = $request->menu_alias;
+    $menu->name = $request->name;
+    $menu->icon = $request->icon;
+    $menu->alias = $request->alias;
 
     // Если родителем является навигация
-    if ($request->navigation_id == $request->menu_parent_id) {
+    if ($request->navigation_id == $request->parent_id) {
       $menu->navigation_id = $request->navigation_id;
       $menu->parent_id = null;
     } else {
       $menu->navigation_id = $request->navigation_id;
-      $menu->parent_id = $request->menu_parent_id;
+      $menu->parent_id = $request->parent_id;
     }
 
     $menu->display = $request->display;
@@ -383,17 +383,17 @@ class MenuController extends Controller
     $menu->system_item = $request->system_item;
 
     $site_id = $menu->navigation->site_id;
-    $menu->name = $request->menu_name;
-    $menu->alias = $request->menu_alias;
-    $menu->icon = $request->menu_icon;
+    $menu->name = $request->name;
+    $menu->alias = $request->alias;
+    $menu->icon = $request->icon;
 
     // Если родителем является навигация
-    if ($request->navigation_id == $request->menu_parent_id) {
+    if ($request->navigation_id == $request->parent_id) {
       $menu->navigation_id = $request->navigation_id;
       $menu->parent_id = null;
     } else {
       $menu->navigation_id = $request->navigation_id;
-      $menu->parent_id = $request->menu_parent_id;
+      $menu->parent_id = $request->parent_id;
     }
 
     $menu->display = $request->display;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-// Подключаем модели
+// Модели
 use App\Site;
 use App\Page;
 use App\Menu;
@@ -115,9 +115,9 @@ class SiteController extends Controller
     // Cистемная запись
     $site->system_item = $request->system_item;
 
-    $site->name = $request->site_name;
-    $site->domen = $request->site_domen;
-    $site_alias = explode('.', $request->site_domen);
+    $site->name = $request->name;
+    $site->domen = $request->domen;
+    $site_alias = explode('.', $request->domen);
     $site->alias = $site_alias[0];
     $site->api_token = str_random(60);
     $site->company_id = $company_id;
@@ -205,9 +205,9 @@ class SiteController extends Controller
     // Подключение политики
     $this->authorize('update', $site);
 
-    $site->name = $request->site_name;
-    $site_alias = explode('.', $request->site_domen);
-    $site->domen = $request->site_domen;
+    $site->name = $request->name;
+    $site_alias = explode('.', $request->domen);
+    $site->domen = $request->domen;
     $site->alias = $site_alias[0];
     $site->editor_id = $user_id;
     $site->save();

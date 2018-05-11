@@ -258,20 +258,22 @@ class AlbumsCategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AlbumsCategoryRequest $request)
     {
-       // Подключение политики
+      // Подключение политики
       $this->authorize(getmethod(__FUNCTION__), AlbumsCategory::class);
 
       // Получаем данные для авторизованного пользователя
       $user = $request->user();
+
+      // Смотрим компанию пользователя
       $company_id = $user->company_id;
-      if ($user->god == 1) {
-      // Если бог, то ставим автором робота
-        $user_id = 1;
-      } else {
-        $user_id = $user->id;
+      if($company_id == null) {
+        abort(403, 'Необходимо авторизоваться под компанией');
       }
+
+      // Скрываем бога
+      $user_id = hideGod($user);
 
       // Пишем в базу
       $albums_category = new AlbumsCategory;
@@ -339,29 +341,29 @@ class AlbumsCategoryController extends Controller
       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
       $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
 
-    // ГЛАВНЫЙ ЗАПРОС:
+      // ГЛАВНЫЙ ЗАПРОС:
       $albums_category = AlbumsCategory::moderatorLimit($answer)->findOrFail($id);
 
-    // Подключение политики
+      // Подключение политики
       $this->authorize(getmethod(__FUNCTION__), $albums_category);
 
       if ($albums_category->category_status == 1) {
-      // Меняем индустрию
+        // Меняем индустрию
         return view('albums_categories.edit-first', ['albums_category' => $albums_category]);
       } else {
-      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
-      // Главный запрос
+        // Главный запрос
         $albums_categories = AlbumsCategory::moderatorLimit($answer)
         ->orderBy('sort', 'asc')
         ->get(['id','name','category_status','parent_id'])
         ->keyBy('id')
         ->toArray();
 
-      // dd($albums_categories);
+        // dd($albums_categories);
 
-      // Формируем дерево вложенности
+        // Формируем дерево вложенности
         $albums_categories_cat = [];
         foreach ($albums_categories as $id => &$node) { 
 
@@ -430,7 +432,7 @@ class AlbumsCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AlbumsCategoryRequest $request, $id)
     {
       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
       $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
@@ -448,7 +450,7 @@ class AlbumsCategoryController extends Controller
       $albums_category->system_item = $request->system_item;
       $albums_category->moderation = $request->moderation;
       $albums_category->parent_id = $request->parent_id;
-      $albums_category->editor_id = $user->id;
+      $albums_category->editor_id = $user_id;
 
       // Если индустрия
       if ($request->first_item == 1) {
@@ -566,94 +568,94 @@ class AlbumsCategoryController extends Controller
     }
 
       // Список категорий альбомов
-  public function albums_category_list(Request $request)
-  {
+    public function albums_category_list(Request $request)
+    {
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+      $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
     // Главный запрос
-    $albums_categories = AlbumsCategory::moderatorLimit($answer)
-    ->get(['id','name','category_status','parent_id'])
-    ->keyBy('id')
-    ->toArray();
+      $albums_categories = AlbumsCategory::moderatorLimit($answer)
+      ->get(['id','name','category_status','parent_id'])
+      ->keyBy('id')
+      ->toArray();
 
     // dd($albums_categories);
 
     // Формируем дерево вложенности
-    $albums_categories_cat = [];
-    foreach ($albums_categories as $id => &$node) { 
+      $albums_categories_cat = [];
+      foreach ($albums_categories as $id => &$node) { 
 
       // Если нет вложений
-      if (!$node['parent_id']) {
-        $albums_categories_cat[$id] = &$node;
-      } else { 
+        if (!$node['parent_id']) {
+          $albums_categories_cat[$id] = &$node;
+        } else { 
 
       // Если есть потомки то перебераем массив
-        $albums_categories[$node['parent_id']]['children'][$id] = &$node;
+          $albums_categories[$node['parent_id']]['children'][$id] = &$node;
+        };
       };
-    };
 
     // dd($albums_categories_cat);
 
     // Функция отрисовки option'ов
-    function tplMenu($albums_category, $padding, $parent, $id) {
+      function tplMenu($albums_category, $padding, $parent, $id) {
 
       // Убираем из списка пришедший пункт меню 
-      if ($albums_category['id'] != $id) {
+        if ($albums_category['id'] != $id) {
 
-        $selected = '';
-        if ($albums_category['id'] == $parent) {
-          $selected = ' selected';
-        }
-        if ($albums_category['category_status'] == 1) {
-          $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['name'].'</option>';
-        } else {
-          $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['name'].'</option>';
-        }
-        
+          $selected = '';
+          if ($albums_category['id'] == $parent) {
+            $selected = ' selected';
+          }
+          if ($albums_category['category_status'] == 1) {
+            $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['name'].'</option>';
+          } else {
+            $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['name'].'</option>';
+          }
+
         // Добавляем пробелы вложенному элементу
-        if (isset($albums_category['children'])) {
-          $i = 1;
-          for($j = 0; $j < $i; $j++){
-            $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-          }     
-          $i++;
-          
-          $menu .= showCat($albums_category['children'], $padding, $parent, $id);
+          if (isset($albums_category['children'])) {
+            $i = 1;
+            for($j = 0; $j < $i; $j++){
+              $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+            }     
+            $i++;
+
+            $menu .= showCat($albums_category['children'], $padding, $parent, $id);
+          }
+          return $menu;
         }
-        return $menu;
       }
-    }
     // Рекурсивно считываем наш шаблон
-    function showCat($data, $padding, $parent, $id){
-      $string = '';
-      $padding = $padding;
-      foreach($data as $item){
-        $string .= tplMenu($item, $padding, $parent, $id);
+      function showCat($data, $padding, $parent, $id){
+        $string = '';
+        $padding = $padding;
+        foreach($data as $item){
+          $string .= tplMenu($item, $padding, $parent, $id);
+        }
+        return $string;
       }
-      return $string;
-    }
 
     // Получаем HTML разметку
-    $albums_categories_list = showCat($albums_categories_cat, '', $request->parent, $request->id);
+      $albums_categories_list = showCat($albums_categories_cat, '', $request->parent, $request->id);
 
     // Отдаем ajax
-    echo json_encode($albums_categories_list, JSON_UNESCAPED_UNICODE);
+      echo json_encode($albums_categories_list, JSON_UNESCAPED_UNICODE);
 
     // dd($albums_categories_list);
-  }
+    }
 
   // Сортировка
-  public function albums_categories_sort(Request $request)
-  {
-    $result = '';
-    $i = 1;
-    foreach ($request->albums_categories as $item) {
+    public function albums_categories_sort(Request $request)
+    {
+      $result = '';
+      $i = 1;
+      foreach ($request->albums_categories as $item) {
 
-      $albums_category = AlbumsCategory::findOrFail($item);
-      $albums_category->sort = $i;
-      $albums_category->save();
-      $i++;
+        $albums_category = AlbumsCategory::findOrFail($item);
+        $albums_category->sort = $i;
+        $albums_category->save();
+        $i++;
+      }
     }
-  }
   }

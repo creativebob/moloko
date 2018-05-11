@@ -2,7 +2,7 @@
 
 @section('title', 'Редактировать должность')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $position->position_name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $position->name))
 
 @section('title-content')
 	<div class="top-bar head-content">

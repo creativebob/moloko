@@ -52,8 +52,7 @@ class NewsController extends Controller
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
-
-    $news = News::with('site', 'author')
+    $news = News::with('site', 'author', 'albums', 'cities', 'company.location.city')
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -65,18 +64,7 @@ class NewsController extends Controller
     ->orderBy('date_publish_begin', 'desc')
     ->paginate(30);
 
-    // dd($answer);
-    
-
-    // $pages = Page::with(['author', 'site' => function($query) use ($site_alias) {
-    //                 $query->whereSite_alias($site_alias);
-    //               }])->paginate(30);
-    // $site = '';
-    // foreach ($pages as $page) {
-    //   $site = $page->site;
-    //   break;
-    // };
-    // Инфо о странице
+    // dd($news);
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
@@ -183,7 +171,7 @@ class NewsController extends Controller
     return view('news.create', compact('cur_news', 'site', 'alias', 'page_info', 'parent_page_info', 'albums_categories_list', 'filials'));  
   }
 
-  public function store(Request $request, $alias)
+  public function store(NewsRequest $request, $alias)
   {
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), News::class);
@@ -411,7 +399,7 @@ class NewsController extends Controller
     return view('news.edit', compact('cur_news', 'parent_page_info', 'page_info', 'site', 'albums_categories_list', 'filials', 'cities', 'alias'));
   }
 
-  public function update(Request $request, $alias, $id)
+  public function update(NewsRequest $request, $alias, $id)
   {
     // dd($request->albums[0]);
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -559,7 +547,7 @@ class NewsController extends Controller
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
-    $cur_news = News::moderatorLimit($answer)->findOrFail($id);
+    $cur_news = News::with('albums', 'cities')->moderatorLimit($answer)->findOrFail($id);
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $cur_news);
@@ -571,14 +559,20 @@ class NewsController extends Controller
       $cur_news->editor_id = $user->id;
       $cur_news->save();
 
+      // dd($cur_news);
+
       // Удаляем связи
-      $albums = $cur_news->albums()->detach();
-      if ($albums == false) {
-        abort(403, 'Ошибка удаления связей с альбомами');
+      if (count($cur_news->albums) > 0) {
+        $albums = $cur_news->albums()->detach();
+        if ($albums == false) {
+          abort(403, 'Ошибка удаления связей с альбомами');
+        }
       }
-      $cities = $cur_news->cities()->detach();
-      if ($cities == false) {
-        abort(403, 'Ошибка удаления связей с городами');
+      if (count($cur_news->albums) > 0) {
+        $cities = $cur_news->cities()->detach();
+        if ($cities == false) {
+          abort(403, 'Ошибка удаления связей с городами');
+        }
       }
 
       // Удаляем файлы
@@ -708,8 +702,8 @@ class NewsController extends Controller
 
     $site = Site::with(['news' => function ($query) {
       $query->where('display', 1)
-            ->where('date_publish_begin', '<', Carbon::now())
-            ->where('date_publish_end', '>', Carbon::now());
+      ->where('date_publish_begin', '<', Carbon::now())
+      ->where('date_publish_end', '>', Carbon::now());
     }, 'news.cities' => function($query) use ($city) {
       $query->whereAlias($city);
     }, 'news.company', 'news.author', 'news.photo'])->where('api_token', $token)->first();

@@ -19,10 +19,12 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
+    <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250">
     @if($regions)
       {{-- Шаблон вывода и динамического обновления --}}
       @include('cities.cities-list', $regions)
     @endif
+    </ul>
   </div>
 </div>
 @endsection

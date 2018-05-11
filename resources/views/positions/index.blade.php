@@ -35,20 +35,20 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($positions))
         @foreach($positions as $position)
-        <tr class="item @if($position->moderation == 1)no-moderation @endif" id="positions-{{ $position->id }}" data-name="{{ $position->position_name }}">
+        <tr class="item @if($position->moderation == 1)no-moderation @endif" id="positions-{{ $position->id }}" data-name="{{ $position->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $position->id }}"><label class="label-check" for="check-{{ $position->id }}"></label></td>
           <td class="td-position-name">
             @can('update', $position)
             <a href="/positions/{{ $position->id }}/edit">
             @endcan
-            {{ $position->position_name }}
+            {{ $position->name }}
             @can('update', $position)
             </a> 
             @endcan
           </td>
           <td class="td-position-page">{{ $position->page->page_alias }}</td>
-          <td class="td-position-company-id">@if(!empty($position->company->company_name)) {{ $position->company->company_name }} @else @if($position->system_item == null) Шаблон @else Системная @endif @endif</td>
+          <td class="td-position-company-id">@if(!empty($position->company->name)) {{ $position->company->name }} @else @if($position->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-position-author">@if(isset($position->author->first_name)) {{ $position->author->first_name . ' ' . $position->author->second_name }} @endif</td>
           <td class="td-delete">
             @if (($position->system_item !== 1) && ($position->company_id !== null))

@@ -29,7 +29,7 @@ class CityRequest extends FormRequest
             // 'region_vk_external_id' => 'integer|nullable', 
             'area_name' => 'string|max:255|nullable',
             'city_name' => 'string|max:255',
-            // 'city_code' => 'integer|nullable',
+            'city_code' => 'integer|nullable',
             'vk_external_id' => 'integer|nullable', 
             'city_db' => 'integer|nullable',
 

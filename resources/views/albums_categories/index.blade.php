@@ -19,10 +19,12 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
+    <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250">
     @if($albums_categories_tree)
     {{-- Шаблон вывода и динамического обновления --}}
     @include('albums_categories.category-list', $albums_categories_tree)
     @endif
+    </ul>
   </div>
 </div>
 @endsection

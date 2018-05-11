@@ -410,10 +410,10 @@ class CityController extends Controller
         $city_name = $city->name;
         if ($city->area_id == null) {
           $area_name = '';
-          $region_name = $city->region->region_name;
+          $region_name = $city->region->name;
         } else {
-          $area_name = $city->area->area_name;
-          $region_name = $city->area->region->region_name;
+          $area_name = $city->area->name;
+          $region_name = $city->area->region->name;
         };
         $objRes->city_id[] = $city_id;
         $objRes->city_name[] = $city_name;
