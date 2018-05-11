@@ -113,11 +113,7 @@ class CityController extends Controller
 
       // Получаем данные для авторизованного пользователя
       $user = $request->user();
-      if ($user->god == 1) {
-        $user_id = 1;
-      } else {
-        $user_id = $user->id;
-      }
+      $user_id = hideGod($user);
       // $company_id = $user->company_id;
       // $filial_id = $user->filial_id;
 
@@ -131,7 +127,7 @@ class CityController extends Controller
         $region_name = $request->region_name;
 
         // Смотрим область
-        $region = Region::where('region_name', $region_name)->first();
+        $region = Region::where('name', $region_name)->first();
         if ($region) {
 
           // Если существует, берем id существующий
@@ -139,7 +135,7 @@ class CityController extends Controller
         } else {
           // Записываем новую область
           $region = new Region;
-          $region->region_name = $region_name;
+          $region->name = $region_name;
           $region->author_id = $user_id;
           $region->system_item = 1;
           $region->save();
@@ -158,14 +154,14 @@ class CityController extends Controller
         // Если пришел город без области (Москва, Питер)
 
         // Смотрим область
-        $region = Region::where('region_name', 'Города Федерального значения')->first();
+        $region = Region::where('name', 'Города Федерального значения')->first();
         if ($region) {
           // Если существует, берем id существующий
           $region_id = $region->id;
         } else {
           // Записываем новую область
           $region = new Region;
-          $region->region_name = 'Города Федерального значения';
+          $region->name = 'Города Федерального значения';
           $region->author_id = $user_id;
           $region->system_item = 1;
           $region->save();
@@ -189,7 +185,7 @@ class CityController extends Controller
         $area_name = $request->area_name;
 
         // Смотрим район
-        $area = Area::where('area_name', $area_name)->first();
+        $area = Area::where('name', $area_name)->first();
         if ($area) {
          // Если существует, берем id существующей
           $region_id = 0;
@@ -198,7 +194,7 @@ class CityController extends Controller
 
           // Записываем новый район
           $area = new Area;
-          $area->area_name = $area_name;
+          $area->name = $area_name;
           $area->region_id = $region_id;
           $area->author_id = $user_id;
           $area->system_item = 1;
@@ -219,19 +215,19 @@ class CityController extends Controller
         $area_id = 0;
       }
 
-      $count = City::whereCity_name($city_name)->count();
+      $count = City::whereName($city_name)->count();
 
       // Записываем город, его наличие в базе мы проверили ранее
       $city = new City;
-      $city->city_name = $city_name;
-      $city->city_code = $request->city_code;
+      $city->name = $city_name;
+      $city->code = $request->code;
       if ($count > 0) {
         $count = $count + 1;
         $city_name = $city_name . $count;
       }
       $city->alias = Transliterate::make($city_name, ['type' => 'url', 'lowercase' => true]);
 
-      $city->city_vk_external_id = $request->city_vk_external_id;
+      $city->vk_external_id = $request->vk_external_id;
       if ($region_id != 0) {
         $city->region_id = $region_id;
       }
@@ -334,7 +330,7 @@ class CityController extends Controller
     if ($request->checkbox == 'false') {
 
       // Выбираем все наши области
-      $regions = Region::select('region_name')->get();
+      $regions = Region::select('name')->get();
 
       // Декодим пришедшие данные
       $vk_cities = json_decode($result);
@@ -369,7 +365,7 @@ class CityController extends Controller
               // dd($region);
 
               // Если имена областей совпали, заносим в наш обьект с результатами
-              if ($region_name == $region->region_name) {
+              if ($region_name == $region->name) {
 
                 $answer->response->items[] = (object) [
                   'region' => $region_name,
@@ -405,13 +401,13 @@ class CityController extends Controller
     // Проверка города в нашей базе данных
     $city_name = $request->city_name;
 
-    $cities = City::moderatorLimit($answer)->where('city_name', 'like', $city_name.'%')->get();
+    $cities = City::moderatorLimit($answer)->where('name', 'like', $city_name.'%')->get();
     $count = $cities->count();
     if ($count > 0) {
       $objRes = (object) [];
       foreach ($cities as $city) {
         $city_id = $city->id;
-        $city_name = $city->city_name;
+        $city_name = $city->name;
         if ($city->area_id == null) {
           $area_name = '';
           $region_name = $city->region->region_name;
@@ -448,8 +444,8 @@ class CityController extends Controller
       if (isset($request->area_name)) {
         // Если район существует
         $area = Area::with(['cities' => function($query) use ($city_name) {
-          $query->where('city_name', $city_name);
-        }])->where('area_name', $request->area_name)->first();
+          $query->where('name', $city_name);
+        }])->where('name', $request->area_name)->first();
           // Если в районе существует город, даем ошибку
         if ($area) {
           if (count($area->cities) > 0) {
@@ -468,7 +464,7 @@ class CityController extends Controller
         }
       } else {
         // Если город без района
-        $city = City::where('city_name', $request->city_name)->first();
+        $city = City::where('name', $request->city_name)->first();
         if ($city) {
           $result = [
             'error_status' => 1,
@@ -482,8 +478,8 @@ class CityController extends Controller
     } else {
 
       $region = Region::with(['cities' => function($query) use ($city_name) {
-        $query->where('city_name', $city_name);
-      }])->where('region_name', 'Города Федерального значения')->first();
+        $query->where('name', $city_name);
+      }])->where('name', 'Города Федерального значения')->first();
 
       if ($region) {
         if (count($region->cities) > 0) {

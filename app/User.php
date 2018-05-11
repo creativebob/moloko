@@ -220,7 +220,6 @@ class User extends Authenticatable
 
   
 
-
     /**
   * Получаем списки авторов
   */
@@ -274,18 +273,15 @@ class User extends Authenticatable
     return $this->belongsToMany('App\RoleUser');
   }
 
-  /**
-  * Получаем город.
-  */
-  public function city()
-  {
-    return $this->belongsTo('App\City');
-  }
-
   public function avatar()
   {
     return $this->belongsTo('App\Photo', 'photo_id', 'id');
   }
 
+  // Получаем локацию пользователя
+  public function location()
+  {
+    return $this->belongsTo('App\Location');
+  }
 
 }

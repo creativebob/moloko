@@ -154,21 +154,66 @@
 
         $list_filter =[];
         $filter_name = $name;
-        $model_entity_name = $name . '_name';
-
+        $model_entity_name = 'name';
 
         $filter_entity = $filter_query->unique($column); 
 
-        if(count($filter_entity)>0){
+        if(count($filter_entity) > 0){
 
             foreach($filter_entity as $entity){
-                $list_filter['item_list'][$entity->$name->id] =  $entity->$name->$model_entity_name;
+                $list_filter['item_list'][$entity->$name->id] = $entity->$name->name;
             }
         };
 
         $filter[$filter_name]['mode'] = 'id'; // Назавние фильтра
+        $filter[$filter_name]['collection'] = $filter_entity;
 
+        if($request->$column == null){
 
+            $filter[$filter_name]['mass_id'] = null;
+            $filter[$filter_name]['count_mass'] = 0;
+            
+        } else {
+
+            $filter[$filter_name]['mass_id'] = $request->$column; // Получаем список ID
+            if(is_array($request->$column)){
+                $filter[$filter_name]['count_mass'] = count($request->$column);
+                $filter['status'] = 'active';
+
+            } else {
+                $filter[$filter_name]['count_mass'] = 0;
+            };
+            
+        };
+
+        $filter[$filter_name]['list_select'] = $list_filter; 
+        $filter[$filter_name]['title'] = $title; // Назавние фильтра
+
+        // dd($filter);
+        return $filter;
+    }
+
+    function addCityFilter($filter, $filter_query, $request, $title, $name, $column, $entity_name = 'none'){
+
+        $list_filter =[];
+        $filter_name = $name;
+        $model_entity_name = 'name';
+
+        $filter_entity = $filter_query->unique('location.city_id');
+        // dd($filter_entity);
+
+        if(count($filter_entity) > 0){
+
+            foreach($filter_entity as $entity){
+                if(isset($entity->location->city_id)){
+                    $list_filter['item_list'][$entity->location->city_id] = $entity->location->city->name;                    
+                } else {
+                    // $list_filter['item_list'][null] = 'Город не определен';
+                };
+            }
+        };
+
+        $filter[$filter_name]['mode'] = 'id'; // Назавние фильтра
         $filter[$filter_name]['collection'] = $filter_entity;
 
         if($request->$column == null){
@@ -198,9 +243,6 @@
 
 
 
-
-
-
     // Пилим checkboxer
     function getCheckboxerData($result_query, $title, $name, $column, $entity_name = 'none'){
 
@@ -215,7 +257,6 @@
             };
 
             $checkboxer_mass['mode'] = 'id'; // Назавние фильтра
-
 
             $checkboxer_mass['collection'] = $filter_entity;
 

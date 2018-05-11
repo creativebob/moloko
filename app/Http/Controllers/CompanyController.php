@@ -54,23 +54,28 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        $companies = Company::with('author', 'director', 'city')
+        $companies = Company::with('author', 'director', 'location.city', 'sector')
         ->moderatorLimit($answer)
-        ->cityFilter($request)
+        // ->cityFilter($request)
         ->sectorFilter($request)
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
-        $filter_query = Company::with('city', 'sector')->moderatorLimit($answer)->get();
+        // dd($companies);
+
+        $filter_query = Company::with('location.city', 'sector')->moderatorLimit($answer)->get();
+        // $filter_query = $filter_cities->location;
+
+        // dd($filter_cities);
         $filter['status'] = null;
 
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
+        $filter = addCityFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
+        // dd($filter);
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
@@ -175,7 +180,7 @@ class CompanyController extends Controller
 
         $schedule = new Schedule;
         $schedule->company_id = $user->company_id;
-        $schedule->name = 'График работы для ' . $user->company->company_name;
+        $schedule->name = 'График работы для ' . $user->company->name;
         $schedule->description = null;
         $schedule->save();
         $schedule_id = $schedule->id;
@@ -187,8 +192,8 @@ class CompanyController extends Controller
         DB::table('worktimes')->insert($mass_time);
 
         $company = new Company;
-        $company->company_name = $request->company_name;
-        $company->company_alias = $request->company_alias;
+        $company->name = $request->name;
+        $company->alias = $request->alias;
 
         $company->phone = cleanPhone($request->phone);
         $company->email = $request->email;
@@ -402,8 +407,8 @@ class CompanyController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $company);
 
-        $company->company_name = $request->company_name;
-        $company->company_alias = $request->company_alias;
+        $company->name = $request->name;
+        $company->alias = $request->alias;
 
         // $old_link_for_folder = $company->company_alias;
         // $new_link_for_folder = 'public/companies/' . $request->company_alias;
@@ -438,7 +443,7 @@ class CompanyController extends Controller
 
             $schedule = new Schedule;
             $schedule->company_id = $user->company_id;
-            $schedule->name = 'График работы для ' . $company->company_name;
+            $schedule->name = 'График работы для ' . $company->name;
             $schedule->description = null;
             $schedule->save();
 
@@ -498,7 +503,7 @@ class CompanyController extends Controller
 
         if(!isset($company)){
             return 0;} else {
-            return $company->company_name;};
+            return $company->name;};
     }
 
 }

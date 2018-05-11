@@ -113,11 +113,6 @@ class Company extends Model
     return $this->belongsTo('App\User', 'author_id');
   }
 
-  public function city()
-  {
-    return $this->belongsTo('App\City');
-  }
-
   public function schedules()
   {
     return $this->belongsToMany('App\Schedule', 'schedule_entity', 'entity_id', 'schedule_id')->where('entity', 'companies');
@@ -138,6 +133,12 @@ class Company extends Model
   public function worktime()
   {
     return $this->hasMany('App\Worktime');
+  }
+
+  // Получаем локацию компании
+  public function location()
+  {
+    return $this->belongsTo('App\Location');
   }
 
 }

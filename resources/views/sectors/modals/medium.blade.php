@@ -1,14 +1,14 @@
 <div class="grid-x grid-padding-x modal-content inputs">
   <div class="small-10 small-offset-1 cell">
     <label>Расположение
-      <select name="sector_parent_id">
+      <select name="parent_id">
         @php
           echo $sectors_list;
         @endphp
       </select>
     </label>
     <label>Название сектора
-      @include('includes.inputs.name', ['value'=>$sector->sector_name, 'name'=>'sector_name', 'required'=>'required'])
+      @include('includes.inputs.name', ['value'=>$sector->name, 'name'=>'name', 'required'=>'required'])
       <div class="sprite-input-right find-status"></div>
       <div class="item-error">Такой сектор уже существует!</div>
     </label>

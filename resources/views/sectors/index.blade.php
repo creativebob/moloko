@@ -19,10 +19,12 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
+    <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250">
     @if($sectors_tree)
     {{-- Шаблон вывода и динамического обновления --}}
-    @include('sectors.industry-list', $sectors_tree)
+    @include('sectors.category-list', $sectors_tree)
     @endif
+    </ul>
   </div>
 </div>
 @endsection
@@ -206,7 +208,7 @@
       },
       url: '/sectors/create',
       type: "GET",
-      data: {sector_parent_id: parent},
+      data: {parent_id: parent},
       success: function(html){
         // alert(html);
         $('#modal').html(html);

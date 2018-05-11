@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSectorsTable extends Migration
+class CreateLocationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,16 @@ class CreateSectorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sectors', function (Blueprint $table) {
+        Schema::create('locations', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->integer('city_id')->nullable()->unsigned()->comment('Id города');
+            $table->foreign('city_id')->references('id')->on('cities');
 
-            $table->string('name')->index()->comment('Название области');
-            $table->integer('parent_id')->nullable()->unsigned()->comment('Id отдела, в котором находится отдел');
-            $table->foreign('parent_id')->references('id')->on('sectors');
-            $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
+            $table->string('address')->nullable()->index()->comment('Адрес');
 
-            // $table->integer('industry_id')->unsigned()->nullable()->comment('Id категории, в которо1 находится сектор');
-            // $table->foreign('industry_id')->references('id')->on('sectors');
+            $table->integer('width')->nullable()->comment('Ширина');
+            $table->integer('longitude')->nullable()->comment('Долгота');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
@@ -46,6 +44,6 @@ class CreateSectorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sectors');
+        Schema::dropIfExists('locations');
     }
 }

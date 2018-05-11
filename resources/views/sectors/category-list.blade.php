@@ -7,13 +7,14 @@
 @endcan --}}
 
 <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="sectors">
+
 @foreach ($sectors_tree as $sector)
-  @if($sector['industry_status'] == 1)
+  @if($sector['category_status'] == 1)
     {{-- Если индустрия --}}
-    <li class="first-item item @if (isset($sector['children'])) parent @endif" id="sectors-{{ $sector['id'] }}" data-name="{{ $sector['sector_name'] }}">
+    <li class="first-item item @if (isset($sector['children'])) parent @endif" id="sectors-{{ $sector['id'] }}" data-name="{{ $sector['name'] }}">
       <a class="first-link @if($drop == 0) link-small @endif">
         <div class="icon-open sprite"></div>
-        <span class="first-item-name">{{ $sector['sector_name'] }}</span>
+        <span class="first-item-name">{{ $sector['name'] }}</span>
         <span class="number">{{ $sector['count'] }}</span>
         @if ($sector['moderation'])
         <span class="no-moderation">Не отмодерированная запись!</span>
@@ -67,7 +68,7 @@
     </li>
   @endif
 @endforeach
-</ul>
+
 
 {{-- Скрипт чекбоксов и перетаскивания для меню --}}
 @include('includes.scripts.menu-scripts')

@@ -15,18 +15,19 @@ class CreateCompaniesTable extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('company_name', 40)->nullable()->index()->comment('Имя компании');
-            $table->string('company_alias', 40)->unique()->nullable()->index()->comment('Алиас компании');
+            $table->string('name', 40)->nullable()->index()->comment('Имя компании');
+            $table->string('alias', 40)->unique()->nullable()->index()->comment('Алиас компании');
 
             $table->bigInteger('phone')->unique()->nullable()->comment('Телефон компании');
             $table->bigInteger('extra_phone')->nullable()->comment('Дополнительный телефон');
 
             $table->string('email')->nullable()->comment('Почта');
 
-            $table->integer('city_id')->nullable()->unsigned()->comment('Id города');
+            // $table->integer('city_id')->nullable()->unsigned()->comment('Id города');
             // $table->foreign('city_id')->references('id')->on('cities');
-            // 
-            $table->string('address', 60)->nullable()->comment('Адрес компании');
+            
+            $table->integer('location_id')->nullable()->unsigned()->comment('Адрес компании');
+            $table->foreign('location_id')->references('id')->on('locations');
 
             $table->bigInteger('inn')->nullable()->unsigned()->comment('ИНН компании');
             $table->bigInteger('kpp')->nullable()->unsigned()->comment('КПП');
