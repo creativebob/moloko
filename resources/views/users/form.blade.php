@@ -98,17 +98,23 @@
             <div class="small-12 medium-6 cell">
               <label class="input-icon">Введите город
                 @php
-                $city_name = null;
-                $city_id = null;
-                if(isset($user->city->city_name)) {
-                $city_name = $user->city->city_name;
-                $city_id = $user->city->id;
+              $city_name = null;
+              $city_id = null;
+              if(isset($city->location->city->name)) {
+              $city_name = $city->location->city->name;
+              $city_id = $city->location->city->id;
               }
               @endphp
               @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
             </label>
             <label>Адрес
-              @include('includes.inputs.address', ['value'=>$user->address, 'name'=>'address', 'required'=>''])
+              @php
+              $address = null;
+              if (isset($user->location->address)) {
+              $address = $user->location->address;
+            }
+              @endphp
+              @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
             </label>
           </div>
         </div>

@@ -204,6 +204,7 @@ class CompanyController extends Controller
     $location = new Location;
     $location->city_id = $request->city_id;
     $location->address = $request->address;
+    $location->author_id = $user_id;
     $location->save();
 
     if ($location) {
@@ -423,13 +424,16 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
     $company = Company::with('location')->moderatorLimit($answer)->findOrFail($id);
 
+    // Пишем локацию
     $location = $company->location;
     if($location->city_id != $request->city_id) {
       $location->city_id = $request->city_id;
+      $location->editor_id = $user_id;
       $location->save();
     }
     if($location->address = $request->address) {
       $location->address = $request->address;
+      $location->editor_id = $user_id;
       $location->save();
     }
 

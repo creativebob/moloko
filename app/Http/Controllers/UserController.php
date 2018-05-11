@@ -146,6 +146,20 @@ class UserController extends Controller
         $company_id = $user_auth->company_id;
         $filial_id = $request->filial_id;
 
+
+        // Пишем локацию
+        $location = new Location;
+        $location->city_id = $request->city_id;
+        $location->address = $request->address;
+        $location->author_id = $user_auth_id;
+        $location->save();
+
+        if ($location) {
+          $location_id = $location->id;
+        } else {
+          abort(403, 'Ошибка записи адреса');
+        }
+
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
         $user = new User;
 
@@ -167,8 +181,7 @@ class UserController extends Controller
         };
 
         $user->telegram_id = $request->telegram_id;
-        $user->city_id = $request->city_id;
-        $user->address = $request->address;
+        $user->location_id = $location_id;
 
         $user->orgform_status = $request->orgform_status;
         $user->user_inn = $request->inn;
@@ -365,17 +378,33 @@ class UserController extends Controller
       {
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
+        $user_auth_id = $user_auth->id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('company', 'photo')->moderatorLimit($answer)->findOrFail($id);
+        $user = User::with('locaton', 'company', 'photo')->moderatorLimit($answer)->findOrFail($id);
+
 
         $filial_id = $request->filial_id;
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
+
+
+        // Пишем локацию
+        $location = $user->location;
+        if($location->city_id != $request->city_id) {
+          $location->city_id = $request->city_id;
+          $location->editor_id = $user_auth_id;
+          $location->save();
+        }
+        if($location->address = $request->address) {
+          $location->address = $request->address;
+          $location->editor_id = $user_auth_id;
+          $location->save();
+        }
 
         $user->login = $request->login;
         $user->email = $request->email;
