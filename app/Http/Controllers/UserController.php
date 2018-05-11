@@ -9,6 +9,7 @@ use App\RoleUser;
 use App\List_item;
 use App\Booklist;
 use App\Photo;
+use App\Location;
 
 use App\Http\Controllers\Session;
 

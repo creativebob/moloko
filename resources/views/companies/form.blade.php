@@ -74,7 +74,13 @@
               @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
             </label>
             <label>Адрес
-              @include('includes.inputs.address', ['value'=>$company->location->address, 'name'=>'address', 'required'=>''])
+              @php
+              $address = null;
+              if (isset($company->location->address)) {
+              $address = $company->location->address;
+            }
+              @endphp
+              @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
             </label>
           </div>
           <div class="small-12 cell checkbox">
