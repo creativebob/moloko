@@ -56,7 +56,7 @@ class CompanyController extends Controller
 
         $companies = Company::with('author', 'director', 'location.city', 'sector')
         ->moderatorLimit($answer)
-        // ->cityFilter($request)
+        ->cityFilter($request)
         ->sectorFilter($request)
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
@@ -65,7 +65,7 @@ class CompanyController extends Controller
         // dd($companies);
 
         $filter_query = Company::with('location.city', 'sector')->moderatorLimit($answer)->get();
-        // $filter_query = $filter_cities->location;
+
 
         // dd($filter_cities);
         $filter['status'] = null;

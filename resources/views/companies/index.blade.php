@@ -72,7 +72,7 @@
           <td class="td-getauth">@if($user->company_id != $company->id) {{ link_to_route('users.getauthcompany', 'Авторизоваться', ['company_id'=>$company->id], ['class' => 'tiny button']) }} @endif</td>
           @endif
 
-          <td class="td-company-address">{{ $company->location->address }} </td>
+          <td class="td-company-address">@if(!empty($company->location->address)){{ $company->location->address }}@endif </td>
           <td class="td-company-phone">{{ decorPhone($company->phone) }} </td>
           <td class="td-user_id">{{ $company->director->first_name or ' ... ' }} {{ $company->director->second_name or ' ... ' }} </td>
 

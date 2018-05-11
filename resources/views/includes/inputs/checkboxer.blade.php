@@ -39,8 +39,23 @@
 
 					@if($checkboxer_mass[$name]['mode'] == 'id')
 
-						{{ Form::checkbox($name . '_id[]', $value->location->city->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->location->city->id]) }}
-						<label for="{{$name}}-{{ $value->location->city->id }}"><span>{{ $value->location->city->name }}</span></label>
+					@php
+
+					if($value->location == null){
+						$value_id = 'null';
+						$value_name = 'Город не указан';
+					} else {
+
+						$value_id = $value->location->city->id;
+						$value_name = $value->location->city->name;
+					};
+
+					@endphp
+
+
+						{{ Form::checkbox($name . '_id[]', $value_id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value_id]) }}
+						<label for="{{$name}}-{{ $value_id }}"><span>{{ $value_name }}</span></label>
+
 					@else
 
 						{{ Form::checkbox($name . '_id[]', $value->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->id]) }}
