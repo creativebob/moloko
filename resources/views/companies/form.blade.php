@@ -34,7 +34,7 @@
         <div class="grid-x grid-padding-x"> 
           <div class="small-12 medium-6 cell">
             <label>Название компании
-              @include('includes.inputs.name', ['value'=>$company->company_name, 'name'=>'company_name', 'required'=>'required'])
+              @include('includes.inputs.name', ['value'=>$company->name, 'name'=>'name', 'required'=>'required'])
             </label>
           </div>
           <div class="small-12 medium-6 cell">
@@ -121,7 +121,7 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Алиас
-                @include('includes.inputs.alias', ['value'=>$company->company_alias, 'name'=>'company_alias', 'required'=>''])
+                @include('includes.inputs.alias', ['value'=>$company->alias, 'name'=>'alias', 'required'=>''])
               </label>
             </div>
 

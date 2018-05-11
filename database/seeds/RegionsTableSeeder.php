@@ -13,28 +13,28 @@ class RegionsTableSeeder extends Seeder
     {
 		 DB::table('regions')->insert([
         	[
-		        'region_name' => 'Иркутская область',
-		        'region_code' => 38,
-		        'region_vk_external_id' => 1127513,
+		        'name' => 'Иркутская область',
+		        'code' => 38,
+		        'vk_external_id' => 1127513,
                 'system_item' => 1,
      	    ],
             [
-                'region_name' => 'Бурятия',
-                'region_code' => null,
-                'region_vk_external_id' => null,
+                'name' => 'Бурятия',
+                'code' => null,
+                'vk_external_id' => null,
                 'system_item' => 1,
 
             ],
             [
-                'region_name' => 'Красноярский край',
-                'region_code' => null,
-                'region_vk_external_id' => null,
+                'name' => 'Красноярский край',
+                'code' => null,
+                'vk_external_id' => null,
                 'system_item' => 1,
             ],
             [
-                'region_name' => 'Забайкальский край',
-                'region_code' => null,
-                'region_vk_external_id' => null,
+                'name' => 'Забайкальский край',
+                'code' => null,
+                'vk_external_id' => null,
                 'system_item' => 1,
             ],
         ]);

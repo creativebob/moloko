@@ -140,4 +140,10 @@ class Company extends Model
     return $this->hasMany('App\Worktime');
   }
 
+  // Получаем локацию компании
+  public function location()
+  {
+    return $this->belongsTo('App\Location');
+  }
+
 }

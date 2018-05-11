@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRegionsTable extends Migration
+class CreateAreasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,19 @@ class CreateRegionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('regions', function (Blueprint $table) {
+        Schema::create('areas', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
+            // $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            // $table->foreign('company_id')->references('id')->on('companies');
             
-            $table->string('region_name', 30)->unique()->index()->comment('Название области');
-            $table->integer('region_code')->unsigned()->nullable()->comment('Код области');
-            $table->integer('region_vk_external_id')->unique()->unsigned()->nullable()->comment('Внешний Id (из базы vk)');
+            $table->string('name', 30)->unique()->index()->comment('Название района');
+            $table->integer('region_id')->unsigned()->comment('Id области, в которой находится район');
+            $table->foreign('region_id')->references('id')->on('regions');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            $table->foreign('author_id')->references('id')->on('users');
+            // $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
@@ -42,6 +42,6 @@ class CreateRegionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('regions');
+        Schema::dropIfExists('areas');
     }
 }

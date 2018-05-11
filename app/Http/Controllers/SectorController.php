@@ -69,11 +69,11 @@ class SectorController extends Controller
     $sectors_tree = [];
     foreach ($sectors_id as $id => &$node) {   
       // Если нет вложений
-      if (!$node['sector_parent_id']){
+      if (!$node['parent_id']){
         $sectors_tree[$id] = &$node;
       } else { 
       // Если есть потомки то перебераем массив
-        $sectors_id[$node['sector_parent_id']]['children'][$id] = &$node;
+        $sectors_id[$node['parent_id']]['children'][$id] = &$node;
       }
     };
 
@@ -146,11 +146,11 @@ class SectorController extends Controller
     $sectors_tree = [];
     foreach ($sectors_id as $id => &$node) {   
       // Если нет вложений
-      if (!$node['sector_parent_id']){
+      if (!$node['parent_id']){
         $sectors_tree[$id] = &$node;
       } else { 
       // Если есть потомки то перебераем массив
-        $sectors_id[$node['sector_parent_id']]['children'][$id] = &$node;
+        $sectors_id[$node['parent_id']]['children'][$id] = &$node;
       }
     };
 
@@ -164,7 +164,7 @@ class SectorController extends Controller
 
     
     // Отдаем Ajax
-    return view('sectors.industry-list', ['sectors_tree' => $sectors_tree, 'id' => $request->id]);
+    return view('sectors.category-list', ['sectors_tree' => $sectors_tree, 'id' => $request->id]);
   }
 
   public function create(Request $request)
@@ -174,7 +174,7 @@ class SectorController extends Controller
 
     $sector = new Sector;
 
-    if (isset($request->sector_parent_id)) {
+    if (isset($request->parent_id)) {
 
       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
       $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
@@ -182,7 +182,7 @@ class SectorController extends Controller
       // Главный запрос
       $sectors = Sector::moderatorLimit($answer)
       ->orderBy('sort', 'asc')
-      ->get(['id','sector_name','industry_status','sector_parent_id'])
+      ->get(['id','name','category_status','parent_id'])
       ->keyBy('id')
       ->toArray();
 
@@ -193,12 +193,12 @@ class SectorController extends Controller
       foreach ($sectors as $id => &$node) { 
 
         // Если нет вложений
-        if (!$node['sector_parent_id']) {
+        if (!$node['parent_id']) {
           $sectors_cat[$id] = &$node;
         } else { 
 
         // Если есть потомки то перебераем массив
-          $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
+          $sectors[$node['parent_id']]['children'][$id] = &$node;
         };
       };
 
@@ -211,10 +211,10 @@ class SectorController extends Controller
         if ($sector['id'] == $parent) {
           $selected = ' selected';
         }
-        if ($sector['industry_status'] == 1) {
-          $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['sector_name'].'</option>';
+        if ($sector['category_status'] == 1) {
+          $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['name'].'</option>';
         } else {
-          $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['sector_name'].'</option>';
+          $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['name'].'</option>';
         }
         
         // Добавляем пробелы вложенному элементу
@@ -241,7 +241,7 @@ class SectorController extends Controller
       }
 
       // Получаем HTML разметку
-      $sectors_list = showCat($sectors_cat, '', $request->sector_parent_id);
+      $sectors_list = showCat($sectors_cat, '', $request->parent_id);
 
       // echo $sectors_list;
 
@@ -275,28 +275,28 @@ class SectorController extends Controller
     // Модерация и системная запись
     $sector->system_item = $request->system_item;
     $sector->moderation = $request->moderation;
-    $sector->sector_parent_id = $request->sector_parent_id;
+    $sector->parent_id = $request->parent_id;
 
     // Смотрим что пришло
     // Если индустрия
     if ($request->first_item == 1) {
-      $first = mb_substr($request->sector_name,0,1, 'UTF-8');//первая буква
-      $last = mb_substr($request->sector_name,1);//все кроме первой буквы
+      $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($request->name,1);//все кроме первой буквы
       $first = mb_strtoupper($first, 'UTF-8');
       $last = mb_strtolower($last, 'UTF-8');
       $sector_name = $first.$last;
-      $sector->sector_name = $sector_name;
-      $sector->industry_status = 1;
+      $sector->name = $sector_name;
+      $sector->category_status = 1;
     }
 
     // Если сектор
     if ($request->medium_item == 1) {
-      $first = mb_substr($request->sector_name,0,1, 'UTF-8');//первая буква
-      $last = mb_substr($request->sector_name,1);//все кроме первой буквы
+      $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($request->name,1);//все кроме первой буквы
       $first = mb_strtoupper($first, 'UTF-8');
       $last = mb_strtolower($last, 'UTF-8');
       $sector_name = $first.$last;
-      $sector->sector_name = $sector_name;
+      $sector->name = $sector_name;
     }
     $sector->save();
 
@@ -327,7 +327,7 @@ class SectorController extends Controller
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $sector);
 
-    if ($sector->industry_status == 1) {
+    if ($sector->category_status == 1) {
       // Меняем индустрию
       return view('sectors.edit-first', ['sector' => $sector]);
     } else {
@@ -337,7 +337,7 @@ class SectorController extends Controller
       // Главный запрос
       $sectors = Sector::moderatorLimit($answer)
       ->orderBy('sort', 'asc')
-      ->get(['id','sector_name','industry_status','sector_parent_id'])
+      ->get(['id','name','category_status','parent_id'])
       ->keyBy('id')
       ->toArray();
 
@@ -348,12 +348,12 @@ class SectorController extends Controller
       foreach ($sectors as $id => &$node) { 
 
         // Если нет вложений
-        if (!$node['sector_parent_id']) {
+        if (!$node['parent_id']) {
           $sectors_cat[$id] = &$node;
         } else { 
 
         // Если есть потомки то перебераем массив
-          $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
+          $sectors[$node['parent_id']]['children'][$id] = &$node;
         };
       };
 
@@ -369,10 +369,10 @@ class SectorController extends Controller
           if ($sector['id'] == $parent) {
             $selected = ' selected';
           }
-          if ($sector['industry_status'] == 1) {
-            $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['sector_name'].'</option>';
+          if ($sector['category_status'] == 1) {
+            $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['name'].'</option>';
           } else {
-            $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['sector_name'].'</option>';
+            $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['name'].'</option>';
           }
           
           // Добавляем пробелы вложенному элементу
@@ -399,7 +399,7 @@ class SectorController extends Controller
       }
 
       // Получаем HTML разметку
-      $sectors_list = showCat($sectors_cat, '', $sector->sector_parent_id, $sector->id);
+      $sectors_list = showCat($sectors_cat, '', $sector->parent_id, $sector->id);
 
 
 
@@ -424,27 +424,27 @@ class SectorController extends Controller
     // Модерация и системная запись
     $sector->system_item = $request->system_item;
     $sector->moderation = $request->moderation;
-    $sector->sector_parent_id = $request->sector_parent_id;
+    $sector->parent_id = $request->parent_id;
     $sector->editor_id = $user->id;
     
     // Если индустрия
     if ($request->first_item == 1) {
-      $first = mb_substr($request->sector_name,0,1, 'UTF-8');//первая буква
-      $last = mb_substr($request->sector_name,1);//все кроме первой буквы
+      $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($request->name,1);//все кроме первой буквы
       $first = mb_strtoupper($first, 'UTF-8');
       $last = mb_strtolower($last, 'UTF-8');
       $sector_name = $first.$last;
-      $sector->sector_name = $sector_name;
+      $sector->name = $sector_name;
     }
 
     // Если сектор
     if ($request->medium_item == 1) {
-      $first = mb_substr($request->sector_name,0,1, 'UTF-8');//первая буква
-      $last = mb_substr($request->sector_name,1);//все кроме первой буквы
+      $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
+      $last = mb_substr($request->name,1);//все кроме первой буквы
       $first = mb_strtoupper($first, 'UTF-8');
       $last = mb_strtolower($last, 'UTF-8');
       $sector_name = $first.$last;
-      $sector->sector_name = $sector_name;
+      $sector->name = $sector_name;
     }
 
     $sector->save();
@@ -473,7 +473,7 @@ class SectorController extends Controller
 
     // Удаляем ajax
     // Проверяем содержит ли индустрия вложения
-    $sector_parent = Sector::moderatorLimit($answer)->whereSector_parent_id($id)->first();
+    $sector_parent = Sector::moderatorLimit($answer)->whereParent_id($id)->first();
 
     // Получаем авторизованного пользователя
     $user = $request->user();
@@ -488,10 +488,10 @@ class SectorController extends Controller
       
     } else {
       // Если нет, мягко удаляем
-      if ($sector->industry_status == 1) {
+      if ($sector->category_status == 1) {
         $parent = null;
       } else {
-        $parent = $sector->sector_parent_id;
+        $parent = $sector->parent_id;
       }
 
       $sector->editor_id = $user->id;
@@ -516,7 +516,7 @@ class SectorController extends Controller
   public function sector_check(Request $request)
   {
     // Проверка отдела в нашей базе данных
-    $sector = Sector::where('sector_name', $request->name)->first();
+    $sector = Sector::where('name', $request->name)->first();
 
     // Если такое название есть
     if ($sector) {
@@ -540,7 +540,7 @@ class SectorController extends Controller
 
     // Главный запрос
     $sectors = Sector::moderatorLimit($answer)
-    ->get(['id','sector_name','industry_status','sector_parent_id'])
+    ->get(['id','name','category_status','parent_id'])
     ->keyBy('id')
     ->toArray();
 
@@ -551,12 +551,12 @@ class SectorController extends Controller
     foreach ($sectors as $id => &$node) { 
 
       // Если нет вложений
-      if (!$node['sector_parent_id']) {
+      if (!$node['parent_id']) {
         $sectors_cat[$id] = &$node;
       } else { 
 
       // Если есть потомки то перебераем массив
-        $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
+        $sectors[$node['parent_id']]['children'][$id] = &$node;
       };
     };
 
@@ -572,10 +572,10 @@ class SectorController extends Controller
         if ($sector['id'] == $parent) {
           $selected = ' selected';
         }
-        if ($sector['industry_status'] == 1) {
-          $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['sector_name'].'</option>';
+        if ($sector['category_status'] == 1) {
+          $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['name'].'</option>';
         } else {
-          $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['sector_name'].'</option>';
+          $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['name'].'</option>';
         }
         
         // Добавляем пробелы вложенному элементу

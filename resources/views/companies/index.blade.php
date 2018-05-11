@@ -24,7 +24,7 @@
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-company-name" data-serversort="company_name" >Название компании</th>
+          <th class="td-company-name" data-serversort="name" >Название компании</th>
 
           @if($user->god == 1)<th class="td-getauth">Действие</th> @endif
 
@@ -37,7 +37,7 @@
       <tbody data-tbodyId="1" class="tbody-width">
         @if(!empty($companies))
         @foreach($companies as $company)
-        <tr class="item @if($user->company_id == $company->id)active @endif  @if($company->moderation == 1)no-moderation @endif" id="companies-{{ $company->id }}" data-name="{{ $company->company_name }}">
+        <tr class="item @if($user->company_id == $company->id)active @endif  @if($company->moderation == 1)no-moderation @endif" id="companies-{{ $company->id }}" data-name="{{ $company->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="company_id" id="check-{{ $company->id }}"
@@ -62,7 +62,7 @@
             @if($edit == 1)
             <a href="/companies/{{ $company->id }}/edit">
               @endif
-              {{ $company->company_name }}
+              {{ $company->name }}
               @if($edit == 1)
             </a> 
             @endif
@@ -72,8 +72,8 @@
           <td class="td-getauth">@if($user->company_id != $company->id) {{ link_to_route('users.getauthcompany', 'Авторизоваться', ['company_id'=>$company->id], ['class' => 'tiny button']) }} @endif</td>
           @endif
 
-          <td class="td-company-address">{{ $company->company_address }} </td>
-          <td class="td-company-phone">{{ decorPhone($company->company_phone) }} </td>
+          <td class="td-company-address">{{ $company->location->address }} </td>
+          <td class="td-company-phone">{{ decorPhone($company->phone) }} </td>
           <td class="td-user_id">{{ $company->director->first_name or ' ... ' }} {{ $company->director->second_name or ' ... ' }} </td>
 
           <td class="td-delete">

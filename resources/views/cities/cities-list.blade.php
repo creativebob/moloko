@@ -8,10 +8,10 @@
 
 <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250">
   @foreach ($regions as $region)      
-  <li class="first-item item @if ((count($region->areas) > 0) || (count($region->cities) > 0)) parent @endif" id="regions-{{ $region->id }}" data-name="{{ $region->region_name }}">
+  <li class="first-item item @if ((count($region->areas) > 0) || (count($region->cities) > 0)) parent @endif" id="regions-{{ $region->id }}" data-name="{{ $region->name }}">
     <a class="first-link @if($drop == 0) link-small @endif">
       <div class="icon-open sprite"></div>
-      <span class="first-item-name">{{ $region->region_name }}</span>
+      <span class="first-item-name">{{ $region->name }}</span>
       <span class="number">{{ count($region->areas) + count($region->cities) }}</span>
       @if ($region->moderation == 1)
       <span class="no-moderation">Не отмодерированная запись!</span>
@@ -43,10 +43,10 @@
     <ul class="menu vertical medium-list" data-entity="areas" data-accordion-menu data-multi-open="false">
     @if((count($region->areas) > 0) || (count($region->cities) > 0))
       @foreach ($region->areas as $area)
-        <li class="medium-item item @if (count($area->cities) > 0) parent @endif" id="areas-{{ $area->id }}" data-name="{{ $area->area_name }}">
+        <li class="medium-item item @if (count($area->cities) > 0) parent @endif" id="areas-{{ $area->id }}" data-name="{{ $area->name }}">
           <a class="medium-link">
             <div class="icon-open sprite"></div>
-            <span>{{ $area->area_name }}</span>
+            <span>{{ $area->name }}</span>
             <span class="number">{{ count($area->cities) }}</span>
             @if ($area->moderation == 1)
             <span class="no-moderation">Не отмодерированная запись!</span>
@@ -65,9 +65,9 @@
           <ul class="menu vertical nested last-list" data-entity="cities">
           @if(count($area->cities) > 0)
             @foreach ($area->cities as $city)
-              <li class="last-item item" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
+              <li class="last-item item" id="cities-{{ $city->id }}" data-name="{{ $city->name }}">
                 <a class="last-link">
-                  <span>{{ $city->city_name }}</span>
+                  <span>{{ $city->name }}</span>
                   @if ($city->moderation == 1)
                   <span class="no-moderation">Не отмодерированная запись!</span>
                   @endif
@@ -90,9 +90,9 @@
       @endforeach
       @if(count($region->cities) > 0)
         @foreach ($region->cities as $city)
-          <li class="medium-as-last item" id="cities-{{ $city->id }}" data-name="{{ $city->city_name }}">
+          <li class="medium-as-last item" id="cities-{{ $city->id }}" data-name="{{ $city->name }}">
             <a class="medium-as-last-link">
-              <span>{{ $city->city_name }}</span>
+              <span>{{ $city->name }}</span>
               @if ($city->moderation == 1)
               <span class="no-moderation">Не отмодерированная запись!</span>
               @endif

@@ -93,7 +93,7 @@
           <input type="checkbox" name="search_all" id="search-all-checkbox">
           <label for="search-all-checkbox"><span class="search-checkbox">Искать везде</span></label>
         </div>
-        <input type="hidden" name="city_vk_external_id" id="city-id-field" pattern="[0-9]{1,20}">
+        <input type="hidden" name="vk_external_id" id="city-id-field" pattern="[0-9]{1,20}">
         <input type="hidden" name="city_db" id="city-db" value="0" pattern="[0-9]{1}">
       </div>
       <div class="small-12 medium-8 cell">
@@ -193,7 +193,7 @@ $(function() {
   };
 
   // Отображение городов из api vk
-  $('#city-name-field').keyup(function() {
+  $(document).on('keyup', '#city-name-field', function() {
     $('.item-error').css('display', 'none');
     $('#city-db').val(0);
     $('#submit-add').prop('disabled', true);

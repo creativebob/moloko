@@ -18,14 +18,19 @@ class DatabaseSeeder extends Seeder
     $this->call(SchedulesTableSeeder::class);
     $this->call(WorktimesTableSeeder::class);
 
-    // Пользователи и компании
-    $this->call(CompaniesTableSeeder::class);
-
-    // Наполнение локализаций
+     // Наполнение локализаций
     $this->call(CountriesTableSeeder::class);
     $this->call(RegionsTableSeeder::class);
     $this->call(AreasTableSeeder::class);
     $this->call(CitiesTableSeeder::class);
+
+    // Локации
+    $this->call(LocationsTableSeeder::class);
+
+    // Пользователи и компании
+    $this->call(CompaniesTableSeeder::class);
+
+   
 
     // Филиалы / отделы
     $this->call(DepartmentsTableSeeder::class);

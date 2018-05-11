@@ -23,7 +23,6 @@ class MenusTableSeeder extends Seeder
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'display' => 1,
     ],
     [
         'name' => 'Тест для сотрудников',
@@ -36,7 +35,6 @@ class MenusTableSeeder extends Seeder
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'display' => 1,
     ],
     [
         'name' => 'Маркетинг',
@@ -48,7 +46,6 @@ class MenusTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
-        'display' => 1,
         'display' => 1,
     ],
     [
