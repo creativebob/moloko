@@ -1,9 +1,8 @@
-{{-- Чекбоксер 
-
---}}
+{{-- Чекбоксер --}}
 
 @php
 	$checkboxer_mass = $value;
+	$relation = $name;
 @endphp
 
 @if(!empty($checkboxer_mass[$name]))
@@ -20,7 +19,6 @@
 
 	@php
 		if($checkboxer_mass[$name]['count_mass'] > 0){$show_status = 'show-elem';} else {$show_status = 'hide-elem';};
-		$entity_name = $name . '_name';
 	@endphp
 
 	<div class="checkboxer-clean {{ $show_status }}" onclick="event.stopPropagation()" data-name="{{$name}}">
@@ -36,16 +34,36 @@
 		@foreach ($checkboxer_mass[$name]['collection'] as $key => $value)
 			<li>
 
-				@if($checkboxer_mass[$name]['mode'] == 'id')
+				{{-- Блок для выбора по городу (через связи) --}}
+				@if($name == 'city')
 
-					{{ Form::checkbox($name . '_id[]', $value->$name->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->$name->id]) }}
-					<label for="{{$name}}-{{ $value->$name->id }}"><span>{{ $value->$name->$entity_name }}</span></label>
+					@if($checkboxer_mass[$name]['mode'] == 'id')
+
+						{{ Form::checkbox($name . '_id[]', $value->location->city->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->location->city->id]) }}
+						<label for="{{$name}}-{{ $value->location->city->id }}"><span>{{ $value->location->city->name }}</span></label>
+					@else
+
+						{{ Form::checkbox($name . '_id[]', $value->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->id]) }}
+						<label for="{{$name}}-{{ $value->id }}">
+							<span>{{ $value->$entity_name }}</span>
+						</label>
+					@endif
+
+				{{-- Блок для выбора по прямым полям (id) --}}
 				@else
 
-					{{ Form::checkbox($name . '_id[]', $value->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->id]) }}
-					<label for="{{$name}}-{{ $value->id }}">
-						<span>{{ $value->$entity_name }}</span>
-					</label>
+					@if($checkboxer_mass[$name]['mode'] == 'id')
+
+						{{ Form::checkbox($name . '_id[]', $value->$relation->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->$name->id]) }}
+						<label for="{{$name}}-{{ $value->$name->id }}"><span>{{ $value->$name->name }}</span></label>
+					@else
+
+						{{ Form::checkbox($name . '_id[]', $value->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->id]) }}
+						<label for="{{$name}}-{{ $value->id }}">
+							<span>{{ $value->$entity_name }}</span>
+						</label>
+					@endif
+
 				@endif
 
 			</li>

@@ -29,7 +29,6 @@ class UsersTableSeeder extends Seeder
     			'filial_id' => null, 
     			'system_item' => 1, 
     			'author_id' => null, 
-    			'city_id' => 1, 
     			'moderation' => null, 
     		],
     		[
@@ -48,7 +47,6 @@ class UsersTableSeeder extends Seeder
     			'filial_id' => null, 
     			'system_item' => null, 
     			'author_id' => 1,
-    			'city_id' => 1,
     			'moderation' => null,
     		],
     		[
@@ -67,7 +65,6 @@ class UsersTableSeeder extends Seeder
     			'filial_id' => null, 
     			'system_item' => null, 
     			'author_id' => 1, 
-    			'city_id' => 1, 
     			'moderation' => null, 
     		],
     		[
@@ -86,7 +83,6 @@ class UsersTableSeeder extends Seeder
     			'filial_id' => 1, 
     			'system_item' => null, 
     			'author_id' => 1, 
-    			'city_id' => 1,
     			'moderation' => null, 
     		],
     		[
@@ -105,7 +101,6 @@ class UsersTableSeeder extends Seeder
     			'filial_id' => 1, 
     			'system_item' => null, 
     			'author_id' => 4, 
-    			'city_id' => 1,
     			'moderation' => null, 
     		],
     		[
@@ -124,7 +119,6 @@ class UsersTableSeeder extends Seeder
     			'filial_id' => 1, 
     			'system_item' => null, 
     			'author_id' => 4, 
-    			'city_id' => 1,
     			'moderation' => null, 
     		],
     		[
@@ -143,7 +137,6 @@ class UsersTableSeeder extends Seeder
     			'filial_id' => 1, 
     			'system_item' => null, 
     			'author_id' => 4, 
-    			'city_id' => 1,
     			'moderation' => null, 
     		],
     		[
@@ -161,7 +154,6 @@ class UsersTableSeeder extends Seeder
     			'god' => null, 
     			'system_item' => null, 
     			'author_id' => 4, 
-    			'city_id' => 2,
     			'moderation' => null, 
     		],
     		[
@@ -179,7 +171,6 @@ class UsersTableSeeder extends Seeder
     			'god' => null, 
     			'system_item' => null, 
     			'author_id' => 8, 
-    			'city_id' => 2,
     			'moderation' => null, 
     		],
     		[
@@ -197,7 +188,6 @@ class UsersTableSeeder extends Seeder
     			'god' => null, 
     			'system_item' => null, 
     			'author_id' => 8, 
-    			'city_id' => 2,
     			'moderation' => null, 
     		],
     		[
@@ -215,7 +205,6 @@ class UsersTableSeeder extends Seeder
     			'god' => null, 
     			'system_item' => null, 
     			'author_id' => 4, 
-    			'city_id' => 3,
     			'moderation' => null, 
     		],
     		[
@@ -233,7 +222,6 @@ class UsersTableSeeder extends Seeder
     			'god' => null, 
     			'system_item' => null, 
     			'author_id' => 11, 
-    			'city_id' => 3,
     			'moderation' => null, 
     		],
     		[
@@ -251,7 +239,6 @@ class UsersTableSeeder extends Seeder
     			'god' => null, 
     			'system_item' => null, 
     			'author_id' => 12, 
-    			'city_id' => 3,
     			'moderation' => null, 
     		],
     		[
@@ -269,7 +256,6 @@ class UsersTableSeeder extends Seeder
     			'god' => null, 
     			'system_item' => null, 
     			'author_id' => 1, 
-    			'city_id' => 1,
     			'moderation' => null, 
     		],
     		[
@@ -287,7 +273,6 @@ class UsersTableSeeder extends Seeder
     			'god' => null, 
     			'system_item' => null, 
     			'author_id' => 5, 
-    			'city_id' => 1,
     			'moderation' => 1, 
     		],
     		[
@@ -305,7 +290,6 @@ class UsersTableSeeder extends Seeder
     			'god' => null, 
     			'system_item' => null, 
     			'author_id' => 5, 
-    			'city_id' => 1,
     			'moderation' => 1, 
     		],
     	]);

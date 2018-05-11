@@ -64,7 +64,7 @@ class UserController extends Controller
 
 
         // Запрос для фильтра
-        $filter_query = User::with('city')
+        $filter_query = User::with('location.city')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -76,7 +76,7 @@ class UserController extends Controller
         $filter['status'] = null;
 
         // Перечень подключаемых фильтров:
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
+        $filter = addCityFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
@@ -96,6 +96,7 @@ class UserController extends Controller
         // dd(storage_path('app\public'));
 
         // dd(Storage::disk('public')->url($user_auth->photo));
+        // 
 
         return view('users.index', compact('users', 'page_info', 'filter', 'user'));
       }

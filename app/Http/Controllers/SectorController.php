@@ -37,8 +37,23 @@ class SectorController extends Controller
     ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
+    ->booklistFilter($request)
     ->orderBy('sort', 'asc')
     ->get();
+
+    // Запрос для фильтра
+    $filter_query = Sector::moderatorLimit($answer)
+    ->companiesLimit($answer)
+    ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
+    ->get();
+
+    $filter['status'] = null;
+
+    // Добавляем данные по спискам (Требуется на каждом контроллере)
+    $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+    // dd($filter);
 
     // Создаем масив где ключ массива является ID меню
     $sectors_rights = [];
@@ -95,7 +110,7 @@ class SectorController extends Controller
       return view('sectors.industry-list', ['sectors_tree' => $sectors_tree, 'id' => $request->id]);
     }
     // Отдаем на шаблон
-    return view('sectors.index', compact('sectors_tree', 'page_info'));
+    return view('sectors.index', compact('sectors_tree', 'page_info', 'filter'));
   }
 
   public function get_content(Request $request)
