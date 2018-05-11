@@ -1,6 +1,6 @@
-<li class="medium-as-last item" id="staff-{{ $staffer['id'] }}" data-name="{{ $staffer['position']['position_name'] }}">
+<li class="medium-as-last item" id="staff-{{ $staffer['id'] }}" data-name="{{ $staffer['position']['name'] }}">
   <div class="medium-as-last-link">
-    <span>{{ $staffer['position']['position_name'] }} ( <a href="/staff/{{ $staffer['id'] }}/edit" class="link-recursion">
+    <span>{{ $staffer['position']['name'] }} ( <a href="/staff/{{ $staffer['id'] }}/edit" class="link-recursion">
       @if (isset($staffer['user_id']))
       {{ $staffer['user']['first_name'] }} {{ $staffer['user']['second_name'] }}
       @else
