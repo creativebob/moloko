@@ -38,10 +38,10 @@
         <tr class="item @if($booklist->moderation == 1)no-moderation @endif" id="booklists-{{ $booklist->id }}" data-name="{{ $booklist->booklist_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $booklist->id }}"><label class="label-check" for="check-{{ $booklist->id }}"></label></td>
-          <td class="td-list-name">{{ $booklist->booklists_name }} </td>
-          <td class="td-list-description">{{ $booklist->booklists_description }}</td>
-          <td class="td-entity-id">{{ $booklist->entity->entity_name }}</td>
-          <td class="td-booklist-company-id">@if(!empty($booklist->company->company_name)) {{ $booklist->company->company_name }} @else @if($booklist->system_item == null) Шаблон @else Системная @endif @endif</td>
+          <td class="td-list-name">{{ $booklist->booklist_name }} </td>
+          <td class="td-list-description">{{ $booklist->booklist_description }}</td>
+          <td class="td-entity-name">{{ $booklist->entity->entity_name }}</td>
+          <td class="td-booklist-company-id">@if(!empty($booklist->company->name)) {{ $booklist->company->name }} @else @if($booklist->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-author">@if(isset($booklist->author->first_name)) {{ $booklist->author->first_name . ' ' . $booklist->author->second_name }} @endif</td>
           <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
         </tr>

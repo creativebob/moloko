@@ -67,7 +67,7 @@ class BooklistController extends Controller
         // };
 
 
-        $booklists = Booklist::moderatorLimit($answer)
+        $booklists = Booklist::with('entity')->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
@@ -78,6 +78,8 @@ class BooklistController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
+
+        // dd($booklists);
 
         return view('booklists.index', compact('booklists', 'page_info'));
     }
