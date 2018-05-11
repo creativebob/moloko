@@ -15,7 +15,7 @@ class CreateCitiesTable extends Migration
     {
         Schema::create('cities', function (Blueprint $table) {
             $table->increments('id');
-            // $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             // $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('name')->index()->comment('Название населенного пункта');

@@ -252,7 +252,7 @@ class SectorController extends Controller
     }
   }
 
-  public function store(Request $request)
+  public function store(SectorRequest $request)
   {
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Sector::class);
@@ -407,7 +407,7 @@ class SectorController extends Controller
     };
   }
 
-  public function update(Request $request, $id)
+  public function update(SectorRequest $request, $id)
   {    
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));

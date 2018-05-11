@@ -63,7 +63,11 @@
           <td class="td-site-name">{{ $cur_news->site->name or ' ... ' }}</td>
           <td class="td-date_publish_begin">{{ $cur_news->date_publish_begin }}</td>
           <td class="td-view">
-            <a class="button" href="http://{{ $cur_news->site->alias }}/{{ $cur_news->cities[0]->alias }}/news/{{ $cur_news->alias }}" target="_blank">Чек</a>
+            @if (count($cur_news->cities) > 0)
+            <a class="button" href="http://{{ $cur_news->site->alias }}/{{ $cur_news->company->location->city->alias }}/news/{{ $cur_news->alias }}" target="_blank">Чек</a>
+            @else
+            Нет города
+            @endif
           </td>
           <td class="td-news-author">@if(isset($cur_news->author->first_name)) {{ $cur_news->author->first_name . ' ' . $cur_news->author->second_name }} @endif</td>
           <td class="td-delete">

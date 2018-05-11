@@ -1,7 +1,7 @@
 <div class="grid-x grid-padding-x align-center modal-content inputs">
   <div class="small-10 cell">
     <label class="input-icon">Введите название навигации
-      @include('includes.inputs.name', ['value'=>$navigation->name, 'name'=>'navigation_name', 'required'=>'required'])
+      @include('includes.inputs.name', ['value'=>$navigation->name, 'name'=>'name', 'required'=>'required'])
       <div class="item-error">Такая навигация уже существует!</div>
     </label>
     <label>Категория навигации

@@ -328,8 +328,8 @@ class NavigationController extends Controller
 
     // Если такая навигация не существует
     if ($request->first_item == 1) {
-      $first = mb_substr($request->navigation_name, 0, 1, 'UTF-8'); //первая буква
-      $last = mb_substr($request->navigation_name, 1); //все кроме первой буквы
+      $first = mb_substr($request->name, 0, 1, 'UTF-8'); //первая буква
+      $last = mb_substr($request->name, 1); //все кроме первой буквы
       $first = mb_strtoupper($first, 'UTF-8');
       $last = mb_strtolower($last, 'UTF-8');
       $navigation_name = $first.$last;
@@ -492,8 +492,8 @@ class NavigationController extends Controller
     
     // Если такая навигация не существует
     if ($request->first_item == 1) {
-      $first = mb_substr($request->navigation_name ,0, 1, 'UTF-8'); //первая буква
-      $last = mb_substr($request->navigation_name, 1); //все кроме первой буквы
+      $first = mb_substr($request->name ,0, 1, 'UTF-8'); //первая буква
+      $last = mb_substr($request->name, 1); //все кроме первой буквы
       $first = mb_strtoupper($first, 'UTF-8');
       $last = mb_strtolower($last, 'UTF-8');
       $navigation_name = $first.$last;

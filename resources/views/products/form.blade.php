@@ -22,7 +22,7 @@
           @include('includes.inputs.name', ['value'=>$product->name, 'name'=>'name', 'required'=>'required'])
         </label>
         <label>Артикул товара
-          @include('includes.inputs.name', ['value'=>$product->article, 'name'=>'alricle', 'required'=>'required'])
+          @include('includes.inputs.name', ['value'=>$product->article, 'name'=>'article', 'required'=>'required'])
         </label>
       </div>
       <div class="small-12 medium-6 cell">

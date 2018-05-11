@@ -18,7 +18,6 @@ use App\Policies\PostionPolicy;
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class PositionController extends Controller
 {
@@ -39,7 +38,7 @@ class PositionController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
 
-    $positions = Position::with('author', 'page')
+    $positions = Position::with('author', 'page', 'roles')
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -89,11 +88,11 @@ class PositionController extends Controller
     $sectors_cat = [];
     foreach ($sectors as $id => &$node) {   
       //Если нет вложений
-      if (!$node['sector_parent_id']){
+      if (!$node['parent_id']){
         $sectors_cat[$id] = &$node;
       } else { 
       //Если есть потомки то перебераем массив
-        $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
+        $sectors[$node['parent_id']]['children'][$id] = &$node;
       };
     };
     // dd($sectors_cat);
@@ -136,7 +135,7 @@ class PositionController extends Controller
     // Создаем новую должность
     $position = new Position;
     $position->company_id = $company_id;
-    $position->position_name = $request->position_name;
+    $position->name = $request->name;
     $position->page_id = $request->page_id;
     $position->author_id = $user_id;
     $position->sector_id = $user->company->sector_id;
@@ -158,27 +157,18 @@ class PositionController extends Controller
     // Если должность записалась
     if($position) {
 
-      $mass = [];
-
-      if($request->roles){
-
-        // Смотрим список пришедших роллей
+      // Когда должность записалась, смотрим пришедшие для нее роли
+      if (isset($request->roles)) {
+        $roles = [];
         foreach ($request->roles as $role) {
-
-          $mass[] = [
-            'position_id' => $position->id,
-            'role_id' => $role,
+          $roles[$role] = [
             'author_id' => $user_id,
           ];
         }
-
-        DB::table('position_role')->insert($mass);
+        $position->roles()->attach($roles);
       }
 
-
-
       return Redirect('/positions');
-
     } else {
       abort(403, 'Ошибка записи должности');
     };
@@ -196,7 +186,7 @@ class PositionController extends Controller
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
-    $position = Position::moderatorLimit($answer)->findOrFail($id);
+    $position = Position::with('roles')->moderatorLimit($answer)->findOrFail($id);
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $position);
@@ -226,11 +216,11 @@ class PositionController extends Controller
     $sectors_cat = [];
     foreach ($sectors as $id => &$node) {   
       //Если нет вложений
-      if (!$node['sector_parent_id']){
+      if (!$node['parent_id']){
         $sectors_cat[$id] = &$node;
       } else { 
       //Если есть потомки то перебераем массив
-        $sectors[$node['sector_parent_id']]['children'][$id] = &$node;
+        $sectors[$node['parent_id']]['children'][$id] = &$node;
       };
     };
     // dd($sectors_cat);
@@ -275,7 +265,7 @@ class PositionController extends Controller
     $position_roles = $position->roles;
 
     // Перезаписываем данные
-    $position->position_name = $request->position_name;
+    $position->name = $request->name;
     $position->page_id = $request->page_id;
 
     // $position->company_id = $user->company_id;
@@ -283,35 +273,19 @@ class PositionController extends Controller
     $position->save();
     // Если записалось
     if ($position) {
-      // Когда должность обновилась, смотрим пришедние для нее роли и сравниваем с существующими
+      // Когда должность обновилась, обновляем пришедшие для нее роли
       if (isset($request->roles)) {
-        $delete = PositionRole::wherePosition_id($id)->delete();
-        $mass = [];
-        // Смотрим список пришедших ролей
+        $roles = [];
         foreach ($request->roles as $role) {
-          $mass[] = [
-            'position_id' => $id,
-            'role_id' => $role,
-            'author_id' => $user->id,
+          $roles[$role] = [
+            'author_id' => $user_id,
           ];
-        };
-        DB::table('position_role')->insert($mass);
-        // Лехина идея с перебором на соответствие
-        // $p = 0;
-        // foreach ($position_roles as $position_role) {
-        //   foreach ($request->roles as $role) {
-        //     if ($position_role->id == $role) {
-        //       $p = 1;
-        //     };
-        //   };
-        //   if ($p == 0) {
-        //     $delete = PositionRole::wherePosition_id($id)->whereRole_id($position_role->id)->get();
-        //     PositionRole::destroy();
-        //   }
-        // }
+        }
+        $position->roles()->sync($roles);
       } else {
+
         // Если удалили последнюю роль для должности и пришел пустой массив
-        $delete = PositionRole::wherePosition_id($id)->delete();
+        $delete = PositionRole::where('position_id', $id)->delete();
       }
       return Redirect('/positions');
     } else {
@@ -378,7 +352,7 @@ class PositionController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->template($answer) // Выводим шаблоны в список
     ->whereNotIn('id', $repeat)
-    ->pluck('position_name', 'id');
+    ->pluck('name', 'id');
     echo json_encode($positions_list, JSON_UNESCAPED_UNICODE);
   }
 }

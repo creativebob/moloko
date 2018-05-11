@@ -4,7 +4,7 @@
 			var reader = new FileReader();
 			reader.onload = function (e) {
 				$('#photo').attr('src', e.target.result);
-				createDraggable();
+				// createDraggable();
 			};
 			reader.readAsDataURL(input.files[0]);
 		}

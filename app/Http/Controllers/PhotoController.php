@@ -65,23 +65,24 @@ class PhotoController extends Controller
     ->orderBy('sort', 'asc')
     ->paginate(30);
 
+    // $album = Album::with(['author', 'photos' => function ($query) {
+    //     $query->orderBy('sort', 'asc')->paginate(30);
+    //   }])
+    //   ->whereAlias($alias)
+    //   ->moderatorLimit($answer)
+    //   ->companiesLimit($answer)
+    // ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+    // ->authors($answer)
+    // ->systemItem($answer) // Фильтр по системным записям
+    // ->booklistFilter($request) 
+    // ->orderBy('sort', 'asc')
+    // ->first();
+
+    // $photos = $album->photos;
 
     // dd($photos);
 
-        // Запрос для фильтра
-    $filter_query = Photo::moderatorLimit($answer)
-    ->companiesLimit($answer)
-    ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
-    ->orderBy('sort', 'asc')
-    ->get();
-
-    $filter['status'] = null;
-
-    // Добавляем данные по спискам (Требуется на каждом контроллере)
-    $filter = addFilter($filter, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $this->entity_name);
-
+  
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
@@ -90,7 +91,7 @@ class PhotoController extends Controller
 
     
 
-    return view('photos.index', compact('photos', 'page_info', 'parent_page_info', 'filter', 'album', 'alias'));
+    return view('photos.index', compact('photos', 'page_info', 'parent_page_info', 'album', 'alias'));
   }
 
   public function create(Request $request, $alias)
@@ -136,9 +137,15 @@ class PhotoController extends Controller
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     if ($request->hasFile('photo')) {
-        // Получаем данные для авторизованного пользователя
+
+      // Получаем данные для авторизованного пользователя
       $user = $request->user();
+
+      // Смотрим компанию пользователя
       $company_id = $user->company_id;
+      if($company_id == null) {
+        abort(403, 'Необходимо авторизоваться под компанией');
+      }
 
       // Скрываем бога
       $user_id = hideGod($user);

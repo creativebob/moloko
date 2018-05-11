@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-// Подключаем модели
+// Модели
 use App\Album;
 use App\Photo;
 use App\AlbumMedia;
@@ -10,21 +10,19 @@ use App\User;
 use App\List_item;
 use App\Booklist;
 use App\AlbumsCategory;
-
-use App\Http\Controllers\Session;
-
-// Модели которые отвечают за работу с правами + политики
 use App\Role;
+
+// Валидация
+use App\Http\Requests\AlbumRequest;
+
+// Политика
 use App\Policies\AlbumPolicy;
-use Illuminate\Support\Facades\Gate;
 
-use Illuminate\Support\Facades\Auth;
-
-// Запросы и их валидация
+// Подключаем фасады
 use Illuminate\Http\Request;
-// use App\Http\Requests\AlbumRequest;
-
-// Прочие необходимые классы
+use App\Http\Controllers\Session;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -60,21 +58,6 @@ class AlbumController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // Запрос для фильтра
-        $filter_query = Album::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('sort', 'asc')
-        ->get();
-
-        // dd($albums);
-
-        $filter['status'] = null;
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addFilter($filter, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $this->entity_name);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -82,7 +65,7 @@ class AlbumController extends Controller
 
         // dd($albums);
 
-        return view('albums.index', compact('albums', 'page_info', 'filter', 'album', 'user'));
+        return view('albums.index', compact('albums', 'page_info', 'album', 'user'));
       }
 
 
@@ -181,7 +164,7 @@ class AlbumController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AlbumRequest $request)
     {
       // Подключение политики
       $this->authorize(getmethod(__FUNCTION__), Album::class);
@@ -191,9 +174,14 @@ class AlbumController extends Controller
 
       // Получаем данные для авторизованного пользователя
       $user = $request->user();
-      $company_id = $user->company_id;
 
-      // Скрываем бога
+    // Смотрим компанию пользователя
+      $company_id = $user->company_id;
+      if($company_id == null) {
+        abort(403, 'Необходимо авторизоваться под компанией');
+      }
+
+    // Скрываем бога
       $user_id = hideGod($user);
 
       // Наполняем сущность данными
@@ -262,27 +250,14 @@ class AlbumController extends Controller
     ->orderBy('sort', 'asc')
     ->first();
 
-        // Запрос для фильтра
-    $filter_query = Album::moderatorLimit($answer)
-    ->companiesLimit($answer)
-        ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('sort', 'asc')
-        ->get();
-
-        $filter['status'] = null;
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addFilter($filter, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $this->entity_name);
-
+    
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+    $page_info = pageInfo($this->entity_name);
 
         // dd($album);
 
-        return view('albums.show', compact('album', 'page_info', 'filter', 'alias'));
-      }
+    return view('albums.show', compact('album', 'page_info', 'alias'));
+  }
 
     /**
      * Show the form for editing the specified resource.
@@ -382,7 +357,7 @@ class AlbumController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AlbumRequest $request, $id)
     {
       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
       $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));

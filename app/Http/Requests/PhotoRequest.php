@@ -6,28 +6,33 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PhotoRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return false;
-    }
+  public function authorize()
+  {
+    return false;
+  }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
+  public function rules()
+  {
+    return [
+      // 'photo' => 'file',
+      'company_id' => 'integer|nullable',
+      'name' => 'string|max:255|nullable',
+      'title' => 'string|max:255|nullable',
+      'description' => 'string|nullable',
+      'path' => 'string|nullable',
+      'alias' => 'string|nullable',
+      'width' => 'integer|nullable',
+      'height' => 'integer|nullable',
+      // 'size' => 'integer|nullable',
+      'extension' => 'string|nullable',
+      'photo_access' => 'integer|nullable',
 
-            'booklists_name' => 'string|max:255', 
-            'booklists_description' => 'string|max:255|nullable', 
-            
-        ];
-    }
+      'author_id' => 'integer|nullable', 
+      'editor_id' => 'integer|nullable', 
+
+      'moderation' => 'integer|max:1|nullable',
+      'system_item' => 'integer|max:1|nullable', 
+
+    ];
+  }
 }

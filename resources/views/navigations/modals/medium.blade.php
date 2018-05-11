@@ -3,11 +3,11 @@
   <div class="grid-x grid-padding-x align-center modal-content inputs">
     <div class="small-10  cell">
       <label>Название пункта меню
-        @include('includes.inputs.name', ['name'=>'menu_name', 'value'=>$menu->name, 'required'=>'required'])
+        @include('includes.inputs.name', ['name'=>'name', 'value'=>$menu->name, 'required'=>'required'])
         <span class="form-error">Уж постарайтесь, введите хотя бы 2 символа!</span>
       </label>
       <label>Введите ссылку
-        @include('includes.inputs.text-en', ['name'=>'menu_alias', 'value'=>$menu->alias, 'required'=>''])
+        @include('includes.inputs.text-en', ['name'=>'alias', 'value'=>$menu->alias, 'required'=>''])
       </label>
       <label>Страница:
         <select name="page_id" class="pages-select" placeholder="Не выбрано">
@@ -37,14 +37,14 @@
   <div class="grid-x grid-padding-x align-center modal-content inputs">
     <div class="small-10 cell">
       <label>Добавляем пункт в:
-        <select name="menu_parent_id" class="menu_list">
+        <select name="parent_id" class="menu_list">
           @php
           echo $navigation_list;
           @endphp
         </select>
       </label>
       <label>Введите имя иконки
-        @include('includes.inputs.text-en', ['name'=>'menu_icon', 'value'=>$menu->menu_icon, 'required'=>''])
+        @include('includes.inputs.text-en', ['name'=>'icon', 'value'=>$menu->icon, 'required'=>''])
       </label>
       <div class="checkbox">
         {{ Form::checkbox('display', 1, $menu->display, ['id' => 'display']) }}

@@ -97,7 +97,7 @@
               @foreach ($filials as $filial)
               <li>
                 {{ Form::checkbox('cities[]', $filial->city->id, null, ['id' => 'city-'.$filial->city->id]) }}
-                <label for="city-{{ $filial->city->id }}"><span>{{ $filial->city->city_name }}</span></label>
+                <label for="city-{{ $filial->city->id }}"><span>{{ $filial->city->name }}</span></label>
               </li>
               @endforeach
             </ul>

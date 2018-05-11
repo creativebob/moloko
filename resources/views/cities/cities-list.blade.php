@@ -6,7 +6,7 @@
   $drop = 1;
 @endcan --}}
 
-<ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250">
+
   @foreach ($regions as $region)      
   <li class="first-item item @if ((count($region->areas) > 0) || (count($region->cities) > 0)) parent @endif" id="regions-{{ $region->id }}" data-name="{{ $region->name }}">
     <a class="first-link @if($drop == 0) link-small @endif">
@@ -114,7 +114,7 @@
     </ul>
   </li>
   @endforeach
-</ul>
+
 
 {{-- Скрипт чекбоксов и перетаскивания для меню --}}
 @include('includes.scripts.menu-scripts')

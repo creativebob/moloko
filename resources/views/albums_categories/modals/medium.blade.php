@@ -7,7 +7,7 @@
         @endphp
       </select>
     </label>
-    <label>Название сектора
+    <label>Название категории
       @include('includes.inputs.name', ['value'=>$albums_category->name, 'name'=>'name', 'required'=>'required'])
       <div class="sprite-input-right find-status"></div>
       <div class="item-error">Такой сектор уже существует!</div>

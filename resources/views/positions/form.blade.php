@@ -15,7 +15,7 @@
     @endif
     <!-- Должность -->
     <label>Название должности
-      @include('includes.inputs.name', ['value'=>$position->position_name, 'name'=>'position_name', 'required'=>'required'])
+      @include('includes.inputs.name', ['value'=>$position->name, 'name'=>'name', 'required'=>'required'])
       <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
     </label>
     <label>Страница должности:

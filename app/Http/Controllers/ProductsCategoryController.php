@@ -172,7 +172,7 @@ class ProductsCategoryController extends Controller
   }
   public function create(Request $request)
   {
-      // Подключение политики
+    // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), ProductsCategory::class);
 
     $products_category = new ProductsCategory;
@@ -255,12 +255,12 @@ class ProductsCategoryController extends Controller
     }
   }
 
-  public function store(Request $request)
+  public function store(ProductsCategoryRequest $request)
   {
-      // Подключение политики
+    // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), ProductsCategory::class);
 
-      // Получаем данные для авторизованного пользователя
+    // Получаем данные для авторизованного пользователя
     $user = $request->user();
     $company_id = $user->company_id;
     if ($user->god == 1) {
@@ -270,18 +270,18 @@ class ProductsCategoryController extends Controller
       $user_id = $user->id;
     }
 
-      // Пишем в базу
+    // Пишем в базу
     $products_category = new ProductsCategory;
     $products_category->company_id = $company_id;
     $products_category->author_id = $user_id;
     $products_category->products_type_id = $request->products_type_id;
 
-      // Модерация и системная запись
+    // Модерация и системная запись
     $products_category->system_item = $request->system_item;
     $products_category->moderation = $request->moderation;
 
-      // Смотрим что пришло
-      // Если категория
+    // Смотрим что пришло
+    // Если категория
     if ($request->first_item == 1) {
       $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
       $last = mb_substr($request->name,1);//все кроме первой буквы
@@ -315,131 +315,125 @@ class ProductsCategoryController extends Controller
     }
   }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
+  public function show($id)
+  {
         //
-    }
+  }
 
-    public function edit($id)
-    {
-      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-      $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
+  public function edit($id)
+  {
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
-      $products_category = ProductsCategory::with('products_type')->moderatorLimit($answer)->findOrFail($id);
+    $products_category = ProductsCategory::with('products_type')->moderatorLimit($answer)->findOrFail($id);
 
     // Подключение политики
-      $this->authorize(getmethod(__FUNCTION__), $products_category);
+    $this->authorize(getmethod(__FUNCTION__), $products_category);
 
-      $products_types_list = ProductsType::get()->pluck('name', 'id');
+    $products_types_list = ProductsType::get()->pluck('name', 'id');
 
-      if ($products_category->category_status == 1) {
+    if ($products_category->category_status == 1) {
       // Меняем индустрию
-        return view('products_categories.edit-first', ['products_category' => $products_category, 'products_types_list' => $products_types_list]);
-      } else {
+      return view('products_categories.edit-first', ['products_category' => $products_category, 'products_types_list' => $products_types_list]);
+    } else {
       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+      $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
       // Главный запрос
-        $products_categories = ProductsCategory::moderatorLimit($answer)
-        ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
-        ->keyBy('id')
-        ->toArray();
+      $products_categories = ProductsCategory::moderatorLimit($answer)
+      ->orderBy('sort', 'asc')
+      ->get(['id','name','category_status','parent_id'])
+      ->keyBy('id')
+      ->toArray();
 
       // dd($products_categories);
 
       // Формируем дерево вложенности
-        $products_categories_cat = [];
-        foreach ($products_categories as $id => &$node) { 
+      $products_categories_cat = [];
+      foreach ($products_categories as $id => &$node) { 
 
         // Если нет вложений
-          if (!$node['parent_id']) {
-            $products_categories_cat[$id] = &$node;
-          } else { 
+        if (!$node['parent_id']) {
+          $products_categories_cat[$id] = &$node;
+        } else { 
 
         // Если есть потомки то перебераем массив
-            $products_categories[$node['parent_id']]['children'][$id] = &$node;
-          };
+          $products_categories[$node['parent_id']]['children'][$id] = &$node;
         };
+      };
 
       // dd($products_categories_cat);
 
       // Функция отрисовки option'ов
-        function tplMenu($products_category, $padding, $parent, $id) {
+      function tplMenu($products_category, $padding, $parent, $id) {
 
         // Убираем из списка пришедший пункт меню 
-          if ($products_category['id'] != $id) {
+        if ($products_category['id'] != $id) {
 
-            $selected = '';
-            if ($products_category['id'] == $parent) {
-              $selected = ' selected';
-            }
-            if ($products_category['category_status'] == 1) {
-              $menu = '<option value="'.$products_category['id'].'" class="first"'.$selected.'>'.$products_category['name'].'</option>';
-            } else {
-              $menu = '<option value="'.$products_category['id'].'"'.$selected.'>'.$padding.' '.$products_category['name'].'</option>';
-            }
+          $selected = '';
+          if ($products_category['id'] == $parent) {
+            $selected = ' selected';
+          }
+          if ($products_category['category_status'] == 1) {
+            $menu = '<option value="'.$products_category['id'].'" class="first"'.$selected.'>'.$products_category['name'].'</option>';
+          } else {
+            $menu = '<option value="'.$products_category['id'].'"'.$selected.'>'.$padding.' '.$products_category['name'].'</option>';
+          }
 
           // Добавляем пробелы вложенному элементу
-            if (isset($products_category['children'])) {
-              $i = 1;
-              for($j = 0; $j < $i; $j++){
-                $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-              }     
-              $i++;
+          if (isset($products_category['children'])) {
+            $i = 1;
+            for($j = 0; $j < $i; $j++){
+              $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+            }     
+            $i++;
 
-              $menu .= showCat($products_category['children'], $padding, $parent, $id);
-            }
-            return $menu;
+            $menu .= showCat($products_category['children'], $padding, $parent, $id);
           }
+          return $menu;
         }
+      }
       // Рекурсивно считываем наш шаблон
-        function showCat($data, $padding, $parent, $id){
-          $string = '';
-          $padding = $padding;
-          foreach($data as $item){
-            $string .= tplMenu($item, $padding, $parent, $id);
-          }
-          return $string;
+      function showCat($data, $padding, $parent, $id){
+        $string = '';
+        $padding = $padding;
+        foreach($data as $item){
+          $string .= tplMenu($item, $padding, $parent, $id);
         }
+        return $string;
+      }
 
       // Получаем HTML разметку
-        $products_categories_list = showCat($products_categories_cat, '', $products_category->parent_id, $products_category->id);
+      $products_categories_list = showCat($products_categories_cat, '', $products_category->parent_id, $products_category->id);
 
-        return view('products_categories.edit-medium', ['products_category' => $products_category, 'products_categories_list' => $products_categories_list, 'products_types_list' => $products_types_list]);
-      }
+      return view('products_categories.edit-medium', ['products_category' => $products_category, 'products_categories_list' => $products_categories_list, 'products_types_list' => $products_types_list]);
     }
+  }
 
-    public function update(Request $request, $id)
-    {
+  public function update(ProductsCategoryRequest $request, $id)
+  {
       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-      $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
+    $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
 
       // ГЛАВНЫЙ ЗАПРОС:
-      $products_category = ProductsCategory::moderatorLimit($answer)->findOrFail($id);
+    $products_category = ProductsCategory::moderatorLimit($answer)->findOrFail($id);
 
       // Подключение политики
-      $this->authorize(getmethod(__FUNCTION__), $products_category);
+    $this->authorize(getmethod(__FUNCTION__), $products_category);
 
       // Получаем авторизованного пользователя
-      $user = $request->user();
+    $user = $request->user();
 
       // Модерация и системная запись
-      $products_category->system_item = $request->system_item;
-      $products_category->moderation = $request->moderation;
-      $products_category->parent_id = $request->parent_id;
-      $products_category->editor_id = $user->id;
-      $products_category->products_type_id = $request->products_type_id;
+    $products_category->system_item = $request->system_item;
+    $products_category->moderation = $request->moderation;
+    $products_category->parent_id = $request->parent_id;
+    $products_category->editor_id = $user->id;
+    $products_category->products_type_id = $request->products_type_id;
 
       // Если индустрия
-      if ($request->first_item == 1) {
+    if ($request->first_item == 1) {
         $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
         $last = mb_substr($request->name,1);//все кроме первой буквы
         $first = mb_strtoupper($first, 'UTF-8');
