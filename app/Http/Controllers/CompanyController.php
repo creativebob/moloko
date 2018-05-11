@@ -200,12 +200,11 @@ class CompanyController extends Controller
         // Записываем в базу все расписание.
     DB::table('worktimes')->insert($mass_time);
 
-
+    // Пишем локацию
     $location = new Location;
     $location->city_id = $request->city_id;
     $location->address = $request->address;
     $location->save();
-
 
     if ($location) {
       $location_id = $location->id;
