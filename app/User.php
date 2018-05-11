@@ -284,4 +284,10 @@ class User extends Authenticatable
     return $this->belongsTo('App\Location');
   }
 
+  // Получаем локацию пользователя
+  public function photo()
+  {
+    return $this->belongsTo('App\Photo');
+  }
+
 }

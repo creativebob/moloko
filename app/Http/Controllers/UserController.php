@@ -141,7 +141,7 @@ class UserController extends Controller
 
         // Получаем данные для авторизованного пользователя
         $user_auth = $request->user();
-        $user_auth_id = $user_auth->id;
+        $user_auth_id = hideGod($user_auth);
         $user_status = $user_auth->god;
         $company_id = $user_auth->company_id;
         $filial_id = $request->filial_id;
@@ -237,7 +237,7 @@ class UserController extends Controller
         if ($request->hasFile('photo')) {
           $photo = new Photo;
           $image = $request->file('photo');
-          $directory = $user_auth->company->id.'/media/albums/'.$user_auth->login;
+          $directory = $user_auth->company->id.'/media/albums/'.$user->login;
           $extension = $image->getClientOriginalExtension();
           $photo->extension = $extension;
           $image_name = 'avatar.'.$extension;
@@ -345,7 +345,7 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar')->moderatorLimit($answer)->findOrFail($id);
+        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
@@ -378,13 +378,13 @@ class UserController extends Controller
       {
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
-        $user_auth_id = $user_auth->id;
+        $user_auth_id = hideGod($user_auth);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('locaton', 'company', 'photo')->moderatorLimit($answer)->findOrFail($id);
+        $user = User::with('location', 'company', 'photo')->moderatorLimit($answer)->findOrFail($id);
 
 
         $filial_id = $request->filial_id;
@@ -424,8 +424,6 @@ class UserController extends Controller
         } else {$user->extra_phone = NULL;};
 
         $user->telegram_id = $request->telegram_id;
-        $user->city_id = $request->city_id;
-        $user->address = $request->address;
 
         $user->orgform_status = $request->orgform_status;
 
@@ -458,7 +456,7 @@ class UserController extends Controller
         if ($request->hasFile('photo')) {
           $photo = new Photo;
           $image = $request->file('photo');
-          $directory = $user_auth->company->id.'/media/albums/'.$user_auth->login;
+          $directory = $user_auth->company->id.'/media/albums/'.$user->login;
           $extension = $image->getClientOriginalExtension();
           $photo->extension = $extension;
           $image_name = 'avatar.'.$extension;

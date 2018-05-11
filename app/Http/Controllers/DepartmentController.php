@@ -56,8 +56,8 @@ class DepartmentController extends Controller
 
 
       // Подключаем фильтры --------------------------------------------------------------------------------------------------------------------------
-      $filter_query = Department::moderatorLimit($answer)
-      ->companiesLimit($answer)
+    $filter_query = Department::moderatorLimit($answer)
+    ->companiesLimit($answer)
       ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
       ->authors($answer)
       ->systemItem($answer) // Фильтр по системным записям
@@ -71,89 +71,89 @@ class DepartmentController extends Controller
       $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
     // Дополнительный запрос
-    $answer_positions = operator_right('positions', false, 'index');
+      $answer_positions = operator_right('positions', false, 'index');
 
     //Создаем масив где ключ массива является ID меню
-    $departments_rights = [];
-    $departments_rights = $departments->keyBy('id');
+      $departments_rights = [];
+      $departments_rights = $departments->keyBy('id');
 
     // Получаем данные для авторизованного пользователя
-    $user = $request->user();
+      $user = $request->user();
 
     // Проверяем прапва на редактирование и удаление
-    $departments_id = [];
-    foreach ($departments_rights as $department) {
-      $edit = 0;
-      $delete = 0;
-      if ($user->can('update', $department)) {
-        $edit = 1;
-      };
-      if ($user->can('delete', $department)) {
-        $delete = 1;
-      };
-      $department_right = $department->toArray();
-      $departments_id[$department_right['id']] = $department_right;
-      $departments_id[$department_right['id']]['edit'] = $edit;
-      $departments_id[$department_right['id']]['delete'] = $delete;
+      $departments_id = [];
+      foreach ($departments_rights as $department) {
+        $edit = 0;
+        $delete = 0;
+        if ($user->can('update', $department)) {
+          $edit = 1;
+        };
+        if ($user->can('delete', $department)) {
+          $delete = 1;
+        };
+        $department_right = $department->toArray();
+        $departments_id[$department_right['id']] = $department_right;
+        $departments_id[$department_right['id']]['edit'] = $edit;
+        $departments_id[$department_right['id']]['delete'] = $delete;
 
       // Проверяем прапва на удаление
-      foreach ($department->staff as $id => $staffer) {
-        $del_staff = 0;
-        if ($user->can('delete', $staffer)) {
-          $del_staff = 1;
+        foreach ($department->staff as $id => $staffer) {
+          $del_staff = 0;
+          if ($user->can('delete', $staffer)) {
+            $del_staff = 1;
+          };
+          $departments_id[$department_right['id']]['staff'][$id]['delete'] = $del_staff;
         };
-        $departments_id[$department_right['id']]['staff'][$id]['delete'] = $del_staff;
       };
-    };
 
     // dd($departments_id);
     // Функция построения дерева из массива от Tommy Lacroix
-    $departments_tree = [];
-    foreach ($departments_id as $id => &$node) {   
+      $departments_tree = [];
+      foreach ($departments_id as $id => &$node) {   
       //Если нет вложений
-      if (!$node['department_parent_id']){
-        $departments_tree[$id] = &$node;
-      } else { 
+        if (!$node['department_parent_id']){
+          $departments_tree[$id] = &$node;
+        } else { 
       //Если есть потомки то перебераем массив
-        $departments_id[$node['department_parent_id']]  ['children'][$id] = &$node;
-      }
-    };
-    foreach ($departments_tree as $department) {
-      $count = 0;
-      if (isset($department['children'])) {
-        $count = count($department['children']) + $count;
+          $departments_id[$node['department_parent_id']]  ['children'][$id] = &$node;
+        }
       };
-      if (isset($department['staff'])) {
-        $count = count($department['staff']) + $count;
-      };
-      $departments_tree[$department['id']]['count'] = $count;
+      foreach ($departments_tree as $department) {
+        $count = 0;
+        if (isset($department['children'])) {
+          $count = count($department['children']) + $count;
+        };
+        if (isset($department['staff'])) {
+          $count = count($department['staff']) + $count;
+        };
+        $departments_tree[$department['id']]['count'] = $count;
       // dd($department);
-    };
+      };
 
     // Инфо о странице
-    $page_info = pageInfo($this->entity_name);
+      $page_info = pageInfo($this->entity_name);
 
     // dd($departments_tree);
-    return view('departments.index', compact('departments_tree', 'positions', 'page_info', 'pages', 'departments', 'filter'));
-  }
+      return view('departments.index', compact('departments_tree', 'positions', 'page_info', 'pages', 'departments', 'filter'));
+    }
 
   // После записи переходим на созданный пункт меню 
-  public function get_content(Request $request)
-  {
+    public function get_content(Request $request)
+    {
     // Подключение политики
-    $this->authorize('index', Department::class);
+      $this->authorize('index', Department::class);
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+      $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
     // -----------------------------------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -----------------------------------------------------------------------------------------------------------------------
-    $departments = Department::with(['staff' => function ($query) {
-      $query->orderBy('sort', 'asc');
-    }, 'staff.position', 'staff.user'])
-    ->moderatorLimit($answer)
-    ->companiesLimit($answer)
+      $departments = Department::with(['staff' => function ($query) {
+        $query->orderBy('sort', 'asc');
+      }, 'staff.position', 'staff.user'])
+      ->moderatorLimit($answer)
+      ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
@@ -374,7 +374,7 @@ class DepartmentController extends Controller
     $department = new Department;
     $department->company_id = $company_id;
     $department->city_id = $request->city_id;
-   
+    
     // Имя филиала / отдела
     $first = mb_substr($request->department_name,0,1, 'UTF-8'); //первая буква
     $last = mb_substr($request->department_name,1); //все кроме первой буквы
@@ -547,8 +547,7 @@ class DepartmentController extends Controller
 
   public function update(DepartmentRequest $request, $id)
   {
-    // Получаем данные для авторизованного пользователя
-    $user = $request->user();
+   
     
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__))
@@ -559,10 +558,29 @@ class DepartmentController extends Controller
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $department);
 
-    if ($user->god == 1) {
-      $user_id = 1;
-    } else {
-      $user_id = $user->id;
+    // Получаем данные для авторизованного пользователя
+    $user = $request->user();
+
+    // Смотрим компанию пользователя
+    $company_id = $user->company_id;
+    if($company_id == null) {
+      abort(403, 'Необходимо авторизоваться под компанией');
+    }
+
+    // Скрываем бога
+    $user_id = hideGod($user);
+    
+    // Пишем локацию
+    $location = $company->location;
+    if($location->city_id != $request->city_id) {
+      $location->city_id = $request->city_id;
+      $location->editor_id = $user_id;
+      $location->save();
+    }
+    if($location->address = $request->address) {
+      $location->address = $request->address;
+      $location->editor_id = $user_id;
+      $location->save();
     }
 
     $department->city_id = $request->city_id;
@@ -588,9 +606,9 @@ class DepartmentController extends Controller
     if ($department) {
       // Переадресовываем на index
       return redirect()->action('DepartmentController@get_content', ['id' => $department->id, 'item' => 'department']);
-      } else {
-        abort(403, 'Ошибка при обновлении отдела!');
-      };
+    } else {
+      abort(403, 'Ошибка при обновлении отдела!');
+    };
   }
 
   public function destroy(Request $request, $id)
@@ -610,7 +628,7 @@ class DepartmentController extends Controller
 
     // Получаем авторизованного пользователя
     $user = $request->user();
-   
+    
 
 
     if (isset($department_parent) || (count($department->staff) > 0)) {

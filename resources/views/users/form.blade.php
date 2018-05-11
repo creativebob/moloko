@@ -100,9 +100,9 @@
                 @php
               $city_name = null;
               $city_id = null;
-              if(isset($city->location->city->name)) {
-              $city_name = $city->location->city->name;
-              $city_id = $city->location->city->id;
+              if(isset($user->location->city->name)) {
+              $city_name = $user->location->city->name;
+              $city_id = $user->location->city->id;
               }
               @endphp
               @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])

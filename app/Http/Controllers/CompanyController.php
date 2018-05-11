@@ -422,6 +422,9 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
     $company = Company::with('location')->moderatorLimit($answer)->findOrFail($id);
 
+    // Скрываем бога
+    $user_id = hideGod($user);
+    
     // Пишем локацию
     $location = $company->location;
     if($location->city_id != $request->city_id) {
