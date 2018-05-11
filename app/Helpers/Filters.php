@@ -200,16 +200,13 @@
         $model_entity_name = 'name';
 
         $filter_entity = $filter_query->unique('location.city_id');
-        // dd($filter_entity);
 
         if(count($filter_entity) > 0){
 
             foreach($filter_entity as $entity){
-                if(isset($entity->location->city_id)){
+                if($entity->location != null){
                     $list_filter['item_list'][$entity->location->city_id] = $entity->location->city->name;                    
-                } else {
-                    // $list_filter['item_list'][null] = 'Город не определен';
-                };
+                } else {$list_filter['item_list'][null] = 'Город не указан';};
             }
         };
 

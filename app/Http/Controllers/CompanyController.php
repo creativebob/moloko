@@ -53,32 +53,30 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-    $companies = Company::with('author', 'director', 'location.city', 'sector')
-    ->moderatorLimit($answer)
-        // ->cityFilter($request)
-    ->sectorFilter($request)
-    ->booklistFilter($request)
-    ->orderBy('moderation', 'desc')
-    ->paginate(30);
 
-        // dd($companies);
+        $companies = Company::with('author', 'director', 'location.city', 'sector')
+        ->moderatorLimit($answer)
+        ->cityFilter($request)
+        ->sectorFilter($request)
+        ->booklistFilter($request)
+        ->orderBy('moderation', 'desc')
+        ->paginate(30);
 
-    $filter_query = Company::with('location.city', 'sector')->moderatorLimit($answer)->get();
-        // $filter_query = $filter_cities->location;
+        $filter_query = Company::with('location.city', 'sector')->moderatorLimit($answer)->get();
 
-        // dd($filter_cities);
-    $filter['status'] = null;
 
-    $filter = addCityFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
-    $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
+        $filter['status'] = null;
 
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-    $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-        // dd($filter);
-        // Инфо о странице
-    $page_info = pageInfo($this->entity_name);
+        $filter = addCityFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
 
-        // dd($filter);
+            // Добавляем данные по спискам (Требуется на каждом контроллере)
+        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+            // dd($filter);
+            // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+            // dd($filter);
 
     return view('companies.index', compact('companies', 'page_info', 'filter', 'user'));
   }

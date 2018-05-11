@@ -21,7 +21,7 @@ class CreateLocationsTable extends Migration
 
             $table->string('address')->nullable()->index()->comment('Адрес');
 
-            $table->integer('width')->nullable()->comment('Ширина');
+            $table->integer('latitude')->nullable()->comment('Широта');
             $table->integer('longitude')->nullable()->comment('Долгота');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
