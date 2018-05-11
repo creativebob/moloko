@@ -21,7 +21,6 @@ use App\Scopes\Filters\BooklistFilter;
 class Photo extends Model
 {
     use Notifiable;
-    use SoftDeletes;
 
     // Подключаем Scopes для главного запроса
     use CompaniesLimitTraitScopes;
@@ -31,8 +30,6 @@ class Photo extends Model
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
     use BooklistFilter;
-
-    protected $dates = ['deleted_at'];
 
     protected $fillable = [
 

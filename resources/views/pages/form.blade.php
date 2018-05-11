@@ -25,8 +25,10 @@
     </label>
     <label>Алиас страницы
       @include('includes.inputs.text-en', ['name'=>'alias', 'value'=>$page->alias, 'required'=>'required'])
+      <div class="sprite-input-right find-status" id="name-check"></div>
+      <div class="item-error">Такая страница уже существует!</div>
     </label>
-    
+    {{ Form::hidden('check', 0, ['id'=>'check']) }}
     {{ Form::hidden('site_id', $site->id) }}
   </div>
   <div class="small-12 medium-5 large-7 cell">

@@ -34,9 +34,9 @@
 			@endcan
 		</div>
 		<div>
-			{{-- @if($menu['edit'] == 1) --}}
+			@if($menu['edit'] == 1)
 			<div class="icon-list-edit sprite" data-open="medium-edit"></div>
-			{{-- @endif --}}
+			 @endif
 		</div>
 		<div class="del">
 			@if(($menu['system_item'] != 1) && ($menu['delete'] == 1))

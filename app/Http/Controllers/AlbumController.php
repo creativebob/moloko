@@ -192,12 +192,9 @@ class AlbumController extends Controller
       // Получаем данные для авторизованного пользователя
       $user = $request->user();
       $company_id = $user->company_id;
-      if ($user->god == 1) {
-        // Если бог, то ставим автором робота
-        $user_id = 1;
-      } else {
-        $user_id = $user->id;
-      }
+
+      // Скрываем бога
+      $user_id = hideGod($user);
 
       // Наполняем сущность данными
       $album = new Album;
@@ -206,7 +203,7 @@ class AlbumController extends Controller
       $album->albums_category_id = $request->albums_category_id;
       $album->access = $request->access;
       $album->description = $request->description;
- 
+
      // Если нет прав на создание полноценной записи - запись отправляем на модерацию
       if($answer['automoderate'] == false){
         $album->moderation = 1;
@@ -298,7 +295,9 @@ class AlbumController extends Controller
 
     // ГЛАВНЫЙ ЗАПРОС:
       $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-      $album = Album::moderatorLimit($answer)->whereAlias($alias)->first();
+      $album = Album::with('photos')->moderatorLimit($answer)->whereAlias($alias)->first();
+
+      // dd($album);
 
     // Подключение политики
       $this->authorize(getmethod(__FUNCTION__), $album);
@@ -308,67 +307,67 @@ class AlbumController extends Controller
 
         // Категории
       $albums_categories = AlbumsCategory::moderatorLimit($answer_category)
-        ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
-        ->keyBy('id')
-        ->toArray();
+      ->orderBy('sort', 'asc')
+      ->get(['id','name','category_status','parent_id'])
+      ->keyBy('id')
+      ->toArray();
 
         // Формируем дерево вложенности
-        $albums_categories_cat = [];
-        foreach ($albums_categories as $id => &$node) { 
+      $albums_categories_cat = [];
+      foreach ($albums_categories as $id => &$node) { 
 
           // Если нет вложений
-          if (!$node['parent_id']) {
-            $albums_categories_cat[$id] = &$node;
-          } else { 
+        if (!$node['parent_id']) {
+          $albums_categories_cat[$id] = &$node;
+        } else { 
 
           // Если есть потомки то перебераем массив
-            $albums_categories[$node['parent_id']]['children'][$id] = &$node;
-          };
-
+          $albums_categories[$node['parent_id']]['children'][$id] = &$node;
         };
+
+      };
 
         // dd($albums_categories_cat);
 
         // Функция отрисовки option'ов
-        function tplMenu($albums_category, $padding, $id) {
+      function tplMenu($albums_category, $padding, $id) {
 
-          $selected = '';
-          if ($albums_category['id'] == $id) {
+        $selected = '';
+        if ($albums_category['id'] == $id) {
             // dd($id);
-            $selected = ' selected';
-          }
+          $selected = ' selected';
+        }
 
-          if ($albums_category['category_status'] == 1) {
-            $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['name'].'</option>';
-          } else {
-            $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['name'].'</option>';
-          }
+        if ($albums_category['category_status'] == 1) {
+          $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['name'].'</option>';
+        } else {
+          $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['name'].'</option>';
+        }
 
             // Добавляем пробелы вложенному элементу
-          if (isset($albums_category['children'])) {
-            $i = 1;
-            for($j = 0; $j < $i; $j++){
-              $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-            }     
-            $i++;
+        if (isset($albums_category['children'])) {
+          $i = 1;
+          for($j = 0; $j < $i; $j++){
+            $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+          }     
+          $i++;
 
-            $menu .= showCat($albums_category['children'], $padding, $id);
-          }
-          return $menu;
+          $menu .= showCat($albums_category['children'], $padding, $id);
         }
+        return $menu;
+      }
         // Рекурсивно считываем наш шаблон
-        function showCat($data, $padding, $id){
-          $string = '';
-          $padding = $padding;
-          foreach($data as $item){
-            $string .= tplMenu($item, $padding, $id);
-          }
-          return $string;
+      function showCat($data, $padding, $id){
+        $string = '';
+        $padding = $padding;
+        foreach($data as $item){
+          $string .= tplMenu($item, $padding, $id);
         }
+        return $string;
+      }
 
         // Получаем HTML разметку
-        $albums_categories_list = showCat($albums_categories_cat, '', $album->albums_category_id);
+      $albums_categories_list = showCat($albums_categories_cat, '', $album->albums_category_id);
 
     // Инфо о странице
       $page_info = pageInfo($this->entity_name);
@@ -386,24 +385,21 @@ class AlbumController extends Controller
     public function update(Request $request, $id)
     {
       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+      $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-    // ГЛАВНЫЙ ЗАПРОС:
-    $album = Album::moderatorLimit($answer)->findOrFail($id);
+      // ГЛАВНЫЙ ЗАПРОС:
+      $album = Album::moderatorLimit($answer)->findOrFail($id);
 
-    $old_alias = $album->alias;
+      $old_alias = $album->alias;
 
-    // Подключение политики
-    $this->authorize('update', $album);
+      // Подключение политики
+      $this->authorize('update', $album);
 
-    // Получаем данные для авторизованного пользователя
+      // Получаем данные для авторизованного пользователя
       $user = $request->user();
-      if ($user->god == 1) {
-        // Если бог, то ставим автором робота
-        $user_id = 1;
-      } else {
-        $user_id = $user->id;
-      }
+
+      // Скрываем бога
+      $user_id = hideGod($user);
 
       $album->name = $request->name;
       $album->alias = $request->alias;
@@ -432,73 +428,86 @@ class AlbumController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $id)
-  {
+    {
+      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+      $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+      // ГЛАВНЫЙ ЗАПРОС:
+      $album = Album::with('photos')->moderatorLimit($answer)->findOrFail($id);
 
-    // ГЛАВНЫЙ ЗАПРОС:
-    $album = Album::moderatorLimit($answer)->findOrFail($id);
+      // Подключение политики
+      $this->authorize(getmethod(__FUNCTION__), $album);
 
-    // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), $album);
+      
 
-    $user = $request->user();
-
-
-    if ($album) {
-      $album->editor_id = $user->id;
-      $album->save();
-      // Удаляем сайт с обновлением
-      $album = Album::destroy($id);
       if ($album) {
-        $relations = AlbumMedia::whereAlbum_id($id)->pluck('media_id')->toArray();
-        $photos = Photo::whereIn('id', $relations)->delete();
-        $media = AlbumMedia::whereAlbum_id($id)->delete();
+        $user = $request->user();
 
-        return Redirect('albums');
+        // Скрываем бога
+        $user_id = hideGod($user);
+        $album->editor_id = $user_id;
+        $album->save();
+
+        // Удаляем папку альбома
+        $directory = $album->company_id.'/media/albums/'.$album->id;
+        $del_dir = Storage::disk('public')->deleteDirectory($directory);
+
+        // Удаляем фотки
+        $album->photos()->delete();
+
+        // Удаляем связи
+        $photos_album = $album->photos()->detach();
+        if ($photos_album == false) {
+          abort(403, 'Ошибка удаления связей с изображениями');
+        }
+        
+        // Удаляем сайт с обновлением
+        $album = Album::destroy($id);
+        if ($album) {
+
+          return Redirect('albums');
+        } else {
+          abort(403, 'Ошибка при удалении сайта');
+        }
       } else {
-        abort(403, 'Ошибка при удалении сайта');
-      };
-    } else {
-      abort(403, 'Сайт не найден');
+        abort(403, 'Сайт не найден');
+      }
     }
-  }
 
     // Список албомов
-  public function albums_list(Request $request)
-  {
+    public function albums_list(Request $request)
+    {
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+      $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
     // Главный запрос
-    $albums = Album::moderatorLimit($answer)
-    ->where('albums_category_id', $request->id)
-    ->get();
+      $albums = Album::moderatorLimit($answer)
+      ->where('albums_category_id', $request->id)
+      ->get();
 
-   $albums_list = '';
-   foreach ($albums as $album) {
-      $albums_list = $albums_list . '<option value="'.$album->id.'">'.$album->name.'</option>';
-   }
-   
+      $albums_list = '';
+      foreach ($albums as $album) {
+        $albums_list = $albums_list . '<option value="'.$album->id.'">'.$album->name.'</option>';
+      }
+
     // Отдаем ajax
-    echo $albums_list;
-  }
+      echo $albums_list;
+    }
 
   // Список получаем альбом
-  public function get_album(Request $request)
-  {
+    public function get_album(Request $request)
+    {
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+      $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
     // Главный запрос
-    $album = Album::moderatorLimit($answer)->findOrFail($request->album_id);
+      $album = Album::moderatorLimit($answer)->findOrFail($request->album_id);
 
      // Отдаем Ajax
-    return view('news.albums', ['album' => $album]);
-  }
+      return view('news.albums', ['album' => $album]);
+    }
 
-  // Сортировка
+    // Сортировка
     public function albums_sort(Request $request)
     {
       $result = '';
@@ -512,5 +521,4 @@ class AlbumController extends Controller
         $i++;
       }
     }
-
-}
+  }

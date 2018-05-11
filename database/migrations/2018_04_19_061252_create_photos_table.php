@@ -43,7 +43,6 @@ class CreatePhotosTable extends Migration
 
             $table->timestamps();
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
-            $table->softDeletes();
         });
     }
 

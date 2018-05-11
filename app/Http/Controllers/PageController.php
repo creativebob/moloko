@@ -114,12 +114,8 @@ class PageController extends Controller
       abort(403, 'Необходимо авторизоваться под компанией');
     }
 
-    if ($user->god == 1) {
-      // Если бог, то ставим автором робота
-      $user_id = 1;
-    } else {
-      $user_id = $user->id;
-    }
+    // Скрываем бога
+    $user_id = hideGod($user);
 
     $page = new Page;
 
@@ -181,7 +177,7 @@ class PageController extends Controller
     // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('sites');
 
-    return view('pages.edit', compact('page', 'parent_page_info', 'page_info', 'site'));
+    return view('pages.edit', compact('page', 'parent_page_info', 'page_info', 'site', 'alias'));
   }
 
 
@@ -196,12 +192,8 @@ class PageController extends Controller
       abort(403, 'Необходимо авторизоваться под компанией');
     }
 
-    if ($user->god == 1) {
-      // Если бог, то ставим автором робота
-      $user_id = 1;
-    } else {
-      $user_id = $user->id;
-    }
+    // Скрываем бога
+    $user_id = hideGod($user);
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -251,8 +243,10 @@ class PageController extends Controller
 
     $site_id = $page->site_id;
     $user = $request->user();
+    // Скрываем бога
+    $user_id = hideGod($user);
     if ($page) {
-      $page->editor_id = $user->id;
+      $page->editor_id = $user_id;
       $page->save();
       // Удаляем страницу с обновлением
       $page = Page::destroy($id);
@@ -265,6 +259,33 @@ class PageController extends Controller
       abort(403, 'Страница не найдена');
     }
   }
+
+  // Проверка наличия в базе
+  public function page_check (Request $request, $alias)
+  {
+    // Проверка навигации по сайту в нашей базе данных
+    $page_alias = $request->alias;
+    $site = Site::withCount(['pages' => function($query) use ($page_alias) {
+      $query->whereAlias($page_alias);
+    }])->whereAlias($alias)->first();
+
+    // Если такая навигация есть
+    if ($site->pages_count > 0) {
+      $result = [
+        'error_status' => 1,
+      ];
+    // Если нет
+    } else {
+      $result = [
+        'error_status' => 0,
+      ];
+    }
+    return json_encode($result, JSON_UNESCAPED_UNICODE);
+  }
+
+
+
+  // -------------------------------------------- API -----------------------------------------------
 
   // Получаем сайт по api
   public function api(Request $request)

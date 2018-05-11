@@ -161,12 +161,8 @@ class MenuController extends Controller
       abort(403, 'Необходимо авторизоваться под компанией');
     }
 
-    if ($user->god == 1) {
-      // Если бог, то ставим автором робота
-      $user_id = 1;
-    } else {
-      $user_id = $user->id;
-    }
+    // Скрываем бога
+    $user_id = hideGod($user);
 
     // Наполняем сущность данными
     $menu = new Menu;
@@ -363,12 +359,8 @@ class MenuController extends Controller
       abort(403, 'Необходимо авторизоваться под компанией');
     }
 
-    if ($user->god == 1) {
-      // Если бог, то ставим автором робота
-      $user_id = 1;
-    } else {
-      $user_id = $user->id;
-    }
+    // Скрываем бога
+    $user_id = hideGod($user);
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -443,15 +435,22 @@ class MenuController extends Controller
       $parent_id = 0;
     }
 
+    $navigation_id = $menu->navigation_id;
+
     if ($menu) {
       $user = $request->user();
-      $menu->editor_id = $user->id;
+      // Скрываем бога
+      $user_id = hideGod($user);
+      $menu->editor_id = $user_id;
       $menu->save();
       $menu = Menu::destroy($id);
 
+
+
      // Удаляем с обновлением
       if ($menu) {
-        return Redirect('/sites/'.$alias.'/current_navigation/'.$navigation_id.'/'.$parent_id);
+        // Переадресовываем на index
+        return redirect()->action('NavigationController@get_content', ['alias' => $alias, 'id' => $navigation_id, 'item' => 'navigation']);
       } else {
         abort(403, 'Ошибка при удалении меню');
       };
