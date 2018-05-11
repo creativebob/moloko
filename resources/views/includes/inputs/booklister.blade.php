@@ -171,6 +171,8 @@
   		var new_booklist_name = document.getElementById('new_booklist').value;
   		var entity_alias = $('#content').data('entity-alias');
 
+  		alert(new_booklist_name + '  ' + entity_alias);
+
 		  $.ajax({
 
 		    headers: {

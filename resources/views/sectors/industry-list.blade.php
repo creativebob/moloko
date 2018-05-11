@@ -6,7 +6,7 @@
   $drop = 1;
 @endcan --}}
 
-<ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250">
+<ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="sectors">
 @foreach ($sectors_tree as $sector)
   @if($sector['industry_status'] == 1)
     {{-- Если индустрия --}}
@@ -43,7 +43,14 @@
         @if ($drop == 1)
         <div class="sprite icon-drop"></div>
         @endif
-        <input type="checkbox" name="" id="check-{{ $sector['id'] }}">
+        <input type="checkbox" class="table-check" name="user_id" id="check-{{ $sector['id'] }}"
+          {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+          @if(!empty($filter['booklist']['booklists']['default']))
+            {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+            @if (in_array($sector['id'], $filter['booklist']['booklists']['default'])) checked 
+          @endif
+        @endif
+        >
         <label class="label-check white" for="check-{{ $sector['id'] }}"></label> 
       </div>
       <ul class="menu vertical medium-list" data-accordion-menu data-multi-open="false">

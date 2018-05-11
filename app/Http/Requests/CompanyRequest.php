@@ -47,7 +47,7 @@ class CompanyRequest extends FormRequest
 
             'mon_begin' => 
                 array(
-                    'required',
+                    'required_with:mon_end',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
@@ -55,7 +55,7 @@ class CompanyRequest extends FormRequest
 
             'mon_end' => 
                 array(
-                    'required',
+                    'required_with:mon_begin',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
@@ -63,7 +63,7 @@ class CompanyRequest extends FormRequest
               
             'tue_begin' => 
                 array(
-                    'required',
+                    'required_with:tue_end',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
@@ -71,7 +71,7 @@ class CompanyRequest extends FormRequest
 
             'tue_end' => 
                 array(
-                    'required',
+                    'required_with:tue_begin',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
@@ -79,7 +79,7 @@ class CompanyRequest extends FormRequest
 
             'wed_begin' => 
                 array(
-                    'required',
+                    'required_with:wed_end',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
@@ -87,14 +87,14 @@ class CompanyRequest extends FormRequest
 
             'wed_end' => 
                 array(
-                    'required',
+                    'required_with:wed_begin',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
                 ), 
             'thu_begin' => 
                 array(
-                    'required',
+                    'required_with:thu_end',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
@@ -102,7 +102,7 @@ class CompanyRequest extends FormRequest
 
             'thu_end' => 
                 array(
-                    'required',
+                    'required_with:thu_begin',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
@@ -110,7 +110,7 @@ class CompanyRequest extends FormRequest
               
             'fri_begin' => 
                 array(
-                    'required',
+                    'required_with:fri_end',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
@@ -118,7 +118,7 @@ class CompanyRequest extends FormRequest
 
             'fri_end' => 
                 array(
-                    'required',
+                    'required_with:fri_begin',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
@@ -126,7 +126,7 @@ class CompanyRequest extends FormRequest
 
             'sat_begin' => 
                 array(
-                    'required',
+                    'required_with:sat_end',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
@@ -134,7 +134,7 @@ class CompanyRequest extends FormRequest
 
             'sat_end' => 
                 array(
-                    'required',
+                    'required_with:sat_begin',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
@@ -142,7 +142,7 @@ class CompanyRequest extends FormRequest
 
             'sun_begin' => 
                 array(
-                    'required',
+                    'required_with:sun_end',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
@@ -150,7 +150,7 @@ class CompanyRequest extends FormRequest
 
             'sun_end' => 
                 array(
-                    'required',
+                    'required_with:sun_begin',
                     'max:5',
                     'nullable',
                     'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'

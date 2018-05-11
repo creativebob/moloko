@@ -13,6 +13,9 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
+// Фильтры
+use App\Scopes\Filters\BooklistFilter;
+
 class Sector extends Model
 {
   use SoftDeletes;
@@ -23,6 +26,8 @@ class Sector extends Model
   use FilialsTraitScopes;
   use TemplateTraitScopes;
   use ModeratorLimitTraitScopes;
+  use BooklistFilter;
+  
   /**
    * Атрибуты, которые должны быть преобразованы в даты.
    *

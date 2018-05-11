@@ -40,7 +40,14 @@
     @if ($drop == 1)
     <div class="sprite icon-drop"></div>
     @endif
-    <input type="checkbox" name="" id="check-{{ $sector['id'] }}">
+    <input type="checkbox" class="table-check" name="user_id" id="check-{{ $sector['id'] }}"
+          {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+          @if(!empty($filter['booklist']['booklists']['default']))
+            {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+            @if (in_array($sector['id'], $filter['booklist']['booklists']['default'])) checked 
+          @endif
+        @endif
+    >
     <label class="label-check" for="check-{{ $sector['id'] }}"></label> 
   </div>
   <ul class="menu vertical medium-list nested" data-accordion-menu data-multi-open="false">
