@@ -40,13 +40,15 @@
         <tr class="item @if($user->company_id == $company->id)active @endif  @if($company->moderation == 1)no-moderation @endif" id="companies-{{ $company->id }}" data-name="{{ $company->company_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
-            <input type="checkbox" class="table-check" name="" id="check-{{ $company->id }}"
-            @if(!empty($filter['booklist']['booklists']['default']))
-            @if (in_array($user->id, $filter['booklist']['booklists']['default'])) checked 
+            <input type="checkbox" class="table-check" name="company_id" id="check-{{ $company->id }}"
+
+              {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+              @if(!empty($filter['booklist']['booklists']['default']))
+                {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+                @if (in_array($company->id, $filter['booklist']['booklists']['default'])) checked 
+              @endif
             @endif
-            @endif 
-            >
-            <label class="label-check" for="check-{{ $company->id }}"></label>
+            ><label class="label-check" for="check-{{ $company->id }}"></label>
           </td>
           <td class="td-company-name">
             @php
@@ -99,18 +101,23 @@
 @endsection
 
 @section('modals')
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
+  {{-- Модалка удаления с refresh --}}
+  @include('includes.modals.modal-delete')
 
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete-ajax')
+  {{-- Модалка удаления с refresh --}}
+  @include('includes.modals.modal-delete-ajax')
 
 @endsection
 
 @section('scripts')
-{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.table-scripts')
+  {{-- Скрипт сортировки и перетаскивания для таблицы --}}
+  @include('includes.scripts.table-scripts')
 
-{{-- Скрипт серверной сортировки --}}
-@include('includes.scripts.serversort-script')
+  {{-- Скрипт чекбоксов --}}
+  @include('includes.scripts.checkbox-control')
+
+  {{-- Скрипт модалки удаления --}}
+  @include('includes.scripts.modal-delete-script')
+  @include('includes.scripts.delete-ajax-script')
+
 @endsection

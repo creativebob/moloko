@@ -45,14 +45,16 @@
     }
 
 
-    function addFilter($filter, $filter_query, $request, $title, $name, $column, $entity_name = 'none'){
+    function addBooklist($filter, $filter_query, $request, $entity_name = 'none'){
+
+        $title = 'Мои списки:';
+        $name = 'booklist';
+        $column = 'booklist_id';
 
         $list_filter =[];
         $filter_name = $name;
         $model_entity_name = $name . '_name';
 
-        // Только для Booklist
-        if($name == 'booklist'){
 
             $filter_entity = $request->user()->booklists_author->where('entity_alias', $entity_name)->values();
 
@@ -120,19 +122,52 @@
             }
 
 
+        $filter[$filter_name]['collection'] = $filter_entity;
+
+        if($request->$column == null){
+
+            $filter[$filter_name]['mass_id'] = null;
+            $filter[$filter_name]['count_mass'] = 0;
+            
         } else {
 
-            $filter_entity = $filter_query->unique($column); 
+            $filter[$filter_name]['mass_id'] = $request->$column; // Получаем список ID
+            if(is_array($request->$column)){
+                $filter[$filter_name]['count_mass'] = count($request->$column);
+                $filter['status'] = 'active';
 
-            if(count($filter_entity)>0){
-
-                foreach($filter_entity as $entity){
-                    $list_filter['item_list'][$entity->$name->id] =  $entity->$name->$model_entity_name;
-                }
+            } else {
+                $filter[$filter_name]['count_mass'] = 0;
             };
-
-            $filter[$filter_name]['mode'] = 'id'; // Назавние фильтра
+            
         };
+
+        $filter[$filter_name]['list_select'] = $list_filter; 
+        $filter[$filter_name]['title'] = $title; // Назавние фильтра
+
+        // dd($filter);
+        return $filter;
+    }
+
+
+    function addFilter($filter, $filter_query, $request, $title, $name, $column, $entity_name = 'none'){
+
+        $list_filter =[];
+        $filter_name = $name;
+        $model_entity_name = $name . '_name';
+
+
+        $filter_entity = $filter_query->unique($column); 
+
+        if(count($filter_entity)>0){
+
+            foreach($filter_entity as $entity){
+                $list_filter['item_list'][$entity->$name->id] =  $entity->$name->$model_entity_name;
+            }
+        };
+
+        $filter[$filter_name]['mode'] = 'id'; // Назавние фильтра
+
 
         $filter[$filter_name]['collection'] = $filter_entity;
 
@@ -160,6 +195,10 @@
         // dd($filter);
         return $filter;
     }
+
+
+
+
 
 
     // Пилим checkboxer

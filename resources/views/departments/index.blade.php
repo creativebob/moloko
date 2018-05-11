@@ -346,4 +346,8 @@
     @endif
   });
 </script>
+
+  {{-- Скрипт чекбоксов --}}
+  @include('includes.scripts.checkbox-control')
+
 @endsection

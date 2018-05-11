@@ -52,7 +52,8 @@
               @if (in_array($user->id, $filter['booklist']['booklists']['default'])) checked 
               @endif
             @endif 
-            ><label class="label-check" for="check-{{ $user->id }}"></label></td>
+            ><label class="label-check" for="check-{{ $user->id }}"></label>
+          </td>
           <td class="td-second-name">
             @php
               $edit = 0;
@@ -125,8 +126,11 @@
 @endsection
 
 @section('scripts')
-  {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+  {{-- Скрипт сортировки и перетаскивания для таблицы --}}
   @include('includes.scripts.table-scripts')
+
+  {{-- Скрипт чекбоксов --}}
+  @include('includes.scripts.checkbox-control')
 
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-delete-script')

@@ -1,6 +1,4 @@
-{{-- Буклистер
-
---}}
+{{-- Буклистер --}}
 
 @php
 	$checkboxer_mass = $value;
@@ -110,9 +108,9 @@
   	$(".booklist .booklist_delete").click(function() {
 
   			// var booklist_id = $('.booklist_delete').data('booklist_id');
-  			// var entity_alias = $('#table-content').data('entity-alias');
+  			var entity_alias = $('#content').data('entity-alias');
 
-			var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
+			// var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
 			var booklist_id = $(this).closest('.item').attr('id').split('-')[1];
 
   			$.ajax({

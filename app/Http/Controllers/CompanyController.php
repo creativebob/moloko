@@ -56,7 +56,6 @@ class CompanyController extends Controller
 
         $companies = Company::with('author', 'director', 'city')
         ->moderatorLimit($answer)
-        ->moderatorLimit($answer)
         ->cityFilter($request)
         ->sectorFilter($request)
         ->booklistFilter($request)
@@ -70,7 +69,7 @@ class CompanyController extends Controller
         $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addFilter($filter, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $this->entity_name);
+        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

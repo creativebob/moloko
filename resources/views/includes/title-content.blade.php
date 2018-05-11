@@ -45,26 +45,37 @@
 		</div>
 		{{-- Блок фильтров --}}
 		@if (isset($filter))
-		<div class="grid-x">
-			<div class="small-12 cell filters fieldset-filters" id="filters">
-				{{ Form::open(['url' => $page_info->alias, 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
-				{{-- Подключаем класс Checkboxer --}}
-				@include('includes.scripts.class.checkboxer')
-				@include($page_info->alias.'.filters')
-				<div class="small-12 cell text-left">
-					{{ Form::submit('Фильтрация', ['class'=>'button']) }}
-				</div>
-				<div class="small-12 cell text-right">
-					{{ Form::submit('Сбросить', ['url' => $page_info->alias, 'class'=>'button']) }}
-				</div>
-				{{ Form::close() }}
 
-				<div class="grid-x">
-					<a class="small-12 cell text-center filter-close">стрелка</a>
-				</div>
+			{{-- Подключаем класс Checkboxer --}}
+			@include('includes.scripts.class.checkboxer')
 
+			<div class="grid-x">
+				<div class="small-12 cell filters fieldset-filters" id="filters">
+					<div class="grid-padding-x">
+						<div class="small-12 cell text-right">
+							{{ link_to_route($page_info->alias .'.index', 'Сбросить', $value = Null, ['class' => 'small-link']) }}
+						</div>
+					</div>
+					<div class="grid-padding-x">
+						<div class="small-12 cell">
+						{{ Form::open(['url' => $page_info->alias, 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
+
+							@include($page_info->alias.'.filters')
+
+							<div class="small-12 cell text-center">
+								{{ Form::submit('Фильтрация', ['class'=>'button']) }}
+							</div>
+							{{ Form::close() }}
+						</div>
+					</div>
+					<div class="grid-x">
+						<a class="small-12 cell text-center filter-close">
+							<button type="button" class="icon-moveup sprite"></button>
+						</a>
+					</div>
+				</div>
 			</div>
-		</div>
+
 		@endif
 	</div>
 </div>

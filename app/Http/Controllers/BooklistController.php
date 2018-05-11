@@ -174,7 +174,7 @@ class BooklistController extends Controller
             // Подключение политики
             $this->authorize(getmethod(__FUNCTION__), $booklist);
 
-            // Удаляем пользователя с обновлением
+            // Удаляем с обновлением
             $booklist = Booklist::moderatorLimit($answer)->where('id', $id)->delete();
 
             if($booklist){
@@ -184,7 +184,7 @@ class BooklistController extends Controller
 
                 $value = [];
                 $filter_query = null;
-                $value = addFilter($value, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $request->entity_alias);
+                $value = addBooklist($value, $filter_query, $request, $request->entity_alias);
                 $name = 'booklist';
 
                 return view('includes.inputs.booklister', ['name'=>$name, 'value'=>$value]);
@@ -290,7 +290,7 @@ class BooklistController extends Controller
 
         $value = []; 
         $filter_query = null;
-        $value = addFilter($value, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $request->entity_alias);
+        $value = addBooklist($value, $filter_query, $request, $request->entity_alias);
         $name = 'booklist';
 
         return view('includes.inputs.booklister', ['name'=>$name, 'value'=>$value]);
@@ -302,7 +302,7 @@ class BooklistController extends Controller
 
         $value = []; 
         $filter_query = null;
-        $value = addFilter($value, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $request->entity_alias);
+        $value = addBooklist($value, $filter_query, $request, $request->entity_alias);
         $name = 'booklist';
 
         return view('includes.inputs.booklister', ['name'=>$name, 'value'=>$value]);

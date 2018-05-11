@@ -54,6 +54,22 @@ class DepartmentController extends Controller
     ->orderBy('sort', 'asc')
     ->get();
 
+
+      // Подключаем фильтры --------------------------------------------------------------------------------------------------------------------------
+      $filter_query = Department::moderatorLimit($answer)
+      ->companiesLimit($answer)
+      ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      ->authors($answer)
+      ->systemItem($answer) // Фильтр по системным записям
+      ->get();
+
+
+
+      $filter['status'] = null;
+
+      // Добавляем данные по спискам (Требуется на каждом контроллере)
+      $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+
     // Дополнительный запрос
     $answer_positions = operator_right('positions', false, 'index');
 
@@ -118,7 +134,7 @@ class DepartmentController extends Controller
     $page_info = pageInfo($this->entity_name);
 
     // dd($departments_tree);
-    return view('departments.index', compact('departments_tree', 'positions', 'page_info', 'pages', 'departments'));
+    return view('departments.index', compact('departments_tree', 'positions', 'page_info', 'pages', 'departments', 'filter'));
   }
 
   // После записи переходим на созданный пункт меню 

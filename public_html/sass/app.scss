@@ -710,6 +710,7 @@ input[type=checkbox], input[type=radio] {
   font-size: 0.8rem;
   cursor: pointer;
   background: #f5f5f5 !important;
+  margin-bottom: 1rem;
 
 }
 
@@ -801,6 +802,33 @@ input[type=checkbox], input[type=radio] {
   background-position: -6px -320px;
   opacity: 0.6;
   width: 20px;
+}
+
+// Закрытие фильтра
+.icon-moveup {
+  background-position: 0px -864px;
+} 
+
+.icon-moveup:hover {
+  cursor: pointer;
+} 
+
+.filter-close:hover .icon-moveup {
+  background-position: -32px -864px;
+}
+
+#filters {
+  box-shadow: 3px 3px rgba(38, 137, 255, 0.16);
+}
+
+.small-link {
+  font-size: 0.8rem;
+  border-bottom: 1px dashed #888;
+}
+
+.small-link:hover {
+  font-size: 0.8rem;
+  border-bottom: 1px solid transparent;
 }
 
 // Закрытие модалки

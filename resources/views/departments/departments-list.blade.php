@@ -28,7 +28,14 @@ $count = count($department['staff']) + $count;
     @if ($drop == 1)
     <div class="sprite icon-drop"></div>
     @endif
-    <input type="checkbox" name="" id="department-check-{{ $department['id'] }}">
+    <input type="checkbox" name="" class="table-check" id="department-check-{{ $department['id'] }}"
+        {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+        @if(!empty($filter['booklist']['booklists']['default']))
+          {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+          @if (in_array($department['id'], $filter['booklist']['booklists']['default'])) checked 
+        @endif
+      @endif
+    >
     <label class="label-check" for="department-check-{{ $department['id'] }}"></label> 
   </div>
   <div class="icon-list">

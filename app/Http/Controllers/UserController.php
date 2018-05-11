@@ -79,7 +79,7 @@ class UserController extends Controller
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addFilter($filter, $filter_query, $request, 'Мои списки:', 'booklist', 'booklist_id', $this->entity_name);
+        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
