@@ -45,7 +45,7 @@
     </label>
   </div>
   <div class="small-12 medium-7 cell text-center checkbox">
-    <img id="photo" src="{{ isset($photo->name) ? '/storage/'.$photo->company->id.'/media/albums/'.$album->id.'/original/'.$photo->name : 'lol' }}">
+    <img id="photo" src="{{ isset($photo->name) ? '/storage/'.$photo->company->id.'/media/albums/'.$album->id.'/img/original/'.$photo->name : 'lol' }}">
     {{ Form::checkbox('avatar')}}
   </div>
 

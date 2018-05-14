@@ -59,11 +59,11 @@ class ProductController extends Controller
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
-    $user = $request->user();
+    
 
     // dd($products);
 
-    return view('products.index', compact('products', 'page_info', 'product', 'user'));
+    return view('products.index', compact('products', 'page_info', 'product'));
   }
 
   public function create(Request $request)
@@ -170,6 +170,9 @@ class ProductController extends Controller
 
         // Инфо о странице
     $page_info = pageInfo($this->entity_name);
+
+
+   
 
     return view('products.create', compact('user', 'product', 'departments_list', 'roles_list', 'page_info', 'products_categories_list', 'countries_list', 'units_list'));
   }
@@ -434,9 +437,21 @@ class ProductController extends Controller
     }
 
 
+    // Добавление фоток
+    public function product_photos(Request $request)
+    {
+      // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
+
+    // dd($products);
+
+    return view('products.photos', compact('page_info'));
+      
+    }
+
 
     // -------------------------------------- Exel ------------------------------------------
-    public function productsDownload($type)
+    public function products_download($type)
     {
       $data = Product::get(['name', 'article', 'cost'])->toArray();
 
@@ -450,7 +465,7 @@ class ProductController extends Controller
       })->download($type);
     }
 
-    public function productsImport(Request $request)
+    public function products_import(Request $request)
     {
       if($request->hasFile('file')) {
 

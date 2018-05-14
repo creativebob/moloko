@@ -119,7 +119,7 @@ class UserController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_roles = operator_right('roles', false, 'index');
-        $roles_list = Role::whereCompany_id($user_auth->company_id)->moderatorLimit($answer_roles)->pluck('role_name', 'id');
+        $roles_list = Role::whereCompany_id($user_auth->company_id)->moderatorLimit($answer_roles)->pluck('name', 'id');
 
         $user = new User;
         $roles = new Role;
@@ -237,7 +237,7 @@ class UserController extends Controller
         if ($request->hasFile('photo')) {
           $photo = new Photo;
           $image = $request->file('photo');
-          $directory = $user_auth->company->id.'/media/albums/'.$user->login;
+          $directory = $user_auth->company->id.'/media/albums/'.$user->login.'/img/';
           $extension = $image->getClientOriginalExtension();
           $photo->extension = $extension;
           $image_name = 'avatar.'.$extension;
@@ -263,7 +263,7 @@ class UserController extends Controller
           if (!file_exists($save_path)) {
             mkdir($save_path, 666, true);
           }
-          $avater->save(storage_path('app/public/'.$directory.'/'.$image_name));
+          $avater->save(storage_path('app/public/'.$directory.$image_name));
 
           
 
@@ -334,7 +334,7 @@ class UserController extends Controller
         ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer_roles)
         ->systemItem($answer_roles) // Фильтр по системным записям 
-        ->pluck('role_name', 'id');
+        ->pluck('name', 'id');
 
         return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
       }
@@ -364,7 +364,7 @@ class UserController extends Controller
         ->authors($answer_roles)
         ->systemItem($answer_roles) // Фильтр по системным записям 
         ->template($answer_roles) // Выводим шаблоны в список
-        ->pluck('role_name', 'id');
+        ->pluck('name', 'id');
 
         // dd($departments_list);
         // Инфо о странице
@@ -456,7 +456,7 @@ class UserController extends Controller
         if ($request->hasFile('photo')) {
           $photo = new Photo;
           $image = $request->file('photo');
-          $directory = $user_auth->company->id.'/media/albums/'.$user->login;
+          $directory = $user_auth->company->id.'/media/albums/'.$user->login.'/img/';
           $extension = $image->getClientOriginalExtension();
           $photo->extension = $extension;
           $image_name = 'avatar.'.$extension;
@@ -482,7 +482,7 @@ class UserController extends Controller
           if (!file_exists($save_path)) {
             mkdir($save_path, 666, true);
           }
-          $avater->save(storage_path('app/public/'.$directory.'/'.$image_name));
+          $avater->save(storage_path('app/public/'.$directory.$image_name));
 
           // $user->photo = $photo->path;
           $user->photo_id = $photo->id;

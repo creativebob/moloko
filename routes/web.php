@@ -21,13 +21,6 @@ Route::get('/lol', function () {
   return view('demo');
 });
 
-// Route for view/blade file.
-Route::get('/importExport', 'MaatwebsiteController@importExport');
-// Route for export/download tabledata to .csv, .xls or .xlsx
-Route::get('/downloadExcel/{type}', 'MaatwebsiteController@downloadExcel');
-// Route for import excel data to database.
-Route::post('/importExcel', 'MaatwebsiteController@importExcel');
-
 Auth::routes();
 
 Route::any('/getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
@@ -81,13 +74,15 @@ Route::post('/photos_sort', 'PhotoController@photos_sort')->middleware('auth');
 
 
 // ------------------------------------- Продукция -------------------------------------------------
-Route::resource('products', 'ProductController')->middleware('auth');
-// Сортировка альбомов
+Route::resource('/products', 'ProductController')->middleware('auth');
+// Добавление фото для продукции
+Route::get('/products/{id}/photos', 'ProductController@product_photos')->middleware('auth');
+// Сортировка продукции
 Route::post('/products_sort', 'ProductController@products_sort')->middleware('auth');
 // Route for export/download tabledata to .xls or .xlsx
-Route::get('/productsDownload/{type}', 'ProductController@productsDownload')->middleware('auth');
+Route::get('/products_download/{type}', 'ProductController@products_download')->middleware('auth');
 // Route for import excel data to database.
-Route::post('/productsImport', 'ProductController@productsImport');
+Route::post('/products_import', 'ProductController@products_import');
 
 
 // ------------------------------------ Категории продукции --------------------------------------

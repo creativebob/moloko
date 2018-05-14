@@ -2,9 +2,7 @@
 
 @section('inhead')
 @include('includes.scripts.pickmeup-inhead')
-<script src="/js/plugins/dropzone/dist/dropzone.js"></script>
-<link rel="stylesheet" href="/js/plugins/dropzone/dist/dropzone.css">
-<!-- <script src="/js/plugins/clipboard/dist/clipboard.min.js"></script> -->
+@include('includes.scripts.dropzone-inhead')
 @endsection
 
 @section('title', 'Новая фотография')
@@ -15,7 +13,6 @@
 <div class="top-bar head-content">
 	<div class="top-bar-left">
 		<h2 class="header-content">добавление новой фотографии</h2>
-
 	</div>
 	<div class="top-bar-right">
 	</div>
@@ -36,12 +33,11 @@
 @include('includes.scripts.cities-list')
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.pickmeup-script')
-@include('includes.scripts.upload-file')
 <script>
 	var minImageWidth = 1200,
   minImageHeight = 795;
-	Dropzone.options.myDropzone = {
-		paramName: 'photo',
+  Dropzone.options.myDropzone = {
+    paramName: 'photo',
     maxFilesize: 8, // MB
     maxFiles: 20,
     acceptedFiles: ".jpeg,.jpg,.png,.gif",
