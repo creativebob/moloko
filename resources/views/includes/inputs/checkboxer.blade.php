@@ -52,7 +52,6 @@
 
 					@endphp
 
-
 						{{ Form::checkbox($name . '_id[]', $value_id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value_id]) }}
 						<label for="{{$name}}-{{ $value_id }}"><span>{{ $value_name }}</span></label>
 

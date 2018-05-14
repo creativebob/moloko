@@ -31,6 +31,7 @@
           <th class="td-company-address">Адрес</th>
           <th class="td-company-phone">Телефон</th>
           <th class="td-user_id">Руководитель</th>
+          <th class="td-delete">Статус</th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -75,6 +76,7 @@
           <td class="td-company-address">@if(!empty($company->location->address)){{ $company->location->address }}@endif </td>
           <td class="td-company-phone">{{ decorPhone($company->phone) }} </td>
           <td class="td-user_id">{{ $company->director->first_name or ' ... ' }} {{ $company->director->second_name or ' ... ' }} </td>
+          <td class="td-user_id">{{ $company->contragents->first()->vendor_status or ' ' }} {{ $company->contragents->first()->client_status or ' ' }} </td>
 
           <td class="td-delete">
             @if ($company->system_item != 1)
