@@ -119,9 +119,13 @@
     {{-- Основной контент --}}
     <div id="wrapper">
       <div class="grid-x breadcrumbs block-refresh">
-        <div class="small-12 cell"> 
+        <div class="small-12 medium-6 cell"> 
           {{-- Breadcrumbs --}}
           @yield('breadcrumbs')
+        </div>
+        <div class="small-12 medium-6 cell"> 
+          {{-- Breadcrumbs --}}
+          @yield('exel')
         </div>
       </div>
       {{-- Контент --}}

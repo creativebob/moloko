@@ -50,11 +50,11 @@ class GetAccessController extends Controller
             foreach($departments as $department){
 
                 // Пишем в сессию список отделов
-                $access['company_info']['departments'][$department->id] = $department->department_name;
+                $access['company_info']['departments'][$department->id] = $department->name;
 
                 // Пишем в сессию список филиалов
                 if($department->filial_status == 1){
-                    $access['company_info']['filials'][$department->id] = $department->department_name;
+                    $access['company_info']['filials'][$department->id] = $department->name;
                 };
             }
         };
@@ -118,7 +118,7 @@ class GetAccessController extends Controller
 
                 // Проверяем, устроен ли пользователь в компании
                 $user_department = $user->staff->first();
-                $user_redirect = $user->staff->first()->position->page->page_alias;
+                $user_redirect = $user->staff->first()->position->page->alias;
 
                 if($user_department != null){
                     $user_filial_id = $user_department->filial_id;
@@ -158,11 +158,11 @@ class GetAccessController extends Controller
                                 $all_rights[$right->alias_right]['right_id'] = $right->id;
 
                                 // Собираем из всех ролей отделы и формируем их список к текущему праву
-                                $all_rights[$right->alias_right]['departments'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->department_name;
+                                $all_rights[$right->alias_right]['departments'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->name;
 
                                 // Собираем из всех ролей филиалы и формируем их список к текущему праву
                                 if($departments->where('id', $role->pivot->department_id)->first()->filial_status == 1){
-                                $all_rights[$right->alias_right]['filials'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->department_name;};
+                                $all_rights[$right->alias_right]['filials'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->name;};
 
                                 // При обработке права на просмотр чужих записей добавляем список авторов к праву
                                 if($right->alias_right == 'authors-users-allow'){$all_rights[$right->alias_right]['authors'] = $list_authors;};
@@ -212,7 +212,7 @@ class GetAccessController extends Controller
                     // Статичное указание ID действия 'index' - 2
                     if($right->action_id == 2){
 
-                        if($user->can('index', 'App\\' . $right->actionentity->entity->entity_model)) {
+                        if($user->can('index', 'App\\' . $right->actionentity->entity->model)) {
 
                             $entities_list[] = $right->actionentity->entity->id;
 
@@ -236,7 +236,7 @@ class GetAccessController extends Controller
             if(isset($request->link)){$link = $request->link;};
 
 
-            if(isset($request->action_method)){$action_method = $request->action_method;};
+            if(isset($request->method)){$action_method = $request->method;};
             if(isset($request->action_array)){$action_array = $request->action_array;};
 
             // if((isset($action_method))&&(isset($action_method))){

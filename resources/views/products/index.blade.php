@@ -9,6 +9,16 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
+@section('exel')
+<a href="{{ URL::to('productsDownload/xls') }}"><button class="button">Скачать Excel xls</button></a>
+    <a href="{{ URL::to('productsDownload/xlsx') }}"><button class="button">Скачать Excel xlsx</button></a>
+    <form action="{{ URL::to('productsImport') }}" method="post" enctype="multipart/form-data">
+      {{ csrf_field() }}
+      <input type="file" name="file" />
+      <button class="button">Импортировать</button>
+    </form>
+@endsection
+
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Product::class, 'type' => 'table'])

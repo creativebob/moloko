@@ -5,14 +5,14 @@ $drop = 1;
 $drop = 1;
 @endcan --}}
 
-<ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250">
+
   @foreach ($departments_tree as $department)
   @if($department['filial_status'] == 1)
   {{-- Если филиал --}}
-  <li class="first-item item @if (isset($department['children']) || isset($department['staff'])) parent @endif" id="departments-{{ $department['id'] }}" data-name="{{ $department['department_name'] }}">
+  <li class="first-item item @if (isset($department['children']) || isset($department['staff'])) parent @endif" id="departments-{{ $department['id'] }}" data-name="{{ $department['name'] }}">
     <a class="first-link @if($drop == 0) link-small @endif">
       <div class="icon-open sprite"></div>
-      <span class="first-item-name">{{ $department['department_name'] }}</span>
+      <span class="first-item-name">{{ $department['name'] }}</span>
       <span class="number">{{ $department['count'] }}</span>
       @if ($department['moderation'])
       <span class="no-moderation">Не отмодерированная запись!</span>
@@ -72,7 +72,7 @@ $drop = 1;
   </li>
   @endif
   @endforeach
-</ul>
+
 
 {{-- Скрипт чекбоксов и перетаскивания для меню --}}
 @include('includes.scripts.menu-scripts')

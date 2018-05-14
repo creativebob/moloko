@@ -15,7 +15,7 @@ class CreateRightsTable extends Migration
     {
         Schema::create('rights', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('right_name')->index()->comment('Простое имя правила для вывода');
+            $table->string('name')->index()->comment('Простое имя правила для вывода');
 
             $table->string('object_entity')->index()->comment('ID сущности (Полиморфно)');
 

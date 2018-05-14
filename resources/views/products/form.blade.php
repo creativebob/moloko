@@ -42,7 +42,7 @@
           {{ Form::select('unit_id', $units_list, $product->unit_id)}}
         </label>
       </div>
-        <div class="small-12 medium-6 cell">
+      <div class="small-12 medium-6 cell">
         <label>Страна производитель
           {{ Form::select('country_id', $countries_list, $product->country_id)}}
         </label>
@@ -55,6 +55,7 @@
     </div>
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
+
   </div>
 
   {{-- Чекбокс модерации --}}

@@ -86,8 +86,8 @@ class EntityController extends Controller
         $user = Auth::user();  
 
         $entity = new entity;
-        $entity->entity_name = $request->entity_name;
-        $entity->entity_alias = $request->entity_alias;
+        $entity->name = $request->name;
+        $entity->alias = $request->alias;
  
         // Вносим общие данные
         $entity->author_id = $user->id;
@@ -155,8 +155,8 @@ class EntityController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $entity);
 
         // Внесение изменений:
-        $entity->entity_name = $request->entity_name;
-        $entity->entity_alias = $request->entity_alias;
+        $entity->name = $request->name;
+        $entity->alias = $request->alias;
 
         $entity->save();
         return redirect('entities');

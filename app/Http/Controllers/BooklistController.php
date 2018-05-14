@@ -104,7 +104,7 @@ class BooklistController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $booklist = Booklist::where('author_id', $user->id)
-        ->where('booklist_name', 'Default')
+        ->where('name', 'Default')
         ->where('entity_alias', $request->entity_alias)
         ->first();
 
@@ -115,7 +115,7 @@ class BooklistController extends Controller
         } else {
 
             $booklist = new Booklist;
-            $booklist->booklist_name = 'Default';
+            $booklist->name = 'Default';
             $booklist->author_id = $user->id;
             $booklist->entity_alias = $request->entity_alias;
             $booklist->save();
@@ -207,19 +207,19 @@ class BooklistController extends Controller
         if($request->new_booklist_name){
 
             $booklist = Booklist::where('author_id', $request->user()->id)
-            ->where('booklist_name', 'Default')
+            ->where('name', 'Default')
             ->where('entity_alias', $request->entity_alias)
             ->first();
 
             if($booklist){
 
-                $booklist->booklist_name = $request->new_booklist_name;
+                $booklist->name = $request->new_booklist_name;
                 $booklist->save();
 
                 $booklist_id = $booklist->id;
 
                 $booklist = new Booklist;
-                $booklist->booklist_name = 'Default';
+                $booklist->name = 'Default';
                 $booklist->author_id = $request->user()->id;
                 $booklist->entity_alias = $request->entity_alias;
                 $booklist->save();
@@ -227,13 +227,13 @@ class BooklistController extends Controller
             } else {
 
                 $booklist = new Booklist;
-                $booklist->booklist_name = $request->new_booklist_name;
+                $booklist->name = $request->new_booklist_name;
                 $booklist->save();
 
                 $booklist_id = $booklist->id;
 
                 $booklist = new Booklist;
-                $booklist->booklist_name = 'Default';
+                $booklist->name = 'Default';
                 $booklist->author_id = $request->user()->id;
                 $booklist->entity_alias = $request->entity_alias;
                 $booklist->save();
@@ -251,7 +251,7 @@ class BooklistController extends Controller
             ->get();
 
             // Получаем список Default
-            $booklists_default = $booklists_user->where('booklist_name', 'Default')->first()->list_items->pluck('item_entity')->toArray();
+            $booklists_default = $booklists_user->where('name', 'Default')->first()->list_items->pluck('item_entity')->toArray();
 
             // Получаем список переданный
             $booklist_operation = $booklists_user->where('id', $request->booklist_id_send)->first()->list_items->pluck('item_entity')->toArray();

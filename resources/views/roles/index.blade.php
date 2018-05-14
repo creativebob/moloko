@@ -44,14 +44,14 @@
             $edit = 1;
           @endphp
         @endcan
-        <tr class="item @if(Auth::user()->role_id == $role->id)active @endif  @if($role->moderation == 1)no-moderation @endif" id="roles-{{ $role->id }}" data-name="{{ $role->role_name }}">
+        <tr class="item @if(Auth::user()->role_id == $role->id)active @endif  @if($role->moderation == 1)no-moderation @endif" id="roles-{{ $role->id }}" data-name="{{ $role->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $role->id }}"><label class="label-check" for="check-{{ $role->id }}"></label></td>
           <td class="td-role-name">
             @if($edit == 1)
               <a href="/roles/{{ $role->id }}/edit">
             @endif
-            {{ $role->role_name }}
+            {{ $role->name }}
             @if($edit == 1)
               </a> 
             @endif
@@ -67,7 +67,7 @@
           </td>
           <td class="td-role-company-id">@if(!empty($role->company->company_name)) {{ $role->company->company_name }} @else @if($role->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-role-count"><span class="allow">{{ $counts_directive_array[$role->id]['count_allow'] }}</span> / <span class="deny"> {{ $counts_directive_array[$role->id]['count_deny'] }}</span></td>
-          <td class="td-role-description">{{ $role->role_description }} </td>
+          <td class="td-role-description">{{ $role->description }} </td>
           <td class="td-role-author">@if(!empty($role->author->first_name)) {{ $role->author->first_name . ' ' . $role->author->second_name }} @endif</td>
           <td class="td-delete">
             @if (($role->system_item !== 1) && ($role->company_id !== null))

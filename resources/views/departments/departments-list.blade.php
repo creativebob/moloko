@@ -12,10 +12,10 @@ $count = count($department['children']) + $count;
 $count = count($department['staff']) + $count;
 @endphp
 @endif
-<li class="medium-item item @if (isset($department['children']) || isset($department['staff'])) parent @endif" id="departments-{{ $department['id'] }}" data-name="{{ $department['department_name'] }}">
+<li class="medium-item item @if (isset($department['children']) || isset($department['staff'])) parent @endif" id="departments-{{ $department['id'] }}" data-name="{{ $department['name'] }}">
   <a class="medium-link">
     <div class="icon-open sprite"></div>
-    <span>{{ $department['department_name'] }}</span>
+    <span>{{ $department['name'] }}</span>
     <span class="number">{{ $count }}</span>
     @if ($department['moderation'])
     <span class="no-moderation">Не отмодерированная запись!</span>
