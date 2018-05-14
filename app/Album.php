@@ -53,6 +53,12 @@ class Album extends Model
     return $this->belongsToMany('App\Photo', 'album_entity', 'album_id', 'entity_id')->where('entity', 'photo');
   }
 
+  // Получаем продукцию
+  // public function photos()
+  // {
+  //   return $this->belongsToMany('App\Photo', 'album_entity', 'album_id', 'entity_id')->where('entity', 'photo');
+  // }
+
    // Получаем фото
   public function photo()
   {

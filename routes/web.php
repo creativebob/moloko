@@ -77,6 +77,9 @@ Route::post('/photos_sort', 'PhotoController@photos_sort')->middleware('auth');
 Route::resource('/products', 'ProductController')->middleware('auth');
 // Добавление фото для продукции
 Route::get('/products/{id}/photos', 'ProductController@product_photos')->middleware('auth');
+// Запись фото
+Route::any('/products/add_photo', 'ProductController@add_photo')->middleware('auth');
+
 // Сортировка продукции
 Route::post('/products_sort', 'ProductController@products_sort')->middleware('auth');
 // Route for export/download tabledata to .xls or .xlsx

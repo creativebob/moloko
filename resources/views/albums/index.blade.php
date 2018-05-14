@@ -53,7 +53,7 @@
           <td>
             <a href="/albums/{{ $album->alias }}">
               @if (isset($album->photo_id))
-              <img src="/storage/{{ $album->company_id }}/media/albums/{{ $album->id }}/small/{{ $album->photo->name }}" alt="{{ $album->name }}">
+              <img src="/storage/{{ $album->company_id }}/media/albums/{{ $album->id }}/img/small/{{ $album->photo->name }}" alt="{{ $album->name }}">
               @else
               нет фото
               @endif

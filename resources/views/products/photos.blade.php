@@ -20,6 +20,8 @@
 <div class="grid-x">
   <div class="small-12 cell">
  {{ Form::open(['url' => '/products/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
+
+ {{ Form::hidden('name', $product->name) }}
 {{ Form::close() }}
   </div>
 </div>

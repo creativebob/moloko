@@ -8,6 +8,9 @@ use App\User;
 use App\ProductsCategory;
 use App\Unit;
 use App\Country;
+use App\Photo;
+use App\Album;
+use App\AlbumEntity;
 
 use DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -27,6 +30,8 @@ use Illuminate\Support\Facades\Storage;
 // Прочие необходимые классы
 use App\Http\Controllers\Session;
 
+use Intervention\Image\ImageManagerStatic as Image;
+
 class ProductController extends Controller
 {
   // Сущность над которой производит операции контроллер
@@ -35,7 +40,6 @@ class ProductController extends Controller
 
   public function index(Request $request)
   {
-
     // Подключение политики
     // $this->authorize(getmethod(__FUNCTION__), Product::class);
 
@@ -172,7 +176,7 @@ class ProductController extends Controller
     $page_info = pageInfo($this->entity_name);
 
 
-   
+
 
     return view('products.create', compact('user', 'product', 'departments_list', 'roles_list', 'page_info', 'products_categories_list', 'countries_list', 'units_list'));
   }
@@ -438,15 +442,126 @@ class ProductController extends Controller
 
 
     // Добавление фоток
-    public function product_photos(Request $request)
+    public function product_photos(Request $request, $id)
     {
+
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+      $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+
+    // ГЛАВНЫЙ ЗАПРОС:
+      $product = Product::moderatorLimit($answer)->findOrFail($id);
+
+     // Подключение политики
+      $this->authorize(getmethod('edit'), $product);
       // Инфо о странице
-    $page_info = pageInfo($this->entity_name);
+      $page_info = pageInfo($this->entity_name);
 
     // dd($products);
 
-    return view('products.photos', compact('page_info'));
+      return view('products.photos', compact('page_info', 'product'));
       
+    }
+
+    public function add_photo(Request $request)
+    {
+
+      dd('lol');
+      if ($request->hasFile('photo')) {
+        // Подключение политики
+        $this->authorize(getmethod('store'), Photo::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // Смотрим компанию пользователя
+        $company_id = $user->company_id;
+        if($company_id == null) {
+          abort(403, 'Необходимо авторизоваться под компанией');
+        }
+
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        $album = Album::where(['company_id' => $company_id, 'description' => $request->name])->first();
+
+        $alias = 'default';
+        if ($album) {
+          $album_id = $album->id;
+        } else {
+          $album = new Album;
+          $album->company_id = $company_id;
+          $album->name = 'default';
+          $album->albums_category_id = 1;
+          $album->description = $request->name;
+          $album->author_id = $user_id;
+          $album->save();
+
+          $album_id = $album->id;
+        }
+
+        $photo = new Photo;
+
+        $image = $request->file('photo');
+        $directory = $company_id.'/media/albums/'.$album_id.'/img/';
+        $extension = $image->getClientOriginalExtension();
+        $photo->extension = $extension;
+
+        $image_name = $alias.'-'.time().'.'.$extension;
+
+        $params = getimagesize($image);
+        $photo->width = $params[0];
+        $photo->height = $params[1];
+
+        $size = filesize($image)/1024;
+        $photo->size = number_format($size, 2, '.', '');
+
+        $photo->name = $image_name;
+        $photo->company_id = $company_id;
+        $photo->author_id = $user_id;
+        $photo->save();
+
+        $media = new AlbumEntity;
+        $media->album_id = $album_id;
+        $media->entity_id = $photo->id;
+        $media->entity = 'photo';
+        $media->save();
+
+        $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
+
+        $small = Image::make($request->photo)->widen(150);
+        $save_path = storage_path('app/public/'.$directory.'small');
+        if (!file_exists($save_path)) {
+          mkdir($save_path, 666, true);
+        }
+        $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
+
+        // $medium = Image::make($request->photo)->grab(900, 596);
+        $medium = Image::make($request->photo)->widen(900);
+        $save_path = storage_path('app/public/'.$directory.'medium');
+        if (!file_exists($save_path)) {
+          mkdir($save_path, 666, true);
+        }
+        $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
+
+        // $large = Image::make($request->photo)->grab(1200, 795);
+        $large = Image::make($request->photo)->widen(1200);
+        $save_path = storage_path('app/public/'.$directory.'large');
+        if (!file_exists($save_path)) {
+          mkdir($save_path, 666, true);
+        }
+        $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
+
+        if ($upload_success) {
+          return response()->json($upload_success, 200);
+        } else {
+          return response()->json('error', 400);
+        } 
+      } else {
+        return response()->json('error', 400);
+      } 
     }
 
 
