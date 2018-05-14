@@ -120,4 +120,10 @@ class Department extends Model
     return $this->hasMany('App\User');
   }
 
+  // Получаем локацию компании
+  public function location()
+  {
+    return $this->belongsTo('App\Location');
+  }
+
 }

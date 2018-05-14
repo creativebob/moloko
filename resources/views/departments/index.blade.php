@@ -183,7 +183,7 @@
       },
       url: '/departments/create',
       type: "GET",
-      data: {department_parent_id: parent},
+      data: {parent_id: parent},
       success: function(html){
         $('#modal').html(html);
         $('#medium-add').foundation();
@@ -317,36 +317,6 @@
     $(this).closest('.reveal-overlay').remove();
   });
 
-  // Открываем меню и подменю, если только что добавили населенный пункт
-  @if(!empty($data))
-    // Общие правила
-    // Подсвечиваем Филиал
-    $('#departments-{{ $data['section_id'] }}').addClass('first-active').find('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
-    // Отображаем отдел и филиал, без должностей
-    if ({{ $data['item_id'] }} == 0) {
-      var firstItem = $('#departments-{{ $data['section_id'] }}').find('.medium-list:first');
-      // Открываем аккордион
-      $('#content-list').foundation('down', firstItem); 
-    } else {
-      // Перебираем родителей и подсвечиваем их
-      $.each($('#departments-{{ $data['item_id'] }}').parents('.parent-item').get().reverse(), function (index) {
-        $(this).children('.medium-link:first').addClass('medium-active');
-        $(this).children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
-        $('#content-list').foundation('down', $(this).closest('.medium-list'));
-      });
-      // Если родитель содержит не пустой элемент
-      if ($('#departments-{{ $data['item_id'] }}').parent('.parent').has('.parent-item')) {
-        $('#content-list').foundation('down', $('#departments-{{ $data['item_id'] }}').closest('.medium-list'));
-      };
-      // Если элемент содержит вложенность, открываем его
-      if ($('#departments-{{ $data['item_id'] }}').hasClass('parent')) {
-        $('#departments-{{ $data['item_id'] }}').children('.medium-link:first').addClass('medium-active');
-        $('#departments-{{ $data['item_id'] }}').children('.icon-list:first').attr('aria-hidden', 'false').css('display', 'block');
-        $('#content-list').foundation('down', $('#departments-{{ $data['item_id'] }}').children('.medium-list:first'));
-      }
-    };
-    @endif
-  });
 </script>
 
   {{-- Скрипт чекбоксов --}}

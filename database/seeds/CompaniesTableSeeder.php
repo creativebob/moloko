@@ -76,7 +76,7 @@ class CompaniesTableSeeder extends Seeder
                 'phone' => '83952712318',
                 // 'extra_phone' => '83952717775',
                 'email' => null,
-                'location_id' => 1,
+                'location_id' => 4,
                 // 'inn' => '',
                 // 'kpp' => '',
                 // 'account_settlement' => '',

@@ -24,12 +24,12 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Название сущности
-                @include('includes.inputs.text-ru', ['value'=>$entity->entity_name, 'name'=>'entity_name', 'required'=>'required'])
+                @include('includes.inputs.text-ru', ['value'=>$entity->name, 'name'=>'name', 'required'=>'required'])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Название сущности в BD
-                @include('includes.inputs.text-en', ['value'=>$entity->entity_alias, 'name'=>'entity_alias', 'required'=>'required'])
+                @include('includes.inputs.text-en', ['value'=>$entity->alias, 'name'=>'alias', 'required'=>'required'])
               </label>
             </div>
           </div>

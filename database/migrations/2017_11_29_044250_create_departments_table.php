@@ -17,13 +17,12 @@ class CreateDepartmentsTable extends Migration
             $table->increments('id');
             $table->integer('company_id')->nullable()->unsigned()->comment('Id компании, в которой находится отдел');
             $table->foreign('company_id')->references('id')->on('companies');
-            $table->integer('city_id')->nullable()->unsigned()->comment('Id города, в котором находится филиал/отдел');
-            $table->foreign('city_id')->references('id')->on('cities');
-            $table->string('department_name', 60)->index()->comment('Название отдела');
-            $table->string('address', 100)->nullable()->comment('Адресс отдела');
+            $table->integer('location_id')->nullable()->unsigned()->comment('Расположение филиала/отдела');
+            $table->foreign('location_id')->references('id')->on('locations');
+            $table->string('name', 60)->index()->comment('Название отдела');
             $table->bigInteger('phone')->nullable()->comment('Телефон отдела');
-            $table->integer('department_parent_id')->unsigned()->nullable()->comment('Id отдела, в котором находится отдел');
-            $table->foreign('department_parent_id')->references('id')->on('departments');
+            $table->integer('parent_id')->unsigned()->nullable()->comment('Id отдела, в котором находится отдел');
+            $table->foreign('parent_id')->references('id')->on('departments');
             $table->integer('filial_status')->unsigned()->nullable()->comment('Маркер филиала, чтобы определить при поиске');
             $table->integer('filial_id')->unsigned()->nullable()->comment('Id филиала, пишется каждому отделу');
             $table->foreign('filial_id')->references('id')->on('departments');

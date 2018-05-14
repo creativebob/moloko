@@ -32,18 +32,18 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($entities))
         @foreach($entities as $entity)
-        <tr class="item @if(Auth::user()->entity_id == $entity->id)active @endif  @if($entity->moderation == 1)no-moderation @endif" id="entities-{{ $entity->id }}" data-name="{{ $entity->entity_name }}">
+        <tr class="item @if(Auth::user()->entity_id == $entity->id)active @endif  @if($entity->moderation == 1)no-moderation @endif" id="entities-{{ $entity->id }}" data-name="{{ $entity->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $entity->id }}"><label class="label-check" for="check-{{ $entity->id }}"></label></td>
           <td class="td-entity-name">
             @can('update', $entity)
             <a href="/entities/{{ $entity->id }}/edit">
             @endcan
-            {{ $entity->entity_name }}
+            {{ $entity->name }}
             @can('update', $entity)
             </a> 
             @endcan
-          <td class="td-entity-alias">{{ $entity->entity_alias }}</td>
+          <td class="td-entity-alias">{{ $entity->alias }}</td>
           <td class="td-delete">
           @if ($entity->system_item !== 1)
             @can('delete', $entity)

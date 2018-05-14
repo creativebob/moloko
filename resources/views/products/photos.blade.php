@@ -1,37 +1,40 @@
 @extends('layouts.app')
-
+ 
 @section('inhead')
 @include('includes.scripts.dropzone-inhead')
 @endsection
 
-@section('title', 'Редактировать товар')
+@section('title', $page_info->name)
 
-@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $product))
+@section('breadcrumbs', Breadcrumbs::render('create', $page_info))
+
 
 @section('title-content')
-  <div class="top-bar head-content">
-    <div class="top-bar-left">
-      <h2 class="header-content">РЕДАКТИРОВАТЬ товар</h2>
-    </div>
-    <div class="top-bar-right">
-    </div>
-  </div>
+{{-- Таблица --}}
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Product::class, 'type' => 'table'])
 @endsection
-
+ 
 @section('content')
 
-  {{ Form::model($product, ['route' => ['products.update', $product->id], 'data-abide', 'novalidate']) }}
-  {{ method_field('PATCH') }}
+{{-- Таблица --}}
+<div class="grid-x">
+  <div class="small-12 cell">
+ {{ Form::open(['url' => '/products/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
+{{ Form::close() }}
+  </div>
+</div>
+@endsection
 
-    @include('products.form', ['submitButtonText' => 'Редактировать альбом', 'param'=>''])
-    
-  {{ Form::close() }}
+@section('modals')
+  {{-- Модалка удаления с refresh --}}
+  @include('includes.modals.modal-delete')
+
+  {{-- Модалка удаления с refresh --}}
+  @include('includes.modals.modal-delete-ajax')
 
 @endsection
 
 @section('scripts')
-  @include('includes.scripts.inputs-mask')
-  @include('includes.scripts.upload-file')
   <script>
   var minImageWidth = 1200,
   minImageHeight = 795;

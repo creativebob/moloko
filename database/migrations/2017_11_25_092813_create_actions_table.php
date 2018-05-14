@@ -15,8 +15,8 @@ class CreateActionsTable extends Migration
     {
         Schema::create('actions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('action_name')->index()->comment('Имя действия');
-            $table->string('action_method')->index()->comment('Имя метода');
+            $table->string('name')->index()->comment('Имя действия');
+            $table->string('method')->index()->comment('Имя метода');
             $table->timestamps();
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
             $table->softDeletes();

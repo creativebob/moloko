@@ -185,6 +185,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Unisharp\Ckeditor\ServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+
 
     ],
 
@@ -240,6 +242,8 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Transliterate' => ElForastero\Transliterate\TransliterationFacade::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
         
 
     ],

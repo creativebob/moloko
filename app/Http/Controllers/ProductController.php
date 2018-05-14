@@ -9,6 +9,10 @@ use App\ProductsCategory;
 use App\Unit;
 use App\Country;
 
+use DB;
+use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
+
 // Валидация
 use App\Http\Requests\ProductRequest;
 
@@ -55,11 +59,11 @@ class ProductController extends Controller
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
-    $user = $request->user();
+    
 
     // dd($products);
 
-    return view('products.index', compact('products', 'page_info', 'product', 'user'));
+    return view('products.index', compact('products', 'page_info', 'product'));
   }
 
   public function create(Request $request)
@@ -166,6 +170,9 @@ class ProductController extends Controller
 
         // Инфо о странице
     $page_info = pageInfo($this->entity_name);
+
+
+   
 
     return view('products.create', compact('user', 'product', 'departments_list', 'roles_list', 'page_info', 'products_categories_list', 'countries_list', 'units_list'));
   }
@@ -427,5 +434,69 @@ class ProductController extends Controller
 
         $i++;
       }
+    }
+
+
+    // Добавление фоток
+    public function product_photos(Request $request)
+    {
+      // Инфо о странице
+    $page_info = pageInfo($this->entity_name);
+
+    // dd($products);
+
+    return view('products.photos', compact('page_info'));
+      
+    }
+
+
+    // -------------------------------------- Exel ------------------------------------------
+    public function products_download($type)
+    {
+      $data = Product::get(['name', 'article', 'cost'])->toArray();
+
+      // dd($data);
+
+      return Excel::create('products-'.Carbon::now()->format('d.m.Y'), function($excel) use ($data) {
+        $excel->sheet('Продукция', function($sheet) use ($data)
+        {
+          $sheet->fromArray($data);
+        });
+      })->download($type);
+    }
+
+    public function products_import(Request $request)
+    {
+      if($request->hasFile('file')) {
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        // Смотрим компанию пользователя
+        $company_id = $user->company_id;
+        if($company_id == null) {
+          abort(403, 'Необходимо авторизоваться под компанией');
+        }
+
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        Excel::load($request->file('file')->getRealPath(), function ($reader) use ($user_id, $company_id){
+          foreach ($reader->toArray() as $key => $row) {
+            $data['company_id'] = $company_id;
+            $data['name'] = $row['name'];
+            $data['article'] = $row['article'];
+            $data['cost'] = $row['cost'];
+          // $data['description'] = $row['description'];
+            $data['author_id'] = $user_id;
+
+            if(!empty($data)) {
+              DB::table('products')->insert($data);
+            }
+          }
+        });
+      }
+
+      return back();
     }
   }

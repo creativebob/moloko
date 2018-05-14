@@ -11,13 +11,13 @@ class CreateEntitiesTable extends Migration
     {
         Schema::create('entities', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('entity_name')->index()->comment('Название сущности');
+            $table->string('name')->index()->comment('Название сущности');
 
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
             
-            $table->string('entity_alias')->index()->comment('Название как в базе данных');
-            $table->string('entity_model')->index()->comment('Название модели');
+            $table->string('alias')->index()->comment('Название как в базе данных');
+            $table->string('model')->index()->comment('Название модели');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 

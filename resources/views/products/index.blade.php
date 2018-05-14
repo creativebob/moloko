@@ -9,6 +9,16 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
+@section('exel')
+<a href="{{ URL::to('productsDownload/xls') }}"><button class="button">Скачать Excel xls</button></a>
+    <a href="{{ URL::to('/products_download/xlsx') }}"><button class="button">Скачать Excel xlsx</button></a>
+    <form action="{{ URL::to('/products_import') }}" method="post" enctype="multipart/form-data">
+      {{ csrf_field() }}
+      <input type="file" name="file" />
+      <button class="button">Импортировать</button>
+    </form>
+@endsection
+
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Product::class, 'type' => 'table'])
@@ -26,7 +36,7 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-photo">Фото</th>
           <th class="td-name">Название товара</th>
-          <th class="td-edit">Редактировать</th>
+          <th class="td-edit">Фото</th>
           <th class="td-category">Категория</th>
           <th class="td-company-id">Компания</th>
           <th class="td-author">Автор</th>
@@ -52,7 +62,7 @@
             </a>
           </td>
           <td class="td-name"><a href="/products/{{ $product->id }}/edit">{{ $product->name }}</a></td>
-          <td class="td-edit"><a class="tiny button" href="/products/{{ $product->id }}/edit">Редактировать</a></td>
+          <td class="td-edit"><a class="tiny button" href="/products/{{ $product->id }}/photos">Добавить фото</a></td>
           <td class="td-category">{{ $product->products_category->name }}</td>
           <td class="td-company-id">@if(!empty($product->company->name)) {{ $product->company->name }} @else @if($product->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-author">@if(isset($product->author->first_name)) {{ $product->author->first_name . ' ' . $product->author->second_name }} @endif</td>

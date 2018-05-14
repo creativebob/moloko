@@ -42,7 +42,7 @@
           {{ Form::select('unit_id', $units_list, $product->unit_id)}}
         </label>
       </div>
-        <div class="small-12 medium-6 cell">
+      <div class="small-12 medium-6 cell">
         <label>Страна производитель
           {{ Form::select('country_id', $countries_list, $product->country_id)}}
         </label>
@@ -52,9 +52,23 @@
           @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$product->description, 'required'=>''])
         </label>
       </div>
+      <div class="small-12 cell">
+        <label>Выберите аватар
+          {{ Form::file('photo') }}
+        </label>
+        <div class="text-center">
+          <img id="photo" @if (isset($product->photo_id)) src="/storage/{{ $product->company->id }}/media/products/{{ $product->id }}/original-{{ $product->avatar->name }}" @endif>
+        </div>
+
+      </div>
     </div>
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
+    @if (isset($product->name)) 
+    <form ></form>
+    {{ Form::open(['url' => '/product_photos', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
+    {{ Form::close() }}
+    @endif
   </div>
 
   {{-- Чекбокс модерации --}}

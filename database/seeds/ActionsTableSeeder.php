@@ -12,16 +12,16 @@ class ActionsTableSeeder extends Seeder
     public function run()
     {
         DB::table('actions')->insert([
-        	['action_name' => 'Просмотр', 'action_method' => 'view'], 
-        	['action_name' => 'Просмотр списка', 'action_method' => 'index'], 
-        	['action_name' => 'Добавление', 'action_method' => 'create'], 
-        	['action_name' => 'Редактирование', 'action_method' => 'update'], 
-        	['action_name' => 'Удаление', 'action_method' => 'delete'], 
-        	['action_name' => 'Системная', 'action_method' => 'system'], 
-            ['action_name' => 'Другие авторы', 'action_method' => 'authors'], 
-        	['action_name' => 'Нет ограничений', 'action_method' => 'nolimit'], 
-            ['action_name' => 'Автомодерация', 'action_method' => 'automoderate'], 
-            ['action_name' => 'Модератор', 'action_method' => 'moderator'],  
+        	['name' => 'Просмотр', 'method' => 'view'], 
+        	['name' => 'Просмотр списка', 'method' => 'index'], 
+        	['name' => 'Добавление', 'method' => 'create'], 
+        	['name' => 'Редактирование', 'method' => 'update'], 
+        	['name' => 'Удаление', 'method' => 'delete'], 
+        	['name' => 'Системная', 'method' => 'system'], 
+            ['name' => 'Другие авторы', 'method' => 'authors'], 
+        	['name' => 'Нет ограничений', 'method' => 'nolimit'], 
+            ['name' => 'Автомодерация', 'method' => 'automoderate'], 
+            ['name' => 'Модератор', 'method' => 'moderator'],  
         ]);
     }
 }

@@ -23,7 +23,7 @@ class ActionEntityTableSeeder extends Seeder
         foreach($entities as $entity){
         	foreach($actions as $action){
 
-         		$mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->action_method . '-' . $entity->entity_alias];
+         		$mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
 
         	};
         }
