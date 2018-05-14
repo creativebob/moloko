@@ -14,12 +14,12 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
+use App\Scopes\Traits\ContragentsTraitScopes;
 
 // Фильтры
 use App\Scopes\Filters\CityFilter;
 use App\Scopes\Filters\SectorFilter;
 use App\Scopes\Filters\BooklistFilter;
-
 
 class Company extends Model
 {
@@ -34,6 +34,7 @@ class Company extends Model
   use FilialsTraitScopes;
   use TemplateTraitScopes;
   use ModeratorLimitTraitScopes;
+  use ContragentsTraitScopes;
 
   // Подключаем фильтры
   use CityFilter;
@@ -140,5 +141,16 @@ class Company extends Model
   {
     return $this->belongsTo('App\Location');
   }
+
+  // public function contragents()
+  // {
+  //   return $this->hasMany('App\Contragent', 'company_id');
+  // }
+
+  public function contragents()
+ {
+   return $this->hasMany('App\Contragent', 'contragent_id');
+ }
+
 
 }

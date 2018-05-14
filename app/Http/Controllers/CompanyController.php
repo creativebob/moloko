@@ -14,6 +14,7 @@ use App\Schedule;
 use App\Worktime;
 use App\Location;
 use App\ScheduleEntity;
+use App\Contragent;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -53,8 +54,8 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-
-        $companies = Company::with('author', 'director', 'location.city', 'sector')
+        $companies = Company::with('author', 'director', 'location.city', 'sector', 'contragents')
+        ->contragents($user->company_id)
         ->moderatorLimit($answer)
         ->cityFilter($request)
         ->sectorFilter($request)
@@ -62,7 +63,12 @@ class CompanyController extends Controller
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
-        $filter_query = Company::with('location.city', 'sector')->moderatorLimit($answer)->get();
+        // dd($companies);
+
+        $filter_query = Company::with('location.city', 'sector')
+        ->contragents($user->company_id)
+        ->moderatorLimit($answer)
+        ->get();
 
 
         $filter['status'] = null;
@@ -177,6 +183,7 @@ class CompanyController extends Controller
 
     // Смотрим компанию пользователя
     $company_id = $user->company_id;
+
     if($company_id == null) {
       abort(403, 'Необходимо авторизоваться под компанией');
     }
@@ -236,6 +243,12 @@ class CompanyController extends Controller
     $company->author_id = $user->id;
 
     $company->save();
+
+    $contragent = new Contragent;
+    $contragent->company_id = $company_id;
+    $contragent->contragent_id = $company->id;
+    $contragent->vendor_status = 1;
+    $contragent->save();
 
         // Создаем связь расписания с компанией
     $schedule_entity = new ScheduleEntity;

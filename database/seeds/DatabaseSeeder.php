@@ -98,5 +98,8 @@ class DatabaseSeeder extends Seeder
     // Связь: Расписания с сущностями
     $this->call(ScheduleEntityTableSeeder::class);
 
+    // Связь: Клиенты - поставщики
+    $this->call(ContragentsTableSeeder::class);
+
   }
 }
