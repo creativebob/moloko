@@ -229,7 +229,7 @@ class ProductController extends Controller
       if ($request->hasFile('photo')) {
         $photo = new Photo;
         $image = $request->file('photo');
-        $directory = $company->id.'/media/products/'.$product->id.'/img/';
+        $directory = $company_id.'/media/products/'.$product->id.'/img/';
         $extension = $image->getClientOriginalExtension();
         $photo->extension = $extension;
         $image_name = 'avatar.'.$extension;
