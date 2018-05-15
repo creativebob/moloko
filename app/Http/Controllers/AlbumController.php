@@ -92,73 +92,76 @@ class AlbumController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_albums_categories = operator_right('albums_categories', false, 'index');
 
-        // Главный запрос
+    // Главный запрос
         $albums_categories = AlbumsCategory::moderatorLimit($answer_albums_categories)
-        ->where('company_id', $user->company_id)
-        ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
-        ->keyBy('id')
-        ->toArray();
+        ->companiesLimit($answer_albums_categories)
+    ->filials($answer_albums_categories) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+    ->authors($answer_albums_categories)
+    ->systemItem($answer_albums_categories) // Фильтр по системным записям
+    ->orderBy('sort', 'asc')
+    ->get(['id','name','category_status','parent_id'])
+    ->keyBy('id')
+    ->toArray();
 
         // Формируем дерево вложенности
-        $albums_categories_cat = [];
-        foreach ($albums_categories as $id => &$node) { 
+    $albums_categories_cat = [];
+    foreach ($albums_categories as $id => &$node) { 
 
           // Если нет вложений
-          if (!$node['parent_id']) {
-            $albums_categories_cat[$id] = &$node;
-          } else { 
+      if (!$node['parent_id']) {
+        $albums_categories_cat[$id] = &$node;
+      } else { 
 
           // Если есть потомки то перебераем массив
-            $albums_categories[$node['parent_id']]['children'][$id] = &$node;
-          };
+        $albums_categories[$node['parent_id']]['children'][$id] = &$node;
+      };
 
-        };
+    };
 
         // dd($albums_categories_cat);
 
         // Функция отрисовки option'ов
-        function tplMenu($albums_category, $padding) {
+    function tplMenu($albums_category, $padding) {
 
-          if ($albums_category['category_status'] == 1) {
-            $menu = '<option value="'.$albums_category['id'].'" class="first">'.$albums_category['name'].'</option>';
-          } else {
-            $menu = '<option value="'.$albums_category['id'].'">'.$padding.' '.$albums_category['name'].'</option>';
-          }
+      if ($albums_category['category_status'] == 1) {
+        $menu = '<option value="'.$albums_category['id'].'" class="first">'.$albums_category['name'].'</option>';
+      } else {
+        $menu = '<option value="'.$albums_category['id'].'">'.$padding.' '.$albums_category['name'].'</option>';
+      }
 
             // Добавляем пробелы вложенному элементу
-          if (isset($albums_category['children'])) {
-            $i = 1;
-            for($j = 0; $j < $i; $j++){
-              $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-            }     
-            $i++;
+      if (isset($albums_category['children'])) {
+        $i = 1;
+        for($j = 0; $j < $i; $j++){
+          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+        }     
+        $i++;
 
-            $menu .= showCat($albums_category['children'], $padding);
-          }
-          return $menu;
-        }
+        $menu .= showCat($albums_category['children'], $padding);
+      }
+      return $menu;
+    }
         // Рекурсивно считываем наш шаблон
-        function showCat($data, $padding){
-          $string = '';
-          $padding = $padding;
-          foreach($data as $item){
-            $string .= tplMenu($item, $padding);
-          }
-          return $string;
-        }
+    function showCat($data, $padding){
+      $string = '';
+      $padding = $padding;
+      foreach($data as $item){
+        $string .= tplMenu($item, $padding);
+      }
+      return $string;
+    }
 
         // Получаем HTML разметку
-        $albums_categories_list = showCat($albums_categories_cat, '');
+    $albums_categories_list = showCat($albums_categories_cat, '');
 
 
         // dd($albums_categories_list);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+    $page_info = pageInfo($this->entity_name);
 
-        return view('albums.create', compact('user', 'album', 'departments_list', 'roles_list', 'page_info', 'albums_categories_list'));
-      }
+    return view('albums.create', compact('user', 'album', 'departments_list', 'roles_list', 'page_info', 'albums_categories_list'));
+  }
 
     /**
      * Store a newly created resource in storage.
@@ -280,78 +283,81 @@ class AlbumController extends Controller
       $this->authorize(getmethod(__FUNCTION__), $album);
 
        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-      $answer_category = operator_right('albums_categories', false, 'index');
+      $answer_albums_categories = operator_right('albums_categories', false, 'index');
 
-        // Категории
-      $albums_categories = AlbumsCategory::moderatorLimit($answer_category)
-      ->where('company_id', $user->company_id)
-      ->orderBy('sort', 'asc')
-      ->get(['id','name','category_status','parent_id'])
-      ->keyBy('id')
-      ->toArray();
+    // Главный запрос
+      $albums_categories = AlbumsCategory::moderatorLimit($answer_albums_categories)
+      ->companiesLimit($answer_albums_categories)
+    ->filials($answer_albums_categories) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+    ->authors($answer_albums_categories)
+    ->systemItem($answer_albums_categories) // Фильтр по системным записям
+    ->orderBy('sort', 'asc')
+    ->get(['id','name','category_status','parent_id'])
+    ->keyBy('id')
+    ->toArray();
 
         // Формируем дерево вложенности
-      $albums_categories_cat = [];
-      foreach ($albums_categories as $id => &$node) { 
+    $albums_categories_cat = [];
+    foreach ($albums_categories as $id => &$node) { 
 
           // Если нет вложений
-        if (!$node['parent_id']) {
-          $albums_categories_cat[$id] = &$node;
-        } else { 
+      if (!$node['parent_id']) {
+        $albums_categories_cat[$id] = &$node;
+      } else { 
 
           // Если есть потомки то перебераем массив
-          $albums_categories[$node['parent_id']]['children'][$id] = &$node;
-        };
-
+        $albums_categories[$node['parent_id']]['children'][$id] = &$node;
       };
+
+    };
 
         // dd($albums_categories_cat);
 
         // Функция отрисовки option'ов
-      function tplMenu($albums_category, $padding, $id) {
+    function tplMenu($albums_category, $padding, $id) {
 
-        $selected = '';
-        if ($albums_category['id'] == $id) {
+      $selected = '';
+      if ($albums_category['id'] == $id) {
             // dd($id);
-          $selected = ' selected';
-        }
+        $selected = ' selected';
+      }
 
-        if ($albums_category['category_status'] == 1) {
-          $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['name'].'</option>';
-        } else {
-          $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['name'].'</option>';
-        }
+      if ($albums_category['category_status'] == 1) {
+        $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['name'].'</option>';
+      } else {
+        $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['name'].'</option>';
+      }
 
             // Добавляем пробелы вложенному элементу
-        if (isset($albums_category['children'])) {
-          $i = 1;
-          for($j = 0; $j < $i; $j++){
-            $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-          }     
-          $i++;
+      if (isset($albums_category['children'])) {
+        $i = 1;
+        for($j = 0; $j < $i; $j++){
+          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+        }     
+        $i++;
 
-          $menu .= showCat($albums_category['children'], $padding, $id);
-        }
-        return $menu;
+        $menu .= showCat($albums_category['children'], $padding, $id);
       }
+      return $menu;
+    }
         // Рекурсивно считываем наш шаблон
-      function showCat($data, $padding, $id){
-        $string = '';
-        $padding = $padding;
-        foreach($data as $item){
-          $string .= tplMenu($item, $padding, $id);
-        }
-        return $string;
+    function showCat($data, $padding, $id){
+      $string = '';
+      $padding = $padding;
+      foreach($data as $item){
+        $string .= tplMenu($item, $padding, $id);
       }
+      return $string;
+    }
 
         // Получаем HTML разметку
-      $albums_categories_list = showCat($albums_categories_cat, '', $album->albums_category_id);
+    $albums_categories_list = showCat($albums_categories_cat, '', $album->albums_category_id);
 
     // Инфо о странице
-      $page_info = pageInfo($this->entity_name);
+    $page_info = pageInfo($this->entity_name);
 
-      return view('albums.edit', compact('album', 'page_info', 'albums_categories_list'));
-    }
+    return view('albums.edit', compact('album', 'page_info', 'albums_categories_list'));
+  }
 
     /**
      * Update the specified resource in storage.

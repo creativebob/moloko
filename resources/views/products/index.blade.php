@@ -54,8 +54,8 @@
             <input type="checkbox" class="table-check" name="album_id" id="check-{{ $product->id }}"><label class="label-check" for="check-{{ $product->id }}"></label></td>
           <td>
             <a href="/products/{{ $product->id }}/edit">
-              @if (isset($product->avatar))
-
+              @if (isset($product->photo_id))
+              <img src="/storage/{{ $product->company_id }}/media/products/{{ $product->id }}/img/{{ $product->photo->name }}">
               @else
               нет фото
               @endif

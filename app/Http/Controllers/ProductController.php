@@ -387,6 +387,8 @@ class ProductController extends Controller
 
     public function update(ProductRequest $request, $id)
     {
+
+
       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
       $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -398,11 +400,49 @@ class ProductController extends Controller
     // Подключение политики
       $this->authorize('update', $product);
 
-    // Получаем данные для авторизованного пользователя
+      // Получаем данные для авторизованного пользователя
       $user = $request->user();
+      $company_id = $user->company_id;
 
     // Скрываем бога
       $user_id = hideGod($user);
+
+
+      if ($request->hasFile('photo')) {
+
+
+        $photo = new Photo;
+        $image = $request->file('photo');
+        $directory = $company_id.'/media/products/'.$product->id.'/img/';
+        $extension = $image->getClientOriginalExtension();
+        $photo->extension = $extension;
+        $image_name = 'avatar.'.$extension;
+
+        $params = getimagesize($request->file('photo'));
+        $photo->width = $params[0];
+        $photo->height = $params[1];
+
+        $size = filesize($request->file('photo'))/1024;
+        $photo->size = number_format($size, 2, '.', '');
+
+        $photo->name = $image_name;
+        $photo->company_id = $company_id;
+        $photo->author_id = $user_id;
+        $photo->save();
+
+        $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
+
+        $avatar = Image::make($request->photo)->widen(150);
+        $save_path = storage_path('app/public/'.$directory);
+        if (!file_exists($save_path)) {
+          mkdir($save_path, 666, true);
+        }
+        $avatar->save(storage_path('app/public/'.$directory.$image_name));
+
+        $product->photo_id = $photo->id;
+      } 
+
+    
 
       $product->name = $request->name;
       $product->article = $request->article;
@@ -415,6 +455,8 @@ class ProductController extends Controller
       // Модерация и системная запись
       $product->system_item = $request->system_item;
       $product->moderation = $request->moderation;
+
+      
 
       $product->editor_id = $user_id;
       $product->save();

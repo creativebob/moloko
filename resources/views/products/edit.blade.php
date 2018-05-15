@@ -20,10 +20,10 @@
 
 @section('content')
 
-  {{ Form::model($product, ['route' => ['products.update', $product->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($product, ['route' => ['products.update', $product->id], 'data-abide', 'novalidate', 'files'=>'true']) }}
   {{ method_field('PATCH') }}
 
-    @include('products.form', ['submitButtonText' => 'Редактировать альбом', 'param'=>''])
+    @include('products.form', ['submitButtonText' => 'Редактировать продукцию', 'param'=>''])
     
   {{ Form::close() }}
 

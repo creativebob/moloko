@@ -77,4 +77,9 @@ class Product extends Model
   {
      return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'product');
   }
+
+  public function photo()
+  {
+    return $this->belongsTo('App\Photo');
+  }
 }
