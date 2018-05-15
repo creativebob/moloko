@@ -54,11 +54,7 @@
             <input type="checkbox" class="table-check" name="album_id" id="check-{{ $product->id }}"><label class="label-check" for="check-{{ $product->id }}"></label></td>
           <td>
             <a href="/products/{{ $product->id }}/edit">
-              @if (isset($product->photo_id))
-              <img src="/storage/{{ $product->company_id }}/media/products/{{ $product->id }}/img/{{ $product->photo->name }}">
-              @else
-              нет фото
-              @endif
+              <img src="{{ isset($product->photo_id) ? '/storage/'.$product->company_id.'/media/products/'.$product->id.'/img/small/'.$product->photo->name : '/img/plug/album_small_default_color.jpg' }}" alt="{{ isset($product->photo_id) ? $product->name : 'Нет фото' }}">
             </a>
           </td>
           <td class="td-name"><a href="/products/{{ $product->id }}/edit">{{ $product->name }}</a></td>

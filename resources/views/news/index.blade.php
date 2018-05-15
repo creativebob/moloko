@@ -54,11 +54,8 @@
           <td class="td-news-title">{{ $cur_news->title }}</td>
           <td class="td-news-preview">{{ str_limit($cur_news->preview, 50) }}</td>
           <td class="td-news-photo">
-          @if (isset($cur_news->photo_id))
-            <img src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/img/small/{{ $cur_news->photo->name }}">
-          @else
-            Нет превью
-          @endif</td>
+          <img src="{{ isset($cur_news->photo_id) ? '/storage/'.$cur_news->company_id.'/media/news/'.$cur_news->id.'/img/small/'.$cur_news->photo->name : '/img/plug/album_small_default_color.jpg' }}" alt="{{ isset($cur_news->photo_id) ? $cur_news->name : 'Нет фото' }}">
+        </td>
           <td class="td-news-alias">{{ $cur_news->alias }}</td>
           <td class="td-site-name">{{ $cur_news->site->name or ' ... ' }}</td>
           <td class="td-date_publish_begin">{{ $cur_news->date_publish_begin }}</td>

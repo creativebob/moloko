@@ -175,6 +175,11 @@ class PhotoController extends Controller
       $photo->author_id = $user_id;
       $photo->save();
 
+      if (!isset($album->photo_id)) {
+        $album->photo_id = $photo->id;
+        $album->save();
+      }
+
       // $album->photos()->attach($photo->id);
 
       $media = new AlbumEntity;
@@ -185,8 +190,10 @@ class PhotoController extends Controller
 
       $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
 
+      $settings = config()->get('settings');
+
       // $small = Image::make($request->photo)->grab(150, 99);
-      $small = Image::make($request->photo)->widen(150);
+      $small = Image::make($request->photo)->widen($settings['img_small_width']->value);
       $save_path = storage_path('app/public/'.$directory.'small');
       if (!file_exists($save_path)) {
         mkdir($save_path, 666, true);
@@ -194,7 +201,7 @@ class PhotoController extends Controller
       $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
 
       // $medium = Image::make($request->photo)->grab(900, 596);
-      $medium = Image::make($request->photo)->widen(900);
+      $medium = Image::make($request->photo)->widen($settings['img_medium_width']->value);
       $save_path = storage_path('app/public/'.$directory.'medium');
       if (!file_exists($save_path)) {
         mkdir($save_path, 666, true);
@@ -202,7 +209,7 @@ class PhotoController extends Controller
       $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
 
       // $large = Image::make($request->photo)->grab(1200, 795);
-      $large = Image::make($request->photo)->widen(1200);
+      $large = Image::make($request->photo)->widen($settings['img_large_width']->value);
       $save_path = storage_path('app/public/'.$directory.'large');
       if (!file_exists($save_path)) {
         mkdir($save_path, 666, true);

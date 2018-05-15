@@ -84,6 +84,7 @@ class DatabaseSeeder extends Seeder
     $this->call(CityEntityTableSeeder::class);
 
     // Альбомы
+    $this->call(SettingsTableSeeder::class);
     $this->call(AlbumsCategoriesTableSeeder::class);
     $this->call(AlbumsTableSeeder::class);
 
