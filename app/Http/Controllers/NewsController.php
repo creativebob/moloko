@@ -89,7 +89,7 @@ class NewsController extends Controller
 
     // Получаем сайт
     $answer_site = operator_right('sites', $this->entity_dependence, getmethod('index'));
-    $site = Site::moderatorLimit($answer_site)->whereAlias($alias)->first();
+    $site = Site::with('company.filials.location.city')->moderatorLimit($answer_site)->whereAlias($alias)->first();
 
     $cur_news = new News;
 
@@ -98,10 +98,13 @@ class NewsController extends Controller
 
         // Главный запрос
     $albums_categories = AlbumsCategory::moderatorLimit($answer_albums_categories)
+    ->where('company_id', $user->company_id)
     ->orderBy('sort', 'asc')
     ->get(['id','name','category_status','parent_id'])
     ->keyBy('id')
     ->toArray();
+
+    // dd($albums_categories);
 
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
@@ -193,6 +196,7 @@ class NewsController extends Controller
     $cur_news->name = $request->name;
     $cur_news->title = $request->title;
     $cur_news->preview = $request->preview;
+
     if (isset($request->alias)) {
       $cur_news->alias = $request->alias;
     } else {
@@ -221,7 +225,7 @@ class NewsController extends Controller
     if ($request->hasFile('photo')) {
       $photo = new Photo;
       $image = $request->file('photo');
-      $directory = $user->company->id.'/media/news/'.$cur_news->id;
+      $directory = $user->company->id.'/media/news/'.$cur_news->id.'/img/';
       $extension = $image->getClientOriginalExtension();
       $photo->extension = $extension;
       $image_name = 'preview.'.$extension;
@@ -240,31 +244,31 @@ class NewsController extends Controller
       $photo->author_id = $user_id;
       $photo->save();
 
-      $upload_success = $image->storeAs($directory.'/original', $image_name, 'public');
+      $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
 
       // $small = Image::make($request->photo)->grab(150, 99);
       $small = Image::make($request->photo)->widen(150);
-      $save_path = storage_path('app/public/'.$directory.'/small');
+      $save_path = storage_path('app/public/'.$directory.'small');
       if (!file_exists($save_path)) {
         mkdir($save_path, 666, true);
       }
-      $small->save(storage_path('app/public/'.$directory.'/small/'.$image_name));
+      $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
 
       // $medium = Image::make($request->photo)->grab(900, 596);
       $medium = Image::make($request->photo)->widen(900);
-      $save_path = storage_path('app/public/'.$directory.'/medium');
+      $save_path = storage_path('app/public/'.$directory.'medium');
       if (!file_exists($save_path)) {
         mkdir($save_path, 666, true);
       }
-      $medium->save(storage_path('app/public/'.$directory.'/medium/'.$image_name));
+      $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
 
       // $large = Image::make($request->photo)->grab(1200, 795);
       $large = Image::make($request->photo)->widen(1200);
-      $save_path = storage_path('app/public/'.$directory.'/large');
+      $save_path = storage_path('app/public/'.$directory.'large');
       if (!file_exists($save_path)) {
         mkdir($save_path, 666, true);
       }
-      $large->save(storage_path('app/public/'.$directory.'/large/'.$image_name));
+      $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
 
       $cur_news->photo_id = $photo->id;
       $cur_news->save();
@@ -313,7 +317,7 @@ class NewsController extends Controller
 
     // ГЛАВНЫЙ ЗАПРОС:
     // Вытаскиваем через сайт, так как алиасы могут дублироваться
-    $site = Site::with(['news.albums.albums_category', 'news.cities', 'company.filials.city','news' => function ($query) use ($news_alias) {
+    $site = Site::with(['news.albums.albums_category', 'news.cities', 'company.filials.location.city','news' => function ($query) use ($news_alias) {
       $query->whereAlias($news_alias);
     }])->moderatorLimit($answer)->whereAlias($alias)->first();
 
@@ -330,15 +334,21 @@ class NewsController extends Controller
     // $cities = $cur_news->cities->pluck('id')->toArray();
     // dd($cities);
 
+    // Получаем данные для авторизованного пользователя
+    $user = $request->user();
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer_albums_categories = operator_right('albums_categories', false, 'index');
 
     // Главный запрос
     $albums_categories = AlbumsCategory::moderatorLimit($answer_albums_categories)
+    ->where('company_id', $user->company_id)
     ->orderBy('sort', 'asc')
     ->get(['id','name','category_status','parent_id'])
     ->keyBy('id')
     ->toArray();
+
+    // dd($albums_categories);
 
     // Формируем дерево вложенности
     $albums_categories_cat = [];

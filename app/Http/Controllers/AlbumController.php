@@ -49,6 +49,7 @@ class AlbumController extends Controller
 
     $albums = Album::with('author', 'company', 'albums_category')
     ->withCount('photos')
+    ->where('name', '!=', 'default')
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
         ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
@@ -93,6 +94,7 @@ class AlbumController extends Controller
 
         // Главный запрос
         $albums_categories = AlbumsCategory::moderatorLimit($answer_albums_categories)
+        ->where('company_id', $user->company_id)
         ->orderBy('sort', 'asc')
         ->get(['id','name','category_status','parent_id'])
         ->keyBy('id')
@@ -282,6 +284,7 @@ class AlbumController extends Controller
 
         // Категории
       $albums_categories = AlbumsCategory::moderatorLimit($answer_category)
+      ->where('company_id', $user->company_id)
       ->orderBy('sort', 'asc')
       ->get(['id','name','category_status','parent_id'])
       ->keyBy('id')

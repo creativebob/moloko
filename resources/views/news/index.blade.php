@@ -55,7 +55,7 @@
           <td class="td-news-preview">{{ str_limit($cur_news->preview, 50) }}</td>
           <td class="td-news-photo">
           @if (isset($cur_news->photo_id))
-            <img src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/small/{{ $cur_news->photo->name }}">
+            <img src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/img/small/{{ $cur_news->photo->name }}">
           @else
             Нет превью
           @endif</td>
@@ -63,10 +63,14 @@
           <td class="td-site-name">{{ $cur_news->site->name or ' ... ' }}</td>
           <td class="td-date_publish_begin">{{ $cur_news->date_publish_begin }}</td>
           <td class="td-view">
+            @if ($cur_news->display == 1)
             @if (count($cur_news->cities) > 0)
             <a class="button" href="http://{{ $cur_news->site->alias }}/{{ $cur_news->company->location->city->alias }}/news/{{ $cur_news->alias }}" target="_blank">Чек</a>
             @else
             Нет города
+            @endif
+            @else
+            не отображается
             @endif
           </td>
           <td class="td-news-author">@if(isset($cur_news->author->first_name)) {{ $cur_news->author->first_name . ' ' . $cur_news->author->second_name }} @endif</td>

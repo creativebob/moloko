@@ -71,7 +71,7 @@
               <li>Размер, Мб: {{ $album->photos->sum('size')/1024 }}</li>
             </ul>
           </td>
-          <td class="td-album-company-id">@if(!empty($album->company->company_name)) {{ $album->company->company_name }} @else @if($album->system_item == null) Шаблон @else Системная @endif @endif</td>
+          <td class="td-album-company-id">@if(!empty($album->company->name)) {{ $album->company->company_name }} @else @if($album->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-album-author">@if(isset($album->author->first_name)) {{ $album->author->first_name . ' ' . $album->author->second_name }} @endif</td>
 
           <td class="td-delete">

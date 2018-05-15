@@ -43,7 +43,7 @@
             @endif
             @endif 
             ><label class="label-check" for="check-{{ $photo->id }}"></label></td>
-            <td class="td-photo"><a href="/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit"><img src="/storage/{{ $photo->company->id }}/media/albums/{{ $album->id }}/img/small/{{ $photo->name }}" alt="Фотография альбома"></a></td>
+            <td class="td-photo"><a href="/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit"><img src="/storage/{{ $photo->company_id }}/media/albums/{{ $album->id }}/img/small/{{ $photo->name }}" alt="Фотография альбома"></a></td>
             <td class="td-photo-name">{{ $photo->name }}</td>
             <td class="td-photo-extra-info">
               <ul>

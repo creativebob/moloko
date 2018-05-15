@@ -71,4 +71,10 @@ class Product extends Model
   {
     return $this->belongsTo('App\Unit');
   }
+
+  // Получаем альбом
+  public function album()
+  {
+     return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'product');
+  }
 }

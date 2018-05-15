@@ -222,10 +222,45 @@ class ProductController extends Controller
     $product->company_id = $company_id;
     $product->author_id = $user_id;
     $product->save();
+
+    
     if ($product) {
 
+      if ($request->hasFile('photo')) {
+        $photo = new Photo;
+        $image = $request->file('photo');
+        $directory = $company->id.'/media/products/'.$product->id.'/img/';
+        $extension = $image->getClientOriginalExtension();
+        $photo->extension = $extension;
+        $image_name = 'avatar.'.$extension;
+
+        $params = getimagesize($request->file('photo'));
+        $photo->width = $params[0];
+        $photo->height = $params[1];
+
+        $size = filesize($request->file('photo'))/1024;
+        $photo->size = number_format($size, 2, '.', '');
+
+        $photo->name = $image_name;
+        $photo->company_id = $company_id;
+        $photo->author_id = $user_id;
+        $photo->save();
+
+        $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
+
+        $avater = Image::make($request->photo)->widen(150);
+        $save_path = storage_path('app/public/'.$directory);
+        if (!file_exists($save_path)) {
+          mkdir($save_path, 666, true);
+        }
+        $avater->save(storage_path('app/public/'.$directory.$image_name));
+
+        $product->photo_id = $photo->id;
+        $product->save();
+      } 
+
       // Создаем папку в файловой системе
-      $storage = Storage::disk('public')->makeDirectory($product->company->id.'/products/'.$product->id);
+      // $storage = Storage::disk('public')->makeDirectory($product->company_id.'/media/products/'.$product->id);
 
       if ($storage) {
         return Redirect('/products');
@@ -449,14 +484,14 @@ class ProductController extends Controller
       $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
 
     // ГЛАВНЫЙ ЗАПРОС:
-      $product = Product::moderatorLimit($answer)->findOrFail($id);
+      $product = Product::with('album.photos')->moderatorLimit($answer)->findOrFail($id);
 
      // Подключение политики
       $this->authorize(getmethod('edit'), $product);
       // Инфо о странице
       $page_info = pageInfo($this->entity_name);
 
-    // dd($products);
+    // dd($product);
 
       return view('products.photos', compact('page_info', 'product'));
       
@@ -464,12 +499,12 @@ class ProductController extends Controller
 
     public function add_photo(Request $request)
     {
+      // dd('lol');
 
-      dd('lol');
+      // Подключение политики
+      $this->authorize(getmethod('store'), Photo::class);
+
       if ($request->hasFile('photo')) {
-        // Подключение политики
-        $this->authorize(getmethod('store'), Photo::class);
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
 
@@ -485,15 +520,17 @@ class ProductController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-        $album = Album::where(['company_id' => $company_id, 'description' => $request->name])->first();
-
         $alias = 'default';
+
+        $album = Album::where(['company_id' => $company_id, 'alias' => $alias, 'description' => $request->name, 'albums_category_id' => 1])->first();
+
         if ($album) {
           $album_id = $album->id;
         } else {
           $album = new Album;
           $album->company_id = $company_id;
-          $album->name = 'default';
+          $album->name = $alias;
+          $album->alias = $alias;
           $album->albums_category_id = 1;
           $album->description = $request->name;
           $album->author_id = $user_id;
@@ -505,7 +542,7 @@ class ProductController extends Controller
         $photo = new Photo;
 
         $image = $request->file('photo');
-        $directory = $company_id.'/media/albums/'.$album_id.'/img/';
+        $directory = $company_id.'/media/products/'.$album_id.'/img/';
         $extension = $image->getClientOriginalExtension();
         $photo->extension = $extension;
 
@@ -528,6 +565,16 @@ class ProductController extends Controller
         $media->entity_id = $photo->id;
         $media->entity = 'photo';
         $media->save();
+
+        $check_media = AlbumEntity::where(['album_id' => $album_id, 'entity_id' => $request->id, 'entity' => 'product'])->first();
+
+        if ($check_media == false) {
+          $media = new AlbumEntity;
+          $media->album_id = $album_id;
+          $media->entity_id = $request->id;
+          $media->entity = 'product';
+          $media->save();
+        }
 
         $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
 

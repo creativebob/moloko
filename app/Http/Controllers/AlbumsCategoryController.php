@@ -283,7 +283,7 @@ class AlbumsCategoryController extends Controller
       // Модерация и системная запись
       $albums_category->system_item = $request->system_item;
       $albums_category->moderation = $request->moderation;
-
+      
       // Смотрим что пришло
       // Если категория
       if ($request->first_item == 1) {
@@ -443,8 +443,17 @@ class AlbumsCategoryController extends Controller
       // Подключение политики
       $this->authorize(getmethod(__FUNCTION__), $albums_category);
 
-      // Получаем авторизованного пользователя
+      // Получаем данные для авторизованного пользователя
       $user = $request->user();
+
+      // Смотрим компанию пользователя
+      $company_id = $user->company_id;
+      if($company_id == null) {
+        abort(403, 'Необходимо авторизоваться под компанией');
+      }
+
+      // Скрываем бога
+      $user_id = hideGod($user);
 
       // Модерация и системная запись
       $albums_category->system_item = $request->system_item;
