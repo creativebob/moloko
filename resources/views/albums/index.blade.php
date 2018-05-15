@@ -26,7 +26,6 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th>Обложка</th>
           <th class="td-album-name">Название альбомa</th>
-          <th class="td-album-edit">Редактировать</th>
           <th class="td-album-category">Категория</th>
           <th class="td-album-description">Описание</th>
           <th class="td-album-date">Сведения</th>
@@ -52,15 +51,10 @@
             ><label class="label-check" for="check-{{ $album->id }}"></label></td>
           <td>
             <a href="/albums/{{ $album->alias }}">
-              @if (isset($album->photo_id))
-              <img src="/storage/{{ $album->company_id }}/media/albums/{{ $album->id }}/img/small/{{ $album->photo->name }}" alt="{{ $album->name }}">
-              @else
-              нет фото
-              @endif
+              <img src="{{ isset($album->photo_id) ? '/storage/'.$album->company_id.'/media/albums/'.$album->id.'/img/small/'.$album->photo->name : '/img/plug/album_small_default_color.jpg' }}" alt="{{ isset($album->photo_id) ? $album->name : 'Нет фото' }}">
             </a>
           </td>
-          <td class="td-album-name"><a href="/albums/{{ $album->alias }}">{{ $album->name }}</a></td>
-          <td class="td-album-edit"><a class="tiny button" href="/albums/{{ $album->alias }}/edit">Редактировать</a></td>
+          <td class="td-album-name"><a href="/albums/{{ $album->alias }}/edit">{{ $album->name }}</a></td>
           <td class="td-album-category">{{ $album->albums_category->name }}</td>
           <td class="td-album-description">{{ $album->description }}</td>
           <td class="td-album-extra-info">

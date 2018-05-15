@@ -440,7 +440,7 @@ class NewsController extends Controller
     if ($request->hasFile('photo')) {
       $photo = new Photo;
       $image = $request->file('photo');
-      $directory = $user->company->id.'/media/news/'.$id;
+      $directory = $user->company->id.'/media/news/'.$id.'/img/';
       $extension = $image->getClientOriginalExtension();
       $photo->extension = $extension;
       $image_name = 'preview.'.$extension;
@@ -459,31 +459,33 @@ class NewsController extends Controller
       $photo->author_id = $user_id;
       $photo->save();
 
-      $upload_success = $image->storeAs($directory.'/original', $image_name, 'public');
+      $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
+
+      $settings = config()->get('settings');
 
       // $small = Image::make($request->photo)->grab(150, 99);
-      $small = Image::make($request->photo)->widen(150);
-      $save_path = storage_path('app/public/'.$directory.'/small');
+      $small = Image::make($request->photo)->widen($settings['img_small_width']->value);
+      $save_path = storage_path('app/public/'.$directory.'small');
       if (!file_exists($save_path)) {
         mkdir($save_path, 666, true);
       }
-      $small->save(storage_path('app/public/'.$directory.'/small/'.$image_name));
+      $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
 
       // $medium = Image::make($request->photo)->grab(900, 596);
-      $medium = Image::make($request->photo)->widen(900);
-      $save_path = storage_path('app/public/'.$directory.'/medium');
+      $medium = Image::make($request->photo)->widen($settings['img_medium_width']->value);
+      $save_path = storage_path('app/public/'.$directory.'medium');
       if (!file_exists($save_path)) {
         mkdir($save_path, 666, true);
       }
-      $medium->save(storage_path('app/public/'.$directory.'/medium/'.$image_name));
+      $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
 
       // $large = Image::make($request->photo)->grab(1200, 795);
-      $large = Image::make($request->photo)->widen(1200);
-      $save_path = storage_path('app/public/'.$directory.'/large');
+      $large = Image::make($request->photo)->widen($settings['img_large_width']->value);
+      $save_path = storage_path('app/public/'.$directory.'large');
       if (!file_exists($save_path)) {
         mkdir($save_path, 666, true);
       }
-      $large->save(storage_path('app/public/'.$directory.'/large/'.$image_name));
+      $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
 
       $cur_news->photo_id = $photo->id;
     }
