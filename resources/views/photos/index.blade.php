@@ -58,8 +58,8 @@
                 <li>Размер, Kb: {{ $photo->size }}</li>
               </ul>
             </td>
-            <td class="td-photo-author">@if(isset($photo->author->first_name)) {{ $photo->author->first_name . ' ' . $photo->author->second_name }} @endif</td>
-
+            <td class="td-photo-author">@if(isset($photo->author->first_name)) {{ $photo->author->first_name . ' ' . $photo->author->second_name }} @endif
+            </td>
             <td class="td-delete">
               @if ($photo->system_item != 1)
               @can('delete', $photo)
