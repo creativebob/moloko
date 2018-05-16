@@ -20,18 +20,16 @@
 <div class="grid-x">
   <div class="small-12 cell">
     <table class="table-content tablesorter" id="content" data-sticky-container>
-      <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
+      <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom" data-entity-alias="news">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-news-photo">Фото</th>
           <th class="td-news-name">Название новости</th>
-          <th class="td-news-title">Заголовок</th>
-          <th class="td-news-preview">Превью</th>
-          <th class="td-news-alias">Алиас</th>
-          <th class="td-site-name">Сайт</th>
-          <th class="td-date_publish_begin">Дата начала</th>
-          <th class="td-view">Просмотр</th>
+<!--           <th class="td-news-title">Заголовок</th> -->
+          <th class="td-news-preview">Короткая новость</th>
+          <th class="td-news-info">Инфо</th>
+          <th class="td-date_publish">Срок публикации</th>
           <th class="td-news-author">Автор</th>
           <th class="td-delete"></th>
         </tr>
@@ -54,22 +52,33 @@
               </a>
             @endcan
           </td>
-          <td class="td-news-title">{{ $cur_news->title }}</td>
-          <td class="td-news-preview">{{ str_limit($cur_news->preview, 50) }}</td>
+          {{-- <td class="td-news-title">{{ $cur_news->title }}</td> --}}
+          <td class="td-news-preview">{{ str_limit($cur_news->preview, 150) }}</td>
 
-          <td class="td-news-alias">{{ $cur_news->alias }}</td>
-          <td class="td-site-name">{{ $cur_news->site->name or ' ... ' }}</td>
-          <td class="td-date_publish_begin">{{ $cur_news->date_publish_begin }}</td>
-          <td class="td-view">
+          <td class="td-news-info">
+<!--             <span>Сайт:&nbsp;{{ $cur_news->site->name or ' ... ' }}</span>
+            <br><br> -->
+            {{-- <span>Домен:&nbsp;{{ $cur_news->site->domen or ' ... ' }}</span><br> --}}
             @if ($cur_news->display == 1)
-            @if (count($cur_news->cities) > 0)
-            <a class="button" href="http://{{ $cur_news->site->alias }}/{{ $cur_news->company->location->city->alias }}/news/{{ $cur_news->alias }}" target="_blank">Чек</a>
-            @else
-            Нет города
-            @endif
+            <span>Алиас:&nbsp;<a href="http://{{ $cur_news->site->alias }}/{{ $cur_news->company->location->city->alias }}/news/{{ $cur_news->alias }}" target="_blank">{{ $cur_news->alias }}</a></span>
             @else
             не отображается
             @endif
+            <br>
+            <span title="{{ $cur_news->cities->implode('name', ', ') }}">Города:&nbsp;
+            @if (count($cur_news->cities) > 0)
+              @if (count($cur_news->cities) == 1)
+                {{$cur_news->cities->first()->name or ' ' }}
+              @else 
+                {{$cur_news->cities->first()->name or ' ' }}&nbsp;и&nbsp;др.
+              @endif
+            @else
+            Нет
+            @endif
+            </span>
+          <td class="td-date_publish">
+            <span>{{ $cur_news->date_publish_begin }} {{ getWeekDay($cur_news->date_publish_begin, 1) }}</span>
+            <span>{{ $cur_news->date_publish_end }} {{ getWeekDay($cur_news->date_publish_end, 1) }}</span>
           </td>
           <td class="td-news-author">@if(isset($cur_news->author->first_name)) {{ $cur_news->author->first_name . ' ' . $cur_news->author->second_name }} @endif</td>
           <td class="td-delete">
@@ -122,4 +131,8 @@ $(function() {
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.table-scripts')
 @include('includes.scripts.table-sort')
+
+{{-- Скрипт чекбоксов --}}
+@include('includes.scripts.checkbox-control')
+
 @endsection

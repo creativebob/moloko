@@ -64,6 +64,26 @@ class NewsController extends Controller
     ->orderBy('date_publish_begin', 'desc')
     ->paginate(30);
 
+
+    $filter_query = News::with('author')
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
+    ->whereSite_id($site->id) // Только для страниц сайта
+    ->get();
+
+
+    $filter['status'] = null;
+
+    // $filter = addCityFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
+    $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
+
+        // Добавляем данные по спискам (Требуется на каждом контроллере)
+    $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+
+
     // dd($news);
 
     // Инфо о странице
@@ -74,7 +94,7 @@ class NewsController extends Controller
     // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('sites');
 
-    return view('news.index', compact('news', 'site', 'page_info', 'parent_page_info', 'alias'));
+    return view('news.index', compact('news', 'site', 'page_info', 'parent_page_info', 'alias', 'filter'));
   }
 
   public function create(Request $request, $alias)
