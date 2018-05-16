@@ -14,7 +14,7 @@ class SitesTableSeeder extends Seeder
 		 DB::table('sites')->insert([
         	[
 		        'name' => 'Crm System',
-		        'domen' => 'crmsystem.vkmars.ru',
+		        'domain' => 'crmsystem.vkmars.ru',
                 'alias' => 'crmsystem',
 		        'company_id' => null,
                 'author_id' => 1,
@@ -24,7 +24,7 @@ class SitesTableSeeder extends Seeder
         	],
             [
                 'name' => 'Ворота "Марс"',
-                'domen' => 'vkmars',
+                'domain' => 'vkmars',
                 'alias' => 'vkmars',
                 'company_id' => 1,
                 'author_id' => 4,
@@ -34,7 +34,7 @@ class SitesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Ибаный',
-                'domen' => 'lol.ru',
+                'domain' => 'lol.ru',
                 'alias' => 'lol',
                 'company_id' => 1,
                 'author_id' => 7,
@@ -44,7 +44,7 @@ class SitesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Фенстер',
-                'domen' => 'f-okna.ru',
+                'domain' => 'f-okna.ru',
                 'alias' => 'f-okna',
                 'company_id' => 2,
                 'author_id' => 14,
@@ -54,7 +54,7 @@ class SitesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Шторка',
-                'domen' => 'shtorka',
+                'domain' => 'shtorka',
                 'alias' => 'storka',
                 'company_id' => 4,
                 'author_id' => 14,

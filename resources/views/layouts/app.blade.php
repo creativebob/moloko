@@ -74,9 +74,9 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                   @php
                   $name = '';
                   if (Auth::user()->sex == 1) {
-                  $name = 'avatar_small_man.jpg';
+                  $name = 'avatar_small_man.png';
                 } else {
-                $name = 'avatar_small_woman.jpg';
+                $name = 'avatar_small_woman.png';
               }
               @endphp
               <img src="{{ isset(Auth::user()->photo_id) ? '/storage/'.Auth::user()->company_id.'/media/albums/'.Auth::user()->login.'/img/'.Auth::user()->avatar->name : '/img/plug/'.$name }}" alt="Аватар" class="avatar">
