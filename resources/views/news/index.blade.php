@@ -24,10 +24,10 @@
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+          <th class="td-news-photo">Фото</th>
           <th class="td-news-name">Название новости</th>
           <th class="td-news-title">Заголовок</th>
           <th class="td-news-preview">Превью</th>
-          <th class="td-news-photo">Превью</th>
           <th class="td-news-alias">Алиас</th>
           <th class="td-site-name">Сайт</th>
           <th class="td-date_publish_begin">Дата начала</th>
@@ -42,6 +42,9 @@
         <tr class="item @if($cur_news->moderation == 1)no-moderation @endif" id="news-{{ $cur_news->id }}" data-name="{{ $cur_news->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $cur_news->id }}"><label class="label-check" for="check-{{ $cur_news->id }}"></label></td>
+          <td class="td-news-photo">
+            <img src="{{ isset($cur_news->photo_id) ? '/storage/'.$cur_news->company_id.'/media/news/'.$cur_news->id.'/img/small/'.$cur_news->photo->name : '/img/plug/news_small_default_color.jpg' }}" alt="{{ isset($cur_news->photo_id) ? $cur_news->name : 'Нет фото' }}">
+          </td>
           <td class="td-news-name">
             @can('update', $cur_news)
               <a href="/sites/{{ $cur_news->site->alias }}/news/{{ $cur_news->alias }}/edit">
@@ -53,9 +56,7 @@
           </td>
           <td class="td-news-title">{{ $cur_news->title }}</td>
           <td class="td-news-preview">{{ str_limit($cur_news->preview, 50) }}</td>
-          <td class="td-news-photo">
-          <img src="{{ isset($cur_news->photo_id) ? '/storage/'.$cur_news->company_id.'/media/news/'.$cur_news->id.'/img/small/'.$cur_news->photo->name : '/img/plug/album_small_default_color.jpg' }}" alt="{{ isset($cur_news->photo_id) ? $cur_news->name : 'Нет фото' }}">
-        </td>
+
           <td class="td-news-alias">{{ $cur_news->alias }}</td>
           <td class="td-site-name">{{ $cur_news->site->name or ' ... ' }}</td>
           <td class="td-date_publish_begin">{{ $cur_news->date_publish_begin }}</td>

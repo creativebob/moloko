@@ -3,6 +3,7 @@
 @section('inhead')
 {{-- Скрипты таблиц в шапке --}}
 @include('includes.scripts.table-inhead')
+@include('includes.scripts.fancybox-inhead')
 @endsection
 
 @section('title', $page_info->title . ' ' . $album->name)
@@ -43,11 +44,16 @@
             @endif
             @endif 
             ><label class="label-check" for="check-{{ $photo->id }}"></label></td>
-            <td class="td-photo"><a href="/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit"><img src="/storage/{{ $photo->company_id }}/media/albums/{{ $album->id }}/img/small/{{ $photo->name }}" alt="Фотография альбома"></a></td>
-            <td class="td-photo-name">{{ $photo->name }}</td>
+            <td class="td-photo">
+              <a data-fancybox="photos" href="/storage/{{ $photo->company_id }}/media/albums/{{ $album->id }}/img/large/{{ $photo->name }}">
+                <img src="/storage/{{ $photo->company_id }}/media/albums/{{ $album->id }}/img/small/{{ $photo->name }}" alt="Фотография альбома">
+              </a>
+            </td>
+            <td class="td-photo-name">
+              <a href="/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit">{{ $photo->name }}</a>
+            </td>
             <td class="td-photo-extra-info">
               <ul>
-                <li>ID Фото: {{ $photo->id }}</li>
                 <li>Дата добавления: {{ date('d.m.Y', strtotime($photo->created_at)) }}</li>
                 <li>Размер, Kb: {{ $photo->size }}</li>
               </ul>
@@ -69,13 +75,6 @@
     </div>
   </div>
 
-  {{-- Pagination --}}
-  <div class="grid-x" id="pagination">
-    <div class="small-6 cell pagination-head">
-      <span class="pagination-title">Кол-во записей: {{ $photos->count() }}</span>
-      {{ $photos->links() }}
-    </div>
-  </div>
   @endsection
 
   @section('modals')

@@ -142,21 +142,9 @@ class SiteController extends Controller
     }
   }
 
-  // Получаем сайт по api
   public function show(Request $request)
   {
-    $site = Site::where('api_token', $request->token)->first();
-    if ($site) {
-      // return Cache::remember('site', 1, function() use ($domen) {
-      return Site::with(['company.filials.city', 'company.city', 'pages', 'navigations.menus.page', 'navigations.navigations_category', 'navigations' => function ($query) {
-        $query->whereDisplay(1);
-      },'navigations.menus' => function ($query) {
-        $query->whereDisplay(1)->orderBy('sort', 'asc');
-      }])->whereDomen($request->domen)->orderBy('sort', 'asc')->first();
-      // });
-    } else {
-      return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
-    }
+
   }
 
   public function edit($alias)
@@ -303,5 +291,24 @@ class SiteController extends Controller
       ];
     }
     return json_encode($result, JSON_UNESCAPED_UNICODE);
+  }
+
+
+  // ------------------------------------ API -----------------------------------------------------
+  // Получаем сайт по api
+  public function api_index (Request $request)
+  {
+    $site = Site::where('api_token', $request->token)->first();
+    if ($site) {
+      // return Cache::remember('site', 1, function() use ($domen) {
+      return Site::with(['company.filials.location.city', 'company.location.city', 'pages', 'navigations.menus.page', 'navigations.navigations_category', 'navigations' => function ($query) {
+        $query->whereDisplay(1);
+      },'navigations.menus' => function ($query) {
+        $query->whereDisplay(1)->orderBy('sort', 'asc');
+      }])->whereDomen($request->domen)->orderBy('sort', 'asc')->first();
+      // });
+    } else {
+      return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
+    }
   }
 }

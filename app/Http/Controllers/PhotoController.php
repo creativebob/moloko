@@ -53,32 +53,32 @@ class PhotoController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // --------------------------------------------------------------------------------------------------------------------------------------
 
-    $photos = Photo::with(['author', 'company', 'album' => function ($query) use ($alias) {
-      $query->whereAlias($alias);
-    }])
-    ->moderatorLimit($answer)
-    ->companiesLimit($answer)
-    ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
-    ->booklistFilter($request) 
-    ->orderBy('sort', 'asc')
-    ->paginate(30);
-
-    // $album = Album::with(['author', 'photos' => function ($query) {
-    //     $query->orderBy('sort', 'asc')->paginate(30);
-    //   }])
-    //   ->whereAlias($alias)
-    //   ->moderatorLimit($answer)
-    //   ->companiesLimit($answer)
+    // $photos = Photo::with(['author', 'company', 'album' => function ($query) use ($alias) {
+    //   $query->whereAlias($alias);
+    // }])
+    // ->moderatorLimit($answer)
+    // ->companiesLimit($answer)
     // ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
     // ->authors($answer)
     // ->systemItem($answer) // Фильтр по системным записям
     // ->booklistFilter($request) 
     // ->orderBy('sort', 'asc')
-    // ->first();
+    // ->paginate(30);
 
-    // $photos = $album->photos;
+    $album = Album::with(['author', 'photos' => function ($query) {
+        $query->orderBy('sort', 'asc');
+      }])
+      ->whereAlias($alias)
+      ->moderatorLimit($answer_album)
+      ->companiesLimit($answer_album)
+    ->filials($answer_album) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+    ->authors($answer_album)
+    ->systemItem($answer_album) // Фильтр по системным записям
+    ->booklistFilter($request) 
+    ->orderBy('sort', 'asc')
+    ->first();
+
+    $photos = $album->photos;
 
     // dd($photos);
 

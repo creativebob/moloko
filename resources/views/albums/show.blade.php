@@ -105,7 +105,6 @@
               </td>
             <td class="td-photo-extra-info">
               <ul>
-                <li>ID Фото: {{ $photo->id }}</li>
                 <li>Дата добавления: {{ date('d.m.Y', strtotime($photo->created_at)) }}</li>
                 <li>Размер, Kb: {{ $photo->size }}</li>
               </ul>

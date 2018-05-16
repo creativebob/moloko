@@ -29,7 +29,8 @@ class UsersTableSeeder extends Seeder
     			'filial_id' => null, 
     			'system_item' => 1, 
     			'author_id' => null, 
-    			'moderation' => null, 
+    			'moderation' => null,
+                'sex' => 1, 
     		],
     		[
     			'login' => 'creativebob', 
@@ -48,6 +49,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 1,
     			'moderation' => null,
+                'sex' => 1, 
     		],
     		[
     			'login' => 'makc_berluskone', 
@@ -66,6 +68,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 1, 
     			'moderation' => null, 
+                'sex' => 1, 
     		],
     		[
     			'login' => 'timoshenko', 
@@ -84,6 +87,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 1, 
     			'moderation' => null, 
+                'sex' => 1, 
     		],
     		[
     			'login' => 'mironov', 
@@ -102,6 +106,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 4, 
     			'moderation' => null, 
+                'sex' => 1, 
     		],
     		[
     			'login' => 'kondrachuk', 
@@ -120,6 +125,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 4, 
     			'moderation' => null, 
+                'sex' => 0, 
     		],
     		[
     			'login' => 'davydenko', 
@@ -138,6 +144,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 4, 
     			'moderation' => null, 
+                'sex' => 1, 
     		],
     		[
     			'login' => 'ylan1', 
@@ -155,6 +162,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 4, 
     			'moderation' => null, 
+                'sex' => 1, 
     		],
     		[
     			'login' => 'ylan2', 
@@ -172,6 +180,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 8, 
     			'moderation' => null, 
+                'sex' => 1, 
     		],
     		[
     			'login' => 'ylan3', 
@@ -189,6 +198,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 8, 
     			'moderation' => null, 
+                'sex' => 0, 
     		],
     		[
     			'login' => 'chita1', 
@@ -206,6 +216,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 4, 
     			'moderation' => null, 
+                'sex' => 1, 
     		],
     		[
     			'login' => 'chita2', 
@@ -223,6 +234,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 11, 
     			'moderation' => null, 
+                'sex' => 1, 
     		],
     		[
     			'login' => 'chita3', 
@@ -240,6 +252,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 12, 
     			'moderation' => null, 
+                'sex' => 1, 
     		],
     		[
     			'login' => 'fenster', 
@@ -257,6 +270,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 1, 
     			'moderation' => null, 
+                'sex' => 1, 
     		],
     		[
     			'login' => 'test1', 
@@ -274,6 +288,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 5, 
     			'moderation' => 1, 
+                'sex' => 1, 
     		],
     		[
     			'login' => 'test2', 
@@ -291,6 +306,7 @@ class UsersTableSeeder extends Seeder
     			'system_item' => null, 
     			'author_id' => 5, 
     			'moderation' => 1, 
+                'sex' => 0, 
     		],
     	]);
 
