@@ -53,15 +53,13 @@
 
         $list_filter =[];
         $filter_name = $name;
-        $model_entity_name = $name . '_name';
-
 
             $filter_entity = $request->user()->booklists_author->where('entity_alias', $entity_name)->values();
 
             if(count($filter_entity)>0){
 
                 foreach($filter_entity as $booklist){
-                    $list_filter['item_list'][$booklist->id] = $booklist->booklist_name;
+                    $list_filter['item_list'][$booklist->id] = $booklist->name;
                 }
 
             };
@@ -83,7 +81,7 @@
             // sortByDesc('id')
 
             // Получаем список Default
-            $booklists_default = $booklists_user->where('booklist_name', 'Default')->first();
+            $booklists_default = $booklists_user->where('name', 'Default')->first();
 
             if($booklists_default != null){
             
@@ -92,7 +90,7 @@
 
                     $booklist_id = $booklist->id;
 
-                    if($booklist->booklist_name == 'Default'){$booklists[$booklist_id]['status'] = 'Default';} else {$booklists[$booklist_id]['status'] = 'Simple';};
+                    if($booklist->name == 'Default'){$booklists[$booklist_id]['status'] = 'Default';} else {$booklists[$booklist_id]['status'] = 'Simple';};
 
                     $booklists['default'] = $booklists_default;
                     $booklists['default_count'] = count($booklists_default);
@@ -154,7 +152,6 @@
 
         $list_filter =[];
         $filter_name = $name;
-        $model_entity_name = 'name';
 
         $filter_entity = $filter_query->unique($column); 
 
@@ -189,7 +186,6 @@
         $filter[$filter_name]['list_select'] = $list_filter; 
         $filter[$filter_name]['title'] = $title; // Назавние фильтра
 
-        // dd($filter);
         return $filter;
     }
 
@@ -197,7 +193,6 @@
 
         $list_filter =[];
         $filter_name = $name;
-        $model_entity_name = 'name';
 
         $filter_entity = $filter_query->unique('location.city_id');
 

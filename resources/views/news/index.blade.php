@@ -4,6 +4,7 @@
 <meta name="description" content="{{ $site->site_name }}" />
 {{-- Скрипты таблиц в шапке --}}
   @include('includes.scripts.table-inhead')
+  @include('includes.scripts.pickmeup-inhead')
 @endsection
 
 @section('title', $page_info->name . ' ' . $site->name)
@@ -19,8 +20,8 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container>
-      <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom" data-entity-alias="news">
+    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="news">
+      <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
@@ -39,7 +40,19 @@
         @foreach($news as $cur_news)
         <tr class="item @if($cur_news->moderation == 1)no-moderation @endif" id="news-{{ $cur_news->id }}" data-name="{{ $cur_news->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $cur_news->id }}"><label class="label-check" for="check-{{ $cur_news->id }}"></label></td>
+          <td class="td-checkbox checkbox">
+            <input type="checkbox" class="table-check" name="cur_news_id" id="check-{{ $cur_news->id }}"
+              {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+              @if(!empty($filter['booklist']['booklists']['default']))
+                {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+                @if (in_array($cur_news->id, $filter['booklist']['booklists']['default'])) checked 
+              @endif
+            @endif
+            >
+
+            <label class="label-check" for="check-{{ $cur_news->id }}">
+              
+            </label></td>
           <td class="td-news-photo">
             <img src="{{ isset($cur_news->photo_id) ? '/storage/'.$cur_news->company_id.'/media/news/'.$cur_news->id.'/img/small/'.$cur_news->photo->name : '/img/plug/news_small_default_color.jpg' }}" alt="{{ isset($cur_news->photo_id) ? $cur_news->name : 'Нет фото' }}">
           </td>
@@ -131,6 +144,7 @@ $(function() {
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.table-scripts')
 @include('includes.scripts.table-sort')
+@include('includes.scripts.pickmeup-script')
 
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox-control')

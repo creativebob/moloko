@@ -41,6 +41,8 @@ class CreateCompaniesTable extends Migration
             $table->integer('admin_user_id')->nullable()->unsigned()->comment('Администратор компании');
             // $table->foreign('user_id')->references('id')->on('users');
 
+            $table->integer('manufacturer_status')->nullable()->unsigned()->comment('Статус производителя');
+
             $table->integer('schedule_id')->nullable()->unsigned()->comment('Id графика работы');
             $table->foreign('schedule_id')->references('id')->on('schedules');
 

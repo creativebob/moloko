@@ -50,12 +50,12 @@
 				<div class="small-12 cell filters fieldset-filters" id="filters">
 					<div class="grid-padding-x">
 						<div class="small-12 cell text-right">
-							{{ link_to_route($page_info->alias .'.index', 'Сбросить', $value = Null, ['class' => 'small-link']) }}
+							{{ link_to(Request::url(), 'Сбросить', ['class' => 'small-link']) }}
 						</div>
 					</div>
 					<div class="grid-padding-x">
 						<div class="small-12 cell">
-						{{ Form::open(['url' => $page_info->alias, 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
+						{{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
 							@include($page_info->alias.'.filters')
 

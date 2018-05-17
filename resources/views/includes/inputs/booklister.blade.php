@@ -21,7 +21,6 @@
 
 	@php
 		if($checkboxer_mass[$name]['count_mass'] > 0){$show_status = 'show-elem';} else {$show_status = 'hide-elem';};
-		$entity_name = $name . '_name';
 	@endphp
 
 	<div class="checkboxer-clean {{ $show_status }}" onclick="event.stopPropagation()" data-name="{{$name}}">
@@ -45,9 +44,9 @@
 	<ul class="checkboxer-menu {{$name}}" data-name="{{$name}}">
 
 		@foreach ($main_mass as $key => $value)
-			<li class="item" id="booklists-{{$value->id}}" data-name="{{$value->$entity_name}}">
+			<li class="item" id="booklists-{{$value->id}}" data-name="{{$value->name}}">
 
-				@if($value->$entity_name != 'Default')
+				@if($value->name != 'Default')
 
 					@php
 					 	$checked = '';
@@ -63,7 +62,7 @@
 					<label for="{{$name}}-{{ $value->id }}">
 						<span class="rename_field_{{$value->id}} dblrename" data-booklist_id="{{$value->id}}">
 
-							<span class="text_rename">{{ str_limit($value->$entity_name, $limit = 30, $end = ' ...')}}</span>
+							<span class="text_rename">{{ str_limit($value->name, $limit = 30, $end = ' ...')}}</span>
 							<span class="count_rename"> ({{$checkboxer_mass['booklist']['booklists'][$value->id]['mass_count']}})</span>
 
 						</span>

@@ -60,10 +60,12 @@ class NewsController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->whereSite_id($site->id) // Только для страниц сайта
     // ->orderBy('sort', 'asc')
+    ->authorFilter($request) // Фильтр по авторам
+    ->booklistFilter($request)  // Фильтр по спискам
+    ->dateIntervalFilter($request, 'date_publish_begin') // Интервальный фильтр по дате публикации
     ->orderBy('moderation', 'desc')
     ->orderBy('date_publish_begin', 'desc')
     ->paginate(30);
-
 
     $filter_query = News::with('author')
     ->moderatorLimit($answer)
@@ -73,7 +75,6 @@ class NewsController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->whereSite_id($site->id) // Только для страниц сайта
     ->get();
-
 
     $filter['status'] = null;
 
@@ -89,7 +90,7 @@ class NewsController extends Controller
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
-    // dd($news);
+    // dd($filter);
 
     // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('sites');

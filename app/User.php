@@ -111,6 +111,12 @@ class User extends Authenticatable
             };
     }
 
+    // Склеиваем имя и фамилию для юзера и выводим при обращении через name
+    public function getNameAttribute($value) {
+      $value = $this->first_name . ' ' . $this->second_name;
+      return $value;
+    }
+
     public function getPhoneAttribute($value) {
         
         if(strlen($value) == 11 ){
