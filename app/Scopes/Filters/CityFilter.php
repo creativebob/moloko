@@ -5,22 +5,29 @@ namespace App\Scopes\Filters;
 trait CityFilter
 {
     // Фильтрация по городу
-    public function scopeCityFilter($query, $request)
+    public function scopeCityFilter($query, $request, $relations = null)
     {
 
-        //Фильтруем по списку городов
-        // if($request->city_id){
-        //   $query = $query->whereIn('city_id', $request->city_id);
-        // };
+        if($relations == null){
 
-        if($request->city_id){
+            //Фильтруем по списку городов
+            if($request->city_id){
+              $query = $query->whereIn('city_id', $request->city_id);
+            };
 
-			$query = $query->whereHas('location', function ($query) use ($request) {
-			    $query = $query->whereIn('city_id', $request->city_id);
-			})->orWhereNull('location_id');
-	    };
+        } else {
 
-    	return $query;
+            if($request->city_id){
+                // dd($request->position_id);
+
+                $query = $query->whereHas('location', function ($query) use ($request) {
+                    $query = $query->whereIn('city_id', $request->city_id);
+                })->orWhereNull('location_id');
+            };
+
+        };
+
+      return $query;
     }
 
 }

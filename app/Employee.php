@@ -13,8 +13,11 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
+
 // Фильтры
+use App\Scopes\Filters\PositionFilter;
 use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\DepartmentFilter;
 
 class Employee extends Model
 {
@@ -30,8 +33,10 @@ class Employee extends Model
   use ModeratorLimitTraitScopes;
 
   // Фильтры
+  use PositionFilter;
   use DateIntervalFilter;
-
+  use DepartmentFilter;
+  
   /**
    * Атрибуты, которые должны быть преобразованы в даты.
    *

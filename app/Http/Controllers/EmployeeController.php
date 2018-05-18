@@ -50,6 +50,8 @@ class EmployeeController extends Controller
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
+        ->positionFilter($request, 'staffer')
+        ->departmentFilter($request, 'staffer')
         ->dateIntervalFilter($request, 'date_employment')
         ->orderBy('moderation', 'desc')
         ->paginate(30);
@@ -58,16 +60,26 @@ class EmployeeController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        // $filter_query = Employee::with('staffer.position')
-        // ->moderatorLimit($answer)
-        // ->companiesLimit($answer)
-        // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        // ->authors($answer)
-        // ->systemItem($answer) // Фильтр по системным записям
-        // ->get();
+        $filter_query = Employee::with('staffer.position', 'staffer.department')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->get();
 
-        // $filter = [];
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
+
+
+        // dd($filter_query);
+        $filter['status'] = null;
+
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите должность:', 'position', 'position_id', 'staffer');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите отдел:', 'department', 'department_id', 'staffer');
+
+
+            // Добавляем данные по спискам (Требуется на каждом контроллере)
+        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        // dd($filter);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -85,7 +97,7 @@ class EmployeeController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('employees.index', compact('employees', 'page_info', 'filials'));
+        return view('employees.index', compact('employees', 'page_info', 'filials', 'filter'));
     }
 
     public function create()

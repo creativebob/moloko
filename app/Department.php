@@ -15,6 +15,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Фильтры
 use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\DepartmentFilter;
 
 class Department extends Model
 {
@@ -30,6 +31,7 @@ class Department extends Model
 
   // Подключаем фильтры
   use BooklistFilter;
+  use DepartmentFilter;
 
   // Фильтрация для показа системных записей
   public function scopeOnlyFilial($query)
