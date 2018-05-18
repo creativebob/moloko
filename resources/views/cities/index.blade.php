@@ -137,6 +137,8 @@ $(function() {
   // Функция получения городов из вк или с фильтром по нашей базе
   function getCityVk () {  
     $('.find-status').removeClass('icon-find-ok');
+
+    alert($('#city-name-field').val());
     // Сам ajax запрос
     $.ajax({
       headers: {

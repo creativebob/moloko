@@ -261,12 +261,13 @@ class ProductController extends Controller
 
       // Создаем папку в файловой системе
       // $storage = Storage::disk('public')->makeDirectory($product->company_id.'/media/products/'.$product->id);
+      return Redirect('/products');
 
-      if ($storage) {
-        return Redirect('/products');
-      } else {
-        abort(403, 'Ошибка записи товара');
-      }
+      // if ($storage) {
+      //   return Redirect('/products');
+      // } else {
+      //   abort(403, 'Ошибка записи товара');
+      // }
     } else {
       abort(403, 'Ошибка записи товара');
     }

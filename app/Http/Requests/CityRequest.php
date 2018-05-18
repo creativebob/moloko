@@ -26,7 +26,9 @@ class CityRequest extends FormRequest
         return [
             'region_name' => 'string|max:255|nullable',
             // 'region_code' => 'integer|nullable',
-            // 'region_vk_external_id' => 'integer|nullable', 
+            // 'region_vk_external_id' => 'integer|nullable',
+            'checkbox' =  'integer|nullable',
+            'name' => 'string|max:255',
             'area_name' => 'string|max:255|nullable',
             'city_name' => 'string|max:255',
             'city_code' => 'integer|nullable',
