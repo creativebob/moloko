@@ -60,14 +60,15 @@ class NewsController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->whereSite_id($site->id) // Только для страниц сайта
     // ->orderBy('sort', 'asc')
-    ->authorFilter($request) // Фильтр по авторам
+    ->filter($request, 'author') // Фильтр по авторам
+    // ->filter($request, 'city', 'cities') // Фильтр по городам публикации
     ->booklistFilter($request)  // Фильтр по спискам
     ->dateIntervalFilter($request, 'date_publish_begin') // Интервальный фильтр по дате публикации
     ->orderBy('moderation', 'desc')
     ->orderBy('date_publish_begin', 'desc')
     ->paginate(30);
 
-    $filter_query = News::with('author')
+    $filter_query = News::with('author', 'cities')
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -75,11 +76,13 @@ class NewsController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->whereSite_id($site->id) // Только для страниц сайта
     ->get();
+    // dd($filter_query);
 
     $filter['status'] = null;
 
     // $filter = addCityFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
     $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
+    // $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'cities');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
     $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);

@@ -26,7 +26,7 @@
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-site-name">Название сайта</th>
-          <th class="td-site-domen">Домен сайта</th>
+          <th class="td-site-domain">Домен сайта</th>
           <th class="td-site-api-token">Api токен</th>
           <th class="td-company-name">Компания</th>
           <th class="td-site-edit">Изменить</th>
@@ -57,7 +57,7 @@
               </a> 
             @endif
           </td>
-          <td class="td-site-domen"><a href="http://{{ $site->domen }}" target="_blank">{{ $site->domen }}</a></td>
+          <td class="td-site-domain"><a href="http://{{ $site->domain }}" target="_blank">{{ $site->domain }}</a></td>
           <td class="td-site-api-token">{{ $site->api_token }}</td>
           <td class="td-site-company-id">@if(!empty($site->company->company_name)) {{ $site->company->company_name }} @else @if($site->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-site-edit">

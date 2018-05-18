@@ -58,7 +58,7 @@ class UserController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям              
         ->orWhere('id', $request->user()->id) // Только для сущности USERS
-        ->cityFilter($request, 'location')
+        ->filter($request, 'city', 'location')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);

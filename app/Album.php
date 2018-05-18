@@ -14,7 +14,7 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Фильтры
-use App\Scopes\Filters\CityFilter;
+use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 
 class Album extends Model
@@ -28,8 +28,10 @@ class Album extends Model
   use FilialsTraitScopes;
   use TemplateTraitScopes;
   use ModeratorLimitTraitScopes;
-  use BooklistFilter;
 
+  // Фильтры
+  use BooklistFilter;
+  use Filter;
 
   protected $fillable = [
 

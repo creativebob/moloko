@@ -2,28 +2,29 @@
 
 namespace App\Scopes\Filters;
 
-trait PositionFilter
+trait Filter
 {
     // Фильтрация по должности
-    public function scopePositionFilter($query, $request, $relations = null)
+    public function scopeFilter($query, $request, $column, $relations = null)
     {
+        // Принимаем значения и создаем переменные: имя поля и имя связующей сущности
+        $column_id = $column . '_id';
+        $relations_id = $relations . '_id';
 
         // Проверка на существование
-        if($request->position_id){
+        if($request->$column_id){
 
 
             // ПРЯМОЙ ЗАПРОС
             // --------------------------------------------------------------------------------------------------------------------------------------
             if($relations == null){
 
+                if($request->$column_id == [0 => 'null']){
 
-
-                if($request->position_id == [0 => 'null']){
-
-                    $query = $query->WhereNull('position_id');
+                    $query = $query->WhereNull($column_id);
                 } else 
                 {
-                    $query = $query->whereIn('position_id', $request->position_id)->orWhereNull('position_id');
+                    $query = $query->whereIn($column_id, $request->$column_id)->orWhereNull($column_id);
                 };
 
 
@@ -33,25 +34,25 @@ trait PositionFilter
             } else {
 
                 // Если приходит массив только с нулем (Требуеться выбрать только записи без города)
-                if($request->position_id == [0 => 'null']){
+                if($request->$column_id == [0 => 'null']){
 
-                    $query = $query->WhereNull('staffer_id');
+                    $query = $query->WhereNull($relations_id);
                 } else 
                 {
 
                     // Если приходит массив с нулем и другими ID
-                    if(in_array('null', $request->position_id)){
+                    if(in_array('null', $request->$column_id)){
 
-                        $query = $query->whereHas('staffer', function ($query) use ($request) {
-                            $query = $query->whereIn('position_id', $request->position_id);
-                        })->orWhereNull('staffer_id');
+                        $query = $query->whereHas($relations, function ($query) use ($request, $column_id) {
+                            $query = $query->whereIn($column_id, $request->$column_id);
+                        })->orWhereNull($relations_id);
 
                     // Если массив приходит без нуля
                     } else {
 
 
-                        $query = $query->whereHas('staffer', function ($query) use ($request) {
-                            $query = $query->whereIn('position_id', $request->position_id);
+                        $query = $query->whereHas($relations, function ($query) use ($request, $column_id) {
+                            $query = $query->whereIn($column_id, $request->$column_id);
                         });
                     };
 

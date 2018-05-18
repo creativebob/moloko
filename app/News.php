@@ -17,6 +17,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use App\Scopes\Filters\AuthorFilter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\Filter;
 
 class News extends Model
 {
@@ -33,6 +34,7 @@ class News extends Model
   use AuthorFilter;
   use BooklistFilter;
   use DateIntervalFilter;
+  use Filter;
   
   /**
    * Атрибуты, которые должны быть преобразованы в даты.

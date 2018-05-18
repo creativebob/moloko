@@ -19,7 +19,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="albums">
+    <table class="table-content tablesorter" id="content" class="content-albums" data-sticky-container data-entity-alias="albums">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
@@ -65,7 +65,7 @@
               <li>Размер, Мб: {{ $album->photos->sum('size')/1024 }}</li>
             </ul>
           </td>
-          <td class="td-album-company-id">@if(!empty($album->company->name)) {{ $album->company->company_name }} @else @if($album->system_item == null) Шаблон @else Системная @endif @endif</td>
+          <td class="td-album-company-id">@if(!empty($album->company->name)) {{ $album->company->name }} @else @if($album->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-album-author">@if(isset($album->author->first_name)) {{ $album->author->first_name . ' ' . $album->author->second_name }} @endif</td>
 
           <td class="td-delete">
@@ -104,6 +104,9 @@
 @section('scripts')
   {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
   @include('includes.scripts.table-scripts')
+
+  {{-- Скрипт чекбоксов --}}
+  @include('includes.scripts.checkbox-control')
 
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-delete-script')

@@ -15,8 +15,9 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Фильтры
-use App\Scopes\Filters\CityFilter;
 use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\Filter;
+
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -33,10 +34,10 @@ class User extends Authenticatable
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-    use BooklistFilter;
     
     // Фильтры
-    use CityFilter;
+    use BooklistFilter;
+    use Filter;
 
     // Фильтрация по городу
     public function scopeUserFilter($query, $request)

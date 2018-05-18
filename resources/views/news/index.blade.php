@@ -4,7 +4,6 @@
 <meta name="description" content="{{ $site->site_name }}" />
 {{-- Скрипты таблиц в шапке --}}
   @include('includes.scripts.table-inhead')
-  @include('includes.scripts.pickmeup-inhead')
 @endsection
 
 @section('title', $page_info->name . ' ' . $site->name)
@@ -20,18 +19,18 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="news">
+    <table class="table-content tablesorter" id="content" class="content-news" data-sticky-container data-entity-alias="news">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-news-photo">Фото</th>
-          <th class="td-news-name">Название новости</th>
+          <th class="td-photo">Фото</th>
+          <th class="td-name">Название новости</th>
 <!--           <th class="td-news-title">Заголовок</th> -->
-          <th class="td-news-preview">Короткая новость</th>
-          <th class="td-news-info">Инфо</th>
+          <th class="td-preview">Короткая новость</th>
+          <th class="td-info">Инфо</th>
           <th class="td-date_publish">Срок публикации</th>
-          <th class="td-news-author">Автор</th>
+          <th class="td-author">Автор</th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -53,10 +52,10 @@
             <label class="label-check" for="check-{{ $cur_news->id }}">
               
             </label></td>
-          <td class="td-news-photo">
+          <td class="td-photo">
             <img src="{{ isset($cur_news->photo_id) ? '/storage/'.$cur_news->company_id.'/media/news/'.$cur_news->id.'/img/small/'.$cur_news->photo->name : '/img/plug/news_small_default_color.jpg' }}" alt="{{ isset($cur_news->photo_id) ? $cur_news->name : 'Нет фото' }}">
           </td>
-          <td class="td-news-name">
+          <td class="td-name">
             @can('update', $cur_news)
               <a href="/sites/{{ $cur_news->site->alias }}/news/{{ $cur_news->alias }}/edit">
             @endcan
@@ -65,10 +64,10 @@
               </a>
             @endcan
           </td>
-          {{-- <td class="td-news-title">{{ $cur_news->title }}</td> --}}
-          <td class="td-news-preview">{{ str_limit($cur_news->preview, 150) }}</td>
+          {{-- <td class="td-title">{{ $cur_news->title }}</td> --}}
+          <td class="td-preview">{{ str_limit($cur_news->preview, 150) }}</td>
 
-          <td class="td-news-info">
+          <td class="td-info">
 <!--             <span>Сайт:&nbsp;{{ $cur_news->site->name or ' ... ' }}</span>
             <br><br> -->
             {{-- <span>Домен:&nbsp;{{ $cur_news->site->domen or ' ... ' }}</span><br> --}}
@@ -93,7 +92,7 @@
             <span>{{ $cur_news->date_publish_begin }} {{ getWeekDay($cur_news->date_publish_begin, 1) }}</span>
             <span>{{ $cur_news->date_publish_end }} {{ getWeekDay($cur_news->date_publish_end, 1) }}</span>
           </td>
-          <td class="td-news-author">@if(isset($cur_news->author->first_name)) {{ $cur_news->author->first_name . ' ' . $cur_news->author->second_name }} @endif</td>
+          <td class="td-author">@if(isset($cur_news->author->first_name)) {{ $cur_news->author->first_name . ' ' . $cur_news->author->second_name }} @endif</td>
           <td class="td-delete">
             @if ($cur_news->system_item != 1)
               @can('delete', $cur_news)
@@ -118,12 +117,6 @@
 </div>
 @endsection
 
-@section('modals')
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
-@endsection
-
-@section('scripts')
 <script type="text/javascript">
 $(function() {
   // Берем алиас сайта
@@ -140,13 +133,33 @@ $(function() {
     $('#form-item-del').attr('action', '/sites/'+ alias + '/' + type + '/' + id);
   });
 });
-</script> 
-{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.table-scripts')
-@include('includes.scripts.table-sort')
-@include('includes.scripts.pickmeup-script')
+</script>
 
-{{-- Скрипт чекбоксов --}}
-@include('includes.scripts.checkbox-control')
+@section('modals')
+  {{-- Модалка удаления с refresh --}}
+  @include('includes.modals.modal-delete')
+
+  {{-- Модалка удаления с refresh --}}
+  @include('includes.modals.modal-delete-ajax')
 
 @endsection
+
+@section('scripts')
+  {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+  @include('includes.scripts.table-scripts')
+
+  {{-- Скрипт чекбоксов --}}
+  @include('includes.scripts.checkbox-control')
+
+  {{-- Скрипт модалки удаления --}}
+  @include('includes.scripts.modal-delete-script')
+  @include('includes.scripts.delete-ajax-script')
+  @include('includes.scripts.table-sort')
+
+  {{-- Скрипт подключения календаря --}}
+  @include('includes.scripts.pickmeup-script')
+
+@endsection
+
+
+

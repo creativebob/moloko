@@ -57,8 +57,8 @@ class CompanyController extends Controller
         $companies = Company::with('author', 'director', 'location.city', 'sector', 'contragents')
         ->contragents($user->company_id)
         ->moderatorLimit($answer)
-        ->cityFilter($request, 'location')
-        ->sectorFilter($request)
+        ->filter($request, 'city', 'location')
+        ->filter($request, 'sector')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);
