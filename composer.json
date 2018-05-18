@@ -38,6 +38,7 @@
       "App\\": "app/"
     },
     "files": [
+      "app/Helpers/HtmlOperations.php",
       "app/Helpers/StringOperation.php", 
       "app/Helpers/SessionOperation.php",
       "app/Helpers/PageInfo.php",

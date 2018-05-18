@@ -106,56 +106,8 @@ class CompanyController extends Controller
     ->keyBy('id')
     ->toArray();
 
-        // Формируем дерево вложенности
-    $sectors_cat = [];
-    foreach ($sectors as $id => &$node) { 
-
-          // Если нет вложений
-      if (!$node['parent_id']) {
-        $sectors_cat[$id] = &$node;
-      } else { 
-
-          // Если есть потомки то перебераем массив
-        $sectors[$node['parent_id']]['children'][$id] = &$node;
-      };
-
-    };
-
-        // dd($sectors_cat);
-
-        // Функция отрисовки option'ов
-    function tplMenu($sector, $padding) {
-
-      if ($sector['category_status'] == 1) {
-        $menu = '<option value="'.$sector['id'].'" class="first" disabled>'.$sector['name'].'</option>';
-      } else {
-        $menu = '<option value="'.$sector['id'].'">'.$padding.' '.$sector['name'].'</option>';
-      }
-
-            // Добавляем пробелы вложенному элементу
-      if (isset($sector['children'])) {
-        $i = 1;
-        for($j = 0; $j < $i; $j++){
-          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-        }     
-        $i++;
-
-        $menu .= showCat($sector['children'], $padding);
-      }
-      return $menu;
-    }
-        // Рекурсивно считываем наш шаблон
-    function showCat($data, $padding){
-      $string = '';
-      $padding = $padding;
-      foreach($data as $item){
-        $string .= tplMenu($item, $padding);
-      }
-      return $string;
-    }
-
-        // Получаем HTML разметку
-    $sectors_list = showCat($sectors_cat, '');
+    // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+      $sectors_list = get_select_with_tree($sectors, null, 1, null);
 
         // dd($sectors_list);
 
@@ -172,7 +124,7 @@ class CompanyController extends Controller
   public function store(CompanyRequest $request)
   {
 
-        // Подключение политики
+    // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Company::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -316,64 +268,8 @@ class CompanyController extends Controller
     ->keyBy('id')
     ->toArray();
 
-        // Формируем дерево вложенности
-    $sectors_cat = [];
-    foreach ($sectors as $id => &$node) { 
-
-          // Если нет вложений
-      if (!$node['parent_id']) {
-        $sectors_cat[$id] = &$node;
-      } else { 
-
-          // Если есть потомки то перебераем массив
-        $sectors[$node['parent_id']]['children'][$id] = &$node;
-      };
-    };
-
-        // dd($sectors_cat);
-
-        // Функция отрисовки option'ов
-    function tplMenu($sector, $padding, $id) {
-
-
-
-      $selected = '';
-      if ($sector['id'] == $id) {
-            // dd($id);
-        $selected = ' selected';
-      }
-      if ($sector['category_status'] == 1) {
-        $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.' disabled>'.$sector['name'].'</option>';
-      } else {
-        $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['name'].'</option>';
-      }
-
-      // Добавляем пробелы вложенному элементу
-      if (isset($sector['children'])) {
-        $i = 1;
-        for($j = 0; $j < $i; $j++){
-          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-        }     
-        $i++;
-
-        $menu .= showCat($sector['children'], $padding, $id);
-      }
-      return $menu;
-    }
-        // Рекурсивно считываем наш шаблон
-    function showCat($data, $padding, $id){
-
-      $string = '';
-      $padding = $padding;
-      foreach($data as $item){
-        $string .= tplMenu($item, $padding, $id);
-      }
-      return $string;
-    }
-
-
-    // Получаем HTML разметку
-    $sectors_list = showCat($sectors_cat, '', $company->sector_id);
+      // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+      $sectors_list = get_select_with_tree($sectors, $company->sector_id, 1, null);
 
     if(isset($company->schedules->first()->worktimes)){
       $worktime_mass = $company->schedules->first()->worktimes->keyBy('weekday');

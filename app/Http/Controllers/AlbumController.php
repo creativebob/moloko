@@ -103,56 +103,8 @@ class AlbumController extends Controller
     ->keyBy('id')
     ->toArray();
 
-        // Формируем дерево вложенности
-    $albums_categories_cat = [];
-    foreach ($albums_categories as $id => &$node) { 
-
-          // Если нет вложений
-      if (!$node['parent_id']) {
-        $albums_categories_cat[$id] = &$node;
-      } else { 
-
-          // Если есть потомки то перебераем массив
-        $albums_categories[$node['parent_id']]['children'][$id] = &$node;
-      };
-
-    };
-
-        // dd($albums_categories_cat);
-
-        // Функция отрисовки option'ов
-    function tplMenu($albums_category, $padding) {
-
-      if ($albums_category['category_status'] == 1) {
-        $menu = '<option value="'.$albums_category['id'].'" class="first">'.$albums_category['name'].'</option>';
-      } else {
-        $menu = '<option value="'.$albums_category['id'].'">'.$padding.' '.$albums_category['name'].'</option>';
-      }
-
-            // Добавляем пробелы вложенному элементу
-      if (isset($albums_category['children'])) {
-        $i = 1;
-        for($j = 0; $j < $i; $j++){
-          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-        }     
-        $i++;
-
-        $menu .= showCat($albums_category['children'], $padding);
-      }
-      return $menu;
-    }
-        // Рекурсивно считываем наш шаблон
-    function showCat($data, $padding){
-      $string = '';
-      $padding = $padding;
-      foreach($data as $item){
-        $string .= tplMenu($item, $padding);
-      }
-      return $string;
-    }
-
-        // Получаем HTML разметку
-    $albums_categories_list = showCat($albums_categories_cat, '');
+     // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+      $albums_categories_list = get_select_with_tree($albums_categories, null, null, null);
 
 
         // dd($albums_categories_list);
@@ -296,62 +248,8 @@ class AlbumController extends Controller
     ->keyBy('id')
     ->toArray();
 
-        // Формируем дерево вложенности
-    $albums_categories_cat = [];
-    foreach ($albums_categories as $id => &$node) { 
-
-          // Если нет вложений
-      if (!$node['parent_id']) {
-        $albums_categories_cat[$id] = &$node;
-      } else { 
-
-          // Если есть потомки то перебераем массив
-        $albums_categories[$node['parent_id']]['children'][$id] = &$node;
-      };
-
-    };
-
-        // dd($albums_categories_cat);
-
-        // Функция отрисовки option'ов
-    function tplMenu($albums_category, $padding, $id) {
-
-      $selected = '';
-      if ($albums_category['id'] == $id) {
-            // dd($id);
-        $selected = ' selected';
-      }
-
-      if ($albums_category['category_status'] == 1) {
-        $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['name'].'</option>';
-      } else {
-        $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['name'].'</option>';
-      }
-
-            // Добавляем пробелы вложенному элементу
-      if (isset($albums_category['children'])) {
-        $i = 1;
-        for($j = 0; $j < $i; $j++){
-          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-        }     
-        $i++;
-
-        $menu .= showCat($albums_category['children'], $padding, $id);
-      }
-      return $menu;
-    }
-        // Рекурсивно считываем наш шаблон
-    function showCat($data, $padding, $id){
-      $string = '';
-      $padding = $padding;
-      foreach($data as $item){
-        $string .= tplMenu($item, $padding, $id);
-      }
-      return $string;
-    }
-
-        // Получаем HTML разметку
-    $albums_categories_list = showCat($albums_categories_cat, '', $album->albums_category_id);
+      // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+      $albums_categories_list = get_select_with_tree($albums_categories, $album->albums_category_id, null, null);
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);

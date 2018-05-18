@@ -191,62 +191,8 @@ class ProductsCategoryController extends Controller
       ->keyBy('id')
       ->toArray();
 
-      // dd($products_categories);
-
-      // Формируем дерево вложенности
-      $products_categories_cat = [];
-      foreach ($products_categories as $id => &$node) { 
-
-        // Если нет вложений
-        if (!$node['parent_id']) {
-          $products_categories_cat[$id] = &$node;
-        } else { 
-
-        // Если есть потомки то перебераем массив
-          $products_categories[$node['parent_id']]['children'][$id] = &$node;
-        };
-      };
-
-      // dd($products_categories_cat);
-
-      // Функция отрисовки option'ов
-      function tplMenu($products_category, $padding, $parent) {
-
-        $selected = '';
-        if ($products_category['id'] == $parent) {
-          $selected = ' selected';
-        }
-        if ($products_category['category_status'] == 1) {
-          $menu = '<option value="'.$products_category['id'].'" class="first"'.$selected.'>'.$products_category['name'].'</option>';
-        } else {
-          $menu = '<option value="'.$products_category['id'].'"'.$selected.'>'.$padding.' '.$products_category['name'].'</option>';
-        }
-        
-        // Добавляем пробелы вложенному элементу
-        if (isset($products_category['children'])) {
-          $i = 1;
-          for($j = 0; $j < $i; $j++){
-            $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-          }     
-          $i++;
-          
-          $menu .= showCat($products_category['children'], $padding, $parent);
-        }
-        return $menu;
-        
-      }
-      // Рекурсивно считываем наш шаблон
-      function showCat($data, $padding, $parent){
-        $string = '';
-        $padding = $padding;
-        foreach($data as $item){
-          $string .= tplMenu($item, $padding, $parent);
-        }
-        return $string;
-      }
-
-      // Получаем HTML разметку
-      $products_categories_list = showCat($products_categories_cat, '', $request->parent_id);
+      // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+      $products_categories_list = get_select_with_tree($products_categories, $request->parent_id, null, null);
 
       return view('products_categories.create-medium', ['products_category' => $products_category, 'products_categories_list' => $products_categories_list, 'products_types_list' => $products_types_list]);
     } else {
@@ -347,65 +293,8 @@ class ProductsCategoryController extends Controller
       ->keyBy('id')
       ->toArray();
 
-      // dd($products_categories);
-
-      // Формируем дерево вложенности
-      $products_categories_cat = [];
-      foreach ($products_categories as $id => &$node) { 
-
-        // Если нет вложений
-        if (!$node['parent_id']) {
-          $products_categories_cat[$id] = &$node;
-        } else { 
-
-        // Если есть потомки то перебераем массив
-          $products_categories[$node['parent_id']]['children'][$id] = &$node;
-        };
-      };
-
-      // dd($products_categories_cat);
-
-      // Функция отрисовки option'ов
-      function tplMenu($products_category, $padding, $parent, $id) {
-
-        // Убираем из списка пришедший пункт меню 
-        if ($products_category['id'] != $id) {
-
-          $selected = '';
-          if ($products_category['id'] == $parent) {
-            $selected = ' selected';
-          }
-          if ($products_category['category_status'] == 1) {
-            $menu = '<option value="'.$products_category['id'].'" class="first"'.$selected.'>'.$products_category['name'].'</option>';
-          } else {
-            $menu = '<option value="'.$products_category['id'].'"'.$selected.'>'.$padding.' '.$products_category['name'].'</option>';
-          }
-
-          // Добавляем пробелы вложенному элементу
-          if (isset($products_category['children'])) {
-            $i = 1;
-            for($j = 0; $j < $i; $j++){
-              $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-            }     
-            $i++;
-
-            $menu .= showCat($products_category['children'], $padding, $parent, $id);
-          }
-          return $menu;
-        }
-      }
-      // Рекурсивно считываем наш шаблон
-      function showCat($data, $padding, $parent, $id){
-        $string = '';
-        $padding = $padding;
-        foreach($data as $item){
-          $string .= tplMenu($item, $padding, $parent, $id);
-        }
-        return $string;
-      }
-
-      // Получаем HTML разметку
-      $products_categories_list = showCat($products_categories_cat, '', $products_category->parent_id, $products_category->id);
+      // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+      $products_categories_list = get_select_with_tree($products_categories, $products_category->parent_id, null, $products_category->id);
 
       return view('products_categories.edit-medium', ['products_category' => $products_category, 'products_categories_list' => $products_categories_list, 'products_types_list' => $products_types_list]);
     }

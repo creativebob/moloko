@@ -54,6 +54,7 @@
           @include('includes.inputs.phone', ['value'=>null, 'name'=>'phone', 'required'=>''])
         </label>
         {{ Form::hidden('filial_id', 0, ['class' => 'filial-id']) }}
+        {{ Form::hidden('parent_id', 0, ['class' => 'parent-id']) }}
         {{ Form::hidden('medium_item', 0, ['class' => 'medium-item', 'pattern' => '[0-9]{1}']) }}
       </div>
     </div>

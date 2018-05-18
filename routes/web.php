@@ -164,7 +164,7 @@ Route::post('/cities_list', 'CityController@cities_list')->middleware('auth');
 Route::post('/city_vk', 'CityController@get_vk_city')->middleware('auth');
 
 // Тестовый маршрут проверки пришедших с вк данных
-// Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
+Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
 
 // ----------------------------------------- Филиалы и отделы --------------------------------------
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
