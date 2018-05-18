@@ -202,64 +202,8 @@ class SectorController extends Controller
       ->toArray();
 
       // dd($sectors);
-
-      // Формируем дерево вложенности
-      $sectors_cat = [];
-      foreach ($sectors as $id => &$node) { 
-
-        // Если нет вложений
-        if (!$node['parent_id']) {
-          $sectors_cat[$id] = &$node;
-        } else { 
-
-        // Если есть потомки то перебераем массив
-          $sectors[$node['parent_id']]['children'][$id] = &$node;
-        };
-      };
-
-      // dd($sectors_cat);
-
-      // Функция отрисовки option'ов
-      function tplMenu($sector, $padding, $parent) {
-
-        $selected = '';
-        if ($sector['id'] == $parent) {
-          $selected = ' selected';
-        }
-        if ($sector['category_status'] == 1) {
-          $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['name'].'</option>';
-        } else {
-          $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['name'].'</option>';
-        }
-        
-        // Добавляем пробелы вложенному элементу
-        if (isset($sector['children'])) {
-          $i = 1;
-          for($j = 0; $j < $i; $j++){
-            $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-          }     
-          $i++;
-          
-          $menu .= showCat($sector['children'], $padding, $parent);
-        }
-        return $menu;
-        
-      }
-      // Рекурсивно считываем наш шаблон
-      function showCat($data, $padding, $parent){
-        $string = '';
-        $padding = $padding;
-        foreach($data as $item){
-          $string .= tplMenu($item, $padding, $parent);
-        }
-        return $string;
-      }
-
-      // Получаем HTML разметку
-      $sectors_list = showCat($sectors_cat, '', $request->parent_id);
-
-      // echo $sectors_list;
-
+      // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+      $sectors_list = get_select_with_tree($sectors, $request->parent_id, null, null);
 
       return view('sectors.create-medium', ['sector' => $sector, 'sectors_list' => $sectors_list]);
     } else {
@@ -358,65 +302,8 @@ class SectorController extends Controller
 
       // dd($sectors);
 
-      // Формируем дерево вложенности
-      $sectors_cat = [];
-      foreach ($sectors as $id => &$node) { 
-
-        // Если нет вложений
-        if (!$node['parent_id']) {
-          $sectors_cat[$id] = &$node;
-        } else { 
-
-        // Если есть потомки то перебераем массив
-          $sectors[$node['parent_id']]['children'][$id] = &$node;
-        };
-      };
-
-      // dd($sectors_cat);
-
-      // Функция отрисовки option'ов
-      function tplMenu($sector, $padding, $parent, $id) {
-
-        // Убираем из списка пришедший пункт меню 
-        if ($sector['id'] != $id) {
-
-          $selected = '';
-          if ($sector['id'] == $parent) {
-            $selected = ' selected';
-          }
-          if ($sector['category_status'] == 1) {
-            $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.'>'.$sector['name'].'</option>';
-          } else {
-            $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['name'].'</option>';
-          }
-          
-          // Добавляем пробелы вложенному элементу
-          if (isset($sector['children'])) {
-            $i = 1;
-            for($j = 0; $j < $i; $j++){
-              $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-            }     
-            $i++;
-            
-            $menu .= showCat($sector['children'], $padding, $parent, $id);
-          }
-          return $menu;
-        }
-      }
-      // Рекурсивно считываем наш шаблон
-      function showCat($data, $padding, $parent, $id){
-        $string = '';
-        $padding = $padding;
-        foreach($data as $item){
-          $string .= tplMenu($item, $padding, $parent, $id);
-        }
-        return $string;
-      }
-
-      // Получаем HTML разметку
-      $sectors_list = showCat($sectors_cat, '', $sector->parent_id, $sector->id);
-
-
+      // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+      $sectors_list = get_select_with_tree($sectors, $sector->parent_id, null, null);
 
       return view('sectors.edit-medium', ['sector' => $sector, 'sectors_list' => $sectors_list]);
     };

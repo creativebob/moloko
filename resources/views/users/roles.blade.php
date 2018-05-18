@@ -4,7 +4,7 @@
 if ($role_user->position == null) {
  $position = (object) [
  	'id' => 'null',
- 	'position_name' => 'Спецправо',
+ 	'name' => 'Спецправо',
  ];
 } else {
  $position = $role_user->position;
