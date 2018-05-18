@@ -183,7 +183,7 @@
       },
       url: '/departments/create',
       type: "GET",
-      data: {parent_id: parent},
+      data: {parent_id: parent, filial_id:filial},
       success: function(html){
         $('#modal').html(html);
         $('#medium-add').foundation();

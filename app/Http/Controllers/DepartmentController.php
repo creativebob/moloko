@@ -368,6 +368,8 @@ class DepartmentController extends Controller
 
     $user_id = hideGod($user);
 
+    $department = new Department;
+
     if (isset($request->address)) {
       // Пишем локацию
       $location = new Location;
@@ -377,15 +379,13 @@ class DepartmentController extends Controller
       $location->save();
 
       if ($location) {
-        $location_id = $location->id;
+        $department->location_id = $location->id;
       } else {
         abort(403, 'Ошибка записи адреса');
       }
     }
 
-    $department = new Department;
     $department->company_id = $company_id;
-    $department->location_id = $location_id;
     
     // Имя филиала / отдела
     $first = mb_substr($request->name,0,1, 'UTF-8'); //первая буква
@@ -414,24 +414,24 @@ class DepartmentController extends Controller
 
     if($department) {
 
-      if($department->filial_status == 1) {
+      // if($department->filial_status == 1) {
 
-        // // Создаем папку в файловой системе
-        // $link_for_folder = 'public/companies/' . $company_id . '/'. $department->id . '/users';
-        // Storage::makeDirectory($link_for_folder);
+      //   // // Создаем папку в файловой системе
+      //   // $link_for_folder = 'public/companies/' . $company_id . '/'. $department->id . '/users';
+      //   // Storage::makeDirectory($link_for_folder);
 
-        // $link_for_folder = 'public/companies/' . $company_id . '/'. $department->id . '/sites';
-        // Storage::makeDirectory($link_for_folder);
+      //   // $link_for_folder = 'public/companies/' . $company_id . '/'. $department->id . '/sites';
+      //   // Storage::makeDirectory($link_for_folder);
 
-        // $link_for_folder = 'public/companies/' . $company_id . '/'. $department->id . '/goods';
-        // Storage::makeDirectory($link_for_folder);
+      //   // $link_for_folder = 'public/companies/' . $company_id . '/'. $department->id . '/goods';
+      //   // Storage::makeDirectory($link_for_folder);
 
-        // $link_for_folder = 'public/companies/' . $company_id . '/'. $department->id . '/documents';
-        // Storage::makeDirectory($link_for_folder);
+      //   // $link_for_folder = 'public/companies/' . $company_id . '/'. $department->id . '/documents';
+      //   // Storage::makeDirectory($link_for_folder);
 
-        // $link = 'departments';
-        // return redirect($link);
-      }
+      //   // $link = 'departments';
+      //   // return redirect($link);
+      // }
 
       // Переадресовываем на index
       return redirect()->action('DepartmentController@get_content', ['id' => $department->id, 'item' => 'department']);

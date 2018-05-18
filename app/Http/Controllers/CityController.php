@@ -314,23 +314,28 @@ class CityController extends Controller
   public function get_vk_city(CityRequest $request)
   {
     // Отправляем запров вк
-    // $city = $request->city;
-    $city = 'ангарск';
+    $city = $request->city;
+    // $city = 'ангарск';
+
+    // dd($city);
 
     $request_params = [
       'country_id' => '1',
       'q' => $city,
       'need_all' => '0',
       'count' => '250',
-      'v' => '5.71'
+      'v' => '5.69',
+      'access_token' => env('VK_API_TOKEN')
     ];
     $get_params = http_build_query($request_params);
     $result = (file_get_contents('https://api.vk.com/method/database.getCities?'. $get_params));
 
+     // echo $result;
+
     // dd($result);
 
     // Если чекбокс не включен, то выдаем результат только по нашим областям
-    if ($request->checkbox == 'false') {
+    if ($request->checkbox == 0) {
 
       // Выбираем все наши области
       $regions = Region::select('name')->get();
