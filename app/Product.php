@@ -35,6 +35,10 @@ class Product extends Model
 	protected $dates = ['deleted_at'];
 
 	protected $fillable = [
+		'name',
+		'article',
+		'cost',
+		'description',
 
 	];
 
@@ -66,5 +70,16 @@ class Product extends Model
   public function unit()
   {
     return $this->belongsTo('App\Unit');
+  }
+
+  // Получаем альбом
+  public function album()
+  {
+     return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'product');
+  }
+
+  public function photo()
+  {
+    return $this->belongsTo('App\Photo');
   }
 }

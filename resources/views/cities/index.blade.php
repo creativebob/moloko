@@ -137,6 +137,9 @@ $(function() {
   // Функция получения городов из вк или с фильтром по нашей базе
   function getCityVk () {  
     $('.find-status').removeClass('icon-find-ok');
+
+    // alert($('#search-all-checkbox').prop('checked'));
+    var checkbox = $('#search-all-checkbox').is(":checked") ? 1 : 0;
     // Сам ajax запрос
     $.ajax({
       headers: {
@@ -144,11 +147,12 @@ $(function() {
       },
       url: "/city_vk",
       type: "POST",
-      data: {city: $('#city-name-field').val(), checkbox:$('#search-all-checkbox').prop('checked')},
+      data: {city: $('#city-name-field').val(), checkbox:checkbox},
       beforeSend: function () {
         $('.find-status').addClass('icon-load');
       },
       success: function(date){
+      	// alert(date);
         $('.find-status').removeClass('icon-load');
         // Удаляем все значения чтобы вписать новые
         $('#tbody-city-add>tr').remove();

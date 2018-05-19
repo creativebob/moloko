@@ -19,6 +19,9 @@ class CreateLocationsTable extends Migration
             $table->integer('city_id')->nullable()->unsigned()->comment('Id города');
             $table->foreign('city_id')->references('id')->on('cities');
 
+            $table->integer('country_id')->nullable()->unsigned()->comment('Id страны');
+            $table->foreign('country_id')->references('id')->on('countries');
+
             $table->string('address')->nullable()->index()->comment('Адрес');
 
             $table->integer('latitude')->nullable()->comment('Широта');

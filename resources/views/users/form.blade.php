@@ -59,7 +59,7 @@
 <!--             <label for="exampleFileUpload" class="button">Upload File</label>
   <input type="file" name="photo" id="exampleFileUpload"> -->
   <div class="text-center">
-    <img id="photo" @if (isset($user->photo_id)) src="/storage/{{ $user->company->id }}/media/albums/{{ $user->login }}/original-{{ $user->avatar->name }}" @endif>
+    <img id="photo" @if (isset($user->photo_id)) src="/storage/{{ $user->company->id }}/media/albums/{{ $user->login }}/img/original-{{ $user->avatar->name }}" @endif>
   </div>
 </div>
 </div>

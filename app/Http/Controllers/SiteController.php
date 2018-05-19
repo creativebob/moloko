@@ -116,8 +116,8 @@ class SiteController extends Controller
     $site->system_item = $request->system_item;
 
     $site->name = $request->name;
-    $site->domen = $request->domen;
-    $site_alias = explode('.', $request->domen);
+    $site->domain = $request->domain;
+    $site_alias = explode('.', $request->domain);
     $site->alias = $site_alias[0];
     $site->api_token = str_random(60);
     $site->company_id = $company_id;
@@ -142,21 +142,9 @@ class SiteController extends Controller
     }
   }
 
-  // Получаем сайт по api
   public function show(Request $request)
   {
-    $site = Site::where('api_token', $request->token)->first();
-    if ($site) {
-      // return Cache::remember('site', 1, function() use ($domen) {
-      return Site::with(['company.filials.city', 'company.city', 'pages', 'navigations.menus.page', 'navigations.navigations_category', 'navigations' => function ($query) {
-        $query->whereDisplay(1);
-      },'navigations.menus' => function ($query) {
-        $query->whereDisplay(1)->orderBy('sort', 'asc');
-      }])->whereDomen($request->domen)->orderBy('sort', 'asc')->first();
-      // });
-    } else {
-      return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
-    }
+
   }
 
   public function edit($alias)
@@ -206,8 +194,8 @@ class SiteController extends Controller
     $this->authorize('update', $site);
 
     $site->name = $request->name;
-    $site_alias = explode('.', $request->domen);
-    $site->domen = $request->domen;
+    $site_alias = explode('.', $request->domain);
+    $site->domain = $request->domain;
     $site->alias = $site_alias[0];
     $site->editor_id = $user_id;
     $site->save();
@@ -289,7 +277,7 @@ class SiteController extends Controller
   public function site_check(Request $request)
   {
     // Проверка навигации по сайту в нашей базе данных
-    $site = Site::whereDomen($request->domen)->first();
+    $site = Site::whereDomain($request->domain)->first();
 
     // Если такой сайт существует
     if ($site) {
@@ -303,5 +291,24 @@ class SiteController extends Controller
       ];
     }
     return json_encode($result, JSON_UNESCAPED_UNICODE);
+  }
+
+
+  // ------------------------------------ API -----------------------------------------------------
+  // Получаем сайт по api
+  public function api_index (Request $request)
+  {
+    $site = Site::where('api_token', $request->token)->first();
+    if ($site) {
+      // return Cache::remember('site', 1, function() use ($domain) {
+      return Site::with(['company.filials.location.city', 'company.location.city', 'pages', 'navigations.menus.page', 'navigations.navigations_category', 'navigations' => function ($query) {
+        $query->whereDisplay(1);
+      },'navigations.menus' => function ($query) {
+        $query->whereDisplay(1)->orderBy('sort', 'asc');
+      }])->whereDomain($request->domain)->orderBy('sort', 'asc')->first();
+      // });
+    } else {
+      return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
+    }
   }
 }

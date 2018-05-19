@@ -13,12 +13,13 @@ use App\Policies\CityPolicy;
 use App\Policies\AreaPolicy;
 use App\Policies\RegionPolicy;
 
+// Валидация
+use App\Http\Requests\CityRequest;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-// Валидация
-use App\Http\Requests\CityRequest;
 
 // Транслитерация
 use Transliterate;
@@ -67,17 +68,17 @@ class CityController extends Controller
 
     public function get_content(Request $request)
     {
-    // Подключение политики
+      // Подключение политики
       $this->authorize(getmethod('index'), Region::class);
       $this->authorize(getmethod('index'), Area::class);
       $this->authorize(getmethod('index'), City::class);
 
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
       $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
 
-    // -------------------------------------------------------------------------------------------
-    // ГЛАВНЫЙ ЗАПРОС
-    // -------------------------------------------------------------------------------------------
+      // -------------------------------------------------------------------------------------------
+      // ГЛАВНЫЙ ЗАПРОС
+      // -------------------------------------------------------------------------------------------
       $regions = Region::with(['areas'  => function ($query) {
         $query->orderBy('sort', 'asc');
       }, 'areas.cities' => function ($query) {
@@ -86,15 +87,15 @@ class CityController extends Controller
         $query->orderBy('sort', 'asc');
       }])
       ->moderatorLimit($answer)
-    // ->companiesLimit($answer['company_id']) нет фильтра по компаниям
-    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
-    ->orderBy('sort', 'asc')
-    ->get();
+      // ->companiesLimit($answer['company_id']) нет фильтра по компаниям
+      ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+      ->authors($answer)
+      ->systemItem($answer) // Фильтр по системным записям
+      ->orderBy('sort', 'asc')
+      ->get();
 
-    // Отдаем Ajax
-    return view('cities.cities-list', ['regions' => $regions, 'id' => $request->id]);
+      // Отдаем Ajax
+      return view('cities.cities-list', ['regions' => $regions, 'id' => $request->id]);
   }
 
   public function create()
@@ -314,20 +315,27 @@ class CityController extends Controller
   {
     // Отправляем запров вк
     $city = $request->city;
+    // $city = 'ангарск';
+
+    // dd($city);
+
     $request_params = [
       'country_id' => '1',
       'q' => $city,
       'need_all' => '0',
       'count' => '250',
-      'v' => '5.71'
+      'v' => '5.69',
+      'access_token' => env('VK_API_TOKEN')
     ];
     $get_params = http_build_query($request_params);
     $result = (file_get_contents('https://api.vk.com/method/database.getCities?'. $get_params));
 
+     // echo $result;
+
     // dd($result);
 
     // Если чекбокс не включен, то выдаем результат только по нашим областям
-    if ($request->checkbox == 'false') {
+    if ($request->checkbox == 0) {
 
       // Выбираем все наши области
       $regions = Region::select('name')->get();
@@ -392,7 +400,7 @@ class CityController extends Controller
   }
 
   // Получаем список городов из нашей базы
-  public function cities_list(CityRequest $request)
+  public function cities_list(Request $request)
   {
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -500,7 +508,7 @@ class CityController extends Controller
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
-// Сортировка
+  // Сортировка
   public function cities_sort(Request $request)
   {
     $i = 1;

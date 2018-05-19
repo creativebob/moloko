@@ -16,7 +16,7 @@ class CreateSitesTable extends Migration
         Schema::create('sites', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 30)->nullable()->index()->comment('Название сайта');
-            $table->string('domen', 30)->nullable()->index()->comment('Домен сайта');
+            $table->string('domain', 30)->nullable()->index()->comment('Домен сайта');
             $table->string('alias')->nullable()->index()->comment('Алиас сайта');
 
             $table->string('api_token', 60)->unique()->nullable()->comment('Токен');

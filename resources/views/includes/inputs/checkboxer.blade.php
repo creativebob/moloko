@@ -1,16 +1,18 @@
 {{-- Чекбоксер --}}
 
 @php
-	$checkboxer_mass = $value;
-	$relation = $name;
+
+	$filter = $value;
+	$relations = $filter[$name]['relations'];
+
 @endphp
 
-@if(!empty($checkboxer_mass[$name]))
+@if(!empty($filter[$name]))
 <div class="checkboxer-wrap {{$name}}">
 	<div class="checkboxer-toggle" data-toggle="{{$name}}-dropdown-bottom-left" data-name="{{$name}}">
 		<div class="checkboxer-title">
-			<span class="title">{{$checkboxer_mass[$name]['title']}}</span>
-			<span class="count_filter_{{$name}}" id="count_filter_{{$name}}">({{$checkboxer_mass[$name]['count_mass']}})</span>
+			<span class="title">{{$filter[$name]['title']}}</span>
+			<span class="count_filter_{{$name}}" id="count_filter_{{$name}}">({{$filter[$name]['count_mass']}})</span>
 		</div>
 		<div class="checkboxer-button">
 			<span class="sprite icon-checkboxer"></span>
@@ -18,7 +20,7 @@
 	</div>
 
 	@php
-		if($checkboxer_mass[$name]['count_mass'] > 0){$show_status = 'show-elem';} else {$show_status = 'hide-elem';};
+		if($filter[$name]['count_mass'] > 0){$show_status = 'show-elem';} else {$show_status = 'hide-elem';};
 	@endphp
 
 	<div class="checkboxer-clean {{ $show_status }}" onclick="event.stopPropagation()" data-name="{{$name}}">
@@ -31,53 +33,40 @@
 
 	<ul class="checkboxer-menu {{$name}}" data-name="{{$name}}">
 
-		@foreach ($checkboxer_mass[$name]['collection'] as $key => $value)
+		@foreach ($filter[$name]['collection'] as $key => $value)
 			<li>
 
-				{{-- Блок для выбора по городу (через связи) --}}
-				@if($name == 'city')
-
-					@if($checkboxer_mass[$name]['mode'] == 'id')
+				{{-- Блок для выбора через связь --}}
+				@if($relations != null)
 
 					@php
 
-					if($value->location == null){
+					if($value->$relations == null){
+
 						$value_id = 'null';
-						$value_name = 'Город не указан';
+						$value_name = 'Не указано';
 					} else {
 
-						$value_id = $value->location->city->id;
-						$value_name = $value->location->city->name;
+						$value_id = $value->$relations->$name->id;
+						$value_name = $value->$relations->$name->name;
 					};
 
 					@endphp
 
+					{{ Form::checkbox($name . '_id[]', $value_id, $filter[$name]['mass_id'], ['id'=>$name.'-'.$value_id]) }}
+					<label for="{{$name}}-{{ $value_id }}"><span>{{ $value_name }}</span></label>
 
-						{{ Form::checkbox($name . '_id[]', $value_id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value_id]) }}
-						<label for="{{$name}}-{{ $value_id }}"><span>{{ $value_name }}</span></label>
-
-					@else
-
-						{{ Form::checkbox($name . '_id[]', $value->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->id]) }}
-						<label for="{{$name}}-{{ $value->id }}">
-							<span>{{ $value->$entity_name }}</span>
-						</label>
-					@endif
 
 				{{-- Блок для выбора по прямым полям (id) --}}
 				@else
 
-					@if($checkboxer_mass[$name]['mode'] == 'id')
+					@php
+					$value_id = $value->$name->id;
+					$value_name = $value->$name->name;
+					@endphp
 
-						{{ Form::checkbox($name . '_id[]', $value->$relation->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->$name->id]) }}
-						<label for="{{$name}}-{{ $value->$name->id }}"><span>{{ $value->$name->name }}</span></label>
-					@else
-
-						{{ Form::checkbox($name . '_id[]', $value->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->id]) }}
-						<label for="{{$name}}-{{ $value->id }}">
-							<span>{{ $value->$entity_name }}</span>
-						</label>
-					@endif
+					{{ Form::checkbox($name . '_id[]', $value_id, $filter[$name]['mass_id'], ['id'=>$name.'-'.$value_id]) }}
+					<label for="{{$name}}-{{ $value_id }}"><span>{{ $value_name }}</span></label>
 
 				@endif
 
@@ -90,7 +79,7 @@
 
 <script type="text/javascript">
 
-	let {{$name}} = new CheckBoxer("{{$name}}", {{$checkboxer_mass[$name]['count_mass']}});
+	let {{$name}} = new CheckBoxer("{{$name}}", {{$filter[$name]['count_mass']}});
 
   	$(".checkboxer-menu.{{$name}} :checkbox").click(function() {
 		{{$name}}.CheckBoxerAddDel(this);

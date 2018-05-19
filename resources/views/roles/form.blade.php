@@ -24,12 +24,12 @@
           <div class="grid-x grid-padding-x"> 
             <div class="small-12 medium-6 cell">
               <label>Название группы
-                @include('includes.inputs.string', ['name'=>'role_name', 'value'=>$role->role_name, 'required'=>'required'])
+                @include('includes.inputs.string', ['name'=>'name', 'value'=>$role->name, 'required'=>'required'])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Описание назначения группы
-                @include('includes.inputs.varchar', ['name'=>'role_description', 'value'=>$role->role_description, 'required'=>''])
+                @include('includes.inputs.varchar', ['name'=>'description', 'value'=>$role->description, 'required'=>''])
               </label>
             </div>
           </div>

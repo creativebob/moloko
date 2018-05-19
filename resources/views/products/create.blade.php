@@ -21,8 +21,8 @@
 
 @section('content')
 
-  {{ Form::open(['url' => '/products', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
-    @include('products.form', ['submitButtonText' => 'Добавить альбом', 'param' => '', 'form' => null])
+  {{ Form::open(['url' => '/products', 'data-abide', 'novalidate', 'files'=>'true']) }}
+    @include('products.form', ['submitButtonText' => 'Добавить продукцию', 'param' => '', 'form' => null])
   {{ Form::close() }}
 
 @endsection

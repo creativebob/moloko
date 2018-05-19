@@ -74,9 +74,18 @@ Route::post('/photos_sort', 'PhotoController@photos_sort')->middleware('auth');
 
 
 // ------------------------------------- Продукция -------------------------------------------------
-Route::resource('products', 'ProductController')->middleware('auth');
-// Сортировка альбомов
+Route::resource('/products', 'ProductController')->middleware('auth');
+// Добавление фото для продукции
+Route::get('/products/{id}/photos', 'ProductController@product_photos')->middleware('auth');
+// Запись фото
+Route::any('/product/add_photo', 'ProductController@add_photo')->middleware('auth');
+
+// Сортировка продукции
 Route::post('/products_sort', 'ProductController@products_sort')->middleware('auth');
+// Route for export/download tabledata to .xls or .xlsx
+Route::get('/products_download/{type}', 'ProductController@products_download')->middleware('auth');
+// Route for import excel data to database.
+Route::post('/products_import', 'ProductController@products_import');
 
 
 // ------------------------------------ Категории продукции --------------------------------------
@@ -155,7 +164,7 @@ Route::post('/cities_list', 'CityController@cities_list')->middleware('auth');
 Route::post('/city_vk', 'CityController@get_vk_city')->middleware('auth');
 
 // Тестовый маршрут проверки пришедших с вк данных
-// Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
+Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
 
 // ----------------------------------------- Филиалы и отделы --------------------------------------
 Route::resource('/departments', 'DepartmentController')->middleware('auth');

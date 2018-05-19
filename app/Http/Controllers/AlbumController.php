@@ -49,14 +49,37 @@ class AlbumController extends Controller
 
     $albums = Album::with('author', 'company', 'albums_category')
     ->withCount('photos')
+    ->where('name', '!=', 'default')
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
         ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request) 
+        ->filter($request, 'author')
+        ->filter($request, 'company')
         ->orderBy('sort', 'asc')
         ->paginate(30);
+
+
+ $filter_query = Album::with('author', 'company', 'albums_category')
+    ->withCount('photos')
+    ->where('name', '!=', 'default')
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
+        ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+    ->get();
+
+    $filter['status'] = null;
+
+    $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
+    $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id');
+
+        // Добавляем данные по спискам (Требуется на каждом контроллере)
+    $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+
 
 
         // Инфо о странице
@@ -65,7 +88,7 @@ class AlbumController extends Controller
 
         // dd($albums);
 
-        return view('albums.index', compact('albums', 'page_info', 'album', 'user'));
+        return view('albums.index', compact('albums', 'page_info', 'album', 'user', 'filter'));
       }
 
 
@@ -91,72 +114,28 @@ class AlbumController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_albums_categories = operator_right('albums_categories', false, 'index');
 
-        // Главный запрос
+    // Главный запрос
         $albums_categories = AlbumsCategory::moderatorLimit($answer_albums_categories)
-        ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
-        ->keyBy('id')
-        ->toArray();
+        ->companiesLimit($answer_albums_categories)
+    ->filials($answer_albums_categories) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+    ->authors($answer_albums_categories)
+    ->systemItem($answer_albums_categories) // Фильтр по системным записям
+    ->orderBy('sort', 'asc')
+    ->get(['id','name','category_status','parent_id'])
+    ->keyBy('id')
+    ->toArray();
 
-        // Формируем дерево вложенности
-        $albums_categories_cat = [];
-        foreach ($albums_categories as $id => &$node) { 
-
-          // Если нет вложений
-          if (!$node['parent_id']) {
-            $albums_categories_cat[$id] = &$node;
-          } else { 
-
-          // Если есть потомки то перебераем массив
-            $albums_categories[$node['parent_id']]['children'][$id] = &$node;
-          };
-
-        };
-
-        // dd($albums_categories_cat);
-
-        // Функция отрисовки option'ов
-        function tplMenu($albums_category, $padding) {
-
-          if ($albums_category['category_status'] == 1) {
-            $menu = '<option value="'.$albums_category['id'].'" class="first">'.$albums_category['name'].'</option>';
-          } else {
-            $menu = '<option value="'.$albums_category['id'].'">'.$padding.' '.$albums_category['name'].'</option>';
-          }
-
-            // Добавляем пробелы вложенному элементу
-          if (isset($albums_category['children'])) {
-            $i = 1;
-            for($j = 0; $j < $i; $j++){
-              $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-            }     
-            $i++;
-
-            $menu .= showCat($albums_category['children'], $padding);
-          }
-          return $menu;
-        }
-        // Рекурсивно считываем наш шаблон
-        function showCat($data, $padding){
-          $string = '';
-          $padding = $padding;
-          foreach($data as $item){
-            $string .= tplMenu($item, $padding);
-          }
-          return $string;
-        }
-
-        // Получаем HTML разметку
-        $albums_categories_list = showCat($albums_categories_cat, '');
+     // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+      $albums_categories_list = get_select_with_tree($albums_categories, null, null, null);
 
 
         // dd($albums_categories_list);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+    $page_info = pageInfo($this->entity_name);
 
-        return view('albums.create', compact('user', 'album', 'departments_list', 'roles_list', 'page_info', 'albums_categories_list'));
-      }
+    return view('albums.create', compact('user', 'album', 'departments_list', 'roles_list', 'page_info', 'albums_categories_list'));
+  }
 
     /**
      * Store a newly created resource in storage.
@@ -278,77 +257,27 @@ class AlbumController extends Controller
       $this->authorize(getmethod(__FUNCTION__), $album);
 
        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-      $answer_category = operator_right('albums_categories', false, 'index');
+      $answer_albums_categories = operator_right('albums_categories', false, 'index');
 
-        // Категории
-      $albums_categories = AlbumsCategory::moderatorLimit($answer_category)
-      ->orderBy('sort', 'asc')
-      ->get(['id','name','category_status','parent_id'])
-      ->keyBy('id')
-      ->toArray();
+    // Главный запрос
+      $albums_categories = AlbumsCategory::moderatorLimit($answer_albums_categories)
+      ->companiesLimit($answer_albums_categories)
+    ->filials($answer_albums_categories) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+    ->authors($answer_albums_categories)
+    ->systemItem($answer_albums_categories) // Фильтр по системным записям
+    ->orderBy('sort', 'asc')
+    ->get(['id','name','category_status','parent_id'])
+    ->keyBy('id')
+    ->toArray();
 
-        // Формируем дерево вложенности
-      $albums_categories_cat = [];
-      foreach ($albums_categories as $id => &$node) { 
-
-          // Если нет вложений
-        if (!$node['parent_id']) {
-          $albums_categories_cat[$id] = &$node;
-        } else { 
-
-          // Если есть потомки то перебераем массив
-          $albums_categories[$node['parent_id']]['children'][$id] = &$node;
-        };
-
-      };
-
-        // dd($albums_categories_cat);
-
-        // Функция отрисовки option'ов
-      function tplMenu($albums_category, $padding, $id) {
-
-        $selected = '';
-        if ($albums_category['id'] == $id) {
-            // dd($id);
-          $selected = ' selected';
-        }
-
-        if ($albums_category['category_status'] == 1) {
-          $menu = '<option value="'.$albums_category['id'].'" class="first"'.$selected.'>'.$albums_category['name'].'</option>';
-        } else {
-          $menu = '<option value="'.$albums_category['id'].'"'.$selected.'>'.$padding.' '.$albums_category['name'].'</option>';
-        }
-
-            // Добавляем пробелы вложенному элементу
-        if (isset($albums_category['children'])) {
-          $i = 1;
-          for($j = 0; $j < $i; $j++){
-            $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-          }     
-          $i++;
-
-          $menu .= showCat($albums_category['children'], $padding, $id);
-        }
-        return $menu;
-      }
-        // Рекурсивно считываем наш шаблон
-      function showCat($data, $padding, $id){
-        $string = '';
-        $padding = $padding;
-        foreach($data as $item){
-          $string .= tplMenu($item, $padding, $id);
-        }
-        return $string;
-      }
-
-        // Получаем HTML разметку
-      $albums_categories_list = showCat($albums_categories_cat, '', $album->albums_category_id);
+      // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+      $albums_categories_list = get_select_with_tree($albums_categories, $album->albums_category_id, null, null);
 
     // Инфо о странице
-      $page_info = pageInfo($this->entity_name);
+    $page_info = pageInfo($this->entity_name);
 
-      return view('albums.edit', compact('album', 'page_info', 'albums_categories_list'));
-    }
+    return view('albums.edit', compact('album', 'page_info', 'albums_categories_list'));
+  }
 
     /**
      * Update the specified resource in storage.

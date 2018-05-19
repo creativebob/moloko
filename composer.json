@@ -17,7 +17,7 @@
     "laravelcollective/html": "^5.4.0",
     "league/flysystem": "^1.0",
     "league/glide-laravel": "^1.0",
-    "maatwebsite/excel": "^3.0",
+    "maatwebsite/excel": "2.*",
     "nesbot/carbon": "1.24.1",
     "unisharp/laravel-ckeditor": "^4.7",
     "unisharp/laravel-filemanager": "^1.8"
@@ -38,6 +38,7 @@
       "App\\": "app/"
     },
     "files": [
+      "app/Helpers/HtmlOperations.php",
       "app/Helpers/StringOperation.php", 
       "app/Helpers/SessionOperation.php",
       "app/Helpers/PageInfo.php",

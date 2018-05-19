@@ -40,7 +40,7 @@
       {{ Form::file('photo') }}
     </label>
     <div class="text-center">
-      <img id="photo" @if (isset($cur_news->photo_id)) src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/original/{{ $cur_news->photo->name }}" @endif>
+      <img id="photo" @if (isset($cur_news->photo_id)) src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/img/original/{{ $cur_news->photo->name }}" @endif>
     </div>
     <label>Алиас новости
       @include('includes.inputs.varchar', ['name'=>'alias', 'value'=>$cur_news->alias, 'required'=>'required'])
@@ -96,8 +96,8 @@
             <ul class="checkbox">
               @foreach ($filials as $filial)
               <li>
-                {{ Form::checkbox('cities[]', $filial->city->id, null, ['id' => 'city-'.$filial->city->id]) }}
-                <label for="city-{{ $filial->city->id }}"><span>{{ $filial->city->name }}</span></label>
+                {{ Form::checkbox('cities[]', $filial->location->city_id, null, ['id' => 'city-'.$filial->location->city_id]) }}
+                <label for="city-{{ $filial->location->city_id }}"><span>{{ $filial->location->city->name }}</span></label>
               </li>
               @endforeach
             </ul>

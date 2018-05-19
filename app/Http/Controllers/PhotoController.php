@@ -53,32 +53,32 @@ class PhotoController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // --------------------------------------------------------------------------------------------------------------------------------------
 
-    $photos = Photo::with(['author', 'company', 'album' => function ($query) use ($alias) {
-      $query->whereAlias($alias);
-    }])
-    ->moderatorLimit($answer)
-    ->companiesLimit($answer)
-    ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
-    ->booklistFilter($request) 
-    ->orderBy('sort', 'asc')
-    ->paginate(30);
-
-    // $album = Album::with(['author', 'photos' => function ($query) {
-    //     $query->orderBy('sort', 'asc')->paginate(30);
-    //   }])
-    //   ->whereAlias($alias)
-    //   ->moderatorLimit($answer)
-    //   ->companiesLimit($answer)
+    // $photos = Photo::with(['author', 'company', 'album' => function ($query) use ($alias) {
+    //   $query->whereAlias($alias);
+    // }])
+    // ->moderatorLimit($answer)
+    // ->companiesLimit($answer)
     // ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
     // ->authors($answer)
     // ->systemItem($answer) // Фильтр по системным записям
     // ->booklistFilter($request) 
     // ->orderBy('sort', 'asc')
-    // ->first();
+    // ->paginate(30);
 
-    // $photos = $album->photos;
+    $album = Album::with(['author', 'photos' => function ($query) {
+        $query->orderBy('sort', 'asc');
+      }])
+      ->whereAlias($alias)
+      ->moderatorLimit($answer_album)
+      ->companiesLimit($answer_album)
+    ->filials($answer_album) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+    ->authors($answer_album)
+    ->systemItem($answer_album) // Фильтр по системным записям
+    ->booklistFilter($request) 
+    ->orderBy('sort', 'asc')
+    ->first();
+
+    $photos = $album->photos;
 
     // dd($photos);
 
@@ -154,7 +154,7 @@ class PhotoController extends Controller
 
       $image = $request->file('photo');
         // $filename = str_random(5).date_format($time,'d').rand(1,9).date_format($time,'h').".".$extension;
-      $directory = $user->company->id.'/media/albums/'.$album->id;
+      $directory = $user->company->id.'/media/albums/'.$album->id.'/img/';
 
       $extension = $image->getClientOriginalExtension();
       $photo->extension = $extension;
@@ -175,6 +175,11 @@ class PhotoController extends Controller
       $photo->author_id = $user_id;
       $photo->save();
 
+      if (!isset($album->photo_id)) {
+        $album->photo_id = $photo->id;
+        $album->save();
+      }
+
       // $album->photos()->attach($photo->id);
 
       $media = new AlbumEntity;
@@ -183,31 +188,33 @@ class PhotoController extends Controller
       $media->entity = 'photo';
       $media->save();
 
-      $upload_success = $image->storeAs($directory.'/original', $image_name, 'public');
+      $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
+
+      $settings = config()->get('settings');
 
       // $small = Image::make($request->photo)->grab(150, 99);
-      $small = Image::make($request->photo)->widen(150);
-      $save_path = storage_path('app/public/'.$directory.'/small');
+      $small = Image::make($request->photo)->widen($settings['img_small_width']->value);
+      $save_path = storage_path('app/public/'.$directory.'small');
       if (!file_exists($save_path)) {
         mkdir($save_path, 666, true);
       }
-      $small->save(storage_path('app/public/'.$directory.'/small/'.$image_name));
+      $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
 
       // $medium = Image::make($request->photo)->grab(900, 596);
-      $medium = Image::make($request->photo)->widen(900);
-      $save_path = storage_path('app/public/'.$directory.'/medium');
+      $medium = Image::make($request->photo)->widen($settings['img_medium_width']->value);
+      $save_path = storage_path('app/public/'.$directory.'medium');
       if (!file_exists($save_path)) {
         mkdir($save_path, 666, true);
       }
-      $medium->save(storage_path('app/public/'.$directory.'/medium/'.$image_name));
+      $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
 
       // $large = Image::make($request->photo)->grab(1200, 795);
-      $large = Image::make($request->photo)->widen(1200);
-      $save_path = storage_path('app/public/'.$directory.'/large');
+      $large = Image::make($request->photo)->widen($settings['img_large_width']->value);
+      $save_path = storage_path('app/public/'.$directory.'large');
       if (!file_exists($save_path)) {
         mkdir($save_path, 666, true);
       }
-      $large->save(storage_path('app/public/'.$directory.'/large/'.$image_name));
+      $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
 
       
       // } 

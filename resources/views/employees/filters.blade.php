@@ -1,23 +1,44 @@
-{{ Form::open(['route' => 'employees.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
-  <legend>Фильтрация</legend>
-  <div class="grid-x grid-padding-x">
-
-    <div class="small-5 medium-4 large-2 cell">
-      <label>Начальная дата
-        @include('includes.inputs.date', ['name'=>'date_start', 'value'=>'', 'required'=>''])
-      </label>
+<div class="small-12 medium-6 large-6 cell">
+  <legend>Фильтры:</legend>
+  <div class="grid-x">
+    <div class="small-12 cell">
+      <div class="grid-x">
+        <div class="small-12 medium-6 cell checkbox checkboxer">
+          @include('includes.inputs.checkboxer', ['name'=>'position', 'value' => $filter])      
+        </div>
+      </div>
     </div>
-
-    <div class="small-5 medium-4 large-2 cell">
-      <label>Конечная дата
-        @include('includes.inputs.date', ['name'=>'date_end', 'value'=>'', 'required'=>''])
-      </label>
+    <div class="small-12 cell">
+      <div class="grid-x">
+        <div class="small-12 medium-6 cell checkbox checkboxer">
+          @include('includes.inputs.checkboxer', ['name'=>'department', 'value' => $filter])      
+        </div>
+      </div>
     </div>
+    <div class="small-12 medium-6 large-6 cell date-interval-block">
 
-    <div class="small-12 medium-12 align-center cell tabs-button">
-      {{ Form::submit('Применить', ['class'=>'button']) }}
-      <a href="/employees" class="button">Сбросить</a>
-    </div>
+      <div class="grid-x">
+        <div class="small-5 medium-5 cell">
+          <label>Начало периода:
+            @include('includes.inputs.date', ['name'=>'date_start', 'value' => '', 'required' => ''])
+          </label>
+        </div>
+        <div class="small-2 medium-2 cell">
+        </div>
+        <div class="small-5 medium-5 cell">
+          <label>Окончание периода:
+            @include('includes.inputs.date', ['name'=>'date_end', 'value' => '', 'required' => ''])
+          </label>
+        </div>
+      </div>
 
+    </div> 
   </div>
-{{ Form::close() }}
+</div>
+
+<div class="small-12 medium-6 large-6 cell checkbox checkboxer">
+  <legend>Мои списки:</legend>
+  <div id="booklists">
+    @include('includes.inputs.booklister', ['name'=>'booklist', 'value' => $filter])
+  </div>
+</div>

@@ -15,8 +15,9 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Фильтры
-use App\Scopes\Filters\CityFilter;
 use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\Filter;
+
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -33,10 +34,10 @@ class User extends Authenticatable
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-    use BooklistFilter;
     
     // Фильтры
-    use CityFilter;
+    use BooklistFilter;
+    use Filter;
 
     // Фильтрация по городу
     public function scopeUserFilter($query, $request)
@@ -109,6 +110,12 @@ class User extends Authenticatable
                 $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
                 return $value;
             };
+    }
+
+    // Склеиваем имя и фамилию для юзера и выводим при обращении через name
+    public function getNameAttribute($value) {
+      $value = $this->first_name . ' ' . $this->second_name;
+      return $value;
     }
 
     public function getPhoneAttribute($value) {

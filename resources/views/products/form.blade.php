@@ -42,7 +42,7 @@
           {{ Form::select('unit_id', $units_list, $product->unit_id)}}
         </label>
       </div>
-        <div class="small-12 medium-6 cell">
+      <div class="small-12 medium-6 cell">
         <label>Страна производитель
           {{ Form::select('country_id', $countries_list, $product->country_id)}}
         </label>
@@ -52,9 +52,19 @@
           @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$product->description, 'required'=>''])
         </label>
       </div>
+      <div class="small-12 cell">
+        <label>Выберите аватар
+          {{ Form::file('photo') }}
+        </label>
+        <div class="text-center">
+          <img id="photo" @if (isset($product->photo_id)) src="/storage/{{ $product->company->id }}/media/products/{{ $product->id }}/img/original-{{ $product->avatar->name }}" @endif>
+        </div>
+
+      </div>
     </div>
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
+
   </div>
 
   {{-- Чекбокс модерации --}}

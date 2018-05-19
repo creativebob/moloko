@@ -14,6 +14,7 @@ use App\Schedule;
 use App\Worktime;
 use App\Location;
 use App\ScheduleEntity;
+use App\Contragent;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -53,21 +54,26 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-
-        $companies = Company::with('author', 'director', 'location.city', 'sector')
+        $companies = Company::with('author', 'director', 'location.city', 'sector', 'contragents')
+        ->contragents($user->company_id)
         ->moderatorLimit($answer)
-        ->cityFilter($request)
-        ->sectorFilter($request)
+        ->filter($request, 'city', 'location')
+        ->filter($request, 'sector')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
-        $filter_query = Company::with('location.city', 'sector')->moderatorLimit($answer)->get();
+        // dd($companies);
+
+        $filter_query = Company::with('location.city', 'sector')
+        ->contragents($user->company_id)
+        ->moderatorLimit($answer)
+        ->get();
 
 
         $filter['status'] = null;
 
-        $filter = addCityFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
 
             // Добавляем данные по спискам (Требуется на каждом контроллере)
@@ -100,56 +106,8 @@ class CompanyController extends Controller
     ->keyBy('id')
     ->toArray();
 
-        // Формируем дерево вложенности
-    $sectors_cat = [];
-    foreach ($sectors as $id => &$node) { 
-
-          // Если нет вложений
-      if (!$node['parent_id']) {
-        $sectors_cat[$id] = &$node;
-      } else { 
-
-          // Если есть потомки то перебераем массив
-        $sectors[$node['parent_id']]['children'][$id] = &$node;
-      };
-
-    };
-
-        // dd($sectors_cat);
-
-        // Функция отрисовки option'ов
-    function tplMenu($sector, $padding) {
-
-      if ($sector['category_status'] == 1) {
-        $menu = '<option value="'.$sector['id'].'" class="first" disabled>'.$sector['name'].'</option>';
-      } else {
-        $menu = '<option value="'.$sector['id'].'">'.$padding.' '.$sector['name'].'</option>';
-      }
-
-            // Добавляем пробелы вложенному элементу
-      if (isset($sector['children'])) {
-        $i = 1;
-        for($j = 0; $j < $i; $j++){
-          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-        }     
-        $i++;
-
-        $menu .= showCat($sector['children'], $padding);
-      }
-      return $menu;
-    }
-        // Рекурсивно считываем наш шаблон
-    function showCat($data, $padding){
-      $string = '';
-      $padding = $padding;
-      foreach($data as $item){
-        $string .= tplMenu($item, $padding);
-      }
-      return $string;
-    }
-
-        // Получаем HTML разметку
-    $sectors_list = showCat($sectors_cat, '');
+    // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+      $sectors_list = get_select_with_tree($sectors, null, 1, null);
 
         // dd($sectors_list);
 
@@ -166,7 +124,7 @@ class CompanyController extends Controller
   public function store(CompanyRequest $request)
   {
 
-        // Подключение политики
+    // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Company::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -177,6 +135,7 @@ class CompanyController extends Controller
 
     // Смотрим компанию пользователя
     $company_id = $user->company_id;
+
     if($company_id == null) {
       abort(403, 'Необходимо авторизоваться под компанией');
     }
@@ -236,6 +195,12 @@ class CompanyController extends Controller
     $company->author_id = $user->id;
 
     $company->save();
+
+    $contragent = new Contragent;
+    $contragent->company_id = $company_id;
+    $contragent->contragent_id = $company->id;
+    $contragent->vendor_status = 1;
+    $contragent->save();
 
         // Создаем связь расписания с компанией
     $schedule_entity = new ScheduleEntity;
@@ -303,64 +268,8 @@ class CompanyController extends Controller
     ->keyBy('id')
     ->toArray();
 
-        // Формируем дерево вложенности
-    $sectors_cat = [];
-    foreach ($sectors as $id => &$node) { 
-
-          // Если нет вложений
-      if (!$node['parent_id']) {
-        $sectors_cat[$id] = &$node;
-      } else { 
-
-          // Если есть потомки то перебераем массив
-        $sectors[$node['parent_id']]['children'][$id] = &$node;
-      };
-    };
-
-        // dd($sectors_cat);
-
-        // Функция отрисовки option'ов
-    function tplMenu($sector, $padding, $id) {
-
-
-
-      $selected = '';
-      if ($sector['id'] == $id) {
-            // dd($id);
-        $selected = ' selected';
-      }
-      if ($sector['category_status'] == 1) {
-        $menu = '<option value="'.$sector['id'].'" class="first"'.$selected.' disabled>'.$sector['name'].'</option>';
-      } else {
-        $menu = '<option value="'.$sector['id'].'"'.$selected.'>'.$padding.' '.$sector['name'].'</option>';
-      }
-
-      // Добавляем пробелы вложенному элементу
-      if (isset($sector['children'])) {
-        $i = 1;
-        for($j = 0; $j < $i; $j++){
-          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-        }     
-        $i++;
-
-        $menu .= showCat($sector['children'], $padding, $id);
-      }
-      return $menu;
-    }
-        // Рекурсивно считываем наш шаблон
-    function showCat($data, $padding, $id){
-
-      $string = '';
-      $padding = $padding;
-      foreach($data as $item){
-        $string .= tplMenu($item, $padding, $id);
-      }
-      return $string;
-    }
-
-
-    // Получаем HTML разметку
-    $sectors_list = showCat($sectors_cat, '', $company->sector_id);
+      // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+      $sectors_list = get_select_with_tree($sectors, $company->sector_id, 1, null);
 
     if(isset($company->schedules->first()->worktimes)){
       $worktime_mass = $company->schedules->first()->worktimes->keyBy('weekday');

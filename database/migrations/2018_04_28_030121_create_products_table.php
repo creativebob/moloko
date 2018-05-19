@@ -24,7 +24,7 @@ class CreateProductsTable extends Migration
 
             $table->integer('cost')->nullable()->unsigned()->comment('Себестоимость');
 
-            $table->string('avatar')->index()->nullable()->comment('Обложка товара');
+            $table->string('photo_id')->index()->nullable()->comment('Обложка товара');
             $table->string('description')->index()->nullable()->comment('Описание товара');
 
             $table->integer('unit_id')->nullable()->unsigned()->comment('ID единицы измерения');

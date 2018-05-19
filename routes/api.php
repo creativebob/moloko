@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/site', 'SiteController@show');
+Route::get('/site', 'SiteController@api_index');
 
 Route::get('/{city}/vacancies', 'StafferController@api_index_vacancies');
 Route::get('/{city}/team', 'StafferController@api_index_team');

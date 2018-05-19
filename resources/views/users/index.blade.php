@@ -88,7 +88,7 @@
           <td class="td-phone">{{ $user->phone }}</td>
           <td class="td-email">{{ $user->email }}</td>
           <td class="td-contragent-status">{{ decor_user_type($user->user_type) }}</td>
-          <td class="td-staffer">@if(!empty($user->staff->first()->position->position_name)) {{ $user->staff->first()->position->position_name }} @endif</td>
+          <td class="td-staffer">@if(!empty($user->staff->first()->position->name)) {{ $user->staff->first()->position->name }} @endif</td>
           <td class="td-access-block">{{ decor_access_block($user->access_block) }}</td>
 {{--           <td class="td-group_action_id">{{ $user->group_action->access_group_name }}</td>
           <td class="td-group_locality_id">{{ $user->group_locality->access_group_name }}</td> --}}

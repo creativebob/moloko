@@ -1876,7 +1876,10 @@ input[type=checkbox], input[type=radio] {
   font-size: 0.8rem;
   border-top: 1px solid #eeeeee;
   border-bottom: 1px solid #eeeeee;
-  line-height: 1;
+  line-height: 1.4;
+}
+.content .table-content tbody td.td-news-photo {
+  width: 150px;
 }
 .content .table-content .active tr:first-child td {
   text-align: right;

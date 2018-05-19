@@ -24,15 +24,15 @@ class DepartmentRequest extends FormRequest
   public function rules()
   {
     return [
-      'department_name' => 'string|max:255',
+      'name' => 'string|max:255',
       'address' => 'string|nullable',
       'phone' => 'string|max:17|nullable',  
       'filial_id' => 'integer|nullable',
       'department_id' => 'integer|nullable',
-      'department_parent_id' => 'integer|nullable',
+      'parent_id' => 'integer|nullable',
 
       'city_id' => 'integer|nullable',
-      'city_name' => 'string|max:255|nullable',
+      'name' => 'string|max:255|nullable',
 
       'first_item' => 'integer|max:1|nullable',
       'medium_item' => 'integer|max:1|nullable',

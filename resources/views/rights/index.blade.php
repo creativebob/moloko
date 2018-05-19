@@ -24,8 +24,8 @@
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-right_name">Правило</th>
-          <th class="td-right_action">Действие</th>
+          <th class="td-name">Правило</th>
+          <th class="td-action">Действие</th>
           <th class="category_right_id">Категория правила</th>
           <th class="td-delete"></th>
         </tr>
@@ -33,11 +33,11 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($rights))
         @foreach($rights as $right)
-        <tr class="item @if($right->moderation == 1)no-moderation @endif" id="right-{{ $right->id }}" data-name="{{ $right->right_name }}">
+        <tr class="item @if($right->moderation == 1)no-moderation @endif" id="right-{{ $right->id }}" data-name="{{ $right->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $right->id }}"><label class="label-check" for="check-{{ $right->id }}"></label></td>
-          <td class="td-right_name">{{ $right->right_name }}</td>
-          <td class="td-right_action">@if($right->category_right_id == 1) {{ $right->actionentity->alias_action_entity }} @endif</td>
+          <td class="td-name">{{ $right->name }}</td>
+          <td class="td-action">@if($right->category_right_id == 1) {{ $right->actionentity->alias_action_entity }} @endif</td>
           <td class="category_right_id">{{ $right->category_right_id }}</td>
 
           <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       

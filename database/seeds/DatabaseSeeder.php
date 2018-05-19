@@ -84,6 +84,7 @@ class DatabaseSeeder extends Seeder
     $this->call(CityEntityTableSeeder::class);
 
     // Альбомы
+    $this->call(SettingsTableSeeder::class);
     $this->call(AlbumsCategoriesTableSeeder::class);
     $this->call(AlbumsTableSeeder::class);
 
@@ -97,6 +98,9 @@ class DatabaseSeeder extends Seeder
 
     // Связь: Расписания с сущностями
     $this->call(ScheduleEntityTableSeeder::class);
+
+    // Связь: Клиенты - поставщики
+    $this->call(ContragentsTableSeeder::class);
 
   }
 }

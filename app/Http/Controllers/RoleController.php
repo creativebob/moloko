@@ -120,8 +120,8 @@ class RoleController extends Controller
         $user = $request->user();
 
         $role = new Role;
-        $role->role_name = $request->role_name;
-        $role->role_description = $request->role_description;
+        $role->name = $request->name;
+        $role->description = $request->description;
 
         if(isset($user->company_id)){$role->company_id = $user->company_id;} else { $role->system_item = 1;};
         $role->author_id = $user->id;
@@ -191,8 +191,8 @@ class RoleController extends Controller
         // Подключение политики
         $this->authorize('update', $role);
 
-        $role->role_name = $request->role_name;
-        $role->role_description = $request->role_description;
+        $role->name = $request->name;
+        $role->description = $request->description;
 
         $role->save();
 
@@ -312,8 +312,10 @@ class RoleController extends Controller
 
                 // РАБОТАЕМ С РАЗРЕШЕНИЯМИ: -----------------------------------------------------------------------------------------------
                 // Получаем имя искомого разрешения и/или запрета у юзера:
-            $box_allow_name = $action->action_method . '-' . $entity->entity_alias . '-allow';
-            $box_deny_name = $action->action_method . '-' . $entity->entity_alias . '-deny';
+            $box_allow_name = $action->method . '-' . $entity->alias . '-allow';
+            $box_deny_name = $action->method . '-' . $entity->alias . '-deny';
+
+            // dd($box_deny_name);
 
                 // Если запись существует, пишем 1, если нет, то 0
             if(isset($session[$box_allow_name])&&(isset($session[$box_deny_name]) == false)){
@@ -352,6 +354,7 @@ class RoleController extends Controller
               'disabled' => $disabled
             ];
 
+            // dd($allrights_array);
 
                 // РАБОТАЕМ С ЗАПРЕТАМИ: -------------------------------------------------------------------------------------------------------
 
@@ -393,16 +396,19 @@ class RoleController extends Controller
           }
 
         // Формируем строку разрешений
-          $main_mass[] = ['entity_name' => $entity->entity_name, 'entity_id' => $entity->id, 'boxes' => $boxes];
+          $main_mass[] = ['entity_name' => $entity->name, 'entity_id' => $entity->id, 'boxes' => $boxes];
 
         // Формируем строку запретов
-          $main_mass_deny[] = ['entity_name' => $entity->entity_name, 'entity_id' => $entity->id, 'boxes' => $boxes_deny];
+          $main_mass_deny[] = ['entity_name' => $entity->name, 'entity_id' => $entity->id, 'boxes' => $boxes_deny];
 
             // Чистим массив - готовим для очередной итерации
           $boxes = [];
           $boxes_deny = [];
 
         }  // Завершение foreach (Наполняем массив данными)
+
+
+        // dd($main_mass);
 
         return view('roles.setting', compact('main_mass', 'main_mass_deny', 'actions', 'role_id', 'role'));
       }

@@ -23,7 +23,7 @@ class UpdateUsersTable extends Migration
             $table->string('second_name', 20)->nullable()->index()->comment('Фамилия')->after('first_name');
             $table->string('patronymic', 20)->nullable()->index()->comment('Отчество')->after('second_name');
 
-            $table->integer('sex')->nullable()->unsigned()->comment('Пол')->after('patronymic');
+            $table->integer('sex')->unsigned()->comment('Пол')->after('patronymic');
             $table->date('birthday')->nullable()->comment('Дата рождения')->after('sex');
 
             $table->bigInteger('phone')->unique()->nullable()->comment('Телефон')->after('birthday');
@@ -31,7 +31,6 @@ class UpdateUsersTable extends Migration
             $table->bigInteger('telegram_id')->unsigned()->unique()->nullable()->comment('ID Telegram')->after('extra_phone');
 
             $table->integer('location_id')->nullable()->unsigned()->comment('Адрес пользователя')->after('telegram_id');;
-            $table->foreign('location_id')->references('id')->on('locations');
 
             $table->string('photo')->nullable()->comment('Фото')->after('location_id');
              $table->integer('photo_id')->nullable()->unsigned()->comment('Id аватарки')->after('photo');
@@ -68,6 +67,7 @@ class UpdateUsersTable extends Migration
         });
 
         Schema::table('users', function(Blueprint $table) {
+            $table->foreign('location_id')->references('id')->on('locations');
             $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('author_id')->references('id')->on('users');
             $table->foreign('filial_id')->references('id')->on('departments');
@@ -95,8 +95,6 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('phone');
             $table->dropColumn('extra_phone');
             $table->dropColumn('telegram_id');
-            $table->dropColumn('city_id');
-            $table->dropColumn('address');
 
             $table->dropColumn('photo');
             $table->dropColumn('photo_id');
@@ -117,6 +115,7 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('moderation');  
             // $table->dropColumn('sort');        
 
+            $table->dropForeign('users_location_id_foreign');
             $table->dropForeign('users_company_id_foreign');
             $table->dropForeign('users_author_id_foreign');
             $table->dropForeign('users_filial_id_foreign');  

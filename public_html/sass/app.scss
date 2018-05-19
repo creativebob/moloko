@@ -2269,6 +2269,8 @@ input[type=checkbox], input[type=radio] {
       //     display: block;
       //     float: left;
       //   }
+      //   
+
     }
   }
 }
@@ -2368,6 +2370,7 @@ input[type=checkbox], input[type=radio] {
         .button {
           margin-bottom: 0;
         }
+
       }
       .no-moderation {
         td {
@@ -2398,7 +2401,10 @@ input[type=checkbox], input[type=radio] {
         font-size: 0.8rem;
         border-top: 1px solid $table-td-border;
         border-bottom: 1px solid $table-td-border;
-        line-height: 1;
+        line-height: 1.4;
+      }
+      td.td-news-photo{
+        width: 150px;
       }
 
 

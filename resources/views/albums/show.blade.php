@@ -88,13 +88,23 @@
             ><label class="label-check" for="check-{{ $photo->id }}"></label></td>
             <td class="td-photo">
               <a href="/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit">
-                <img src="/storage/{{ $photo->company->id }}/media/albums/{{ $album->id }}/small/{{ $photo->name }}" alt="Фотография альбома">
+                <img src="/storage/{{ $photo->company->id }}/media/albums/{{ $album->id }}/img/small/{{ $photo->name }}" alt="Фотография альбома">
               </a>
             </td>
-            <td class="td-photo-link">{{ url('/storage/'.$photo->company->id.'/media/albums/'.$album->id.'/'.$photo->name) }}</td>
+            <td class="td-photo-link">
+              <ul>
+                @php
+                $settings = config()->get('settings');
+                @endphp
+
+                <li>Ширина {{ $settings['img_small_width']->value }} - {{ url('/storage/'.$photo->company_id.'/media/albums/'.$album->id.'/img/small/'.$photo->name) }}</li>
+                <li>Ширина {{ $settings['img_medium_width']->value }} - {{ url('/storage/'.$photo->company_id.'/media/albums/'.$album->id.'/img/medium/'.$photo->name) }}</li>
+                <li>Ширина {{ $settings['img_large_width']->value }} - {{ url('/storage/'.$photo->company_id.'/media/albums/'.$album->id.'/img/large/'.$photo->name) }}</li>
+                <li>Ширина {{ $photo->width }} - {{ url('/storage/'.$photo->company_id.'/media/albums/'.$album->id.'/img/original/'.$photo->name) }}</li>
+              </ul>
+              </td>
             <td class="td-photo-extra-info">
               <ul>
-                <li>ID Фото: {{ $photo->id }}</li>
                 <li>Дата добавления: {{ date('d.m.Y', strtotime($photo->created_at)) }}</li>
                 <li>Размер, Kb: {{ $photo->size }}</li>
               </ul>

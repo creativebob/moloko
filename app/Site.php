@@ -32,7 +32,7 @@ class Site extends Model
   protected $dates = ['deleted_at'];
   protected $fillable = [
     'name',
-    'domen',
+    'domain',
     'company_id',
   ];
   /**

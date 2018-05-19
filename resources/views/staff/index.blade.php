@@ -57,11 +57,11 @@
             ( {{ $staffer->position->name }} )
           </td>
           @if ($filials > 1)
-          <td class="td-staffer-filial">{{ $staffer->filial->department_name }}</td>
+          <td class="td-staffer-filial">{{ $staffer->filial->name }}</td>
           @endif
           <td class="td-staffer-department">
-            @if ($staffer->filial->department_name !== $staffer->department->department_name)
-            {{ $staffer->department->department_name }}
+            @if ($staffer->filial->name !== $staffer->department->name)
+            {{ $staffer->department->name }}
             @endif
           </td>
           <td class="td-staffer-phone">

@@ -28,12 +28,16 @@
 	    for(var i=0; i<checkboxes.length; i++) {
 	      checkboxes[i].onclick = function() {
 
+
+
 	        counter_checkbox = counter_checkbox + 1;
 
 	        var parent = $(this).closest('.item');
 	        var entity_alias = parent.attr('id').split('-')[0];
 	        var item_entity = parent.attr('id').split('-')[1];
 
+	      	alert(entity_alias + ' - ' + item_entity);
+	      	
 	        // Если есть кнопка группового изменения чекбоксов
 	    	if(checkall != null){
 		        var checkedCount = document.querySelectorAll('input.table-check:checked').length;

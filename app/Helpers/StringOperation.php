@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 function decor_access_block($access_block) {
   if($access_block == 1){$result = "Блокирован";} else {$result = "Открыт";};
   return $result;
@@ -194,5 +196,49 @@ function timeToSec($time) {
             // Отдаем готовый массив
             return $mass_time;
         };
+
+
+
+        // -----------------------------------------------------------------------------------------------
+        // ПАРСИМ ДАТУ И ОТДАЕМ ДЕНЬ НЕДЕЛИ В НУЖНОМ ФОРМАТЕ ---------------------------------------------
+        // -----------------------------------------------------------------------------------------------
+
+ 
+        function getWeekDay($date, $type = 0){
+
+          // Получаем дату и необходимый формат вывоода
+          $date = Carbon::parse($date);
+          $weekday = $date->dayOfWeek;
+
+          if($type == 0){
+
+            switch ($weekday) {
+              case 1: $weekday = 'Понедельник'; break;
+              case 2: $weekday = 'Вторник'; break;
+              case 3: $weekday = 'Среда'; break;
+              case 4: $weekday = 'Четверг'; break;
+              case 5: $weekday = 'Пятница'; break;
+              case 6: $weekday = 'Суббота'; break;
+              case 7: $weekday = 'Воскресенье'; break; 
+            }
+
+          } else {
+
+            switch ($weekday) {
+              case 1: $weekday = 'Пн'; break;
+              case 2: $weekday = 'Вт'; break;
+              case 3: $weekday = 'Ср'; break;
+              case 4: $weekday = 'Чт'; break;
+              case 5: $weekday = 'Пт'; break;
+              case 6: $weekday = 'Сб'; break;
+              case 7: $weekday = 'Вс'; break; 
+            }
+
+          };
+
+          // Отдаем день недели
+          return $weekday;
+        };
+
 
 ?>

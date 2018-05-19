@@ -22,14 +22,14 @@ class RightsTableSeeder extends Seeder
 
         foreach($actionentities as $actionentity){
 
-                $mass[] = ['right_name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+                $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
 
-                $mass[] = ['right_name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+                $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
         };
 
         DB::table('rights')->insert($mass);
 
-        DB::table('rights')->insert([
+        // DB::table('rights')->insert([
 
         // 	['right_name' => 'Просмотр пользователя', 'object_entity' => 1, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1], 
         //  ['right_name' => 'Просмотр списка пользователей', 'object_entity' => 2, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1], 
@@ -44,6 +44,6 @@ class RightsTableSeeder extends Seeder
           // ['right_name' => 'Иркутский филиал', 'object_entity' => 1, 'category_right_id' => 2, 'company_id' => 1, 'system_item' => null], 
           // ['right_name' => 'Улан-Удэнский филиал', 'object_entity' => 2, 'category_right_id' => 2, 'company_id' => 1, 'system_item' => null], 
 
-        ]);
+        // ]);
     }
 }

@@ -13,6 +13,12 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
+// Фильтры
+use App\Scopes\Filters\AuthorFilter;
+use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\Filter;
+
 class News extends Model
 {
    use SoftDeletes;
@@ -23,6 +29,13 @@ class News extends Model
   use FilialsTraitScopes;
   use TemplateTraitScopes;
   use ModeratorLimitTraitScopes;
+
+  // Подключаем фильтры
+  use AuthorFilter;
+  use BooklistFilter;
+  use DateIntervalFilter;
+  use Filter;
+  
   /**
    * Атрибуты, которые должны быть преобразованы в даты.
    *

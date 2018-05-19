@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
-@include('includes.scripts.pickmeup-inhead')
+	@include('includes.scripts.pickmeup-inhead')
 @endsection
 
 @section('title', 'Редактировать новость')
@@ -36,11 +36,11 @@
 @endsection
 
 @section('scripts')
-@include('includes.scripts.inputs-mask')
-@include('news.scripts')
-@include('includes.scripts.pickmeup-script')
-@include('includes.scripts.upload-file')
-@include('includes.scripts.delete-from-page-script')
+	@include('includes.scripts.inputs-mask')
+	@include('news.scripts')
+	@include('includes.scripts.pickmeup-script')
+	@include('includes.scripts.upload-file')
+	@include('includes.scripts.delete-from-page-script')
 @endsection
 
 

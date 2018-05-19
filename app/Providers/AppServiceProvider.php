@@ -6,10 +6,11 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 use App\Menu;
+use App\Setting;
+
 
 use Illuminate\Support\Facades\Auth;
 
-use App\Policies\SitePolicy;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -77,6 +78,17 @@ class AppServiceProvider extends ServiceProvider
           // View::share('sidebar_tree', $sidebar_tree);
           // Конец меню для левого сайдбара
         });
+      }
+
+       // Если существует таблица с меню
+      if (Schema::hasTable('settings')) {
+        $settings = Setting::get()->keyBy('name');
+
+          config()->set('settings', $settings);
+
+        // View::share(compact('settings'));
+
+          // dd(config()->get('settings'));
       }
     }
     /**
