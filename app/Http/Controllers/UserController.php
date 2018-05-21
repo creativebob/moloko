@@ -551,6 +551,20 @@ class UserController extends Controller
         if($user) {return Redirect('/users');} else {abort(403,'Что-то пошло не так!');};
       }
 
+      // Сортировка
+    public function users_sort(Request $request)
+    {
+      $result = '';
+      $i = 1;
+      foreach ($request->users as $item) {
+
+        $users = User::findOrFail($item);
+        $users->sort = $i;
+        $users->save();
+        $i++;
+      }
+    }
+
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------------
     // СПЕЦИФИЧЕСКИЕ МЕТОДЫ СУЩНОСТИ

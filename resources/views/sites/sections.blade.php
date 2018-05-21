@@ -73,7 +73,7 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($site))
         @foreach($site->menus as $menu)
-        <tr class="parent" id="sites-{{ $site->id }}" data-name="{{ $site->site_name }}">
+        <tr class="item" id="sites-{{ $site->id }}" data-name="{{ $site->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"><label class="label-check" for="check-{{ $site->id }}"></label></td>
           <td class="td-menu-name"><a href="/sites/{{ $site->alias }}/{{ $menu->alias }}">{{ $menu->name }}</a></td>

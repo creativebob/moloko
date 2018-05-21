@@ -22,7 +22,7 @@
     <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="pages">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
-          <th class="td-drop"><div class="sprite icon-drop"></div></th>
+          <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-name">Название страницы</th>
           <th class="td-title">Заголовок</th>
@@ -37,7 +37,7 @@
       @if(!empty($pages))
         @foreach($pages as $page)
         <tr class="item @if($page->moderation == 1)no-moderation @endif" id="pages-{{ $page->id }}" data-name="{{ $page->name }}">
-          <td class="td-drop"><div class="sprite icon-drop"></div></td>
+          <td class="td-drop"></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $page->id }}"><label class="label-check" for="check-{{ $page->id }}"></label></td>
           <td class="td-name">
             @can('update', $page)

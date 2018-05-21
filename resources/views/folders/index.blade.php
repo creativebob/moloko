@@ -22,7 +22,7 @@
     <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="folders">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
-          <th class="td-drop"><div class="sprite icon-drop"></div></th>
+          <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-name">Имя папки</th>
           <th class="td-alias">Алиас</th>
@@ -34,7 +34,7 @@
       @if(!empty($folders))
         @foreach($folders as $folder)
         <tr class="item @if(Auth::user()->folder_id == $folder->id)active @endif  @if($folder->moderation == 1)no-moderation @endif" id="folders-{{ $folder->id }}" data-name="{{ $folder->folder_name }}">
-          <td class="td-drop"><div class="sprite icon-drop"></div></td>
+          <td class="td-drop"></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $folder->id }}"><label class="label-check" for="check-{{ $folder->id }}"></label></td>
           <td class="td-name">
             @can('update', $folder)

@@ -3,7 +3,7 @@
 @section('inhead')
 <meta name="description" content="{{ $page_info->page_description }}" />
 {{-- Скрипты меню в шапке --}}
-@include('includes.scripts.menu-inhead')
+@include('includes.scripts.sortable-inhead')
 @endsection
 
 @section('title', $page_info->name)

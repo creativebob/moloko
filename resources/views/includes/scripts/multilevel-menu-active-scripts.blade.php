@@ -2,7 +2,7 @@
 
   // Присваиваем при клике на первый элемент списка активный класс
 
-  // ПРи клике на первый элемент списка
+  // При клике на первый элемент списка
   $(document).on('click', '.first-link', function() {
 
     if ($(this).closest('.first-item').hasClass('first-active')) {

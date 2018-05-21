@@ -91,7 +91,7 @@ class CompanyController extends Controller
   public function create(Request $request)
   {
 
-        //Подключение политики
+    //Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Company::class);
 
         // Подключение политики
@@ -463,6 +463,20 @@ class CompanyController extends Controller
       abort(403, 'Компания не найдена');
     }
   }
+
+  // Сортировка
+    public function companies_sort(Request $request)
+    {
+      $result = '';
+      $i = 1;
+      foreach ($request->companies as $item) {
+
+        $companies = Company::findOrFail($item);
+        $companies->sort = $i;
+        $companies->save();
+        $i++;
+      }
+    }
 
 
   public function checkcompany(Request $request)

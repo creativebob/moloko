@@ -250,11 +250,25 @@ class SiteController extends Controller
         return Redirect('/sites');
       } else {
         abort(403, 'Ошибка при удалении сайта');
-      };
+      }
     } else {
       abort(403, 'Сайт не найден');
     }
   }
+
+  // Сортировка
+    public function sites_sort(Request $request)
+    {
+      $result = '';
+      $i = 1;
+      foreach ($request->sites as $item) {
+
+        $sites = Site::findOrFail($item);
+        $sites->sort = $i;
+        $sites->save();
+        $i++;
+      }
+    }
 
 
   public function sections($alias)

@@ -28,7 +28,10 @@ Route::any('/getaccess', 'GetAccessController@set')->middleware('auth')->name('g
 // Директории
 Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');
 
+// -------------------------------------- Пользователи ------------------------------------------------
 Route::resource('/users', 'UserController')->middleware('auth');
+// Сортировка пользователей
+Route::post('/users_sort', 'UserController@users_sort')->middleware('auth');
 
 
 // ---------------------------------- Категории альбомов -------------------------------------------
@@ -103,6 +106,8 @@ Route::post('/products_categories_sort', 'ProductsCategoryController@products_ca
 Route::resource('/companies', 'CompanyController')->middleware('auth');
 // Проверка существования компании в базе по ИНН
 Route::post('/companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');
+// Сортировка компаний
+Route::post('/companies_sort', 'CompanyController@companies_sort')->middleware('auth');
 
 // Маршруты для правил доступа
 Route::resource('/rights', 'RightController')->middleware('auth');
@@ -183,12 +188,18 @@ Route::post('/departments_sort', 'DepartmentController@departments_sort')->middl
 Route::resource('/positions', 'PositionController')->middleware('auth');
 // Список отделов филиала и доступных должностей
 Route::post('/positions_list', 'PositionController@positions_list')->middleware('auth');
+// Сортировка должностей
+Route::post('/positions_sort', 'PositionController@positions_sort')->middleware('auth');
 
 // -------------------------------------- Штат компании ---------------------------------------------
 Route::resource('/staff', 'StafferController')->middleware('auth');
+// Сортировка штата
+Route::post('/staff_sort', 'StafferController@staff_sort')->middleware('auth');
 
 // --------------------------------------- Сотрудники ---------------------------------------------
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
+// Сортировка сотрудников
+Route::post('/employees_sort', 'EmployeeController@employees_sort')->middleware('auth');
 
 // ----------------------------------------- Секторы -----------------------------------------------
 Route::resource('/sectors', 'SectorController')->middleware('auth');
@@ -218,6 +229,8 @@ Route::delete('/sites/{id}', 'SiteController@destroy')->middleware('auth')->name
 Route::get('/sites/{alias}', 'SiteController@sections')->middleware('auth')->name('sites.sections');
 // Проверка на существование домена сайта
 Route::post('/site_check', 'SiteController@site_check')->middleware('auth');
+// Сортировка сайтов
+Route::post('/sites_sort', 'SiteController@sites_sort')->middleware('auth');
 
 // Разделы сайта
 Route::prefix('/sites/{alias}')->group(function () {
@@ -242,7 +255,6 @@ Route::prefix('/sites/{alias}')->group(function () {
   // Проверка на существование новости
   Route::post('/news_check', 'NewsController@news_check')->middleware('auth');
 });
-
 
 
 // Сортировка навигаций

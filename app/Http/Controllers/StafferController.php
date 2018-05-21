@@ -50,8 +50,8 @@ class StafferController extends Controller
     $user = $request->user();
     // Смотрим сколько филиалов в компании
     $company = Company::with(['departments' => function($query) {
-                  $query->whereFilial_status(1);
-                }])->findOrFail($user->company_id);
+      $query->whereFilial_status(1);
+    }])->findOrFail($user->company_id);
     $filials = count($company->departments);
     // dd($staff);
 
@@ -191,7 +191,7 @@ class StafferController extends Controller
       $user_id = $staffer->user_id;
       $employee = Employee::where(['staffer_id' => $id, 'user_id' => $user_id, 'dismissal_date' => null])->first();
       if ($employee) {
-          $employment_date_db = $employee->employment_date;
+        $employment_date_db = $employee->employment_date;
         // Смотрим отличатеся ли пришедшая дата устройства
         if ($employment_date_db !== $request->employment_date) {
           $employee->employment_date = $request->employment_date;
@@ -242,7 +242,6 @@ class StafferController extends Controller
 
   public function destroy(Request $request, $id)
   {
-
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
     
@@ -257,19 +256,29 @@ class StafferController extends Controller
     // Находим филиал и отдел
     $user = $request->user();
     
-
-
     $staffer->editor_id = $user->id;
     $staffer->save();
     $staffer = Staffer::destroy($id);
     if ($staffer) {
-       return redirect()->action('DepartmentController@get_content', ['id' => $department_id, 'item' => 'department']);
+      return redirect()->action('DepartmentController@get_content', ['id' => $department_id, 'item' => 'department']);
     } else {
       abort(403, 'Ошибка при удалении штата');
-    };  
+    }
   }
 
+  // Сортировка
+  public function staff_sort(Request $request)
+  {
+    $result = '';
+    $i = 1;
+    foreach ($request->staff as $item) {
 
+      $staff = Staffer::findOrFail($item);
+      $staff->sort = $i;
+      $staff->save();
+      $i++;
+    }
+  }
 
   // ---------------------------------------------- API --------------------------------------------------
 
@@ -282,7 +291,7 @@ class StafferController extends Controller
     }])->where('api_token', $request->token)->first();
     if ($site) {
       // return Cache::remember('staff', 1, function() use ($domen) {
-        return $site->company->staff;
+      return $site->company->staff;
       // });
     } else {
       return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
@@ -297,7 +306,7 @@ class StafferController extends Controller
     }])->where('api_token', $request->token)->first();
     if ($site) {
       // return Cache::remember('staff', 1, function() use ($domen) {
-        return $site->company->staff;
+      return $site->company->staff;
       // });
     } else {
       return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);

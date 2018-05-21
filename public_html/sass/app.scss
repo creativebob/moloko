@@ -2274,6 +2274,10 @@ input[type=checkbox], input[type=radio] {
   // ----------------------------- Таблица в контенте --------------------------------------
   .table-content {
 
+    th:first-child:hover {
+      cursor: default;
+    }
+
     .is-stuck {
      background-color: $body-bg-color; 
 

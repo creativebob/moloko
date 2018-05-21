@@ -174,4 +174,18 @@ class EmployeeController extends Controller
     {
         //
     }
+
+    // Сортировка
+    public function employees_sort(Request $request)
+    {
+      $result = '';
+      $i = 1;
+      foreach ($request->employees as $item) {
+
+        $employees = Employee::findOrFail($item);
+        $employees->sort = $i;
+        $employees->save();
+        $i++;
+      }
+    }
 }
