@@ -49,7 +49,7 @@ class Employee extends Model
     'dismissal_date',
   ];
   
-   public function setDateEmploymentAttribute($value) {
+   public function setEmploymentDateAttribute($value) {
     if($value == Null){
         return $value;
     } else {
@@ -58,7 +58,7 @@ class Employee extends Model
     };
   }
 
-  public function getDateEmploymentAttribute($value) {
+  public function getEmploymentDateAttribute($value) {
     if($value == Null){
         return $value;
     } else {
@@ -68,7 +68,7 @@ class Employee extends Model
     };
   }
 
-  public function setDateDismissalAttribute($value) {
+  public function setDismissalDateAttribute($value) {
     if($value == Null){
         return $value;
     } else {
@@ -77,7 +77,7 @@ class Employee extends Model
     };
   }
 
-  public function getDateDismissalAttribute($value) {
+  public function getDismissalDateAttribute($value) {
     if($value == Null){
         return $value;
     } else {

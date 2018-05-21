@@ -32,8 +32,8 @@
           <th class="td-filial">Филиал</th>
           @endif
           <th class="td-department">Отдел</th>
-          <th class="td-date-employment">Дата приема</th>
-          <th class="td-date-dismissal">Дата увольнения</th>
+          <th class="td-employment-date">Дата приема</th>
+          <th class="td-dismissal-date">Дата увольнения</th>
           
           <th class="td-status">Статус</th>
           <th class="td-dismissal-desc">Причина увольнения</th>
@@ -47,7 +47,7 @@
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $employee->id }}"><label class="label-check" for="check-{{ $employee->id }}"></label></td>
           <td class="td-name">
-            @if ($employee->date_dismissal == null)
+            @if ($employee->dismissal_date == null)
               @can('update', $employee)
               <a href="/staff/{{ $employee->staffer->id }}/edit">
               @endcan
@@ -72,10 +72,10 @@
               {{ $employee->staffer->department->name }}
               @endif
             </td>
-            <td class="td-date-employment">{{ $employee->date_employment }}</td>
-            <td class="td-date-dismissal">{{ $employee->date_dismissal }}</td>
+            <td class="td-employment-date">{{ $employee->employment_date }}</td>
+            <td class="td-dismissal-date">{{ $employee->dismissal_date }}</td>
             <td class="td-status">
-              @if (!empty($employee->date_dismissal))
+              @if (!empty($employee->dismissal_date))
               Уволен
               @else
               Работает
@@ -107,7 +107,7 @@
   @section('scripts')
   {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
   @include('includes.scripts.tablesorter-script')
-  
+
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
   {{-- Скрипт модалки удаления --}}
