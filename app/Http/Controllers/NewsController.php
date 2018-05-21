@@ -63,9 +63,9 @@ class NewsController extends Controller
     ->filter($request, 'author_id') // Фильтр по авторам
     ->filter($request, 'id', 'cities') // Фильтр по городам публикации
     ->booklistFilter($request)  // Фильтр по спискам
-    ->dateIntervalFilter($request, 'date_publish_begin') // Интервальный фильтр по дате публикации
+    ->dateIntervalFilter($request, 'publish_begin_date') // Интервальный фильтр по дате публикации
     ->orderBy('moderation', 'desc')
-    ->orderBy('date_publish_begin', 'desc')
+    ->orderBy('publish_begin_date', 'desc')
     ->paginate(30);
 
     $filter_query = News::with('author', 'cities')
@@ -233,8 +233,8 @@ class NewsController extends Controller
     // Модерация и системная запись
     $cur_news->system_item = $request->system_item;
 
-    $cur_news->date_publish_begin = $request->date_publish_begin;
-    $cur_news->date_publish_end = $request->date_publish_end;
+    $cur_news->publish_begin_date = $request->publish_begin_date;
+    $cur_news->publish_end_date = $request->publish_end_date;
 
     // Если нет прав на создание полноценной записи - запись отправляем на модерацию
     if($answer['automoderate'] == false){
@@ -523,8 +523,8 @@ class NewsController extends Controller
     $cur_news->preview = $request->preview;
     $cur_news->content = $request->content;
 
-    $cur_news->date_publish_begin = $request->date_publish_begin;
-    $cur_news->date_publish_end = $request->date_publish_end;
+    $cur_news->publish_begin_date = $request->publish_begin_date;
+    $cur_news->publish_end_date = $request->publish_end_date;
 
     $cur_news->display = $request->display;
 
@@ -743,8 +743,8 @@ class NewsController extends Controller
 
     $site = Site::with(['news' => function ($query) {
       $query->where('display', 1)
-      ->where('date_publish_begin', '<', Carbon::now())
-      ->where('date_publish_end', '>', Carbon::now());
+      ->where('publish_begin_date', '<', Carbon::now())
+      ->where('publish_end_date', '>', Carbon::now());
     }, 'news.cities' => function($query) use ($city) {
       $query->whereAlias($city);
     }, 'news.company', 'news.author', 'news.photo'])->where('api_token', $token)->first();

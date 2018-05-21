@@ -1,7 +1,7 @@
 <script type="text/javascript">
   $(function() {
     // Сортировка строк таблицы
-    $("#table-content").tablesorter({ 
+    $("#content").tablesorter({ 
       // передаем аргументы для заголовков и назначаем объект 
       headers: { 
         // работаем со второй колонкой (подсчет идет с нуля) 

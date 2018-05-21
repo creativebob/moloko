@@ -28,8 +28,8 @@ class CreateNewsTable extends Migration
             $table->text('content')->nullable()->comment('Контент новости');
             $table->string('alias')->index()->nullable()->comment('Алиас');
 
-            $table->date('date_publish_begin')->index()->comment('Дата начала публикации');
-            $table->date('date_publish_end')->index()->comment('Дата окончания публикации');
+            $table->date('publish_begin_date')->index()->comment('Дата начала публикации');
+            $table->date('publish_end_date')->index()->comment('Дата окончания публикации');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

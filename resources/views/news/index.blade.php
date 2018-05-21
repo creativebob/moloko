@@ -89,8 +89,8 @@
             @endif
             </span>
           <td class="td-date_publish">
-            <span>{{ $cur_news->date_publish_begin }} {{ getWeekDay($cur_news->date_publish_begin, 1) }}</span>
-            <span>{{ $cur_news->date_publish_end }} {{ getWeekDay($cur_news->date_publish_end, 1) }}</span>
+            <span>{{ $cur_news->publish_begin_date }} {{ getWeekDay($cur_news->publish_begin_date, 1) }}</span>
+            <span>{{ $cur_news->publish_end_date }} {{ getWeekDay($cur_news->publish_end_date, 1) }}</span>
           </td>
           <td class="td-author">@if(isset($cur_news->author->first_name)) {{ $cur_news->author->first_name . ' ' . $cur_news->author->second_name }} @endif</td>
           <td class="td-delete">
