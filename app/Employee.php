@@ -44,10 +44,9 @@ class Employee extends Model
    */
   protected $dates = ['deleted_at'];
   protected $fillable = [
-  	'vacancy_id',
     'user_id',
-    'date_employment',
-    'date_dismissal',
+    'employment_date',
+    'dismissal_date',
   ];
   
    public function setDateEmploymentAttribute($value) {
@@ -55,7 +54,7 @@ class Employee extends Model
         return $value;
     } else {
         $date_parts = explode('.', $value);
-        $this->attributes['date_employment'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+        $this->attributes['employment_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
     };
   }
 
@@ -74,7 +73,7 @@ class Employee extends Model
         return $value;
     } else {
         $date_parts = explode('.', $value);
-        $this->attributes['date_dismissal'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+        $this->attributes['dismissal_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
     };
   }
 

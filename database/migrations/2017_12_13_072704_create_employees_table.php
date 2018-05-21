@@ -25,10 +25,10 @@ class CreateEmployeesTable extends Migration
             $table->integer('user_id')->unsigned()->nullable()->comment('Id пользователя');
             $table->foreign('user_id')->references('id')->on('users');
   
-            $table->date('date_employment')->nullable()->comment('Дата приема на работу');
-            $table->date('date_dismissal')->nullable()->comment('Дата увольнения');
+            $table->date('employment_date')->nullable()->comment('Дата приема на работу');
+            $table->date('dismissal_date')->nullable()->comment('Дата увольнения');
 
-            $table->string('dismissal_desc')->nullable()->comment('Причина увольнения');
+            $table->string('dismissal_description')->nullable()->comment('Причина увольнения');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 

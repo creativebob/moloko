@@ -23,17 +23,17 @@
     <div class="grid-x">
       <div class="small-12 medium-5 cell">
         <label>Дата приема
-          @include('includes.inputs.date', ['value'=>$employee->date_employment, 'name'=>'date_employment', 'required'=>'required'])
+          @include('includes.inputs.date', ['value'=>$employee->employment_date, 'name'=>'employment_date', 'required'=>'required'])
         </label>
       </div>
       <div class="small-12 medium-5 medium-offset-1 cell">
         <label>Дата увольнения
-          @include('includes.inputs.date', ['value'=>$employee->date_dismissal, 'name'=>'date_dismissal', 'required'=>''])
+          @include('includes.inputs.date', ['value'=>$employee->dismissal_date, 'name'=>'dismissal_date', 'required'=>''])
         </label>
       </div>
     </div>
     <label>Причина увольнения
-      @include('includes.inputs.name', ['value'=>$employee->dismissal_desc, 'name'=>'dismissal_desc', 'required'=>''])
+      @include('includes.inputs.name', ['value'=>$employee->dismissal_description, 'name'=>'dismissal_description', 'required'=>''])
     </label>
     
   </div>

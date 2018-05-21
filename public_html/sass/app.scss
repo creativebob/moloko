@@ -1579,6 +1579,21 @@ input[type=checkbox], input[type=radio] {
     color: $breadcrumbs-a-color;
   }
 }
+
+// -------------------------------------------- Exel --------------------------------------
+
+#exel {
+
+  img {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  #exel-import {
+    z-index: 95;
+  }
+}
+
 // -------------------------------------- Переопределяем модалку фонды -------------------------
 .reveal {
   padding: 0;

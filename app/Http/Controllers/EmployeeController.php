@@ -52,7 +52,7 @@ class EmployeeController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->positionFilter($request, 'staffer')
         ->departmentFilter($request, 'staffer')
-        ->dateIntervalFilter($request, 'date_employment')
+        ->dateIntervalFilter($request, 'employment_date')
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
@@ -156,9 +156,9 @@ class EmployeeController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $employee);
 
         // Перезаписываем данные
-        $employee->date_employment = $request->date_employment;
-        $employee->date_dismissal = $request->date_dismissal;
-        $employee->dismissal_desc = $request->dismissal_desc;
+        $employee->employment_date = $request->employment_date;
+        $employee->dismissal_date = $request->dismissal_date;
+        $employee->dismissal_description = $request->dismissal_description;
         $employee->editor_id = $user->id;
         $employee->save();
         

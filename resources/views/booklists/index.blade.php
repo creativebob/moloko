@@ -2,7 +2,7 @@
  
 @section('inhead')
 {{-- Скрипты таблиц в шапке --}}
-  @include('includes.scripts.table-inhead')
+  @include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -19,13 +19,13 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container>
+    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="booklists">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-booklists-name">Имя списка</th>
-          <th class="td-booklists-description">Описание списка</th>
+          <th class="td-name">Имя списка</th>
+          <th class="td-description">Описание списка</th>
           <th class="td-entity-id">Имя сущности</th>
           <th class="td-company-name">Компания</th>
           <th class="td-author">Автор</th>
@@ -38,8 +38,8 @@
         <tr class="item @if($booklist->moderation == 1)no-moderation @endif" id="booklists-{{ $booklist->id }}" data-name="{{ $booklist->booklist_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $booklist->id }}"><label class="label-check" for="check-{{ $booklist->id }}"></label></td>
-          <td class="td-list-name">{{ $booklist->booklist_name }} </td>
-          <td class="td-list-description">{{ $booklist->booklist_description }}</td>
+          <td class="td-name">{{ $booklist->booklist_name }} </td>
+          <td class="td-description">{{ $booklist->booklist_description }}</td>
           <td class="td-entity-name">{{ $booklist->entity->entity_name }}</td>
           <td class="td-booklist-company-id">@if(!empty($booklist->company->name)) {{ $booklist->company->name }} @else @if($booklist->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-author">@if(isset($booklist->author->first_name)) {{ $booklist->author->first_name . ' ' . $booklist->author->second_name }} @endif</td>
@@ -70,7 +70,7 @@
 
 @section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.table-scripts')
+@include('includes.scripts.tablesorter-script')
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')

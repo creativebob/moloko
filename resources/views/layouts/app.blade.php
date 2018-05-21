@@ -25,12 +25,13 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
   <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
   <script type="text/javascript" src="/js/jquery.latest.min.js"></script>
 
-  {{-- Дополнительные плагины/скрипиты/стили для конкретной страницы --}}
+  {{-- Дополнительные плагины / скрипты / стили для конкретной страницы --}}
   @yield('inhead')
 
-  <link rel="stylesheet" href="{{ asset('/css/foundation.css') }}">
-  <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
-  <!-- CSRF Token -->
+  <link rel="stylesheet" href="/css/foundation.css">
+  <link rel="stylesheet" href="/css/app.css">
+
+  {{-- CSRF Token --}}
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   {{-- Transition --}}
@@ -95,14 +96,11 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
               @endif
             </li>
             <li>
-
-
               @if(isset($session_god))
               {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 
               @endif
             </li>
             <li>
-
               @if(isset($session_access))
               {{ link_to_route('help.show_session', 'Смотреть сессию', $value = Null, ['target' => '_blank']) }} 
             @endif</li>
@@ -121,19 +119,22 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
     </header>
   </div>
 </div>
+
 {{-- Основной сайдбар, весь функционал --}}
 @include('layouts.sidebar')
+
 {{-- Менеджер задач --}}
 @include('layouts.task-manager')
+
 {{-- Основной контент --}}
 <div id="wrapper">
   <div class="grid-x breadcrumbs block-refresh">
-    <div class="small-12 medium-7 cell"> 
+    <div class="small-12 medium-9 cell"> 
       {{-- Breadcrumbs --}}
       @yield('breadcrumbs')
     </div>
-    <div class="small-12 medium-5 cell"> 
-      {{-- Breadcrumbs --}}
+    <div class="small-12 medium-3 cell text-right" id="exel"> 
+      {{-- Exel --}}
       @yield('exel')
     </div>
   </div>
@@ -198,7 +199,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
       if ($("div").is("#head-content")) {
         $('.head-content').css({'transition': 'width 0.3s ease'});
       };
-      if ($("table").is("#table-content")) {
+      if ($("table").is("#table")) {
           // $('#thead-sticky').css({'transition': 'margin 0.1s ease'});
           $('#thead-content').css({'transition': 'width 0.3s ease'});
           $('#thead-content>th').css({'transition': 'width 0.3s ease'});
