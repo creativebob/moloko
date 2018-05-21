@@ -3,8 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
-// Фильтры
+// Scopes для главного запроса
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemItemTraitScopes;
@@ -12,22 +13,32 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
+// Фильтры
+// use App\Scopes\Filters\Filter;
+// use App\Scopes\Filters\BooklistFilter;
+// use App\Scopes\Filters\DateIntervalFilter;
+
 class MenuSite extends Model
 {
 
-	// Подключаем Scopes для главного запроса
-  	use CompaniesLimitTraitScopes;
+    // Включаем Scopes
+	use CompaniesLimitTraitScopes;
 	use AuthorsTraitScopes;
 	use SystemItemTraitScopes;
 	use FilialsTraitScopes;
 	use TemplateTraitScopes;
 	use ModeratorLimitTraitScopes;
-	
-    protected $table = 'menu_site';
-    protected $fillable = [
-    	'menu_id', 
-		'site_id', 
-    ];
 
+    // Фильтры
+    // use Filter;
+    // use BooklistFilter;
+    // use DateIntervalFilter;
     
+	protected $table = 'menu_site';
+	protected $fillable = [
+		'menu_id', 
+		'site_id', 
+	];
+
+
 }

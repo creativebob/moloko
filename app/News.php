@@ -3,9 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-// Фильтры
+// Scopes для главного запроса
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemItemTraitScopes;
@@ -14,117 +15,104 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Фильтры
-use App\Scopes\Filters\AuthorFilter;
+use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
-use App\Scopes\Filters\Filter;
 
 class News extends Model
 {
-   use SoftDeletes;
-  // Подключаем Scopes для главного запроса
-  use CompaniesLimitTraitScopes;
-  use AuthorsTraitScopes;
-  use SystemItemTraitScopes;
-  use FilialsTraitScopes;
-  use TemplateTraitScopes;
-  use ModeratorLimitTraitScopes;
+    use SoftDeletes;
 
-  // Подключаем фильтры
-  use AuthorFilter;
-  use BooklistFilter;
-  use DateIntervalFilter;
-  use Filter;
-  
-  /**
-   * Атрибуты, которые должны быть преобразованы в даты.
-   *
-   * @var array
-   */
-  protected $dates = ['deleted_at'];
-  protected $fillable = [
-    'name',
-    'alias',
-    'company_id',
-  ];
+    // Включаем Scopes
+    use CompaniesLimitTraitScopes;
+    use AuthorsTraitScopes;
+    use SystemItemTraitScopes;
+    use FilialsTraitScopes;
+    use TemplateTraitScopes;
+    use ModeratorLimitTraitScopes;
 
-  public function setDatePublishBeginAttribute($value) {
-    if($value == Null){
-        return $value;
-    } else {
-        $date_parts = explode('.', $value);
-        $this->attributes['date_publish_begin'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
-    };
-  }
+    // Фильтры
+    use Filter;
+    use BooklistFilter;
+    use DateIntervalFilter;
 
-  public function getDatePublishBeginAttribute($value) {
-    if($value == Null){
-        return $value;
-    } else {
-      $date_parts = explode('-', $value);
-      $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
-      return $value;
-    };
-  }
+    protected $dates = ['deleted_at'];
+    protected $fillable = [
+        'name',
+        'alias',
+        'company_id',
+    ];
 
-  public function setDatePublishEndAttribute($value) {
-    if($value == Null){
-        return $value;
-    } else {
-        $date_parts = explode('.', $value);
-        $this->attributes['date_publish_end'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
-    };
-  }
+    public function setPublishBeginDateAttribute($value) {
+        if($value == Null){
+            return $value;
+        } else {
+            $date_parts = explode('.', $value);
+            $this->attributes['date_publish_begin'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+        };
+    }
 
-  public function getDatePublishEndAttribute($value) {
-    if($value == Null){
-        return $value;
-    } else {
-      $date_parts = explode('-', $value);
-      $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
-      return $value;
-    };
-  }
+    public function getPublishBeginDateAttribute($value) {
+        if($value == Null){
+            return $value;
+        } else {
+            $date_parts = explode('-', $value);
+            $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
+            return $value;
+        };
+    }
 
-  /**
-  * Получаем сайт.
-  */
-  public function site()
-  {
-    return $this->belongsTo('App\Site');
-  }
+    public function setPublishEndDateAttribute($value) {
+        if($value == Null){
+            return $value;
+        } else {
+            $date_parts = explode('.', $value);
+            $this->attributes['date_publish_end'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+        };
+    }
 
-  /**
-  * Получаем компанию.
-  */
-  public function company()
-  {
-    return $this->belongsTo('App\Company');
-  }
+    public function getPublishEndDateAttribute($value) {
+        if($value == Null){
+            return $value;
+        } else {
+            $date_parts = explode('-', $value);
+            $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
+            return $value;
+        };
+    }
 
-  public function photo()
-  {
-    return $this->belongsTo('App\Photo');
-  }
+    // Получаем сайт.
+    public function site()
+    {
+        return $this->belongsTo('App\Site');
+    }
 
+    // Получаем компанию.
+    public function company()
+    {
+        return $this->belongsTo('App\Company');
+    }
 
-  public function author()
-  {
-    return $this->belongsTo('App\User', 'author_id');
-  }
+    public function photo()
+    {
+        return $this->belongsTo('App\Photo');
+    }
 
-  
+    public function author()
+    {
+        return $this->belongsTo('App\User', 'author_id');
+    }
 
-  // Получаем альбом
-  public function albums()
-  {
-     return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'news');
-  }
+    // Получаем альбом
+    public function albums()
+    {
+        return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'news');
+    }
 
-  // Получаем города
-  public function cities()
-  {
-    return $this->belongsToMany('App\City', 'city_entity', 'entity_id', 'city_id')->where('entity', 'news');
-  }
+    // Получаем города
+    public function cities()
+    {
+        return $this->belongsToMany('App\City', 'city_entity', 'entity_id', 'city_id')->where('entity', 'news');
+    }
 
 }

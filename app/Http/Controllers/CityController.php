@@ -79,7 +79,7 @@ class CityController extends Controller
       // -------------------------------------------------------------------------------------------
       // ГЛАВНЫЙ ЗАПРОС
       // -------------------------------------------------------------------------------------------
-      $regions = Region::with(['areas'  => function ($query) {
+      $regions = Region::with(['areas'  => function ($query){
         $query->orderBy('sort', 'asc');
       }, 'areas.cities' => function ($query) {
         $query->orderBy('sort', 'asc');
@@ -386,10 +386,13 @@ class CityController extends Controller
           }
         }
 
+        
         if (isset($answer->response->items)) {
+
           // Если нашлись наши области в пришедших, считаем количество items
           $answer->response->count = count($answer->response->items);
         } else {
+
           // Если совпадений не нашлось
           $answer->response->count = 0;
         }

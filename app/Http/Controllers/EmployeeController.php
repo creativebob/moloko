@@ -50,8 +50,8 @@ class EmployeeController extends Controller
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        ->positionFilter($request, 'staffer')
-        ->departmentFilter($request, 'staffer')
+        ->filter($request, 'position_id', 'staffer')
+        ->filter($request, 'department_id', 'staffer')
         ->dateIntervalFilter($request, 'date_employment')
         ->orderBy('moderation', 'desc')
         ->paginate(30);
