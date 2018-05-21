@@ -22,7 +22,7 @@
     <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="roles">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
-          <th class="td-drop"><div class="sprite icon-drop"></div></th>
+          <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-name">Название таблицы</th>
           <th class="td-set">Настройка</th>
@@ -45,7 +45,7 @@
           @endphp
         @endcan
         <tr class="item @if(Auth::user()->role_id == $role->id)active @endif  @if($role->moderation == 1)no-moderation @endif" id="roles-{{ $role->id }}" data-name="{{ $role->name }}">
-          <td class="td-drop"><div class="sprite icon-drop"></div></td>
+          <td class="td-drop"></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $role->id }}"><label class="label-check" for="check-{{ $role->id }}"></label></td>
           <td class="td-name">
             @if($edit == 1)

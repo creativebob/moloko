@@ -75,7 +75,7 @@ $drop = 1;
 
 
 {{-- Скрипт чекбоксов и перетаскивания для меню --}}
-@include('includes.scripts.menu-scripts')
+@include('includes.scripts.sortable-menu-script')
 
 @if(!empty($id))
 <script type="text/javascript">

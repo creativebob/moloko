@@ -18,7 +18,7 @@
       @include('includes.inputs.name', ['value'=>$site->name, 'name'=>'name', 'required'=>'required'])
     </label>
     <label>Домен сайта {{ $site->domen }}
-      @include('includes.inputs.varchar', ['value'=>$site->domen, 'name'=>'domen', 'required'=>'required'])
+      @include('includes.inputs.varchar', ['value'=>$site->domain, 'name'=>'domain', 'required'=>'required'])
       <div class="sprite-input-right find-status" id="name-check"></div>
       <div class="item-error">Такой сайт уже существует!</div>
     </label>

@@ -347,8 +347,22 @@ class PositionController extends Controller
       }; 
     } else {
       abort(403, 'Должность не найдена');
-    };
+    }
   }
+
+  // Сортировка
+    public function positions_sort(Request $request)
+    {
+      $result = '';
+      $i = 1;
+      foreach ($request->positions as $item) {
+
+        $positions = Position::findOrFail($item);
+        $positions->sort = $i;
+        $positions->save();
+        $i++;
+      }
+    }
 
   public function positions_list(Request $request)
   {

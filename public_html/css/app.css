@@ -1785,6 +1785,9 @@ input[type=checkbox], input[type=radio] {
 .content .content-list .last-list .last-item:last-child .last-link {
   border-bottom: none;
 }
+.content .table-content th:first-child:hover {
+  cursor: default;
+}
 .content .table-content .is-stuck {
   background-color: #eeeeee;
 }

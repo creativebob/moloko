@@ -41,7 +41,7 @@
     <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="products">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
-          <th class="td-drop"><div class="sprite icon-drop"></div></th>
+          <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-photo">Фото</th>
           <th class="td-name">Название товара</th>
@@ -125,5 +125,5 @@
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-delete-script')
   @include('includes.scripts.delete-ajax-script')
-  @include('includes.scripts.table-sort')
+  @include('includes.scripts.sortable-table-script')
   @endsection
