@@ -2,7 +2,7 @@
  
 @section('inhead')
 {{-- Скрипты таблиц в шапке --}}
-  @include('includes.scripts.table-inhead')
+  @include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -19,14 +19,14 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container>
+    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="folders">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-folder-name">Имя папки</th>
-          <th class="td-folder-alias">Алиас</th>
-          <th class="td-folder-url">Путь</th>
+          <th class="td-name">Имя папки</th>
+          <th class="td-alias">Алиас</th>
+          <th class="td-url">Путь</th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -36,7 +36,7 @@
         <tr class="item @if(Auth::user()->folder_id == $folder->id)active @endif  @if($folder->moderation == 1)no-moderation @endif" id="folders-{{ $folder->id }}" data-name="{{ $folder->folder_name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $folder->id }}"><label class="label-check" for="check-{{ $folder->id }}"></label></td>
-          <td class="td-folder-name">
+          <td class="td-name">
             @can('update', $folder)
             <a href="/folders/{{ $folder->id }}/edit">
             @endcan
@@ -44,8 +44,8 @@
             @can('update', $folder)
             </a> 
             @endcan
-          <td class="td-folder-alias">{{ $folder->folder_alias }} </td>
-          <td class="td-folder-url">{{ $folder->folder_url }} </td>
+          <td class="td-alias">{{ $folder->folder_alias }} </td>
+          <td class="td-url">{{ $folder->folder_url }} </td>
           <td class="td-delete">
           @if ($folder->system_item !== 1)
             @can('delete', $folder)
@@ -76,7 +76,7 @@
 
 @section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.table-scripts')
+@include('includes.scripts.tablesorter-script')
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')

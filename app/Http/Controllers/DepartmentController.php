@@ -373,6 +373,7 @@ class DepartmentController extends Controller
     if (isset($request->address)) {
       // Пишем локацию
       $location = new Location;
+      $location->country_id = 1;
       $location->city_id = $request->city_id;
       $location->address = $request->address;
       $location->author_id = $user_id;
@@ -587,7 +588,7 @@ class DepartmentController extends Controller
         $location->editor_id = $user_id;
         $location->save();
       }
-      if($location->address = $request->address) {
+      if($location->address != $request->address) {
         $location->address = $request->address;
         $location->editor_id = $user_id;
         $location->save();

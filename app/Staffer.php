@@ -15,9 +15,9 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Фильтры
-// use App\Scopes\Filters\Filter;
-// use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\Filter;
+use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\DateIntervalFilter;
 
 class Staffer extends Model
 {
@@ -33,9 +33,9 @@ class Staffer extends Model
     use ModeratorLimitTraitScopes;
 
     // Фильтры
-    // use Filter;
-    // use BooklistFilter;
-    // use DateIntervalFilter;
+    use Filter;
+    use BooklistFilter;
+    use DateIntervalFilter;
 
     protected $table = 'staff';
     protected $dates = ['deleted_at'];

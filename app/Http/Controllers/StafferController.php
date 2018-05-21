@@ -15,8 +15,10 @@ use App\RoleUser;
 // Валидация
 use App\Http\Requests\StafferRequest;
 use App\Http\Requests\EmployeeRequest;
+
 // Политика
 use App\Policies\StafferPolicy;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,30 +37,60 @@ class StafferController extends Controller
     $this->authorize(getmethod(__FUNCTION__), Staffer::class);
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
     // -------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
+
     $staff = Staffer::with('filial', 'department', 'user', 'position', 'employees')
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
+    ->booklistFilter($request)
+    ->filter($request, 'position_id')
+    ->filter($request, 'department_id')
+    ->dateIntervalFilter($request, 'date_employment')
     ->orderBy('moderation', 'desc')
     ->paginate(30);
     
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
+    // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+    $filter_query = Staffer::moderatorLimit($answer)
+    ->companiesLimit($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
+    ->get();
+
+    // dd($filter_query);
+    $filter['status'] = null;
+
+    $filter = addFilter($filter, $filter_query, $request, 'Выберите должность:', 'position', 'position_id');
+    $filter = addFilter($filter, $filter_query, $request, 'Выберите отдел:', 'department', 'department_id');
+
+    // Добавляем данные по спискам (Требуется на каждом контроллере)
+    $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+    // dd($filter);
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
+
     $user = $request->user();
     // Смотрим сколько филиалов в компании
     $company = Company::with(['departments' => function($query) {
-                  $query->whereFilial_status(1);
-                }])->findOrFail($user->company_id);
+          $query->whereFilial_status(1);
+        }])->findOrFail($user->company_id);
     $filials = count($company->departments);
     // dd($staff);
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);    
 
-    return view('staff.index', compact('staff', 'page_info', 'filials'));
+    return view('staff.index', compact('staff', 'page_info', 'filials', 'filter'));
   }
 
   public function create()
@@ -125,7 +157,7 @@ class StafferController extends Controller
     
     // ГЛАВНЫЙ ЗАПРОС:
     $staffer = Staffer::with(['position', 'employees' => function($query) {
-      $query->whereDate_dismissal(null);
+      $query->wheredismissal_date(null);
     }])
     ->moderatorLimit($answer)
     ->findOrFail($id);
@@ -171,16 +203,16 @@ class StafferController extends Controller
     $this->authorize(getmethod(__FUNCTION__), $staffer);
 
     // Если не пустая дата увольнения пришла
-    if (isset($request->date_dismissal)) {
+    if (isset($request->dismissal_date)) {
       // Снимаем с должности в штате
       $staffer->user_id = null;
       $staffer->editor_id = $user->id;
       // Ищем в сотрудниках по id должности и где пустая дата увольнения
-      $employee = Employee::where(['staffer_id' => $id, 'date_dismissal' => null])->first();
+      $employee = Employee::where(['staffer_id' => $id, 'dismissal_date' => null])->first();
       // Заполняем дату
-      $employee->date_employment = $request->date_employment;
-      $employee->date_dismissal = $request->date_dismissal;
-      $employee->dismissal_desc = $request->dismissal_desc;
+      $employee->employment_date = $request->employment_date;
+      $employee->dismissal_date = $request->dismissal_date;
+      $employee->dismissal_description = $request->dismissal_description;
       $employee->editor_id = $user->id;
 
       // Удаляем должность и права данного юзера
@@ -189,12 +221,12 @@ class StafferController extends Controller
     // Если даты увольнения нет
     } else {
       $user_id = $staffer->user_id;
-      $employee = Employee::where(['staffer_id' => $id, 'user_id' => $user_id, 'date_dismissal' => null])->first();
+      $employee = Employee::where(['staffer_id' => $id, 'user_id' => $user_id, 'dismissal_date' => null])->first();
       if ($employee) {
-          $date_employment_db = $employee->date_employment;
+          $employment_date_db = $employee->employment_date;
         // Смотрим отличатеся ли пришедшая дата устройства
-        if ($date_employment_db !== $request->date_employment) {
-          $employee->date_employment = $request->date_employment;
+        if ($employment_date_db !== $request->employment_date) {
+          $employee->employment_date = $request->employment_date;
           $employee->save();
           if ($employee) {
             return Redirect('/staff');
@@ -210,7 +242,7 @@ class StafferController extends Controller
         $employee->company_id = $user->company_id;
         $employee->staffer_id = $id;
         $employee->user_id = $request->user_id;
-        $employee->date_employment = $request->date_employment;
+        $employee->employment_date = $request->employment_date;
         $employee->author_id = $user->id;
         // Создать связь сотрудника, филиала и ролей должности
         $mass = [];

@@ -15,8 +15,8 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Фильтры
-// use App\Scopes\Filters\Filter;
-// use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\Filter;
+use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
 class Site extends Model
@@ -33,8 +33,8 @@ class Site extends Model
     use ModeratorLimitTraitScopes;
 
     // Фильтры
-    // use Filter;
-    // use BooklistFilter;
+    use Filter;
+    use BooklistFilter;
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];

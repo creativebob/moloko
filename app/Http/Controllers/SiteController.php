@@ -45,13 +45,39 @@ class SiteController extends Controller
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
+    ->booklistFilter($request)
+    // ->filter($request, 'position_id')
+    // ->filter($request, 'department_id')
     ->orderBy('moderation', 'desc')
     ->paginate(30);
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
+    // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+    $filter_query = Site::with('author', 'company')
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
+    ->get();
+
+    $filter['status'] = null;
+
+    // $filter = addFilter($filter, $filter_query, $request, 'Выберите должность:', 'position', 'position_id');
+    // $filter = addFilter($filter, $filter_query, $request, 'Выберите отдел:', 'department', 'department_id');
+
+    // Добавляем данные по спискам (Требуется на каждом контроллере)
+    $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
+
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
-    return view('sites.index', compact('sites', 'page_info'));
+    return view('sites.index', compact('sites', 'page_info', 'filter'));
   }
 
 

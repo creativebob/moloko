@@ -38,20 +38,47 @@ class PositionController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
 
-    $positions = Position::with('author', 'page', 'roles')
+    $positions = Position::with('author', 'page', 'roles', 'company')
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
     ->template($answer) // Выводим шаблоны в список
+    ->booklistFilter($request)
+    ->filter($request, 'author_id')
+    ->filter($request, 'company_id')
     ->orderBy('moderation', 'desc')
     ->paginate(30);
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
+    // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+    $filter_query = Position::with('author', 'company')
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
+    ->template($answer) // Выводим шаблоны в список
+    ->get();
+
+    // dd($filter_query);
+    $filter['status'] = null;
+
+    $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
+    $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id');
+
+    // Добавляем данные по спискам (Требуется на каждом контроллере)
+    $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
-    return view('positions.index', compact('positions', 'page_info'));
+    return view('positions.index', compact('positions', 'page_info', 'filter'));
   }
 
   public function create(Request $request)

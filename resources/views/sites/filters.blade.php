@@ -1,19 +1,20 @@
-{{ Form::open(['route' => 'sites.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
-  <legend>Фильтрация</legend>
-  <div class="grid-x grid-padding-x"> 
-    <div class="small-6 cell">
-      <label>Статус пользователя
-        {{ Form::select('user_type', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
-      </label>
-    </div>
-    <div class="small-6 cell">
-      <label>Блокировка доступа
-        {{ Form::select('access_block', [ 'all' => 'Все пользователи', '1' => 'Доступ блокирован', '' => 'Доступ открыт'], 'all') }}
-      </label>
-    </div>
-
-    <div class="small-12 medium-12 align-center cell tabs-button">
-      {{ Form::submit('Фильтрация', ['class'=>'button']) }}
+<div class="small-12 medium-6 large-6 cell checkbox checkboxer">
+  <legend>Фильтры:</legend>
+  <div class="grid-x">
+    <div class="small-12 medium-6 cell">
+      {{-- @include('includes.inputs.checkboxer', ['name'=>'city', 'value'=>$filter]) --}}   
     </div>
   </div>
-{{ Form::close() }}
+  <div class="grid-x">
+    <div class="small-12 medium-6 cell">
+      {{-- @include('includes.inputs.checkboxer', ['name'=>'sector', 'value'=>$filter]) --}}     
+    </div>
+  </div>
+</div>
+<div class="small-12 medium-6 large-6 cell checkbox checkboxer">
+  <legend>Мои списки:</legend>
+  <div id="booklists">
+    @include('includes.inputs.booklister', ['name'=>'booklist', 'value'=>$filter])
+  </div>
+</div>
+

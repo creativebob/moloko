@@ -2,7 +2,7 @@
  
 @section('inhead')
 {{-- Скрипты таблиц в шапке --}}
-  @include('includes.scripts.table-inhead')
+  @include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -127,7 +127,7 @@
 
 @section('scripts')
   {{-- Скрипт сортировки и перетаскивания для таблицы --}}
-  @include('includes.scripts.table-scripts')
+  @include('includes.scripts.tablesorter-script')
 
   {{-- Скрипт чекбоксов --}}
   @include('includes.scripts.checkbox-control')

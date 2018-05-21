@@ -57,17 +57,44 @@ class ProductController extends Controller
     ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
+    ->booklistFilter($request)
+    ->filter($request, 'author_id')
+    ->filter($request, 'company_id')
+    ->filter($request, 'products_category_id')
     ->orderBy('sort', 'asc')
     ->paginate(30);
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
+    // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+    $filter_query = Product::with('author', 'company', 'products_category')
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
+    ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
+    ->get();
+
+    // dd($filter_query);
+    $filter['status'] = null;
+
+    $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
+    $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id');
+    $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'products_category', 'products_category_id');
+
+    // Добавляем данные по спискам (Требуется на каждом контроллере)
+    $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
-    
 
     // dd($products);
 
-    return view('products.index', compact('products', 'page_info', 'product'));
+    return view('products.index', compact('products', 'page_info', 'product', 'filter'));
   }
 
   public function create(Request $request)

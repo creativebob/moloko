@@ -3,7 +3,7 @@
 @section('inhead')
 <meta name="description" content="{{ $page_info->page_description }}" />
 {{-- Скрипты таблиц в шапке --}}
-@include('includes.scripts.table-inhead')
+@include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -20,18 +20,18 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="table-content" data-sticky-container>
+    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="staff">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-staffer-position">Название должности</th>
+          <th class="td-position">Название должности</th>
           @if ($filials > 1)
-          <th class="td-staffer-filial">Филиал</th>
+          <th class="td-filial">Филиал</th>
           @endif
-          <th class="td-staffer-department">Отдел</th>
-          <th class="td-staffer-phone">Телефон</th>
-          <th class="td-staffer-date-employment">Дата приема</th>
+          <th class="td-department">Отдел</th>
+          <th class="td-phone">Телефон</th>
+          <th class="td-date-employment">Дата приема</th>
           
           <!-- <th class="td-delete"></th> -->
         </tr>
@@ -41,8 +41,19 @@
         @foreach($staff as $staffer)
         <tr class="item @if($staffer->moderation == 1)no-moderation @endif" id="staff-{{ $staffer->id }}" data-name="{{ $staffer->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $staffer->id }}"><label class="label-check" for="check-{{ $staffer->id }}"></label></td>
-          <td class="td-staffer-position">
+          <td class="td-checkbox checkbox">
+            <input type="checkbox" class="table-check" name="" id="check-{{ $staffer->id }}"
+
+              {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+              @if(!empty($filter['booklist']['booklists']['default']))
+                {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+                @if (in_array($staffer->id, $filter['booklist']['booklists']['default'])) checked 
+              @endif
+            @endif
+            >
+
+            <label class="label-check" for="check-{{ $staffer->id }}"></label></td>
+          <td class="td-position">
             @can('update', $staffer)
             <a href="/staff/{{ $staffer->id }}/edit">
               @endcan
@@ -57,18 +68,18 @@
             ( {{ $staffer->position->name }} )
           </td>
           @if ($filials > 1)
-          <td class="td-staffer-filial">{{ $staffer->filial->name }}</td>
+          <td class="td-filial">{{ $staffer->filial->name }}</td>
           @endif
-          <td class="td-staffer-department">
+          <td class="td-department">
             @if ($staffer->filial->name !== $staffer->department->name)
             {{ $staffer->department->name }}
             @endif
           </td>
-          <td class="td-staffer-phone">
+          <td class="td-phone">
             @if (isset($staffer->user))
             {{ $staffer->user->phone }}
           @endif</td>
-          <td class="td-staffer-date-employment">
+          <td class="td-date-employment">
             @foreach ($staffer->employees as $employee)
             @if (($employee->user_id == $staffer->user_id) && ($employee->date_dismissal == null))
             {{ $employee->date_employment }}
@@ -105,8 +116,11 @@
 
 @section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.table-scripts')
+@include('includes.scripts.tablesorter-script')
 
+{{-- Скрипт чекбоксов --}}
+@include('includes.scripts.checkbox-control')
+  
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
 @endsection

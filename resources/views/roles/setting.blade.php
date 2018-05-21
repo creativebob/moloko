@@ -2,7 +2,7 @@
 
 @section('inhead')
 {{-- Скрипты таблиц в шапке --}}
-  @include('includes.scripts.table-inhead')
+  @include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', 'Настройка прав доступа пользователей')

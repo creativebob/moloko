@@ -3,7 +3,7 @@
 @section('inhead')
 <meta name="description" content="{{ $page_info->page_description }}" />
 {{-- Скрипты таблиц в шапке --}}
-@include('includes.scripts.table-inhead')
+@include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -24,12 +24,12 @@
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-company-name" data-serversort="name" >Название компании</th>
+          <th class="td-name" data-serversort="name" >Название компании</th>
 
           @if($user->god == 1)<th class="td-getauth">Действие</th> @endif
 
-          <th class="td-company-address">Адрес</th>
-          <th class="td-company-phone">Телефон</th>
+          <th class="td-address">Адрес</th>
+          <th class="td-phone">Телефон</th>
           <th class="td-user_id">Руководитель</th>
           <th class="td-delete">Статус</th>
           <th class="td-delete"></th>
@@ -51,7 +51,7 @@
             @endif
             ><label class="label-check" for="check-{{ $company->id }}"></label>
           </td>
-          <td class="td-company-name">
+          <td class="td-name">
             @php
             $edit = 0;
             @endphp
@@ -73,8 +73,8 @@
           <td class="td-getauth">@if($user->company_id != $company->id) {{ link_to_route('users.getauthcompany', 'Авторизоваться', ['company_id'=>$company->id], ['class' => 'tiny button']) }} @endif</td>
           @endif
 
-          <td class="td-company-address">@if(!empty($company->location->address)){{ $company->location->address }}@endif </td>
-          <td class="td-company-phone">{{ decorPhone($company->phone) }} </td>
+          <td class="td-address">@if(!empty($company->location->address)){{ $company->location->address }}@endif </td>
+          <td class="td-phone">{{ decorPhone($company->phone) }} </td>
           <td class="td-user_id">{{ $company->director->first_name or ' ... ' }} {{ $company->director->second_name or ' ... ' }} </td>
           <td class="td-user_id">{{ $company->contragents->first()->vendor_status or ' ' }} {{ $company->contragents->first()->client_status or ' ' }} </td>
 
@@ -113,7 +113,7 @@
 
 @section('scripts')
   {{-- Скрипт сортировки и перетаскивания для таблицы --}}
-  @include('includes.scripts.table-scripts')
+  @include('includes.scripts.tablesorter-script')
 
   {{-- Скрипт чекбоксов --}}
   @include('includes.scripts.checkbox-control')

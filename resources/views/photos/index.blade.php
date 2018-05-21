@@ -2,7 +2,7 @@
 
 @section('inhead')
 {{-- Скрипты таблиц в шапке --}}
-@include('includes.scripts.table-inhead')
+@include('includes.scripts.tablesorter-inhead')
 @include('includes.scripts.fancybox-inhead')
 @endsection
 
@@ -24,10 +24,10 @@
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-photo">Фотография</th>
-          <th class="td-photo-name">Имя фото</th>
-          <th class="td-photo-date">Сведения</th>
-          <th class="td-photo-author">Автор</th>
+          <th class="td">Фотография</th>
+          <th class="td-name">Имя фото</th>
+          <th class="td-date">Сведения</th>
+          <th class="td-author">Автор</th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -44,21 +44,21 @@
             @endif
             @endif 
             ><label class="label-check" for="check-{{ $photo->id }}"></label></td>
-            <td class="td-photo">
+            <td class="td">
               <a data-fancybox="photos" href="/storage/{{ $photo->company_id }}/media/albums/{{ $album->id }}/img/large/{{ $photo->name }}">
                 <img src="/storage/{{ $photo->company_id }}/media/albums/{{ $album->id }}/img/small/{{ $photo->name }}" alt="Фотография альбома">
               </a>
             </td>
-            <td class="td-photo-name">
+            <td class="td-name">
               <a href="/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit">{{ $photo->name }}</a>
             </td>
-            <td class="td-photo-extra-info">
+            <td class="td-extra-info">
               <ul>
                 <li>Дата добавления: {{ date('d.m.Y', strtotime($photo->created_at)) }}</li>
                 <li>Размер, Kb: {{ $photo->size }}</li>
               </ul>
             </td>
-            <td class="td-photo-author">@if(isset($photo->author->first_name)) {{ $photo->author->first_name . ' ' . $photo->author->second_name }} @endif
+            <td class="td-author">@if(isset($photo->author->first_name)) {{ $photo->author->first_name . ' ' . $photo->author->second_name }} @endif
             </td>
             <td class="td-delete">
               @if ($photo->system_item != 1)
@@ -105,7 +105,7 @@
   });
 </script> 
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.table-scripts')
+@include('includes.scripts.tablesorter-script')
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')

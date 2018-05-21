@@ -15,6 +15,7 @@ use App\Worktime;
 use App\Location;
 use App\ScheduleEntity;
 use App\Contragent;
+use App\Country;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -108,8 +109,10 @@ class CompanyController extends Controller
 
     // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
       $sectors_list = get_select_with_tree($sectors, null, 1, null);
+      // dd($sectors_list);
 
-        // dd($sectors_list);
+      // Получаем список стран
+      $countries_list = Country::get()->pluck('name', 'id');
 
         // Инфо о странице
     $page_info = pageInfo($this->entity_name);
@@ -118,7 +121,7 @@ class CompanyController extends Controller
     $worktime = [];
     for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
 
-      return view('companies.create', compact('company', 'sectors_list', 'page_info', 'worktime'));
+      return view('companies.create', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list'));
   }
 
   public function store(CompanyRequest $request)
@@ -159,6 +162,7 @@ class CompanyController extends Controller
 
     // Пишем локацию
     $location = new Location;
+    $location->country_id = $request->country_id;
     $location->city_id = $request->city_id;
     $location->address = $request->address;
     $location->author_id = $user_id;
@@ -311,11 +315,14 @@ class CompanyController extends Controller
 
             // dd($worktime);
 
+    // Получаем список стран
+      $countries_list = Country::get()->pluck('name', 'id');
+
 
         // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
-    return view('companies.edit', compact('company', 'sectors_list', 'page_info', 'worktime'));
+    return view('companies.edit', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list'));
   }
 
 
@@ -341,8 +348,13 @@ class CompanyController extends Controller
       $location->editor_id = $user_id;
       $location->save();
     }
-    if($location->address = $request->address) {
+    if($location->address != $request->address) {
       $location->address = $request->address;
+      $location->editor_id = $user_id;
+      $location->save();
+    }
+    if($location->country_id != $request->country_id) {
+      $location->country_id = $request->country_id;
       $location->editor_id = $user_id;
       $location->save();
     }
