@@ -15,7 +15,7 @@
     @endif
     <!-- Сотрудник -->
     <label>Название должности
-    {{ Form::text('position_name', $employee->staffer->position->position_name, ['class'=>'varchar-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'readonly']) }}
+    {{ Form::text('position_name', $employee->staffer->position->name, ['class'=>'varchar-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'readonly']) }}
     </label>
     <label>Сотрудник:
       {{ Form::select('user_id', $users_list, $employee->user_id, ['id'=>'staffer-select', 'placeholder'=>'Вакансия', 'disabled']) }}

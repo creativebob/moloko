@@ -31,7 +31,7 @@
           @endif
           <th class="td-department">Отдел</th>
           <th class="td-phone">Телефон</th>
-          <th class="td-date-employment">Дата приема</th>
+          <th class="td-employment-date">Дата приема</th>
           
           <!-- <th class="td-delete"></th> -->
         </tr>
@@ -79,10 +79,10 @@
             @if (isset($staffer->user))
             {{ $staffer->user->phone }}
           @endif</td>
-          <td class="td-date-employment">
+          <td class="td-employment-date">
             @foreach ($staffer->employees as $employee)
             @if (($employee->user_id == $staffer->user_id) && ($employee->date_dismissal == null))
-            {{ $employee->date_employment }}
+            {{ $employee->employment_date }}
             @endif
             @endforeach
           </td>
