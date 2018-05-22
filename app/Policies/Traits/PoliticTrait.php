@@ -55,6 +55,39 @@ trait PoliticTrait
             };
         };
 
+
+        // Бог авторизованный под компанией может создавать
+        if(($user_status == 1)&&($method == 'create')&&($company_id == null)){
+
+            // Разрешаем богу
+            if(
+                ($entity_name == 'companies')||
+                ($entity_name == 'roles')||
+                ($entity_name == 'rights')||
+                // ($entity_name == 'pages')||
+                // ($entity_name == 'sities')||
+                // ($entity_name == 'navigations')||
+                // ($entity_name == 'menus')||
+                // ($entity_name == 'roles')||
+
+                // ($entity_name == 'cities')||   
+                // ($entity_name == 'regions')||   
+                // ($entity_name == 'areas')||       
+                // ($entity_name == 'positions')||
+                // ($entity_name == 'entities')
+                ($entity_name == 'sectors')
+            ){
+
+                // Разрешаем
+                return true;
+
+            } else {
+
+                // Запрещаем
+                return false;
+            };         
+        };
+
         // Бог авторизованный под компанией может создавать
         if(($user_status == 1)&&($method == 'create')&&($company_id != null)){
             return true;            
@@ -141,7 +174,6 @@ trait PoliticTrait
                 $mass_right = getRight('nolimit', $entity_name, $session);
                 $nolimit_status = $mass_right['result'];
             };
-
 
             $mass_right = getRight('system', $entity_name, $session);
             $system_status = $mass_right['result'];

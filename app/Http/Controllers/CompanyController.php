@@ -139,16 +139,12 @@ class CompanyController extends Controller
     // Смотрим компанию пользователя
     $company_id = $user->company_id;
 
-    if($company_id == null) {
-      abort(403, 'Необходимо авторизоваться под компанией');
-    }
-
     // Скрываем бога
     $user_id = hideGod($user);
 
     $schedule = new Schedule;
     $schedule->company_id = $company_id;
-    $schedule->name = 'График работы для ' . $user->company->name;
+    $schedule->name = 'График работы компании';
     $schedule->description = null;
     $schedule->author_id = $user_id;
     $schedule->save();
