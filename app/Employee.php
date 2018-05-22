@@ -41,20 +41,20 @@ class Employee extends Model
     protected $fillable = [
         'vacancy_id',
         'user_id',
-        'date_employment',
-        'date_dismissal',
+        'employment_date',
+        'dismissal_date',
     ];
 
-    public function setDateEmploymentAttribute($value) {
+    public function setEmploymentDateAttribute($value) {
         if($value == Null){
             return $value;
         } else {
             $date_parts = explode('.', $value);
-            $this->attributes['date_employment'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+            $this->attributes['employment_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
         };
     }
 
-    public function getDateEmploymentAttribute($value) {
+    public function getEmploymentDateAttribute($value) {
         if($value == Null){
             return $value;
         } else {
@@ -64,16 +64,16 @@ class Employee extends Model
         };
     }
 
-    public function setDateDismissalAttribute($value) {
+    public function setDismissalDateAttribute($value) {
         if($value == Null){
             return $value;
         } else {
             $date_parts = explode('.', $value);
-            $this->attributes['date_dismissal'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+            $this->attributes['dismissal_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
         };
     }
 
-    public function getDateDismissalAttribute($value) {
+    public function getDismissalDateAttribute($value) {
         if($value == Null){
             return $value;
         } else {

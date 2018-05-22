@@ -69,7 +69,7 @@
           </td>
           <td class="td-domain"><a href="http://{{ $site->domain }}" target="_blank">{{ $site->domain }}</a></td>
           <td class="td-api-token">{{ $site->api_token }}</td>
-          <td class="td-company-id">@if(!empty($site->company->company_name)) {{ $site->company->company_name }} @else @if($site->system_item == null) Шаблон @else Системная @endif @endif</td>
+          <td class="td-company-id">@if(!empty($site->company->name)) {{ $site->company->name }} @else @if($site->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-edit">
             @if($edit == 1)
             <a class="tiny button" href="/sites/{{ $site->alias }}/edit">Редактировать</a>

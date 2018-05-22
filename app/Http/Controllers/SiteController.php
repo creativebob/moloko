@@ -341,7 +341,7 @@ class SiteController extends Controller
     $site = Site::where('api_token', $request->token)->first();
     if ($site) {
       // return Cache::remember('site', 1, function() use ($domain) {
-      return Site::with(['company.filials.location.city', 'company.location.city', 'pages', 'navigations.menus.page', 'navigations.navigations_category', 'navigations' => function ($query) {
+      return Site::with(['company.filials.location.city', 'company.location.city', 'company.schedules.worktimes', 'pages', 'navigations.menus.page', 'navigations.navigations_category', 'navigations' => function ($query) {
         $query->whereDisplay(1);
       },'navigations.menus' => function ($query) {
         $query->whereDisplay(1)->orderBy('sort', 'asc');
