@@ -2,7 +2,7 @@
 
 @section('inhead')
 {{-- Скрипты таблиц в шапке --}}
-@include('includes.scripts.table-inhead')
+@include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', 'Содержимое альбома ' . $album->name)
@@ -162,10 +162,9 @@
 
   
   {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-  @include('includes.scripts.table-scripts')
 
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-delete-script')
   @include('includes.scripts.delete-ajax-script')
-@include('includes.scripts.table-sort')
+@include('includes.scripts.tablesorter-script')
   @endsection
