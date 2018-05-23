@@ -242,7 +242,6 @@ class RoleController extends Controller
             $f = $right->actionentity->alias_action_entity;
         };
 
-
         // РАБОТАЕМ С РАЗРЕШЕНИЯМИ:
 
         // Создаем массив который будет содержать данные на отображение всех чекбоксов
@@ -291,7 +290,6 @@ class RoleController extends Controller
 
             // Перебираем все операции действий в системе 
             foreach($actions as $action){
-
 
                 // РАБОТАЕМ С РАЗРЕШЕНИЯМИ: -----------------------------------------------------------------------------------------------
                 // Получаем имя искомого разрешения и/или запрета у юзера:
@@ -412,15 +410,15 @@ class RoleController extends Controller
 
         $role_id = $request->role_id;
 
-
-        // СОЗДАНИЕ СВЯЗИ - НАЗНАЧЕНИЕ ПРАВА НА РОЛЬ:
-        // Для начала проверим, не работаем ли мы с системной или шаблонной ролью
-
         if(
-            ($role->system_item == null)&&($role->company_id != null)&&($user->god == null)|| // ОБЫЧНАЯ ДЛЯ ПОЛЬЗОВАТЕЛЯ
-            ($role->system_item == null)&&($role->company_id == null)&&($user->god == 1)){  // ШАБЛОН ДЛЯ БОГА
+            (($role->system_item == null)&&($role->company_id != null)&&($user->god == null))|| // ОБЫЧНАЯ ДЛЯ ПОЛЬЗОВАТЕЛЯ
+            (($role->system_item == null)&&($user->god == 1)&&($user->company_id == null))
+        ){  
 
-            if (count($request->rights) > 0) {
+            // СОЗДАНИЕ СВЯЗИ - НАЗНАЧЕНИЕ ПРАВА НА РОЛЬ:
+            // Для начала проверим, не работаем ли мы с системной или шаблонной ролью
+
+            if(is_array($request->rights)) {
 
                 // -----------------------------------------------------------------------------------------------------------------------------
                 // РАБОТАЕМ С ГРУППОВЫМ НАЗНАЧЕНИЕМ ПРАВА --------------------------------------------------------------------------------------
@@ -469,6 +467,8 @@ class RoleController extends Controller
                 // Получаем ID связи роли с правом
                 $rightrole = RightRole::where('role_id', $request->role_id)->where('right_id', $request->right_id)->first();
 
+
+
                 // Если такая связь НАЙДЕНА
                 if(isset($rightrole)){
 
@@ -506,7 +506,7 @@ class RoleController extends Controller
                     } else {
 
                         echo "Все пошло по пизде!";
-                    }
+                    };
 
                 }
 
@@ -515,6 +515,7 @@ class RoleController extends Controller
         }
 
     }
+
 
     // Получаем роль
     public function get_role(Request $request)

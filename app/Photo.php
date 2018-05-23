@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Scopes для главного запросаФ
 use App\Scopes\Traits\CompaniesLimitTraitScopes;

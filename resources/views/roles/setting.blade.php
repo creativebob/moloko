@@ -10,7 +10,7 @@
 @section('title-content')
 	<div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">НАСТРОЙКА РОЛИ:  {{ $role->role_name }}</h2>
+       <h2 class="header-content">НАСТРОЙКА РОЛИ:  {{ $role->name }}</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -87,7 +87,7 @@
                       </th>
                       <th class="td-entity-name">Название таблицы</th>
                         @foreach($actions as $action)
-                          <th class="td-action-{{ $action->action_method }}">{{ $action->action_name }}</th>
+                          <th class="td-action-{{ $action->action_method }}">{{ $action->name }}</th>
                         @endforeach
                     </tr>
                   </thead>
@@ -141,6 +141,7 @@
   }).disableSelection();
 
   var parent = $('.parent');
+
   // Смотрим есть ли выделенные чекбоксы в правах сущности, и если все выделены, то выделяем и ее
   // Разрешение
   function checkedAllow() {
@@ -153,6 +154,7 @@
     });
   };
   checkedAllow();
+  
   // Запрет
   function checkedDeny() {
     parent.each(function(index) {
@@ -164,7 +166,9 @@
     }); 
   };
   checkedDeny();
+
   // Скрипт передачи значения на изменение
+
   // Разрешение
   $(document).on('click', '.checkbox-allow', function() {
     var parent = $(this).closest('.parent');
@@ -185,6 +189,7 @@
       }
     });
   });
+
   // Запрет
   $(document).on('click', '.checkbox-deny', function() {
     var parent = $(this).closest('.parent');
@@ -243,8 +248,10 @@
       }
     });
   });
+
   // Запрет
   $(document).on('click', '.table-check-deny', function() {
+
     // При клике на чекбокс сущности получаем id всех прав на сущность
     var parent = $(this).closest('.parent'); 
     var rights = parent.find('.checkbox-deny').map(function(){

@@ -162,9 +162,9 @@
 
   
   {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+  @include('includes.scripts.tablesorter-script')
 
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-delete-script')
   @include('includes.scripts.delete-ajax-script')
-@include('includes.scripts.tablesorter-script')
   @endsection
