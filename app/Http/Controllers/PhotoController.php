@@ -39,46 +39,49 @@ class PhotoController extends Controller
 
   public function index(Request $request, $alias)
   {
+
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Photo::class);
 
     $answer_album = operator_right('albums', $this->entity_dependence, getmethod(__FUNCTION__));
+
     // Получаем сайт
     $album = Album::moderatorLimit($answer_album)->whereAlias($alias)->first();
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+    // dd($answer);
     // --------------------------------------------------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // --------------------------------------------------------------------------------------------------------------------------------------
 
-    // $photos = Photo::with(['author', 'company', 'album' => function ($query) use ($alias) {
-    //   $query->whereAlias($alias);
-    // }])
-    // ->moderatorLimit($answer)
-    // ->companiesLimit($answer)
-    // ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
-    // ->authors($answer)
-    // ->systemItem($answer) // Фильтр по системным записям
-    // ->booklistFilter($request) 
-    // ->orderBy('sort', 'asc')
-    // ->paginate(30);
-
-    $album = Album::with(['author', 'photos' => function ($query) {
-        $query->orderBy('sort', 'asc');
-      }])
-      ->whereAlias($alias)
-      ->moderatorLimit($answer_album)
-      ->companiesLimit($answer_album)
-    ->filials($answer_album) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
-    ->authors($answer_album)
-    ->systemItem($answer_album) // Фильтр по системным записям
+    $photos = Photo::with(['author', 'company'])->whereHas('album', function ($query) use ($alias) {
+      $query->whereAlias($alias);
+    })
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
+    ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
     ->booklistFilter($request) 
     ->orderBy('sort', 'asc')
-    ->first();
+    ->paginate(30);
 
-    $photos = $album->photos;
+    // $album = Album::with(['author', 'photos' => function ($query) {
+    //     $query->orderBy('sort', 'asc');
+    //   }])
+    //   ->whereAlias($alias)
+    //   ->moderatorLimit($answer_album)
+    //   ->companiesLimit($answer_album)
+    // ->filials($answer_album) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+    // ->authors($answer_album)
+    // ->systemItem($answer_album) // Фильтр по системным записям
+    // ->booklistFilter($request) 
+    // ->orderBy('sort', 'asc')
+    // ->first();
+
+    // $photos = $album->photos;
 
     // dd($photos);
 

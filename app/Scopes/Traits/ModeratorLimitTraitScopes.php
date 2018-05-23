@@ -8,7 +8,6 @@ trait ModeratorLimitTraitScopes
     // Фильтрация записей модерируемых записей по филиалу и автору
     public function scopeModeratorLimit($query, $answer)
     {
-
         $entity_dependence = $answer['dependence'];
         $moderator = $answer['moderator']['result'];
         $moderator_filials = $answer['moderator']['filials'];
@@ -32,8 +31,12 @@ trait ModeratorLimitTraitScopes
 
             } else {
 
-                return $query
-                ->where(function ($query) use ($user_id) {$query->whereNull('moderation');})->orWhere(function ($query) use ($user_id) {$query->Where('moderation', 1)->Where('author_id', $user_id);});
+                // dd($entity_dependence);
+                return $query->where(function ($query) use ($user_id) {
+                    $query->whereNull('moderation');
+                })->orWhere(function ($query) use ($user_id) {
+                    $query->Where('moderation', 1)->Where('author_id', $user_id);
+                });
             };
 
 
