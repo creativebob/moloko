@@ -258,13 +258,12 @@ class AlbumController extends Controller
 
     public function update(AlbumRequest $request, $id)
     {
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $album = Album::moderatorLimit($answer)->findOrFail($id);
-
-        $old_alias = $album->alias;
 
         // Подключение политики
         $this->authorize('update', $album);
@@ -287,11 +286,11 @@ class AlbumController extends Controller
 
         $album->editor_id = $user_id;
         $album->save();
-        if ($album) {
 
+        if ($album) {
             return Redirect('/albums');
         } else {
-            abort(403, 'Ошибка записи альбома');
+            abort(403, 'Ошибка обновления записи альбома');
         }
     }
 

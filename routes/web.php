@@ -35,9 +35,13 @@ Route::post('/users_sort', 'UserController@users_sort')->middleware('auth');
 
 
 // ---------------------------------- Категории альбомов -------------------------------------------
-Route::resource('/albums_categories', 'AlbumsCategoryController')->middleware('auth');
 // Текущая добавленная/удаленная категория альбомов
-Route::any('/get_albums_categories', 'AlbumsCategoryController@get_content')->middleware('auth');
+Route::any('/albums_categories', 'AlbumsCategoryController@index')->middleware('auth');
+
+Route::resource('/albums_categories', 'AlbumsCategoryController')->middleware('auth');
+
+
+
 // Проверка на существование категории альбомов
 Route::post('/albums_category_check', 'AlbumsCategoryController@albums_category_check')->middleware('auth');
 // Select категорий альбомов

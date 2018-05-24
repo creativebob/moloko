@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-// Подключаем модели
+// Модели
 use App\Product;
 use App\User;
 use App\ProductsCategory;
