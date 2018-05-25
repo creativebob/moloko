@@ -20,7 +20,7 @@ use App\Http\Requests\UserRequest;
 // Политики
 use App\Policies\UserPolicy;
 
-// Прочие классы
+// Общие классы
 use Illuminate\Support\Facades\Log;
 
 // Специфические классы 

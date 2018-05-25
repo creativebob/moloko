@@ -36,8 +36,8 @@ class ActionEntityController extends Controller
             $result = [
             'status' => 1,
             'role_id' => $role_user->role_id,
-            'role_name' => $role_user->role->role_name,
-            'department_name' => $role_user->department->department_name,
+            'role_name' => $role_user->role->name,
+            'department_name' => $role_user->department->name,
             ];
 
         } else {
