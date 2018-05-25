@@ -301,12 +301,12 @@ class AlbumController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $album = Album::with('photos')->moderatorLimit($answer)->findOrFail($id);
+        $album = Album::with('photos')->withCount('photos')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $album);
 
-        if ($album) {
+        if ($album->photos_count == 0) {
 
             $user = $request->user();
 
