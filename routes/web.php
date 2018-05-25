@@ -37,11 +37,8 @@ Route::post('/users_sort', 'UserController@users_sort')->middleware('auth');
 // ---------------------------------- Категории альбомов -------------------------------------------
 // Текущая добавленная/удаленная категория альбомов
 Route::any('/albums_categories', 'AlbumsCategoryController@index')->middleware('auth');
-
+// ОСновные методы
 Route::resource('/albums_categories', 'AlbumsCategoryController')->middleware('auth');
-
-
-
 // Проверка на существование категории альбомов
 Route::post('/albums_category_check', 'AlbumsCategoryController@albums_category_check')->middleware('auth');
 // Select категорий альбомов
@@ -96,9 +93,10 @@ Route::post('/products_import', 'ProductController@products_import');
 
 
 // ------------------------------------ Категории продукции --------------------------------------
-Route::resource('/products_categories', 'ProductsCategoryController')->middleware('auth');
 // Текущая добавленная/удаленная категория продукции
-Route::any('/get_products_categories', 'ProductsCategoryController@get_content')->middleware('auth');
+Route::any('/products_categories', 'ProductsCategoryController@index')->middleware('auth');
+// Основые методы
+Route::resource('/products_categories', 'ProductsCategoryController')->middleware('auth');
 // Проверка на существование категории продукции
 Route::post('/products_category_check', 'ProductsCategoryController@products_category_check')->middleware('auth');
 // Select категорий продукции
@@ -206,9 +204,10 @@ Route::resource('/employees', 'EmployeeController')->middleware('auth');
 Route::post('/employees_sort', 'EmployeeController@employees_sort')->middleware('auth');
 
 // ----------------------------------------- Секторы -----------------------------------------------
-Route::resource('/sectors', 'SectorController')->middleware('auth');
 // Текущий добавленный/удаленный сектор
-Route::any('/get_sectors', 'SectorController@get_content')->middleware('auth');
+Route::any('/sectors', 'SectorController@index')->middleware('auth');
+// Основные методы
+Route::resource('/sectors', 'SectorController')->middleware('auth');
 // Проверка на существование сектора
 Route::post('/sector_check', 'SectorController@sector_check')->middleware('auth');
 // Select секторов

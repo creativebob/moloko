@@ -122,7 +122,7 @@ class AlbumController extends Controller
         ->toArray();
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $albums_categories_list = get_select_with_tree($albums_categories, null, null, null);
+        $albums_categories_list = get_select_tree($albums_categories, null, null, null);
         // dd($albums_categories_list);
 
         // Инфо о странице
@@ -247,7 +247,7 @@ class AlbumController extends Controller
         ->toArray();
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $albums_categories_list = get_select_with_tree($albums_categories, $album->albums_category_id, null, null);
+        $albums_categories_list = get_select_tree($albums_categories, $album->albums_category_id, null, null);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

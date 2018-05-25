@@ -146,7 +146,7 @@ class ProductController extends Controller
     ->toArray();
 
     // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-    $products_categories_list = get_select_with_tree($products_categories, null, null, null);
+    $products_categories_list = get_select_tree($products_categories, null, null, null);
 
 
         // dd($countries_list);
@@ -303,7 +303,7 @@ class ProductController extends Controller
       ->toArray();
 
       // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-      $products_categories_list = get_select_with_tree($products_categories, $product->products_category_id, null, null);
+      $products_categories_list = get_select_tree($products_categories, $product->products_category_id, null, null);
 
       // Инфо о странице
       $page_info = pageInfo($this->entity_name);
