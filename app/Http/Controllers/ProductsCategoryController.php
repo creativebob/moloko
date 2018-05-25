@@ -128,7 +128,14 @@ class ProductsCategoryController extends Controller
 
         // Модерация и системная запись
         $products_category->system_item = $request->system_item;
-        $products_category->moderation = $request->moderation;
+        
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        if ($answer['automoderate'] == false){
+            $products_category->moderation = 1;
+        }
 
         // Смотрим что пришло
         // Если категория
@@ -142,8 +149,7 @@ class ProductsCategoryController extends Controller
         }
 
         // Делаем заглавной первую букву
-        $name = get_first_letter($request->name);
-        $products_category->name = $name;
+        $products_category->name = get_first_letter($request->name);
 
         $products_category->save();
 
@@ -232,8 +238,7 @@ class ProductsCategoryController extends Controller
         $products_category->products_type_id = $request->products_type_id;
 
         // Делаем заглавной первую букву
-        $name = get_first_letter($request->name);
-        $products_category->name = $name;  
+        $products_category->name = get_first_letter($request->name); 
 
         $products_category->save();
 

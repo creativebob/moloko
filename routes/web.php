@@ -158,9 +158,10 @@ Route::resource('/areas', 'AreaController')->middleware('auth');
 Route::post('/areas_sort', 'AreaController@areas_sort')->middleware('auth');
 
 // ----------------------------------- Населенные пункты -------------------------------------------
-Route::resource('/cities', 'CityController')->middleware('auth');
 // Текущий добавленный/удаленный город
-Route::any('/get_cities', 'CityController@get_content')->middleware('auth');
+Route::any('/cities', 'CityController@index')->middleware('auth');
+// Основные методы
+Route::resource('/cities', 'CityController')->middleware('auth');
 // Проверка на существование города
 Route::post('/city_check', 'CityController@city_check')->middleware('auth');
 // Сортировка населенных пунктов
@@ -174,9 +175,10 @@ Route::post('/city_vk', 'CityController@get_vk_city')->middleware('auth');
 Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
 
 // ----------------------------------------- Филиалы и отделы --------------------------------------
+// Текущий добавленный/удаленный отдел/филиал
+Route::any('/departments', 'DepartmentController@index')->middleware('auth');
+// Основные методы
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
-// Текущий добавленный/удаленный сектор
-Route::any('/get_departments', 'DepartmentController@get_content')->middleware('auth');
 // Текущий добавленный/удаленный отдел
 Route::get('/current_department/{section_id}/{item_id}', 'DepartmentController@current_department')->middleware('auth');
 // Проверка на существование филиала/отдела
@@ -244,9 +246,10 @@ Route::prefix('/sites/{alias}')->group(function () {
   Route::post('/page_check', 'PageController@page_check')->middleware('auth');
 
   // --------------------------------------- Навигации --------------------------------------------
-  Route::resource('/navigations', 'NavigationController')->middleware('auth');
   // Текущая добавленная/удаленная навигация
-  Route::any('/get_navigations', 'NavigationController@get_content')->middleware('auth');
+  Route::any('/navigations', 'NavigationController@index')->middleware('auth');
+  // Основные методы
+  Route::resource('/navigations', 'NavigationController')->middleware('auth');
 	// Проверка на существование навигации
   Route::post('/navigation_check', 'NavigationController@navigation_check')->middleware('auth');
 

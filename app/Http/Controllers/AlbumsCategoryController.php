@@ -123,7 +123,14 @@ class AlbumsCategoryController extends Controller
 
         // Модерация и системная запись
         $albums_category->system_item = $request->system_item;
-        $albums_category->moderation = $request->moderation;
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        if ($answer['automoderate'] == false){
+            $navigation->moderation = 1;
+        }
 
         // Смотрим что пришло
         // Если категория
@@ -137,8 +144,7 @@ class AlbumsCategoryController extends Controller
         }
 
         // Делаем заглавной первую букву
-        $name = get_first_letter($request->name);
-        $albums_category->name = $name;
+        $albums_category->name = get_first_letter($request->name);
 
         $albums_category->save();
 
@@ -223,8 +229,7 @@ class AlbumsCategoryController extends Controller
         $albums_category->editor_id = $user_id;
 
         // Делаем заглавной первую букву
-        $name = get_first_letter($request->name);
-        $albums_category->name = $name;
+        $albums_category->name = get_first_letter($request->name);
 
         $albums_category->save();
 

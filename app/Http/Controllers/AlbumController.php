@@ -87,7 +87,7 @@ class AlbumController extends Controller
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // --------------------------------------------------------------------------------------------------------------------------------------
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -101,9 +101,6 @@ class AlbumController extends Controller
 
         // Подключение политики
         $this->authorize(__FUNCTION__, Album::class);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $album = new Album;
 

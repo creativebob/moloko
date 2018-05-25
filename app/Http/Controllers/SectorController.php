@@ -141,7 +141,14 @@ class SectorController extends Controller
 
         // Модерация и системная запись
         $sector->system_item = $request->system_item;
-        $sector->moderation = $request->moderation;
+        
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        if ($answer['automoderate'] == false){
+            $sector->moderation = 1;
+        }
         
         // Смотрим что пришло
         // Если категория
@@ -154,9 +161,8 @@ class SectorController extends Controller
             $sector->parent_id = $request->parent_id;
         }
 
-        // Делаем заглавной первую букву
-        $name = get_first_letter($request->name);
-        $sector->name = $name;
+        // Делаем заглавной первую буквуa
+        $sector->name = get_first_letter($request->name);
 
         $sector->save();
 
@@ -243,8 +249,7 @@ class SectorController extends Controller
         $sector->editor_id = $user_id;
 
         // Делаем заглавной первую букву
-        $name = get_first_letter($request->name);
-        $sector->name = $name;
+        $sector->name = get_first_letter($request->name);
 
         $sector->save();
 

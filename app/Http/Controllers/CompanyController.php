@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-// Модели для текущей работы
+// Модели
 use App\User;
 use App\Company;
 use App\Page;
