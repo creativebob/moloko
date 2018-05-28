@@ -33,8 +33,8 @@ class NewsRequest extends FormRequest
         'content' => 'string|nullable', 
         'alias' => 'string|nullable', 
 
-        'date_publish_begin' => 'date|after:01.01.2018|nullable',
-        'date_publish_end' => 'date|after:01.01.2018|nullable',
+        'publish_begin_date' => 'date|after:01.01.2018|nullable',
+        'publish_end_date' => 'date|after:01.01.2018|nullable',
 
         'display' => 'integer|nullable',
 
