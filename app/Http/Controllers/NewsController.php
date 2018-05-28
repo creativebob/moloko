@@ -68,6 +68,8 @@ class NewsController extends Controller
     ->orderBy('publish_begin_date', 'desc')
     ->paginate(30);
 
+    // dd($news);
+
     $filter_query = News::with('author', 'cities')
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
@@ -747,7 +749,7 @@ class NewsController extends Controller
       ->where('publish_end_date', '>', Carbon::now());
     }, 'news.cities' => function($query) use ($city) {
       $query->whereAlias($city);
-    }, 'news.company', 'news.author', 'news.photo'])->where('api_token', $token)->first();
+    }, 'news.company', 'news.author.staff.position', 'news.photo'])->where('api_token', $token)->first();
 
     if ($site) {
         // return Cache::forever($domen.'-news', $site, function() use ($city, $token) {
@@ -774,7 +776,7 @@ class NewsController extends Controller
   // Показываем новость на сайте
   public function api_show(Request $request, $city, $link)
   {
-    $site = Site::with(['news.author', 'news.author.staff', 'news' => function ($query) use ($link) {
+    $site = Site::with(['news.author', 'news' => function ($query) use ($link) {
       $query->where(['alias' => $link, 'display' => 1]);
     }])->where('api_token', $request->token)->first();
     if ($site) {

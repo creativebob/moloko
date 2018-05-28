@@ -23,7 +23,7 @@ class EmployeesTableSeeder extends Seeder
             [   
                 'staffer_id' => 2,
                 'company_id' => 1,
-                'user_id' => 8,
+                'user_id' => 5,
                 'employment_date' => '2017-12-01',
                 'dismissal_date' => null,
                 'dismissal_description' => null,
@@ -31,7 +31,7 @@ class EmployeesTableSeeder extends Seeder
             [   
                 'staffer_id' => 3,
                 'company_id' => 1,
-                'user_id' => 11,
+                'user_id' => 6,
                 'employment_date' => '2017-12-01',
                 'dismissal_date' => null,
                 'dismissal_description' => null,
@@ -39,7 +39,7 @@ class EmployeesTableSeeder extends Seeder
             [   
                 'staffer_id' => 4,
                 'company_id' => 1,
-                'user_id' => 5,
+                'user_id' => 7,
                 'employment_date' => '2017-12-01',
                 'dismissal_date' => null,
                 'dismissal_description' => null,
@@ -47,12 +47,12 @@ class EmployeesTableSeeder extends Seeder
             [   
                 'staffer_id' => 5,
                 'company_id' => 1,
-                'user_id' => 6,
+                'user_id' => 8,
                 'employment_date' => '2017-12-01',
                 'dismissal_date' => null,
                 'dismissal_description' => null,
             ],
-            [   
+             [   
                 'staffer_id' => 6,
                 'company_id' => 1,
                 'user_id' => 9,
@@ -70,8 +70,8 @@ class EmployeesTableSeeder extends Seeder
             ],
             [   
                 'staffer_id' => 8,
-                'company_id' => 1,
-                'user_id' => 12,
+                'company_id' => 2,
+                'user_id' => 11,
                 'employment_date' => '2017-12-01',
                 'dismissal_date' => null,
                 'dismissal_description' => null,
@@ -79,22 +79,6 @@ class EmployeesTableSeeder extends Seeder
             [   
                 'staffer_id' => 9,
                 'company_id' => 1,
-                'user_id' => 13,
-                'employment_date' => '2017-12-01',
-                'dismissal_date' => null,
-                'dismissal_description' => null,
-            ],
-            [   
-                'staffer_id' => 10,
-                'company_id' => 1,
-                'user_id' => 7,
-                'employment_date' => '2017-12-01',
-                'dismissal_date' => null,
-                'dismissal_description' => null,
-            ],
-            [   
-                'staffer_id' => 11,
-                'company_id' => 2,
                 'user_id' => 14,
                 'employment_date' => '2017-12-01',
                 'dismissal_date' => null,
