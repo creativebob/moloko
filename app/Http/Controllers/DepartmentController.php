@@ -165,24 +165,31 @@ class DepartmentController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
+        // После записи переходим на созданный пункт меню
+        if ($request->ajax()) {
+            return view('departments.filials-list', ['departments_tree' => $departments_tree, 'item' => $request->item, 'id' => $request->id]); 
+        }
+
         return view('departments.index', compact('departments_tree', 'positions', 'page_info', 'pages', 'departments', 'filter'));
     }
 
 
     public function create(Request $request)
     {
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Department::class);
 
         if (isset($request->parent_id)) {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+            $answer_departments = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
-            $department = Department::moderatorLimit($answer)->where('id', $request->parent_id)->first();
+            $department = Department::moderatorLimit($answer_departments)->where('id', $request->parent_id)->first();
 
-            // Если филиал
             if ($department->filial_status == 1) {
+
+                // Если филиал
                 $departments = Department::moderatorLimit($answer_departments)
                 ->companiesLimit($answer_departments)
                 ->filials($answer_departments) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -213,488 +220,467 @@ class DepartmentController extends Controller
 
                 $filial_id = $department->filial_id;
             }
+
             // dd($departments);
 
+            // Не выносим в хелпер формирование списка, так так в филиалах не category_status, а filial_status
+
             // Формируем дерево вложенности
-            $departments_id = [];
-            $departments_cat = [];
-            foreach ($departments as $id => &$node) { 
+            $departments_cat = get_parents_tree($departments);
 
-        // Если нет вложений
-                if (!$node['parent_id']) {
-                  $departments_cat[$id] = &$node;
-              } else { 
-        // Если есть потомки то перебераем массив
-                  $departments[$node['parent_id']]['children'][$id] = &$node;
-              };
-          };
+            // echo json_encode($departments_cat);
+            // dd($departments_cat);
 
-      // echo json_encode($departments_cat);
-      // dd($departments_cat);
+            // Функция отрисовки option'ов
+            function tplMenu($item, $padding, $parent) {
 
-      // Функция отрисовки option'ов
-          function tplMenu($item, $padding, $parent) {
+                $selected = '';
+                if ($item['id'] == $parent) {
+                    $selected = ' selected';
+                }
+                if ($item['filial_status'] == 1) {
+                    $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
+                } else {
+                    $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
+                }
 
-            $selected = '';
-            if ($item['id'] == $parent) {
-              $selected = ' selected';
-          }
-          if ($item['filial_status'] == 1) {
-              $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
-          } else {
-              $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
-          }
+                // Добавляем пробелы вложенному элементу
+                if (isset($item['children'])) {
+                    $i = 1;
+                    for($j = 0; $j < $i; $j++){
+                        $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+                    }     
+                    $i++;
 
-        // Добавляем пробелы вложенному элементу
-          if (isset($item['children'])) {
-              $i = 1;
-              for($j = 0; $j < $i; $j++){
-                $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-            }     
-            $i++;
+                    $menu .= showCat($item['children'], $padding, $parent);
+                }
+                return $menu;
+            }
 
-            $menu .= showCat($item['children'], $padding, $parent);
+            // Рекурсивно считываем наш шаблон
+            function showCat($data, $padding, $parent){
+                $string = '';
+                $padding = $padding;
+                foreach($data as $item){
+                    $string .= tplMenu($item, $padding, $parent);
+                }
+                return $string;
+            }
+
+            // Получаем HTML разметку
+            $departments_list = showCat($departments_cat, '', $request->parent_id);
+
+            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
+            // $departments_list = get_select_tree($departments, $request->parent_id, null, null);
+            // echo $departments_list;
+
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer_staff = operator_right('staff', 'true', 'index');
+
+            // Смотрим на наличие должности в данном филиале, в массиве устанавливаем id должностей, которых не может быть более 1ой
+            $direction = Staffer::where(['position_id' => 1, 'filial_id' => $filial_id])->moderatorLimit($answer_staff)->count();
+
+            $repeat = [];
+
+            if ($direction == 1) {
+                $repeat[] = 1;
+            }
+
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer_positions = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+            // -------------------------------------------------------------------------------------------
+            // ГЛАВНЫЙ ЗАПРОС
+            // -------------------------------------------------------------------------------------------
+            $positions_list = Position::with('staff')->moderatorLimit($answer_positions)
+            ->companiesLimit($answer_positions)
+            ->filials($answer_positions) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+            ->authors($answer_positions)
+            ->systemItem($answer_positions) // Фильтр по системным записям
+            ->template($answer_positions) // Выводим шаблоны в список
+            ->whereNotIn('id', $repeat)
+            ->pluck('name', 'id');
+
+            // echo $positions_list;
+            // echo $department . ' ' . $positions_list . ' ' . $departments_list;
+
+            return view('departments.create-medium', ['departments_list' => $departments_list, 'positions_list' => $positions_list]);
+        } else {
+
+            $department = new Department;
+
+            return view('departments.create-first', ['department' => $department]);
         }
-        return $menu;
     }
 
-      // Рекурсивно считываем наш шаблон
-    function showCat($data, $padding, $parent){
-        $string = '';
-        $padding = $padding;
-        foreach($data as $item){
-          $string .= tplMenu($item, $padding, $parent);
-      }
-      return $string;
-  }
+    public function store(DepartmentRequest $request)
+    {
 
-      // Получаем HTML разметку
-  $departments_list = showCat($departments_cat, '', $request->parent_id);
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Department::class);
 
-      // echo $departments_list;
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+        $company_id = $user->company_id;
 
-      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-  $answer_staff = operator_right('staff', 'true', 'index');
+        $user_id = hideGod($user);
 
-      // Смотрим на наличие должности в данном филиале, в массиве устанавливаем id должностей, которых не може тбыть более 1ой
-  $direction = Staffer::where(['position_id' => 1, 'filial_id' => $filial_id])->moderatorLimit($answer_staff)->count();
+        $department = new Department;
 
-  $repeat = [];
+        if (isset($request->address)) {
 
-  if ($direction == 1) {
-    $repeat[] = 1;
-};
+            // Пишем локацию
+            $location = new Location;
+            $location->country_id = 1;
+            $location->city_id = $request->city_id;
+            $location->address = $request->address;
+            $location->author_id = $user_id;
+            $location->save();
 
-      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-$answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+            if ($location) {
+                $department->location_id = $location->id;
+            } else {
+                abort(403, 'Ошибка записи адреса');
+            }
+        }
 
-      // -------------------------------------------------------------------------------------------
-      // ГЛАВНЫЙ ЗАПРОС
-      // -------------------------------------------------------------------------------------------
-$positions_list = Position::with('staff')->moderatorLimit($answer)
-->companiesLimit($answer)
-      ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-      ->authors($answer)
-      ->systemItem($answer) // Фильтр по системным записям
-      ->template($answer) // Выводим шаблоны в список
-      ->whereNotIn('id', $repeat)
-      ->pluck('name', 'id');
+        $department->company_id = $company_id;
 
-      // echo $positions_list;
-      // echo $department . ' ' . $positions_list . ' ' . $departments_list;
+        // Имя филиала / отдела
+        $first = mb_substr($request->name,0,1, 'UTF-8'); //первая буква
+        $last = mb_substr($request->name,1); //все кроме первой буквы
+        $first = mb_strtoupper($first, 'UTF-8');
+        $department->name = $first.$last;
 
-      return view('departments.create-medium', ['departments_list' => $departments_list, 'positions_list' => $positions_list]);
-  } else {
+        if (isset($request->phone)) {
+            $department->phone = cleanPhone($request->phone);
+        }
 
-      $department = new Department;
+        $department->author_id = $user_id;
 
-      return view('departments.create-first', ['department' => $department]);
-  }
-}
+        // Пишем филиал
+        if ($request->first_item == 1) {
+            $department->filial_status = 1;
+        }
 
-public function store(DepartmentRequest $request)
-{
+        // Пишем отделы
+        if ($request->medium_item == 1) {
+            $department->filial_id = $request->filial_id;
+            $department->parent_id = $request->parent_id;
+        }
 
-    // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), Department::class);
-
-    // Получаем данные для авторизованного пользователя
-    $user = $request->user();
-    $company_id = $user->company_id;
-
-    $user_id = hideGod($user);
-
-    $department = new Department;
-
-    if (isset($request->address)) {
-      // Пишем локацию
-      $location = new Location;
-      $location->country_id = 1;
-      $location->city_id = $request->city_id;
-      $location->address = $request->address;
-      $location->author_id = $user_id;
-      $location->save();
-
-      if ($location) {
-        $department->location_id = $location->id;
-    } else {
-        abort(403, 'Ошибка записи адреса');
-    }
-}
-
-$department->company_id = $company_id;
-
-    // Имя филиала / отдела
-    $first = mb_substr($request->name,0,1, 'UTF-8'); //первая буква
-    $last = mb_substr($request->name,1); //все кроме первой буквы
-    $first = mb_strtoupper($first, 'UTF-8');
-    $department->name = $first.$last;
-
-    if (isset($request->phone)) {
-      $department->phone = cleanPhone($request->phone);
-  }
-
-  $department->author_id = $user_id;
-
-    // Пишем филиал
-  if ($request->first_item == 1) {
-      $department->filial_status = 1;
-  }
-
-    // Пишем отделы
-  if ($request->medium_item == 1) {
-      $department->filial_id = $request->filial_id;
-      $department->parent_id = $request->parent_id;
-  }
-
-  $department->save();
-
-  if($department) {
-
-      // if($department->filial_status == 1) {
-
-      //   // // Создаем папку в файловой системе
-      //   // $link_for_folder = 'public/companies/' . $company_id . '/'. $department->id . '/users';
-      //   // Storage::makeDirectory($link_for_folder);
-
-      //   // $link_for_folder = 'public/companies/' . $company_id . '/'. $department->id . '/sites';
-      //   // Storage::makeDirectory($link_for_folder);
-
-      //   // $link_for_folder = 'public/companies/' . $company_id . '/'. $department->id . '/goods';
-      //   // Storage::makeDirectory($link_for_folder);
-
-      //   // $link_for_folder = 'public/companies/' . $company_id . '/'. $department->id . '/documents';
-      //   // Storage::makeDirectory($link_for_folder);
-
-      //   // $link = 'departments';
-      //   // return redirect($link);
-      // }
-
-      // Переадресовываем на index
-      return redirect()->action('DepartmentController@get_content', ['id' => $department->id, 'item' => 'department']);
-
-      // $action_method = "DepartmentController@get_content";
-      // $action_arrray = ['id' => $department->id, 'item' => 'department'];
-
-      // return redirect()->action('GetAccessController@set', ['action_method' => $action_method, 'action_arrray' => $action_arrray]);
-      
-  } else {
-      abort(403, 'Ошибка при записи отдела!');
-  };
-}
-
-public function show($id)
-{
-
-}
-
-public function edit($id)
-{
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-    // ГЛАВНЫЙ ЗАПРОС:
-    $department = Department::with('location')->moderatorLimit($answer)->findOrFail($id);
-
-    // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), $department);
-
-    if ($department->filial_status == 1) {
-      // Меняем филиал
-      return view('departments.edit-first', ['department' => $department]);
-  } else {
-      // Меняем отдел
-      $item_id = $department->id;
-      $filial_id = $department->filial_id;
-      $parent_id = $department->parent_id;
-
-      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-      $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
-
-      // Главный запрос
-      $departments = Department::moderatorLimit($answer)
-      ->where('id', $filial_id)
-      ->orWhere('filial_id', $filial_id)
-      ->orderBy('sort', 'asc')
-      ->get(['id', 'name', 'filial_status', 'parent_id'])
-      ->keyBy('id')
-      ->toArray();
-
-      // echo $departments;
-
-      // Формируем дерево вложенности
-      $departments_id = [];
-      $departments_cat = [];
-
-      foreach ($departments as $id => &$node) { 
-        // Если нет вложений
-        if (!$node['parent_id']) {
-          $departments_cat[$id] = &$node;
-      } else { 
-        // Если есть потомки то перебераем массив
-          $departments[$node['parent_id']]['children'][$id] = &$node;
-      };
-  };
-
-      // echo json_encode($departments_cat, JSON_UNESCAPED_UNICODE);
-
-      // Функция отрисовки option'ов
-  function tplMenu($item, $padding, $id, $parent) {
-        // echo json_encode($item, JSON_UNESCAPED_UNICODE);
-        // Убираем из списка пришедший отдел 
-    if ($item['id'] != $id) {
-
-      $selected = '';
-      if ($item['id'] == $parent) {
-        $selected = ' selected';
-    }
-    if ($item['filial_status'] == 1) {
-        $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
-    } else {
-        $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
-    }
-
-        // Добавляем пробелы вложенному элементу
-    if (isset($item['children'])) {
-        $i = 1;
-        for($j = 0; $j < $i; $j++){
-          $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-      }     
-      $i++;
-
-      $menu .= showCat($item['children'], $padding, $id, $parent);
-  }
-  return $menu;
-}
-}
-
-      // Рекурсивно считываем наш шаблон
-function showCat($data, $padding, $id, $parent){
-    $string = '';
-    $padding = $padding;
-
-    foreach($data as $item){
-      $string .= tplMenu($item, $padding, $id, $parent);
-  }
-  return $string;
-}
-
-      // echo $item_id . ' ' . json_encode($departments_cat, JSON_UNESCAPED_UNICODE);
-
-      // echo $parent_id;
-      // Получаем HTML разметку
-$departments_list = showCat($departments_cat, '', $item_id, $parent_id);
-
-      // echo json_encode($departments_list);
-      // echo $department . ' ' . $departments_list;
-return view('departments.edit-medium', ['department' => $department, 'departments_list' => $departments_list]);
-} 
-}
-
-public function update(DepartmentRequest $request, $id)
-{
-
-
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__))
-    ;
-    // ГЛАВНЫЙ ЗАПРОС:
-    $department = Department::moderatorLimit($answer)->findOrFail($id);
-
-    // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), $department);
-
-    // Получаем данные для авторизованного пользователя
-    $user = $request->user();
-
-    // Смотрим компанию пользователя
-    $company_id = $user->company_id;
-    if($company_id == null) {
-      abort(403, 'Необходимо авторизоваться под компанией');
-  }
-
-    // Скрываем бога
-  $user_id = hideGod($user);
-
-  if (isset($department->location_id)) {
-      // Пишем локацию
-      $location = $department->location;
-      if($location->city_id != $request->city_id) {
-        $location->city_id = $request->city_id;
-        $location->editor_id = $user_id;
-        $location->save();
-    }
-    if($location->address != $request->address) {
-        $location->address = $request->address;
-        $location->editor_id = $user_id;
-        $location->save();
-    }
-}
-
-    // Имя филиала / отдела
-    $first = mb_substr($request->name,0,1, 'UTF-8'); //первая буква
-    $last = mb_substr($request->name,1); //все кроме первой буквы
-    $first = mb_strtoupper($first, 'UTF-8');
-    $department->name = $first.$last;
-
-    if (isset($request->phone)) {
-      $department->phone = cleanPhone($request->phone);
-  }
-
-  $department->editor_id = $user_id;
-
-  if ($request->medium_item == 1) {
-      $department->parent_id = $request->parent_id;
-  }
-
-  $department->save();
-  if ($department) {
-      // Переадресовываем на index
-      return redirect()->action('DepartmentController@get_content', ['id' => $department->id, 'item' => 'department']);
-  } else {
-      abort(403, 'Ошибка при обновлении отдела!');
-  };
-}
-
-public function destroy(Request $request, $id)
-{
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-    // ГЛАВНЫЙ ЗАПРОС:
-    $department = Department::with('staff')->moderatorLimit($answer)->findOrFail($id);
-
-    // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), $department);
-
-    // Удаляем ajax
-    // Проверяем содержит ли филиал / отдел вложения / должности
-    $department_parent = Department::moderatorLimit($answer)->whereParent_id($id)->first();
-
-    // Получаем авторизованного пользователя
-    $user = $request->user();
-    
-
-
-    if (isset($department_parent) || (count($department->staff) > 0)) {
-
-      $result = [
-        'error_status' => 1,
-        'error_message' => 'Данный отдел не пуст, удаление невозможно'
-    ];
-} else {
-      // Если нет, мягко удаляем
-  if ($department->filial_status == 1) {
-    $parent = null;
-} else {
-    $parent = $department->parent_id;
-}
-
-$department->editor_id = $user->id;
-$department->save();
-
-$department = Department::destroy($id); 
-
-if ($department) {
-        // Переадресовываем на index
-    return redirect()->action('DepartmentController@get_content', ['id' => $parent, 'item' => 'department']);
-} else {
-    $result = [
-      'error_status' => 1,
-      'error_message' => 'Ошибка при удалении!'
-  ];
-}
-}
-}
-
-public function departments_list(Request $request)
-{
-
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, true, 'index');
-
-    $departments_list = Department::moderatorLimit($answer)->whereId($request->filial_id)
-    ->orWhere('filial_id', $request->filial_id)
-    ->pluck('name', 'id');
-    echo json_encode($departments_list, JSON_UNESCAPED_UNICODE);
-}
-
-public function department_check(Request $request)
-{
-    // Получаем данные для авторизованного пользователя
-    $user = $request->user();
-
-    // Проверка отдела в нашей базе данных
-    $department = Department::where(['name' => $request->name, 'company_id' => $user->company_id])->first();
-
-    $res = false;
-    if ($department) {
-      // Если такой филиал существует в компании
-      if (isset($department->filial_status)) {
-        $res = true;
-    }
-    if ($department->filial_id == $request->filial_id) {
-        $res = true;
-    }
-}
-
-if ($res) {
-  $result = [
-    'error_message' => 'Такой отдел уже существует',
-    'error_status' => 1,
-];
-} else {
-  $result = [
-    'error_status' => 0,
-];
-}
-echo json_encode($result, JSON_UNESCAPED_UNICODE);
-}
-
-public function departments_sort(Request $request)
-{
-
-    if (isset($request->departments)) {
-      $i = 1;
-      foreach ($request->departments as $item) {
-
-        $department = Department::findOrFail($item);
-        $department->sort = $i;
         $department->save();
 
-        $i++;
+        if ($department) {
+
+            // Переадресовываем на index
+            return redirect()->action('DepartmentController@index', ['id' => $department->id, 'item' => 'department']);
+
+            // $action_method = "DepartmentController@get_content";
+            // $action_arrray = ['id' => $department->id, 'item' => 'department'];
+
+            // return redirect()->action('GetAccessController@set', ['action_method' => $action_method, 'action_arrray' => $action_arrray]);
+
+        } else {
+            abort(403, 'Ошибка при записи отдела!');
+        }
     }
-}
-if (isset($request->staff)) {
-  $i = 1;
-  foreach ($request->staff as $item) {
 
-    $staffer = Staffer::findOrFail($item);
-    $staffer->sort = $i;
-    $staffer->save();
+    public function show($id)
+    {
 
-    $i++;
-}
-}
-}
+    }
+
+    public function edit($id)
+    {
+        
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $department = Department::with('location')->moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $department);
+
+        if ($department->filial_status == 1) {
+
+            // Меняем филиал
+            return view('departments.edit-first', ['department' => $department]);
+        } else {
+
+            // Меняем отдел
+            $item_id = $department->id;
+            $filial_id = $department->filial_id;
+            $parent_id = $department->parent_id;
+
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+
+            // Главный запрос
+            $departments = Department::moderatorLimit($answer)
+            ->where('id', $filial_id)
+            ->orWhere('filial_id', $filial_id)
+            ->orderBy('sort', 'asc')
+            ->get(['id', 'name', 'filial_status', 'parent_id'])
+            ->keyBy('id')
+            ->toArray();
+
+            // echo $departments;
+
+            // Не выносим в хелпер формирование списка, так так в филиалах не category_status, а filial_status
+
+            // Формируем дерево вложенности
+            $departments_cat = get_parents_tree($departments);
+
+            // echo json_encode($departments_cat, JSON_UNESCAPED_UNICODE);
+
+            // Функция отрисовки option'ов
+            function tplMenu($item, $padding, $id, $parent) {
+
+                // echo json_encode($item, JSON_UNESCAPED_UNICODE);
+                // Убираем из списка пришедший отдел 
+                if ($item['id'] != $id) {
+
+                    $selected = '';
+                    if ($item['id'] == $parent) {
+                        $selected = ' selected';
+                    }
+                    if ($item['filial_status'] == 1) {
+                        $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
+                    } else {
+                        $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
+                    }
+
+                    // Добавляем пробелы вложенному элементу
+                    if (isset($item['children'])) {
+                        $i = 1;
+                        for($j = 0; $j < $i; $j++){
+                            $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+                        }     
+                        $i++;
+
+                        $menu .= showCat($item['children'], $padding, $id, $parent);
+                    }
+                    return $menu;
+                }
+            }
+
+            // Рекурсивно считываем наш шаблон
+            function showCat($data, $padding, $id, $parent){
+                $string = '';
+                $padding = $padding;
+
+                foreach($data as $item){
+                    $string .= tplMenu($item, $padding, $id, $parent);
+                }
+                return $string;
+            }
+
+            // echo $item_id . ' ' . json_encode($departments_cat, JSON_UNESCAPED_UNICODE);
+
+            // echo $parent_id;
+            // Получаем HTML разметку
+            $departments_list = showCat($departments_cat, '', $item_id, $parent_id);
+
+            // echo json_encode($departments_list);
+            // echo $department . ' ' . $departments_list;
+            return view('departments.edit-medium', ['department' => $department, 'departments_list' => $departments_list]);
+        } 
+    }
+
+    public function update(DepartmentRequest $request, $id)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__))
+        ;
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $department = Department::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $department);
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        // Смотрим компанию пользователя
+        $company_id = $user->company_id;
+        if($company_id == null) {
+            abort(403, 'Необходимо авторизоваться под компанией');
+        }
+
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        if (isset($department->location_id)) {
+
+            // Пишем локацию
+            $location = $department->location;
+            if($location->city_id != $request->city_id) {
+                $location->city_id = $request->city_id;
+                $location->editor_id = $user_id;
+                $location->save();
+            }
+
+            if($location->address != $request->address) {
+                $location->address = $request->address;
+                $location->editor_id = $user_id;
+                $location->save();
+            }
+        }
+
+        // Имя филиала / отдела
+        $first = mb_substr($request->name,0,1, 'UTF-8'); //первая буква
+        $last = mb_substr($request->name,1); //все кроме первой буквы
+        $first = mb_strtoupper($first, 'UTF-8');
+        $department->name = $first.$last;
+
+        if (isset($request->phone)) {
+            $department->phone = cleanPhone($request->phone);
+        }
+
+        $department->editor_id = $user_id;
+
+        if ($request->medium_item == 1) {
+            $department->parent_id = $request->parent_id;
+        }
+
+        $department->save();
+        if ($department) {
+            // Переадресовываем на index
+            return redirect()->action('DepartmentController@index', ['id' => $department->id, 'item' => 'department']);
+        } else {
+            abort(403, 'Ошибка при обновлении отдела!');
+        }
+    }
+
+    public function destroy(Request $request, $id)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $department = Department::withCount('staff')->moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $department);
+
+        // Удаляем ajax
+        // Проверяем содержит ли филиал / отдел вложения / должности
+        $department_parent = Department::moderatorLimit($answer)->whereParent_id($id)->first();
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        if (isset($department_parent) || ($department->staff_count > 0)) {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Данный отдел не пуст, удаление невозможно'
+            ];
+        } else {
+
+            // Если нет, мягко удаляем
+            if ($department->filial_status == 1) {
+                $parent = null;
+            } else {
+                $parent = $department->parent_id;
+            }
+
+            $department->editor_id = $user->id;
+            $department->save();
+
+            $department = Department::destroy($id); 
+
+            if ($department) {
+
+                // Переадресовываем на index
+                return redirect()->action('DepartmentController@index', ['id' => $parent, 'item' => 'department']);
+            } else {
+                $result = [
+                    'error_status' => 1,
+                    'error_message' => 'Ошибка при удалении!'
+                ];
+            }
+        }
+    }
+
+    public function departments_list(Request $request)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, true, 'index');
+
+        $departments_list = Department::moderatorLimit($answer)->whereId($request->filial_id)
+        ->orWhere('filial_id', $request->filial_id)
+        ->pluck('name', 'id');
+
+        echo json_encode($departments_list, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function department_check(Request $request)
+    {
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        // Проверка отдела в нашей базе данных
+        $department = Department::where(['name' => $request->name, 'company_id' => $user->company_id])->first();
+
+        $res = false;
+        if ($department) {
+
+            // Если такой филиал существует в компании
+            if (isset($department->filial_status)) {
+                $res = true;
+            }
+            if ($department->filial_id == $request->filial_id) {
+                $res = true;
+            }
+        }
+
+        if ($res) {
+            $result = [
+                'error_message' => 'Такой отдел уже существует',
+                'error_status' => 1,
+            ];
+        } else {
+            $result = [
+                'error_status' => 0,
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+    // Сортировка
+    public function departments_sort(Request $request)
+    {
+
+        if (isset($request->departments)) {
+            $i = 1;
+            foreach ($request->departments as $item) {
+
+                $department = Department::findOrFail($item);
+                $department->sort = $i;
+                $department->save();
+
+                $i++;
+            }
+        }
+
+        if (isset($request->staff)) {
+            $i = 1;
+            foreach ($request->staff as $item) {
+
+                $staffer = Staffer::findOrFail($item);
+                $staffer->sort = $i;
+                $staffer->save();
+
+                $i++;
+            }
+        }
+    }
 }

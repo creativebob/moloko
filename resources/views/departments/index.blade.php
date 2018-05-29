@@ -46,7 +46,7 @@
 {{-- Список городов --}}
 @include('includes.scripts.cities-list')
 <script type="text/javascript">
-  $(function() {
+    $(function() {
 
     // Обозначаем таймер для проверки
     var timerId;
@@ -106,70 +106,70 @@
     // Открываем модалку
     $(document).on('click', '[data-open="first-add"]', function() {
         $.ajax({
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/departments/create',
-        type: "GET",
-        success: function(html){
-            $('#modal').html(html);
-            $('#first-add').foundation();
-            $('#first-add').foundation('open');
-        }
-    }); 
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '/departments/create',
+            type: "GET",
+            success: function(html){
+                $('#modal').html(html);
+                $('#first-add').foundation();
+                $('#first-add').foundation('open');
+            }
+        }); 
     });
 
-  // Проверка существования
-  $(document).on('keyup', '#form-first-add .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-first-add .name-field').val();
-    // Указываем название кнопки
-    var submit = '.submit-add';
-    // Значение поля с разрешением
-    var db = '#form-first-add .first-item';
-    // Выполняем запрос
-    clearTimeout(timerId);   
-    timerId = setTimeout(function() {
-      departmentCheck (name, submit, db, null);
-  }, time); 
-});
+    // Проверка существования
+    $(document).on('keyup', '#form-first-add .name-field', function() {
+        // Получаем фрагмент текста
+        var name = $('#form-first-add .name-field').val();
+        // Указываем название кнопки
+        var submit = '.submit-add';
+        // Значение поля с разрешением
+        var db = '#form-first-add .first-item';
+        // Выполняем запрос
+        clearTimeout(timerId);   
+        timerId = setTimeout(function() {
+            departmentCheck (name, submit, db, null);
+        }, time); 
+    });
 
-  // ----------- Изменение -------------
+    // ----------- Изменение -------------
 
-  // Открываем модалку
-  $(document).on('click', '[data-open="first-edit"]', function() {
-    // Получаем данные о разделе
-    var id = $(this).closest('.item').attr('id').split('-')[1];
+    // Открываем модалку
+    $(document).on('click', '[data-open="first-edit"]', function() {
+        // Получаем данные о разделе
+        var id = $(this).closest('.item').attr('id').split('-')[1];
 
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: "/departments/" + id + "/edit",
-    type: "GET",
-    success: function(html) {
-        $('#modal').html(html);
-        $('#first-edit').foundation();
-        $('#first-edit').foundation('open');
-    }
-});
-});
+        // Ajax запрос
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "/departments/" + id + "/edit",
+            type: "GET",
+            success: function(html) {
+                $('#modal').html(html);
+                $('#first-edit').foundation();
+                $('#first-edit').foundation('open');
+            }
+        });
+    });
 
-  // Проверка существования
-  $(document).on('keyup', '#form-first-edit .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-first-edit .name-field').val();
-    // Указываем название кнопки
-    var submit = '.submit-edit';
-    // Значение поля с разрешением
-    var db = '#form-first-edit .first-item';
-    // Выполняем запрос
-    clearTimeout(timerId);   
-    timerId = setTimeout(function() {
-      departmentCheck (name, submit, db, null);
-  }, time); 
-});
+    // Проверка существования
+    $(document).on('keyup', '#form-first-edit .name-field', function() {
+        // Получаем фрагмент текста
+        var name = $('#form-first-edit .name-field').val();
+        // Указываем название кнопки
+        var submit = '.submit-edit';
+        // Значение поля с разрешением
+        var db = '#form-first-edit .first-item';
+        // Выполняем запрос
+        clearTimeout(timerId);   
+        timerId = setTimeout(function() {
+            departmentCheck (name, submit, db, null);
+        }, time); 
+    });
 
   // ------------------------------- Отдел --------------------------------------------
 
@@ -179,6 +179,7 @@
 
     var parent = $(this).closest('.item').attr('id').split('-')[1];
     var filial = $(this).closest('.first-item').attr('id').split('-')[1];
+    // alert(parent + filial);
     
     $.ajax({
       headers: {
@@ -186,7 +187,7 @@
     },
     url: '/departments/create',
     type: "GET",
-    data: {parent_id: parent, filial_id:filial},
+    data: {parent_id: parent, filial_id: filial},
     success: function(html){
         $('#modal').html(html);
         $('#medium-add').foundation();

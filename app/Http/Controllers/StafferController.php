@@ -138,7 +138,7 @@ class StafferController extends Controller
 
     if ($staffer) {
       // Переадресовываем на index
-      return redirect()->action('DepartmentController@get_content', ['id' => $staffer->id, 'item' => 'staffer']);
+      return redirect()->action('DepartmentController@index', ['id' => $staffer->id, 'item' => 'staffer']);
     } else {
       abort(403, 'Ошибка при записи штата!');
     };
@@ -294,7 +294,7 @@ class StafferController extends Controller
     $staffer->save();
     $staffer = Staffer::destroy($id);
     if ($staffer) {
-      return redirect()->action('DepartmentController@get_content', ['id' => $department_id, 'item' => 'department']);
+      return redirect()->action('DepartmentController@index', ['id' => $department_id, 'item' => 'department']);
     } else {
       abort(403, 'Ошибка при удалении штата');
     }

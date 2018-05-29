@@ -44,6 +44,7 @@ class SectorController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
+        ->template($answer) // Выводим шаблоны альбомов
         ->booklistFilter($request)
         ->orderBy('sort', 'asc')
         ->get();
