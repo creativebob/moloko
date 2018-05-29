@@ -39,50 +39,53 @@ class PhotoController extends Controller
 
   public function index(Request $request, $alias)
   {
+
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Photo::class);
 
     $answer_album = operator_right('albums', $this->entity_dependence, getmethod(__FUNCTION__));
+
     // Получаем сайт
     $album = Album::moderatorLimit($answer_album)->whereAlias($alias)->first();
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+    // dd($answer);
     // --------------------------------------------------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // --------------------------------------------------------------------------------------------------------------------------------------
 
-    // $photos = Photo::with(['author', 'company', 'album' => function ($query) use ($alias) {
-    //   $query->whereAlias($alias);
-    // }])
-    // ->moderatorLimit($answer)
-    // ->companiesLimit($answer)
-    // ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
-    // ->authors($answer)
-    // ->systemItem($answer) // Фильтр по системным записям
-    // ->booklistFilter($request) 
-    // ->orderBy('sort', 'asc')
-    // ->paginate(30);
-
-    $album = Album::with(['author', 'photos' => function ($query) {
-        $query->orderBy('sort', 'asc');
-      }])
-      ->whereAlias($alias)
-      ->moderatorLimit($answer_album)
-      ->companiesLimit($answer_album)
-    ->filials($answer_album) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
-    ->authors($answer_album)
-    ->systemItem($answer_album) // Фильтр по системным записям
+    $photos = Photo::with(['author', 'company'])->whereHas('album', function ($query) use ($alias) {
+      $query->whereAlias($alias);
+    })
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
+    ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
     ->booklistFilter($request) 
     ->orderBy('sort', 'asc')
-    ->first();
+    ->paginate(30);
 
-    $photos = $album->photos;
+    // $album = Album::with(['author', 'photos' => function ($query) {
+    //     $query->orderBy('sort', 'asc');
+    //   }])
+    //   ->whereAlias($alias)
+    //   ->moderatorLimit($answer_album)
+    //   ->companiesLimit($answer_album)
+    // ->filials($answer_album) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
+    // ->authors($answer_album)
+    // ->systemItem($answer_album) // Фильтр по системным записям
+    // ->booklistFilter($request) 
+    // ->orderBy('sort', 'asc')
+    // ->first();
+
+    // $photos = $album->photos;
 
     // dd($photos);
 
-  
+
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
@@ -332,14 +335,33 @@ class PhotoController extends Controller
       $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
       // ГЛАВНЫЙ ЗАПРОС:
-      $photo = Photo::moderatorLimit($answer)->findOrFail($id);
+      $photo = Photo::with(['avatar', 'album' => function ($query) use ($alias) {
+        $query->whereAlias($alias);
+      }])->moderatorLimit($answer)->findOrFail($id);
 
       // Подключение политики
       $this->authorize(getmethod(__FUNCTION__), $photo);
 
       if ($photo) {
 
-        $storage = Storage::disk('public')->delete($photo->path);
+        $album = $photo->album->first();
+
+        if (isset($photo->album->name)) {
+          $album = Album::findOrFail($photo->album->id);
+          $album->photo_id = null;
+          $album->save();
+
+          if ($album == false) {
+            abort(403, 'Ошибка при удалении аватара альбома');
+          }
+        }
+        $directory = $album->company_id.'/media/albums/'.$album->id.'/img';
+
+
+        $storage = Storage::disk('public')->delete($directory.'/small/'.$photo->name);
+        $storage = Storage::disk('public')->delete($directory.'/medium/'.$photo->name);
+        $storage = Storage::disk('public')->delete($directory.'/large/'.$photo->name);
+        $storage = Storage::disk('public')->delete($directory.'/original/'.$photo->name);
         // dd($storage);
         $user = $request->user();
 
@@ -347,6 +369,10 @@ class PhotoController extends Controller
         $user_id = hideGod($user);
         $photo->editor_id = $user_id;
         $photo->save();
+
+        if (isset($photo->album)) {
+          # code...
+        }
         
         // Удаляем страницу с обновлением
         $photo = Photo::destroy($id);

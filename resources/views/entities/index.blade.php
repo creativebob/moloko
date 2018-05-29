@@ -2,7 +2,7 @@
  
 @section('inhead')
 {{-- Скрипты таблиц в шапке --}}
-  @include('includes.scripts.table-inhead')
+  @include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -19,13 +19,13 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container>
+    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="entities">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
-          <th class="td-drop"><div class="sprite icon-drop"></div></th>
+          <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-entity-name">Название таблицы</th>
-          <th class="td-entity-alias">Название в DB</th>
+          <th class="td-name">Название таблицы</th>
+          <th class="td-alias">Название в DB</th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -33,9 +33,9 @@
       @if(!empty($entities))
         @foreach($entities as $entity)
         <tr class="item @if(Auth::user()->entity_id == $entity->id)active @endif  @if($entity->moderation == 1)no-moderation @endif" id="entities-{{ $entity->id }}" data-name="{{ $entity->name }}">
-          <td class="td-drop"><div class="sprite icon-drop"></div></td>
+          <td class="td-drop"></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $entity->id }}"><label class="label-check" for="check-{{ $entity->id }}"></label></td>
-          <td class="td-entity-name">
+          <td class="td-name">
             @can('update', $entity)
             <a href="/entities/{{ $entity->id }}/edit">
             @endcan
@@ -43,7 +43,7 @@
             @can('update', $entity)
             </a> 
             @endcan
-          <td class="td-entity-alias">{{ $entity->alias }}</td>
+          <td class="td-alias">{{ $entity->alias }}</td>
           <td class="td-delete">
           @if ($entity->system_item !== 1)
             @can('delete', $entity)
@@ -75,7 +75,7 @@
 
 @section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.table-scripts')
+@include('includes.scripts.tablesorter-script')
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')

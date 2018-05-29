@@ -45,13 +45,39 @@ class SiteController extends Controller
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
+    ->booklistFilter($request)
+    // ->filter($request, 'position_id')
+    // ->filter($request, 'department_id')
     ->orderBy('moderation', 'desc')
     ->paginate(30);
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
+    // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+    $filter_query = Site::with('author', 'company')
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
+    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+    ->authors($answer)
+    ->systemItem($answer) // Фильтр по системным записям
+    ->get();
+
+    $filter['status'] = null;
+
+    // $filter = addFilter($filter, $filter_query, $request, 'Выберите должность:', 'position', 'position_id');
+    // $filter = addFilter($filter, $filter_query, $request, 'Выберите отдел:', 'department', 'department_id');
+
+    // Добавляем данные по спискам (Требуется на каждом контроллере)
+    $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------
+
 
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
-    return view('sites.index', compact('sites', 'page_info'));
+    return view('sites.index', compact('sites', 'page_info', 'filter'));
   }
 
 
@@ -250,11 +276,25 @@ class SiteController extends Controller
         return Redirect('/sites');
       } else {
         abort(403, 'Ошибка при удалении сайта');
-      };
+      }
     } else {
       abort(403, 'Сайт не найден');
     }
   }
+
+  // Сортировка
+    public function sites_sort(Request $request)
+    {
+      $result = '';
+      $i = 1;
+      foreach ($request->sites as $item) {
+
+        $sites = Site::findOrFail($item);
+        $sites->sort = $i;
+        $sites->save();
+        $i++;
+      }
+    }
 
 
   public function sections($alias)
@@ -301,7 +341,7 @@ class SiteController extends Controller
     $site = Site::where('api_token', $request->token)->first();
     if ($site) {
       // return Cache::remember('site', 1, function() use ($domain) {
-      return Site::with(['company.filials.location.city', 'company.location.city', 'pages', 'navigations.menus.page', 'navigations.navigations_category', 'navigations' => function ($query) {
+      return Site::with(['company.filials.location.city', 'company.location.city', 'company.schedules.worktimes', 'pages', 'navigations.menus.page', 'navigations.navigations_category', 'navigations' => function ($query) {
         $query->whereDisplay(1);
       },'navigations.menus' => function ($query) {
         $query->whereDisplay(1)->orderBy('sort', 'asc');

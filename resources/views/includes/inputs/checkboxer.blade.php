@@ -34,6 +34,7 @@
 	<ul class="checkboxer-menu {{$name}}" data-name="{{$name}}">
 
 		@foreach ($filter[$name]['collection'] as $key => $value)
+
 			<li>
 
 				{{-- Блок для выбора через связь --}}
@@ -61,8 +62,17 @@
 				@else
 
 					@php
-					$value_id = $value->$name->id;
-					$value_name = $value->$name->name;
+
+						if(!isset($value->$name->id)){
+
+							$value_id = 'null';
+							$value_name = 'Не указано';
+						} else {
+
+							$value_id = $value->$name->id;
+							$value_name = $value->$name->name;							
+						}
+
 					@endphp
 
 					{{ Form::checkbox($name . '_id[]', $value_id, $filter[$name]['mass_id'], ['id'=>$name.'-'.$value_id]) }}

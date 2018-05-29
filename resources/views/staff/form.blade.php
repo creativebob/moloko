@@ -31,24 +31,24 @@
       <div class="small-6 cell">
         <label>Дата приема
           @php 
-          $date_employment = null;
+          $employment_date = null;
           @endphp
           @if (!empty($staffer))
           @foreach ($staffer->employees as $employee)
-          @if (($employee->user_id == $staffer->user_id) && ($employee->date_dismissal == null))
+          @if (($employee->user_id == $staffer->user_id) && ($employee->dismissal_date == null))
           @php
-          $date_employment = $employee->date_employment; 
+          $employment_date = $employee->employment_date; 
           @endphp    
           @endif
           @endforeach
-          {{ Form::text('date_employment', $date_employment, ['class'=>'date_employment date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off', 'required']) }}
+          {{ Form::text('employment_date', $employment_date, ['class'=>'employment_date date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off', 'required']) }}
           @endif
         </label>
       </div>
       <div class="small-6 cell">
         <label>Дата увольнения
-          {{-- @include('includes.inputs.date', ['name'=>'date_dismissal', 'value'=>$user->birthday, 'required'=>'']) --}}
-          {{ Form::text('date_dismissal', null, ['class'=>'date_dismissal date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+          {{-- @include('includes.inputs.date', ['name'=>'dismissal_date', 'value'=>$user->birthday, 'required'=>'']) --}}
+          {{ Form::text('dismissal_date', null, ['class'=>'dismissal_date date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
         </label>
       </div>
       {{-- Чекбокс модерации --}}

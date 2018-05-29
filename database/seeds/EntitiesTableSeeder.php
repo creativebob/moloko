@@ -112,7 +112,7 @@ class EntitiesTableSeeder extends Seeder
       ],
       [
         'name' => 'Категории навигаци',
-        'alias' => 'navigations_category',
+        'alias' => 'navigations_categories',
         'model' => 'NavigationsCategory',
         'system_item' => 1,
         'author_id' => 1,

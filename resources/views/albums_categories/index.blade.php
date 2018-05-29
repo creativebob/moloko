@@ -3,7 +3,7 @@
 @section('inhead')
 <meta name="description" content="{{ $page_info->page_description }}" />
 {{-- Скрипты меню в шапке --}}
-@include('includes.scripts.menu-inhead')
+@include('includes.scripts.sortable-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -19,7 +19,7 @@
 {{-- Список --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250">
+    <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="albums_categories">
     @if($albums_categories_tree)
     {{-- Шаблон вывода и динамического обновления --}}
     @include('albums_categories.category-list', $albums_categories_tree)

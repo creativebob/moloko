@@ -147,94 +147,6 @@
         return $filter;
     }
 
-
-    // function addFilter($filter, $filter_query, $request, $title, $name, $column, $entity_name = 'none'){
-
-    //     $list_filter =[];
-    //     $filter_name = $name;
-
-    //     $filter_entity = $filter_query->unique($column); 
-
-    //     if(count($filter_entity) > 0){
-
-    //         foreach($filter_entity as $entity){
-    //             $list_filter['item_list'][$entity->$name->id] = $entity->$name->name;
-    //         }
-    //     };
-
-    //     $filter[$filter_name]['mode'] = 'id'; // Назавние фильтра
-    //     $filter[$filter_name]['collection'] = $filter_entity;
-
-    //     if($request->$column == null){
-
-    //         $filter[$filter_name]['mass_id'] = null;
-    //         $filter[$filter_name]['count_mass'] = 0;
-            
-    //     } else {
-
-    //         $filter[$filter_name]['mass_id'] = $request->$column; // Получаем список ID
-    //         if(is_array($request->$column)){
-    //             $filter[$filter_name]['count_mass'] = count($request->$column);
-    //             $filter['status'] = 'active';
-
-    //         } else {
-    //             $filter[$filter_name]['count_mass'] = 0;
-    //         };
-            
-    //     };
-
-    //     $filter[$filter_name]['list_select'] = $list_filter; 
-    //     $filter[$filter_name]['title'] = $title; // Назавние фильтра
-
-    //     return $filter;
-    // }
-
-    function addCityFilter($filter, $filter_query, $request, $title, $name, $column, $entity_name = 'none'){
-
-        $list_filter =[];
-        $filter_name = $name;
-
-        $filter_entity = $filter_query->unique('location.city_id');
-
-        // 
-        if(count($filter_entity) > 0){
-
-            foreach($filter_entity as $entity){
-                if($entity->location != null){
-                    $list_filter['item_list'][$entity->location->city_id] = $entity->location->city->name;                    
-                } else {$list_filter['item_list'][null] = 'Город не указан';};
-            }
-        };
-
-        $filter[$filter_name]['mode'] = 'id'; // Назавние фильтра
-        $filter[$filter_name]['collection'] = $filter_entity;
-
-        if($request->$column == null){
-
-            $filter[$filter_name]['mass_id'] = null;
-            $filter[$filter_name]['count_mass'] = 0;
-            
-        } else {
-
-            $filter[$filter_name]['mass_id'] = $request->$column; // Получаем список ID
-            if(is_array($request->$column)){
-                $filter[$filter_name]['count_mass'] = count($request->$column);
-                $filter['status'] = 'active';
-
-            } else {
-                $filter[$filter_name]['count_mass'] = 0;
-            };
-            
-        };
-
-        $filter[$filter_name]['list_select'] = $list_filter; 
-        $filter[$filter_name]['title'] = $title; // Назавние фильтра
-
-        // dd($filter);
-        return $filter;
-    }
-
-
     function addFilter($filter, $filter_query, $request, $title, $name, $column, $relations = null, $entity_name = 'none'){
 
         $list_filter =[];
@@ -244,6 +156,7 @@
 
         if($relations != null){
             $filter_entity = $filter_query->unique($relations . '.' . $column);
+            // dd($filter_entity);
         } else {
             $filter_entity = $filter_query->unique($column);
         };

@@ -1,7 +1,7 @@
 @extends('layouts.app')
  
 @section('inhead')
-  @include('includes.scripts.table-inhead')
+  @include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', $site->name)
@@ -60,7 +60,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="table-content" data-sticky-container>
+    <table class="table-content tablesorter" id="content" data-sticky-container>
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
@@ -73,7 +73,7 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($site))
         @foreach($site->menus as $menu)
-        <tr class="parent" id="sites-{{ $site->id }}" data-name="{{ $site->site_name }}">
+        <tr class="item" id="sites-{{ $site->id }}" data-name="{{ $site->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"><label class="label-check" for="check-{{ $site->id }}"></label></td>
           <td class="td-menu-name"><a href="/sites/{{ $site->alias }}/{{ $menu->alias }}">{{ $menu->name }}</a></td>
@@ -99,7 +99,7 @@
 
 @section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.table-scripts')
+@include('includes.scripts.tablesorter-script')
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')

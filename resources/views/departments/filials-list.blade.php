@@ -10,17 +10,17 @@ $drop = 1;
   @if($department['filial_status'] == 1)
   {{-- Если филиал --}}
   <li class="first-item item @if (isset($department['children']) || isset($department['staff'])) parent @endif" id="departments-{{ $department['id'] }}" data-name="{{ $department['name'] }}">
-    <a class="first-link @if($drop == 0) link-small @endif">
-      <div class="icon-open sprite"></div>
-      <span class="first-item-name">{{ $department['name'] }}</span>
-      <span class="number">{{ $department['count'] }}</span>
-      @if ($department['moderation'])
-      <span class="no-moderation">Не отмодерированная запись!</span>
-      @endif
-      @if ($department['system_item'])
-      <span class="system-item">Системная запись!</span>
-      @endif
-    </a>
+      <a class="first-link @if($drop == 0) link-small @endif">
+          <div class="icon-open sprite"></div>
+          <span class="first-item-name">{{ $department['name'] }}</span>
+          <span class="number">{{ $department['count'] }}</span>
+          @if ($department['moderation'])
+          <span class="no-moderation">Не отмодерированная запись!</span>
+          @endif
+          @if ($department['system_item'])
+          <span class="system-item">Системная запись!</span>
+          @endif
+      </a>
     <div class="icon-list">
       <div>
         @can('create', App\Department::class)
@@ -75,7 +75,7 @@ $drop = 1;
 
 
 {{-- Скрипт чекбоксов и перетаскивания для меню --}}
-@include('includes.scripts.menu-scripts')
+@include('includes.scripts.sortable-menu-script')
 
 @if(!empty($id))
 <script type="text/javascript">
@@ -91,33 +91,34 @@ $drop = 1;
     };
     // Если средний элемент
     if ($('#departments-{{ $id }}').hasClass('medium-item')) {
-      // Присваиваем элементу активный клас и открываем его и вышестоящий
-      $('#departments-{{ $id }}').addClass('medium-active');
-      $('#departments-{{ $id }}').parent('.medium-list').addClass('is-active');
-      $('#departments-{{ $id }}').children('.medium-list').addClass('is-active');
+      
+        // Присваиваем элементу активный клас и открываем его и вышестоящий
+        $('#departments-{{ $id }}').addClass('medium-active');
+        $('#departments-{{ $id }}').parent('.medium-list').addClass('is-active');
+        $('#departments-{{ $id }}').children('.medium-list').addClass('is-active');
 
-      // Перебираем родителей
-      $.each($('#departments-{{ $id }}').parents('.item'), function (index) {
+        // Перебираем родителей
+        $.each($('#departments-{{ $id }}').parents('.item'), function (index) {
 
-        // Если первый элемент, присваиваем активный класс
-        if ($(this).hasClass('first-item')) {
-          $(this).addClass('first-active');
-        };
+            // Если первый элемент, присваиваем активный класс
+            if ($(this).hasClass('first-item')) {
+              $(this).addClass('first-active');
+            };
 
-        // Если средний элемент, присваиваем активный класс
-        if ($(this).hasClass('medium-item')) {
-          $(this).addClass('medium-active');
-          $(this).parent('.medium-list').addClass('is-active');
-        };
-      });
+            // Если средний элемент, присваиваем активный класс
+            if ($(this).hasClass('medium-item')) {
+                $(this).addClass('medium-active');
+                $(this).parent('.medium-list').addClass('is-active');
+            };
+        });
     };
   };
 
   if ('{{ $item }}' == 'staffer') {
 
     if ($('#staff-{{ $id }}').hasClass('medium-as-last')) {
-      // Открываем вышестоящий
-      $('#staff-{{ $id }}').parent('.medium-list').addClass('is-active');
+          // Открываем вышестоящий
+          $('#staff-{{ $id }}').parent('.medium-list').addClass('is-active');
     };
 
     // Перебираем родителей

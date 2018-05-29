@@ -12,11 +12,10 @@ trait SystemItemTraitScopes
         // $dependence = $answer['dependence'];
         // $filials = $answer['filials'];
 
-        $system_item = $answer['system_item'];
+        $system_item = $answer['system_item']['result'];
         $user_status = $answer['user_status'];
         $company_id = $answer['company_id'];
         $entity_name = $answer['entity_name'];
-
 
         // ЗАВИСИМОСТЬ ОТ СИСТЕМНЫХ ЗАПИСЕЙ  -----------------------------------------------------------------------------------------------------------
 
@@ -60,6 +59,8 @@ trait SystemItemTraitScopes
 
 
             if(($user_status == null)&&($system_item == true)){
+
+
 
                 // Если есть право смотреть системные
                 return $query

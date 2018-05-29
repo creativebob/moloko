@@ -20,12 +20,12 @@
     <div class="grid-x grid-padding-x">
       <div class="small-6 cell">
         <label>Начало публикации
-          @include('includes.inputs.date', ['name'=>'date_publish_begin', 'value'=>$cur_news->date_publish_begin, 'required'=>'required'])
+          @include('includes.inputs.date', ['name'=>'publish_begin_date', 'value'=>$cur_news->publish_begin_date, 'required'=>'required'])
         </label>
       </div>
       <div class="small-6 cell">
         <label>Окончание публикации
-          @include('includes.inputs.date', ['name'=>'date_publish_end', 'value'=>$cur_news->date_publish_end, 'required'=>'required'])
+          @include('includes.inputs.date', ['name'=>'publish_end_date', 'value'=>$cur_news->publish_end_date, 'required'=>'required'])
         </label>
       </div>
     </div>

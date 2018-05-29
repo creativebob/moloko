@@ -1285,6 +1285,14 @@ input[type=checkbox], input[type=radio] {
   color: #5190ff;
 }
 
+#exel img {
+  width: 1rem;
+  height: 1rem;
+}
+#exel #exel-import {
+  z-index: 95;
+}
+
 .reveal {
   padding: 0;
   border: 1px solid #000000;
@@ -1776,6 +1784,9 @@ input[type=checkbox], input[type=radio] {
 }
 .content .content-list .last-list .last-item:last-child .last-link {
   border-bottom: none;
+}
+.content .table-content th:first-child:hover {
+  cursor: default;
 }
 .content .table-content .is-stuck {
   background-color: #eeeeee;

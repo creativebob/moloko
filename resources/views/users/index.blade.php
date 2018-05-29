@@ -2,7 +2,7 @@
  
 @section('inhead')
 {{-- Скрипты таблиц в шапке --}}
-  @include('includes.scripts.table-inhead')
+  @include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -22,7 +22,7 @@
     <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="users">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
-          <th class="td-drop"><div class="sprite icon-drop"></div></th>
+          <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-second-name">Пользователь</th>
           <th class="td-login">Логин</th>
@@ -127,10 +127,12 @@
 
 @section('scripts')
   {{-- Скрипт сортировки и перетаскивания для таблицы --}}
-  @include('includes.scripts.table-scripts')
+  @include('includes.scripts.tablesorter-script')
 
   {{-- Скрипт чекбоксов --}}
   @include('includes.scripts.checkbox-control')
+
+   @include('includes.scripts.sortable-table-script')
 
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-delete-script')

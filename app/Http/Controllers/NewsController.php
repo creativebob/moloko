@@ -60,13 +60,15 @@ class NewsController extends Controller
     ->systemItem($answer) // Фильтр по системным записям
     ->whereSite_id($site->id) // Только для страниц сайта
     // ->orderBy('sort', 'asc')
-    ->filter($request, 'author') // Фильтр по авторам
-    // ->filter($request, 'city', 'cities') // Фильтр по городам публикации
+    ->filter($request, 'author_id') // Фильтр по авторам
+    ->filter($request, 'id', 'cities') // Фильтр по городам публикации
     ->booklistFilter($request)  // Фильтр по спискам
-    ->dateIntervalFilter($request, 'date_publish_begin') // Интервальный фильтр по дате публикации
+    ->dateIntervalFilter($request, 'publish_begin_date') // Интервальный фильтр по дате публикации
     ->orderBy('moderation', 'desc')
-    ->orderBy('date_publish_begin', 'desc')
+    ->orderBy('publish_begin_date', 'desc')
     ->paginate(30);
+
+    // dd($news);
 
     $filter_query = News::with('author', 'cities')
     ->moderatorLimit($answer)
@@ -80,9 +82,8 @@ class NewsController extends Controller
 
     $filter['status'] = null;
 
-    // $filter = addCityFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id');
+
     $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
-    // $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'cities');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
     $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
@@ -234,8 +235,8 @@ class NewsController extends Controller
     // Модерация и системная запись
     $cur_news->system_item = $request->system_item;
 
-    $cur_news->date_publish_begin = $request->date_publish_begin;
-    $cur_news->date_publish_end = $request->date_publish_end;
+    $cur_news->publish_begin_date = $request->publish_begin_date;
+    $cur_news->publish_end_date = $request->publish_end_date;
 
     // Если нет прав на создание полноценной записи - запись отправляем на модерацию
     if($answer['automoderate'] == false){
@@ -441,6 +442,7 @@ class NewsController extends Controller
 
   public function update(NewsRequest $request, $alias, $id)
   {
+      // dd($request);
     // dd($request->albums[0]);
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -491,7 +493,7 @@ class NewsController extends Controller
       $small = Image::make($request->photo)->widen($settings['img_small_width']->value);
       $save_path = storage_path('app/public/'.$directory.'small');
       if (!file_exists($save_path)) {
-        mkdir($save_path, 666, true);
+        mkdir($save_path, 755, true);
       }
       $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
 
@@ -499,7 +501,7 @@ class NewsController extends Controller
       $medium = Image::make($request->photo)->widen($settings['img_medium_width']->value);
       $save_path = storage_path('app/public/'.$directory.'medium');
       if (!file_exists($save_path)) {
-        mkdir($save_path, 666, true);
+        mkdir($save_path, 755, true);
       }
       $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
 
@@ -507,7 +509,7 @@ class NewsController extends Controller
       $large = Image::make($request->photo)->widen($settings['img_large_width']->value);
       $save_path = storage_path('app/public/'.$directory.'large');
       if (!file_exists($save_path)) {
-        mkdir($save_path, 666, true);
+        mkdir($save_path, 755, true);
       }
       $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
 
@@ -524,8 +526,8 @@ class NewsController extends Controller
     $cur_news->preview = $request->preview;
     $cur_news->content = $request->content;
 
-    $cur_news->date_publish_begin = $request->date_publish_begin;
-    $cur_news->date_publish_end = $request->date_publish_end;
+    $cur_news->publish_begin_date = $request->publish_begin_date;
+    $cur_news->publish_end_date = $request->publish_end_date;
 
     $cur_news->display = $request->display;
 
@@ -744,11 +746,11 @@ class NewsController extends Controller
 
     $site = Site::with(['news' => function ($query) {
       $query->where('display', 1)
-      ->where('date_publish_begin', '<', Carbon::now())
-      ->where('date_publish_end', '>', Carbon::now());
+      ->where('publish_begin_date', '<', Carbon::now())
+      ->where('publish_end_date', '>', Carbon::now());
     }, 'news.cities' => function($query) use ($city) {
       $query->whereAlias($city);
-    }, 'news.company', 'news.author', 'news.photo'])->where('api_token', $token)->first();
+    }, 'news.company', 'news.author.staff.position', 'news.photo'])->where('api_token', $token)->first();
 
     if ($site) {
         // return Cache::forever($domen.'-news', $site, function() use ($city, $token) {
@@ -775,7 +777,7 @@ class NewsController extends Controller
   // Показываем новость на сайте
   public function api_show(Request $request, $city, $link)
   {
-    $site = Site::with(['news.author', 'news.author.staff', 'news' => function ($query) use ($link) {
+    $site = Site::with(['news.author', 'news' => function ($query) use ($link) {
       $query->where(['alias' => $link, 'display' => 1]);
     }])->where('api_token', $request->token)->first();
     if ($site) {

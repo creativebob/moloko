@@ -2,7 +2,7 @@
  
 @section('inhead')
 {{-- Скрипты таблиц в шапке --}}
-  @include('includes.scripts.table-inhead')
+  @include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -22,15 +22,15 @@
     <table class="table-content tablesorter" id="content" class="content-albums" data-sticky-container data-entity-alias="albums">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
-          <th class="td-drop"><div class="sprite icon-drop"></div></th>
+          <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th>Обложка</th>
-          <th class="td-album-name">Название альбомa</th>
-          <th class="td-album-category">Категория</th>
-          <th class="td-album-description">Описание</th>
-          <th class="td-album-date">Сведения</th>
-          <th class="td-album-company-id">Компания</th>
-          <th class="td-album-author">Автор</th>
+          <th class="td-name">Название альбомa</th>
+          <th class="td-category">Категория</th>
+          <th class="td-description">Описание</th>
+          <th class="td-date">Сведения</th>
+          <th class="td-company-id">Компания</th>
+          <th class="td-author">Автор</th>
 
           <th class="td-delete"></th>
         </tr>
@@ -54,10 +54,10 @@
               <img src="{{ isset($album->photo_id) ? '/storage/'.$album->company_id.'/media/albums/'.$album->id.'/img/small/'.$album->photo->name : '/img/plug/album_small_default_color.jpg' }}" alt="{{ isset($album->photo_id) ? $album->name : 'Нет фото' }}">
             </a>
           </td>
-          <td class="td-album-name"><a href="/albums/{{ $album->alias }}/edit">{{ $album->name }}</a></td>
-          <td class="td-album-category">{{ $album->albums_category->name }}</td>
-          <td class="td-album-description">{{ $album->description }}</td>
-          <td class="td-album-extra-info">
+          <td class="td-name"><a href="/albums/{{ $album->alias }}/edit">{{ $album->name }}</a></td>
+          <td class="td-category">{{ $album->albums_category->name }}</td>
+          <td class="td-description">{{ $album->description }}</td>
+          <td class="td-extra-info">
             <ul>
               <li>Доступ: {{ $album->access == 1 ? 'Личный' : 'Общий' }}</li>
               <li>Кол-во фотографий: {{ $album->photos_count }}</li>
@@ -65,11 +65,11 @@
               <li>Размер, Мб: {{ $album->photos->sum('size')/1024 }}</li>
             </ul>
           </td>
-          <td class="td-album-company-id">@if(!empty($album->company->name)) {{ $album->company->name }} @else @if($album->system_item == null) Шаблон @else Системная @endif @endif</td>
-          <td class="td-album-author">@if(isset($album->author->first_name)) {{ $album->author->first_name . ' ' . $album->author->second_name }} @endif</td>
+          <td class="td-company-id">@if(!empty($album->company->name)) {{ $album->company->name }} @else @if($album->system_item == null) Шаблон @else Системная @endif @endif</td>
+          <td class="td-author">@if(isset($album->author->first_name)) {{ $album->author->first_name . ' ' . $album->author->second_name }} @endif</td>
 
           <td class="td-delete">
-            @if ($album->system_item != 1)
+            @if (($album->system_item != 1) && ($album->photos_count == 0))
               @can('delete', $album)
               <a class="icon-delete sprite" data-open="item-delete"></a>
               @endcan
@@ -103,7 +103,7 @@
 
 @section('scripts')
   {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-  @include('includes.scripts.table-scripts')
+  @include('includes.scripts.tablesorter-script')
 
   {{-- Скрипт чекбоксов --}}
   @include('includes.scripts.checkbox-control')
@@ -111,5 +111,6 @@
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-delete-script')
   @include('includes.scripts.delete-ajax-script')
-  @include('includes.scripts.table-sort')
+
+  @include('includes.scripts.sortable-table-script')
 @endsection

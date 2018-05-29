@@ -61,6 +61,15 @@
             <label>Почта
               @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email', 'required'=>''])
             </label>  
+            <label>Страна
+              @php
+              $country_id = null;
+              if (isset($company->location->country_id)) {
+              $country_id = $company->location->country_id;
+            }
+              @endphp
+              {{ Form::select('country_id', $countries_list, $country_id)}}
+            </label> 
           </div>
 
 

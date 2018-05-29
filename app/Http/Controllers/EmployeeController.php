@@ -50,8 +50,10 @@ class EmployeeController extends Controller
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        ->positionFilter($request, 'staffer')
-        ->departmentFilter($request, 'staffer')
+
+        ->booklistFilter($request)
+        ->filter($request, 'position_id', 'staffer')
+        ->filter($request, 'department_id', 'staffer')
         ->dateIntervalFilter($request, 'date_employment')
         ->orderBy('moderation', 'desc')
         ->paginate(30);
@@ -68,8 +70,6 @@ class EmployeeController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->get();
 
-
-
         // dd($filter_query);
         $filter['status'] = null;
 
@@ -82,7 +82,6 @@ class EmployeeController extends Controller
         // dd($filter);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
-
 
         // Смотрим сколько филиалов в компании
         $user = $request->user();
@@ -156,9 +155,9 @@ class EmployeeController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $employee);
 
         // Перезаписываем данные
-        $employee->date_employment = $request->date_employment;
-        $employee->date_dismissal = $request->date_dismissal;
-        $employee->dismissal_desc = $request->dismissal_desc;
+        $employee->employment_date = $request->employment_date;
+        $employee->dismissal_date = $request->dismissal_date;
+        $employee->dismissal_description = $request->dismissal_description;
         $employee->editor_id = $user->id;
         $employee->save();
         
@@ -173,5 +172,19 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    // Сортировка
+    public function employees_sort(Request $request)
+    {
+      $result = '';
+      $i = 1;
+      foreach ($request->employees as $item) {
+
+        $employees = Employee::findOrFail($item);
+        $employees->sort = $i;
+        $employees->save();
+        $i++;
+      }
     }
 }

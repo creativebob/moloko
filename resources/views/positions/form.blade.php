@@ -32,7 +32,7 @@
               <li>
                 <div class="small-12 cell checkbox">
                   {{ Form::checkbox('roles[]', $role->id, null, ['id'=>'role-'.$role->id, 'class'=>'access-checkbox']) }}
-                  <label for="role-{{ $role->id }}"><span>{{ $role->role_name }}</span></label>
+                  <label for="role-{{ $role->id }}"><span>{{ $role->name }}</span></label>
                   @php
                     $allow = count($role->rights->where('directive', 'allow'));
                     $deny = count($role->rights->where('directive', 'deny'));

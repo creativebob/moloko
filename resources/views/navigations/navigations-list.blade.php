@@ -12,13 +12,7 @@
     <a class="first-link @if($drop == 0) link-small @endif">
       <div class="icon-open sprite"></div>
       <span class="first-item-name">{{ $navigation['name'] }}</span>
-      <span class="number">
-      @if (isset($navigation['menus']))
-        {{ count($navigation['menus']) }}
-      @else
-        0
-      @endif
-      </span>
+      <span class="number">{{ $navigation['menus_count'] }}</span>
       <span>( {{ $navigation['navigations_category']['name'] }} )</span>
       @if ($navigation['moderation'])
       <span class="no-moderation">Не отмодерированная запись!</span>
@@ -68,7 +62,7 @@
 
 
 {{-- Скрипт чекбоксов и перетаскивания для меню --}}
-@include('includes.scripts.menu-scripts')
+@include('includes.scripts.sortable-menu-script')
 
 @if(!empty($id))
 <script type="text/javascript">

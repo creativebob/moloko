@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-// Заготовки
+// Scopes для главного запроса
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemItemTraitScopes;
@@ -15,71 +15,76 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Фильтры
-use App\Scopes\Filters\CityFilter;
+use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
+// use App\Scopes\Filters\DateIntervalFilter;
 
 class Product extends Model
 {
-	use Notifiable;
-	use SoftDeletes;
+    use Notifiable;
+    use SoftDeletes;
 
-  // Подключаем Scopes для главного запроса
-	use CompaniesLimitTraitScopes;
-	use AuthorsTraitScopes;
-	use SystemItemTraitScopes;
-	use FilialsTraitScopes;
-	use TemplateTraitScopes;
-	use ModeratorLimitTraitScopes;
-	use BooklistFilter;
+    // Включаем Scopes
+    use CompaniesLimitTraitScopes;
+    use AuthorsTraitScopes;
+    use SystemItemTraitScopes;
+    use FilialsTraitScopes;
+    use TemplateTraitScopes;
+    use ModeratorLimitTraitScopes;
 
-	protected $dates = ['deleted_at'];
+    // Фильтры
+    use Filter;
+    use BooklistFilter;
+    // use DateIntervalFilter;
 
-	protected $fillable = [
-		'name',
-		'article',
-		'cost',
-		'description',
 
-	];
+    protected $dates = ['deleted_at'];
 
-	// Получаем компанию
-	public function company()
-	{
-		return $this->belongsTo('App\Company');
-	}
+    protected $fillable = [
+        'name',
+        'article',
+        'cost',
+        'description',
+    ];
 
-  // Получаем категорию
-	public function products_category()
-	{
-		return $this->belongsTo('App\ProductsCategory');
-	}
+    // Получаем компанию
+    public function company()
+    {
+        return $this->belongsTo('App\Company');
+    }
 
-	// Получаем автора
-	public function author()
-	{
-		return $this->belongsTo('App\User', 'author_id');
-	}
+    // Получаем категорию
+    public function products_category()
+    {
+        return $this->belongsTo('App\ProductsCategory');
+    }
 
-	// Получаем страну
-  public function country()
-  {
-    return $this->belongsTo('App\Country');
-  }
+    // Получаем автора
+    public function author()
+    {
+        return $this->belongsTo('App\User', 'author_id');
+    }
 
-  // Получаем еденицу измерения
-  public function unit()
-  {
-    return $this->belongsTo('App\Unit');
-  }
+    // Получаем страну
+    public function country()
+    {
+        return $this->belongsTo('App\Country');
+    }
 
-  // Получаем альбом
-  public function album()
-  {
-     return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'product');
-  }
+    // Получаем еденицу измерения
+    public function unit()
+    {
+        return $this->belongsTo('App\Unit');
+    }
 
-  public function photo()
-  {
-    return $this->belongsTo('App\Photo');
-  }
+    // Получаем альбом
+    public function album()
+    {
+        return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'product');
+    }
+
+    public function photo()
+    {
+        return $this->belongsTo('App\Photo');
+    }
 }

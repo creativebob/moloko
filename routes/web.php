@@ -28,13 +28,17 @@ Route::any('/getaccess', 'GetAccessController@set')->middleware('auth')->name('g
 // Директории
 Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');
 
+// -------------------------------------- Пользователи ------------------------------------------------
 Route::resource('/users', 'UserController')->middleware('auth');
+// Сортировка пользователей
+Route::post('/users_sort', 'UserController@users_sort')->middleware('auth');
 
 
 // ---------------------------------- Категории альбомов -------------------------------------------
-Route::resource('/albums_categories', 'AlbumsCategoryController')->middleware('auth');
 // Текущая добавленная/удаленная категория альбомов
-Route::any('/get_albums_categories', 'AlbumsCategoryController@get_content')->middleware('auth');
+Route::any('/albums_categories', 'AlbumsCategoryController@index')->middleware('auth');
+// ОСновные методы
+Route::resource('/albums_categories', 'AlbumsCategoryController')->middleware('auth');
 // Проверка на существование категории альбомов
 Route::post('/albums_category_check', 'AlbumsCategoryController@albums_category_check')->middleware('auth');
 // Select категорий альбомов
@@ -89,9 +93,10 @@ Route::post('/products_import', 'ProductController@products_import');
 
 
 // ------------------------------------ Категории продукции --------------------------------------
-Route::resource('/products_categories', 'ProductsCategoryController')->middleware('auth');
 // Текущая добавленная/удаленная категория продукции
-Route::any('/get_products_categories', 'ProductsCategoryController@get_content')->middleware('auth');
+Route::any('/products_categories', 'ProductsCategoryController@index')->middleware('auth');
+// Основые методы
+Route::resource('/products_categories', 'ProductsCategoryController')->middleware('auth');
 // Проверка на существование категории продукции
 Route::post('/products_category_check', 'ProductsCategoryController@products_category_check')->middleware('auth');
 // Select категорий продукции
@@ -103,6 +108,8 @@ Route::post('/products_categories_sort', 'ProductsCategoryController@products_ca
 Route::resource('/companies', 'CompanyController')->middleware('auth');
 // Проверка существования компании в базе по ИНН
 Route::post('/companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');
+// Сортировка компаний
+Route::post('/companies_sort', 'CompanyController@companies_sort')->middleware('auth');
 
 // Маршруты для правил доступа
 Route::resource('/rights', 'RightController')->middleware('auth');
@@ -151,9 +158,10 @@ Route::resource('/areas', 'AreaController')->middleware('auth');
 Route::post('/areas_sort', 'AreaController@areas_sort')->middleware('auth');
 
 // ----------------------------------- Населенные пункты -------------------------------------------
-Route::resource('/cities', 'CityController')->middleware('auth');
 // Текущий добавленный/удаленный город
-Route::any('/get_cities', 'CityController@get_content')->middleware('auth');
+Route::any('/cities', 'CityController@index')->middleware('auth');
+// Основные методы
+Route::resource('/cities', 'CityController')->middleware('auth');
 // Проверка на существование города
 Route::post('/city_check', 'CityController@city_check')->middleware('auth');
 // Сортировка населенных пунктов
@@ -167,9 +175,10 @@ Route::post('/city_vk', 'CityController@get_vk_city')->middleware('auth');
 Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
 
 // ----------------------------------------- Филиалы и отделы --------------------------------------
+// Текущий добавленный/удаленный отдел/филиал
+Route::any('/departments', 'DepartmentController@index')->middleware('auth');
+// Основные методы
 Route::resource('/departments', 'DepartmentController')->middleware('auth');
-// Текущий добавленный/удаленный сектор
-Route::any('/get_departments', 'DepartmentController@get_content')->middleware('auth');
 // Текущий добавленный/удаленный отдел
 Route::get('/current_department/{section_id}/{item_id}', 'DepartmentController@current_department')->middleware('auth');
 // Проверка на существование филиала/отдела
@@ -183,17 +192,24 @@ Route::post('/departments_sort', 'DepartmentController@departments_sort')->middl
 Route::resource('/positions', 'PositionController')->middleware('auth');
 // Список отделов филиала и доступных должностей
 Route::post('/positions_list', 'PositionController@positions_list')->middleware('auth');
+// Сортировка должностей
+Route::post('/positions_sort', 'PositionController@positions_sort')->middleware('auth');
 
 // -------------------------------------- Штат компании ---------------------------------------------
 Route::resource('/staff', 'StafferController')->middleware('auth');
+// Сортировка штата
+Route::post('/staff_sort', 'StafferController@staff_sort')->middleware('auth');
 
 // --------------------------------------- Сотрудники ---------------------------------------------
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
+// Сортировка сотрудников
+Route::post('/employees_sort', 'EmployeeController@employees_sort')->middleware('auth');
 
 // ----------------------------------------- Секторы -----------------------------------------------
-Route::resource('/sectors', 'SectorController')->middleware('auth');
 // Текущий добавленный/удаленный сектор
-Route::any('/get_sectors', 'SectorController@get_content')->middleware('auth');
+Route::any('/sectors', 'SectorController@index')->middleware('auth');
+// Основные методы
+Route::resource('/sectors', 'SectorController')->middleware('auth');
 // Проверка на существование сектора
 Route::post('/sector_check', 'SectorController@sector_check')->middleware('auth');
 // Select секторов
@@ -218,6 +234,8 @@ Route::delete('/sites/{id}', 'SiteController@destroy')->middleware('auth')->name
 Route::get('/sites/{alias}', 'SiteController@sections')->middleware('auth')->name('sites.sections');
 // Проверка на существование домена сайта
 Route::post('/site_check', 'SiteController@site_check')->middleware('auth');
+// Сортировка сайтов
+Route::post('/sites_sort', 'SiteController@sites_sort')->middleware('auth');
 
 // Разделы сайта
 Route::prefix('/sites/{alias}')->group(function () {
@@ -228,9 +246,10 @@ Route::prefix('/sites/{alias}')->group(function () {
   Route::post('/page_check', 'PageController@page_check')->middleware('auth');
 
   // --------------------------------------- Навигации --------------------------------------------
-  Route::resource('/navigations', 'NavigationController')->middleware('auth');
   // Текущая добавленная/удаленная навигация
-  Route::any('/get_navigations', 'NavigationController@get_content')->middleware('auth');
+  Route::any('/navigations', 'NavigationController@index')->middleware('auth');
+  // Основные методы
+  Route::resource('/navigations', 'NavigationController')->middleware('auth');
 	// Проверка на существование навигации
   Route::post('/navigation_check', 'NavigationController@navigation_check')->middleware('auth');
 
@@ -242,7 +261,6 @@ Route::prefix('/sites/{alias}')->group(function () {
   // Проверка на существование новости
   Route::post('/news_check', 'NewsController@news_check')->middleware('auth');
 });
-
 
 
 // Сортировка навигаций

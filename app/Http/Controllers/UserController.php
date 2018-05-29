@@ -2,58 +2,60 @@
 
 namespace App\Http\Controllers;
 
+// Модели
 use App\User;
 use App\Position;
 use App\Staffer;
 use App\RoleUser;
 use App\List_item;
-use App\Booklist;
 use App\Photo;
 use App\Location;
-
-use App\Http\Controllers\Session;
-
-// Модели которые отвечают за работу с правами + политики
+use App\Booklist;
 use App\Role;
-use App\Policies\UserPolicy;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Auth;
 
-// Запросы и их валидация
+// Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 
-// Прочие необходимые классы
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
+// Политики
+use App\Policies\UserPolicy;
 
+// Общие классы
+use Illuminate\Support\Facades\Log;
+
+// Специфические классы 
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
+
+// На удаление
+use App\Http\Controllers\Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
 
     // Сущность над которой производит операции контроллер
-  protected $entity_name = 'users';
-  protected $entity_dependence = true;
+    protected $entity_name = 'users';
+    protected $entity_dependence = true;
 
-  public function index(Request $request)
-  {
+    public function index(Request $request)
+    {
 
         // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), User::class);
+        $this->authorize(getmethod(__FUNCTION__), User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-    $users = User::with('roles', 'staff', 'staff.position')  
-    ->moderatorLimit($answer)
-    ->companiesLimit($answer)
+        $users = User::with('roles', 'staff', 'staff.position')  
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям              
@@ -63,8 +65,10 @@ class UserController extends Controller
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        // Запрос для фильтра
         $filter_query = User::with('location.city')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -87,23 +91,11 @@ class UserController extends Controller
 
         $user_auth = $request->user();
 
-        // dd(Storage::disk('public')->get($user_auth->photo));
-
-
-            // dd(public_path('app/public/1/1/1/3/3/3'));
-        // $ava = Storage::disk('public')->get(storage_path('app\public'.$user_auth->photo));
-        // dd($ava);
-
-        // dd(storage_path('app\public'));
-
-        // dd(Storage::disk('public')->url($user_auth->photo));
-        // 
-
         return view('users.index', compact('users', 'page_info', 'filter', 'user'));
-      }
+    }
 
-      public function create(Request $request)
-      {
+    public function create(Request $request)
+    {
 
         $user_auth = $request->user();
 
@@ -128,10 +120,10 @@ class UserController extends Controller
         $page_info = pageInfo($this->entity_name);
 
         return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list', 'page_info'));
-      }
+    }
 
-      public function store(UserRequest $request)
-      {
+    public function store(UserRequest $request)
+    {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), User::class);
@@ -146,18 +138,18 @@ class UserController extends Controller
         $company_id = $user_auth->company_id;
         $filial_id = $request->filial_id;
 
-
         // Пишем локацию
         $location = new Location;
+        $location->country_id = 1;
         $location->city_id = $request->city_id;
         $location->address = $request->address;
         $location->author_id = $user_auth_id;
         $location->save();
 
-        if ($location) {
-          $location_id = $location->id;
+        if($location) {
+            $location_id = $location->id;
         } else {
-          abort(403, 'Ошибка записи адреса');
+            abort(403, 'Ошибка записи адреса');
         }
 
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
@@ -177,7 +169,7 @@ class UserController extends Controller
         $user->phone = cleanPhone($request->phone);
 
         if(($request->extra_phone != Null)&&($request->extra_phone != "")){
-          $user->extra_phone = cleanPhone($request->extra_phone);
+            $user->extra_phone = cleanPhone($request->extra_phone);
         };
 
         $user->telegram_id = $request->telegram_id;
@@ -200,7 +192,7 @@ class UserController extends Controller
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
-          $user->moderation = 1;
+            $user->moderation = 1;
         }
 
         // Пишем ID компании авторизованного пользователя
@@ -210,7 +202,6 @@ class UserController extends Controller
         // Пишем ID филиала авторизованного пользователя
         if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
         $user->filial_id = $filial_id;
-
 
         // Создаем папку в файловой системе
         // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'avatars';
@@ -227,89 +218,92 @@ class UserController extends Controller
 
         $company_id = $user_auth->company_id;
         if ($user_auth->god == 1) {
-      // Если бог, то ставим автором робота
-          $user_id = 1;
-          $company_id = null;
+
+            // Если бог, то ставим автором робота
+            $user_id = 1;
+            $company_id = null;
         } else {
-          $user_id = $user_auth->id;
+            $user_id = $user_auth->id;
         }
 
         if ($request->hasFile('photo')) {
-          $photo = new Photo;
-          $image = $request->file('photo');
-          $directory = $user_auth->company->id.'/media/albums/'.$user->login.'/img/';
-          $extension = $image->getClientOriginalExtension();
-          $photo->extension = $extension;
-          $image_name = 'avatar.'.$extension;
+            $photo = new Photo;
+            $image = $request->file('photo');
+            $directory = $user_auth->company->id.'/media/albums/'.$user->login.'/img/';
+            $extension = $image->getClientOriginalExtension();
+            $photo->extension = $extension;
+            $image_name = 'avatar.'.$extension;
 
-          // $photo->path = '/'.$directory.'/'.$image_name;
+            // $photo->path = '/'.$directory.'/'.$image_name;
 
-          $params = getimagesize($request->file('photo'));
-          $photo->width = $params[0];
-          $photo->height = $params[1];
+            $params = getimagesize($request->file('photo'));
+            $photo->width = $params[0];
+            $photo->height = $params[1];
 
-          $size = filesize($request->file('photo'))/1024;
-          $photo->size = number_format($size, 2, '.', '');
+            $size = filesize($request->file('photo'))/1024;
+            $photo->size = number_format($size, 2, '.', '');
 
-          $photo->name = $image_name;
-          $photo->company_id = $company_id;
-          $photo->author_id = $user_id;
-          $photo->save();
+            $photo->name = $image_name;
+            $photo->company_id = $company_id;
+            $photo->author_id = $user_id;
+            $photo->save();
 
-          $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
+            $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
 
-          $avater = Image::make($request->photo)->widen(30);
-          $save_path = storage_path('app/public/'.$directory);
-          if (!file_exists($save_path)) {
-            mkdir($save_path, 666, true);
-          }
-          $avater->save(storage_path('app/public/'.$directory.$image_name));
+            $avater = Image::make($request->photo)->widen(30);
+            $save_path = storage_path('app/public/'.$directory);
+            if (!file_exists($save_path)) {
+                mkdir($save_path, 666, true);
+            }
+            $avater->save(storage_path('app/public/'.$directory.$image_name));
 
-          
-
-          $user->photo = $photo->path;
-          $user->photo_id = $photo->id;
+            $user->photo = $photo->path;
+            $user->photo_id = $photo->id;
         }   
 
         $user->save();
+
         if ($user) {
-          // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
-          if (isset($request->access)) {
-            $delete = RoleUser::whereUser_id($user->id)->delete();
+            // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
+            if (isset($request->access)) {
 
-            $mass = [];
-            foreach ($request->access as $string) {
-              $item = explode(',', $string);
+                $delete = RoleUser::whereUser_id($user->id)->delete();
 
-              if ($item[2] == 'null') {
-                $position = null;
-              } else {
-                $position = $item[2];
-              }
+                $mass = [];
+                foreach ($request->access as $string) {
+                    $item = explode(',', $string);
 
-              $mass[] = [
-                'role_id' => $item[0],
-                'department_id' => $item[1],
-                'user_id' => $user->id,
-                'position_id' => $position,
-              ];
+                    if ($item[2] == 'null') {
+                    $position = null;
+                    } else {
+                    $position = $item[2];
+                    }
+
+                    $mass[] = [
+                    'role_id' => $item[0],
+                    'department_id' => $item[1],
+                    'user_id' => $user->id,
+                    'position_id' => $position,
+                    ];
+                }
+
+                // dd($mass);
+                DB::table('role_user')->insert($mass);
+
+            } else {
+                // Если удалили последнюю роль для должности и пришел пустой массив
+                $delete = RoleUser::whereUser_id($user->id)->delete();
             }
 
-          // dd($mass);
-            DB::table('role_user')->insert($mass);
+            return redirect('users');
 
-          } else {
-            // Если удалили последнюю роль для должности и пришел пустой массив
-            $delete = RoleUser::whereUser_id($user->id)->delete();
-          }
-          return redirect('users');
         } else {
-          abort(403, 'Ошибка при обновлении пользователя!');
+            abort(403, 'Ошибка при обновлении пользователя!');
         }
-      }
+    }
 
-      public function show(Request $request, $id)
-      {
+    public function show(Request $request, $id)
+    {
 
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::moderatorLimit($answer)->findOrFail($id);
@@ -337,10 +331,10 @@ class UserController extends Controller
         ->pluck('name', 'id');
 
         return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
-      }
+    }
 
-      public function edit(Request $request, $id)
-      {
+    public function edit(Request $request, $id)
+    {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -370,12 +364,12 @@ class UserController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
         // dd($user);
-        
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info'));
-      }
 
-      public function update(UserRequest $request, $id)
-      {
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info'));
+    }
+
+    public function update(UserRequest $request, $id)
+    {
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
         $user_auth_id = hideGod($user_auth);
@@ -386,24 +380,23 @@ class UserController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::with('location', 'company', 'photo')->moderatorLimit($answer)->findOrFail($id);
 
-
         $filial_id = $request->filial_id;
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
 
-
         // Пишем локацию
         $location = $user->location;
         if($location->city_id != $request->city_id) {
-          $location->city_id = $request->city_id;
-          $location->editor_id = $user_auth_id;
-          $location->save();
+            $location->city_id = $request->city_id;
+            $location->editor_id = $user_auth_id;
+            $location->save();
         }
-        if($location->address = $request->address) {
-          $location->address = $request->address;
-          $location->editor_id = $user_auth_id;
-          $location->save();
+
+        if($location->address != $request->address) {
+            $location->address = $request->address;
+            $location->editor_id = $user_auth_id;
+            $location->save();
         }
 
         $user->login = $request->login;
@@ -420,7 +413,7 @@ class UserController extends Controller
         $user->phone = cleanPhone($request->phone);
 
         if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-          $user->extra_phone = cleanPhone($request->extra_phone);
+            $user->extra_phone = cleanPhone($request->extra_phone);
         } else {$user->extra_phone = NULL;};
 
         $user->telegram_id = $request->telegram_id;
@@ -435,7 +428,7 @@ class UserController extends Controller
         $user->passport_date = $request->passport_date;
 
         $user->user_type = $request->user_type;
-        
+
         $user->lead_id = $request->lead_id;
         $user->employee_id = $request->employee_id;
         $user->access_block = $request->access_block;
@@ -443,49 +436,48 @@ class UserController extends Controller
         $user->filial_id = $request->filial_id;
 
 
-
         $company_id = $user_auth->company_id;
         if ($user_auth->god == 1) {
-      // Если бог, то ставим автором робота
-          $user_id = 1;
-          $company_id = null;
+            // Если бог, то ставим автором робота
+            $user_id = 1;
+            $company_id = null;
         } else {
-          $user_id = $user_auth->id;
+            $user_id = $user_auth->id;
         }
 
         if ($request->hasFile('photo')) {
-          $photo = new Photo;
-          $image = $request->file('photo');
-          $directory = $user_auth->company->id.'/media/albums/'.$user->login.'/img/';
-          $extension = $image->getClientOriginalExtension();
-          $photo->extension = $extension;
-          $image_name = 'avatar.'.$extension;
+            $photo = new Photo;
+            $image = $request->file('photo');
+            $directory = $user_auth->company->id.'/media/albums/'.$user->login.'/img/';
+            $extension = $image->getClientOriginalExtension();
+            $photo->extension = $extension;
+            $image_name = 'avatar.'.$extension;
 
-          // $photo->path = '/'.$directory.'/'.$image_name;
+            // $photo->path = '/'.$directory.'/'.$image_name;
 
-          $params = getimagesize($request->file('photo'));
-          $photo->width = $params[0];
-          $photo->height = $params[1];
+            $params = getimagesize($request->file('photo'));
+            $photo->width = $params[0];
+            $photo->height = $params[1];
 
-          $size = filesize($request->file('photo'))/1024;
-          $photo->size = number_format($size, 2, '.', '');
+            $size = filesize($request->file('photo'))/1024;
+            $photo->size = number_format($size, 2, '.', '');
 
-          $photo->name = $image_name;
-          $photo->company_id = $company_id;
-          $photo->author_id = $user_id;
-          $photo->save();
+            $photo->name = $image_name;
+            $photo->company_id = $company_id;
+            $photo->author_id = $user_id;
+            $photo->save();
 
-          $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
+            $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
 
-          $avater = Image::make($request->photo)->widen(30);
-          $save_path = storage_path('app/public/'.$directory);
-          if (!file_exists($save_path)) {
-            mkdir($save_path, 666, true);
-          }
-          $avater->save(storage_path('app/public/'.$directory.$image_name));
+            $avater = Image::make($request->photo)->widen(30);
+            $save_path = storage_path('app/public/'.$directory);
+            if (!file_exists($save_path)) {
+                mkdir($save_path, 666, true);
+            }
+            $avater->save(storage_path('app/public/'.$directory.$image_name));
 
-          // $user->photo = $photo->path;
-          $user->photo_id = $photo->id;
+            // $user->photo = $photo->path;
+            $user->photo_id = $photo->id;
         }   
 
         // Модерируем (Временно)
@@ -496,44 +488,47 @@ class UserController extends Controller
         // dd($request->access);
 
         if ($user) {
-          // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
-          if (isset($request->access)) {
-            $delete = RoleUser::whereUser_id($user->id)->delete();
 
-            $mass = [];
-            foreach ($request->access as $string) {
-              $item = explode(',', $string);
+            // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
+            if (isset($request->access)) {
 
-              if ($item[2] == 'null') {
-                $position = null;
-              } else {
-                $position = $item[2];
-              }
+                $delete = RoleUser::whereUser_id($user->id)->delete();
+                $mass = [];
+                foreach ($request->access as $string) {
 
-              $mass[] = [
-                'role_id' => $item[0],
-                'department_id' => $item[1],
-                'user_id' => $user->id,
-                'position_id' => $position,
-              ];
+                    $item = explode(',', $string);
+                    if ($item[2] == 'null') {
+                        $position = null;
+                    } else {
+                        $position = $item[2];
+                    }
+
+                    $mass[] = [
+                        'role_id' => $item[0],
+                        'department_id' => $item[1],
+                        'user_id' => $user->id,
+                        'position_id' => $position,
+                    ];
+                }
+
+                // dd($mass);
+                DB::table('role_user')->insert($mass);
+
+            } else {
+                // Если удалили последнюю роль для должности и пришел пустой массив
+                $delete = RoleUser::whereUser_id($user->id)->delete();
             }
 
-          // dd($mass);
-            DB::table('role_user')->insert($mass);
+            return redirect('users');
 
-          } else {
-        // Если удалили последнюю роль для должности и пришел пустой массив
-            $delete = RoleUser::whereUser_id($user->id)->delete();
-          }
-          return redirect('users');
         } else {
-          abort(403, 'Ошибка при обновлении пользователя!');
+            abort(403, 'Ошибка при обновлении пользователя!');
         }
 
-      }
+    }
 
-      public function destroy(Request $request, $id)
-      {
+    public function destroy(Request $request, $id)
+    {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -548,15 +543,30 @@ class UserController extends Controller
         $user = User::moderatorLimit($answer)->where('id', $id)->delete();
 
         if($user) {return Redirect('/users');} else {abort(403,'Что-то пошло не так!');};
-      }
+    }
+
+    // Сортировка
+    public function users_sort(Request $request)
+    {
+
+        $result = '';
+        $i = 1;
+        foreach ($request->users as $item) {
+
+            $users = User::findOrFail($item);
+            $users->sort = $i;
+            $users->save();
+            $i++;
+        }
+    }
 
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------------
     // СПЕЦИФИЧЕСКИЕ МЕТОДЫ СУЩНОСТИ
     // --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-      public function getauthcompany($company_id)
-      {
+    public function getauthcompany($company_id)
+    {
 
         // Только для бога
         $this->authorize('god', User::class);
@@ -566,21 +576,21 @@ class UserController extends Controller
         $auth_user->save();
 
         return redirect('/getaccess');
-      }
+    }
 
-      public function getauthuser($user_id)
-      {
+    public function getauthuser($user_id)
+    {
 
         // Только для бога
         $this->authorize('god', User::class);
         session(['god' => Auth::user()->id]);
         Auth::loginUsingId($user_id);
         return redirect('/getaccess');
-      }
+    }
 
-      public function getgod()
-      {
-            // Только для бога
+    public function getgod()
+    {
+        // Только для бога
         $this->authorize('god', User::class);
 
         $user = User::findOrFail(Auth::user()->id);
@@ -588,19 +598,19 @@ class UserController extends Controller
         $user->save();
 
         return redirect('/getaccess');
-      }
+    }
 
-      public function returngod(Request $request)
-      {
+    public function returngod(Request $request)
+    {
 
         if ($request->session()->has('god')) {
 
-          $god_id = $request->session()->get('god');
-          $request->session()->forget('god');
-          Auth::loginUsingId($god_id);
+        $god_id = $request->session()->get('god');
+        $request->session()->forget('god');
+        Auth::loginUsingId($god_id);
         }
 
         return redirect('/getaccess');
-      }
-
     }
+
+}

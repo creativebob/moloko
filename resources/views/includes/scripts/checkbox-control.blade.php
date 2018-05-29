@@ -36,7 +36,7 @@
 	        var entity_alias = parent.attr('id').split('-')[0];
 	        var item_entity = parent.attr('id').split('-')[1];
 
-	      	alert(entity_alias + ' - ' + item_entity);
+	      	// alert(entity_alias + ' - ' + item_entity);
 	      	
 	        // Если есть кнопка группового изменения чекбоксов
 	    	if(checkall != null){

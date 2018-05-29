@@ -24,8 +24,8 @@ class SitesTableSeeder extends Seeder
         	],
             [
                 'name' => 'Ворота "Марс"',
-                'domain' => 'vkmars',
-                'alias' => 'vkmars',
+                'domain' => 'vorotamars.ru',
+                'alias' => 'vorotamars',
                 'company_id' => 1,
                 'author_id' => 4,
                 'system_item' => null,
