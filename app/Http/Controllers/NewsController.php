@@ -68,6 +68,8 @@ class NewsController extends Controller
     ->orderBy('publish_begin_date', 'desc')
     ->paginate(30);
 
+    // dd($news);
+
     $filter_query = News::with('author', 'cities')
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
@@ -272,27 +274,29 @@ class NewsController extends Controller
 
       $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
 
+      $settings = config()->get('settings');
+
       // $small = Image::make($request->photo)->grab(150, 99);
-      $small = Image::make($request->photo)->widen(150);
+      $small = Image::make($request->photo)->widen($settings['img_small_width']->value);
       $save_path = storage_path('app/public/'.$directory.'small');
       if (!file_exists($save_path)) {
-        mkdir($save_path, 666, true);
+        mkdir($save_path, 755, true);
       }
       $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
 
       // $medium = Image::make($request->photo)->grab(900, 596);
-      $medium = Image::make($request->photo)->widen(900);
+      $medium = Image::make($request->photo)->widen($settings['img_medium_width']->value);
       $save_path = storage_path('app/public/'.$directory.'medium');
       if (!file_exists($save_path)) {
-        mkdir($save_path, 666, true);
+        mkdir($save_path, 755, true);
       }
       $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
 
       // $large = Image::make($request->photo)->grab(1200, 795);
-      $large = Image::make($request->photo)->widen(1200);
+      $large = Image::make($request->photo)->widen($settings['img_large_width']->value);
       $save_path = storage_path('app/public/'.$directory.'large');
       if (!file_exists($save_path)) {
-        mkdir($save_path, 666, true);
+        mkdir($save_path, 755, true);
       }
       $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
 
@@ -440,6 +444,7 @@ class NewsController extends Controller
 
   public function update(NewsRequest $request, $alias, $id)
   {
+      // dd($request);
     // dd($request->albums[0]);
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -490,7 +495,7 @@ class NewsController extends Controller
       $small = Image::make($request->photo)->widen($settings['img_small_width']->value);
       $save_path = storage_path('app/public/'.$directory.'small');
       if (!file_exists($save_path)) {
-        mkdir($save_path, 666, true);
+        mkdir($save_path, 755, true);
       }
       $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
 
@@ -498,7 +503,7 @@ class NewsController extends Controller
       $medium = Image::make($request->photo)->widen($settings['img_medium_width']->value);
       $save_path = storage_path('app/public/'.$directory.'medium');
       if (!file_exists($save_path)) {
-        mkdir($save_path, 666, true);
+        mkdir($save_path, 755, true);
       }
       $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
 
@@ -506,7 +511,7 @@ class NewsController extends Controller
       $large = Image::make($request->photo)->widen($settings['img_large_width']->value);
       $save_path = storage_path('app/public/'.$directory.'large');
       if (!file_exists($save_path)) {
-        mkdir($save_path, 666, true);
+        mkdir($save_path, 755, true);
       }
       $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
 
@@ -747,7 +752,7 @@ class NewsController extends Controller
       ->where('publish_end_date', '>', Carbon::now());
     }, 'news.cities' => function($query) use ($city) {
       $query->whereAlias($city);
-    }, 'news.company', 'news.author', 'news.photo'])->where('api_token', $token)->first();
+    }, 'news.company', 'news.author.staff.position', 'news.photo'])->where('api_token', $token)->first();
 
     if ($site) {
         // return Cache::forever($domen.'-news', $site, function() use ($city, $token) {
@@ -774,7 +779,7 @@ class NewsController extends Controller
   // Показываем новость на сайте
   public function api_show(Request $request, $city, $link)
   {
-    $site = Site::with(['news.author', 'news.author.staff', 'news' => function ($query) use ($link) {
+    $site = Site::with(['news.author', 'news' => function ($query) use ($link) {
       $query->where(['alias' => $link, 'display' => 1]);
     }])->where('api_token', $request->token)->first();
     if ($site) {

@@ -39,7 +39,7 @@ class Navigation extends Model
     
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'navigation_name',
+        'name',
         'site_id',
         'company_id',
     ];

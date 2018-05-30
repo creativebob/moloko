@@ -69,7 +69,7 @@
           <td class="td-author">@if(isset($album->author->first_name)) {{ $album->author->first_name . ' ' . $album->author->second_name }} @endif</td>
 
           <td class="td-delete">
-            @if ($album->system_item != 1)
+            @if (($album->system_item != 1) && ($album->photos_count == 0))
               @can('delete', $album)
               <a class="icon-delete sprite" data-open="item-delete"></a>
               @endcan

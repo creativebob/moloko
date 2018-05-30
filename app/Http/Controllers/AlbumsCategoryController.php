@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AlbumsCategoryController extends Controller
 {
+
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'albums_categories';
     protected $entity_dependence = false;
@@ -47,74 +48,33 @@ class AlbumsCategoryController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        // Создаем массив где ключ массива является ID меню
-        $albums_categories_rights = [];
-        $albums_categories_rights = $albums_categories->keyBy('id');
-
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Проверяем права на редактирование и удаление
-        $albums_categories_id = [];
-
-        foreach ($albums_categories_rights as $albums_category) {
-            $edit = 0;
-            $delete = 0;
-            if ($user->can('update', $albums_category)) {
-                $edit = 1;
-            };
-            if ($user->can('delete', $albums_category)) {
-                $delete = 1;
-            };
-            $albums_category_right = $albums_category->toArray();
-            $albums_categories_id[$albums_category_right['id']] = $albums_category_right;
-            $albums_categories_id[$albums_category_right['id']]['edit'] = $edit;
-            $albums_categories_id[$albums_category_right['id']]['delete'] = $delete;
-        };
-
-        // dd($albums_categories_id);
-        // Функция построения дерева из массива от Tommy Lacroix
-        $albums_categories_tree = [];
-
-        foreach ($albums_categories_id as $id => &$node) {   
-            // Если нет вложений
-            if (!$node['parent_id']){
-            $albums_categories_tree[$id] = &$node;
-            } else { 
-            // Если есть потомки то перебераем массив
-            $albums_categories_id[$node['parent_id']]['children'][$id] = &$node;
-            }
-        };
-
-        foreach ($albums_categories_tree as $albums_category) {
-            $count = 0;
-            if (isset($albums_category['children'])) {
-                $count = count($albums_category['children']) + $count;
-            };
-            $albums_categories_tree[$albums_category['id']]['count'] = $count;
-        };
+        // Получаем массив с вложенными элементами дял отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
+        $albums_categories_tree = get_index_tree_with_rights($albums_categories, $user);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        // dd($albums_categories_tree);
-
         // Отдаем Ajax
-        if($request->ajax()) {
+        if ($request->ajax()) {
             return view('albums_categories.category-list', ['albums_categories_tree' => $albums_categories_tree, 'id' => $request->id]);
         }
+
         // Отдаем на шаблон
         return view('albums_categories.index', compact('albums_categories_tree', 'page_info'));
     }
 
-
     public function create(Request $request)
     {
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), AlbumsCategory::class);
 
         $albums_category = new AlbumsCategory;
 
+        // Если добавляем вложенный элемент
         if (isset($request->parent_id)) {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -131,8 +91,7 @@ class AlbumsCategoryController extends Controller
             ->toArray();
 
             // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $albums_categories_list = get_select_with_tree($albums_categories, $request->parent_id, null, null);
-
+            $albums_categories_list = get_select_tree($albums_categories, $request->parent_id, null, null);
             // echo $albums_categories_list;
 
             return view('albums_categories.create-medium', ['albums_category' => $albums_category, 'albums_categories_list' => $albums_categories_list]);
@@ -141,7 +100,6 @@ class AlbumsCategoryController extends Controller
             return view('albums_categories.create-first', ['albums_category' => $albums_category]);
         }
     }
-
 
     public function store(AlbumsCategoryRequest $request)
     {
@@ -154,9 +112,6 @@ class AlbumsCategoryController extends Controller
 
         // Смотрим компанию пользователя
         $company_id = $user->company_id;
-        if($company_id == null) {
-            abort(403, 'Необходимо авторизоваться под компанией');
-        }
 
         // Скрываем бога
         $user_id = hideGod($user);
@@ -168,33 +123,33 @@ class AlbumsCategoryController extends Controller
 
         // Модерация и системная запись
         $albums_category->system_item = $request->system_item;
-        $albums_category->moderation = $request->moderation;
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        if ($answer['automoderate'] == false){
+            $navigation->moderation = 1;
+        }
 
         // Смотрим что пришло
         // Если категория
         if ($request->first_item == 1) {
-            $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
-            $last = mb_substr($request->name,1);//все кроме первой буквы
-            $first = mb_strtoupper($first, 'UTF-8');
-            $last = mb_strtolower($last, 'UTF-8');
-            $albums_category_name = $first.$last;
-            $albums_category->name = $albums_category_name;
             $albums_category->category_status = 1;
         }
 
         // Если категория альбомов
         if ($request->medium_item == 1) {
-            $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
-            $last = mb_substr($request->name,1);//все кроме первой буквы
-            $first = mb_strtoupper($first, 'UTF-8');
-            $last = mb_strtolower($last, 'UTF-8');
-            $albums_category_name = $first.$last;
-            $albums_category->name = $albums_category_name;
             $albums_category->parent_id = $request->parent_id;
         }
+
+        // Делаем заглавной первую букву
+        $albums_category->name = get_first_letter($request->name);
+
         $albums_category->save();
 
         if ($albums_category) {
+
             // Переадресовываем на index
             return redirect()->action('AlbumsCategoryController@index', ['id' => $albums_category->id]);
         } else {
@@ -205,12 +160,10 @@ class AlbumsCategoryController extends Controller
         }
     }
 
-
     public function show($id)
     {
-        
+        //
     }
-
 
     public function edit($id)
     {
@@ -226,7 +179,7 @@ class AlbumsCategoryController extends Controller
 
         if ($albums_category->category_status == 1) {
 
-            // Меняем индустрию
+            // Меняем категорию
             return view('albums_categories.edit-first', ['albums_category' => $albums_category]);
         } else {
 
@@ -235,18 +188,20 @@ class AlbumsCategoryController extends Controller
 
             // Главный запрос
             $albums_categories = AlbumsCategory::moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer) // Фильтр по системным записям
             ->orderBy('sort', 'asc')
             ->get(['id','name','category_status','parent_id'])
             ->keyBy('id')
             ->toArray();
 
             // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $albums_categories_list = get_select_with_tree($albums_categories, $albums_category->parent_id, null, $albums_category->id);
+            $albums_categories_list = get_select_tree($albums_categories, $albums_category->parent_id, null, $albums_category->id);
 
             return view('albums_categories.edit-medium', ['albums_category' => $albums_category, 'albums_categories_list' => $albums_categories_list]);
         }
     }
-
 
     public function update(AlbumsCategoryRequest $request, $id)
     {
@@ -263,52 +218,29 @@ class AlbumsCategoryController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-        if($company_id == null) {
-            abort(403, 'Необходимо авторизоваться под компанией');
-        }
-
         // Скрываем бога
         $user_id = hideGod($user);
 
         // Модерация и системная запись
         $albums_category->system_item = $request->system_item;
         $albums_category->moderation = $request->moderation;
+
         $albums_category->parent_id = $request->parent_id;
         $albums_category->editor_id = $user_id;
 
-        // Если индустрия
-        if ($request->first_item == 1) {
-            $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
-            $last = mb_substr($request->name,1);//все кроме первой буквы
-            $first = mb_strtoupper($first, 'UTF-8');
-            $last = mb_strtolower($last, 'UTF-8');
-            $albums_category_name = $first.$last;
-            $albums_category->name = $albums_category_name;
-        }
-
-        // Если сектор
-        if ($request->medium_item == 1) {
-            $first = mb_substr($request->name,0,1, 'UTF-8');//первая буква
-            $last = mb_substr($request->name,1);//все кроме первой буквы
-            $first = mb_strtoupper($first, 'UTF-8');
-            $last = mb_strtolower($last, 'UTF-8');
-            $albums_category_name = $first.$last;
-            $albums_category->name = $albums_category_name;
-
-        }
+        // Делаем заглавной первую букву
+        $albums_category->name = get_first_letter($request->name);
 
         $albums_category->save();
 
         if ($albums_category) {
 
-        // Переадресовываем на index
-        return redirect()->action('AlbumsCategoryController@index', ['id' => $albums_category->id]);
+            // Переадресовываем на index
+            return redirect()->action('AlbumsCategoryController@index', ['id' => $albums_category->id]);
         } else {
-        $result = [
-            'error_status' => 1,
-            'error_message' => 'Ошибка при записи сектора!'
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при записи сектора!'
             ];
         }
     }
@@ -333,15 +265,16 @@ class AlbumsCategoryController extends Controller
         // Получаем авторизованного пользователя
         $user = $request->user();
 
-        // Если содержит, то даем сообщенеи об ошибке
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        // Если содержит, то даем сообщение об ошибке
         if ($albums_category_parent) {
 
-            // Если содержит, то даем сообщенеи об ошибке
             $result = [
                 'error_status' => 1,
                 'error_message' => 'Данная область содержит населенные пункты, удаление невозможно'
             ];
-
         } else {
 
             // Если нет, мягко удаляем
@@ -351,10 +284,9 @@ class AlbumsCategoryController extends Controller
                 $parent = $albums_category->parent_id;
             }
 
-            $albums_category->editor_id = $user->id;
+            $albums_category->editor_id = $user_id;
             $albums_category->save();
 
-            // Если нет, мягко удаляем
             $albums_category = AlbumsCategory::destroy($id);
 
             if ($albums_category) {
@@ -383,14 +315,15 @@ class AlbumsCategoryController extends Controller
         // Если такое название есть
         if ($albums_category) {
             $result = [
-            'error_status' => 1,
+                'error_status' => 1,
             ];
+
             // Если нет
         } else {
             $result = [
-            'error_status' => 0
+                'error_status' => 0
             ];
-        };
+        }
 
         return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
@@ -404,16 +337,18 @@ class AlbumsCategoryController extends Controller
 
         // Главный запрос
         $albums_categories = AlbumsCategory::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
         ->get(['id','name','category_status','parent_id'])
         ->keyBy('id')
         ->toArray();
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $albums_categories_list = get_select_with_tree($albums_categories, $request->parent, null, $request->id);
+        $albums_categories_list = get_select_tree($albums_categories, $request->parent, null, $request->id);
 
         // Отдаем ajax
         echo json_encode($albums_categories_list, JSON_UNESCAPED_UNICODE);
-
         // dd($albums_categories_list);
     }
 
@@ -430,6 +365,5 @@ class AlbumsCategoryController extends Controller
             $albums_category->save();
             $i++;
         }
-
     }
 }

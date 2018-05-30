@@ -25,7 +25,7 @@
       <td>-</td>
       <td>
         <div class="small-12 medium-6 cell">
-            @include('includes.inputs.time', ['value'=>$worktime[2]['begin'], 'name'=>'tue_end', 'required'=>''])
+            @include('includes.inputs.time', ['value'=>$worktime[2]['end'], 'name'=>'tue_end', 'required'=>''])
         </div>
       </td>
     </tr>

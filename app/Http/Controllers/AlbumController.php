@@ -87,7 +87,7 @@ class AlbumController extends Controller
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // --------------------------------------------------------------------------------------------------------------------------------------
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -101,9 +101,6 @@ class AlbumController extends Controller
 
         // Подключение политики
         $this->authorize(__FUNCTION__, Album::class);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $album = new Album;
 
@@ -122,7 +119,7 @@ class AlbumController extends Controller
         ->toArray();
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $albums_categories_list = get_select_with_tree($albums_categories, null, null, null);
+        $albums_categories_list = get_select_tree($albums_categories, null, null, null);
         // dd($albums_categories_list);
 
         // Инфо о странице
@@ -247,7 +244,7 @@ class AlbumController extends Controller
         ->toArray();
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $albums_categories_list = get_select_with_tree($albums_categories, $album->albums_category_id, null, null);
+        $albums_categories_list = get_select_tree($albums_categories, $album->albums_category_id, null, null);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -300,12 +297,12 @@ class AlbumController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $album = Album::with('photos')->moderatorLimit($answer)->findOrFail($id);
+        $album = Album::with('photos')->withCount('photos')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $album);
 
-        if ($album) {
+        if ($album->photos_count == 0) {
 
             $user = $request->user();
 

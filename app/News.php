@@ -48,7 +48,7 @@ class News extends Model
             return $value;
         } else {
             $date_parts = explode('.', $value);
-            $this->attributes['date_publish_begin'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+            $this->attributes['publish_begin_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
         };
     }
 
@@ -67,7 +67,7 @@ class News extends Model
             return $value;
         } else {
             $date_parts = explode('.', $value);
-            $this->attributes['date_publish_end'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+            $this->attributes['publish_end_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
         };
     }
 

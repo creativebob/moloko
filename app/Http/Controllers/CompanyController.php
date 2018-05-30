@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-// Модели для текущей работы
+// Модели
 use App\User;
 use App\Company;
 use App\Page;
@@ -108,7 +108,7 @@ class CompanyController extends Controller
         ->toArray();
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $sectors_list = get_select_with_tree($sectors, null, 1, null);
+        $sectors_list = get_select_tree($sectors, null, 1, null);
         // dd($sectors_list);
 
         // Получаем список стран
@@ -271,7 +271,7 @@ class CompanyController extends Controller
         ->toArray();
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $sectors_list = get_select_with_tree($sectors, $company->sector_id, 1, null);
+        $sectors_list = get_select_tree($sectors, $company->sector_id, 1, null);
 
         if(isset($company->schedules->first()->worktimes)){
             $worktime_mass = $company->schedules->first()->worktimes->keyBy('weekday');
