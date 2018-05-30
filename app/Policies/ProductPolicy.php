@@ -74,6 +74,12 @@ class ProductPolicy
         return $result;
     }
 
+    public function publisher(User $user)
+    {
+        $result = $this->getstatus($this->entity_name, null, 'publisher', $this->entity_dependence);
+        return $result;
+    }
+
     public function god(User $user)
     {
         // dd('lol');
