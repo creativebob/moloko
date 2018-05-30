@@ -99,6 +99,8 @@ class PageController extends Controller
 
   public function store(PageRequest $request, $alias)
   {
+
+    // dd($request);
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Page::class);
 
@@ -126,6 +128,8 @@ class PageController extends Controller
 
     // Системная запись
     $page->system_item = $request->system_item;
+
+    $page->display = $request->display;
 
     $page->name = $request->name;
     $page->title = $request->title;

@@ -130,53 +130,53 @@ trait PoliticTrait
         // Общие проверки права для создания (Для обычного пользователя)
         // Запрещаем создание записей если нет компании или филиала
 
-            if(($method == 'create')&&($user_status == 0)){
+        if(($method == 'create')&&($user_status == 0)){
 
                 // Если нет компании
-                if($company_id == null){
+            if($company_id == null){
                         // abort(403, 'Авторизуйтесь под компанией для создания записи');
-                        return false;
-                } else {
+                return false;
+            } else {
 
-                    if(!isset($session['company_info']['filials'])){
+                if(!isset($session['company_info']['filials'])){
                         // abort(403, 'Для начала необходимо создать филиал! ;)');
-                        return false;
-                    };
+                    return false;
                 };
             };
+        };
 
 
             // Пропускае бога на index
-            if(($method == 'index')&&($user_status == 1)){return true;};
+        if(($method == 'index')&&($user_status == 1)){return true;};
 
             // Получаем массив с правами
-            $mass_right = getRight($method, $entity_name, $session);
+        $mass_right = getRight($method, $entity_name, $session);
 
 
             // Мгновенный результат по следующим методам
-            if(($method == 'index')||($method == 'create')){
+        if(($method == 'index')||($method == 'create')){
 
-                return $mass_right['result'];
-            };
+            return $mass_right['result'];
+        };
 
 
             // Собираем данные для принятия решения
-            $mass_right = getRight('moderator', $entity_name, $session);
-            $moderator_status = $mass_right['result'];
+        $mass_right = getRight('moderator', $entity_name, $session);
+        $moderator_status = $mass_right['result'];
 
-            $mass_right = getRight('automoderate', $entity_name, $session);
-            $automoderate_status = $mass_right['result'];
+        $mass_right = getRight('automoderate', $entity_name, $session);
+        $automoderate_status = $mass_right['result'];
 
 
-            if($entity_dependence == false){
-                $nolimit_status = true;
-            } else {
-                $mass_right = getRight('nolimit', $entity_name, $session);
-                $nolimit_status = $mass_right['result'];
-            };
+        if($entity_dependence == false){
+            $nolimit_status = true;
+        } else {
+            $mass_right = getRight('nolimit', $entity_name, $session);
+            $nolimit_status = $mass_right['result'];
+        };
 
-            $mass_right = getRight('system', $entity_name, $session);
-            $system_status = $mass_right['result'];
+        $mass_right = getRight('system', $entity_name, $session);
+        $system_status = $mass_right['result'];
 
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -336,7 +336,7 @@ trait PoliticTrait
             } else {
 
                 foreach($list_authors as $author){
-                    
+
                     if($author == $model->author){
                         $result_author = true;
                     };

@@ -16,6 +16,8 @@ class CreateCategoryRightsTable extends Migration
         Schema::create('category_rights', function (Blueprint $table) {
             $table->increments('id');
             $table->string('category_right_name')->index()->unique()->comment('Имя категории пользователей');
+            
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 

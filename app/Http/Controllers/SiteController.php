@@ -8,6 +8,7 @@ use App\Page;
 use App\Menu;
 use App\MenuSite;
 use App\Company;
+use App\Department;
 
 // Валидация
 use App\Http\Requests\SiteRequest;
@@ -81,7 +82,7 @@ class SiteController extends Controller
   }
 
 
-  public function create()
+  public function create(Request $request)
   {
 
     // Подключение политики
@@ -98,6 +99,13 @@ class SiteController extends Controller
     // ->authors($answer_menus)
     // ->systemItem($answer_menus) // Фильтр по системным записям
     
+    // Получаем данные для авторизованного пользователя
+    $user = $request->user();
+
+    $filials = Department::where(['filial_status' => 1, 'company_id' => $user->company_id])->get();
+
+
+    // dd($filials);
 
     // dd($menus);
 
@@ -106,7 +114,7 @@ class SiteController extends Controller
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
-    return view('sites.create', compact('site', 'menus', 'page_info'));  
+    return view('sites.create', compact('site', 'menus', 'page_info', 'filials'));  
   }
 
 
@@ -162,6 +170,8 @@ class SiteController extends Controller
         ];
       };
       $site->menus()->attach($sections);
+
+      $site->departments()->attach($request->departments);
       return Redirect('/sites');
     } else {
       abort(403, 'Ошибка записи сайта');
@@ -173,12 +183,25 @@ class SiteController extends Controller
 
   }
 
-  public function edit($alias)
+  public function edit(Request $request, $alias)
   {
+
+    // Получаем данные для авторизованного пользователя
+    $user = $request->user();
 
     // ГЛАВНЫЙ ЗАПРОС:
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-    $site = Site::moderatorLimit($answer)->whereAlias($alias)->first();
+
+    $site = Site::with(['departments', 'company' => function ($query) use ($user) {
+     $query->with(['departments' => function ($query) {
+       $query->where('filial_status', 1);
+     }])->where('id', $user->company_id)->first();
+   }])->moderatorLimit($answer)->whereAlias($alias)->first();
+
+    
+
+    $departments = $site->company->departments;
+    // dd($departments);
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $site);
@@ -193,7 +216,7 @@ class SiteController extends Controller
 
     // dd($site);
 
-    return view('sites.edit', compact('site', 'menus', 'page_info'));
+    return view('sites.edit', compact('site', 'menus', 'page_info', 'departments'));
   }
 
   public function update(SiteRequest $request, $id)
@@ -241,6 +264,8 @@ class SiteController extends Controller
 
         // Синхронизируем с существующими
         $site->menus()->sync($sections);
+
+        $site->departments()->sync($request->departments);
       } else {
         // Если удалили последний раздел для сайта и пришел пустой массив
         $delete = MenuSite::whereSite_id($id)->delete();
@@ -283,18 +308,18 @@ class SiteController extends Controller
   }
 
   // Сортировка
-    public function sites_sort(Request $request)
-    {
-      $result = '';
-      $i = 1;
-      foreach ($request->sites as $item) {
+  public function sites_sort(Request $request)
+  {
+    $result = '';
+    $i = 1;
+    foreach ($request->sites as $item) {
 
-        $sites = Site::findOrFail($item);
-        $sites->sort = $i;
-        $sites->save();
-        $i++;
-      }
+      $sites = Site::findOrFail($item);
+      $sites->sort = $i;
+      $sites->save();
+      $i++;
     }
+  }
 
 
   public function sections($alias)
@@ -341,9 +366,11 @@ class SiteController extends Controller
     $site = Site::where('api_token', $request->token)->first();
     if ($site) {
       // return Cache::remember('site', 1, function() use ($domain) {
-      return Site::with(['company.filials.location.city', 'company.location.city', 'company.schedules.worktimes', 'pages', 'navigations.menus.page', 'navigations.navigations_category', 'navigations' => function ($query) {
+      return Site::with(['departments.location.city', 'company', 'company.schedules.worktimes', 'pages' => function ($query) {
         $query->whereDisplay(1);
-      },'navigations.menus' => function ($query) {
+      }, 'navigations.menus.page', 'navigations.navigations_category', 'navigations' => function ($query) {
+        $query->whereDisplay(1);
+      }, 'navigations.menus' => function ($query) {
         $query->whereDisplay(1)->orderBy('sort', 'asc');
       }])->whereDomain($request->domain)->orderBy('sort', 'asc')->first();
       // });

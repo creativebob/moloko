@@ -20,6 +20,8 @@ class CreateUnitsTable extends Migration
             $table->string('preview')->comment('Сокращенное название');
             $table->string('description')->nullable()->comment('Описание единицы измерения');
 
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');

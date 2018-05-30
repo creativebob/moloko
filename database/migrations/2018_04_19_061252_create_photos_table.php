@@ -32,6 +32,8 @@ class CreatePhotosTable extends Migration
             $table->string('extension')->nullable()->comment('Расширение фото');
 
             $table->integer('photo_access')->nullable()->unsigned()->comment('0 - личный, 1 - публичный');
+
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 

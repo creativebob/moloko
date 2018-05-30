@@ -37,6 +37,14 @@
     </label>
   </div>
 
+  {{-- Чекбокс отображения на сайте --}}
+    @can ('publisher', $page)
+    <div class="small-12 cell checkbox">
+      {{ Form::checkbox('display', 1, $page->display, ['id' => 'display']) }}
+      <label for="display"><span>Отображать на сайте</span></label>
+    </div>
+    @endcan
+
     {{-- Чекбокс модерации --}}
     @can ('moderator', $page)
       @if ($page->moderation == 1)

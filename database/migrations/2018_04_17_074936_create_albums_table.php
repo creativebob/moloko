@@ -31,6 +31,8 @@ class CreateAlbumsTable extends Migration
             
             $table->string('description')->index()->nullable()->comment('Описание альбома');
 
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');

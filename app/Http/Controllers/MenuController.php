@@ -469,7 +469,7 @@ class MenuController extends Controller
         if ($menu) {
 
             // Переадресовываем на index
-            return redirect()->action('NavigationController@get_content', ['id' => $menu->id, 'alias' => $alias, 'item' => 'menu']);
+            return redirect()->action('NavigationController@index', ['id' => $menu->id, 'alias' => $alias, 'item' => 'menu']);
         } else {
             $result = [
                 'error_status' => 1,
@@ -515,7 +515,7 @@ class MenuController extends Controller
             // Удаляем с обновлением
             if ($menu) {
             // Переадресовываем на index
-                return redirect()->action('NavigationController@get_content', ['alias' => $alias, 'id' => $navigation_id, 'item' => 'navigation']);
+                return redirect()->action('NavigationController@index', ['alias' => $alias, 'id' => $navigation_id, 'item' => 'navigation']);
             } else {
                 abort(403, 'Ошибка при удалении меню');
             }
