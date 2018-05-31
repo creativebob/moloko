@@ -49,6 +49,9 @@
           <th class="td-category">Категория</th>
           <th class="td-company-id">Компания</th>
           <th class="td-author">Автор</th>
+          @can ('publisher', App\Product::class)
+          <th class="td-display">Отображение</th>
+          @endcan
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -81,7 +84,15 @@
             <td class="td-category">{{ $product->products_category->name }}</td>
             <td class="td-company-id">@if(!empty($product->company->name)) {{ $product->company->name }} @else @if($product->system_item == null) Шаблон @else Системная @endif @endif</td>
             <td class="td-author">@if(isset($product->author->first_name)) {{ $product->author->first_name . ' ' . $product->author->second_name }} @endif</td>
-
+            @can ('publisher', $product)
+            <td class="td-display">
+              @if ($product['display'] == 1)
+              <span class="system-item">Отображается на сайте</span>
+              @else
+              <span class="no-moderation">Не отображается на сайте</span>
+              @endif
+            </td>
+            @endcan
             <td class="td-delete">
               @if ($product->system_item != 1)
               @can('delete', $product)

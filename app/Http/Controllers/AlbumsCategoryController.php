@@ -143,6 +143,8 @@ class AlbumsCategoryController extends Controller
             $albums_category->parent_id = $request->parent_id;
         }
 
+        $albums_category->display = $request->display;
+
         // Делаем заглавной первую букву
         $albums_category->name = get_first_letter($request->name);
 
@@ -227,6 +229,8 @@ class AlbumsCategoryController extends Controller
 
         $albums_category->parent_id = $request->parent_id;
         $albums_category->editor_id = $user_id;
+
+        $albums_category->display = $request->display;
 
         // Делаем заглавной первую букву
         $albums_category->name = get_first_letter($request->name);

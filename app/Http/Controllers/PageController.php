@@ -39,7 +39,7 @@ class PageController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // -------------------------------------------------------------------------------------------
 
-     $pages = Page::with('site', 'author')
+    $pages = Page::with('site', 'author')
     ->moderatorLimit($answer)
     ->companiesLimit($answer)
     ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -69,10 +69,10 @@ class PageController extends Controller
     $parent_page_info = pageInfo('sites');
 
     return view('pages.index', compact('pages', 'site', 'page_info', 'parent_page_info', 'alias'));
-  }
+}
 
-  public function create(Request $request, $alias)
-  {
+public function create(Request $request, $alias)
+{
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), PAge::class);
@@ -95,10 +95,12 @@ class PageController extends Controller
     $parent_page_info = pageInfo('sites');
 
     return view('pages.create', compact('page', 'site', 'alias', 'page_info', 'parent_page_info'));  
-  }
+}
 
-  public function store(PageRequest $request, $alias)
-  {
+public function store(PageRequest $request, $alias)
+{
+
+    // dd($request);
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Page::class);
 
@@ -112,45 +114,47 @@ class PageController extends Controller
     $company_id = $user->company_id;
     if($company_id == null) {
       abort(403, 'Необходимо авторизоваться под компанией');
-    }
+  }
 
     // Скрываем бога
-    $user_id = hideGod($user);
+  $user_id = hideGod($user);
 
-    $page = new Page;
+  $page = new Page;
 
     // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-    if ($answer['automoderate'] == false){
+  if ($answer['automoderate'] == false){
       $page->moderation = 1;
-    }
+  }
 
     // Системная запись
-    $page->system_item = $request->system_item;
+  $page->system_item = $request->system_item;
 
-    $page->name = $request->name;
-    $page->title = $request->title;
-    $page->description = $request->description;
-    $page->alias = $request->alias;
-    $page->content = $request->content;
-    $page->site_id = $request->site_id;
-    $page->company_id = $company_id;
-    $page->author_id = $user_id;
-    $page->save();
+  $page->display = $request->display;
 
-    if ($page) {
+  $page->name = $request->name;
+  $page->title = $request->title;
+  $page->description = $request->description;
+  $page->alias = $request->alias;
+  $page->content = $request->content;
+  $page->site_id = $request->site_id;
+  $page->company_id = $company_id;
+  $page->author_id = $user_id;
+  $page->save();
+
+  if ($page) {
       return redirect('/sites/'.$alias.'/pages');
-    } else {
+  } else {
       abort(403, 'Ошибка при записи страницы!');
-    }
   }
+}
 
-  public function show($id)
-  {
+public function show($id)
+{
     //
-  }
+}
 
-  public function edit(Request $request, $alias, $page_alias)
-  {
+public function edit(Request $request, $alias, $page_alias)
+{
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
     $answer = operator_right('sites', false, getmethod(__FUNCTION__));
@@ -161,7 +165,7 @@ class PageController extends Controller
     // Вытаскиваем через сайт, так как алиасы могут дублироваться
     $site = Site::with(['pages' => function ($query) use ($page_alias) {
       $query->whereAlias($page_alias);
-    }])->moderatorLimit($answer)->whereAlias($alias)->first();
+  }])->moderatorLimit($answer)->whereAlias($alias)->first();
 
     // $site = $page->site[0];
     // dd($page);
@@ -178,11 +182,11 @@ class PageController extends Controller
     $parent_page_info = pageInfo('sites');
 
     return view('pages.edit', compact('page', 'parent_page_info', 'page_info', 'site', 'alias'));
-  }
+}
 
 
-  public function update(PageRequest $request, $alias, $id)
-  {
+public function update(PageRequest $request, $alias, $id)
+{
     // Получаем данные для авторизованного пользователя
     $user = $request->user();
 
@@ -190,48 +194,49 @@ class PageController extends Controller
     $company_id = $user->company_id;
     if($company_id == null) {
       abort(403, 'Необходимо авторизоваться под компанией');
-    }
-
-    // Скрываем бога
-    $user_id = hideGod($user);
-
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-    // ГЛАВНЫЙ ЗАПРОС:
-    $page = Page::moderatorLimit($answer)->findOrFail($id);
-
-    // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), $page);
-
-    // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-    if ($answer['automoderate'] == false) {
-      $page->moderation = 1;
-    } else {
-      $page->moderation = $request->moderation;
-    }
-
-    // Системная запись
-    $page->system_item = $request->system_item;
-
-    $page->name = $request->name;
-    $page->title = $request->title;
-    $page->description = $request->description;
-    $page->alias = $request->alias;
-    $page->content = $request->content;
-    $page->site_id = $request->site_id;
-    $page->editor_id = $user_id;
-    $page->save();
-
-    if ($page) {
-      return redirect('/sites/'.$alias.'/pages');
-    } else {
-      abort(403, 'Ошибка при записи страницы!');
-    }
   }
 
-  public function destroy(Request $request, $alias, $id)
-  {
+    // Скрываем бога
+  $user_id = hideGod($user);
+
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+  $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+    // ГЛАВНЫЙ ЗАПРОС:
+  $page = Page::moderatorLimit($answer)->findOrFail($id);
+
+    // Подключение политики
+  $this->authorize(getmethod(__FUNCTION__), $page);
+
+    // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+  if ($answer['automoderate'] == false) {
+      $page->moderation = 1;
+  } else {
+      $page->moderation = $request->moderation;
+  }
+
+    // Системная запись
+  $page->system_item = $request->system_item;
+
+  $page->display = $request->display;
+  $page->name = $request->name;
+  $page->title = $request->title;
+  $page->description = $request->description;
+  $page->alias = $request->alias;
+  $page->content = $request->content;
+  $page->site_id = $request->site_id;
+  $page->editor_id = $user_id;
+  $page->save();
+
+  if ($page) {
+      return redirect('/sites/'.$alias.'/pages');
+  } else {
+      abort(403, 'Ошибка при записи страницы!');
+  }
+}
+
+public function destroy(Request $request, $alias, $id)
+{
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -252,48 +257,45 @@ class PageController extends Controller
       $page = Page::destroy($id);
       if ($page) {
         return Redirect('/sites/'.$alias.'/pages');
-      } else {
-        abort(403, 'Ошибка при удалении страницы');
-      };
     } else {
-      abort(403, 'Страница не найдена');
-    }
-  }
+        abort(403, 'Ошибка при удалении страницы');
+    };
+} else {
+  abort(403, 'Страница не найдена');
+}
+}
 
   // Проверка наличия в базе
-  public function page_check (Request $request, $alias)
-  {
+public function page_check (Request $request, $alias)
+{
     // Проверка навигации по сайту в нашей базе данных
     $page_alias = $request->alias;
     $site = Site::withCount(['pages' => function($query) use ($page_alias) {
       $query->whereAlias($page_alias);
-    }])->whereAlias($alias)->first();
+  }])->whereAlias($alias)->first();
 
     // Если такая навигация есть
     if ($site->pages_count > 0) {
       $result = [
         'error_status' => 1,
-      ];
+    ];
     // Если нет
-    } else {
-      $result = [
-        'error_status' => 0,
-      ];
-    }
-    return json_encode($result, JSON_UNESCAPED_UNICODE);
-  }
-
-
+} else {
+  $result = [
+    'error_status' => 0,
+];
+}
+return json_encode($result, JSON_UNESCAPED_UNICODE);
+}
 
   // -------------------------------------------- API -----------------------------------------------
-
   // Получаем сайт по api
-  public function api(Request $request, $city, $alias)
-  {
+public function api(Request $request, $city, $alias)
+{
 
     $site = Site::with(['pages' => function ($query) use ($alias) {
-      $query->where('alias', $alias);
-    }])->where('api_token', $request->token)->first();
+      $query->where(['alias' => $alias, 'display' => 1]);
+  }])->where('api_token', $request->token)->first();
 
     if ($site) {
         // return Cache::forever($domen.'-news', $site, function() use ($city, $token) {
@@ -301,11 +303,10 @@ class PageController extends Controller
 
       return $page;
         // });
-    } else {
+  } else {
       return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
-    }  
+  }  
 
-
-    return null;
-  }
+  return null;
+}
 }

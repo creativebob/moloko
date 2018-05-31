@@ -24,6 +24,8 @@ class CreateMenuSiteTable extends Migration
             $table->integer('site_id')->nullable()->unsigned()->comment('Id сайта');
             $table->foreign('site_id')->references('id')->on('sites');
 
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');

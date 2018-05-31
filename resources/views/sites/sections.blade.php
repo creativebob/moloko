@@ -66,7 +66,7 @@
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-menu-name">Название раздела</th>
-          <th class="td-site-author">Автор</th>
+          {{-- <th class="td-site-author">Автор</th> --}}
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -77,7 +77,7 @@
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"><label class="label-check" for="check-{{ $site->id }}"></label></td>
           <td class="td-menu-name"><a href="/sites/{{ $site->alias }}/{{ $menu->alias }}">{{ $menu->name }}</a></td>
-          <td class="td-site-author">@if(isset($site->author->first_name)) {{ $site->author->first_name . ' ' . $site->author->second_name }} @endif</td>
+          {{-- <td class="td-site-author">@if(isset($site->author->first_name)) {{ $site->author->first_name . ' ' . $site->author->second_name }} @endif</td> --}}
           <td class="td-delete">
             @if (isset($site->company_id))
             <a class="icon-delete sprite" data-open="item-delete"></a>

@@ -41,7 +41,7 @@ class ProductController extends Controller
   public function index(Request $request)
   {
     // Подключение политики
-    // $this->authorize(getmethod(__FUNCTION__), Product::class);
+    $this->authorize(getmethod(__FUNCTION__), Product::class);
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -197,6 +197,9 @@ class ProductController extends Controller
 
       // Модерация и системная запись
     $product->system_item = $request->system_item;
+
+    // Отображение на сайте
+        $product->display = $request->display;
 
     $product->company_id = $company_id;
     $product->author_id = $user_id;
@@ -382,7 +385,8 @@ class ProductController extends Controller
       $product->system_item = $request->system_item;
       $product->moderation = $request->moderation;
 
-      
+      // Отображение на сайте
+        $product->display = $request->display;
 
       $product->editor_id = $user_id;
       $product->save();

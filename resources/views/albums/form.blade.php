@@ -52,6 +52,14 @@
             <label for="private-checkbox"><span>Личный альбом.</span></label>
           </div>
 
+          {{-- Чекбокс отображения на сайте --}}
+          @can ('publisher', $album)
+          <div class="small-12 cell checkbox">
+            {{ Form::checkbox('display', 1, $album->display, ['id' => 'display']) }}
+            <label for="display"><span>Отображать на сайте</span></label>
+          </div>
+          @endcan
+
           {{-- Чекбокс модерации --}}
           @can ('moderator', $album)
           @if ($album->moderation == 1)

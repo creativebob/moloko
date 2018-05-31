@@ -158,6 +158,10 @@ class AlbumController extends Controller
 
         // Cистемная запись
         $album->system_item = $request->system_item;
+
+        // Отображение на сайте
+        $album->display = $request->display;
+
         $album->company_id = $user->company_id;
         $album->author_id = $user_id;
         $album->save();
@@ -280,6 +284,9 @@ class AlbumController extends Controller
         // Модерация и системная запись
         $album->system_item = $request->system_item;
         $album->moderation = $request->moderation;
+
+        // Отображение на сайте
+        $album->display = $request->display;
 
         $album->editor_id = $user_id;
         $album->save();

@@ -27,6 +27,8 @@ class CreateBooklistsTable extends Migration
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');

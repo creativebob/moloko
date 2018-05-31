@@ -22,6 +22,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Пользователи системы',
@@ -32,6 +33,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Филиалы и отделы',
@@ -42,6 +44,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Штат',
@@ -52,6 +55,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Сотрудники',
@@ -62,6 +66,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Тестовая страница для должностей',
@@ -72,6 +77,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Сайты',
@@ -82,6 +88,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Населенные пункты',
@@ -92,6 +99,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Должности',
@@ -102,6 +110,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Сущности',
@@ -112,6 +121,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Роли',
@@ -122,6 +132,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Правила доступа',
@@ -132,6 +143,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Страницы сайта',
@@ -142,6 +154,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Навигации',
@@ -152,6 +165,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Главная',
@@ -161,7 +175,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'company',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Списки',
@@ -172,6 +187,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Секторы',
@@ -182,6 +198,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Папки',
@@ -192,6 +209,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Новости',
@@ -201,7 +219,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'news',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Контакты',
@@ -211,7 +230,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'contacts',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Замер',
@@ -221,7 +241,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'measurement',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Гаражные ворота',
@@ -231,7 +252,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'garage_gates',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Уличные ворота',
@@ -241,7 +263,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'street_gates',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Рольставни',
@@ -251,7 +274,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'rollets',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Автоматика',
@@ -261,7 +285,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'automatics',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Стальные двери',
@@ -271,7 +296,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'steel_doors',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => null,
       ],
       [
         'name' => 'Перегрузочные системы',
@@ -281,7 +307,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'handling_systems',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Сервисный центр',
@@ -291,7 +318,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'service_center',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'База знаний',
@@ -301,7 +329,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'knowledge',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Заборы',
@@ -311,7 +340,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'fences',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Ангары',
@@ -321,7 +351,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'hangars',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Шлагбаумы',
@@ -331,7 +362,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'barriers',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Противопожарные ворота',
@@ -341,7 +373,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'fire_gates',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Команда',
@@ -351,7 +384,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'team',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Вакансии',
@@ -361,7 +395,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'vacancies',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 4,
+        'author_id' => 7,
+        'display' => 1,
       ],
       [
         'name' => 'Альбомы',
@@ -372,6 +407,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => 1,
       ],
       [
         'name' => 'Категории альбомов',
@@ -382,6 +418,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => 1,
       ],
       [
         'name' => 'Фотографии альбома',
@@ -392,6 +429,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => 1,
       ],
       [
         'name' => 'Новости',
@@ -402,6 +440,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => 1,
       ],
       [
         'name' => 'Категории продукции',
@@ -412,6 +451,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => 1,
       ],
       [
         'name' => 'Продукция',
@@ -422,6 +462,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
+        'display' => 1,
       ],
       [
         'name' => 'Товары',
@@ -432,6 +473,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => 4,
         'system_item' => null,
         'author_id' => 1,
+        'display' => 1,
       ],
       [
         'name' => 'Услуги',
@@ -442,6 +484,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => 4,
         'system_item' => null,
         'author_id' => 1,
+        'display' => 1,
       ],
       [
         'name' => 'Контакты',
@@ -452,6 +495,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => 4,
         'system_item' => null,
         'author_id' => 1,
+        'display' => 1,
       ],
       [
         'name' => 'Комплектация для откатных ворот',
@@ -461,7 +505,8 @@ class PagesTableSeeder extends Seeder
         'alias' => 'street_gate_set',
         'company_id' => 1,
         'system_item' => null,
-        'author_id' => 14,
+        'author_id' => 7,
+        'display' => 1,
       ],
       
     ]);

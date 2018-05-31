@@ -369,6 +369,9 @@ class DepartmentController extends Controller
             $department->parent_id = $request->parent_id;
         }
 
+        // Отображение на сайте
+        $department->display = $request->display;
+
         $department->save();
 
         if ($department) {
@@ -393,7 +396,7 @@ class DepartmentController extends Controller
 
     public function edit($id)
     {
-        
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -505,12 +508,6 @@ class DepartmentController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-        if($company_id == null) {
-            abort(403, 'Необходимо авторизоваться под компанией');
-        }
-
         // Скрываем бога
         $user_id = hideGod($user);
 
@@ -546,6 +543,9 @@ class DepartmentController extends Controller
         if ($request->medium_item == 1) {
             $department->parent_id = $request->parent_id;
         }
+
+        // Отображение на сайте
+        $department->display = $request->display;
 
         $department->save();
         if ($department) {

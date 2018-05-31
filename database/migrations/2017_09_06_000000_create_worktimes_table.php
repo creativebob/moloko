@@ -27,6 +27,8 @@ class CreateWorktimesTable extends Migration
             $table->integer('timeout')->unsigned()->nullable()->comment('Время начала перерыва, сек');
             $table->integer('timeout_interval')->unsigned()->nullable()->comment('Интервал перерыва, сек');
 
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+
             $table->integer('sort')->nullable()->unsigned()->comment('Поле для сортировки');
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');

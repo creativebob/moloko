@@ -23,6 +23,11 @@ $count = count($department['staff']) + $count;
     @if ($department['system_item'])
     <span class="system-item">Системная запись!</span>
     @endif
+    @if ($department['display'] == 1)
+    <span class="system-item">Отображается на сайте</span>
+    @else
+    <span class="no-moderation">Не отображается на сайте</span>
+    @endif
   </a>
   <div class="drop-list checkbox">
     @if ($drop == 1)

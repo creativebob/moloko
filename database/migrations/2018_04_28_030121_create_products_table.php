@@ -37,6 +37,7 @@ class CreateProductsTable extends Migration
             $table->integer('products_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться товар');
             $table->foreign('products_category_id')->references('id')->on('products_categories');
             
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 

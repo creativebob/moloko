@@ -148,6 +148,8 @@ class ProductsCategoryController extends Controller
             $products_category->parent_id = $request->parent_id;
         }
 
+        $products_category->display = $request->display;
+
         // Делаем заглавной первую букву
         $products_category->name = get_first_letter($request->name);
 
@@ -236,6 +238,8 @@ class ProductsCategoryController extends Controller
         $products_category->parent_id = $request->parent_id;
         $products_category->editor_id = $user_id;
         $products_category->products_type_id = $request->products_type_id;
+
+        $products_category->display = $request->display;
 
         // Делаем заглавной первую букву
         $products_category->name = get_first_letter($request->name); 
