@@ -7,8 +7,8 @@
   <div class="grid-x tabs-wrap align-center tabs-margin-top">
     <div class="small-8 cell">
       <ul class="tabs-list" data-tabs id="tabs">
-        <li class="tabs-title is-active"><a href="#add-department" aria-selected="true">Добавить отдел</a></li>
-        <li class="tabs-title"><a data-tabs-target="add-position" href="#add-position">Добавить должность</a></li>
+        <li class="tabs-title is-active"><a href="#add-department" aria-selected="true">Отдел</a></li>
+        <li class="tabs-title"><a data-tabs-target="add-position" href="#add-position">Должность</a></li>
       </ul>
     </div>
   </div>
@@ -57,15 +57,15 @@
         {{-- Чекбокс отображения на сайте --}}
         @can ('publisher', App\Department::class)
         <div class="small-12 cell checkbox">
-          {{ Form::checkbox('display', 1, null, ['id' => 'display']) }}
-          <label for="display"><span>Отображать на сайте</span></label>
+          {{ Form::checkbox('display', 1, null, ['id' => 'display-department']) }}
+          <label for="display-department"><span>Отображать на сайте</span></label>
         </div>
         @endcan
 
         @can('god', App\Department::class)
         <div class="checkbox">
-          {{ Form::checkbox('system_item', 1, null, ['id' => 'system-item']) }}
-          <label for="system-item"><span>Системная запись.</span></label>
+          {{ Form::checkbox('system_item', 1, null, ['id' => 'system-item-department']) }}
+          <label for="system-item-department"><span>Системная запись.</span></label>
         </div>
         @endcan
 
@@ -79,6 +79,7 @@
         {{ Form::submit('Добавить отдел', ['data-close', 'class'=>'button modal-button submit-add']) }}
       </div>
     </div>
+
   </div>
   {{ Form::close() }}
   <!-- Добавляем должность -->
@@ -100,17 +101,43 @@
         {{-- Чекбокс отображения на сайте --}}
         @can ('publisher', App\Staffer::class)
         <div class="small-12 cell checkbox">
-          {{ Form::checkbox('display', 1, null, ['id' => 'display']) }}
-          <label for="display"><span>Отображать на сайте</span></label>
+          {{ Form::checkbox('display', 1, null, ['id' => 'display-position']) }}
+          <label for="display-position"><span>Отображать на сайте</span></label>
         </div>
         @endcan
 
         @can('god', App\Staffer::class)
         <div class="checkbox">
-          {{ Form::checkbox('system_item', 1, null, ['id' => 'system-item']) }}
-          <label for="system-item"><span>Системная запись.</span></label>
+          {{ Form::checkbox('system_item', 1, null, ['id' => 'system-item-position']) }}
+          <label for="system-item-position"><span>Системная запись.</span></label>
         </div>
         @endcan
+
+        {{ Form::hidden('filial_id', 0, ['class' => 'filial-id']) }}
+      </div>
+    </div>
+    <div class="grid-x align-center">
+      <div class="small-6 medium-4 cell">
+        {{ Form::submit('Добавить должность', ['data-close', 'class'=>'button modal-button', 'id'=>'submit-position-add']) }}
+      </div>
+    </div>
+  </div>
+  {{ Form::close() }}
+  <!-- Добавляем график работы -->
+  {{ Form::open(['id' => 'form-worktimes-add']) }}
+  <div class="tabs-panel" id="add-worktimes">
+    <div class="grid-x grid-padding-x align-center modal-content inputs">
+      <div class="small-10 cell">
+        <label>Добавляем должность в:
+          <select class="departments-list" name="department_id">
+            @php
+            echo $departments_list;
+            @endphp
+          </select>
+        </label>
+        <label>Должность
+          {{ Form::select('position_id', $positions_list, ['class'=>'positions-list']) }}
+        </label>
 
         {{ Form::hidden('filial_id', 0, ['class' => 'filial-id']) }}
       </div>

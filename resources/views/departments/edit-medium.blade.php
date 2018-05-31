@@ -1,10 +1,25 @@
+
+
 <div class="reveal" id="medium-edit" data-reveal data-close-on-click="false">
 	<div class="grid-x">
 		<div class="small-12 cell modal-title">
 			<h5>Редактирование отдел</h5>
 		</div>
 	</div>
+	<div class="grid-x tabs-wrap align-center tabs-margin-top">
+  <div class="small-8 cell">
+    <ul class="tabs-list" data-tabs id="tabs">
+      <li class="tabs-title is-active"><a href="#department" aria-selected="true">Филиал</a></li>
+      <li class="tabs-title"><a data-tabs-target="worktimes" href="#worktimes">График работы</a></li>
+    </ul>
+  </div>
+</div>
+<div class="tabs-wrap inputs">
+  <div class="tabs-content" data-tabs-content="tabs">
+
+    
 	{{ Form::open(['id'=>'form-medium-edit', 'data-abide', 'novalidate']) }}
+	<div class="tabs-panel is-active" id="department">
 	<div class="grid-x grid-padding-x align-center modal-content inputs">
 		<div class="small-10 cell">
 			<label>Отдел находится в:
@@ -69,6 +84,15 @@
 	{{ Form::hidden('medium_item', 1, ['class' => 'medium-item', 'pattern' => '[0-9]{1}']) }}
 </div>
 </div>
+</div>
+<!-- Схема работы -->
+<div class="tabs-panel" id="worktimes">
+  <div class="grid-x grid-padding-x align-center">
+    <div class="small-8 cell">
+      @include('includes.inputs.schedule', ['value'=>$worktime]) 
+    </div>
+  </div>
+</div>
 <div class="grid-x align-center">
 	<div class="small-6 medium-4 cell">
 		{{ Form::submit('Редактировать отдел', ['data-close', 'class'=>'button modal-button submit-edit']) }}
@@ -77,6 +101,8 @@
 {{ Form::close() }}
 <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
+</div>
+  </div>
 
 @include('includes.scripts.inputs-mask')
 

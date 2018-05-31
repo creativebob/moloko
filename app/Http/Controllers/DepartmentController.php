@@ -9,7 +9,10 @@ use App\Position;
 use App\Staffer;
 use App\Page;
 use App\Right;
+use App\Schedule;
+use App\Worktime;
 use App\Location;
+use App\ScheduleEntity;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -21,11 +24,13 @@ use App\Policies\DepartmentPolicy;
 // Общие классы
 use Illuminate\Support\Facades\Log;
 
+
 // Специфические классы
 use Illuminate\Support\Facades\Storage;
 
 // На удаление
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
 {
@@ -309,20 +314,26 @@ class DepartmentController extends Controller
 
             $department = new Department;
 
-            return view('departments.create-first', ['department' => $department]);
+            // Формируем пуcтой массив
+            $worktime = [];
+            for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
+
+                return view('departments.create-first', compact('department', 'worktime'));
         }
     }
 
     public function store(DepartmentRequest $request)
     {
 
+        // dd($request);
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Department::class);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
-        $company_id = $user->company_id;
 
+        // Скрываем бога
         $user_id = hideGod($user);
 
         $department = new Department;
@@ -344,7 +355,7 @@ class DepartmentController extends Controller
             }
         }
 
-        $department->company_id = $company_id;
+        $department->company_id = $user->company_id;
 
         // Имя филиала / отдела
         $first = mb_substr($request->name,0,1, 'UTF-8'); //первая буква
@@ -361,18 +372,44 @@ class DepartmentController extends Controller
         // Пишем филиал
         if ($request->first_item == 1) {
             $department->filial_status = 1;
+            $status = 'филиала';
         }
 
         // Пишем отделы
         if ($request->medium_item == 1) {
             $department->filial_id = $request->filial_id;
             $department->parent_id = $request->parent_id;
+            $status = 'отдела';
         }
 
         // Отображение на сайте
         $department->display = $request->display;
 
         $department->save();
+
+        // Если пришел хотя бы один день из расписания пишем расписание и дни
+        if (isset($request->mon_begin)||isset($request->tue_begin)||isset($request->wed_begin)||isset($request->thu_begin)||isset($request->fri_begin)||isset($request->sat_begin)||isset($request->sun_begin)) {
+            $schedule = new Schedule;
+            $schedule->company_id = $user->company_id;
+            $schedule->name = 'График работы для '.$status.': '.$department->name;
+            $schedule->description = null;
+            $schedule->author_id = $user_id;
+            $schedule->save();
+            $schedule_id = $schedule->id;
+
+            // Функция getWorktimes ловит все поля расписания из запроса и готовит к записи в worktimes
+            $mass_time = getWorktimes($request, $schedule_id);
+
+            // Записываем в базу все расписание.
+            DB::table('worktimes')->insert($mass_time);
+        }
+
+        // Создаем связь расписания с филиалом / отделом
+        $schedule_entity = new ScheduleEntity;
+        $schedule_entity->schedule_id = $schedule->id;
+        $schedule_entity->entity_id = $department->id;
+        $schedule_entity->entity = 'departments';
+        $schedule_entity->save();
 
         if ($department) {
 
@@ -381,9 +418,7 @@ class DepartmentController extends Controller
 
             // $action_method = "DepartmentController@get_content";
             // $action_arrray = ['id' => $department->id, 'item' => 'department'];
-
             // return redirect()->action('GetAccessController@set', ['action_method' => $action_method, 'action_arrray' => $action_arrray]);
-
         } else {
             abort(403, 'Ошибка при записи отдела!');
         }
@@ -401,15 +436,52 @@ class DepartmentController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $department = Department::with('location')->moderatorLimit($answer)->findOrFail($id);
+        $department = Department::with('location', 'schedules.worktimes')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $department);
 
+        if(isset($department->schedules->first()->worktimes)){
+            $worktime_mass = $department->schedules->first()->worktimes->keyBy('weekday');
+        }
+
+        for($x = 1; $x<8; $x++){
+
+            if(isset($worktime_mass[$x]->worktime_begin)){
+
+                $worktime_begin = $worktime_mass[$x]->worktime_begin;
+                $str_worktime_begin = secToTime($worktime_begin);
+                $worktime[$x]['begin'] = $str_worktime_begin;
+
+            } else {
+
+                $worktime[$x]['begin'] = null;
+            }
+
+            if(isset($worktime_mass[$x]->worktime_interval)){
+
+                $worktime_interval = $worktime_mass[$x]->worktime_interval;
+
+                if(($worktime_begin + $worktime_interval) > 86400){
+
+                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
+                } else {
+
+                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);                       
+                }
+
+                $worktime[$x]['end'] = $str_worktime_interval;
+            } else {
+
+                $worktime[$x]['end'] = null;
+            }
+
+        }
+
         if ($department->filial_status == 1) {
 
             // Меняем филиал
-            return view('departments.edit-first', ['department' => $department]);
+            return view('departments.edit-first', compact('department', 'worktime'));
         } else {
 
             // Меняем отдел
@@ -488,7 +560,8 @@ class DepartmentController extends Controller
 
             // echo json_encode($departments_list);
             // echo $department . ' ' . $departments_list;
-            return view('departments.edit-medium', ['department' => $department, 'departments_list' => $departments_list]);
+
+            return view('departments.edit-medium', compact('department', 'departments_list', 'worktime'));
         } 
     }
 
@@ -500,7 +573,7 @@ class DepartmentController extends Controller
         ;
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $department = Department::moderatorLimit($answer)->findOrFail($id);
+        $department = Department::with('location', 'schedules.worktimes')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $department);
@@ -540,14 +613,48 @@ class DepartmentController extends Controller
 
         $department->editor_id = $user_id;
 
+        $status = 'филиала';
         if ($request->medium_item == 1) {
             $department->parent_id = $request->parent_id;
+            $status = 'отдела';
         }
 
         // Отображение на сайте
         $department->display = $request->display;
 
         $department->save();
+
+        // Если не существует расписания для компании - создаем его
+        if($department->schedules->count() < 1){
+
+            $schedule = new Schedule;
+            $schedule->company_id = $user->company_id;
+            $schedule->name = 'График работы для '.$status.': ' . $department->name;
+            $schedule->description = null;
+            $schedule->save();
+
+            // Создаем связь расписания с компанией
+            $schedule_entity = new ScheduleEntity;
+            $schedule_entity->schedule_id = $schedule->id;
+            $schedule_entity->entity_id = $department->id;
+            $schedule_entity->entity = 'departments';
+            $schedule_entity->save();
+
+            $schedule_id = $schedule->id;
+        } else {
+
+            $schedule_id = $department->schedules->first()->id;
+        }
+
+        // Функция getWorktimes ловит все поля расписания из запроса и готовит к записи в worktimes
+        $mass_time = getWorktimes($request, $schedule_id);
+
+        // Удаляем все записи времени в worktimes для этого расписания
+        $worktimes = Worktime::where('schedule_id', $schedule_id)->forceDelete();
+
+        // Вставляем новое время в расписание
+        DB::table('worktimes')->insert($mass_time);
+
         if ($department) {
             // Переадресовываем на index
             return redirect()->action('DepartmentController@index', ['id' => $department->id, 'item' => 'department']);
