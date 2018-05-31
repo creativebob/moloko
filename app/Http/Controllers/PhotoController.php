@@ -173,6 +173,10 @@ class PhotoController extends Controller
       $size = filesize($image)/1024;
       $photo->size = number_format($size, 2, '.', '');
 
+
+      // Отображение на сайте
+      $photo->display = 1;
+
       $photo->name = $image_name;
       $photo->company_id = $company_id;
       $photo->author_id = $user_id;
@@ -266,13 +270,6 @@ class PhotoController extends Controller
     return view('photos.edit', compact('photo', 'parent_page_info', 'page_info', 'album'));
   }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $alias, $id)
     {
 
@@ -302,6 +299,9 @@ class PhotoController extends Controller
       // Модерация и системная запись
       $photo->system_item = $request->system_item;
       $photo->moderation = $request->moderation;
+
+      // Отображение на сайте
+      $photo->display = $request->display;
 
       $photo->editor_id = $user_id;
       $photo->title = $request->title;

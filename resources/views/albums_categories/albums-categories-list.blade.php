@@ -7,7 +7,8 @@
     $count = count($albums_category['children']);
   @endphp
 @endif
-<li class="medium-item item @if (isset($albums_category['children'])) parent @endif" id="albums_categories-{{ $albums_category['id'] }}" data-name="{{ $albums_category['name'] }}">
+@if (isset($products_category['children']))
+<li class="medium-item item parent" id="albums_categories-{{ $albums_category['id'] }}" data-name="{{ $albums_category['name'] }}">
   <a class="medium-link @if($drop == 0) link-small @endif">
     <div class="icon-open sprite"></div>
     <span class="medium-item-name">{{ $albums_category['name'] }}</span>
@@ -53,6 +54,50 @@
   @endif
   </ul>
 </li>
+@else
+
+{{-- Конечный --}}
+<li class="medium-as-last item" id="albums_categories-{{ $albums_category['id'] }}" data-name="{{ $albums_category['name'] }}">
+  <a class="medium-as-last-link">
+    <span>{{ $albums_category['name'] }}</span>
+    @if ($albums_category['moderation'])
+    <span class="no-moderation">Не отмодерированная запись!</span>
+    @endif
+    @if ($albums_category['system_item'])
+    <span class="system-item">Системная запись!</span>
+    @endif
+    @if ($albums_category['display'] == 1)
+    <span class="system-item">Отображается на сайте</span>
+    @else
+    <span class="no-moderation">Не отображается на сайте</span>
+    @endif
+  </a>
+  <div class="icon-list">
+    <div>
+      @can('create', App\AlbumsCategory::class)
+      <div class="icon-list-add sprite" data-open="medium-add"></div>
+      @endcan
+    </div>
+    <div>
+      {{-- @if($albums_category['edit'] == 1) --}}
+      <div class="icon-list-edit sprite" data-open="medium-edit"></div>
+      {{-- @endif --}}
+    </div>
+    <div class="del">
+      @if(($albums_category['system_item'] != 1) && ($albums_category['delete'] == 1))
+      <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
+      @endif
+    </div>
+  </div>
+  <div class="drop-list checkbox">
+    @if ($drop == 1)
+    <div class="sprite icon-drop"></div>
+    @endif
+    <input type="checkbox" name="" id="albums_category-check-{{ $albums_category['id'] }}">
+    <label class="label-check" for="albums_category-check-{{ $albums_category['id'] }}"></label> 
+  </div>
+</li>
+@endif
 
 
  

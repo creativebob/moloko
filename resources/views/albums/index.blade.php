@@ -31,6 +31,9 @@
           <th class="td-date">Сведения</th>
           <th class="td-company-id">Компания</th>
           <th class="td-author">Автор</th>
+          @can ('publisher', App\Album::class)
+          <th class="td-display">Отображение</th>
+          @endcan
 
           <th class="td-delete"></th>
         </tr>
@@ -67,7 +70,15 @@
           </td>
           <td class="td-company-id">@if(!empty($album->company->name)) {{ $album->company->name }} @else @if($album->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-author">@if(isset($album->author->first_name)) {{ $album->author->first_name . ' ' . $album->author->second_name }} @endif</td>
-
+          @can ('publisher', $album)
+          <td class="td-display">
+            @if ($album['display'] == 1)
+            <span class="system-item">Отображается на сайте</span>
+            @else
+            <span class="no-moderation">Не отображается на сайте</span>
+            @endif
+          </td>
+          @endcan
           <td class="td-delete">
             @if (($album->system_item != 1) && ($album->photos_count == 0))
               @can('delete', $album)

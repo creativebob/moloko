@@ -41,6 +41,29 @@
 	<label>Телефон отдела
 		@include('includes.inputs.phone', ['value'=>$department->phone, 'name'=>'phone', 'required'=>''])
 	</label>
+
+	{{-- Чекбокс отображения на сайте --}}
+    @can ('publisher', $department)
+    <div class="small-12 cell checkbox">
+      {{ Form::checkbox('display', 1, $department->display, ['id' => 'display']) }}
+      <label for="display"><span>Отображать на сайте</span></label>
+    </div>
+    @endcan
+
+    @if ($department->moderation == 1)
+    <div class="checkbox">
+      {{ Form::checkbox('moderation', 1, $department->moderation, ['id' => 'moderation']) }}
+      <label for="moderation"><span>Временная запись.</span></label>
+    </div>
+    @endif
+
+    @can('god', App\Department::class)
+    <div class="checkbox">
+      {{ Form::checkbox('system_item', 1, $department->system_item, ['id' => 'system-item']) }}
+      <label for="system-item"><span>Системная запись.</span></label>
+    </div>
+    @endcan
+
 	{{ Form::hidden('filial_id', $department->filial_id, ['id' => 'filial-id']) }}
 	{{ Form::hidden('department_id', $department->id, ['id' => 'department-id']) }}
 	{{ Form::hidden('medium_item', 1, ['class' => 'medium-item', 'pattern' => '[0-9]{1}']) }}

@@ -53,6 +53,22 @@
         <label>Телефон отдела
           @include('includes.inputs.phone', ['value'=>null, 'name'=>'phone', 'required'=>''])
         </label>
+
+        {{-- Чекбокс отображения на сайте --}}
+        @can ('publisher', App\Department::class)
+        <div class="small-12 cell checkbox">
+          {{ Form::checkbox('display', 1, null, ['id' => 'display']) }}
+          <label for="display"><span>Отображать на сайте</span></label>
+        </div>
+        @endcan
+
+        @can('god', App\Department::class)
+        <div class="checkbox">
+          {{ Form::checkbox('system_item', 1, null, ['id' => 'system-item']) }}
+          <label for="system-item"><span>Системная запись.</span></label>
+        </div>
+        @endcan
+
         {{ Form::hidden('filial_id', 0, ['class' => 'filial-id']) }}
         {{ Form::hidden('parent_id', 0, ['class' => 'parent-id']) }}
         {{ Form::hidden('medium_item', 0, ['class' => 'medium-item', 'pattern' => '[0-9]{1}']) }}
@@ -80,6 +96,22 @@
         <label>Должность
           {{ Form::select('position_id', $positions_list, ['class'=>'positions-list']) }}
         </label>
+
+        {{-- Чекбокс отображения на сайте --}}
+        @can ('publisher', App\Staffer::class)
+        <div class="small-12 cell checkbox">
+          {{ Form::checkbox('display', 1, null, ['id' => 'display']) }}
+          <label for="display"><span>Отображать на сайте</span></label>
+        </div>
+        @endcan
+
+        @can('god', App\Staffer::class)
+        <div class="checkbox">
+          {{ Form::checkbox('system_item', 1, null, ['id' => 'system-item']) }}
+          <label for="system-item"><span>Системная запись.</span></label>
+        </div>
+        @endcan
+
         {{ Form::hidden('filial_id', 0, ['class' => 'filial-id']) }}
       </div>
     </div>

@@ -91,7 +91,6 @@ Route::get('/products_download/{type}', 'ProductController@products_download')->
 // Route for import excel data to database.
 Route::post('/products_import', 'ProductController@products_import');
 
-
 // ------------------------------------ Категории продукции --------------------------------------
 // Текущая добавленная/удаленная категория продукции
 Route::any('/products_categories', 'ProductsCategoryController@index')->middleware('auth');
@@ -253,6 +252,7 @@ Route::prefix('/sites/{alias}')->group(function () {
 	// Проверка на существование навигации
   Route::post('/navigation_check', 'NavigationController@navigation_check')->middleware('auth');
 
+// Route::any('/menus/create', 'MenuController@create')->middleware('auth');
   // -------------------------------------------Меню ---------------------------------------------
   Route::resource('/menus', 'MenuController')->middleware('auth');
 
@@ -270,7 +270,7 @@ Route::post('/menus_sort', 'MenuController@menus_sort')->middleware('auth');
 // Сортировка новостей
 Route::post('/news_sort', 'NewsController@news_sort')->middleware('auth');
 
-// Route::any('/modal', 'MenuController@modal')->middleware('auth');
+
 
 // ------------------------------------- Отображение сессии -----------------------------------------
 Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');

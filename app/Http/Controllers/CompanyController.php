@@ -223,7 +223,7 @@ class CompanyController extends Controller
         // };
 
         // Создаем папку в файловой системе
-        Storage::disk('public')->makeDirectory($company->id.'/media');
+        // Storage::disk('public')->makeDirectory($company->id.'/media');
 
         // $folder->folder_url = $link_for_folder;
         // $folder->folder_alias = 'users';

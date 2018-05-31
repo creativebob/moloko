@@ -27,12 +27,22 @@
 <label>Телефон филиала
   @include('includes.inputs.phone', ['value'=>$department->phone, 'name'=>'phone', 'required'=>'required'])
 </label>
+
+{{-- Чекбокс отображения на сайте  --}}
+    @can ('publisher', $department)
+    <div class="small-12 cell checkbox">
+      {{ Form::checkbox('display', 1, $department->display, ['id' => 'display']) }}
+      <label for="display"><span>Отображать на сайте</span></label>
+    </div>
+    @endcan
+
 @if ($department->moderation == 1)
 <div class="checkbox">
   {{ Form::checkbox('moderation', 1, $department->moderation, ['id' => 'moderation']) }}
   <label for="moderation"><span>Временная запись.</span></label>
 </div>
 @endif
+
 @can('god', App\Department::class)
 <div class="checkbox">
   {{ Form::checkbox('system_item', 1, $department->system_item, ['id' => 'system-item']) }}

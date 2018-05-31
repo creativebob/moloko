@@ -51,6 +51,15 @@
           {{ Form::text('dismissal_date', null, ['class'=>'dismissal_date date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
         </label>
       </div>
+      
+      {{-- Чекбокс отображения на сайте --}}
+      @can ('publisher', $staffer)
+      <div class="small-12 cell checkbox">
+        {{ Form::checkbox('display', 1, $staffer->display, ['id' => 'display']) }}
+        <label for="display"><span>Отображать на сайте</span></label>
+      </div>
+      @endcan
+
       {{-- Чекбокс модерации --}}
       @can ('moderator', $staffer)
       @if ($staffer->moderation == 1)

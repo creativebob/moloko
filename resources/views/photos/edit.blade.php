@@ -54,6 +54,14 @@
     <label for="avatar-checkbox"><span>Сделать аватаром альбома.</span></label>
   </div>
 
+  {{-- Чекбокс отображения на сайте --}}
+  @can ('publisher', $photo)
+  <div class="small-12 cell checkbox">
+    {{ Form::checkbox('display', 1, $photo->display, ['id' => 'display']) }}
+    <label for="display"><span>Отображать на сайте</span></label>
+  </div>
+  @endcan
+
   {{-- Чекбокс модерации --}}
   @can ('moderator', $photo)
   @if ($photo->moderation == 1)

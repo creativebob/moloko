@@ -20,7 +20,9 @@
       @if ($navigation['system_item'])
       <span class="system-item">Системная запись!</span>
       @endif
-      @if ($navigation['display'] != 1)
+      @if ($navigation['display'] == 1)
+      <span class="system-item">Отображается на сайте</span>
+      @else
       <span class="no-moderation">Не отображается на сайте</span>
       @endif
     </a>
