@@ -28,6 +28,7 @@
 @section('scripts')
   @include('includes.scripts.inputs-mask')
   @include('sites.check')
+  @include('sites.scripts')
 @endsection
 
 

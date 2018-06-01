@@ -184,16 +184,18 @@ class AlbumController extends Controller
 
     public function show(Request $request, $alias)
     {
-        $album = Album::whereAlias($alias)->first();
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_album = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $answer_photo = operator_right('photos', false, getmethod('index'));
+        // dd($answer_photo);
+
+        $album = Album::moderatorLimit($answer)->whereAlias($alias)->first();
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $album);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        $answer_photo = operator_right('photos', false, getmethod('index'));
-        // dd($answer_photo);
         // --------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------------------------------
@@ -206,19 +208,18 @@ class AlbumController extends Controller
             ->systemItem($answer_photo)
             ->orderBy('sort', 'asc'); // Фильтр по системным записямorderBy('sort', 'asc');
         }])
+        ->moderatorLimit($answer_album)
+        ->companiesLimit($answer_album)
+        ->authors($answer_album)
+        ->systemItem($answer_album) // Фильтр по системным записям
         ->whereAlias($alias)
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request) 
         ->first();
 
+        // dd($album);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-
-        // dd($album);
 
         return view('albums.show', compact('album', 'page_info', 'alias'));
     }
@@ -226,8 +227,12 @@ class AlbumController extends Controller
 
     public function edit(Request $request, $alias)
     {
+        // Получаем данные для авторизованного пользователя
         $user = $request->user();
+        
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
         $album = Album::moderatorLimit($answer)->where('company_id', $user->company_id)->whereAlias($alias)->first();
 
         // Подключение политики
