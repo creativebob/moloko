@@ -10,17 +10,22 @@
 			0
 			@endif
 		</span>
+
 		@if ($menu['moderation'])
 		<span class="no-moderation">Не отмодерированная запись!</span>
 		@endif
+
 		@if ($menu['system_item'])
 		<span class="system-item">Системная запись!</span>
 		@endif
+
+		@can ('publisher', App\Menu::class)
 		@if ($menu['display'] == 1)
 		<span class="system-item">Отображается на сайте</span>
 		@else
 		<span class="no-moderation">Не отображается на сайте</span>
 		@endif
+		@endcan
 	</a>
 	<div class="drop-list checkbox">
 		@if ($drop == 1)

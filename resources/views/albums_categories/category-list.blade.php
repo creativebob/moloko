@@ -21,11 +21,13 @@ $drop = 1;
     @if ($albums_category['system_item'])
     <span class="system-item">Системная запись!</span>
     @endif
+    @can ('publisher', App\AlbumsCategory::class)
     @if ($albums_category['display'] == 1)
     <span class="system-item">Отображается на сайте</span>
     @else
     <span class="no-moderation">Не отображается на сайте</span>
     @endif
+    @endcan
   </a>
   <div class="icon-list">
     <div>

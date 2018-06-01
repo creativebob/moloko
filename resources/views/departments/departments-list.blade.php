@@ -17,17 +17,22 @@ $count = count($department['staff']) + $count;
     <div class="icon-open sprite"></div>
     <span>{{ $department['name'] }}</span>
     <span class="number">{{ $count }}</span>
+
     @if ($department['moderation'])
     <span class="no-moderation">Не отмодерированная запись!</span>
     @endif
+
     @if ($department['system_item'])
     <span class="system-item">Системная запись!</span>
     @endif
+    
+    @can ('publisher', App\Department::class)
     @if ($department['display'] == 1)
     <span class="system-item">Отображается на сайте</span>
     @else
     <span class="no-moderation">Не отображается на сайте</span>
     @endif
+    @endcan
   </a>
   <div class="drop-list checkbox">
     @if ($drop == 1)
