@@ -41,6 +41,7 @@
       "app/Helpers/HtmlOperations.php",
       "app/Helpers/StringOperation.php", 
       "app/Helpers/SessionOperation.php",
+      "app/Helpers/PhotoOperations.php",
       "app/Helpers/PageInfo.php",
       "app/Helpers/Filters.php" 
     ]

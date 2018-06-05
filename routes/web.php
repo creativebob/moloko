@@ -84,6 +84,9 @@ Route::get('/products/{id}/photos', 'ProductController@product_photos')->middlew
 // Запись фото
 Route::any('/product/add_photo', 'ProductController@add_photo')->middleware('auth');
 
+// Проверка на существование продукции
+Route::post('/product_check', 'ProductController@product_check')->middleware('auth');
+
 // Сортировка продукции
 Route::post('/products_sort', 'ProductController@products_sort')->middleware('auth');
 // Route for export/download tabledata to .xls or .xlsx

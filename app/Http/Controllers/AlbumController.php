@@ -110,7 +110,6 @@ class AlbumController extends Controller
         // Главный запрос
         $albums_categories = AlbumsCategory::moderatorLimit($answer_albums_categories)
         ->companiesLimit($answer_albums_categories)
-        ->filials($answer_albums_categories) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
         ->authors($answer_albums_categories)
         ->systemItem($answer_albums_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')

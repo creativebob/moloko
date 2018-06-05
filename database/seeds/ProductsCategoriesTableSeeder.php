@@ -14,6 +14,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_status' => 1,
         'author_id' => 1,
         'products_type_id' => 1,
+        'category_id' => null,
       ],
       [
         'company_id' => 1,
@@ -22,6 +23,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_status' => null,
         'author_id' => 1,
         'products_type_id' => 1,
+        'category_id' => 1,
       ],
       [
         'company_id' => 1,
@@ -30,6 +32,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_status' => null,
         'author_id' => 1,
         'products_type_id' => 1,
+        'category_id' => 1,
       ],
       [
         'company_id' => 1,
@@ -38,6 +41,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_status' => 1,
         'author_id' => 1,
         'products_type_id' => 1,
+        'category_id' => null,
       ],
       [
         'company_id' => 1,
@@ -46,6 +50,34 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_status' => 1,
         'author_id' => 1,
         'products_type_id' => 1,
+        'category_id' => null,
+      ],
+      [
+        'company_id' => 1,
+        'name' => 'Монтаж',
+        'parent_id' => null,
+        'category_status' => 1,
+        'author_id' => 1,
+        'products_type_id' => 2,
+        'category_id' => null,
+      ],
+      [
+        'company_id' => 1,
+        'name' => 'Монтаж откатных ворот',
+        'parent_id' => 6,
+        'category_status' => null,
+        'author_id' => 1,
+        'products_type_id' => 2,
+        'category_id' => 6,
+      ],
+      [
+        'company_id' => 1,
+        'name' => 'Монтаж секционных ворот',
+        'parent_id' => 6,
+        'category_status' => null,
+        'author_id' => 1,
+        'products_type_id' => 2,
+        'category_id' => 6,
       ],
     ]);
   }

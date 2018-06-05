@@ -29,8 +29,58 @@
 @endsection
 
 @section('title-content')
-{{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Product::class, 'type' => 'table'])
+{{-- Заголовок и фильтры --}}
+<div data-sticky-container id="head-content">
+  <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
+    <div class="top-bar head-content">
+      <div class="top-bar-left">
+        <h2 class="header-content">{{ $page_info->title }}</h2>
+        <a class="icon-add sprite" data-open="first-add"></a>
+      </div>
+      <div class="top-bar-right">
+        @if (isset($filter))
+        <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
+        @endif
+        <input class="search-field" type="search" name="search_field" placeholder="Поиск" />
+        <button type="button" class="icon-search sprite button"></button>
+      </div>
+    </div>
+    {{-- Блок фильтров --}}
+    @if (isset($filter))
+
+    {{-- Подключаем класс Checkboxer --}}
+    @include('includes.scripts.class.checkboxer')
+
+    <div class="grid-x">
+      <div class="small-12 cell filters fieldset-filters" id="filters">
+        <div class="grid-padding-x">
+          <div class="small-12 cell text-right">
+            {{ link_to(Request::url(), 'Сбросить', ['class' => 'small-link']) }}
+          </div>
+        </div>
+        <div class="grid-padding-x">
+          <div class="small-12 cell">
+            {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
+
+            @include($page_info->alias.'.filters')
+
+            <div class="small-12 cell text-center">
+              {{ Form::submit('Фильтрация', ['class'=>'button']) }}
+            </div>
+            {{ Form::close() }}
+          </div>
+        </div>
+        <div class="grid-x">
+          <a class="small-12 cell text-center filter-close">
+            <button type="button" class="icon-moveup sprite"></button>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    @endif
+  </div>
+</div>
 @endsection
 
 @section('content')
@@ -45,7 +95,6 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-photo">Фото</th>
           <th class="td-name">Название товара</th>
-          <th class="td-edit">Фото</th>
           <th class="td-category">Категория</th>
           <th class="td-company-id">Компания</th>
           <th class="td-author">Автор</th>
@@ -62,16 +111,13 @@
         <tr class="item @if($product->moderation == 1)no-moderation @endif" id="products-{{ $product->id }}" data-name="{{ $product->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
-
             <input type="checkbox" class="table-check" name="album_id" id="check-{{ $product->id }}"
-
-              {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
-              @if(!empty($filter['booklist']['booklists']['default']))
-                {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-                @if (in_array($product->id, $filter['booklist']['booklists']['default'])) checked 
-              @endif
+            {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+            @if(!empty($filter['booklist']['booklists']['default']))
+            {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+            @if (in_array($product->id, $filter['booklist']['booklists']['default'])) checked 
             @endif
-
+            @endif
             >
             <label class="label-check" for="check-{{ $product->id }}"></label></td>
             <td>
@@ -80,7 +126,6 @@
               </a>
             </td>
             <td class="td-name"><a href="/products/{{ $product->id }}/edit">{{ $product->name }}</a></td>
-            <td class="td-edit"><a class="tiny button" href="/products/{{ $product->id }}/photos">Добавить фото</a></td>
             <td class="td-category">{{ $product->products_category->name }}</td>
             <td class="td-company-id">@if(!empty($product->company->name)) {{ $product->company->name }} @else @if($product->system_item == null) Шаблон @else Системная @endif @endif</td>
             <td class="td-author">@if(isset($product->author->first_name)) {{ $product->author->first_name . ' ' . $product->author->second_name }} @endif</td>
@@ -118,6 +163,7 @@
   @endsection
 
   @section('modals')
+  <section id="modal"></section>
   {{-- Модалка удаления с refresh --}}
   @include('includes.modals.modal-delete')
 
@@ -127,14 +173,110 @@
   @endsection
 
   @section('scripts')
-  {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-  @include('includes.scripts.tablesorter-script')
-  
-  {{-- Скрипт чекбоксов --}}
-  @include('includes.scripts.checkbox-control')
+  <script type="text/javascript">
+    // Обозначаем таймер для проверки
+    var timerId;
+    var time = 400;
 
-  {{-- Скрипт модалки удаления --}}
-  @include('includes.scripts.modal-delete-script')
-  @include('includes.scripts.delete-ajax-script')
-  @include('includes.scripts.sortable-table-script')
-  @endsection
+    // Первая буква заглавная
+    function newParagraph (name) {
+      name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
+      return name;
+    };
+
+    // ------------------- Проверка на совпадение имени --------------------------------------
+    function productCheck (name, submit, db) {
+
+      // Блокируем аттрибут базы данных
+      $(db).val(0);
+
+      // Смотрим сколько символов
+      var lenname = name.length;
+
+      // Если символов больше 3 - делаем запрос
+      if (lenname > 3) {
+
+        // Первая буква сектора заглавная
+        name = newParagraph (name);
+
+        // Сам ajax запрос
+        $.ajax({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          url: "/product_check",
+          type: "POST",
+          data: {name: name},
+          beforeSend: function () {
+            $('.find-status').addClass('icon-load');
+          },
+          success: function(date){
+            $('.find-status').removeClass('icon-load');
+            var result = $.parseJSON(date);
+            // Если ошибка
+            if (result.error_status == 1) {
+              $(submit).prop('disabled', true);
+              $('.item-error').css('display', 'block');
+              $(db).val(0);
+            } else {
+              // Выводим пришедшие данные на страницу
+              $(submit).prop('disabled', false);
+              $('.item-error').css('display', 'none');
+              $(db).val(1);
+            };
+          }
+        });
+      };
+    // Удаляем все значения, если символов меньше 3х
+    if (lenname <= 3) {
+      $(submit).prop('disabled', false);
+      $('.item-error').css('display', 'none');
+      $(db).val(0);
+    };
+  };
+
+  // ---------------------------- Продукция -----------------------------------------------
+
+  // ----------- Добавление -------------
+  // Открываем модалку
+  $(document).on('click', '[data-open="first-add"]', function() {
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/products/create',
+      type: "GET",
+      success: function(html){
+        $('#modal').html(html);
+        $('#first-add').foundation();
+        $('#first-add').foundation('open');
+      }
+    }); 
+  });
+
+  // Проверка существования
+  $(document).on('keyup', '#form-first-add .name-field', function() {
+    // Получаем фрагмент текста
+    var name = $('#form-first-add .name-field').val();
+    // Указываем название кнопки
+    var submit = '.modal-button';
+    // Значение поля с разрешением
+    var db = '#form-first-add .first-item';
+    // Выполняем запрос
+    clearTimeout(timerId);   
+    timerId = setTimeout(function() {
+      productCheck (name, submit, db)
+    }, time); 
+  });
+</script>
+{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+@include('includes.scripts.tablesorter-script')
+
+{{-- Скрипт чекбоксов --}}
+@include('includes.scripts.checkbox-control')
+
+{{-- Скрипт модалки удаления --}}
+@include('includes.scripts.modal-delete-script')
+@include('includes.scripts.delete-ajax-script')
+@include('includes.scripts.sortable-table-script')
+@endsection

@@ -63,8 +63,8 @@ class StaffTableSeeder extends Seeder
             [   
                 'company_id' => 1,
                 'user_id' => 10,
-                'position_id' => 1,
-                'department_id' => 4,
+                'position_id' => 2,
+                'department_id' => 5,
                 'filial_id' => 5,
                 'author_id' => 1,
             ],
