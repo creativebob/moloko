@@ -82,7 +82,7 @@ class CompaniesTableSeeder extends Seeder
                 // 'account_settlement' => '',
                 // 'account_correspondent' => '',
                 // 'bank' => '',
-                'director_user_id' => null,  
+                'director_user_id' => 15,  
                 // 'admin_user_id' => '1',  
                 'moderation' => null,
                 'sector_id' => 12,

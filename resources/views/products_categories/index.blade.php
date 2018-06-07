@@ -209,19 +209,19 @@
   });
 
   // Проверка существования
-  $(document).on('keyup', '#form-medium-add .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-medium-add .name-field').val();
-    // Указываем название кнопки
-    var submit = '.submit-add';
-    // Значение поля с разрешением
-    var db = '#form-medium-add .medium-item';
-    // Выполняем запрос
-    clearTimeout(timerId);   
-    timerId = setTimeout(function() {
-      productsCategoryCheck (name, submit, db)
-    }, time); 
-  });
+  // $(document).on('keyup', '#form-medium-add .name-field', function() {
+  //   // Получаем фрагмент текста
+  //   var name = $('#form-medium-add .name-field').val();
+  //   // Указываем название кнопки
+  //   var submit = '.submit-add';
+  //   // Значение поля с разрешением
+  //   var db = '#form-medium-add .medium-item';
+  //   // Выполняем запрос
+  //   clearTimeout(timerId);   
+  //   timerId = setTimeout(function() {
+  //     productsCategoryCheck (name, submit, db)
+  //   }, time); 
+  // });
 
   // ----------- Изменение -------------
   // Открываем модалку
@@ -248,19 +248,19 @@
   });
 
   // Проверка существования
-  $(document).on('keyup', '#form-medium-edit .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-medium-edit .name-field').val();
-    // Указываем название кнопки
-    var submit = '.submit-edit';
-    // Значение поля с разрешением
-    var db = '#form-medium-edit .medium-item';
-    // Выполняем запрос
-    clearTimeout(timerId);   
-    timerId = setTimeout(function() {
-      productsCategoryCheck (name, submit, db)
-    }, time); 
-  });
+  // $(document).on('keyup', '#form-medium-edit .name-field', function() {
+  //   // Получаем фрагмент текста
+  //   var name = $('#form-medium-edit .name-field').val();
+  //   // Указываем название кнопки
+  //   var submit = '.submit-edit';
+  //   // Значение поля с разрешением
+  //   var db = '#form-medium-edit .medium-item';
+  //   // Выполняем запрос
+  //   clearTimeout(timerId);   
+  //   timerId = setTimeout(function() {
+  //     productsCategoryCheck (name, submit, db)
+  //   }, time); 
+  // });
 
   // ------------------------ Кнопка добавления ---------------------------------------
   $(document).on('click', '.submit-add', function(event) {

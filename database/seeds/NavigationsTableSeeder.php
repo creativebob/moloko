@@ -60,6 +60,14 @@ class NavigationsTableSeeder extends Seeder
         'navigations_category_id' => 3,  
         'display' => 1,           
       ],
+      [
+        'name' => 'Навигация по сайту',
+        'site_id' => 5,  
+        'system_item' => null, 
+        'company_id' => 4,
+        'navigations_category_id' => 1, 
+        'display' => 1,            
+      ],
 
     ]);
    }

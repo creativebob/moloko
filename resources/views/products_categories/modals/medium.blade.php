@@ -14,7 +14,7 @@
     </label>
 
     {{ Form::hidden('products_category_id', $products_category->id, ['id' => 'products-category-id']) }}
-    {{ Form::hidden('medium_item', 0, ['class' => 'medium-item', 'pattern' => '[0-9]{1}']) }}
+    {{ Form::hidden('medium_item', 1, ['class' => 'medium-item', 'pattern' => '[0-9]{1}']) }}
     {{ Form::hidden('category_id', 0, ['class' => 'category-id']) }}
 
     {{-- Чекбокс отображения на сайте --}}

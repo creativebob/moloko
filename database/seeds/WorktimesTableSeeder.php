@@ -12,6 +12,7 @@ class WorktimesTableSeeder extends Seeder
     public function run()
     {
 		DB::table('worktimes')->insert([
+			// ВК "Марс" (09:00-18:00)
 			[
 				'schedule_id' => 1, 
 				'weekday' => 1, 
@@ -167,12 +168,12 @@ class WorktimesTableSeeder extends Seeder
 				'moderation' => null, 
 			],	
 
-
+			// Шторка (09:00-17:00)
 			[
 				'schedule_id' => 4, 
 				'weekday' => 1, 
 				'worktime_begin' => 32400, 
-				'worktime_interval' => 32400, 
+				'worktime_interval' => 28800, 
 				'company_id' => 3, 
 				'system_item' => null, 
 				'author_id' => 1, 
@@ -182,7 +183,7 @@ class WorktimesTableSeeder extends Seeder
 				'schedule_id' => 4, 
 				'weekday' => 2, 
 				'worktime_begin' => 32400, 
-				'worktime_interval' => 32400, 
+				'worktime_interval' => 28800, 
 				'company_id' => 3, 
 				'system_item' => null, 
 				'author_id' => 1, 
@@ -192,7 +193,7 @@ class WorktimesTableSeeder extends Seeder
 				'schedule_id' => 4, 
 				'weekday' => 3, 
 				'worktime_begin' => 32400, 
-				'worktime_interval' => 32400, 
+				'worktime_interval' => 28800, 
 				'company_id' => 3, 
 				'system_item' => null, 
 				'author_id' => 1, 
@@ -202,7 +203,7 @@ class WorktimesTableSeeder extends Seeder
 				'schedule_id' => 4, 
 				'weekday' => 4, 
 				'worktime_begin' => 32400, 
-				'worktime_interval' => 32400, 
+				'worktime_interval' => 28800, 
 				'company_id' => 3, 
 				'system_item' => null, 
 				'author_id' => 1, 
@@ -212,7 +213,7 @@ class WorktimesTableSeeder extends Seeder
 				'schedule_id' => 4, 
 				'weekday' => 5, 
 				'worktime_begin' => 32400, 
-				'worktime_interval' => 32400, 
+				'worktime_interval' => 28800, 
 				'company_id' => 3, 
 				'system_item' => null, 
 				'author_id' => 1, 

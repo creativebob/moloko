@@ -84,6 +84,16 @@ class StaffTableSeeder extends Seeder
                 'filial_id' => 1,
                 'author_id' => 1,
             ],
+
+            // Шторка
+            [   
+                'company_id' => 4,
+                'user_id' => 15,
+                'position_id' => 1,
+                'department_id' => 8,
+                'filial_id' => 8,
+                'author_id' => 1,
+            ],
         ]);
     }
 }
