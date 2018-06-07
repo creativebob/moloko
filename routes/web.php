@@ -73,6 +73,9 @@ Route::prefix('/albums/{alias}')->group(function () {
   // Загрузка фоток через ajax через dropzone.js
 });
 
+Route::any('/get_photo', 'PhotoController@get_photo')->middleware('auth');
+Route::any('/update_photo/{id}', 'PhotoController@update_photo')->middleware('auth');
+
 // Сортировка фоток
 Route::post('/photos_sort', 'PhotoController@photos_sort')->middleware('auth');
 

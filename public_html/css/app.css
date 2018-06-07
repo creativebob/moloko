@@ -1374,6 +1374,10 @@ input[type=checkbox], input[type=radio] {
   z-index: 50;
 }
 
+#photos-list .active {
+  border: 2px solid red;
+}
+
 .tabs-margin-top {
   margin-top: 2rem;
 }

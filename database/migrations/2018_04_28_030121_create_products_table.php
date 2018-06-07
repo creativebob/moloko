@@ -38,6 +38,9 @@ class CreateProductsTable extends Migration
 
             $table->integer('manufacturer_id')->nullable()->unsigned()->comment('Id производителя товара');
             $table->foreign('manufacturer_id')->references('id')->on('companies');
+
+            $table->integer('album_id')->nullable()->unsigned()->comment('ID альбома');
+            $table->foreign('album_id')->references('id')->on('albums');
             
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

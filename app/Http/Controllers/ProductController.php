@@ -227,7 +227,14 @@ class ProductController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('products.edit', compact('product', 'page_info', 'products_categories_list', 'units_list', 'manufacturers_list'));
+        $photo = New Photo;
+
+        // Отдаем Ajax
+        if ($request->ajax()) {
+            return view('products.photos-list', ['sectors_tree' => $sectors_tree, 'id' => $request->id]);
+        }
+
+        return view('products.edit', compact('product', 'page_info', 'products_categories_list', 'units_list', 'manufacturers_list', 'photo'));
     }
 
     public function update(ProductRequest $request, $id)
@@ -254,12 +261,15 @@ class ProductController extends Controller
             $directory = $company_id.'/media/products/'.$product->id.'/img/';
             $name = 'avatar-'.time();
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем))
-            if (isset($product->photo_id)) {
-                $photo = update_photo($request, $user_id, $company_id, $directory, $name, $product->photo_id);
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            if ($product->photo_id) {
+                $array = save_photo($request, $user_id, $company_id, $directory, $name, null, $product->photo_id);
+
             } else {
-                $photo = save_photo($request, $user_id, $company_id, $directory, $name);
+                $array = save_photo($request, $user_id, $company_id, $directory, $name);
+                
             }
+            $photo = $array['photo'];
 
             $product->photo_id = $photo->id;
         } 
@@ -281,6 +291,8 @@ class ProductController extends Controller
 
         $product->editor_id = $user_id;
         $product->save();
+
+
 
         if ($product) {
             return Redirect('/products');
@@ -421,10 +433,22 @@ class ProductController extends Controller
                 $album_id = $album->id;
             }
 
-            $photo = new Photo;
+            $product = Product::findOrFail($request->id);
+
+            if ($product->album_id == null) {
+                $product->album_id = $album_id;
+                $product->save();
+
+                if (!$product) {
+                    abort(403, 'Ошибка записи альбома в продукцию');
+                }
+            }
 
             $directory = $company_id.'/media/albums/'.$album_id.'/img/';
-            $photo = save_photo($request, $user_id, $company_id, $directory,  $alias);
+            $array = save_photo($request, $user_id, $company_id, $directory,  $alias.'-'.time(), $album_id);
+
+            $photo = $array['photo'];
+            $upload_success = $array['upload_success'];
 
             $media = new AlbumEntity;
             $media->album_id = $album_id;
@@ -432,18 +456,21 @@ class ProductController extends Controller
             $media->entity = 'photo';
             $media->save();
 
-            $check_media = AlbumEntity::where(['album_id' => $album_id, 'entity_id' => $request->id, 'entity' => 'product'])->first();
+            // $check_media = AlbumEntity::where(['album_id' => $album_id, 'entity_id' => $request->id, 'entity' => 'product'])->first();
 
-            if ($check_media == false) {
-                $media = new AlbumEntity;
-                $media->album_id = $album_id;
-                $media->entity_id = $request->id;
-                $media->entity = 'product';
-                $media->save();
-            }
-
+            // if ($check_media == false) {
+            //     $media = new AlbumEntity;
+            //     $media->album_id = $album_id;
+            //     $media->entity_id = $request->id;
+            //     $media->entity = 'product';
+            //     $media->save();
+            // }
 
             if ($upload_success) {
+
+                // Переадресовываем на index
+                // return redirect()->route('/products/'.$product->id.'/edit', ['photo' => $photo, 'upload_success' => $upload_success]);
+
                 return response()->json($upload_success, 200);
             } else {
                 return response()->json('error', 400);

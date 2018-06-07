@@ -33,7 +33,7 @@
 </div>
 
 <div class="grid-x tabs-wrap inputs">
-  <div class="small-12 medium-7 large-5 cell tabs-margin-top">
+  <div class="small-12 cell tabs-margin-top">
     <div class="tabs-content" data-tabs-content="tabs">
 
       @if ($errors->any())
@@ -93,6 +93,31 @@
               <img id="photo" @if (isset($product->photo_id)) src="/storage/{{ $product->company->id }}/media/products/{{ $product->id }}/img/medium/{{ $product->photo->name }}" @endif>
             </div>
           </div>
+
+          {{-- Чекбокс отображения на сайте --}}
+          @can ('publisher', $product)
+          <div class="small-12 cell checkbox">
+            {{ Form::checkbox('display', 1, $product->display, ['id' => 'display']) }}
+            <label for="display"><span>Отображать на сайте</span></label>
+          </div>
+          @endcan
+
+          {{-- Чекбокс модерации --}}
+          @can ('moderator', $product)
+          @if ($product->moderation == 1)
+          <div class="small-12 cell checkbox">
+            @include('includes.inputs.moderation', ['value'=>$product->moderation, 'name'=>'moderation'])
+          </div>
+          @endif
+          @endcan
+
+          {{-- Чекбокс системной записи --}}
+          @can ('god', $product)
+          <div class="small-12 cell checkbox">
+            @include('includes.inputs.system', ['value'=>$product->system_item, 'name'=>'system_item']) 
+          </div>
+          @endcan
+
         </div>
       </div>
 
@@ -100,8 +125,7 @@
       <div class="tabs-panel" id="properties">
         <div class="grid-x grid-padding-x">
           <div class="small-12 medium-6 cell">
-            <label>Название товара
-              про
+            <label>Название товара про
             </label>
           </div>
         </div>
@@ -112,13 +136,37 @@
       <!-- Фотографии -->
       <div class="tabs-panel" id="photos">
         <div class="grid-x grid-padding-x">
-          <div class="small-12 medium-6 cell">
+          <div class="small-12 medium-5 cell">
+
+            {{-- Форма редактированя фотки --}}
+            {{ Form::open(['url' => '/product/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
+
+            @include('products.photo-edit', ['photo' => $photo])
+
+            {{ Form::hidden('name', $product->name) }}
+            {{ Form::hidden('id', $product->id) }}
+
+            {{ Form::close() }}
+
+          </div>
+          <div class="small-12 medium-7 cell">
             {{ Form::open(['url' => '/product/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
 
             {{ Form::hidden('name', $product->name) }}
             {{ Form::hidden('id', $product->id) }}
 
             {{ Form::close() }}
+
+            <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
+              @if (isset($product->album_id))
+              @foreach ($product->album->photos as $photo)
+              @include('products.photos-list', ['photo' => $photo])
+              
+              @endforeach
+              @endif
+
+            </ul>
+
           </div>
         </div>
       </div>
@@ -129,41 +177,12 @@
 
 
 <div class="grid-x grid-padding-x inputs">
-  {{-- Чекбокс отображения на сайте --}}
-  @can ('publisher', $product)
-  <div class="small-12 cell checkbox">
-    {{ Form::checkbox('display', 1, $product->display, ['id' => 'display', 'form' => 'product-form']) }}
-    <label for="display"><span>Отображать на сайте</span></label>
-  </div>
-  @endcan
 
-  {{-- Чекбокс модерации --}}
-  @can ('moderator', $product)
-  @if ($product->moderation == 1)
-  <div class="small-12 cell checkbox">
-    {{-- Чекбокс модерации --}}
-    {{ Form::checkbox(эmoderation, 1, $product->moderation, ['id'=>'moderation-checkbox', 'form' => 'product-form']) }}
-    <label for="moderation-checkbox"><span>Временная запись.</span></label>
-  </div>
-  @endif
-  @endcan
-
-  {{-- Чекбокс системной записи --}}
-  @can ('god', $product)
-  <div class="small-12 cell checkbox">
-    {{ Form::checkbox('system_item', 1, $product->system_item, ['id'=>'system-item-checkbox', 'form' => 'product-form']) }}
-    <label for="system-item-checkbox"><span>Сделать запись системной.</span></label>
-  </div>
-  @endcan   
 
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit('Редактировать продукцию', ['class'=>'button', 'form' => 'product-form']) }}
   </div>
 </div>
-
-
-
-
 
 
 @endsection
@@ -176,6 +195,57 @@
 $settings = config()->get('settings');
 @endphp
 <script>
+  $(document).on('click', '#photos-list img', function(event) {
+    event.preventDefault();
+
+    $('#photos-list img').removeClass('active');
+    
+    var id = $(this).data('id');
+
+    $(this).addClass('active');
+
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/get_photo',
+      type: 'GET',
+      data: {id: id, entity: 'products'},
+      success: function(html){
+        // alert(html);
+        $('#form-photo-edit').html(html);
+        
+        // $('#first-add').foundation();
+        // $('#first-add').foundation('open');
+      }
+    })
+  });
+
+  $(document).on('click', '#form-photo-edit .button', function(event) {
+    event.preventDefault();
+
+    var id = $(this).closest('#form-photo-edit').find('input[name=id]').val();
+
+    // alert(id);
+
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/update_photo/' + id,
+      type: 'PATCH',
+      data: $(this).closest('#form-photo-edit').serialize(),
+      success: function(html){
+        // alert(html);
+        $('#form-photo-edit').html(html);
+        
+        // $('#first-add').foundation();
+        // $('#first-add').foundation('open');
+      }
+    })
+  });
+
+
   var minImageHeight = 795;
   Dropzone.options.myDropzone = {
     paramName: 'photo',
@@ -186,12 +256,13 @@ $settings = config()->get('settings');
     init: function() {
       this.on("success", function(file, responseText) {
         file.previewTemplate.setAttribute('id',responseText[0].id);
+
+        // alert(file);
       });
       this.on("thumbnail", function(file) {
         if (file.width < {{ $settings['img_min_width']->value }} || file.height < minImageHeight) {
-          file.rejectDimensions()
-        }
-        else {
+          file.rejectDimensions();
+        } else {
           file.acceptDimensions();
         }
       });
@@ -201,5 +272,6 @@ $settings = config()->get('settings');
       file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width']->value }} px в ширину"); };
     }
   };
+
 </script>
 @endsection

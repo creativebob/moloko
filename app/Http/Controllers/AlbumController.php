@@ -52,13 +52,13 @@ class AlbumController extends Controller
 
         $albums = Album::with('author', 'company', 'albums_category')
         ->withCount('photos')
-        ->where('name', '!=', 'default')
+        ->whereHas('albums_category', function ($query) {
+            $query->whereNull('system_item')->where('company_id', '!=', null); // Исключаем програмную категорию
+        })
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
-        ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
-        ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        ->booklistFilter($request) 
+        ->booklistFilter($request)
         ->filter($request, 'author')
         ->filter($request, 'company')
         ->orderBy('sort', 'asc')
@@ -190,7 +190,7 @@ class AlbumController extends Controller
         $answer_photo = operator_right('photos', false, getmethod('index'));
         // dd($answer_photo);
 
-        $album = Album::moderatorLimit($answer)->whereAlias($alias)->first();
+        $album = Album::moderatorLimit($answer_album)->whereAlias($alias)->first();
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $album);

@@ -78,7 +78,7 @@ class Product extends Model
     }
 
     // Получаем альбом
-    public function album()
+    public function albums()
     {
         return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'product');
     }
@@ -86,5 +86,17 @@ class Product extends Model
     public function photo()
     {
         return $this->belongsTo('App\Photo');
+    }
+
+    // Производитель
+    public function manufacturer()
+    {
+        return $this->belongsTo('App\Company', 'manufacturer_id');
+    }
+
+    // Альбом
+    public function album()
+    {
+        return $this->belongsTo('App\Album');
     }
 }

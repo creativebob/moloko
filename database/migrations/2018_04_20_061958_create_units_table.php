@@ -17,8 +17,14 @@ class CreateUnitsTable extends Migration
             $table->increments('id');
 
             $table->string('name')->index()->comment('Название единицы измерения');
-            $table->string('preview')->comment('Сокращенное название');
+            $table->string('abbreviation')->comment('Сокращенное название');
+
+            $table->decimal('ratio', 15, 8)->nullable()->comment('Коэффициент умножения');
+
             $table->string('description')->nullable()->comment('Описание единицы измерения');
+
+            $table->integer('units_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться юнит');
+            $table->foreign('units_category_id')->references('id')->on('units_categories');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
