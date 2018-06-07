@@ -73,9 +73,9 @@ class CompaniesTableSeeder extends Seeder
 
                 'name' => 'Шторка',
                 'alias' => 'storka',
-                'phone' => '83952712318',
+                'phone' => '89149266771',
                 // 'extra_phone' => '83952717775',
-                'email' => null,
+                'email' => 'akasha_07@mail.ru',
                 'location_id' => 4,
                 // 'inn' => '',
                 // 'kpp' => '',

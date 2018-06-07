@@ -47,6 +47,22 @@ class ProductsCategoriesTableSeeder extends Seeder
         'author_id' => 1,
         'products_type_id' => 1,
       ],
+      [
+        'company_id' => 4,
+        'name' => 'Портьерные ткани',
+        'parent_id' => null,
+        'category_status' => 1,
+        'author_id' => 1,
+        'products_type_id' => 1,
+      ],
+      [
+        'company_id' => 4,
+        'name' => 'Блекаут',
+        'parent_id' => 6,
+        'category_status' => null,
+        'author_id' => 1,
+        'products_type_id' => 1,
+      ],
     ]);
   }
 }
