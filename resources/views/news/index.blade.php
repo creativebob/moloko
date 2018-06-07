@@ -31,6 +31,9 @@
           <th class="td-info">Инфо</th>
           <th class="td-date-publish">Срок публикации</th>
           <th class="td-author">Автор</th>
+          @can ('publisher', App\News::class)
+          <th class="td-display">Отображение</th>
+          @endcan
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -93,6 +96,15 @@
     <span>{{ $cur_news->publish_end_date }} {{ getWeekDay($cur_news->publish_end_date, 1) }}</span>
   </td>
   <td class="td-author">@if(isset($cur_news->author->first_name)) {{ $cur_news->author->first_name . ' ' . $cur_news->author->second_name }} @endif</td>
+  @can ('publisher', $cur_news)
+  <td class="td-display">
+    @if ($cur_news['display'] == 1)
+    <span class="system-item">Отображается на сайте</span>
+    @else
+    <span class="no-moderation">Не отображается на сайте</span>
+    @endif
+  </td>
+  @endcan
   <td class="td-delete">
     @if ($cur_news->system_item != 1)
     @can('delete', $cur_news)

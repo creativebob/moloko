@@ -58,7 +58,7 @@ class PositionsTableSeeder extends Seeder
                 'sector_id' => 9,
             ],
             [
-                'name' => 'Руководитель отдела продаж',
+                'name' => 'Технический специалист',
                 'page_id' => 6,
                 'direction_status' => 1,
                 'company_id' => 1,

@@ -1,6 +1,6 @@
 {{-- Расписание / График работы --}}
 
-  <table class="worktime_edit unstriped stack">
+  <table class="worktime_edit unstriped">
     <tr>
       <td>Понедельник</td>
       <td>

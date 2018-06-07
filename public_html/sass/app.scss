@@ -1691,12 +1691,22 @@ input[type=checkbox], input[type=radio] {
   z-index: 50;
 }
 // ------------------------------------------- Tabs -------------------------------------------
+
+#photos-list {
+
+      .active {
+        border: 2px solid red;
+      }
+    }
+
 .tabs-margin-top {
   margin-top: 2rem;
 }
 .tabs-wrap {
   padding: 0 10px;
   font-family: $PFDDPL;
+
+
 
   //Обнуляем фонду, в активном состоянии
   .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
@@ -2683,6 +2693,9 @@ input[type=checkbox], input[type=radio] {
     .fieldset-access {
       padding: 1rem 0.6rem;
     }
+
+    
+    
   }
     // Блочим элементы добавления/редактирования/удаления
     .content-list {

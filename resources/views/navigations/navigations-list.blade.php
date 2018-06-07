@@ -14,15 +14,23 @@
       <span class="first-item-name">{{ $navigation['name'] }}</span>
       <span class="number">{{ $navigation['menus_count'] }}</span>
       <span>( {{ $navigation['navigations_category']['name'] }} )</span>
+
       @if ($navigation['moderation'])
       <span class="no-moderation">Не отмодерированная запись!</span>
       @endif
+
       @if ($navigation['system_item'])
       <span class="system-item">Системная запись!</span>
       @endif
-      @if ($navigation['display'] != 1)
+      
+      @can ('publisher', App\Navigation::class)
+      @if ($navigation['display'] == 1)
+      <span class="system-item">Отображается на сайте</span>
+      @else
       <span class="no-moderation">Не отображается на сайте</span>
       @endif
+      @endcan
+
     </a>
     <div class="icon-list">
       <div>

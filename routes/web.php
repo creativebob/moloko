@@ -73,6 +73,9 @@ Route::prefix('/albums/{alias}')->group(function () {
   // Загрузка фоток через ajax через dropzone.js
 });
 
+Route::any('/get_photo', 'PhotoController@get_photo')->middleware('auth');
+Route::any('/update_photo/{id}', 'PhotoController@update_photo')->middleware('auth');
+
 // Сортировка фоток
 Route::post('/photos_sort', 'PhotoController@photos_sort')->middleware('auth');
 
@@ -84,13 +87,15 @@ Route::get('/products/{id}/photos', 'ProductController@product_photos')->middlew
 // Запись фото
 Route::any('/product/add_photo', 'ProductController@add_photo')->middleware('auth');
 
+// Проверка на существование продукции
+Route::post('/product_check', 'ProductController@product_check')->middleware('auth');
+
 // Сортировка продукции
 Route::post('/products_sort', 'ProductController@products_sort')->middleware('auth');
 // Route for export/download tabledata to .xls or .xlsx
 Route::get('/products_download/{type}', 'ProductController@products_download')->middleware('auth');
 // Route for import excel data to database.
 Route::post('/products_import', 'ProductController@products_import');
-
 
 // ------------------------------------ Категории продукции --------------------------------------
 // Текущая добавленная/удаленная категория продукции
@@ -253,6 +258,7 @@ Route::prefix('/sites/{alias}')->group(function () {
 	// Проверка на существование навигации
   Route::post('/navigation_check', 'NavigationController@navigation_check')->middleware('auth');
 
+// Route::any('/menus/create', 'MenuController@create')->middleware('auth');
   // -------------------------------------------Меню ---------------------------------------------
   Route::resource('/menus', 'MenuController')->middleware('auth');
 
@@ -270,7 +276,7 @@ Route::post('/menus_sort', 'MenuController@menus_sort')->middleware('auth');
 // Сортировка новостей
 Route::post('/news_sort', 'NewsController@news_sort')->middleware('auth');
 
-// Route::any('/modal', 'MenuController@modal')->middleware('auth');
+
 
 // ------------------------------------- Отображение сессии -----------------------------------------
 Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');

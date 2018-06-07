@@ -46,6 +46,7 @@ class Contragent extends Model
         'contragent_id', 
         'client_status', 
         'vendor_status',
+        'manufacturer_status',
     ];
 
     public function getVendorStatusAttribute($value) {

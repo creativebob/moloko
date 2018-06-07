@@ -20,6 +20,8 @@ class CreateSettingsTable extends Migration
             $table->string('description')->nullable()->comment('Описание настройки');
             $table->string('value')->nullable()->comment('Значение настройки');
 
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');

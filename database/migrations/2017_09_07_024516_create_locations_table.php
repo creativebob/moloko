@@ -27,6 +27,8 @@ class CreateLocationsTable extends Migration
             $table->integer('latitude')->nullable()->comment('Широта');
             $table->integer('longitude')->nullable()->comment('Долгота');
 
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');

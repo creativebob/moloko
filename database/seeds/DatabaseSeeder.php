@@ -30,15 +30,19 @@ class DatabaseSeeder extends Seeder
     // Пользователи и компании
     $this->call(CompaniesTableSeeder::class);
 
-   
-
     // Филиалы / отделы
     $this->call(DepartmentsTableSeeder::class);
     $this->call(UsersTableSeeder::class);
 
+    // Единицы измерения
+    $this->call(UnitsCategoriesTableSeeder::class);
+    $this->call(UnitsTableSeeder::class);
+
     // Сайты, страницы
     $this->call(SitesTableSeeder::class);
     $this->call(PagesTableSeeder::class);
+
+    $this->call(DepartmentSiteTableSeeder::class);
 
     // Должности
     $this->call(PositionsTableSeeder::class);
@@ -87,9 +91,6 @@ class DatabaseSeeder extends Seeder
     $this->call(SettingsTableSeeder::class);
     $this->call(AlbumsCategoriesTableSeeder::class);
     $this->call(AlbumsTableSeeder::class);
-
-    // Единицы измерения
-    $this->call(UnitsTableSeeder::class);
 
     // Товары
     $this->call(ProductsTypesTableSeeder::class);

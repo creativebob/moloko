@@ -189,12 +189,8 @@
   // Модалка
   $(document).on('click', '[data-open="medium-add"]', function() {
 
-    var parent;
-    if ($(this).closest('.first-item').hasClass('parent')) {
-      parent = $(this).closest('.item').attr('id').split('-')[1];
-    } else {
-      parent = $(this).closest('.item').attr('id').split('-')[1];
-    };
+    var parent = $(this).closest('.item').attr('id').split('-')[1];
+    var category = $(this).closest('.first-item').attr('id').split('-')[1];
     
     $.ajax({
       headers: {
@@ -202,11 +198,12 @@
       },
       url: '/products_categories/create',
       type: "GET",
-      data: {parent_id: parent},
+      data: {category_id: category, parent_id: parent},
       success: function(html){
         $('#modal').html(html);
         $('#medium-add').foundation();
         $('#medium-add').foundation('open');
+        $('.category-id').val(category);
       }
     }); 
   });
@@ -229,8 +226,10 @@
   // ----------- Изменение -------------
   // Открываем модалку
   $(document).on('click', '[data-open="medium-edit"]', function() {
+
     // Получаем данные о разделе
     var id = $(this).closest('.item').attr('id').split('-')[1];
+    var category = $(this).closest('.first-item').attr('id').split('-')[1];
 
     // Ajax запрос
     $.ajax({
@@ -239,6 +238,7 @@
       },
       url: "/products_categories/" + id + "/edit",
       type: "GET",
+      data: {category_id: category},
       success: function(html) {
         $('#modal').html(html);
         $('#medium-edit').foundation();

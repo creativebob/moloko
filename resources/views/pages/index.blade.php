@@ -1,9 +1,9 @@
 @extends('layouts.app')
- 
+
 @section('inhead')
 <meta name="description" content="{{ $site->site_name }}" />
 {{-- Скрипты таблиц в шапке --}}
-  @include('includes.scripts.tablesorter-inhead')
+@include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', $page_info->name . ' ' . $site->name)
@@ -14,7 +14,7 @@
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'page_alias' => 'sites/'.$site->alias.'/'.$page_info->alias, 'class' => App\Page::class, 'type' => 'section-table', 'name' => $site->name])
 @endsection
- 
+
 @section('content')
 {{-- Таблица --}}
 <div class="grid-x">
@@ -30,22 +30,25 @@
           <th class="td-alias">Алиас</th>
           <th class="td-site-id">Сайт</th>
           <th class="td-author">Автор</th>
+          @can ('publisher', App\Page::class)
+          <th class="td-display">Отображение</th>
+          @endcan
           <th class="td-delete"></th>
         </tr>
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
-      @if(!empty($pages))
+        @if(!empty($pages))
         @foreach($pages as $page)
         <tr class="item @if($page->moderation == 1)no-moderation @endif" id="pages-{{ $page->id }}" data-name="{{ $page->name }}">
           <td class="td-drop"></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $page->id }}"><label class="label-check" for="check-{{ $page->id }}"></label></td>
           <td class="td-name">
             @can('update', $page)
-              <a href="/sites/{{ $page->site->alias }}/pages/{{ $page->alias }}/edit">
-            @endcan
-            {{ $page->name }}
-            @can('update', $page)
-              </a>
+            <a href="/sites/{{ $page->site->alias }}/pages/{{ $page->alias }}/edit">
+              @endcan
+              {{ $page->name }}
+              @can('update', $page)
+            </a>
             @endcan
           </td>
           <td class="td-title">{{ $page->title }}</td>
@@ -53,16 +56,25 @@
           <td class="td-alias">{{ $page->alias }}</td>
           <td class="td-site-id">{{ $page->site->name or ' ... ' }}</td>
           <td class="td-author">@if(isset($page->author->first_name)) {{ $page->author->first_name . ' ' . $page->author->second_name }} @endif</td>
+          @can ('publisher', $page)
+          <td class="td-display">
+            @if ($page['display'] == 1)
+            <span class="system-item">Отображается на сайте</span>
+            @else
+            <span class="no-moderation">Не отображается на сайте</span>
+            @endif
+          </td>
+          @endcan
           <td class="td-delete">
             @if ($page->system_item != 1)
-              @can('delete', $page)
-              <a class="icon-delete sprite" data-open="item-delete"></a>
-              @endcan
+            @can('delete', $page)
+            <a class="icon-delete sprite" data-open="item-delete"></a>
+            @endcan
             @endif
           </td>
         </tr>
         @endforeach
-      @endif
+        @endif
       </tbody>
     </table>
   </div>
@@ -84,11 +96,11 @@
 
 @section('scripts')
 <script type="text/javascript">
-$(function() {
+  $(function() {
   // Берем алиас сайта
   var alias = '{{ $alias }}';
  // Мягкое удаление с refresh
-  $(document).on('click', '[data-open="item-delete"]', function() {
+ $(document).on('click', '[data-open="item-delete"]', function() {
     // находим описание сущности, id и название удаляемого элемента в родителе
     var parent = $(this).closest('.item');
     var type = parent.attr('id').split('-')[0];

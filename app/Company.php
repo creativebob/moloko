@@ -146,4 +146,22 @@ class Company extends Model
         return $this->hasMany('App\Contragent', 'contragent_id');
     }
 
+    // Получаем клиентов
+    public function clients()
+    {   
+        return $this->belongsToMany('App\Company', 'contragents', 'company_id', 'contragent_id')->where('client_status', 1);
+    }
+
+    // Получаем поставщиков
+    public function vendors()
+    {
+        return $this->belongsToMany('App\Company', 'contragents', 'company_id', 'contragent_id')->where('vendor_status', 1);
+    }
+
+    // Получаем производителей
+    public function manufacturers()
+    {
+        return $this->belongsToMany('App\Company', 'contragents', 'company_id', 'contragent_id')->where('manufacturer_status', 1);
+    }
+
 }

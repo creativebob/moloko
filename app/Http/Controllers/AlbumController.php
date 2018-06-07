@@ -52,13 +52,13 @@ class AlbumController extends Controller
 
         $albums = Album::with('author', 'company', 'albums_category')
         ->withCount('photos')
-        ->where('name', '!=', 'default')
+        ->whereHas('albums_category', function ($query) {
+            $query->whereNull('system_item')->where('company_id', '!=', null); // Исключаем програмную категорию
+        })
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
-        ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
-        ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        ->booklistFilter($request) 
+        ->booklistFilter($request)
         ->filter($request, 'author')
         ->filter($request, 'company')
         ->orderBy('sort', 'asc')
@@ -110,7 +110,6 @@ class AlbumController extends Controller
         // Главный запрос
         $albums_categories = AlbumsCategory::moderatorLimit($answer_albums_categories)
         ->companiesLimit($answer_albums_categories)
-        ->filials($answer_albums_categories) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
         ->authors($answer_albums_categories)
         ->systemItem($answer_albums_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
@@ -158,6 +157,10 @@ class AlbumController extends Controller
 
         // Cистемная запись
         $album->system_item = $request->system_item;
+
+        // Отображение на сайте
+        $album->display = $request->display;
+
         $album->company_id = $user->company_id;
         $album->author_id = $user_id;
         $album->save();
@@ -180,16 +183,18 @@ class AlbumController extends Controller
 
     public function show(Request $request, $alias)
     {
-        $album = Album::whereAlias($alias)->first();
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_album = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $answer_photo = operator_right('photos', false, getmethod('index'));
+        // dd($answer_photo);
+
+        $album = Album::moderatorLimit($answer_album)->whereAlias($alias)->first();
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $album);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        $answer_photo = operator_right('photos', false, getmethod('index'));
-        // dd($answer_photo);
         // --------------------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------------------------------
@@ -202,19 +207,18 @@ class AlbumController extends Controller
             ->systemItem($answer_photo)
             ->orderBy('sort', 'asc'); // Фильтр по системным записямorderBy('sort', 'asc');
         }])
+        ->moderatorLimit($answer_album)
+        ->companiesLimit($answer_album)
+        ->authors($answer_album)
+        ->systemItem($answer_album) // Фильтр по системным записям
         ->whereAlias($alias)
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request) 
         ->first();
 
+        // dd($album);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-
-        // dd($album);
 
         return view('albums.show', compact('album', 'page_info', 'alias'));
     }
@@ -222,8 +226,12 @@ class AlbumController extends Controller
 
     public function edit(Request $request, $alias)
     {
+        // Получаем данные для авторизованного пользователя
         $user = $request->user();
+        
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
         $album = Album::moderatorLimit($answer)->where('company_id', $user->company_id)->whereAlias($alias)->first();
 
         // Подключение политики
@@ -280,6 +288,9 @@ class AlbumController extends Controller
         // Модерация и системная запись
         $album->system_item = $request->system_item;
         $album->moderation = $request->moderation;
+
+        // Отображение на сайте
+        $album->display = $request->display;
 
         $album->editor_id = $user_id;
         $album->save();

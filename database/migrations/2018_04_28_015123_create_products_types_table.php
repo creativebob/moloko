@@ -18,6 +18,13 @@ class CreateProductsTypesTable extends Migration
 
             $table->string('name')->index()->comment('Название типа товаров');
 
+            $table->text('description')->comment('Description для типа товаров');
+            $table->string('alias')->index()->comment('Алиас типа товаров');
+
+            $table->string('type')->index()->comment('Тип товара (service/goods)');
+
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');

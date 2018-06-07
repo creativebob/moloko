@@ -50,6 +50,12 @@ class Location extends Model
         return $this->belongsTo('App\City');
     }
 
+    // Получаем страну.
+    public function country()
+    {
+        return $this->belongsTo('App\Country');
+    }
+
     // Получаем компании.
     public function companies()
     {
