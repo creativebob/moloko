@@ -102,6 +102,7 @@ class StaffTableSeeder extends Seeder
                 'department_id' => 8,
                 'filial_id' => 8,
                 'author_id' => 1,
+                'display' => 1,
             ],
         ]);
     }

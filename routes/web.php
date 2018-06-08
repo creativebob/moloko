@@ -97,6 +97,10 @@ Route::get('/products_download/{type}', 'ProductController@products_download')->
 // Route for import excel data to database.
 Route::post('/products_import', 'ProductController@products_import');
 
+Route::any('/add_product_metric', 'ProductController@add_product_metric')->middleware('auth');
+
+Route::any('/get_metric', 'MetricController@get_metric')->middleware('auth');
+
 // ------------------------------------ Категории продукции --------------------------------------
 // Текущая добавленная/удаленная категория продукции
 Route::any('/products_categories', 'ProductsCategoryController@index')->middleware('auth');
@@ -108,6 +112,15 @@ Route::post('/products_category_check', 'ProductsCategoryController@products_cat
 Route::post('/products_categories_list', 'ProductsCategoryController@products_categories_list')->middleware('auth');
 // Сортировка категорий продукции
 Route::post('/products_categories_sort', 'ProductsCategoryController@products_categories_sort')->middleware('auth');
+
+// --------------------------------------- Свойства -----------------------------------------------
+Route::any('/add_property', 'PropertyController@add_property')->middleware('auth');
+
+// Route::resource('/properties', 'PropertyController')->middleware('auth');
+
+// --------------------------------------- Метрики -----------------------------------------------
+Route::resource('/metrics', 'MetricController')->middleware('auth');
+
 
 // --------------------------------------- Компании -----------------------------------------------
 Route::resource('/companies', 'CompanyController')->middleware('auth');

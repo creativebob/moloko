@@ -103,5 +103,9 @@ class DatabaseSeeder extends Seeder
     // Связь: Клиенты - поставщики
     $this->call(ContragentsTableSeeder::class);
 
+    $this->call(PropertiesTableSeeder::class);
+    $this->call(MetricsTableSeeder::class);
+    $this->call(MetricEntityTableSeeder::class);
+
   }
 }

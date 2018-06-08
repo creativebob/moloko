@@ -495,7 +495,7 @@ class NewsController extends Controller
     }
 
     // Проверка наличия в базе
-    public function news_check (Request $request, $alias)
+    public function news_check(Request $request, $alias)
     {
 
         // Проверка новости по сайту в нашей базе данных

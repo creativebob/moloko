@@ -71,8 +71,8 @@
             </label>
           </div>
           <div class="small-12 medium-6 cell">
-            <label>Единица измерения
-              {{ Form::select('unit_id', $units_list, $product->unit_id)}}
+            <label>Категория измерения товара
+              {{ Form::select('units_category_id', $units_categories_list, $product->units_category_id)}}
             </label>
           </div>
           <div class="small-12 medium-6 cell">
@@ -93,6 +93,8 @@
               <img id="photo" @if (isset($product->photo_id)) src="/storage/{{ $product->company->id }}/media/products/{{ $product->id }}/img/medium/{{ $product->photo->name }}" @endif>
             </div>
           </div>
+
+          {{ Form::hidden('metric_product_id', $product->id) }}
 
           {{-- Чекбокс отображения на сайте --}}
           @can ('publisher', $product)
@@ -124,9 +126,42 @@
       <!-- Свойства -->
       <div class="tabs-panel" id="properties">
         <div class="grid-x grid-padding-x">
-          <div class="small-12 medium-6 cell">
-            <label>Название товара про
-            </label>
+          <div class="small-12 medium-8 cell">
+            <table>
+              <thead>
+                <tr> 
+                  <th>Название</th>
+                  <th>Максимум</th>
+                  <th>Минимум</th>
+                  <th>Подтверждение</th>
+                  <th>Отрицание</th>
+                  <th>Цвет</th>
+                  <th>Список</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="metrics-table">
+                @each('products.metric', $product->metrics, 'metric')
+              </tbody>
+            </table>
+          </div>
+          <div class="small-12 medium-4 cell">
+            <fieldset>
+              <legend>Добавить свойство | <a data-toggle="properties-dropdown">Метрики</a></legend>
+              
+              <label>Выберите свойство
+                {{ Form::select('property_id', $properties_list, null, ['id' => 'properties-list']) }}
+              </label>
+              <div class="grid-x grid-padding-x" id="property-form"></div>
+
+            </fieldset>
+            <div class="dropdown-pane" id="properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
+              <ul class="checker" id="properties-list">
+                @each('products.property', $properties, 'property')
+
+              </ul>
+
+            </div>
           </div>
         </div>
       </div>
@@ -187,14 +222,70 @@
 
 @endsection
 
+@section('modals')
+{{-- Модалка удаления с ajax --}}
+@include('includes.modals.modal-delete-ajax')
+@endsection
+
 @section('scripts')
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
+
+@include('includes.scripts.delete-from-page-script')
 
 @php
 $settings = config()->get('settings');
 @endphp
 <script>
+
+  $(document).on('change', '#properties-list', function(event) {
+    event.preventDefault();
+
+   // alert($(this).val());
+
+   $.ajax({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    url: '/add_property',
+    type: 'GET',
+    data: {id: $(this).val(), entity: 'products'},
+    success: function(html){
+        // alert(html);
+
+        $('#property-form').html(html);
+        
+        // $('#first-add').foundation();
+        // $('#first-add').foundation('open');
+      }
+    })
+ });
+
+  $(document).on('click', '#add-metric', function(event) {
+    event.preventDefault();
+
+
+
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/add_product_metric',
+      type: 'POST',
+      data: $('#product-form').serialize(),
+      success: function(html){
+        // alert(html);
+
+        $('#metrics-table').append(html);
+        $('#property-form').html('');
+
+        // $('#first-add').foundation();
+        // $('#first-add').foundation('open');
+      }
+    })
+  });
+
+
   $(document).on('click', '#photos-list img', function(event) {
     event.preventDefault();
 

@@ -18,6 +18,7 @@ class ProductsTableSeeder extends Seeder
     			'company_id' => 1, 
     			'author_id' => 4, 
                 'manufacturer_id' => 1,
+                'units_category_id' => 6,
     		],
             [
                 'name' => 'Секционные ворота',
@@ -25,6 +26,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 1, 
                 'author_id' => 4, 
                 'manufacturer_id' => null,
+                'units_category_id' => 6,
             ],
             [
                 'name' => 'Забор',
@@ -32,6 +34,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 1, 
                 'author_id' => 4, 
                 'manufacturer_id' => null,
+                'units_category_id' => 6,
             ],
     	]);
     }

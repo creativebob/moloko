@@ -77,6 +77,12 @@ class Product extends Model
         return $this->belongsTo('App\Unit');
     }
 
+     // Получаем категорию еденицу измерения
+    public function units_category()
+    {
+        return $this->belongsTo('App\UnitsCategory');
+    }
+
     // Получаем альбом
     public function albums()
     {
@@ -98,5 +104,11 @@ class Product extends Model
     public function album()
     {
         return $this->belongsTo('App\Album');
+    }
+
+    // Получаем метрики
+    public function metrics()
+    {
+        return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'products');
     }
 }

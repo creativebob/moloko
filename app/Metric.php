@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Scopes для главного запроса
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
@@ -13,14 +14,10 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
-// Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
-use App\Scopes\Filters\DateIntervalFilter;
-
-class UnitsCategory extends Model
+class Metric extends Model
 {
-	
+     use SoftDeletes;
+
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -29,14 +26,15 @@ class UnitsCategory extends Model
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
 
-    // Фильтры
-    use Filter;
-    use BooklistFilter;
-    use DateIntervalFilter;
-
-    // Категория едениц измерения
-    public function units()
+    // Получаем проодукцию
+    public function products()
     {
-        return $this->hasMany('App\Unit');
+        return $this->belongsToMany('App\Product', 'metric_entity', 'metric_id', 'entity_id')->where('entity', 'products');
+    }
+
+     // Получаем единицу измерения
+    public function unit()
+    {
+        return $this->belongsTo('App\Unit');
     }
 }

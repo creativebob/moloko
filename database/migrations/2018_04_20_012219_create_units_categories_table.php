@@ -16,6 +16,9 @@ class CreateUnitsCategoriesTable extends Migration
         Schema::create('units_categories', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
+            $table->foreign('company_id')->references('id')->on('companies');
+
             $table->string('name')->index()->comment('Название категории единицы измерения');
             // $table->string('description')->nullable()->comment('Описание категории единицы измерения');
 

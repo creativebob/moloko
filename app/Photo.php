@@ -64,7 +64,7 @@ class Photo extends Model
     // Получаем альбомы
     public function albums()
     {
-        return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'photo');
+        return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'photos');
     }
 
     // Получаем автора

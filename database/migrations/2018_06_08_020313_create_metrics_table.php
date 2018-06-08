@@ -4,28 +4,36 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProductsTypesTable extends Migration
+class CreateMetricsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
-        Schema::create('products_types', function (Blueprint $table) {
+        Schema::create('metrics', function (Blueprint $table) {
             $table->increments('id');
+
+            $table->string('name')->nullable()->comment('Имя метрики');
 
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->string('name')->index()->comment('Название типа товаров');
+            $table->integer('property_id')->nullable()->unsigned()->comment('ID свойства');
+            $table->foreign('property_id')->references('id')->on('properties');
 
-            $table->text('description')->comment('Description для типа товаров');
-            $table->string('alias')->index()->comment('Алиас типа товаров');
+            $table->decimal('min', 15, 8)->nullable()->comment('Минимум');
+            $table->decimal('max', 15, 8)->nullable()->comment('Максимум');
 
-            $table->string('type')->index()->comment('Тип товара (service/goods)');
+            $table->integer('unit_id')->nullable()->unsigned()->comment('Id единицы измерения');
+            $table->foreign('unit_id')->references('id')->on('units');
 
+            $table->string('color')->nullable()->comment('Цвет');
+
+            $table->string('boolean_false')->nullable()->comment('Отрицательный ответ');
+            $table->string('boolean_true')->nullable()->comment('Положительный ответ');
+
+            $table->integer('booklist_id')->nullable()->unsigned()->comment('Id списка');
+            $table->foreign('booklist_id')->references('id')->on('booklists');
+            
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -42,13 +50,8 @@ class CreateProductsTypesTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::dropIfExists('products_types');
+        Schema::dropIfExists('metrics');
     }
 }

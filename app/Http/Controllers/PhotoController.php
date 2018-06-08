@@ -193,7 +193,7 @@ class PhotoController extends Controller
       $media = new AlbumEntity;
       $media->album_id = $album->id;
       $media->entity_id = $photo->id;
-      $media->entity = 'photo';
+      $media->entity = 'photos';
       $media->save();
 
       $upload_success = $image->storeAs($directory.'original', $image_name, 'public');

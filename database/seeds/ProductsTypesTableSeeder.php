@@ -36,6 +36,24 @@ class ProductsTypesTableSeeder extends Seeder
                 'alias' => 'measurement',
                 'type' => 'service',
             ],
+            [
+                'name' => 'Сырье',
+                'description' => '',
+                'alias' => 'material',
+                'type' => 'material',
+            ],
+            [
+                'name' => 'Полуфабрикат',
+                'description' => '',
+                'alias' => 'semiproduct',
+                'type' => 'semiproduct',
+            ],
+            [
+                'name' => 'Набор',
+                'description' => '',
+                'alias' => 'set',
+                'type' => 'set',
+            ],
     	]);
     }
 }

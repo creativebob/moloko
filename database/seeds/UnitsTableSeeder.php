@@ -271,6 +271,33 @@ class UnitsTableSeeder extends Seeder
 				'author_id' => 1, 
 				'moderation' => null, 
 			],
+			[
+				'name' => 'Упаковка', 
+				'abbreviation' => 'упак', 
+				'ratio' => 1, 
+				'units_category_id' => 6,
+				'system_item' => 1, 
+				'author_id' => 1, 
+				'moderation' => null, 
+			],
+			[
+				'name' => 'Рулон', 
+				'abbreviation' => 'рул', 
+				'ratio' => 1, 
+				'units_category_id' => 6,
+				'system_item' => 1, 
+				'author_id' => 1, 
+				'moderation' => null, 
+			],
+			[
+				'name' => 'Коробка', 
+				'abbreviation' => 'кор', 
+				'ratio' => 1, 
+				'units_category_id' => 6,
+				'system_item' => 1, 
+				'author_id' => 1, 
+				'moderation' => null, 
+			],
 
 
 		]);
