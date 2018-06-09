@@ -16,7 +16,15 @@ class CreateProductsTypesTable extends Migration
         Schema::create('products_types', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
+            $table->foreign('company_id')->references('id')->on('companies');
+
             $table->string('name')->index()->comment('Название типа товаров');
+
+            $table->text('description')->comment('Description для типа товаров');
+            $table->string('alias')->index()->comment('Алиас типа товаров');
+
+            $table->string('type')->index()->comment('Тип товара (service/goods)');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

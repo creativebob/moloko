@@ -7,7 +7,9 @@
     $count = count($sector['children']);
   @endphp
 @endif
-<li class="medium-item item @if (isset($sector['children'])) parent @endif" id="sectors-{{ $sector['id'] }}" data-name="{{ $sector['name'] }}">
+
+@if (isset($sector['children']))
+<li class="medium-item item parent" id="sectors-{{ $sector['id'] }}" data-name="{{ $sector['name'] }}">
   <a class="medium-link @if($drop == 0) link-small @endif">
     <div class="icon-open sprite"></div>
     <span class="medium-item-name">{{ $sector['name'] }}</span>
@@ -60,6 +62,46 @@
   @endif
   </ul>
 </li>
+
+@else
+
+{{-- Конечный --}}
+<li class="medium-as-last item" id="sectors-{{ $sector['id'] }}" data-name="{{ $sector['name'] }}">
+  <a class="medium-as-last-link">
+    <span>{{ $sector['name'] }}</span>
+    @if ($sector['moderation'])
+    <span class="no-moderation">Не отмодерированная запись!</span>
+    @endif
+    @if ($sector['system_item'])
+    <span class="system-item">Системная запись!</span>
+    @endif
+  </a>
+  <div class="icon-list">
+    <div>
+      @can('create', App\Sector::class)
+      <div class="icon-list-add sprite" data-open="medium-add"></div>
+      @endcan
+    </div>
+    <div>
+      {{-- @if($sector['edit'] == 1) --}}
+      <div class="icon-list-edit sprite" data-open="medium-edit"></div>
+      {{-- @endif --}}
+    </div>
+    <div class="del">
+      @if(($sector['system_item'] != 1) && ($sector['delete'] == 1))
+      <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
+      @endif
+    </div>
+  </div>
+  <div class="drop-list checkbox">
+    @if ($drop == 1)
+    <div class="sprite icon-drop"></div>
+    @endif
+    <input type="checkbox" name="" id="sector-check-{{ $sector['id'] }}">
+    <label class="label-check" for="sector-check-{{ $sector['id'] }}"></label> 
+  </div>
+</li>
+@endif
 
 
  

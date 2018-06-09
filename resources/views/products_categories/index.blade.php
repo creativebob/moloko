@@ -189,12 +189,8 @@
   // Модалка
   $(document).on('click', '[data-open="medium-add"]', function() {
 
-    var parent;
-    if ($(this).closest('.first-item').hasClass('parent')) {
-      parent = $(this).closest('.item').attr('id').split('-')[1];
-    } else {
-      parent = $(this).closest('.item').attr('id').split('-')[1];
-    };
+    var parent = $(this).closest('.item').attr('id').split('-')[1];
+    var category = $(this).closest('.first-item').attr('id').split('-')[1];
     
     $.ajax({
       headers: {
@@ -202,35 +198,38 @@
       },
       url: '/products_categories/create',
       type: "GET",
-      data: {parent_id: parent},
+      data: {category_id: category, parent_id: parent},
       success: function(html){
         $('#modal').html(html);
         $('#medium-add').foundation();
         $('#medium-add').foundation('open');
+        $('.category-id').val(category);
       }
     }); 
   });
 
   // Проверка существования
-  $(document).on('keyup', '#form-medium-add .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-medium-add .name-field').val();
-    // Указываем название кнопки
-    var submit = '.submit-add';
-    // Значение поля с разрешением
-    var db = '#form-medium-add .medium-item';
-    // Выполняем запрос
-    clearTimeout(timerId);   
-    timerId = setTimeout(function() {
-      productsCategoryCheck (name, submit, db)
-    }, time); 
-  });
+  // $(document).on('keyup', '#form-medium-add .name-field', function() {
+  //   // Получаем фрагмент текста
+  //   var name = $('#form-medium-add .name-field').val();
+  //   // Указываем название кнопки
+  //   var submit = '.submit-add';
+  //   // Значение поля с разрешением
+  //   var db = '#form-medium-add .medium-item';
+  //   // Выполняем запрос
+  //   clearTimeout(timerId);   
+  //   timerId = setTimeout(function() {
+  //     productsCategoryCheck (name, submit, db)
+  //   }, time); 
+  // });
 
   // ----------- Изменение -------------
   // Открываем модалку
   $(document).on('click', '[data-open="medium-edit"]', function() {
+
     // Получаем данные о разделе
     var id = $(this).closest('.item').attr('id').split('-')[1];
+    var category = $(this).closest('.first-item').attr('id').split('-')[1];
 
     // Ajax запрос
     $.ajax({
@@ -239,6 +238,7 @@
       },
       url: "/products_categories/" + id + "/edit",
       type: "GET",
+      data: {category_id: category},
       success: function(html) {
         $('#modal').html(html);
         $('#medium-edit').foundation();
@@ -248,19 +248,19 @@
   });
 
   // Проверка существования
-  $(document).on('keyup', '#form-medium-edit .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-medium-edit .name-field').val();
-    // Указываем название кнопки
-    var submit = '.submit-edit';
-    // Значение поля с разрешением
-    var db = '#form-medium-edit .medium-item';
-    // Выполняем запрос
-    clearTimeout(timerId);   
-    timerId = setTimeout(function() {
-      productsCategoryCheck (name, submit, db)
-    }, time); 
-  });
+  // $(document).on('keyup', '#form-medium-edit .name-field', function() {
+  //   // Получаем фрагмент текста
+  //   var name = $('#form-medium-edit .name-field').val();
+  //   // Указываем название кнопки
+  //   var submit = '.submit-edit';
+  //   // Значение поля с разрешением
+  //   var db = '#form-medium-edit .medium-item';
+  //   // Выполняем запрос
+  //   clearTimeout(timerId);   
+  //   timerId = setTimeout(function() {
+  //     productsCategoryCheck (name, submit, db)
+  //   }, time); 
+  // });
 
   // ------------------------ Кнопка добавления ---------------------------------------
   $(document).on('click', '.submit-add', function(event) {

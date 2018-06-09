@@ -41,7 +41,7 @@
       <ul>
         @foreach ($departments as $department)
         <li class="checkbox"> 
-          {{ Form::checkbox('departments[]', $department->id, null, ['id'=>'department-'.$department->id]) }}
+          {{ Form::checkbox('departments[]', $department->id, null, ['id'=>'department-'.$department->id, 'class'=>'department-checkbox']) }}
           <label for="department-{{ $department->id }}"><span>{{ $department->name }}</span></label>
         </li>
         @endforeach
@@ -66,7 +66,7 @@
     @endcan   
 
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-    {{ Form::submit($submitButtonText, ['class'=>'button']) }}
+    {{ Form::submit($submitButtonText, ['class'=>'button site-button', 'disabled']) }}
   </div>
 </div>
 

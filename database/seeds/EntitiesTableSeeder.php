@@ -257,6 +257,20 @@ class EntitiesTableSeeder extends Seeder
         'system_item' => 1,
         'author_id' => 1,
       ], 
+      [
+        'name' => 'Метрики',
+        'alias' => 'metrics',
+        'model' => 'Metric',
+        'system_item' => 1,
+        'author_id' => 1,
+      ], 
+      [
+        'name' => 'Метрики',
+        'alias' => 'metrics',
+        'model' => 'Metric',
+        'system_item' => 1,
+        'author_id' => 1,
+      ], 
             // [
             //     'name' => 'Рабочее время дня',
             //     'alias' => 'worktimes',

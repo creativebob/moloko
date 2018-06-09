@@ -714,6 +714,47 @@ class MenusTableSeeder extends Seeder
         'display' => 1,
         'sort' => null,
     ],
+
+    // Шторка
+    [
+        'name' => 'Товары',
+        'icon' => null,
+        'alias' => null,
+        'parent_id' => null,
+        'page_id' => 42,
+        'navigation_id' => 7,
+        'company_id' => 4,
+        'system_item' => null,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => null,
+    ],
+    [
+        'name' => 'Услуги',
+        'icon' => null,
+        'alias' => null,
+        'parent_id' => null,
+        'page_id' => 43,
+        'navigation_id' => 7,
+        'company_id' => 4,
+        'system_item' => null,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => null,
+    ],
+    [
+        'name' => 'Контакты',
+        'icon' => null,
+        'alias' => null,
+        'parent_id' => null,
+        'page_id' => 44,
+        'navigation_id' => 7,
+        'company_id' => 4,
+        'system_item' => null,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => null,
+    ],
 ]);
 }
 }

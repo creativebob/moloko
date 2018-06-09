@@ -75,6 +75,15 @@ class DepartmentsTableSeeder extends Seeder
                 'location_id' => null,
                 'company_id' => 2,
             ],
+            [
+                'name' => 'Иркутский филиал',
+                'phone' => 89149266771,
+                'parent_id' => null,
+                'filial_id' => null,
+                'filial_status' => 1,
+                'location_id' => 9,
+                'company_id' => 4,
+            ],
         ]);
     }
 }

@@ -14,17 +14,23 @@ $drop = 1;
     <div class="icon-open sprite"></div>
     <span class="first-item-name">{{ $department['name'] }}</span>
     <span class="number">{{ $department['count'] }}</span>
+
     @if ($department['moderation'])
     <span class="no-moderation">Не отмодерированная запись!</span>
     @endif
+
     @if ($department['system_item'])
     <span class="system-item">Системная запись!</span>
     @endif
+
+    @can ('publisher', App\Department::class)
     @if ($department['display'] == 1)
     <span class="system-item">Отображается на сайте</span>
     @else
     <span class="no-moderation">Не отображается на сайте</span>
     @endif
+    @endcan
+    
   </a>
   <div class="icon-list">
     <div>

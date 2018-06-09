@@ -34,6 +34,10 @@ class DatabaseSeeder extends Seeder
     $this->call(DepartmentsTableSeeder::class);
     $this->call(UsersTableSeeder::class);
 
+    // Единицы измерения
+    $this->call(UnitsCategoriesTableSeeder::class);
+    $this->call(UnitsTableSeeder::class);
+
     // Сайты, страницы
     $this->call(SitesTableSeeder::class);
     $this->call(PagesTableSeeder::class);
@@ -88,9 +92,6 @@ class DatabaseSeeder extends Seeder
     $this->call(AlbumsCategoriesTableSeeder::class);
     $this->call(AlbumsTableSeeder::class);
 
-    // Единицы измерения
-    $this->call(UnitsTableSeeder::class);
-
     // Товары
     $this->call(ProductsTypesTableSeeder::class);
     $this->call(ProductsCategoriesTableSeeder::class);
@@ -101,6 +102,10 @@ class DatabaseSeeder extends Seeder
 
     // Связь: Клиенты - поставщики
     $this->call(ContragentsTableSeeder::class);
+
+    $this->call(PropertiesTableSeeder::class);
+    $this->call(MetricsTableSeeder::class);
+    $this->call(MetricEntityTableSeeder::class);
 
   }
 }

@@ -99,10 +99,6 @@
             {{ Form::checkbox('orgform_status', 1, $company->orgform_status==1, ['id'=>'orgform-status-checkbox']) }}
             <label for="orgform-status-checkbox"><span>Директор компании (Юридическое лицо)</span></label>
           </div> -->
-          <div class="small-12 cell checkbox">
-            {{ Form::checkbox('manufacturer_status', 1, $company->manufacturer_status==1, ['id'=>'manufacturer-status-checkbox']) }}
-            <label for="orgform-status-checkbox"><span>Производитель товара (услуг)</span></label>
-          </div>
         </div>
       </div>
 

@@ -73,6 +73,9 @@ Route::prefix('/albums/{alias}')->group(function () {
   // Загрузка фоток через ajax через dropzone.js
 });
 
+Route::any('/get_photo', 'PhotoController@get_photo')->middleware('auth');
+Route::any('/update_photo/{id}', 'PhotoController@update_photo')->middleware('auth');
+
 // Сортировка фоток
 Route::post('/photos_sort', 'PhotoController@photos_sort')->middleware('auth');
 
@@ -84,12 +87,19 @@ Route::get('/products/{id}/photos', 'ProductController@product_photos')->middlew
 // Запись фото
 Route::any('/product/add_photo', 'ProductController@add_photo')->middleware('auth');
 
+// Проверка на существование продукции
+Route::post('/product_check', 'ProductController@product_check')->middleware('auth');
+
 // Сортировка продукции
 Route::post('/products_sort', 'ProductController@products_sort')->middleware('auth');
 // Route for export/download tabledata to .xls or .xlsx
 Route::get('/products_download/{type}', 'ProductController@products_download')->middleware('auth');
 // Route for import excel data to database.
 Route::post('/products_import', 'ProductController@products_import');
+
+Route::any('/add_product_metric', 'ProductController@add_product_metric')->middleware('auth');
+
+Route::any('/get_metric', 'MetricController@get_metric')->middleware('auth');
 
 // ------------------------------------ Категории продукции --------------------------------------
 // Текущая добавленная/удаленная категория продукции
@@ -102,6 +112,15 @@ Route::post('/products_category_check', 'ProductsCategoryController@products_cat
 Route::post('/products_categories_list', 'ProductsCategoryController@products_categories_list')->middleware('auth');
 // Сортировка категорий продукции
 Route::post('/products_categories_sort', 'ProductsCategoryController@products_categories_sort')->middleware('auth');
+
+// --------------------------------------- Свойства -----------------------------------------------
+Route::any('/add_property', 'PropertyController@add_property')->middleware('auth');
+
+// Route::resource('/properties', 'PropertyController')->middleware('auth');
+
+// --------------------------------------- Метрики -----------------------------------------------
+Route::resource('/metrics', 'MetricController')->middleware('auth');
+
 
 // --------------------------------------- Компании -----------------------------------------------
 Route::resource('/companies', 'CompanyController')->middleware('auth');

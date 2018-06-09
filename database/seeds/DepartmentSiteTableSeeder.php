@@ -20,6 +20,10 @@ class DepartmentSiteTableSeeder extends Seeder
                 'department_id' => 4,
                 'site_id' => 2,
         	],
+            [
+                'department_id' => 8,
+                'site_id' => 5,
+            ],
 
         ]);
     }

@@ -17,18 +17,24 @@ class ProductsTableSeeder extends Seeder
     			'products_category_id' => 2,
     			'company_id' => 1, 
     			'author_id' => 4, 
+                'manufacturer_id' => 1,
+                'units_category_id' => 6,
     		],
             [
                 'name' => 'Секционные ворота',
                 'products_category_id' => 3,
                 'company_id' => 1, 
                 'author_id' => 4, 
+                'manufacturer_id' => null,
+                'units_category_id' => 6,
             ],
             [
                 'name' => 'Забор',
                 'products_category_id' => 4,
                 'company_id' => 1, 
                 'author_id' => 4, 
+                'manufacturer_id' => null,
+                'units_category_id' => 6,
             ],
     	]);
     }

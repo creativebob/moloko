@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 
+
 function decor_access_block($access_block) {
     if($access_block == 1){$result = "Блокирован";} else {$result = "Открыт";};
 
@@ -236,5 +237,7 @@ function get_first_letter($name){
     // Отдаем имя
     return $name;
 }
+
+
 
 ?>

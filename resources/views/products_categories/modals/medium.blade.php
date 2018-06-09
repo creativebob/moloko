@@ -12,23 +12,33 @@
       <div class="sprite-input-right find-status"></div>
       <div class="item-error">Такой уже существует!</div>
     </label>
-    <label>Тип продукции
-      {{ Form::select('products_type_id', $products_types_list, $products_category->products_type_id)}}
-    </label>
+
     {{ Form::hidden('products_category_id', $products_category->id, ['id' => 'products-category-id']) }}
-    {{ Form::hidden('medium_item', 0, ['class' => 'medium-item', 'pattern' => '[0-9]{1}']) }}
+    {{ Form::hidden('medium_item', 1, ['class' => 'medium-item', 'pattern' => '[0-9]{1}']) }}
+    {{ Form::hidden('category_id', 0, ['class' => 'category-id']) }}
+
+    {{-- Чекбокс отображения на сайте --}}
+    @can ('publisher', $products_category)
+    <div class="small-12 cell checkbox">
+      {{ Form::checkbox('display', 1, $products_category->display, ['id' => 'display']) }}
+      <label for="display"><span>Отображать на сайте</span></label>
+    </div>
+    @endcan
+
     @if ($products_category->moderation == 1)
       <div class="checkbox">
         {{ Form::checkbox('moderation', 1, $products_category->moderation, ['id' => 'moderation']) }}
         <label for="moderation"><span>Временная запись.</span></label>
       </div>
       @endif
+
       @can('god', App\ProductsCategory::class)
       <div class="checkbox">
         {{ Form::checkbox('system_item', 1, $products_category->system_item, ['id' => 'system-item']) }}
         <label for="system-item"><span>Системная запись.</span></label>
       </div>
       @endcan
+
   </div>
 </div>
 <div class="grid-x align-center">

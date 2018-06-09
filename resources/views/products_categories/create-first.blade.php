@@ -6,7 +6,7 @@
   </div>
   {{ Form::open(['id'=>'form-first-add', 'data-abide', 'novalidate']) }}
 
-    @include('products_categories.modals.first', ['submitButtonText' => 'Добавить категорию', 'class' => 'submit-add'])
+    @include('products_categories.modals.first', ['submitButtonText' => 'Добавить категорию', 'class' => 'submit-add', 'disabled' => ''])
 
   {{ Form::close() }}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 

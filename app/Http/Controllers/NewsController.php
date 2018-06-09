@@ -178,6 +178,8 @@ class NewsController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
+        $company_id = $user->company_id;
+
         $cur_news = new News;
         $cur_news->name = $request->name;
         $cur_news->title = $request->title;
@@ -214,65 +216,13 @@ class NewsController extends Controller
 
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
-            $photo = new Photo;
-            $image = $request->file('photo');
 
             // Директория
-            $directory = $user->company->id.'/media/news/'.$cur_news->id.'/img/';
+            $directory = $company_id.'/media/news/'.$cur_news->id.'/img/';
 
-            // Расширение
-            $extension = $image->getClientOriginalExtension();
-            $photo->extension = $extension;
-
-            // Название
-            $image_name = 'preview.'.$extension;
-            $photo->name = $image_name;
-
-            // $photo->path = '/'.$directory.'/'.$image_name;
-
-            // Ширина / высота
-            $params = getimagesize($request->file('photo'));
-            $photo->width = $params[0];
-            $photo->height = $params[1];
-
-            // Размер
-            $size = filesize($request->file('photo'))/1024;
-            $photo->size = number_format($size, 2, '.', '');
-
-            $photo->company_id = $company_id;
-            $photo->author_id = $user_id;
-            $photo->save();
-
-            // Сохранияем оригинал
-            $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
-
-            // Вытаскиваем настройки сохранения фото
-            $settings = config()->get('settings');
-
-            // Сохраняем small, medium и large
-            // $small = Image::make($request->photo)->grab(150, 99);
-            $small = Image::make($request->photo)->widen($settings['img_small_width']->value);
-            $save_path = storage_path('app/public/'.$directory.'small');
-            if (!file_exists($save_path)) {
-                mkdir($save_path, 755, true);
-            }
-            $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
-
-            // $medium = Image::make($request->photo)->grab(900, 596);
-            $medium = Image::make($request->photo)->widen($settings['img_medium_width']->value);
-            $save_path = storage_path('app/public/'.$directory.'medium');
-            if (!file_exists($save_path)) {
-                mkdir($save_path, 755, true);
-            }
-            $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
-
-            // $large = Image::make($request->photo)->grab(1200, 795);
-            $large = Image::make($request->photo)->widen($settings['img_large_width']->value);
-            $save_path = storage_path('app/public/'.$directory.'large');
-            if (!file_exists($save_path)) {
-                mkdir($save_path, 755, true);
-            }
-            $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
+            $array = save_photo($request, $user_id, $company_id, $directory, 'preview-'.time());
+            $photo = $array['photo'];
 
             $cur_news->photo_id = $photo->id;
             $cur_news->save();
@@ -397,68 +347,23 @@ class NewsController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
+        $company_id = $user->company_id;
+
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
-            $photo = new Photo;
-            $image = $request->file('photo');
 
             // Директория
-            $directory = $user->company->id.'/media/news/'.$id.'/img/';
-            $extension = $image->getClientOriginalExtension();
+            $directory = $company_id.'/media/news/'.$cur_news->id.'/img/';
 
-            // Расширение
-            $photo->extension = $extension;
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            if ($cur_news->photo_id) {
+                $array = save_photo($request, $user_id, $company_id, $directory, 'preview-'.time(), null, $cur_news->photo_id);
 
-            // Название
-            $image_name = 'preview.'.$extension;
-            $photo->name = $image_name;
-
-            // $photo->path = '/'.$directory.'/'.$image_name;
-
-            // Ширина / высота
-            $params = getimagesize($request->file('photo'));
-            $photo->width = $params[0];
-            $photo->height = $params[1];
-
-            // Размер
-            $size = filesize($request->file('photo'))/1024;
-            $photo->size = number_format($size, 2, '.', '');
-
-
-            $photo->company_id = $user->company_id;
-            $photo->author_id = $user_id;
-            $photo->save();
-
-            // Сохранияем оригинал
-            $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
-
-            // Вытаскиваем настройки сохранения фото
-            $settings = config()->get('settings');
-
-            // Сохраняем small, medium и large
-            // $small = Image::make($request->photo)->grab(150, 99);
-            $small = Image::make($request->photo)->widen($settings['img_small_width']->value);
-            $save_path = storage_path('app/public/'.$directory.'small');
-            if (!file_exists($save_path)) {
-                mkdir($save_path, 755, true);
+            } else {
+                $array = save_photo($request, $user_id, $company_id, $directory, 'preview-'.time());
+                
             }
-            $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
-
-            // $medium = Image::make($request->photo)->grab(900, 596);
-            $medium = Image::make($request->photo)->widen($settings['img_medium_width']->value);
-            $save_path = storage_path('app/public/'.$directory.'medium');
-            if (!file_exists($save_path)) {
-                mkdir($save_path, 755, true);
-            }
-            $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
-
-            // $large = Image::make($request->photo)->grab(1200, 795);
-            $large = Image::make($request->photo)->widen($settings['img_large_width']->value);
-            $save_path = storage_path('app/public/'.$directory.'large');
-            if (!file_exists($save_path)) {
-                mkdir($save_path, 755, true);
-            }
-            $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
+            $photo = $array['photo'];
 
             $cur_news->photo_id = $photo->id;
         }
@@ -590,7 +495,7 @@ class NewsController extends Controller
     }
 
     // Проверка наличия в базе
-    public function news_check (Request $request, $alias)
+    public function news_check(Request $request, $alias)
     {
 
         // Проверка новости по сайту в нашей базе данных

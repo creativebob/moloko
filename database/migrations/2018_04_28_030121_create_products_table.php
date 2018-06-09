@@ -27,15 +27,20 @@ class CreateProductsTable extends Migration
             $table->string('photo_id')->index()->nullable()->comment('Обложка товара');
             $table->string('description')->index()->nullable()->comment('Описание товара');
 
-            $table->integer('unit_id')->nullable()->unsigned()->comment('ID единицы измерения');
-            $table->foreign('unit_id')->references('id')->on('units');
+            $table->integer('units_category_id')->nullable()->unsigned()->comment('ID категории измерения');
+            $table->foreign('units_category_id')->references('id')->on('units_categories');
 
             $table->integer('rule_id')->nullable()->unsigned()->comment('ID правила определения цены');
             // $table->foreign('rule_id')->references('id')->on('rules');
 
-
             $table->integer('products_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться товар');
             $table->foreign('products_category_id')->references('id')->on('products_categories');
+
+            $table->integer('manufacturer_id')->nullable()->unsigned()->comment('Id производителя товара');
+            $table->foreign('manufacturer_id')->references('id')->on('companies');
+
+            $table->integer('album_id')->nullable()->unsigned()->comment('ID альбома');
+            $table->foreign('album_id')->references('id')->on('albums');
             
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

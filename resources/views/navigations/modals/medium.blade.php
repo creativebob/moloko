@@ -37,7 +37,6 @@
         @include('includes.inputs.text-en', ['name'=>'icon', 'value'=>$menu->icon, 'required'=>''])
       </label>
 
-      
       {{ Form::hidden('navigation_id', $menu->navigation_id) }}
       {{ Form::hidden('site_id', $site->id) }}
       {{ Form::hidden('menu_id', $menu->id, ['id'=>'menu_id']) }}

@@ -75,8 +75,7 @@ class ProductsCategoryController extends Controller
 
         $products_category = new ProductsCategory;
 
-        // Выбираем все типы без проверки, так как они статичны, добавляться не будут
-        $products_types_list = ProductsType::get()->pluck('name', 'id');
+        
 
         // Если добавляем вложенный элемент
         if (isset($request->parent_id)) {
@@ -89,6 +88,8 @@ class ProductsCategoryController extends Controller
             ->companiesLimit($answer)
             ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
+            ->where('id', $request->category_id)
+            ->orWhere('category_id', $request->category_id)
             ->orderBy('sort', 'asc')
             ->get(['id','name','category_status','parent_id'])
             ->keyBy('id')
@@ -98,8 +99,11 @@ class ProductsCategoryController extends Controller
             $products_categories_list = get_select_tree($products_categories, $request->parent_id, null, null);
             // echo $products_categories_list;
 
-            return view('products_categories.create-medium', ['products_category' => $products_category, 'products_categories_list' => $products_categories_list, 'products_types_list' => $products_types_list]);
+            return view('products_categories.create-medium', ['products_category' => $products_category, 'products_categories_list' => $products_categories_list]);
         } else {
+
+            // Выбираем все типы без проверки, так как они статичны, добавляться не будут
+            $products_types_list = ProductsType::get()->pluck('name', 'id');
 
             return view('products_categories.create-first', ['products_category' => $products_category, 'products_types_list' => $products_types_list]);
         }
@@ -124,8 +128,7 @@ class ProductsCategoryController extends Controller
         $products_category = new ProductsCategory;
         $products_category->company_id = $company_id;
         $products_category->author_id = $user_id;
-        $products_category->products_type_id = $request->products_type_id;
-
+        
         // Модерация и системная запись
         $products_category->system_item = $request->system_item;
         
@@ -141,11 +144,16 @@ class ProductsCategoryController extends Controller
         // Если категория
         if ($request->first_item == 1) {
             $products_category->category_status = 1;
+            $products_category->products_type_id = $request->products_type_id;
         }
 
-        // Если категория альбомов
+        // Если вложенный
         if ($request->medium_item == 1) {
             $products_category->parent_id = $request->parent_id;
+            $products_category->category_id = $request->category_id;
+
+            $parent = ProductsCategory::findOrFail($request->category_id);
+            $products_category->products_type_id = $parent->products_type_id;
         }
 
         $products_category->display = $request->display;
@@ -172,7 +180,7 @@ class ProductsCategoryController extends Controller
         //
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -184,10 +192,10 @@ class ProductsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $products_category);
 
-        // Выбираем все типы без проверки, так как они статичны, добавляться не будут
-        $products_types_list = ProductsType::get()->pluck('name', 'id');
-
         if ($products_category->category_status == 1) {
+
+            // Выбираем все типы без проверки, так как они статичны, добавляться не будут
+            $products_types_list = ProductsType::get()->pluck('name', 'id');
 
             // Меняем категорию
             return view('products_categories.edit-first', ['products_category' => $products_category, 'products_types_list' => $products_types_list]);
@@ -201,6 +209,8 @@ class ProductsCategoryController extends Controller
             ->companiesLimit($answer)
             ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
+            ->where('id', $request->category_id)
+            ->orWhere('category_id', $request->category_id)
             ->orderBy('sort', 'asc')
             ->get(['id','name','category_status','parent_id'])
             ->keyBy('id')
@@ -209,7 +219,7 @@ class ProductsCategoryController extends Controller
             // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
             $products_categories_list = get_select_tree($products_categories, $products_category->parent_id, null, $products_category->id);
 
-            return view('products_categories.edit-medium', ['products_category' => $products_category, 'products_categories_list' => $products_categories_list, 'products_types_list' => $products_types_list]);
+            return view('products_categories.edit-medium', ['products_category' => $products_category, 'products_categories_list' => $products_categories_list]);
         }
     }
 
@@ -237,8 +247,16 @@ class ProductsCategoryController extends Controller
 
         $products_category->parent_id = $request->parent_id;
         $products_category->editor_id = $user_id;
-        $products_category->products_type_id = $request->products_type_id;
 
+        // Если сменили тип категории продукции, то меняем его и всем вложенным элементам
+        if (($products_category->category_status == 1) && ($products_category->products_type_id != $request->products_type_id)) {
+            $products_category->products_type_id = $request->products_type_id;
+
+            $products_categories = ProductsCategory::whereCategory_id($id)
+            ->update(['products_type_id' => $request->products_type_id]);
+
+        }
+        
         $products_category->display = $request->display;
 
         // Делаем заглавной первую букву
@@ -253,7 +271,7 @@ class ProductsCategoryController extends Controller
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи сектора!'
+                'error_message' => 'Ошибка при записи категории продукции!'
             ];
         }
     }

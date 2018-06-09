@@ -856,7 +856,10 @@ input[type=checkbox], input[type=radio] {
 }  
 .icon-delete:hover {
   background-position: -32px -512px;
-} 
+}
+
+
+
 // ---------- Инпуты (вынесены за контент т.к. модальное окно образуется за контентом) ---------
 .inputs {
 
@@ -1691,12 +1694,22 @@ input[type=checkbox], input[type=radio] {
   z-index: 50;
 }
 // ------------------------------------------- Tabs -------------------------------------------
+
+#photos-list {
+
+      .active {
+        border: 2px solid red;
+      }
+    }
+
 .tabs-margin-top {
   margin-top: 2rem;
 }
 .tabs-wrap {
   padding: 0 10px;
   font-family: $PFDDPL;
+
+
 
   //Обнуляем фонду, в активном состоянии
   .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
@@ -2683,6 +2696,9 @@ input[type=checkbox], input[type=radio] {
     .fieldset-access {
       padding: 1rem 0.6rem;
     }
+
+    
+    
   }
     // Блочим элементы добавления/редактирования/удаления
     .content-list {
@@ -2715,4 +2731,105 @@ input[type=checkbox], input[type=radio] {
   .footer {
     display: none;
   }
+}
+
+
+
+
+// --------------------------------------- Чекер -------------------------------------
+
+.checker
+{
+  width: 100%;
+  display: block;
+  top: 0px;
+  float: left;
+  border: none;
+  z-index: 1000;
+  margin-left: 0px;
+  padding-top: 1px;
+  box-sizing: border-box;
+  left: 0;
+  height: auto;
+  position: relative;
+
+  li {
+    line-height: 1.2;
+    float: left;
+    background: #fff;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid transparent;
+    list-style-type: none;
+    width: 100%;
+
+    &:first-child {
+      border-top: 1px solid transparent;
+    }
+
+    &:hover {
+      background: #efefef;
+    }
+
+    span {
+      display: block;
+      padding: 6px 0px 6px 20px;
+      color: #000;
+      text-decoration: none;
+      margin: 0px 10px 0px 10px;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+}
+
+
+
+.checkboxer-menu li label
+{
+  width: 100%;
+}
+
+.checkboxer-menu>li:last-child
+{
+  // border-bottom: 1px solid #ccc;
+}
+
+.checkboxer-menu>li
+
+.checkboxer-menu>li
+
+.checkboxer-menu>li>a
+{
+  float: left;
+  display: block;
+  width: 230px;
+  padding: 6px 0px 6px 20px;
+  color: #000;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin: 0px 10px 0px 10px;
+  font-size: 0.8em;
+  height: 100%;
+  outline: none;
+}
+
+.checkboxer-menu>li.active
+{
+  background-color: #eee;
+}
+
+.checkboxer-menu>li.active:hover
+{
+  background-color: #e1e1e1;
+}
+
+.checkboxer-menu>li:hover>a
+{
+  color: #000;
+
+}
+
+.checkboxer-menu li:first-child>a
+{
+  border-top: 1px solid transparent;
 }

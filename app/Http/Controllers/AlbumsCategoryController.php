@@ -143,6 +143,7 @@ class AlbumsCategoryController extends Controller
             $albums_category->parent_id = $request->parent_id;
         }
 
+        // Отображение на сайте
         $albums_category->display = $request->display;
 
         // Делаем заглавной первую букву
@@ -198,7 +199,7 @@ class AlbumsCategoryController extends Controller
             ->keyBy('id')
             ->toArray();
 
-            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
             $albums_categories_list = get_select_tree($albums_categories, $albums_category->parent_id, null, $albums_category->id);
 
             return view('albums_categories.edit-medium', ['albums_category' => $albums_category, 'albums_categories_list' => $albums_categories_list]);
@@ -230,6 +231,7 @@ class AlbumsCategoryController extends Controller
         $albums_category->parent_id = $request->parent_id;
         $albums_category->editor_id = $user_id;
 
+        // Отображение на сайте
         $albums_category->display = $request->display;
 
         // Делаем заглавной первую букву
@@ -248,7 +250,6 @@ class AlbumsCategoryController extends Controller
             ];
         }
     }
-
 
     public function destroy(Request $request, $id)
     {

@@ -21,11 +21,13 @@ $drop = 1;
     @if ($products_category['system_item'])
     <span class="system-item">Системная запись!</span>
     @endif
+    @can ('publisher', App\ProductsCategory::class)
     @if ($products_category['display'] == 1)
     <span class="system-item">Отображается на сайте</span>
     @else
     <span class="no-moderation">Не отображается на сайте</span>
     @endif
+    @endcan
   </a>
   <div class="icon-list">
     <div>
