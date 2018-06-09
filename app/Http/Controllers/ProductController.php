@@ -13,6 +13,7 @@ use App\Album;
 use App\AlbumEntity;
 use App\Property;
 use App\Metric;
+use App\Article;
 
 
 // Валидация
@@ -179,6 +180,10 @@ class ProductController extends Controller
                 $product->metrics()->attach($metrics);
             }
 
+            // $article = new Article;
+            // $article->name = ;
+
+
             // Отправляем на редактирование записи
             return Redirect('/products/'.$product->id.'/edit');
         } else {
@@ -196,8 +201,14 @@ class ProductController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-        $product = Product::with(['units_category', 'manufacturer.location.country', 'products_category', 'metrics.unit'])->moderatorLimit($answer)->findOrFail($id);
-        // dd($product);
+        $product = Product::with(['units_category', 'manufacturer.location.country', 'products_category', 'metrics.unit', 'metrics'])->moderatorLimit($answer)->findOrFail($id);
+        // dd($product->metrics);
+
+        $product_metrics = [];
+        foreach ($product->metrics as $metric) {
+            $product_metrics[] = $metric->id;
+        }
+        // dd($product_metrics);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $product);
@@ -234,7 +245,15 @@ class ProductController extends Controller
             ->companiesLimit($answer_metrics)
             ->authors($answer_metrics)
             ->systemItem($answer_metrics); // Фильтр по системным записям
-        }])
+        }
+        // , 'products' 
+        // => function ($query) use ($id) {
+        //     $query->findOrFail($id);
+        ])
+        // ->whereHas('metrics.products', function ($query) use ($id) {
+        //     $query->findOrFail($id);
+        // })
+        ->withCount('metrics')
         // ->whereHas('metrics', function ($query) use ($answer_metrics) {
         //     $query->moderatorLimit($answer_metrics)
         //     ->companiesLimit($answer_metrics)
@@ -244,7 +263,7 @@ class ProductController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        // dd($properties);
+        // dd($properties[0]->metrics->);
 
 
         $properties_list = $properties->pluck('name', 'id');
@@ -290,10 +309,10 @@ class ProductController extends Controller
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('products.photos-list', ['sectors_tree' => $sectors_tree, 'id' => $request->id]);
+            return view('products.properties-list', ['properties' => $properties, 'product_metrics' => $product_metrics]);
         }
 
-        return view('products.edit', compact('product', 'page_info', 'products_categories_list', 'units_categories_list', 'manufacturers_list', 'photo', 'properties', 'properties_list'));
+        return view('products.edit', compact('product', 'page_info', 'products_categories_list', 'units_categories_list', 'manufacturers_list', 'photo', 'properties', 'properties_list', 'product_metrics'));
     }
 
     public function update(ProductRequest $request, $id)
@@ -464,10 +483,10 @@ class ProductController extends Controller
         $metric = new Metric;
         $metric->company_id = $company_id;
         $metric->property_id = $request->property_id;
-        $metric->name = $request->metric_name;
-        $metric->min = $request->metric_min;
-        $metric->max = $request->metric_max;
-        $metric->unit_id = $request->metric_unit_id;
+        $metric->name = $request->name;
+        $metric->min = $request->min;
+        $metric->max = $request->max;
+        $metric->unit_id = $request->unit_id;
 
         $metric->author_id = $user_id;
 
@@ -476,16 +495,15 @@ class ProductController extends Controller
         if ($metric) {
 
             // Когда метрика записалась, связываем ее с продуктом
-            $product[$request->metric_product_id] = [
+            $product[$request->product_id] = [
                 'entity' => $this->entity_name,
             ];
 
             $metric->products()->attach($product);
             
             // echo $metric;
-            // Переадресовываем на index
+            // Переадресовываем на получение метрики
             return redirect()->action('MetricController@get_metric', ['id' => $metric->id, 'entity' => $this->entity_name]);
-            // return view('products.metric', ['metric' => $metric]);
         } else {
             $result = [
                 'error_status' => 1,

@@ -9,5 +9,5 @@
 	<td class="td-delete">
 		<a class="icon-delete sprite" data-open="item-delete-ajax"></a>
 	</td>   
-	{{ Form::hidden('metrics[]', $metric->id) }}
+	{{ Form::hidden('metrics[]', $metric->id, ['form' => 'product-form']) }}
 </tr>

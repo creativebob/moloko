@@ -2134,39 +2134,28 @@ input[type=checkbox], input[type=radio] {
   outline: none;
   cursor: pointer;
 }
-
-.checkboxer-menu li label {
-  width: 100%;
-}
-
-.checkboxer-menu > li
-.checkboxer-menu > li
-.checkboxer-menu > li > a {
-  float: left;
-  display: block;
+.checker .checker-nested {
+  position: absolute;
+  left: -250px;
+  top: -17px;
+  z-index: 10;
   width: 230px;
-  padding: 6px 0px 6px 20px;
+  padding: 1rem;
+  display: none;
+  border: 1px solid #cacaca;
+  border-radius: 0;
+  background-color: #fefefe;
+  font-size: 1rem;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.checker .checker-nested li span {
+  display: inline-block;
+  padding: 0;
   color: #000;
   text-decoration: none;
-  text-transform: uppercase;
-  margin: 0px 10px 0px 10px;
-  font-size: 0.8em;
-  height: 100%;
+  margin: 0;
   outline: none;
-}
-
-.checkboxer-menu > li.active {
-  background-color: #eee;
-}
-
-.checkboxer-menu > li.active:hover {
-  background-color: #e1e1e1;
-}
-
-.checkboxer-menu > li:hover > a {
-  color: #000;
-}
-
-.checkboxer-menu li:first-child > a {
-  border-top: 1px solid transparent;
+  cursor: pointer;
 }

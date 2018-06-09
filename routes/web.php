@@ -101,6 +101,8 @@ Route::any('/add_product_metric', 'ProductController@add_product_metric')->middl
 
 Route::any('/get_metric', 'MetricController@get_metric')->middleware('auth');
 
+Route::any('/get_properties_with_metrics', 'PropertyController@get_properties_with_metrics')->middleware('auth');
+
 // ------------------------------------ Категории продукции --------------------------------------
 // Текущая добавленная/удаленная категория продукции
 Route::any('/products_categories', 'ProductsCategoryController@index')->middleware('auth');

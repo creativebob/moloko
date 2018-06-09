@@ -12,7 +12,7 @@
 @section('title-content')
 <div class="top-bar head-content">
   <div class="top-bar-left">
-    <h2 class="header-content">РЕДАКТИРОВАТЬ товар</h2>
+    <h2 class="header-content">РЕДАКТИРОВАТЬ товар &laquo{{ $product->name }}&raquo</h2>
   </div>
   <div class="top-bar-right">
   </div>
@@ -20,13 +20,13 @@
 @endsection
 
 @section('content')
-
-
 <div class="grid-x tabs-wrap">
   <div class="small-12 cell">
     <ul class="tabs-list" data-tabs id="tabs">
       <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
       <li class="tabs-title"><a data-tabs-target="properties" href="#properties">Свойства</a></li>
+      <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
+      <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
       <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li>
     </ul>
   </div>
@@ -94,7 +94,7 @@
             </div>
           </div>
 
-          {{ Form::hidden('metric_product_id', $product->id) }}
+          
 
           {{-- Чекбокс отображения на сайте --}}
           @can ('publisher', $product)
@@ -123,6 +123,8 @@
         </div>
       </div>
 
+      {{ Form::close() }}
+
       <!-- Свойства -->
       <div class="tabs-panel" id="properties">
         <div class="grid-x grid-padding-x">
@@ -141,32 +143,45 @@
                 </tr>
               </thead>
               <tbody id="metrics-table">
+                {{-- Таблица метрик товара --}}
+                @if (!empty($product->metrics))
                 @each('products.metric', $product->metrics, 'metric')
+                @endif
               </tbody>
             </table>
           </div>
           <div class="small-12 medium-4 cell">
+            {{ Form::open(['id' => 'properties-form','data-abide', 'novalidate']) }}
             <fieldset>
               <legend>Добавить свойство | <a data-toggle="properties-dropdown">Метрики</a></legend>
               
               <label>Выберите свойство
-                {{ Form::select('property_id', $properties_list, null, ['id' => 'properties-list']) }}
+                {{ Form::select('property_id', $properties_list, null, ['id' => 'properties-select']) }}
               </label>
               <div class="grid-x grid-padding-x" id="property-form"></div>
 
             </fieldset>
+            {{ Form::hidden('product_id', $product->id) }}
+            {{ Form::close() }}
+            {{-- Список свойств с метриками --}}
             <div class="dropdown-pane" id="properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
-              <ul class="checker" id="properties-list">
-                @each('products.property', $properties, 'property')
-
-              </ul>
-
+              @include('products.properties-list', $properties)
             </div>
+            
           </div>
         </div>
       </div>
 
-      {{ Form::close() }}
+      
+
+      <!-- Состав -->
+      <div class="tabs-panel" id="compositions">
+        <div class="grid-x grid-padding-x">
+          <div class="small-12 medium-5 cell">
+
+          </div>
+        </div>
+      </div>
 
       <!-- Фотографии -->
       <div class="tabs-panel" id="photos">
@@ -206,6 +221,8 @@
         </div>
       </div>
 
+
+
     </div>
   </div>
 </div>
@@ -218,53 +235,54 @@
     {{ Form::submit('Редактировать продукцию', ['class'=>'button', 'form' => 'product-form']) }}
   </div>
 </div>
-
-
-@endsection
-
-@section('modals')
-{{-- Модалка удаления с ajax --}}
-@include('includes.modals.modal-delete-ajax')
 @endsection
 
 @section('scripts')
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
-
-@include('includes.scripts.delete-from-page-script')
-
 @php
 $settings = config()->get('settings');
 @endphp
 <script>
 
-  $(document).on('change', '#properties-list', function(event) {
-    event.preventDefault();
+  // Основные ностойки
+  var product_id = '{{ $product->id }}';
 
-   // alert($(this).val());
+  // При клике на удаление метрики со страницы
+  $(document).on('click', '[data-open="item-delete-ajax"]', function() {
 
-   $.ajax({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/add_property',
-    type: 'GET',
-    data: {id: $(this).val(), entity: 'products'},
-    success: function(html){
+    // Находим описание сущности, id и название удаляемого элемента в родителе
+    var parent = $(this).closest('.item');
+    var id = parent.attr('id').split('-')[1];
+
+    // Удаляем элемент со страницы
+    $('#metrics-' + id).remove();
+
+    // Убираем отмеченный чекбокс в списке метрик
+    $('#add-metric-' + id).prop('checked', false);
+  });
+
+  // При смнене свойства в select
+  $(document).on('change', '#properties-select', function() {
+    // alert($(this).val());
+
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/add_property',
+      type: 'GET',
+      data: {id: $(this).val(), entity: 'products'},
+      success: function(html){
         // alert(html);
-
         $('#property-form').html(html);
-        
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
       }
     })
- });
+  });
 
+  // При клике на кнопку под Select'ом свойств
   $(document).on('click', '#add-metric', function(event) {
     event.preventDefault();
-
-
 
     $.ajax({
       headers: {
@@ -272,29 +290,82 @@ $settings = config()->get('settings');
       },
       url: '/add_product_metric',
       type: 'POST',
-      data: $('#product-form').serialize(),
+      data: $('#properties-form').serialize(),
       success: function(html){
         // alert(html);
-
         $('#metrics-table').append(html);
         $('#property-form').html('');
 
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
+        // В случае успеха обновляем список метрик
+        $.ajax({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          url: '/products/' + product_id + '/edit',
+          type: 'GET',
+          data: $('#product-form').serialize(),
+          success: function(html){
+            // alert(html);
+
+            $('#properties-dropdown').html(html);
+          }
+        })
       }
     })
   });
 
+  // При клике на чекбокс метрики отображаем ее на странице
+  $(document).on('click', '.add-metric', function() {
 
+    // alert($(this).val());
+    var id = $(this).val();
+    
+    // Если нужно добавить метрику
+    if ($(this).prop('checked') == true) {
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/get_metric',
+        type: 'POST',
+        data: {id: $(this).val(), entity: 'products'},
+        success: function(html){
+
+          // alert(html);
+          $('#metrics-table').append(html);
+          $('#property-form').html('');
+        }
+      })
+    } else {
+
+      // Если нужно удалить метрику со страницы
+      $('#metrics-' + id).remove();
+    }
+  });
+
+  // При клике на свойство отображаем или скрываем его метрики
+  $(document).on('click', '.parent', function() {
+
+    // Скрываем все метрики
+    $('.checker-nested').hide();
+
+    // Показываем нужную
+    $('#' +$(this).data('open')).show();
+  });
+
+  // При клике на фотку подствляем ее значения в блок редактирования
   $(document).on('click', '#photos-list img', function(event) {
     event.preventDefault();
 
+    // Удаляем всем фоткам активынй класс
     $('#photos-list img').removeClass('active');
+
+    // Наваливаем его текущей
+    $(this).addClass('active');
     
     var id = $(this).data('id');
 
-    $(this).addClass('active');
-
+    // Получаем инфу фотки
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -303,22 +374,23 @@ $settings = config()->get('settings');
       type: 'GET',
       data: {id: id, entity: 'products'},
       success: function(html){
+
         // alert(html);
         $('#form-photo-edit').html(html);
-        
         // $('#first-add').foundation();
         // $('#first-add').foundation('open');
       }
     })
   });
 
+  // При сохранении информации фотки
   $(document).on('click', '#form-photo-edit .button', function(event) {
     event.preventDefault();
 
     var id = $(this).closest('#form-photo-edit').find('input[name=id]').val();
-
     // alert(id);
 
+    // Записываем инфу и обновляем
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -336,7 +408,7 @@ $settings = config()->get('settings');
     })
   });
 
-
+  // НАстройки dropzone
   var minImageHeight = 795;
   Dropzone.options.myDropzone = {
     paramName: 'photo',

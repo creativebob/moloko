@@ -40,19 +40,19 @@ class ProductsTypesTableSeeder extends Seeder
                 'name' => 'Сырье',
                 'description' => '',
                 'alias' => 'material',
-                'type' => 'material',
+                'type' => 'goods',
             ],
             [
                 'name' => 'Полуфабрикат',
                 'description' => '',
                 'alias' => 'semiproduct',
-                'type' => 'semiproduct',
+                'type' => 'goods',
             ],
             [
                 'name' => 'Набор',
                 'description' => '',
                 'alias' => 'set',
-                'type' => 'set',
+                'type' => 'goods',
             ],
     	]);
     }
