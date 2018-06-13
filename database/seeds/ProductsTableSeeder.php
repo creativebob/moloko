@@ -36,6 +36,33 @@ class ProductsTableSeeder extends Seeder
                 'manufacturer_id' => null,
                 'units_category_id' => 6,
             ],
+
+            [
+                'name' => 'Труба',
+                'products_category_id' => 26,
+                'company_id' => 1, 
+                'author_id' => 4, 
+                'manufacturer_id' => null,
+                'units_category_id' => 6,
+            ],
+
+             [
+                'name' => 'Прутик',
+                'products_category_id' => 26,
+                'company_id' => 1, 
+                'author_id' => 4, 
+                'manufacturer_id' => null,
+                'units_category_id' => 6,
+            ],
+
+            [
+                'name' => 'Полуфабрик',
+                'products_category_id' => 27,
+                'company_id' => 1, 
+                'author_id' => 4, 
+                'manufacturer_id' => null,
+                'units_category_id' => 6,
+            ],
     	]);
     }
 }

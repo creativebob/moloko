@@ -19,6 +19,9 @@ class CreateArticlesTable extends Migration
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
+            $table->integer('product_id')->nullable()->unsigned()->comment('ID товара');
+            $table->foreign('product_id')->references('id')->on('products');
+
             $table->string('name')->nullable()->comment('Имя артикула (руками)');
 
             $table->string('internal')->nullable()->comment('Имя генерируемого артикула');

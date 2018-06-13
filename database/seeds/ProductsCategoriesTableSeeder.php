@@ -80,33 +80,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 6,
       ],
 
-      [
-        'company_id' => null,
-        'name' => 'Сырье',
-        'parent_id' => null,
-        'category_status' => 1,
-        'author_id' => 1,
-        'products_type_id' => 5,
-        'category_id' => null,
-      ],
-      [
-        'company_id' => null,
-        'name' => 'Полуфабрикат',
-        'parent_id' => null,
-        'category_status' => 1,
-        'author_id' => 1,
-        'products_type_id' => 6,
-        'category_id' => null,
-      ],
-      [
-        'company_id' => null,
-        'name' => 'Набор',
-        'parent_id' => null,
-        'category_status' => 1,
-        'author_id' => 1,
-        'products_type_id' => 7,
-        'category_id' => null,
-      ],
+      
 
       // Шторка
       [
@@ -269,6 +243,35 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_status' => 1,
         'author_id' => 1,
         'products_type_id' => 1,
+        'category_id' => null,
+      ],
+
+
+      [
+        'company_id' => 1,
+        'name' => 'Сырье',
+        'parent_id' => null,
+        'category_status' => 1,
+        'author_id' => 1,
+        'products_type_id' => 5,
+        'category_id' => null,
+      ],
+      [
+        'company_id' => 1,
+        'name' => 'Полуфабрикат',
+        'parent_id' => null,
+        'category_status' => 1,
+        'author_id' => 1,
+        'products_type_id' => 6,
+        'category_id' => null,
+      ],
+      [
+        'company_id' => 1,
+        'name' => 'Набор',
+        'parent_id' => null,
+        'category_status' => 1,
+        'author_id' => 1,
+        'products_type_id' => 7,
         'category_id' => null,
       ],
 
