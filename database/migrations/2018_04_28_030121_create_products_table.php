@@ -20,9 +20,6 @@ class CreateProductsTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('name')->index()->comment('Название товара');
-            $table->string('article')->nullable()->index()->comment('Артикул товара');
-
-            $table->integer('cost')->nullable()->unsigned()->comment('Себестоимость');
 
             $table->string('photo_id')->index()->nullable()->comment('Обложка товара');
             $table->string('description')->index()->nullable()->comment('Описание товара');

@@ -59,7 +59,7 @@
         <div class="grid-x grid-padding-x">
 
           <div class="small-12 medium-6 cell">
-            <div class="grid-x grid-padding-x">
+            <div class="grid-x grid-margin-x">
               <div class="small-12 medium-6 cell">
                 <label>Название товара
                   @include('includes.inputs.name', ['value'=>$product->name, 'name'=>'name', 'required'=>'required'])
@@ -76,10 +76,10 @@
               </div>
               <div class="small-12 medium-6 cell">
                 <label>Категория измерения товара
-                  {{ Form::select('units_category_id', $units_categories_list, $product->unit->units_category_id)}}
+                  {{ Form::select('units_category_id', $units_categories_list, $product->unit->units_category_id, ['id' => 'units-categories-list'])}}
                 </label>
                 <label>Единица измерения товара
-                  {{ Form::select('unit_id', $units_list, $product->unit_id)}}
+                  {{ Form::select('unit_id', $units_list, $product->unit_id, ['id' => 'units-list']) }}
                 </label>
               </div>
               <div class="small-12 medium-6 cell">
@@ -271,7 +271,7 @@
                 <tr> 
                   <th>Название</th>
                   <th>еще поле</th>
-                  <th></th>
+                  <!--  <th></th> -->
                 </tr>
               </thead>
               <tbody id="article-table">
@@ -282,9 +282,37 @@
               </tbody>
             </table>
           </div>
-          <div class="small-12 medium-4 cell">
+          <div class="small-12 medium-4 cell"  >
+            {{ Form::open(['url' => 'articles', 'data-abide', 'novalidate', 'id' => 'article-form']) }}
 
-
+            <fieldset class="fieldset-access">
+              <legend>Основные</legend>
+              <label>Сокращение
+                {{ Form::text('name') }}
+              </label>
+              <label>Внешнее обозначение
+                {{ Form::text('external') }}
+              </label>
+              <div class="grid-x grid-margin-x">
+                <div class="small-12 medium-6 cell">
+                  <label>Себестоимость
+                    {{ Form::text('cost') }}
+                  </label>
+                </div>
+                <div class="small-12 medium-6 cell">
+                  <label>Цена
+                    {{ Form::text('price') }}
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+            <div id="article-inputs"></div>
+            {{ Form::hidden('product_id', $product->id) }}
+            {{-- Кнопка --}}
+            <div class="small-12 cell tabs-button tabs-margin-top text-center">
+              {{ Form::submit('Создать артикул', ['class'=>'button', 'id' => 'add-article']) }}
+            </div>
+            {{ Form::close() }}
 
           </div>
         </div>
@@ -301,6 +329,7 @@
 @section('scripts')
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
+@include('products.scripts')
 @php
 $settings = config()->get('settings');
 @endphp
@@ -396,7 +425,7 @@ $settings = config()->get('settings');
       })
   });
 
-
+  // Когда при клике по табам активная вкладка артикула
   $('.tabs-list').on('change.zf.tabs', function() {
     if($('#articles:visible').length){
 
@@ -404,17 +433,38 @@ $settings = config()->get('settings');
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/get_product_inputs',
+        url: '/get_article_inputs',
         type: 'GET',
         data: {product_id: product_id},
         success: function(html){
-
-
-        // alert(html);
-        $('#property-form').html(html);
-      }
-    })
+          // alert(html);
+          $('#article-inputs').html(html);
+        }
+      })
     }
+  });
+
+
+  $(document).on('click', '#add-article', function() {
+    // event.preventDefault();
+
+    // alert($('#article-form').serialize());
+    
+    // $.ajax({
+    //   headers: {
+    //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //   },
+    //   url: '/articles',
+    //   type: 'POST',
+    //   data: $('#article-form').serialize(),
+    //   success: function(html){
+
+    //     // alert(html);
+    //     $('#article-table').append(html);
+    //     $('#article-form')[0].reset();
+    //   }
+    // })
+
   });
 
 

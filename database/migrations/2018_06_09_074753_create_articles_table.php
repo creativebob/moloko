@@ -35,6 +35,9 @@ class CreateArticlesTable extends Migration
             $table->integer('price_rule_id')->nullable()->unsigned()->comment('ID ценовой политики');
             $table->foreign('price_rule_id')->references('id')->on('price_rules');
 
+            $table->integer('metrics_count')->nullable()->unsigned()->index()->comment('Количество метрик у артикула');
+            $table->integer('compositions_count')->nullable()->unsigned()->index()->comment('Количество состава у артикула');
+
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');

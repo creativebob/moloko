@@ -254,6 +254,8 @@
     }); 
   });
 
+  
+
   // Проверка существования
   $(document).on('keyup', '#form-first-add .name-field', function() {
     // Получаем фрагмент текста

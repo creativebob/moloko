@@ -87,16 +87,15 @@ class UnitController extends Controller
 
     public function get_units_list(Request $request)
     {
-        $units = Unit::where('units_category_id', $request->id)->get()->pluck('name', 'id');
+        $units = Unit::where('units_category_id', $request->id)->get();
 
         if ($units) {
 
-            
-            return view($request->entity.'.units-list', ['units_list' => $units]);
+            return view($request->entity.'.units-list', ['get_units_list' => $units]);
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при формировании списка едениц измерения!'
+                'error_message' => 'Ошибка при формировании списка едениц измерения!',
             ];
         }
     }

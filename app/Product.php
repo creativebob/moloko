@@ -117,4 +117,10 @@ class Product extends Model
     {
         return $this->belongsToMany('App\Product', 'compositions', 'product_id', 'composition_id');
     }
+
+    // Получаем артикулы
+    public function articles()
+    {
+        return $this->hasMany('App\Article');
+    }
 }

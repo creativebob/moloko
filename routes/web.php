@@ -102,8 +102,6 @@ Route::any('/add_product_metric', 'ProductController@add_product_metric')->middl
 Route::any('/add_composition', 'ProductController@add_composition')->middleware('auth');
 Route::any('/delete_composition', 'ProductController@delete_composition')->middleware('auth');
 
-Route::any('get_product_inputs', 'ProductController@get_product_inputs')->middleware('auth');
-
 Route::any('/get_metric', 'MetricController@get_metric')->middleware('auth');
 
 Route::any('/add_metric', 'MetricController@add_metric')->middleware('auth');
@@ -112,7 +110,13 @@ Route::any('/delete_metric', 'MetricController@delete_metric')->middleware('auth
 Route::any('/get_properties_with_metrics', 'PropertyController@get_properties_with_metrics')->middleware('auth');
 
 
-Route::any('get_units_list', 'UnitController@get_units_list')->middleware('auth');
+Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
+
+
+Route::any('/get_article_inputs', 'ArticleController@get_article_inputs')->middleware('auth');
+
+// Основые методы
+Route::resource('/articles', 'ArticleController')->middleware('auth');
 
 
 
