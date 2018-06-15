@@ -16,6 +16,7 @@ use App\Property;
 use App\Metric;
 use App\Article;
 use App\Unit;
+use App\Value;
 
 
 // Валидация
@@ -223,6 +224,7 @@ class ProductController extends Controller
         $answer_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
         $product = Product::with(['units_category', 'manufacturer.location.country', 'products_category', 'metrics.unit', 'metrics', 'compositions', 'articles'])->moderatorLimit($answer_products)->findOrFail($id);
         // dd($product->articles);
+        // dd($product->metrics);
 
         
 
@@ -300,7 +302,7 @@ class ProductController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        // dd($properties[0]->metrics->);
+        // dd($properties);
 
 
         $properties_list = $properties->pluck('name', 'id');
@@ -635,6 +637,7 @@ class ProductController extends Controller
         $metric->company_id = $company_id;
         $metric->property_id = $request->property_id;
         $metric->name = $request->name;
+        $metric->description = $request->description;
         $metric->min = $request->min;
         $metric->max = $request->max;
         $metric->unit_id = $request->unit_id;
@@ -655,6 +658,12 @@ class ProductController extends Controller
                 'error_message' => 'Ошибка при добавлении свойства!'
             ];
         }
+    }
+
+    public function add_product_value(Request $request)
+    {   
+        // Переадресовываем на получение метрики
+        return view('products.value', ['value' => $request->value]);
     }
 
     // Добавление фоток

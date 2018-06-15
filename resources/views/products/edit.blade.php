@@ -288,7 +288,7 @@
             <fieldset class="fieldset-access">
               <legend>Основные</legend>
               <label>Сокращение
-                {{ Form::text('name') }}
+                {{ Form::text('name', null, ['required']) }}
               </label>
               <label>Внешнее обозначение
                 {{ Form::text('external') }}
@@ -307,6 +307,9 @@
               </div>
             </fieldset>
             <div id="article-inputs"></div>
+            <div class="small-12 cell tabs-margin-top text-center">
+              <div class="item-error" id="article-error">Такой артикул уже существует!<br>Измените значения!</div>
+            </div>
             {{ Form::hidden('product_id', $product->id) }}
             {{-- Кнопка --}}
             <div class="small-12 cell tabs-button tabs-margin-top text-center">
@@ -425,6 +428,20 @@ $settings = config()->get('settings');
       })
   });
 
+    // При клике на удаление состава со страницы
+    $(document).on('click', '[data-open="delete-value"]', function() {
+
+    // Находим описание сущности, id и название удаляемого элемента в родителе
+    // var parent = $(this).closest('.item');
+    // var id = parent.attr('id').split('-')[1];
+
+    // Удаляем элемент со страницы
+    var parent = $(this).closest('item');
+
+    parent.remove();
+
+  });
+
   // Когда при клике по табам активная вкладка артикула
   $('.tabs-list').on('change.zf.tabs', function() {
     if($('#articles:visible').length){
@@ -444,26 +461,40 @@ $settings = config()->get('settings');
     }
   });
 
-
-  $(document).on('click', '#add-article', function() {
-    // event.preventDefault();
-
+  // Проверяем наличие артикула в базе при клике на кнопку добавления артикула
+  $(document).on('click', '#add-article', function(event) {
+    event.preventDefault();
     // alert($('#article-form').serialize());
     
-    // $.ajax({
-    //   headers: {
-    //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //   },
-    //   url: '/articles',
-    //   type: 'POST',
-    //   data: $('#article-form').serialize(),
-    //   success: function(html){
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/articles',
+      type: 'POST',
+      dataType: 'json', // ставим тип json, чтоб определить что пришло по итогу
+      data: $('#article-form').serialize(),
 
-    //     // alert(html);
-    //     $('#article-table').append(html);
-    //     $('#article-form')[0].reset();
-    //   }
-    // })
+      // В случае совпадения артикула принимаем json, и выдаем ошибку
+      success: function(data, textStatus, jqXHR) {
+        if (data['error_status'] == 1) {
+          $('#add-article').prop('disabled', true);
+          $('#article-error').css('display', 'block');
+        }
+      },
+
+      // В случае несовпадения артикула пишем новый и вставляем его, но ответ придет html, поэтому ajax даст ошибку, т.к. ждет json
+      error: function(html, textStatus, errorThrown) {
+        // alert(JSON.stringify(html['responseText']));
+        $('#article-table').append(JSON.stringify(html['responseText']));
+        $('#article-form')[0].reset();
+      }
+    })
+  });
+
+  $(document).on('change', '#article-form input', function() {
+    $('#add-article').prop('disabled', false);
+    $('#article-error').css('display', 'none');
 
   });
 
@@ -518,6 +549,27 @@ $settings = config()->get('settings');
             $('#properties-dropdown').html(html);
           }
         })
+      }
+    })
+  });
+
+
+  // При клике на кнопку под Select'ом свойств
+  $(document).on('click', '#add-value', function(event) {
+    event.preventDefault();
+
+    // alert($('#properties-form input[name=value]').val());
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/add_product_value',
+      type: 'POST',
+      data: {value: $('#properties-form input[name=value]').val()},
+      success: function(html){
+        // alert(html);
+        $('#values-table').append(html);
+        $('#properties-form input[name=value]').val('');
       }
     })
   });

@@ -12,10 +12,11 @@ class CreateMetricsTable extends Migration
         Schema::create('metrics', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('name')->nullable()->comment('Имя метрики');
-
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
             $table->foreign('company_id')->references('id')->on('companies');
+
+            $table->string('name')->comment('Имя метрики');
+            $table->string('description')->nullable()->comment('Описание метрики');
 
             $table->integer('property_id')->nullable()->unsigned()->comment('ID свойства');
             $table->foreign('property_id')->references('id')->on('properties');

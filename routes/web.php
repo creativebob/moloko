@@ -99,6 +99,8 @@ Route::post('/products_import', 'ProductController@products_import');
 
 Route::any('/add_product_metric', 'ProductController@add_product_metric')->middleware('auth');
 
+Route::any('/add_product_value', 'ProductController@add_product_value')->middleware('auth');
+
 Route::any('/add_composition', 'ProductController@add_composition')->middleware('auth');
 Route::any('/delete_composition', 'ProductController@delete_composition')->middleware('auth');
 
@@ -119,8 +121,9 @@ Route::any('/get_article_inputs', 'ArticleController@get_article_inputs')->middl
 Route::resource('/articles', 'ArticleController')->middleware('auth');
 
 
-
 // ------------------------------------ Категории продукции --------------------------------------
+// Метод для обновления фотографии, ajax не поддерживает PATCH
+Route::post('/products_categories/{id}/update', 'ProductsCategoryController@update_ajax');
 // Текущая добавленная/удаленная категория продукции
 Route::any('/products_categories', 'ProductsCategoryController@index')->middleware('auth');
 // Основые методы

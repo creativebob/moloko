@@ -94,9 +94,14 @@ class PropertyController extends Controller
 
         if ($property) {
 
+            if (isset($property->units_category->name)) {
+                $units_list = $property->units_category->units->pluck('abbreviation', 'id');
+            } else {
+                $units_list = null;
+            }
             // echo $property;
             
-            return view($request->entity.'.add-property', ['type' => $property->type, 'units_list' => $property->units_category->units->pluck('abbreviation', 'id')]);
+            return view($request->entity.'.add-property', ['type' => $property->type, 'units_list' => $units_list]);
         } else {
             $result = [
                 'error_status' => 1,

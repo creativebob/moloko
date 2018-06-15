@@ -299,6 +299,17 @@ class UnitsTableSeeder extends Seeder
 				'moderation' => null, 
 			],
 
+			// Проценты
+			[
+				'name' => 'Процент', 
+				'abbreviation' => '%', 
+				'ratio' => 1, 
+				'units_category_id' => 7,
+				'system_item' => 1, 
+				'author_id' => 1, 
+				'moderation' => null, 
+			],
+
 
 		]);
 	}

@@ -75,8 +75,6 @@ class ProductsCategoryController extends Controller
 
         $products_category = new ProductsCategory;
 
-        
-
         // Если добавляем вложенный элемент
         if (isset($request->parent_id)) {
 
@@ -128,6 +126,7 @@ class ProductsCategoryController extends Controller
         $products_category = new ProductsCategory;
         $products_category->company_id = $company_id;
         $products_category->author_id = $user_id;
+
         
         // Модерация и системная запись
         $products_category->system_item = $request->system_item;
@@ -158,10 +157,27 @@ class ProductsCategoryController extends Controller
 
         $products_category->display = $request->display;
 
+        $products_category->description = $request->description;
+        $products_category->seo_description = $request->seo_description;
+
         // Делаем заглавной первую букву
         $products_category->name = get_first_letter($request->name);
 
         $products_category->save();
+
+        // Если прикрепили фото
+        if ($request->hasFile('photo')) {
+
+            // Директория
+            $directory = $company_id.'/media/products_categories/'.$products_category->id.'/img/';
+
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
+            $array = save_photo($request, $user_id, $company_id, $directory, 'avatar-'.time());
+            $photo = $array['photo'];
+
+            $products_category->photo_id = $photo->id;
+            $products_category->save();
+        }
 
         if ($products_category) {
 
@@ -187,7 +203,7 @@ class ProductsCategoryController extends Controller
         $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $products_category = ProductsCategory::with('products_type')->moderatorLimit($answer)->findOrFail($id);
+        $products_category = ProductsCategory::with('products_type', 'photo')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $products_category);
@@ -197,6 +213,7 @@ class ProductsCategoryController extends Controller
             // Выбираем все типы без проверки, так как они статичны, добавляться не будут
             $products_types_list = ProductsType::get()->pluck('name', 'id');
 
+            // echo $id;
             // Меняем категорию
             return view('products_categories.edit-first', ['products_category' => $products_category, 'products_types_list' => $products_types_list]);
         } else {
@@ -226,6 +243,8 @@ class ProductsCategoryController extends Controller
     public function update(ProductsCategoryRequest $request, $id)
     {
 
+        // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
 
@@ -240,6 +259,30 @@ class ProductsCategoryController extends Controller
 
         // Скрываем бога
         $user_id = hideGod($user);
+
+        $company_id = $user->company_id;
+
+        // Если прикрепили фото
+        if (Input::hasFile('photo')) {
+
+            // Директория
+            $directory = $company_id.'/media/products_categories/'.$products_category->id.'/img/';
+
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            if ($products_category->photo_id) {
+                $array = save_photo($request, $user_id, $company_id, $directory, 'avatar-'.time(), null, $products_category->photo_id);
+
+            } else {
+                $array = save_photo($request, $user_id, $company_id, $directory, 'avatar-'.time());
+                
+            }
+            $photo = $array['photo'];
+
+            $products_category->photo_id = $photo->id;
+        }
+
+        $products_category->description = $request->description;
+        $products_category->seo_description = $request->seo_description;
 
         // Модерация и системная запись
         $products_category->system_item = $request->system_item;
@@ -396,6 +439,86 @@ class ProductsCategoryController extends Controller
             $products_category->sort = $i;
             $products_category->save();
             $i++;
+        }
+    }
+
+
+
+
+    public function update_ajax(Request $request, $id)
+    {
+        // dd($request);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_name, 'update');
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $products_category = ProductsCategory::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod('update'), $products_category);
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        $company_id = $user->company_id;
+        
+        // Если прикрепили фото
+        if ($request->hasFile('photo')) {
+
+            // Директория
+            $directory = $company_id.'/media/products_categories/'.$products_category->id.'/img/';
+
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            if ($products_category->photo_id) {
+                $array = save_photo($request, $user_id, $company_id, $directory, 'avatar-'.time(), null, $products_category->photo_id);
+
+            } else {
+                $array = save_photo($request, $user_id, $company_id, $directory, 'avatar-'.time());
+                
+            }
+            $photo = $array['photo'];
+
+            $products_category->photo_id = $photo->id;
+        }
+
+        $products_category->description = $request->description;
+        $products_category->seo_description = $request->seo_description;
+
+        // Модерация и системная запись
+        $products_category->system_item = $request->system_item;
+        $products_category->moderation = $request->moderation;
+
+        $products_category->parent_id = $request->parent_id;
+        $products_category->editor_id = $user_id;
+
+        // Если сменили тип категории продукции, то меняем его и всем вложенным элементам
+        if (($products_category->category_status == 1) && ($products_category->products_type_id != $request->products_type_id)) {
+            $products_category->products_type_id = $request->products_type_id;
+
+            $products_categories = ProductsCategory::whereCategory_id($id)
+            ->update(['products_type_id' => $request->products_type_id]);
+
+        }
+        
+        $products_category->display = $request->display;
+
+        // Делаем заглавной первую букву
+        $products_category->name = get_first_letter($request->name); 
+
+        $products_category->save();
+
+        if ($products_category) {
+
+            // Переадресовываем на index
+            return redirect()->action('ProductsCategoryController@index', ['id' => $products_category->id]);
+        } else {
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при записи категории продукции!'
+            ];
         }
     }
 }

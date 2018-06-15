@@ -4,8 +4,7 @@
       <h5>Редактирование категории продукции</h5>
     </div>
   </div>
-  <!-- Редактируем отдел -->
-  {{ Form::open(['id'=>'form-medium-edit', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['id'=>'form-medium-edit', 'data-abide', 'novalidate', 'files'=>'true']) }}
 
     @include('products_categories.modals.medium', ['submitButtonText' => 'Редактировать категорию продукции', 'class' => 'submit-edit'])
 
@@ -14,6 +13,7 @@
 </div>
 
 @include('includes.scripts.inputs-mask')
+@include('includes.scripts.upload-file')
 
 
 

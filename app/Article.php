@@ -47,7 +47,7 @@ class Article extends Model
     // Состав
     public function compositions()
     {
-        return $this->belongsToMany('App\Product', 'article_values', 'article_id', 'entity_id')->where('entity', 'compositions');
+        return $this->belongsToMany('App\Product', 'article_values', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
     }
 
      // Продукт

@@ -21,41 +21,30 @@ class ArticleController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
 
         // Подключение политики
-        // $this->authorize(getmethod(__FUNCTION__), Article::class);
+        $this->authorize(getmethod(__FUNCTION__), Article::class);
 
         $product_id = $request->product_id;
 
         // Вытаскиваем продукт
         $product = Product::with('metrics', 'compositions')->findOrFail($product_id);
+        // dd($product);
 
+        // Формируем массивы метрик
         $metrics = [];
-        $metrics_list = [];
         $metrics_values = [];
+
         foreach ($product->metrics as $metric) {
 
             $input = 'metrics-'.$metric->id;
-
-            $metrics_list[] = $metric->id;
 
             $metrics_values[$metric->id] = $request->$input;
 
@@ -66,152 +55,152 @@ class ArticleController extends Controller
         }
         $metrics_count = count($metrics);
 
-        // dd($metrics_list);
+        // dd($metrics_values);
 
+        // Формируем массивы составов
         $compositions = [];
-        $compositions_list = [];
+        $compositions_values = [];
+
         foreach ($product->compositions as $composition) {
 
             $input = 'compositions-'.$composition->id;
 
-            $compositions_list[] = $composition->id;
+            $compositions_values[$composition->id] = $request->$input;
 
             $compositions[$composition->id] = [
                 'entity' => 'compositions',
                 'value' => $request->$input,
             ];
         }
-
-         // dd($compositions_list);
-
         $compositions_count = count($compositions);
+        // dd($compositions_values);
 
         // Проверка на наличие артикула
-        $articles = Article::where('product_id', $product_id)
+
+        // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
+        $articles = Article::with('metrics', 'compositions')
+        ->where('product_id', $product_id)
         ->where(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count])
         ->get();
-
         // dd($articles);
 
-        $array = [];
+        // Создаем массив совпадений
+        $coincidence = [];
+
+        // Сравниваем метрики
+        $metrics_array = [];
         foreach ($articles as $article) {
             foreach ($article->metrics as $metric) {
-                $array[$article->id][$metric->id] = $metric->pivot->value;
+                $metrics_array[$article->id][$metric->id] = $metric->pivot->value;
             }
         }
-
-        // dd($array);
-
+        // dd($metrics_array);
         // dd($metrics_values);
 
-        foreach ($array as $item) {
+        foreach ($metrics_array as $item) {
+            if ($metrics_values == $item) {
 
-            $a = collect($item)->diffAssoc($metrics_values);
-
-            if (!isset($a)) {
-                dd('lol');
+                // Если значения метрик совпали, создаюм ключ метрик
+                $coincidence['metric'] = 1;
             }
-           
         }
 
-        // dd($a->all());
+        // Сравниваем составы
+        $compositions_array = [];
+        foreach ($articles as $article) {
+            foreach ($article->compositions as $composition) {
+                $compositions_array[$article->id][$composition->id] = $composition->pivot->value;
+            }
+        }
+        // dd($compositions_array);
+        // dd($compositions_values);
 
-        
+        foreach ($compositions_array as $item) {
+            if ($compositions_values == $item) {
 
-
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        // Наполняем сущность данными
-
-        $article = new Article;
-        $article->product_id = $request->product_id;
-        $article->name = $request->name;
-        $article->external = $request->external;
-        $article->cost = $request->cost;
-        $article->price = $request->price;
-
-        $article->metrics_count = $metrics_count;
-        $article->compositions_count = $compositions_count;
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false) {
-            $article->moderation = 1;
+                // Если значения составов совпали, создаюм ключ составов
+                $coincidence['composition'] = 1;
+            }
         }
 
-        // Системная запись
-        $article->system_item = $request->system_item;
+        // Проверяем наличие ключей в массиве
+        if (array_key_exists('metric', $coincidence) && array_key_exists('composition', $coincidence)) {
 
-        $article->company_id = $company_id;
-        $article->author_id = $user_id;
-        $article->save();
+            // Если ключи присутствуют, даем ошибку
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Такой артикул уже существует!',
+            ];
 
-        if ($article) {
+            echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        } else {
 
+            // Если что то не совпало, пишем новый артикул
 
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-            // Пишем метрики
-            $article->metrics()->attach($metrics);
+            // Получаем данные для авторизованного пользователя
+            $user = $request->user();
 
-            // Пишем состав
-            $article->compositions()->attach($compositions);
+            // Смотрим компанию пользователя
+            $company_id = $user->company_id;
 
-            return view('products.article', compact('article'));
+            // Скрываем бога
+            $user_id = hideGod($user);
 
+            // Наполняем сущность данными
 
+            $article = new Article;
+            $article->product_id = $request->product_id;
+            $article->name = $request->name;
+            $article->external = $request->external;
+            $article->cost = $request->cost;
+            $article->price = $request->price;
+
+            $article->metrics_count = $metrics_count;
+            $article->compositions_count = $compositions_count;
+
+            // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+            if ($answer['automoderate'] == false) {
+                $article->moderation = 1;
+            }
+
+            // Системная запись
+            $article->system_item = $request->system_item;
+
+            $article->company_id = $company_id;
+            $article->author_id = $user_id;
+            $article->save();
+
+            if ($article) {
+
+                // Пишем метрики
+                $article->metrics()->attach($metrics);
+
+                // Пишем состав
+                $article->compositions()->attach($compositions);
+
+                return view('products.article', compact('article'));
+            }
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
