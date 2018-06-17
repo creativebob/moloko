@@ -383,7 +383,9 @@ class SiteController extends Controller
 
         if ($site) {
             // return Cache::remember('site', 1, function() use ($domain) {
-            return Site::with(['departments.location.city', 'company.location.city', 'company.schedules.worktimes', 'pages' => function ($query) {
+            return Site::with(['departments.location.city', 'company.location.city', 'company.schedules.worktimes', 'company.products_categories.products' => function ($query) {
+                $query->whereDisplay(1);
+            }, 'pages' => function ($query) {
                 $query->whereDisplay(1);
             }, 'navigations.menus.page', 'navigations.navigations_category', 'navigations' => function ($query) {
                 $query->whereDisplay(1);

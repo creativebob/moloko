@@ -146,6 +146,12 @@ class Company extends Model
         return $this->hasMany('App\Contragent', 'contragent_id');
     }
 
+    // Получаем категории продукции
+    public function products_categories()
+    {
+        return $this->hasMany('App\ProductCategory');
+    }
+
     // Получаем клиентов
     public function clients()
     {   
