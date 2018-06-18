@@ -388,7 +388,7 @@ class SiteController extends Controller
                 'company.schedules.worktimes',
                 'company.products_categories' => function ($query) {
                     $query->with(['products' => function ($query) {
-                        $query->with('manufacturer.location.country', 'unit')->whereDisplay(1);
+                        $query->with('manufacturer.location.country', 'unit', 'articles')->whereDisplay(1);
                     }])->whereDisplay(1);
                 }, 'pages' => function ($query) {
                     $query->whereDisplay(1);
