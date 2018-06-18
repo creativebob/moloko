@@ -60,6 +60,38 @@ class ContragentsTableSeeder extends Seeder
                 'author_id' => 1,
                 'manufacturer_status' => 1,
             ], 
+            [
+                'company_id' => 4,
+                'contragent_id' => 5,
+                'client_status' => null,
+                'vendor_status' => null,
+                'author_id' => 1,
+                'manufacturer_status' => 1,
+            ], 
+            [
+                'company_id' => 4,
+                'contragent_id' => 6,
+                'client_status' => null,
+                'vendor_status' => null,
+                'author_id' => 1,
+                'manufacturer_status' => 1,
+            ], 
+            [
+                'company_id' => 4,
+                'contragent_id' => 7,
+                'client_status' => null,
+                'vendor_status' => null,
+                'author_id' => 1,
+                'manufacturer_status' => 1,
+            ], 
+            [
+                'company_id' => 4,
+                'contragent_id' => 8,
+                'client_status' => null,
+                'vendor_status' => null,
+                'author_id' => 1,
+                'manufacturer_status' => 1,
+            ], 
         ]);
     }
 }

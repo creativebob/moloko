@@ -108,6 +108,7 @@ class DatabaseSeeder extends Seeder
     $this->call(MetricEntityTableSeeder::class);
 
     $this->call(ArticlesTableSeeder::class);
+    $this->call(ArticleValuesTableSeeder::class);
 
   }
 }

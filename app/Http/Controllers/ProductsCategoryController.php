@@ -49,6 +49,8 @@ class ProductsCategoryController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
+        // dd(get_parents_tree($products_categories));
+
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
