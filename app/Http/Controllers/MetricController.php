@@ -85,13 +85,46 @@ class MetricController extends Controller
         //
     }
 
-    public function get_metric(Request $request)
+    public function add_metric(Request $request)
     {
 
-
         $metric = Metric::with('unit')->findOrFail($request->id);
+
+        // Смотрим с какой сущностью нужно связать метрику
+        switch ($request->entity) {
+            case 'products':
+            $metric->products()->toggle([$request->entity_id => ['entity' => $request->entity]]);
+            break;
+        }
 
 
         return view($request->entity.'.metric', ['metric' => $metric]);
     }
+
+    public function delete_metric(Request $request)
+    {
+
+        $metric = Metric::findOrFail($request->id);
+
+        // Смотрим от какой сущности нужно отвязать метрику
+        switch ($request->entity) {
+            case 'products':
+            $res = $metric->products()->toggle([$request->entity_id => ['entity' => $request->entity]]);
+            break;
+        }
+
+        if ($res) {
+            $result = [
+                'error_status' => 0,
+            ];
+        } else {
+            $result = [
+                'error_message' => 'Не удалось удалить метрику!',
+                'error_status' => 1,
+            ];
+        }
+        
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
 }

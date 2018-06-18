@@ -111,4 +111,16 @@ class Product extends Model
     {
         return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'products');
     }
+
+    // Получаем состав
+    public function compositions()
+    {
+        return $this->belongsToMany('App\Product', 'compositions', 'product_id', 'composition_id');
+    }
+
+    // Получаем артикулы
+    public function articles()
+    {
+        return $this->hasMany('App\Article');
+    }
 }

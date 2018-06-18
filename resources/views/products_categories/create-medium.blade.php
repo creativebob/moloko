@@ -4,8 +4,7 @@
       <h5>ДОБАВЛЕНИЕ категории продукции</h5>
     </div>
   </div>
-  <!-- Добавляем сектор -->
-  {{ Form::open(['id'=>'form-medium-add', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['id'=>'form-medium-add', 'data-abide', 'novalidate', 'files'=>'true']) }}
 
       @include('products_categories.modals.medium', ['submitButtonText' => 'Добавить категорию продукции', 'class' => 'submit-add'])
 
@@ -14,6 +13,7 @@
 </div>
 
 @include('includes.scripts.inputs-mask')
+@include('includes.scripts.upload-file')
 
 
 

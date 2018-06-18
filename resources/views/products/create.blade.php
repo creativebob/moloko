@@ -21,6 +21,32 @@
         </select>
       </label>
 
+      <div class="grid-x grid-margin-x">
+        <div class="small-12 medium-6 cell">
+          <label>Категория единиц измерения
+            {{ Form::select('units_category_id', $units_categories_list, null, ['placeholder' => 'Выберите категорию', 'id' => 'units-categories-list', 'required']) }}
+          </label>
+        </div>
+        <div class="small-12 medium-6 cell">
+          <label>Единица измерения
+            <select name="unit_id" id="units-list" required disabled></select>
+          </label>
+        </div>
+      </div>
+
+      <div class="grid-x grid-margin-x">
+        <div class="small-12 medium-6 cell">
+          <label>Себестоимость
+            {{ Form::text('cost') }}
+          </label>
+        </div>
+        <div class="small-12 medium-6 cell">
+          <label>Цена
+            {{ Form::text('price') }}
+          </label>
+        </div>
+      </div>
+
       {{-- Чекбокс системной записи --}}
       @can ('god', App\Product::class)
       <div class="small-12 cell checkbox">
@@ -41,6 +67,8 @@
 </div>
 
 @include('includes.scripts.inputs-mask')
+@include('products.scripts')
+
 
 
 

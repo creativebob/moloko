@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\User;
 use App\ProductsCategory;
+use App\ProductsType;
 use App\UnitsCategory;
 use App\Company;
 use App\Photo;
@@ -13,6 +14,9 @@ use App\Album;
 use App\AlbumEntity;
 use App\Property;
 use App\Metric;
+use App\Article;
+use App\Unit;
+use App\Value;
 
 
 // Валидация
@@ -131,7 +135,23 @@ class ProductController extends Controller
         $products_categories_list = get_select_tree($products_categories, null, null, null);
         // dd($countries_list);
 
-        return view('products.create', ['product' => $product, 'products_categories_list' => $products_categories_list]);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_units_categories = operator_right('units_categories', false, 'index');
+
+        // Главный запрос
+        $units_categories_list = UnitsCategory::with(['units' => function ($query) {
+            $query->pluck('name', 'id');
+        }])
+        ->moderatorLimit($answer_units_categories)
+        ->companiesLimit($answer_units_categories)
+        ->authors($answer_units_categories)
+        ->systemItem($answer_units_categories) // Фильтр по системным записям
+        ->template($answer_units_categories)
+        ->orderBy('sort', 'asc')
+        ->get()
+        ->pluck('name', 'id');
+
+        return view('products.create', compact('product', 'products_categories_list', 'units_categories_list'));
     }
 
     public function store(ProductRequest $request)
@@ -154,7 +174,8 @@ class ProductController extends Controller
         $product->name = $request->name;
 
         $product->products_category_id = $request->products_category_id;
-
+        $product->unit_id = $request->unit_id;
+        
         // Автоматически отправляем запись на модерацию
         $product->moderation = 1;
 
@@ -167,20 +188,25 @@ class ProductController extends Controller
 
         if ($product) {
 
-            // Когда новость записалась, смотрим пришедние для нее альбомы и пишем, т.к. это первая запись новости
-            if (isset($request->metrics)) {
-                $metrics = [];
-                foreach ($request->metrics as $metric) {
-                    $metrics[$metric] = [
-                        'entity' => $this->entity_name,
-                    ];
-                }
+            // Когда продукт записался, создаем дял него базовый артикул
 
-                $product->metrics()->attach($metrics);
+            $article = new Article;
+            $article->name = $request->name;
+            $article->product_id = $product->id;
+            $article->cost = $request->cost;
+            $article->price = $request->price;
+
+            $article->company_id = $company_id;
+            $article->author_id = $user_id;
+
+            $article->save();
+
+            if ($article) {
+                // Отправляем на редактирование записи
+                return Redirect('/products/'.$product->id.'/edit');
+            } else {
+                abort(403, 'Ошибка записи базового артикула');
             }
-
-            // Отправляем на редактирование записи
-            return Redirect('/products/'.$product->id.'/edit');
         } else {
             abort(403, 'Ошибка записи товара');
         }
@@ -195,9 +221,27 @@ class ProductController extends Controller
     {
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-        $product = Product::with(['units_category', 'manufacturer.location.country', 'products_category', 'metrics.unit'])->moderatorLimit($answer)->findOrFail($id);
-        // dd($product);
+        $answer_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $product = Product::with(['units_category', 'manufacturer.location.country', 'products_category', 'metrics.unit', 'metrics', 'compositions', 'articles'])->moderatorLimit($answer_products)->findOrFail($id);
+        // dd($product->articles);
+        // dd($product->metrics);
+
+        
+
+        // dd($product->compositions);
+
+        $product_metrics = [];
+        foreach ($product->metrics as $metric) {
+            $product_metrics[] = $metric->id;
+        }
+        // dd($product_metrics);
+
+        $product_compositions = [];
+        foreach ($product->compositions as $composition) {
+            $product_compositions[] = $composition->id;
+        }
+
+        // dd($product_compositions);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $product);
@@ -206,7 +250,10 @@ class ProductController extends Controller
         $answer_units_categories = operator_right('units_categories', false, 'index');
 
         // Главный запрос
-        $units_categories_list = UnitsCategory::moderatorLimit($answer_units_categories)
+        $units_categories_list = UnitsCategory::with(['units' => function ($query) {
+            $query->pluck('name', 'id');
+        }])
+        ->moderatorLimit($answer_units_categories)
         ->companiesLimit($answer_units_categories)
         ->authors($answer_units_categories)
         ->systemItem($answer_units_categories) // Фильтр по системным записям
@@ -214,7 +261,10 @@ class ProductController extends Controller
         ->orderBy('sort', 'asc')
         ->get()
         ->pluck('name', 'id');
-        // dd($units_categories_list);
+
+        $units_list = Unit::where('units_category_id', $product->unit->units_category_id)->get()->pluck('name', 'id');
+
+        // dd($units_categories_list[$product->unit->units_category_id]);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -234,7 +284,15 @@ class ProductController extends Controller
             ->companiesLimit($answer_metrics)
             ->authors($answer_metrics)
             ->systemItem($answer_metrics); // Фильтр по системным записям
-        }])
+        }
+        // , 'products' 
+        // => function ($query) use ($id) {
+        //     $query->findOrFail($id);
+    ])
+        // ->whereHas('metrics.products', function ($query) use ($id) {
+        //     $query->findOrFail($id);
+        // })
+        ->withCount('metrics')
         // ->whereHas('metrics', function ($query) use ($answer_metrics) {
         //     $query->moderatorLimit($answer_metrics)
         //     ->companiesLimit($answer_metrics)
@@ -288,12 +346,123 @@ class ProductController extends Controller
 
         $photo = New Photo;
 
+        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer_products = operator_right('products', false, 'index');
+
+        // $products = Product::with('products_category.products_type')
+        // ->moderatorLimit($answer_products)
+        // ->companiesLimit($answer_products)
+        // ->authors($answer_products)
+        // ->systemItem($answer_products) // Фильтр по системным записям
+        // ->whereHas('products_category', function ($query) {
+        //     $query->whereHas('products_type', function ($query) {
+        //         $query->whereType('goods');
+        //     });
+        // })
+        // ->orderBy('sort', 'asc')
+        // ->get();
+
+        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_products_types = operator_right('products_types', false, 'index');
+
+        $products_types = ProductsType::with(['products_categories' => function ($query) use ($answer_products_categories) {
+            $query->with('products')
+            ->withCount('products')
+            ->moderatorLimit($answer_products_categories)
+            ->companiesLimit($answer_products_categories)
+            ->authors($answer_products_categories)
+            ->systemItem($answer_products_categories) // Фильтр по системным записям
+            ->template($answer_products_categories);
+        }])
+        ->moderatorLimit($answer_products_types)
+        ->companiesLimit($answer_products_types)
+        ->authors($answer_products_types)
+        ->systemItem($answer_products_types) // Фильтр по системным записям
+        ->template($answer_products_types)
+        ->whereType('goods')
+        ->orderBy('sort', 'asc')
+        ->get();
+
+        $grouped_products_types = $products_types->groupBy('alias');
+
+
+        // foreach ($grouped_products_types as $grouped_products_type) {
+        //     dd($grouped_products_type[0]->products_categories);
+        // }
+
+        // dd($grouped_products_types);
+
+
+
+        // $grouped->toArray();
+
+        // dd($grouped['material'][0]->products_categories[0]->products);
+
+
+        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer_products_categories = operator_right('products_categories', false, 'index');
+
+        // $products_categories = ProductsCategory::with(['products' => function ($query) use ($answer_products) {
+        //     $query->moderatorLimit($answer_products)
+        //     ->companiesLimit($answer_products)
+        //     ->authors($answer_products)
+        //     ->systemItem($answer_products) // Фильтр по системным записям
+        //     ->template($answer_products);
+        // }])
+        // ->moderatorLimit($answer_products_categories)
+        // ->companiesLimit($answer_products_categories)
+        // ->authors($answer_products_categories)
+        // ->systemItem($answer_products_categories) // Фильтр по системным записям
+        // ->template($answer_products_categories)
+        // ->whereHas('products_type', function ($query) {
+        //     $query->whereType('goods');
+        // })
+        // ->orderBy('sort', 'asc')
+        // ->groupBy();
+
+        // // dd($products_categories);
+
+        // $materials = $products_types->where('alias', 'material');
+        // dd($materials);
+
+        // $materials = Product::moderatorLimit($answer_products)
+        // ->companiesLimit($answer_products)
+        // ->authors($answer_products)
+        // ->systemItem($answer_products) // Фильтр по системным записям
+        // ->whereHas('products_category', function ($query) {
+        //     $query->whereHas('products_type', function ($query) {
+        //         $query->whereAlias('material');
+        //     });
+        // })
+        // ->orderBy('sort', 'asc')
+        // ->get();
+
+        // $semiproducts = Product::with('products_category.products_type')->moderatorLimit($answer_products)
+        // ->companiesLimit($answer_products)
+        // ->authors($answer_products)
+        // ->systemItem($answer_products) // Фильтр по системным записям
+        // ->whereHas('products_category', function ($query) {
+        //     $query->whereHas('products_type', function ($query) {
+        //         $query->whereType('goods');
+        //     });
+        // })
+        // ->orderBy('sort', 'asc')
+        // ->get();
+
+        // $materials = $products->whereHas('products_category', function ($query) {
+        //     $query->whereHas('products_type', function ($query) {
+        //         $query->whereAlias('material');
+        //     });
+        // })->get();
+
+        // dd($materials);
+
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('products.photos-list', ['sectors_tree' => $sectors_tree, 'id' => $request->id]);
+            return view('products.properties-list', ['properties' => $properties, 'product_metrics' => $product_metrics]);
         }
 
-        return view('products.edit', compact('product', 'page_info', 'products_categories_list', 'units_categories_list', 'manufacturers_list', 'photo', 'properties', 'properties_list'));
+        return view('products.edit', compact('product', 'page_info', 'products_categories_list', 'units_categories_list', 'manufacturers_list', 'photo', 'properties', 'properties_list', 'product_metrics', 'product_compositions', 'grouped_products_types', 'units_list'));
     }
 
     public function update(ProductRequest $request, $id)
@@ -335,7 +504,9 @@ class ProductController extends Controller
 
         $product->name = $request->name;
 
-        $product->units_category_id = $request->units_category_id;
+        $product->unit_id = $request->unit_id;
+        
+
         $product->manufacturer_id = $request->manufacturer_id;
 
         $product->products_category_id = $request->products_category_id;
@@ -354,6 +525,7 @@ class ProductController extends Controller
 
 
         if ($product) {
+
             // dd($request->metrics);
             // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
             if (isset($request->metrics)) {
@@ -464,10 +636,11 @@ class ProductController extends Controller
         $metric = new Metric;
         $metric->company_id = $company_id;
         $metric->property_id = $request->property_id;
-        $metric->name = $request->metric_name;
-        $metric->min = $request->metric_min;
-        $metric->max = $request->metric_max;
-        $metric->unit_id = $request->metric_unit_id;
+        $metric->name = $request->name;
+        $metric->description = $request->description;
+        $metric->min = $request->min;
+        $metric->max = $request->max;
+        $metric->unit_id = $request->unit_id;
 
         $metric->author_id = $user_id;
 
@@ -475,23 +648,22 @@ class ProductController extends Controller
 
         if ($metric) {
 
-            // Когда метрика записалась, связываем ее с продуктом
-            $product[$request->metric_product_id] = [
-                'entity' => $this->entity_name,
-            ];
 
-            $metric->products()->attach($product);
-            
             // echo $metric;
-            // Переадресовываем на index
-            return redirect()->action('MetricController@get_metric', ['id' => $metric->id, 'entity' => $this->entity_name]);
-            // return view('products.metric', ['metric' => $metric]);
+            // Переадресовываем на получение метрики
+            return redirect()->action('MetricController@add_metric', ['id' => $metric->id, 'entity_id' => $request->product_id, 'entity' => $this->entity_name]);
         } else {
             $result = [
                 'error_status' => 1,
                 'error_message' => 'Ошибка при добавлении свойства!'
             ];
         }
+    }
+
+    public function add_product_value(Request $request)
+    {   
+        // Переадресовываем на получение метрики
+        return view('products.value', ['value' => $request->value]);
     }
 
     // Добавление фоток
@@ -600,6 +772,51 @@ class ProductController extends Controller
         } else {
             return response()->json('error', 400);
         } 
+    }
+
+    public function add_composition(Request $request)
+    {
+
+        $product = Product::findOrFail($request->product_id);
+
+        $product->compositions()->toggle([$request->id]);
+
+        $composition = Product::findOrFail($request->id);
+
+        return view('products.composition', ['composition' => $composition]);
+    }
+
+    public function delete_composition(Request $request)
+    {
+
+        $product = Product::findOrFail($request->product_id);
+        $res = $product->compositions()->toggle([$request->id]);
+
+        if ($res) {
+            $result = [
+                'error_status' => 0,
+            ];
+        } else {
+            $result = [
+                'error_message' => 'Не удалось удалить состав!',
+                'error_status' => 1,
+            ];
+        }
+        
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function get_product_inputs(Request $request)
+    {
+
+        $product = Product::with('metrics.property', 'compositions')->findOrFail(1);
+
+        // $request->product_id
+
+        dd($product);
+
+        
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
 

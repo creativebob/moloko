@@ -37,4 +37,10 @@ class Metric extends Model
     {
         return $this->belongsTo('App\Unit');
     }
+
+    // Получаем единицу измерения
+    public function property()
+    {
+        return $this->belongsTo('App\Property');
+    }
 }

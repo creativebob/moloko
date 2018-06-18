@@ -60,6 +60,15 @@ class UnitsCategoriesTableSeeder extends Seeder
     			'author_id' => 1, 
     			'moderation' => null, 
     		],
+            [
+                'name' => 'Проценты', 
+                'unit' => 'процент', 
+                'abbreviation' => '%', 
+                'system_item' => null, 
+                'author_id' => 1, 
+                'moderation' => null, 
+            ],
+
     		// [
     		// 	'name' => 'Сила электрического тока', 
     		// 	'unit' => 'ампер', 

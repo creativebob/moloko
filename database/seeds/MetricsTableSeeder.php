@@ -22,7 +22,7 @@ class MetricsTableSeeder extends Seeder
     		],
     		[
     			'name' => 'Высота откатных ворот',
-    			'property_id' => 1,
+    			'property_id' => 3,
     			'min' => 1,
     			'max' => 3,
     			'color' => null,

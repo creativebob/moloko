@@ -57,6 +57,16 @@ class PropertiesTableSeeder extends Seeder
     			'units_category_id' => 5,
     			'type' => 'numeric',
     		],
+            [
+                'name' => 'Процент',
+                'units_category_id' => 7,
+                'type' => 'percent',
+            ],
+            [
+                'name' => 'Список',
+                'units_category_id' => null,
+                'type' => 'list',
+            ],
 
     	]);
     }

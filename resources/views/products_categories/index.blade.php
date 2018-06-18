@@ -20,10 +20,10 @@
 <div class="grid-x">
   <div class="small-12 cell">
     <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="products_categories">
-    @if($products_categories_tree)
-    {{-- Шаблон вывода и динамического обновления --}}
-    @include('products_categories.category-list', $products_categories_tree)
-    @endif
+      @if($products_categories_tree)
+      {{-- Шаблон вывода и динамического обновления --}}
+      @include('products_categories.category-list', $products_categories_tree)
+      @endif
     </ul>
   </div>
 </div>
@@ -152,7 +152,6 @@
     // Получаем данные о разделе
     var id = $(this).closest('.item').attr('id').split('-')[1];
 
-
     // Ajax запрос
     $.ajax({
       headers: {
@@ -161,6 +160,7 @@
       url: "/products_categories/" + id + "/edit",
       type: "GET",
       success: function(html) {
+        // alert(html);
         $('#modal').html(html);
         $('#first-edit').foundation();
         $('#first-edit').foundation('open');
@@ -266,7 +266,8 @@
   $(document).on('click', '.submit-add', function(event) {
     event.preventDefault();
 
-    // alert($(this).closest('form').serialize());
+    var formName = $(this).closest('form').attr('id');
+
     // Ajax запрос
     $.ajax({
       headers: {
@@ -274,7 +275,9 @@
       },
       url: '/products_categories',
       type: "POST",
-      data: $(this).closest('form').serialize(),
+      data: new FormData($("#" + formName)[0]),
+      contentType: false,
+      processData: false,
       success:function(html) {
         $('#content').html(html);
         Foundation.reInit($('#content'));
@@ -288,14 +291,18 @@
 
     var id = $('#products-category-id').val();
 
+    var formName = $(this).closest('form').attr('id');
+    
     // Ajax запрос
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/products_categories/' + id,
-      type: "PATCH",
-      data: $(this).closest('form').serialize(),
+      url: '/products_categories/' + id + '/update',
+      type: "POST",
+      data: new FormData($("#" + formName)[0]),
+      contentType: false,
+      processData: false,
       success:function(html) {
         $('#content').html(html);
         Foundation.reInit($('#content'));

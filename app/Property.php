@@ -46,4 +46,10 @@ class Property extends Model
     {
         return $this->hasMany('App\Metric');
     }
+
+    // Пролучаем продукцию
+    // public function products()
+    // {
+    //     return $this->hasManyThrough('App\Product', 'App\Metric');
+    // }
 }

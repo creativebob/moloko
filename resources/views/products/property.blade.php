@@ -1,21 +1,13 @@
 <li>
-	<span>{{ $property->name }}</span>
-	
-
-
-	{{-- <ul>
-		@foreach ($property->metrics as $metric)
-		<li class="checkbox">
-			{{ Form::checkbox('add_metric_id', 1, $property->metric, ['id' => 'add-metric-'. $metric->id]) }}
-			<label for="add-metric-{{ $metric->id }}"><span>{{ $metric->name }}</span></label>
-		</li>
-		@endforeach
-	</ul> --}}
-
+	<span class="parent" data-open="property-{{ $property->id }}">{{ $property->name }}</span>
+	@if ($property->metrics_count > 0)
+	<div class="checker-nested" id="property-{{ $property->id }}">
+		<ul  class="checker">
+			@foreach ($property->metrics as $metric)
+                  @include('products.metrics', $metric)
+                @endforeach
+			{{-- @each('products.metrics', $property->metrics, 'metric') --}}
+		</ul>
+	</div>
+	@endif
 </li>
-
-
-
-<!-- <div class="dropdown-pane" id="metrics-dropdown" data-dropdown data-position="left" data-alignment="top" data-close-on-click="true">
-	
-</div> -->

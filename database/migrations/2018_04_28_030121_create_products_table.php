@@ -20,15 +20,12 @@ class CreateProductsTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('name')->index()->comment('Название товара');
-            $table->string('article')->nullable()->index()->comment('Артикул товара');
-
-            $table->integer('cost')->nullable()->unsigned()->comment('Себестоимость');
 
             $table->string('photo_id')->index()->nullable()->comment('Обложка товара');
             $table->string('description')->index()->nullable()->comment('Описание товара');
 
-            $table->integer('units_category_id')->nullable()->unsigned()->comment('ID категории измерения');
-            $table->foreign('units_category_id')->references('id')->on('units_categories');
+            $table->integer('unit_id')->nullable()->unsigned()->comment('ID еденицы измерения');
+            $table->foreign('unit_id')->references('id')->on('units');
 
             $table->integer('rule_id')->nullable()->unsigned()->comment('ID правила определения цены');
             // $table->foreign('rule_id')->references('id')->on('rules');

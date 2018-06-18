@@ -7,7 +7,6 @@
 	<td>{{ $metric->color }}</td>
 	<td>{{ $metric->booklist_id }}</td>
 	<td class="td-delete">
-		<a class="icon-delete sprite" data-open="item-delete-ajax"></a>
+		<a class="icon-delete sprite" data-open="delete-metric"></a>
 	</td>   
-	{{ Form::hidden('metrics[]', $metric->id) }}
 </tr>

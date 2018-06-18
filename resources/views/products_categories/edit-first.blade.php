@@ -4,7 +4,7 @@
       <h5>Редактирование категории</h5>
     </div>
   </div>
-  {{ Form::open(['id'=>'form-first-edit', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['id'=>'form-first-edit', 'data-abide', 'novalidate', 'files'=>'true']) }}
 
     @include('products_categories.modals.first', ['submitButtonText' => 'Редактировать категорию', 'class' => 'submit-edit', 'disabled' => 'disabled'])
 
@@ -13,6 +13,7 @@
 </div>
 
 @include('includes.scripts.inputs-mask')
+@include('includes.scripts.upload-file')
 
 
 

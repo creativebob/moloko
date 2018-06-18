@@ -107,5 +107,7 @@ class DatabaseSeeder extends Seeder
     $this->call(MetricsTableSeeder::class);
     $this->call(MetricEntityTableSeeder::class);
 
+    $this->call(ArticlesTableSeeder::class);
+
   }
 }
