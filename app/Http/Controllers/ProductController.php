@@ -225,13 +225,13 @@ class ProductController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-        $product = Product::with(['units_category', 'manufacturer.location.country', 'products_category', 'metrics.unit', 'metrics', 'compositions', 'articles', 'album.photos'])->withCount('metrics', 'compositions')->moderatorLimit($answer_products)->findOrFail($id);
+        $product = Product::with(['unit', 'manufacturer.location.country', 'products_category', 'metrics.unit', 'compositions', 'articles', 'album.photos'])->withCount('metrics', 'compositions')->moderatorLimit($answer_products)->findOrFail($id);
 
         // if ($product->metrics_count > 0) {
         //     dd($product->compositions_count);
         // }
 
-
+        // dd($product);
 
         $product_metrics = [];
         foreach ($product->metrics as $metric) {
