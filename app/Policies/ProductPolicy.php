@@ -82,7 +82,6 @@ class ProductPolicy
 
     public function god(User $user)
     {
-        // dd('lol');
         if(Auth::user()->god){return true;} else {return false;};
     }
 }
