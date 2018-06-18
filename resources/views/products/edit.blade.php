@@ -3,6 +3,7 @@
 @section('inhead')
 @include('includes.scripts.dropzone-inhead')
 @include('includes.scripts.fancybox-inhead')
+@include('includes.scripts.sortable-inhead')
 @endsection
 
 @section('title', 'Редактировать товар')
@@ -163,7 +164,7 @@
             </table>
           </div>
           <div class="small-12 medium-4 cell">
-            {{ Form::open(['id' => 'properties-form','data-abide', 'novalidate']) }}
+            {{ Form::open(['url' => '/add_product_metric', 'id' => 'properties-form','data-abide', 'novalidate']) }}
             <fieldset>
               <legend>Добавить свойство | <a data-toggle="properties-dropdown">Метрики</a></legend>
 
@@ -243,9 +244,9 @@
             {{ Form::close() }}
             <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
               @if (isset($product->album_id))
-              @foreach ($product->album->photos as $photo)
-              @include('products.photos-list', ['photo' => $photo])
-              @endforeach
+
+              @include('products.photos', $product)
+
               @endif
             </ul>
           </div>
@@ -428,18 +429,17 @@ $settings = config()->get('settings');
       })
   });
 
-    // При клике на удаление состава со страницы
-    $(document).on('click', '[data-open="delete-value"]', function() {
+  // При клике на удаление состава со страницы
+  $(document).on('click', '[data-open="delete-value"]', function() {
 
     // Находим описание сущности, id и название удаляемого элемента в родителе
     // var parent = $(this).closest('.item');
     // var id = parent.attr('id').split('-')[1];
 
     // Удаляем элемент со страницы
-    var parent = $(this).closest('item');
+    $(this).closest('.item').remove();
 
-    parent.remove();
-
+    // parent.remove();
   });
 
   // Когда при клике по табам активная вкладка артикула
@@ -495,11 +495,7 @@ $settings = config()->get('settings');
   $(document).on('change', '#article-form input', function() {
     $('#add-article').prop('disabled', false);
     $('#article-error').css('display', 'none');
-
   });
-
-
-
 
   // При смнене свойства в select
   $(document).on('change', '#properties-select', function() {
@@ -523,6 +519,8 @@ $settings = config()->get('settings');
   $(document).on('click', '#add-metric', function(event) {
     event.preventDefault();
 
+    alert($('#properties-form').serialize());
+
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -531,28 +529,27 @@ $settings = config()->get('settings');
       type: 'POST',
       data: $('#properties-form').serialize(),
       success: function(html){
-        // alert(html);
-        $('#metrics-table').append(html);
-        $('#property-form').html('');
+        alert(html);
+        // $('#metrics-table').append(html);
+        // $('#property-form').html('');
 
         // В случае успеха обновляем список метрик
-        $.ajax({
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
-          url: '/products/' + product_id + '/edit',
-          type: 'GET',
-          data: $('#product-form').serialize(),
-          success: function(html){
-            // alert(html);
+        // $.ajax({
+        //   headers: {
+        //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //   },
+        //   url: '/products/' + product_id + '/edit',
+        //   type: 'GET',
+        //   data: $('#product-form').serialize(),
+        //   success: function(html){
+        //     // alert(html);
 
-            $('#properties-dropdown').html(html);
-          }
-        })
+        //     $('#properties-dropdown').html(html);
+        //   }
+        // })
       }
     })
   });
-
 
   // При клике на кнопку под Select'ом свойств
   $(document).on('click', '#add-value', function(event) {
@@ -734,6 +731,27 @@ $settings = config()->get('settings');
     })
   });
 
+  // Оставляем ширину у вырванного из потока элемента
+  var fixHelper = function(e, ui) {
+    ui.children().each(function() {
+      $(this).width($(this).width());
+    });
+    return ui;
+  };
+
+  // Включаем перетаскивание
+  $("#values-table tbody").sortable({
+    axis: 'y',
+    helper: fixHelper, // ширина вырванного элемента
+    handle: 'td:first', // указываем за какой элемент можно тянуть
+    placeholder: "table-drop-color", // фон вырванного элемента
+    update: function( event, ui ) {
+
+      var entity = $(this).children('.item').attr('id').split('-')[0];
+    }
+  });
+
+
   // НАстройки dropzone
   var minImageHeight = 795;
   Dropzone.options.myDropzone = {
@@ -746,7 +764,21 @@ $settings = config()->get('settings');
       this.on("success", function(file, responseText) {
         file.previewTemplate.setAttribute('id',responseText[0].id);
 
-        // alert(file);
+        $.ajax({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          url: '/product/photos',
+          type: 'PATCH',
+          data: {product_id: product_id},
+          success: function(html){
+        // alert(html);
+        $('#photos-list').html(html);
+        
+        // $('#first-add').foundation();
+        // $('#first-add').foundation('open');
+      }
+    })
       });
       this.on("thumbnail", function(file) {
         if (file.width < {{ $settings['img_min_width']->value }} || file.height < minImageHeight) {

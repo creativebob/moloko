@@ -440,9 +440,9 @@ class PhotoController extends Controller
         return view($request->entity.'.photo-edit', ['photo' => $photo]);
       } else {
         $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при записи категории продукции!'
-            ];
+          'error_status' => 1,
+          'error_message' => 'Ошибка при записи категории продукции!'
+        ];
       }
     }
 

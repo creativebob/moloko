@@ -86,6 +86,7 @@ Route::resource('/products', 'ProductController')->middleware('auth');
 Route::get('/products/{id}/photos', 'ProductController@product_photos')->middleware('auth');
 // Запись фото
 Route::any('/product/add_photo', 'ProductController@add_photo')->middleware('auth');
+Route::any('/product/photos', 'ProductController@photos')->middleware('auth');
 
 // Проверка на существование продукции
 Route::post('/product_check', 'ProductController@product_check')->middleware('auth');

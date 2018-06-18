@@ -124,7 +124,7 @@ class ArticleController extends Controller
         }
 
         // Проверяем наличие ключей в массиве
-        if (array_key_exists('metric', $coincidence) && array_key_exists('composition', $coincidence)) {
+        if ((array_key_exists('metric', $coincidence)&&array_key_exists('composition', $coincidence))||(array_key_exists('metric', $coincidence)&&$product->compositions)||(array_key_exists('composition', $coincidence)&&$product->metrics)) {
 
             // Если ключи присутствуют, даем ошибку
             $result = [
@@ -209,7 +209,7 @@ class ArticleController extends Controller
     public function get_article_inputs(Request $request)
     {
 
-        $product = Product::with('metrics.property', 'compositions.unit')->findOrFail($request->product_id);
+        $product = Product::with('metrics.property', 'compositions.unit')->withCount('metrics', 'compositions')->findOrFail($request->product_id);
         return view('products.article-form', compact('product'));
 
          // $product = Product::with('metrics.property', 'compositions.unit')->findOrFail(1);

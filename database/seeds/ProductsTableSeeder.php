@@ -63,6 +63,72 @@ class ProductsTableSeeder extends Seeder
                 'manufacturer_id' => null,
                 'unit_id' => 26, 
             ],
+
+            // Шторка
+            [
+                'name' => 'Блекаут вензель розовый',
+                'products_category_id' => 11,
+                'company_id' => 4, 
+                'author_id' => 15, 
+                'manufacturer_id' => 5,
+                'unit_id' => 4, 
+            ],
+            [
+                'name' => 'Блекаут вензель терракотовый',
+                'products_category_id' => 11,
+                'company_id' => 4, 
+                'author_id' => 15, 
+                'manufacturer_id' => 5,
+                'unit_id' => 4, 
+            ],
+            [
+                'name' => 'Блекаут БАБОЧКИ',
+                'products_category_id' => 11,
+                'company_id' => 4, 
+                'author_id' => 15, 
+                'manufacturer_id' => 5,
+                'unit_id' => 4, 
+            ],
+            [
+                'name' => 'Блекаут ЛИСТЬЯ',
+                'products_category_id' => 11,
+                'company_id' => 4, 
+                'author_id' => 15, 
+                'manufacturer_id' => 5,
+                'unit_id' => 4, 
+            ],
+            [
+                'name' => '',
+                'products_category_id' => 11,
+                'company_id' => 4, 
+                'author_id' => 15, 
+                'manufacturer_id' => 5,
+                'unit_id' => 4, 
+            ],
+            [
+                'name' => '',
+                'products_category_id' => 11,
+                'company_id' => 4, 
+                'author_id' => 15, 
+                'manufacturer_id' => 5,
+                'unit_id' => 4, 
+            ],
+            [
+                'name' => '',
+                'products_category_id' => 11,
+                'company_id' => 4, 
+                'author_id' => 15, 
+                'manufacturer_id' => 5,
+                'unit_id' => 4, 
+            ],
+            [
+                'name' => '',
+                'products_category_id' => 11,
+                'company_id' => 4, 
+                'author_id' => 15, 
+                'manufacturer_id' => 5,
+                'unit_id' => 4, 
+            ],
     	]);
     }
 }

@@ -20,6 +20,7 @@
 <label class="small-6 cell">Знаки после запятой
 	{{ Form::select('metric_lol', ['1' => '0.0', '2' => '0.00', '3' => '0.000'], null) }}
 </label>
+{{ Form::hidden('type', 'numeric') }}
 @break
 
 @case('percent')
@@ -35,18 +36,21 @@
 <label class="small-6 cell">Знаки после запятой
 	{{ Form::select('metric_lol', ['1' => '0.0', '2' => '0.00', '3' => '0.000'], null) }}
 </label>
+{{ Form::hidden('type', 'percent') }}
 @break
 
 @case('list')
 <label class="small-12 cell">Введите значение
 	{{ Form::text('value') }}
 </label>
-<a class="button small-12 cell" id="add-value">Добавить значение</a>
-<table id="values-table">
+<a class="button small-10 cell" id="add-value">Добавить значение</a>
+<table id="values-table" class="tablesorter">
 	<tbody id="values-tbody">
 		
 	</tbody>
 </table>
+{{ Form::hidden('type', 'list') }}
+
 
 
 @break

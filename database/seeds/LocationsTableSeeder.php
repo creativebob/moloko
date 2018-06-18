@@ -62,6 +62,30 @@ class LocationsTableSeeder extends Seeder
 				'author_id' => 1,
 				'country_id' => 1,
 			],
+			[
+				'city_id' => 1,
+				'address' => null,
+				'author_id' => 1,
+				'country_id' => 4,
+			],
+			[
+				'city_id' => 1,
+				'address' => null,
+				'author_id' => 1,
+				'country_id' => 5,
+			],
+			[
+				'city_id' => 1,
+				'address' => null,
+				'author_id' => 1,
+				'country_id' => 2,
+			],
+			[
+				'city_id' => 1,
+				'address' => null,
+				'author_id' => 1,
+				'country_id' => 1,
+			],
 		]);
 	}
 }
