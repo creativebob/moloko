@@ -149,7 +149,7 @@ class Company extends Model
     // Получаем категории продукции
     public function products_categories()
     {
-        return $this->hasMany('App\ProductCategory');
+        return $this->hasMany('App\ProductsCategory');
     }
 
     // Получаем клиентов

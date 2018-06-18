@@ -54,8 +54,8 @@ class SitesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Шторка',
-                'domain' => 'shtorka',
-                'alias' => 'storka',
+                'domain' => 'shtorka38.ru',
+                'alias' => 'storka38',
                 'company_id' => 4,
                 'author_id' => 7,
                 'system_item' => null,
