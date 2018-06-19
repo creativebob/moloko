@@ -246,18 +246,21 @@ trait PoliticTrait
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        // Гасим любую операцию над системной записью без компании
-        if(($model->system_item == 1)&&($model->company_id == null)&&($user_status == null)){
-            return false;
-        };
+        if($model != null){
 
-        // Проверка на возможность операций с системной записью
-        if(($model->system_item == 1)&&($system_status == false)){
-            return false;
+            // Гасим любую операцию над системной записью без компании
+            if(($model->system_item == 1)&&($model->company_id == null)&&($user_status == null)){
+                return false;
+            };
+
+            // Проверка на возможность операций с системной записью
+            if(($model->system_item == 1)&&($system_status == false)){
+                return false;
+            };
+
         };
 
         // Получаем статус наличия права в связке с филиалом (Есть или нет)
-
         if(($method == 'delete')&&($model->system_item == 1)){
             return false;
             // abort(403, 'Удаление системных записей запрещено законом');
