@@ -508,6 +508,17 @@ class PagesTableSeeder extends Seeder
         'author_id' => 7,
         'display' => 1,
       ],
+      [
+        'name' => 'Студия',
+        'site_id' => 5,
+        'title' => 'Студия штор',
+        'description' => 'Студия штор',
+        'alias' => 'studio',
+        'company_id' => 4,
+        'system_item' => null,
+        'author_id' => 15,
+        'display' => 1,
+      ],
       
     ]);
 }

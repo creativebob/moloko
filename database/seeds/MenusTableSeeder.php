@@ -727,7 +727,7 @@ class MenusTableSeeder extends Seeder
         'system_item' => null,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 2,
     ],
     [
         'name' => 'Услуги',
@@ -740,7 +740,7 @@ class MenusTableSeeder extends Seeder
         'system_item' => null,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 3,
     ],
     [
         'name' => 'Контакты',
@@ -753,7 +753,20 @@ class MenusTableSeeder extends Seeder
         'system_item' => null,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 4,
+    ],
+    [
+        'name' => 'Студия',
+        'icon' => null,
+        'alias' => null,
+        'parent_id' => null,
+        'page_id' => 46,
+        'navigation_id' => 7,
+        'company_id' => 4,
+        'system_item' => null,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => 1,
     ],
 ]);
 }
