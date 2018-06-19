@@ -1,6 +1,7 @@
 @switch($metric->property->type)
 @case('numeric')
-<label>{{ $metric->property->name }}
+<label>
+	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->property->name }}</span>
 	{{ Form::number('metrics-'.$metric->id) }}
 </label>
 @break

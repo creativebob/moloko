@@ -17,6 +17,9 @@ use App\Metric;
 use App\Article;
 use App\Unit;
 use App\Value;
+use App\Booklist;
+use App\Entity;
+use App\List_item;
 
 
 // Валидация
@@ -222,13 +225,13 @@ class ProductController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-        $product = Product::with(['units_category', 'manufacturer.location.country', 'products_category', 'metrics.unit', 'metrics', 'compositions', 'articles'])->moderatorLimit($answer_products)->findOrFail($id);
-        // dd($product->articles);
-        // dd($product->metrics);
+        $product = Product::with(['unit', 'manufacturer.location.country', 'products_category', 'metrics.unit', 'compositions', 'articles', 'album.photos'])->withCount('metrics', 'compositions')->moderatorLimit($answer_products)->findOrFail($id);
 
-        
+        // if ($product->metrics_count > 0) {
+        //     dd($product->compositions_count);
+        // }
 
-        // dd($product->compositions);
+        // dd($product);
 
         $product_metrics = [];
         foreach ($product->metrics as $metric) {
@@ -624,7 +627,11 @@ class ProductController extends Controller
     }
 
     public function add_product_metric(Request $request)
-    {
+    {   
+        foreach ($request->values as $value) {
+            echo $value;
+        }
+        
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -638,9 +645,58 @@ class ProductController extends Controller
         $metric->property_id = $request->property_id;
         $metric->name = $request->name;
         $metric->description = $request->description;
-        $metric->min = $request->min;
-        $metric->max = $request->max;
-        $metric->unit_id = $request->unit_id;
+
+        if ($request->type == 'numeric' || $request->type == 'percent') {
+            $metric->min = $request->min;
+            $metric->max = $request->max;
+            $metric->unit_id = $request->unit_id;
+        }
+
+        if ($request->type == 'list') {
+            // $entity = Entity::where('alias', 'values')->first();
+
+            // $booklist = new Booklist;
+
+            // $booklist->name = $request->name;
+            // $booklist->description = $request->description;
+            // $booklist->entity_id = $entity->id;
+            // $booklist->entity_alias = $entity->alias;
+
+            // $booklist->author_id = $user_id;
+            // $booklist->company_id = $company_id;
+
+            // $booklist->save();
+
+            // if ($booklist) {
+                // $booklist_id = $booklist->id;
+
+                foreach ($request->values as $value) {
+
+                    // echo json_encode($value);
+                     
+
+                    $value = new Value;
+                    $value->value = $value;
+
+                    $value->author_id = $user_id;
+                    $value->company_id = $company_id;
+                    
+                    $value->save();
+
+
+                    // $list_item = new List_item;
+
+                    // $list_item->item_entity = $value->id;
+                    // $list_item->booklist_id = $booklist_id;
+
+                    // $value->company_id = $company_id;
+                    // $list_item->author_id = $user_id;
+                    // $list_item->save();
+
+                }   
+            // }
+        }
+        
 
         $metric->author_id = $user_id;
 
@@ -746,7 +802,7 @@ class ProductController extends Controller
             $media = new AlbumEntity;
             $media->album_id = $album_id;
             $media->entity_id = $photo->id;
-            $media->entity = 'photo';
+            $media->entity = 'photos';
             $media->save();
 
             // $check_media = AlbumEntity::where(['album_id' => $album_id, 'entity_id' => $request->id, 'entity' => 'product'])->first();
@@ -772,6 +828,23 @@ class ProductController extends Controller
         } else {
             return response()->json('error', 400);
         } 
+    }
+
+    public function photos(Request $request)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $product = Product::with('album.photos')->moderatorLimit($answer)->findOrFail($request->product_id);
+        // dd($product);
+
+        // Подключение политики
+        $this->authorize(getmethod('edit'), $product);
+
+        return view('products.photos', compact('product'));
+
     }
 
     public function add_composition(Request $request)

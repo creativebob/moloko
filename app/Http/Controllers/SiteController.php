@@ -383,15 +383,24 @@ class SiteController extends Controller
 
         if ($site) {
             // return Cache::remember('site', 1, function() use ($domain) {
-            return Site::with(['departments.location.city', 'company.location.city', 'company.schedules.worktimes', 'company.products_categories.products' => function ($query) {
-                $query->whereDisplay(1);
-            }, 'pages' => function ($query) {
-                $query->whereDisplay(1);
-            }, 'navigations.menus.page', 'navigations.navigations_category', 'navigations' => function ($query) {
-                $query->whereDisplay(1);
-            }, 'navigations.menus' => function ($query) {
-                $query->whereDisplay(1)->orderBy('sort', 'asc');
-            }])->whereDomain($request->domain)->orderBy('sort', 'asc')->first();
+            return Site::with(['departments.location.city',
+                'company.location.city',
+                'company.schedules.worktimes',
+                'company.products_categories' => function ($query) {
+                    $query->with(['products' => function ($query) {
+                        $query->with('manufacturer.location.country', 'unit', 'articles')->whereDisplay(1);
+                    }])->whereDisplay(1);
+                }, 'pages' => function ($query) {
+                    $query->whereDisplay(1);
+                }, 'navigations.menus.page',
+                'navigations.navigations_category',
+                'navigations' => function ($query) {
+                    $query->whereDisplay(1);
+                }, 'navigations.menus' => function ($query) {
+                    $query->whereDisplay(1)->orderBy('sort', 'asc');
+                }])->whereDomain($request->domain)
+            ->orderBy('sort', 'asc')
+            ->first();
             // });
         } else {
             return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
