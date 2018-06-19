@@ -286,12 +286,15 @@ class ProductController extends Controller
             $query->moderatorLimit($answer_metrics)
             ->companiesLimit($answer_metrics)
             ->authors($answer_metrics)
-            ->systemItem($answer_metrics); // Фильтр по системным записям
-        }
+            ->systemItem($answer_metrics); // Фильтр по системным записям 
+        }])
         // , 'products' 
         // => function ($query) use ($id) {
         //     $query->findOrFail($id);
-    ])
+
+        // ->whereHas('metrics', function ($query) use ($user) {
+        //     $query->where('company_id', $user->company_id);
+        // })
         // ->whereHas('metrics.products', function ($query) use ($id) {
         //     $query->findOrFail($id);
         // })
@@ -626,95 +629,7 @@ class ProductController extends Controller
         }
     }
 
-    public function add_product_metric(Request $request)
-    {   
-        foreach ($request->values as $value) {
-            echo $value;
-        }
-        
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-        $company_id = $user->company_id;
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        $metric = new Metric;
-        $metric->company_id = $company_id;
-        $metric->property_id = $request->property_id;
-        $metric->name = $request->name;
-        $metric->description = $request->description;
-
-        if ($request->type == 'numeric' || $request->type == 'percent') {
-            $metric->min = $request->min;
-            $metric->max = $request->max;
-            $metric->unit_id = $request->unit_id;
-        }
-
-        if ($request->type == 'list') {
-            // $entity = Entity::where('alias', 'values')->first();
-
-            // $booklist = new Booklist;
-
-            // $booklist->name = $request->name;
-            // $booklist->description = $request->description;
-            // $booklist->entity_id = $entity->id;
-            // $booklist->entity_alias = $entity->alias;
-
-            // $booklist->author_id = $user_id;
-            // $booklist->company_id = $company_id;
-
-            // $booklist->save();
-
-            // if ($booklist) {
-                // $booklist_id = $booklist->id;
-
-                foreach ($request->values as $value) {
-
-                    // echo json_encode($value);
-                     
-
-                    $value = new Value;
-                    $value->value = $value;
-
-                    $value->author_id = $user_id;
-                    $value->company_id = $company_id;
-                    
-                    $value->save();
-
-
-                    // $list_item = new List_item;
-
-                    // $list_item->item_entity = $value->id;
-                    // $list_item->booklist_id = $booklist_id;
-
-                    // $value->company_id = $company_id;
-                    // $list_item->author_id = $user_id;
-                    // $list_item->save();
-
-                }   
-            // }
-        }
-        
-
-        $metric->author_id = $user_id;
-
-        $metric->save();
-
-        if ($metric) {
-
-
-            // echo $metric;
-            // Переадресовываем на получение метрики
-            return redirect()->action('MetricController@add_metric', ['id' => $metric->id, 'entity_id' => $request->product_id, 'entity' => $this->entity_name]);
-        } else {
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при добавлении свойства!'
-            ];
-        }
-    }
+   
 
     public function add_product_value(Request $request)
     {   

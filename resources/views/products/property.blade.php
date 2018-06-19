@@ -1,6 +1,6 @@
 <li>
 	<span class="parent" data-open="property-{{ $property->id }}">{{ $property->name }}</span>
-	@if ($property->metrics_count > 0)
+	@if (count($property->metrics) > 0)
 	<div class="checker-nested" id="property-{{ $property->id }}">
 		<ul  class="checker">
 			@foreach ($property->metrics as $metric)

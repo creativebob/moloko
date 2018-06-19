@@ -51,8 +51,6 @@
 </table>
 {{ Form::hidden('type', 'list') }}
 
-
-
 @break
 
 
@@ -60,6 +58,9 @@
 @default
 Default case...
 @endswitch
+
+{{ Form::hidden('property_id', $property_id) }}
+{{ Form::hidden('entity', 'products') }}
 
 <div class="small-12 cell text-center">
 	<a class="button" id="add-metric">Добавить метрику</a>

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Metric;
+use App\Value;
+
+use DB;
 
 use Illuminate\Http\Request;
 
@@ -37,7 +40,79 @@ class MetricController extends Controller
      */
     public function store(Request $request)
     {
+        // echo $request->values[0];
+        // foreach ($request->values as $value) {
+        //     echo $value;
+        // }
 
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+        $company_id = $user->company_id;
+
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        $metric = new Metric;
+        $metric->company_id = $company_id;
+        $metric->property_id = $request->property_id;
+        $metric->name = $request->name;
+        $metric->description = $request->description;
+
+        if ($request->type == 'numeric' || $request->type == 'percent') {
+            $metric->min = $request->min;
+            $metric->max = $request->max;
+            $metric->unit_id = $request->unit_id;
+        }
+
+        $metric->author_id = $user_id;
+
+        $metric->save();
+
+        if ($request->type == 'list') {
+            $values = [];
+
+            foreach ($request->values as $value) {
+
+                $values[] = [
+                    'metric_id' => $metric->id,
+                    'value' => $value,
+                    'author_id' => $user_id,
+                    'company_id' => $company_id,
+                ];     
+            } 
+
+            $lol = Value::insert($values);
+            // echo json_encode($values);
+
+           //  $metric->values()->createMany($values);
+
+           // $metric->values()->saveMany([
+           //      foreach ($request->values as $value) {
+
+           //          new Value ([
+           //              'value' => $value,
+           //              'author_id' => $user_id,
+           //              'company_id' => $company_id,
+           //          ]),     
+           //      } 
+           //  ]);
+        }
+
+        
+
+        if ($metric) {
+
+
+            // echo $metric;
+            // Переадресовываем на получение метрики
+            return redirect()->action('MetricController@add_metric', ['id' => $metric->id, 'entity_id' => $request->product_id, 'entity' => $request->entity]);
+        } else {
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при добавлении свойства!'
+            ];
+        }
     }
 
     /**
@@ -48,7 +123,8 @@ class MetricController extends Controller
      */
     public function show($id)
     {
-        //
+        $metric = Metric::with('values')->findOrFail($id);
+        dd($metric);
     }
 
     /**
@@ -84,6 +160,10 @@ class MetricController extends Controller
     {
         //
     }
+
+
+
+    // --------------------------------------------- Ajax -------------------------------------------------
 
     public function add_metric(Request $request)
     {

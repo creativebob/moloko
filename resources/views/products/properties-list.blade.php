@@ -1,6 +1,6 @@
 <ul class="checker" id="properties-list">
 	@foreach ($properties as $property)
-	@if($property->metrics_count > 0)
+	@if(count($property->metrics) > 0)
 	@include('products.property', $property)
 	@endif
 	@endforeach
@@ -10,7 +10,7 @@
 	<li>
 		<br>
 		<label>Создать свойство
-	   		{{ Form::select('property_id', $properties_list, null, ['id' => 'properties-select']) }}
-	    </label>
+	   		{{ Form::select('property_id', $properties_list, null, ['id' => 'properties-select', 'placeholder' => 'Выберите свойство']) }}
+	   	</label>
 	</li>
 </ul>

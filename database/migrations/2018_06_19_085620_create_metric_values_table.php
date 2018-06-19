@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProductsTable extends Migration
+class CreateMetricValuesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,35 +13,20 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('metric_values', function (Blueprint $table) {
             $table->increments('id');
-
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->string('name')->index()->comment('Название товара');
+            $table->integer('metric_id')->nullable()->unsigned()->comment('ID метрики');
+            $table->foreign('metric_id')->references('id')->on('metrics');
+
+            $table->string('name')->nullable()->comment('Название значения');
+            $table->string('value')->nullable()->comment('Значение');
 
             $table->string('photo_id')->index()->nullable()->comment('Обложка товара');
             // $table->foreign('photo_id')->references('id')->on('photos');
 
-
-            $table->string('description')->index()->nullable()->comment('Описание товара');
-
-            $table->integer('unit_id')->nullable()->unsigned()->comment('ID еденицы измерения');
-            $table->foreign('unit_id')->references('id')->on('units');
-
-            $table->integer('rule_id')->nullable()->unsigned()->comment('ID правила определения цены');
-            // $table->foreign('rule_id')->references('id')->on('rules');
-
-            $table->integer('products_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться товар');
-            $table->foreign('products_category_id')->references('id')->on('products_categories');
-
-            $table->integer('manufacturer_id')->nullable()->unsigned()->comment('Id производителя товара');
-            $table->foreign('manufacturer_id')->references('id')->on('companies');
-
-            $table->integer('album_id')->nullable()->unsigned()->comment('ID альбома');
-            $table->foreign('album_id')->references('id')->on('albums');
-            
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -65,6 +50,6 @@ class CreateProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('metric_values');
     }
 }

@@ -98,7 +98,9 @@ Route::get('/products_download/{type}', 'ProductController@products_download')->
 // Route for import excel data to database.
 Route::post('/products_import', 'ProductController@products_import');
 
-Route::any('/add_product_metric', 'ProductController@add_product_metric')->middleware('auth');
+// ------------------------------------- Метрики -------------------------------------------------
+Route::resource('/metrics', 'MetricController')->middleware('auth');
+Route::any('/ajax_store_metric', 'MetricController@ajax_store')->middleware('auth');
 
 Route::any('/add_product_value', 'ProductController@add_product_value')->middleware('auth');
 

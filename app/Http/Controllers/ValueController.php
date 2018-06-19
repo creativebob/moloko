@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-// Модели
-use App\Property;
-
-
 use Illuminate\Http\Request;
 
-class PropertyController extends Controller
+class ValueController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,9 +13,7 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        // $property = Property::with('units_category.units')->findOrFail(3);
-
-        // dd($property);
+        //
     }
 
     /**
@@ -86,27 +80,5 @@ class PropertyController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function add_property(Request $request)
-    {
-        $property = Property::with('units_category.units')->findOrFail($request->id);
-
-        if ($property) {
-
-            if (isset($property->units_category->name)) {
-                $units_list = $property->units_category->units->pluck('abbreviation', 'id');
-            } else {
-                $units_list = null;
-            }
-            // echo $property;
-            
-            return view($request->entity.'.add-property', ['type' => $property->type, 'units_list' => $units_list, 'property_id' => $request->id]);
-        } else {
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при добавлении свойства!'
-            ];
-        }
     }
 }

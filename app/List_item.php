@@ -49,4 +49,5 @@ class List_item extends Model
         return $this->belongsTo('App\Booklist');
     }
 
+
 }

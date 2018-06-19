@@ -409,9 +409,9 @@ $settings = config()->get('settings');
       success: function(date){
 
         var result = $.parseJSON(date);
-          // alert(result);
+        // alert(result);
 
-          if (result['error_status'] == 0) {
+        if (result['error_status'] == 0) {
 
             // Удаляем элемент со страницы
             $('#compositions-' + id).remove();
@@ -498,18 +498,31 @@ $settings = config()->get('settings');
   $(document).on('change', '#properties-select', function() {
     // alert($(this).val());
 
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/add_property',
-      type: 'GET',
-      data: {id: $(this).val(), entity: 'products'},
-      success: function(html){
+    var id = $(this).val();
+
+    // Если вернулись на "Выберите свойство" то очищаем форму
+    if (id == '') {
+      $('#property-form').html('');
+    } else {
+      // alert(id);
+      $('#property-id').val(id);
+
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/add_property',
+        type: 'GET',
+        data: {id: id, entity: 'products'},
+        success: function(html){
         // alert(html);
         $('#property-form').html(html);
+        $('#properties-dropdown').foundation('close');
       }
     })
+    }
+
+    
   });
 
   // При клике на кнопку под Select'ом свойств
@@ -522,10 +535,11 @@ $settings = config()->get('settings');
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/add_product_metric',
+      url: '/metrics',
       type: 'POST',
       data: $('#properties-form').serialize(),
       success: function(html){
+
         alert(html);
         // $('#metrics-table').append(html);
         // $('#property-form').html('');
