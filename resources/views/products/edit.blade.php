@@ -146,8 +146,8 @@
               <thead>
                 <tr> 
                   <th>Название</th>
-                  <th>Максимум</th>
                   <th>Минимум</th>
+                  <th>Максимум</th>
                   <th>Подтверждение</th>
                   <th>Отрицание</th>
                   <th>Цвет</th>
@@ -166,11 +166,8 @@
           <div class="small-12 medium-4 cell">
             {{ Form::open(['url' => '/add_product_metric', 'id' => 'properties-form','data-abide', 'novalidate']) }}
             <fieldset>
-              <legend>Добавить свойство | <a data-toggle="properties-dropdown">Метрики</a></legend>
+              <legend><a data-toggle="properties-dropdown">Добавить метрику</a></legend>
 
-              <label>Выберите свойство
-                {{ Form::select('property_id', $properties_list, null, ['id' => 'properties-select']) }}
-              </label>
               <div class="grid-x grid-padding-x" id="property-form"></div>
 
             </fieldset>

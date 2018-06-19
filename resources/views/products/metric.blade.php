@@ -1,7 +1,7 @@
 <tr class="item" id="metrics-{{ $metric->id }}" data-name="{{ $metric->name }}">
 	<td>{{ $metric->name }}</td>
-	<td>{{ $metric->min }}</td>
-	<td>{{ $metric->max }}</td>
+	<td>{{ round($metric->min, 6) }}</td>
+	<td>{{ round($metric->max, 6) }}</td>
 	<td>{{ $metric->boolean_true }}</td>
 	<td>{{ $metric->boolean_false }}</td>
 	<td>{{ $metric->color }}</td>

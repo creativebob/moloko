@@ -7,4 +7,10 @@
 
 	{{-- @each('products.property', $properties, 'property') --}}
 
+	<li>
+		<br>
+		<label>Создать свойство
+	   		{{ Form::select('property_id', $properties_list, null, ['id' => 'properties-select']) }}
+	    </label>
+	</li>
 </ul>

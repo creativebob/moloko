@@ -27,6 +27,8 @@ class CreateMetricsTable extends Migration
             $table->integer('unit_id')->nullable()->unsigned()->comment('Id единицы измерения');
             $table->foreign('unit_id')->references('id')->on('units');
 
+            $table->integer('decimal_place')->unsigned()->default(0)->comment('Знаков после запятой');
+
             $table->string('color')->nullable()->comment('Цвет');
 
             $table->string('boolean_false')->nullable()->comment('Отрицательный ответ');
