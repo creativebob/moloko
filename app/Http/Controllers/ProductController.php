@@ -225,7 +225,7 @@ class ProductController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-        $product = Product::with(['unit', 'manufacturer.location.country', 'products_category', 'metrics.unit', 'compositions', 'articles', 'album.photos'])->withCount('metrics', 'compositions')->moderatorLimit($answer_products)->findOrFail($id);
+        $product = Product::with(['unit', 'manufacturer.location.country', 'products_category', 'metrics.unit', 'metrics.values', 'compositions', 'articles', 'album.photos'])->withCount('metrics', 'compositions')->moderatorLimit($answer_products)->findOrFail($id);
 
         // if ($product->metrics_count > 0) {
         //     dd($product->compositions_count);
@@ -283,7 +283,7 @@ class ProductController extends Controller
         ->systemItem($answer_properties) // Фильтр по системным записям
         ->template($answer_properties)
         ->with(['metrics' => function ($query) use ($answer_metrics) {
-            $query->moderatorLimit($answer_metrics)
+            $query->with('values')->moderatorLimit($answer_metrics)
             ->companiesLimit($answer_metrics)
             ->authors($answer_metrics)
             ->systemItem($answer_metrics); // Фильтр по системным записям 
@@ -462,10 +462,11 @@ class ProductController extends Controller
         // })->get();
 
         // dd($materials);
-
+        // dd($product_metrics);
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('products.properties-list', ['properties' => $properties, 'product_metrics' => $product_metrics]);
+            // echo json_encode($properties);
+            return view('products.properties-list', ['properties' => $properties, 'product_metrics' => $product_metrics, 'properties_list' => $properties_list]);
         }
 
         return view('products.edit', compact('product', 'page_info', 'products_categories_list', 'units_categories_list', 'manufacturers_list', 'photo', 'properties', 'properties_list', 'product_metrics', 'product_compositions', 'grouped_products_types', 'units_list'));

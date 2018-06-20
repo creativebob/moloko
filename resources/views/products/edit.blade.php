@@ -164,7 +164,7 @@
             </table>
           </div>
           <div class="small-12 medium-4 cell">
-            {{ Form::open(['url' => '/add_product_metric', 'id' => 'properties-form','data-abide', 'novalidate']) }}
+            {{ Form::open(['url' => '/add_product_metric', 'id' => 'properties-form', 'data-abide', 'novalidate']) }}
             <fieldset>
               <legend><a data-toggle="properties-dropdown">Добавить метрику</a></legend>
 
@@ -294,12 +294,12 @@
               <div class="grid-x grid-margin-x">
                 <div class="small-12 medium-6 cell">
                   <label>Себестоимость
-                    {{ Form::text('cost') }}
+                    {{ Form::number('cost', $product->articles[0]->cost) }}
                   </label>
                 </div>
                 <div class="small-12 medium-6 cell">
                   <label>Цена
-                    {{ Form::text('price') }}
+                    {{ Form::number('price', $product->articles[0]->price) }}
                   </label>
                 </div>
               </div>
@@ -375,7 +375,6 @@ $settings = config()->get('settings');
             //   data: $('#product-form').serialize(),
             //   success: function(html){
             //     // alert(html);
-
             //     $('#properties-dropdown').html(html);
             //   }
             // })
@@ -453,6 +452,8 @@ $settings = config()->get('settings');
         success: function(html){
           // alert(html);
           $('#article-inputs').html(html);
+          $('#article-inputs').foundation();
+          // Foundation.reInit($('#article-inputs'));
         }
       })
     }
@@ -474,6 +475,7 @@ $settings = config()->get('settings');
 
       // В случае совпадения артикула принимаем json, и выдаем ошибку
       success: function(data, textStatus, jqXHR) {
+        // alert(data['metric_values']);
         if (data['error_status'] == 1) {
           $('#add-article').prop('disabled', true);
           $('#article-error').css('display', 'block');
@@ -482,6 +484,7 @@ $settings = config()->get('settings');
 
       // В случае несовпадения артикула пишем новый и вставляем его, но ответ придет html, поэтому ajax даст ошибку, т.к. ждет json
       error: function(html, textStatus, errorThrown) {
+
         // alert(JSON.stringify(html['responseText']));
         $('#article-table').append(JSON.stringify(html['responseText']));
         $('#article-form')[0].reset();
@@ -529,7 +532,7 @@ $settings = config()->get('settings');
   $(document).on('click', '#add-metric', function(event) {
     event.preventDefault();
 
-    alert($('#properties-form').serialize());
+    // alert($('#properties-form').serialize());
 
     $.ajax({
       headers: {
@@ -540,24 +543,24 @@ $settings = config()->get('settings');
       data: $('#properties-form').serialize(),
       success: function(html){
 
-        alert(html);
-        // $('#metrics-table').append(html);
-        // $('#property-form').html('');
+        // alert(html);
+        $('#metrics-table').append(html);
+        $('#property-form').html('');
 
         // В случае успеха обновляем список метрик
-        // $.ajax({
-        //   headers: {
-        //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //   },
-        //   url: '/products/' + product_id + '/edit',
-        //   type: 'GET',
-        //   data: $('#product-form').serialize(),
-        //   success: function(html){
-        //     // alert(html);
+        $.ajax({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          url: '/products/' + product_id + '/edit',
+          type: 'GET',
+          data: $('#product-form').serialize(),
+          success: function(html){
+            // alert(html);
 
-        //     $('#properties-dropdown').html(html);
-        //   }
-        // })
+            $('#properties-dropdown').html(html);
+          }
+        })
       }
     })
   });
@@ -594,7 +597,7 @@ $settings = config()->get('settings');
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/add_metric',
+        url: '/ajax_add_relation_metric',
         type: 'POST',
         data: {id: $(this).val(), entity: 'products', entity_id: product_id},
         success: function(html){
@@ -611,7 +614,7 @@ $settings = config()->get('settings');
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/delete_metric',
+        url: '/ajax_delete_relation_metric',
         type: 'POST',
         data: {id: $(this).val(), entity: 'products', entity_id: product_id},
         success: function(date){

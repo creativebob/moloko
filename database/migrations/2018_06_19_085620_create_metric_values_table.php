@@ -24,7 +24,7 @@ class CreateMetricValuesTable extends Migration
             $table->string('name')->nullable()->comment('Название значения');
             $table->string('value')->nullable()->comment('Значение');
 
-            $table->string('photo_id')->index()->nullable()->comment('Обложка товара');
+            $table->integer('photo_id')->nullable()->unsigned()->comment('ID фотки');
             // $table->foreign('photo_id')->references('id')->on('photos');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
