@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use App\Article;
 use App\Product;
 
+use App\ArticleValue;
+
 
 use Illuminate\Http\Request;
 
@@ -29,6 +31,7 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
 
+        // dd($request);
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Article::class);
 
@@ -46,15 +49,20 @@ class ArticleController extends Controller
 
             $input = 'metrics-'.$metric->id;
 
-            $metrics_values[$metric->id] = $request->$input;
+            foreach ($request->$input as $value) {
+                $metrics_values[$metric->id][] = $value;
+            }
+            
+            foreach ($request->$input as $value) {
+                $metrics[$metric->id][] = [
+                    'entity' => 'metrics',
+                    'value' => $value,
+                ];
+            }
 
-            $metrics[$metric->id] = [
-                'entity' => 'metrics',
-                'value' => $request->$input,
-            ];
         }
         $metrics_count = count($metrics);
-
+        // dd($metrics);
         // dd($metrics_values);
 
         // Формируем массивы составов
@@ -78,7 +86,7 @@ class ArticleController extends Controller
         // Проверка на наличие артикула
 
         // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
-        $articles = Article::with('metrics', 'compositions')
+        $articles = Article::with('metrics.values', 'compositions')
         ->where('product_id', $product_id)
         ->where(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count])
         ->get();
@@ -91,13 +99,16 @@ class ArticleController extends Controller
         $metrics_array = [];
         foreach ($articles as $article) {
             foreach ($article->metrics as $metric) {
-                $metrics_array[$article->id][$metric->id] = $metric->pivot->value;
+
+                $metrics_array[$article->id][$metric->id][] = $metric->pivot->value;
+
             }
         }
         // dd($metrics_array);
         // dd($metrics_values);
 
         foreach ($metrics_array as $item) {
+            // dd($metrics_values);
             if ($metrics_values == $item) {
 
                 // Если значения метрик совпали, создаюм ключ метрик
@@ -175,8 +186,24 @@ class ArticleController extends Controller
 
             if ($article) {
 
+                // dd($metrics);
+
+                $metrics_insert = [];
+                foreach ($metrics as $key => $metric) {
+
+                    foreach ($metric as $values) {
+                        $values['article_id'] = $article->id;
+                        $values['entity_id'] = $key;
+                        $metrics_insert[] = $values;
+                    }
+                }
+                // dd($metrics_insert);
+
+
+                $article_values = ArticleValue::insert($metrics_insert);
+
                 // Пишем метрики
-                $article->metrics()->attach($metrics);
+                // $article->metrics()->attach($metrics);
 
                 // Пишем состав
                 $article->compositions()->attach($compositions);

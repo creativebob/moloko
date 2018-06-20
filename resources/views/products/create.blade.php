@@ -37,12 +37,12 @@
       <div class="grid-x grid-margin-x">
         <div class="small-12 medium-6 cell">
           <label>Себестоимость
-            {{ Form::text('cost') }}
+            {{ Form::number('cost') }}
           </label>
         </div>
         <div class="small-12 medium-6 cell">
           <label>Цена
-            {{ Form::text('price') }}
+            {{ Form::number('price') }}
           </label>
         </div>
       </div>

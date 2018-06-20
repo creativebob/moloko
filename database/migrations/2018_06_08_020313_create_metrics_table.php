@@ -34,8 +34,7 @@ class CreateMetricsTable extends Migration
             $table->string('boolean_false')->nullable()->comment('Отрицательный ответ');
             $table->string('boolean_true')->nullable()->comment('Положительный ответ');
 
-            $table->integer('booklist_id')->nullable()->unsigned()->comment('Id списка');
-            $table->foreign('booklist_id')->references('id')->on('booklists');
+             $table->string('list_type')->nullable()->comment('Тип списка');
             
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

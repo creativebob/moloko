@@ -100,17 +100,21 @@ Route::post('/products_import', 'ProductController@products_import');
 
 // ------------------------------------- Метрики -------------------------------------------------
 Route::resource('/metrics', 'MetricController')->middleware('auth');
-Route::any('/ajax_store_metric', 'MetricController@ajax_store')->middleware('auth');
+
+Route::post('/ajax_store_metric', 'MetricController@ajax_store')->middleware('auth');
+
+// Добавляем/ удаляем связь сущности с метрикой
+Route::post('/ajax_add_relation_metric', 'MetricController@ajax_add_relation')->middleware('auth');
+Route::post('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relation')->middleware('auth');
 
 Route::any('/add_product_value', 'ProductController@add_product_value')->middleware('auth');
 
-Route::any('/add_composition', 'ProductController@add_composition')->middleware('auth');
-Route::any('/delete_composition', 'ProductController@delete_composition')->middleware('auth');
+Route::any('/ajax_add_relation_composition', 'ProductController@add_composition')->middleware('auth');
+Route::any('/ajax_delete_relation_composition', 'ProductController@delete_composition')->middleware('auth');
 
 Route::any('/get_metric', 'MetricController@get_metric')->middleware('auth');
 
-Route::any('/add_metric', 'MetricController@add_metric')->middleware('auth');
-Route::any('/delete_metric', 'MetricController@delete_metric')->middleware('auth');
+
 
 Route::any('/get_properties_with_metrics', 'PropertyController@get_properties_with_metrics')->middleware('auth');
 
