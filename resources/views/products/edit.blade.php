@@ -352,7 +352,7 @@ $settings = config()->get('settings');
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/delete_metric',
+      url: '/ajax_delete_relation_metric',
       type: 'POST',
       data: {id: id, entity: 'products', entity_id: product_id},
       success: function(date){
@@ -402,7 +402,7 @@ $settings = config()->get('settings');
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/delete_composition',
+      url: '/ajax_delete_relation_composition',
       type: 'POST',
       data: {id: id, product_id: product_id},
       success: function(date){
@@ -428,26 +428,20 @@ $settings = config()->get('settings');
   // При клике на удаление состава со страницы
   $(document).on('click', '[data-open="delete-value"]', function() {
 
-    // Находим описание сущности, id и название удаляемого элемента в родителе
-    // var parent = $(this).closest('.item');
-    // var id = parent.attr('id').split('-')[1];
-
     // Удаляем элемент со страницы
     $(this).closest('.item').remove();
-
-    // parent.remove();
   });
 
   // Когда при клике по табам активная вкладка артикула
-  $('.tabs-list').on('change.zf.tabs', function() {
+  $(document).on('change.zf.tabs', '.tabs-list', function() {
     if($('#articles:visible').length){
 
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/get_article_inputs',
-        type: 'GET',
+        url: '/ajax_get_article_inputs',
+        type: 'POST',
         data: {product_id: product_id},
         success: function(html){
           // alert(html);
@@ -514,8 +508,8 @@ $settings = config()->get('settings');
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/add_property',
-        type: 'GET',
+        url: '/ajax_add_property',
+        type: 'POST',
         data: {id: id, entity: 'products'},
         success: function(html){
         // alert(html);
@@ -524,8 +518,6 @@ $settings = config()->get('settings');
       }
     })
     }
-
-    
   });
 
   // При клике на кнопку под Select'ом свойств
@@ -574,7 +566,7 @@ $settings = config()->get('settings');
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/add_product_value',
+      url: '/ajax_add_metric_value',
       type: 'POST',
       data: {value: $('#properties-form input[name=value]').val()},
       success: function(html){
@@ -655,7 +647,7 @@ $settings = config()->get('settings');
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/add_composition',
+        url: '/ajax_add_relation_composition',
         type: 'POST',
         data: {id: $(this).val(), product_id: product_id},
         success: function(html){
@@ -671,7 +663,7 @@ $settings = config()->get('settings');
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/delete_composition',
+        url: '/ajax_delete_relation_composition',
         type: 'POST',
         data: {id: $(this).val(), product_id: product_id},
         success: function(date){
@@ -707,8 +699,8 @@ $settings = config()->get('settings');
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/get_photo',
-      type: 'GET',
+      url: '/ajax_get_photo',
+      type: 'POST',
       data: {id: id, entity: 'products'},
       success: function(html){
 
@@ -732,13 +724,12 @@ $settings = config()->get('settings');
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/update_photo/' + id,
+      url: '/ajax_update_photo/' + id,
       type: 'PATCH',
       data: $(this).closest('#form-photo-edit').serialize(),
       success: function(html){
         // alert(html);
         $('#form-photo-edit').html(html);
-        
         // $('#first-add').foundation();
         // $('#first-add').foundation('open');
       }
@@ -765,8 +756,7 @@ $settings = config()->get('settings');
     }
   });
 
-
-  // НАстройки dropzone
+  // Настройки dropzone
   var minImageHeight = 795;
   Dropzone.options.myDropzone = {
     paramName: 'photo',
@@ -783,7 +773,7 @@ $settings = config()->get('settings');
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           url: '/product/photos',
-          type: 'PATCH',
+          type: 'post',
           data: {product_id: product_id},
           success: function(html){
         // alert(html);

@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+// Модели
+use App\Product;
+
 use Illuminate\Http\Request;
 
 class CompositionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // Сущность над которой производит операции контроллер
+    protected $entity_name = 'compositions';
+    protected $entity_dependence = false;
+
     public function index()
     {
         //
@@ -80,5 +82,39 @@ class CompositionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+     // --------------------------------------------- Ajax -------------------------------------------------
+    
+    public function ajax_add_relation(Request $request)
+    {
+
+        $product = Product::findOrFail($request->product_id);
+
+        $product->compositions()->toggle([$request->id]);
+
+        $composition = Product::findOrFail($request->id);
+
+        return view('products.composition', ['composition' => $composition]);
+    }
+
+    public function ajax_delete_relation(Request $request)
+    {
+
+        $product = Product::findOrFail($request->product_id);
+        $res = $product->compositions()->toggle([$request->id]);
+
+        if ($res) {
+            $result = [
+                'error_status' => 0,
+            ];
+        } else {
+            $result = [
+                'error_message' => 'Не удалось удалить состав!',
+                'error_status' => 1,
+            ];
+        }
+        
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 }

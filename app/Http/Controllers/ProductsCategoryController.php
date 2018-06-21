@@ -445,9 +445,9 @@ class ProductsCategoryController extends Controller
     }
 
 
+    // ------------------------------------------------ Ajax -------------------------------------------------
 
-
-    public function update_ajax(Request $request, $id)
+    public function ajax_update(Request $request, $id)
     {
         // dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)

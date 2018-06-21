@@ -12,11 +12,10 @@ use Illuminate\Http\Request;
 
 class MetricController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // Сущность над которой производит операции контроллер
+    protected $entity_name = 'metrics';
+    protected $entity_dependence = false;
+
     public function index()
     {
         //
@@ -91,7 +90,7 @@ class MetricController extends Controller
 
             // echo $metric;
             // Переадресовываем на получение метрики
-            return redirect()->action('MetricController@add_metric', ['id' => $metric->id, 'entity_id' => $request->product_id, 'entity' => $request->entity]);
+            return redirect()->action('MetricController@ajax_add_relation', ['id' => $metric->id, 'entity_id' => $request->product_id, 'entity' => $request->entity]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -203,7 +202,7 @@ class MetricController extends Controller
 
             // echo $metric;
             // Переадресовываем на получение метрики
-            return redirect()->action('MetricController@add_metric', ['id' => $metric->id, 'entity_id' => $request->product_id, 'entity' => $request->entity]);
+            return redirect()->action('MetricController@ajax_add_relation', ['id' => $metric->id, 'entity_id' => $request->product_id, 'entity' => $request->entity]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -212,7 +211,7 @@ class MetricController extends Controller
         }
     }
     
-    public function add_relation_metric(Request $request)
+    public function ajax_add_relation(Request $request)
     {
 
         $metric = Metric::with('unit')->findOrFail($request->id);
@@ -252,6 +251,12 @@ class MetricController extends Controller
         }
         
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+     public function add_metric_value(Request $request)
+    {   
+        // Переадресовываем на получение метрики
+        return view('products.value', ['value' => $request->value]);
     }
 
 }

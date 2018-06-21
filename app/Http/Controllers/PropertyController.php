@@ -88,6 +88,8 @@ class PropertyController extends Controller
         //
     }
 
+    // ---------------------------------------------- Ajax ----------------------------------------------------------
+
     public function add_property(Request $request)
     {
         $property = Property::with('units_category.units')->findOrFail($request->id);

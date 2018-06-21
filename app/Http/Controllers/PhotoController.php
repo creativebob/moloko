@@ -402,7 +402,7 @@ class PhotoController extends Controller
       }
     }
 
-    // Сортировка
+    // ------------------------------------------ Ajax --------------------------------------------------------
     public function get_photo(Request $request)
     {
       // ГЛАВНЫЙ ЗАПРОС:

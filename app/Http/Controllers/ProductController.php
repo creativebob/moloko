@@ -632,11 +632,7 @@ class ProductController extends Controller
 
    
 
-    public function add_product_value(Request $request)
-    {   
-        // Переадресовываем на получение метрики
-        return view('products.value', ['value' => $request->value]);
-    }
+   
 
     // Добавление фоток
     public function product_photos(Request $request, $id)
@@ -763,17 +759,6 @@ class ProductController extends Controller
 
     }
 
-    public function add_composition(Request $request)
-    {
-
-        $product = Product::findOrFail($request->product_id);
-
-        $product->compositions()->toggle([$request->id]);
-
-        $composition = Product::findOrFail($request->id);
-
-        return view('products.composition', ['composition' => $composition]);
-    }
 
     public function delete_composition(Request $request)
     {

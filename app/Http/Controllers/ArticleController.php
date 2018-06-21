@@ -233,7 +233,7 @@ class ArticleController extends Controller
         //
     }
 
-    public function get_article_inputs(Request $request)
+    public function get_inputs(Request $request)
     {
 
         $product = Product::with('metrics.property', 'compositions.unit')->withCount('metrics', 'compositions')->findOrFail($request->product_id);
