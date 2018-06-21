@@ -34,6 +34,8 @@ use App\Folder;
 use App\Product;
 use App\ProductsCategory;
 
+use App\Article;
+
 use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
 use App\Policies\CompanyPolicy;
@@ -65,6 +67,8 @@ use App\Policies\FolderPolicy;
 
 use App\Policies\ProductPolicy;
 use App\Policies\ProductsCategoryPolicy;
+
+use App\Policies\ArticlePolicy;
 
 
 use Illuminate\Support\Facades\Gate as GateContract;
@@ -107,6 +111,7 @@ class AuthServiceProvider extends ServiceProvider
         Folder::class => FolderPolicy::class,
         Product::class => ProductPolicy::class,
         ProductsCategory::class => ProductsCategoryPolicy::class,
+        Article::class => ArticlePolicy::class,
     ];
 
     public function boot()

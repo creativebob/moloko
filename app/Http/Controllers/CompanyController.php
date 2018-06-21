@@ -223,7 +223,7 @@ class CompanyController extends Controller
         // };
 
         // Создаем папку в файловой системе
-        Storage::disk('public')->makeDirectory($company->id.'/media');
+        // Storage::disk('public')->makeDirectory($company->id.'/media');
 
         // $folder->folder_url = $link_for_folder;
         // $folder->folder_alias = 'users';
@@ -332,7 +332,7 @@ class CompanyController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $company = Company::with('location')->moderatorLimit($answer)->findOrFail($id);
+        $company = Company::with('location', 'schedules.worktimes')->moderatorLimit($answer)->findOrFail($id);
 
         // Скрываем бога
         $user_id = hideGod($user);
@@ -372,8 +372,6 @@ class CompanyController extends Controller
         if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
             $company->extra_phone = cleanPhone($request->extra_phone);
         } else {$company->extra_phone = NULL;};
-
-
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;

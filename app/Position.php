@@ -39,7 +39,7 @@ class Position extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'position_name',
+        'name',
         'page_id',
         'direct_status',
         'company_id',

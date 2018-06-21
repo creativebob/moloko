@@ -108,10 +108,13 @@
 
     </div>
 
+    {{-- Чекбокс отображения на сайте --}}
+    @can ('publisher', $cur_news)
     <div class="small-12 cell checkbox">
       {{ Form::checkbox('display', 1, $cur_news->display, ['id' => 'display']) }}
       <label for="display"><span>Отображать на сайте</span></label>
     </div>
+    @endcan
 
     {{-- Чекбокс модерации --}}
     @can ('moderator', $cur_news)

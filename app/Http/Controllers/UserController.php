@@ -253,7 +253,7 @@ class UserController extends Controller
             $avater = Image::make($request->photo)->widen(30);
             $save_path = storage_path('app/public/'.$directory);
             if (!file_exists($save_path)) {
-                mkdir($save_path, 666, true);
+                mkdir($save_path, 755, true);
             }
             $avater->save(storage_path('app/public/'.$directory.$image_name));
 
@@ -472,7 +472,7 @@ class UserController extends Controller
             $avater = Image::make($request->photo)->widen(30);
             $save_path = storage_path('app/public/'.$directory);
             if (!file_exists($save_path)) {
-                mkdir($save_path, 666, true);
+                mkdir($save_path, 755, true);
             }
             $avater->save(storage_path('app/public/'.$directory.$image_name));
 

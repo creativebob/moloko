@@ -80,4 +80,10 @@ class Site extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
+    // Получаем отделы
+    public function departments()
+    {
+        return $this->belongsToMany('App\Department');
+    }
+
 }

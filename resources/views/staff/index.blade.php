@@ -32,6 +32,9 @@
           <th class="td-department">Отдел</th>
           <th class="td-phone">Телефон</th>
           <th class="td-employment-date">Дата приема</th>
+          @can ('publisher', App\Staffer::class)
+          <th class="td-display">Отображение</th>
+          @endcan
           
           <!-- <th class="td-delete"></th> -->
         </tr>
@@ -86,6 +89,15 @@
             @endif
             @endforeach
           </td>
+          @can ('publisher', $staffer)
+          <td class="td-display">
+            @if ($staffer['display'] == 1)
+            <span class="system-item">Отображается на сайте</span>
+            @else
+            <span class="no-moderation">Не отображается на сайте</span>
+            @endif
+          </td>
+          @endcan
           
          <!--  <td class="td-delete">
             @if (isset($employee->company_id))

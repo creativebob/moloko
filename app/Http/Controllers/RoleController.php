@@ -412,7 +412,7 @@ class RoleController extends Controller
 
         if(
             (($role->system_item == null)&&($role->company_id != null)&&($user->god == null))|| // ОБЫЧНАЯ ДЛЯ ПОЛЬЗОВАТЕЛЯ
-            (($role->system_item == null)&&($user->god == 1)&&($user->company_id == null))
+            (($role->system_item == null)&&($user->god == 1))
         ){  
 
             // СОЗДАНИЕ СВЯЗИ - НАЗНАЧЕНИЕ ПРАВА НА РОЛЬ:

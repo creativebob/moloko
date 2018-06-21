@@ -28,6 +28,9 @@
           <th class="td-name">Имя фото</th>
           <th class="td-date">Сведения</th>
           <th class="td-author">Автор</th>
+          @can ('publisher', App\Photo::class)
+          <th class="td-display">Отображение</th>
+          @endcan
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -60,6 +63,15 @@
             </td>
             <td class="td-author">@if(isset($photo->author->first_name)) {{ $photo->author->first_name . ' ' . $photo->author->second_name }} @endif
             </td>
+            @can ('publisher', $photo)
+            <td class="td-display">
+              @if ($photo['display'] == 1)
+              <span class="system-item">Отображается на сайте</span>
+              @else
+              <span class="no-moderation">Не отображается на сайте</span>
+              @endif
+            </td>
+            @endcan
             <td class="td-delete">
               @if ($photo->system_item != 1)
               @can('delete', $photo)

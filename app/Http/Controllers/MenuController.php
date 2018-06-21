@@ -62,6 +62,7 @@ class MenuController extends Controller
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
+
         $site = Site::with(['navigations' => function ($query) use ($answer_navigations) {
             $query->moderatorLimit($answer_navigations)
             ->companiesLimit($answer_navigations)
@@ -81,14 +82,14 @@ class MenuController extends Controller
             ->authors($answer_pages)
             ->systemItem($answer_pages) // Фильтр по системным записям
             ->orderBy('sort', 'asc');
-        }, 'navigations.navigations_category'])
-        //  => function ($query) use ($answer_navigations_categories) {
-        //     $query->moderatorLimit($answer_navigations_categories)
-        //     ->companiesLimit($answer_navigations_categories)
-        //     ->authors($answer_navigations_categories)
-        //     ->systemItem($answer_navigations_categories) // Фильтр по системным записям
-        //     ->orderBy('sort', 'asc');
-        // }
+        }, 'navigations.navigations_category' => function ($query) use ($answer_navigations_categories) {
+            $query->moderatorLimit($answer_navigations_categories)
+            ->companiesLimit($answer_navigations_categories)
+            ->authors($answer_navigations_categories)
+            ->systemItem($answer_navigations_categories) // Фильтр по системным записям
+            ->template($answer_navigations_categories) // Выводим шаблоны в список
+            ->orderBy('sort', 'asc');
+        }])
         ->moderatorLimit($answer_sites)
         ->companiesLimit($answer_sites)
         ->authors($answer_sites)
@@ -112,17 +113,18 @@ class MenuController extends Controller
             // Проверяем права на редактирование и удаление
             foreach ($navigation_id[$navigation->id]['children'] as $id => &$item) {
 
-            // Функция построения дерева из массива от Tommy Lacroix
-            // Если нет вложений
+                // Функция построения дерева из массива от Tommy Lacroix
+                // Если нет вложений
                 if (!$item['parent_id']){
                     $navigations_tree[$navigation->id]['children'][$id] = &$item;
                 } else { 
-                // Если есть потомки то перебераем массив
+
+                    // Если есть потомки то перебераем массив
                     $navigation_id[$navigation->id]['children'][$item['parent_id']]['children'][$id] = &$item;
                 }
             }
 
-        // Записываем даныне навигации
+            // Записываем даныне навигации
             $navigations_tree[$navigation->id]['id'] = $navigation->id;
             $navigations_tree[$navigation->id]['name'] = $navigation->name;
         }
@@ -191,9 +193,6 @@ class MenuController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-
         // Скрываем бога
         $user_id = hideGod($user);
 
@@ -226,7 +225,28 @@ class MenuController extends Controller
 
         $menu->display = $request->display;
         $menu->page_id = $request->page_id;
-        $menu->company_id = $company_id;
+
+        // Если к пункту меню привязана страница и мы выключаем/вкючаем его отображение на сайте, то и меняем отображение и у страницы
+        if (isset($request->page_id)) {
+
+            // Находим страницу
+            $page = Page::whereId($request->page_id)->first();
+
+            if ($request->display == 1) {
+                $page->display = 1;
+            } else {
+                $page->display = null;
+            }
+
+            $page->save();
+
+            // Если страница не обновилась
+            if ($page == false) {
+                abort(403, 'Ошибка при изменении страницы связанной с пунктом меню');
+            }
+        }
+        
+        $menu->company_id = $user->company_id;
         $menu->author_id = $user_id;
         $menu->save();
 
@@ -289,6 +309,7 @@ class MenuController extends Controller
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
+        
         $site = Site::with(['navigations' => function ($query) use ($answer_navigations) {
             $query->moderatorLimit($answer_navigations)
             ->companiesLimit($answer_navigations)
@@ -308,14 +329,14 @@ class MenuController extends Controller
             ->authors($answer_pages)
             ->systemItem($answer_pages) // Фильтр по системным записям
             ->orderBy('sort', 'asc');
-        }, 'navigations.navigations_category'])
-        //  => function ($query) use ($answer_navigations_categories) {
-        //     $query->moderatorLimit($answer_navigations_categories)
-        //     ->companiesLimit($answer_navigations_categories)
-        //     ->authors($answer_navigations_categories)
-        //     ->systemItem($answer_navigations_categories) // Фильтр по системным записям
-        //     ->orderBy('sort', 'asc');
-        // }
+        }, 'navigations.navigations_category' => function ($query) use ($answer_navigations_categories) {
+            $query->moderatorLimit($answer_navigations_categories)
+            ->companiesLimit($answer_navigations_categories)
+            ->authors($answer_navigations_categories)
+            ->systemItem($answer_navigations_categories) // Фильтр по системным записям
+            ->template($answer_navigations_categories) // Выводим шаблоны в список
+            ->orderBy('sort', 'asc');
+        }])
         ->moderatorLimit($answer_sites)
         ->companiesLimit($answer_sites)
         ->authors($answer_sites)
@@ -462,6 +483,27 @@ class MenuController extends Controller
 
         $menu->display = $request->display;
         $menu->page_id = $request->page_id;
+
+        // Если к пункту меню привязана страница и мы выключаем/вкючаем его отображение на сайте, то и меняем отображение и у страницы
+        if (isset($request->page_id)) {
+
+            // Находим страницу
+            $page = Page::whereId($request->page_id)->first();
+
+            if ($request->display == 1) {
+                $page->display = 1;
+            } else {
+                $page->display = null;
+            }
+
+            $page->save();
+
+            // Если страница не обновилась
+            if ($page == false) {
+                abort(403, 'Ошибка при изменении страницы связанной с пунктом меню');
+            }
+        }
+
         $menu->editor_id = $user_id;
         $menu->save();
 
@@ -469,7 +511,7 @@ class MenuController extends Controller
         if ($menu) {
 
             // Переадресовываем на index
-            return redirect()->action('NavigationController@get_content', ['id' => $menu->id, 'alias' => $alias, 'item' => 'menu']);
+            return redirect()->action('NavigationController@index', ['id' => $menu->id, 'alias' => $alias, 'item' => 'menu']);
         } else {
             $result = [
                 'error_status' => 1,
@@ -515,7 +557,7 @@ class MenuController extends Controller
             // Удаляем с обновлением
             if ($menu) {
             // Переадресовываем на index
-                return redirect()->action('NavigationController@get_content', ['alias' => $alias, 'id' => $navigation_id, 'item' => 'navigation']);
+                return redirect()->action('NavigationController@index', ['alias' => $alias, 'id' => $navigation_id, 'item' => 'navigation']);
             } else {
                 abort(403, 'Ошибка при удалении меню');
             }

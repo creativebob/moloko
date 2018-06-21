@@ -4,15 +4,16 @@
       <h5>Редактирование категории</h5>
     </div>
   </div>
-  {{ Form::open(['id'=>'form-first-edit', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['id'=>'form-first-edit', 'data-abide', 'novalidate', 'files'=>'true']) }}
 
-    @include('products_categories.modals.first', ['submitButtonText' => 'Редактировать категорию', 'class' => 'submit-edit'])
+    @include('products_categories.modals.first', ['submitButtonText' => 'Редактировать категорию', 'class' => 'submit-edit', 'disabled' => 'disabled'])
 
   {{ Form::close() }}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 
 @include('includes.scripts.inputs-mask')
+@include('includes.scripts.upload-file')
 
 
 

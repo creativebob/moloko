@@ -69,6 +69,9 @@
           <th class="td-media-link">Ссылка</th>
           <th class="td-media-date">Сведения</th>
           <th class="td-media-author">Автор</th>
+          @can ('publisher', App\Photo::class)
+          <th class="td-display">Отображение</th>
+          @endcan
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -102,7 +105,7 @@
                 <li>Ширина {{ $settings['img_large_width']->value }} - {{ url('/storage/'.$photo->company_id.'/media/albums/'.$album->id.'/img/large/'.$photo->name) }}</li>
                 <li>Ширина {{ $photo->width }} - {{ url('/storage/'.$photo->company_id.'/media/albums/'.$album->id.'/img/original/'.$photo->name) }}</li>
               </ul>
-              </td>
+            </td>
             <td class="td-photo-extra-info">
               <ul>
                 <li>Дата добавления: {{ date('d.m.Y', strtotime($photo->created_at)) }}</li>
@@ -110,7 +113,15 @@
               </ul>
             </td>
             <td class="td-media-author">@if(isset($photo->author->first_name)) {{ $photo->author->first_name . ' ' . $photo->author->second_name }} @endif</td>
-
+            @can ('publisher', $photo)
+            <td class="td-display">
+              @if ($photo['display'] == 1)
+              <span class="system-item">Отображается на сайте</span>
+              @else
+              <span class="no-moderation">Не отображается на сайте</span>
+              @endif
+            </td>
+            @endcan
             <td class="td-delete">
               @if ($photo->system_item != 1)
               @can('delete', $photo)
@@ -142,7 +153,7 @@
   @endsection
 
   @section('scripts')
-<script type="text/javascript">
+  <script type="text/javascript">
     $(function() {
     // Берем алиас сайта
     var alias = '{{ $alias }}';
@@ -160,11 +171,11 @@
   });
 </script> 
 
-  
-  {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-  @include('includes.scripts.tablesorter-script')
 
-  {{-- Скрипт модалки удаления --}}
-  @include('includes.scripts.modal-delete-script')
-  @include('includes.scripts.delete-ajax-script')
-  @endsection
+{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+@include('includes.scripts.tablesorter-script')
+
+{{-- Скрипт модалки удаления --}}
+@include('includes.scripts.modal-delete-script')
+@include('includes.scripts.delete-ajax-script')
+@endsection

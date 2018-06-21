@@ -1,42 +1,76 @@
-@extends('layouts.app')
-
-@section('inhead')
-  @include('includes.scripts.pickmeup-inhead')
-@endsection
-
-@section('title', 'Новый товар')
-
-@section('breadcrumbs', Breadcrumbs::render('create', $page_info))
-
-@section('title-content')
-	<div class="top-bar head-content">
-    <div class="top-bar-left">
-       <h2 class="header-content">СОЗДАНИЕ НОВОГО товара</h2>
-
-    </div>
-    <div class="top-bar-right">
+<div class="reveal" id="first-add" data-reveal data-close-on-click="false">
+  <div class="grid-x">
+    <div class="small-12 cell modal-title">
+      <h5>ДОБАВЛЕНИЕ продукции</h5>
     </div>
   </div>
-@endsection
+  {{ Form::open(['url' => 'products', 'id'=>'form-first-add', 'data-abide', 'novalidate']) }}
 
-@section('content')
+  <div class="grid-x grid-padding-x align-center modal-content inputs">
+    <div class="small-10 cell">
+      <label>Название товара
+        @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+        <div class="item-error">Такой товар уже существует!</div>
+      </label>
 
-  {{ Form::open(['url' => '/products', 'data-abide', 'novalidate', 'files'=>'true']) }}
-    @include('products.form', ['submitButtonText' => 'Добавить продукцию', 'param' => '', 'form' => null])
+      <label>Категория товара
+        <select name="products_category_id">
+          @php
+          echo $products_categories_list;
+          @endphp
+        </select>
+      </label>
+
+      <div class="grid-x grid-margin-x">
+        <div class="small-12 medium-6 cell">
+          <label>Категория единиц измерения
+            {{ Form::select('units_category_id', $units_categories_list, null, ['placeholder' => 'Выберите категорию', 'id' => 'units-categories-list', 'required']) }}
+          </label>
+        </div>
+        <div class="small-12 medium-6 cell">
+          <label>Единица измерения
+            <select name="unit_id" id="units-list" required disabled></select>
+          </label>
+        </div>
+      </div>
+
+      <div class="grid-x grid-margin-x">
+        <div class="small-12 medium-6 cell">
+          <label>Себестоимость
+            {{ Form::number('cost') }}
+          </label>
+        </div>
+        <div class="small-12 medium-6 cell">
+          <label>Цена
+            {{ Form::number('price') }}
+          </label>
+        </div>
+      </div>
+
+      {{-- Чекбокс системной записи --}}
+      @can ('god', App\Product::class)
+      <div class="small-12 cell checkbox">
+        @include('includes.inputs.system', ['value'=>null, 'name'=>'system_item']) 
+      </div>
+      @endcan
+
+    </div>
+  </div>
+  <div class="grid-x align-center">
+    <div class="small-6 medium-4 cell">
+      {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button']) }}
+    </div>
+  </div>
+
   {{ Form::close() }}
+  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+</div>
 
-@endsection
+@include('includes.scripts.inputs-mask')
+@include('products.scripts')
 
-@section('modals')
-  {{-- Модалка удаления с ajax --}}
-  @include('includes.modals.modal-delete-ajax')
-@endsection
 
-@section('scripts')
-  @include('includes.scripts.cities-list')
-  @include('includes.scripts.inputs-mask')
-  @include('includes.scripts.pickmeup-script')
-@endsection
+
 
 
 

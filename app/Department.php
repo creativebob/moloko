@@ -124,4 +124,9 @@ class Department extends Model
         return $this->belongsTo('App\Location');
     }
 
+     public function schedules()
+    {
+        return $this->belongsToMany('App\Schedule', 'schedule_entity', 'entity_id', 'schedule_id')->where('entity', 'departments');
+    }
+
 }

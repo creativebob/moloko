@@ -20,10 +20,10 @@
 <div class="grid-x">
   <div class="small-12 cell">
     <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="products_categories">
-    @if($products_categories_tree)
-    {{-- Шаблон вывода и динамического обновления --}}
-    @include('products_categories.category-list', $products_categories_tree)
-    @endif
+      @if($products_categories_tree)
+      {{-- Шаблон вывода и динамического обновления --}}
+      @include('products_categories.category-list', $products_categories_tree)
+      @endif
     </ul>
   </div>
 </div>
@@ -152,7 +152,6 @@
     // Получаем данные о разделе
     var id = $(this).closest('.item').attr('id').split('-')[1];
 
-
     // Ajax запрос
     $.ajax({
       headers: {
@@ -161,6 +160,7 @@
       url: "/products_categories/" + id + "/edit",
       type: "GET",
       success: function(html) {
+        // alert(html);
         $('#modal').html(html);
         $('#first-edit').foundation();
         $('#first-edit').foundation('open');
@@ -189,12 +189,8 @@
   // Модалка
   $(document).on('click', '[data-open="medium-add"]', function() {
 
-    var parent;
-    if ($(this).closest('.first-item').hasClass('parent')) {
-      parent = $(this).closest('.item').attr('id').split('-')[1];
-    } else {
-      parent = $(this).closest('.item').attr('id').split('-')[1];
-    };
+    var parent = $(this).closest('.item').attr('id').split('-')[1];
+    var category = $(this).closest('.first-item').attr('id').split('-')[1];
     
     $.ajax({
       headers: {
@@ -202,35 +198,38 @@
       },
       url: '/products_categories/create',
       type: "GET",
-      data: {parent_id: parent},
+      data: {category_id: category, parent_id: parent},
       success: function(html){
         $('#modal').html(html);
         $('#medium-add').foundation();
         $('#medium-add').foundation('open');
+        $('.category-id').val(category);
       }
     }); 
   });
 
   // Проверка существования
-  $(document).on('keyup', '#form-medium-add .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-medium-add .name-field').val();
-    // Указываем название кнопки
-    var submit = '.submit-add';
-    // Значение поля с разрешением
-    var db = '#form-medium-add .medium-item';
-    // Выполняем запрос
-    clearTimeout(timerId);   
-    timerId = setTimeout(function() {
-      productsCategoryCheck (name, submit, db)
-    }, time); 
-  });
+  // $(document).on('keyup', '#form-medium-add .name-field', function() {
+  //   // Получаем фрагмент текста
+  //   var name = $('#form-medium-add .name-field').val();
+  //   // Указываем название кнопки
+  //   var submit = '.submit-add';
+  //   // Значение поля с разрешением
+  //   var db = '#form-medium-add .medium-item';
+  //   // Выполняем запрос
+  //   clearTimeout(timerId);   
+  //   timerId = setTimeout(function() {
+  //     productsCategoryCheck (name, submit, db)
+  //   }, time); 
+  // });
 
   // ----------- Изменение -------------
   // Открываем модалку
   $(document).on('click', '[data-open="medium-edit"]', function() {
+
     // Получаем данные о разделе
     var id = $(this).closest('.item').attr('id').split('-')[1];
+    var category = $(this).closest('.first-item').attr('id').split('-')[1];
 
     // Ajax запрос
     $.ajax({
@@ -239,6 +238,7 @@
       },
       url: "/products_categories/" + id + "/edit",
       type: "GET",
+      data: {category_id: category},
       success: function(html) {
         $('#modal').html(html);
         $('#medium-edit').foundation();
@@ -248,25 +248,26 @@
   });
 
   // Проверка существования
-  $(document).on('keyup', '#form-medium-edit .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-medium-edit .name-field').val();
-    // Указываем название кнопки
-    var submit = '.submit-edit';
-    // Значение поля с разрешением
-    var db = '#form-medium-edit .medium-item';
-    // Выполняем запрос
-    clearTimeout(timerId);   
-    timerId = setTimeout(function() {
-      productsCategoryCheck (name, submit, db)
-    }, time); 
-  });
+  // $(document).on('keyup', '#form-medium-edit .name-field', function() {
+  //   // Получаем фрагмент текста
+  //   var name = $('#form-medium-edit .name-field').val();
+  //   // Указываем название кнопки
+  //   var submit = '.submit-edit';
+  //   // Значение поля с разрешением
+  //   var db = '#form-medium-edit .medium-item';
+  //   // Выполняем запрос
+  //   clearTimeout(timerId);   
+  //   timerId = setTimeout(function() {
+  //     productsCategoryCheck (name, submit, db)
+  //   }, time); 
+  // });
 
   // ------------------------ Кнопка добавления ---------------------------------------
   $(document).on('click', '.submit-add', function(event) {
     event.preventDefault();
 
-    // alert($(this).closest('form').serialize());
+    var formName = $(this).closest('form').attr('id');
+
     // Ajax запрос
     $.ajax({
       headers: {
@@ -274,7 +275,9 @@
       },
       url: '/products_categories',
       type: "POST",
-      data: $(this).closest('form').serialize(),
+      data: new FormData($("#" + formName)[0]),
+      contentType: false,
+      processData: false,
       success:function(html) {
         $('#content').html(html);
         Foundation.reInit($('#content'));
@@ -288,14 +291,18 @@
 
     var id = $('#products-category-id').val();
 
+    var formName = $(this).closest('form').attr('id');
+    
     // Ajax запрос
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/products_categories/' + id,
-      type: "PATCH",
-      data: $(this).closest('form').serialize(),
+      url: '/products_categories/' + id + '/update',
+      type: "POST",
+      data: new FormData($("#" + formName)[0]),
+      contentType: false,
+      processData: false,
       success:function(html) {
         $('#content').html(html);
         Foundation.reInit($('#content'));

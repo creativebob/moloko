@@ -60,4 +60,9 @@ class ProductsCategory extends Model
         return $this->belongsTo('App\ProductsType');
     }
 
+    public function photo()
+    {
+        return $this->belongsTo('App\Photo');
+    }
+
 }

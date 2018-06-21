@@ -20,23 +20,29 @@ class CreateProductsTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('name')->index()->comment('Название товара');
-            $table->string('article')->nullable()->index()->comment('Артикул товара');
-
-            $table->integer('cost')->nullable()->unsigned()->comment('Себестоимость');
 
             $table->string('photo_id')->index()->nullable()->comment('Обложка товара');
+            // $table->foreign('photo_id')->references('id')->on('photos');
+
+
             $table->string('description')->index()->nullable()->comment('Описание товара');
 
-            $table->integer('unit_id')->nullable()->unsigned()->comment('ID единицы измерения');
+            $table->integer('unit_id')->nullable()->unsigned()->comment('ID еденицы измерения');
             $table->foreign('unit_id')->references('id')->on('units');
 
             $table->integer('rule_id')->nullable()->unsigned()->comment('ID правила определения цены');
             // $table->foreign('rule_id')->references('id')->on('rules');
 
-
             $table->integer('products_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться товар');
             $table->foreign('products_category_id')->references('id')->on('products_categories');
+
+            $table->integer('manufacturer_id')->nullable()->unsigned()->comment('Id производителя товара');
+            $table->foreign('manufacturer_id')->references('id')->on('companies');
+
+            $table->integer('album_id')->nullable()->unsigned()->comment('ID альбома');
+            $table->foreign('album_id')->references('id')->on('albums');
             
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 

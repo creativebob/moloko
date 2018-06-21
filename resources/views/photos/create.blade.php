@@ -20,8 +20,12 @@
 @endsection
 
 @section('content')
+<div class="grid-x grid-padding-x">
+    <div class="small-12 cell">
 {{ Form::open(['url' => '/albums/'.$alias.'/photos', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
 {{ Form::close() }}
+</div>
+</div>
 @endsection
 
 @section('modals')

@@ -24,6 +24,8 @@ class CreateListItemsTable extends Migration
             $table->integer('booklist_id')->nullable()->unsigned()->comment('Id списка');
             $table->foreign('booklist_id')->references('id')->on('booklists');
 
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');

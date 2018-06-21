@@ -21,6 +21,12 @@ class CreateProductsCategoriesTable extends Migration
 
             $table->string('name')->index()->comment('Название категории товаров');
 
+            $table->string('description')->nullable()->index()->comment('Описание категории товаров');
+            $table->string('seo_description')->nullable()->index()->comment('Описание для сайта для категории товаров');
+
+            $table->integer('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
+            $table->foreign('photo_id')->references('id')->on('photos');
+
             $table->integer('parent_id')->nullable()->unsigned()->comment('Id категории товара');
             $table->foreign('parent_id')->references('id')->on('products_categories');
 
@@ -28,6 +34,11 @@ class CreateProductsCategoriesTable extends Migration
             $table->foreign('products_type_id')->references('id')->on('products_types');
 
             $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
+
+            $table->integer('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
+            $table->foreign('category_id')->references('id')->on('products_categories');
+
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 

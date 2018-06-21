@@ -1,51 +1,89 @@
-<div class="grid-x grid-padding-x align-center modal-content inputs">
-  <div class="small-10 cell">
-    <label class="input-icon">Введите город
-      @php
-      $city_name = null;
-      $city_id = null;
-      if(isset($department->location->city->name)) {
-      $city_name = $department->location->city->name;
-      $city_id = $department->location->city->id;
-    }
-    @endphp
-    @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
-  </label>
-  <label>Название филиала
-    @include('includes.inputs.name', ['value'=>$department->name, 'name'=>'name', 'required'=>'required'])
-    <div class="item-error">Такой филиал уже существует в организации!</div>
-  </label>
-  <label>Адресс филиала
-   @php
-   $address = null;
-   if (isset($department->location->address)) {
-   $address = $department->location->address;
- }
- @endphp
- @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
-</label>
-<label>Телефон филиала
-  @include('includes.inputs.phone', ['value'=>$department->phone, 'name'=>'phone', 'required'=>'required'])
-</label>
-@if ($department->moderation == 1)
-<div class="checkbox">
-  {{ Form::checkbox('moderation', 1, $department->moderation, ['id' => 'moderation']) }}
-  <label for="moderation"><span>Временная запись.</span></label>
+<div class="grid-x tabs-wrap align-center tabs-margin-top">
+  <div class="small-8 cell">
+    <ul class="tabs-list" data-tabs id="tabs">
+      <li class="tabs-title is-active"><a href="#department" aria-selected="true">Филиал</a></li>
+      <li class="tabs-title"><a data-tabs-target="worktimes" href="#worktimes">График работы</a></li>
+    </ul>
+  </div>
 </div>
-@endif
-@can('god', App\Department::class)
-<div class="checkbox">
-  {{ Form::checkbox('system_item', 1, $department->system_item, ['id' => 'system-item']) }}
-  <label for="system-item"><span>Системная запись.</span></label>
+<div class="tabs-wrap inputs">
+  <div class="tabs-content" data-tabs-content="tabs">
+
+    <div class="tabs-panel is-active" id="department">
+      <div class="grid-x grid-padding-x align-center modal-content inputs">
+        <div class="small-10 cell">
+          <label class="input-icon">Введите город
+            @php
+            $city_name = null;
+            $city_id = null;
+            if (isset($department->location->city->name)) {
+            $city_name = $department->location->city->name;
+            $city_id = $department->location->city->id;
+          }
+          @endphp
+          @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
+        </label>
+        <label>Название филиала
+          @include('includes.inputs.name', ['value'=>$department->name, 'name'=>'name', 'required'=>'required'])
+          <div class="item-error">Такой филиал уже существует в организации!</div>
+        </label>
+        <label>Адресс филиала
+          @php
+          $address = null;
+          if (isset($department->location->address)) {
+          $address = $department->location->address;
+        }
+        @endphp
+        @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+      </label>
+      <label>Телефон филиала
+        @include('includes.inputs.phone', ['value'=>$department->phone, 'name'=>'phone', 'required'=>'required'])
+      </label>
+      {{ Form::hidden('department_id', $department->id, ['id' => 'department-id']) }}
+      {{ Form::hidden('first_item', 0, ['class' => 'first-item']) }}
+
+    </div>
+  </div>
 </div>
-@endcan
-{{ Form::hidden('department_id', $department->id, ['id' => 'department-id']) }}
-{{ Form::hidden('first_item', 0, ['class' => 'first-item']) }}
+<!-- Схема работы -->
+<div class="tabs-panel" id="worktimes">
+  <div class="grid-x grid-padding-x align-center">
+    <div class="small-8 cell">
+      @include('includes.inputs.schedule', ['value'=>$worktime]) 
+    </div>
+  </div>
 </div>
+
+<div class="grid-x align-center">
+  {{-- Чекбокс отображения на сайте  --}}
+  @can ('publisher', $department)
+  <div class="small-8 cell checkbox">
+    {{ Form::checkbox('display', 1, $department->display, ['id' => 'display']) }}
+    <label for="display"><span>Отображать на сайте</span></label>
+  </div>
+  @endcan
+
+  @if ($department->moderation == 1)
+  <div class="small-8 cell checkbox">
+    {{ Form::checkbox('moderation', 1, $department->moderation, ['id' => 'moderation']) }}
+    <label for="moderation"><span>Временная запись.</span></label>
+  </div>
+  @endif
+
+  @can('god', App\Department::class)
+  <div class="small-8 cell checkbox">
+    {{ Form::checkbox('system_item', 1, $department->system_item, ['id' => 'system-item']) }}
+    <label for="system-item"><span>Системная запись.</span></label>
+  </div>
+  @endcan
+
 </div>
 <div class="grid-x align-center">
   <div class="small-6 medium-4 cell text-center">
     {{ Form::submit($submitButtonText, ['data-close', 'class'=>'button modal-button '.$class]) }}
   </div>
 </div>
+
+</div>
+  </div>
 

@@ -16,9 +16,20 @@ class CreateUnitsTable extends Migration
         Schema::create('units', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
+            $table->foreign('company_id')->references('id')->on('companies');
+
             $table->string('name')->index()->comment('Название единицы измерения');
-            $table->string('preview')->comment('Сокращенное название');
+            $table->string('abbreviation')->comment('Сокращенное название');
+
+            $table->decimal('ratio', 15, 8)->nullable()->comment('Коэффициент умножения');
+
             $table->string('description')->nullable()->comment('Описание единицы измерения');
+
+            $table->integer('units_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться юнит');
+            $table->foreign('units_category_id')->references('id')->on('units_categories');
+
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 

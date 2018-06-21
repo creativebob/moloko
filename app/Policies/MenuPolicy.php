@@ -46,6 +46,24 @@ class MenuPolicy
         return $result;
     }
 
+    public function moderator(User $user, Menu $model)
+    {
+        $result = $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
+        return $result;
+    }
+
+    public function automoderate(User $user, Menu $model)
+    {
+        $result = $this->getstatus($this->entity_name, $model, 'automoderate', $this->entity_dependence);
+        return $result;
+    }
+
+    public function publisher(User $user)
+    {
+        $result = $this->getstatus($this->entity_name, null, 'publisher', $this->entity_dependence);
+        return $result;
+    }
+
     public function god(User $user)
     {
         if(Auth::user()->god){return true;} else {return false;};

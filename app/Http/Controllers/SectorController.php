@@ -44,9 +44,12 @@ class SectorController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
+        ->template($answer) // Выводим шаблоны альбомов
         ->booklistFilter($request)
         ->orderBy('sort', 'asc')
         ->get();
+
+        // dd($sectors);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
@@ -69,7 +72,7 @@ class SectorController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Получаем массив с вложенными элементами дял отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
+        // Получаем массив с вложенными элементами для отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
         $sectors_tree = get_index_tree_with_rights($sectors, $user);
         // dd($sectors_tree);
 
@@ -103,6 +106,7 @@ class SectorController extends Controller
             ->companiesLimit($answer)
             ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
+            ->template($answer) // Выводим шаблоны альбомов
             ->orderBy('sort', 'asc')
             ->get(['id','name','category_status','parent_id'])
             ->keyBy('id')
@@ -209,6 +213,7 @@ class SectorController extends Controller
             ->companiesLimit($answer)
             ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
+            ->template($answer) // Выводим шаблоны альбомов
             ->orderBy('sort', 'asc')
             ->get(['id','name','category_status','parent_id'])
             ->keyBy('id')

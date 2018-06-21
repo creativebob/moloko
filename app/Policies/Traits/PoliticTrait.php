@@ -130,53 +130,53 @@ trait PoliticTrait
         // Общие проверки права для создания (Для обычного пользователя)
         // Запрещаем создание записей если нет компании или филиала
 
-            if(($method == 'create')&&($user_status == 0)){
+        if(($method == 'create')&&($user_status == 0)){
 
                 // Если нет компании
-                if($company_id == null){
+            if($company_id == null){
                         // abort(403, 'Авторизуйтесь под компанией для создания записи');
-                        return false;
-                } else {
+                return false;
+            } else {
 
-                    if(!isset($session['company_info']['filials'])){
+                if(!isset($session['company_info']['filials'])){
                         // abort(403, 'Для начала необходимо создать филиал! ;)');
-                        return false;
-                    };
+                    return false;
                 };
             };
+        };
 
 
             // Пропускае бога на index
-            if(($method == 'index')&&($user_status == 1)){return true;};
+        if(($method == 'index')&&($user_status == 1)){return true;};
 
             // Получаем массив с правами
-            $mass_right = getRight($method, $entity_name, $session);
+        $mass_right = getRight($method, $entity_name, $session);
 
 
             // Мгновенный результат по следующим методам
-            if(($method == 'index')||($method == 'create')){
+        if(($method == 'index')||($method == 'create')){
 
-                return $mass_right['result'];
-            };
+            return $mass_right['result'];
+        };
 
 
             // Собираем данные для принятия решения
-            $mass_right = getRight('moderator', $entity_name, $session);
-            $moderator_status = $mass_right['result'];
+        $mass_right = getRight('moderator', $entity_name, $session);
+        $moderator_status = $mass_right['result'];
 
-            $mass_right = getRight('automoderate', $entity_name, $session);
-            $automoderate_status = $mass_right['result'];
+        $mass_right = getRight('automoderate', $entity_name, $session);
+        $automoderate_status = $mass_right['result'];
 
 
-            if($entity_dependence == false){
-                $nolimit_status = true;
-            } else {
-                $mass_right = getRight('nolimit', $entity_name, $session);
-                $nolimit_status = $mass_right['result'];
-            };
+        if($entity_dependence == false){
+            $nolimit_status = true;
+        } else {
+            $mass_right = getRight('nolimit', $entity_name, $session);
+            $nolimit_status = $mass_right['result'];
+        };
 
-            $mass_right = getRight('system', $entity_name, $session);
-            $system_status = $mass_right['result'];
+        $mass_right = getRight('system', $entity_name, $session);
+        $system_status = $mass_right['result'];
 
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -246,18 +246,21 @@ trait PoliticTrait
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        // Гасим любую операцию над системной записью без компании
-        if(($model->system_item == 1)&&($model->company_id == null)&&($user_status == null)){
-            return false;
-        };
+        if($model != null){
 
-        // Проверка на возможность операций с системной записью
-        if(($model->system_item == 1)&&($system_status == false)){
-            return false;
+            // Гасим любую операцию над системной записью без компании
+            if(($model->system_item == 1)&&($model->company_id == null)&&($user_status == null)){
+                return false;
+            };
+
+            // Проверка на возможность операций с системной записью
+            if(($model->system_item == 1)&&($system_status == false)){
+                return false;
+            };
+
         };
 
         // Получаем статус наличия права в связке с филиалом (Есть или нет)
-
         if(($method == 'delete')&&($model->system_item == 1)){
             return false;
             // abort(403, 'Удаление системных записей запрещено законом');
@@ -268,6 +271,27 @@ trait PoliticTrait
             return false;
             // abort(403, 'Удаление системных записей запрещено законом');
         };
+
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        // ПРОВЕРКА РАЗРЕШЕНИЙ НА ПУБЛИКАЦИЮ НА САЙТЕ ---------------------------------------------------------------------------------------------------------------------------
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+         if($method == 'publisher') {
+
+            if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'])) {
+
+                // Нет ли блокировки этого права?
+                if(!isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
+                    return true;
+                } else {
+                    return false;
+                };
+            } else {
+                    return true;
+            };
+        };
+
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         // ПРОВЕРКА РАЗРЕШЕНИЙ ПО АВТОРАМ ---------------------------------------------------------------------------------------------------------------------------
@@ -315,7 +339,7 @@ trait PoliticTrait
             } else {
 
                 foreach($list_authors as $author){
-                    
+
                     if($author == $model->author){
                         $result_author = true;
                     };

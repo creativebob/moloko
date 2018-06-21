@@ -56,7 +56,8 @@ class PhotoController extends Controller
     // ГЛАВНЫЙ ЗАПРОС
     // --------------------------------------------------------------------------------------------------------------------------------------
 
-    $photos = Photo::with(['author', 'company'])->whereHas('album', function ($query) use ($alias) {
+    $photos = Photo::with(['author', 'company'])
+    ->whereHas('album', function ($query) use ($alias) {
       $query->whereAlias($alias);
     })
     ->moderatorLimit($answer)
@@ -173,6 +174,10 @@ class PhotoController extends Controller
       $size = filesize($image)/1024;
       $photo->size = number_format($size, 2, '.', '');
 
+      // Отображение на сайте
+      $photo->display = 1;
+
+      $photo->album_id = $album->id;
       $photo->name = $image_name;
       $photo->company_id = $company_id;
       $photo->author_id = $user_id;
@@ -188,7 +193,7 @@ class PhotoController extends Controller
       $media = new AlbumEntity;
       $media->album_id = $album->id;
       $media->entity_id = $photo->id;
-      $media->entity = 'photo';
+      $media->entity = 'photos';
       $media->save();
 
       $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
@@ -199,7 +204,7 @@ class PhotoController extends Controller
       $small = Image::make($request->photo)->widen($settings['img_small_width']->value);
       $save_path = storage_path('app/public/'.$directory.'small');
       if (!file_exists($save_path)) {
-        mkdir($save_path, 666, true);
+        mkdir($save_path, 755, true);
       }
       $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
 
@@ -207,7 +212,7 @@ class PhotoController extends Controller
       $medium = Image::make($request->photo)->widen($settings['img_medium_width']->value);
       $save_path = storage_path('app/public/'.$directory.'medium');
       if (!file_exists($save_path)) {
-        mkdir($save_path, 666, true);
+        mkdir($save_path, 755, true);
       }
       $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
 
@@ -215,7 +220,7 @@ class PhotoController extends Controller
       $large = Image::make($request->photo)->widen($settings['img_large_width']->value);
       $save_path = storage_path('app/public/'.$directory.'large');
       if (!file_exists($save_path)) {
-        mkdir($save_path, 666, true);
+        mkdir($save_path, 755, true);
       }
       $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
 
@@ -241,87 +246,84 @@ class PhotoController extends Controller
 
   public function edit(Request $request, $alias, $id)
   {
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
-    $photo = Photo::with(['album' => function ($query) use ($alias) {
-      $query->whereAlias($alias);
-    }])->moderatorLimit($answer)->whereId($id)->first();
+    $photo = Photo::with('album')->moderatorLimit($answer)->findOrFail($id);
 
-      // Подключение политики
+    // dd($photo);
+
+    // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $photo);
 
-    $album = $photo->album->first();
+    $album = $photo->album;
 
-      // Инфо о странице
+    // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
-      // Так как сущность имеет определенного родителя
+    // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('albums');
-
-      // dd($album);
-
+    // dd($album);
 
     return view('photos.edit', compact('photo', 'parent_page_info', 'page_info', 'album'));
   }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $alias, $id)
-    {
+  public function update(Request $request, $alias, $id)
+  {
 
+    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+    $answer_album = operator_right('albums', false, getmethod('index'));
+    $album = Album::moderatorLimit($answer_album)->whereAlias($alias)->first();
 
       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-      $answer_album = operator_right('albums', false, getmethod('index'));
-      $album = Album::moderatorLimit($answer_album)->whereAlias($alias)->first();
-
-      // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-      $answer = operator_right('albums', false, getmethod(__FUNCTION__));
-      $photo = Photo::moderatorLimit($answer)->findOrFail($id);
+    $answer = operator_right('albums', false, getmethod(__FUNCTION__));
+    $photo = Photo::moderatorLimit($answer)->findOrFail($id);
 
       // Подключение политики
-      $this->authorize(getmethod(__FUNCTION__), $photo);
+    $this->authorize(getmethod(__FUNCTION__), $photo);
 
       // Получаем данные для авторизованного пользователя
-      $user = $request->user();
+    $user = $request->user();
 
       // Скрываем бога
-      $user_id = hideGod($user);
+    $user_id = hideGod($user);
 
-      if ($request->avatar == 1) {
-        $album->photo_id = $id;
-        $album->save();
-      }
+    if ($request->avatar == 1) {
+      $album->photo_id = $id;
+      $album->save();
+    }
 
       // Модерация и системная запись
-      $photo->system_item = $request->system_item;
-      $photo->moderation = $request->moderation;
+    $photo->system_item = $request->system_item;
+    $photo->moderation = $request->moderation;
 
-      $photo->editor_id = $user_id;
-      $photo->title = $request->title;
-      $photo->description = $request->description;
-      $photo->save();
+      // Отображение на сайте
+    $photo->display = $request->display;
+
+    $photo->editor_id = $user_id;
+    $photo->title = $request->title;
+    $photo->description = $request->description;
+    $photo->save();
 
 
     // Инфо о странице
-      $page_info = pageInfo($this->entity_name);
+    $page_info = pageInfo($this->entity_name);
 
     // Так как сущность имеет определенного родителя
-      $parent_page_info = pageInfo('albums');
+    $parent_page_info = pageInfo('albums');
 
-      if ($photo) {
-        return redirect('/albums/'.$alias.'/photos');
-      } else {
-        abort(403, 'Ошибка при обновления фотографии!');
-      }
+    if ($photo) {
 
+
+
+      return redirect('/albums/'.$alias.'/photos');
+    } else {
+      abort(403, 'Ошибка при обновления фотографии!');
     }
+
+  }
 
     /**
      * Remove the specified resource from storage.
@@ -358,11 +360,12 @@ class PhotoController extends Controller
         $directory = $album->company_id.'/media/albums/'.$album->id.'/img';
 
 
-        $storage = Storage::disk('public')->delete($directory.'/small/'.$photo->name);
-        $storage = Storage::disk('public')->delete($directory.'/medium/'.$photo->name);
-        $storage = Storage::disk('public')->delete($directory.'/large/'.$photo->name);
-        $storage = Storage::disk('public')->delete($directory.'/original/'.$photo->name);
+        $small = Storage::disk('public')->delete($directory.'/small/'.$photo->name);
+        $medium = Storage::disk('public')->delete($directory.'/medium/'.$photo->name);
+        $large = Storage::disk('public')->delete($directory.'/large/'.$photo->name);
+        $original = Storage::disk('public')->delete($directory.'/original/'.$photo->name);
         // dd($storage);
+
         $user = $request->user();
 
         // Скрываем бога
@@ -377,7 +380,7 @@ class PhotoController extends Controller
         // Удаляем страницу с обновлением
         $photo = Photo::destroy($id);
         if ($photo) {
-          return Redirect('albums/'.$alias.'/photos');
+          return Redirect('/albums/'.$alias.'/photos');
         } else {
           abort(403, 'Ошибка при удалении фотографии');
         }
@@ -398,4 +401,49 @@ class PhotoController extends Controller
         $i++;
       }
     }
+
+    // ------------------------------------------ Ajax --------------------------------------------------------
+    public function get_photo(Request $request)
+    {
+      // ГЛАВНЫЙ ЗАПРОС:
+      $photo = Photo::with('album')->findOrFail($request->id);
+
+      // return $photo;
+      return view($request->entity.'.photo-edit', ['photo' => $photo]);
+    }
+
+    // Сортировка
+    public function update_photo(Request $request, $id)
+    {
+
+      // Получаем данные для авторизованного пользователя
+      $user = $request->user();
+
+      // Скрываем бога
+      $user_id = hideGod($user);
+
+      // ГЛАВНЫЙ ЗАПРОС:
+      $photo = Photo::findOrFail($id);
+
+      // Модерация и системная запись
+      $photo->system_item = $request->system_item;
+      $photo->moderation = $request->moderation;
+
+      // Отображение на сайте
+      $photo->display = $request->display;
+      $photo->editor_id = $user_id;
+      $photo->title = $request->title;
+      $photo->description = $request->description;
+      $photo->save();
+
+      if ($photo) {
+        return view($request->entity.'.photo-edit', ['photo' => $photo]);
+      } else {
+        $result = [
+          'error_status' => 1,
+          'error_message' => 'Ошибка при записи категории продукции!'
+        ];
+      }
+    }
+
   }

@@ -8,347 +8,402 @@ use App\Page;
 use App\Menu;
 use App\MenuSite;
 use App\Company;
+use App\Department;
 
 // Валидация
+use Illuminate\Http\Request;
 use App\Http\Requests\SiteRequest;
 
 // Политика
 use App\Policies\SitePolicy;
 
-// Подключаем фасады
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+// Общие классы
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+
+// Специфические классы 
+
+
+// На удаление
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SiteController extends Controller
 {
-  // Сущность над которой производит операции контроллер
-  protected $entity_name = 'sites';
-  protected $entity_dependence = false;
 
-  public function index(Request $request)
-  {
+    // Сущность над которой производит операции контроллер
+    protected $entity_name = 'sites';
+    protected $entity_dependence = false;
 
-    // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), Site::class);
+    public function index(Request $request)
+    {
 
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-    // -------------------------------------------------------------------------------------------
-    // ГЛАВНЫЙ ЗАПРОС
-    // -------------------------------------------------------------------------------------------
-    $sites = Site::with('author', 'company')
-    ->moderatorLimit($answer)
-    ->companiesLimit($answer)
-    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
-    ->booklistFilter($request)
-    // ->filter($request, 'position_id')
-    // ->filter($request, 'department_id')
-    ->orderBy('moderation', 'desc')
-    ->paginate(30);
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Site::class);
 
-    // ---------------------------------------------------------------------------------------------------------------------------------------------
-    // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-    $filter_query = Site::with('author', 'company')
-    ->moderatorLimit($answer)
-    ->companiesLimit($answer)
-    ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    ->authors($answer)
-    ->systemItem($answer) // Фильтр по системным записям
-    ->get();
+        // -------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -------------------------------------------------------------------------------------------
 
-    $filter['status'] = null;
+        $sites = Site::with('author', 'company')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->booklistFilter($request)
+        // ->filter($request, 'position_id')
+        // ->filter($request, 'department_id')
+        ->orderBy('moderation', 'desc')
+        ->paginate(30);
 
-    // $filter = addFilter($filter, $filter_query, $request, 'Выберите должность:', 'position', 'position_id');
-    // $filter = addFilter($filter, $filter_query, $request, 'Выберите отдел:', 'department', 'department_id');
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-    // Добавляем данные по спискам (Требуется на каждом контроллере)
-    $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        $filter_query = Site::with('author', 'company')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->get();
 
-    // ---------------------------------------------------------------------------------------------------------------------------------------------
+        $filter['status'] = null;
 
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите должность:', 'position', 'position_id');
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите отдел:', 'department', 'department_id');
 
-    // Инфо о странице
-    $page_info = pageInfo($this->entity_name);
+        // Добавляем данные по спискам (Требуется на каждом контроллере)
+        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
-    return view('sites.index', compact('sites', 'page_info', 'filter'));
-  }
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
 
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
 
-  public function create()
-  {
-
-    // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), Site::class);
-
-    // Список меню для сайта
-    $answer_menus = operator_right('menus', false, 'index');
-
-    $menus = Menu::whereNavigation_id(1) // Только для сайтов, разделы сайта
-    ->get();
-    // moderatorLimit($answer_menus)
-    // ->companiesLimit($answer_menus)
-    // ->filials($answer_menus) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-    // ->authors($answer_menus)
-    // ->systemItem($answer_menus) // Фильтр по системным записям
-    
-
-    // dd($menus);
-
-    $site = new Site;
-
-    // Инфо о странице
-    $page_info = pageInfo($this->entity_name);
-
-    return view('sites.create', compact('site', 'menus', 'page_info'));  
-  }
-
-
-  public function store(SiteRequest $request)
-  {
-    // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), Site::class);
-
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-    // Получаем данные для авторизованного пользователя
-    $user = $request->user();
-
-    // Смотрим компанию пользователя
-    $company_id = $user->company_id;
-    if($company_id == null) {
-      abort(403, 'Необходимо авторизоваться под компанией');
+        return view('sites.index', compact('sites', 'page_info', 'filter'));
     }
 
-    // Скрываем бога
-    $user_id = hideGod($user);
+    public function create(Request $request)
+    {
 
-    // Наполняем сущность данными
-    $site = new Site;
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Site::class);
 
-    // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-    if($answer['automoderate'] == false){
-      $site->moderation = 1;
+        // Список меню для сайта
+        $answer_menus = operator_right('menus', false, 'index');
+
+        $menus = Menu::whereNavigation_id(1) // Только для сайтов, разделы сайта
+        ->moderatorLimit($answer_menus)
+        ->companiesLimit($answer_menus)
+        ->authors($answer_menus)
+        ->systemItem($answer_menus) // Фильтр по системным записям
+        ->template($answer_menus) // Выводим шаблоны в список
+        ->get();
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        $departments = Department::where(['filial_status' => 1, 'company_id' => $user->company_id])->get();
+        // dd($departments);
+
+        $site = new Site;
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('sites.create', compact('site', 'menus', 'page_info', 'departments'));  
     }
 
-    // Cистемная запись
-    $site->system_item = $request->system_item;
 
-    $site->name = $request->name;
-    $site->domain = $request->domain;
-    $site_alias = explode('.', $request->domain);
-    $site->alias = $site_alias[0];
-    $site->api_token = str_random(60);
-    $site->company_id = $company_id;
-    $site->author_id = $user_id;
-    $site->save();
+    public function store(SiteRequest $request)
+    {
 
-    if ($site) {
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Site::class);
 
-      $sections = [];
-      // Смотрим список пришедших разделов
-      foreach ($request->menus as $menu) {
-        $sections[] = [
-          'site_id' => $site->id,
-          'menu_id' => $menu,
-          'author_id' => $user->id,
-        ];
-      };
-      $site->menus()->attach($sections);
-      return Redirect('/sites');
-    } else {
-      abort(403, 'Ошибка записи сайта');
-    }
-  }
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-  public function show(Request $request)
-  {
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
 
-  }
+        // Скрываем бога
+        $user_id = hideGod($user);
 
-  public function edit($alias)
-  {
+        // Наполняем сущность данными
+        $site = new Site;
 
-    // ГЛАВНЫЙ ЗАПРОС:
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-    $site = Site::moderatorLimit($answer)->whereAlias($alias)->first();
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        if($answer['automoderate'] == false){
+            $site->moderation = 1;
+        }
 
-    // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), $site);
+        // Cистемная запись
+        $site->system_item = $request->system_item;
 
-    // Список меню для сайта
-    $answer_menu = operator_right('menus', false, 'index');
-    $menus = Menu::whereNavigation_id(1) // Только для сайтов, разделы сайта
-    ->get();
+        $site->name = $request->name;
+        $site->domain = $request->domain;
 
-    // Инфо о странице
-    $page_info = pageInfo($this->entity_name);
+        // Пока отсекаем по точке
+        $site_alias = explode('.', $request->domain);
+        $site->alias = $site_alias[0];
 
-    // dd($site);
+        $site->api_token = str_random(60);
+        $site->company_id = $user->company_id;
+        $site->author_id = $user_id;
+        $site->save();
 
-    return view('sites.edit', compact('site', 'menus', 'page_info'));
-  }
+        if ($site) {
 
-  public function update(SiteRequest $request, $id)
-  {
-    // Получаем данные для авторизованного пользователя
-    $user = $request->user();
+            // Пришем список пришедших разделов сайта
+            $site->menus()->attach($request->menus);
 
-    // Смотрим компанию пользователя
-    $company_id = $user->company_id;
-    if($company_id == null) {
-      abort(403, 'Необходимо авторизоваться под компанией');
+            // Пришем список пришедших филиалов сайта
+            $site->departments()->attach($request->departments);
+
+            return Redirect('/sites');
+        } else {
+            abort(403, 'Ошибка записи сайта');
+        }
     }
 
-    // Скрываем бога
-    $user_id = hideGod($user);
-
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-    // ГЛАВНЫЙ ЗАПРОС:
-    $site = Site::moderatorLimit($answer)->findOrFail($id);
-
-    // Подключение политики
-    $this->authorize('update', $site);
-
-    $site->name = $request->name;
-    $site_alias = explode('.', $request->domain);
-    $site->domain = $request->domain;
-    $site->alias = $site_alias[0];
-    $site->editor_id = $user_id;
-    $site->save();
-
-    if ($site) {
-      // Когда сайт добавился, смотрим пришедние для него разделы
-      if (isset($request->menus)) {
-        $sections = [];
-        // Формируем список пришедших разделов
-        foreach ($request->menus as $menu) {
-          $sections[] = [
-            'site_id' => $site->id,
-            'menu_id' => $menu,
-            'author_id' => $user_id,
-          ];
-        };
-
-        // Синхронизируем с существующими
-        $site->menus()->sync($sections);
-      } else {
-        // Если удалили последний раздел для сайта и пришел пустой массив
-        $delete = MenuSite::whereSite_id($id)->delete();
-      }
-      return Redirect('/sites');
-    } else {
-      abort(403, 'Ошибка обновления сайта');
+    public function show(Request $request)
+    {
+        //
     }
-  }
 
-  public function destroy(Request $request, $id)
-  {
-    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+    public function edit(Request $request, $alias)
+    {
 
-    // ГЛАВНЫЙ ЗАПРОС:
-    $site = Site::moderatorLimit($answer)->findOrFail($id);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-    // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), $site);
+        $answer_menus = operator_right('menus', false, 'index');
 
-    if ($site) {
-      // Получаем пользователя
-      $user = $request->user();
-      // Скрываем бога
-      $user_id = hideGod($user);
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
 
-      $site->editor_id = $user_id;
-      $site->save();
-      // Удаляем сайт с обновлением
-      $site = Site::destroy($id);
-      if ($site) {
-        return Redirect('/sites');
-      } else {
-        abort(403, 'Ошибка при удалении сайта');
-      }
-    } else {
-      abort(403, 'Сайт не найден');
+        // ГЛАВНЫЙ ЗАПРОС:
+        $site = Site::with(['departments', 'company' => function ($query) use ($user) {
+            $query->with(['departments' => function ($query) {
+                $query->where('filial_status', 1);
+            }])->where('id', $user->company_id)->first();
+        }])->moderatorLimit($answer)->whereAlias($alias)->first();
+        // dd($site);
+
+        $departments = $site->company->departments;
+        // dd($departments);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $site);
+
+        // Список меню для сайта
+        $menus = Menu::whereNavigation_id(1) // Только для сайтов, разделы сайта
+        ->moderatorLimit($answer_menus)
+        ->companiesLimit($answer_menus)
+        ->authors($answer_menus)
+        ->systemItem($answer_menus) // Фильтр по системным записям
+        ->template($answer_menus) // Выводим шаблоны в список
+        ->get();
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('sites.edit', compact('site', 'menus', 'page_info', 'departments'));
     }
-  }
 
-  // Сортировка
+    public function update(SiteRequest $request, $id)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $site = Site::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize('update', $site);
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        $site->name = $request->name;
+
+        if ($site->domain != $request->domain) {
+            $site_alias = explode('.', $request->domain);
+            $site->alias = $site_alias[0];
+        }
+        
+        $site->domain = $request->domain;
+        $site->editor_id = $user_id;
+        $site->save();
+
+        if ($site) {
+
+            // Смотрим пришедние для сайта разделы и синхронизируем с существующими
+            if (isset($request->menus)) {
+
+                // Синхронизируем с существующими
+                $site->menus()->sync($request->menus);
+            } else {
+
+                // Если удалили последний раздел для сайта и пришел пустой массив
+                $site->menus()->detach();
+            }
+
+            // Смотрим пришедние для сайта филиалы и синхронизируем с существующими
+            if (isset($request->menus)) {
+
+                // Синхронизируем с существующими
+                $site->departments()->sync($request->departments);
+            } else {
+
+                // Если удалили последний филиал для сайта и пришел пустой массив
+                $site->departments()->detach();
+            }
+
+            return Redirect('/sites');
+        } else {
+            abort(403, 'Ошибка обновления сайта');
+        }
+    }
+
+    public function destroy(Request $request, $id)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $site = Site::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $site);
+
+        if ($site) {
+
+            // Получаем пользователя
+            $user = $request->user();
+
+            // Скрываем бога
+            $user_id = hideGod($user);
+
+            $site->editor_id = $user_id;
+            $site->save();
+
+            // Удаляем сайт с обновлением
+            $site = Site::destroy($id);
+
+            if ($site) {
+                return Redirect('/sites');
+            } else {
+                abort(403, 'Ошибка при удалении сайта');
+            }
+        } else {
+            abort(403, 'Сайт не найден');
+        }
+    }
+
+    // Сортировка
     public function sites_sort(Request $request)
     {
-      $result = '';
-      $i = 1;
-      foreach ($request->sites as $item) {
+        $result = '';
+        $i = 1;
+        foreach ($request->sites as $item) {
 
-        $sites = Site::findOrFail($item);
-        $sites->sort = $i;
-        $sites->save();
-        $i++;
-      }
+            $sites = Site::findOrFail($item);
+            $sites->sort = $i;
+            $sites->save();
+            $i++;
+        }
+    }
+
+    public function sections($alias)
+    { 
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $answer_sites = operator_right($this->entity_name, $this->entity_dependence, 'update');
+
+        $answer_menus = operator_right('menus', false, 'update');
+
+        $site = Site::with(['menus', 'author'])
+        ->moderatorLimit($answer_sites)
+        ->companiesLimit($answer_sites)
+        ->authors($answer_sites)
+        ->systemItem($answer_sites) // Фильтр по системным записям
+        ->template($answer_sites) // Выводим шаблоны в список
+        ->whereAlias($alias)
+        ->first();
+
+        // Подключение политики
+        $this->authorize('view', $site);
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('sites.sections', compact('site', 'page_info'));
+    }
+
+    // Проверка наличия в базе
+    public function site_check(Request $request)
+    {
+
+        // Проверка навигации по сайту в нашей базе данных
+        $site = Site::whereDomain($request->domain)->first();
+
+        // Если такой сайт существует
+        if ($site) {
+            $result = [
+                'error_status' => 1,
+            ];
+
+        // Если нет
+        } else {
+            $result = [
+                'error_status' => 0,
+            ];
+        }
+        return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
 
-  public function sections($alias)
-  { 
-    // ГЛАВНЫЙ ЗАПРОС:
-    $answer = operator_right($this->entity_name, $this->entity_dependence, 'update');
+    // ------------------------------------ API -----------------------------------------------------
+    // Получаем сайт по api
+    public function api_index (Request $request)
+    {
+        $site = Site::where('api_token', $request->token)->first();
 
-    $site = Site::with('menus', 'author')->moderatorLimit($answer)->whereAlias($alias)->first();
-
-      // Подключение политики
-    $this->authorize('view', $site);
-
-      // Инфо о странице
-    $page_info = pageInfo($this->entity_name);
-
-    return view('sites.sections', compact('site', 'page_info'));
-  }
-
-  // Проверка наличия в базе
-  public function site_check(Request $request)
-  {
-    // Проверка навигации по сайту в нашей базе данных
-    $site = Site::whereDomain($request->domain)->first();
-
-    // Если такой сайт существует
-    if ($site) {
-      $result = [
-        'error_status' => 1,
-      ];
-    // Если нет
-    } else {
-      $result = [
-        'error_status' => 0,
-      ];
+        if ($site) {
+            // return Cache::remember('site', 1, function() use ($domain) {
+            return Site::with(['departments.location.city',
+                'company.location.city',
+                'company.schedules.worktimes',
+                'company.products_categories' => function ($query) {
+                    $query->with(['products' => function ($query) {
+                        $query->with('manufacturer.location.country', 'unit', 'articles', 'photo', 'album.photos')->whereDisplay(1);
+                    }])->whereDisplay(1);
+                }, 'pages' => function ($query) {
+                    $query->whereDisplay(1);
+                }, 'navigations.menus.page',
+                'navigations.navigations_category',
+                'navigations' => function ($query) {
+                    $query->whereDisplay(1);
+                }, 'navigations.menus' => function ($query) {
+                    $query->whereDisplay(1)->orderBy('sort', 'asc');
+                }])->whereDomain($request->domain)
+            ->orderBy('sort', 'asc')
+            ->first();
+            // });
+        } else {
+            return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
+        }
     }
-    return json_encode($result, JSON_UNESCAPED_UNICODE);
-  }
-
-
-  // ------------------------------------ API -----------------------------------------------------
-  // Получаем сайт по api
-  public function api_index (Request $request)
-  {
-    $site = Site::where('api_token', $request->token)->first();
-    if ($site) {
-      // return Cache::remember('site', 1, function() use ($domain) {
-      return Site::with(['company.filials.location.city', 'company.location.city', 'company.schedules.worktimes', 'pages', 'navigations.menus.page', 'navigations.navigations_category', 'navigations' => function ($query) {
-        $query->whereDisplay(1);
-      },'navigations.menus' => function ($query) {
-        $query->whereDisplay(1)->orderBy('sort', 'asc');
-      }])->whereDomain($request->domain)->orderBy('sort', 'asc')->first();
-      // });
-    } else {
-      return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
-    }
-  }
 }

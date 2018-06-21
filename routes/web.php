@@ -37,7 +37,7 @@ Route::post('/users_sort', 'UserController@users_sort')->middleware('auth');
 // ---------------------------------- Категории альбомов -------------------------------------------
 // Текущая добавленная/удаленная категория альбомов
 Route::any('/albums_categories', 'AlbumsCategoryController@index')->middleware('auth');
-// ОСновные методы
+// Основные методы
 Route::resource('/albums_categories', 'AlbumsCategoryController')->middleware('auth');
 // Проверка на существование категории альбомов
 Route::post('/albums_category_check', 'AlbumsCategoryController@albums_category_check')->middleware('auth');
@@ -73,26 +73,65 @@ Route::prefix('/albums/{alias}')->group(function () {
   // Загрузка фоток через ajax через dropzone.js
 });
 
+Route::post('/ajax_get_photo', 'PhotoController@get_photo')->middleware('auth');
+Route::patch('/ajax_update_photo/{id}', 'PhotoController@update_photo')->middleware('auth');
+
 // Сортировка фоток
 Route::post('/photos_sort', 'PhotoController@photos_sort')->middleware('auth');
 
 
 // ------------------------------------- Продукция -------------------------------------------------
+// Основные методы
 Route::resource('/products', 'ProductController')->middleware('auth');
 // Добавление фото для продукции
 Route::get('/products/{id}/photos', 'ProductController@product_photos')->middleware('auth');
 // Запись фото
 Route::any('/product/add_photo', 'ProductController@add_photo')->middleware('auth');
+Route::post('/product/photos', 'ProductController@photos')->middleware('auth');
+
+// Проверка на существование продукции
+Route::post('/product_check', 'ProductController@product_check')->middleware('auth');
 
 // Сортировка продукции
 Route::post('/products_sort', 'ProductController@products_sort')->middleware('auth');
+
 // Route for export/download tabledata to .xls or .xlsx
 Route::get('/products_download/{type}', 'ProductController@products_download')->middleware('auth');
 // Route for import excel data to database.
 Route::post('/products_import', 'ProductController@products_import');
 
+// ------------------------------------- Метрики -------------------------------------------------
+// Основные методы
+Route::resource('/metrics', 'MetricController')->middleware('auth');
+
+// Пишем метрику через ajax
+Route::post('/ajax_store_metric', 'MetricController@ajax_store')->middleware('auth');
+// Добавляем / удаляем связь сущности с метрикой
+Route::match(['get', 'post'], '/ajax_add_relation_metric', 'MetricController@ajax_add_relation')->middleware('auth');
+Route::post('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relation')->middleware('auth');
+
+
+Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->middleware('auth');
+
+
+// ------------------------------------- Состав -------------------------------------------------
+Route::post('/ajax_add_relation_composition', 'CompositionController@ajax_add_relation')->middleware('auth');
+Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_delete_relation')->middleware('auth');
+
+
+
+
+
+Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
+Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
+
+// Основые методы
+Route::resource('/articles', 'ArticleController')->middleware('auth');
+
 
 // ------------------------------------ Категории продукции --------------------------------------
+// Метод для обновления фотографии, ajax не поддерживает PATCH
+Route::post('/products_categories/{id}/update', 'ProductsCategoryController@ajax_update');
 // Текущая добавленная/удаленная категория продукции
 Route::any('/products_categories', 'ProductsCategoryController@index')->middleware('auth');
 // Основые методы
@@ -103,6 +142,15 @@ Route::post('/products_category_check', 'ProductsCategoryController@products_cat
 Route::post('/products_categories_list', 'ProductsCategoryController@products_categories_list')->middleware('auth');
 // Сортировка категорий продукции
 Route::post('/products_categories_sort', 'ProductsCategoryController@products_categories_sort')->middleware('auth');
+
+// --------------------------------------- Свойства -----------------------------------------------
+Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware('auth');
+
+// Route::any('/get_properties_with_metrics', 'PropertyController@get_properties_with_metrics')->middleware('auth');
+
+// --------------------------------------- Метрики -----------------------------------------------
+Route::resource('/metrics', 'MetricController')->middleware('auth');
+
 
 // --------------------------------------- Компании -----------------------------------------------
 Route::resource('/companies', 'CompanyController')->middleware('auth');
@@ -253,6 +301,7 @@ Route::prefix('/sites/{alias}')->group(function () {
 	// Проверка на существование навигации
   Route::post('/navigation_check', 'NavigationController@navigation_check')->middleware('auth');
 
+// Route::any('/menus/create', 'MenuController@create')->middleware('auth');
   // -------------------------------------------Меню ---------------------------------------------
   Route::resource('/menus', 'MenuController')->middleware('auth');
 
@@ -270,7 +319,7 @@ Route::post('/menus_sort', 'MenuController@menus_sort')->middleware('auth');
 // Сортировка новостей
 Route::post('/news_sort', 'NewsController@news_sort')->middleware('auth');
 
-// Route::any('/modal', 'MenuController@modal')->middleware('auth');
+
 
 // ------------------------------------- Отображение сессии -----------------------------------------
 Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');
