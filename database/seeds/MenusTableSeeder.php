@@ -503,7 +503,7 @@ class MenusTableSeeder extends Seeder
         'company_id' => 1,
         'system_item' => null,
         'author_id' => 1,
-        'display' => 1,
+        'display' => null,
         'sort' => 4,
     ],
     [

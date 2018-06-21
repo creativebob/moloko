@@ -352,7 +352,7 @@ class PagesTableSeeder extends Seeder
         'company_id' => 1,
         'system_item' => null,
         'author_id' => 7,
-        'display' => 1,
+        'display' => null,
       ],
       [
         'name' => 'Шлагбаумы',
