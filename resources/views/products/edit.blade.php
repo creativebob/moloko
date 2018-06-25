@@ -188,11 +188,11 @@
       <div class="tabs-panel" id="compositions">
         <div class="grid-x grid-padding-x">
           <div class="small-12 medium-8 cell">
-            <table>
+            <table class="composition-table">
               <thead>
                 <tr> 
-                  <th>Название</th>
-                  <th>еще поле</th>
+                  <th>Состоит из сырья:</th>
+                  <th></th>
                   <th></th>
                 </tr>
               </thead>

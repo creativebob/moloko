@@ -413,6 +413,76 @@ input[type=checkbox], input[type=radio] {
   background-position: -128px -512px;
 }
 
+.icon-display-hide {
+  background-position: -64px -992px;
+  opacity: 0.2;
+}
+
+.icon-display-hide:hover {
+  background-position: -64px -992px;
+  opacity: 1;
+}
+
+.icon-display-show {
+  background-position: -32px -992px;
+  opacity: 0;
+  transition: opacity ease 0.3s;
+}
+
+tr:hover .icon-display-show {
+  background-position: -32px -992px;
+  opacity: 0.2;
+}
+
+tr:hover .icon-display-show:hover {
+  background-position: -32px -992px;
+  opacity: 1;
+}
+
+.icon-system-lock {
+  background-position: -32px -960px;
+  opacity: 0.2;
+}
+
+.icon-system-lock:hover {
+  background-position: -32px -960px;
+  opacity: 1;
+}
+
+.icon-system-unlock {
+  background-position: -64px -960px;
+  opacity: 0.2;
+}
+
+.icon-system-unlock:hover {
+  background-position: -64px -960px;
+  opacity: 1;
+}
+
+.icon-system-template {
+  background-position: -32px -928px;
+  opacity: 0.2;
+  margin-left: 1rem;
+}
+
+.icon-system-template:hover {
+  background-position: -32px -928px;
+  opacity: 1;
+  margin-left: 1rem;
+}
+
+.icon-system-programm {
+  background-position: -64px -896px;
+  opacity: 0.2;
+  margin-left: 1rem;
+}
+
+.icon-system-programm:hover {
+  background-position: -64px -896px;
+  opacity: 1;
+  margin-left: 1rem;
+}
+
 .icon-add {
   background-position: 0px -384px;
   opacity: 0.2;
@@ -2158,4 +2228,24 @@ input[type=checkbox], input[type=radio] {
   margin: 0;
   outline: none;
   cursor: pointer;
+}
+
+.composition-table {
+  border-collapse: separate;
+  border-spacing: 0px 5px !important;
+}
+
+.composition-table tr th {
+  background-color: transparent !important;
+  border-bottom: 2px solid #000;
+}
+
+.composition-table tr td {
+  background-color: #fff;
+  border-top: 2px solid #fff;
+}
+
+.composition-table tr:first-child td {
+  background-color: #fff;
+  border-top: 5px solid #ccc;
 }

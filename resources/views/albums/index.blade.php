@@ -32,9 +32,8 @@
           <th class="td-company-id">Компания</th>
           <th class="td-author">Автор</th>
           @can ('publisher', App\Album::class)
-          <th class="td-display">Отображение</th>
+          <th class="td-display"></th>
           @endcan
-
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -72,11 +71,30 @@
           <td class="td-author">@if(isset($album->author->first_name)) {{ $album->author->first_name . ' ' . $album->author->second_name }} @endif</td>
           @can ('publisher', $album)
           <td class="td-display">
+
+
             @if ($album['display'] == 1)
-            <span class="system-item">Отображается на сайте</span>
+            <a class="icon-display-show sprite" data-open="item-display"></a>
             @else
-            <span class="no-moderation">Не отображается на сайте</span>
+            <a class="icon-display-hide sprite" data-open="item-display"></a>
             @endif
+
+            @if ($album['system_item'] == 1)
+              @if($album['company_id'] != null)
+                <a class="icon-system-lock sprite"></a>
+              @else               
+                <a class="icon-system-programm sprite"></a>
+              @endif
+            @endif
+
+            @if ($album['system_item'] == null)
+              @if($album['company_id'] != null)
+
+              @else               
+                <a class="icon-system-template sprite"></a>
+              @endif
+            @endif
+
           </td>
           @endcan
           <td class="td-delete">

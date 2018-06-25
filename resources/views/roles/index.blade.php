@@ -30,6 +30,7 @@
           <th class="td-count">Количество правил</th>
           <th class="td-description">Описание</th>
           <th class="td-author">Автор</th>
+          <th class="td-display"></th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -69,6 +70,35 @@
           <td class="td-count"><span class="allow">{{ $counts_directive_array[$role->id]['count_allow'] }}</span> / <span class="deny"> {{ $counts_directive_array[$role->id]['count_deny'] }}</span></td>
           <td class="td-description">{{ $role->description }} </td>
           <td class="td-author">@if(!empty($role->author->first_name)) {{ $role->author->first_name . ' ' . $role->author->second_name }} @endif</td>
+
+          <td class="td-display">
+
+
+            @if ($role['display'] == 1)
+            <a class="icon-display-show sprite" data-open="item-display"></a>
+            @else
+            <a class="icon-display-hide sprite" data-open="item-display"></a>
+            @endif
+
+            @if ($role['system_item'] == 1)
+              @if($role['company_id'] != null)
+                <a class="icon-system-lock sprite"></a>
+              @else               
+                <a class="icon-system-programm sprite"></a>
+              @endif
+            @endif
+
+            @if ($role['system_item'] == null)
+              @if($role['company_id'] != null)
+
+              @else               
+                <a class="icon-system-template sprite"></a>
+              @endif
+            @endif
+
+          </td>
+
+
           <td class="td-delete">
             @if (($role->system_item !== 1) && ($role->company_id !== null))
               @can('delete', $role)
