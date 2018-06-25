@@ -181,9 +181,7 @@
           </div>
         </div>
       </div>
-
-
-
+      
       <!-- Состав -->
       <div class="tabs-panel" id="compositions">
         <div class="grid-x grid-padding-x">
