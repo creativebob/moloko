@@ -112,6 +112,52 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   src: url(/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot);
   src: url(/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot?#iefix) format('embedded-opentype'), url(/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff) format('woff'), url(/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf) format('truetype');
 }
+.compact {
+  margin-bottom: 0.25rem !important;
+}
+
+.w4 {
+  width: 4rem;
+}
+
+.w8 {
+  width: 80px;
+}
+
+.w10 {
+  width: 100px;
+}
+
+.w12 {
+  width: 120px;
+}
+
+.wrap-input-table {
+  position: relative;
+}
+.wrap-input-table input {
+  z-index: 906;
+}
+.wrap-input-table .text-to-placeholder {
+  display: inline-block;
+  position: absolute;
+  margin-left: 55px;
+  margin-top: -26px;
+  font-size: 0.9rem;
+  color: #000;
+  opacity: 0.4;
+  transition: opacity ease 0.3s;
+  z-index: 900;
+  width: 60px !important;
+  text-align: right;
+}
+.wrap-input-table input:focus + .text-to-placeholder {
+  opacity: 1;
+}
+.wrap-input-table .padding-to-placeholder {
+  padding-right: 60px !important;
+}
+
 html {
   font-family: "SegoeUISemiLight";
   font-size: 16px;
@@ -737,19 +783,20 @@ tr:hover .icon-display-show:hover {
 }
 
 .inputs label {
-  font-size: 0.875rem;
+  font-family: "calibri";
+  font-size: 0.8rem;
   color: #666666;
   position: relative;
 }
 .inputs input:not([type="submit"]), .inputs textarea {
   margin-top: 0.25rem;
-  margin-bottom: 0.85rem;
-  height: 26px;
-  color: #666666;
+  margin-bottom: 1rem;
+  height: 28px;
+  color: #000000;
   background-color: #ffffff;
-  font-size: 0.8rem;
-  padding: 5px 12px;
-  border: 1px solid #999999;
+  font-size: 0.85rem;
+  padding: 5px 10px;
+  border: 1px solid #bbbbbb;
   box-shadow: none;
 }
 .inputs input[type=file] {
@@ -764,12 +811,13 @@ tr:hover .icon-display-show:hover {
 }
 .inputs select {
   margin-top: 0.25rem;
-  margin-bottom: 0.7rem;
-  height: 26px;
+  margin-bottom: 1rem;
+  height: 28px;
   background-color: #ffffff;
-  font-size: 0.8rem;
-  border: 1px solid #999999;
-  padding: 4px 4px 3px 16px;
+  font-size: 0.85rem;
+  border: 1px solid #bbbbbb;
+  padding: 4px 4px 3px 10px;
+  color: #000000;
   background-position: 100% center;
 }
 .inputs input:focus, .inputs select:focus, .inputs textarea:focus {
@@ -782,7 +830,7 @@ tr:hover .icon-display-show:hover {
   color: #666666;
   background-color: #f5f5f5;
   font-size: 0.8rem;
-  padding: 5px 12px;
+  padding: 5px 10px 5px 10px;
   border: 1px solid #ccc;
   box-shadow: none;
 }
@@ -1412,7 +1460,7 @@ tr:hover .icon-display-show:hover {
   font-family: "PFDinDisplayPro-Light";
   font-size: 0.875rem;
   font-weight: normal;
-  color: #666666;
+  color: #000000;
   padding: 0;
   margin-bottom: 1rem;
 }
@@ -1497,7 +1545,7 @@ tr:hover .icon-display-show:hover {
   margin-bottom: 1rem;
 }
 .tabs-wrap .radiobutton {
-  color: #666666;
+  color: #000000;
 }
 .tabs-wrap .radiobutton label {
   margin-left: -8px;
@@ -2239,17 +2287,21 @@ tr:hover .icon-display-show:hover {
   border-spacing: 0px 5px !important;
 }
 
+table.composition-table thead {
+  background-color: transparent;
+}
+
 .composition-table tr th {
   background-color: transparent !important;
-  border-bottom: 2px solid #000;
+  border-bottom: 3px solid #000;
 }
 
 .composition-table tr td {
   background-color: #fff;
   border-top: 2px solid #fff;
+  padding: 0.1rem 0.625rem 0.1rem;
 }
 
 .composition-table tr:first-child td {
   background-color: #fff;
-  border-top: 5px solid #ccc;
 }

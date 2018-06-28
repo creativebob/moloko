@@ -16,6 +16,10 @@
  $medium: 1024px;
 // $fence-sm: $small $medium;
 
+
+
+
+
 // ----------------------- Подключаем шрифты ----------------------------------------
 
 // PFDinDisplayPro
@@ -100,6 +104,8 @@ $SUISL: "SegoeUISemiLight";
 $SUIR: "SegoeUIRegular";
 $SUISB: "SegoeUISemiBold";
 
+$calibri: "calibri";
+
 // ----------------------------------- Переменные --------------------------------------
 
 // Цвета
@@ -153,8 +159,10 @@ $breadcrumbs-border-color: #dcdcdc;
 $content-bg-color: #eeeeee;
 
 // Инпуты
-$input-color: #666666;
-$input-border-color: #999999;
+$input-color: #000000;
+$label-color: #666666;
+
+$input-border-color: #bbbbbb;
 $input-focus-border-color: #333333;
 
   // Список (accordion menu)
@@ -189,6 +197,62 @@ $footer-num-color: #ffffff;
 // Меняем умолчания фонды
 // Выпадающий список
 $dropdown-width: 14rem;
+
+// Для полей которые вставляем в узкие элементы (уменьшаем их поля)
+.compact {
+  margin-bottom: 0.25rem !important;
+}
+
+.w4{
+  width: 4rem;
+}
+
+.w8{
+  width: 80px;
+}
+
+.w10{
+  width: 100px;
+}
+
+.w12{
+  width: 120px;
+}
+
+
+
+.wrap-input-table{
+  position: relative;
+
+  input {
+    z-index: 906;
+  }
+
+  .text-to-placeholder {
+    display: inline-block;
+    position: absolute;
+    margin-left: 55px;
+    margin-top: -26px;
+    font-size: 0.9rem;
+    color: #000;
+    opacity: 0.4;
+    transition: opacity ease 0.3s;
+    z-index: 900;
+
+    width: 60px !important;
+    text-align: right;
+  }
+
+  input:focus + .text-to-placeholder {
+    opacity: 1;
+  }
+
+  .padding-to-placeholder {
+    padding-right: 60px !important;
+  }
+
+
+}
 
 // Общие настройки шрифта
 html {
@@ -951,19 +1015,20 @@ tr:hover .icon-display-show:hover {
 .inputs {
 
   label {
-    font-size: 0.875rem;
-    color: $input-color;
+    font-family: $calibri;
+    font-size: 0.8rem;
+    color: $label-color;
     position: relative;
   }
 
   input:not([type="submit"]), textarea {
     margin-top: 0.25rem;
-    margin-bottom: 0.85rem;
-    height: 26px;
+    margin-bottom: 1rem;
+    height: 28px;
     color: $input-color;
     background-color: $white;
-    font-size: 0.8rem;
-    padding: 5px 12px;
+    font-size: 0.85rem;
+    padding: 5px 10px;
     border: 1px solid $input-border-color;
     box-shadow: none;
   }
@@ -980,12 +1045,13 @@ tr:hover .icon-display-show:hover {
     }
     select {
       margin-top: 0.25rem;
-      margin-bottom: 0.7rem;
-      height: 26px;
+      margin-bottom: 1rem;
+      height: 28px;
       background-color: $white;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       border: 1px solid $input-border-color;
-      padding: 4px 4px 3px 16px;
+      padding: 4px 4px 3px 10px;
+      color: $input-color;
 
       // Меняем положение стрелочки фонды
       background-position: 100% center;
@@ -1003,7 +1069,7 @@ tr:hover .icon-display-show:hover {
       color: #666666;
       background-color: #f5f5f5;
       font-size: 0.8rem;
-      padding: 5px 12px;
+      padding: 5px 10px 5px 10px;
       border: 1px solid #ccc;
       box-shadow: none;
     }
@@ -2966,18 +3032,21 @@ tr:hover .icon-display-show:hover {
   border-spacing: 0px 5px !important;
 }
 
+table.composition-table thead {
+  background-color: transparent;
+}
 
 .composition-table tr th{
   background-color: transparent !important;
-  border-bottom: 2px solid #000;
+  border-bottom: 3px solid #000;
 }
 
 .composition-table tr td{
   background-color: #fff;
   border-top: 2px solid #fff;
+  padding: 0.1rem 0.625rem 0.1rem;
 }
 
 .composition-table tr:first-child td{
   background-color: #fff;
-  border-top: 5px solid #ccc;
 }
