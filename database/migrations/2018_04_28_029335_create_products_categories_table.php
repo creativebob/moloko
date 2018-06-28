@@ -30,8 +30,12 @@ class CreateProductsCategoriesTable extends Migration
             $table->integer('parent_id')->nullable()->unsigned()->comment('Id категории товара');
             $table->foreign('parent_id')->references('id')->on('products_categories');
 
-            $table->integer('products_type_id')->nullable()->unsigned()->comment('ID типа продукции');
-            $table->foreign('products_type_id')->references('id')->on('products_types');
+            $table->enum('type', ['services', 'goods', 'raws'])->comment('Тип товара (Услуга/товар/сырье)');
+
+            $table->integer('set_status')->nullable()->unsigned()->comment('Статус набора (Один/набор)');
+
+            $table->integer('products_mode_id')->nullable()->unsigned()->comment('Вид продукции');
+            $table->foreign('products_mode_id')->references('id')->on('products_modes');
 
             $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
 

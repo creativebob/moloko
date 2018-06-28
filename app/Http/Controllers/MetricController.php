@@ -90,7 +90,7 @@ class MetricController extends Controller
 
             // echo $metric;
             // Переадресовываем на получение метрики
-            return redirect()->action('MetricController@ajax_add_relation', ['id' => $metric->id, 'entity_id' => $request->product_id, 'entity' => $request->entity]);
+            return redirect()->action('MetricController@ajax_add_relation', ['id' => $metric->id, 'entity_id' => $request->entity_id, 'entity' => $request->entity]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -218,8 +218,8 @@ class MetricController extends Controller
 
         // Смотрим с какой сущностью нужно связать метрику
         switch ($request->entity) {
-            case 'products':
-            $metric->products()->toggle([$request->entity_id => ['entity' => $request->entity]]);
+            case 'products_categories':
+            $metric->products_categories()->toggle([$request->entity_id => ['entity' => $request->entity]]);
             break;
         }
 
@@ -234,8 +234,8 @@ class MetricController extends Controller
 
         // Смотрим от какой сущности нужно отвязать метрику
         switch ($request->entity) {
-            case 'products':
-            $res = $metric->products()->toggle([$request->entity_id => ['entity' => $request->entity]]);
+            case 'products_categories':
+            $res = $metric->products_categories()->toggle([$request->entity_id => ['entity' => $request->entity]]);
             break;
         }
 
@@ -256,7 +256,7 @@ class MetricController extends Controller
      public function add_metric_value(Request $request)
     {   
         // Переадресовываем на получение метрики
-        return view('products.value', ['value' => $request->value]);
+        return view('products_categories.value', ['value' => $request->value]);
     }
 
 }

@@ -27,9 +27,9 @@ class Metric extends Model
     use ModeratorLimitTraitScopes;
 
     // Получаем проодукцию
-    public function products()
+    public function products_categories()
     {
-        return $this->belongsToMany('App\Product', 'metric_entity', 'metric_id', 'entity_id')->where('entity', 'products');
+        return $this->belongsToMany('App\ProductsCategory', 'metric_entity', 'metric_id', 'entity_id')->where('entity', 'products_categories');
     }
 
      // Получаем единицу измерения

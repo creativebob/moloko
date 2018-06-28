@@ -119,9 +119,6 @@ Route::post('/ajax_add_relation_composition', 'CompositionController@ajax_add_re
 Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_delete_relation')->middleware('auth');
 
 
-
-
-
 Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
 
@@ -130,6 +127,9 @@ Route::resource('/articles', 'ArticleController')->middleware('auth');
 
 
 // ------------------------------------ Категории продукции --------------------------------------
+Route::get('/products_categories/{alias}', 'ProductsCategoryController@types')->middleware('auth');
+Route::get('/products_categories/{alias}/create', 'ProductsCategoryController@create')->middleware('auth');
+Route::get('/products_categories/{alias}/{id}/edit', 'ProductsCategoryController@edit')->middleware('auth');
 // Метод для обновления фотографии, ajax не поддерживает PATCH
 Route::post('/products_categories/{id}/update', 'ProductsCategoryController@ajax_update');
 // Текущая добавленная/удаленная категория продукции
@@ -142,6 +142,8 @@ Route::post('/products_category_check', 'ProductsCategoryController@products_cat
 Route::post('/products_categories_list', 'ProductsCategoryController@products_categories_list')->middleware('auth');
 // Сортировка категорий продукции
 Route::post('/products_categories_sort', 'ProductsCategoryController@products_categories_sort')->middleware('auth');
+
+
 
 // --------------------------------------- Свойства -----------------------------------------------
 Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware('auth');

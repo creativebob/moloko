@@ -43,6 +43,9 @@
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
 <script type="text/javascript">
+
+  var alias = '{{ $alias }}';
+
   $(function() {
   // Функция появления окна с ошибкой
   function showError (msg) {
@@ -120,7 +123,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/products_categories/create',
+      url: '/products_categories/' + alias + '/create',
       type: "GET",
       success: function(html){
         $('#modal').html(html);
@@ -196,7 +199,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/products_categories/create',
+      url: '/products_categories/' + alias + '/create',
       type: "GET",
       data: {category_id: category, parent_id: parent},
       success: function(html){
@@ -263,52 +266,52 @@
   // });
 
   // ------------------------ Кнопка добавления ---------------------------------------
-  $(document).on('click', '.submit-add', function(event) {
-    event.preventDefault();
+  // $(document).on('click', '.submit-add', function(event) {
+  //   event.preventDefault();
 
-    var formName = $(this).closest('form').attr('id');
+  //   var formName = $(this).closest('form').attr('id');
 
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/products_categories',
-      type: "POST",
-      data: new FormData($("#" + formName)[0]),
-      contentType: false,
-      processData: false,
-      success:function(html) {
-        $('#content').html(html);
-        Foundation.reInit($('#content'));
-      }
-    });
-  });
+  //   // Ajax запрос
+  //   $.ajax({
+  //     headers: {
+  //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //     },
+  //     url: '/products_categories',
+  //     type: "POST",
+  //     data: new FormData($("#" + formName)[0]),
+  //     contentType: false,
+  //     processData: false,
+  //     success:function(html) {
+  //       $('#content').html(html);
+  //       Foundation.reInit($('#content'));
+  //     }
+  //   });
+  // });
 
   // ------------------------ Кнопка обновления ---------------------------------------
-  $(document).on('click', '.submit-edit', function(event) {
-    event.preventDefault();
+  // $(document).on('click', '.submit-edit', function(event) {
+  //   event.preventDefault();
 
-    var id = $('#products-category-id').val();
+  //   var id = $('#products-category-id').val();
 
-    var formName = $(this).closest('form').attr('id');
+  //   var formName = $(this).closest('form').attr('id');
     
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/products_categories/' + id + '/update',
-      type: "POST",
-      data: new FormData($("#" + formName)[0]),
-      contentType: false,
-      processData: false,
-      success:function(html) {
-        $('#content').html(html);
-        Foundation.reInit($('#content'));
-      }
-    });
-  });
+  //   // Ajax запрос
+  //   $.ajax({
+  //     headers: {
+  //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //     },
+  //     url: '/products_categories/' + id + '/update',
+  //     type: "POST",
+  //     data: new FormData($("#" + formName)[0]),
+  //     contentType: false,
+  //     processData: false,
+  //     success:function(html) {
+  //       $('#content').html(html);
+  //       Foundation.reInit($('#content'));
+  //     }
+  //   });
+  // });
 
   // ---------------------------------- Закрытие модалки -----------------------------------
   $(document).on('click', '.icon-close-modal, .submit-add, .submit-edit', function() {

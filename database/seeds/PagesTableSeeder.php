@@ -519,6 +519,40 @@ class PagesTableSeeder extends Seeder
         'author_id' => 15,
         'display' => 1,
       ],
+
+      [
+        'name' => 'Категории товаров',
+        'site_id' => 1,
+        'title' => 'Категории товаров',
+        'description' => 'Категории товаров',
+        'alias' => 'products_categories/goods',
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => null,
+      ],
+      [
+        'name' => 'Категории услуг',
+        'site_id' => 1,
+        'title' => 'Категории услуг',
+        'description' => 'Категории услуг',
+        'alias' => 'products_categories/services',
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => null,
+      ],
+      [
+        'name' => 'Категории сырья',
+        'site_id' => 1,
+        'title' => 'Категории сырья',
+        'description' => 'Категории сырья',
+        'alias' => 'products_categories/raws',
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => null,
+      ],
       
     ]);
 }

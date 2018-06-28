@@ -44,25 +44,52 @@ class ProductsCategory extends Model
     'category_status',
     ];
 
-    // Получаем компании.
+
+    // public function products()
+    // {
+    //     return $this->hasMany('App\Product');
+    // }
+
+    public function products_mode()
+    {
+        return $this->belongsTo('App\ProductsMode');
+    }
+
+    // Получаем компанию
     public function company()
     {
         return $this->belongsTo('App\Company');
     }
 
-    public function products()
+    // Получаем автора
+    public function author()
     {
-        return $this->hasMany('App\Product');
+        return $this->belongsTo('App\User', 'author_id');
     }
 
-    public function products_type()
-    {
-        return $this->belongsTo('App\ProductsType');
-    }
 
     public function photo()
     {
         return $this->belongsTo('App\Photo');
+    }
+
+
+    // Получаем метрики
+    public function metrics()
+    {
+        return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'products_categories');
+    }
+
+    // Получаем состав
+    public function compositions()
+    {
+        return $this->belongsToMany('App\Product', 'compositions', 'product_id', 'composition_id');
+    }
+
+    // Получаем артикулы
+    public function articles()
+    {
+        return $this->hasMany('App\Article');
     }
 
 }
