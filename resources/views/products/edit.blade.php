@@ -278,7 +278,6 @@
                 </div>
             </div>
 
-
             <!-- Ценообразование -->
             <div class="tabs-panel" id="price-rules">
                 <div class="grid-x grid-padding-x">
