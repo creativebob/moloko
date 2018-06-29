@@ -100,6 +100,9 @@ Route::get('/products_download/{type}', 'ProductController@products_download')->
 // Route for import excel data to database.
 Route::post('/products_import', 'ProductController@products_import');
 
+// --------------------------------------- Помещения -----------------------------------------------
+Route::resource('places', 'PlaceController')->middleware('auth');
+
 // ------------------------------------- Метрики -------------------------------------------------
 // Основные методы
 Route::resource('/metrics', 'MetricController')->middleware('auth');

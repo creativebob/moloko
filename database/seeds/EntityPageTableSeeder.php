@@ -116,6 +116,10 @@ class EntityPageTableSeeder extends Seeder
                 'entity_id' => 29, 
                 'page_id' => 41, 
             ],
+            [
+                'entity_id' => 30, 
+                'page_id' => 42, 
+            ],
 
         ]);
     }
