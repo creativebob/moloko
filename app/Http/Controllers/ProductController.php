@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\User;
 use App\ProductsCategory;
-use App\ProductsType;
+use App\ProductsMode;
 use App\UnitsCategory;
 use App\Company;
 use App\Photo;
@@ -110,6 +110,67 @@ class ProductController extends Controller
         return view('products.index', compact('products', 'page_info', 'product', 'filter'));
     }
 
+    public function types(Request $request, $type)
+    {
+
+        // Подключение политики
+        $this->authorize('index', Product::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        // dd($answer);
+
+        // --------------------------------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // --------------------------------------------------------------------------------------------------------------------------------------
+
+        $products = Product::with('author', 'company', 'products_category', 'unit', 'country')
+        ->whereHas('products_category', function ($query) use ($type) {
+            $query->where('type', $type);
+        })
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->booklistFilter($request)
+        ->filter($request, 'author_id')
+        ->filter($request, 'company_id')
+        ->filter($request, 'products_category_id')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->paginate(30);
+
+        // dd($products);
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+        // $filter_query = Product::with('author', 'company', 'products_category')
+        // ->moderatorLimit($answer)
+        // ->companiesLimit($answer)
+        // ->authors($answer)
+        // ->systemItem($answer) // Фильтр по системным записям
+        // ->get();
+        // // dd($filter_query);
+
+        // $filter['status'] = null;
+
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id');
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'products_category', 'products_category_id');
+
+        // // Добавляем данные по спискам (Требуется на каждом контроллере)
+        // $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // dd($type);
+        // Инфо о странице
+        $page_info = pageInfo('products/'.$type);
+
+        return view('products.index', compact('products', 'page_info', 'product', 'filter'));
+    }
+
     public function create(Request $request)
     {
 
@@ -126,7 +187,7 @@ class ProductController extends Controller
         ->companiesLimit($answer_products_categories)
         ->authors($answer_products_categories)
         ->systemItem($answer_products_categories) // Фильтр по системным записям
-        ->whereHas('products_type', function ($query) {
+        ->whereHas('products_mode', function ($query) {
             $query->whereType('goods');
         })
         ->orderBy('sort', 'asc')
@@ -225,7 +286,7 @@ class ProductController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-        $product = Product::with(['unit', 'manufacturer.location.country', 'products_category', 'metrics.unit', 'metrics.values', 'compositions', 'articles', 'album.photos'])->withCount('metrics', 'compositions')->moderatorLimit($answer_products)->findOrFail($id);
+        $product = Product::with(['unit', 'manufacturer.location.country', 'products_category.metrics.unit', 'compositions', 'album.photos'])->withCount('metrics', 'compositions')->moderatorLimit($answer_products)->findOrFail($id);
 
         // if ($product->metrics_count > 0) {
         //     dd($product->compositions_count);
@@ -288,23 +349,7 @@ class ProductController extends Controller
             ->authors($answer_metrics)
             ->systemItem($answer_metrics); // Фильтр по системным записям 
         }])
-        // , 'products' 
-        // => function ($query) use ($id) {
-        //     $query->findOrFail($id);
-
-        // ->whereHas('metrics', function ($query) use ($user) {
-        //     $query->where('company_id', $user->company_id);
-        // })
-        // ->whereHas('metrics.products', function ($query) use ($id) {
-        //     $query->findOrFail($id);
-        // })
         ->withCount('metrics')
-        // ->whereHas('metrics', function ($query) use ($answer_metrics) {
-        //     $query->moderatorLimit($answer_metrics)
-        //     ->companiesLimit($answer_metrics)
-        //     ->authors($answer_metrics)
-        //     ->systemItem($answer_metrics); // Фильтр по системным записям
-        // })
         ->orderBy('sort', 'asc')
         ->get();
 
@@ -334,7 +379,7 @@ class ProductController extends Controller
         ->companiesLimit($answer_products_categories)
         ->authors($answer_products_categories)
         ->systemItem($answer_products_categories) // Фильтр по системным записям
-        ->whereHas('products_type', function ($query) {
+        ->whereHas('products_mode', function ($query) {
             $query->whereType('goods');
         })
         ->orderBy('sort', 'asc')
@@ -353,123 +398,35 @@ class ProductController extends Controller
         $photo = New Photo;
 
         // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer_products = operator_right('products', false, 'index');
+        $answer_products_modes = operator_right('products_modes', false, 'index');
 
-        // $products = Product::with('products_category.products_type')
-        // ->moderatorLimit($answer_products)
-        // ->companiesLimit($answer_products)
-        // ->authors($answer_products)
-        // ->systemItem($answer_products) // Фильтр по системным записям
-        // ->whereHas('products_category', function ($query) {
-        //     $query->whereHas('products_type', function ($query) {
-        //         $query->whereType('goods');
-        //     });
-        // })
-        // ->orderBy('sort', 'asc')
-        // ->get();
-
-        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_products_types = operator_right('products_types', false, 'index');
-
-        $products_types = ProductsType::with(['products_categories' => function ($query) use ($answer_products_categories) {
-            $query->with('products')
-            ->withCount('products')
+        $products_modes = ProductsMode::with(['products_categories' => function ($query) use ($answer_products_categories) {
+            $query->with('articles')
+            ->withCount('articles')
             ->moderatorLimit($answer_products_categories)
             ->companiesLimit($answer_products_categories)
             ->authors($answer_products_categories)
             ->systemItem($answer_products_categories) // Фильтр по системным записям
             ->template($answer_products_categories);
         }])
-        ->moderatorLimit($answer_products_types)
-        ->companiesLimit($answer_products_types)
-        ->authors($answer_products_types)
-        ->systemItem($answer_products_types) // Фильтр по системным записям
-        ->template($answer_products_types)
+        ->moderatorLimit($answer_products_modes)
+        ->companiesLimit($answer_products_modes)
+        ->authors($answer_products_modes)
+        ->systemItem($answer_products_modes) // Фильтр по системным записям
+        ->template($answer_products_modes)
         ->whereType('goods')
         ->orderBy('sort', 'asc')
         ->get();
 
-        $grouped_products_types = $products_types->groupBy('alias');
+        $grouped_products_modes = $products_modes->groupBy('alias');
 
-
-        // foreach ($grouped_products_types as $grouped_products_type) {
-        //     dd($grouped_products_type[0]->products_categories);
-        // }
-
-        // dd($grouped_products_types);
-
-
-
-        // $grouped->toArray();
-
-        // dd($grouped['material'][0]->products_categories[0]->products);
-
-
-        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer_products_categories = operator_right('products_categories', false, 'index');
-
-        // $products_categories = ProductsCategory::with(['products' => function ($query) use ($answer_products) {
-        //     $query->moderatorLimit($answer_products)
-        //     ->companiesLimit($answer_products)
-        //     ->authors($answer_products)
-        //     ->systemItem($answer_products) // Фильтр по системным записям
-        //     ->template($answer_products);
-        // }])
-        // ->moderatorLimit($answer_products_categories)
-        // ->companiesLimit($answer_products_categories)
-        // ->authors($answer_products_categories)
-        // ->systemItem($answer_products_categories) // Фильтр по системным записям
-        // ->template($answer_products_categories)
-        // ->whereHas('products_type', function ($query) {
-        //     $query->whereType('goods');
-        // })
-        // ->orderBy('sort', 'asc')
-        // ->groupBy();
-
-        // // dd($products_categories);
-
-        // $materials = $products_types->where('alias', 'material');
-        // dd($materials);
-
-        // $materials = Product::moderatorLimit($answer_products)
-        // ->companiesLimit($answer_products)
-        // ->authors($answer_products)
-        // ->systemItem($answer_products) // Фильтр по системным записям
-        // ->whereHas('products_category', function ($query) {
-        //     $query->whereHas('products_type', function ($query) {
-        //         $query->whereAlias('material');
-        //     });
-        // })
-        // ->orderBy('sort', 'asc')
-        // ->get();
-
-        // $semiproducts = Product::with('products_category.products_type')->moderatorLimit($answer_products)
-        // ->companiesLimit($answer_products)
-        // ->authors($answer_products)
-        // ->systemItem($answer_products) // Фильтр по системным записям
-        // ->whereHas('products_category', function ($query) {
-        //     $query->whereHas('products_type', function ($query) {
-        //         $query->whereType('goods');
-        //     });
-        // })
-        // ->orderBy('sort', 'asc')
-        // ->get();
-
-        // $materials = $products->whereHas('products_category', function ($query) {
-        //     $query->whereHas('products_type', function ($query) {
-        //         $query->whereAlias('material');
-        //     });
-        // })->get();
-
-        // dd($materials);
-        // dd($product_metrics);
         // Отдаем Ajax
         if ($request->ajax()) {
             // echo json_encode($properties);
             return view('products.properties-list', ['properties' => $properties, 'product_metrics' => $product_metrics, 'properties_list' => $properties_list]);
         }
 
-        return view('products.edit', compact('product', 'page_info', 'products_categories_list', 'units_categories_list', 'manufacturers_list', 'photo', 'properties', 'properties_list', 'product_metrics', 'product_compositions', 'grouped_products_types', 'units_list'));
+        return view('products.edit', compact('product', 'page_info', 'products_categories_list', 'units_categories_list', 'manufacturers_list', 'photo', 'product_metrics', 'product_compositions', 'grouped_products_modes', 'units_list'));
     }
 
     public function update(ProductRequest $request, $id)

@@ -37,7 +37,7 @@ $drop = 1;
     </div>
     <div>
       @if($products_category['edit'] == 1)
-      <div class="icon-list-edit sprite" data-open="first-edit"></div>
+      <a class="icon-list-edit sprite" href="/products_categories/{{ $products_category['id'] }}/edit"></a>
       @endif
     </div>
     <div class="del">

@@ -52,7 +52,7 @@ class ProductsCategoryPolicy
         return $result;
     }
 
-    public function moderator(User $user, Sector $model)
+    public function moderator(User $user, ProductsCategory $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
         return $result;

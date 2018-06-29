@@ -42,7 +42,11 @@
 @include('includes.scripts.inputs-mask')
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
+
 <script type="text/javascript">
+
+  var type = '{{ $type }}';
+
   $(function() {
   // Функция появления окна с ошибкой
   function showError (msg) {
@@ -120,9 +124,10 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/products_categories/create',
+      url: '/products_categories/' + type + '/create',
       type: "GET",
       success: function(html){
+        // alert(html);
         $('#modal').html(html);
         $('#first-add').foundation();
         $('#first-add').foundation('open');
@@ -145,45 +150,7 @@
     }, time); 
   });
 
-  // ----------- Изменение -------------
-
-  // Открываем модалку
-  $(document).on('click', '[data-open="first-edit"]', function() {
-    // Получаем данные о разделе
-    var id = $(this).closest('.item').attr('id').split('-')[1];
-
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/products_categories/" + id + "/edit",
-      type: "GET",
-      success: function(html) {
-        // alert(html);
-        $('#modal').html(html);
-        $('#first-edit').foundation();
-        $('#first-edit').foundation('open');
-      }
-    });
-  });
-
-  // Проверка существования
-  $(document).on('keyup', '#form-first-edit .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-first-edit .name-field').val();
-    // Указываем название кнопки
-    var submit = '.submit-edit';
-    // Значение поля с разрешением
-    var db = '#form-first-edit .first-item';
-    // Выполняем запрос
-    clearTimeout(timerId);   
-    timerId = setTimeout(function() {
-      productsCategoryCheck (name, submit, db)
-    }, time); 
-  });
-
-  // ------------------------------- Сектор --------------------------------------------
+  // ------------------------------- Вложенные категории --------------------------------------------
 
   // ----------- Добавление -------------
   // Модалка
@@ -196,7 +163,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/products_categories/create',
+      url: '/products_categories/' + type + '/create',
       type: "GET",
       data: {category_id: category, parent_id: parent},
       success: function(html){
@@ -208,110 +175,9 @@
     }); 
   });
 
-  // Проверка существования
-  // $(document).on('keyup', '#form-medium-add .name-field', function() {
-  //   // Получаем фрагмент текста
-  //   var name = $('#form-medium-add .name-field').val();
-  //   // Указываем название кнопки
-  //   var submit = '.submit-add';
-  //   // Значение поля с разрешением
-  //   var db = '#form-medium-add .medium-item';
-  //   // Выполняем запрос
-  //   clearTimeout(timerId);   
-  //   timerId = setTimeout(function() {
-  //     productsCategoryCheck (name, submit, db)
-  //   }, time); 
-  // });
-
-  // ----------- Изменение -------------
-  // Открываем модалку
-  $(document).on('click', '[data-open="medium-edit"]', function() {
-
-    // Получаем данные о разделе
-    var id = $(this).closest('.item').attr('id').split('-')[1];
-    var category = $(this).closest('.first-item').attr('id').split('-')[1];
-
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/products_categories/" + id + "/edit",
-      type: "GET",
-      data: {category_id: category},
-      success: function(html) {
-        $('#modal').html(html);
-        $('#medium-edit').foundation();
-        $('#medium-edit').foundation('open');
-      }
-    });
-  });
-
-  // Проверка существования
-  // $(document).on('keyup', '#form-medium-edit .name-field', function() {
-  //   // Получаем фрагмент текста
-  //   var name = $('#form-medium-edit .name-field').val();
-  //   // Указываем название кнопки
-  //   var submit = '.submit-edit';
-  //   // Значение поля с разрешением
-  //   var db = '#form-medium-edit .medium-item';
-  //   // Выполняем запрос
-  //   clearTimeout(timerId);   
-  //   timerId = setTimeout(function() {
-  //     productsCategoryCheck (name, submit, db)
-  //   }, time); 
-  // });
-
-  // ------------------------ Кнопка добавления ---------------------------------------
-  $(document).on('click', '.submit-add', function(event) {
-    event.preventDefault();
-
-    var formName = $(this).closest('form').attr('id');
-
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/products_categories',
-      type: "POST",
-      data: new FormData($("#" + formName)[0]),
-      contentType: false,
-      processData: false,
-      success:function(html) {
-        $('#content').html(html);
-        Foundation.reInit($('#content'));
-      }
-    });
-  });
-
-  // ------------------------ Кнопка обновления ---------------------------------------
-  $(document).on('click', '.submit-edit', function(event) {
-    event.preventDefault();
-
-    var id = $('#products-category-id').val();
-
-    var formName = $(this).closest('form').attr('id');
-    
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/products_categories/' + id + '/update',
-      type: "POST",
-      data: new FormData($("#" + formName)[0]),
-      contentType: false,
-      processData: false,
-      success:function(html) {
-        $('#content').html(html);
-        Foundation.reInit($('#content'));
-      }
-    });
-  });
 
   // ---------------------------------- Закрытие модалки -----------------------------------
-  $(document).on('click', '.icon-close-modal, .submit-add, .submit-edit', function() {
+  $(document).on('click', '.icon-close-modal, .submit-edit', function() {
     $(this).closest('.reveal-overlay').remove();
   });
 });

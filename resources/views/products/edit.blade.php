@@ -50,7 +50,7 @@
             </div>
             @endif
 
-            {{ Form::model($product, ['route' => ['products.update', $product->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'product-form']) }}
+            {{ Form::model($product, ['url' => ['products/'.$product->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'product-form']) }}
             {{ method_field('PATCH') }}
 
             <!-- Общая информация -->
@@ -175,6 +175,11 @@
                                 </div>
                             </div>
                         </fieldset>
+                        <fieldset class="fieldset-access">
+                            <legend>Метрики</legend>
+
+                            @each('products.metric-input', $product->products_category->metrics, 'metric')
+                        </fieldset>
                         <div id="article-inputs"></div>
                         <div class="small-12 cell tabs-margin-top text-center">
                             <div class="item-error" id="article-error">Такой артикул уже существует!<br>Измените значения!</div>
@@ -236,13 +241,13 @@
                         {{-- Состав --}}
                         <div class="small-12 medium-12 cell">
                             <ul class="menu right">
-                                @foreach ($grouped_products_types as $grouped_products_type)
+                                @foreach ($grouped_products_modes as $grouped_products_mode)
                                     <li>
-                                        <a class="button" data-toggle="{{ $grouped_products_type[0]->alias }}-dropdown">{{ $grouped_products_type[0]->name }}</a>
-                                        <div class="dropdown-pane" id="{{ $grouped_products_type[0]->alias }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
+                                        <a class="button" data-toggle="{{ $grouped_products_mode[0]->alias }}-dropdown">{{ $grouped_products_mode[0]->name }}</a>
+                                        <div class="dropdown-pane" id="{{ $grouped_products_mode[0]->alias }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
 
                                             <ul class="checker" id="products-categories-list">
-                                                @foreach ($grouped_products_types[$grouped_products_type[0]->alias][0]->products_categories as $products_category)
+                                                @foreach ($grouped_products_modes[$grouped_products_mode[0]->alias][0]->products_categories as $products_category)
                                                 @if ($products_category->products_count > 0)
                                                 @include('products.products-category', $products_category)
                                                 @endif
@@ -289,12 +294,12 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Себестоимость
-                                        {{ Form::number('cost', $product->articles[0]->cost) }}
+                                        {{ Form::number('cost', null) }}
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Цена
-                                        {{ Form::number('price', $product->articles[0]->price) }}
+                                        {{ Form::number('price', null) }}
                                     </label>
                                 </div>
                             </div>

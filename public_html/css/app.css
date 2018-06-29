@@ -447,6 +447,10 @@ input[type=checkbox], input[type=radio] {
   background-position: -96px -800px;
 }
 
+a.icon-list-edit {
+  display: inline-block;
+}
+
 .icon-list-edit:hover {
   background-position: -128px -800px;
 }

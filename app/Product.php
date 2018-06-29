@@ -109,7 +109,7 @@ class Product extends Model
     // Получаем метрики
     public function metrics()
     {
-        return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'products');
+        return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'products_categories');
     }
 
     // Получаем состав
@@ -119,8 +119,8 @@ class Product extends Model
     }
 
     // Получаем артикулы
-    public function articles()
-    {
-        return $this->hasMany('App\Article');
-    }
+    // public function articles()
+    // {
+    //     return $this->hasMany('App\Article');
+    // }
 }

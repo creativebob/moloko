@@ -14,7 +14,7 @@ class ArticlesTableSeeder extends Seeder
     	DB::table('articles')->insert([
     		[
     			'name' => 'Откатные ворота',
-    			'product_id' => 1,
+
     			'cost' => 30000,
     			'price' => 35000,
     			'company_id' => 1, 
@@ -22,7 +22,7 @@ class ArticlesTableSeeder extends Seeder
     		],
     		[
     			'name' => 'Секционные ворота',
-    			'product_id' => 2,
+
     			'cost' => 24000,
     			'price' => null,
     			'company_id' => 1, 
@@ -30,7 +30,7 @@ class ArticlesTableSeeder extends Seeder
     		],
     		[
     			'name' => 'Забор',
-    			'product_id' => 3,
+
     			'cost' => null,
     			'price' => null,
     			'company_id' => 1, 
@@ -38,7 +38,7 @@ class ArticlesTableSeeder extends Seeder
     		],
     		[
     			'name' => 'Труба',
-    			'product_id' => 4,
+
     			'cost' => 1000,
     			'price' => null,
     			'company_id' => 1, 
@@ -46,7 +46,7 @@ class ArticlesTableSeeder extends Seeder
     		],
     		[
     			'name' => 'Прутик',
-    			'product_id' => 5,
+
     			'cost' => 100,
     			'price' => null,
     			'company_id' => 1, 
@@ -54,7 +54,7 @@ class ArticlesTableSeeder extends Seeder
     		],
     		[
     			'name' => 'Полуфабрик',
-    			'product_id' => 6,
+
     			'cost' => 5000,
     			'price' => 7000,
     			'company_id' => 1, 
@@ -64,7 +64,7 @@ class ArticlesTableSeeder extends Seeder
             // Шторка
             [
                 'name' => 'Блекаут ВЕНЗЕЛЬ розовый',
-                'product_id' => 7,
+
                 'cost' => null,
                 'price' => 700,
                 'company_id' => 4, 
@@ -72,7 +72,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Блекаут ВЕНЗЕЛЬ терракотовый',
-                'product_id' => 8,
+
                 'cost' => null,
                 'price' => 700,
                 'company_id' => 4, 
@@ -80,7 +80,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Блекаут БАБОЧКИ',
-                'product_id' => 9,
+
                 'cost' => null,
                 'price' => 480,
                 'company_id' => 4, 
@@ -88,7 +88,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Блекаут ЛИСТЬЯ',
-                'product_id' => 10,
+
                 'cost' => null,
                 'price' => 590,
                 'company_id' => 4, 
@@ -96,7 +96,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Блекаут INTERIO',
-                'product_id' => 11,
+
                 'cost' => null,
                 'price' => 670,
                 'company_id' => 4, 
@@ -104,7 +104,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Блекаут Люстра',
-                'product_id' => 12,
+
                 'cost' => null,
                 'price' => 750,
                 'company_id' => 4, 
@@ -112,7 +112,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард Дебют Цветы',
-                'product_id' => 13,
+ 
                 'cost' => null,
                 'price' => 250,
                 'company_id' => 4, 
@@ -120,7 +120,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард BYRA LUX',
-                'product_id' => 14,
+      
                 'cost' => null,
                 'price' => 753,
                 'company_id' => 4, 
@@ -128,7 +128,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард POINT',
-                'product_id' => 15,
+  
                 'cost' => null,
                 'price' => 900,
                 'company_id' => 4, 
@@ -136,7 +136,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард VALENTINA',
-                'product_id' => 16,
+
                 'cost' => null,
                 'price' => 1000,
                 'company_id' => 4, 
@@ -144,7 +144,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард Диана',
-                'product_id' => 17,
+ 
                 'cost' => null,
                 'price' => 320,
                 'company_id' => 4, 
@@ -152,7 +152,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард Зебра',
-                'product_id' => 18,
+        
                 'cost' => null,
                 'price' => 390,
                 'company_id' => 4, 
@@ -160,7 +160,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард Кудри',
-                'product_id' => 19,
+    
                 'cost' => null,
                 'price' => 560,
                 'company_id' => 4, 
@@ -168,7 +168,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард ZARA',
-                'product_id' => 20,
+         
                 'cost' => null,
                 'price' => 6690,
                 'company_id' => 4, 
@@ -176,7 +176,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард MOSTAR',
-                'product_id' => 21,
+         
                 'cost' => null,
                 'price' => 340,
                 'company_id' => 4, 
@@ -184,7 +184,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард Полоска',
-                'product_id' => 22,
+      
                 'cost' => null,
                 'price' => 460,
                 'company_id' => 4, 
@@ -192,7 +192,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард  Шенил',
-                'product_id' => 23,
+         
                 'cost' => null,
                 'price' => 590,
                 'company_id' => 4, 
@@ -200,7 +200,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард Анита',
-                'product_id' => 24,
+          
                 'cost' => null,
                 'price' => 460,
                 'company_id' => 4, 
@@ -208,7 +208,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард 7700',
-                'product_id' => 25,
+         
                 'cost' => null,
                 'price' => 740,
                 'company_id' => 4, 
@@ -216,7 +216,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Жаккард Классика',
-                'product_id' => 26,
+          
                 'cost' => null,
                 'price' => 330,
                 'company_id' => 4, 
@@ -224,7 +224,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Тафта Вензель',
-                'product_id' => 27,
+       
                 'cost' => null,
                 'price' => 600,
                 'company_id' => 4, 
@@ -232,7 +232,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Тафта Кружева',
-                'product_id' => 28,
+    
                 'cost' => null,
                 'price' => 600,
                 'company_id' => 4, 
@@ -240,7 +240,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Канвас однотонный',
-                'product_id' => 29,
+
                 'cost' => null,
                 'price' => 750,
                 'company_id' => 4, 
@@ -248,7 +248,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Бархат ADELYA',
-                'product_id' => 30,
+       
                 'cost' => null,
                 'price' => 830,
                 'company_id' => 4, 
@@ -256,7 +256,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Софт двусторонний',
-                'product_id' => 31,
+    
                 'cost' => null,
                 'price' => 770,
                 'company_id' => 4, 
@@ -264,7 +264,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Лен Interio',
-                'product_id' => 32,
+     
                 'cost' => null,
                 'price' => 680,
                 'company_id' => 4, 
@@ -272,7 +272,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Лен МИСКЕТ',
-                'product_id' => 33,
+  
                 'cost' => null,
                 'price' => 680,
                 'company_id' => 4, 
@@ -280,7 +280,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Лен РОМБ',
-                'product_id' => 34,
+     
                 'cost' => null,
                 'price' => 520,
                 'company_id' => 4, 
@@ -288,7 +288,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Лен ЦВЕТЫ',
-                'product_id' => 35,
+     
                 'cost' => null,
                 'price' => 560,
                 'company_id' => 4, 
@@ -296,7 +296,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Лен SANPA',
-                'product_id' => 36,
+  
                 'cost' => null,
                 'price' => 560,
                 'company_id' => 4, 
@@ -304,7 +304,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Лен с термопечатью',
-                'product_id' => 37,
+       
                 'cost' => null,
                 'price' => 490,
                 'company_id' => 4, 
@@ -312,7 +312,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Лен ЛИСТ Ламелла',
-                'product_id' => 38,
+    
                 'cost' => null,
                 'price' => 530,
                 'company_id' => 4, 
@@ -320,7 +320,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Лен ПОЛОСКА',
-                'product_id' => 39,
+       
                 'cost' => null,
                 'price' => 580,
                 'company_id' => 4, 
@@ -328,7 +328,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Блекаут однотонный Бирюза',
-                'product_id' => 40,
+        
                 'cost' => null,
                 'price' => 620,
                 'company_id' => 4, 
@@ -336,7 +336,7 @@ class ArticlesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Блекаут однотонный Болотный',
-                'product_id' => 41,
+      
                 'cost' => null,
                 'price' => 620,
                 'company_id' => 4, 
