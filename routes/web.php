@@ -81,8 +81,14 @@ Route::post('/photos_sort', 'PhotoController@photos_sort')->middleware('auth');
 
 
 // ------------------------------------- Продукция -------------------------------------------------
+Route::get('/products/{type}/create', 'ProductController@create')->middleware('auth');
+Route::get('/products/{id}/edit', 'ProductController@edit')->middleware('auth');
+Route::patch('/products/{id}', 'ProductController@update')->middleware('auth');
+
+Route::get('/products/{type}/{status?}', 'ProductController@types')->middleware('auth');
+Route::post('/products/', 'ProductController@store')->middleware('auth');
 // Основные методы
-Route::resource('/products', 'ProductController')->middleware('auth');
+// Route::resource('/products', 'ProductController')->middleware('auth');
 // Добавление фото для продукции
 Route::get('/products/{id}/photos', 'ProductController@product_photos')->middleware('auth');
 // Запись фото
@@ -127,15 +133,21 @@ Route::resource('/articles', 'ArticleController')->middleware('auth');
 
 
 // ------------------------------------ Категории продукции --------------------------------------
-Route::get('/products_categories/{alias}', 'ProductsCategoryController@types')->middleware('auth');
-Route::get('/products_categories/{alias}/create', 'ProductsCategoryController@create')->middleware('auth');
-Route::get('/products_categories/{alias}/{id}/edit', 'ProductsCategoryController@edit')->middleware('auth');
+Route::get('/products_categories/{type}/create', 'ProductsCategoryController@create')->middleware('auth');
+Route::get('/products_categories/{id}/edit', 'ProductsCategoryController@edit')->middleware('auth');
+Route::patch('/products_categories/{id}', 'ProductsCategoryController@update')->middleware('auth');
+
+Route::get('/products_categories/{type}/{status?}', 'ProductsCategoryController@types')->middleware('auth');
+Route::post('/products_categories/', 'ProductsCategoryController@store')->middleware('auth');
+
+
+
 // Метод для обновления фотографии, ajax не поддерживает PATCH
 Route::post('/products_categories/{id}/update', 'ProductsCategoryController@ajax_update');
 // Текущая добавленная/удаленная категория продукции
-Route::any('/products_categories', 'ProductsCategoryController@index')->middleware('auth');
+// Route::any('/products_categories', 'ProductsCategoryController@index')->middleware('auth');
 // Основые методы
-Route::resource('/products_categories', 'ProductsCategoryController')->middleware('auth');
+// Route::resource('/products_categories', 'ProductsCategoryController')->middleware('auth');
 // Проверка на существование категории продукции
 Route::post('/products_category_check', 'ProductsCategoryController@products_category_check')->middleware('auth');
 // Select категорий продукции

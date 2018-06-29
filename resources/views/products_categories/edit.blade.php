@@ -29,9 +29,7 @@
       <li class="tabs-title"><a data-tabs-target="properties" href="#properties">Свойства</a></li>
 
       {{-- Исключаем состав из сырья --}}
-      @if($products_category->products_mode->alias != 'materials')
       <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
-      @endif
 
       <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
     </ul>
@@ -121,121 +119,123 @@
          </div>
 
          {{-- Кнопка --}}
-          <div class="small-12 cell tabs-button tabs-margin-top">
-            {{ Form::submit('Редактировать продукцию', ['class'=>'button']) }}
-          </div>
-       </div>
-     </div>
-
-     {{ Form::close() }}
-
-     <!-- Свойства -->
-      <div class="tabs-panel" id="properties">
-        <div class="grid-x grid-padding-x">
-          <div class="small-12 medium-8 cell">
-            <table>
-              <thead>
-                <tr> 
-                  <th>Название</th>
-                  <th>Минимум</th>
-                  <th>Максимум</th>
-                  <th>Подтверждение</th>
-                  <th>Отрицание</th>
-                  <th>Цвет</th>
-                  <th>Список</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="metrics-table">
-                {{-- Таблица метрик товара --}}
-                @if (!empty($products_category->metrics))
-                @each('products_categories.metric', $products_category->metrics, 'metric')
-                @endif
-              </tbody>
-            </table>
-          </div>
-          <div class="small-12 medium-4 cell">
-            {{ Form::open(['url' => '/add_products_category_metric', 'id' => 'properties-form', 'data-abide', 'novalidate']) }}
-            <fieldset>
-              <legend><a data-toggle="properties-dropdown">Добавить метрику</a></legend>
-
-              <div class="grid-x grid-padding-x" id="property-form"></div>
-
-            </fieldset>
-            {{ Form::hidden('entity_id', $products_category->id) }}
-            {{ Form::close() }}
-            {{-- Список свойств с метриками --}}
-            <div class="dropdown-pane" id="properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
-              @include('products_categories.properties-list', $properties)
-            </div>
-
-          </div>
+         <div class="small-12 cell tabs-button tabs-margin-top">
+          {{ Form::submit('Редактировать продукцию', ['class'=>'button']) }}
         </div>
       </div>
+    </div>
 
-      {{-- Исключаем состав из сырья --}}
-      @if($products_category->products_mode->alias != 'materials')
+    {{ Form::close() }}
 
-      <!-- Состав -->
-      <div class="tabs-panel" id="compositions">
-        <div class="grid-x grid-padding-x">
-          <div class="small-12 medium-8 cell">
-            <table class="composition-table">
-              <thead>
-                <tr> 
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="composition-table">
-                {{-- Таблица метрик товара --}}
-                @if (!empty($products_category->compositions))
-                @each('products_categories.composition', $products_category->compositions, 'composition')
-                @endif
-              </tbody>
-            </table>
-          </div>
+    <!-- Свойства -->
+    <div class="tabs-panel" id="properties">
+      <div class="grid-x grid-padding-x">
+        <div class="small-12 medium-8 cell">
+          <table>
+            <thead>
+              <tr> 
+                <th>Название</th>
+                <th>Минимум</th>
+                <th>Максимум</th>
+                <th>Подтверждение</th>
+                <th>Отрицание</th>
+                <th>Цвет</th>
+                <th>Список</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="metrics-table">
+              {{-- Таблица метрик товара --}}
+              @if (!empty($products_category->metrics))
+              @each('products_categories.metric', $products_category->metrics, 'metric')
+              @endif
+            </tbody>
+          </table>
+        </div>
+        <div class="small-12 medium-4 cell">
+          {{ Form::open(['url' => '/add_products_category_metric', 'id' => 'properties-form', 'data-abide', 'novalidate']) }}
+          <fieldset>
+            <legend><a data-toggle="properties-dropdown">Добавить метрику</a></legend>
 
-          <div class="small-12 medium-4 cell">
+            <div class="grid-x grid-padding-x" id="property-form"></div>
 
-            <ul class="menu vertical">
-
-              @foreach ($products_modes as $products_mode)
-              <li>
-                <a class="button" data-toggle="{{ $products_mode->alias }}-dropdown">{{ $products_mode->name }}</a>
-                <div class="dropdown-pane" id="{{ $products_mode->alias }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
-
-                  <ul class="checker" id="products-categories-list">
-                  
-                  </ul>
-
-                </div>
-              </li>
-              @endforeach
-            </ul>
-
+          </fieldset>
+          {{ Form::hidden('entity_id', $products_category->id) }}
+          {{ Form::close() }}
+          {{-- Список свойств с метриками --}}
+          <div class="dropdown-pane" id="properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
+            @include('products_categories.properties-list', $properties)
           </div>
 
         </div>
       </div>
-      @endif
-     
-   </div>
- </div>
+    </div>
+
+    {{-- Исключаем состав из сырья --}}
+
+
+    <!-- Состав -->
+    <div class="tabs-panel" id="compositions">
+      <div class="grid-x grid-padding-x">
+        <div class="small-12 medium-8 cell">
+          <table class="composition-table">
+            <thead>
+              <tr> 
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="composition-table">
+              {{-- Таблица метрик товара --}}
+              @if (!empty($products_category->compositions))
+              @each('products_categories.composition', $products_category->compositions, 'composition')
+              @endif
+            </tbody>
+          </table>
+        </div>
+
+        <div class="small-12 medium-4 cell">
+
+          <ul class="menu vertical">
+
+            @foreach ($products_modes_list as $products_mode)
+            <li>
+              <a class="button" data-toggle="{{ $products_mode['alias'] }}-dropdown">{{ $products_mode['name'] }}</a>
+              <div class="dropdown-pane" id="{{ $products_mode['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
+
+                <ul class="checker" id="products-categories-list">
+                  @foreach ($products_mode['products_categories'] as $products_cat)
+                  @include('products_categories.products-category', $products_cat)
+                  @endforeach
+                </ul>
+
+              </div>
+            </li>
+            @endforeach
+          </ul>
+
+        </div>
+
+      </div>
+    </div>
+
+
+  </div>
+</div>
 
 
 
- @endsection
+@endsection
 
- @section('scripts')
- @include('includes.scripts.inputs-mask')
- @include('includes.scripts.upload-file')
- @include('products.scripts')
- @php
- $settings = config()->get('settings');
- @endphp
- <script>
+@section('scripts')
+@include('includes.scripts.inputs-mask')
+@include('includes.scripts.upload-file')
+@include('products.scripts')
+@php
+$settings = config()->get('settings');
+@endphp
+<script>
 
   // Основные ностойки
   var products_category_id = '{{ $products_category->id }}';
@@ -335,63 +335,63 @@
   });
 
   // Когда при клике по табам активная вкладка артикула
-  $(document).on('change.zf.tabs', '.tabs-list', function() {
-    if($('#articles:visible').length){
+  // $(document).on('change.zf.tabs', '.tabs-list', function() {
+  //   if($('#articles:visible').length){
 
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/ajax_get_article_inputs',
-        type: 'POST',
-        data: {products_category_id: products_category_id},
-        success: function(html){
-          // alert(html);
-          $('#article-inputs').html(html);
-          $('#article-inputs').foundation();
-          // Foundation.reInit($('#article-inputs'));
-        }
-      })
-    }
-  });
+  //     $.ajax({
+  //       headers: {
+  //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //       },
+  //       url: '/ajax_get_article_inputs',
+  //       type: 'POST',
+  //       data: {products_category_id: products_category_id},
+  //       success: function(html){
+  //         // alert(html);
+  //         $('#article-inputs').html(html);
+  //         $('#article-inputs').foundation();
+  //         // Foundation.reInit($('#article-inputs'));
+  //       }
+  //     })
+  //   }
+  // });
 
   // Проверяем наличие артикула в базе при клике на кнопку добавления артикула
-  $(document).on('click', '#add-article', function(event) {
-    event.preventDefault();
-    // alert($('#article-form').serialize());
+  // $(document).on('click', '#add-article', function(event) {
+  //   event.preventDefault();
+  //   // alert($('#article-form').serialize());
     
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/articles',
-      type: 'POST',
-      dataType: 'json', // ставим тип json, чтоб определить что пришло по итогу
-      data: $('#article-form').serialize(),
+  //   $.ajax({
+  //     headers: {
+  //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //     },
+  //     url: '/articles',
+  //     type: 'POST',
+  //     dataType: 'json', // ставим тип json, чтоб определить что пришло по итогу
+  //     data: $('#article-form').serialize(),
 
-      // В случае совпадения артикула принимаем json, и выдаем ошибку
-      success: function(data, textStatus, jqXHR) {
-        // alert(data['metric_values']);
-        if (data['error_status'] == 1) {
-          $('#add-article').prop('disabled', true);
-          $('#article-error').css('display', 'block');
-        }
-      },
+  //     // В случае совпадения артикула принимаем json, и выдаем ошибку
+  //     success: function(data, textStatus, jqXHR) {
+  //       // alert(data['metric_values']);
+  //       if (data['error_status'] == 1) {
+  //         $('#add-article').prop('disabled', true);
+  //         $('#article-error').css('display', 'block');
+  //       }
+  //     },
 
-      // В случае несовпадения артикула пишем новый и вставляем его, но ответ придет html, поэтому ajax даст ошибку, т.к. ждет json
-      error: function(html, textStatus, errorThrown) {
+  //     // В случае несовпадения артикула пишем новый и вставляем его, но ответ придет html, поэтому ajax даст ошибку, т.к. ждет json
+  //     error: function(html, textStatus, errorThrown) {
 
-        // alert(JSON.stringify(html['responseText']));
-        $('#article-table').append(JSON.stringify(html['responseText']));
-        $('#article-form')[0].reset();
-      }
-    })
-  });
+  //       // alert(JSON.stringify(html['responseText']));
+  //       $('#article-table').append(JSON.stringify(html['responseText']));
+  //       $('#article-form')[0].reset();
+  //     }
+  //   })
+  // });
 
-  $(document).on('change', '#article-form input', function() {
-    $('#add-article').prop('disabled', false);
-    $('#article-error').css('display', 'none');
-  });
+  // $(document).on('change', '#article-form input', function() {
+  //   $('#add-article').prop('disabled', false);
+  //   $('#article-error').css('display', 'none');
+  // });
 
   // При смнене свойства в select
   $(document).on('change', '#properties-select', function() {
@@ -446,7 +446,7 @@
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
-          url: '/products_categories/' + products_category_type + '/' + products_category_id + '/edit',
+          url: '/products_categories/' + products_category_id + '/edit',
           type: 'GET',
           data: $('#product-form').serialize(),
           success: function(html){

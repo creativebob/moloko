@@ -37,15 +37,9 @@ class ProductsModesTableSeeder extends Seeder
                 'type' => 'services',
             ],
             [
-                'name' => 'Материал',
+                'name' => 'Сырье',
                 'description' => '',
-                'alias' => 'materials',
-                'type' => 'raws',
-            ],
-            [
-                'name' => 'Полуфабрикат',
-                'description' => '',
-                'alias' => 'semis',
+                'alias' => 'raws',
                 'type' => 'raws',
             ],
     	]);

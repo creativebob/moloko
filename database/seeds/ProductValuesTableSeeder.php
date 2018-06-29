@@ -2,14 +2,20 @@
 
 use Illuminate\Database\Seeder;
 
-class ArticleValuesTableSeeder extends Seeder
+class ProductValuesTableSeeder extends Seeder
 {
 
 	public function run()
 	{
+		$mass[] = [
+			'product_id' => 1,
+			'entity_id' => 6,
+			'entity' => 'metrics',
+			'value' => 100,
+		];
 		for ($i=7; $i <= 41; $i++) { 
 			$mass[] = [
-				'article_id' => $i,
+				'product_id' => $i,
 				'entity_id' => 6,
 				'entity' => 'metrics',
 				'value' => 100,
@@ -18,13 +24,13 @@ class ArticleValuesTableSeeder extends Seeder
 
 		for ($i=7; $i <= 41; $i++) { 
 			$mass[] = [
-				'article_id' => $i,
+				'product_id' => $i,
 				'entity_id' => 3,
 				'entity' => 'metrics',
 				'value' => 280,
 			];
 		}
 
-		DB::table('article_values')->insert($mass);
+		DB::table('product_values')->insert($mass);
 	}
 }

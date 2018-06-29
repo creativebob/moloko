@@ -39,26 +39,29 @@ class Article extends Model
     // use DateIntervalFilter;
 
     // Метрики
-    public function metrics()
-    {
-        return $this->belongsToMany('App\Metric', 'article_values', 'article_id', 'entity_id')->where('entity', 'metrics')->withPivot('entity', 'value');
-    }
+    // public function metrics()
+    // {
+    //     return $this->belongsToMany('App\Metric', 'article_values', 'article_id', 'entity_id')->where('entity', 'metrics')->withPivot('entity', 'value');
+    // }
 
-    // Состав
-    public function compositions()
-    {
-        return $this->belongsToMany('App\Product', 'article_values', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
-    }
+    // // Состав
+    // public function compositions()
+    // {
+    //     return $this->belongsToMany('App\Product', 'article_values', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
+    // }
 
-     // Продукт
-    public function product()
-    {
-        return $this->belongsTo('App\Product');
-    }
+    //  // Продукт
+    // public function product()
+    // {
+    //     return $this->belongsTo('App\Product');
+    // }
 
-     // Продукт
-    public function metrics_list($metrics_list)
-    {
-        return $this->belongsToMany('App\Metric', 'article_values', 'article_id', 'entity_id')->where('entity', 'metrics')->wherePivotIn('entity_id', $metrics_list);
-    }
+    //  // Продукт
+    // public function metrics_list($metrics_list)
+    // {
+    //     return $this->belongsToMany('App\Metric', 'article_values', 'article_id', 'entity_id')->where('entity', 'metrics')->wherePivotIn('entity_id', $metrics_list);
+    // }
+
+
+    
 }

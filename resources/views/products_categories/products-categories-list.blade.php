@@ -35,7 +35,7 @@
     </div>
     <div>
       @if($products_category['edit'] == 1)
-      <a class="icon-list-edit sprite" href="/products_categories/{{ $alias }}/{{ $products_category['id'] }}/edit"></a>
+      <a class="icon-list-edit sprite" href="/products_categories/{{ $products_category['id'] }}/edit"></a>
       @endif
     </div>
     <div class="del">
@@ -90,7 +90,7 @@
     </div>
     <div>
       {{-- @if($products_category['edit'] == 1) --}}
-      <a class="icon-list-edit sprite" href="/products_categories/{{ $alias }}/{{ $products_category['id'] }}/edit"></a>
+      <a class="icon-list-edit sprite" href="/products_categories/{{ $products_category['id'] }}/edit"></a>
       {{-- @endif --}}
     </div>
     <div class="del">

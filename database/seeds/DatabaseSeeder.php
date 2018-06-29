@@ -96,6 +96,7 @@ class DatabaseSeeder extends Seeder
     $this->call(ProductsModesTableSeeder::class);
     $this->call(ProductsCategoriesTableSeeder::class);
     $this->call(ProductsTableSeeder::class);
+    $this->call(ProductValuesTableSeeder::class);
 
     // Связь: Расписания с сущностями
     $this->call(ScheduleEntityTableSeeder::class);
@@ -108,7 +109,7 @@ class DatabaseSeeder extends Seeder
     $this->call(MetricEntityTableSeeder::class);
 
     $this->call(ArticlesTableSeeder::class);
-    $this->call(ArticleValuesTableSeeder::class);
+    
 
   }
 }

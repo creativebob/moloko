@@ -5,11 +5,11 @@
       @include('includes.inputs.name', ['value'=>$products_category->name, 'name'=>'name', 'required'=>'required'])
       <div class="item-error">Такая категория уже существует!</div>
     </label>
-    @if ($type != 'goods')
+
     <label>Тип
       {{ Form::select('products_mode_id', $products_modes_list) }}
     </label>
-    @endif
+
   </div>
 </div>
 
@@ -19,12 +19,10 @@
 
 <div class="grid-x align-center">
 
-  @if ($type != 'raws')
   <div class="small-8 cell checkbox">
-    {{ Form::checkbox('set_status', 1, null, ['id' => 'set_status']) }}
-    <label for="set_status"><span>Набор</span></label>
+    {{ Form::checkbox('status', 'set', null, ['id' => 'set-status']) }}
+    <label for="set-status"><span>Набор</span></label>
   </div>
-  @endif
 
   {{-- Чекбокс отображения на сайте --}}
   @can ('publisher', $products_category)

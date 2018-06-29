@@ -41,8 +41,8 @@ class ProductsTableSeeder extends Seeder
             ],
 
             [
-                'name' => 'Труба',
-                'products_category_id' => 26,
+                'name' => 'C10',
+                'products_category_id' => 27,
                 'company_id' => 1, 
                 'author_id' => 4, 
                 'manufacturer_id' => null,
@@ -51,8 +51,8 @@ class ProductsTableSeeder extends Seeder
             ],
 
              [
-                'name' => 'Прутик',
-                'products_category_id' => 26,
+                'name' => 'C8',
+                'products_category_id' => 27,
                 'company_id' => 1, 
                 'author_id' => 4, 
                 'manufacturer_id' => null,
@@ -61,7 +61,7 @@ class ProductsTableSeeder extends Seeder
             ],
 
             [
-                'name' => 'Полуфабрик',
+                'name' => 'C12',
                 'products_category_id' => 27,
                 'company_id' => 1, 
                 'author_id' => 4, 

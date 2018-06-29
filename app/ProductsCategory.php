@@ -42,8 +42,28 @@ class ProductsCategory extends Model
     'name',
     'parent_id',
     'category_status',
+    'status',
     ];
+    // dd('lol');
 
+    // public function getStatusAttribute($value) {
+    //     // dd($value);
+    //     if($value == 1){
+    //         return 'set';
+    //     } else {
+    //         return 'one';
+    //     }
+    // }
+
+
+    // public function setStatusAttribute($value) {
+    //      dd($value);
+    //     if($value == 'set'){
+    //         return 1;
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
     // public function products()
     // {
@@ -83,13 +103,13 @@ class ProductsCategory extends Model
     // Получаем состав
     public function compositions()
     {
-        return $this->belongsToMany('App\Product', 'compositions', 'product_id', 'composition_id');
+        return $this->belongsToMany('App\ProductsCategory', 'compositions', 'products_category_id', 'composition_id');
     }
 
     // Получаем артикулы
-    public function articles()
+    public function products()
     {
-        return $this->hasMany('App\Article');
+        return $this->hasMany('App\Product');
     }
 
 }

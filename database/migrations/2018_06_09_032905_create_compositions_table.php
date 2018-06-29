@@ -16,8 +16,8 @@ class CreateCompositionsTable extends Migration
         Schema::create('compositions', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('product_id')->nullable()->unsigned()->comment('Id продукта');
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->integer('products_category_id')->nullable()->unsigned()->comment('Id категории продукции');
+            $table->foreign('products_category_id')->references('id')->on('products_categories');
             
             $table->integer('composition_id')->nullable()->unsigned()->comment('Id сущности связанной с метрикой');
             $table->foreign('composition_id')->references('id')->on('products');

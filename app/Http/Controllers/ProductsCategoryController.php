@@ -79,9 +79,8 @@ class ProductsCategoryController extends Controller
         return view('products_categories.index', compact('products_categories_tree', 'page_info'));
     }
 
-    public function types(Request $request, $alias)
+    public function types(Request $request, $type, $status = null)
     {
-
 
         // dd($alias);
         // Подключение политики
@@ -94,13 +93,26 @@ class ProductsCategoryController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------
 
-        $products_categories = ProductsCategory::where('type', $alias)
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('sort', 'asc')
-        ->get();
+        if ($status == null) {
+            $products_categories = ProductsCategory::where('type', $type)
+            ->whereIn('status', ['one', 'set'])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer) // Фильтр по системным записям
+            ->orderBy('sort', 'asc')
+            ->get();
+        } else {
+            $products_categories = ProductsCategory::where(['type' => $type, 'status' => $status])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer) // Фильтр по системным записям
+            ->orderBy('sort', 'asc')
+            ->get();
+        }
+
+        // dd($products_categories);
 
         // dd(get_parents_tree($products_categories));
 
@@ -111,7 +123,7 @@ class ProductsCategoryController extends Controller
         $products_categories_tree = get_index_tree_with_rights($products_categories, $user);
 
         // Инфо о странице
-        $page_info = pageInfo('products_categories/'.$alias);
+        $page_info = pageInfo('products_categories/'.$type);
 
         // dd($page_info);
 
@@ -128,18 +140,17 @@ class ProductsCategoryController extends Controller
 
         // dd($id);
 
-        return view('products_categories.index', compact('products_categories_tree', 'page_info', 'alias', 'id'));
+        return view('products_categories.index', compact('products_categories_tree', 'page_info', 'type', 'id'));
     }
 
-    public function create(Request $request, $alias)
+    public function create(Request $request, $type)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), ProductsCategory::class);
 
         $products_category = new ProductsCategory;
 
-        $products_modes_list = ProductsMode::where('type', $alias)->get()->pluck('name', 'id');
+        $products_modes_list = ProductsMode::where('type', $type)->get()->pluck('name', 'id');
 
         // Если добавляем вложенный элемент
         if (isset($request->parent_id)) {
@@ -152,7 +163,7 @@ class ProductsCategoryController extends Controller
             ->companiesLimit($answer)
             ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
-            ->where('type', $alias)
+            ->where('type', $type)
             ->where('id', $request->category_id)
             ->orWhere('category_id', $request->category_id)
             ->orderBy('sort', 'asc')
@@ -164,10 +175,10 @@ class ProductsCategoryController extends Controller
             $products_categories_list = get_select_tree($products_categories, $request->parent_id, null, null);
             // echo $products_categories_list;
 
-            return view('products_categories.create-medium', ['products_category' => $products_category, 'products_categories_list' => $products_categories_list, 'type' => $alias, 'products_modes_list' => $products_modes_list]);
+            return view('products_categories.create-medium', ['products_category' => $products_category, 'products_categories_list' => $products_categories_list, 'type' => $type, 'products_modes_list' => $products_modes_list]);
         } else {
 
-            return view('products_categories.create-first', ['products_category' => $products_category, 'type' => $alias, 'products_modes_list' => $products_modes_list]);
+            return view('products_categories.create-first', ['products_category' => $products_category, 'type' => $type, 'products_modes_list' => $products_modes_list]);
         }
     }
 
@@ -195,9 +206,7 @@ class ProductsCategoryController extends Controller
         // Модерация и системная запись
         $products_category->system_item = $request->system_item;
 
-        if (isset($request->products_mode_id)) {
-            $products_category->products_mode_id = $request->products_mode_id;
-        }
+        $products_category->products_mode_id = $request->products_mode_id;
 
         $products_category->type = $request->type;
         
@@ -219,13 +228,16 @@ class ProductsCategoryController extends Controller
         if ($request->medium_item == 1) {
             $products_category->parent_id = $request->parent_id;
             $products_category->category_id = $request->category_id;
-
-            $parent = ProductsCategory::findOrFail($request->category_id);
         }
 
         $products_category->display = $request->display;
 
-        $products_category->set_status = $request->set_status;
+        if ($request->status == 'set') {
+            $products_category->status = $request->status;
+        } else {
+            $products_category->status = 'one';
+        }
+
 
         // Делаем заглавной первую букву
         $products_category->name = get_first_letter($request->name);
@@ -237,7 +249,7 @@ class ProductsCategoryController extends Controller
         if ($products_category) {
 
             // Отправляем на редактирование записи
-            return Redirect('/products_categories/'.$request->type.'/'.$products_category->id.'/edit');
+            return Redirect('/products_categories/'.$products_category->id.'/edit');
 
         } else {
             $result = [
@@ -252,7 +264,7 @@ class ProductsCategoryController extends Controller
         //
     }
 
-    public function edit(Request $request, $alias, $id)
+    public function edit(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -293,7 +305,8 @@ class ProductsCategoryController extends Controller
         ->systemItem($answer_properties) // Фильтр по системным записям
         ->template($answer_properties)
         ->with(['metrics' => function ($query) use ($answer_metrics) {
-            $query->with('values')->moderatorLimit($answer_metrics)
+            $query->with('values')
+            ->moderatorLimit($answer_metrics)
             ->companiesLimit($answer_metrics)
             ->authors($answer_metrics)
             ->systemItem($answer_metrics); // Фильтр по системным записям 
@@ -304,55 +317,73 @@ class ProductsCategoryController extends Controller
 
         $properties_list = $properties->pluck('name', 'id');
 
-        if (($products_category->type == 'goods') && ($products_category->set_status == 1)) {
-            $type = ['goods'];
-        }
-        if (($products_category->type == 'goods') && ($products_category->set_status == null)) {
-            $type = ['materials', 'semis'];
-        }
-
-        if (($products_category->type == 'services') && ($products_category->set_status == 1)) {
-            $type = ['installs', 'deliveries', 'measurements'];
-        }
-        if (($products_category->type == 'services') && ($products_category->set_status == null)) {
-            $type = [];
+        if ($products_category->type == 'goods') {
+            if ($products_category->status == 'one') {
+                $type = ['raws'];
+            } else {
+                $type = ['goods'];
+            }
         }
 
-        if (($products_category->type == 'raws') && ($products_category->set_status == 1)) {
-            $type = ['materials'];
-        }
-        if (($products_category->type == 'raws') && ($products_category->set_status == null)) {
-            $type = [];
-        }
-        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_products_modes = operator_right('products_modes', false, 'index');
 
-        $products_modes = ProductsMode::moderatorLimit($answer_products_modes)
+        $products_modes = ProductsMode::with(['products_categories' => function ($query) use ($answer_products_categories) {
+            $query->withCount('products')
+            ->moderatorLimit($answer_products_categories)
+            ->companiesLimit($answer_products_categories)
+            ->authors($answer_products_categories)
+            ->systemItem($answer_products_categories); // Фильтр по системным записям 
+        }])
+        ->moderatorLimit($answer_products_modes)
         ->companiesLimit($answer_products_modes)
         ->authors($answer_products_modes)
         ->systemItem($answer_products_modes) // Фильтр по системным записям
         ->template($answer_products_modes)
-        ->whereIn('alias', $type)
+        ->whereIn('type', $type)
         ->orderBy('sort', 'asc')
-        ->get();
+        ->get()
+        ->toArray();
 
         // dd($products_modes);
+        $products_modes_list = [];
+        foreach ($products_modes as $products_mode) {
+            $products_categories_id = [];
+            foreach ($products_mode['products_categories'] as $products_cat) {
+                $products_categories_id[$products_cat['id']] = $products_cat;
+            }
+            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+            $products_categories_list = get_parents_tree($products_categories_id, null, null, null);
+
+
+            $products_modes_list[] = [
+                'name' => $products_mode['name'],
+                'alias' => $products_mode['alias'],
+                'products_categories' =>$products_categories_list,
+            ];
+        }
+
+        // dd($products_modes_list);
 
         // $grouped_products_types = $products_modes->groupBy('alias');
 
         // dd($grouped_products_types);
 
         // Инфо о странице
-        $page_info = pageInfo('products_categories/'.$alias);
+        $page_info = pageInfo('products_categories/'.$products_category->type);
+
+
 
         if ($products_category->category_status == 1) {
 
             // Выбираем все типы без проверки, так как они статичны, добавляться не будут
             // $products_types_list = ProductsType::get()->pluck('name', 'id');
 
+            // dd($products_category);
+
             // echo $id;
             // Меняем категорию
-            return view('products_categories.edit', compact('products_category', 'page_info', 'properties', 'properties_list', 'products_category_metrics', 'products_category_compositions', 'products_modes'));
+            return view('products_categories.edit', compact('products_category', 'page_info', 'properties', 'properties_list', 'products_category_metrics', 'products_category_compositions', 'products_modes_list'));
         } else {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -373,7 +404,9 @@ class ProductsCategoryController extends Controller
             // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
             $products_categories_list = get_select_tree($products_categories, $products_category->parent_id, null, $products_category->id);
 
-            return view('products_categories.edit', compact('products_category', 'products_categories_list', 'page_info', 'properties', 'properties_list', 'products_category_metrics', 'products_category_compositions', 'products_modes'));
+            // dd($products_category);
+
+            return view('products_categories.edit', compact('products_category', 'products_categories_list', 'page_info', 'properties', 'properties_list', 'products_category_metrics', 'products_category_compositions', 'products_modes_list'));
         }
     }
 
@@ -425,7 +458,7 @@ class ProductsCategoryController extends Controller
         $products_category->system_item = $request->system_item;
         $products_category->moderation = $request->moderation;
 
-        $products_category->parent_id = $request->parent_id;
+        // $products_category->parent_id = $request->parent_id;
         $products_category->editor_id = $user_id;
 
         // Если сменили тип категории продукции, то меняем его и всем вложенным элементам
