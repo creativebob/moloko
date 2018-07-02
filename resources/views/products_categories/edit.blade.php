@@ -29,7 +29,9 @@
       <li class="tabs-title"><a data-tabs-target="properties" href="#properties">Свойства</a></li>
 
       {{-- Исключаем состав из сырья --}}
+      @if($products_category->type != 'raws')
       <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
+      @endif
 
       <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
     </ul>
@@ -66,6 +68,18 @@
               @include('includes.inputs.name', ['value'=>$products_category->name, 'name'=>'name', 'required'=>'required'])
             </label>
           </div>
+
+          <div class="small-12 medium-3 cell">
+            <label>Мера
+              {{ Form::select('units_category_id', $units_categories_list, $products_category->unit->units_category_id, ['id' => 'units-categories-list'])}}
+            </label>
+          </div>
+          <div class="small-12 medium-3 cell">
+            <label>Единица измерения
+              {{ Form::select('unit_id', $units_list, $products_category->unit_id, ['id' => 'units-list']) }}
+            </label>
+          </div>
+
 
           {{-- Чекбокс отображения на сайте --}}
           @can ('publisher', $products_category)
@@ -359,7 +373,7 @@ $settings = config()->get('settings');
   // $(document).on('click', '#add-article', function(event) {
   //   event.preventDefault();
   //   // alert($('#article-form').serialize());
-    
+
   //   $.ajax({
   //     headers: {
   //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -387,6 +401,26 @@ $settings = config()->get('settings');
   //     }
   //   })
   // });
+
+  
+  $(document).on('change', '#units-categories-list', function() {
+    var id = $(this).val();
+    // alert(id);
+
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/get_units_list',
+      type: "POST",
+      data: {id: id, entity: 'products_categories'},
+      success: function(html){
+        $('#units-list').html(html);
+        $('#units-list').prop('disabled', false);
+      }
+    }); 
+  });
+  
 
   // $(document).on('change', '#article-form input', function() {
   //   $('#add-article').prop('disabled', false);
@@ -540,7 +574,7 @@ $settings = config()->get('settings');
   // При клике на чекбокс метрики отображаем ее на странице
   $(document).on('click', '.add-composition', function() {
 
-    // alert($(this).val());
+    // alert(products_category_id);
     var id = $(this).val();
     
     // Если нужно добавить состав
@@ -551,7 +585,7 @@ $settings = config()->get('settings');
         },
         url: '/ajax_add_relation_composition',
         type: 'POST',
-        data: {id: $(this).val(), products_category_id: products_category_id},
+        data: {id: $(this).val(), products_category_id: products_category_id, entity: 'products_categories'},
         success: function(html){
 
           // alert(html);
@@ -567,7 +601,7 @@ $settings = config()->get('settings');
         },
         url: '/ajax_delete_relation_composition',
         type: 'POST',
-        data: {id: $(this).val(), products_category_id: products_category_id},
+        data: {id: $(this).val(), products_category_id: products_category_id, entity: 'products_categories'},
         success: function(date){
 
           var result = $.parseJSON(date);

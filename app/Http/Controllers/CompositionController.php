@@ -90,12 +90,11 @@ class CompositionController extends Controller
     {
 
         $products_category = ProductsCategory::findOrFail($request->products_category_id);
-
         $products_category->compositions()->toggle([$request->id]);
 
-        $composition = Product::findOrFail($request->id);
+        $composition = ProductsCategory::findOrFail($request->id);
 
-        return view('products_categories.composition', ['composition' => $composition]);
+        return view($request->entity.'.composition', compact('composition'));
     }
 
     public function ajax_delete_relation(Request $request)

@@ -174,6 +174,9 @@
 
   @section('scripts')
   <script type="text/javascript">
+
+    var type = '{{ $type }}';
+
     // Обозначаем таймер для проверки
     var timerId;
     var time = 400;
@@ -235,6 +238,8 @@
     };
   };
 
+
+
   // ---------------------------- Продукция -----------------------------------------------
 
   // ----------- Добавление -------------
@@ -244,7 +249,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/products/create',
+      url: '/products/' + type + '/create',
       type: "GET",
       success: function(html){
         $('#modal').html(html);

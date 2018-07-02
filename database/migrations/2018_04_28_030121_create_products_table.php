@@ -29,8 +29,8 @@ class CreateProductsTable extends Migration
 
             $table->string('description')->index()->nullable()->comment('Описание артикула');
 
-            $table->integer('unit_id')->nullable()->unsigned()->comment('ID еденицы измерения');
-            $table->foreign('unit_id')->references('id')->on('units');
+            // $table->integer('unit_id')->nullable()->unsigned()->comment('ID еденицы измерения');
+            // $table->foreign('unit_id')->references('id')->on('units');
 
             $table->integer('rule_id')->nullable()->unsigned()->comment('ID правила определения цены');
             // $table->foreign('rule_id')->references('id')->on('rules');

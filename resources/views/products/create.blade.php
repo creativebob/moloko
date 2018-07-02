@@ -21,7 +21,7 @@
         </select>
       </label>
 
-      <div class="grid-x grid-margin-x">
+      {{-- <div class="grid-x grid-margin-x">
         <div class="small-12 medium-6 cell">
           <label>Категория единиц измерения
             {{ Form::select('units_category_id', $units_categories_list, null, ['placeholder' => 'Выберите категорию', 'id' => 'units-categories-list', 'required']) }}
@@ -32,7 +32,7 @@
             <select name="unit_id" id="units-list" required disabled></select>
           </label>
         </div>
-      </div>
+      </div> --}}
 
       <div class="grid-x grid-margin-x">
         <div class="small-12 medium-6 cell">

@@ -10,6 +10,14 @@
       {{ Form::select('products_mode_id', $products_modes_list) }}
     </label>
 
+    <label>Мера
+      {{ Form::select('units_category_id', $units_categories_list, null, ['placeholder' => 'Выберите категорию', 'id' => 'units-categories-list', 'required']) }}
+    </label>
+
+    <label>Единица измерения
+      <select name="unit_id" id="units-list" required disabled></select>
+    </label>
+
   </div>
 </div>
 
@@ -52,5 +60,8 @@
     {{ Form::submit('Сохранить', ['data-close', 'class'=>'button modal-button '.$class]) }}
   </div>
 </div>
+
+@include('products_categories.scripts')
+
 
 

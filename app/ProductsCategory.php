@@ -70,6 +70,12 @@ class ProductsCategory extends Model
     //     return $this->hasMany('App\Product');
     // }
 
+    // Получаем единицу измерения
+    public function unit()
+    {
+        return $this->belongsTo('App\Unit');
+    }
+
     public function products_mode()
     {
         return $this->belongsTo('App\ProductsMode');
@@ -87,12 +93,10 @@ class ProductsCategory extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
-
     public function photo()
     {
         return $this->belongsTo('App\Photo');
     }
-
 
     // Получаем метрики
     public function metrics()
@@ -111,5 +115,7 @@ class ProductsCategory extends Model
     {
         return $this->hasMany('App\Product');
     }
+
+    
 
 }

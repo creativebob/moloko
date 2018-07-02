@@ -113,10 +113,10 @@ class Product extends Model
     }
 
     // Получаем состав
-    public function compositions()
-    {
-        return $this->belongsToMany('App\Product', 'compositions', 'product_id', 'composition_id');
-    }
+    // public function compositions()
+    // {
+    //     return $this->belongsToMany('App\Product', 'compositions', 'product_id', 'composition_id');
+    // }
 
     // Получаем артикулы
     // public function articles()

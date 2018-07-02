@@ -77,19 +77,7 @@
                                     </select>
                                 </label>
 
-                                <div class="grid-x grid-margin-x">
-                                    <div class="small-12 medium-6 cell">
-                                        <label>Мера
-                                            {{ Form::select('units_category_id', $units_categories_list, $product->unit->units_category_id, ['id' => 'units-categories-list'])}}
-                                        </label>
-                                    </div>
-                                    <div class="small-12 medium-6 cell">
-                                        <label>Единица измерения
-                                            {{ Form::select('unit_id', $units_list, $product->unit_id, ['id' => 'units-list']) }}
-                                        </label>
-                                    </div>
-                                </div>
-
+              
                                 <fieldset class="fieldset">
                                     <legend>
                                         <div class="small-12 cell checkbox">
@@ -175,11 +163,13 @@
                                 </div>
                             </div>
                         </fieldset>
+                        @if (count($product->products_category->metrics) > 0)
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
                             @each('products.metric-input', $product->products_category->metrics, 'metric')
                         </fieldset>
+                        @endif
                         <div id="article-inputs"></div>
                         <div class="small-12 cell tabs-margin-top text-center">
                             <div class="item-error" id="article-error">Такой артикул уже существует!<br>Измените значения!</div>
@@ -241,22 +231,7 @@
                         {{-- Состав --}}
                         <div class="small-12 medium-12 cell">
                             <ul class="menu right">
-                                @foreach ($grouped_products_modes as $grouped_products_mode)
-                                    <li>
-                                        <a class="button" data-toggle="{{ $grouped_products_mode[0]->alias }}-dropdown">{{ $grouped_products_mode[0]->name }}</a>
-                                        <div class="dropdown-pane" id="{{ $grouped_products_mode[0]->alias }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
-
-                                            <ul class="checker" id="products-categories-list">
-                                                @foreach ($grouped_products_modes[$grouped_products_mode[0]->alias][0]->products_categories as $products_category)
-                                                @if ($products_category->products_count > 0)
-                                                @include('products.products-category', $products_category)
-                                                @endif
-                                                @endforeach
-                                            </ul>
-
-                                        </div>
-                                    </li>
-                                @endforeach
+                                
                             </ul>
                         </div>
                         <table class="composition-table">
@@ -274,8 +249,8 @@
                             </thead>
                             <tbody id="composition-table">
                                 {{-- Таблица метрик товара --}}
-                                @if (!empty($product->compositions))
-                                    @each('products.composition', $product->compositions, 'composition')
+                                @if (!empty($product->products_category->compositions))
+                                    @each('products.composition', $product->products_category->compositions, 'composition')
                                 @endif
                             </tbody>
                         </table>

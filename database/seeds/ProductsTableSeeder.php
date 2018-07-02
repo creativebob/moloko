@@ -18,7 +18,7 @@ class ProductsTableSeeder extends Seeder
     			'company_id' => 1, 
     			'author_id' => 4, 
                 'manufacturer_id' => 1,
-                'unit_id' => 26,
+                // 'unit_id' => 26,
                 'display' => 1,
     		],
             [
@@ -27,7 +27,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 1, 
                 'author_id' => 4, 
                 'manufacturer_id' => null,
-                'unit_id' => 26, 
+                // 'unit_id' => 26, 
                 'display' => 1,
             ],
             [
@@ -36,7 +36,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 1, 
                 'author_id' => 4, 
                 'manufacturer_id' => null,
-                'unit_id' => 26, 
+                // 'unit_id' => 26, 
                 'display' => 1,
             ],
 
@@ -46,7 +46,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 1, 
                 'author_id' => 4, 
                 'manufacturer_id' => null,
-                'unit_id' => 26, 
+                // 'unit_id' => 26, 
                 'display' => 1,
             ],
 
@@ -56,7 +56,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 1, 
                 'author_id' => 4, 
                 'manufacturer_id' => null,
-                'unit_id' => 26, 
+                // 'unit_id' => 26, 
                 'display' => 1,
             ],
 
@@ -66,7 +66,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 1, 
                 'author_id' => 4, 
                 'manufacturer_id' => null,
-                'unit_id' => 26, 
+                // 'unit_id' => 26, 
                 'display' => 1,
             ],
 
@@ -77,7 +77,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -86,7 +86,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -95,7 +95,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -104,7 +104,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -113,7 +113,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -122,7 +122,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -131,7 +131,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -140,7 +140,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -149,7 +149,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -158,7 +158,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -167,7 +167,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -176,7 +176,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -185,7 +185,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -194,7 +194,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -203,7 +203,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -212,7 +212,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -221,7 +221,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -230,7 +230,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -239,7 +239,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -248,7 +248,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -257,7 +257,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -266,7 +266,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -275,7 +275,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -284,7 +284,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -293,7 +293,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -302,7 +302,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -311,7 +311,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -320,7 +320,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -329,7 +329,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -338,7 +338,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 6,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -347,7 +347,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -356,7 +356,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -365,7 +365,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -374,7 +374,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
             [
@@ -383,7 +383,7 @@ class ProductsTableSeeder extends Seeder
                 'company_id' => 4, 
                 'author_id' => 15, 
                 'manufacturer_id' => 5,
-                'unit_id' => 18, 
+                // 'unit_id' => 18,
                 'display' => 1,
             ],
     	]);
