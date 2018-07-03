@@ -17,7 +17,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => null,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 26,
+// 'unit_id' => 26,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -32,7 +32,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 1,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 26,
+// 'unit_id' => 26,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -47,7 +47,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 1,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 26,
+// 'unit_id' => 26,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -63,7 +63,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => null,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 26,
+// 'unit_id' => 26,
         
         'status' => 'set',
         'products_mode_id' => 1,
@@ -79,7 +79,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => null,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 26,
+// 'unit_id' => 26,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -95,7 +95,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => null,
         'display' => 1,
         'type' => 'services',
-        'unit_id' => 26,
+// 'unit_id' => 26,
         
         'status' => 'one',
         'products_mode_id' => 2,
@@ -110,7 +110,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 6,
         'display' => 1,
         'type' => 'services',
-        'unit_id' => 26,
+// 'unit_id' => 26,
         
         'status' => 'one',
         'products_mode_id' => 2,
@@ -125,7 +125,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 6,
         'display' => 1,
         'type' => 'services',
-        'unit_id' => 26,
+// 'unit_id' => 26,
         
         'status' => 'one',
         'products_mode_id' => 2,
@@ -144,7 +144,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => null,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -160,7 +160,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -176,7 +176,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -191,7 +191,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -206,7 +206,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -222,7 +222,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -238,7 +238,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -254,7 +254,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -270,7 +270,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -285,7 +285,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -300,7 +300,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -316,7 +316,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -332,7 +332,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -347,7 +347,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -362,7 +362,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -377,7 +377,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 9,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -393,7 +393,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => null,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -410,7 +410,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => null,
         'display' => 1,
         'type' => 'raws',
-        'unit_id' => 26,
+// 'unit_id' => 26,
         
         'status' => 'one',
         'products_mode_id' => 5,
@@ -425,7 +425,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 26,
         'display' => 1,
         'type' => 'raws',
-        'unit_id' => 26,
+// 'unit_id' => 26,
         
         'status' => 'one',
         'products_mode_id' => 5,
@@ -440,7 +440,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => null,
         'display' => 1,
         'type' => 'raws',
-        'unit_id' => 26,
+// 'unit_id' => 26,
         
         'status' => 'one',
         'products_mode_id' => 5,
@@ -457,7 +457,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -472,7 +472,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -487,7 +487,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -502,7 +502,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -517,7 +517,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -532,7 +532,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -547,7 +547,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -563,7 +563,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -578,7 +578,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -593,7 +593,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -609,7 +609,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -624,7 +624,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -639,7 +639,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -655,7 +655,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -670,7 +670,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -685,7 +685,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -700,7 +700,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -715,7 +715,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -730,7 +730,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -746,7 +746,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -761,7 +761,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -776,7 +776,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -792,7 +792,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 25,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -808,7 +808,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => null,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -823,7 +823,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 52,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -838,7 +838,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 52,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -854,7 +854,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => null,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -869,7 +869,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 55,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -884,7 +884,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 55,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -900,7 +900,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => null,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -915,7 +915,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 58,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -930,7 +930,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 58,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -945,7 +945,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 58,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -960,7 +960,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 58,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -975,7 +975,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 58,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -990,7 +990,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 58,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -1006,7 +1006,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => null,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -1021,7 +1021,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 65,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -1036,7 +1036,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 65,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -1051,7 +1051,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 65,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -1066,7 +1066,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 65,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,
@@ -1081,7 +1081,7 @@ class ProductsCategoriesTableSeeder extends Seeder
         'category_id' => 65,
         'display' => 1,
         'type' => 'goods',
-        'unit_id' => 18,
+// 'unit_id' => 18,
         
         'status' => 'one',
         'products_mode_id' => 1,

@@ -272,9 +272,9 @@ class EntitiesTableSeeder extends Seeder
         'author_id' => 1,
       ], 
       [
-        'name' => 'Артикулы',
-        'alias' => 'articles',
-        'model' => 'Article',
+        'name' => 'Группы товаров',
+        'alias' => 'products_groups',
+        'model' => 'ProductsGroup',
         'system_item' => 1,
         'author_id' => 1,
       ], 

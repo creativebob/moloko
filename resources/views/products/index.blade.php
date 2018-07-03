@@ -126,7 +126,7 @@
               </a>
             </td>
             <td class="td-name"><a href="/products/{{ $product->id }}/edit">{{ $product->name }}</a></td>
-            <td class="td-category">{{ $product->products_category->name }}</td>
+            <td class="td-category">{{ $product->products_group->name }}</td>
             <td class="td-company-id">@if(!empty($product->company->name)) {{ $product->company->name }} @else @if($product->system_item == null) Шаблон @else Системная @endif @endif</td>
             <td class="td-author">@if(isset($product->author->first_name)) {{ $product->author->first_name . ' ' . $product->author->second_name }} @endif</td>
             @can ('publisher', $product)

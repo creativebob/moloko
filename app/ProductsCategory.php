@@ -111,9 +111,9 @@ class ProductsCategory extends Model
     }
 
     // Получаем артикулы
-    public function products()
+    public function products_group()
     {
-        return $this->hasMany('App\Product');
+        return $this->hasMany('App\ProductsGroup');
     }
 
     

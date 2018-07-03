@@ -54,9 +54,9 @@ class Product extends Model
     }
 
     // Получаем категорию
-    public function products_category()
+    public function products_group()
     {
-        return $this->belongsTo('App\ProductsCategory');
+        return $this->belongsTo('App\ProductsGroup');
     }
 
     // Получаем автора

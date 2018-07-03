@@ -139,10 +139,8 @@ Route::get('/products_categories/{id}/edit', 'ProductsCategoryController@edit')-
 Route::patch('/products_categories/{id}', 'ProductsCategoryController@update')->middleware('auth');
 Route::delete('/products_categories/{id}', 'ProductsCategoryController@destroy')->middleware('auth');
 
-Route::get('/products_categories/{type}/{status?}', 'ProductsCategoryController@types')->middleware('auth');
+Route::any('/products_categories/{type}/{status?}', 'ProductsCategoryController@types')->middleware('auth');
 Route::post('/products_categories/', 'ProductsCategoryController@store')->middleware('auth');
-
-
 
 // Метод для обновления фотографии, ajax не поддерживает PATCH
 Route::post('/products_categories/{id}/update', 'ProductsCategoryController@ajax_update');

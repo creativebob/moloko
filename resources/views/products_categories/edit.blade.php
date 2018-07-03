@@ -69,16 +69,7 @@
             </label>
           </div>
 
-          <div class="small-12 medium-3 cell">
-            <label>Мера
-              {{ Form::select('units_category_id', $units_categories_list, $products_category->unit->units_category_id, ['id' => 'units-categories-list'])}}
-            </label>
-          </div>
-          <div class="small-12 medium-3 cell">
-            <label>Единица измерения
-              {{ Form::select('unit_id', $units_list, $products_category->unit_id, ['id' => 'units-list']) }}
-            </label>
-          </div>
+          
 
 
           {{-- Чекбокс отображения на сайте --}}

@@ -29,14 +29,14 @@ class CreateProductsTable extends Migration
 
             $table->string('description')->index()->nullable()->comment('Описание артикула');
 
-            // $table->integer('unit_id')->nullable()->unsigned()->comment('ID еденицы измерения');
-            // $table->foreign('unit_id')->references('id')->on('units');
+            $table->integer('unit_id')->nullable()->unsigned()->comment('ID еденицы измерения');
+            $table->foreign('unit_id')->references('id')->on('units');
 
             $table->integer('rule_id')->nullable()->unsigned()->comment('ID правила определения цены');
             // $table->foreign('rule_id')->references('id')->on('rules');
 
-            $table->integer('products_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться товар');
-            $table->foreign('products_category_id')->references('id')->on('products_categories');
+            $table->integer('products_group_id')->nullable()->unsigned()->comment('Id группы в которой находиться товар');
+            $table->foreign('products_group_id')->references('id')->on('products_groups');
 
             $table->integer('manufacturer_id')->nullable()->unsigned()->comment('Id производителя товара');
             $table->foreign('manufacturer_id')->references('id')->on('companies');
@@ -57,6 +57,8 @@ class CreateProductsTable extends Migration
 
             $table->integer('metrics_count')->nullable()->unsigned()->index()->comment('Количество метрик у артикула');
             $table->integer('compositions_count')->nullable()->unsigned()->index()->comment('Количество состава у артикула');
+
+            $table->integer('template')->nullable()->unsigned()->comment('Статус шаблона');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

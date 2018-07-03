@@ -175,6 +175,27 @@
     }); 
   });
 
+  // ------------------------ Кнопка добавления ---------------------------------------
+  $(document).on('click', '.submit-add', function(event) {
+    event.preventDefault();
+
+    // alert($(this).closest('form').serialize());
+    // Ajax запрос
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/products_categories',
+      type: "POST",
+      data: $(this).closest('form').serialize(),
+      success:function(html) {
+        alert(html);
+        $('#content').html(html);
+        Foundation.reInit($('#content'));
+      }
+    });
+  });
+
 
   // ---------------------------------- Закрытие модалки -----------------------------------
   $(document).on('click', '.icon-close-modal, .submit-edit', function() {

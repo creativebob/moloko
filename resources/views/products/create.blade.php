@@ -8,10 +8,7 @@
 
   <div class="grid-x grid-padding-x align-center modal-content inputs">
     <div class="small-10 cell">
-      <label>Название товара
-        @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
-        <div class="item-error">Такой товар уже существует!</div>
-      </label>
+      
 
       <label>Категория товара
         <select name="products_category_id">
@@ -21,7 +18,16 @@
         </select>
       </label>
 
-      {{-- <div class="grid-x grid-margin-x">
+      <label>Название товара
+        @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+        <div class="item-error">Такой товар уже существует!</div>
+      </label>
+
+      <label>Группа товаров
+        {{ Form::select('products_group_id', ['1' => 'Лол', '2' => 'Кек'], null, ['placeholder' => 'Выберите категорию']) }}
+      </label>
+
+      <div class="grid-x grid-margin-x">
         <div class="small-12 medium-6 cell">
           <label>Категория единиц измерения
             {{ Form::select('units_category_id', $units_categories_list, null, ['placeholder' => 'Выберите категорию', 'id' => 'units-categories-list', 'required']) }}
@@ -32,7 +38,7 @@
             <select name="unit_id" id="units-list" required disabled></select>
           </label>
         </div>
-      </div> --}}
+      </div>
 
       <div class="grid-x grid-margin-x">
         <div class="small-12 medium-6 cell">

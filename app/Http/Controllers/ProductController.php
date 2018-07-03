@@ -124,18 +124,20 @@ class ProductController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------------------------------
 
-        $products = Product::with('author', 'company', 'products_category', 'unit', 'country')
-        ->whereHas('products_category', function ($query) use ($type) {
-            $query->where('type', $type);
+        $products = Product::with('author', 'company', 'products_group', 'unit', 'country')
+        ->whereHas('products_group', function ($query) use ($type) {
+            $query->whereHas('products_category', function ($query) use ($type) {
+                $query->where('type', $type);
+            });
         })
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        ->booklistFilter($request)
-        ->filter($request, 'author_id')
-        ->filter($request, 'company_id')
-        ->filter($request, 'products_category_id')
+        // ->booklistFilter($request)
+        // ->filter($request, 'author_id')
+        // ->filter($request, 'company_id')
+        // ->filter($request, 'products_category_id')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
@@ -254,7 +256,7 @@ class ProductController extends Controller
 
 
                 // Отправляем на редактирование записи
-                return Redirect('/products/'.$product->id.'/edit');
+            return Redirect('/products/'.$product->id.'/edit');
 
         } else {
             abort(403, 'Ошибка записи товара');
@@ -377,6 +379,25 @@ class ProductController extends Controller
 
         $photo = New Photo;
 
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_units_categories = operator_right('units_categories', false, 'index');
+
+        // Главный запрос
+        $units_categories_list = UnitsCategory::with(['units' => function ($query) {
+            $query->pluck('name', 'id');
+        }])
+        ->moderatorLimit($answer_units_categories)
+        ->companiesLimit($answer_units_categories)
+        ->authors($answer_units_categories)
+        ->systemItem($answer_units_categories) // Фильтр по системным записям
+        ->template($answer_units_categories)
+        ->orderBy('sort', 'asc')
+        ->get()
+        ->pluck('name', 'id');
+
+        $units_list = Unit::where('units_category_id', $product->unit->units_category_id)->get()->pluck('name', 'id');
+
         // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         // $answer_products_categories = operator_right('products_categories', false, 'index');
 
@@ -398,7 +419,7 @@ class ProductController extends Controller
         // // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         // $products_categories_list = get_select_tree($products_categories, $product->products_category_id, null, null);
 
-       
+
 
         
 
@@ -599,9 +620,9 @@ class ProductController extends Controller
         }
     }
 
-   
 
-   
+
+
 
     // Добавление фоток
     public function product_photos(Request $request, $id)
