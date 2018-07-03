@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 // Модели
@@ -33,7 +32,11 @@ use Illuminate\Support\Facades\Log;
 class PlaceController extends Controller
 {
 
-    public function index()
+    // Сущность над которой производит операции контроллер
+    protected $entity_name = 'places';
+    protected $entity_dependence = false;
+
+    public function index(Request $request)
     {
 
         // Подключение политики
@@ -53,6 +56,7 @@ class PlaceController extends Controller
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);
+
 
 
         $filter_query = Place::moderatorLimit($answer)
@@ -78,60 +82,138 @@ class PlaceController extends Controller
 
     public function create()
     {
-        //
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Place::class);
+
+        $place = new Place;
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        // Подключение политики
+        $this->authorize(getmethod('index'), PlacesType::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_places_types = operator_right('places_types', 'false', 'index');
+
+        // Список типов помещений
+        $places_types = PlacesType::moderatorLimit($answer_places_types)
+        ->companiesLimit($answer_places_types)
+        ->authors($answer_places_types)
+        ->systemItem($answer_places_types) // Фильтр по системным записям
+        ->template($answer_places_types) // Выводим шаблоны в список
+        ->get();
+
+        return view('places.create', compact('place', 'page_info'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        //
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Place::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        $place = new Place;
+        $place->name = $request->name;
+        $place->description = $request->description;
+        $place->square = $request->square;
+
+        if($user->company_id != null){
+            $place->company_id = $user->company_id;
+        } else {
+            $place->company_id = null;
+        };
+
+        $place->author_id = $user->id;
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        if($answer['automoderate'] == false){
+            $place->moderation = 1;
+        };
+
+        $place->save();
+
+        if($place){} else {abort(403);};
+        return redirect('places');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
-        //
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $place = Place::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize('update', $role);
+
+        $role->name = $request->name;
+        $role->description = $request->description;
+
+        $role->save();
+
+        return redirect('roles');
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+
+    public function edit(Request $request, $id)
     {
-        //
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $place = Place::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $place);
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('places.edit', compact('place', 'page_info'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+
+    public function update(PlaceRequest $request, $id)
     {
-        //
+
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $place = Place::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize('update', $place);
+
+        $place->name = $request->name;
+        $place->description = $request->description;
+
+        $place->save();
+
+        return redirect('places');
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         //

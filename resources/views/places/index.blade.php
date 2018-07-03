@@ -12,7 +12,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\place::class, 'type' => 'table'])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Place::class, 'type' => 'table'])
 @endsection
 
 @section('content')
@@ -30,6 +30,9 @@
 
           <th class="td-address">Адрес</th>
           <th class="td-square">Площадь</th>
+          <th class="td-stockroom-status">Склад</th>
+          <th class="td-rent-status">Аренда</th>
+          
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -72,7 +75,9 @@
           @endif
 
           <td class="td-address">@if(!empty($place->location->address)){{ $place->location->address }}@endif </td>
-          <td class="td-square">{{ $square }} </td>
+          <td class="td-square">{{ $place->square }} </td>
+          <td class="td-stockroom-status">{{ $place->stockroom_status }} </tdh>
+          <td class="td-rent-status">{{ $place->rent_status }} </td>
 
           <td class="td-delete">
             @if ($place->system_item != 1)

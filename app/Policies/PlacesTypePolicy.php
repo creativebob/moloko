@@ -4,18 +4,18 @@ namespace App\Policies;
 
 use App\Policies\Traits\PoliticTrait;
 use App\User;
-use App\Company;
+use App\PlacesType;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class CompanyPolicy
+class PlacePolicy
 {
     
     use HandlesAuthorization;
     use PoliticTrait;
 
-    protected $entity_name = 'companies';
+    protected $entity_name = 'places_types';
     protected $entity_dependence = false;
 
     public function before($user)
@@ -30,7 +30,7 @@ class CompanyPolicy
         return $result;
     }
 
-    public function view(User $user, Company $model)
+    public function view(User $user, PlacesType $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
         return $result;
@@ -42,25 +42,25 @@ class CompanyPolicy
         return $result;
     }
 
-    public function update(User $user, Company $model)
+    public function update(User $user, PlacesType $model)
     { 
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
 
-    public function delete(User $user, Company $model)
+    public function delete(User $user, PlacesType $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
     }
 
-    public function moderator(User $user, Company $model)
+    public function moderator(User $user, PlacesType $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
         return $result;
     }
 
-    public function automoderate(User $user, Company $model)
+    public function automoderate(User $user, PlacesType $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'automoderate', $this->entity_dependence);
         return $result;

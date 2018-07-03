@@ -11,6 +11,9 @@ class CreatePlacesTable extends Migration
     {
         Schema::create('places', function (Blueprint $table) {
             $table->increments('id');
+
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            
             $table->string('name', 40)->nullable()->index()->comment('Имя помещения');
             $table->string('description')->index()->nullable()->comment('Описание для помещения');
 
@@ -22,7 +25,6 @@ class CreatePlacesTable extends Migration
 
             // $table->integer('schedule_id')->nullable()->unsigned()->comment('Id графика работы');
             // $table->foreign('schedule_id')->references('id')->on('schedules');
-
 
             $table->integer('square')->nullable()->unsigned()->comment('Площадь в квадратных метрах');
             $table->integer('stockroom_status')->unsigned()->nullable()->comment('Флаг, что является складом');

@@ -592,7 +592,7 @@ class PagesTableSeeder extends Seeder
         'site_id' => 1,
         'title' => 'Помещения',
         'description' => 'Помещения',
-        'alias' => 'place',
+        'alias' => 'places',
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,

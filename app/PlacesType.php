@@ -15,14 +15,12 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
+// use App\Scopes\Filters\Filter;
+// use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class Place extends Model
+class PlacesType extends Model
 {
-
-    use Notifiable;
     use SoftDeletes;
 
     // Включаем Scopes
@@ -34,43 +32,26 @@ class Place extends Model
     use ModeratorLimitTraitScopes;
 
     // Фильтры
-    use Filter;
-    use BooklistFilter;
+    // use Filter;
+    // use BooklistFilter;
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-
+        'name',
+        'description',
     ];
 
-    // Фильтрация по городу
-    public function scopeAuthorFilter($query, $request)
-    {
 
-        //Фильтруем по списку городов
-        if($request->author_id){
-            $query = $query->whereIn('author_id', $request->author_id);
-        };
+    // Получаем компании.
+    // public function company()
+    // {
+    // 	return $this->belongsTo('App\Company');
+    // }
 
-        return $query;
-    }
+    // public function albums()
+    // {
+    // 	return $this->hasMany('App\Album');
+    // }
 
-
-    public function places_types()
-    {
-        return $this->belongsToMany('App\PlaceType', 'rooms', 'place_id', 'places_type_id');
-    }
-
-
-    public function author()
-    {
-        return $this->belongsTo('App\User', 'author_id');
-    }
-
-    // Получаем локацию компании
-    public function location()
-    {
-        return $this->belongsTo('App\Location');
-    }
-    
 }

@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Редактировать компанию')
+@section('title', 'Редактировать помещение')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $company->name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $place->name))
 
 @section('title-content')
 	<div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">РЕДАКТИРОВАТЬ КОМПАНИЮ</h2>
+       <h2 class="header-content">РЕДАКТИРОВАТЬ ПОМЕЩЕНИЕ</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -16,9 +16,9 @@
 
 @section('content')
 
-  {{ Form::model($company, ['route' => ['companies.update', $company->id], 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+  {{ Form::model($place, ['route' => ['places.update', $place->id], 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
   {{ method_field('PATCH') }}
-    @include('companies.form', ['submitButtonText' => 'Редактировать компанию', 'param'=>''])
+    @include('places.form', ['submitButtonText' => 'Редактировать помещение', 'param'=>''])
   {{ Form::close() }}
 
 @endsection

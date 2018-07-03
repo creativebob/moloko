@@ -852,7 +852,7 @@ class MenusTableSeeder extends Seeder
         'name' => 'Помещения',
         'icon' => null,
         'alias' => 'places',
-        'parent_id' => 51,
+        'parent_id' => 52,
         'page_id' => 53,
         'navigation_id' => 2,
         'company_id' => null,

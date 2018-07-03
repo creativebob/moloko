@@ -6,6 +6,8 @@ use App\User;
 use App\RightsRole;
 use App\Company;
 use App\Role;
+use App\Place;
+use App\PlacesType;
 
 use App\Right;
 use App\Entity;
@@ -40,6 +42,8 @@ use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
 use App\Policies\CompanyPolicy;
 use App\Policies\RolePolicy;
+use App\Policies\PlacePolicy;
+use App\Policies\PlacesTypePolicy;
 
 use App\Policies\RightPolicy;
 use App\Policies\EntityPolicy;
@@ -55,6 +59,7 @@ use App\Policies\PagePolicy;
 use App\Policies\NavigationPolicy;
 use App\Policies\MenuPolicy;
 use App\Policies\NewsPolicy;
+
 
 use App\Policies\PositionPolicy;
 use App\Policies\StafferPolicy;
@@ -91,6 +96,8 @@ class AuthServiceProvider extends ServiceProvider
         Right::class => RightPolicy::class, 
         Entity::class => EntityPolicy::class, 
         Role::class => RolePolicy::class,
+        Place::class => PlacePolicy::class,
+        PlacesType::class => PlacesTypePolicy::class,
         Position::class => PositionPolicy::class,
         Region::class => RegionPolicy::class,
         Area::class => AreaPolicy::class,
