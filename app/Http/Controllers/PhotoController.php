@@ -224,7 +224,6 @@ class PhotoController extends Controller
       }
       $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
 
-      
       // } 
       // Storage::disk('public')->put($directory.'/small/'.$image_name, $small->stream()->__toString());
       //   // dd($photo);

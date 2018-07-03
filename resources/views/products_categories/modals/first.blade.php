@@ -53,4 +53,7 @@
   </div>
 </div>
 
+@include('products_categories.scripts')
+
+
 

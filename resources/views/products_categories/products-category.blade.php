@@ -1,6 +1,6 @@
 <li>
 
-	@if ($products_cat['products_count'] > 0)
+	@if ($products_cat['products_group_count'] > 0)
 	<div class="checkbox">
 		{{ Form::checkbox('add_products_category_id', $products_cat['id'], null, ['class' => 'add-composition', 'id' => 'add-producs_categories-'.$products_cat['id']]) }}
 		<label for="add-producs_categories-{{ $products_cat['id'] }}"><span>{{ $products_cat['name'] }}</span></label>

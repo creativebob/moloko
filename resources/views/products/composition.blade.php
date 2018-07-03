@@ -1,7 +1,15 @@
 <tr class="item" id="compositions-{{ $composition->id }}" data-name="{{ $composition->name }}">
 	<td>{{ $composition->name }}</td>
 	<td>
-		 {{ Form::select('unit_id', ['1' => 'Колбаска'], 0, ['id' => 'units-list', 'class' => 'compact']) }}
+		@if (count($composition->products) > 0)
+		<select class="compact">
+			@foreach ($composition->products as $product)
+				<option value="{{ $product->id }}">{{ $product->name }}</option>
+			@endforeach
+		</select>
+		@else
+			Нет артикулов сырья
+		@endif
 	</td>
 	<td>
 		<div class="wrap-input-table">
