@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Product;
+use App\ProductsCategory;
 
 use Illuminate\Http\Request;
 
@@ -85,24 +86,33 @@ class CompositionController extends Controller
     }
 
      // --------------------------------------------- Ajax -------------------------------------------------
+
+    public function ajax_add(Request $request)
+    {
+
+        $composition = Product::with(['unit', 'articles' => function ($query) {
+            $query->whereNull('template');
+        }])->findOrFail($request->id);
+
+        return view($request->entity.'.compositions.composition', compact('composition'));
+    }
     
     public function ajax_add_relation(Request $request)
     {
 
-        $product = Product::findOrFail($request->product_id);
-
-        $product->compositions()->toggle([$request->id]);
+        $products_category = ProductsCategory::findOrFail($request->products_category_id);
+        $products_category->compositions()->toggle([$request->id]);
 
         $composition = Product::findOrFail($request->id);
 
-        return view('products.composition', ['composition' => $composition]);
+        return view($request->entity.'.compositions.composition', compact('composition'));
     }
 
     public function ajax_delete_relation(Request $request)
     {
 
-        $product = Product::findOrFail($request->product_id);
-        $res = $product->compositions()->toggle([$request->id]);
+        $products_category = ProductsCategory::findOrFail($request->products_category_id);
+        $res = $products_category->compositions()->toggle([$request->id]);
 
         if ($res) {
             $result = [

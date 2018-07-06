@@ -10,19 +10,19 @@ class MetricEntityTableSeeder extends Seeder
         $mass[] = [
             'metric_id' => 1,
             'entity_id' => 1,
-            'entity' => 'products',
+            'entity' => 'products_categories',
         ];
         $mass[] = [
             'metric_id' => 2,
             'entity_id' => 1,
-            'entity' => 'products',
+            'entity' => 'products_categories',
         ];
 
         for ($i=7; $i <= 41; $i++) { 
             $mass[] = [
                 'metric_id' => 3,
                 'entity_id' => $i,
-                'entity' => 'products',
+                'entity' => 'products_categories',
             ];
         }
 
@@ -30,7 +30,7 @@ class MetricEntityTableSeeder extends Seeder
             $mass[] = [
                 'metric_id' => 6,
                 'entity_id' => $i,
-                'entity' => 'products',
+                'entity' => 'products_categories',
             ];
         }
 

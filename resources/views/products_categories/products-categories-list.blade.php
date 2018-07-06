@@ -1,13 +1,18 @@
 {{-- Если вложенный --}}
 @php
-  $count = 0;
+$count = 0;
 @endphp
 @if (isset($products_category['children']))
-  @php
-    $count = count($products_category['children']);
-  @endphp
+@php
+$count = count($products_category['children']) + $count;
+@endphp
 @endif
-@if (isset($products_category['children']))
+@if (isset($products_category['products']))
+@php
+$count = count($products_category['products']) + $count;
+@endphp
+@endif
+@if ((isset($products_category['children'])) || ($products_category['products_count'] > 0))
 <li class="medium-item item parent" id="products_categories-{{ $products_category['id'] }}" data-name="{{ $products_category['name'] }}">
   <a class="medium-link @if($drop == 0) link-small @endif">
     <div class="icon-open sprite"></div>
@@ -35,11 +40,11 @@
     </div>
     <div>
       @if($products_category['edit'] == 1)
-      <div class="icon-list-edit sprite" data-open="medium-edit"></div>
+      <a class="icon-list-edit sprite" href="/products_categories/{{ $products_category['id'] }}/edit"></a>
       @endif
     </div>
     <div class="del">
-      @if (!isset($products_category['children']) && ($products_category['system_item'] != 1) && $products_category['delete'] == 1)
+      @if (!isset($products_category['children']) && ($products_category['system_item'] != 1) && $products_category['delete'] == 1 && $products_category['products_count'] > 0)
       <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
       @endif
     </div>
@@ -52,13 +57,23 @@
     <label class="label-check" for="check-{{ $products_category['id'] }}"></label> 
   </div>
   <ul class="menu vertical medium-list nested" data-accordion-menu data-multi-open="false">
-  @if (isset($products_category['children']))
-    @foreach($products_category['children'] as $products_category)
-      @include('products_categories.products-categories-list', $products_category)
+    @if ((isset($products_category['children'])) || ($products_category['products_count'] > 0))
+
+    @if ($products_category['products_count'] > 0)
+    @foreach($products_category['products'] as $product)
+    @include('products_categories.products-list', $product)
     @endforeach
-  @else
+    @endif
+
+    @if (isset($products_category['children']))
+    @foreach($products_category['children'] as $products_category)
+    @include('products_categories.products-categories-list', $products_category)
+    @endforeach
+    @endif
+
+    @else
     <li class="empty-item"></li>
-  @endif
+    @endif
   </ul>
 </li>
 
@@ -90,7 +105,7 @@
     </div>
     <div>
       {{-- @if($products_category['edit'] == 1) --}}
-      <div class="icon-list-edit sprite" data-open="medium-edit"></div>
+      <a class="icon-list-edit sprite" href="/products_categories/{{ $products_category['id'] }}/edit"></a>
       {{-- @endif --}}
     </div>
     <div class="del">
@@ -110,9 +125,6 @@
 @endif
 
 
- 
-              
-    
 
 
 
@@ -122,6 +134,8 @@
 
 
 
- 
 
-         
+
+
+
+

@@ -8,13 +8,30 @@ $drop = 1;
 
 
 @foreach ($products_categories_tree as $products_category)
+
+@php
+$count = 0;
+@endphp
+@if (isset($products_category['children']))
+@php
+$count = count($products_category['children']) + $count;
+@endphp
+@endif
+@if (isset($products_category['products']))
+@php
+$count = count($products_category['products']) + $count;
+@endphp
+@endif
+
+
+
 @if($products_category['category_status'] == 1)
-{{-- Если индустрия --}}
+{{-- Если категория --}}
 <li class="first-item item @if (isset($products_category['children'])) parent @endif" id="products_categories-{{ $products_category['id'] }}" data-name="{{ $products_category['name'] }}">
   <a class="first-link @if($drop == 0) link-small @endif">
     <div class="icon-open sprite"></div>
     <span class="first-item-name">{{ $products_category['name'] }}</span>
-    <span class="number">{{ $products_category['count'] }}</span>
+    <span class="number">{{ $count }}</span>
     @if ($products_category['moderation'])
     <span class="no-moderation">Не отмодерированная запись!</span>
     @endif
@@ -37,7 +54,7 @@ $drop = 1;
     </div>
     <div>
       @if($products_category['edit'] == 1)
-      <div class="icon-list-edit sprite" data-open="first-edit"></div>
+      <a class="icon-list-edit sprite" href="/products_categories/{{ $products_category['id'] }}/edit"></a>
       @endif
     </div>
     <div class="del">
@@ -54,11 +71,23 @@ $drop = 1;
     <label class="label-check white" for="check-{{ $products_category['id'] }}"></label> 
   </div>
   <ul class="menu vertical medium-list" data-accordion-menu data-multi-open="false">
+
+    
+
+    @if ((isset($products_category['children'])) || ($products_category['products_count'] > 0))
+
+    @if ($products_category['products_count'] > 0)
+    @foreach($products_category['products'] as $product)
+    @include('products_categories.products-list', $product)
+    @endforeach
+    @endif
+    
     @if (isset($products_category['children']))
-    {{-- @each('products_categories.products-categories-list', $sector['children'], 'sector', 'includes.empty-item') --}}
     @foreach($products_category['children'] as $products_category)
     @include('products_categories.products-categories-list', $products_category)
     @endforeach
+    @endif
+
     @else
     <li class="empty-item"></li>
     @endif

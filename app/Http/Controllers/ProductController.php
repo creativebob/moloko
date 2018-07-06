@@ -122,7 +122,8 @@ class ProductController extends Controller
         $answer_products_categories = operator_right('products_categories', false, 'index');
 
         // Категории
-        $products_categories = ProductsCategory::moderatorLimit($answer_products_categories)
+        $products_categories = ProductsCategory::with('products')
+        ->moderatorLimit($answer_products_categories)
         ->companiesLimit($answer_products_categories)
         ->authors($answer_products_categories)
         ->systemItem($answer_products_categories) // Фильтр по системным записям
@@ -137,6 +138,8 @@ class ProductController extends Controller
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
         $products_categories_list = get_select_tree($products_categories, null, null, null);
         // dd($countries_list);
+
+        $products_list = $products_categories->products->pluck('name', 'id');
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_units_categories = operator_right('units_categories', false, 'index');
@@ -154,7 +157,7 @@ class ProductController extends Controller
         ->get()
         ->pluck('name', 'id');
 
-        return view('products.create', compact('product', 'products_categories_list', 'units_categories_list'));
+        return view('products.create', compact('product', 'products_categories_list', 'units_categories_list', 'products_list'));
     }
 
     public function store(ProductRequest $request)
@@ -180,10 +183,12 @@ class ProductController extends Controller
         $product->unit_id = $request->unit_id;
         
         // Автоматически отправляем запись на модерацию
-        $product->moderation = 1;
+        // $product->moderation = 1;
 
         // Модерация и системная запись
         $product->system_item = $request->system_item;
+
+        $product->display = $request->display;
 
         $product->company_id = $company_id;
         $product->author_id = $user_id;
@@ -191,25 +196,31 @@ class ProductController extends Controller
 
         if ($product) {
 
+            // если добавляли продукт с категорий продукции
+            if ($request->entity == 'products_categories') {
+                // Переадресовываем на index
+                return Redirect('products_categories/'.$request->type)->with('id', $request->products_category_id);
+            }
+
             // Когда продукт записался, создаем дял него базовый артикул
 
-            $article = new Article;
-            $article->name = $request->name;
-            $article->product_id = $product->id;
-            $article->cost = $request->cost;
-            $article->price = $request->price;
+            // $article = new Article;
+            // $article->name = $request->name;
+            // $article->product_id = $product->id;
+            // $article->cost = $request->cost;
+            // $article->price = $request->price;
 
-            $article->company_id = $company_id;
-            $article->author_id = $user_id;
+            // $article->company_id = $company_id;
+            // $article->author_id = $user_id;
 
-            $article->save();
+            // $article->save();
 
-            if ($article) {
-                // Отправляем на редактирование записи
-                return Redirect('/products/'.$product->id.'/edit');
-            } else {
-                abort(403, 'Ошибка записи базового артикула');
-            }
+            // if ($article) {
+            //     // Отправляем на редактирование записи
+            //     return Redirect('/products/'.$product->id.'/edit');
+            // } else {
+            //     abort(403, 'Ошибка записи базового артикула');
+            // }
         } else {
             abort(403, 'Ошибка записи товара');
         }
@@ -839,4 +850,87 @@ class ProductController extends Controller
 
         return back();
     }
+
+    public function ajax_count(Request $request)
+    {
+        // $id = 1;
+        // $entity = 'products_categories';
+
+        $id = $request->id;
+        $entity = $request->entity;
+
+        $products_category = ProductsCategory::withCount('products')->findOrFail($id);
+
+
+        if ($products_category->products_count > 0) {
+
+            $products_list = Product::where('products_category_id', $id)->get()->pluck('name', 'id');
+
+            if ($products_list) {
+
+                return view($entity.'.mode-select', compact('products_list'));
+            } else {
+                $result = [
+                    'error_status' => 1,
+                    'error_message' => 'Ошибка при формировании списка групп товаров!',
+                ];
+            }
+
+        } else {
+
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer_units_categories = operator_right('units_categories', false, 'index');
+
+            // Главный запрос
+            $units_categories_list = UnitsCategory::with(['units' => function ($query) {
+                $query->pluck('name', 'id');
+            }])
+            ->moderatorLimit($answer_units_categories)
+            ->companiesLimit($answer_units_categories)
+            ->authors($answer_units_categories)
+            ->systemItem($answer_units_categories) // Фильтр по системным записям
+            ->template($answer_units_categories)
+            ->orderBy('sort', 'asc')
+            ->get()
+            ->pluck('name', 'id');
+
+            return view($entity.'.mode-add', compact('units_categories_list'));
+        }
+    }
+
+    public function ajax_modes(Request $request)
+    {
+        $mode = $request->mode;
+        $entity = $request->entity;
+
+        // $mode = 'mode-add';
+        // $entity = 'products_categories';
+
+        if ($mode == 'mode-select') {
+            return view($entity.'.mode-select');
+        }
+
+        if ($mode == 'mode-add') {
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer_units_categories = operator_right('units_categories', false, 'index');
+
+                // Главный запрос
+            $units_categories_list = UnitsCategory::with(['units' => function ($query) {
+                $query->pluck('name', 'id');
+            }])
+            ->moderatorLimit($answer_units_categories)
+            ->companiesLimit($answer_units_categories)
+            ->authors($answer_units_categories)
+            ->systemItem($answer_units_categories) // Фильтр по системным записям
+            ->template($answer_units_categories)
+            ->orderBy('sort', 'asc')
+            ->get()
+            ->pluck('name', 'id');
+
+            return view($entity.'.mode-add', compact('units_categories_list'));
+        }
+
+    }
+
+    
 }

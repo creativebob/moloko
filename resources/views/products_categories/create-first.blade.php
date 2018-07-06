@@ -4,7 +4,7 @@
       <h5>ДОБАВЛЕНИЕ категории</h5>
     </div>
   </div>
-  {{ Form::open(['id'=>'form-first-add', 'data-abide', 'novalidate', 'files'=>'true']) }}
+  {{ Form::open(['url' => '/products_categories', 'id'=>'form-first-add', 'data-abide', 'novalidate']) }}
 
     @include('products_categories.modals.first', ['submitButtonText' => 'Добавить категорию', 'class' => 'submit-add', 'disabled' => ''])
 

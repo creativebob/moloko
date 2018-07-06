@@ -93,7 +93,7 @@ class DatabaseSeeder extends Seeder
     $this->call(AlbumsTableSeeder::class);
 
     // Товары
-    $this->call(ProductsTypesTableSeeder::class);
+    $this->call(ProductsModesTableSeeder::class);
     $this->call(ProductsCategoriesTableSeeder::class);
     $this->call(ProductsTableSeeder::class);
 

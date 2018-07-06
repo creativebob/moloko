@@ -55,14 +55,26 @@ class ProductsCategory extends Model
         return $this->hasMany('App\Product');
     }
 
-    public function products_type()
+    public function products_mode()
     {
-        return $this->belongsTo('App\ProductsType');
+        return $this->belongsTo('App\ProductsMode');
     }
 
     public function photo()
     {
         return $this->belongsTo('App\Photo');
+    }
+
+    // Получаем метрики
+    public function metrics()
+    {
+        return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'products_categories');
+    }
+
+    // Получаем состав
+    public function compositions()
+    {
+        return $this->belongsToMany('App\Product', 'compositions', 'products_category_id', 'composition_id');
     }
 
 }

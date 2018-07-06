@@ -94,11 +94,7 @@ class Product extends Model
         return $this->belongsTo('App\Photo');
     }
 
-    // Производитель
-    public function manufacturer()
-    {
-        return $this->belongsTo('App\Company', 'manufacturer_id');
-    }
+    
 
     // Альбом
     public function album()
