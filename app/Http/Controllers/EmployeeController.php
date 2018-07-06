@@ -73,8 +73,8 @@ class EmployeeController extends Controller
         // dd($filter_query);
         $filter['status'] = null;
 
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите должность:', 'position', 'position_id', 'staffer');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите отдел:', 'department', 'department_id', 'staffer');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите должность:', 'position', 'position_id', 'staffer', 'external-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите отдел:', 'department', 'department_id', 'staffer', 'external-id-one');
 
 
             // Добавляем данные по спискам (Требуется на каждом контроллере)

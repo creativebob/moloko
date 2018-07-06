@@ -24,14 +24,12 @@
         <tr id="thead-content">
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-name" data-serversort="name" >Название компании</th>
-
-          @if($user->god == 1)<th class="td-getauth">Действие</th> @endif
-
+          <th class="td-name" data-serversort="name" >Название помещения</th>
+          <th class="td-description">Описание</th>
           <th class="td-address">Адрес</th>
           <th class="td-square">Площадь</th>
-          <th class="td-stockroom-status">Склад</th>
-          <th class="td-rent-status">Аренда</th>
+          <th class="td-stockroom-status">Назначение</th>
+          <th class="td-rent-status">Форма собственности</th>
           
           <th class="td-delete"></th>
         </tr>
@@ -69,14 +67,10 @@
             </a> 
             @endif
           </td>
-          {{-- Если пользователь бог, то показываем для него переключатель на компанию --}}
-          @if($user->god == 1)
-          <td class="td-getauth">@if($user->place_id != $place->id) {{ link_to_route('users.getauthplace', 'Авторизоваться', ['place_id'=>$place->id], ['class' => 'tiny button']) }} @endif</td>
-          @endif
-
+          <td class="td-description">{{ $place->description }} </td>
           <td class="td-address">@if(!empty($place->location->address)){{ $place->location->address }}@endif </td>
-          <td class="td-square">{{ $place->square }} </td>
-          <td class="td-stockroom-status">{{ $place->stockroom_status }} </tdh>
+          <td class="td-square">{{ num_format($place->square, 0) }} м<sup>2</sup>  </td>
+          <td class="td-places-types">{{ $place->places_types->implode('name', ', ') }}</td>
           <td class="td-rent-status">{{ $place->rent_status }} </td>
 
           <td class="td-delete">
@@ -113,16 +107,15 @@
 @endsection
 
 @section('scripts')
-  {{-- Скрипт сортировки и перетаскивания для таблицы --}}
+  {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
   @include('includes.scripts.tablesorter-script')
 
   {{-- Скрипт чекбоксов --}}
   @include('includes.scripts.checkbox-control')
 
-  @include('includes.scripts.sortable-table-script')
-
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-delete-script')
   @include('includes.scripts.delete-ajax-script')
 
+  @include('includes.scripts.sortable-table-script')
 @endsection

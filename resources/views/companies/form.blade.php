@@ -69,7 +69,7 @@
             }
               @endphp
               {{ Form::select('country_id', $countries_list, $country_id)}}
-            </label> 
+            </label>
           </div>
 
 

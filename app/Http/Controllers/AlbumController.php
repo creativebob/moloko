@@ -81,8 +81,8 @@ class AlbumController extends Controller
         // Создаем контейнер фильтра
         $filter['status'] = null;
 
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id', null, 'internal-id-one');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);

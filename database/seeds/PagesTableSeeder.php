@@ -598,6 +598,17 @@ class PagesTableSeeder extends Seeder
         'author_id' => 1,
         'display' => null,
       ],
+      [
+        'name' => 'Типы помещений',
+        'site_id' => 1,
+        'title' => 'Типы помещений',
+        'description' => 'Типы помещений',
+        'alias' => 'places_types',
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => null,
+      ],
     ]);
 }
 }

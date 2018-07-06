@@ -58,7 +58,7 @@ class Place extends Model
 
     public function places_types()
     {
-        return $this->belongsToMany('App\PlaceType', 'rooms', 'place_id', 'places_type_id');
+        return $this->belongsToMany('App\PlacesType', 'rooms', 'place_id', 'places_type_id');
     }
 
 

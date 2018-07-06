@@ -292,6 +292,13 @@ class EntitiesTableSeeder extends Seeder
         'system_item' => 1,
         'author_id' => 1,
       ], 
+      [
+        'name' => 'Типы помещений',
+        'alias' => 'places_types',
+        'model' => 'PlacesType',
+        'system_item' => 1,
+        'author_id' => 1,
+      ], 
 
             // [
             //     'name' => 'Рабочее время дня',

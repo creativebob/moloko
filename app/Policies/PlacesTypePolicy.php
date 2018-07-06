@@ -9,7 +9,7 @@ use App\PlacesType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PlacePolicy
+class PlacesTypePolicy
 {
     
     use HandlesAuthorization;

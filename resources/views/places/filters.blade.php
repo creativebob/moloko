@@ -4,12 +4,13 @@
  		<div class="small-12 medium-6 cell">
 			@include('includes.inputs.checkboxer', ['name'=>'city', 'value'=>$filter]) 			
  		</div>
- 	</div>
+ 	</div>  --}}
 	<div class="grid-x">
  		<div class="small-12 medium-6 cell">
-			@include('includes.inputs.checkboxer', ['name'=>'sector', 'value'=>$filter])			
+			@include('includes.inputs.checkboxer', ['name'=>'places_types', 'value'=>$filter])			
  		</div>
- 	</div> --}}
+ 	</div>
+ 	
 </div>
 <div class="small-12 medium-6 large-6 cell checkbox checkboxer">
 	<legend>Мои списки:</legend>

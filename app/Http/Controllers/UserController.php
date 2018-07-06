@@ -60,7 +60,7 @@ class UserController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям              
         ->orWhere('id', $request->user()->id) // Только для сущности USERS
-        ->filter($request, 'city', 'location')
+        ->filter($request, 'city_id', 'location')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);
@@ -81,10 +81,11 @@ class UserController extends Controller
         $filter['status'] = null;
 
         // Перечень подключаемых фильтров:
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

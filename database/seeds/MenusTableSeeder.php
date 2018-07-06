@@ -861,6 +861,19 @@ class MenusTableSeeder extends Seeder
         'display' => 1,
         'sort' => null,
     ],
+    [
+        'name' => 'Типы помещений',
+        'icon' => null,
+        'alias' => 'places_types',
+        'parent_id' => 4,
+        'page_id' => 54,
+        'navigation_id' => 2,
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => null,
+    ],
 ]);
 }
 }
