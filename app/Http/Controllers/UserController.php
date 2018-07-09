@@ -12,6 +12,7 @@ use App\Photo;
 use App\Location;
 use App\Booklist;
 use App\Role;
+use App\Country;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -117,10 +118,14 @@ class UserController extends Controller
         $user = new User;
         $roles = new Role;
 
+
+        // Получаем список стран
+        $countries_list = Country::get()->pluck('name', 'id');
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list', 'page_info'));
+        return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list', 'page_info', 'countries_list'));
     }
 
     public function store(UserRequest $request)
@@ -141,13 +146,13 @@ class UserController extends Controller
 
         // Пишем локацию
         $location = new Location;
-        $location->country_id = 1;
+        $location->country_id = $request->country_id;
         $location->city_id = $request->city_id;
         $location->address = $request->address;
-        $location->author_id = $user_auth_id;
+        $location->author_id = $user_auth->id;
         $location->save();
 
-        if($location) {
+        if ($location) {
             $location_id = $location->id;
         } else {
             abort(403, 'Ошибка записи адреса');
@@ -361,12 +366,14 @@ class UserController extends Controller
         ->template($answer_roles) // Выводим шаблоны в список
         ->pluck('name', 'id');
 
-        // dd($departments_list);
+        // Получаем список стран
+        $countries_list = Country::get()->pluck('name', 'id');
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
         // dd($user);
 
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info'));
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list'));
     }
 
     public function update(UserRequest $request, $id)

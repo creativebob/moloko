@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 use App\Menu;
-use App\Setting;
+use App\AlbumsSetting;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -81,10 +81,25 @@ class AppServiceProvider extends ServiceProvider
       }
 
        // Если существует таблица с меню
-      if (Schema::hasTable('settings')) {
-        $settings = Setting::get()->keyBy('name');
+      if (Schema::hasTable('albums_settings')) {
+        $get_settings = AlbumsSetting::whereNull('company_id')->first();
 
-          config()->set('settings', $settings);
+        // dd($get_settings);
+
+        $settings['img_small_width'] = $get_settings->img_small_width;
+        $settings['img_small_height'] = $get_settings->img_small_height;
+        $settings['img_medium_width'] = $get_settings->img_medium_width;
+        $settings['img_medium_height'] = $get_settings->img_medium_height;
+        $settings['img_large_width'] = $get_settings->img_large_width;
+        $settings['img_large_height'] = $get_settings->img_large_height;   
+
+        $settings['img_formats'] = $get_settings->img_formats;
+
+        $settings['img_min_width'] = $get_settings->img_min_width;
+        $settings['img_min_height'] = $get_settings->img_min_height;   
+        $settings['img_max_size'] = $get_settings->img_max_size;
+
+        config()->set('settings', $settings);
 
         // View::share(compact('settings'));
 

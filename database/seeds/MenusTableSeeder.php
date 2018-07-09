@@ -26,7 +26,7 @@ class MenusTableSeeder extends Seeder
         'sort' => null,
     ],
     [
-        'name' => 'Тест для сотрудников',
+        'name' => 'Продажи',
         'icon' => 'icon-sale',
         'alias' => null,
         'parent_id' => null,

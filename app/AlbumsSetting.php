@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Setting extends Model
+class AlbumsSetting extends Model
 {
     //
 }

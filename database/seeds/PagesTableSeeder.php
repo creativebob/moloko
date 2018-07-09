@@ -60,7 +60,7 @@ class PagesTableSeeder extends Seeder
       [
         'name' => 'Сотрудники',
         'site_id' => 1,
-        'title' => 'Сотрудники компани',
+        'title' => 'Сотрудники компании',
         'description' => 'Сотрудники компании',
         'alias' => 'employees',
         'company_id' => null,
@@ -69,7 +69,7 @@ class PagesTableSeeder extends Seeder
         'display' => null,
       ],
       [
-        'name' => 'Тестовая страница для должностей',
+        'name' => 'Продажи',
         'site_id' => 1,
         'title' => 'Страница должности',
         'description' => 'Должность в компании',

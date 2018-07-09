@@ -84,40 +84,60 @@
               </label>
             </div>
           </div>
+
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
+              <label>Страна
+                @php
+                $country_id = null;
+                if (isset($user->location->country_id)) {
+                  $country_id = $user->location->country_id;
+                }
+                @endphp
+                {{ Form::select('country_id', $countries_list, $country_id)}}
+              </label>
+            </div>
+            <div class="small-12 medium-6 cell">
+                <label class="input-icon">Введите город
+                  @php
+                $city_name = null;
+                $city_id = null;
+                if(isset($user->location->city->name)) {
+                $city_name = $user->location->city->name;
+                $city_id = $user->location->city->id;
+                }
+                @endphp
+                @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
+              </label>
+            </div>
+
+
+            <div class="small-12 medium-6 cell">
+              <label>Адрес
+                @php
+                $address = null;
+                if (isset($user->location->address)) {
+                  $address = $user->location->address;
+                }
+                @endphp
+                @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+              </label>
+            </div>
+
+            <div class="small-12 medium-6 cell">
               <label>Почта
-                @include('includes.inputs.email', ['value'=>$user->email, 'name'=>'email', 'required'=>''])
-              </label>         
+                @include('includes.inputs.email', ['value'=>$user->email, 'name'=>'email', 'required'=>'required'])
+              </label> 
+            </div>
+
+            <div class="small-12 medium-6 cell">
               <label>Телеграм ID
                 {{ Form::text('telegram_id', $user->telegram_id, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
                 <span class="form-error">Укажите номер Telegram</span>
               </label>
-              
             </div>
-            <div class="small-12 medium-6 cell">
-              <label class="input-icon">Введите город
-                @php
-              $city_name = null;
-              $city_id = null;
-              if(isset($user->location->city->name)) {
-              $city_name = $user->location->city->name;
-              $city_id = $user->location->city->id;
-              }
-              @endphp
-              @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
-            </label>
-            <label>Адрес
-              @php
-              $address = null;
-              if (isset($user->location->address)) {
-              $address = $user->location->address;
-            }
-              @endphp
-              @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
-            </label>
-          </div>
         </div>
+
       </div>
       <!-- Персональные данные -->
       <div class="tabs-panel" id="content-panel-2">
@@ -128,10 +148,13 @@
             </label>
           </div>
           <div class="small-6 small-offset-1 medium-6 medium-offset-2 cell radiobutton">Пол<br>
-            {{ Form::radio('sex', '1', true, ['id'=>'man']) }}
+
+            {{ Form::radio('sex', 1, true, ['id'=>'man']) }}
             <label for="man"><span>Мужской</span></label>
-            {{ Form::radio('sex', '0', false, ['id'=>'woman']) }}
+
+            {{ Form::radio('sex', 0, false, ['id'=>'woman']) }}
             <label for="woman"><span>Женский</span></label>
+
           </div>
         </div>
         <div class="grid-x grid-padding-x">
