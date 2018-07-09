@@ -160,6 +160,24 @@ class CompaniesTableSeeder extends Seeder
                 'sector_id' => 12,
                 'author_id' => 1,
             ],
+            [
+                'name' => 'Косметология',
+                'alias' => 'cosmetology',
+                'phone' => '83952712317',
+                // 'extra_phone' => '83952717775',
+                'email' => null,
+                'location_id' => 14,
+                // 'inn' => '',
+                // 'kpp' => '',
+                // 'account_settlement' => '',
+                // 'account_correspondent' => '',
+                // 'bank' => '',
+                'director_user_id' => null,  
+                // 'admin_user_id' => '1',  
+                'moderation' => null,
+                'sector_id' => 12,
+                'author_id' => 1,
+            ],
         ]);
     }
 }

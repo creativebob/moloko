@@ -11,6 +11,9 @@ use App\Site;
 use App\Company;
 use App\Department;
 use App\RoleUser;
+use App\Worktime;
+use App\ScheduleEntity;
+use App\Schedule;
 
 // Валидация
 use App\Http\Requests\StafferRequest;
@@ -83,8 +86,8 @@ class StafferController extends Controller
     // Смотрим сколько филиалов в компании
     $company = Company::with(['departments' => function($query) {
 
-        $query->whereFilial_status(1);
-      }])->findOrFail($user->company_id);
+      $query->whereFilial_status(1);
+    }])->findOrFail($user->company_id);
 
     $filials = count($company->departments);
     // dd($staff);
@@ -160,7 +163,7 @@ class StafferController extends Controller
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
     
     // ГЛАВНЫЙ ЗАПРОС:
-    $staffer = Staffer::with(['position', 'employees' => function($query) {
+    $staffer = Staffer::with(['position', 'schedules.worktimes', 'employees' => function($query) {
       $query->wheredismissal_date(null);
     }])
     ->moderatorLimit($answer)
@@ -185,10 +188,47 @@ class StafferController extends Controller
     };
     // dd($users_list);
 
+    if (isset($staffer->schedules->first()->worktimes)) {
+      $worktime_mass = $staffer->schedules->first()->worktimes->keyBy('weekday');
+    }
+
+    for($x = 1; $x<8; $x++){
+
+      if(isset($worktime_mass[$x]->worktime_begin)){
+
+        $worktime_begin = $worktime_mass[$x]->worktime_begin;
+        $str_worktime_begin = secToTime($worktime_begin);
+        $worktime[$x]['begin'] = $str_worktime_begin;
+
+      } else {
+
+        $worktime[$x]['begin'] = null;
+      }
+
+      if(isset($worktime_mass[$x]->worktime_interval)){
+
+        $worktime_interval = $worktime_mass[$x]->worktime_interval;
+
+        if(($worktime_begin + $worktime_interval) > 86400){
+
+          $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
+        } else {
+
+          $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);                       
+        }
+
+        $worktime[$x]['end'] = $str_worktime_interval;
+      } else {
+
+        $worktime[$x]['end'] = null;
+      }
+
+    }
+
     // Инфо о странице
     $page_info = pageInfo($this->entity_name);
 
-    return view('staff.edit', compact('staffer', 'users_list', 'page_info'));    
+    return view('staff.edit', compact('staffer', 'users_list', 'page_info', 'worktime'));    
   }
 
   public function update(EmployeeRequest $request, $id)
@@ -197,20 +237,57 @@ class StafferController extends Controller
     // Получаем авторизованного пользователя
     $user = $request->user();
 
+    // Скрываем бога
+      $user_id = hideGod($user);
+
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
 
     // ГЛАВНЫЙ ЗАПРОС:
-    $staffer = Staffer::moderatorLimit($answer)->findOrFail($id);
+    $staffer = Staffer::with('schedules.worktimes', 'position')->moderatorLimit($answer)->findOrFail($id);
 
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $staffer);
+
+    // Если не существует расписания для компании - создаем его
+    if($staffer->schedules->count() < 1){
+
+      $schedule = new Schedule;
+      $schedule->company_id = $user->company_id;
+      $schedule->name = 'График работы для должности: ' . $staffer->position->name;
+      $schedule->description = null;
+      $schedule->author_id = $user_id;
+      $schedule->save();
+
+            // Создаем связь расписания с компанией
+      $schedule_entity = new ScheduleEntity;
+      $schedule_entity->schedule_id = $schedule->id;
+      $schedule_entity->entity_id = $staffer->id;
+      $schedule_entity->entity = 'staff';
+      $schedule_entity->save();
+
+      $schedule_id = $schedule->id;
+    } else {
+
+      $schedule_id = $staffer->schedules->first()->id;
+    }
+
+        // Функция getWorktimes ловит все поля расписания из запроса и готовит к записи в worktimes
+    $mass_time = getWorktimes($request, $schedule_id);
+
+        // Удаляем все записи времени в worktimes для этого расписания
+    $worktimes = Worktime::where('schedule_id', $schedule_id)->forceDelete();
+
+        // Вставляем новое время в расписание
+    DB::table('worktimes')->insert($mass_time);
 
     // Если не пустая дата увольнения пришла
     if (isset($request->dismissal_date)) {
       // Снимаем с должности в штате
       $staffer->user_id = null;
       $staffer->editor_id = $user->id;
+      $staffer->schedule_id = $schedule_id;
+
       // Ищем в сотрудниках по id должности и где пустая дата увольнения
       $employee = Employee::where(['staffer_id' => $id, 'dismissal_date' => null])->first();
       // Заполняем дату
@@ -268,6 +345,8 @@ class StafferController extends Controller
 
     if ($employee) {
       $staffer->display = $request->display;
+
+      $staffer->editor_id = $user_id;
       $staffer->save();
 
       if ($staffer) {

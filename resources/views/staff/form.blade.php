@@ -81,6 +81,7 @@
     <label>Причина увольнения
       {{ Form::textarea('dismissal_desc', null, ['class'=>'varchar-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
     </label>
+    @include('includes.inputs.schedule', ['value'=>$worktime]) 
   </div>
   <div class="small-0 medium-0 large-2 cell tabs-margin-top"></div>
 

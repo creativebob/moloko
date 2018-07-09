@@ -86,6 +86,12 @@ class LocationsTableSeeder extends Seeder
 				'author_id' => 1,
 				'country_id' => 1,
 			],
+			[
+				'city_id' => 1,
+				'address' => 'ул. Красного восстания, 16',
+				'author_id' => 1,
+				'country_id' => 1,
+			],
 		]);
 	}
 }
