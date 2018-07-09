@@ -27,4 +27,9 @@ class MetricValue extends Model
     use ModeratorLimitTraitScopes;
 
     protected $table = 'metric_values';
+
+     public function value()
+    {
+        return $this->belongsTo('App\MetricValue');
+    }
 }

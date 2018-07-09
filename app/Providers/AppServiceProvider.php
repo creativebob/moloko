@@ -80,7 +80,7 @@ class AppServiceProvider extends ServiceProvider
         });
       }
 
-       // Если существует таблица с меню
+      // Если существует таблица с меню
       if (Schema::hasTable('settings')) {
         $settings = Setting::get()->keyBy('name');
 

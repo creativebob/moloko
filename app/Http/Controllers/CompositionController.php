@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 // Модели
 use App\Product;
 use App\ProductsCategory;
+use App\Article;
 
 use Illuminate\Http\Request;
 
@@ -94,7 +95,10 @@ class CompositionController extends Controller
             $query->whereNull('template');
         }])->findOrFail($request->id);
 
-        return view($request->entity.'.compositions.composition', compact('composition'));
+        $article = Article::with('compositions_values')->findOrFail($request->article_id);
+        $compositions_values = $article->compositions_values->keyBy('product_id');
+
+        return view($request->entity.'.compositions.composition', compact('composition', 'compositions_values'));
     }
     
     public function ajax_add_relation(Request $request)
