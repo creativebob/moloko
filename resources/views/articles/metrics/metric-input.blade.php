@@ -1,17 +1,26 @@
-@switch($metric->property->type)
+@php
+$metrics_value = null;
+@endphp
 
+@if(isset($metrics_values[$metric->id]->pivot->value))
+@php
+$metrics_value = $metrics_values[$metric->id]->pivot->value;
+@endphp
+@endif
+
+@switch($metric->property->type)
 
 @case('numeric')
 <label>
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
-	{{ Form::number('metrics['.$metric->id.'][value]') }}
+	{{ Form::number('metrics['.$metric->id.'][value]', $metrics_value) }}
 </label>
 @break
 
 @case('percent')
 <label>
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
-	{{ Form::number('metrics['.$metric->id.'][value]') }}
+	{{ Form::number('metrics['.$metric->id.'][value]', $metrics_value) }}
 </label>
 @break
 
@@ -35,15 +44,25 @@
 	@break
 
 	@case('select')
+	
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
 	<ul>
-
 		<select name="metrics[{{ $metric->id }}][value]">
 			@foreach ($metric->values as $value)
-			<option value="{{ $value->value }}">{{ $value->value }}</option>
+			@php
+			$selected = null;
+			@endphp
+
+			@if(isset($metrics_values[$metric->id]->pivot->value))
+			@if($metrics_values[$metric->id]->pivot->value == $value->value)
+			@php
+			$selected = 'selected';
+			@endphp
+			@endif
+			@endif
+			<option value="{{ $value->value }}" {{ $selected }}>{{ $value->value }}</option>
 			@endforeach
 		</select>
-
 	</ul>
 	@break
 	@endswitch

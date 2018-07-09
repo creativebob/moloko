@@ -170,22 +170,32 @@
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
-                            @if ($article->product->products_category->metrics_count > 0)
-                            @each('articles.metrics.metric-input', $article->product->products_category->metrics, 'metric')
+                            @if ($article->template == 1)
+
+                            @foreach ($article->product->products_category->metrics as $metric)
+                            @include('articles.metrics.metric-input', $metric)
+                            @endforeach
+
+                            @else
+
+                            @foreach ($article->metrics_values as $metric)
+                            @include('articles.metrics.metric-value', $metric)
+                            @endforeach
+
                             @endif
 
-                            @if ($article->metrics_values_count > 0)
-                            @each('articles.metrics.metric-value', $article->metrics_values, 'metric')
-                            @endif
-                        </fieldset>
-                        @endif
-                        <div id="article-inputs"></div>
-                        <div class="small-12 cell tabs-margin-top text-center">
+                            {{-- @if ($article->metrics_values_count > 0)
+                             @each('articles.metrics.metric-input', $article->product->products_category->metrics, 'metric')
+                             @each('articles.metrics.metric-value', $article->metrics_values, 'metric')
+                             @endif --}}
+
+                         </fieldset>
+                         @endif
+                         <div id="article-inputs"></div>
+                         <div class="small-12 cell tabs-margin-top text-center">
                             <div class="item-error" id="article-error">Такой артикул уже существует!<br>Измените значения!</div>
                         </div>
                         {{ Form::hidden('article_id', $article->id) }}
-
-                   
 
 
                     </div>
@@ -224,7 +234,7 @@
 
                     {{-- Кнопка --}}
                     <div class="small-12 cell tabs-button tabs-margin-top">
-                        {{ Form::submit('Создать артикул', ['class'=>'button']) }}
+                        {{ Form::submit('Создать артикул', ['class'=>'button', 'id' => 'add-article']) }}
                     </div>
 
                 </div>{{-- Закрытие разделителя на блоки --}}
@@ -241,6 +251,7 @@
                         <table class="composition-table">
                             <thead>
                                 <tr> 
+                                    @if ($article->template == 1)
                                     <th>Категория:</th>
                                     <th>Продукт:</th>
                                     <th>Кол-во:</th>
@@ -248,13 +259,26 @@
                                     <th>Отход:</th>
                                     <th>Остаток:</th>
                                     <th>Операция над остатком:</th>
+                                    @else
+                                    <th>Продукт:</th>
+                                    <th>Кол-во:</th>
+                                    @endif
+
                                     <!-- <th></th> -->
                                 </tr>
                             </thead>
                             <tbody id="composition-table">
                                 {{-- Таблица состава --}}
                                 @if (!empty($article->product->products_category->compositions))
-                                @each('articles.compositions.composition', $article->product->products_category->compositions, 'composition')
+                                @if ($article->template == 1)
+                                @foreach ($article->product->products_category->compositions as $composition)
+                                @include('articles.compositions.composition', $composition)
+                                @endforeach
+                                @else
+                                @foreach ($article->compositions_values as $composition)
+                                @include('articles.compositions.composition-value', $composition)
+                                @endforeach
+                                @endif
                                 @endif
                             </tbody>
                         </table>
@@ -262,92 +286,93 @@
 
                     <div class="small-12 medium-3 cell">
 
-                      <ul class="menu vertical">
+                        @if ($article->template == 1)
+                        <ul class="menu vertical">
 
-                        @foreach ($products_modes_list as $products_mode)
-                        <li>
-                          <a class="button" data-toggle="{{ $products_mode['alias'] }}-dropdown">{{ $products_mode['name'] }}</a>
-                          <div class="dropdown-pane" id="{{ $products_mode['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
+                            @foreach ($products_modes_list as $products_mode)
+                            <li>
+                              <a class="button" data-toggle="{{ $products_mode['alias'] }}-dropdown">{{ $products_mode['name'] }}</a>
+                              <div class="dropdown-pane" id="{{ $products_mode['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
 
-                            <ul class="checker" id="products-categories-list">
-                                @foreach ($products_mode['products_categories'] as $products_cat)
-                                @include('articles.compositions.products-category', $products_cat)
-                                @endforeach
-                            </ul>
+                                <ul class="checker" id="products-categories-list">
+                                    @foreach ($products_mode['products_categories'] as $products_cat)
+                                    @include('articles.compositions.products-category', $products_cat)
+                                    @endforeach
+                                </ul>
 
-                        </div>
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
-            
-        </div>
-    </div>
-
-    <!-- Ценообразование -->
-    <div class="tabs-panel" id="price-rules">
-        <div class="grid-x grid-padding-x">
-            <div class="small-12 medium-6 cell">
-
-                <fieldset class="fieldset-access">
-                    <legend>Базовые настройки</legend>
-
-                    <div class="grid-x grid-margin-x">
-                        <div class="small-12 medium-6 cell">
-                            <label>Себестоимость
-                                {{ Form::number('cost', $article->cost) }}
-                            </label>
-                        </div>
-                        <div class="small-12 medium-6 cell">
-                            <label>Цена
-                                {{ Form::number('price', $article->price) }}
-                            </label>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-        </div>
-    </div>
-{{ Form::close() }}
-
-    <!-- Фотографии -->
-    <div class="tabs-panel" id="photos">
-        <div class="grid-x grid-padding-x">
-
-            <div class="small-12 medium-7 cell">
-                {{ Form::open(['url' => '/article/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
-                {{ Form::hidden('name', $article->name) }}
-                {{ Form::hidden('id', $article->id) }}
-                {{ Form::close() }}
-                <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
-                    @if (isset($article->album_id))
-
-                    @include('articles.photos', $article)
-
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
                     @endif
-                </ul>
+                </div>
+
             </div>
-
-            <div class="small-12 medium-5 cell">
-
-                {{-- Форма редактированя фотки --}}
-                {{ Form::open(['url' => '/article/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
-
-
-                {{ Form::hidden('name', $article->name) }}
-                {{ Form::hidden('id', $article->id) }}
-                {{ Form::close() }}
-            </div>
-
         </div>
+
+        <!-- Ценообразование -->
+        <div class="tabs-panel" id="price-rules">
+            <div class="grid-x grid-padding-x">
+                <div class="small-12 medium-6 cell">
+
+                    <fieldset class="fieldset-access">
+                        <legend>Базовые настройки</legend>
+
+                        <div class="grid-x grid-margin-x">
+                            <div class="small-12 medium-6 cell">
+                                <label>Себестоимость
+                                    {{ Form::number('cost', $article->cost) }}
+                                </label>
+                            </div>
+                            <div class="small-12 medium-6 cell">
+                                <label>Цена
+                                    {{ Form::number('price', $article->price) }}
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        {{ Form::close() }}
+
+        <!-- Фотографии -->
+        <div class="tabs-panel" id="photos">
+            <div class="grid-x grid-padding-x">
+
+                <div class="small-12 medium-7 cell">
+                    {{ Form::open(['url' => '/article/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
+                    {{ Form::hidden('name', $article->name) }}
+                    {{ Form::hidden('id', $article->id) }}
+                    {{ Form::close() }}
+                    <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
+                        @if (isset($article->album_id))
+
+                        @include('articles.photos', $article)
+
+                        @endif
+                    </ul>
+                </div>
+
+                <div class="small-12 medium-5 cell">
+
+                    {{-- Форма редактированя фотки --}}
+                    {{ Form::open(['url' => '/article/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
+
+
+                    {{ Form::hidden('name', $article->name) }}
+                    {{ Form::hidden('id', $article->id) }}
+                    {{ Form::close() }}
+                </div>
+
+            </div>
+        </div>
+
+
+
     </div>
-
-
-
 </div>
 </div>
-</div>
-
 
 
 @endsection
@@ -369,22 +394,22 @@ $settings = config()->get('settings');
         // При клике на удаление метрики со страницы
         $(document).on('click', '[data-open="delete-metric"]', function() {
 
-        // Находим описание сущности, id и название удаляемого элемента в родителе
-        var parent = $(this).closest('.item');
-        var id = parent.attr('id').split('-')[1];
+            // Находим описание сущности, id и название удаляемого элемента в родителе
+            var parent = $(this).closest('.item');
+            var id = parent.attr('id').split('-')[1];
 
-        // alert(id);
+            // alert(id);
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/ajax_delete_relation_metric',
-            type: 'POST',
-            data: {id: id, entity: 'articles', entity_id: article_id},
-            success: function(date){
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/ajax_delete_relation_metric',
+                type: 'POST',
+                data: {id: id, entity: 'articles', entity_id: article_id},
+                success: function(date){
 
-                var result = $.parseJSON(date);
+                    var result = $.parseJSON(date);
         // alert(result);
 
         if (result['error_status'] == 0) {
@@ -414,54 +439,54 @@ $settings = config()->get('settings');
     }; 
 }
 })
-    });
+        });
 
         // При клике на удаление состава со страницы
         $(document).on('click', '[data-open="delete-composition"]', function() {
 
-        // Находим описание сущности, id и название удаляемого элемента в родителе
-        var parent = $(this).closest('.item');
-        var id = parent.attr('id').split('-')[1];
+            // Находим описание сущности, id и название удаляемого элемента в родителе
+            var parent = $(this).closest('.item');
+            var id = parent.attr('id').split('-')[1];
 
-        // alert(id);
+            // alert(id);
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/ajax_delete_relation_composition',
-            type: 'POST',
-            data: {id: id, article_id: article_id},
-            success: function(date){
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/ajax_delete_relation_composition',
+                type: 'POST',
+                data: {id: id, article_id: article_id},
+                success: function(date){
 
-                var result = $.parseJSON(date);
-        // alert(result);
+                    var result = $.parseJSON(date);
+                    // alert(result);
 
-        if (result['error_status'] == 0) {
+                    if (result['error_status'] == 0) {
 
-        // Удаляем элемент со страницы
-        $('#compositions-' + id).remove();
+                        // Удаляем элемент со страницы
+                        $('#compositions-' + id).remove();
 
-        // Убираем отмеченный чекбокс в списке метрик
-        $('#add-composition-' + id).prop('checked', false);
+                        // Убираем отмеченный чекбокс в списке метрик
+                        $('#add-composition-' + id).prop('checked', false);
 
-    } else {
-        alert(result['error_message']);
-    }; 
-}
-})
-    });
+                    } else {
+                        alert(result['error_message']);
+                    }; 
+                }
+            })
+        });
 
         // При клике на удаление состава со страницы
         $(document).on('click', '[data-open="delete-value"]', function() {
 
-        // Удаляем элемент со страницы
-        $(this).closest('.item').remove();
-    });
+            // Удаляем элемент со страницы
+            $(this).closest('.item').remove();
+        });
 
         // Когда при клике по табам активная вкладка артикула
         $(document).on('change.zf.tabs', '.tabs-list', function() {
-            if($('#articles:visible').length){
+            if ($('#articles:visible').length) {
 
                 $.ajax({
                     headers: {
@@ -471,47 +496,40 @@ $settings = config()->get('settings');
                     type: 'POST',
                     data: {article_id: article_id},
                     success: function(html){
-        // alert(html);
-        $('#article-inputs').html(html);
-        $('#article-inputs').foundation();
-        // Foundation.reInit($('#article-inputs'));
-    }
-})
+                        // alert(html);
+                        $('#article-inputs').html(html);
+                        $('#article-inputs').foundation();
+                        // Foundation.reInit($('#article-inputs'));
+                    }
+                })
             }
         });
 
         // Проверяем наличие артикула в базе при клике на кнопку добавления артикула
-        $(document).on('click', '#add-article', function(event) {
-            event.preventDefault();
-        // alert($('#article-form').serialize());
+        // $(document).on('click', '#add-article', function(event) {
+        //     event.preventDefault();
+        //     // alert($('#article-form').serialize());
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/articles',
-            type: 'POST',
-        dataType: 'json', // ставим тип json, чтоб определить что пришло по итогу
-        data: $('#article-form').serialize(),
+        //     $.ajax({
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         url: '/articles/' + article_id,
+        //         type: 'PATCH',
+        //         data: $('#article-form').serialize(),
+        //         success: function(data) {
+        //             var result = $.parseJSON(data);
+        //             alert(result['error_status']);
+        //             // alert(data['metric_values']);
+        //             if (result['error_status'] == 1) {
+        //                 $('#add-article').prop('disabled', true);
+        //                 $('#article-error').css('display', 'block');
+        //             } else {
 
-        // В случае совпадения артикула принимаем json, и выдаем ошибку
-        success: function(data, textStatus, jqXHR) {
-        // alert(data['metric_values']);
-        if (data['error_status'] == 1) {
-            $('#add-article').prop('disabled', true);
-            $('#article-error').css('display', 'block');
-        }
-    },
-
-        // В случае несовпадения артикула пишем новый и вставляем его, но ответ придет html, поэтому ajax даст ошибку, т.к. ждет json
-        error: function(html, textStatus, errorThrown) {
-
-        // alert(JSON.stringify(html['responseText']));
-        $('#article-table').append(JSON.stringify(html['responseText']));
-        $('#article-form')[0].reset();
-    }
-})
-    });
+        //             }
+        //         }
+        //     })
+        // });
 
         $(document).on('change', '#article-form input', function() {
             $('#add-article').prop('disabled', false);
@@ -676,7 +694,7 @@ $settings = config()->get('settings');
                 },
                 url: '/ajax_add_page_composition',
                 type: 'POST',
-                data: {id: $(this).val(), entity: 'articles'},
+                data: {id: $(this).val(), entity: 'articles', article_id: article_id},
                 success: function(html){
 
         // alert(html);

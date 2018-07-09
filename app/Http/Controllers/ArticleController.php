@@ -199,18 +199,19 @@ class ArticleController extends Controller
 
     public function edit(Request $request, $id)
     {
+
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_articles = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $article = Article::with(['product.products_category' => function ($query) {
-            $query->with(['metrics.property', 'compositions' => function ($query) {
+            $query->with(['metrics.property', 'metrics.property', 'compositions' => function ($query) {
                 $query->with(['articles' => function ($query) {
                     $query->whereNull('template');
                 }]);
             }])
             ->withCount('metrics', 'compositions');
         }, 'album.photos', 'company.manufacturers', 'metrics_values', 'compositions_values'])->withCount(['metrics_values', 'compositions_values'])->moderatorLimit($answer_articles)->findOrFail($id);
-        // dd($article->metrics_values);
+        // dd($article);
 
         $manufacturers_list = $article->company->manufacturers->pluck('name', 'id');
         // dd($manufacturers_list);
@@ -332,151 +333,100 @@ class ArticleController extends Controller
 
         // dd($product->products_group->products_category->type);
 
+        $metrics_values = $article->metrics_values->keyBy('id');
+        $compositions_values = $article->compositions_values->keyBy('product_id');
+        // dd($metrics_values);
+        // dd($compositions_values->where('product_id', 4));
+
         $type = $article->product->products_category->type;
 
         // Инфо о странице
         $page_info = pageInfo('articles/'.$article->product->products_category->type);
 
-        return view('articles.edit', compact('article', 'page_info', 'products_categories_list', 'products_list', 'manufacturers_list', 'type', 'products_modes_list', 'products_category_compositions'));
+        return view('articles.edit', compact('article', 'page_info', 'products_categories_list', 'products_list', 'manufacturers_list', 'type', 'products_modes_list', 'products_category_compositions', 'metrics_values', 'compositions_values'));
     }
 
     public function update(Request $request, $id)
     {
+
         // dd($request);
+        $metrics_count = count($request->metrics);
+        $compositions_count = count($request->compositions);
 
+        // Если снят флаг черновика
+        if (empty($request->template)) {
 
-        
+            // Проверка на наличие артикула
+            // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
+            $articles = Article::with('metrics_values', 'compositions_values')
+            ->where('product_id', $request->product_id)
+            ->where(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count])
+            ->get();
+            // dd($articles);
 
-        // $product_id = $request->product_id;
+            // Создаем массив совпадений
+            $coincidence = [];
 
-        // // Вытаскиваем продукт
-        // $product = Product::with('metrics', 'compositions')->findOrFail($product_id);
-        // // dd($product);
-
-        // // Формируем массивы метрик
-        // $metrics = [];
-        
-
-        // foreach ($product->metrics as $metric) {
-
-            // $input = 'metrics-'.$metric->id;
-
-        $metrics_values = [];
-
-        foreach ($request->metrics as $metric_id => $value) {
+            // dd($request->metrics);
+            $metrics_values = [];
+            foreach ($request->metrics as $metric_id => $value) {
                 // dd($value['value']);
-            $metrics_values[$metric_id]['entity'] = 'metrics';
-            $metrics_values[$metric_id]['value'] = $value['value'];
-        }
+                $metrics_values[$id][$metric_id] = $value['value'];
+            }
+            // dd($metrics_values);
 
+            // Сравниваем метрики
+            $metrics_array = [];
+            foreach ($articles as $article) {
+                foreach ($article->metrics_values as $metric) {
+                // dd($metric);
+                    $metrics_array[$article->id][$metric->id] = $metric->pivot->value;
+                }
+            }
+            // dd($metrics_array);
 
-        $compositions_values = [];
+            if ($metrics_values == $metrics_array) {
+                // Если значения метрик совпали, создаюм ключ метрик
+                $coincidence['metric'] = 1;
+            }
+            // dd($request->compositions);
 
-        foreach ($request->compositions as $composition_id => $value) {
+            $compositions_values = [];
+            foreach ($request->compositions as $composition_id => $value) {
                 // dd($value['value']);
-            $compositions_values[$value['article']]['entity'] = 'articles';
-            $compositions_values[$value['article']]['value'] = $value['count'];
+                $compositions_values[$id][$value['article']] = $value['count'];
+            }
+            // dd($compositions_values);
+
+            // Сравниваем составы
+            $compositions_array = [];
+            foreach ($articles as $article) {
+                foreach ($article->compositions_values as $composition) {
+                    $compositions_array[$article->id][$composition->id] = $composition->pivot->value;
+                }
+            }
+            // dd($compositions_array);
+
+            if ($compositions_values == $compositions_array) {
+                // Если значения составов совпали, создаюм ключ составов
+                $coincidence['composition'] = 1;
+            }
+
+            // Проверяем наличие ключей в массиве
+            if ((array_key_exists('metric', $coincidence) && array_key_exists('composition', $coincidence)) || (array_key_exists('metric', $coincidence) && $article->product->products_category->compositions) || (array_key_exists('composition', $coincidence) && $article->product->products_category->metrics)) {
+                // Если ключи присутствуют, даем ошибку
+                $result = [
+                    'error_status' => 1,
+                    'error_message' => 'Такой артикул уже существует!',
+                ];
+
+                echo json_encode($result, JSON_UNESCAPED_UNICODE);
+            }
+
+            // dd($coincidence);
         }
-
-            // foreach ($request->$input as $value) {
-            //     $metrics[$metric->id][] = [
-            //         'entity' => 'metrics',
-            //         'value' => $value,
-            //     ];
-            // }
-
-        // }
-        // $metrics_count = count($metrics);
-
-        // dd($metrics_values);
-        // dd($metrics);
-        // dd($metrics_values);
-
-        // // Формируем массивы составов
-        // $compositions = [];
-        // $compositions_values = [];
-
-        // foreach ($product->compositions as $composition) {
-
-        //     $input = 'compositions-'.$composition->id;
-
-        //     $compositions_values[$composition->id] = $request->$input;
-
-        //     $compositions[$composition->id] = [
-        //         'entity' => 'compositions',
-        //         'value' => $request->$input,
-        //     ];
-        // }
-        // $compositions_count = count($compositions);
-        // // dd($compositions_values);
-
-        // // Проверка на наличие артикула
-
-        // // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
-        // $articles = Article::with('metrics.values', 'compositions')
-        // ->where('product_id', $product_id)
-        // ->where(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count])
-        // ->get();
-        // // dd($articles);
-
-        // // Создаем массив совпадений
-        // $coincidence = [];
-
-        // // Сравниваем метрики
-        // $metrics_array = [];
-        // foreach ($articles as $article) {
-        //     foreach ($article->metrics as $metric) {
-
-        //         $metrics_array[$article->id][$metric->id][] = $metric->pivot->value;
-
-        //     }
-        // }
-        // // dd($metrics_array);
-        // // dd($metrics_values);
-
-        // foreach ($metrics_array as $item) {
-        //     // dd($metrics_values);
-        //     if ($metrics_values == $item) {
-
-        //         // Если значения метрик совпали, создаюм ключ метрик
-        //         $coincidence['metric'] = 1;
-        //     }
-        // }
-
-        // // Сравниваем составы
-        // $compositions_array = [];
-        // foreach ($articles as $article) {
-        //     foreach ($article->compositions as $composition) {
-        //         $compositions_array[$article->id][$composition->id] = $composition->pivot->value;
-        //     }
-        // }
-        // // dd($compositions_array);
-        // // dd($compositions_values);
-
-        // foreach ($compositions_array as $item) {
-        //     if ($compositions_values == $item) {
-
-        //         // Если значения составов совпали, создаюм ключ составов
-        //         $coincidence['composition'] = 1;
-        //     }
-        // }
-
-        // // Проверяем наличие ключей в массиве
-        // if ((array_key_exists('metric', $coincidence)&&array_key_exists('composition', $coincidence))||(array_key_exists('metric', $coincidence)&&$product->compositions)||(array_key_exists('composition', $coincidence)&&$product->metrics)) {
-
-        //     // Если ключи присутствуют, даем ошибку
-        //     $result = [
-        //         'error_status' => 1,
-        //         'error_message' => 'Такой артикул уже существует!',
-        //     ];
-
-        //     echo json_encode($result, JSON_UNESCAPED_UNICODE);
-        // } else {
 
         // Если что то не совпало, пишем новый артикул
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -487,10 +437,12 @@ class ArticleController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-        // ГЛАВНЫЙ ЗАПРОС:
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+        // ГЛАВНЫЙ ЗАПРОС:
         $article = Article::moderatorLimit($answer)->findOrFail($id);
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $article);
 
@@ -500,16 +452,12 @@ class ArticleController extends Controller
         $article->external = $request->external;
         $article->cost = $request->cost;
         $article->price = $request->price;
-
         $article->manufacturer_id = $request->manufacturer_id;
-        
-        
 
+        $article->metrics_count = $metrics_count;
+        $article->compositions_count = $compositions_count;
 
-        // $article->metrics_count = $metrics_count;
-        // $article->compositions_count = $compositions_count;
-
-            // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false) {
             $article->moderation = 1;
         }
@@ -519,39 +467,47 @@ class ArticleController extends Controller
 
         $article->display = $request->display;
         $article->template = $request->template;
-
         $article->company_id = $company_id;
         $article->author_id = $user_id;
         $article->save();
 
         if ($article) {
 
-                // dd($metrics);
+            if ($article->template == 1) {
 
-            // $metrics_insert = [];
-            // foreach ($metrics as $key => $metric) {
+                if (isset($request->metrics)) {
+                    $metrics_insert = [];
+                    foreach ($request->metrics as $metric_id => $value) {
+                        // dd($value['value']);
+                        $metrics_insert[$metric_id]['entity'] = 'metrics';
+                        $metrics_insert[$metric_id]['value'] = $value['value'];
+                    }
 
-            //     foreach ($metric as $values) {
-            //         $values['article_id'] = $article->id;
-            //         $values['entity_id'] = $key;
-            //         $metrics_insert[] = $values;
-            //     }
-            // }
-            //     // dd($metrics_insert);
+                    // Пишем метрики
+                    $article->metrics_values()->attach($metrics_insert);
+                }
+                
+                // dd($metrics_insert);
+                if (isset($request->compositions)) {
+                    $compositions_insert = [];
+                    foreach ($request->compositions as $composition_id => $value) {
+                        // dd($value['value']);
+                        $compositions_insert[$value['article']]['entity'] = 'articles';
+                        $compositions_insert[$value['article']]['value'] = $value['count'];
+                    }
 
+                    // Пишем состав
+                    $article->compositions_values()->attach($compositions_insert);
+                }
+            }
 
-            // $article_values = ArticleValue::insert($metrics_insert);
+            $result = [
+                'error_status' => 0,
+            ];
 
-            // Пишем метрики
-            $article->metrics_values()->detach();
-            $article->metrics_values()->attach($metrics_values);
-
-            // Пишем состав
-            $article->compositions_values()->detach();
-            $article->compositions_values()->attach($compositions_values);
-
+            // echo json_encode($result, JSON_UNESCAPED_UNICODE);
             return Redirect('/articles/'.$article->product->products_category->type);
-            // }
+
         }
     }
 
