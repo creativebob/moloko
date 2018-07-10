@@ -11,27 +11,31 @@
   </div>
 </div>
 
+ {{-- Контейнер для разграничения --}}
 <div class="grid-x grid-padding-x inputs">
-    <div class="small-12 medium-6 cell">
+
+        {{-- Контейнер для табов --}}
         <div data-tabs-content="tabs">
+
+            {{-- Блок вывода ошибок --}}
+            @if ($errors->any())
+                <div class="alert callout" data-closable>
+                    <h5>Неправильный формат данных:</h5>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
+
+
+            {{-- Первый таб --}}
             <div class="tabs-panel is-active" id="content-panel-1">
-
-                <div class="small-12 medium-7 large-5 cell tabs-margin-top">
-
-                    @if ($errors->any())
-                        <div class="alert callout" data-closable>
-                            <h5>Неправильный формат данных:</h5>
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    @endif
-
+                <div class="small-12 medium-6 cell tabs-margin-top">
                     <div class="grid-x grid-padding-x">
                         <div class="small-12 medium-6 cell">
                             <label>Название альбома
@@ -96,11 +100,88 @@
                 <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
                     {{ Form::submit($submitButtonText, ['class'=>'button']) }}
                 </div>
-            </div>
-        </div>
+            </div> {{-- Конец первого таба --}}
 
-        <div class="tabs-panel" id="content-panel-2">
-        </div>
+             {{-- Второй таб --}}
+            <div class="tabs-panel" id="content-panel-2">
+                 {{-- Контейнер для разграничения --}}
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-6 cell">
+                        <fieldset class="fieldset-access">
+                            <legend>Принимать к загрузке в следующих размерах:</legend>
+                                @php 
+                                    $album_settings_default = config()->get('settings'); 
 
-    </div>
-</div>
+                                @endphp
+                                <div class="grid-x grid-padding-x">
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Ширина
+                                            @include('includes.inputs.digit', ['value'=>$albums_settings->img_min_width, 'name'=>'img_min_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_min_width'], 'pattern' => '[0-9\W\s]{0,4}'])
+                                        </label>
+                                    </div>
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Высота
+                                            @include('includes.inputs.digit', ['value'=>$albums_settings->img_min_height, 'name'=>'img_min_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_min_height'], 'pattern' => '[0-9\W\s]{0,4}'])
+                                        </label>
+                                    </div>
+
+                                  <div class="small-12 cell radiobutton">
+                                    {{ Form::radio('upload_mode', 1, true, ['id'=>'mode_min']) }}
+                                    <label for="mode_min"><span>Указаны минимальные размеры</span></label>
+
+                                    {{ Form::radio('upload_mode', 0, false, ['id'=>'mode_fix']) }}
+                                    <label for="mode_fix"><span>Загружать в строго указанных размерах</span></label>
+                                  </div>
+
+
+                                </div>
+
+                        </fieldset>
+                    </div>
+                    <div class="small-12 medium-6 cell">
+                        <fieldset class="fieldset-access">
+                            <legend>Форматы сохранения изображений:</legend>
+                            <div class="grid-x grid-padding-x">
+                                <div class="small-12 medium-6 cell">
+                                    <label>Ширина маленького
+                                        @include('includes.inputs.digit', ['value'=>$albums_settings->img_small_width, 'name'=>'img_small_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_small_width']])
+                                    </label>
+                                </div>
+                                <div class="small-12 medium-6 cell">
+                                    <label>Высота маленького
+                                        @include('includes.inputs.digit', ['value'=>$albums_settings->img_small_height, 'name'=>'img_small_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_small_height']])
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="grid-x grid-padding-x">
+                                <div class="small-12 medium-6 cell">
+                                    <label>Ширина среднего
+                                        @include('includes.inputs.digit', ['value'=>$albums_settings->img_medium_width, 'name'=>'img_medium_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_medium_width']])
+                                    </label>
+                                </div>
+                                <div class="small-12 medium-6 cell">
+                                    <label>Высота среднего
+                                        @include('includes.inputs.digit', ['value'=>$albums_settings->img_medium_height, 'name'=>'img_medium_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_medium_height']])
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="grid-x grid-padding-x">
+                                <div class="small-12 medium-6 cell">
+                                    <label>Ширина большого
+                                        @include('includes.inputs.digit', ['value'=>$albums_settings->img_large_width, 'name'=>'img_large_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_large_width']])
+                                    </label>
+                                </div>
+                                <div class="small-12 medium-6 cell">
+                                    <label>Высота большого
+                                        @include('includes.inputs.digit', ['value'=>$albums_settings->img_large_height, 'name'=>'img_large_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_large_height']])
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                    </div>
+                </div>
+
+            </div> {{-- Конец второго таба --}}
+        </div> {{-- Конец контейнера табов --}}
+    </div> {{-- Конец контейнера для разграничения --}}

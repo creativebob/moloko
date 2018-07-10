@@ -10,6 +10,7 @@ use App\User;
 use App\List_item;
 use App\Booklist;
 use App\AlbumsCategory;
+use App\AlbumsSetting;
 use App\Role;
 
 // Валидация
@@ -121,10 +122,13 @@ class AlbumController extends Controller
         $albums_categories_list = get_select_tree($albums_categories, null, null, null);
         // dd($albums_categories_list);
 
+
+        $albums_settings = new AlbumsSetting;
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('albums.create', compact('album', 'page_info', 'albums_categories_list'));
+        return view('albums.create', compact('album', 'page_info', 'albums_categories_list', 'albums_settings'));
     }
 
 
@@ -160,12 +164,44 @@ class AlbumController extends Controller
 
         // Отображение на сайте
         $album->display = $request->display;
-
         $album->company_id = $user->company_id;
         $album->author_id = $user_id;
         $album->save();
 
-        if ($album) {
+
+        // Наполняем сущность данными
+        $albums_settings = new AlbumsSetting;
+
+        $albums_settings->album_id = $album->id;
+        $albums_settings->name = 'Настройка альбома ID:'. $album->id;
+        $albums_settings->img_small_width = $request->img_small_width;
+        $albums_settings->img_small_height = $request->img_small_height;
+        $albums_settings->img_medium_width = $request->img_medium_width;
+        $albums_settings->img_medium_height = $request->img_medium_height;
+        $albums_settings->img_large_width = $request->img_large_width;
+        $albums_settings->img_large_height = $request->img_large_height;
+
+        $albums_settings->img_formats = $request->img_formats;
+        $albums_settings->upload_mode = $request->upload_mode;
+
+        $albums_settings->img_min_width = $request->img_min_width;
+        $albums_settings->img_min_height = $request->img_min_height;
+        $albums_settings->img_max_size = $request->img_max_size;
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        if($answer['automoderate'] == false){
+            $album->moderation = 1;
+        }
+
+        // Cистемная запись
+        $albums_settings->system_item = $request->system_item;
+
+        // Отображение на сайте
+        $albums_settings->company_id = $user->company_id;
+        $albums_settings->author_id = $user_id;
+        $albums_settings->save();
+
+        if($album) {
 
             // Создаем папку в файловой системе
             $storage = Storage::disk('public')->makeDirectory($album->company->id.'/media/albums/'.$album->id);
@@ -175,6 +211,7 @@ class AlbumController extends Controller
             } else {
                 abort(403, 'Ошибка создания папки альбома');
             }
+
         } else {
             abort(403, 'Ошибка записи альбома');
         }
@@ -254,16 +291,34 @@ class AlbumController extends Controller
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         $albums_categories_list = get_select_tree($albums_categories, $album->albums_category_id, null, null);
 
+
+        // Работаем с сущностью albums_settigs настройка альбомов
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_albums_settings = operator_right('albums_settings', false, 'index');
+
+
+        $albums_settings = AlbumsSetting::moderatorLimit($answer_albums_settings)->where('album_id', $album->id)->first();
+
+        if(!isset($albums_settings->id)){
+
+            $albums_settings = new AlbumsSetting;
+
+        };
+
+        // Подключение политики
+        // $this->authorize(getmethod('index'), $albums_settings);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('albums.edit', compact('album', 'page_info', 'albums_categories_list'));
+        return view('albums.edit', compact('album', 'page_info', 'albums_categories_list', 'albums_settings'));
     }
 
 
     public function update(AlbumRequest $request, $id)
     {
 
+        // dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -294,6 +349,54 @@ class AlbumController extends Controller
 
         $album->editor_id = $user_id;
         $album->save();
+
+
+        // Работаем с сущностью albums_settigs настройка альбомов
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_albums_settings = operator_right('albums_settings', false, 'index');
+
+        $albums_settings = AlbumsSetting::moderatorLimit($answer_albums_settings)->where('album_id', $album->id)->first();
+
+        if(!isset($albums_settings->id)){
+            $albums_settings = new AlbumsSetting;
+        };
+        
+        // Подключение политики
+        $this->authorize(getmethod('index'), $albums_settings);
+
+        $albums_settings->name = 'Настройка альбома ID:'. $album->id;
+        $albums_settings->img_small_width = $request->img_small_width;
+        $albums_settings->img_small_height = $request->img_small_height;
+        $albums_settings->img_medium_width = $request->img_medium_width;
+        $albums_settings->img_medium_height = $request->img_medium_height;
+        $albums_settings->img_large_width = $request->img_large_width;
+        $albums_settings->img_large_height = $request->img_large_height;
+
+        $albums_settings->img_formats = $request->img_formats;
+        $albums_settings->upload_mode = $request->upload_mode;
+
+        $albums_settings->img_min_width = $request->img_min_width;
+        $albums_settings->img_min_height = $request->img_min_height;
+        $albums_settings->img_max_size = $request->img_max_size;
+        $albums_settings->album_id = $album->id;
+        $albums_settings->save();
+
+        // Если параметров нет - удаляем запись из таблицы (чтоб не держать пустые)
+        if(
+            ($albums_settings->img_small_width == null)&&
+            ($albums_settings->img_small_height == null)&&
+            ($albums_settings->img_medium_width == null)&&       
+            ($albums_settings->img_medium_height == null)&&
+            ($albums_settings->img_large_width == null)&&
+            ($albums_settings->img_large_height == null)&&
+            ($albums_settings->img_formats == null)&&
+            ($albums_settings->img_min_width == null)&&
+            ($albums_settings->img_min_height == null)&&
+            ($albums_settings->img_max_size == null)
+        ){
+            $albums_settings = AlbumsSetting::destroy($albums_settings->id);
+        };
+
 
         if ($album) {
             return Redirect('/albums');

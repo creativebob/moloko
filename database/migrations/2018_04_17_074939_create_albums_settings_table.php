@@ -32,6 +32,7 @@ class CreateAlbumsSettingsTable extends Migration
             $table->integer('img_large_height')->nullable()->unsigned()->comment('Высота большого изображения');
 
             $table->string('img_formats')->nullable()->comment('Допустимые форматы');
+            $table->integer('upload_mode')->nullable()->unsigned()->comment('Режим загрузки изображений (1 - строгий / null - простой)');
 
             $table->integer('img_min_width')->nullable()->unsigned()->comment('Минимальная ширина изображения');
             $table->integer('img_min_height')->nullable()->unsigned()->comment('Минимальная высота изображения');
@@ -45,8 +46,9 @@ class CreateAlbumsSettingsTable extends Migration
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
-
             $table->timestamps();
+            $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
+            $table->softDeletes();
         });
     }
 

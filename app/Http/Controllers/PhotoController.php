@@ -183,7 +183,7 @@ class PhotoController extends Controller
       $photo->author_id = $user_id;
       $photo->save();
 
-      if (!isset($album->photo_id)) {
+      if(!isset($album->photo_id)){
         $album->photo_id = $photo->id;
         $album->save();
       }

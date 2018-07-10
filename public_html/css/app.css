@@ -112,6 +112,16 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   src: url(/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot);
   src: url(/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot?#iefix) format('embedded-opentype'), url(/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff) format('woff'), url(/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf) format('truetype');
 }
+fieldset {
+  border: 1px solid #d6d6d6;
+  padding: 1rem 2rem 2rem;
+  margin-bottom: 1rem;
+}
+fieldset legend {
+  font-family: "PFDinDisplayPro-Med";
+  padding: 0 1rem;
+}
+
 .compact {
   margin-bottom: 0.25rem !important;
 }
@@ -1552,7 +1562,7 @@ tr:hover .icon-display-show:hover {
   margin-right: 8px;
 }
 .tabs-wrap .fieldset-access {
-  border: 1px solid #b3b3b3;
+  border: 1px solid #d6d6d6;
   padding: 1rem 2rem 2rem;
 }
 .tabs-wrap .fieldset-access legend {
@@ -1617,7 +1627,7 @@ tr:hover .icon-display-show:hover {
   position: absolute;
 }
 .content .fieldset-filters {
-  border: 1px solid #b3b3b3;
+  border: 1px solid #d6d6d6;
   padding-top: 1rem;
 }
 .content .fieldset-filters legend {

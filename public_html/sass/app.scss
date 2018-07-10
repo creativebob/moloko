@@ -177,7 +177,7 @@ $input-focus-border-color: #333333;
   // Tabs (Несколько вкладок)
   $tabs-active-bg-color: #ac4747;
   $tabs-active-color: #ffffff;
-  $tabs-fieldset-border-color: #b3b3b3;
+  $tabs-fieldset-border-color: #d6d6d6;
 
   // Таблица в контенте
   $table-bg-color: #f6f6f6;
@@ -197,6 +197,22 @@ $footer-num-color: #ffffff;
 // Меняем умолчания фонды
 // Выпадающий список
 $dropdown-width: 14rem;
+
+
+// Базовые корректировки
+fieldset {
+    border: 1px solid  $tabs-fieldset-border-color;
+    padding: 1rem 2rem 2rem;
+    margin-bottom: 1rem;
+
+    legend {
+      font-family: $PFDDPM;
+      padding: 0 1rem;
+    }
+}
+
+// Конец базовых корректировок
+
 
 // Для полей которые вставляем в узкие элементы (уменьшаем их поля)
 .compact {

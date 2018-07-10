@@ -165,10 +165,8 @@ class CompanyController extends Controller
         $location->save();
 
         if ($location) {
-
             $location_id = $location->id;
         } else {
-
             abort(403, 'Ошибка записи адреса');
         }
 

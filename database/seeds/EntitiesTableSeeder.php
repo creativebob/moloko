@@ -299,6 +299,13 @@ class EntitiesTableSeeder extends Seeder
         'system_item' => 1,
         'author_id' => 1,
       ], 
+      [
+        'name' => 'Настройка альбомов',
+        'alias' => 'albums_settings',
+        'model' => 'AlbumsSetting',
+        'system_item' => 1,
+        'author_id' => 1,
+      ], 
 
             // [
             //     'name' => 'Рабочее время дня',

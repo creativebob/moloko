@@ -28,8 +28,11 @@ use App\Position;
 use App\Staffer;
 use App\Booklist;
 use App\Sector;
+
 use App\Album;
 use App\AlbumsCategory;
+use App\AlbumsSetting;
+
 use App\Photo;
 use App\Folder;
 
@@ -65,8 +68,11 @@ use App\Policies\PositionPolicy;
 use App\Policies\StafferPolicy;
 use App\Policies\BooklistPolicy;
 use App\Policies\SectorPolicy;
+
 use App\Policies\AlbumPolicy;
 use App\Policies\AlbumsCategoryPolicy;
+use App\Policies\AlbumsSettingPolicy;
+
 use App\Policies\PhotoPolicy;
 use App\Policies\FolderPolicy;
 
@@ -114,6 +120,7 @@ class AuthServiceProvider extends ServiceProvider
         Sector::class => SectorPolicy::class,
         Album::class => AlbumPolicy::class,
         AlbumsCategory::class => AlbumsCategoryPolicy::class,
+        AlbumsSetting::class => AlbumsSettingPolicy::class,
         Photo::class => PhotoPolicy::class,
         Folder::class => FolderPolicy::class,
         Product::class => ProductPolicy::class,
