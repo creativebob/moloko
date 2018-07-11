@@ -3,13 +3,13 @@
 $drop = 1;
 @endphp
 
-<li class="medium-as-last item" id="products-{{ $product['id'] }}" data-name="{{ $product['name'] }}">
+<li class="medium-as-last item" id="services_products-{{ $services_product['id'] }}" data-name="{{ $services_product['name'] }}">
   <a class="medium-as-last-link">
-    <span>{{ $product['name'] }}</span>
-    @if ($product['moderation'] == 1)
+    <span>{{ $services_product['name'] }} (Товар)</span>
+    @if ($services_product['moderation'] == 1)
     <span class="no-moderation">Не отмодерированная запись!</span>
     @endif
-    @if ($product['system_item'] == 1)
+    @if ($services_product['system_item'] == 1)
     <span class="system-item">Системная запись!</span>
     @endif
   </a>
@@ -17,8 +17,21 @@ $drop = 1;
     @if ($drop == 1)
     <div class="sprite icon-drop"></div>
     @endif
-    <input type="checkbox" name="" id="product-check-{{ $product['id'] }}">
-    <label class="label-check" for="product-check-{{ $product['id'] }}"></label> 
+    <input type="checkbox" name="" id="services_product-check-{{ $services_product['id'] }}">
+    <label class="label-check" for="services_product-check-{{ $services_product['id'] }}"></label> 
+  </div>
+  <div class="icon-list">
+
+    <div class="display-menu">
+      @can ('publisher', App\ServicesProduct::class)
+      @if ($services_product['display'] == 1)
+      <div class="icon-display-show black sprite" data-open="item-display"></div>
+      @else
+      <div class="icon-display-hide black sprite" data-open="item-display"></div>
+      @endif
+      @endcan
+    </div>
+
   </div>
 </li>
 

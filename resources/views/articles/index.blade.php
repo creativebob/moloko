@@ -132,9 +132,9 @@
             @can ('publisher', $article)
             <td class="td-display">
               @if ($article['display'] == 1)
-              <span class="system-item">Отображается на сайте</span>
+              <a class="icon-display-show black sprite" data-open="item-display"></a>
               @else
-              <span class="no-moderation">Не отображается на сайте</span>
+              <a class="icon-display-hide black sprite" data-open="item-display"></a>
               @endif
             </td>
             @endcan
@@ -173,9 +173,13 @@
   @endsection
 
   @section('scripts')
+
+  {{-- Скрипт отображеняи на сайте --}}
+  @include('includes.scripts.display-ajax')
+
   <script type="text/javascript">
 
-     var type = '{{ $type }}';
+    var type = '{{ $type }}';
 
     // Обозначаем таймер для проверки
     var timerId;

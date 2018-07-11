@@ -5,11 +5,11 @@ namespace App\Policies;
 use App\Policies\Traits\PoliticTrait;
 use App\User;
 
-use App\Product;
+use App\ServicesProduct;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
-class ProductPolicy
+class ServicesProductPolicy
 {
     use HandlesAuthorization;
     use PoliticTrait;

@@ -7,8 +7,15 @@ use App\Article;
 use App\Product;
 use App\ProductsCategory;
 use App\ProductsMode;
+use App\Album;
+use App\AlbumEntity;
+use App\Photo;
 
 use App\ArticleValue;
+
+
+// Транслитерация
+use Transliterate;
 
 
 use Illuminate\Http\Request;
@@ -525,6 +532,138 @@ class ArticleController extends Controller
          // $product = Product::with('metrics.property', 'compositions.unit')->findOrFail(1);
         // dd($product);
 
+    }
+
+    public function add_photo(Request $request)
+    {
+
+        // Подключение политики
+        $this->authorize(getmethod('store'), Photo::class);
+
+        if ($request->hasFile('photo')) {
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+
+            // Получаем авторизованного пользователя
+            $user = $request->user();
+
+            // Смотрим компанию пользователя
+            $company_id = $user->company_id;
+
+            // Скрываем бога
+            $user_id = hideGod($user);
+
+           // Иначе переводим заголовок в транслитерацию
+            $alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
+
+            $album = Album::where(['company_id' => $company_id, 'name' => $request->name, 'albums_category_id' => 1])->first();
+
+            if ($album) {
+                $album_id = $album->id;
+            } else {
+                $album = new Album;
+                $album->company_id = $company_id;
+                $album->name = $request->name;
+                $album->alias = $alias;
+                $album->albums_category_id = 1;
+                $album->description = $request->name;
+                $album->author_id = $user_id;
+                $album->save();
+
+                $album_id = $album->id;
+            }
+
+            $article = Article::findOrFail($request->id);
+
+            if ($article->album_id == null) {
+                $article->album_id = $album_id;
+                $article->save();
+
+                if (!$product) {
+                    abort(403, 'Ошибка записи альбома в продукцию');
+                }
+            }
+
+            $directory = $company_id.'/media/albums/'.$album_id.'/img/';
+            $array = save_photo($request, $user_id, $company_id, $directory,  $alias.'-'.time(), $album_id);
+
+            $photo = $array['photo'];
+            $upload_success = $array['upload_success'];
+
+            $media = new AlbumEntity;
+            $media->album_id = $album_id;
+            $media->entity_id = $photo->id;
+            $media->entity = 'photos';
+            $media->save();
+
+            // $check_media = AlbumEntity::where(['album_id' => $album_id, 'entity_id' => $request->id, 'entity' => 'product'])->first();
+
+            // if ($check_media == false) {
+            //     $media = new AlbumEntity;
+            //     $media->album_id = $album_id;
+            //     $media->entity_id = $request->id;
+            //     $media->entity = 'product';
+            //     $media->save();
+            // }
+
+            if ($upload_success) {
+
+                // Переадресовываем на index
+                // return redirect()->route('/products/'.$product->id.'/edit', ['photo' => $photo, 'upload_success' => $upload_success]);
+
+                return response()->json($upload_success, 200);
+            } else {
+                return response()->json('error', 400);
+            } 
+
+        } else {
+            return response()->json('error', 400);
+        } 
+    }
+
+    public function photos(Request $request)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $article = Article::with('album.photos')->moderatorLimit($answer)->findOrFail($request->article_id);
+        // dd($product);
+
+        // Подключение политики
+        $this->authorize(getmethod('edit'), $article);
+
+        return view('articles.photos', compact('article'));
 
     }
+
+    // Отображение на сайте
+    public function ajax_display(Request $request)
+    {
+
+        if ($request->action == 'hide') {
+          $display = null;
+      } else {
+          $display = 1;
+      }
+
+      $article = Article::findOrFail($request->id);
+      $article->display = $display;
+      $article->save();
+
+      if ($article) {
+
+          $result = [
+            'error_status' => 0,
+        ];  
+    } else {
+
+      $result = [
+        'error_status' => 1,
+        'error_message' => 'Ошибка при обновлении отображения на сайте!'
+    ];
+}
+echo json_encode($result, JSON_UNESCAPED_UNICODE);
+}
 }

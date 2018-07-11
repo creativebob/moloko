@@ -66,9 +66,9 @@
             @can ('publisher', $photo)
             <td class="td-display">
               @if ($photo['display'] == 1)
-              <span class="system-item">Отображается на сайте</span>
+              <a class="icon-display-show black sprite" data-open="item-display"></a>
               @else
-              <span class="no-moderation">Не отображается на сайте</span>
+              <a class="icon-display-hide black sprite" data-open="item-display"></a>
               @endif
             </td>
             @endcan
@@ -123,4 +123,7 @@
 @include('includes.scripts.modal-delete-script')
 @include('includes.scripts.delete-ajax-script')
 @include('includes.scripts.sortable-table-script')
+
+{{-- Скрипт отображеняи на сайте --}}
+@include('includes.scripts.display-ajax')
 @endsection

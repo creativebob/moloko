@@ -648,29 +648,42 @@ a.icon-list-edit {
 
 // Иконка общего добавления
 .icon-display-hide {
-  background-position: -64px -992px;
-  opacity: 0.2;
-}
 
-.icon-display-hide:hover {
-  background-position: -64px -992px;
-  opacity: 1;
+  &.black {
+    background-position: -64px -992px;
+  }
+
+  &.white {
+    background-position: -160px -992px;
+  }
+  opacity: 0.2;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .icon-display-show {
-  background-position: -32px -992px;
+
+  &.black {
+    background-position: -32px -992px;
+  }
+
+  &.white {
+    background-position: -96px -992px;
+  }
+
   opacity: 0;
   transition: opacity ease 0.3s;
+
+  &:hover {
+     opacity: 1;
+  }
 }
 
 tr:hover .icon-display-show {
-  background-position: -32px -992px;
+  // background-position: -32px -992px;
   opacity: 0.2;
-}
-
-tr:hover .icon-display-show:hover {
-  background-position: -32px -992px;
-  opacity: 1;
 }
 
 

@@ -26,13 +26,6 @@ $count = count($department['staff']) + $count;
     <span class="system-item">Системная запись!</span>
     @endif
     
-    @can ('publisher', App\Department::class)
-    @if ($department['display'] == 1)
-    <span class="system-item">Отображается на сайте</span>
-    @else
-    <span class="no-moderation">Не отображается на сайте</span>
-    @endif
-    @endcan
   </a>
   <div class="drop-list checkbox">
     @if ($drop == 1)
@@ -49,6 +42,17 @@ $count = count($department['staff']) + $count;
     <label class="label-check" for="department-check-{{ $department['id'] }}"></label> 
   </div>
   <div class="icon-list">
+
+    <div class="display-menu">
+      @can ('publisher', App\Department::class)
+      @if ($department['display'] == 1)
+      <div class="icon-display-show black sprite" data-open="item-display"></div>
+      @else
+      <div class="icon-display-hide black sprite" data-open="item-display"></div>
+      @endif
+      @endcan
+    </div>
+
     <div>
       @can('create', App\Department::class)
       <div class="icon-list-add sprite" data-open="medium-add"></div>

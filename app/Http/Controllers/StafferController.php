@@ -238,7 +238,7 @@ class StafferController extends Controller
     $user = $request->user();
 
     // Скрываем бога
-      $user_id = hideGod($user);
+    $user_id = hideGod($user);
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
@@ -383,6 +383,37 @@ class StafferController extends Controller
     } else {
       abort(403, 'Ошибка при удалении штата');
     }
+  }
+
+
+  // ---------------------------------------------- Ajax -----------------------------------------------------------
+  // Отображение на сайте
+  public function ajax_display(Request $request)
+  {
+
+    if ($request->action == 'hide') {
+      $display = null;
+    } else {
+      $display = 1;
+    }
+
+    $staffer = Staffer::findOrFail($request->id);
+    $staffer->display = $display;
+    $staffer->save();
+
+    if ($staffer) {
+
+      $result = [
+        'error_status' => 0,
+      ];  
+    } else {
+
+      $result = [
+        'error_status' => 1,
+        'error_message' => 'Ошибка при обновлении отображения на сайте!'
+      ];
+    }
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
   // Сортировка

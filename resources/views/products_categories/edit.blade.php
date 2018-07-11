@@ -6,14 +6,40 @@
 @include('includes.scripts.sortable-inhead')
 @endsection
 
-@section('title', 'Редактировать товар')
+@php
+$type_name = null;
+@endphp
+
+@switch($products_category->type)
+
+@case('goods')
+@php
+$type_name = 'товар';
+@endphp
+@break
+
+@case('raws')
+@php
+$type_name = 'сырье';
+@endphp
+@break
+
+@case('services')
+@php
+$type_name = 'услугу';
+@endphp
+@break
+
+@endswitch
+
+@section('title', 'Редактировать '.$type_name)
 
 @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $products_category->name))
 
 @section('title-content')
 <div class="top-bar head-content">
   <div class="top-bar-left">
-    <h2 class="header-content">РЕДАКТИРОВАТЬ товар &laquo{{ $products_category->name }}&raquo</h2>
+    <h2 class="header-content">РЕДАКТИРОВАние категории &laquo{{ $products_category->name }}&raquo</h2>
   </div>
   <div class="top-bar-right">
   </div>
@@ -95,7 +121,7 @@
 
           {{-- Кнопка --}}
           <div class="small-12 cell tabs-button tabs-margin-top">
-            {{ Form::submit('Редактировать продукцию', ['class'=>'button']) }}
+            {{ Form::submit('Редактировать '.$type_name, ['class'=>'button']) }}
           </div>
         </div>
       </div>

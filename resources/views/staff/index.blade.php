@@ -92,9 +92,9 @@
           @can ('publisher', $staffer)
           <td class="td-display">
             @if ($staffer['display'] == 1)
-            <span class="system-item">Отображается на сайте</span>
+            <a class="icon-display-show black sprite" data-open="item-display"></a>
             @else
-            <span class="no-moderation">Не отображается на сайте</span>
+            <a class="icon-display-hide black sprite" data-open="item-display"></a>
             @endif
           </td>
           @endcan
@@ -138,4 +138,7 @@
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
+
+{{-- Скрипт отображеняи на сайте --}}
+@include('includes.scripts.display-ajax')
 @endsection

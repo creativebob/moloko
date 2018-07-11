@@ -161,7 +161,7 @@ class CompaniesTableSeeder extends Seeder
                 'author_id' => 1,
             ],
             [
-                'name' => 'Косметология',
+                'name' => 'Отделение косметологии «Профессорской клиники ИГМУ»',
                 'alias' => 'cosmetology',
                 'phone' => '83952712317',
                 // 'extra_phone' => '83952717775',

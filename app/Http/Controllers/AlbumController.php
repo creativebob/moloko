@@ -395,4 +395,33 @@ class AlbumController extends Controller
             $i++;
         }
     }
+
+    // Отображение на сайте
+    public function ajax_display(Request $request)
+    {
+
+        if ($request->action == 'hide') {
+            $display = null;
+        } else {
+            $display = 1;
+        }
+
+        $album = Album::findOrFail($request->id);
+        $album->display = $display;
+        $album->save();
+
+        if ($album) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении отображения на сайте!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
 }

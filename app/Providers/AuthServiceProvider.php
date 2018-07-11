@@ -31,10 +31,11 @@ use App\AlbumsCategory;
 use App\Photo;
 use App\Folder;
 
-use App\Product;
-use App\ProductsCategory;
+use App\Service;
+use App\ServicesCategory;
+use App\ServicesProduct;
 
-use App\Article;
+// use App\Article;
 
 use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
@@ -65,10 +66,11 @@ use App\Policies\AlbumsCategoryPolicy;
 use App\Policies\PhotoPolicy;
 use App\Policies\FolderPolicy;
 
-use App\Policies\ProductPolicy;
-use App\Policies\ProductsCategoryPolicy;
+use App\Policies\ServicePolicy;
+use App\Policies\ServicesCategoryPolicy;
+use App\Policies\ServicesProductPolicy;
 
-use App\Policies\ArticlePolicy;
+// use App\Policies\ArticlePolicy;
 
 
 use Illuminate\Support\Facades\Gate as GateContract;
@@ -109,9 +111,9 @@ class AuthServiceProvider extends ServiceProvider
         AlbumsCategory::class => AlbumsCategoryPolicy::class,
         Photo::class => PhotoPolicy::class,
         Folder::class => FolderPolicy::class,
-        Product::class => ProductPolicy::class,
-        ProductsCategory::class => ProductsCategoryPolicy::class,
-        Article::class => ArticlePolicy::class,
+        Service::class => ServicePolicy::class,
+        ServicesCategory::class => ServicesCategoryPolicy::class,
+        ServicesProduct::class => ServicesProductPolicy::class,
     ];
 
     public function boot()

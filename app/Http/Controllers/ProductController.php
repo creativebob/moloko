@@ -49,7 +49,7 @@ class ProductController extends Controller
 {
 
     // Сущность над которой производит операции контроллер
-    protected $entity_name = 'products';
+    protected $entity_name = 'services_products';
     protected $entity_dependence = false;
 
     public function index(Request $request)
@@ -198,8 +198,9 @@ class ProductController extends Controller
 
             // если добавляли продукт с категорий продукции
             if ($request->entity == 'products_categories') {
+                return redirect()->action('ProductsCategoryController@index', ['products_category_id' => $request->products_category_id, 'type' => $request->type]);
                 // Переадресовываем на index
-                return Redirect('products_categories/'.$request->type)->with('id', $request->products_category_id);
+                // return Redirect('products_categories/'.$request->type)->with('products_category_id', $request->products_category_id);
             }
 
             // Когда продукт записался, создаем дял него базовый артикул

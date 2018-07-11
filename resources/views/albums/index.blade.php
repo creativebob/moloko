@@ -32,7 +32,7 @@
           <th class="td-company-id">Компания</th>
           <th class="td-author">Автор</th>
           @can ('publisher', App\Album::class)
-          <th class="td-display"></th>
+          <th class="td-display">Отображение</th>
           @endcan
           <th class="td-delete"></th>
         </tr>
@@ -74,9 +74,9 @@
 
 
             @if ($album['display'] == 1)
-            <a class="icon-display-show sprite" data-open="item-display"></a>
+            <a class="icon-display-show black sprite" data-open="item-display"></a>
             @else
-            <a class="icon-display-hide sprite" data-open="item-display"></a>
+            <a class="icon-display-hide black sprite" data-open="item-display"></a>
             @endif
 
             @if ($album['system_item'] == 1)
@@ -142,4 +142,7 @@
   @include('includes.scripts.delete-ajax-script')
 
   @include('includes.scripts.sortable-table-script')
+
+  {{-- Скрипт отображеняи на сайте --}}
+  @include('includes.scripts.display-ajax')
 @endsection

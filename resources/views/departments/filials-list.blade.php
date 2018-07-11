@@ -22,17 +22,20 @@ $drop = 1;
     @if ($department['system_item'])
     <span class="system-item">Системная запись!</span>
     @endif
-
-    @can ('publisher', App\Department::class)
-    @if ($department['display'] == 1)
-    <span class="system-item">Отображается на сайте</span>
-    @else
-    <span class="no-moderation">Не отображается на сайте</span>
-    @endif
-    @endcan
     
   </a>
   <div class="icon-list">
+
+    <div class="display-menu">
+      @can ('publisher', App\Department::class)
+      @if ($department['display'] == 1)
+      <div class="icon-display-show white sprite" data-open="item-display"></div>
+      @else
+      <div class="icon-display-hide white sprite" data-open="item-display"></div>
+      @endif
+      @endcan
+    </div>
+
     <div>
       @can('create', App\Department::class)
       <div class="icon-list-add sprite" data-open="medium-add"></div>

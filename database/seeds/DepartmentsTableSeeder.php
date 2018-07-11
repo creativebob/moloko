@@ -20,6 +20,7 @@ class DepartmentsTableSeeder extends Seeder
 		        'filial_status' => 1,
                 'location_id' => 5,
 		        'company_id' => 1,
+                'display' => 1,
         	],
             [
                 'name' => 'Отдел продаж',
@@ -29,6 +30,7 @@ class DepartmentsTableSeeder extends Seeder
                 'filial_status' => null,
                 'location_id' => null,
                 'company_id' => 1,
+                'display' => null,
             ],
             [
                 'name' => 'Отдел маркетинга и автоматизации',
@@ -38,6 +40,7 @@ class DepartmentsTableSeeder extends Seeder
                 'filial_status' => null,
                 'location_id' => null,
                 'company_id' => 1,
+                'display' => null,
             ],
             [
                 'name' => 'Улан-Удэнский филиал',
@@ -47,6 +50,7 @@ class DepartmentsTableSeeder extends Seeder
                 'filial_status' => 1,
                 'location_id' => 6,
                 'company_id' => 1,
+                'display' => 1,
             ],
             [
                 'name' => 'Отдел продаж',
@@ -56,6 +60,7 @@ class DepartmentsTableSeeder extends Seeder
                 'filial_status' => null,
                 'location_id' => null,
                 'company_id' => 1,
+                'display' => null,
             ],
             [
                 'name' => 'Иркутский филиал',
@@ -65,6 +70,7 @@ class DepartmentsTableSeeder extends Seeder
                 'filial_status' => 1,
                 'location_id' => 8,
                 'company_id' => 2,
+                'display' => 1,
             ],
             [
                 'name' => 'Отдел продаж',
@@ -74,6 +80,7 @@ class DepartmentsTableSeeder extends Seeder
                 'filial_status' => null,
                 'location_id' => null,
                 'company_id' => 2,
+                'display' => null,
             ],
             [
                 'name' => 'Иркутский филиал',
@@ -83,6 +90,7 @@ class DepartmentsTableSeeder extends Seeder
                 'filial_status' => 1,
                 'location_id' => 9,
                 'company_id' => 4,
+                'display' => 1,
             ],
         ]);
     }

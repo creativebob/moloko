@@ -494,6 +494,8 @@ class NewsController extends Controller
         }
     }
 
+    // ------------------------------------------- Ajax ---------------------------------------------
+
     // Проверка наличия в базе
     public function news_check(Request $request, $alias)
     {
@@ -518,6 +520,37 @@ class NewsController extends Controller
         }
         return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
+
+    // Отображение на сайте
+    public function ajax_display(Request $request)
+    {
+
+        if ($request->action == 'hide') {
+            $display = null;
+        } else {
+            $display = 1;
+        }
+
+        $cur_news = News::findOrFail($request->id);
+        $cur_news->display = $display;
+        $cur_news->save();
+
+        if ($cur_news) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении отображения на сайте!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+    
 
 
     public function get_albums(Request $request)

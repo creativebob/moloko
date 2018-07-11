@@ -55,51 +55,55 @@ class ProductsCategoryController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------
 
-        $products_categories = ProductsCategory::moderatorLimit($answer)
+        $products_categories = ProductsCategory::with('products')
+        ->withCount('products')
+        ->where('type', $request->type)
+        ->whereIn('status', ['one', 'set'])
+        ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('sort', 'asc')
-        ->get();
+            ->systemItem($answer) // Фильтр по системным записям
+            ->orderBy('sort', 'asc')
+            ->get();
 
         // dd(get_parents_tree($products_categories));
 
         // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+            $user = $request->user();
 
         // Получаем массив с вложенными элементами дял отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
-        $products_categories_tree = get_index_tree_with_rights($products_categories, $user);
+            $products_categories_tree = get_index_tree_with_rights($products_categories, $user);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+            $page_info = pageInfo($this->entity_name);
 
         // Отдаем Ajax
-        if ($request->ajax()) {
-            return view('products_categories.category-list', ['products_categories_tree' => $products_categories_tree, 'id' => $request->id]);
+            if ($request->ajax()) {
+                return view('products_categories.category-list', ['products_categories_tree' => $products_categories_tree, 'id' => $request->products_category_id]);
+            }
+
+            return view('products_categories.index', compact('products_categories_tree', 'page_info'));
         }
 
-        return view('products_categories.index', compact('products_categories_tree', 'page_info'));
-    }
-
-    public function types(Request $request, $type, $status = null)
-    {
+        public function types(Request $request, $type, $status = null)
+        {
 
         // dd($alias);
         // Подключение политики
-        $this->authorize('index', ProductsCategory::class);
+            $this->authorize('index', ProductsCategory::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+            $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // if (empty($type)) {
-        //    $type = $request->type;
-        // }
+            if (empty($type)) {
+             $type = $request->type;
+         }
 
         // -----------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------
 
-        if (($status == null) || (empty($status))) {
+         if (($status == null) || (empty($status))) {
             $products_categories = ProductsCategory::with('products')
             ->withCount('products')
             ->where('type', $type)
@@ -133,28 +137,16 @@ class ProductsCategoryController extends Controller
         $products_categories_tree = get_index_tree_with_rights($products_categories, $user);
         // dd($products_categories_tree);
 
+        // if (session('products_category_id')) {
+        //     $id = session('products_category_id');
+        // } else {
+        //     $id = null;
+        // }
+
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            $id = $request->id;
-            $type = $request->type;
-            
-            $products_categories = ProductsCategory::with('products')
-            ->withCount('products')
-            ->where('type', $type)
-            ->whereIn('status', ['one', 'set'])
-            ->moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
-            ->orderBy('sort', 'asc')
-            ->get();
-
-            // Получаем массив с вложенными элементами дял отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
-            $products_categories_tree = get_index_tree_with_rights($products_categories, $user);
-
-
-            // return $type;
+            // echo $request->products_category_id;
             return view('products_categories.category-list', ['products_categories_tree' => $products_categories_tree, 'id' => $id]);
         }
 
@@ -162,12 +154,6 @@ class ProductsCategoryController extends Controller
         $page_info = pageInfo('products_categories/'.$type);
 
         // dd($page_info);
-
-        if (session('products_category_id')) {
-            $id = session('products_category_id');
-        } else {
-            $id = null;
-        }
 
         // dd($id);
 
@@ -253,8 +239,11 @@ class ProductsCategoryController extends Controller
         $products_category->company_id = $company_id;
         $products_category->author_id = $user_id;
 
-        // Модерация и системная запись
+        // Системная запись
         $products_category->system_item = $request->system_item;
+
+        $products_category->display = $request->display;
+
         $products_category->products_mode_id = $request->products_mode_id;
         $products_category->type = $request->type;
 
@@ -282,8 +271,7 @@ class ProductsCategoryController extends Controller
             $products_category->products_mode_id = $category->products_mode_id;
         }
 
-        $products_category->display = $request->display;
-
+        
         if ($request->status == 'set') {
             $products_category->status = $request->status;
         } else {
@@ -298,12 +286,14 @@ class ProductsCategoryController extends Controller
         if ($products_category) {
 
             // Переадресовываем на index
-            return redirect()->action('ProductsCategoryController@types', ['id' => $products_category->id, 'type' => $products_category->type]);
+            return redirect()->action('ProductsCategoryController@index', ['products_category_id' => $products_category->id, 'type' => $products_category->type]);
+
+            // return redirect('/products_categories/'.$products_category->type)->with('products_category_id', $products_category->id);
 
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи сектора!'
+                'error_message' => 'Ошибка при записи сектора!',
             ];
         }
     }
@@ -367,7 +357,7 @@ class ProductsCategoryController extends Controller
         ->get();
 
 
-       
+        
 
         $properties_list = $properties->pluck('name', 'id');
 
@@ -567,7 +557,7 @@ class ProductsCategoryController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $products_category = ProductsCategory::moderatorLimit($answer)->findOrFail($id);
+        $products_category = ProductsCategory::withCount('products')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $products_category);
@@ -582,16 +572,17 @@ class ProductsCategoryController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-        $type = $products_category->type;
-
         // Если содержит, то даем сообщение об ошибке
-        if ($products_category_parent) {
+        if ($products_category_parent || ($products_category->products_count > 0)) {
 
             $result = [
                 'error_status' => 1,
                 'error_message' => 'Данная область содержит населенные пункты, удаление невозможно'
             ];
         } else {
+
+            $type = $products_category->type;
+            $id = $products_category->id;
 
             // Если нет, мягко удаляем
             if ($products_category->category_status == 1) {
@@ -607,8 +598,10 @@ class ProductsCategoryController extends Controller
 
             if ($products_category) {
 
+                return redirect()->action('ProductsCategoryController@index', ['products_category_id' => $id, 'type' => $type]);
+
                 // Переадресовываем на index
-                return redirect()->action('ProductsCategoryController@types', ['id' => $parent, 'type' => $type]);
+                // return redirect()->action('ProductsCategoryController@types', ['id' => $parent, 'type' => $type]);
             } else {
                 $result = [
                     'error_status' => 1,
@@ -767,6 +760,35 @@ class ProductsCategoryController extends Controller
             ];
         }
     }
+
+    // Отображение на сайте
+    public function ajax_display(Request $request)
+    {
+
+        if ($request->action == 'hide') {
+          $display = null;
+      } else {
+          $display = 1;
+      }
+
+      $products_category = ProductsCategory::findOrFail($request->id);
+      $products_category->display = $display;
+      $products_category->save();
+
+      if ($products_category) {
+
+          $result = [
+            'error_status' => 0,
+        ];  
+    } else {
+
+      $result = [
+        'error_status' => 1,
+        'error_message' => 'Ошибка при обновлении отображения на сайте!'
+    ];
+}
+echo json_encode($result, JSON_UNESCAPED_UNICODE);
+}
 
 
 

@@ -285,6 +285,27 @@ class EntitiesTableSeeder extends Seeder
         'system_item' => 1,
         'author_id' => 1,
       ], 
+      [
+        'name' => 'Категории услуг',
+        'alias' => 'services_categories',
+        'model' => 'ServicesCategory',
+        'system_item' => 1,
+        'author_id' => 1,
+      ],
+       [
+        'name' => 'Продукты услуг',
+        'alias' => 'services_products',
+        'model' => 'ServicesProduct',
+        'system_item' => 1,
+        'author_id' => 1,
+      ], 
+      [
+        'name' => 'Услуги',
+        'alias' => 'services',
+        'model' => 'Service',
+        'system_item' => 1,
+        'author_id' => 1,
+      ], 
             // [
             //     'name' => 'Рабочее время дня',
             //     'alias' => 'worktimes',

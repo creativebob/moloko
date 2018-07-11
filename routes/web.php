@@ -46,6 +46,7 @@ Route::post('/albums_categories_list', 'AlbumsCategoryController@albums_categori
 // Сортировка категорий альбомов
 Route::post('/albums_categories_sort', 'AlbumsCategoryController@albums_categories_sort')->middleware('auth');
 
+
 // --------------------------------------- Альбомы -----------------------------------------------
 Route::resource('/albums', 'AlbumController')->middleware('auth');
 Route::get('/albums', 'AlbumController@index')->middleware('auth')->name('albums.index');
@@ -62,6 +63,8 @@ Route::post('/albums_list', 'AlbumController@albums_list')->middleware('auth');
 Route::post('/get_album', 'AlbumController@get_album')->middleware('auth');
 // Сортировка альбомов
 Route::post('/albums_sort', 'AlbumController@albums_sort')->middleware('auth');
+// Отображение на сайте
+Route::post('/albums_display', 'AlbumController@ajax_display')->middleware('auth');
 
 // Route::get('/albums/{alias}', 'AlbumController@sections')->middleware('auth')->name('albums.photos');
 // Группа с префиксом
@@ -77,7 +80,8 @@ Route::patch('/ajax_update_photo/{id}', 'PhotoController@update_photo')->middlew
 
 // Сортировка фоток
 Route::post('/photos_sort', 'PhotoController@photos_sort')->middleware('auth');
-
+// Отображение фоток на сайте
+Route::post('/photos_display', 'PhotoController@ajax_display')->middleware('auth');
 
 // ------------------------------------- Продукция -------------------------------------------------
 
@@ -144,19 +148,84 @@ Route::get('/articles/{type}/{status?}', 'ArticleController@types')->middleware(
 Route::post('/articles/', 'ArticleController@store')->middleware('auth');
 // Основые методы
 Route::resource('/articles', 'ArticleController')->middleware('auth');
+// Отображение страниц на сайте
+Route::post('/articles_display', 'ArticleController@ajax_display')->middleware('auth');
+
+// Запись фото
+Route::any('/article/add_photo', 'ArticleController@add_photo')->middleware('auth');
+Route::post('/article/photos', 'ArticleController@photos')->middleware('auth');
 
 
 // ------------------------------------ Категории продукции --------------------------------------
+
+// -------------------------------- Категории товаров -----------------------------------------
+// Текущая добавленная/удаленная категория
+Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('auth');
+// Основные методы
+Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('auth');
+
+// -------------------------------- Категории сырья -------------------------------------------
+// Текущая добавленная/удаленная категория
+Route::any('/raws_categories', 'RawsCategoryController@index')->middleware('auth');
+// Основные методы
+Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth');
+
+
+
+// -------------------------------- Категории услуг -------------------------------------------
+// Route::any('/ajax_services_modes', 'ServicesProductController@ajax_modes')->middleware('auth');
+// Текущая добавленная/удаленная категория
+Route::any('/services_categories', 'ServicesCategoryController@index')->middleware('auth');
+// Основные методы
+Route::resource('/services_categories', 'ServicesCategoryController')->middleware('auth');
+
+// Проверка на существование категории продукции
+Route::post('/services_category_check', 'ServicesCategoryController@services_category_check')->middleware('auth');
+
+// Отображение страниц на сайте
+Route::post('/services_categories_display', 'ServicesCategoryController@ajax_display')->middleware('auth');
+// Сортировка
+Route::post('/services_categories_sort', 'ServicesCategoryController@services_categories_sort')->middleware('auth');
+
+// --------------------------------- Продукция услуг --------------------------------------------
+// Основные методы
+Route::resource('/services_products', 'ServicesProductController')->middleware('auth');
+
+
+Route::any('/ajax_services_count', 'ServicesProductController@ajax_count')->middleware('auth');
+Route::any('/ajax_services_modes', 'ServicesProductController@ajax_modes')->middleware('auth');
+
+// Основные методы
+Route::resource('/services', 'ServiceController')->middleware('auth');
+
+
+// Проверка на существование товара
+Route::post('/sector_check', 'SectorController@sector_check')->middleware('auth');
+// Select секторов
+Route::post('/sectors_list', 'SectorController@sectors_list')->middleware('auth');
+// Сортировка секторов
+Route::post('/sectors_sort', 'SectorController@sectors_sort')->middleware('auth');
+
+Route::any('/products_categories_ajax', 'ProductsCategoryController@index')->middleware('auth');
+
 Route::get('/products_categories/{type}/create', 'ProductsCategoryController@create')->middleware('auth');
+
 Route::match(['get', 'post'], '/products_categories/{id}/edit', 'ProductsCategoryController@edit')->middleware('auth');
+
 Route::patch('/products_categories/{id}', 'ProductsCategoryController@update')->middleware('auth');
+
 Route::delete('/products_categories/{id}', 'ProductsCategoryController@destroy')->middleware('auth');
 
-Route::any('/products_categories/{type}/{status?}', 'ProductsCategoryController@types')->middleware('auth');
 Route::post('/products_categories/', 'ProductsCategoryController@store')->middleware('auth');
 
+Route::get('/products_categories/{type}/{status?}', 'ProductsCategoryController@types')->middleware('auth');
+
+
+
+// Route::any('/products_categories/{type}/', 'ProductsCategoryController@index')->middleware('auth');
+
 // Метод для обновления фотографии, ajax не поддерживает PATCH
-Route::post('/products_categories/{id}/update', 'ProductsCategoryController@ajax_update');
+// Route::post('/products_categories/{id}/update', 'ProductsCategoryController@ajax_update');
 // Текущая добавленная/удаленная категория продукции
 // Route::any('/products_categories', 'ProductsCategoryController@index')->middleware('auth');
 // Основые методы
@@ -167,6 +236,8 @@ Route::post('/products_category_check', 'ProductsCategoryController@products_cat
 Route::post('/products_categories_list', 'ProductsCategoryController@products_categories_list')->middleware('auth');
 // Сортировка категорий продукции
 Route::post('/products_categories_sort', 'ProductsCategoryController@products_categories_sort')->middleware('auth');
+// Отображение страниц на сайте
+Route::post('/products_categories_display', 'ProductsCategoryController@ajax_display')->middleware('auth');
 
 // Метод для обновления фотографии, ajax не поддерживает PATCH
 // Route::post('/products_categories/{id}/update', 'ProductsCategoryController@ajax_update');
@@ -273,6 +344,8 @@ Route::post('/department_check', 'DepartmentController@department_check')->middl
 Route::post('/departments_list', 'DepartmentController@departments_list')->middleware('auth');
 // Сортировка отделов
 Route::post('/departments_sort', 'DepartmentController@departments_sort')->middleware('auth');
+// Отображение страниц на сайте
+Route::post('/departments_display', 'DepartmentController@ajax_display')->middleware('auth');
 
 // ----------------------------------------- Должности --------------------------------------------
 Route::resource('/positions', 'PositionController')->middleware('auth');
@@ -283,6 +356,8 @@ Route::post('/positions_sort', 'PositionController@positions_sort')->middleware(
 
 // -------------------------------------- Штат компании ---------------------------------------------
 Route::resource('/staff', 'StafferController')->middleware('auth');
+// Отображение страниц на сайте
+Route::post('/staff_display', 'StafferController@ajax_display')->middleware('auth');
 // Сортировка штата
 Route::post('/staff_sort', 'StafferController@staff_sort')->middleware('auth');
 
@@ -356,6 +431,13 @@ Route::post('/navigations_sort', 'NavigationController@navigations_sort')->middl
 Route::post('/menus_sort', 'MenuController@menus_sort')->middleware('auth');
 // Сортировка новостей
 Route::post('/news_sort', 'NewsController@news_sort')->middleware('auth');
+
+
+// Отображение на сайте
+Route::post('/pages_display', 'PageController@ajax_display')->middleware('auth');
+Route::post('/news_display', 'NewsController@ajax_display')->middleware('auth');
+Route::post('/navigations_display', 'NavigationController@ajax_display')->middleware('auth');
+Route::post('/menus_display', 'MenuController@ajax_display')->middleware('auth');
 
 
 

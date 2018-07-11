@@ -24,15 +24,28 @@ $count = count($products_category['products']) + $count;
     @if ($products_category['system_item'])
     <span class="system-item">Системная запись!</span>
     @endif
-    @can ('publisher', App\ProductsCategory::class)
+
+    {{-- @can ('publisher', App\ProductsCategory::class)
     @if ($products_category['display'] == 1)
     <span class="system-item">Отображается на сайте</span>
     @else
     <span class="no-moderation">Не отображается на сайте</span>
     @endif
-    @endcan
+    @endcan --}}
+
   </a>
   <div class="icon-list">
+
+    <div class="display-menu">
+      @can ('publisher', App\ProductsCategory::class)
+      @if ($products_category['display'] == 1)
+      <div class="icon-display-show black sprite" data-open="item-display"></div>
+      @else
+      <div class="icon-display-hide black sprite" data-open="item-display"></div>
+      @endif
+      @endcan
+    </div>
+
     <div>
       @can('create', App\ProductsCategory::class)
       <div class="icon-list-add sprite" data-open="medium-add"></div>
@@ -44,7 +57,7 @@ $count = count($products_category['products']) + $count;
       @endif
     </div>
     <div class="del">
-      @if (!isset($products_category['children']) && ($products_category['system_item'] != 1) && $products_category['delete'] == 1 && $products_category['products_count'] > 0)
+      @if (!isset($products_category['children']) && empty($products_category['products']) && ($products_category['system_item'] != 1) && $products_category['delete'] == 1 && $products_category['products_count'] > 0)
       <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
       @endif
     </div>
@@ -60,8 +73,8 @@ $count = count($products_category['products']) + $count;
     @if ((isset($products_category['children'])) || ($products_category['products_count'] > 0))
 
     @if ($products_category['products_count'] > 0)
-    @foreach($products_category['products'] as $product)
-    @include('products_categories.products-list', $product)
+    @foreach($products_category['products'] as $services_product)
+    @include('products_categories.products-list', $services_product)
     @endforeach
     @endif
 
@@ -89,15 +102,20 @@ $count = count($products_category['products']) + $count;
     @if ($products_category['system_item'])
     <span class="system-item">Системная запись!</span>
     @endif
-    @can ('publisher', App\ProductsCategory::class)
-    @if ($products_category['display'] == 1)
-    <span class="system-item">Отображается на сайте</span>
-    @else
-    <span class="no-moderation">Не отображается на сайте</span>
-    @endif
-    @endcan
+
   </a>
   <div class="icon-list">
+
+    <div class="display-menu">
+      @can ('publisher', App\ProductsCategory::class)
+      @if ($products_category['display'] == 1)
+      <div class="icon-display-show black sprite" data-open="item-display"></div>
+      @else
+      <div class="icon-display-hide black sprite" data-open="item-display"></div>
+      @endif
+      @endcan
+    </div>
+
     <div>
       @can('create', App\ProductsCategory::class)
       <div class="icon-list-add sprite" data-open="medium-add"></div>

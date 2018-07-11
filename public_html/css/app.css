@@ -464,29 +464,34 @@ a.icon-list-edit {
 }
 
 .icon-display-hide {
-  background-position: -64px -992px;
   opacity: 0.2;
 }
-
-.icon-display-hide:hover {
+.icon-display-hide.black {
   background-position: -64px -992px;
+}
+.icon-display-hide.white {
+  background-position: -160px -992px;
+}
+.icon-display-hide:hover {
   opacity: 1;
 }
 
 .icon-display-show {
-  background-position: -32px -992px;
   opacity: 0;
   transition: opacity ease 0.3s;
 }
-
-tr:hover .icon-display-show {
+.icon-display-show.black {
   background-position: -32px -992px;
-  opacity: 0.2;
+}
+.icon-display-show.white {
+  background-position: -96px -992px;
+}
+.icon-display-show:hover {
+  opacity: 1;
 }
 
-tr:hover .icon-display-show:hover {
-  background-position: -32px -992px;
-  opacity: 1;
+tr:hover .icon-display-show {
+  opacity: 0.2;
 }
 
 .icon-system-lock {

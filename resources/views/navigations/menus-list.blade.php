@@ -35,6 +35,17 @@
 		<label class="label-check" for="check-{{ $menu['id'] }}"></label> 
 	</div>
 	<div class="icon-list">
+
+		<div class="display-menu">
+			@can ('publisher', App\Menu::class)
+			@if ($menu['display'] == 1)
+			<div class="icon-display-show black sprite" data-open="item-display"></div>
+			@else
+			<div class="icon-display-hide black sprite" data-open="item-display"></div>
+			@endif
+			@endcan
+		</div>
+
 		<div>
 			@can('create', App\Menu::class)
 			<div class="icon-list-add sprite" data-open="medium-add"></div>
@@ -72,13 +83,19 @@
 		@if ($menu['system_item'])
 		<span class="system-item">Системная запись!</span>
 		@endif
-		@if ($menu['display'] == 1)
-		<span class="system-item">Отображается на сайте</span>
-		@else
-		<span class="no-moderation">Не отображается на сайте</span>
-		@endif
 	</a>
 	<div class="icon-list">
+
+		<div class="display-menu">
+			@can ('publisher', App\Menu::class)
+			@if ($menu['display'] == 1)
+			<div class="icon-display-show black sprite" data-open="item-display"></div>
+			@else
+			<div class="icon-display-hide black sprite" data-open="item-display"></div>
+			@endif
+			@endcan
+		</div>
+
 		<div>
 			@can('create', App\Menu::class)
 			<div class="icon-list-add sprite" data-open="medium-add"></div>

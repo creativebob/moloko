@@ -39,8 +39,13 @@
 @section('scripts')
 {{-- Маска ввода --}}
 @include('includes.scripts.inputs-mask')
+
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
+
+{{-- Скрипт отображеняи на сайте --}}
+@include('includes.scripts.display-ajax')
+
 <script type="text/javascript">
   $(function() {
 

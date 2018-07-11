@@ -59,9 +59,9 @@
           @can ('publisher', $page)
           <td class="td-display">
             @if ($page['display'] == 1)
-            <span class="system-item">Отображается на сайте</span>
+            <a class="icon-display-show black sprite" data-open="item-display"></a>
             @else
-            <span class="no-moderation">Не отображается на сайте</span>
+            <a class="icon-display-hide black sprite" data-open="item-display"></a>
             @endif
           </td>
           @endcan
@@ -112,6 +112,10 @@
   });
 });
 </script> 
+
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
+
+{{-- Скрипт отображеняи на сайте --}}
+@include('includes.scripts.display-ajax')
 @endsection

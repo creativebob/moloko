@@ -790,4 +790,33 @@ class DepartmentController extends Controller
             }
         }
     }
+
+    // Отображение на сайте
+    public function ajax_display(Request $request)
+    {
+
+        if ($request->action == 'hide') {
+            $display = null;
+        } else {
+            $display = 1;
+        }
+
+        $department = Department::findOrFail($request->id);
+        $department->display = $display;
+        $department->save();
+
+        if ($department) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении отображения на сайте!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
 }

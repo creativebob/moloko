@@ -38,7 +38,7 @@
 					</div>
 				</div>
 
-				{{ Form::hidden('products_category_id', $products_category->id, ['id' => 'products-category-id']) }}
+				{{ Form::hidden('services_category_id', $services_category->id, ['id' => 'services-category-id']) }}
 				{{ Form::hidden('medium_item', 1, ['class' => 'medium-item', 'pattern' => '[0-9]{1}']) }}
 				{{ Form::hidden('category_id', 0, ['class' => 'category-id']) }}
 				{{ Form::hidden('type', $type) }}
@@ -48,7 +48,7 @@
 					{{-- Чекбокс отображения на сайте --}}
 					@can ('publisher', $products_category)
 					<div class="small-8 cell checkbox">
-						{{ Form::checkbox('display', 1, $products_category->display, ['id' => 'display']) }}
+						{{ Form::checkbox('display', 1, null, ['id' => 'display']) }}
 						<label for="display"><span>Отображать на сайте</span></label>
 					</div>
 					@endcan

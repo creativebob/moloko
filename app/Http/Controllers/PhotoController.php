@@ -446,4 +446,33 @@ class PhotoController extends Controller
       }
     }
 
+    // Отображение на сайте
+    public function ajax_display(Request $request)
+    {
+
+        if ($request->action == 'hide') {
+            $display = null;
+        } else {
+            $display = 1;
+        }
+
+        $photo = Photo::findOrFail($request->id);
+        $photo->display = $display;
+        $photo->save();
+
+        if ($photo) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении отображения на сайте!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
   }

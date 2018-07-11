@@ -16,15 +16,19 @@
     <span class="system-item">Системная запись!</span>
     @endif
 
-    @can ('publisher', App\Staffer::class)
-    @if ($staffer['display'] == 1)
-    <span class="system-item">Отображается на сайте</span>
-    @else
-    <span class="no-moderation">Не отображается на сайте</span>
-    @endif
-    @endcan
   </div>
   <div class="icon-list">
+
+    <div class="display-menu">
+      @can ('publisher', App\Staffer::class)
+      @if ($staffer['display'] == 1)
+      <div class="icon-display-show black sprite" data-open="item-display"></div>
+      @else
+      <div class="icon-display-hide black sprite" data-open="item-display"></div>
+      @endif
+      @endcan
+    </div>
+
     <div class="del">
       @if(($staffer['system_item'] != 1) && ($staffer['delete'] == 1) && !isset($staffer['user']))
       <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>

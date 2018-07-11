@@ -772,7 +772,7 @@ class MenusTableSeeder extends Seeder
     [
         'name' => 'Категории товаров',
         'icon' => null,
-        'alias' => 'products_categories/goods',
+        'alias' => 'goods_categories',
         'parent_id' => 52,
         'page_id' => 47,
         'navigation_id' => 2,
@@ -785,7 +785,7 @@ class MenusTableSeeder extends Seeder
     [
         'name' => 'Категории услуг',
         'icon' => null,
-        'alias' => 'products_categories/services',
+        'alias' => 'services_categories',
         'parent_id' => 52,
         'page_id' => 48,
         'navigation_id' => 2,
@@ -798,7 +798,7 @@ class MenusTableSeeder extends Seeder
     [
         'name' => 'Категории сырья',
         'icon' => null,
-        'alias' => 'products_categories/raws',
+        'alias' => 'raws_categories',
         'parent_id' => 52,
         'page_id' => 49,
         'navigation_id' => 2,
@@ -812,7 +812,7 @@ class MenusTableSeeder extends Seeder
     [
         'name' => 'Товары',
         'icon' => null,
-        'alias' => 'articles/goods',
+        'alias' => 'goods',
         'parent_id' => 52,
         'page_id' => 50,
         'navigation_id' => 2,
@@ -825,7 +825,7 @@ class MenusTableSeeder extends Seeder
     [
         'name' => 'Услуги',
         'icon' => null,
-        'alias' => 'articles/services',
+        'alias' => 'services',
         'parent_id' => 52,
         'page_id' => 51,
         'navigation_id' => 2,
@@ -838,7 +838,7 @@ class MenusTableSeeder extends Seeder
     [
         'name' => 'Сырьё',
         'icon' => null,
-        'alias' => 'articles/raws',
+        'alias' => 'raws',
         'parent_id' => 52,
         'page_id' => 52,
         'navigation_id' => 2,
