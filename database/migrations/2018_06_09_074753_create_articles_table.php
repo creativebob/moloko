@@ -24,8 +24,6 @@ class CreateArticlesTable extends Migration
 
             $table->string('name')->nullable()->comment('Имя артикула (руками)');
 
-            $table->string('photo_id')->index()->nullable()->comment('Обложка артикула');
-            // $table->foreign('photo_id')->references('id')->on('photos');
 
             $table->string('description')->index()->nullable()->comment('Описание артикула');
 
@@ -47,9 +45,6 @@ class CreateArticlesTable extends Migration
             $table->string('internal')->nullable()->comment('Имя генерируемого артикула');
             $table->string('external')->nullable()->comment('Имя внешнего артикула');
 
-            $table->integer('manufacturer_id')->nullable()->unsigned()->comment('Id производителя артикула');
-            $table->foreign('manufacturer_id')->references('id')->on('companies');
-
             $table->integer('cost')->nullable()->comment('Фиксированная себестоимость товара (руками)');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим определения себестоимости');
 
@@ -61,8 +56,6 @@ class CreateArticlesTable extends Migration
             $table->integer('metrics_count')->nullable()->unsigned()->index()->comment('Количество метрик у артикула');
             $table->integer('compositions_count')->nullable()->unsigned()->index()->comment('Количество состава у артикула');
 
-            $table->integer('album_id')->nullable()->unsigned()->comment('ID альбома');
-            $table->foreign('album_id')->references('id')->on('albums');
 
             $table->integer('photo_id')->nullable()->unsigned()->comment('ID аватара');
             $table->foreign('photo_id')->references('id')->on('photos');

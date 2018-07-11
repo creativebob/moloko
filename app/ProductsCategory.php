@@ -88,11 +88,11 @@ class ProductsCategory extends Model
     }
 
 
-    public function products_mode()
-    {
-        return $this->belongsTo('App\ProductsMode');
+    // public function products_mode()
+    // {
+    //     return $this->belongsTo('App\ProductsMode');
 
-    }
+    // }
 
     public function photo()
     {
