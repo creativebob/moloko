@@ -58,7 +58,11 @@ class UserRequest extends FormRequest
             'passport_date' => 'date|after:01.01.1970|before:today|nullable', 
             'passport_address' => 'string|max:255|nullable', 
 
-            'user_type' => 'required', 
+            'degree' => 'string|max:200|nullable', 
+            'specialty' => 'string|max:200|nullable', 
+            'quote' => 'string|max:500|nullable', 
+
+            // 'user_type' => 'required', 
 
             // 'lead_id' => 'required', 
             // 'employee_id' => 'required', 

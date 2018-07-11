@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\User;
 use App\ProductsCategory;
-use App\ProductsType;
+use App\ProductsMode;
 use App\UnitsCategory;
 use App\Company;
 use App\Photo;
@@ -110,7 +110,70 @@ class ProductController extends Controller
         return view('products.index', compact('products', 'page_info', 'product', 'filter'));
     }
 
-    public function create(Request $request)
+    public function types(Request $request, $type)
+    {
+
+        // Подключение политики
+        $this->authorize('index', Product::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        // dd($answer);
+
+        // --------------------------------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // --------------------------------------------------------------------------------------------------------------------------------------
+
+        $products = Product::with('author', 'company', 'products_group', 'unit', 'country')
+        ->whereHas('products_group', function ($query) use ($type) {
+            $query->whereHas('products_category', function ($query) use ($type) {
+                $query->where('type', $type);
+            });
+        })
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        // ->booklistFilter($request)
+        // ->filter($request, 'author_id')
+        // ->filter($request, 'company_id')
+        // ->filter($request, 'products_category_id')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->paginate(30);
+
+        // dd($products);
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+        // $filter_query = Product::with('author', 'company', 'products_category')
+        // ->moderatorLimit($answer)
+        // ->companiesLimit($answer)
+        // ->authors($answer)
+        // ->systemItem($answer) // Фильтр по системным записям
+        // ->get();
+        // // dd($filter_query);
+
+        // $filter['status'] = null;
+
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id');
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'products_category', 'products_category_id');
+
+        // // Добавляем данные по спискам (Требуется на каждом контроллере)
+        // $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // dd($type);
+        // Инфо о странице
+        $page_info = pageInfo('products/'.$type);
+
+        return view('products.index', compact('products', 'page_info', 'product', 'filter', 'type'));
+    }
+
+    public function create(Request $request, $type)
     {
 
         // Подключение политики
@@ -127,8 +190,8 @@ class ProductController extends Controller
         ->companiesLimit($answer_products_categories)
         ->authors($answer_products_categories)
         ->systemItem($answer_products_categories) // Фильтр по системным записям
-        ->whereHas('products_type', function ($query) {
-            $query->whereType('goods');
+        ->whereHas('products_mode', function ($query) use ($type) {
+            $query->whereType($type);
         })
         ->orderBy('sort', 'asc')
         ->get(['id','name','category_status','parent_id'])
@@ -180,7 +243,7 @@ class ProductController extends Controller
         $product->name = $request->name;
 
         $product->products_category_id = $request->products_category_id;
-        $product->unit_id = $request->unit_id;
+        // $product->unit_id = $request->unit_id;
         
         // Автоматически отправляем запись на модерацию
         // $product->moderation = 1;
@@ -222,6 +285,7 @@ class ProductController extends Controller
             // } else {
             //     abort(403, 'Ошибка записи базового артикула');
             // }
+
         } else {
             abort(403, 'Ошибка записи товара');
         }
@@ -237,7 +301,7 @@ class ProductController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-        $product = Product::with(['unit', 'manufacturer.location.country', 'products_category', 'metrics.unit', 'metrics.values', 'compositions', 'articles', 'album.photos'])->withCount('metrics', 'compositions')->moderatorLimit($answer_products)->findOrFail($id);
+        $product = Product::with(['products_category.metrics', 'products_category.compositions.products', 'album.photos'])->moderatorLimit($answer_products)->findOrFail($id);
 
         // if ($product->metrics_count > 0) {
         //     dd($product->compositions_count);
@@ -245,21 +309,104 @@ class ProductController extends Controller
 
         // dd($product);
 
-        $product_metrics = [];
-        foreach ($product->metrics as $metric) {
-            $product_metrics[] = $metric->id;
-        }
-        // dd($product_metrics);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_products_categories = operator_right('products_categories', false, 'index');
 
-        $product_compositions = [];
-        foreach ($product->compositions as $composition) {
-            $product_compositions[] = $composition->id;
-        }
+        // Главный запрос
+        $products_categories = ProductsCategory::moderatorLimit($answer_products_categories)
+        ->companiesLimit($answer_products_categories)
+        ->authors($answer_products_categories)
+        ->systemItem($answer_products_categories) // Фильтр по системным записям
+        ->get(['id','name','category_status','parent_id'])
+        ->keyBy('id')
+        ->toArray();
+
+        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+        $products_categories_list = get_select_tree($products_categories, $product->products_category_id, null, null);
+
+        // dd($products_categories_list);
+
+        // $product_metrics = [];
+        // foreach ($product->metrics as $metric) {
+        //     $product_metrics[] = $metric->id;
+        // }
+        // // dd($product_metrics);
+
+        // $product_compositions = [];
+        // foreach ($product->compositions as $composition) {
+        //     $product_compositions[] = $composition->id;
+        // }
 
         // dd($product_compositions);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $product);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer_units_categories = operator_right('units_categories', false, 'index');
+
+        // // Главный запрос
+        // $units_categories_list = UnitsCategory::with(['units' => function ($query) {
+        //     $query->pluck('name', 'id');
+        // }])
+        // ->moderatorLimit($answer_units_categories)
+        // ->companiesLimit($answer_units_categories)
+        // ->authors($answer_units_categories)
+        // ->systemItem($answer_units_categories) // Фильтр по системным записям
+        // ->template($answer_units_categories)
+        // ->orderBy('sort', 'asc')
+        // ->get()
+        // ->pluck('name', 'id');
+
+        // $units_list = Unit::where('units_category_id', $product->unit->units_category_id)->get()->pluck('name', 'id');
+
+        // // dd($units_categories_list[$product->unit->units_category_id]);
+
+        // // Получаем данные для авторизованного пользователя
+        // $user = $request->user();
+
+        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer_properties = operator_right('properties', false, 'index');
+
+        // $answer_metrics = operator_right('metrics', false, 'index');
+
+        // $properties = Property::moderatorLimit($answer_properties)
+        // ->companiesLimit($answer_properties)
+        // ->authors($answer_properties)
+        // ->systemItem($answer_properties) // Фильтр по системным записям
+        // ->template($answer_properties)
+        // ->with(['metrics' => function ($query) use ($answer_metrics) {
+        //     $query->with('values')->moderatorLimit($answer_metrics)
+        //     ->companiesLimit($answer_metrics)
+        //     ->authors($answer_metrics)
+        //     ->systemItem($answer_metrics); // Фильтр по системным записям 
+        // }])
+        // ->withCount('metrics')
+        // ->orderBy('sort', 'asc')
+        // ->get();
+
+        // // dd($properties);
+
+
+        // $properties_list = $properties->pluck('name', 'id');
+        // // dd($properties_list);
+
+        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer_manufacturers = operator_right('companies', false, 'index');
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // Главный запрос
+        $company = Company::with('manufacturers')
+        ->findOrFail($user->company_id);
+        // dd($company);
+
+        $manufacturers_list = $company->manufacturers->pluck('name', 'id');
+        // dd($manufacturers_list);
+
+        $photo = New Photo;
+
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_units_categories = operator_right('units_categories', false, 'index');
@@ -279,209 +426,68 @@ class ProductController extends Controller
 
         $units_list = Unit::where('units_category_id', $product->unit->units_category_id)->get()->pluck('name', 'id');
 
-        // dd($units_categories_list[$product->unit->units_category_id]);
+        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer_products_categories = operator_right('products_categories', false, 'index');
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_properties = operator_right('properties', false, 'index');
-
-        $answer_metrics = operator_right('metrics', false, 'index');
-
-        $properties = Property::moderatorLimit($answer_properties)
-        ->companiesLimit($answer_properties)
-        ->authors($answer_properties)
-        ->systemItem($answer_properties) // Фильтр по системным записям
-        ->template($answer_properties)
-        ->with(['metrics' => function ($query) use ($answer_metrics) {
-            $query->with('values')->moderatorLimit($answer_metrics)
-            ->companiesLimit($answer_metrics)
-            ->authors($answer_metrics)
-            ->systemItem($answer_metrics); // Фильтр по системным записям 
-        }])
-        // , 'products' 
-        // => function ($query) use ($id) {
-        //     $query->findOrFail($id);
-
-        // ->whereHas('metrics', function ($query) use ($user) {
-        //     $query->where('company_id', $user->company_id);
+        // // Категории
+        // $products_categories = ProductsCategory::moderatorLimit($answer_products_categories)
+        // ->companiesLimit($answer_products_categories)
+        // ->authors($answer_products_categories)
+        // ->systemItem($answer_products_categories) // Фильтр по системным записям
+        // ->whereHas('products_mode', function ($query) {
+        //     $query->whereType('goods');
         // })
-        // ->whereHas('metrics.products', function ($query) use ($id) {
-        //     $query->findOrFail($id);
-        // })
-        ->withCount('metrics')
-        // ->whereHas('metrics', function ($query) use ($answer_metrics) {
-        //     $query->moderatorLimit($answer_metrics)
-        //     ->companiesLimit($answer_metrics)
-        //     ->authors($answer_metrics)
-        //     ->systemItem($answer_metrics); // Фильтр по системным записям
-        // })
-        ->orderBy('sort', 'asc')
-        ->get();
+        // ->orderBy('sort', 'asc')
+        // ->get(['id','name','category_status','parent_id'])
+        // ->keyBy('id')
+        // ->toArray();
 
-        // dd($properties);
+        // // dd($products_categories);
+
+        // // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+        // $products_categories_list = get_select_tree($products_categories, $product->products_category_id, null, null);
 
 
-        $properties_list = $properties->pluck('name', 'id');
-        // dd($properties_list);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_manufacturers = operator_right('companies', false, 'index');
+        
 
+        // // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer_products_modes = operator_right('products_modes', false, 'index');
 
-        // Главный запрос
-        $company = Company::with('manufacturers')
-        ->findOrFail($user->company_id);
-        // dd($company);
+        // $products_modes = ProductsMode::with(['products_categories' => function ($query) use ($answer_products_categories) {
+        //     $query->with('articles')
+        //     ->withCount('articles')
+        //     ->moderatorLimit($answer_products_categories)
+        //     ->companiesLimit($answer_products_categories)
+        //     ->authors($answer_products_categories)
+        //     ->systemItem($answer_products_categories) // Фильтр по системным записям
+        //     ->template($answer_products_categories);
+        // }])
+        // ->moderatorLimit($answer_products_modes)
+        // ->companiesLimit($answer_products_modes)
+        // ->authors($answer_products_modes)
+        // ->systemItem($answer_products_modes) // Фильтр по системным записям
+        // ->template($answer_products_modes)
+        // ->whereType('goods')
+        // ->orderBy('sort', 'asc')
+        // ->get();
 
-        $manufacturers_list = $company->manufacturers->pluck('name', 'id');
-        // dd($manufacturers_list);
+        // $grouped_products_modes = $products_modes->groupBy('alias');
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_products_categories = operator_right('products_categories', false, 'index');
+        // // Отдаем Ajax
+        // if ($request->ajax()) {
+        //     // echo json_encode($properties);
+        //     return view('products.properties-list', ['properties' => $properties, 'product_metrics' => $product_metrics, 'properties_list' => $properties_list]);
+        // }
 
-        // Категории
-        $products_categories = ProductsCategory::moderatorLimit($answer_products_categories)
-        ->companiesLimit($answer_products_categories)
-        ->authors($answer_products_categories)
-        ->systemItem($answer_products_categories) // Фильтр по системным записям
-        ->whereHas('products_type', function ($query) {
-            $query->whereType('goods');
-        })
-        ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
-        ->keyBy('id')
-        ->toArray();
+        // , 'products_categories_list', 'units_categories_list', 'manufacturers_list', 'photo', 'product_metrics', 'product_compositions', 'grouped_products_modes', 'units_list'
 
-        // dd($products_categories);
-
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $products_categories_list = get_select_tree($products_categories, $product->products_category_id, null, null);
+        // dd($product);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        $photo = New Photo;
-
-        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer_products = operator_right('products', false, 'index');
-
-        // $products = Product::with('products_category.products_type')
-        // ->moderatorLimit($answer_products)
-        // ->companiesLimit($answer_products)
-        // ->authors($answer_products)
-        // ->systemItem($answer_products) // Фильтр по системным записям
-        // ->whereHas('products_category', function ($query) {
-        //     $query->whereHas('products_type', function ($query) {
-        //         $query->whereType('goods');
-        //     });
-        // })
-        // ->orderBy('sort', 'asc')
-        // ->get();
-
-        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_products_types = operator_right('products_types', false, 'index');
-
-        $products_types = ProductsType::with(['products_categories' => function ($query) use ($answer_products_categories) {
-            $query->with('products')
-            ->withCount('products')
-            ->moderatorLimit($answer_products_categories)
-            ->companiesLimit($answer_products_categories)
-            ->authors($answer_products_categories)
-            ->systemItem($answer_products_categories) // Фильтр по системным записям
-            ->template($answer_products_categories);
-        }])
-        ->moderatorLimit($answer_products_types)
-        ->companiesLimit($answer_products_types)
-        ->authors($answer_products_types)
-        ->systemItem($answer_products_types) // Фильтр по системным записям
-        ->template($answer_products_types)
-        ->whereType('goods')
-        ->orderBy('sort', 'asc')
-        ->get();
-
-        $grouped_products_types = $products_types->groupBy('alias');
-
-
-        // foreach ($grouped_products_types as $grouped_products_type) {
-        //     dd($grouped_products_type[0]->products_categories);
-        // }
-
-        // dd($grouped_products_types);
-
-
-
-        // $grouped->toArray();
-
-        // dd($grouped['material'][0]->products_categories[0]->products);
-
-
-        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer_products_categories = operator_right('products_categories', false, 'index');
-
-        // $products_categories = ProductsCategory::with(['products' => function ($query) use ($answer_products) {
-        //     $query->moderatorLimit($answer_products)
-        //     ->companiesLimit($answer_products)
-        //     ->authors($answer_products)
-        //     ->systemItem($answer_products) // Фильтр по системным записям
-        //     ->template($answer_products);
-        // }])
-        // ->moderatorLimit($answer_products_categories)
-        // ->companiesLimit($answer_products_categories)
-        // ->authors($answer_products_categories)
-        // ->systemItem($answer_products_categories) // Фильтр по системным записям
-        // ->template($answer_products_categories)
-        // ->whereHas('products_type', function ($query) {
-        //     $query->whereType('goods');
-        // })
-        // ->orderBy('sort', 'asc')
-        // ->groupBy();
-
-        // // dd($products_categories);
-
-        // $materials = $products_types->where('alias', 'material');
-        // dd($materials);
-
-        // $materials = Product::moderatorLimit($answer_products)
-        // ->companiesLimit($answer_products)
-        // ->authors($answer_products)
-        // ->systemItem($answer_products) // Фильтр по системным записям
-        // ->whereHas('products_category', function ($query) {
-        //     $query->whereHas('products_type', function ($query) {
-        //         $query->whereAlias('material');
-        //     });
-        // })
-        // ->orderBy('sort', 'asc')
-        // ->get();
-
-        // $semiproducts = Product::with('products_category.products_type')->moderatorLimit($answer_products)
-        // ->companiesLimit($answer_products)
-        // ->authors($answer_products)
-        // ->systemItem($answer_products) // Фильтр по системным записям
-        // ->whereHas('products_category', function ($query) {
-        //     $query->whereHas('products_type', function ($query) {
-        //         $query->whereType('goods');
-        //     });
-        // })
-        // ->orderBy('sort', 'asc')
-        // ->get();
-
-        // $materials = $products->whereHas('products_category', function ($query) {
-        //     $query->whereHas('products_type', function ($query) {
-        //         $query->whereAlias('material');
-        //     });
-        // })->get();
-
-        // dd($materials);
-        // dd($product_metrics);
-        // Отдаем Ajax
-        if ($request->ajax()) {
-            // echo json_encode($properties);
-            return view('products.properties-list', ['properties' => $properties, 'product_metrics' => $product_metrics, 'properties_list' => $properties_list]);
-        }
-
-        return view('products.edit', compact('product', 'page_info', 'products_categories_list', 'units_categories_list', 'manufacturers_list', 'photo', 'properties', 'properties_list', 'product_metrics', 'product_compositions', 'grouped_products_types', 'units_list'));
+        return view('products.edit', compact('product', 'page_info', 'products_categories_list', 'manufacturers_list', 'photo'));
     }
 
     public function update(ProductRequest $request, $id)
@@ -642,9 +648,9 @@ class ProductController extends Controller
         }
     }
 
-   
 
-   
+
+
 
     // Добавление фоток
     public function product_photos(Request $request, $id)

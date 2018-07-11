@@ -30,6 +30,8 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 
 // -------------------------------------- Пользователи ------------------------------------------------
 Route::resource('/users', 'UserController')->middleware('auth');
+Route::get('/myprofile', 'UserController@myprofile')->middleware('auth')->name('users.myprofile');;
+
 // Сортировка пользователей
 Route::post('/users_sort', 'UserController@users_sort')->middleware('auth');
 
@@ -115,6 +117,10 @@ Route::post('/products_import', 'ProductController@products_import');
 Route::any('/ajax_products_count/', 'ProductController@ajax_count')->middleware('auth');
 Route::any('/ajax_products_modes/', 'ProductController@ajax_modes')->middleware('auth');
 
+// --------------------------------------- Помещения -----------------------------------------------
+Route::resource('places', 'PlaceController')->middleware('auth');
+
+
 // ------------------------------------- Метрики -------------------------------------------------
 // Основные методы
 Route::resource('/metrics', 'MetricController')->middleware('auth');
@@ -134,6 +140,7 @@ Route::post('/ajax_add_relation_composition', 'CompositionController@ajax_add_re
 Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_delete_relation')->middleware('auth');
 
 Route::post('/ajax_add_page_composition', 'CompositionController@ajax_add')->middleware('auth');
+
 
 Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
@@ -157,6 +164,7 @@ Route::post('/article/photos', 'ArticleController@photos')->middleware('auth');
 
 
 // ------------------------------------ Категории продукции --------------------------------------
+
 
 // -------------------------------- Категории товаров -----------------------------------------
 // Текущая добавленная/удаленная категория
@@ -251,6 +259,8 @@ Route::post('/products_categories_display', 'ProductsCategoryController@ajax_dis
 // Route::post('/products_categories_list', 'ProductsCategoryController@products_categories_list')->middleware('auth');
 // // Сортировка категорий продукции
 // Route::post('/products_categories_sort', 'ProductsCategoryController@products_categories_sort')->middleware('auth');
+
+
 
 // --------------------------------------- Свойства -----------------------------------------------
 Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware('auth');

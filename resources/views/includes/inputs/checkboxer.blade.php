@@ -3,7 +3,6 @@
 @php
 
 	$filter = $value;
-	$relations = $filter[$name]['relations'];
 
 @endphp
 
@@ -33,56 +32,15 @@
 
 	<ul class="checkboxer-menu {{$name}}" data-name="{{$name}}">
 
-		@foreach ($filter[$name]['collection'] as $key => $value)
+		@if(!empty($filter[$name]['list_select']['item_list']))
+			@foreach ($filter[$name]['list_select']['item_list'] as $key => $value)
+				<li>
+					{{ Form::checkbox($filter[$name]['column'] . '[]', $key, $filter[$name]['mass_id'], ['id'=>$name.'-'.$key]) }}
+					<label for="{{$name}}-{{ $key }}"><span>{{ $value }}</span></label>
+				</li>
+			@endforeach
+		@endif
 
-			<li>
-
-				{{-- Блок для выбора через связь --}}
-				@if($relations != null)
-
-					@php
-
-					if($value->$relations == null){
-
-						$value_id = 'null';
-						$value_name = 'Не указано';
-					} else {
-
-						$value_id = $value->$relations->$name->id;
-						$value_name = $value->$relations->$name->name;
-					};
-
-					@endphp
-
-					{{ Form::checkbox($name . '_id[]', $value_id, $filter[$name]['mass_id'], ['id'=>$name.'-'.$value_id]) }}
-					<label for="{{$name}}-{{ $value_id }}"><span>{{ $value_name }}</span></label>
-
-
-				{{-- Блок для выбора по прямым полям (id) --}}
-				@else
-
-					@php
-
-						if(!isset($value->$name->id)){
-
-							$value_id = 'null';
-							$value_name = 'Не указано';
-						} else {
-
-							$value_id = $value->$name->id;
-							$value_name = $value->$name->name;							
-						}
-
-					@endphp
-
-					{{ Form::checkbox($name . '_id[]', $value_id, $filter[$name]['mass_id'], ['id'=>$name.'-'.$value_id]) }}
-					<label for="{{$name}}-{{ $value_id }}"><span>{{ $value_name }}</span></label>
-
-				@endif
-
-			</li>
-
-		@endforeach
 	</ul>
 
 </div>

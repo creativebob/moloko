@@ -3,6 +3,7 @@
 
     <label>Название категории
       @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+
       <div class="item-error">Такая категория уже существует!</div>
     </label>
 

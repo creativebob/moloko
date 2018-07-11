@@ -35,6 +35,7 @@ class MetricEntityTableSeeder extends Seeder
         // }
 
 
+
         // DB::table('metric_entity')->insert($mass);
     }
 }

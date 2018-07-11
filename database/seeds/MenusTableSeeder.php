@@ -26,7 +26,7 @@ class MenusTableSeeder extends Seeder
         'sort' => null,
     ],
     [
-        'name' => 'Тест для сотрудников',
+        'name' => 'Продажи',
         'icon' => 'icon-sale',
         'alias' => null,
         'parent_id' => null,
@@ -677,7 +677,7 @@ class MenusTableSeeder extends Seeder
     ],
     [
         'name' => 'Продукция',
-        'icon' => 'icon-production',
+        'icon' => 'icon-product',
         'alias' => null,
         'parent_id' => null,
         'page_id' => null,
@@ -772,6 +772,7 @@ class MenusTableSeeder extends Seeder
     [
         'name' => 'Категории товаров',
         'icon' => null,
+
         'alias' => 'goods_categories',
         'parent_id' => 52,
         'page_id' => 47,
@@ -848,6 +849,47 @@ class MenusTableSeeder extends Seeder
         'display' => 1,
         'sort' => null,
     ],
+
+    [
+        'name' => 'Помещения',
+        'icon' => null,
+        'alias' => 'places',
+        'parent_id' => 52,
+        'page_id' => 53,
+        'navigation_id' => 2,
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => null,
+    ],
+    [
+        'name' => 'Типы помещений',
+        'icon' => null,
+        'alias' => 'places_types',
+        'parent_id' => 4,
+        'page_id' => 54,
+        'navigation_id' => 2,
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => null,
+    ],
+    [
+        'name' => 'Прoизводство',
+        'icon' => 'icon-production',
+        'alias' => null,
+        'parent_id' => null,
+        'page_id' => null,
+        'navigation_id' => 2,
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => null,
+    ],
+
 ]);
 }
 }

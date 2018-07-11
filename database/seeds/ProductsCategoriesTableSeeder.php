@@ -51,6 +51,7 @@ class ProductsCategoriesTableSeeder extends Seeder
 //         'products_mode_id' => 1,
 //       ],
       [
+
         'company_id' => 1,
         'name' => 'Заборы',
         'parent_id' => null,
@@ -64,8 +65,11 @@ class ProductsCategoriesTableSeeder extends Seeder
         
         'status' => 'set',
         'products_mode_id' => 1,
-      ],
-      [
+
+
+    ],
+    [
+
         'company_id' => 1,
         'name' => 'Шлагбаумы',
         'parent_id' => null,
@@ -79,13 +83,17 @@ class ProductsCategoriesTableSeeder extends Seeder
         
         'status' => 'one',
         'products_mode_id' => 1,
-      ],
-      [
+
+
+    ],
+    [
+
         'company_id' => 1,
         'name' => 'Монтаж',
         'parent_id' => null,
         'category_status' => 1,
         'author_id' => 1,
+
         'category_id' => null,
         'display' => 1,
         'type' => 'services',
@@ -1054,5 +1062,6 @@ class ProductsCategoriesTableSeeder extends Seeder
 //         'products_mode_id' => 1,
 //       ],
     ]);
+
 }
 }

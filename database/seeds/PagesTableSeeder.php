@@ -60,7 +60,7 @@ class PagesTableSeeder extends Seeder
       [
         'name' => 'Сотрудники',
         'site_id' => 1,
-        'title' => 'Сотрудники компани',
+        'title' => 'Сотрудники компании',
         'description' => 'Сотрудники компании',
         'alias' => 'employees',
         'company_id' => null,
@@ -69,7 +69,7 @@ class PagesTableSeeder extends Seeder
         'display' => null,
       ],
       [
-        'name' => 'Тестовая страница для должностей',
+        'name' => 'Продажи',
         'site_id' => 1,
         'title' => 'Страница должности',
         'description' => 'Должность в компании',
@@ -587,7 +587,29 @@ class PagesTableSeeder extends Seeder
         'author_id' => 1,
         'display' => null,
       ],
-      
+      [
+        'name' => 'Помещения',
+        'site_id' => 1,
+        'title' => 'Помещения',
+        'description' => 'Помещения',
+        'alias' => 'places',
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => null,
+      ],
+      [
+        'name' => 'Типы помещений',
+        'site_id' => 1,
+        'title' => 'Типы помещений',
+        'description' => 'Типы помещений',
+        'alias' => 'places_types',
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => null,
+      ],
+
     ]);
 }
 }

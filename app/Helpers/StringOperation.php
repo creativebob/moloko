@@ -2,6 +2,11 @@
 
 use Carbon\Carbon;
 
+function num_format($number, $value) {
+
+    $result = number_format($number, $value, ',', ' ');
+    return $result;
+}
 
 function decor_access_block($access_block) {
     if($access_block == 1){$result = "Блокирован";} else {$result = "Открыт";};
@@ -91,7 +96,7 @@ function getmethod($method){
     if(($method == 'current_city')||($method == 'current_department')||($method == 'current_sector')){return 'index';};
 
     if($method == 'show'){return 'view';};
-    if(($method == 'edit')||($method == 'update')){return 'update';};
+    if(($method == 'edit')||($method == 'update')||($method == 'myprofile')){ return 'update';};
     if(($method == 'create')||($method == 'store')){return 'create';};
     if($method == 'destroy'){return 'delete';};
     if($method == 'setting'){return 'update';};

@@ -39,7 +39,9 @@ $type_name = 'услугу';
 @section('title-content')
 <div class="top-bar head-content">
   <div class="top-bar-left">
+
     <h2 class="header-content">РЕДАКТИРОВАние категории &laquo{{ $products_category->name }}&raquo</h2>
+
   </div>
   <div class="top-bar-right">
   </div>
@@ -95,6 +97,7 @@ $type_name = 'услугу';
             </label>
           </div>
 
+
           {{-- Чекбокс отображения на сайте --}}
           @can ('publisher', $products_category)
           <div class="small-12 cell checkbox">
@@ -121,7 +124,9 @@ $type_name = 'услугу';
 
           {{-- Кнопка --}}
           <div class="small-12 cell tabs-button tabs-margin-top">
+
             {{ Form::submit('Редактировать '.$type_name, ['class'=>'button']) }}
+
           </div>
         </div>
       </div>
@@ -175,7 +180,9 @@ $type_name = 'услугу';
             <tbody id="metrics-table">
               {{-- Таблица метрик товара --}}
               @if (!empty($products_category->metrics))
+
               @each('products_categories.metrics.metric', $products_category->metrics, 'metric')
+
               @endif
             </tbody>
           </table>
@@ -192,7 +199,9 @@ $type_name = 'услугу';
           {{ Form::close() }}
           {{-- Список свойств с метриками --}}
           <div class="dropdown-pane" id="properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
+
             @include('products_categories.metrics.properties-list', $properties)
+
           </div>
 
         </div>
@@ -205,6 +214,7 @@ $type_name = 'услугу';
     <div class="tabs-panel" id="compositions">
       <div class="grid-x grid-padding-x">
         <div class="small-12 medium-9 cell">
+
           <table class="composition-table">
             <thead>
               <tr> 
@@ -216,13 +226,17 @@ $type_name = 'услугу';
             <tbody id="composition-table">
               {{-- Таблица метрик товара --}}
               @if (!empty($products_category->compositions))
+
               @each('products_categories.compositions.composition', $products_category->compositions, 'composition')
+
               @endif
             </tbody>
           </table>
         </div>
 
+
         <div class="small-12 medium-3 cell">
+
 
           <ul class="menu vertical">
 
@@ -234,6 +248,7 @@ $type_name = 'услугу';
                 <ul class="checker" id="products-categories-list">
                   @foreach ($products_mode['products_categories'] as $products_cat)
                   @include('products_categories.compositions.products-category', $products_cat)
+
                   @endforeach
                 </ul>
 
@@ -346,6 +361,7 @@ $settings = config()->get('settings');
 
             // Убираем отмеченный чекбокс в списке метрик
             $('#add-product-' + id).prop('checked', false);
+
             
           } else {
             alert(result['error_message']);
@@ -361,7 +377,7 @@ $settings = config()->get('settings');
     $(this).closest('.item').remove();
   });
 
-  // Смена категории едениц измерения
+
   $(document).on('change', '#units-categories-list', function() {
     var id = $(this).val();
     // alert(id);
@@ -379,6 +395,7 @@ $settings = config()->get('settings');
       }
     }); 
   });
+
 
   // При смнене свойства в select
   $(document).on('change', '#properties-select', function() {
@@ -435,7 +452,9 @@ $settings = config()->get('settings');
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           url: '/products_categories/' + products_category_id + '/edit',
+
           type: 'POST',
+
           success: function(html){
             // alert(html);
 
@@ -527,8 +546,10 @@ $settings = config()->get('settings');
   // При клике на чекбокс метрики отображаем ее на странице
   $(document).on('click', '.add-composition', function() {
 
+
     var id = $(this).val();
     // alert(products_category_id + ' ' + id);
+
     
     // Если нужно добавить состав
     if ($(this).prop('checked') == true) {
@@ -538,8 +559,10 @@ $settings = config()->get('settings');
         },
         url: '/ajax_add_relation_composition',
         type: 'POST',
+
         data: {id: id, products_category_id: products_category_id, entity: 'products_categories'},
         success: function(html){
+
           // alert(html);
           $('#composition-table').append(html);
         }
@@ -554,6 +577,7 @@ $settings = config()->get('settings');
         url: '/ajax_delete_relation_composition',
         type: 'POST',
         data: {id: id, products_category_id: products_category_id, entity: 'products_categories'},
+
         success: function(date){
 
           var result = $.parseJSON(date);

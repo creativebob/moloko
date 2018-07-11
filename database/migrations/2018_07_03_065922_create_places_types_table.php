@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateArticleValuesTable extends Migration
+class CreatePlacesTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,26 +13,19 @@ class CreateArticleValuesTable extends Migration
      */
     public function up()
     {
-        Schema::create('article_values', function (Blueprint $table) {
+        Schema::create('places_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
-            $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('article_id')->nullable()->unsigned()->comment('ID артикула');
-            $table->foreign('article_id')->references('id')->on('articles');
-
-            $table->integer('entity_id')->nullable()->unsigned()->comment('ID связанной сущности');
-
-            $table->string('entity')->nullable()->comment('Имя сущности');
-
-            $table->string('value')->nullable()->comment('Значение');
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            
+            $table->string('name')->index()->comment('Имя типа помещения');
+            $table->string('description')->index()->comment('Описание типа помещения');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
@@ -50,6 +43,6 @@ class CreateArticleValuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('article_values');
+        Schema::dropIfExists('places_types');
     }
 }

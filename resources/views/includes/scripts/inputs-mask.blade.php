@@ -5,31 +5,41 @@
   jQuery(function($) {
     // --------------------------------- Буквы --------------------------
     // C дефисом ru
-    $('.text-ru-field').mask('яяя?яяяяяяяяяяяяяяяяяяяяя');
+    $('.text-ru-field').mask('яя?яяяяяяяяяяяяяяяяяяяяя');
     // C дефисом en
-    $('.text-en-field').mask('zzz?zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+    $('.text-en-field').mask('zz?zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
     // Логин
     $('.login-field').mask('llllll?llllllllllllllllllllllllllllll');
     // Алиас
-    $('.alias-field').mask('sss?ssssssssssssssss');
+    $('.alias-field').mask('ss?ssssssssssssssss');
     // Должность
-    $('.position-field').mask('bbb?bbbbbbbbbbbbbbbbbbbbbbbbbbb');
+    $('.position-field').mask('bb?bbbbbbbbbbbbbbbbbbbbbbbbbbb');
     // Пароль
     // $('.password-mask').mask('dddddd?dddddddddddddd');
     // Строка с пробелами, числами и символами
-    $('.varchar-field').mask('***?******************************************');
+    $('.varchar-field').mask('**?******************************************');
     // Строка с пробелами и символами
-    $('.string-field').mask('ббб?ббббббббббббббббббббббббббббббббббббббббббб');
+    $('.string-field').mask('бб?ббббббббббббббббббббббббббббббббббббббббббббб');
     // Строка с пробелами и символами
-    $('.text-ru-en-field').mask('ttt?tttttttttttttttttttttttt');
+    $('.text-ru-en-field').mask('tt?tttttttttttttttttttttttt');
+
     // -------------------------- Числа --------------------------------
+    // Дробное число
+    $('.digit-field').mask('1?999999');
+
+    // Дробное число
+    $('.digit-2-field').mask('1?9');
+    $('.digit-3-field').mask('1?99');
+    $('.digit-4-field').mask('1?999');
+    $('.digit-5-field').mask('1?9999');
+
     // Дата
     $('.date-field').mask('99.99.9999');
     // Время
     $('.time-field').mask('99:99',{placeholder:"_"});
 
     // Строка с числами
-    $('.integer-field').mask('999?999999999999999');
+    $('.integer-field').mask('1?999999999999999');
     // Дата рождения
     $('.birthday-field').mask('99.99.9999');
     // Телефон
@@ -52,6 +62,6 @@
     // });
     // Определяем маски для полей
     // Текстовые поля
-    // $.mask.definitions['t']='[A-Za-z]';
+    $.mask.definitions['p']='[A-Z]';
   });
 </script>

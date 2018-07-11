@@ -13,6 +13,7 @@
 		</div>
 	</div>
 
+
 	<div class="tabs-wrap inputs">
 		<div class="tabs-content" data-tabs-content="tabs">
 			<!-- Добавляем категорию -->

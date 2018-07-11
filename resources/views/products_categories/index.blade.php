@@ -195,6 +195,7 @@
       data: $(this).closest('form').serialize(),
       success:function(html) {
         // alert(html);
+
         $('#content').html(html);
         Foundation.reInit($('#content'));
       }
@@ -220,6 +221,7 @@
       }
     });
   });
+
 
 
   // ---------------------------------- Закрытие модалки -----------------------------------

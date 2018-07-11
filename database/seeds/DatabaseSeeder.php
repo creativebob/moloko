@@ -88,15 +88,16 @@ class DatabaseSeeder extends Seeder
     $this->call(CityEntityTableSeeder::class);
 
     // Альбомы
-    $this->call(SettingsTableSeeder::class);
     $this->call(AlbumsCategoriesTableSeeder::class);
     $this->call(AlbumsTableSeeder::class);
+    $this->call(AlbumsSettingsTableSeeder::class);
 
-    // Товары
+    // Услуги
     $this->call(ServicesModesTableSeeder::class);
     $this->call(ServicesCategoriesTableSeeder::class);
     $this->call(ServicesProductsTableSeeder::class);
     $this->call(ServicesTableSeeder::class);
+
 
     // Связь: Расписания с сущностями
     $this->call(ScheduleEntityTableSeeder::class);
@@ -107,9 +108,6 @@ class DatabaseSeeder extends Seeder
     $this->call(PropertiesTableSeeder::class);
     $this->call(MetricsTableSeeder::class);
     $this->call(MetricEntityTableSeeder::class);
-
-    // $this->call(ArticlesTableSeeder::class);
-    // $this->call(ArticleValuesTableSeeder::class);
 
   }
 }

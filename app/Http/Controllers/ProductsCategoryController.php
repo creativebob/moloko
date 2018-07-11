@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\ProductsCategory;
 use App\ProductsMode;
 use App\Product;
+
 use App\Company;
 use App\Photo;
 use App\Album;
@@ -60,6 +61,7 @@ class ProductsCategoryController extends Controller
         ->where('type', $request->type)
         ->whereIn('status', ['one', 'set'])
         ->moderatorLimit($answer)
+
         ->companiesLimit($answer)
         ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
@@ -153,12 +155,14 @@ class ProductsCategoryController extends Controller
         // Инфо о странице
         $page_info = pageInfo('products_categories/'.$type);
 
+
         // dd($page_info);
 
         // dd($id);
 
         return view('products_categories.index', compact('products_categories_tree', 'page_info', 'type', 'id'));
     }
+
 
     public function create(Request $request, $type)
     {
@@ -192,6 +196,7 @@ class ProductsCategoryController extends Controller
             $products_categories_list = get_select_tree($products_categories, $request->parent_id, null, null);
             // echo $products_categories_list;
 
+
             $products_category = ProductsCategory::with('products')->findOrFail($request->parent_id);
             $products_list = $products_category->products->pluck('name', 'id');
 
@@ -216,6 +221,7 @@ class ProductsCategoryController extends Controller
         } else {
 
             return view('products_categories.create-first', compact('products_category', 'type', 'products_modes_list'));
+
         }
     }
 
@@ -239,10 +245,12 @@ class ProductsCategoryController extends Controller
         $products_category->company_id = $company_id;
         $products_category->author_id = $user_id;
 
+
         // Системная запись
         $products_category->system_item = $request->system_item;
 
         $products_category->display = $request->display;
+
 
         $products_category->products_mode_id = $request->products_mode_id;
         $products_category->type = $request->type;
@@ -271,7 +279,6 @@ class ProductsCategoryController extends Controller
             $products_category->products_mode_id = $category->products_mode_id;
         }
 
-        
         if ($request->status == 'set') {
             $products_category->status = $request->status;
         } else {
@@ -286,9 +293,11 @@ class ProductsCategoryController extends Controller
         if ($products_category) {
 
             // Переадресовываем на index
+
             return redirect()->action('ProductsCategoryController@index', ['products_category_id' => $products_category->id, 'type' => $products_category->type]);
 
             // return redirect('/products_categories/'.$products_category->type)->with('products_category_id', $products_category->id);
+
 
         } else {
             $result = [
@@ -309,6 +318,7 @@ class ProductsCategoryController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_products_categories = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+
         // ГЛАВНЫЙ ЗАПРОС:
         $products_category = ProductsCategory::with(['products_mode', 'metrics.unit', 'metrics.values', 'compositions'])
         ->withCount('metrics', 'compositions')
@@ -327,7 +337,9 @@ class ProductsCategoryController extends Controller
             $products_category_compositions[] = $composition->id;
         }
 
+
         // dd($products_category_compositions);
+
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $products_category);
@@ -368,6 +380,7 @@ class ProductsCategoryController extends Controller
 
         // dd($properties_list);
 
+
         if ($products_category->type == 'goods') {
             if ($products_category->status == 'one') {
                 $type = ['raws'];
@@ -394,6 +407,7 @@ class ProductsCategoryController extends Controller
         $products_modes = ProductsMode::with(['products_categories' => function ($query) use ($answer_products_categories) {
             $query->with('products')
             ->withCount('products')
+
             ->moderatorLimit($answer_products_categories)
             ->companiesLimit($answer_products_categories)
             ->authors($answer_products_categories)
@@ -423,12 +437,14 @@ class ProductsCategoryController extends Controller
             $products_modes_list[] = [
                 'name' => $products_mode['name'],
                 'alias' => $products_mode['alias'],
+
                 'products_categories' => $products_categories_list,
             ];
         }
 
 
         
+
         // dd($products_modes_list);
         // $grouped_products_types = $products_modes->groupBy('alias');
         // dd($grouped_products_types);
@@ -523,6 +539,8 @@ class ProductsCategoryController extends Controller
         // $products_category->parent_id = $request->parent_id;
         $products_category->editor_id = $user_id;
 
+        $products_category->unit_id = $request->unit_id;
+
         // Если сменили тип категории продукции, то меняем его и всем вложенным элементам
         if (($products_category->category_status == 1) && ($products_category->products_type_id != $request->products_type_id)) {
             $products_category->products_type_id = $request->products_type_id;
@@ -572,6 +590,8 @@ class ProductsCategoryController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
+        $type = $products_category->type;
+
         // Если содержит, то даем сообщение об ошибке
         if ($products_category_parent || ($products_category->products_count > 0)) {
 
@@ -602,6 +622,7 @@ class ProductsCategoryController extends Controller
 
                 // Переадресовываем на index
                 // return redirect()->action('ProductsCategoryController@types', ['id' => $parent, 'type' => $type]);
+
             } else {
                 $result = [
                     'error_status' => 1,

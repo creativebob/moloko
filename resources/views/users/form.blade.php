@@ -8,6 +8,7 @@
       <li class="tabs-title is-active"><a href="#content-panel-1" aria-selected="true">Учетные данные</a></li>
       <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Персональные данные</a></li>
       <li class="tabs-title"><a data-tabs-target="content-panel-3" href="#content-panel-3">Представитель компании</a></li>
+      <li class="tabs-title"><a data-tabs-target="content-panel-4" href="#content-panel-4">Образование и опыт</a></li>
     </ul>
   </div>
 </div>
@@ -84,41 +85,62 @@
               </label>
             </div>
           </div>
+
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
+              <label>Страна
+                @php
+                $country_id = null;
+                if (isset($user->location->country_id)) {
+                  $country_id = $user->location->country_id;
+                }
+                @endphp
+                {{ Form::select('country_id', $countries_list, $country_id)}}
+              </label>
+            </div>
+            <div class="small-12 medium-6 cell">
+                <label class="input-icon">Введите город
+                  @php
+                $city_name = null;
+                $city_id = null;
+                if(isset($user->location->city->name)) {
+                $city_name = $user->location->city->name;
+                $city_id = $user->location->city->id;
+                }
+                @endphp
+                @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
+              </label>
+            </div>
+
+
+            <div class="small-12 medium-6 cell">
+              <label>Адрес
+                @php
+                $address = null;
+                if (isset($user->location->address)) {
+                  $address = $user->location->address;
+                }
+                @endphp
+                @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+              </label>
+            </div>
+
+            <div class="small-12 medium-6 cell">
               <label>Почта
-                @include('includes.inputs.email', ['value'=>$user->email, 'name'=>'email', 'required'=>''])
-              </label>         
+                @include('includes.inputs.email', ['value'=>$user->email, 'name'=>'email', 'required'=>'required'])
+              </label> 
+            </div>
+
+            <div class="small-12 medium-6 cell">
               <label>Телеграм ID
                 {{ Form::text('telegram_id', $user->telegram_id, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
                 <span class="form-error">Укажите номер Telegram</span>
               </label>
-              
             </div>
-            <div class="small-12 medium-6 cell">
-              <label class="input-icon">Введите город
-                @php
-              $city_name = null;
-              $city_id = null;
-              if(isset($user->location->city->name)) {
-              $city_name = $user->location->city->name;
-              $city_id = $user->location->city->id;
-              }
-              @endphp
-              @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
-            </label>
-            <label>Адрес
-              @php
-              $address = null;
-              if (isset($user->location->address)) {
-              $address = $user->location->address;
-            }
-              @endphp
-              @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
-            </label>
-          </div>
         </div>
+
       </div>
+
       <!-- Персональные данные -->
       <div class="tabs-panel" id="content-panel-2">
         <div class="grid-x grid-padding-x">
@@ -128,10 +150,13 @@
             </label>
           </div>
           <div class="small-6 small-offset-1 medium-6 medium-offset-2 cell radiobutton">Пол<br>
-            {{ Form::radio('sex', '1', true, ['id'=>'man']) }}
+
+            {{ Form::radio('sex', 1, true, ['id'=>'man']) }}
             <label for="man"><span>Мужской</span></label>
-            {{ Form::radio('sex', '0', false, ['id'=>'woman']) }}
+
+            {{ Form::radio('sex', 0, false, ['id'=>'woman']) }}
             <label for="woman"><span>Женский</span></label>
+
           </div>
         </div>
         <div class="grid-x grid-padding-x">
@@ -161,6 +186,7 @@
           </div>
         </div>
       </div>
+
       <!-- Представитель компании -->
       <div class="tabs-panel" id="content-panel-3">
         <div class="grid-x grid-padding-x">
@@ -208,6 +234,41 @@
           </div>
         </div>
       </div>
+
+      <!-- Образование и опыт -->
+      <div class="tabs-panel" id="content-panel-4">
+        <div class="grid-x grid-padding-x">
+          <div class="small-12 medium-6 cell">
+            <label>Специальность
+              @include('includes.inputs.string', ['name'=>'specialty', 'value'=>$user->specialty, 'required'=>''])
+            </label>
+          </div>
+          <div class="small-12 medium-6 cell">
+            <label>Ученая степень, звание
+              @include('includes.inputs.string', ['name'=>'degree', 'value'=>$user->degree, 'required'=>''])
+            </label>
+          </div>
+        </div>
+        <div class="grid-x grid-padding-x">
+          <div class="small-12 medium-12 cell">
+            <label>Информация о человеке (Для сайта):
+              {{ Form::textarea('about', $user->about, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+            </label><br>
+          </div>
+        </div>
+
+        <div class="grid-x grid-padding-x">        
+          <div class="small-12 medium-12 cell">
+            <label>Фраза
+              @include('includes.inputs.string', ['name'=>'quote', 'value'=>$user->quote, 'required'=>''])
+            </label>
+          </div>
+
+        </div>
+
+
+      </div>
+
     </div>
   </div>
   <div class="small-12 medium-5 medium-offset-1 large-5 large-offset-2 cell">

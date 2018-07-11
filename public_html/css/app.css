@@ -112,6 +112,16 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   src: url(/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot);
   src: url(/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot?#iefix) format('embedded-opentype'), url(/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff) format('woff'), url(/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf) format('truetype');
 }
+fieldset {
+  border: 1px solid #d6d6d6;
+  padding: 1rem 2rem 2rem;
+  margin-bottom: 1rem;
+}
+fieldset legend {
+  font-family: "PFDinDisplayPro-Med";
+  padding: 0 1rem;
+}
+
 .compact {
   margin-bottom: 0.25rem !important;
 }
@@ -700,7 +710,7 @@ tr:hover .icon-display-show {
 .checkboxer-button span, .checkboxer-title span {
   height: 32px;
   display: inline-block;
-  padding-top: 0.5rem;
+  padding-top: 0.7rem;
 }
 
 .checkboxer-title span.count {
@@ -1184,6 +1194,9 @@ tr:hover .icon-display-show {
 .sidebar .icon-settings {
   background-position: -96px -224px;
 }
+.sidebar .icon-product {
+  background-position: -96px -1024px;
+}
 .sidebar .icon-arrow-forward {
   background-position: -160px -288px;
 }
@@ -1216,6 +1229,9 @@ tr:hover .icon-display-show {
 }
 .sidebar .nav > ul > li > .active .icon-settings, .sidebar .gen-menu-bot > li > .active .icon-settings {
   background-position: -160px -224px;
+}
+.sidebar .nav > ul > li > .active .icon-product, .sidebar .gen-menu-bot > li > .active .icon-product {
+  background-position: -160px -1024px;
 }
 .sidebar .nav::-webkit-scrollbar {
   width: 0.5rem;
@@ -1557,7 +1573,7 @@ tr:hover .icon-display-show {
   margin-right: 8px;
 }
 .tabs-wrap .fieldset-access {
-  border: 1px solid #b3b3b3;
+  border: 1px solid #d6d6d6;
   padding: 1rem 2rem 2rem;
 }
 .tabs-wrap .fieldset-access legend {
@@ -1622,7 +1638,7 @@ tr:hover .icon-display-show {
   position: absolute;
 }
 .content .fieldset-filters {
-  border: 1px solid #b3b3b3;
+  border: 1px solid #d6d6d6;
   padding-top: 1rem;
 }
 .content .fieldset-filters legend {

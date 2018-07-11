@@ -257,6 +257,7 @@ class MetricController extends Controller
     {   
         // Переадресовываем на получение метрики
         return view('products_categories.metrics.value', ['value' => $request->value]);
+
     }
 
 }

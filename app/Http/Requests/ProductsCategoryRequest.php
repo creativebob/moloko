@@ -29,11 +29,12 @@ class ProductsCategoryRequest extends FormRequest
         'medium_item' => 'integer|max:1|nullable',
         'products_category_id' => 'integer|nullable', 
         'parent_id' => 'integer|nullable', 
-        'products_type_id' => 'integer|nullable',
+        'products_mode_id' => 'integer|nullable',
         
         'category_id' => 'integer|nullable', 
 
         'photo_id' => 'integer|nullable',
+        'set_status' => 'integer|nullable',
 
         'description' => 'string|nullable',
         'seo_description' => 'string|nullable',

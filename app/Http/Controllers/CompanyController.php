@@ -73,8 +73,8 @@ class CompanyController extends Controller
 
         $filter['status'] = null;
 
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id', null, 'internal-id-one');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
@@ -165,10 +165,8 @@ class CompanyController extends Controller
         $location->save();
 
         if ($location) {
-
             $location_id = $location->id;
         } else {
-
             abort(403, 'Ошибка записи адреса');
         }
 

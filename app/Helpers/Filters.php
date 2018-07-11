@@ -51,7 +51,7 @@
         $name = 'booklist';
         $column = 'booklist_id';
 
-        $list_filter =[];
+        $list_select =[];
         $filter_name = $name;
 
             $filter_entity = $request->user()->booklists_author->where('entity_alias', $entity_name)->values();
@@ -59,7 +59,7 @@
             if(count($filter_entity)>0){
 
                 foreach($filter_entity as $booklist){
-                    $list_filter['item_list'][$booklist->id] = $booklist->name;
+                    $list_select['item_list'][$booklist->id] = $booklist->name;
                 }
 
             };
@@ -140,51 +140,149 @@
             
         };
 
-        $filter[$filter_name]['list_select'] = $list_filter; 
+        $filter[$filter_name]['list_select'] = $list_select; 
         $filter[$filter_name]['title'] = $title; // Назавние фильтра
 
         // dd($filter);
         return $filter;
     }
 
-    function addFilter($filter, $filter_query, $request, $title, $name, $column, $relations = null, $entity_name = 'none'){
 
-        $list_filter =[];
-        $filter_name = $name;
-
-        // dd($filter_query);
-
-        if($relations != null){
-            $filter_entity = $filter_query->unique($relations . '.' . $column);
-            // dd($filter_entity);
-        } else {
-            $filter_entity = $filter_query->unique($column);
-        };
+    // $filter - массив / тело фильтра
 
 
+    function addFilter($filter, $filter_query, $request, $title, $filter_name, $column, $relations = null, $filter_mode = null){
 
-        if(count($filter_entity) > 0){
+        // Готовим массив для наполнения пунктами коллекции
+        $list_select = [];
 
-            foreach($filter_entity as $entity){
-                if($entity->$relations != null){
+        // Пишем режим в фильтр
+        $filter[$filter_name]['mode'] = $filter_mode;
+        $filter[$filter_name]['column'] = $column;
 
-                    if($relations != null){
+        // ОПРЕДЕЛЯЕМ РЕЖИМ РАБОТЫ ФИЛЬТРА И ФОРМИРУЕМ ВЫПОДАЮЩИЙ СПИСОК
+ 
+        // Если режим не передали - пытаемся определить самостоятельно
+        if($filter_mode == null){
 
-                        $list_filter['item_list'][$entity->$relations->$column] = $entity->$relations->$name->name;
-                    } else {
-                        // dd($list_filter);
-                        $list_filter['item_list'][$entity->$name->id] = $entity->$name->name;
-                    }
+            // Если выборка в текущей колекции или 
+            if($relations != null){
 
+                // Выбираем только уникальные ID
+                $filter_entity = $filter_query->unique($relations . '.' . $column);
+
+                if($column == 'id'){
+
+                    // Выборка по ID в третей коллекции
+                    $filter[$filter_name]['mode'] = 'external-self-one';
                 } else {
 
-                    $list_filter['item_list'][null] = 'Не указано';
+                    // Выборка элементов (id и name) из третей коллекции по присутствию ID ее элементов во второй коллекции
+                    // по присутствию ID ее элементов в первой коллекции
+                    $filter[$filter_name]['mode'] = 'external-id-one';
                 };
-            }
+
+            } else {
+
+                // Выбираем только уникальные ID
+                $filter_entity = $filter_query->unique($column);
+
+                if($column == 'id'){
+
+                    // Выборка элементов по ID текущей коллекции
+                    $filter[$filter_name]['mode'] = 'internal-self-one';
+                } else {
+
+                    // Выборка элементов из другой коллекции по присутствию ID ее элементов в текущей коллекции
+                    $filter[$filter_name]['mode'] = 'internal-id-one';
+                };
+
+            };
+
+        } else {
+
+
+            // Вытаскиеваем в зависимости от режима нужную коллекцию
+            if($filter_mode == 'internal-self-one'){
+
+                // Выбираем только уникальные ID
+                $filter_entity = $filter_query->unique($column);
+
+                if(count($filter_entity) > 0){
+                    foreach($filter_entity as $entity){
+                        $list_select['item_list'][$entity->id] = $entity->name;
+                    }
+                };
+
+                $column = $filter_name . "_" . $column;
+                // dd($column);
+                
+            };
+
+            if($filter_mode == 'internal-id-one'){
+
+                // Выбираем только уникальные ID
+                $filter_entity = $filter_query->unique($column);
+
+                if(count($filter_entity) > 0){
+                    foreach($filter_entity as $entity){
+                        $list_select['item_list'][$entity->$filter_name->id] = $entity->$filter_name->name;
+                    }
+                }
+
+            };
+
+
+
+            // Вытаскиеваем в зависимости от режима нужную коллекцию
+            if($filter_mode == 'external-id-one'){
+
+
+                // Выбираем только уникальные ID
+                $filter_entity = $filter_query->unique($relations . '.' . $column);
+
+                if(count($filter_entity) > 0){
+                    foreach($filter_entity as $entity){
+                        $list_select['item_list'][$entity->$relations->$column] = $entity->$relations->$filter_name->name;
+                        if($entity->$relations == null){$list_select['item_list'][null] = 'Не указано';};
+                    }
+                }
+
+
+            };
+            
+            if($filter_mode == 'external-id-many'){
+
+                $filter_entity = $filter_query->unique($relations);
+
+                // Выбираем только уникальные ID
+                foreach($filter_entity as $item){
+                    if($item->$relations->isEmpty()){
+                        $list_select['item_list'][null] = 'Не указано';
+                    } else {
+                        foreach($item->$relations as $item2){
+                            $list_select['item_list'][$item2->id] = $item2->name;
+                        }
+                    }
+                }
+            };
+
+
+            if($filter_mode == 'external-self-one'){
+
+                // Выбираем только уникальные ID
+                $filter_entity = $filter_query->unique($relations . '.' . $column);
+
+                if(count($filter_entity) > 0){
+                    foreach($filter_entity as $entity){
+                            $list_select['item_list'][$entity->$relations->$column] = $entity->$relations->name;
+                    }
+                }
+
+            };
+
         };
 
-        $filter[$filter_name]['mode'] = 'id'; // Назавние фильтра
-        $filter[$filter_name]['relations'] = $relations;
         $filter[$filter_name]['collection'] = $filter_entity;
 
         if($request->$column == null){
@@ -195,7 +293,10 @@
         } else {
 
             $filter[$filter_name]['mass_id'] = $request->$column; // Получаем список ID
+
+
             if(is_array($request->$column)){
+
                 $filter[$filter_name]['count_mass'] = count($request->$column);
                 $filter['status'] = 'active';
 
@@ -205,55 +306,12 @@
             
         };
 
-        $filter[$filter_name]['list_select'] = $list_filter; 
+        $filter[$filter_name]['column'] = $column;
+        $filter[$filter_name]['list_select'] = $list_select; 
         $filter[$filter_name]['title'] = $title; // Назавние фильтра
 
         // dd($filter);
         return $filter;
     }
-
-
-
-    // Пилим checkboxer
-    function getCheckboxerData($result_query, $title, $name, $column, $entity_name = 'none'){
-
-        $checkboxer_mass = [];
-        $filter_entity = $result_query->unique($column); 
-
-            if(count($filter_entity)>0){
-
-                // foreach($filter_entity as $entity){
-                //     $list_filter['item_list'][$entity->$name->id] =  $entity->$name->$model_entity_name;
-                // }
-            };
-
-            $checkboxer_mass['mode'] = 'id'; // Назавние фильтра
-
-            $checkboxer_mass['collection'] = $filter_entity;
-
-            if($request->$column == null){
-
-                $checkboxer_mass['mass_id'] = null;
-                $checkboxer_mass['count_mass'] = 0;
-                
-            } else {
-
-                $checkboxer_mass['mass_id'] = $request->$column; // Получаем список ID
-                if(is_array($request->$column)){
-                    $checkboxer_mass['count_mass'] = count($request->$column);
-
-                } else {
-                    $checkboxer_mass['count_mass'] = 0;
-                };
-                
-            };
-
-            $checkboxer_mass['list_select'] = $list_filter; 
-            $checkboxer_mass['title'] = $title; // Назавние фильтра
-
-            // dd($filter);
-            return $checkboxer_mass;
-
-        };
 
 ?>

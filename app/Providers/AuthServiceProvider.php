@@ -6,6 +6,8 @@ use App\User;
 use App\RightsRole;
 use App\Company;
 use App\Role;
+use App\Place;
+use App\PlacesType;
 
 use App\Right;
 use App\Entity;
@@ -26,8 +28,11 @@ use App\Position;
 use App\Staffer;
 use App\Booklist;
 use App\Sector;
+
 use App\Album;
 use App\AlbumsCategory;
+use App\AlbumsSetting;
+
 use App\Photo;
 use App\Folder;
 
@@ -41,6 +46,8 @@ use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
 use App\Policies\CompanyPolicy;
 use App\Policies\RolePolicy;
+use App\Policies\PlacePolicy;
+use App\Policies\PlacesTypePolicy;
 
 use App\Policies\RightPolicy;
 use App\Policies\EntityPolicy;
@@ -57,12 +64,16 @@ use App\Policies\NavigationPolicy;
 use App\Policies\MenuPolicy;
 use App\Policies\NewsPolicy;
 
+
 use App\Policies\PositionPolicy;
 use App\Policies\StafferPolicy;
 use App\Policies\BooklistPolicy;
 use App\Policies\SectorPolicy;
+
 use App\Policies\AlbumPolicy;
 use App\Policies\AlbumsCategoryPolicy;
+use App\Policies\AlbumsSettingPolicy;
+
 use App\Policies\PhotoPolicy;
 use App\Policies\FolderPolicy;
 
@@ -93,6 +104,8 @@ class AuthServiceProvider extends ServiceProvider
         Right::class => RightPolicy::class, 
         Entity::class => EntityPolicy::class, 
         Role::class => RolePolicy::class,
+        Place::class => PlacePolicy::class,
+        PlacesType::class => PlacesTypePolicy::class,
         Position::class => PositionPolicy::class,
         Region::class => RegionPolicy::class,
         Area::class => AreaPolicy::class,
@@ -109,6 +122,7 @@ class AuthServiceProvider extends ServiceProvider
         Sector::class => SectorPolicy::class,
         Album::class => AlbumPolicy::class,
         AlbumsCategory::class => AlbumsCategoryPolicy::class,
+        AlbumsSetting::class => AlbumsSettingPolicy::class,
         Photo::class => PhotoPolicy::class,
         Folder::class => FolderPolicy::class,
         Service::class => ServicePolicy::class,

@@ -12,6 +12,7 @@ use App\Photo;
 use App\Location;
 use App\Booklist;
 use App\Role;
+use App\Country;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -60,7 +61,7 @@ class UserController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям              
         ->orWhere('id', $request->user()->id) // Только для сущности USERS
-        ->filter($request, 'city', 'location')
+        ->filter($request, 'city_id', 'location')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);
@@ -81,10 +82,11 @@ class UserController extends Controller
         $filter['status'] = null;
 
         // Перечень подключаемых фильтров:
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -116,10 +118,14 @@ class UserController extends Controller
         $user = new User;
         $roles = new Role;
 
+
+        // Получаем список стран
+        $countries_list = Country::get()->pluck('name', 'id');
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list', 'page_info'));
+        return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list', 'page_info', 'countries_list'));
     }
 
     public function store(UserRequest $request)
@@ -140,13 +146,13 @@ class UserController extends Controller
 
         // Пишем локацию
         $location = new Location;
-        $location->country_id = 1;
+        $location->country_id = $request->country_id;
         $location->city_id = $request->city_id;
         $location->address = $request->address;
-        $location->author_id = $user_auth_id;
+        $location->author_id = $user_auth->id;
         $location->save();
 
-        if($location) {
+        if ($location) {
             $location_id = $location->id;
         } else {
             abort(403, 'Ошибка записи адреса');
@@ -182,6 +188,11 @@ class UserController extends Controller
         $user->passport_number = $request->passport_number;
         $user->passport_released = $request->passport_released;
         $user->passport_date = $request->passport_date;
+
+        $user->about = $request->about;
+        $user->specialty = $request->specialty;
+        $user->degree = $request->degree;
+        $user->quote = $request->quote;
 
         $user->user_type = $request->user_type;
         $user->lead_id = $request->lead_id;
@@ -360,12 +371,14 @@ class UserController extends Controller
         ->template($answer_roles) // Выводим шаблоны в список
         ->pluck('name', 'id');
 
-        // dd($departments_list);
+        // Получаем список стран
+        $countries_list = Country::get()->pluck('name', 'id');
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
         // dd($user);
 
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info'));
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list'));
     }
 
     public function update(UserRequest $request, $id)
@@ -427,8 +440,12 @@ class UserController extends Controller
         $user->passport_released = $request->passport_released;
         $user->passport_date = $request->passport_date;
 
+        $user->about = $request->about;
+        $user->specialty = $request->specialty;
+        $user->degree = $request->degree;
+        $user->quote = $request->quote;
+        
         $user->user_type = $request->user_type;
-
         $user->lead_id = $request->lead_id;
         $user->employee_id = $request->employee_id;
         $user->access_block = $request->access_block;
@@ -518,6 +535,13 @@ class UserController extends Controller
                 // Если удалили последнюю роль для должности и пришел пустой массив
                 $delete = RoleUser::whereUser_id($user->id)->delete();
             }
+
+
+            $backroute = $request->backroute;
+            if(isset($backroute)){
+                // return redirect()->back();
+                return redirect($backroute);
+            };
 
             return redirect('users');
 
@@ -612,5 +636,50 @@ class UserController extends Controller
 
         return redirect('/getaccess');
     }
+
+
+    public function myprofile(Request $request)
+    {
+
+        $id = Auth::user()->id;
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar')->moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $user);
+
+        // Функция из Helper отдает массив со списками для SELECT
+        $departments_list = getLS('users', 'index', 'departments');
+        $filials_list = getLS('users', 'index', 'filials');
+
+        $role = new Role;
+
+        $answer_roles = operator_right('roles', false, 'index');
+
+        $roles_list = Role::moderatorLimit($answer_roles)
+        ->companiesLimit($answer_roles)
+        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer_roles)
+        ->systemItem($answer_roles) // Фильтр по системным записям 
+        ->template($answer_roles) // Выводим шаблоны в список
+        ->pluck('name', 'id');
+
+        // Получаем список стран
+        $countries_list = Country::get()->pluck('name', 'id');
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+        // dd($user);
+
+        return view('users.myprofile', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list'));
+    }
+
+
+
+
 
 }

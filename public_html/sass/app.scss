@@ -16,8 +16,6 @@
  $medium: 1024px;
 // $fence-sm: $small $medium;
 
-
-
 // ----------------------- Подключаем шрифты ----------------------------------------
 
 // PFDinDisplayPro
@@ -175,7 +173,7 @@ $input-focus-border-color: #333333;
   // Tabs (Несколько вкладок)
   $tabs-active-bg-color: #ac4747;
   $tabs-active-color: #ffffff;
-  $tabs-fieldset-border-color: #b3b3b3;
+  $tabs-fieldset-border-color: #d6d6d6;
 
   // Таблица в контенте
   $table-bg-color: #f6f6f6;
@@ -195,6 +193,22 @@ $footer-num-color: #ffffff;
 // Меняем умолчания фонды
 // Выпадающий список
 $dropdown-width: 14rem;
+
+
+// Базовые корректировки
+fieldset {
+    border: 1px solid  $tabs-fieldset-border-color;
+    padding: 1rem 2rem 2rem;
+    margin-bottom: 1rem;
+
+    legend {
+      font-family: $PFDDPM;
+      padding: 0 1rem;
+    }
+}
+
+// Конец базовых корректировок
+
 
 // Для полей которые вставляем в узкие элементы (уменьшаем их поля)
 .compact {
@@ -930,7 +944,7 @@ tr:hover .icon-display-show {
 {
   height: 32px;
   display: inline-block;
-  padding-top: 0.5rem;
+  padding-top: 0.7rem;
 }
 
 .checkboxer-title span.count
@@ -1474,6 +1488,9 @@ tr:hover .icon-display-show {
   .icon-settings {
     background-position:  -96px -224px;
   }
+  .icon-product {
+    background-position:  -96px -1024px;
+  }
   .icon-arrow-forward {
     background-position: -160px -288px;
   }
@@ -1509,6 +1526,10 @@ tr:hover .icon-display-show {
     .icon-settings {
       background-position: -160px -224px;
     }
+    .icon-product {
+      background-position: -160px -1024px;
+    }
+
   }
   // Скролл в сайбаре по умолчанию
   .nav::-webkit-scrollbar {

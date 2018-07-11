@@ -23,7 +23,7 @@ class UpdateUsersTable extends Migration
             $table->string('second_name', 20)->nullable()->index()->comment('Фамилия')->after('first_name');
             $table->string('patronymic', 20)->nullable()->index()->comment('Отчество')->after('second_name');
 
-            $table->integer('sex')->unsigned()->comment('Пол')->after('patronymic');
+            $table->integer('sex')->unsigned()->comment('Пол')->default(1)->after('patronymic');
             $table->date('birthday')->nullable()->comment('Дата рождения')->after('sex');
 
             $table->bigInteger('phone')->unique()->nullable()->comment('Телефон')->after('birthday');
@@ -43,8 +43,12 @@ class UpdateUsersTable extends Migration
             $table->string('passport_released', 60)->nullable()->comment('Кем выдан паспорт')->after('passport_date');
             $table->string('passport_address', 60)->nullable()->comment('Адрес прописки')->after('passport_released');
 
-            $table->integer('user_type')->nullable()->unsigned()->comment('Сотрудник 1 или Клиент 0')->after('passport_address');
+            $table->text('about')->nullable()->comment('Информация о пользователе')->after('passport_address');;
+            $table->text('specialty')->nullable()->comment('Специальность')->after('about');
+            $table->text('degree')->nullable()->comment('Ученая степень, звание')->after('specialty');
+            $table->text('quote')->nullable()->comment('Цитата, высказывание, фраза')->after('degree');      
 
+            $table->integer('user_type')->nullable()->unsigned()->comment('Сотрудник 1 или Клиент 0')->after('quote');
             $table->integer('lead_id')->nullable()->unsigned()->comment('Id лида')->after('user_type');
             // $table->foreign('lead_id')->references('lead_id')->on('leads');
             $table->integer('employee_id')->nullable()->unsigned()->comment('Id сотрудника')->after('lead_id');

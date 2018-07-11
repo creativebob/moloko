@@ -19,7 +19,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 // use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class ProductsType extends Model
+class PlacesType extends Model
 {
     use SoftDeletes;
 
@@ -39,11 +39,19 @@ class ProductsType extends Model
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'name',
+        'description',
     ];
 
-    public function products_categories()
-    {
-        return $this->hasMany('App\ProductsCategory');
-    }
+
+    // Получаем компании.
+    // public function company()
+    // {
+    // 	return $this->belongsTo('App\Company');
+    // }
+
+    // public function albums()
+    // {
+    // 	return $this->hasMany('App\Album');
+    // }
 
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSettingsTable extends Migration
+class CreateProductsGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,19 @@ class CreateSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('settings', function (Blueprint $table) {
+        Schema::create('products_groups', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('name')->index()->comment('Название настройки');
-            $table->string('description')->nullable()->comment('Описание настройки');
-            $table->string('value')->nullable()->comment('Значение настройки');
+            $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
+            $table->foreign('company_id')->references('id')->on('companies');
+
+            $table->string('name')->nullable()->comment('Имя артикула (руками)');
+
+            $table->integer('unit_id')->nullable()->unsigned()->comment('ID еденицы измерения');
+            $table->foreign('unit_id')->references('id')->on('units');
+
+            $table->integer('products_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться товар');
+            $table->foreign('products_category_id')->references('id')->on('products_categories');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
@@ -31,6 +38,8 @@ class CreateSettingsTable extends Migration
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
 
             $table->timestamps();
+            $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
+            $table->softDeletes();
         });
     }
 
@@ -41,6 +50,6 @@ class CreateSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('settings');
+        Schema::dropIfExists('products_groups');
     }
 }

@@ -54,9 +54,9 @@ class Product extends Model
     }
 
     // Получаем категорию
-    public function products_category()
+    public function products_group()
     {
-        return $this->belongsTo('App\ProductsCategory');
+        return $this->belongsTo('App\ProductsGroup');
     }
 
     // Получаем автора
@@ -105,18 +105,18 @@ class Product extends Model
     // Получаем метрики
     public function metrics()
     {
-        return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'products');
+        return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'products_categories');
     }
 
     // Получаем состав
-    public function compositions()
-    {
-        return $this->belongsToMany('App\Product', 'compositions', 'product_id', 'composition_id');
-    }
+    // public function compositions()
+    // {
+    //     return $this->belongsToMany('App\Product', 'compositions', 'product_id', 'composition_id');
+    // }
 
     // Получаем артикулы
-    public function articles()
-    {
-        return $this->hasMany('App\Article');
-    }
+    // public function articles()
+    // {
+    //     return $this->hasMany('App\Article');
+    // }
 }

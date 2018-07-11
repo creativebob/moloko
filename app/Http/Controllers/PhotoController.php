@@ -183,7 +183,7 @@ class PhotoController extends Controller
       $photo->author_id = $user_id;
       $photo->save();
 
-      if (!isset($album->photo_id)) {
+      if(!isset($album->photo_id)){
         $album->photo_id = $photo->id;
         $album->save();
       }
@@ -201,7 +201,7 @@ class PhotoController extends Controller
       $settings = config()->get('settings');
 
       // $small = Image::make($request->photo)->grab(150, 99);
-      $small = Image::make($request->photo)->widen($settings['img_small_width']->value);
+      $small = Image::make($request->photo)->widen($settings['img_small_width']);
       $save_path = storage_path('app/public/'.$directory.'small');
       if (!file_exists($save_path)) {
         mkdir($save_path, 755, true);
@@ -209,7 +209,7 @@ class PhotoController extends Controller
       $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
 
       // $medium = Image::make($request->photo)->grab(900, 596);
-      $medium = Image::make($request->photo)->widen($settings['img_medium_width']->value);
+      $medium = Image::make($request->photo)->widen($settings['img_medium_width']);
       $save_path = storage_path('app/public/'.$directory.'medium');
       if (!file_exists($save_path)) {
         mkdir($save_path, 755, true);
@@ -217,14 +217,13 @@ class PhotoController extends Controller
       $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
 
       // $large = Image::make($request->photo)->grab(1200, 795);
-      $large = Image::make($request->photo)->widen($settings['img_large_width']->value);
+      $large = Image::make($request->photo)->widen($settings['img_large_width']);
       $save_path = storage_path('app/public/'.$directory.'large');
       if (!file_exists($save_path)) {
         mkdir($save_path, 755, true);
       }
       $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
 
-      
       // } 
       // Storage::disk('public')->put($directory.'/small/'.$image_name, $small->stream()->__toString());
       //   // dd($photo);
