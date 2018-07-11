@@ -31,6 +31,8 @@ class AlbumRequest extends FormRequest
         'alias' => 'string|max:255',
         'photo_id' => 'integer|nullable', 
         'description' => 'string|max:255',
+        'delay' => 'integer|nullable|max:60',
+
         'author_id' => 'integer|nullable', 
         'editor_id' => 'integer|nullable', 
 

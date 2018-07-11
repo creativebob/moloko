@@ -153,6 +153,7 @@ class AlbumController extends Controller
         $album->albums_category_id = $request->albums_category_id;
         $album->access = $request->access;
         $album->description = $request->description;
+        $album->delay = $request->delay;
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
@@ -339,6 +340,8 @@ class AlbumController extends Controller
         $album->albums_category_id = $request->albums_category_id;
         $album->access = $request->access;
         $album->description = $request->description;
+        $album->delay = $request->delay;
+
 
         // Модерация и системная запись
         $album->system_item = $request->system_item;
@@ -360,7 +363,7 @@ class AlbumController extends Controller
         if(!isset($albums_settings->id)){
             $albums_settings = new AlbumsSetting;
         };
-        
+
         // Подключение политики
         $this->authorize(getmethod('index'), $albums_settings);
 

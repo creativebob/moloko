@@ -12,6 +12,7 @@ trait PoliticTrait
     public function getstatus($entity_name, $model, $method, $entity_dependence)
     {
 
+
         // Получаем данные из сессии
         $session  = session('access');
         $user_id = $session['user_info']['user_id'];
@@ -384,10 +385,9 @@ trait PoliticTrait
         };
 
         // Если запись это сам юзер - сразу даем зеленый свет! 
-        if(($entity_name == 'users')&&($user_id == $model->id)&&($method = 'update')){
-            return false;
-        };
-
+        // if(($entity_name == 'users')&&($user_id == $model->id)&&($method = 'update')){
+        //     return false;
+        // };
 
         // Если запись своя - сразу даем зеленый свет!
         if($user_id == $model->author_id){

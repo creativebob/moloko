@@ -5,7 +5,7 @@
 <div class="grid-x tabs-wrap">
   <div class="small-12 cell">
     <ul class="tabs-list" data-tabs id="tabs">
-      <li class="tabs-title is-active"><a href="#content-panel-1" aria-selected="true">Учетные данные</a></li>
+      <li class="tabs-title is-active"><a href="#content-panel-1" aria-selected="true">Информация об альбоме</a></li>
       <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Настройка</a></li>
     </ul>
   </div>
@@ -46,12 +46,17 @@
                             </label>
                         </div>
                         <div class="small-12 medium-6 cell">
-                        <label>Категория альбома
-                            <select name="albums_category_id">
-                                @php
-                                    echo $albums_categories_list;
-                                @endphp
-                            </select>
+                            <label>Категория альбома
+                                <select name="albums_category_id">
+                                    @php
+                                        echo $albums_categories_list;
+                                    @endphp
+                                </select>
+                            </label>
+                            <label>Задержка времени (для слайдера), сек
+                                {{ Form::text('delay', $album->delay, ['class'=>'digit-2-field', 'maxlength'=>'2', 'autocomplete'=>'off']) }}
+                                <div class="sprite-input-right find-status" id="name-check"></div>
+                                <span class="form-error">Введите кол-во секунд</span>
                             </label>
                         </div>
                         <div class="small-12 cell">

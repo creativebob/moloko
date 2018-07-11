@@ -176,6 +176,10 @@ class User extends Authenticatable
         'passport_date', 
         'passport_address', 
 
+        'specialty', 
+        'about', 
+        'degree', 
+
         'user_type', 
         'lead_id', 
         'employee_id', 

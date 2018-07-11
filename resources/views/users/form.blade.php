@@ -8,6 +8,7 @@
       <li class="tabs-title is-active"><a href="#content-panel-1" aria-selected="true">Учетные данные</a></li>
       <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Персональные данные</a></li>
       <li class="tabs-title"><a data-tabs-target="content-panel-3" href="#content-panel-3">Представитель компании</a></li>
+      <li class="tabs-title"><a data-tabs-target="content-panel-4" href="#content-panel-4">Образование и опыт</a></li>
     </ul>
   </div>
 </div>
@@ -139,6 +140,7 @@
         </div>
 
       </div>
+
       <!-- Персональные данные -->
       <div class="tabs-panel" id="content-panel-2">
         <div class="grid-x grid-padding-x">
@@ -184,6 +186,7 @@
           </div>
         </div>
       </div>
+
       <!-- Представитель компании -->
       <div class="tabs-panel" id="content-panel-3">
         <div class="grid-x grid-padding-x">
@@ -231,6 +234,41 @@
           </div>
         </div>
       </div>
+
+      <!-- Образование и опыт -->
+      <div class="tabs-panel" id="content-panel-4">
+        <div class="grid-x grid-padding-x">
+          <div class="small-12 medium-6 cell">
+            <label>Специальность
+              @include('includes.inputs.string', ['name'=>'specialty', 'value'=>$user->specialty, 'required'=>''])
+            </label>
+          </div>
+          <div class="small-12 medium-6 cell">
+            <label>Ученая степень, звание
+              @include('includes.inputs.string', ['name'=>'degree', 'value'=>$user->degree, 'required'=>''])
+            </label>
+          </div>
+        </div>
+        <div class="grid-x grid-padding-x">
+          <div class="small-12 medium-12 cell">
+            <label>Информация о человеке (Для сайта):
+              {{ Form::textarea('about', $user->about, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+            </label><br>
+          </div>
+        </div>
+
+        <div class="grid-x grid-padding-x">        
+          <div class="small-12 medium-12 cell">
+            <label>Фраза
+              @include('includes.inputs.string', ['name'=>'quote', 'value'=>$user->quote, 'required'=>''])
+            </label>
+          </div>
+
+        </div>
+
+
+      </div>
+
     </div>
   </div>
   <div class="small-12 medium-5 medium-offset-1 large-5 large-offset-2 cell">

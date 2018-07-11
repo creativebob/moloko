@@ -189,6 +189,11 @@ class UserController extends Controller
         $user->passport_released = $request->passport_released;
         $user->passport_date = $request->passport_date;
 
+        $user->about = $request->about;
+        $user->specialty = $request->specialty;
+        $user->degree = $request->degree;
+        $user->quote = $request->quote;
+
         $user->user_type = $request->user_type;
         $user->lead_id = $request->lead_id;
         $user->employee_id = $request->employee_id;
@@ -435,8 +440,12 @@ class UserController extends Controller
         $user->passport_released = $request->passport_released;
         $user->passport_date = $request->passport_date;
 
+        $user->about = $request->about;
+        $user->specialty = $request->specialty;
+        $user->degree = $request->degree;
+        $user->quote = $request->quote;
+        
         $user->user_type = $request->user_type;
-
         $user->lead_id = $request->lead_id;
         $user->employee_id = $request->employee_id;
         $user->access_block = $request->access_block;
@@ -526,6 +535,13 @@ class UserController extends Controller
                 // Если удалили последнюю роль для должности и пришел пустой массив
                 $delete = RoleUser::whereUser_id($user->id)->delete();
             }
+
+
+            $backroute = $request->backroute;
+            if(isset($backroute)){
+                // return redirect()->back();
+                return redirect($backroute);
+            };
 
             return redirect('users');
 
@@ -620,5 +636,50 @@ class UserController extends Controller
 
         return redirect('/getaccess');
     }
+
+
+    public function myprofile(Request $request)
+    {
+
+        $id = Auth::user()->id;
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar')->moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $user);
+
+        // Функция из Helper отдает массив со списками для SELECT
+        $departments_list = getLS('users', 'index', 'departments');
+        $filials_list = getLS('users', 'index', 'filials');
+
+        $role = new Role;
+
+        $answer_roles = operator_right('roles', false, 'index');
+
+        $roles_list = Role::moderatorLimit($answer_roles)
+        ->companiesLimit($answer_roles)
+        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer_roles)
+        ->systemItem($answer_roles) // Фильтр по системным записям 
+        ->template($answer_roles) // Выводим шаблоны в список
+        ->pluck('name', 'id');
+
+        // Получаем список стран
+        $countries_list = Country::get()->pluck('name', 'id');
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+        // dd($user);
+
+        return view('users.myprofile', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list'));
+    }
+
+
+
+
 
 }

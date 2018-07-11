@@ -30,6 +30,8 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 
 // -------------------------------------- Пользователи ------------------------------------------------
 Route::resource('/users', 'UserController')->middleware('auth');
+Route::get('/myprofile', 'UserController@myprofile')->middleware('auth')->name('users.myprofile');;
+
 // Сортировка пользователей
 Route::post('/users_sort', 'UserController@users_sort')->middleware('auth');
 

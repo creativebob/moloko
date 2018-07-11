@@ -86,7 +86,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
         </ul>
         <div class="dropdown-pane profile-head" id="profile" data-dropdown data-position="bottom" data-alignment="right" data-v-offset="10" data-h-offset="-30" data-close-on-click="true">
           <ul class="menu vertical">
-            <li><a href="index.php">Профиль</a></li>
+            <li>{{ link_to_route('users.myprofile', 'Мой профиль', $value = Null) }} </li>
             <li><a href="">Настройки</a></li>
             <li><hr></li>
             <li><a href="">Нужна помощь?</a></li>

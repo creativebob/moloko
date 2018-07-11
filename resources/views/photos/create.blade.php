@@ -41,20 +41,21 @@
 @php
 $settings = config()->get('settings');
 @endphp
+
 <script>
   var minImageHeight = 795;
   Dropzone.options.myDropzone = {
     paramName: 'photo',
-    maxFilesize: {{ $settings['img_max_size']->value }}, // MB
+    maxFilesize: {{ $settings['img_max_size'] }}, // MB
     maxFiles: 20,
-    acceptedFiles: '{{ $settings['img_formats']->value }}',
+    acceptedFiles: '{{ $settings['img_formats'] }}',
     addRemoveLinks: true,
     init: function() {
     	this.on("success", function(file, responseText) {
     		file.previewTemplate.setAttribute('id',responseText[0].id);
     	});
     	this.on("thumbnail", function(file) {
-    		if (file.width < {{ $settings['img_min_width']->value }} || file.height < minImageHeight) {
+    		if (file.width < {{ $settings['img_min_width'] }} || file.height < minImageHeight) {
     			file.rejectDimensions()
     		}
     		else {
@@ -64,7 +65,7 @@ $settings = config()->get('settings');
     },
     accept: function(file, done) {
     	file.acceptDimensions = done;
-    	file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width']->value }} px в ширину"); };
+    	file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину"); };
     }
   };
 </script>

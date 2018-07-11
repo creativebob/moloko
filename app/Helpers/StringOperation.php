@@ -96,7 +96,7 @@ function getmethod($method){
     if(($method == 'current_city')||($method == 'current_department')||($method == 'current_sector')){return 'index';};
 
     if($method == 'show'){return 'view';};
-    if(($method == 'edit')||($method == 'update')){return 'update';};
+    if(($method == 'edit')||($method == 'update')||($method == 'myprofile')){ return 'update';};
     if(($method == 'create')||($method == 'store')){return 'create';};
     if($method == 'destroy'){return 'delete';};
     if($method == 'setting'){return 'update';};
