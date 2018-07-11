@@ -1479,6 +1479,9 @@ tr:hover .icon-display-show:hover {
   .icon-settings {
     background-position:  -96px -224px;
   }
+  .icon-product {
+    background-position:  -96px -1024px;
+  }
   .icon-arrow-forward {
     background-position: -160px -288px;
   }
@@ -1514,6 +1517,10 @@ tr:hover .icon-display-show:hover {
     .icon-settings {
       background-position: -160px -224px;
     }
+    .icon-product {
+      background-position: -160px -1024px;
+    }
+
   }
   // Скролл в сайбаре по умолчанию
   .nav::-webkit-scrollbar {
