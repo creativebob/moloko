@@ -132,11 +132,12 @@ class ServiceController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
+        $name = $request->name;
+
         if ($request->mode == 'mode-add') {
 
-            $name = $request->name;
-
-            $services_product = ServicesProduct::where(['name' => $name, 'services_category_id' => $services_category_id])->first();
+            $service_product_name = $request->service_product_name;
+            $services_product = ServicesProduct::where(['name' => $service_product_name, 'services_category_id' => $services_category_id])->first();
 
             if ($services_product) {
                 $services_product_id = $services_product->id;
@@ -145,8 +146,8 @@ class ServiceController extends Controller
                 // Наполняем сущность данными
                 $services_product = new ServicesProduct;
 
-                $services_product->name = $name;
-                $services_product->unit_id = $request->unit_id;
+                $services_product->name = $service_product_name;
+                $services_product->unit_id = 26;
 
                 $services_product->services_category_id = $services_category_id;
 
@@ -169,7 +170,7 @@ class ServiceController extends Controller
 
             $services_product = ServicesProduct::findOrFail($request->services_product_id);
 
-            $name = $services_product->name;
+            $service_product_name = $services_product->name;
             $services_product_id = $services_product->id;
         }
 
@@ -183,7 +184,7 @@ class ServiceController extends Controller
         $service->author_id = $user_id;
         $service->save();
 
-        $service->name = $name.' ('. $service->id .')';
+        $service->name = $name;
         $service->save();
 
         if ($service) {
@@ -463,6 +464,8 @@ class ServiceController extends Controller
         // Наполняем сущность данными
         $service->services_product_id = $request->services_product_id;
         $service->name = $request->name;
+
+        $service->manually = $request->manually;
         // $service->external = $request->external;
         $service->cost = $request->cost;
         $service->price = $request->price;

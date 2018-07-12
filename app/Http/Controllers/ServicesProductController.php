@@ -180,7 +180,10 @@ class ServicesProductController extends Controller
         $services_product->name = $request->name;
 
         $services_product->services_category_id = $request->services_category_id;
-        $services_product->unit_id = $request->unit_id;
+
+        $services_product->unit_id = 26;
+
+        // $services_product->unit_id = $request->unit_id;
         
         // Автоматически отправляем запись на модерацию
         // $product->moderation = 1;
