@@ -8,7 +8,7 @@
 		<div class="small-8 cell">
 			<ul class="tabs-list" data-tabs id="tabs">
 				<li class="tabs-title is-active"><a href="#add-category" aria-selected="true">Подкатегория</a></li>
-				<li class="tabs-title"><a data-tabs-target="add-service" href="#add-service">Услуга</a></li>
+				<li class="tabs-title"><a data-tabs-target="add-service" href="#add-service">Группа</a></li>
 			</ul>
 		</div>
 	</div>
@@ -90,7 +90,7 @@
 							</select>
 						</label>
 
-						<label>Общее название услуги
+						<label>Название группы
 							@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
 							<div class="item-error">Такой товар уже существует!</div>
 						</label>

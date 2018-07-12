@@ -177,87 +177,87 @@
         }, time); 
     });
 
-  // ------------------------------- Отдел --------------------------------------------
+    // ------------------------------- Отдел --------------------------------------------
 
-  // ----------- Добавление -------------
-  // Модалка
-  $(document).on('click', '[data-open="medium-add"]', function() {
+    // ----------- Добавление -------------
+    // Модалка
+    $(document).on('click', '[data-open="medium-add"]', function() {
 
-    var parent = $(this).closest('.item').attr('id').split('-')[1];
-    var filial = $(this).closest('.first-item').attr('id').split('-')[1];
-    // alert(parent + filial);
-    
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/departments/create',
-    type: "GET",
-    data: {parent_id: parent, filial_id: filial},
-    success: function(html){
-        $('#modal').html(html);
-        $('#medium-add').foundation();
-        $('#medium-add').foundation('open');
-        $('.filial-id').val(filial);
-    }
-}); 
-});
+        var parent = $(this).closest('.item').attr('id').split('-')[1];
+        var filial = $(this).closest('.first-item').attr('id').split('-')[1];
+        // alert(parent + filial);
 
-  // Проверка существования
-  $(document).on('keyup', '#form-medium-add .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-medium-add .name-field').val();
-    // Указываем название кнопки
-    var submit = '.submit-add';
-    // Значение поля с разрешением
-    var db = '#form-medium-add .medium-item';
-    // Филиал
-    var filial = $('#filial-id').val();
-    // Выполняем запрос
-    clearTimeout(timerId);   
-    timerId = setTimeout(function() {
-      departmentCheck (name, submit, db, filial)
-  }, time); 
-});
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '/departments/create',
+            type: "GET",
+            data: {parent_id: parent, filial_id: filial},
+            success: function(html){
+                $('#modal').html(html);
+                $('#medium-add').foundation();
+                $('#medium-add').foundation('open');
+                $('.filial-id').val(filial);
+            }
+        }); 
+    });
 
-  // ----------- Изменение -------------
-  // Открываем модалку
-  $(document).on('click', '[data-open="medium-edit"]', function() {
-    // Получаем данные о разделе
-    var id = $(this).closest('.item').attr('id').split('-')[1];
+    // Проверка существования
+    $(document).on('keyup', '#form-medium-add .name-field', function() {
+        // Получаем фрагмент текста
+        var name = $('#form-medium-add .name-field').val();
+        // Указываем название кнопки
+        var submit = '.submit-add';
+        // Значение поля с разрешением
+        var db = '#form-medium-add .medium-item';
+        // Филиал
+        var filial = $('#filial-id').val();
+        // Выполняем запрос
+        clearTimeout(timerId);   
+        timerId = setTimeout(function() {
+          departmentCheck (name, submit, db, filial)
+      }, time); 
+    });
 
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: "/departments/" + id + "/edit",
-    type: "GET",
-    success: function(html) {
-        // alert(html);
-        $('#modal').html(html);
-        $('#medium-edit').foundation();
-        $('#medium-edit').foundation('open');
-    }
-});
-});
+    // ----------- Изменение -------------
+    // Открываем модалку
+    $(document).on('click', '[data-open="medium-edit"]', function() {
+        // Получаем данные о разделе
+        var id = $(this).closest('.item').attr('id').split('-')[1];
 
-  // Проверка существования
-  $(document).on('keyup', '#form-medium-edit .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-medium-edit .name-field').val();
-    // Указываем название кнопки
-    var submit = '.submit-edit';
-    // Значение поля с разрешением
-    var db = '#form-medium-edit .medium-item';
-    // Филиал
-    var filial = $('#filial-id').val();
-    // Выполняем запрос
-    clearTimeout(timerId);   
-    timerId = setTimeout(function() {
-      departmentCheck (name, submit, db, filial)
-  }, time); 
-});
+        // Ajax запрос
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "/departments/" + id + "/edit",
+            type: "GET",
+            success: function(html) {
+                // alert(html);
+                $('#modal').html(html);
+                $('#medium-edit').foundation();
+                $('#medium-edit').foundation('open');
+            }
+        });
+    });
+
+    // Проверка существования
+    $(document).on('keyup', '#form-medium-edit .name-field', function() {
+        // Получаем фрагмент текста
+        var name = $('#form-medium-edit .name-field').val();
+        // Указываем название кнопки
+        var submit = '.submit-edit';
+        // Значение поля с разрешением
+        var db = '#form-medium-edit .medium-item';
+        // Филиал
+        var filial = $('#filial-id').val();
+        // Выполняем запрос
+        clearTimeout(timerId);   
+        timerId = setTimeout(function() {
+          departmentCheck (name, submit, db, filial)
+      }, time); 
+    });
 
   // ------------------------ Кнопка добавления ---------------------------------------
   $(document).on('click', '.submit-add', function(event) {

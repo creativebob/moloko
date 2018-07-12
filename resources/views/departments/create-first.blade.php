@@ -6,7 +6,7 @@
 	</div>
 	
 	
-			{{ Form::open(['id'=>'form-first-add', 'data-abide', 'novalidate']) }}
+			{{ Form::open(['url' => '/departments', 'id'=>'form-first-add', 'data-abide', 'novalidate']) }}
 
 			@include('departments.modals.first', ['submitButtonText' => 'Добавить филиал', 'class' => 'submit-add'])
 

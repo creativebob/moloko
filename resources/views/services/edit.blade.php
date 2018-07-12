@@ -73,10 +73,10 @@
                                         @endphp
                                     </select>
                                 </label>
-                                <label>Общее название услуги
+                                <label>Группа
                                     {{ Form::select('services_product_id', $services_products_list, $service->services_product_id) }}
                                 </label>
-                                <label>Название
+                                <label>Название услуги
                                     {{ Form::text('name', null, ['required']) }}
                                 </label>
 
@@ -111,7 +111,7 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 cell">
                                     <label>Удобный (вручную)
-                                        {{ Form::text('manually', null, ['required']) }}
+                                        {{ Form::text('manually', null) }}
                                     </label>
                                 </div> 
                                 {{-- <div class="small-12 medium-4 cell">
@@ -202,7 +202,7 @@
 
                     {{-- Кнопка --}}
                     <div class="small-12 cell tabs-button tabs-margin-top">
-                        {{ Form::submit('Создать услугу', ['class'=>'button', 'id' => 'add-service']) }}
+                        {{ Form::submit('Редактировать услугу', ['class'=>'button', 'id' => 'add-service']) }}
                     </div>
 
                 </div>{{-- Закрытие разделителя на блоки --}}
