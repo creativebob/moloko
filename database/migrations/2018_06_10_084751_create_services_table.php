@@ -22,10 +22,11 @@ class CreateServicesTable extends Migration
             $table->integer('services_product_id')->nullable()->unsigned()->comment('ID товара');
             $table->foreign('services_product_id')->references('id')->on('services_products');
 
-            $table->string('name')->nullable()->comment('Имя артикула (руками)');
+            $table->string('name')->nullable()->comment('Имя артикула');
 
             $table->string('description')->nullable()->index()->comment('Описание артикула услуги');
 
+            $table->string('manually')->nullable()->comment('Имя дял поиска (руками)');
             $table->string('internal')->nullable()->comment('Имя генерируемого артикула');
             $table->string('external')->nullable()->comment('Имя внешнего артикула');
 

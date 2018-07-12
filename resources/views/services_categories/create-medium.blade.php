@@ -1,7 +1,7 @@
 <div class="reveal" id="medium-add" data-reveal data-close-on-click="false">
 	<div class="grid-x">
 		<div class="small-12 cell modal-title">
-			<h5>ДОБАВЛЕНИЕ категории продукции</h5>
+			<h5>ДОБАВЛЕНИЕ категории услуг</h5>
 		</div>
 	</div>
 	<div class="grid-x tabs-wrap align-center tabs-margin-top">
@@ -22,14 +22,14 @@
 				<!-- Основные -->
 				<div class="grid-x grid-padding-x modal-content inputs">
 					<div class="small-10 small-offset-1 cell">
-						<label>Расположение
+						<label>Категория
 							<select name="parent_id">
 								@php
 								echo $services_categories_list;
 								@endphp
 							</select>
 						</label>
-						<label>Название
+						<label>Название подкатегории
 							@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
 							<div class="sprite-input-right find-status"></div>
 							<div class="item-error">Такой уже существует!</div>
@@ -69,7 +69,7 @@
 
 				<div class="grid-x align-center">
 					<div class="small-6 medium-6 cell">
-						{{ Form::submit('Добавить категорию продукции', ['data-close', 'class'=>'button modal-button submit-add']) }}
+						{{ Form::submit('Добавить подкатегорию услуг', ['data-close', 'class'=>'button modal-button submit-add']) }}
 					</div>
 				</div>
 
@@ -82,7 +82,7 @@
 				{{ Form::open(['id'=>'form-product-add', 'data-abide', 'novalidate']) }}
 				<div class="grid-x grid-padding-x align-center modal-content inputs">
 					<div class="small-10 cell">
-						<label>Категория товара
+						<label>Категория
 							<select name="services_category_id" id="services-categories-list" required>
 								@php
 								echo $services_categories_list;
@@ -90,12 +90,12 @@
 							</select>
 						</label>
 
-						<label>Название товара
+						<label>Общее название услуги
 							@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
 							<div class="item-error">Такой товар уже существует!</div>
 						</label>
 
-						<div class="grid-x grid-margin-x">
+						{{-- <div class="grid-x grid-margin-x">
 							<div class="small-12 medium-6 cell">
 								<label>Категория единиц измерения
 									{{ Form::select('units_category_id', $units_categories_list, null, ['placeholder' => 'Выберите категорию', 'id' => 'units-categories-list', 'required']) }}
@@ -106,7 +106,7 @@
 									<select name="unit_id" id="units-list" required disabled></select>
 								</label>
 							</div>
-						</div>
+						</div> --}}
 
 						{{ Form::hidden('entity', 'services_categories') }}
 
@@ -129,7 +129,7 @@
 				</div>
 				<div class="grid-x align-center">
 					<div class="small-6 medium-4 cell">
-						{{ Form::submit('Добавить товар', ['data-close', 'class'=>'button modal-button submit-services-product-add']) }}
+						{{ Form::submit('Добавить услугу', ['data-close', 'class'=>'button modal-button submit-services-product-add']) }}
 					</div>
 				</div>
 				{{ Form::close() }}

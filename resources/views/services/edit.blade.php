@@ -6,14 +6,14 @@
 @include('includes.scripts.sortable-inhead')
 @endsection
 
-@section('title', 'Редактировать артикул услуги')
+@section('title', 'Редактировать услугу')
 
 @section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $service))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ артикул услуги &laquo{{ $service->name }}&raquo</h2>
+        <h2 class="header-content">РЕДАКТИРОВАТЬ услугу &laquo{{ $service->name }}&raquo</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -66,15 +66,18 @@
                         <div class="grid-x grid-margin-x">
                             <div class="small-12 medium-6 cell">
 
-                                <label>Категория услуги
+                                <label>Категория
                                     <select name="services_category_id" disabled>
                                         @php
                                         echo $services_categories_list;
                                         @endphp
                                     </select>
                                 </label>
-                                <label>Название услуги
+                                <label>Общее название услуги
                                     {{ Form::select('services_product_id', $services_products_list, $service->services_product_id) }}
+                                </label>
+                                <label>Название
+                                    {{ Form::text('name', null, ['required']) }}
                                 </label>
 
                             </div>
@@ -82,7 +85,7 @@
                             <div class="small-12 medium-6 cell">
 
                                 <div class="small-12 cell">
-                                    <label>Фотография артикула услуги
+                                    <label>Фотография
                                         {{ Form::file('photo') }}
                                     </label>
                                     <div class="text-center">
@@ -107,8 +110,8 @@
 
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 cell">
-                                    <label>Название
-                                        {{ Form::text('name', null, ['required']) }}
+                                    <label>Удобный (вручную)
+                                        {{ Form::text('manually', null, ['required']) }}
                                     </label>
                                 </div> 
                                 {{-- <div class="small-12 medium-4 cell">
@@ -126,7 +129,7 @@
 
                         <div class="grid-x">
                             <div class="small-12 cell">
-                                <label>Описание артикула услуги
+                                <label>Описание услуги
                                     @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$service->description, 'required'=>''])
                                 </label>
                             </div>
@@ -150,14 +153,14 @@
                             @endif
 
                             {{-- @if ($service->metrics_values_count > 0)
-                             @each('services.metrics.metric-input', $service->services_product->services_category->metrics, 'metric')
-                             @each('services.metrics.metric-value', $service->metrics_values, 'metric')
-                             @endif --}}
+                               @each('services.metrics.metric-input', $service->services_product->services_category->metrics, 'metric')
+                               @each('services.metrics.metric-value', $service->metrics_values, 'metric')
+                               @endif --}}
 
-                         </fieldset>
-                         @endif
-                         <div id="service-inputs"></div>
-                         <div class="small-12 cell tabs-margin-top text-center">
+                           </fieldset>
+                           @endif
+                           <div id="service-inputs"></div>
+                           <div class="small-12 cell tabs-margin-top text-center">
                             <div class="item-error" id="service-error">Такой артикул уже существует!<br>Измените значения!</div>
                         </div>
                         {{ Form::hidden('service_id', $service->id) }}
@@ -199,7 +202,7 @@
 
                     {{-- Кнопка --}}
                     <div class="small-12 cell tabs-button tabs-margin-top">
-                        {{ Form::submit('Создать артикул', ['class'=>'button', 'id' => 'add-service']) }}
+                        {{ Form::submit('Создать услугу', ['class'=>'button', 'id' => 'add-service']) }}
                     </div>
 
                 </div>{{-- Закрытие разделителя на блоки --}}

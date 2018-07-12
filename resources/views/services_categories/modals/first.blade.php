@@ -18,10 +18,10 @@
 
 <div class="grid-x align-center">
 
-  <div class="small-8 cell checkbox">
+  {{-- <div class="small-8 cell checkbox">
     {{ Form::checkbox('status', 'set', null, ['id' => 'set-status']) }}
     <label for="set-status"><span>Набор</span></label>
-  </div>
+  </div> --}}
 
   {{-- Чекбокс отображения на сайте --}}
   @can ('publisher', $services_category)

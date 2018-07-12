@@ -1,13 +1,13 @@
 <div class="reveal" id="first-add" data-reveal data-close-on-click="false">
 	<div class="grid-x">
 		<div class="small-12 cell modal-title">
-			<h5>ДОБАВЛЕНИЕ артикула</h5>
+			<h5>ДОБАВЛЕНИЕ услуги</h5>
 		</div>
 	</div>
 	{{ Form::open(['url' => '/services','id'=>'form-service-add', 'data-abide', 'novalidate']) }}
 	<div class="grid-x grid-padding-x align-center modal-content inputs">
 		<div class="small-10 cell">
-			<label>Категория товара
+			<label>Категория
 				<select name="services_category_id" id="services-categories-list" required>
 					<option value="0">Выберите категорию</option>
 					@php
