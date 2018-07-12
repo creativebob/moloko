@@ -839,12 +839,12 @@ class ServicesProductController extends Controller
         $id = $request->id;
         $entity = $request->entity;
 
-        $services_category = ServicesCategory::withCount('services_products')->findOrFail($id);
+        $services_category = ServicesCategory::withCount('services_products')->with('services_products')->findOrFail($id);
 
 
         if ($services_category->services_products_count > 0) {
 
-            $services_products_list = ServicesProduct::where('services_category_id', $id)->get()->pluck('name', 'id');
+            $services_products_list = $services_category->services_products->pluck('name', 'id');
 
             if ($services_products_list) {
 
@@ -880,11 +880,11 @@ class ServicesProductController extends Controller
 
     public function ajax_modes(Request $request)
     {
-        // $mode = $request->mode;
-        // $entity = $request->entity;
+        $mode = $request->mode;
+        $entity = $request->entity;
 
-        $mode = 'mode-add';
-        $entity = 'service_categories';
+        // $mode = 'mode-add';
+        // $entity = 'service_categories';
 
         if ($mode == 'mode-select') {
             return view($entity.'.mode-select');

@@ -140,6 +140,38 @@ class PhotoController extends Controller
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+    $user = $request->user();
+
+    // Смотрим компанию пользователя
+    $company_id = $user->company_id;
+
+    // Скрываем бога
+    $user_id = hideGod($user);
+
+    if ($request->hasFile('photo')) {
+
+      $directory = $user->company->id.'/media/albums/'.$album->id.'/img/';
+      $name = $album->alias.'-'.time();
+
+      // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+        $array = save_photo($request, $user_id, $company_id, $directory, $name);
+
+      $photo = $array['photo'];
+
+       if(!isset($album->photo_id)){
+        $album->photo_id = $photo->id;
+        $album->save();
+      }
+
+      // $album->photos()->attach($photo->id);
+
+      $media = new AlbumEntity;
+      $media->album_id = $album->id;
+      $media->entity_id = $photo->id;
+      $media->entity = 'photos';
+      $media->save();
+    } 
+
     if ($request->hasFile('photo')) {
 
       // Получаем данные для авторизованного пользователя
@@ -449,29 +481,29 @@ class PhotoController extends Controller
     public function ajax_display(Request $request)
     {
 
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
+      if ($request->action == 'hide') {
+        $display = null;
+      } else {
+        $display = 1;
+      }
 
-        $photo = Photo::findOrFail($request->id);
-        $photo->display = $display;
-        $photo->save();
+      $photo = Photo::findOrFail($request->id);
+      $photo->display = $display;
+      $photo->save();
 
-        if ($photo) {
+      if ($photo) {
 
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
+        $result = [
+          'error_status' => 0,
+        ];  
+      } else {
 
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        $result = [
+          'error_status' => 1,
+          'error_message' => 'Ошибка при обновлении отображения на сайте!'
+        ];
+      }
+      echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
   }

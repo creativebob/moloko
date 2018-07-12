@@ -203,8 +203,13 @@ Route::resource('/services_products', 'ServicesProductController')->middleware('
 Route::any('/ajax_services_count', 'ServicesProductController@ajax_count')->middleware('auth');
 Route::any('/ajax_services_modes', 'ServicesProductController@ajax_modes')->middleware('auth');
 
+
+Route::any('/services/create', 'ServiceController@create')->middleware('auth');
 // Основные методы
 Route::resource('/services', 'ServiceController')->middleware('auth');
+
+Route::any('/service/add_photo', 'ServiceController@add_photo')->middleware('auth');
+Route::post('/service/photos', 'ServiceController@photos')->middleware('auth');
 
 
 // Проверка на существование товара
