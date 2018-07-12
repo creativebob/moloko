@@ -461,6 +461,26 @@ class ServiceController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $service);
 
+        if ($request->hasFile('photo')) {
+
+            $directory = $company_id.'/media/services/'.$service->id.'/img/';
+            $name = 'avatar-'.time();
+
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            if ($service->photo_id) {
+                $array = save_photo($request, $user_id, $company_id, $directory, $name, null, $service->photo_id);
+
+            } else {
+                $array = save_photo($request, $user_id, $company_id, $directory, $name);
+                
+            }
+            $photo = $array['photo'];
+
+            $service->photo_id = $photo->id;
+        } 
+
+        
+
         // Наполняем сущность данными
         $service->services_product_id = $request->services_product_id;
         $service->name = $request->name;

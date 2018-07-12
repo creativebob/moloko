@@ -402,14 +402,16 @@ class DepartmentController extends Controller
 
             // Записываем в базу все расписание.
             DB::table('worktimes')->insert($mass_time);
+
+            // Создаем связь расписания с филиалом / отделом
+            $schedule_entity = new ScheduleEntity;
+            $schedule_entity->schedule_id = $schedule->id;
+            $schedule_entity->entity_id = $department->id;
+            $schedule_entity->entity = 'departments';
+            $schedule_entity->save();
         }
 
-        // Создаем связь расписания с филиалом / отделом
-        $schedule_entity = new ScheduleEntity;
-        $schedule_entity->schedule_id = $schedule->id;
-        $schedule_entity->entity_id = $department->id;
-        $schedule_entity->entity = 'departments';
-        $schedule_entity->save();
+        
 
         if ($department) {
 
