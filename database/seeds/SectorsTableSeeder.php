@@ -33,6 +33,71 @@ class SectorsTableSeeder extends Seeder
                 'author_id' => 1,
                 // 'industry_id' => null,
         	],
+
+
+            [
+                'name' => 'Дом, ремонт',
+                'parent_id' => null,
+                'category_status' => 1,
+                'author_id' => 1,
+                // 'industry_id' => null,
+            ],
+                [
+                    'name' => 'Двери и окна',
+                    'parent_id' => 4,
+                    'category_status' => 1,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Дизайн студии',
+                    'parent_id' => 4,
+                    'category_status' => 1,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Мебель и предметы интерьера',
+                    'parent_id' => 4,
+                    'category_status' => 1,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Текстиль',
+                    'parent_id' => 4,
+                    'category_status' => 1,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+
+
+
+            [
+                'name' => 'Продукты питания',
+                'parent_id' => null,
+                'category_status' => 1,
+                'author_id' => 1,
+                // 'industry_id' => null,
+            ],
+                [
+                    'name' => 'Продукты',
+                    'parent_id' => 9,
+                    'category_status' => 1,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Доставка еды',
+                    'parent_id' => 9,
+                    'category_status' => 1,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+
+
+
+
         	[
 		        'name' => 'Интернет',
 		        'parent_id' => null,
@@ -54,6 +119,70 @@ class SectorsTableSeeder extends Seeder
                 'author_id' => 1,
                 // 'industry_id' => null,
         	],
+
+                [
+                    'name' => 'Отели, хостелы',
+                    'parent_id' => 14,
+                    'category_status' => 1,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Туры и турагентства',
+                    'parent_id' => 14,
+                    'category_status' => 1,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+
+
+
+
+
+            [
+                'name' => 'Медицина',
+                'parent_id' => null,
+                'category_status' => 1,
+                'author_id' => 1,
+                // 'industry_id' => null,
+            ],
+                [
+                    'name' => 'Аптеки',
+                    'parent_id' => 17,
+                    'category_status' => 1,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Косметология и пластическая хирургия',
+                    'parent_id' => 17,
+                    'category_status' => 1,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Оптика',
+                    'parent_id' => 17,
+                    'category_status' => 1,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Психология',
+                    'parent_id' => 17,
+                    'category_status' => 1,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Стоматология',
+                    'parent_id' => 17,
+                    'category_status' => 1,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+
+
         	[
 		        'name' => 'Заборы',
 		        'parent_id' => 1,
@@ -63,14 +192,7 @@ class SectorsTableSeeder extends Seeder
         	],
         	[
 		        'name' => 'Ворота',
-		        'parent_id' => 2,
-                'category_status' => null,
-                'author_id' => 1,
-                // 'industry_id' => 2,
-        	],
-        	[
-		        'name' => 'Окна',
-		        'parent_id' => 2,
+		        'parent_id' => 1,
                 'category_status' => null,
                 'author_id' => 1,
                 // 'industry_id' => 2,

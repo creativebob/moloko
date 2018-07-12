@@ -982,7 +982,8 @@ tr:hover .icon-display-show {
 
 // Закрытие фильтра
 .icon-moveup {
-  background-position: 0px -864px;
+  background-position: 0px -672px;
+  opacity: 0.8;
 } 
 
 .icon-moveup:hover {
@@ -990,7 +991,8 @@ tr:hover .icon-display-show {
 } 
 
 .filter-close:hover .icon-moveup {
-  background-position: -32px -864px;
+  background-position: 0px -672px;
+  opacity: 1;
 }
 
 #filters {

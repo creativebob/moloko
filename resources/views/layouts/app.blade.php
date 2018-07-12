@@ -59,12 +59,12 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
         </div>
         <div class="small-5 right-head cell">
           <ul>
-            <li>
+             {{-- <li>
               @if(isset($session_god))
               {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 
               @endif
-            </li>
-            <li><a id="task-toggle"><img src="/img/header/alert.png"></a></li>
+            </li> --}}
+            {{-- <li><a id="task-toggle"><img src="/img/header/alert.png"></a></li> --}}
             <li>
               <a data-toggle="profile">
                 <span>
@@ -87,9 +87,9 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
         <div class="dropdown-pane profile-head" id="profile" data-dropdown data-position="bottom" data-alignment="right" data-v-offset="10" data-h-offset="-30" data-close-on-click="true">
           <ul class="menu vertical">
             <li>{{ link_to_route('users.myprofile', 'Мой профиль', $value = Null) }} </li>
-            <li><a href="">Настройки</a></li>
+            {{-- <li><a href="">Настройки</a></li> --}}
             <li><hr></li>
-            <li><a href="">Нужна помощь?</a></li>
+            {{-- <li><a href="">Нужна помощь?</a></li> --}}
             <li>
               @if(isset($company_id)&&($user_status == 1))
               {{ link_to_route('users.getgod', 'Выйти из компании', $value = Null) }} 
@@ -100,10 +100,10 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
               {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 
               @endif
             </li>
-            <li>
+            {{-- <li>
               @if(isset($session_access))
               {{ link_to_route('help.show_session', 'Смотреть сессию', $value = Null, ['target' => '_blank']) }} 
-            @endif</li>
+            @endif</li> --}}
 
             {{-- Кнопка выхода --}}
             <li><a href="{{ route('logout') }}"
