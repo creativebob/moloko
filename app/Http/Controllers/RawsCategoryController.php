@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 // На удаление
 use Illuminate\Support\Facades\Auth;
 
-class GoodsCategoryController extends Controller
+class RawsCategoryController extends Controller
 {
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'products_categories';

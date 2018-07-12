@@ -9,7 +9,7 @@ use App\ServicesProduct;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
-class ServicesProductPolicy
+class ProductPolicy
 {
     use HandlesAuthorization;
     use PoliticTrait;
