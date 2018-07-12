@@ -1,6 +1,5 @@
 <script type="text/javascript">
 
-  var type = '{{ $type }}';
 
   $(document).on('change', '#units-categories-list', function() {
     var id = $(this).val();
@@ -12,7 +11,7 @@
       },
       url: '/get_units_list',
       type: "POST",
-      data: {id: id, entity: 'products_categories'},
+      data: {id: id, entity: 'services_categories'},
       success: function(html){
         $('#units-list').html(html);
         $('#units-list').prop('disabled', false);
@@ -20,14 +19,14 @@
     }); 
   });
 
-  $(document).on('change', '#products-categories-list', function() {
+  $(document).on('change', '#services-categories-list', function() {
 
     var id = $(this).val();
     // alert(id);
 
     if (id == 0) {
       $('#mode').html('');
-      // $('#products_groups-list').prop('disabled', true);
+      // $('#services_groups-list').prop('disabled', true);
 
     } else {
 
@@ -36,9 +35,9 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/ajax_products_count',
+        url: '/ajax_services_count',
         type: "POST",
-        data: {id: id, entity: 'articles'},
+        data: {id: id, entity: 'services'},
         success: function(html){
         // alert(html);
         $('#mode').html(html);
@@ -59,9 +58,9 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/ajax_products_modes',
+        url: '/ajax_services_modes',
         type: "POST",
-        data: {mode: id, entity: 'articles'},
+        data: {mode: id, entity: 'services'},
         success: function(html){
         // alert(html);
         $('#mode').html(html);

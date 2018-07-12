@@ -45,10 +45,12 @@ function save_photo($request, $user_id, $company_id, $directory, $name, $album_i
     // Сохранияем оригинал
     $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
 
-        if($album_id != null){
+
 
         // Смотрим, есть ли настройки на конкретный альбом
-        $get_settings = AlbumsSetting::where('album_id', $album_id)->first();
+    $get_settings = AlbumsSetting::where('album_id', $album_id)->first();
+
+    if($get_settings){
 
         $settings['img_small_width'] = $get_settings->img_small_width;
         $settings['img_small_height'] = $get_settings->img_small_height;
@@ -65,7 +67,7 @@ function save_photo($request, $user_id, $company_id, $directory, $name, $album_i
 
         // Вытаскиваем настройки сохранения фото
         $settings = config()->get('settings');
-    };
+    }
 
     // Сохраняем small, medium и large
     // $small = Image::make($request->photo)->grab(150, 99);

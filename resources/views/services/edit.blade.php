@@ -6,14 +6,14 @@
 @include('includes.scripts.sortable-inhead')
 @endsection
 
-@section('title', 'Редактировать артикул')
+@section('title', 'Редактировать артикул услуги')
 
-@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $article))
+@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $service))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ артикул &laquo{{ $article->name }}&raquo</h2>
+        <h2 class="header-content">РЕДАКТИРОВАТЬ артикул услуги &laquo{{ $service->name }}&raquo</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -25,12 +25,8 @@
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
-
-            @if ($type != 'raws')
-            <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
-            @endif
             <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
-            <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li>
+            <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li> 
 
         </ul>
     </div>
@@ -54,7 +50,7 @@
             </div>
             @endif
 
-            {{ Form::model($article, ['url' => ['articles/'.$article->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'article-form']) }}
+            {{ Form::model($service, ['url' => ['services/'.$service->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'service-form']) }}
             {{ method_field('PATCH') }}
 
             <!-- Общая информация -->
@@ -70,71 +66,32 @@
                         <div class="grid-x grid-margin-x">
                             <div class="small-12 medium-6 cell">
 
-                                <label>Категория товара
-                                    <select name="products_category_id" disabled>
+                                <label>Категория услуги
+                                    <select name="services_category_id" disabled>
                                         @php
-                                        echo $products_categories_list;
+                                        echo $services_categories_list;
                                         @endphp
                                     </select>
                                 </label>
-                                <label>Название группы товаров
-                                    {{ Form::select('product_id', $products_list, $article->product_id) }}
+                                <label>Название услуги
+                                    {{ Form::select('services_product_id', $services_products_list, $service->services_product_id) }}
                                 </label>
 
-                                <fieldset class="fieldset">
-                                    <legend>
-                                        <div class="small-12 cell checkbox">
-                                            {{ Form::checkbox('portion', 1, $article->display, ['id' => 'portion']) }}
-                                            <label for="portion"><span>Принимать порциями</span></label>
-                                        </div>                                   
-                                    </legend>
-
-                                    <div class="grid-x grid-margin-x">
-                                        <div class="small-12 medium-6 cell">
-                                            <label>Имя порции
-                                                {{ Form::text('pr', "", ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
-                                            </label>
-                                        </div>
-                                        <div class="small-6 medium-3 cell">
-                                            <label>Сокр. имя
-                                                {{ Form::text('pr1',  "", ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
-                                            </label>
-                                        </div>
-                                        <div class="small-6 medium-3 cell">
-                                            <label>Кол-во
-                                                {{-- Количество чего-либо --}}
-                                                {{ Form::text('raw_count', 0, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
-                                                <div class="sprite-input-right find-status" id="name-check"></div>
-                                                <span class="form-error">Введите количество</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-
-                                <div class="small-12 medium-6 cell">
-                                    <label>Производитель
-                                        {{ Form::select('manufacturer_id', $manufacturers_list, $article->manufacturer_id, ['placeholder' => 'Выберите производителя'])}}
-                                    </label>
-                                </div>
                             </div>
 
                             <div class="small-12 medium-6 cell">
 
                                 <div class="small-12 cell">
-                                    <label>Фотография продукта
+                                    <label>Фотография артикула услуги
                                         {{ Form::file('photo') }}
                                     </label>
                                     <div class="text-center">
-                                        <img id="photo" @if (isset($article->photo_id)) src="/storage/{{ $article->company->id }}/media/articles/{{ $article->id }}/img/medium/{{ $article->photo->name }}" @endif>
+                                        <img id="photo" @if (isset($service->photo_id)) src="/storage/{{ $service->company->id }}/media/services/{{ $service->id }}/img/medium/{{ $service->photo->name }}" @endif>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="small-12 cell">
-                                <label>Описание товара
-                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$article->description, 'required'=>''])
-                                </label>
-                            </div>
+                            
                         </div>
 
                     </div>
@@ -143,18 +100,18 @@
 
                     {{-- Правый блок на первой вкладке --}}
                     <div class="small-12 large-6 cell">
-                        {{ Form::open(['url' => 'articles', 'data-abide', 'novalidate', 'id' => 'article-form']) }}
+                        {{ Form::open(['url' => 'services', 'data-abide', 'novalidate', 'id' => 'service-form']) }}
 
                         <fieldset class="fieldset-access">
-                            <legend>Артикулы</legend>
+                            <legend>Артикул</legend>
 
                             <div class="grid-x grid-margin-x">
-                                <div class="small-12 medium-4 cell">
-                                    <label>Удобный (вручную)
+                                <div class="small-12 cell">
+                                    <label>Название
                                         {{ Form::text('name', null, ['required']) }}
                                     </label>
                                 </div> 
-                                <div class="small-12 medium-4 cell">
+                                {{-- <div class="small-12 medium-4 cell">
                                     <label>Программный
                                         {{ Form::text('internal', null, ['required', 'disabled']) }}
                                     </label>
@@ -163,39 +120,47 @@
                                     <label>Внешний
                                         {{ Form::text('external') }}
                                     </label>
-                                </div>
+                                </div> --}}
                             </div>
                         </fieldset>
-                        @if (($article->product->products_category->metrics_count > 0) || ($article->metrics_values_count > 0))
+
+                        <div class="grid-x">
+                            <div class="small-12 cell">
+                                <label>Описание артикула услуги
+                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$service->description, 'required'=>''])
+                                </label>
+                            </div>
+                        </div>
+                        @if (($service->services_product->services_category->metrics_count > 0) || ($service->metrics_values_count > 0))
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
-                            @if ($article->template == 1)
+                            @if ($service->template == 1)
 
-                            @foreach ($article->product->products_category->metrics as $metric)
-                            @include('articles.metrics.metric-input', $metric)
+                            @foreach ($service->services_product->services_category->metrics as $metric)
+                            @include('services.metrics.metric-input', $metric)
                             @endforeach
 
                             @else
 
-                            @foreach ($article->metrics_values as $metric)
-                            @include('articles.metrics.metric-value', $metric)
+                            @foreach ($service->metrics_values as $metric)
+                            @include('services.metrics.metric-value', $metric)
                             @endforeach
 
                             @endif
 
-                            {{-- @if ($article->metrics_values_count > 0)
-                             @each('articles.metrics.metric-input', $article->product->products_category->metrics, 'metric')
-                             @each('articles.metrics.metric-value', $article->metrics_values, 'metric')
+                            {{-- @if ($service->metrics_values_count > 0)
+                             @each('services.metrics.metric-input', $service->services_product->services_category->metrics, 'metric')
+                             @each('services.metrics.metric-value', $service->metrics_values, 'metric')
                              @endif --}}
 
                          </fieldset>
                          @endif
-                         <div id="article-inputs"></div>
+                         <div id="service-inputs"></div>
                          <div class="small-12 cell tabs-margin-top text-center">
-                            <div class="item-error" id="article-error">Такой артикул уже существует!<br>Измените значения!</div>
+                            <div class="item-error" id="service-error">Такой артикул уже существует!<br>Измените значения!</div>
                         </div>
-                        {{ Form::hidden('article_id', $article->id) }}
+                        {{ Form::hidden('service_id', $service->id) }}
 
 
                     </div>
@@ -204,174 +169,105 @@
 
                     {{-- Чекбокс черновика --}}
                     <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('template', 1, $article->template, ['id' => 'template']) }}
+                        {{ Form::checkbox('template', 1, $service->template, ['id' => 'template']) }}
                         <label for="template"><span>Черновик</span></label>
                     </div>
 
                     {{-- Чекбокс отображения на сайте --}}
-                    @can ('publisher', $article)
+                    @can ('publisher', $service)
                     <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('display', 1, $article->display, ['id' => 'display']) }}
+                        {{ Form::checkbox('display', 1, $service->display, ['id' => 'display']) }}
                         <label for="display"><span>Отображать на сайте</span></label>
                     </div>
                     @endcan
 
                     {{-- Чекбокс модерации --}}
-                    @can ('moderator', $article)
-                    @if ($article->moderation == 1)
+                    @can ('moderator', $service)
+                    @if ($service->moderation == 1)
                     <div class="small-12 cell checkbox">
-                        @include('includes.inputs.moderation', ['value'=>$article->moderation, 'name'=>'moderation'])
+                        @include('includes.inputs.moderation', ['value'=>$service->moderation, 'name'=>'moderation'])
                     </div>
                     @endif
                     @endcan
 
                     {{-- Чекбокс системной записи --}}
-                    @can ('god', $article)
+                    @can ('god', $service)
                     <div class="small-12 cell checkbox">
-                        @include('includes.inputs.system', ['value'=>$article->system_item, 'name'=>'system_item']) 
+                        @include('includes.inputs.system', ['value'=>$service->system_item, 'name'=>'system_item']) 
                     </div>
                     @endcan
 
                     {{-- Кнопка --}}
                     <div class="small-12 cell tabs-button tabs-margin-top">
-                        {{ Form::submit('Создать артикул', ['class'=>'button', 'id' => 'add-article']) }}
+                        {{ Form::submit('Создать артикул', ['class'=>'button', 'id' => 'add-service']) }}
                     </div>
 
                 </div>{{-- Закрытие разделителя на блоки --}}
             </div>{{-- Закрытите таба --}}
 
 
-            
-
-
-            <!-- Состав -->
-            <div class="tabs-panel" id="compositions">
+            <!-- Ценообразование -->
+            <div class="tabs-panel" id="price-rules">
                 <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-9 cell">
-                        <table class="composition-table">
-                            <thead>
-                                <tr> 
-                                    @if ($article->template == 1)
-                                    <th>Категория:</th>
-                                    <th>Продукт:</th>
-                                    <th>Кол-во:</th>
-                                    <th>Использование:</th>
-                                    <th>Отход:</th>
-                                    <th>Остаток:</th>
-                                    <th>Операция над остатком:</th>
-                                    @else
-                                    <th>Продукт:</th>
-                                    <th>Кол-во:</th>
-                                    @endif
+                    <div class="small-12 medium-6 cell">
 
-                                    <!-- <th></th> -->
-                                </tr>
-                            </thead>
-                            <tbody id="composition-table">
-                                {{-- Таблица состава --}}
-                                @if (!empty($article->product->products_category->compositions))
-                                @if ($article->template == 1)
-                                @foreach ($article->product->products_category->compositions as $composition)
-                                @include('articles.compositions.composition', $composition)
-                                @endforeach
-                                @else
-                                @foreach ($article->compositions_values as $composition)
-                                @include('articles.compositions.composition-value', $composition)
-                                @endforeach
-                                @endif
-                                @endif
-                            </tbody>
-                        </table>
+                        <fieldset class="fieldset-access">
+                            <legend>Базовые настройки</legend>
+
+                            <div class="grid-x grid-margin-x">
+                                <div class="small-12 medium-6 cell">
+                                    <label>Себестоимость
+                                        {{ Form::number('cost', $service->cost) }}
+                                    </label>
+                                </div>
+                                <div class="small-12 medium-6 cell">
+                                    <label>Цена
+                                        {{ Form::number('price', $service->price) }}
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            {{ Form::close() }}
+
+            <!-- Фотографии -->
+            <div class="tabs-panel" id="photos">
+                <div class="grid-x grid-padding-x">
+
+                    <div class="small-12 medium-7 cell">
+                        {{ Form::open(['url' => '/service/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
+                        {{ Form::hidden('name', $service->name) }}
+                        {{ Form::hidden('id', $service->id) }}
+                        {{ Form::close() }}
+                        <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
+                            @if (isset($service->album_id))
+
+                            @include('services.photos', $service)
+
+                            @endif
+                        </ul>
                     </div>
 
-                    <div class="small-12 medium-3 cell">
+                    <div class="small-12 medium-5 cell">
 
-                        @if ($article->template == 1)
-                        <ul class="menu vertical">
+                        {{-- Форма редактированя фотки --}}
+                        {{ Form::open(['url' => '/service/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
 
-                            @foreach ($products_modes_list as $products_mode)
-                            <li>
-                              <a class="button" data-toggle="{{ $products_mode['alias'] }}-dropdown">{{ $products_mode['name'] }}</a>
-                              <div class="dropdown-pane" id="{{ $products_mode['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
 
-                                <ul class="checker" id="products-categories-list">
-                                    @foreach ($products_mode['products_categories'] as $products_cat)
-                                    @include('articles.compositions.products-category', $products_cat)
-                                    @endforeach
-                                </ul>
+                        {{ Form::hidden('name', $service->name) }}
+                        {{ Form::hidden('id', $service->id) }}
+                        {{ Form::close() }}
+                    </div>
 
-                            </div>
-                        </li>
-                        @endforeach
-                    </ul>
-                    @endif
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Ценообразование -->
-        <div class="tabs-panel" id="price-rules">
-            <div class="grid-x grid-padding-x">
-                <div class="small-12 medium-6 cell">
-
-                    <fieldset class="fieldset-access">
-                        <legend>Базовые настройки</legend>
-
-                        <div class="grid-x grid-margin-x">
-                            <div class="small-12 medium-6 cell">
-                                <label>Себестоимость
-                                    {{ Form::number('cost', $article->cost) }}
-                                </label>
-                            </div>
-                            <div class="small-12 medium-6 cell">
-                                <label>Цена
-                                    {{ Form::number('price', $article->price) }}
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
                 </div>
             </div>
+
+
+
         </div>
-        {{ Form::close() }}
-
-        <!-- Фотографии -->
-        <div class="tabs-panel" id="photos">
-            <div class="grid-x grid-padding-x">
-
-                <div class="small-12 medium-7 cell">
-                    {{ Form::open(['url' => '/article/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
-                    {{ Form::hidden('name', $article->name) }}
-                    {{ Form::hidden('id', $article->id) }}
-                    {{ Form::close() }}
-                    <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
-                        @if (isset($article->album_id))
-
-                        @include('articles.photos', $article)
-
-                        @endif
-                    </ul>
-                </div>
-
-                <div class="small-12 medium-5 cell">
-
-                    {{-- Форма редактированя фотки --}}
-                    {{ Form::open(['url' => '/article/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
-
-
-                    {{ Form::hidden('name', $article->name) }}
-                    {{ Form::hidden('id', $article->id) }}
-                    {{ Form::close() }}
-                </div>
-
-            </div>
-        </div>
-
-
-
     </div>
-</div>
 </div>
 
 
@@ -381,7 +277,7 @@
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
-@include('articles.scripts')
+@include('services.scripts')
 @php
 $settings = config()->get('settings');
 @endphp
@@ -389,7 +285,7 @@ $settings = config()->get('settings');
 <script>
 
         // Основные ностойки
-        var article_id = '{{ $article->id }}';
+        var service_id = '{{ $service->id }}';
 
         // При клике на удаление метрики со страницы
         $(document).on('click', '[data-open="delete-metric"]', function() {
@@ -406,7 +302,7 @@ $settings = config()->get('settings');
                 },
                 url: '/ajax_delete_relation_metric',
                 type: 'POST',
-                data: {id: id, entity: 'articles', entity_id: article_id},
+                data: {id: id, entity: 'services', entity_id: service_id},
                 success: function(date){
 
                     var result = $.parseJSON(date);
@@ -422,9 +318,9 @@ $settings = config()->get('settings');
         //   headers: {
         //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         //   },
-        //   url: '/articles/' + article_id + '/edit',
+        //   url: '/services/' + service_id + '/edit',
         //   type: 'GET',
-        //   data: $('#article-form').serialize(),
+        //   data: $('#service-form').serialize(),
         //   success: function(html){
         //     // alert(html);
         //     $('#properties-dropdown').html(html);
@@ -456,7 +352,7 @@ $settings = config()->get('settings');
                 },
                 url: '/ajax_delete_relation_composition',
                 type: 'POST',
-                data: {id: id, article_id: article_id},
+                data: {id: id, service_id: service_id},
                 success: function(date){
 
                     var result = $.parseJSON(date);
@@ -486,44 +382,44 @@ $settings = config()->get('settings');
 
         // Когда при клике по табам активная вкладка артикула
         $(document).on('change.zf.tabs', '.tabs-list', function() {
-            if ($('#articles:visible').length) {
+            if ($('#services:visible').length) {
 
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: '/ajax_get_article_inputs',
+                    url: '/ajax_get_service_inputs',
                     type: 'POST',
-                    data: {article_id: article_id},
+                    data: {service_id: service_id},
                     success: function(html){
                         // alert(html);
-                        $('#article-inputs').html(html);
-                        $('#article-inputs').foundation();
-                        // Foundation.reInit($('#article-inputs'));
+                        $('#service-inputs').html(html);
+                        $('#service-inputs').foundation();
+                        // Foundation.reInit($('#service-inputs'));
                     }
                 })
             }
         });
 
         // Проверяем наличие артикула в базе при клике на кнопку добавления артикула
-        // $(document).on('click', '#add-article', function(event) {
+        // $(document).on('click', '#add-service', function(event) {
         //     event.preventDefault();
-        //     // alert($('#article-form').serialize());
+        //     // alert($('#service-form').serialize());
 
         //     $.ajax({
         //         headers: {
         //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         //         },
-        //         url: '/articles/' + article_id,
+        //         url: '/services/' + service_id,
         //         type: 'PATCH',
-        //         data: $('#article-form').serialize(),
+        //         data: $('#service-form').serialize(),
         //         success: function(data) {
         //             var result = $.parseJSON(data);
         //             alert(result['error_status']);
         //             // alert(data['metric_values']);
         //             if (result['error_status'] == 1) {
-        //                 $('#add-article').prop('disabled', true);
-        //                 $('#article-error').css('display', 'block');
+        //                 $('#add-service').prop('disabled', true);
+        //                 $('#service-error').css('display', 'block');
         //             } else {
 
         //             }
@@ -531,9 +427,9 @@ $settings = config()->get('settings');
         //     })
         // });
 
-        $(document).on('change', '#article-form input', function() {
-            $('#add-article').prop('disabled', false);
-            $('#article-error').css('display', 'none');
+        $(document).on('change', '#service-form input', function() {
+            $('#add-service').prop('disabled', false);
+            $('#service-error').css('display', 'none');
         });
 
         // При смнене свойства в select
@@ -555,7 +451,7 @@ $settings = config()->get('settings');
             },
             url: '/ajax_add_property',
             type: 'POST',
-            data: {id: id, entity: 'articles'},
+            data: {id: id, entity: 'services'},
             success: function(html){
         // alert(html);
         $('#property-form').html(html);
@@ -589,9 +485,9 @@ $settings = config()->get('settings');
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: '/articles/' + article_id + '/edit',
+            url: '/services/' + service_id + '/edit',
             type: 'GET',
-            data: $('#article-form').serialize(),
+            data: $('#service-form').serialize(),
             success: function(html){
         // alert(html);
 
@@ -636,7 +532,7 @@ $settings = config()->get('settings');
                 },
                 url: '/ajax_add_relation_metric',
                 type: 'POST',
-                data: {id: $(this).val(), entity: 'articles', entity_id: article_id},
+                data: {id: $(this).val(), entity: 'services', entity_id: service_id},
                 success: function(html){
 
         // alert(html);
@@ -653,7 +549,7 @@ $settings = config()->get('settings');
             },
             url: '/ajax_delete_relation_metric',
             type: 'POST',
-            data: {id: $(this).val(), entity: 'articles', entity_id: article_id},
+            data: {id: $(this).val(), entity: 'services', entity_id: service_id},
             success: function(date){
 
                 var result = $.parseJSON(date);
@@ -694,7 +590,7 @@ $settings = config()->get('settings');
                 },
                 url: '/ajax_add_page_composition',
                 type: 'POST',
-                data: {id: $(this).val(), entity: 'articles', article_id: article_id},
+                data: {id: $(this).val(), entity: 'services', service_id: service_id},
                 success: function(html){
 
         // alert(html);
@@ -732,7 +628,7 @@ $settings = config()->get('settings');
             },
             url: '/ajax_get_photo',
             type: 'POST',
-            data: {id: id, entity: 'articles'},
+            data: {id: id, entity: 'services'},
             success: function(html){
 
         // alert(html);
@@ -791,9 +687,9 @@ $settings = config()->get('settings');
         var minImageHeight = 795;
         Dropzone.options.myDropzone = {
             paramName: 'photo',
-        maxFilesize: {{ $settings['img_max_size']->value }}, // MB
+        maxFilesize: {{ $settings['img_max_size'] }}, // MB
         maxFiles: 20,
-        acceptedFiles: '{{ $settings['img_formats']->value }}',
+        acceptedFiles: '{{ $settings['img_formats'] }}',
         addRemoveLinks: true,
         init: function() {
             this.on("success", function(file, responseText) {
@@ -803,9 +699,9 @@ $settings = config()->get('settings');
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: '/article/photos',
+                    url: '/service/photos',
                     type: 'post',
-                    data: {article_id: article_id},
+                    data: {service_id: service_id},
                     success: function(html){
         // alert(html);
         $('#photos-list').html(html);
@@ -816,7 +712,7 @@ $settings = config()->get('settings');
 })
             });
             this.on("thumbnail", function(file) {
-                if (file.width < {{ $settings['img_min_width']->value }} || file.height < minImageHeight) {
+                if (file.width < {{ $settings['img_min_width'] }} || file.height < minImageHeight) {
                     file.rejectDimensions();
                 } else {
                     file.acceptDimensions();
@@ -825,7 +721,7 @@ $settings = config()->get('settings');
         },
         accept: function(file, done) {
             file.acceptDimensions = done;
-            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width']->value }} px в ширину"); };
+            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину"); };
         }
     };
 

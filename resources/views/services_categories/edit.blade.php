@@ -6,14 +6,14 @@
 @include('includes.scripts.sortable-inhead')
 @endsection
 
-@section('title', 'Редактировать услугу')
+@section('title', 'Редактирование категории услуг')
 
 @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $services_category->name))
 
 @section('title-content')
 <div class="top-bar head-content">
   <div class="top-bar-left">
-    <h2 class="header-content">РЕДАКТИРОВАние категории услугу &laquo{{ $services_category->name }}&raquo</h2>
+    <h2 class="header-content">РЕДАКТИРОВАние категории услуг &laquo{{ $services_category->name }}&raquo</h2>
   </div>
   <div class="top-bar-right">
   </div>
@@ -619,9 +619,9 @@ $settings = config()->get('settings');
   var minImageHeight = 795;
   Dropzone.options.myDropzone = {
     paramName: 'photo',
-    maxFilesize: {{ $settings['img_max_size']->value }}, // MB
+    maxFilesize: {{ $settings['img_max_size'] }}, // MB
     maxFiles: 20,
-    acceptedFiles: '{{ $settings['img_formats']->value }}',
+    acceptedFiles: '{{ $settings['img_formats'] }}',
     addRemoveLinks: true,
     init: function() {
       this.on("success", function(file, responseText) {
@@ -644,7 +644,7 @@ $settings = config()->get('settings');
     })
       });
       this.on("thumbnail", function(file) {
-        if (file.width < {{ $settings['img_min_width']->value }} || file.height < minImageHeight) {
+        if (file.width < {{ $settings['img_min_width'] }} || file.height < minImageHeight) {
           file.rejectDimensions();
         } else {
           file.acceptDimensions();
@@ -653,7 +653,7 @@ $settings = config()->get('settings');
     },
     accept: function(file, done) {
       file.acceptDimensions = done;
-      file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width']->value }} px в ширину"); };
+      file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину"); };
     }
   };
 

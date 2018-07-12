@@ -8,7 +8,7 @@
 		<div class="small-8 cell">
 			<ul class="tabs-list" data-tabs id="tabs">
 				<li class="tabs-title is-active"><a href="#add-category" aria-selected="true">Подкатегория</a></li>
-				<li class="tabs-title"><a data-tabs-target="add-product" href="#add-product">Товар</a></li>
+				<li class="tabs-title"><a data-tabs-target="add-service" href="#add-service">Услуга</a></li>
 			</ul>
 		</div>
 	</div>
@@ -77,8 +77,8 @@
 				
 			</div>
 
-			<!-- Добавляем продукт -->
-			<div class="tabs-panel" id="add-product">
+			<!-- Добавляем услугу -->
+			<div class="tabs-panel" id="add-service">
 				{{ Form::open(['id'=>'form-product-add', 'data-abide', 'novalidate']) }}
 				<div class="grid-x grid-padding-x align-center modal-content inputs">
 					<div class="small-10 cell">

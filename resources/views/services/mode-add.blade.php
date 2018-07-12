@@ -1,4 +1,4 @@
-<label>Название товара
+<label>Название услуги
   @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
   <div class="item-error">Такой товар уже существует!</div>
 </label>

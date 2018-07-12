@@ -5,7 +5,7 @@ $drop = 1;
 
 <li class="medium-as-last item" id="products-{{ $product['id'] }}" data-name="{{ $product['name'] }}">
   <a class="medium-as-last-link">
-    <span>{{ $product['name'] }} (Товар)</span>
+    <span>{{ $product['name'] }} (Услуга)</span>
     @if ($product['moderation'] == 1)
     <span class="no-moderation">Не отмодерированная запись!</span>
     @endif
