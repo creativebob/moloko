@@ -36,15 +36,31 @@
 </div>
 @endif
 <div class="grid-x grid-padding-x inputs tabs-margin-top">
-  <div class="small-12 medium-5 cell">
-    <label>Заголовок фото
-      @include('includes.inputs.name', ['name'=>'title', 'value'=>$photo->title, 'required'=>'required'])
-    </label>
-    <label>Описание фото
-      @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$photo->description, 'required'=>''])
-    </label>
+  <div class="small-12 medium-6 cell">
+      <div class="grid-x grid-padding-x">
+        <div class="small-12 medium-12 cell">
+          <label>Заголовок фото
+            @include('includes.inputs.name', ['name'=>'title', 'value'=>$photo->title, 'required'=>'required'])
+          </label>
+          <label>Описание
+            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$photo->description, 'required'=>''])
+          </label>
+        </div>
+        <div class="small-12 medium-6 cell">
+          <label>Ссылка на внешний адрес (В случае необходимости)
+            @include('includes.inputs.link', ['name'=>'link', 'value'=>$photo->link, 'required'=>''])
+          </label>
+        </div>
+
+        <div class="small-12 medium-6 cell">
+          <label for="head">Цвет (В случае необходимости)
+              <input type="color" id="head" name="color" value="#e66465" />
+          </label>
+        </div>
+      </div>
   </div>
-  <div class="small-12 medium-7 cell text-center checkbox">
+
+  <div class="small-12 medium-6 cell text-center checkbox">
     <img id="photo" src="{{ isset($photo->name) ? '/storage/'.$photo->company->id.'/media/albums/'.$album->id.'/img/original/'.$photo->name : 'lol' }}">
     {{ Form::checkbox('avatar')}}
   </div>

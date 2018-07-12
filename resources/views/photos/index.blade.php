@@ -26,6 +26,7 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td">Фотография</th>
           <th class="td-name">Имя фото</th>
+          <th class="td-description">Комментарий</th>
           <th class="td-date">Сведения</th>
           <th class="td-author">Автор</th>
           @can ('publisher', App\Photo::class)
@@ -55,10 +56,14 @@
             <td class="td-name">
               <a href="/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit">{{ $photo->name }}</a>
             </td>
+            <td class="td-description">
+              {{ $photo->description }}
+            </td>
             <td class="td-extra-info">
               <ul>
                 <li>Дата добавления: {{ date('d.m.Y', strtotime($photo->created_at)) }}</li>
                 <li>Размер, Kb: {{ $photo->size }}</li>
+                <li>@if(!empty($photo->link))Внешняя ссылка: <a href="{{ $photo->link }}">{{ $photo->link }} </a> @endif</li>
               </ul>
             </td>
             <td class="td-author">@if(isset($photo->author->first_name)) {{ $photo->author->first_name . ' ' . $photo->author->second_name }} @endif

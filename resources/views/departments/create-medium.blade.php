@@ -5,7 +5,7 @@
     </div>
   </div>
   <div class="grid-x tabs-wrap align-center tabs-margin-top">
-    <div class="small-8 cell">
+    <div class="small-10 cell">
       <ul class="tabs-list" data-tabs id="tabs">
         <li class="tabs-title is-active"><a href="#add-department" aria-selected="true">Отдел</a></li>
         <li class="tabs-title"><a data-tabs-target="add-position" href="#add-position">Должность</a></li>
@@ -18,11 +18,11 @@
       {{ Form::open(['id' => 'form-medium-add']) }}
       <div class="tabs-panel is-active" id="add-department">
         <div class="grid-x grid-padding-x align-center modal-content inputs">
-          <div class="small-10 cell">
+          <div class="small-12 cell">
             <label>Добавляем отдел в:
               <select class="departments-list" name="parent_id">
                 @php
-                echo $departments_list;
+                  echo $departments_list;
                 @endphp
               </select>
             </label>
@@ -30,26 +30,32 @@
               @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
               <div class="item-error">Данный отдел уже существует в этом филиале!</div>
             </label>
-            <label class="input-icon">Введите город
+          </div>
+          <div class="small-4 cell">
+              <label class="input-icon">Введите город
+                @php
+                $city_name = null;
+                $city_id = null;
+                if(isset($department->location->city->name)) {
+                $city_name = $department->location->city->name;
+                $city_id = $department->location->city->id;
+              }
+              @endphp
+              @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
+            </label>
+          </div>
+          <div class="small-8 cell">
+            <label>Адрес отдела
               @php
-              $city_name = null;
-              $city_id = null;
-              if(isset($department->location->city->name)) {
-              $city_name = $department->location->city->name;
-              $city_id = $department->location->city->id;
-            }
-            @endphp
-            @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
-          </label>
-          <label>Адресс отдела
-            @php
-            $address = null;
-            if (isset($department->location->address)) {
-            $address = $department->location->address;
-          }
-          @endphp
-          @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
-        </label>
+                $address = null;
+                if (isset($department->location->address)) {
+                  $address = $department->location->address;
+                }
+              @endphp
+              @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+            </label>            
+          </div>
+        <div class="small-12 cell">
         <label>Телефон отдела
           @include('includes.inputs.phone', ['value'=>null, 'name'=>'phone', 'required'=>''])
         </label>
@@ -86,14 +92,15 @@
   {{ Form::open(['id' => 'form-position-add']) }}
   <div class="tabs-panel" id="add-position">
     <div class="grid-x grid-padding-x align-center modal-content inputs">
-      <div class="small-10 cell">
-        <label>Добавляем должность в:
+      <div class="small-12 cell">
+
+        {{-- <label>Добавляем должность в:
           <select class="departments-list" name="department_id">
             @php
-            echo $departments_list;
+                echo $departments_list;
             @endphp
           </select>
-        </label>
+        </label> --}}
         <label>Должность
           {{ Form::select('position_id', $positions_list, ['class'=>'positions-list']) }}
         </label>

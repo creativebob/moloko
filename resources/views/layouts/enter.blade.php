@@ -13,7 +13,7 @@
   <body class="enter-page">
     <div class="grid-x">
       <div class="small-10 cell enter">
-        <img class="logo" src="img/logo-mars.svg">
+        <img class="logo" src="img/logo-creativebob.svg">
         <form action="{{ route('login') }}" method="POST" data-abide novalidate>
           {{ csrf_field() }}
           <label class="input-icon">
@@ -32,7 +32,7 @@
             <label for="remember" class="remember"><span>Запомнить меня</span></label>
           </div>
         </form>
-        <a href="" class="forgot">Забыл пароль, хули делать?</a>
+        <a href="" class="forgot">Кажется пароль забыл...</a>
       </div>
     </div>
     <script src="js/vendor/what-input.js"></script>

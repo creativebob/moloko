@@ -55,7 +55,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
             {{-- <div class="title-bar-title"></div> --}}
           </div>
           {{-- Логотип --}}
-          <h1><span>Mars</span>Crm</h1>
+          <h1><span>CRM</span>System</h1>
         </div>
         <div class="small-5 right-head cell">
           <ul>

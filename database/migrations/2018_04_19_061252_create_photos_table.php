@@ -24,7 +24,7 @@ class CreatePhotosTable extends Migration
             $table->string('description')->nullable()->comment('Описание фото');
 
             $table->string('path')->nullable()->comment('Путь к фото');
-            $table->string('alias')->nullable()->comment('Алиас фото');
+            $table->string('link')->nullable()->comment('Ссылка на внешний адрес');
 
             $table->integer('width')->nullable()->comment('Ширина фото');
             $table->integer('height')->nullable()->comment('Высота фото');

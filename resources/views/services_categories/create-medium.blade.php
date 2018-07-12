@@ -90,7 +90,7 @@
 							</select>
 						</label>
 
-						<label>Общее название услуги
+						<label>Группа услуг
 							@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
 							<div class="item-error">Такой товар уже существует!</div>
 						</label>
@@ -129,7 +129,7 @@
 				</div>
 				<div class="grid-x align-center">
 					<div class="small-6 medium-4 cell">
-						{{ Form::submit('Добавить услугу', ['data-close', 'class'=>'button modal-button submit-services-product-add']) }}
+						{{ Form::submit('Добавить группу услуг', ['data-close', 'class'=>'button modal-button submit-services-product-add']) }}
 					</div>
 				</div>
 				{{ Form::close() }}

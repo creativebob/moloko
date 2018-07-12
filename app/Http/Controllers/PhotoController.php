@@ -336,6 +336,8 @@ class PhotoController extends Controller
     $photo->editor_id = $user_id;
     $photo->title = $request->title;
     $photo->description = $request->description;
+    $photo->link = $request->link;
+
     $photo->save();
 
 

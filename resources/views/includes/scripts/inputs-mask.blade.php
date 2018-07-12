@@ -22,6 +22,8 @@
     $('.string-field').mask('бб?ббббббббббббббббббббббббббббббббббббббббббббб');
     // Строка с пробелами и символами
     $('.text-ru-en-field').mask('tt?tttttttttttttttttttttttt');
+    // Ссылка
+    $('.link-field').mask('llllll?lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll');
 
     // -------------------------- Числа --------------------------------
     // Дробное число

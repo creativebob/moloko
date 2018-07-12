@@ -6,17 +6,29 @@
 	</div>
 	{{ Form::open(['url' => '/services','id'=>'form-service-add', 'data-abide', 'novalidate']) }}
 	<div class="grid-x grid-padding-x align-center modal-content inputs">
-		<div class="small-10 cell">
-			<label>Категория
-				<select name="services_category_id" id="services-categories-list" required>
-					<option value="0">Выберите категорию</option>
-					@php
-					echo $services_categories_list;
-					@endphp
-				</select>
-			</label>
+		<div class="small-12 cell">
 
-			<div id="mode"></div>
+			<div class="grid-x cell">
+				<div class="small-12 cell">
+
+					<label>Категория
+						<select name="services_category_id" id="services-categories-list" required>
+							<option value="0">Выберите категорию</option>
+							@php
+							echo $services_categories_list;
+							@endphp
+						</select>
+					</label>
+
+				</div>
+
+				<div id="mode" class="small-12 cell">
+					
+				</div>
+
+			</div>
+
+
 
 			{{-- Чекбокс отображения на сайте --}}
 			@can ('publisher', App\Service::class)

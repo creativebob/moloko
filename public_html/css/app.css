@@ -112,6 +112,20 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   src: url(/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot);
   src: url(/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot?#iefix) format('embedded-opentype'), url(/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff) format('woff'), url(/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf) format('truetype');
 }
+.relative {
+  position: relative;
+}
+
+.up-input-button {
+  font-size: 0.8rem;
+  display: block;
+  position: absolute;
+  right: 0px;
+  color: #999;
+  width: auto;
+  z-index: 9000;
+}
+
 fieldset {
   border: 1px solid #d6d6d6;
   padding: 1rem 2rem 2rem;

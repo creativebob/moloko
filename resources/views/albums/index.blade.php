@@ -56,7 +56,11 @@
               <img src="{{ isset($album->photo_id) ? '/storage/'.$album->company_id.'/media/albums/'.$album->id.'/img/small/'.$album->photo->name : '/img/plug/album_small_default_color.jpg' }}" alt="{{ isset($album->photo_id) ? $album->name : 'Нет фото' }}">
             </a>
           </td>
-          <td class="td-name"><a href="/albums/{{ $album->alias }}/edit">{{ $album->name }}</a></td>
+
+          <td class="td-name">
+            @can('update', $album)<a href="/albums/{{ $album->alias }}/edit">{{ $album->name }}</a>@endcan
+            @cannot('update', $album){{ $album->name }} @endcannot
+          </td>
           <td class="td-category">{{ $album->albums_category->name }}</td>
           <td class="td-description">{{ $album->description }}</td>
           <td class="td-extra-info">
@@ -65,6 +69,7 @@
               <li>Кол-во фотографий: {{ $album->photos_count }}</li>
               <li>Дата создания: {{ date('d.m.Y', strtotime($album->created_at)) }}</li>
               <li>Размер, Мб: {{ $album->photos->sum('size')/1024 }}</li>
+              <li>@if(!empty($album->delay))Задержка времени: {{ $album->delay }} сек. @endif</li>
             </ul>
           </td>
           <td class="td-company-id">@if(!empty($album->company->name)) {{ $album->company->name }} @else @if($album->system_item == null) Шаблон @else Системная @endif @endif</td>

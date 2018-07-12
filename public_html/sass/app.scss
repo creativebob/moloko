@@ -194,6 +194,20 @@ $footer-num-color: #ffffff;
 // Выпадающий список
 $dropdown-width: 14rem;
 
+.relative{
+  position: relative;
+}
+
+.up-input-button {
+  font-size: 0.8rem;
+  display: block;
+  position: absolute;
+  right: 0px;
+  color: #999;
+  width: auto;
+  z-index: 9000;
+}
+
 
 // Базовые корректировки
 fieldset {
