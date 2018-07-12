@@ -12,4 +12,23 @@ class ServicesProduct extends Model
         return $this->belongsTo('App\ServicesCategory');
     }
 
+     // Получаем категорию
+    public function services()
+    {
+        return $this->hasMany('App\Service');
+    }
+
+    public function photo()
+    {
+        return $this->belongsTo('App\Photo');
+    }
+
+    
+
+    // Альбом
+    public function album()
+    {
+        return $this->belongsTo('App\Album');
+    }
+
 }

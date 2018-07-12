@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 
 Route::get('/site', 'SiteController@api_index');
 
+// Марс
 Route::get('/{city}/vacancies', 'StafferController@api_index_vacancies');
 Route::get('/{city}/team', 'StafferController@api_index_team');
 

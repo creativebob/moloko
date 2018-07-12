@@ -147,9 +147,15 @@ class Company extends Model
     }
 
     // Получаем категории продукции
-    public function products_categories()
+    public function services_categories()
     {
-        return $this->hasMany('App\ProductsCategory');
+        return $this->hasMany('App\ServicesCategory');
+    }
+    
+    // Получаем категории продукции
+    public function services_products()
+    {
+        return $this->hasMany('App\ServicesProduct');
     }
 
     // Получаем клиентов
