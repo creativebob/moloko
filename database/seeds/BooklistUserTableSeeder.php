@@ -12,18 +12,7 @@ class BooklistUserTableSeeder extends Seeder
     public function run()
     {
 		DB::table('booklist_user')->insert([
-            [
-                'booklist_id' => 1,
-                'user_id' => 4,
-            ],
-            [
-                'booklist_id' => 2,
-                'user_id' => 4,
-            ],
-            [
-                'booklist_id' => 3,
-                'user_id' => 4,
-            ],
+
         ]);
     }
 }

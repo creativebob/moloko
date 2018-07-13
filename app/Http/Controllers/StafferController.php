@@ -105,6 +105,7 @@ class StafferController extends Controller
 
   public function store(StafferRequest $request)
   {
+
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Staffer::class);
 

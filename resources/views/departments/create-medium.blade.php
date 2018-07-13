@@ -89,18 +89,18 @@
   </div>
   {{ Form::close() }}
   <!-- Добавляем должность -->
-  {{ Form::open(['id' => 'form-position-add']) }}
+  {{ Form::open(['url' => '/staff','id' => 'form-position-add']) }}
   <div class="tabs-panel" id="add-position">
     <div class="grid-x grid-padding-x align-center modal-content inputs">
       <div class="small-12 cell">
 
-        {{-- <label>Добавляем должность в:
+        <label>Добавляем должность в:
           <select class="departments-list" name="department_id">
             @php
                 echo $departments_list;
             @endphp
           </select>
-        </label> --}}
+        </label>
         <label>Должность
           {{ Form::select('position_id', $positions_list, ['class'=>'positions-list']) }}
         </label>

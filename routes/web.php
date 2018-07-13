@@ -211,6 +211,9 @@ Route::resource('/services', 'ServiceController')->middleware('auth');
 Route::any('/service/add_photo', 'ServiceController@add_photo')->middleware('auth');
 Route::post('/service/photos', 'ServiceController@photos')->middleware('auth');
 
+// Отображение страниц на сайте
+Route::post('/services_display', 'ServiceController@ajax_display')->middleware('auth');
+
 
 // Проверка на существование товара
 Route::post('/sector_check', 'SectorController@sector_check')->middleware('auth');

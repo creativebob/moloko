@@ -8,13 +8,7 @@ class EntitiesTableSeeder extends Seeder
   public function run()
   {
     DB::table('entities')->insert([
-     [
-      'name' => 'Пользователи',
-      'alias' => 'users',
-      'model' => 'User',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
+      // 1 ЦУП
     [
       'name' => 'Компании',
       'alias' => 'companies',
@@ -22,10 +16,10 @@ class EntitiesTableSeeder extends Seeder
       'system_item' => 1,
       'author_id' => 1,
     ],
-    [
-      'name' => 'Штат',
-      'alias' => 'staff',
-      'model' => 'Staffer',
+     [
+      'name' => 'Пользователи',
+      'alias' => 'users',
+      'model' => 'User',
       'system_item' => 1,
       'author_id' => 1,
     ],
@@ -37,9 +31,9 @@ class EntitiesTableSeeder extends Seeder
       'author_id' => 1,
     ],
     [
-      'name' => 'Должности',
-      'alias' => 'positions',
-      'model' => 'Position',
+      'name' => 'Штат',
+      'alias' => 'staff',
+      'model' => 'Staffer',
       'system_item' => 1,
       'author_id' => 1,
     ],
@@ -50,6 +44,173 @@ class EntitiesTableSeeder extends Seeder
       'system_item' => 1,
       'author_id' => 1,
     ],
+
+    // 6 Настройка
+    [
+      'name' => 'Сущности',
+      'alias' => 'entities',
+      'model' => 'Entity',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Роли',
+      'alias' => 'roles',
+      'model' => 'Role',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Правила',
+      'alias' => 'rights',
+      'model' => 'Right',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    
+    // 9 Маркетинг
+    [
+      'name' => 'Сайты',
+      'alias' => 'sites',
+      'model' => 'Site',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Страницы',
+      'alias' => 'pages',
+      'model' => 'Page',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Новости',
+      'alias' => 'news',
+      'model' => 'News',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Альбомы',
+      'alias' => 'albums',
+      'model' => 'Album',
+      'system_item' => 1,
+      'author_id' => 1,
+    ], 
+    
+    // 13 Списки
+    [
+      'name' => 'Должности',
+      'alias' => 'positions',
+      'model' => 'Position',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+     [
+      'name' => 'Списки',
+      'alias' => 'booklists',
+      'model' => 'Booklist',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Секторы',
+      'alias' => 'sectors',
+      'model' => 'Sector',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Папки',
+      'alias' => 'folders',
+      'model' => 'Folder',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],  
+    
+    [
+      'name' => 'Категории альбомов',
+      'alias' => 'albums_categories',
+      'model' => 'AlbumsCategory',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Фотографии',
+      'alias' => 'photos',
+      'model' => 'Photo',
+      'system_item' => 1,
+      'author_id' => 1,
+    ], 
+
+    // 19 Продукция
+    [
+      'name' => 'Категории товаров',
+      'alias' => 'goods_categories',
+      'model' => 'GoodsCategory',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Категории услуг',
+      'alias' => 'services_categories',
+      'model' => 'ServicesCategory',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Категории сырья',
+      'alias' => 'raws_categories',
+      'model' => 'RawsCategory',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Товары',
+      'alias' => 'goods',
+      'model' => 'Goods',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Услуги',
+      'alias' => 'services',
+      'model' => 'Service',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Сырьё',
+      'alias' => 'raws',
+      'model' => 'Raw',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Помещения',
+      'alias' => 'places',
+      'model' => 'Place',
+      'system_item' => 1,
+      'author_id' => 1,
+    ], 
+
+    // 27 Сущности, связаныне с одной страницей
+    [
+      'name' => 'Навигации',
+      'alias' => 'navigations',
+      'model' => 'Navigation',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    
+    [
+      'name' => 'Меню',
+      'alias' => 'menus',
+      'model' => 'Menu',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
     [
       'name' => 'Области',
       'alias' => 'regions',
@@ -71,38 +232,14 @@ class EntitiesTableSeeder extends Seeder
       'system_item' => 1,
       'author_id' => 1,
     ],
+
+    // Сущности без страниц отобраджения
+
+    // Настройка
     [
       'name' => 'Категории правил',
       'alias' => 'category_right',
       'model' => 'Category_right',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Сущности',
-      'alias' => 'entities',
-      'model' => 'Entity',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Сайты',
-      'alias' => 'sites',
-      'model' => 'Site',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Страницы',
-      'alias' => 'pages',
-      'model' => 'Page',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Навигации',
-      'alias' => 'navigations',
-      'model' => 'Navigation',
       'system_item' => 1,
       'author_id' => 1,
     ],
@@ -113,69 +250,7 @@ class EntitiesTableSeeder extends Seeder
       'system_item' => 1,
       'author_id' => 1,
     ],
-    [
-      'name' => 'Меню',
-      'alias' => 'menus',
-      'model' => 'Menu',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Правила',
-      'alias' => 'rights',
-      'model' => 'Right',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Роли',
-      'alias' => 'roles',
-      'model' => 'Role',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Списки',
-      'alias' => 'booklists',
-      'model' => 'Booklist',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Секторы',
-      'alias' => 'sectors',
-      'model' => 'Sector',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Папки',
-      'alias' => 'folders',
-      'model' => 'Folder',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],  
-    [
-      'name' => 'Альбомы',
-      'alias' => 'albums',
-      'model' => 'Album',
-      'system_item' => 1,
-      'author_id' => 1,
-    ], 
-    [
-      'name' => 'Категории альбомов',
-      'alias' => 'albums_categories',
-      'model' => 'AlbumsCategory',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Фотографии',
-      'alias' => 'photos',
-      'model' => 'Photo',
-      'system_item' => 1,
-      'author_id' => 1,
-    ], 
+
     [
       'name' => 'Сущности с прикрепленными альбомами',
       'alias' => 'album_entity',
@@ -183,34 +258,6 @@ class EntitiesTableSeeder extends Seeder
       'system_item' => 1,
       'author_id' => 1,
     ],
-    [
-      'name' => 'Новости',
-      'alias' => 'news',
-      'model' => 'News',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Типы продукции',
-      'alias' => 'products_types',
-      'model' => 'ProductsType',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Категории продукции',
-      'alias' => 'products_categories',
-      'model' => 'ProductsCategory',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Продукция',
-      'alias' => 'products',
-      'model' => 'Product',
-      'system_item' => 1,
-      'author_id' => 1,
-    ], 
     [
       'name' => 'Единицы измерения',
       'alias' => 'units',
@@ -281,27 +328,8 @@ class EntitiesTableSeeder extends Seeder
       'system_item' => 1,
       'author_id' => 1,
     ], 
-    [
-      'name' => 'Категории услуг',
-      'alias' => 'services_categories',
-      'model' => 'ServicesCategory',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Продукты услуг',
-      'alias' => 'services_products',
-      'model' => 'ServicesProduct',
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-    [
-      'name' => 'Помещения',
-      'alias' => 'places',
-      'model' => 'Place',
-      'system_item' => 1,
-      'author_id' => 1,
-    ], 
+   
+    
     [
       'name' => 'Типы помещений',
       'alias' => 'places_types',
@@ -309,14 +337,7 @@ class EntitiesTableSeeder extends Seeder
       'system_item' => 1,
       'author_id' => 1,
     ], 
-    [
-
-      'name' => 'Услуги',
-      'alias' => 'services',
-      'model' => 'Service',
-      'system_item' => 1,
-      'author_id' => 1,
-    ], 
+     
     [
       'name' => 'Настройка альбомов',
       'alias' => 'albums_settings',
@@ -324,6 +345,71 @@ class EntitiesTableSeeder extends Seeder
       'system_item' => 1,
       'author_id' => 1,
     ], 
+
+    [
+      'name' => 'Режимы товаров',
+      'alias' => 'goods_modes',
+      'model' => 'GoodsMode',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Режимы услуг',
+      'alias' => 'services_modes',
+      'model' => 'ServicesMode',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Режимы сырья',
+      'alias' => 'raws_modes',
+      'model' => 'RawsMode',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
+    [
+      'name' => 'Группы товаров',
+      'alias' => 'goods_products',
+      'model' => 'GoodsProduct',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Группы услуг',
+      'alias' => 'services_products',
+      'model' => 'ServicesProduct',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    [
+      'name' => 'Группы сырья',
+      'alias' => 'raws_products',
+      'model' => 'RawsProduct',
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+    // [
+    //   'name' => 'Типы продукции',
+    //   'alias' => 'products_types',
+    //   'model' => 'ProductsType',
+    //   'system_item' => 1,
+    //   'author_id' => 1,
+    // ],
+    // [
+    //   'name' => 'Категории продукции',
+    //   'alias' => 'products_categories',
+    //   'model' => 'ProductsCategory',
+    //   'system_item' => 1,
+    //   'author_id' => 1,
+    // ],
+    // [
+    //   'name' => 'Продукция',
+    //   'alias' => 'products',
+    //   'model' => 'Product',
+    //   'system_item' => 1,
+    //   'author_id' => 1,
+    // ], 
 
             // [
             //     'name' => 'Рабочее время дня',

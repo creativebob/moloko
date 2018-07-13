@@ -3,7 +3,7 @@
 	  @if (isset($sidebar['children']))
 	    <ul class="menu vertical nested">
 	      @foreach($sidebar['children'] as $sidebar)
-	        @include('includes.sidebar-list', $sidebar)
+	        @include('layouts.sidebar-list', $sidebar)
 	      @endforeach
 	       </ul>
 	    @endif

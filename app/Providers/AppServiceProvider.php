@@ -33,7 +33,10 @@ class AppServiceProvider extends ServiceProvider
           // Получаем список сущностей из сессии
           $session = app('session')->get('access');
           $entities_list = $session['settings']['entities_list'];
-          if (!isset($entities_list)) {
+
+          // dd($entities_list);
+
+          if (empty($entities_list)) {
             $entities_list = [];
           };
           // dd($entities_list);

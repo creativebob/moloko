@@ -13,7 +13,7 @@ class AlbumsSettingsTableSeeder extends Seeder
     {
         DB::table('albums_settings')->insert([
         	[
-                'company_id' => Null,
+                'company_id' => null,
 		        'name' => 'img_small_width',
 		        'description' => 'Комментарий к настройке',
 
