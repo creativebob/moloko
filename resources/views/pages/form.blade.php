@@ -33,7 +33,7 @@
   </div>
   <div class="small-12 medium-5 large-7 cell">
     <label>Контент:
-      {{ Form::textarea('page_content', $page->content, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+      {{ Form::textarea('content', $page->content, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
     </label>
   </div>
 

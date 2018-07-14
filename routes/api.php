@@ -15,15 +15,10 @@ use Illuminate\Http\Request;
 
 Route::get('/site', 'SiteController@api_index');
 
-// Марс
-Route::get('/{city}/vacancies', 'StafferController@api_index_vacancies');
-Route::get('/{city}/team', 'StafferController@api_index_team');
 
-Route::get('/{city}/news', 'NewsController@api_index');
-Route::get('/{city}/news/{link}', 'NewsController@api_show');
+// Route::get('/site/boot', 'SiteController@boot');
+// Route::get('/site/content', 'SiteController@content');
 
-Route::get('/{city}/{alias}', 'PageController@api');
- 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

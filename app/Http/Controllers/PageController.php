@@ -322,16 +322,14 @@ class PageController extends Controller
 
     // -------------------------------------------- API -----------------------------------------------
     // Получаем сайт по api
-    public function api(Request $request, $city, $alias)
+    public function api(Request $request, $alias)
     {
 
-        $site = Site::with(['pages' => function ($query) use ($alias) {
-            $query->where(['alias' => $alias, 'display' => 1]);
-        }])->where('api_token', $request->token)->first();
+        $site = Site::where('api_token', $request->token)->first();
 
         if ($site) {
             // return Cache::forever($domen.'-news', $site, function() use ($city, $token) {
-            $page = $site->pages->first();
+            $page = null;
 
             return $page;
             // });
