@@ -23,9 +23,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
-// Специфические классы 
-
-
 // На удаление
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -382,25 +379,10 @@ class SiteController extends Controller
         $site = Site::where('api_token', $request->token)->first();
 
         if ($site) {
+        	
+        	// dd($request->action);
             // return Cache::remember('site', 1, function() use ($domain) {
-            return Site::with(['departments.location.city',
-                'company.location.city',
-                'company.schedules.worktimes',
-                'company.products_categories' => function ($query) {
-                    $query->with(['products' => function ($query) {
-                        $query->with('manufacturer.location.country', 'unit', 'articles', 'photo', 'album.photos')->whereDisplay(1);
-                    }])->whereDisplay(1);
-                }, 'pages' => function ($query) {
-                    $query->whereDisplay(1);
-                }, 'navigations.menus.page',
-                'navigations.navigations_category',
-                'navigations' => function ($query) {
-                    $query->whereDisplay(1);
-                }, 'navigations.menus' => function ($query) {
-                    $query->whereDisplay(1)->orderBy('sort', 'asc');
-                }])->whereDomain($request->domain)
-            ->orderBy('sort', 'asc')
-            ->first();
+            return redirect()->action('ApiController@index', ['alias' => $site->alias, 'action' => $request->action, 'domain' => $site->domain]);
             // });
         } else {
             return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);

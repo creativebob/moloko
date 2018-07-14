@@ -10,6 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::resource('/site_api', 'ApiController');
+Route::get('/medcosm', 'ApiController@medcosm');
 
 Route::get('/', function () {
   return view('layouts.enter');
