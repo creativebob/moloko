@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 use App\Menu;
+use App\Site;
 use App\AlbumsSetting;
 
 
@@ -22,14 +23,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
       // Если существует таблица с меню
       if (Schema::hasTable('menus')) {
+
         // Получаем все пункты меню
         // Знаем что статика, поэтому указываем в таблице навигации id, получаем массив
         $sidebar = Menu::with('page', 'page.entities')->where(['navigation_id' => 2, 'display' => 1])->orderBy('sort', 'asc')->get()->toArray();
         // dd($sidebar);
         
         view()->composer('*', function($view) use ($sidebar) {
+
           // Получаем список сущностей из сессии
           $session = app('session')->get('access');
           $entities_list = $session['settings']['entities_list'];
@@ -66,14 +70,14 @@ class AppServiceProvider extends ServiceProvider
             // Если есть потомки то перебераем массив
               $sidebar_id[$node['parent_id']]['children'][$id] = &$node;
             }
-          };
+          }
 
           $sidebar_final = [];
           foreach ($sidebar_tree as $id => &$node) {
             if (isset($node['children'])) {
               $sidebar_final[$id] = &$node;
             }
-          };
+          }
           // dd($sidebar_final);
 
           // Отдаем меню на шаблон
@@ -81,6 +85,27 @@ class AppServiceProvider extends ServiceProvider
           // View::share('sidebar_tree', $sidebar_tree);
           // Конец меню для левого сайдбара
         });
+      }
+
+        // dd(env('SITE_API_TOKEN'));
+
+      if (Schema::hasTable('sites')) {
+
+          // Получаем общую инфу сайта
+        $site = Site::with(['company.location.city',
+            'pages' => function ($query) {
+              $query->whereDisplay(1);
+            }, 'navigations' => function ($query) {
+              $query->with(['navigations_category', 'menus' => function ($query) {
+                $query->whereDisplay(1)->orderBy('sort', 'asc');
+              }])->whereDisplay(1);
+            }])->findOrFail(2);
+
+          // dd($site);
+
+        if ($site) {
+          $view->with('site', $site);   
+        }
       }
 
 
@@ -119,4 +144,4 @@ class AppServiceProvider extends ServiceProvider
     {
       //
     }
-}
+  }

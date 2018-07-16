@@ -13,6 +13,8 @@
 Route::resource('/site_api', 'ApiController');
 Route::get('/medcosm', 'ApiController@medcosm');
 
+
+
 Route::get('/', function () {
   return view('layouts.enter');
 });
@@ -22,6 +24,8 @@ Route::get('/img/{path}', 'ImageController@show')->where('path', '.*');
 Route::get('/lol', function () {
   return view('demo');
 });
+
+Route::any('/lolkek', ['uses' => 'Project/ServicesProjectController@index'])->middleware('auth');
 
 Auth::routes();
 
