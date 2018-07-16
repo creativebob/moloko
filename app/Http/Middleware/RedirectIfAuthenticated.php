@@ -19,7 +19,7 @@ class RedirectIfAuthenticated
     {
         if (Auth::guard($guard)->check()) {
 
-            return redirect('users');
+            return redirect('admin/users');
         }
 
         return $next($request);

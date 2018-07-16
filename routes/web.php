@@ -25,7 +25,7 @@ Route::get('/lol', function () {
 
 Auth::routes();
 
-Route::any('/getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
+Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
 
 // Директории
 Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');
@@ -282,11 +282,11 @@ Route::resource('/metrics', 'MetricController')->middleware('auth');
 
 
 // --------------------------------------- Компании -----------------------------------------------
-Route::resource('/companies', 'CompanyController')->middleware('auth');
+Route::resource('companies', 'CompanyController')->middleware('auth');
 // Проверка существования компании в базе по ИНН
-Route::post('/companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');
+Route::post('companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');
 // Сортировка компаний
-Route::post('/companies_sort', 'CompanyController@companies_sort')->middleware('auth');
+Route::post('companies_sort', 'CompanyController@companies_sort')->middleware('auth');
 
 // Маршруты для правил доступа
 Route::resource('/rights', 'RightController')->middleware('auth');

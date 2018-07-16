@@ -598,8 +598,8 @@ class UserController extends Controller
         $auth_user = User::findOrFail(Auth::user()->id);
         $auth_user->company_id = $company_id;
         $auth_user->save();
-
-        return redirect('/getaccess');
+        return redirect()->route('getaccess.set');
+        // return redirect('/getaccess');
     }
 
     public function getauthuser($user_id)
@@ -609,7 +609,9 @@ class UserController extends Controller
         $this->authorize('god', User::class);
         session(['god' => Auth::user()->id]);
         Auth::loginUsingId($user_id);
-        return redirect('/getaccess');
+        
+        // return redirect('/getaccess');
+        return redirect()->route('getaccess.set');
     }
 
     public function getgod()
@@ -621,7 +623,8 @@ class UserController extends Controller
         $user->company_id = null;
         $user->save();
 
-        return redirect('/getaccess');
+        // return redirect('/getaccess');
+        return redirect()->route('getaccess.set');
     }
 
     public function returngod(Request $request)
@@ -634,7 +637,8 @@ class UserController extends Controller
         Auth::loginUsingId($god_id);
         }
 
-        return redirect('/getaccess');
+        return redirect()->route('getaccess.set');
+        // return redirect('/getaccess');
     }
 
 
