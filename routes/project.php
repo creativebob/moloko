@@ -11,4 +11,7 @@
 |
 */
 
-Route::resource('news', 'Project\NewsProjectController')->middleware('auth')->name('newsp.index', 'newsp.store', 'newsp.create', 'newsp.show', 'newsp.update', 'newsp.destroy', 'newsp.edit');
+Route::resource('/news', 'Project\NewsProjectController')->middleware('auth');
+
+Route::resource('/lolkek', 'Project\ServicesProjectController')->middleware('auth');
+

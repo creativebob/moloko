@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 use App\Menu;
+use App\Site;
 use App\AlbumsSetting;
 
 
@@ -22,14 +23,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
       // Если существует таблица с меню
       if (Schema::hasTable('menus')) {
+
         // Получаем все пункты меню
         // Знаем что статика, поэтому указываем в таблице навигации id, получаем массив
         $sidebar = Menu::with('page', 'page.entities')->where(['navigation_id' => 2, 'display' => 1])->orderBy('sort', 'asc')->get()->toArray();
         // dd($sidebar);
         
         view()->composer('*', function($view) use ($sidebar) {
+
           // Получаем список сущностей из сессии
           $session = app('session')->get('access');
           $entities_list = $session['settings']['entities_list'];
@@ -66,14 +70,14 @@ class AppServiceProvider extends ServiceProvider
             // Если есть потомки то перебераем массив
               $sidebar_id[$node['parent_id']]['children'][$id] = &$node;
             }
-          };
+          }
 
           $sidebar_final = [];
           foreach ($sidebar_tree as $id => &$node) {
             if (isset($node['children'])) {
               $sidebar_final[$id] = &$node;
             }
-          };
+          }
           // dd($sidebar_final);
 
           // Отдаем меню на шаблон
@@ -83,33 +87,57 @@ class AppServiceProvider extends ServiceProvider
         });
       }
 
+        // dd(env('SITE_API_TOKEN'));
+
+      if (Schema::hasTable('sites')) {
+
+          // Получаем общую инфу сайта
+        $site = Site::with(['company.location.city',
+          'pages' => function ($query) {
+            $query->whereDisplay(1);
+          }, 'navigations' => function ($query) {
+            $query->with(['navigations_category', 'menus' => function ($query) {
+              $query->whereDisplay(1)->orderBy('sort', 'asc');
+            }])->whereDisplay(1);
+          }])->find(2);
+
+          // dd($site);
+
+        if ($site) {
+         view()->composer('*', function($view) use ($site) {
+          $view->with('site', $site);  
+      });
+    }
+  }
+  
+
 
        // Если существует таблица с меню
-      if (Schema::hasTable('albums_settings')) {
-        $get_settings = AlbumsSetting::whereNull('company_id')->first();
+    if (Schema::hasTable('albums_settings')) {
+      $get_settings = AlbumsSetting::whereNull('company_id')->first();
 
         // dd($get_settings);
 
-        $settings['img_small_width'] = $get_settings->img_small_width;
-        $settings['img_small_height'] = $get_settings->img_small_height;
-        $settings['img_medium_width'] = $get_settings->img_medium_width;
-        $settings['img_medium_height'] = $get_settings->img_medium_height;
-        $settings['img_large_width'] = $get_settings->img_large_width;
-        $settings['img_large_height'] = $get_settings->img_large_height;   
+      $settings['img_small_width'] = $get_settings->img_small_width;
+      $settings['img_small_height'] = $get_settings->img_small_height;
+      $settings['img_medium_width'] = $get_settings->img_medium_width;
+      $settings['img_medium_height'] = $get_settings->img_medium_height;
+      $settings['img_large_width'] = $get_settings->img_large_width;
+      $settings['img_large_height'] = $get_settings->img_large_height;   
 
-        $settings['img_formats'] = $get_settings->img_formats;
+      $settings['img_formats'] = $get_settings->img_formats;
 
-        $settings['img_min_width'] = $get_settings->img_min_width;
-        $settings['img_min_height'] = $get_settings->img_min_height;   
-        $settings['img_max_size'] = $get_settings->img_max_size;
+      $settings['img_min_width'] = $get_settings->img_min_width;
+      $settings['img_min_height'] = $get_settings->img_min_height;   
+      $settings['img_max_size'] = $get_settings->img_max_size;
 
-        config()->set('settings', $settings);
+      config()->set('settings', $settings);
 
         // View::share(compact('settings'));
 
           // dd(config()->get('settings'));
-      }
     }
+  }
     /**
      * Register any application services.
      *
@@ -119,4 +147,4 @@ class AppServiceProvider extends ServiceProvider
     {
       //
     }
-}
+  }

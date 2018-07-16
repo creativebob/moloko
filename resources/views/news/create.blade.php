@@ -19,7 +19,7 @@
 @endsection
 
 @section('content')
-{{ Form::open(['url' => '/sites/'.$site->alias.'/news', 'data-abide', 'novalidate', 'files'=>'true']) }}
+{{ Form::open(['url' => '/admin/sites/'.$site->alias.'/news', 'data-abide', 'novalidate', 'files'=>'true']) }}
 @include('news.form', ['submitButtonText' => 'Добавить новость', 'param' => ''])
 {{ Form::close() }}
 @endsection

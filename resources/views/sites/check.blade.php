@@ -15,7 +15,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/site_check',
+        url: '/admin/site_check',
         type: "POST",
         data: {domen: domen},
         beforeSend: function () {

@@ -2,7 +2,7 @@
 
 // Все index'ы
 Breadcrumbs::register('index', function ($breadcrumbs, $page_info) {
-  $breadcrumbs->push($page_info->name, url('/'.$page_info->alias));
+  $breadcrumbs->push($page_info->name, url('/admin/'.$page_info->alias));
 });
 
 // index > Создать

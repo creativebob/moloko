@@ -60,7 +60,7 @@
             <label class="label-check" for="check-{{ $site->id }}"></label></td>
           <td class="td-name">
             @if($edit == 1)
-              <a href="/sites/{{ $site->alias }}">
+              <a href="/admin/sites/{{ $site->alias }}">
             @endif
             {{ $site->name }}
             @if($edit == 1)

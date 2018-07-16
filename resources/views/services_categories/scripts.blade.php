@@ -9,7 +9,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/get_units_list',
+      url: '/admin/get_units_list',
       type: "POST",
       data: {id: id, entity: 'services_categories'},
       success: function(html){
@@ -35,7 +35,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/ajax_services_count',
+        url: '/admin/ajax_services_count',
         type: "POST",
         data: {id: id, entity: 'services_categories'},
         success: function(html){
@@ -58,7 +58,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/ajax_services_modes',
+        url: '/admin/ajax_services_modes',
         type: "POST",
         data: {mode: id, entity: 'services_categories'},
         success: function(html){

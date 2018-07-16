@@ -50,7 +50,7 @@
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $role->id }}"><label class="label-check" for="check-{{ $role->id }}"></label></td>
           <td class="td-name">
             @if($edit == 1)
-              <a href="/roles/{{ $role->id }}/edit">
+              <a href="/admin/roles/{{ $role->id }}/edit">
             @endif
             {{ $role->name }}
             @if($edit == 1)
