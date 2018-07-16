@@ -36,7 +36,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/companies/check_company",
+        url: "/admin/companies/check_company",
         type: "POST",
         data: {company_inn: company_inn},
         success: function (data) {

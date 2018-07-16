@@ -89,7 +89,7 @@
   </div>
   {{ Form::close() }}
   <!-- Добавляем должность -->
-  {{ Form::open(['url' => '/staff','id' => 'form-position-add']) }}
+  {{ Form::open(['url' => 'admin/staff','id' => 'form-position-add']) }}
   <div class="tabs-panel" id="add-position">
     <div class="grid-x grid-padding-x align-center modal-content inputs">
       <div class="small-12 cell">

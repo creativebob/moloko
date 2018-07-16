@@ -10,4 +10,5 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::resource('news', 'Project\NewsProjectController')->middleware('auth');
+
+Route::resource('news', 'Project\NewsProjectController')->middleware('auth')->name('newsp.index', 'newsp.store', 'newsp.create', 'newsp.show', 'newsp.update', 'newsp.destroy', 'newsp.edit');
