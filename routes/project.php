@@ -11,3 +11,5 @@
 |
 */
 Route::resource('news', 'Project\NewsProjectController')->middleware('auth');
+
+Route::resource('/lolkek', 'Project\ServicesProjectController')->middleware('auth');

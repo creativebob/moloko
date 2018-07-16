@@ -80,7 +80,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/albums_category_check",
+        url: "/admin/albums_category_check",
         type: "POST",
         data: {name: name},
         beforeSend: function () {
@@ -120,7 +120,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/albums_categories/create',
+      url: '/admin/albums_categories/create',
       type: "GET",
       success: function(html){
         $('#modal').html(html);
@@ -158,7 +158,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/albums_categories/" + id + "/edit",
+      url: "/admin/albums_categories/" + id + "/edit",
       type: "GET",
       success: function(html) {
         $('#modal').html(html);
@@ -200,7 +200,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/albums_categories/create',
+      url: '/admin/albums_categories/create',
       type: "GET",
       data: {parent_id: parent},
       success: function(html){
@@ -237,7 +237,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/albums_categories/" + id + "/edit",
+      url: "/admin/albums_categories/" + id + "/edit",
       type: "GET",
       success: function(html) {
         $('#modal').html(html);
@@ -272,7 +272,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/albums_categories',
+      url: '/admin/albums_categories',
       type: "POST",
       data: $(this).closest('form').serialize(),
       success:function(html) {
@@ -293,7 +293,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/albums_categories/' + id,
+      url: '/admin/albums_categories/' + id,
       type: "PATCH",
       data: $(this).closest('form').serialize(),
       success:function(html) {

@@ -121,11 +121,11 @@
             >
             <label class="label-check" for="check-{{ $service->id }}"></label></td>
             <td>
-              <a href="/services/{{ $service->id }}/edit">
+              <a href="/admin/services/{{ $service->id }}/edit">
                 <img src="{{ isset($service->photo_id) ? '/storage/'.$service->company_id.'/media/services/'.$service->id.'/img/small/'.$service->photo->name : '/img/plug/product_small_default_color.jpg' }}" alt="{{ isset($service->photo_id) ? $service->name : 'Нет фото' }}">
               </a>
             </td>
-            <td class="td-name"><a href="/services/{{ $service->id }}/edit">{{ $service->name }}</a></td>
+            <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->name }}</a></td>
             <td class="td-service">{{ $service->services_product->name }}</td>
             <td class="td-company-id">@if(!empty($service->company->name)) {{ $service->company->name }} @else @if($service->system_item == null) Шаблон @else Системная @endif @endif</td>
             <td class="td-author">@if(isset($service->author->first_name)) {{ $service->author->first_name . ' ' . $service->author->second_name }} @endif</td>

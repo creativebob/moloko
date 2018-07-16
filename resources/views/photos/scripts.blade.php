@@ -6,7 +6,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/roleuser",
+      url: "/admin/roleuser",
       type: "POST",
       data: {role_id: $('#select-roles').val(), department_id: $('#select-departments').val(), user_id: $('#user-id').val()},
       success: function (data) {

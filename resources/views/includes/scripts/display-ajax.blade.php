@@ -20,7 +20,7 @@ $(document).on('click', '[data-open="item-display"]', function(event) {
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    url: '/' + entity_alias + '_display',
+    url: '/admin/' + entity_alias + '_display',
     type: "POST",
     data: {id: id, action: action},
     success: function (date) {

@@ -44,7 +44,7 @@
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $page->id }}"><label class="label-check" for="check-{{ $page->id }}"></label></td>
           <td class="td-name">
             @can('update', $page)
-            <a href="/sites/{{ $page->site->alias }}/pages/{{ $page->alias }}/edit">
+            <a href="/admin/sites/{{ $page->site->alias }}/pages/{{ $page->alias }}/edit">
               @endcan
               {{ $page->name }}
               @can('update', $page)

@@ -21,7 +21,7 @@
       	headers: {
       		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       	},
-      	url: '/sites/' + siteAlias + '/page_check',
+      	url: '/admin/sites/' + siteAlias + '/page_check',
       	type: "POST",
       	data: {alias: alias},
       	beforeSend: function () {

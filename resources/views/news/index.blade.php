@@ -60,7 +60,7 @@
             </td>
             <td class="td-name">
               @can('update', $cur_news)
-              <a href="/sites/{{ $cur_news->site->alias }}/news/{{ $cur_news->alias }}/edit">
+              <a href="/admin/sites/{{ $cur_news->site->alias }}/news/{{ $cur_news->alias }}/edit">
                 @endcan
                 {{ $cur_news->name }}
                 @can('update', $cur_news)

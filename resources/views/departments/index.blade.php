@@ -74,7 +74,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '/department_check',
+                url: '/admin/department_check',
                 type: "POST",
                 data: {name: name, filial_id: filial},
                 beforeSend: function () {
@@ -115,7 +115,7 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: '/departments/create',
+            url: '/admin/departments/create',
             type: "GET",
             success: function(html){
                 $('#modal').html(html);
@@ -152,7 +152,7 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: "/departments/" + id + "/edit",
+            url: "/admin/departments/" + id + "/edit",
             type: "GET",
             success: function(html) {
                 $('#modal').html(html);
@@ -191,7 +191,7 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: '/departments/create',
+            url: '/admin/departments/create',
             type: "GET",
             data: {parent_id: parent, filial_id: filial},
             success: function(html){
@@ -231,7 +231,7 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: "/departments/" + id + "/edit",
+            url: "/admin/departments/" + id + "/edit",
             type: "GET",
             success: function(html) {
                 // alert(html);
@@ -269,7 +269,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    url: '/departments',
+    url: '/admin/departments',
     type: "POST",
     data: $(this).closest('form').serialize(),
     success:function(html) {
@@ -311,7 +311,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    url: '/departments/' + id,
+    url: '/admin/departments/' + id,
     type: "PATCH",
     data: $(this).closest('form').serialize(),
     success:function(html) {

@@ -17,7 +17,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/cities_list",
+        url: "/admin/cities_list",
         type: "POST",
         data: {city_name: city},
         beforeSend: function () {

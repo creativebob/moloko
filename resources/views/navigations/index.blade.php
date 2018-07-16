@@ -76,7 +76,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/sites/' + siteAlias + '/' + entity_alias + '/' + id,
+      url: '/admin/sites/' + siteAlias + '/' + entity_alias + '/' + id,
       type: "DELETE",
       success: function (html) {
         $('#content').html(html);
@@ -123,7 +123,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/sites/'+ siteAlias + '/navigation_check',
+        url: '/admin/sites/'+ siteAlias + '/navigation_check',
         type: "POST",
         data: {name: name},
         beforeSend: function () {
@@ -160,7 +160,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/sites/' + siteAlias + '/navigations/create',
+      url: '/admin/sites/' + siteAlias + '/navigations/create',
       type: "GET",
       success: function(html){
         $('#modal').html(html);
@@ -194,7 +194,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/sites/' + siteAlias + '/navigations',
+      url: '/admin/sites/' + siteAlias + '/navigations',
       type: "POST",
       data: $('#form-first-add').serialize(),
       success:function(html) {
@@ -215,7 +215,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/sites/" + siteAlias + "/navigations/" + id + "/edit",
+      url: "/admin/sites/" + siteAlias + "/navigations/" + id + "/edit",
       type: "GET",
       success: function(html) {
         $('#modal').html(html);
@@ -252,7 +252,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/sites/' + siteAlias + '/navigations/' + id,
+      url: '/admin/sites/' + siteAlias + '/navigations/' + id,
       type: "PATCH",
       data: $('#form-first-edit').serialize(),
       success:function(html) {
@@ -277,7 +277,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/sites/' + siteAlias + '/menus/create',
+      url: '/admin/sites/' + siteAlias + '/menus/create',
       type: "GET",
       data: {navigation_id: navigation, menu_parent_id: parent},
       success: function(html){
@@ -296,7 +296,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/sites/' + siteAlias + '/menus',
+      url: '/admin/sites/' + siteAlias + '/menus',
       type: "POST",
       data: $('#form-medium-add').serialize(),
       success: function(html){
@@ -315,7 +315,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/sites/" + siteAlias + "/menus/" + id + "/edit",
+      url: "/admin/sites/" + siteAlias + "/menus/" + id + "/edit",
       type: "GET",
       success: function(html){
         // alert(html);
@@ -336,7 +336,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/sites/' + siteAlias + '/menus/' + id,
+      url: '/admin/sites/' + siteAlias + '/menus/' + id,
       type: "PATCH",
       data: $('#form-medium-edit').serialize(),
       success: function(html){

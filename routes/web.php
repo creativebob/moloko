@@ -25,7 +25,7 @@ Route::get('/lol', function () {
   return view('demo');
 });
 
-Route::any('/lolkek', ['uses' => 'Project/ServicesProjectController@index'])->middleware('auth');
+
 
 Auth::routes();
 
@@ -54,9 +54,8 @@ Route::post('/albums_categories_list', 'AlbumsCategoryController@albums_categori
 // Сортировка категорий альбомов
 Route::post('/albums_categories_sort', 'AlbumsCategoryController@albums_categories_sort')->middleware('auth');
 
-
 // --------------------------------------- Альбомы -----------------------------------------------
-Route::resource('/albums', 'AlbumController')->middleware('auth');
+// Route::resource('/albums', 'AlbumController')->middleware('auth');
 Route::get('/albums', 'AlbumController@index')->middleware('auth')->name('albums.index');
 Route::get('/albums/create', 'AlbumController@create')->middleware('auth')->name('albums.create');
 Route::get('/albums/{alias}', 'AlbumController@show')->middleware('auth')->name('albums.show');

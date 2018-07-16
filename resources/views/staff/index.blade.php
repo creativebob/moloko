@@ -58,7 +58,7 @@
             <label class="label-check" for="check-{{ $staffer->id }}"></label></td>
           <td class="td-position">
             @can('update', $staffer)
-            <a href="/staff/{{ $staffer->id }}/edit">
+            <a href="/admin/staff/{{ $staffer->id }}/edit">
               @endcan
               @if (isset($staffer->user))
               {{ $staffer->user->second_name . ' ' . $staffer->user->first_name }}

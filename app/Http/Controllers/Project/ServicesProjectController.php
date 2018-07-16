@@ -16,10 +16,10 @@ class ServicesProjectController extends Controller
      */
     public function index()
     {
-        $site = Site::with('company.staff.schedules.worktimes')
-        ->findOrFail(2);
-
-        dd($site);
+        // $site = Site::with('company.staff.schedules.worktimes')
+        // ->findOrFail(2);
+        dd('lol');
+        // dd($site);
     }
 
     /**

@@ -50,7 +50,7 @@
 	          headers: {
 	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 	          },
-	          url: '/booklists',
+	          url: '/admin/booklists',
 	          type: "POST",
 	          data: {item_entity: item_entity, entity_alias: entity_alias},
 	          success: function (data) {

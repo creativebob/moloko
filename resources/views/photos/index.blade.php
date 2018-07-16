@@ -54,7 +54,7 @@
               </a>
             </td>
             <td class="td-name">
-              <a href="/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit">{{ $photo->name }}</a>
+              <a href="/admin/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit">{{ $photo->name }}</a>
             </td>
             <td class="td-description">
               {{ $photo->description }}
