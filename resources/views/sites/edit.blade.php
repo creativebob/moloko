@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::model($site, ['route' => ['sites.update', $site->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($site, ['url' => '/admin/sites/'.$site->id, 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
     @include('sites.form', ['submitButtonText' => 'Редактировать сайт', 'param'=>''])

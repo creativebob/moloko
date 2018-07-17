@@ -20,7 +20,7 @@
 
 @section('content')
 
-{{ Form::model($user, ['route' => ['users.update', $user->id], 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
+{{ Form::model($user, ['url' => '/admin/users/'.$user->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
 {{ method_field('PATCH') }}
 
 @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>''])

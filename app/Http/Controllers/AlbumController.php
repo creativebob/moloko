@@ -208,7 +208,7 @@ class AlbumController extends Controller
             $storage = Storage::disk('public')->makeDirectory($album->company->id.'/media/albums/'.$album->id);
 
             if ($storage) {
-                return Redirect('/albums');
+                return redirect('/admin/albums');
             } else {
                 abort(403, 'Ошибка создания папки альбома');
             }

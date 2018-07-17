@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::open(['route' => 'sites.store', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['url' => '/admin/sites', 'data-abide', 'novalidate']) }}
     @include('sites.form', ['submitButtonText' => 'Добавить Сайт', 'param' => ''])
   {{ Form::close() }}
 

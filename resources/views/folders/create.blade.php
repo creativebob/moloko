@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::open(['route' => 'entities.store', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['url' => '/admin/folders', 'data-abide', 'novalidate']) }}
 
     @include('entities.form', ['submitButtonText' => 'Зарегистрировать', 'param' => ''])
     

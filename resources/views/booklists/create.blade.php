@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::open(['route' => 'users.store', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['url' => '/admin/booklists', 'data-abide', 'novalidate']) }}
     @include('users.form', ['submitButtonText' => 'Добавить пользователя', 'param' => ''])
   {{ Form::close() }}
 
