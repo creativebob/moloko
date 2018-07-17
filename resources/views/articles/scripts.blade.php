@@ -10,7 +10,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/get_units_list',
+      url: '/admin/get_units_list',
       type: "POST",
       data: {id: id, entity: 'products_categories'},
       success: function(html){
@@ -36,7 +36,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/ajax_products_count',
+        url: '/admin/ajax_products_count',
         type: "POST",
         data: {id: id, entity: 'articles'},
         success: function(html){
@@ -59,7 +59,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/ajax_products_modes',
+        url: '/admin/ajax_products_modes',
         type: "POST",
         data: {mode: id, entity: 'articles'},
         success: function(html){

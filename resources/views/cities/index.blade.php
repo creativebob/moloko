@@ -145,7 +145,7 @@ $(function() {
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/city_vk",
+      url: "/admin/city_vk",
       type: "POST",
       data: {city: $('#city-name-field').val(), checkbox:checkbox},
       beforeSend: function () {
@@ -267,7 +267,7 @@ $(function() {
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
-          url: "/city_check",
+          url: "/admin/city_check",
           type: "POST",
           data: $('#form-add').serialize(),
           success: function (data) {
@@ -300,7 +300,7 @@ $(function() {
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/cities',
+      url: '/admin/cities',
       type: "POST",
       data: $(this).closest('#form-add').serialize(),
       success:function(html){
