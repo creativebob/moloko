@@ -139,9 +139,12 @@ class UserController extends Controller
 
         // Получаем данные для авторизованного пользователя
         $user_auth = $request->user();
+
+        // Скрываем бога
         $user_auth_id = hideGod($user_auth);
-        $user_status = $user_auth->god;
+
         $company_id = $user_auth->company_id;
+
         $filial_id = $request->filial_id;
 
         // Пишем локацию
@@ -171,6 +174,8 @@ class UserController extends Controller
         $user->patronymic = $request->patronymic;
         $user->sex = $request->sex;
         $user->birthday = $request->birthday;
+
+        $user->company_id = $company_id;
 
         $user->phone = cleanPhone($request->phone);
 
@@ -206,13 +211,13 @@ class UserController extends Controller
             $user->moderation = 1;
         }
 
-        // Пишем ID компании авторизованного пользователя
-        if($company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
-        $user->company_id = $company_id;
+        // // Пишем ID компании авторизованного пользователя
+        // if($company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
+        // $user->company_id = $company_id;
 
-        // Пишем ID филиала авторизованного пользователя
-        if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
-        $user->filial_id = $filial_id;
+        // // Пишем ID филиала авторизованного пользователя
+        // if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
+        // $user->filial_id = $filial_id;
 
         // Создаем папку в файловой системе
         // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'avatars';
@@ -227,23 +232,13 @@ class UserController extends Controller
         // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'documents';
         // Storage::makeDirectory($link_for_folder);
 
-        $company_id = $user_auth->company_id;
-        if ($user_auth->god == 1) {
-
-            // Если бог, то ставим автором робота
-            $user_id = 1;
-            $company_id = null;
-        } else {
-            $user_id = $user_auth->id;
-        }
-
         $user->save();
 
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
 
             // Директория
-            $directory = $company_id.'/media/users/'.$user->id.'/img/';
+            $directory = $user->company_id.'/media/users/'.$user->id.'/img/';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             $array = save_photo($request, $user->id, $company_id, $directory, 'avatar-'.time());
@@ -364,7 +359,9 @@ class UserController extends Controller
     {
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
+
         $user_auth_id = hideGod($user_auth);
+
         $company_id = $user_auth->company_id;
 
         // dd($company_id);
@@ -396,7 +393,12 @@ class UserController extends Controller
 
         $user->login = $request->login;
         $user->email = $request->email;
-        $user->password = bcrypt($request->password);
+
+        // Если пришел не пустой пароль
+        if (isset($request->password)) {
+            $user->password = bcrypt($request->password);
+        }
+        
         $user->nickname = $request->nickname;
 
         $user->first_name = $request->first_name;
@@ -435,15 +437,12 @@ class UserController extends Controller
         $user->filial_id = $request->filial_id;
 
 
-        // $company_id = $user_auth->company_id;
-
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
 
-
             // dd($company_id);
             // Директория
-            $directory = $company_id.'/media/users/'.$user->id.'/img/';
+            $directory = $user->company_id.'/media/users/'.$user->id.'/img/';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($user->photo_id) {

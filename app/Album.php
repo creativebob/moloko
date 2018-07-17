@@ -81,4 +81,11 @@ class Album extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
+
+    // Получаем настройки
+    public function album_settings()
+    {
+        return $this->hasOne('App\AlbumSetting', 'album_id');
+    }
+
 }

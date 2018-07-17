@@ -356,6 +356,11 @@ Route::post('/city_vk', 'CityController@get_vk_city')->middleware('auth');
 // Тестовый маршрут проверки пришедших с вк данных
 Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
 
+// Отображение на сайте
+Route::post('/cities_display', 'CityController@ajax_display')->middleware('auth');
+Route::post('/areas_display', 'AreaController@ajax_display')->middleware('auth');
+Route::post('/regions_display', 'RegionController@ajax_display')->middleware('auth');
+
 // ----------------------------------------- Филиалы и отделы --------------------------------------
 // Текущий добавленный/удаленный отдел/филиал
 Route::any('/departments', 'DepartmentController@index')->middleware('auth');

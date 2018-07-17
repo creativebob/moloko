@@ -16,6 +16,14 @@ class AlbumsCategoriesTableSeeder extends Seeder
         'author_id' => 1,
         'system_item' => 1,
       ],
+      [
+        'company_id' => null,
+        'name' => 'Общая категория',
+        'parent_id' => null,
+        'category_status' => 1,
+        'author_id' => 1,
+        'system_item' => null,
+      ],
      
     ]);
   }
