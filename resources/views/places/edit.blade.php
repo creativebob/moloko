@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::model($place, ['route' => ['places.update', $place->id], 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+  {{ Form::model($place, ['url' => '/admin/places/'.$place->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
   {{ method_field('PATCH') }}
     @include('places.form', ['submitButtonText' => 'Редактировать помещение', 'param'=>''])
   {{ Form::close() }}

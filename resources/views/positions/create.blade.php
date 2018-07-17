@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::open(['route' => 'positions.store', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['url' => '/admin/positions', 'data-abide', 'novalidate']) }}
     @include('positions.form', ['submitButtonText' => 'Добавить должность', 'param' => ''])
   {{ Form::close() }}
 

@@ -20,7 +20,7 @@
 
 @section('content')
 
-  {{ Form::model($employee, ['route' => ['employees.update', $employee->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($employee, ['url' => '/admin/employees/'.$employee->id, 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
     @include('employees.form', ['submitButtonText' => 'Редактировать уволенного сотрудника', 'param'=>''])

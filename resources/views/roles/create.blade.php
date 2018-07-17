@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::open(['route' => 'roles.store', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['url' => '/admin/roles', 'data-abide', 'novalidate']) }}
     @include('roles.form', ['submitButtonText' => 'Создать', 'param' => ''])
   {{ Form::close() }}
 

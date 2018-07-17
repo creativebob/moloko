@@ -87,7 +87,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/services_category_check",
+        url: "/admin/services_category_check",
         type: "POST",
         data: {name: name},
         beforeSend: function () {
@@ -127,7 +127,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/services_categories/create',
+      url: '/admin/services_categories/create',
       type: "GET",
       success: function(html){
         // alert(html);
@@ -166,7 +166,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/services_categories/create',
+      url: '/admin/services_categories/create',
       type: "GET",
       data: {category_id: category, parent_id: parent},
       success: function(html){
@@ -188,7 +188,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/services_categories',
+      url: '/admin/services_categories',
       type: "POST",
       data: $(this).closest('form').serialize(),
       success:function(html) {
@@ -208,7 +208,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/services_products',
+      url: '/admin/services_products',
       type: "POST",
       data: $(this).closest('form').serialize(),
       success:function(html) {

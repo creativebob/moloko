@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::model($role, ['route' => ['roles.update', $role->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($role, ['url' => '/admin/roles/'.$role->id, 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
     @include('roles.form', ['submitButtonText' => 'Редактировать группу', 'param'=>''])

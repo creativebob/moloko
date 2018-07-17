@@ -21,7 +21,7 @@
 
 @section('content')
 
-  {{ Form::open(['url' => 'admin/albums', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+  {{ Form::open(['url' => '/admin/albums', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
     @include('albums.form', ['submitButtonText' => 'Добавить альбом', 'param' => '', 'form' => null])
   {{ Form::close() }}
 

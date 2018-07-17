@@ -4,7 +4,7 @@
 			<h5>ДОБАВЛЕНИЕ артикула</h5>
 		</div>
 	</div>
-	{{ Form::open(['url' => '/articles','id'=>'form-article-add', 'data-abide', 'novalidate']) }}
+	{{ Form::open(['url' => '/admin/articles','id'=>'form-article-add', 'data-abide', 'novalidate']) }}
 	<div class="grid-x grid-padding-x align-center modal-content inputs">
 		<div class="small-10 cell">
 			<label>Категория товара

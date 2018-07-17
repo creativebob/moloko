@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::model($entity, ['route' => ['entities.update', $entity->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($entity, ['url' => '/admin/entities/'.$entity->id, 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
     @include('entities.form', ['submitButtonText' => 'Редактировать сущность', 'param'=>''])

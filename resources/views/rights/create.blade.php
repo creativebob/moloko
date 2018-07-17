@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::open(['route' => 'rights.store', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['url' => '/admin/rights', 'data-abide', 'novalidate']) }}
     @include('rights.form', ['submitButtonText' => 'Добавить в систему правило', 'param' => ''])
   {{ Form::close() }}
 

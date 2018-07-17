@@ -222,8 +222,6 @@
     });
   });
 
-
-
   // ---------------------------------- Закрытие модалки -----------------------------------
   $(document).on('click', '.icon-close-modal, .submit-edit', function() {
     $(this).closest('.reveal-overlay').remove();
