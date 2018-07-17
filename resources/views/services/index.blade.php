@@ -119,85 +119,86 @@
             @endif
             @endif
             >
-            <label class="label-check" for="check-{{ $service->id }}"></label></td>
-            <td>
-              <a href="/admin/services/{{ $service->id }}/edit">
-                <img src="{{ isset($service->photo_id) ? '/storage/'.$service->company_id.'/media/services/'.$service->id.'/img/small/'.$service->photo->name : '/img/plug/product_small_default_color.jpg' }}" alt="{{ isset($service->photo_id) ? $service->name : 'Нет фото' }}">
-              </a>
-            </td>
-            <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->name }}</a></td>
-            <td class="td-service">{{ $service->services_product->name }}</td>
-            <td class="td-company-id">@if(!empty($service->company->name)) {{ $service->company->name }} @else @if($service->system_item == null) Шаблон @else Системная @endif @endif</td>
-            <td class="td-author">@if(isset($service->author->first_name)) {{ $service->author->first_name . ' ' . $service->author->second_name }} @endif</td>
-            @can ('publisher', $service)
-            <td class="td-display">
-              @if ($service['display'] == 1)
-              <a class="icon-display-show black sprite" data-open="item-display"></a>
-              @else
-              <a class="icon-display-hide black sprite" data-open="item-display"></a>
-              @endif
-            </td>
+            <label class="label-check" for="check-{{ $service->id }}"></label>
+          </td>
+          <td>
+            <a href="/admin/services/{{ $service->id }}/edit">
+              <img src="{{ isset($service->photo_id) ? '/storage/'.$service->company_id.'/media/services/'.$service->id.'/img/small/'.$service->photo->name : '/img/plug/product_small_default_color.jpg' }}" alt="{{ isset($service->photo_id) ? $service->name : 'Нет фото' }}">
+            </a>
+          </td>
+          <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->name }}</a></td>
+          <td class="td-service">{{ $service->services_product->name }}</td>
+          <td class="td-company-id">@if(!empty($service->company->name)) {{ $service->company->name }} @else @if($service->system_item == null) Шаблон @else Системная @endif @endif</td>
+          <td class="td-author">@if(isset($service->author->first_name)) {{ $service->author->first_name . ' ' . $service->author->second_name }} @endif</td>
+          @can ('publisher', $service)
+          <td class="td-display">
+            @if ($service['display'] == 1)
+            <a class="icon-display-show black sprite" data-open="item-display"></a>
+            @else
+            <a class="icon-display-hide black sprite" data-open="item-display"></a>
+            @endif
+          </td>
+          @endcan
+          <td class="td-delete">
+            @if ($service->system_item != 1)
+            @can('delete', $service)
+            <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan
-            <td class="td-delete">
-              @if ($service->system_item != 1)
-              @can('delete', $service)
-              <a class="icon-delete sprite" data-open="item-delete"></a>
-              @endcan
-              @endif
-            </td>       
-          </tr>
-          @endforeach
-          @endif
-        </tbody>
-      </table>
-    </div>
+            @endif
+          </td>       
+        </tr>
+        @endforeach
+        @endif
+      </tbody>
+    </table>
   </div>
+</div>
 
-  {{-- Pagination --}}
-  <div class="grid-x" id="pagination">
-    <div class="small-6 cell pagination-head">
-      <span class="pagination-title">Кол-во записей: {{ $services->count() }}</span>
-      {{ $services->links() }}
-    </div>
+{{-- Pagination --}}
+<div class="grid-x" id="pagination">
+  <div class="small-6 cell pagination-head">
+    <span class="pagination-title">Кол-во записей: {{ $services->count() }}</span>
+    {{ $services->links() }}
   </div>
-  @endsection
+</div>
+@endsection
 
-  @section('modals')
-  <section id="modal"></section>
-  {{-- Модалка удаления с refresh --}}
-  @include('includes.modals.modal-delete')
+@section('modals')
+<section id="modal"></section>
+{{-- Модалка удаления с refresh --}}
+@include('includes.modals.modal-delete')
 
-  {{-- Модалка удаления с refresh --}}
-  @include('includes.modals.modal-delete-ajax')
+{{-- Модалка удаления с refresh --}}
+@include('includes.modals.modal-delete-ajax')
 
-  @endsection
+@endsection
 
-  @section('scripts')
+@section('scripts')
 
-  {{-- Скрипт отображеняи на сайте --}}
-  @include('includes.scripts.display-ajax')
+{{-- Скрипт отображеняи на сайте --}}
+@include('includes.scripts.display-ajax')
 
-  <script type="text/javascript">
+<script type="text/javascript">
 
 
-    // Обозначаем таймер для проверки
-    var timerId;
-    var time = 400;
+  // Обозначаем таймер для проверки
+  var timerId;
+  var time = 400;
 
-    // Первая буква заглавная
-    function newParagraph (name) {
-      name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
-      return name;
-    };
+  // Первая буква заглавная
+  function newParagraph (name) {
+    name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
+    return name;
+  };
 
     // ------------------- Проверка на совпадение имени --------------------------------------
     function serviceCheck (name, submit, db) {
 
-      // Блокируем аттрибут базы данных
-      $(db).val(0);
+    // Блокируем аттрибут базы данных
+    $(db).val(0);
 
-      // Смотрим сколько символов
-      var lenname = name.length;
+    // Смотрим сколько символов
+    var lenname = name.length;
 
       // Если символов больше 3 - делаем запрос
       if (lenname > 3) {
@@ -210,7 +211,7 @@
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
-          url: "/service_check",
+          url: "/admin/service_check",
           type: "POST",
           data: {name: name},
           beforeSend: function () {
@@ -233,58 +234,62 @@
           }
         });
       };
-    // Удаляем все значения, если символов меньше 3х
-    if (lenname <= 3) {
-      $(submit).prop('disabled', false);
-      $('.item-error').css('display', 'none');
-      $(db).val(0);
+      // Удаляем все значения, если символов меньше 3х
+      if (lenname <= 3) {
+        $(submit).prop('disabled', false);
+        $('.item-error').css('display', 'none');
+        $(db).val(0);
+      };
     };
-  };
 
-  // ---------------------------- Продукция -----------------------------------------------
+    // ---------------------------- Продукция -----------------------------------------------
 
-  // ----------- Добавление -------------
-  // Открываем модалку
-  $(document).on('click', '[data-open="first-add"]', function() {
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/services/create',
-      type: "GET",
-      success: function(html){
-        $('#modal').html(html);
-        $('#first-add').foundation();
-        $('#first-add').foundation('open');
-      }
-    }); 
-  });
+    // ----------- Добавление -------------
+    // Открываем модалку
+    $(document).on('click', '[data-open="first-add"]', function() {
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/admin/services/create',
+        type: "GET",
+        success: function(html){
+          $('#modal').html(html);
+          $('#first-add').foundation();
+          $('#first-add').foundation('open');
+        }
+      }); 
+    });
 
-  
 
-  // Проверка существования
-  $(document).on('keyup', '#form-first-add .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-first-add .name-field').val();
-    // Указываем название кнопки
-    var submit = '.modal-button';
-    // Значение поля с разрешением
-    var db = '#form-first-add .first-item';
-    // Выполняем запрос
-    clearTimeout(timerId);   
-    timerId = setTimeout(function() {
-      serviceCheck (name, submit, db)
-    }, time); 
-  });
-</script>
-{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.tablesorter-script')
 
-{{-- Скрипт чекбоксов --}}
-@include('includes.scripts.checkbox-control')
+    // Проверка существования
+    $(document).on('keyup', '#form-first-add .name-field', function() {
 
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
-@include('includes.scripts.delete-ajax-script')
-@include('includes.scripts.sortable-table-script')
-@endsection
+      // Получаем фрагмент текста
+      var name = $('#form-first-add .name-field').val();
+
+      // Указываем название кнопки
+      var submit = '.modal-button';
+
+      // Значение поля с разрешением
+      var db = '#form-first-add .first-item';
+
+      // Выполняем запрос
+      clearTimeout(timerId);   
+      timerId = setTimeout(function() {
+        serviceCheck (name, submit, db)
+      }, time); 
+    });
+  </script>
+  {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+  @include('includes.scripts.tablesorter-script')
+
+  {{-- Скрипт чекбоксов --}}
+  @include('includes.scripts.checkbox-control')
+
+  {{-- Скрипт модалки удаления --}}
+  @include('includes.scripts.modal-delete-script')
+  @include('includes.scripts.delete-ajax-script')
+  @include('includes.scripts.sortable-table-script')
+  @endsection

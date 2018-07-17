@@ -4,7 +4,7 @@
 			<h5>ДОБАВЛЕНИЕ услуги</h5>
 		</div>
 	</div>
-	{{ Form::open(['url' => '/services','id'=>'form-service-add', 'data-abide', 'novalidate']) }}
+	{{ Form::open(['url' => '/admin/services','id'=>'form-service-add', 'data-abide', 'novalidate']) }}
 	<div class="grid-x grid-padding-x align-center modal-content inputs">
 		<div class="small-12 cell">
 

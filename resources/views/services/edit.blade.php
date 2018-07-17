@@ -50,7 +50,7 @@
             </div>
             @endif
 
-            {{ Form::model($service, ['url' => ['/services/'.$service->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'service-form']) }}
+            {{ Form::model($service, ['url' => ['/admin/services/'.$service->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'service-form']) }}
             {{ method_field('PATCH') }}
 
             <!-- Общая информация -->
