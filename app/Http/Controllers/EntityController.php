@@ -106,7 +106,7 @@ class EntityController extends Controller
         // $entity->filial_id = $filial_id;
 
         $entity->save();
-        return redirect('entities');
+        return redirect('/admin/entities');
     }
 
 
@@ -159,7 +159,7 @@ class EntityController extends Controller
         $entity->alias = $request->alias;
 
         $entity->save();
-        return redirect('entities');
+        return redirect('/admin/entities');
     }
 
     public function destroy($id)
@@ -178,7 +178,7 @@ class EntityController extends Controller
         $entity = Entity::destroy($id);
 
         if ($entity) {
-          return Redirect('/entities');
+          return redirect('/admin/entities');
         } else {
           echo 'Произошла ошибка';
         }; 

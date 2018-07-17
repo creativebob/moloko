@@ -306,7 +306,7 @@ class UserController extends Controller
                 $delete = RoleUser::whereUser_id($user->id)->delete();
             }
 
-            return redirect()->route('users.index');
+            return Redirect('/admin/users');
 
         } else {
             abort(403, 'Ошибка при обновлении пользователя!');
@@ -543,7 +543,7 @@ class UserController extends Controller
                 return redirect($backroute);
             };
 
-            return redirect()->route('users.index');
+            return redirect('/admin/users');
 
         } else {
             abort(403, 'Ошибка при обновлении пользователя!');
@@ -566,7 +566,7 @@ class UserController extends Controller
         // Удаляем пользователя с обновлением
         $user = User::moderatorLimit($answer)->where('id', $id)->delete();
 
-        if($user) {return redirect()->route('users.index');} else {abort(403,'Что-то пошло не так!');};
+        if($user) {return redirect('/admin/users');} else {abort(403,'Что-то пошло не так!');};
     }
 
     // Сортировка

@@ -208,7 +208,7 @@ class AlbumController extends Controller
             $storage = Storage::disk('public')->makeDirectory($album->company->id.'/media/albums/'.$album->id);
 
             if ($storage) {
-                return Redirect('/albums');
+                return redirect('/admin/albums');
             } else {
                 abort(403, 'Ошибка создания папки альбома');
             }
@@ -402,7 +402,7 @@ class AlbumController extends Controller
 
 
         if ($album) {
-            return Redirect('/albums');
+            return redirect('/admin/albums');
         } else {
             abort(403, 'Ошибка обновления записи альбома');
         }
@@ -444,7 +444,7 @@ class AlbumController extends Controller
             // Удаляем альбом с обновлением
             $album = Album::destroy($id);
             if ($album) {
-                return Redirect('albums');
+                return redirect('/admin/albums');
             } else {
                 abort(403, 'Ошибка при удалении альбома');
             }

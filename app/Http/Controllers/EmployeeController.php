@@ -163,7 +163,7 @@ class EmployeeController extends Controller
         
         // Если записалось
         if ($employee) {
-          return Redirect('/employees');
+          return redirect('/admin/employees');
         } else {
           abort(403, 'Ошибка редактирования сотрудника');
         };

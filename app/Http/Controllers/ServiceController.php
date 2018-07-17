@@ -189,9 +189,10 @@ class ServiceController extends Controller
 
         if ($service) {
 
-            return Redirect('/services/'.$service->id.'/edit');
+            return Redirect('/admin/services/'.$service->id.'/edit');
+
         } else {
-            abort(403, 'Ошибка записи артикула');
+            abort(403, 'Ошибка записи артикула услуги');
         }  
     }
 
@@ -546,7 +547,7 @@ class ServiceController extends Controller
             // ];
 
             // echo json_encode($result, JSON_UNESCAPED_UNICODE);
-            return Redirect('/services');
+            return Redirect('/admin/services');
 
         } else {
             abort(403, 'Ошибка записи группы товаров');

@@ -198,7 +198,7 @@ class PositionController extends Controller
                 $position->roles()->attach($roles);
             }
 
-            return Redirect('/positions');
+            return redirect('/admin/positions');
         } else {
             abort(403, 'Ошибка записи должности');
         };
@@ -320,7 +320,7 @@ class PositionController extends Controller
                 // Если удалили последнюю роль для должности и пришел пустой массив
                 $delete = PositionRole::where('position_id', $id)->delete();
             }
-            return Redirect('/positions');
+            return redirect('/admin/positions');
         } else {
             abort(403, 'Ошибка записи должности');
         };
@@ -350,7 +350,7 @@ class PositionController extends Controller
             $position = Position::destroy($id);
 
             if ($position) {
-                return Redirect('/positions');
+                return redirect('/admin/positions');
             } else {
                 abort(403, 'Ошибка при удалении должности');
             }; 

@@ -228,7 +228,7 @@ class CompanyController extends Controller
         // $folder->folder_parent_id = 2;
         // $folder->save();
 
-        return redirect()->route('companies.store');
+        return redirect('/admin/companies');
         // return redirect('admin/companies');
     }
 
@@ -415,7 +415,7 @@ class CompanyController extends Controller
         // Вставляем новое время в расписание
         DB::table('worktimes')->insert($mass_time);
 
-        return redirect()->route('companies.index');
+        return redirect('/admin/companies');
     }
 
 
@@ -447,7 +447,7 @@ class CompanyController extends Controller
 
             // Удаляем компанию с обновлением
             if($company) {
-                return redirect()->route('companies.index');
+                return redirect('/admin/companies');
 
             } else {
                 abort(403, 'Ошибка при удалении компании');

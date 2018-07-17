@@ -461,7 +461,8 @@ class ServicesCategoryController extends Controller
 
         if ($services_category) {
 
-            return Redirect('/services_categories/'.$services_category->type)->with('services_category_id', $services_category->id);
+            return Redirect('/admin/services_categories/'.$services_category->type)->with('services_category_id', $services_category->id);
+
         } else {
             $result = [
                 'error_status' => 1,

@@ -559,7 +559,7 @@ class ProductsCategoryController extends Controller
 
         if ($products_category) {
 
-            return Redirect('/products_categories/'.$products_category->type)->with('products_category_id', $products_category->id);
+            return redirect('/admin/products_categories/'.$products_category->type)->with('products_category_id', $products_category->id);
         } else {
             $result = [
                 'error_status' => 1,

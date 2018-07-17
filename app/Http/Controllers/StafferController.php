@@ -311,7 +311,7 @@ class StafferController extends Controller
           $employee->employment_date = $request->employment_date;
           $employee->save();
           if ($employee) {
-            return Redirect('/staff');
+            return Redirect('/admin/staff');
           } else {
             abort(403, 'Ошибка при записи даты приема на должность!');
           }
@@ -351,7 +351,7 @@ class StafferController extends Controller
       $staffer->save();
 
       if ($staffer) {
-        return Redirect('/staff');
+        return Redirect('/admin/staff');
       } else {
         abort(403, 'Ошибка при обновлении штата!');
       }

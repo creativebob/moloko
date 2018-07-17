@@ -351,7 +351,7 @@ class PhotoController extends Controller
 
 
 
-      return redirect('/albums/'.$alias.'/photos');
+      return redirect('/admin/albums/'.$alias.'/photos');
     } else {
       abort(403, 'Ошибка при обновления фотографии!');
     }
@@ -413,7 +413,7 @@ class PhotoController extends Controller
         // Удаляем страницу с обновлением
         $photo = Photo::destroy($id);
         if ($photo) {
-          return Redirect('/albums/'.$alias.'/photos');
+          return redirect('/admin/albums/'.$alias.'/photos');
         } else {
           abort(403, 'Ошибка при удалении фотографии');
         }

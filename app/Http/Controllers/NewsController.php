@@ -253,7 +253,7 @@ class NewsController extends Controller
 
                 $cur_news->cities()->attach($cities);
             }
-            return redirect('/sites/'.$alias.'/news');
+            return redirect('/admin/sites/'.$alias.'/news');
         } else {
             abort(403, 'Ошибка при записи новости!');
         }
@@ -430,7 +430,7 @@ class NewsController extends Controller
                 // Если удалили последний город для новости и пришел пустой массив
                 $cur_news->cities()->detach();
             }
-            return redirect('/sites/'.$alias.'/news');
+            return redirect('/admin/sites/'.$alias.'/news');
         } else {
             abort(403, 'Ошибка при обновлении новости!');
         }
@@ -485,7 +485,7 @@ class NewsController extends Controller
             $cur_news = News::destroy($id);
 
             if ($cur_news) {
-                return Redirect('/sites/'.$alias.'/news');
+                return redirect('/admin/sites/'.$alias.'/news');
             } else {
                 abort(403, 'Ошибка при удалении новости');
             }

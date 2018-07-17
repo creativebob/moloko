@@ -193,7 +193,7 @@ class ArticleController extends Controller
 
         if ($article) {
 
-            return Redirect('/articles/'.$article->id.'/edit');
+            return redirect('/admin/articles/'.$article->id.'/edit');
         } else {
             abort(403, 'Ошибка записи артикула');
         }  
@@ -513,7 +513,7 @@ class ArticleController extends Controller
             ];
 
             // echo json_encode($result, JSON_UNESCAPED_UNICODE);
-            return Redirect('/articles/'.$article->product->products_category->type);
+            return redirect('/admin/articles/'.$article->product->products_category->type);
 
         }
     }

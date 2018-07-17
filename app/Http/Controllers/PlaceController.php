@@ -175,7 +175,7 @@ class PlaceController extends Controller
             abort(403, 'Ошибка записи помещения');
         };
 
-        return redirect('places');
+        return redirect('/admin/places');
     }
 
 
@@ -199,7 +199,7 @@ class PlaceController extends Controller
 
         $role->save();
 
-        return redirect('roles');
+        return redirect('/admin/roles');
 
     }
 
@@ -306,7 +306,7 @@ class PlaceController extends Controller
             abort(403, 'Ошибка записи помещения');
         };
 
-        return redirect('places');
+        return redirect('/admin/places');
 
     }
 
@@ -325,6 +325,6 @@ class PlaceController extends Controller
         // Удаляем пользователя с обновлением
         $place = Place::moderatorLimit($answer)->where('id', $id)->delete();
 
-        if($place) {return Redirect('places');} else {abort(403,'Что-то пошло не так!');};
+        if($place) {return redirect('/admin/places');} else {abort(403,'Что-то пошло не так!');};
     }
 }
