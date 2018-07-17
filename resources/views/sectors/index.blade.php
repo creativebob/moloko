@@ -86,7 +86,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/sector_check",
+        url: "/admin/sector_check",
         type: "POST",
         data: {name: name},
         beforeSend: function () {
@@ -126,7 +126,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/sectors/create',
+      url: '/admin/sectors/create',
       type: "GET",
       success: function(html){
         $('#modal').html(html);
@@ -164,7 +164,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/sectors/" + id + "/edit",
+      url: "/admin/sectors/" + id + "/edit",
       type: "GET",
       success: function(html) {
         $('#modal').html(html);
@@ -206,7 +206,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/sectors/create',
+      url: '/admin/sectors/create',
       type: "GET",
       data: {parent_id: parent},
       success: function(html){
@@ -244,7 +244,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/sectors/" + id + "/edit",
+      url: "/admin/sectors/" + id + "/edit",
       type: "GET",
       success: function(html) {
         $('#modal').html(html);
@@ -279,7 +279,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/sectors',
+      url: '/admin/sectors',
       type: "POST",
       data: $(this).closest('form').serialize(),
       success:function(html) {
@@ -300,7 +300,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/sectors/' + id,
+      url: '/admin/sectors/' + id,
       type: "PATCH",
       data: $(this).closest('form').serialize(),
       success:function(html) {
