@@ -287,7 +287,6 @@ class StafferController extends Controller
       // Снимаем с должности в штате
       $staffer->user_id = null;
       $staffer->editor_id = $user->id;
-      $staffer->schedule_id = $schedule_id;
 
       // Ищем в сотрудниках по id должности и где пустая дата увольнения
       $employee = Employee::where(['staffer_id' => $id, 'dismissal_date' => null])->first();

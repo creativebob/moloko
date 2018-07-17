@@ -80,7 +80,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                 $name = 'avatar_small_woman.png';
               }
               @endphp
-              <img src="{{ isset(Auth::user()->photo_id) ? '/storage/'.Auth::user()->company_id.'/media/users/'.Auth::user()->id.'/img/'.Auth::user()->avatar->name : '/img/plug/'.$name }}" alt="Аватар" class="avatar">
+              <img src="{{ isset(Auth::user()->photo_id) ? '/storage/'.Auth::user()->company_id.'/media/users/'.Auth::user()->id.'/img/small/'.Auth::user()->avatar->name : '/img/plug/'.$name }}" alt="Аватар" class="avatar">
             </a>
           </li>
         </ul>
