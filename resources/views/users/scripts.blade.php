@@ -40,7 +40,7 @@ CKEDITOR.replace('content-ckeditor');
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/get_role",
+        url: "/admin/get_role",
         type: "POST",
         data: $(this).closest('form').serialize(),
         success: function(html){
