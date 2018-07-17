@@ -10,7 +10,7 @@ use App\User;
 use App\List_item;
 use App\Booklist;
 use App\AlbumsCategory;
-use App\AlbumsSetting;
+use App\AlbumSetting;
 use App\Role;
 
 // Валидация
@@ -54,7 +54,8 @@ class AlbumController extends Controller
         $albums = Album::with('author', 'company', 'albums_category')
         ->withCount('photos')
         ->whereHas('albums_category', function ($query) {
-            $query->whereNull('system_item')->where('company_id', '!=', null); // Исключаем програмную категорию
+            $query->whereNull('system_item');
+            // ->where('company_id', '!=', null); // Исключаем програмную категорию
         })
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -64,6 +65,8 @@ class AlbumController extends Controller
         ->filter($request, 'company')
         ->orderBy('sort', 'asc')
         ->paginate(30);
+
+        // dd($albums);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
@@ -126,12 +129,12 @@ class AlbumController extends Controller
         // dd($albums_categories_list);
 
 
-        $albums_settings = new AlbumsSetting;
+        $album_settings = new AlbumSetting;
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('albums.create', compact('album', 'page_info', 'albums_categories_list', 'albums_settings'));
+        return view('albums.create', compact('album', 'page_info', 'albums_categories_list', 'album_settings'));
     }
 
 
@@ -174,23 +177,23 @@ class AlbumController extends Controller
 
 
         // Наполняем сущность данными
-        $albums_settings = new AlbumsSetting;
+        $album_settings = new AlbumSetting;
 
-        $albums_settings->album_id = $album->id;
-        $albums_settings->name = 'Настройка альбома ID:'. $album->id;
-        $albums_settings->img_small_width = $request->img_small_width;
-        $albums_settings->img_small_height = $request->img_small_height;
-        $albums_settings->img_medium_width = $request->img_medium_width;
-        $albums_settings->img_medium_height = $request->img_medium_height;
-        $albums_settings->img_large_width = $request->img_large_width;
-        $albums_settings->img_large_height = $request->img_large_height;
+        $album_settings->album_id = $album->id;
+        $album_settings->name = 'Настройка альбома ID:'. $album->id;
+        $album_settings->img_small_width = $request->img_small_width;
+        $album_settings->img_small_height = $request->img_small_height;
+        $album_settings->img_medium_width = $request->img_medium_width;
+        $album_settings->img_medium_height = $request->img_medium_height;
+        $album_settings->img_large_width = $request->img_large_width;
+        $album_settings->img_large_height = $request->img_large_height;
 
-        $albums_settings->img_formats = $request->img_formats;
-        $albums_settings->upload_mode = $request->upload_mode;
+        $album_settings->img_formats = $request->img_formats;
+        $album_settings->upload_mode = $request->upload_mode;
 
-        $albums_settings->img_min_width = $request->img_min_width;
-        $albums_settings->img_min_height = $request->img_min_height;
-        $albums_settings->img_max_size = $request->img_max_size;
+        $album_settings->img_min_width = $request->img_min_width;
+        $album_settings->img_min_height = $request->img_min_height;
+        $album_settings->img_max_size = $request->img_max_size;
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
@@ -198,12 +201,12 @@ class AlbumController extends Controller
         }
 
         // Cистемная запись
-        $albums_settings->system_item = $request->system_item;
+        $album_settings->system_item = $request->system_item;
 
         // Отображение на сайте
-        $albums_settings->company_id = $user->company_id;
-        $albums_settings->author_id = $user_id;
-        $albums_settings->save();
+        $album_settings->company_id = $user->company_id;
+        $album_settings->author_id = $user_id;
+        $album_settings->save();
 
         if($album) {
 
@@ -273,7 +276,9 @@ class AlbumController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $album = Album::moderatorLimit($answer)->where('company_id', $user->company_id)->whereAlias($alias)->first();
+        $album = Album::with('album_settings')->moderatorLimit($answer)->where('company_id', $user->company_id)->whereAlias($alias)->first();
+
+        // dd($album);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $album);
@@ -286,6 +291,7 @@ class AlbumController extends Controller
         ->companiesLimit($answer_albums_categories)
         ->filials($answer_albums_categories) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
         ->authors($answer_albums_categories)
+        ->template($answer_albums_categories)
         ->systemItem($answer_albums_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
         ->get(['id','name','category_status','parent_id'])
@@ -298,24 +304,24 @@ class AlbumController extends Controller
 
         // Работаем с сущностью albums_settigs настройка альбомов
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_albums_settings = operator_right('albums_settings', false, 'index');
+        $answer_album_settings = operator_right('album_settings', false, 'index');
 
 
-        $albums_settings = AlbumsSetting::moderatorLimit($answer_albums_settings)->where('album_id', $album->id)->first();
+        $album_settings = AlbumSetting::moderatorLimit($answer_album_settings)->where('album_id', $album->id)->first();
 
-        if(!isset($albums_settings->id)){
+        if(!isset($album_settings->id)){
 
-            $albums_settings = new AlbumsSetting;
+            $album_settings = new AlbumSetting;
 
         };
 
         // Подключение политики
-        // $this->authorize(getmethod('index'), $albums_settings);
+        // $this->authorize(getmethod('index'), $album_settings);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('albums.edit', compact('album', 'page_info', 'albums_categories_list', 'albums_settings'));
+        return view('albums.edit', compact('album', 'page_info', 'albums_categories_list', 'album_settings'));
     }
 
 
@@ -327,7 +333,9 @@ class AlbumController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $album = Album::moderatorLimit($answer)->findOrFail($id);
+        $album = Album::with('album_settings')->moderatorLimit($answer)->findOrFail($id);
+
+        // dd($album);
 
         // Подключение политики
         $this->authorize('update', $album);
@@ -345,7 +353,6 @@ class AlbumController extends Controller
         $album->description = $request->description;
         $album->delay = $request->delay;
 
-
         // Модерация и системная запись
         $album->system_item = $request->system_item;
         $album->moderation = $request->moderation;
@@ -356,51 +363,56 @@ class AlbumController extends Controller
         $album->editor_id = $user_id;
         $album->save();
 
-
         // Работаем с сущностью albums_settigs настройка альбомов
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_albums_settings = operator_right('albums_settings', false, 'index');
+        $answer_album_settings = operator_right('album_settings', false, 'index');
 
-        $albums_settings = AlbumsSetting::moderatorLimit($answer_albums_settings)->where('album_id', $album->id)->first();
+        $album_settings = AlbumSetting::moderatorLimit($answer_album_settings)->where('album_id', $album->id)->first();
 
-        if(!isset($albums_settings->id)){
-            $albums_settings = new AlbumsSetting;
-        };
+        // dd($album_settings);
+
+        if (empty($album_settings)) {
+            $album_settings = new AlbumSetting;
+        }
 
         // Подключение политики
-        $this->authorize(getmethod('index'), $albums_settings);
+        $this->authorize(getmethod('index'), $album_settings);
 
-        $albums_settings->name = 'Настройка альбома ID:'. $album->id;
-        $albums_settings->img_small_width = $request->img_small_width;
-        $albums_settings->img_small_height = $request->img_small_height;
-        $albums_settings->img_medium_width = $request->img_medium_width;
-        $albums_settings->img_medium_height = $request->img_medium_height;
-        $albums_settings->img_large_width = $request->img_large_width;
-        $albums_settings->img_large_height = $request->img_large_height;
+        // dd($album->album_settings);
 
-        $albums_settings->img_formats = $request->img_formats;
-        $albums_settings->upload_mode = $request->upload_mode;
+        // $album_settings = $album->album_settings;
 
-        $albums_settings->img_min_width = $request->img_min_width;
-        $albums_settings->img_min_height = $request->img_min_height;
-        $albums_settings->img_max_size = $request->img_max_size;
-        $albums_settings->album_id = $album->id;
-        $albums_settings->save();
+        $album_settings->name = 'Настройка альбома ID:'. $album->id;
+        $album_settings->img_small_width = $request->img_small_width;
+        $album_settings->img_small_height = $request->img_small_height;
+        $album_settings->img_medium_width = $request->img_medium_width;
+        $album_settings->img_medium_height = $request->img_medium_height;
+        $album_settings->img_large_width = $request->img_large_width;
+        $album_settings->img_large_height = $request->img_large_height;
+
+        $album_settings->img_formats = $request->img_formats;
+        $album_settings->upload_mode = $request->upload_mode;
+
+        $album_settings->img_min_width = $request->img_min_width;
+        $album_settings->img_min_height = $request->img_min_height;
+        $album_settings->img_max_size = $request->img_max_size;
+        $album_settings->album_id = $album->id;
+        $album_settings->save();
 
         // Если параметров нет - удаляем запись из таблицы (чтоб не держать пустые)
         if(
-            ($albums_settings->img_small_width == null)&&
-            ($albums_settings->img_small_height == null)&&
-            ($albums_settings->img_medium_width == null)&&       
-            ($albums_settings->img_medium_height == null)&&
-            ($albums_settings->img_large_width == null)&&
-            ($albums_settings->img_large_height == null)&&
-            ($albums_settings->img_formats == null)&&
-            ($albums_settings->img_min_width == null)&&
-            ($albums_settings->img_min_height == null)&&
-            ($albums_settings->img_max_size == null)
+            ($album_settings->img_small_width == null)&&
+            ($album_settings->img_small_height == null)&&
+            ($album_settings->img_medium_width == null)&&       
+            ($album_settings->img_medium_height == null)&&
+            ($album_settings->img_large_width == null)&&
+            ($album_settings->img_large_height == null)&&
+            ($album_settings->img_formats == null)&&
+            ($album_settings->img_min_width == null)&&
+            ($album_settings->img_min_height == null)&&
+            ($album_settings->img_max_size == null)
         ){
-            $albums_settings = AlbumsSetting::destroy($albums_settings->id);
+            $album_settings = AlbumSetting::destroy($album_settings->id);
         };
 
 

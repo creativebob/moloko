@@ -3,17 +3,17 @@
 namespace App\Policies;
 
 use App\User;
-use App\AlbumsSetting;
+use App\AlbumSetting;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 use App\Policies\Traits\PoliticTrait;
 
-class AlbumsSettingPolicy
+class AlbumSettingPolicy
 {
     use HandlesAuthorization;
     use PoliticTrait;
 
-    protected $entity_name = 'albums_settings';
+    protected $entity_name = 'album_settings';
     protected $entity_dependence = false;
 
     public function before($user)
@@ -28,7 +28,7 @@ class AlbumsSettingPolicy
         return $result;
     }
 
-    public function view(User $user, AlbumsSetting $model)
+    public function view(User $user, AlbumSetting $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
         return $result;
@@ -40,13 +40,13 @@ class AlbumsSettingPolicy
         return $result;
     }
 
-    public function update(User $user, AlbumsSetting $model)
+    public function update(User $user, AlbumSetting $model)
     { 
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
 
-    public function delete(User $user, AlbumsSetting $model)
+    public function delete(User $user, AlbumSetting $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
@@ -58,7 +58,7 @@ class AlbumsSettingPolicy
         return $result;
     }
 
-    public function automoderate(User $user, AlbumsSetting $model)
+    public function automoderate(User $user, AlbumSetting $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'automoderate', $this->entity_dependence);
         return $result;

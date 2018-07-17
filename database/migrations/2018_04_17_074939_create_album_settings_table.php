@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAlbumsSettingsTable extends Migration
+class CreateAlbumSettingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateAlbumsSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('albums_settings', function (Blueprint $table) {
+        Schema::create('album_settings', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('album_id')->nullable()->unsigned()->comment('Id альбома');
             $table->foreign('album_id')->references('id')->on('albums');
@@ -59,6 +60,6 @@ class CreateAlbumsSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('albums_settings');
+        Schema::dropIfExists('album_settings');
     }
 }

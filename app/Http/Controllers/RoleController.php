@@ -220,7 +220,7 @@ class RoleController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::moderatorLimit($answer)->findOrFail($role_id);
+        $role = Role::with('rights')->moderatorLimit($answer)->findOrFail($role_id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $role);

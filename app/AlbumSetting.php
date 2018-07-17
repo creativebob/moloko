@@ -19,7 +19,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 // use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class AlbumsSetting extends Model
+class AlbumSetting extends Model
 {
 	use SoftDeletes;
 

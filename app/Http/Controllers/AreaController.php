@@ -119,4 +119,33 @@ class AreaController extends Controller
             }
         }
     }
+
+    // Отображение на сайте
+    public function ajax_display(Request $request)
+    {
+
+        if ($request->action == 'hide') {
+            $display = null;
+        } else {
+            $display = 1;
+        }
+
+        $area = Area::findOrFail($request->id);
+        $area->display = $display;
+        $area->save();
+
+        if ($area) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении отображения на сайте!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
 }
