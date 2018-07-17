@@ -1500,6 +1500,7 @@ tr:hover .icon-display-show {
   color: #000000;
   padding: 0;
   margin-bottom: 1rem;
+  margin-top: -16px;
 }
 .table-content-search tbody {
   border: none;
@@ -1514,7 +1515,7 @@ tr:hover .icon-display-show {
   font-size: 0.8rem;
   border-bottom: 1px solid #dadada;
   line-height: 1;
-  padding: 0.4rem 0;
+  padding: 0.4rem 10px;
 }
 .table-content-search tbody td a {
   color: #5190ff;

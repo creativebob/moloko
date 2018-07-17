@@ -25,7 +25,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 1,
         ],
         [
             'name' => 'Компании',
@@ -105,7 +105,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 7,
         ],
          [
             'name' => 'Сущности',
@@ -159,7 +159,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 5,
         ],
         [
             'name' => 'Сайты',
@@ -200,7 +200,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 6,
         ],
         [
             'name' => 'Должности',
@@ -280,7 +280,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 4,
         ],
         [
             'name' => 'Категории товаров',
@@ -388,7 +388,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 2,
         ],
 
         [
@@ -473,6 +473,19 @@ class MenusTableSeeder extends Seeder
             'display' => 1,
             'sort' => null,
         ],
+        [
+            'name' => 'Прoизводство',
+            'icon' => 'icon-production',
+            'alias' => null,
+            'parent_id' => null,
+            'page_id' => null,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => 3,
+        ],
 
 
         // Остальное
@@ -489,19 +502,8 @@ class MenusTableSeeder extends Seeder
         //     'display' => 1,
         //     'sort' => null,
         // ],
-        // [
-        //     'name' => 'Прoизводство',
-        //     'icon' => 'icon-production',
-        //     'alias' => null,
-        //     'parent_id' => null,
-        //     'page_id' => null,
-        //     'navigation_id' => 2,
-        //     'company_id' => null,
-        //     'system_item' => 1,
-        //     'author_id' => 1,
-        //     'display' => 1,
-        //     'sort' => null,
-        // ],
+
+
 
     ]);
 }

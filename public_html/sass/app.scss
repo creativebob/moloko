@@ -1852,7 +1852,8 @@ tr:hover .icon-display-show {
     color: $input-color;
     padding: 0;
     margin-bottom: 1rem;
-
+    margin-top: -16px;
+    
   }
   
   tbody {
@@ -1872,7 +1873,7 @@ tr:hover .icon-display-show {
       font-size: 0.8rem;
       border-bottom: 1px solid $table-search-td-border-color;
       line-height: 1;
-      padding: 0.4rem 0;
+      padding: 0.4rem 10px;
 
       a {
         color: $table-search-td-color;
