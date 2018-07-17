@@ -424,7 +424,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Страницы',
             'icon' => null,
-            'alias' => '/admin/pages',
+            'alias' => '/pages',
             'parent_id' => null,
             'page_id' => null,
             'navigation_id' => 1,
@@ -437,7 +437,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Навигации',
             'icon' => null,
-            'alias' => '/admin/navigations',
+            'alias' => '/navigations',
             'parent_id' => null,
             'page_id' => null,
             'navigation_id' => 1,
@@ -450,7 +450,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Новости',
             'icon' => null,
-            'alias' => '/admin/news',
+            'alias' => '/news',
             'parent_id' => null,
             'page_id' => null,
             'navigation_id' => 1,
@@ -463,7 +463,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Галерея',
             'icon' => null,
-            'alias' => '/admin/gallery',
+            'alias' => '/gallery',
             'parent_id' => null,
             'page_id' => null,
             'navigation_id' => 1,

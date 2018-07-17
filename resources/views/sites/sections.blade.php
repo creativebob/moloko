@@ -76,7 +76,7 @@
         <tr class="item" id="sites-{{ $site->id }}" data-name="{{ $site->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"><label class="label-check" for="check-{{ $site->id }}"></label></td>
-          <td class="td-menu-name"><a href="/admin/sites/{{ $site->alias }}/{{ $menu->alias }}">{{ $menu->name }}</a></td>
+          <td class="td-menu-name"><a href="/admin/sites/{{ $site->alias }}{{ $menu->alias }}">{{ $menu->name }}</a></td>
           {{-- <td class="td-site-author">@if(isset($site->author->first_name)) {{ $site->author->first_name . ' ' . $site->author->second_name }} @endif</td> --}}
           <td class="td-delete">
             @if (isset($site->company_id))
