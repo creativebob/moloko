@@ -113,10 +113,13 @@ class AlbumController extends Controller
         ->companiesLimit($answer_albums_categories)
         ->authors($answer_albums_categories)
         ->systemItem($answer_albums_categories) // Фильтр по системным записям
+        ->template($answer_albums_categories) // Выводим шаблоны категорий альбомов
         ->orderBy('sort', 'asc')
         ->get(['id','name','category_status','parent_id'])
         ->keyBy('id')
         ->toArray();
+
+        // dd($albums_categories);
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         $albums_categories_list = get_select_tree($albums_categories, null, null, null);

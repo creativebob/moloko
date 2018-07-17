@@ -1852,8 +1852,7 @@ tr:hover .icon-display-show {
     color: $input-color;
     padding: 0;
     margin-bottom: 1rem;
-    margin-top: -16px;
-    
+
   }
   
   tbody {
@@ -1894,6 +1893,7 @@ tr:hover .icon-display-show {
   background-color: white;
   width: 400px;
   z-index: 50;
+  margin-top: -16px;
 }
 // ------------------------------------------- Tabs -------------------------------------------
 

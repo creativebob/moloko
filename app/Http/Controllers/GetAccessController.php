@@ -119,7 +119,7 @@ class GetAccessController extends Controller
                 // Проверяем, устроен ли пользователь в компании
                 $user_department = $user->staff->first();
                 if($user->staff->first() == null){abort(403, "Пользователь не устроен в компании!");};
-                $user_redirect = $user->staff->first()->position->page->alias;
+                $user_redirect = '/admin/' . $user->staff->first()->position->page->alias;
 
                 if($user_department != null){
                     $user_filial_id = $user_department->filial_id;

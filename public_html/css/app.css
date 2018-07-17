@@ -1500,7 +1500,6 @@ tr:hover .icon-display-show {
   color: #000000;
   padding: 0;
   margin-bottom: 1rem;
-  margin-top: -16px;
 }
 .table-content-search tbody {
   border: none;
@@ -1532,6 +1531,7 @@ tr:hover .icon-display-show {
   background-color: white;
   width: 400px;
   z-index: 50;
+  margin-top: -16px;
 }
 
 #photos-list .active {
