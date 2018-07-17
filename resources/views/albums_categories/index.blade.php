@@ -38,10 +38,15 @@
 @section('scripts')
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.scripts.delete-ajax-script')
+
 {{-- Маска ввода --}}
 @include('includes.scripts.inputs-mask')
+
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
+
+{{-- Скрипт отображеняи на сайте --}}
+@include('includes.scripts.display-ajax')
 <script type="text/javascript">
   $(function() {
   // Функция появления окна с ошибкой

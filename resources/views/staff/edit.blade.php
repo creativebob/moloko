@@ -20,7 +20,7 @@
 
 @section('content')
 
-  {{ Form::model($staffer, ['url' => '/admin/staff/'.$staffer->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($staffer, ['url' => '/admin/staff/'.$staffer->id, 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
     @include('staff.form', ['submitButtonText' => 'Редактировать сотрудника', 'param'=>''])

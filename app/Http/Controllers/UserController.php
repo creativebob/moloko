@@ -237,42 +237,21 @@ class UserController extends Controller
             $user_id = $user_auth->id;
         }
 
-        if ($request->hasFile('photo')) {
-            $photo = new Photo;
-            $image = $request->file('photo');
-            $directory = $user_auth->company->id.'/media/albums/'.$user->login.'/img/';
-            $extension = $image->getClientOriginalExtension();
-            $photo->extension = $extension;
-            $image_name = 'avatar.'.$extension;
-
-            // $photo->path = '/'.$directory.'/'.$image_name;
-
-            $params = getimagesize($request->file('photo'));
-            $photo->width = $params[0];
-            $photo->height = $params[1];
-
-            $size = filesize($request->file('photo'))/1024;
-            $photo->size = number_format($size, 2, '.', '');
-
-            $photo->name = $image_name;
-            $photo->company_id = $company_id;
-            $photo->author_id = $user_id;
-            $photo->save();
-
-            $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
-
-            $avater = Image::make($request->photo)->widen(30);
-            $save_path = storage_path('app/public/'.$directory);
-            if (!file_exists($save_path)) {
-                mkdir($save_path, 755, true);
-            }
-            $avater->save(storage_path('app/public/'.$directory.$image_name));
-
-            $user->photo = $photo->path;
-            $user->photo_id = $photo->id;
-        }   
-
         $user->save();
+
+        // Если прикрепили фото
+        if ($request->hasFile('photo')) {
+
+            // Директория
+            $directory = $company_id.'/media/users/'.$user->id.'/img/';
+
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
+            $array = save_photo($request, $user->id, $company_id, $directory, 'avatar-'.time());
+            $photo = $array['photo'];
+
+            $user->photo_id = $photo->id;
+            $user->save();
+        }
 
         if ($user) {
             // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
@@ -386,6 +365,9 @@ class UserController extends Controller
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
         $user_auth_id = hideGod($user_auth);
+        $company_id = $user_auth->company_id;
+
+        // dd($company_id);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -453,49 +435,28 @@ class UserController extends Controller
         $user->filial_id = $request->filial_id;
 
 
-        $company_id = $user_auth->company_id;
-        if ($user_auth->god == 1) {
-            // Если бог, то ставим автором робота
-            $user_id = 1;
-            $company_id = null;
-        } else {
-            $user_id = $user_auth->id;
-        }
+        // $company_id = $user_auth->company_id;
 
+        // Если прикрепили фото
         if ($request->hasFile('photo')) {
-            $photo = new Photo;
-            $image = $request->file('photo');
-            $directory = $user_auth->company->id.'/media/albums/'.$user->login.'/img/';
-            $extension = $image->getClientOriginalExtension();
-            $photo->extension = $extension;
-            $image_name = 'avatar.'.$extension;
 
-            // $photo->path = '/'.$directory.'/'.$image_name;
 
-            $params = getimagesize($request->file('photo'));
-            $photo->width = $params[0];
-            $photo->height = $params[1];
+            // dd($company_id);
+            // Директория
+            $directory = $company_id.'/media/users/'.$user->id.'/img/';
 
-            $size = filesize($request->file('photo'))/1024;
-            $photo->size = number_format($size, 2, '.', '');
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            if ($user->photo_id) {
+                $array = save_photo($request, $user_auth_id, $company_id, $directory, 'avatar-'.time(), null, $user->photo_id);
 
-            $photo->name = $image_name;
-            $photo->company_id = $company_id;
-            $photo->author_id = $user_id;
-            $photo->save();
-
-            $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
-
-            $avater = Image::make($request->photo)->widen(30);
-            $save_path = storage_path('app/public/'.$directory);
-            if (!file_exists($save_path)) {
-                mkdir($save_path, 755, true);
+            } else {
+                $array = save_photo($request, $user_auth_id, $company_id, $directory, 'avatar-'.time());
+                
             }
-            $avater->save(storage_path('app/public/'.$directory.$image_name));
+            $photo = $array['photo'];
 
-            // $user->photo = $photo->path;
             $user->photo_id = $photo->id;
-        }   
+        }
 
         // Модерируем (Временно)
         if($answer['automoderate']){$user->moderation = null;};

@@ -62,6 +62,8 @@ class AlbumsCategoryController extends Controller
             return view('albums_categories.category-list', ['albums_categories_tree' => $albums_categories_tree, 'id' => $request->id]);
         }
 
+        // dd($albums_categories_tree);
+
         // Отдаем на шаблон
         return view('albums_categories.index', compact('albums_categories_tree', 'page_info'));
     }
@@ -370,5 +372,34 @@ class AlbumsCategoryController extends Controller
             $albums_category->save();
             $i++;
         }
+    }
+
+    // Отображение на сайте
+    public function ajax_display(Request $request)
+    {
+
+        if ($request->action == 'hide') {
+            $display = null;
+        } else {
+            $display = 1;
+        }
+
+        $albums_category = AlbumsCategory::findOrFail($request->id);
+        $albums_category->display = $display;
+        $albums_category->save();
+
+        if ($albums_category) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении отображения на сайте!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 }

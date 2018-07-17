@@ -55,7 +55,7 @@ $count = count($services_category['services_products']) + $count;
     </div>
     <div>
       @if($services_category['edit'] == 1)
-      <a class="icon-list-edit sprite" href="/services_categories/{{ $services_category['id'] }}/edit"></a>
+      <a class="icon-list-edit sprite" href="/admin/services_categories/{{ $services_category['id'] }}/edit"></a>
       @endif
     </div>
     <div class="del">
