@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -23,6 +24,7 @@ class LoginController extends Controller
         return 'login';
     }
 
+    // Закоментировал это
     use AuthenticatesUsers;
 
     /**
@@ -33,11 +35,16 @@ class LoginController extends Controller
     
     protected $redirectTo = 'admin/getaccess';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+        $request->session()->flush();
+        $request->session()->regenerate();
+        return redirect('admin');
+    }
+
+
     public function __construct()
     {
         $this->middleware('guest')->except('logout');

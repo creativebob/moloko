@@ -10,11 +10,13 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Auth::routes();
+
 Route::resource('/site_api', 'ApiController');
 Route::get('/medcosm', 'ApiController@medcosm');
 
-
-
+// Вход в панель управления
 Route::get('/', function () {
   return view('layouts.enter');
 });
@@ -24,10 +26,6 @@ Route::get('/img/{path}', 'ImageController@show')->where('path', '.*');
 Route::get('/lol', function () {
   return view('demo');
 });
-
-
-
-Auth::routes();
 
 Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
 
@@ -469,6 +467,6 @@ Route::post('/menus_display', 'MenuController@ajax_display')->middleware('auth')
 // ------------------------------------- Отображение сессии -----------------------------------------
 Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');
 
-Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');
+
+

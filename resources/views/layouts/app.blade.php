@@ -113,6 +113,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
               {{ csrf_field() }}
             </form>
+            
           </ul>
         </div>
       </div>

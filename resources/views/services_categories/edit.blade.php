@@ -54,7 +54,7 @@
       </div>
       @endif
 
-      {{ Form::model($services_category, ['url' => '/services_categories/'.$services_category->id, 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'products-category-form']) }}
+      {{ Form::model($services_category, ['url' => '/admin/services_categories/'.$services_category->id, 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'products-category-form']) }}
       {{ method_field('PATCH') }}
 
       <!-- Общая информация -->
@@ -102,12 +102,15 @@
       <div class="tabs-panel" id="site">
         <div class="grid-x grid-padding-x">
           <div class="small-12 medium-6 cell">
-            <label>Описание
-              @include('includes.inputs.textarea', ['value'=>$services_category->description, 'name'=>'description', 'required'=>''])
-            </label>
+
+            <label>Описание:
+              {{ Form::textarea('description', $services_category->description, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+            </label><br>
+
             <label>Description для сайта
               @include('includes.inputs.textarea', ['value'=>$services_category->seo_description, 'name'=>'seo_description', 'required'=>''])
             </label>
+
           </div>
           <div class="small-12 medium-6 cell">
             <label>Выберите аватар
@@ -228,13 +231,26 @@
 @endsection
 
 @section('scripts')
+
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
 @include('products.scripts')
 @php
 $settings = config()->get('settings');
 @endphp
+
+<script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
 <script>
+
+
+  CKEDITOR.replace('content-ckeditor');
+
+  // Конфигурация 
+  CKEDITOR.config.toolbar = [
+    ['Bold', 'Italic', 'NumberedList', 'BulletedList', 'Maximize', 'Source']
+  ];
+
+
 
   // Основные ностойки
   var services_category_id = '{{ $services_category->id }}';
@@ -405,7 +421,7 @@ $settings = config()->get('settings');
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
-          url: '/services_categories/' + services_category_id + '/edit',
+          url: '/admin/services_categories/' + services_category_id + '/edit',
           type: 'POST',
           success: function(html){
             // alert(html);

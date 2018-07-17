@@ -1,6 +1,5 @@
 <script type="text/javascript">
 
-
   $(document).on('change', '#units-categories-list', function() {
     var id = $(this).val();
     // alert(id);

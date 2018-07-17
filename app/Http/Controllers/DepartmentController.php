@@ -411,9 +411,28 @@ class DepartmentController extends Controller
             $schedule_entity->save();
         }
 
-        
-
         if ($department) {
+
+            // Получаем сессию
+            $access  = session('access');
+
+                // Получаем все отделы компании
+                $my_departments = Department::whereCompany_id($user->company_id)->get();
+
+                // Настройка прав бога, если он авторизован под компанией 
+                foreach($my_departments as $my_department){
+
+                    // Пишем в сессию список отделов
+                    $access['company_info']['departments'][$my_department->id] = $my_department->name;
+
+                    // Пишем в сессию список филиалов
+                    if($my_department->filial_status == 1){
+                        $access['company_info']['filials'][$my_department->id] = $my_department->name;
+                    };
+                }
+
+            // Перезаписываем сессию
+            session(['access' => $access]);
 
             // Переадресовываем на index
             return redirect()->action('DepartmentController@index', ['id' => $department->id, 'item' => 'department']);
@@ -421,6 +440,7 @@ class DepartmentController extends Controller
             // $action_method = "DepartmentController@get_content";
             // $action_arrray = ['id' => $department->id, 'item' => 'department'];
             // return redirect()->action('GetAccessController@set', ['action_method' => $action_method, 'action_arrray' => $action_arrray]);
+        
         } else {
             abort(403, 'Ошибка при записи отдела!');
         }
