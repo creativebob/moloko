@@ -53,6 +53,8 @@ Route::post('/albums_category_check', 'AlbumsCategoryController@albums_category_
 Route::post('/albums_categories_list', 'AlbumsCategoryController@albums_categories_list')->middleware('auth');
 // Сортировка категорий альбомов
 Route::post('/albums_categories_sort', 'AlbumsCategoryController@albums_categories_sort')->middleware('auth');
+// Отображение на сайте
+Route::post('/albums_categories_display', 'AlbumsCategoryController@ajax_display')->middleware('auth');
 
 // --------------------------------------- Альбомы -----------------------------------------------
 // Route::resource('/albums', 'AlbumController')->middleware('auth');

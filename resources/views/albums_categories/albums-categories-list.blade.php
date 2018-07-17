@@ -7,7 +7,7 @@
     $count = count($albums_category['children']);
   @endphp
 @endif
-@if (isset($products_category['children']))
+@if (isset($albums_category['children']))
 <li class="medium-item item parent" id="albums_categories-{{ $albums_category['id'] }}" data-name="{{ $albums_category['name'] }}">
   <a class="medium-link @if($drop == 0) link-small @endif">
     <div class="icon-open sprite"></div>
@@ -21,6 +21,17 @@
     @endif
   </a>
   <div class="icon-list">
+
+    <div class="display-menu">
+      @can ('publisher', App\AlbumsCategory::class)
+      @if ($albums_category['display'] == 1)
+      <div class="icon-display-show black sprite" data-open="item-display"></div>
+      @else
+      <div class="icon-display-hide black sprite" data-open="item-display"></div>
+      @endif
+      @endcan
+    </div>
+    
     <div>
       @can('create', App\AlbumsCategory::class)
       <div class="icon-list-add sprite" data-open="medium-add"></div>
@@ -66,13 +77,19 @@
     @if ($albums_category['system_item'])
     <span class="system-item">Системная запись!</span>
     @endif
-    @if ($albums_category['display'] == 1)
-    <span class="system-item">Отображается на сайте</span>
-    @else
-    <span class="no-moderation">Не отображается на сайте</span>
-    @endif
   </a>
   <div class="icon-list">
+
+    <div class="display-menu">
+      @can ('publisher', App\AlbumsCategory::class)
+      @if ($albums_category['display'] == 1)
+      <div class="icon-display-show black sprite" data-open="item-display"></div>
+      @else
+      <div class="icon-display-hide black sprite" data-open="item-display"></div>
+      @endif
+      @endcan
+    </div>
+
     <div>
       @can('create', App\AlbumsCategory::class)
       <div class="icon-list-add sprite" data-open="medium-add"></div>
