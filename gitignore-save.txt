@@ -1,0 +1,6 @@
+app/Http/Controllers/Project
+app/Http/Requests/Project
+resources/views/project
+routes/project
+public_html/project
+storage

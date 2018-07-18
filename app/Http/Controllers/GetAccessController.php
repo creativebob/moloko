@@ -251,13 +251,4 @@ class GetAccessController extends Controller
 
         };
     }
-
-
-    public function relog()
-    {
-        return 123;
-    }
-
-
-
 }

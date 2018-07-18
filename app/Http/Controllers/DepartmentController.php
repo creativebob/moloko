@@ -14,6 +14,9 @@ use App\Worktime;
 use App\Location;
 use App\ScheduleEntity;
 
+// Подрубаем трейт перезаписи сессии
+use App\Http\Controllers\Traits\RewriteSessionDepartments;
+
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\DepartmentRequest;
@@ -24,7 +27,6 @@ use App\Policies\DepartmentPolicy;
 // Общие классы
 use Illuminate\Support\Facades\Log;
 
-
 // Специфические классы
 use Illuminate\Support\Facades\Storage;
 
@@ -34,6 +36,8 @@ use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
 {
+    // Подключаем трейт перезаписи списк отделов (филиалов) в сессии пользователя
+    use RewriteSessionDepartments;
 
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'departments';
@@ -413,26 +417,8 @@ class DepartmentController extends Controller
 
         if ($department) {
 
-            // Получаем сессию
-            $access  = session('access');
-
-                // Получаем все отделы компании
-                $my_departments = Department::whereCompany_id($user->company_id)->get();
-
-                // Настройка прав бога, если он авторизован под компанией 
-                foreach($my_departments as $my_department){
-
-                    // Пишем в сессию список отделов
-                    $access['company_info']['departments'][$my_department->id] = $my_department->name;
-
-                    // Пишем в сессию список филиалов
-                    if($my_department->filial_status == 1){
-                        $access['company_info']['filials'][$my_department->id] = $my_department->name;
-                    };
-                }
-
-            // Перезаписываем сессию
-            session(['access' => $access]);
+            // Перезаписываем сессию: меняем список филиалов и отделов на новый
+            $this->RSDepartments($user);
 
             // Переадресовываем на index
             return redirect()->action('DepartmentController@index', ['id' => $department->id, 'item' => 'department']);
