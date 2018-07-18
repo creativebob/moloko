@@ -54,8 +54,14 @@ class AlbumController extends Controller
         $albums = Album::with('author', 'company', 'albums_category')
         ->withCount('photos')
         ->whereHas('albums_category', function ($query) {
-            $query->whereNull('system_item');
-            // ->where('company_id', '!=', null); // Исключаем програмную категорию
+
+            $query->where('company_id', '!=', null)
+            ->where(function ($query) {
+                $query->where('system_item', 1)->orWhere('system_item', null);
+            })->orWhere('company_id', null)->where(function ($query) {
+                $query->whereNull('system_item');
+            });
+
         })
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
