@@ -1,25 +1,65 @@
 <script type="text/javascript">
-  $(document).on('click', '#submit-role-add', function(event) {
-    event.preventDefault();
-    // Скрипт добавления роли пользователю
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/admin/roleuser",
-      type: "POST",
-      data: {role_id: $('#select-roles').val(), department_id: $('#select-departments').val(), user_id: $('#user-id').val()},
-      success: function (data) {
-        var result = $.parseJSON(data);
-        var data = '';
-        if (result.status == 1) {
-          data = '<tr class=\"parent\" id=\"roleuser-' + result.role_id + '\" data-name="' + result.role_name + '"><td>' + result.role_name + '</td><td>' + result.department_name + '</td><td>Спецправо</td><td>Инфа</td><td class="td-delete"><a class="icon-delete sprite" data-open="item-delete-ajax"></a></td></tr>';
-          $('.roleuser-table').append(data);
-        } else {
-          alert('ошибка');
+  // ------------------- Проверка на совпадение имени --------------------------------------
+  function albumCheck (name, submit, db) {
+
+    // Блокируем аттрибут базы данных
+    $(db).val(0);
+
+    // Смотрим сколько символов
+    var lenname = name.length;
+
+    // Если символов больше 3 - делаем запрос
+    if (lenname > 3) {
+
+
+      // Сам ajax запрос
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: "/admin/albums_check",
+        type: "POST",
+        data: {name: name},
+        beforeSend: function () {
+          $('#alias-check').addClass('icon-load');
+        },
+        success: function(date){
+          $('#alias-check').removeClass('icon-load');
+          var result = $.parseJSON(date);
+          // Если ошибка
+          if (result.error_status == 1) {
+            $(submit).prop('disabled', true);
+            $('.item-error').css('display', 'block');
+            $(db).val(0);
+          } else {
+            // Выводим пришедшие данные на страницу
+            $(submit).prop('disabled', false);
+            $('.item-error').css('display', 'none');
+            $(db).val(1);
+          };
         }
-      }
-    });
+      });
+    };
+    // Удаляем все значения, если символов меньше 3х
+    if (lenname <= 3) {
+      $(submit).prop('disabled', false);
+      $('.item-error').css('display', 'none');
+      $(db).val(0);
+    };
+  };
+  // Проверка существования
+  $(document).on('keyup', '.alias input[name=alias]', function() {
+    // Получаем фрагмент текста
+    var name = $('input[name=alias]').val();
+    // Указываем название кнопки
+    var submit = '.button';
+    // Значение поля с разрешением
+    var db = '#form-first-add .first-item';
+    // Выполняем запрос
+    clearTimeout(timerId);   
+    timerId = setTimeout(function() {
+      albumCheck (name, submit, db)
+    }, time); 
   });
 
   function readURL(input) {

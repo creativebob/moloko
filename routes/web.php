@@ -64,6 +64,7 @@ Route::get('/albums/{alias}/edit', 'AlbumController@edit')->middleware('auth')->
 Route::patch('/albums/{id}', 'AlbumController@update')->middleware('auth')->name('albums.update');
 Route::delete('/albums/{id}', 'AlbumController@destroy')->middleware('auth')->name('albums.destroy');
 
+
 // Получение альбомов по категории
 Route::post('/albums_list', 'AlbumController@albums_list')->middleware('auth');
 // Получение альбома
@@ -72,6 +73,8 @@ Route::post('/get_album', 'AlbumController@get_album')->middleware('auth');
 Route::post('/albums_sort', 'AlbumController@albums_sort')->middleware('auth');
 // Отображение на сайте
 Route::post('/albums_display', 'AlbumController@ajax_display')->middleware('auth');
+// Проверка на существование
+Route::post('/albums_check', 'AlbumController@albums_check')->middleware('auth');
 
 // Route::get('/albums/{alias}', 'AlbumController@sections')->middleware('auth')->name('albums.photos');
 // Группа с префиксом

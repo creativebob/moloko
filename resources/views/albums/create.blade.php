@@ -35,6 +35,7 @@
 @section('scripts')
   @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
+  @include('albums.scripts')
   @include('includes.scripts.pickmeup-script')
 @endsection
 

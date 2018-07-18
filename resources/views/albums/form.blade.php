@@ -41,8 +41,10 @@
                             <label>Название альбома
                                 @include('includes.inputs.name', ['value'=>$album->name, 'name'=>'name', 'required'=>'required'])
                             </label>
-                            <label>Алиас альбома
+                            <label class="alias">Алиас альбома
                                 @include('includes.inputs.name', ['value'=>$album->alias, 'name'=>'alias', 'required'=>'required'])
+                                <div class="sprite-input-right find-status" id="alias-check"></div>
+                                <div class="item-error">Такой альбом уже существует!</div>
                             </label>
                         </div>
                         <div class="small-12 medium-6 cell">

@@ -27,4 +27,5 @@
 
 @section('scripts')
   @include('includes.scripts.inputs-mask')
+  @include('albums.scripts')
 @endsection

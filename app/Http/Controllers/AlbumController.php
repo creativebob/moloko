@@ -557,4 +557,30 @@ class AlbumController extends Controller
         }
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
+
+     // Проверка наличия в базе
+    public function albums_check(Request $request)
+    {
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // Проверка отдела в нашей базе данных
+        $album = Album::where(['alias' => $request->name, 'company_id' => $user->company_id])->first();
+
+        // Если такое название есть
+        if ($album) {
+            $result = [
+                'error_status' => 1,
+            ];
+
+            // Если нет
+        } else {
+            $result = [
+                'error_status' => 0
+            ];
+        }
+
+        return json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
 }
