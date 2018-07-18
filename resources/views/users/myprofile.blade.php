@@ -294,7 +294,8 @@
       <div class="grid-x grid-padding-x"> 
         <div class="small-12 cell tabs-margin-top">
 
-          <imput type="hidden" value='1' name="user_type">
+          <input type="hidden" value='1' name="user_type">
+          <input type="hidden" value='true' name="users_edit_mode">
 
           <label>Логин
             {{ Form::text('login', $user->login, ['class'=>'login-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'required', 'pattern'=>'[A-Za-z0-9._-]{6,30}']) }}
