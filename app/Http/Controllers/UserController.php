@@ -450,8 +450,8 @@ class UserController extends Controller
 
             } else {
                 $array = save_photo($request, $user_auth_id, $company_id, $directory, 'avatar-'.time());
-                
             }
+
             $photo = $array['photo'];
 
             $user->photo_id = $photo->id;
@@ -462,11 +462,10 @@ class UserController extends Controller
 
         $user->save();
 
-        // dd($request->access);
+        // Выполняем, только если данные пришли не из userfrofile!
+        if(!isset($request->users_edit_mode)){
 
-        if ($user) {
-
-            // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
+            // Тут вписываем изменения по правам
             if (isset($request->access)) {
 
                 $delete = RoleUser::whereUser_id($user->id)->delete();
@@ -488,14 +487,17 @@ class UserController extends Controller
                     ];
                 }
 
-                // dd($mass);
                 DB::table('role_user')->insert($mass);
 
             } else {
+
                 // Если удалили последнюю роль для должности и пришел пустой массив
                 $delete = RoleUser::whereUser_id($user->id)->delete();
             }
 
+        };
+
+        if ($user) {
 
             $backroute = $request->backroute;
             if(isset($backroute)){

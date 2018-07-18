@@ -123,7 +123,7 @@
           </td>
           <td>
             <a href="/admin/services/{{ $service->id }}/edit">
-              <img src="{{ isset($service->photo_id) ? '/storage/'.$service->company_id.'/media/services/'.$service->id.'/img/small/'.$service->photo->name : '/img/plug/product_small_default_color.jpg' }}" alt="{{ isset($service->photo_id) ? $service->name : 'Нет фото' }}">
+              <img src="{{ isset($service->photo_id) ? '/storage/'.$service->company_id.'/media/services/'.$service->id.'/img/small/'.$service->photo->name : '/crm/img/plug/service_small_default_color.jpg' }}" alt="{{ isset($service->photo_id) ? $service->name : 'Нет фото' }}">
             </a>
           </td>
           <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->name }}</a></td>

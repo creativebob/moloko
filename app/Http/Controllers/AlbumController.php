@@ -452,9 +452,11 @@ class AlbumController extends Controller
 
             // Удаляем связи
             $photos_album = $album->photos()->detach();
-            if ($photos_album == false) {
-                abort(403, 'Ошибка удаления связей с изображениями');
-            }
+            
+            
+            // if ($photos_album == false) {
+            //     abort(403, 'Ошибка удаления связей с изображениями');
+            // }
 
             // Удаляем альбом с обновлением
             $album = Album::destroy($id);
