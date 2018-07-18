@@ -131,10 +131,10 @@
                                     </div>
 
                                   <div class="small-12 cell radiobutton">
-                                    {{ Form::radio('upload_mode', 1, true, ['id'=>'mode_min']) }}
+                                    {{ Form::radio('upload_mode', 0, true, ['id'=>'mode_min']) }}
                                     <label for="mode_min"><span>Указаны минимальные размеры</span></label>
 
-                                    {{ Form::radio('upload_mode', 0, false, ['id'=>'mode_fix']) }}
+                                    {{ Form::radio('upload_mode', 1, false, ['id'=>'mode_fix']) }}
                                     <label for="mode_fix"><span>Загружать в строго указанных размерах</span></label>
                                   </div>
 

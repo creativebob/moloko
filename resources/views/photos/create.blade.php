@@ -38,40 +38,7 @@
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.pickmeup-script')
 
-@php
-$settings = config()->get('settings');
-@endphp
-
-@if ($album->album_settings->img_max_size != null)
-@php
-$settings['img_max_size'] = $album->album_settings->img_max_size;
-@endphp
-@endif
-
-@if ($album->album_settings->img_formats != null) 
-@php
-$settings['img_formats'] = $album->album_settings->img_formats;
-@endphp
-@endif
-
-@if ($album->album_settings->img_min_width != null) 
-@php
-$settings['img_min_width'] = $album->album_settings->img_min_width;
-@endphp
-@endif
-
-@if ($album->album_settings->img_min_height != null) 
-@php
-$settings['img_min_height'] = $album->album_settings->img_min_height;
-@endphp
-@endif
-
-@php
-$settings['upload_mode'] = $album->album_settings->upload_mode;
-@endphp
-
 <script>
-    var uploadMode = '{{ $settings['upload_mode'] }}';
 
     Dropzone.options.myDropzone = {
         paramName: 'photo',
@@ -84,7 +51,7 @@ $settings['upload_mode'] = $album->album_settings->upload_mode;
                 file.previewTemplate.setAttribute('id',responseText[0].id);
             });
             this.on("thumbnail", function(file) {
-                if (uploadMode == 0) {
+                if ({{ $settings['upload_mode'] }} == 0) {
                     if (file.width < {{ $settings['img_min_width'] }} || file.height < {{ $settings['img_min_height'] }}) {
                         file.rejectDimensions()
                     }
@@ -104,7 +71,7 @@ $settings['upload_mode'] = $album->album_settings->upload_mode;
         accept: function(file, done) {
             file.acceptDimensions = done;
             file.rejectDimensions = function() {
-                if (uploadMode == 0) {
+                if ({{ $settings['upload_mode'] }} == 0) {
                     done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину, и {{ $settings['img_min_height'] }} в высоту."); 
                 } else {
                     done("Размер должен быть {{ $settings['img_min_width'] }} px в ширину, и {{ $settings['img_min_height'] }} в высоту."); 

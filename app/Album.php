@@ -85,7 +85,7 @@ class Album extends Model
     // Получаем настройки
     public function album_settings()
     {
-        return $this->hasOne('App\AlbumSetting', 'album_id');
+        return $this->hasOne('App\EntitySetting', 'entity_id')->where('entity', 'albums');
     }
 
 }

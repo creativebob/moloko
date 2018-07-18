@@ -1,6 +1,6 @@
 <?php
 use App\Photo;
-use App\AlbumSetting;
+use App\EntitySetting;
 
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -49,7 +49,7 @@ function save_photo($request, $user_id, $company_id, $directory, $name, $album_i
     $settings = config()->get('settings');
 
     // Смотрим, есть ли настройки на конкретный альбом
-    $get_settings = AlbumSetting::where('album_id', $album_id)->first();
+    $get_settings = EntitySetting::where(['entity_id' => $album_id, 'entity' => 'albums'])->first();
 
     if($get_settings){
 

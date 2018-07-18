@@ -10,7 +10,7 @@ use App\User;
 use App\List_item;
 use App\Booklist;
 use App\AlbumsCategory;
-use App\AlbumSetting;
+use App\EntitySetting;
 use App\Role;
 
 // Валидация
@@ -135,7 +135,7 @@ class AlbumController extends Controller
         // dd($albums_categories_list);
 
 
-        $album_settings = new AlbumSetting;
+        $album_settings = new EntitySetting;
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -146,6 +146,8 @@ class AlbumController extends Controller
 
     public function store(AlbumRequest $request)
     {
+
+        // dd($request);
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Album::class);
 
@@ -183,9 +185,10 @@ class AlbumController extends Controller
 
 
         // Наполняем сущность данными
-        $album_settings = new AlbumSetting;
+        $album_settings = new EntitySetting;
 
-        $album_settings->album_id = $album->id;
+        $album_settings->entity_id = $album->id;
+        $album_settings->entity = 'albums';
         $album_settings->name = 'Настройка альбома ID:'. $album->id;
         $album_settings->img_small_width = $request->img_small_width;
         $album_settings->img_small_height = $request->img_small_height;
@@ -313,13 +316,11 @@ class AlbumController extends Controller
         $answer_album_settings = operator_right('album_settings', false, 'index');
 
 
-        $album_settings = AlbumSetting::moderatorLimit($answer_album_settings)->where('album_id', $album->id)->first();
+        $album_settings = EntitySetting::moderatorLimit($answer_album_settings)->where(['entity_id' => $album->id, 'entity' => 'albums'])->first();
 
-        if(!isset($album_settings->id)){
-
-            $album_settings = new AlbumSetting;
-
-        };
+        // if(!isset($album_settings->id)){
+        //     $album_settings = new EntitySetting;
+        // };
 
         // Подключение политики
         // $this->authorize(getmethod('index'), $album_settings);
@@ -373,13 +374,13 @@ class AlbumController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_album_settings = operator_right('album_settings', false, 'index');
 
-        $album_settings = AlbumSetting::moderatorLimit($answer_album_settings)->where('album_id', $album->id)->first();
+        $album_settings = EntitySetting::moderatorLimit($answer_album_settings)->where(['entity_id' => $album->id, 'entity' => 'albums'])->first();
 
         // dd($album_settings);
 
-        if (empty($album_settings)) {
-            $album_settings = new AlbumSetting;
-        }
+        // if (empty($album_settings)) {
+        //     $album_settings = new EntitySetting;
+        // }
 
         // Подключение политики
         $this->authorize(getmethod('index'), $album_settings);
@@ -387,6 +388,9 @@ class AlbumController extends Controller
         // dd($album->album_settings);
 
         // $album_settings = $album->album_settings;
+
+        // $album_settings->entity_id = $album->id;
+        // $album_settings->entity = 'albums';
 
         $album_settings->name = 'Настройка альбома ID:'. $album->id;
         $album_settings->img_small_width = $request->img_small_width;
@@ -402,24 +406,24 @@ class AlbumController extends Controller
         $album_settings->img_min_width = $request->img_min_width;
         $album_settings->img_min_height = $request->img_min_height;
         $album_settings->img_max_size = $request->img_max_size;
-        $album_settings->album_id = $album->id;
+    
         $album_settings->save();
 
         // Если параметров нет - удаляем запись из таблицы (чтоб не держать пустые)
-        if(
-            ($album_settings->img_small_width == null)&&
-            ($album_settings->img_small_height == null)&&
-            ($album_settings->img_medium_width == null)&&       
-            ($album_settings->img_medium_height == null)&&
-            ($album_settings->img_large_width == null)&&
-            ($album_settings->img_large_height == null)&&
-            ($album_settings->img_formats == null)&&
-            ($album_settings->img_min_width == null)&&
-            ($album_settings->img_min_height == null)&&
-            ($album_settings->img_max_size == null)
-        ){
-            $album_settings = AlbumSetting::destroy($album_settings->id);
-        };
+        // if(
+        //     ($album_settings->img_small_width == null)&&
+        //     ($album_settings->img_small_height == null)&&
+        //     ($album_settings->img_medium_width == null)&&       
+        //     ($album_settings->img_medium_height == null)&&
+        //     ($album_settings->img_large_width == null)&&
+        //     ($album_settings->img_large_height == null)&&
+        //     ($album_settings->img_formats == null)&&
+        //     ($album_settings->img_min_width == null)&&
+        //     ($album_settings->img_min_height == null)&&
+        //     ($album_settings->img_max_size == null)
+        // ){
+        //     $album_settings = EntitySetting::destroy($album_settings->id);
+        // };
 
 
         if ($album) {
@@ -456,11 +460,13 @@ class AlbumController extends Controller
             // Удаляем фотки
             $album->photos()->delete();
 
+            $album->album_settings()->delete();
+
             // Удаляем связи
-            $photos_album = $album->photos()->detach();
-            if ($photos_album == false) {
-                abort(403, 'Ошибка удаления связей с изображениями');
-            }
+            // $photos_album = $album->photos()->detach();
+            // if ($photos_album == false) {
+            //     abort(403, 'Ошибка удаления связей с изображениями');
+            // }
 
             // Удаляем альбом с обновлением
             $album = Album::destroy($id);

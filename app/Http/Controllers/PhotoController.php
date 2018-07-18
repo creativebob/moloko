@@ -34,36 +34,36 @@ use Intervention\Image\ImageManagerStatic as Image;
 class PhotoController extends Controller
 {
     // Сущность над которой производит операции контроллер
-    protected $entity_name = 'photos';
-    protected $entity_dependence = false;
+  protected $entity_name = 'photos';
+  protected $entity_dependence = false;
 
-    public function index(Request $request, $alias)
-    {
+  public function index(Request $request, $alias)
+  {
 
     // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Photo::class);
+    $this->authorize(getmethod(__FUNCTION__), Photo::class);
 
-        $answer_album = operator_right('albums', false, getmethod(__FUNCTION__));
+    $answer_album = operator_right('albums', false, getmethod(__FUNCTION__));
 
     // Получаем сайт
-        $album = Album::with('album_settings')->moderatorLimit($answer_album)->whereAlias($alias)->first();
+    $album = Album::with('album_settings')->moderatorLimit($answer_album)->whereAlias($alias)->first();
 
     // dd($album);
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     // dd($answer);
     // --------------------------------------------------------------------------------------------------------------------------------------
     // ГЛАВНЫЙ ЗАПРОС
     // --------------------------------------------------------------------------------------------------------------------------------------
 
-        $photos = Photo::with(['author', 'company'])
-        ->whereHas('album', function ($query) use ($alias) {
-          $query->whereAlias($alias);
-      })
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
+    $photos = Photo::with(['author', 'company'])
+    ->whereHas('album', function ($query) use ($alias) {
+      $query->whereAlias($alias);
+    })
+    ->moderatorLimit($answer)
+    ->companiesLimit($answer)
     ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
     ->authors($answer)
     ->systemItem($answer) // Фильтр по системным записям
@@ -98,10 +98,10 @@ class PhotoController extends Controller
     
 
     return view('photos.index', compact('photos', 'page_info', 'parent_page_info', 'album', 'alias'));
-}
+  }
 
-public function create(Request $request, $alias)
-{
+  public function create(Request $request, $alias)
+  {
 
     $user = $request->user();
 
@@ -119,6 +119,27 @@ public function create(Request $request, $alias)
     $departments_list = getLS('users', 'view', 'departments');
     $filials_list = getLS('users', 'view', 'departments');
 
+    // Получаем настройки по умолчанию
+    $settings = config()->get('settings');
+    // dd($settings);
+
+    // Выдергиваем настройки из альбома
+    if (isset($album->album_settings->img_max_size)) {
+      $settings['img_max_size'] = $album->album_settings->img_max_size;
+    }
+    if (isset($album->album_settings->img_formats)) {
+      $settings['img_formats'] = $album->album_settings->img_formats;
+    }
+    if (isset($album->album_settings->img_min_width)) {
+      $settings['img_min_width'] = $album->album_settings->img_min_width;
+    }
+    if (isset($album->album_settings->img_min_height)) {
+      $settings['img_min_height'] = $album->album_settings->img_min_height;
+    }
+
+    $settings['upload_mode'] = $album->album_settings->upload_mode;
+    // dd($settings);
+
     $photo = new Photo;
 
     // Инфо о странице
@@ -127,11 +148,11 @@ public function create(Request $request, $alias)
     // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('albums');
 
-    return view('photos.create', compact('alias', 'photo', 'album', 'roles_list', 'page_info', 'parent_page_info'));
-}
+    return view('photos.create', compact('alias', 'photo', 'album', 'roles_list', 'page_info', 'parent_page_info', 'settings'));
+  }
 
-public function store(Request $request, $alias)
-{
+  public function store(Request $request, $alias)
+  {
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Photo::class);
 
@@ -163,40 +184,40 @@ public function store(Request $request, $alias)
       if(!isset($album->photo_id)){
         $album->photo_id = $photo->id;
         $album->save();
-    }
+      }
 
       // $album->photos()->attach($photo->id);
 
-    $media = new AlbumEntity;
-    $media->album_id = $album->id;
-    $media->entity_id = $photo->id;
-    $media->entity = 'photos';
-    $media->save();
+      $media = new AlbumEntity;
+      $media->album_id = $album->id;
+      $media->entity_id = $photo->id;
+      $media->entity = 'photos';
+      $media->save();
 
-    $upload_success = $array['upload_success'];
+      $upload_success = $array['upload_success'];
 
 
       // } 
       // Storage::disk('public')->put($directory.'/small/'.$image_name, $small->stream()->__toString());
       //   // dd($photo);
 
-    if ($upload_success) {
+      if ($upload_success) {
         return response()->json($upload_success, 200);
-    } else {
+      } else {
         return response()->json('error', 400);
+      } 
+    } else {
+      return response()->json('error', 400);
     } 
-} else {
-  return response()->json('error', 400);
-} 
-}
+  }
 
-public function show($id)
-{
+  public function show($id)
+  {
 
-}
+  }
 
-public function edit(Request $request, $alias, $id)
-{
+  public function edit(Request $request, $alias, $id)
+  {
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -219,10 +240,10 @@ public function edit(Request $request, $alias, $id)
     // dd($album);
 
     return view('photos.edit', compact('photo', 'parent_page_info', 'page_info', 'album'));
-}
+  }
 
-public function update(Request $request, $alias, $id)
-{
+  public function update(Request $request, $alias, $id)
+  {
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer_album = operator_right('albums', false, getmethod('index'));
@@ -244,49 +265,49 @@ public function update(Request $request, $alias, $id)
     if ($request->avatar == 1) {
       $album->photo_id = $id;
       $album->save();
-  }
+    }
 
       // Модерация и системная запись
-  $photo->system_item = $request->system_item;
-  $photo->moderation = $request->moderation;
+    $photo->system_item = $request->system_item;
+    $photo->moderation = $request->moderation;
 
       // Отображение на сайте
-  $photo->display = $request->display;
+    $photo->display = $request->display;
 
-  $photo->editor_id = $user_id;
-  $photo->title = $request->title;
-  $photo->description = $request->description;
-  $photo->link = $request->link;
+    $photo->editor_id = $user_id;
+    $photo->title = $request->title;
+    $photo->description = $request->description;
+    $photo->link = $request->link;
 
-  $photo->save();
+    $photo->save();
 
 
     // Инфо о странице
-  $page_info = pageInfo($this->entity_name);
+    $page_info = pageInfo($this->entity_name);
 
     // Так как сущность имеет определенного родителя
-  $parent_page_info = pageInfo('albums');
+    $parent_page_info = pageInfo('albums');
 
-  if ($photo) {
+    if ($photo) {
 
 
 
       return redirect('/admin/albums/'.$alias.'/photos');
-  } else {
+    } else {
       abort(403, 'Ошибка при обновления фотографии!');
+    }
+
   }
 
-}
-
-public function destroy(Request $request, $alias, $id)
-{
+  public function destroy(Request $request, $alias, $id)
+  {
       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
       // ГЛАВНЫЙ ЗАПРОС:
     $photo = Photo::with(['avatar', 'album' => function ($query) use ($alias) {
       $query->whereAlias($alias);
-  }])->moderatorLimit($answer)->findOrFail($id);
+    }])->moderatorLimit($answer)->findOrFail($id);
 
       // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), $photo);
@@ -302,41 +323,41 @@ public function destroy(Request $request, $alias, $id)
 
         if ($album == false) {
           abort(403, 'Ошибка при удалении аватара альбома');
+        }
       }
-  }
-  $directory = $album->company_id.'/media/albums/'.$album->id.'/img';
+      $directory = $album->company_id.'/media/albums/'.$album->id.'/img';
 
 
-  $small = Storage::disk('public')->delete($directory.'/small/'.$photo->name);
-  $medium = Storage::disk('public')->delete($directory.'/medium/'.$photo->name);
-  $large = Storage::disk('public')->delete($directory.'/large/'.$photo->name);
-  $original = Storage::disk('public')->delete($directory.'/original/'.$photo->name);
+      $small = Storage::disk('public')->delete($directory.'/small/'.$photo->name);
+      $medium = Storage::disk('public')->delete($directory.'/medium/'.$photo->name);
+      $large = Storage::disk('public')->delete($directory.'/large/'.$photo->name);
+      $original = Storage::disk('public')->delete($directory.'/original/'.$photo->name);
         // dd($storage);
 
-  $user = $request->user();
+      $user = $request->user();
 
         // Скрываем бога
-  $user_id = hideGod($user);
-  $photo->editor_id = $user_id;
-  $photo->save();
+      $user_id = hideGod($user);
+      $photo->editor_id = $user_id;
+      $photo->save();
 
-  $photo->albums()->detach();
+      $photo->albums()->detach();
 
         // Удаляем страницу с обновлением
-  $photo = Photo::destroy($id);
-  if ($photo) {
-    return redirect('/admin/albums/'.$alias.'/photos');
-} else {
-    abort(403, 'Ошибка при удалении фотографии');
-}
-} else {
-  abort(403, 'Фотография не найдена');
-}
-}
+      $photo = Photo::destroy($id);
+      if ($photo) {
+        return redirect('/admin/albums/'.$alias.'/photos');
+      } else {
+        abort(403, 'Ошибка при удалении фотографии');
+      }
+    } else {
+      abort(403, 'Фотография не найдена');
+    }
+  }
 
     // Сортировка
-public function photos_sort(Request $request)
-{
+  public function photos_sort(Request $request)
+  {
     $result = '';
     $i = 1;
     foreach ($request->photos as $item) {
@@ -344,22 +365,22 @@ public function photos_sort(Request $request)
       $photo->sort = $i;
       $photo->save();
       $i++;
+    }
   }
-}
 
     // ------------------------------------------ Ajax --------------------------------------------------------
-public function get_photo(Request $request)
-{
+  public function get_photo(Request $request)
+  {
       // ГЛАВНЫЙ ЗАПРОС:
     $photo = Photo::with('album')->findOrFail($request->id);
 
       // return $photo;
     return view($request->entity.'.photo-edit', ['photo' => $photo]);
-}
+  }
 
     // Сортировка
-public function update_photo(Request $request, $id)
-{
+  public function update_photo(Request $request, $id)
+  {
 
       // Получаем данные для авторизованного пользователя
     $user = $request->user();
@@ -383,41 +404,41 @@ public function update_photo(Request $request, $id)
 
     if ($photo) {
       return view($request->entity.'.photo-edit', ['photo' => $photo]);
-  } else {
+    } else {
       $result = [
         'error_status' => 1,
         'error_message' => 'Ошибка при записи категории продукции!'
-    ];
-}
-}
+      ];
+    }
+  }
 
     // Отображение на сайте
-public function ajax_display(Request $request)
-{
+  public function ajax_display(Request $request)
+  {
 
     if ($request->action == 'hide') {
       $display = null;
-  } else {
+    } else {
       $display = 1;
-  }
+    }
 
-  $photo = Photo::findOrFail($request->id);
-  $photo->display = $display;
-  $photo->save();
+    $photo = Photo::findOrFail($request->id);
+    $photo->display = $display;
+    $photo->save();
 
-  if ($photo) {
+    if ($photo) {
 
       $result = [
         'error_status' => 0,
-    ];  
-} else {
+      ];  
+    } else {
 
-  $result = [
-    'error_status' => 1,
-    'error_message' => 'Ошибка при обновлении отображения на сайте!'
-];
-}
-echo json_encode($result, JSON_UNESCAPED_UNICODE);
-}
+      $result = [
+        'error_status' => 1,
+        'error_message' => 'Ошибка при обновлении отображения на сайте!'
+      ];
+    }
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+  }
 
 }

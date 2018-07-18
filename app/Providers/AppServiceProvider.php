@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 use App\Menu;
 use App\Site;
-use App\AlbumSetting;
+use App\EntitySetting;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -113,8 +113,8 @@ class AppServiceProvider extends ServiceProvider
 
 
        // Если существует таблица с меню
-    if (Schema::hasTable('album_settings')) {
-      $get_settings = AlbumSetting::whereNull('company_id')->first();
+    if (Schema::hasTable('entity_settings')) {
+      $get_settings = EntitySetting::whereNull('company_id')->first();
 
         // dd($get_settings);
 
