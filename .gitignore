@@ -13,3 +13,10 @@ composer.lock
 .env
 .composer.lock
 
+/app/Http/Controllers/Project
+/app/Http/Requests/Project
+/resources/views/project
+/routes/project.php
+/public_html/project
+/storage
+
