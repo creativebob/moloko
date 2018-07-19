@@ -216,7 +216,7 @@ class UserController extends Controller
         // $user->company_id = $company_id;
 
         // Пишем ID филиала авторизованного пользователя
-        if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
+        if ($filial_id == null) {abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
         $user->filial_id = $filial_id;
 
         // Создаем папку в файловой системе
@@ -510,7 +510,6 @@ class UserController extends Controller
         } else {
             abort(403, 'Ошибка при обновлении пользователя!');
         }
-
     }
 
     public function destroy(Request $request, $id)

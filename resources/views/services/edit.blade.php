@@ -240,7 +240,7 @@
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-7 cell">
-                        {{ Form::open(['url' => '/service/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
+                        {{ Form::open(['url' => '/admin/service/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
                         {{ Form::hidden('name', $service->name) }}
                         {{ Form::hidden('id', $service->id) }}
                         {{ Form::close() }}
@@ -256,7 +256,7 @@
                     <div class="small-12 medium-5 cell">
 
                         {{-- Форма редактированя фотки --}}
-                        {{ Form::open(['url' => '/service/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
+                        {{ Form::open(['url' => '/admin/service/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
 
 
                         {{ Form::hidden('name', $service->name) }}
@@ -303,7 +303,7 @@ $settings = config()->get('settings');
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '/ajax_delete_relation_metric',
+                url: '/admin/ajax_delete_relation_metric',
                 type: 'POST',
                 data: {id: id, entity: 'services', entity_id: service_id},
                 success: function(date){
@@ -353,7 +353,7 @@ $settings = config()->get('settings');
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '/ajax_delete_relation_composition',
+                url: '/admin/ajax_delete_relation_composition',
                 type: 'POST',
                 data: {id: id, service_id: service_id},
                 success: function(date){
@@ -391,7 +391,7 @@ $settings = config()->get('settings');
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: '/ajax_get_service_inputs',
+                    url: '/admin/ajax_get_service_inputs',
                     type: 'POST',
                     data: {service_id: service_id},
                     success: function(html){
@@ -452,7 +452,7 @@ $settings = config()->get('settings');
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: '/ajax_add_property',
+            url: '/admin/ajax_add_property',
             type: 'POST',
             data: {id: id, entity: 'services'},
             success: function(html){
@@ -474,7 +474,7 @@ $settings = config()->get('settings');
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: '/metrics',
+            url: '/admin/metrics',
             type: 'POST',
             data: $('#properties-form').serialize(),
             success: function(html){
@@ -488,7 +488,7 @@ $settings = config()->get('settings');
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: '/services/' + service_id + '/edit',
+            url: '/admin/services/' + service_id + '/edit',
             type: 'GET',
             data: $('#service-form').serialize(),
             success: function(html){
@@ -510,7 +510,7 @@ $settings = config()->get('settings');
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: '/ajax_add_metric_value',
+            url: '/admin/ajax_add_metric_value',
             type: 'POST',
             data: {value: $('#properties-form input[name=value]').val()},
             success: function(html){
@@ -533,7 +533,7 @@ $settings = config()->get('settings');
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '/ajax_add_relation_metric',
+                url: '/admin/ajax_add_relation_metric',
                 type: 'POST',
                 data: {id: $(this).val(), entity: 'services', entity_id: service_id},
                 success: function(html){
@@ -550,7 +550,7 @@ $settings = config()->get('settings');
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: '/ajax_delete_relation_metric',
+            url: '/admin/ajax_delete_relation_metric',
             type: 'POST',
             data: {id: $(this).val(), entity: 'services', entity_id: service_id},
             success: function(date){
@@ -591,7 +591,7 @@ $settings = config()->get('settings');
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '/ajax_add_page_composition',
+                url: '/admin/ajax_add_page_composition',
                 type: 'POST',
                 data: {id: $(this).val(), entity: 'services', service_id: service_id},
                 success: function(html){
@@ -629,7 +629,7 @@ $settings = config()->get('settings');
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: '/ajax_get_photo',
+            url: '/admin/ajax_get_photo',
             type: 'POST',
             data: {id: id, entity: 'services'},
             success: function(html){
@@ -654,7 +654,7 @@ $settings = config()->get('settings');
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: '/ajax_update_photo/' + id,
+            url: '/admin/ajax_update_photo/' + id,
             type: 'PATCH',
             data: $(this).closest('#form-photo-edit').serialize(),
             success: function(html){
@@ -702,7 +702,7 @@ $settings = config()->get('settings');
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: '/service/photos',
+                    url: '/admin/service/photos',
                     type: 'post',
                     data: {service_id: service_id},
                     success: function(html){
