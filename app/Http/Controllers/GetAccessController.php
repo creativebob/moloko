@@ -118,6 +118,7 @@ class GetAccessController extends Controller
 
                 // Проверяем, устроен ли пользователь в компании
                 $user_department = $user->staff->first();
+
                 if($user->staff->first() == null){abort(403, "Пользователь не устроен в компании!");};
                 $user_redirect = '/admin/' . $user->staff->first()->position->page->alias;
 
@@ -127,7 +128,8 @@ class GetAccessController extends Controller
                 } else {abort(403, "Пользователь не устроен в компании!");};
 
                 // Вырубаемся, если пользователь не имеет ID компании, филиала или департамента
-                if(($user->filial_id == null)||($user_department_id == null)){abort(403, "Пользователь не имеет связи с филиалом или должностью");};
+                if(($user->filial_id == null)||($user_department_id == null)){
+                    abort(403, "Пользователь не имеет связи с филиалом или должностью");};
 
                 // dd($user->staff);
 
