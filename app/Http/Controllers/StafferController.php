@@ -284,12 +284,10 @@ class StafferController extends Controller
 
     // Если не пустая дата увольнения пришла
     if (isset($request->dismissal_date)) {
-      // Снимаем с должности в штате
-      $staffer->user_id = null;
-      $staffer->editor_id = $user->id;
 
       // Ищем в сотрудниках по id должности и где пустая дата увольнения
       $employee = Employee::where(['staffer_id' => $id, 'dismissal_date' => null])->first();
+
       // Заполняем дату
       $employee->employment_date = $request->employment_date;
       $employee->dismissal_date = $request->dismissal_date;
@@ -298,6 +296,12 @@ class StafferController extends Controller
 
       // Удаляем должность и права данного юзера
       $delete = RoleUser::where(['position_id' => $staffer->position_id, 'user_id' => $staffer->user_id])->delete();
+
+      // dd($staffer->user_id);
+
+      // Снимаем с должности в штате
+      $staffer->user_id = null;
+      $staffer->editor_id = $user->id;
 
     // Если даты увольнения нет
     } else {
@@ -319,7 +323,6 @@ class StafferController extends Controller
         // Назначаем пользователя
         $staffer->user_id = $request->user_id;
 
-        
         // Создаем новую запись в сотрудниках
         $employee = new Employee;
         $employee->company_id = $user->company_id;

@@ -215,9 +215,9 @@ class UserController extends Controller
         // if($company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
         // $user->company_id = $company_id;
 
-        // // Пишем ID филиала авторизованного пользователя
-        // if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
-        // $user->filial_id = $filial_id;
+        // Пишем ID филиала авторизованного пользователя
+        if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
+        $user->filial_id = $filial_id;
 
         // Создаем папку в файловой системе
         // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'avatars';
