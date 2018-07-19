@@ -110,6 +110,20 @@ class AppServiceProvider extends ServiceProvider
     }
   }
   
+      // Умолчания на случай, если нет доступа к базе (Для формирования autoload)
+      $settings = [];
+      $settings['img_small_width'] = 0;
+      $settings['img_small_height'] = 0;
+      $settings['img_medium_width'] = 0;
+      $settings['img_medium_height'] = 0;
+      $settings['img_large_width'] = 0;
+      $settings['img_large_height'] = 0;   
+
+      $settings['img_formats'] = 0;
+
+      $settings['img_min_width'] = 0;
+      $settings['img_min_height'] = 0;   
+      $settings['img_max_size'] = 0;
 
 
        // Если существует таблица с меню
@@ -118,18 +132,20 @@ class AppServiceProvider extends ServiceProvider
 
         // dd($get_settings);
 
-      $settings['img_small_width'] = $get_settings->img_small_width;
-      $settings['img_small_height'] = $get_settings->img_small_height;
-      $settings['img_medium_width'] = $get_settings->img_medium_width;
-      $settings['img_medium_height'] = $get_settings->img_medium_height;
-      $settings['img_large_width'] = $get_settings->img_large_width;
-      $settings['img_large_height'] = $get_settings->img_large_height;   
+      if($get_settings != null){
+        $settings['img_small_width'] = $get_settings->img_small_width;
+        $settings['img_small_height'] = $get_settings->img_small_height;
+        $settings['img_medium_width'] = $get_settings->img_medium_width;
+        $settings['img_medium_height'] = $get_settings->img_medium_height;
+        $settings['img_large_width'] = $get_settings->img_large_width;
+        $settings['img_large_height'] = $get_settings->img_large_height;   
 
-      $settings['img_formats'] = $get_settings->img_formats;
+        $settings['img_formats'] = $get_settings->img_formats;
 
-      $settings['img_min_width'] = $get_settings->img_min_width;
-      $settings['img_min_height'] = $get_settings->img_min_height;   
-      $settings['img_max_size'] = $get_settings->img_max_size;
+        $settings['img_min_width'] = $get_settings->img_min_width;
+        $settings['img_min_height'] = $get_settings->img_min_height;   
+        $settings['img_max_size'] = $get_settings->img_max_size;
+      };
 
       config()->set('settings', $settings);
 

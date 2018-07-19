@@ -28,8 +28,6 @@
 	    for(var i=0; i<checkboxes.length; i++) {
 	      checkboxes[i].onclick = function() {
 
-
-
 	        counter_checkbox = counter_checkbox + 1;
 
 	        var parent = $(this).closest('.item');

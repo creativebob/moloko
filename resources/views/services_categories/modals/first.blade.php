@@ -10,6 +10,21 @@
       {{ Form::select('services_mode_id', $services_modes_list) }}
     </label>
 
+    <!-- Bottom Left -->
+    <button class="button" type="button" data-toggle="example-dropdown-bottom-left">Тип услуги</button>
+    <div class="dropdown-pane" data-position="bottom" data-alignment="left" id="example-dropdown-bottom-left" data-dropdown data-auto-focus="true">
+      <!-- My dropdown content in here -->
+    </div>
+
+
+  <select>
+      <optgroup label="Option Group">Option Group</option>
+          <option value="option1">Option One</option>
+          <option value="option2">Option Two</option>
+      </optgroup>
+  </select>
+    
+
   </div>
 </div>
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTestTable extends Migration
+class CreateServicesTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,14 @@ class CreateTestTable extends Migration
      */
     public function up()
     {
-        Schema::create('test', function (Blueprint $table) {
+        Schema::create('services_types', function (Blueprint $table) {
             $table->increments('id');
-
+            
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->string('name')->index()->comment('Название области');
-            $table->integer('parent_id')->nullable()->unsigned()->comment('Id отдела, в котором находится отдел');
-            $table->foreign('parent_id')->references('id')->on('sectors');
-            $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
-
-            // $table->integer('industry_id')->unsigned()->nullable()->comment('Id категории, в которо1 находится сектор');
-            // $table->foreign('industry_id')->references('id')->on('sectors');
+            $table->string('name')->index()->comment('Название типа услуги');
+            $table->text('description')->nullable()->comment('Информация о типе услуги');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
@@ -48,6 +44,6 @@ class CreateTestTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test');
+        Schema::dropIfExists('services_types');
     }
 }

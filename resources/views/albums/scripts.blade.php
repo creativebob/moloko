@@ -1,4 +1,9 @@
 <script type="text/javascript">
+
+    // Обозначаем таймер для проверки
+  var timerId;
+  var time = 400;
+  
   // ------------------- Проверка на совпадение имени --------------------------------------
   function albumCheck (name, submit, db) {
 

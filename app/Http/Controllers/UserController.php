@@ -510,7 +510,6 @@ class UserController extends Controller
         } else {
             abort(403, 'Ошибка при обновлении пользователя!');
         }
-
     }
 
     public function destroy(Request $request, $id)
