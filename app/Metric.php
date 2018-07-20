@@ -14,9 +14,17 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
+// Подключаем кеш
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+    
+
 class Metric extends Model
 {
-     use SoftDeletes;
+
+    // Включаем кеш
+    use Cachable;
+
+    use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -27,9 +35,9 @@ class Metric extends Model
     use ModeratorLimitTraitScopes;
 
     // Получаем проодукцию
-    public function products_categories()
+    public function goods_categories()
     {
-        return $this->belongsToMany('App\ProductsCategory', 'metric_entity', 'metric_id', 'entity_id')->where('entity', 'products_categories');
+        return $this->belongsToMany('App\GoodsCategory', 'metric_entity', 'metric_id', 'entity_id')->where('entity', 'goods_categories');
     }
 
      // Получаем единицу измерения

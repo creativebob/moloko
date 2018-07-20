@@ -14,8 +14,16 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
+// Подключаем кеш
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+    
+
 class Value extends Model
 {
+
+	// Включаем кеш
+    use Cachable;
+
     use Notifiable;
     use SoftDeletes;
 

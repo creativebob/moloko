@@ -14,6 +14,11 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
+// Подключаем кеш
+
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+
+
 // Фильтры
 // use App\Scopes\Filters\Filter;
 // use App\Scopes\Filters\BooklistFilter;
@@ -22,6 +27,9 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 class Action extends Model
 {
 
+    // Включаем кеш
+    use Cachable;
+    
     use SoftDeletes;
 
     // Включаем Scopes

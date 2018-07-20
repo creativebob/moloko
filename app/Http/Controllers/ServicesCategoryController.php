@@ -30,7 +30,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ServicesCategoryRequest;
 
 // Политика
-use App\Policies\ServiceServicesCategoryPolicy;
+use App\Policies\ServicesCategoryPolicy;
 
 // Общие классы
 use Illuminate\Support\Facades\Log;

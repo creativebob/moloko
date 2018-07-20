@@ -88,46 +88,25 @@ class AppServiceProvider extends ServiceProvider
       }
 
         // dd(env('SITE_API_TOKEN'));
-
-      if (Schema::hasTable('sites')) {
-
-          // Получаем общую инфу сайта
-        $site = Site::with(['company.location.city',
-          'pages' => function ($query) {
-            $query->whereDisplay(1);
-          }, 'navigations' => function ($query) {
-            $query->with(['navigations_category', 'menus' => function ($query) {
-              $query->whereDisplay(1)->orderBy('sort', 'asc');
-            }])->whereDisplay(1);
-          }])->find(2);
-
-          // dd($site);
-
-        if ($site) {
-         view()->composer('*', function($view) use ($site) {
-          $view->with('site', $site);  
-      });
-    }
-  }
-  
+      
       // Умолчания на случай, если нет доступа к базе (Для формирования autoload)
-      $settings = [];
-      $settings['img_small_width'] = 0;
-      $settings['img_small_height'] = 0;
-      $settings['img_medium_width'] = 0;
-      $settings['img_medium_height'] = 0;
-      $settings['img_large_width'] = 0;
-      $settings['img_large_height'] = 0;   
+     $settings = [];
+     $settings['img_small_width'] = 0;
+     $settings['img_small_height'] = 0;
+     $settings['img_medium_width'] = 0;
+     $settings['img_medium_height'] = 0;
+     $settings['img_large_width'] = 0;
+     $settings['img_large_height'] = 0;   
 
-      $settings['img_formats'] = 0;
+     $settings['img_formats'] = 0;
 
-      $settings['img_min_width'] = 0;
-      $settings['img_min_height'] = 0;   
-      $settings['img_max_size'] = 0;
+     $settings['img_min_width'] = 0;
+     $settings['img_min_height'] = 0;   
+     $settings['img_max_size'] = 0;
 
 
        // Если существует таблица с меню
-    if (Schema::hasTable('entity_settings')) {
+     if (Schema::hasTable('entity_settings')) {
       $get_settings = EntitySetting::whereNull('company_id')->first();
 
         // dd($get_settings);

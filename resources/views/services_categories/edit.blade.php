@@ -123,7 +123,7 @@
 
          {{-- Кнопка --}}
          <div class="small-12 cell tabs-button tabs-margin-top">
-          {{ Form::submit('Редактировать продукцию', ['class'=>'button']) }}
+          {{ Form::submit('Редактировать категорию услуг', ['class'=>'button']) }}
         </div>
       </div>
     </div>

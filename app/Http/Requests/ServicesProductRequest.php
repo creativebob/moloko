@@ -32,7 +32,7 @@ class ServicesProductRequest extends FormRequest
             'description' => 'string|nullable', 
             'unit_id' => 'integer|nullable',
             'rule_id' => 'integer|nullable', 
-            'servicess_category_id' => 'integer|nullable',
+            'services_category_id' => 'integer|nullable',
             
             'author_id' => 'integer|nullable', 
             'editor_id' => 'integer|nullable', 

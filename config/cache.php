@@ -73,6 +73,11 @@ return [
             'connection' => 'default',
         ],
 
+        'model' => [
+            'driver' => 'redis',
+            'connection' => 'model-cache',
+        ],
+
     ],
 
     /*
