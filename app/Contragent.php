@@ -15,6 +15,10 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use App\Scopes\Traits\ContragentsTraitScopes;
 
+// Подключаем кеш
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+    
+
 // Фильтры
 // use App\Scopes\Filters\Filter;
 // use App\Scopes\Filters\BooklistFilter;
@@ -22,6 +26,9 @@ use App\Scopes\Traits\ContragentsTraitScopes;
 
 class Contragent extends Model
 {
+
+    // Включаем кеш
+    use Cachable;
 
     use Notifiable;
     // use SoftDeletes;

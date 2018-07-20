@@ -21,7 +21,7 @@ class CreateServicesModesTable extends Migration
 
             $table->string('name')->index()->comment('Название типа товаров');
 
-            $table->text('description')->comment('Description для типа товаров');
+            $table->text('description')->nullable()->comment('Description для типа товаров');
             $table->string('alias')->index()->comment('Алиас типа товаров');
 
             $table->string('type')->index()->comment('Тип товара (service/goods)');

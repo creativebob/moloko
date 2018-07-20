@@ -14,9 +14,17 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
+// Подключаем кеш
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+    
+
 class Metric extends Model
 {
-     use SoftDeletes;
+
+    // Включаем кеш
+    use Cachable;
+
+    use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;

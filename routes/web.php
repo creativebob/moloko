@@ -211,7 +211,7 @@ Route::resource('/services_products', 'ServicesProductController')->middleware('
 Route::any('/ajax_services_count', 'ServicesProductController@ajax_count')->middleware('auth');
 Route::any('/ajax_services_modes', 'ServicesProductController@ajax_modes')->middleware('auth');
 
-
+// ---------------------------------- Услуги (Артикулы) -------------------------------------------
 Route::any('/services/create', 'ServiceController@create')->middleware('auth');
 // Основные методы
 Route::resource('/services', 'ServiceController')->middleware('auth');
@@ -221,6 +221,42 @@ Route::post('/service/photos', 'ServiceController@photos')->middleware('auth');
 
 // Отображение страниц на сайте
 Route::post('/services_display', 'ServiceController@ajax_display')->middleware('auth');
+
+
+
+// -------------------------------- Категории товаров -------------------------------------------
+// Route::any('/goods_categories/create', 'GoodsCategoryController@create')->middleware('auth');
+// Текущая добавленная/удаленная категория
+Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('auth');
+// Основные методы
+Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('auth');
+
+// Проверка на существование категории продукции
+Route::post('/goods_category_check', 'GoodsCategoryController@goods_category_check')->middleware('auth');
+
+// Отображение страниц на сайте
+Route::post('/goods_categories_display', 'GoodsCategoryController@ajax_display')->middleware('auth');
+// Сортировка
+Route::post('/goods_categories_sort', 'GoodsCategoryController@goods_categories_sort')->middleware('auth');
+
+// --------------------------------- Продукция товаров --------------------------------------------
+// Основные методы
+Route::resource('/goods_products', 'GoodsProductController')->middleware('auth');
+
+
+Route::any('/ajax_goods_count', 'GoodsProductController@ajax_count')->middleware('auth');
+Route::any('/ajax_goods_modes', 'GoodsProductController@ajax_modes')->middleware('auth');
+
+// ---------------------------------- Товары (Артикулы) -------------------------------------------
+Route::any('/goods/create', 'GoodsController@create')->middleware('auth');
+// Основные методы
+Route::resource('/goods', 'GoodsController')->middleware('auth');
+
+Route::any('/cur_good/add_photo', 'GoodsController@add_photo')->middleware('auth');
+Route::post('/cur_good/photos', 'GoodsController@photos')->middleware('auth');
+
+// Отображение страниц на сайте
+Route::post('/goods_display', 'GoodsController@ajax_display')->middleware('auth');
 
 
 // Проверка на существование товара
