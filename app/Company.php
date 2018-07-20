@@ -176,4 +176,10 @@ class Company extends Model
         return $this->belongsToMany('App\Company', 'contragents', 'company_id', 'contragent_id')->where('manufacturer_status', 1);
     }
 
+    // Получаем типы услуг
+    public function services_types()
+    {
+        return $this->belongsToMany('App\ServicesType', 'companies_services_types', 'company_id', 'services_type_id');
+    }
+
 }

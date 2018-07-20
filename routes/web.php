@@ -189,9 +189,11 @@ Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth'
 
 
 // -------------------------------- Категории услуг -------------------------------------------
-// Route::any('/ajax_services_modes', 'ServicesProductController@ajax_modes')->middleware('auth');
+// Route::get('/services_categories/create', 'ServicesCategoryController@create')->middleware('auth');
+
 // Текущая добавленная/удаленная категория
 Route::any('/services_categories', 'ServicesCategoryController@index')->middleware('auth');
+
 // Основные методы
 Route::resource('/services_categories', 'ServicesCategoryController')->middleware('auth');
 

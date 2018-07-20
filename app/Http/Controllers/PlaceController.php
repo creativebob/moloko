@@ -105,7 +105,8 @@ class PlaceController extends Controller
         ->get();
 
         $filter['status'] = null;
-        $places_types_checkboxer = addFilter($filter, $places_types_query, $request, 'Тип помещения', 'places_types', 'id', 'places_types', 'internal-self-one');
+
+        $places_types_checkboxer = addFilter($filter, $places_types_query, $request, 'Тип помещения', 'places_types', 'id', 'internal-self-one');
 
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
@@ -239,6 +240,10 @@ class PlaceController extends Controller
         $request[$column] = $places_types;
 
         $filter['status'] = null;
+
+        // dd($request);
+        
+
         $places_types_checkboxer = addFilter($filter, $places_types_query, $request, 'Тип помещения', 'places_types', 'id', 'places_types', 'internal-self-one');
 
         // Получаем список стран

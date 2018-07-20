@@ -142,6 +142,11 @@
               </label>
             </div>
 
+            @include('includes.scripts.class.checkboxer')
+            <div class="small-12 medium-12 cell checkbox checkboxer">
+                @include('includes.inputs.checkboxer', ['name'=>'services_types', 'value'=>$services_types_checkboxer])      
+            </div>
+
             {{-- Чекбокс модерации --}}
             @can ('moderator', $company)
             @if ($company->moderation == 1)

@@ -16,6 +16,7 @@ use App\Location;
 use App\ScheduleEntity;
 use App\Contragent;
 use App\Country;
+use App\ServicesType;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -114,14 +115,23 @@ class CompanyController extends Controller
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
 
+        // // Получаем список стран
+        // $services_types_list = ServicesType::get()->pluck('name', 'id');
+        // dd($services_types_list);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
+
+        // Формируем checkboxer со списком типов услуг
+        $services_types_query = ServicesType::get();
+        $filter['status'] = null;
+        $services_types_checkboxer = addFilter($filter, $services_types_query, $request, 'Возможные типы услуг', 'services_types', 'id', 'services_types', 'internal-self-one');
 
         // Формируем пуcтой массив
         $worktime = [];
         for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
 
-        return view('companies.create', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list'));
+        return view('companies.create', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
     }
 
     public function store(CompanyRequest $request)
@@ -196,6 +206,21 @@ class CompanyController extends Controller
 
         $company->save();
 
+        // Если запись удачна - будем записывать связи
+        if($company){
+
+            // Записываем связи: id-шники в таблицу Rooms
+            if(isset($request->services_types_id)){
+                
+                $result = $company->services_types()->sync($request->services_types_id);               
+            } else {
+                $result = $company->services_types()->detach(); 
+            };
+
+        } else {
+            abort(403, 'Ошибка записи компании');
+        };
+
         $contragent = new Contragent;
         $contragent->company_id = $company_id;
         $contragent->contragent_id = $company->id;
@@ -210,23 +235,6 @@ class CompanyController extends Controller
         $schedule_entity->save();
 
 
-        // $folder = new Folder;
-        // $folder->folder_name = $company->company_name;
-        // $link_for_folder = 'public/companies/' . $company->id;
-
-        // if($company->company_alias != null){
-        //     $link_for_folder = 'public/companies/' . $company->company_alias;
-        // } else {
-        //     $link_for_folder = 'public/companies/' . $company->id;
-        // };
-
-        // Создаем папку в файловой системе
-        // Storage::disk('public')->makeDirectory($company->id.'/media');
-
-        // $folder->folder_url = $link_for_folder;
-        // $folder->folder_alias = 'users';
-        // $folder->folder_parent_id = 2;
-        // $folder->save();
 
         return redirect('/admin/companies');
         // return redirect('admin/companies');
@@ -248,16 +256,17 @@ class CompanyController extends Controller
     }
 
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $company = Company::with('location.city', 'schedules.worktimes', 'sector')->moderatorLimit($answer)->findOrFail($id);
-        $this->authorize(getmethod(__FUNCTION__), $company);
+        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
+        ->moderatorLimit($answer)
+        ->findOrFail($id);
 
-        // dd($company);
+        $this->authorize(getmethod(__FUNCTION__), $company);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('sectors', false, 'index');
@@ -268,6 +277,21 @@ class CompanyController extends Controller
         ->get(['id','name','category_status','parent_id'])
         ->keyBy('id')
         ->toArray();
+
+        $services_types = [];
+        foreach ($company->services_types as $service_type){
+            $services_types[] = $service_type->id;
+        }
+
+        // Имя столбца
+        $column = 'services_types_id';
+        $request[$column] = $services_types;
+
+        $services_types_query = ServicesType::get();
+
+        $filter['status'] = null;
+        $services_types_checkboxer = addFilter($filter, $services_types_query, $request, 'Возможные типы услуг', 'services_types', 'id', 'services_types', 'internal-self-one');
+
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         $sectors_list = get_select_tree($sectors, $company->sector_id, 1, null);
@@ -309,14 +333,12 @@ class CompanyController extends Controller
 
         };
 
-        // dd($worktime);
-
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-        return view('companies.edit', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list'));
+        return view('companies.edit', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
     }
 
 
@@ -414,6 +436,9 @@ class CompanyController extends Controller
 
         // Вставляем новое время в расписание
         DB::table('worktimes')->insert($mass_time);
+
+        // Записываем связи: id-шники в таблицу companies_services_types
+        $result = $company->services_types()->sync($request->services_types_id);
 
         return redirect('/admin/companies');
     }
