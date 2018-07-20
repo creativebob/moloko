@@ -26,6 +26,7 @@
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
             <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
+            <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
             <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li> 
 
         </ul>
@@ -109,12 +110,12 @@
                             <legend>Артикул</legend>
 
                             <div class="grid-x grid-margin-x">
-                                <div class="small-12 cell">
+                                <div class="small-12 medium-4 cell">
                                     <label>Удобный (вручную)
                                         {{ Form::text('manually', null) }}
                                     </label>
                                 </div> 
-                                {{-- <div class="small-12 medium-4 cell">
+                                <div class="small-12 medium-4 cell">
                                     <label>Программный
                                         {{ Form::text('internal', null, ['required', 'disabled']) }}
                                     </label>
@@ -123,7 +124,7 @@
                                     <label>Внешний
                                         {{ Form::text('external') }}
                                     </label>
-                                </div> --}}
+                                </div>
                             </div>
                         </fieldset>
 

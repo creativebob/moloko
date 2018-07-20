@@ -26,12 +26,9 @@
     <ul class="tabs-list" data-tabs id="tabs">
       <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
       <li class="tabs-title"><a data-tabs-target="site" href="#site">Сайт</a></li>
-
-        {{--
       <li class="tabs-title"><a data-tabs-target="properties" href="#properties">Свойства</a></li>
       <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
       <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
-      --}}
     </ul>
   </div>
 </div>
@@ -268,7 +265,7 @@ $settings = config()->get('settings');
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/ajax_delete_relation_metric',
+      url: '/admin/ajax_delete_relation_metric',
       type: 'POST',
       data: {id: id, entity: 'goods_categories', entity_id: goods_category_id},
       success: function(date){
@@ -318,7 +315,7 @@ $settings = config()->get('settings');
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/ajax_delete_relation_composition',
+      url: '/admin/ajax_delete_relation_composition',
       type: 'POST',
       data: {id: id, goods_category_id: goods_category_id},
       success: function(date){
@@ -357,7 +354,7 @@ $settings = config()->get('settings');
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/get_units_list',
+      url: '/admin/get_units_list',
       type: "POST",
       data: {id: id, entity: 'goods_categories'},
       success: function(html){
@@ -384,7 +381,7 @@ $settings = config()->get('settings');
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/ajax_add_property',
+        url: '/admin/ajax_add_property',
         type: 'POST',
         data: {id: id, entity: 'goods_categories'},
         success: function(html){
@@ -406,7 +403,7 @@ $settings = config()->get('settings');
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/metrics',
+      url: '/admin/metrics',
       type: 'POST',
       data: $('#properties-form').serialize(),
       success: function(html){
@@ -442,7 +439,7 @@ $settings = config()->get('settings');
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/ajax_add_metric_value',
+      url: '/admin/ajax_add_metric_value',
       type: 'POST',
       data: {value: $('#properties-form input[name=value]').val()},
       success: function(html){
@@ -465,7 +462,7 @@ $settings = config()->get('settings');
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/ajax_add_relation_metric',
+        url: '/admin/ajax_add_relation_metric',
         type: 'POST',
         data: {id: $(this).val(), entity: 'goods_categories', entity_id: goods_category_id},
         success: function(html){
@@ -482,7 +479,7 @@ $settings = config()->get('settings');
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/ajax_delete_relation_metric',
+        url: '/admin/ajax_delete_relation_metric',
         type: 'POST',
         data: {id: $(this).val(), entity: 'goods_categories', entity_id: goods_category_id},
         success: function(date){
@@ -523,7 +520,7 @@ $settings = config()->get('settings');
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/ajax_add_relation_composition',
+        url: '/admin/ajax_add_relation_composition',
         type: 'POST',
         data: {id: id, goods_category_id: goods_category_id, entity: 'goods_categories'},
         success: function(html){
@@ -538,7 +535,7 @@ $settings = config()->get('settings');
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/ajax_delete_relation_composition',
+        url: '/admin/ajax_delete_relation_composition',
         type: 'POST',
         data: {id: id, goods_category_id: goods_category_id, entity: 'goods_categories'},
         success: function(date){
@@ -574,7 +571,7 @@ $settings = config()->get('settings');
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/ajax_get_photo',
+      url: '/admin/ajax_get_photo',
       type: 'POST',
       data: {id: id, entity: 'products'},
       success: function(html){
@@ -599,7 +596,7 @@ $settings = config()->get('settings');
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/ajax_update_photo/' + id,
+      url: '/admin/ajax_update_photo/' + id,
       type: 'PATCH',
       data: $(this).closest('#form-photo-edit').serialize(),
       success: function(html){

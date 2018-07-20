@@ -228,6 +228,8 @@ Route::post('/services_display', 'ServiceController@ajax_display')->middleware('
 // Route::any('/goods_categories/create', 'GoodsCategoryController@create')->middleware('auth');
 // Текущая добавленная/удаленная категория
 Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('auth');
+
+Route::match(['get', 'post'], '/goods_categories/{id}/edit', 'GoodsCategoryController@edit')->middleware('auth');
 // Основные методы
 Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('auth');
 

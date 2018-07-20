@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\Product;
-use App\ProductsCategory;
-use App\Article;
+use App\GoodsProduct;
+use App\GoodsCategory;
+use App\Goods;
 
 use Illuminate\Http\Request;
 
@@ -91,11 +91,11 @@ class CompositionController extends Controller
     public function ajax_add(Request $request)
     {
 
-        $composition = Product::with(['unit', 'articles' => function ($query) {
+        $composition = GoodsProduct::with(['unit', 'articles' => function ($query) {
             $query->whereNull('template');
         }])->findOrFail($request->id);
 
-        $article = Article::with('compositions_values')->findOrFail($request->article_id);
+        $article = Goods::with('compositions_values')->findOrFail($request->article_id);
         $compositions_values = $article->compositions_values->keyBy('product_id');
 
         return view($request->entity.'.compositions.composition', compact('composition', 'compositions_values'));
@@ -104,10 +104,10 @@ class CompositionController extends Controller
     public function ajax_add_relation(Request $request)
     {
 
-        $products_category = ProductsCategory::findOrFail($request->products_category_id);
-        $products_category->compositions()->toggle([$request->id]);
+        $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
+        $goods_category->compositions()->toggle([$request->id]);
 
-        $composition = Product::findOrFail($request->id);
+        $composition = Goods::findOrFail($request->id);
 
         return view($request->entity.'.compositions.composition', compact('composition'));
     }
@@ -115,8 +115,8 @@ class CompositionController extends Controller
     public function ajax_delete_relation(Request $request)
     {
 
-        $products_category = ProductsCategory::findOrFail($request->products_category_id);
-        $res = $products_category->compositions()->toggle([$request->id]);
+        $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
+        $res = $goods_category->compositions()->toggle([$request->id]);
 
         if ($res) {
             $result = [

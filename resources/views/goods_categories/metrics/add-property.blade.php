@@ -63,7 +63,7 @@
 @endswitch
 
 {{ Form::hidden('property_id', $property_id) }}
-{{ Form::hidden('entity', 'products_categories') }}
+{{ Form::hidden('entity', 'goods_categories') }}
 
 <div class="small-12 cell text-center">
 	<a class="button" id="add-metric">Добавить метрику</a>
