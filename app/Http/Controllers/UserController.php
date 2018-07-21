@@ -43,6 +43,8 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
+        $user_auth = $request->user();
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), User::class);
 
@@ -59,8 +61,9 @@ class UserController extends Controller
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям              
-        ->orWhere('id', $request->user()->id) // Только для сущности USERS
+        ->systemItem($answer) // Фильтр по системным записям
+        // ->where('id', '!=', $request->user()->id) // Только для сущности USERS          
+        // ->orWhere('id', $request->user()->id) // Только для сущности USERS
         ->filter($request, 'city_id', 'location')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
@@ -91,7 +94,7 @@ class UserController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        $user_auth = $request->user();
+
 
         return view('users.index', compact('users', 'page_info', 'filter', 'user'));
     }
@@ -445,6 +448,7 @@ class UserController extends Controller
             $directory = $user->company_id.'/media/users/'.$user->id.'/img/';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+
             if ($user->photo_id) {
                 $array = save_photo($request, $user_auth_id, $company_id, $directory, 'avatar-'.time(), null, $user->photo_id);
 
@@ -461,6 +465,12 @@ class UserController extends Controller
         if($answer['automoderate']){$user->moderation = null;};
 
         $user->save();
+
+        if ($user) {
+
+        } else {
+            abort(403, 'Ошибка при обновлении пользователя!');
+        }
 
         // Выполняем, только если данные пришли не из userfrofile!
         if(!isset($request->users_edit_mode)){
@@ -497,9 +507,9 @@ class UserController extends Controller
 
         };
 
-        if ($user) {
 
             $backroute = $request->backroute;
+
             if(isset($backroute)){
                 // return redirect()->back();
                 return redirect($backroute);
@@ -507,9 +517,6 @@ class UserController extends Controller
 
             return redirect('/admin/users');
 
-        } else {
-            abort(403, 'Ошибка при обновлении пользователя!');
-        }
     }
 
     public function destroy(Request $request, $id)
@@ -569,6 +576,7 @@ class UserController extends Controller
         // Только для бога
         $this->authorize('god', User::class);
         session(['god' => Auth::user()->id]);
+
         Auth::loginUsingId($user_id);
         
         // return redirect('/getaccess');
@@ -612,7 +620,7 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar')->moderatorLimit($answer)->findOrFail($id);
+        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar')->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
@@ -644,7 +652,160 @@ class UserController extends Controller
     }
 
 
+    public function updatemyprofile(Request $request)
+    {
+
+
+        // Получаем авторизованного пользователя
+        $user_auth = $request->user();
+
+        $user_auth_id = hideGod($user_auth);
+
+        $company_id = $user_auth->company_id;
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = $user_auth;
+
+        $filial_id = $request->filial_id;
+
+        // Подключение политики
+        // $this->authorize(getmethod(__FUNCTION__), $user);
+
+        // Пишем локацию
+        $location = $user->location;
+        if($location->city_id != $request->city_id) {
+            $location->city_id = $request->city_id;
+            $location->editor_id = $user_auth_id;
+            $location->save();
+        }
+
+        if($location->address != $request->address) {
+            $location->address = $request->address;
+            $location->editor_id = $user_auth_id;
+            $location->save();
+        }
+
+        $user->login = $request->login;
+        $user->email = $request->email;
+
+        // Если пришел не пустой пароль
+        if (isset($request->password)) {
+            $user->password = bcrypt($request->password);
+        }
+        
+        $user->nickname = $request->nickname;
+
+        $user->first_name = $request->first_name;
+        $user->second_name = $request->second_name;
+        $user->patronymic = $request->patronymic;
+        $user->sex = $request->sex;
+        $user->birthday = $request->birthday;
+
+        $user->phone = cleanPhone($request->phone);
+
+        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
+            $user->extra_phone = cleanPhone($request->extra_phone);
+        } else {$user->extra_phone = NULL;};
+
+        $user->telegram_id = $request->telegram_id;
+
+        // $user->orgform_status = $request->orgform_status;
+
+        // $user->user_inn = $request->inn;
+
+        // $user->passport_address = $request->passport_address;
+        // $user->passport_number = $request->passport_number;
+        // $user->passport_released = $request->passport_released;
+        // $user->passport_date = $request->passport_date;
+
+        $user->about = $request->about;
+        $user->specialty = $request->specialty;
+        $user->degree = $request->degree;
+        $user->quote = $request->quote;
+        
+        // $user->user_type = $request->user_type;
+        // $user->lead_id = $request->lead_id;
+        // $user->employee_id = $request->employee_id;
+        // $user->access_block = $request->access_block;
+
+        // $user->filial_id = $request->filial_id;
+
+
+        // Если прикрепили фото
+        if ($request->hasFile('photo')) {
+
+            // dd($company_id);
+            // Директория
+            $directory = $user->company_id.'/media/users/'.$user->id.'/img/';
+
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            if ($user->photo_id) {
+                $array = save_photo($request, $user_auth_id, $company_id, $directory, 'avatar-'.time(), null, $user->photo_id);
+
+            } else {
+                $array = save_photo($request, $user_auth_id, $company_id, $directory, 'avatar-'.time());
+            }
+
+            $photo = $array['photo'];
+
+            $user->photo_id = $photo->id;
+        }
+
+        $user->save();
 
 
 
+        // Выполняем, только если данные пришли не из userfrofile!
+        if(!isset($request->users_edit_mode)){
+
+            // Тут вписываем изменения по правам
+            if (isset($request->access)) {
+
+                $delete = RoleUser::whereUser_id($user->id)->delete();
+                $mass = [];
+                foreach ($request->access as $string) {
+
+                    $item = explode(',', $string);
+                    if ($item[2] == 'null') {
+                        $position = null;
+                    } else {
+                        $position = $item[2];
+                    }
+
+                    $mass[] = [
+                        'role_id' => $item[0],
+                        'department_id' => $item[1],
+                        'user_id' => $user->id,
+                        'position_id' => $position,
+                    ];
+                }
+
+                DB::table('role_user')->insert($mass);
+
+            } else {
+
+                // Если удалили последнюю роль для должности и пришел пустой массив
+                $delete = RoleUser::whereUser_id($user->id)->delete();
+            }
+
+        };
+
+        if ($user) {
+
+            // $backroute = $request->backroute;
+            // if(isset($backroute)){
+            //     // return redirect()->back();
+            //     return redirect($backroute);
+            // };
+
+            return redirect('/admin/home');
+
+        } else {
+            abort(403, 'Ошибка при обновлении пользователя!');
+        }
+
+    }
 }
