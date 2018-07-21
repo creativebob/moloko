@@ -12,12 +12,12 @@
 
 @section('exel')
 <!-- <a href="{{ URL::to('productsDownload/xls') }}"><button class="button">Скачать Excel xls</button></a> -->
-<a href="{{ URL::to('/products_download/xlsx') }}">
-  <img src="/img/svg/excel_export.svg">
+<a href="{{ URL::to('/crm/products_download/xlsx') }}">
+  <img src="/crm/img/svg/excel_export.svg">
   <!--  <button class="button">Скачать Excel xlsx</button> -->
 </a>
 <a>
-  <img src="/img/svg/excel_import.svg" data-toggle="exel-import">
+  <img src="/crm/img/svg/excel_import.svg" data-toggle="exel-import">
 </a>
 <!-- <button class="button" type="button" data-toggle="exel-import">Загрузить</button> -->
 <div class="dropdown-pane" id="exel-import" data-dropdown data-auto-focus="true" data-close-on-click="true">
