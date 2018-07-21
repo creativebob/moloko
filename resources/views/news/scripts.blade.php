@@ -16,7 +16,7 @@
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
-          url: "/albums_list",
+          url: "/admin/albums_list",
           type: "POST",
           data: {id: id},
           success: function(html){
@@ -37,7 +37,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/get_album",
+        url: "/admin/admin/get_album",
         type: "POST",
         data: $(this).closest('form').serialize(),
         success: function(html){
@@ -67,7 +67,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/sites/' + siteAlias + '/news_check',
+        url: '/admin/sites/' + siteAlias + '/news_check',
         type: "POST",
         data: {alias: alias},
         beforeSend: function () {

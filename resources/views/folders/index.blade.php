@@ -38,7 +38,7 @@
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $folder->id }}"><label class="label-check" for="check-{{ $folder->id }}"></label></td>
           <td class="td-name">
             @can('update', $folder)
-            <a href="/folders/{{ $folder->id }}/edit">
+            <a href="/admin/folders/{{ $folder->id }}/edit">
             @endcan
             {{ $folder->folder_name }}
             @can('update', $folder)

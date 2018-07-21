@@ -105,7 +105,8 @@ class PlaceController extends Controller
         ->get();
 
         $filter['status'] = null;
-        $places_types_checkboxer = addFilter($filter, $places_types_query, $request, 'Тип помещения', 'places_types', 'id', 'places_types', 'internal-self-one');
+
+        $places_types_checkboxer = addFilter($filter, $places_types_query, $request, 'Тип помещения', 'places_types', 'id', 'internal-self-one');
 
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
@@ -175,7 +176,7 @@ class PlaceController extends Controller
             abort(403, 'Ошибка записи помещения');
         };
 
-        return redirect('places');
+        return redirect('/admin/places');
     }
 
 
@@ -199,7 +200,7 @@ class PlaceController extends Controller
 
         $role->save();
 
-        return redirect('roles');
+        return redirect('/admin/roles');
 
     }
 
@@ -239,6 +240,10 @@ class PlaceController extends Controller
         $request[$column] = $places_types;
 
         $filter['status'] = null;
+
+        // dd($request);
+        
+
         $places_types_checkboxer = addFilter($filter, $places_types_query, $request, 'Тип помещения', 'places_types', 'id', 'places_types', 'internal-self-one');
 
         // Получаем список стран
@@ -306,7 +311,7 @@ class PlaceController extends Controller
             abort(403, 'Ошибка записи помещения');
         };
 
-        return redirect('places');
+        return redirect('/admin/places');
 
     }
 
@@ -325,6 +330,6 @@ class PlaceController extends Controller
         // Удаляем пользователя с обновлением
         $place = Place::moderatorLimit($answer)->where('id', $id)->delete();
 
-        if($place) {return Redirect('places');} else {abort(403,'Что-то пошло не так!');};
+        if($place) {return redirect('/admin/places');} else {abort(403,'Что-то пошло не так!');};
     }
 }

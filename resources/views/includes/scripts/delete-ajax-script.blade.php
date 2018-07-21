@@ -24,7 +24,7 @@ $(document).on('click', '.delete-button-ajax', function(event) {
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    url: '/' + entity_alias + '/' + id,
+    url: '/admin/' + entity_alias + '/' + id,
     type: "DELETE",
     success: function (html) {
       // alert(html);

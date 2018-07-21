@@ -43,6 +43,9 @@
       <tbody data-tbodyId="1" class="tbody-width">
         @if(!empty($employees))
         @foreach($employees as $employee)
+
+        {{-- Привязан ли пользователь к сотруднику --}}
+        @if($employee->user != null)
         <tr class="item @if($employee->moderation == 1)no-moderation @endif" id="employees-{{ $employee->id }}" data-name="{{ $employee->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
@@ -60,11 +63,11 @@
           <td class="td-name">
             @if ($employee->dismissal_date == null)
               @can('update', $employee)
-              <a href="/staff/{{ $employee->staffer->id }}/edit">
+              <a href="/admin/staff/{{ $employee->staffer->id }}/edit">
               @endcan
             @else
               @can('update', $employee)
-              <a href="/employees/{{ $employee->id }}/edit">
+              <a href="/admin/employees/{{ $employee->id }}/edit">
               @endcan
             @endif
             {{ $employee->user->name }}
@@ -94,6 +97,9 @@
             </td>
             <td class="td-dismissal-description">{{ $employee->dismissal_description }}</td>    
           </tr>
+          @endif
+
+
           @endforeach
           @endif
         </tbody>

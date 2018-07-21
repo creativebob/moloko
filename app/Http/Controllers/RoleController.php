@@ -134,7 +134,7 @@ class RoleController extends Controller
         $role->save();
 
         if($role){} else {abort(403);};
-        return redirect('roles');
+        return redirect('/admin/roles');
     }
 
 
@@ -193,7 +193,7 @@ class RoleController extends Controller
 
         $role->save();
 
-        return redirect('roles');
+        return redirect('/admin/roles');
     }
 
     public function destroy($id)
@@ -209,7 +209,7 @@ class RoleController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $role);
 
         $role = Role::destroy($id);
-        if ($role) {return Redirect('roles');} else {echo 'Произошла ошибка';};
+        if ($role) {return Redirect('/admin/roles');} else {echo 'Произошла ошибка';};
 
     }
 
@@ -220,7 +220,7 @@ class RoleController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::moderatorLimit($answer)->findOrFail($role_id);
+        $role = Role::with('rights')->moderatorLimit($answer)->findOrFail($role_id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $role);

@@ -570,7 +570,7 @@ class ProductController extends Controller
             }
 
 
-            return Redirect('/products');
+            return redirect('/admin/products');
         } else {
             abort(403, 'Ошибка обновления товара');
         }
@@ -601,7 +601,7 @@ class ProductController extends Controller
             // $photos = Photo::whereIn('id', $relations)->delete();
             // $media = AlbumMedia::whereAlbum_id($id)->delete();
 
-                return Redirect('products');
+                return redirect('/admin/products');
             } else {
                 abort(403, 'Ошибка при удалении товара');
             }

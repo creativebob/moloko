@@ -60,7 +60,7 @@
             <label class="label-check" for="check-{{ $site->id }}"></label></td>
           <td class="td-name">
             @if($edit == 1)
-              <a href="/sites/{{ $site->alias }}">
+              <a href="/admin/sites/{{ $site->alias }}">
             @endif
             {{ $site->name }}
             @if($edit == 1)
@@ -72,7 +72,7 @@
           <td class="td-company-id">@if(!empty($site->company->name)) {{ $site->company->name }} @else @if($site->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-edit">
             @if($edit == 1)
-            <a class="tiny button" href="/sites/{{ $site->alias }}/edit">Редактировать</a>
+            <a class="tiny button" href="/admin/sites/{{ $site->alias }}/edit">Редактировать</a>
             @endif
           </td>
           <td class="td-author">@if(isset($site->author->first_name)) {{ $site->author->first_name . ' ' . $site->author->second_name }} @endif</td>

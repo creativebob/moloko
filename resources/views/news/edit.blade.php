@@ -20,7 +20,7 @@
 
 @section('content')
 
-{{ Form::model($cur_news, ['url' => '/sites/'.$site->alias.'/news/'.$cur_news->id, 'data-abide', 'novalidate', 'files'=>'true']) }}
+{{ Form::model($cur_news, ['url' => '/admin/sites/'.$site->alias.'/news/'.$cur_news->id, 'data-abide', 'novalidate', 'files'=>'true']) }}
 {{ method_field('PATCH') }}
 
 @include('news.form', ['submitButtonText' => 'Редактировать новость', 'param'=>''])

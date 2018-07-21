@@ -23,13 +23,13 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 
   {{-- Add jQuery library --}}
   <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
-  <script type="text/javascript" src="/js/jquery.latest.min.js"></script>
+  <script type="text/javascript" src="/crm/js/jquery.latest.min.js"></script>
 
   {{-- Дополнительные плагины / скрипты / стили для конкретной страницы --}}
   @yield('inhead')
 
-  <link rel="stylesheet" href="/css/foundation.css">
-  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/crm/css/foundation.css">
+  <link rel="stylesheet" href="/crm/css/app.css">
 
   {{-- CSRF Token --}}
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -64,7 +64,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
               {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 
               @endif
             </li> --}}
-            {{-- <li><a id="task-toggle"><img src="/img/header/alert.png"></a></li> --}}
+            {{-- <li><a id="task-toggle"><img src="/crm/img/header/alert.png"></a></li> --}}
             <li>
               <a data-toggle="profile">
                 <span>
@@ -80,7 +80,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                 $name = 'avatar_small_woman.png';
               }
               @endphp
-              <img src="{{ isset(Auth::user()->photo_id) ? '/storage/'.Auth::user()->company_id.'/media/albums/'.Auth::user()->login.'/img/'.Auth::user()->avatar->name : '/img/plug/'.$name }}" alt="Аватар" class="avatar">
+              <img src="{{ isset(Auth::user()->photo_id) ? '/storage/'.Auth::user()->company_id.'/media/users/'.Auth::user()->id.'/crm/img/small/'.Auth::user()->avatar->name : '/crm/img/plug/'.$name }}" alt="Аватар" class="avatar">
             </a>
           </li>
         </ul>
@@ -100,10 +100,10 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
               {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 
               @endif
             </li>
-            {{-- <li>
+            <li>
               @if(isset($session_access))
               {{ link_to_route('help.show_session', 'Смотреть сессию', $value = Null, ['target' => '_blank']) }} 
-            @endif</li> --}}
+            @endif</li>
 
             {{-- Кнопка выхода --}}
             <li><a href="{{ route('logout') }}"
@@ -113,6 +113,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
               {{ csrf_field() }}
             </form>
+            
           </ul>
         </div>
       </div>
@@ -181,9 +182,9 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
   </div>
 </footer>
 {{-- Скрипты --}}
-<script src="/js/vendor/what-input.js"></script>
-<script src="/js/vendor/foundation.js"></script>
-<script src="/js/app.js"></script>
+<script src="/crm/js/vendor/what-input.js"></script>
+<script src="/crm/js/vendor/foundation.js"></script>
+<script src="/crm/js/app.js"></script>
 <!-- Наши скрипты -->
 <script type="text/javascript">
   $(function() {

@@ -141,7 +141,7 @@ class PageController extends Controller
         $page->save();
 
         if ($page) {
-            return redirect('/sites/'.$alias.'/pages');
+            return redirect('/admin/sites/'.$alias.'/pages');
         } else {
             abort(403, 'Ошибка при записи страницы!');
         }
@@ -225,7 +225,7 @@ class PageController extends Controller
         $page->save();
 
         if ($page) {
-            return redirect('/sites/'.$alias.'/pages');
+            return redirect('/admin/sites/'.$alias.'/pages');
         } else {
             abort(403, 'Ошибка при записи страницы!');
         }
@@ -254,7 +254,7 @@ class PageController extends Controller
             // Удаляем страницу с обновлением
             $page = Page::destroy($id);
             if ($page) {
-                return Redirect('/sites/'.$alias.'/pages');
+                return Redirect('/admin/sites/'.$alias.'/pages');
             } else {
                 abort(403, 'Ошибка при удалении страницы');
             }

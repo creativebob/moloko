@@ -54,7 +54,7 @@
               </a>
             </td>
             <td class="td-name">
-              <a href="/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit">{{ $photo->name }}</a>
+              <a href="/admin/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit">{{ $photo->name }}</a>
             </td>
             <td class="td-description">
               {{ $photo->description }}
@@ -117,7 +117,7 @@
       var name = parent.data('name');
       $('.title-delete').text(name);
       $('.delete-button').attr('id', 'del-' + type + '-' + id);
-      $('#form-item-del').attr('action', '/albums/'+ alias + '/' + type + '/' + id);
+      $('#form-item-del').attr('action', '/admin/albums/'+ alias + '/' + type + '/' + id);
     });
   });
 </script> 

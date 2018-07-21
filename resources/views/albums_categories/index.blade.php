@@ -38,10 +38,15 @@
 @section('scripts')
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.scripts.delete-ajax-script')
+
 {{-- Маска ввода --}}
 @include('includes.scripts.inputs-mask')
+
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
+
+{{-- Скрипт отображеняи на сайте --}}
+@include('includes.scripts.display-ajax')
 <script type="text/javascript">
   $(function() {
   // Функция появления окна с ошибкой
@@ -80,7 +85,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/albums_category_check",
+        url: "/admin/albums_category_check",
         type: "POST",
         data: {name: name},
         beforeSend: function () {
@@ -120,7 +125,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/albums_categories/create',
+      url: '/admin/albums_categories/create',
       type: "GET",
       success: function(html){
         $('#modal').html(html);
@@ -158,7 +163,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/albums_categories/" + id + "/edit",
+      url: "/admin/albums_categories/" + id + "/edit",
       type: "GET",
       success: function(html) {
         $('#modal').html(html);
@@ -200,7 +205,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/albums_categories/create',
+      url: '/admin/albums_categories/create',
       type: "GET",
       data: {parent_id: parent},
       success: function(html){
@@ -237,7 +242,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/albums_categories/" + id + "/edit",
+      url: "/admin/albums_categories/" + id + "/edit",
       type: "GET",
       success: function(html) {
         $('#modal').html(html);
@@ -272,7 +277,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/albums_categories',
+      url: '/admin/albums_categories',
       type: "POST",
       data: $(this).closest('form').serialize(),
       success:function(html) {
@@ -293,7 +298,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/albums_categories/' + id,
+      url: '/admin/albums_categories/' + id,
       type: "PATCH",
       data: $(this).closest('form').serialize(),
       success:function(html) {

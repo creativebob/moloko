@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::model($album, ['route' => ['albums.update', $album->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($album, ['url' => '/admin/albums/'.$album->id, 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
     @include('albums.form', ['submitButtonText' => 'Редактировать альбом', 'param'=>''])
@@ -27,4 +27,5 @@
 
 @section('scripts')
   @include('includes.scripts.inputs-mask')
+  @include('albums.scripts')
 @endsection

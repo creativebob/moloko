@@ -37,7 +37,7 @@
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $entity->id }}"><label class="label-check" for="check-{{ $entity->id }}"></label></td>
           <td class="td-name">
             @can('update', $entity)
-            <a href="/entities/{{ $entity->id }}/edit">
+            <a href="/admin/entities/{{ $entity->id }}/edit">
             @endcan
             {{ $entity->name }}
             @can('update', $entity)

@@ -14,6 +14,9 @@ use App\Worktime;
 use App\Location;
 use App\ScheduleEntity;
 
+// Подрубаем трейт перезаписи сессии
+use App\Http\Controllers\Traits\RewriteSessionDepartments;
+
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\DepartmentRequest;
@@ -24,7 +27,6 @@ use App\Policies\DepartmentPolicy;
 // Общие классы
 use Illuminate\Support\Facades\Log;
 
-
 // Специфические классы
 use Illuminate\Support\Facades\Storage;
 
@@ -34,6 +36,8 @@ use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
 {
+    // Подключаем трейт перезаписи списк отделов (филиалов) в сессии пользователя
+    use RewriteSessionDepartments;
 
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'departments';
@@ -411,9 +415,10 @@ class DepartmentController extends Controller
             $schedule_entity->save();
         }
 
-        
-
         if ($department) {
+
+            // Перезаписываем сессию: меняем список филиалов и отделов на новый
+            $this->RSDepartments($user);
 
             // Переадресовываем на index
             return redirect()->action('DepartmentController@index', ['id' => $department->id, 'item' => 'department']);
@@ -421,6 +426,7 @@ class DepartmentController extends Controller
             // $action_method = "DepartmentController@get_content";
             // $action_arrray = ['id' => $department->id, 'item' => 'department'];
             // return redirect()->action('GetAccessController@set', ['action_method' => $action_method, 'action_arrray' => $action_arrray]);
+        
         } else {
             abort(403, 'Ошибка при записи отдела!');
         }

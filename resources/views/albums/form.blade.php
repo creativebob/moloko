@@ -41,8 +41,10 @@
                             <label>Название альбома
                                 @include('includes.inputs.name', ['value'=>$album->name, 'name'=>'name', 'required'=>'required'])
                             </label>
-                            <label>Алиас альбома
+                            <label class="alias">Алиас альбома
                                 @include('includes.inputs.name', ['value'=>$album->alias, 'name'=>'alias', 'required'=>'required'])
+                                <div class="sprite-input-right find-status" id="alias-check"></div>
+                                <div class="item-error">Такой альбом уже существует!</div>
                             </label>
                         </div>
                         <div class="small-12 medium-6 cell">
@@ -121,20 +123,20 @@
                                 <div class="grid-x grid-padding-x">
                                     <div class="small-12 medium-6 cell">
                                         <label>Ширина
-                                            @include('includes.inputs.digit', ['value'=>$albums_settings->img_min_width, 'name'=>'img_min_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_min_width'], 'pattern' => '[0-9\W\s]{0,4}'])
+                                            @include('includes.inputs.digit', ['value'=>$album_settings->img_min_width, 'name'=>'img_min_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_min_width'], 'pattern' => '[0-9\W\s]{0,4}'])
                                         </label>
                                     </div>
                                     <div class="small-12 medium-6 cell">
                                         <label>Высота
-                                            @include('includes.inputs.digit', ['value'=>$albums_settings->img_min_height, 'name'=>'img_min_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_min_height'], 'pattern' => '[0-9\W\s]{0,4}'])
+                                            @include('includes.inputs.digit', ['value'=>$album_settings->img_min_height, 'name'=>'img_min_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_min_height'], 'pattern' => '[0-9\W\s]{0,4}'])
                                         </label>
                                     </div>
 
                                   <div class="small-12 cell radiobutton">
-                                    {{ Form::radio('upload_mode', 1, true, ['id'=>'mode_min']) }}
+                                    {{ Form::radio('upload_mode', 0, true, ['id'=>'mode_min']) }}
                                     <label for="mode_min"><span>Указаны минимальные размеры</span></label>
 
-                                    {{ Form::radio('upload_mode', 0, false, ['id'=>'mode_fix']) }}
+                                    {{ Form::radio('upload_mode', 1, false, ['id'=>'mode_fix']) }}
                                     <label for="mode_fix"><span>Загружать в строго указанных размерах</span></label>
                                   </div>
 
@@ -149,36 +151,36 @@
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Ширина маленького
-                                        @include('includes.inputs.digit', ['value'=>$albums_settings->img_small_width, 'name'=>'img_small_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_small_width']])
+                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_small_width, 'name'=>'img_small_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_small_width']])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Высота маленького
-                                        @include('includes.inputs.digit', ['value'=>$albums_settings->img_small_height, 'name'=>'img_small_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_small_height']])
+                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_small_height, 'name'=>'img_small_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_small_height']])
                                     </label>
                                 </div>
                             </div>
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Ширина среднего
-                                        @include('includes.inputs.digit', ['value'=>$albums_settings->img_medium_width, 'name'=>'img_medium_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_medium_width']])
+                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_medium_width, 'name'=>'img_medium_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_medium_width']])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Высота среднего
-                                        @include('includes.inputs.digit', ['value'=>$albums_settings->img_medium_height, 'name'=>'img_medium_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_medium_height']])
+                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_medium_height, 'name'=>'img_medium_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_medium_height']])
                                     </label>
                                 </div>
                             </div>
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Ширина большого
-                                        @include('includes.inputs.digit', ['value'=>$albums_settings->img_large_width, 'name'=>'img_large_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_large_width']])
+                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_large_width, 'name'=>'img_large_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_large_width']])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Высота большого
-                                        @include('includes.inputs.digit', ['value'=>$albums_settings->img_large_height, 'name'=>'img_large_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_large_height']])
+                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_large_height, 'name'=>'img_large_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_large_height']])
                                     </label>
                                 </div>
                             </div>

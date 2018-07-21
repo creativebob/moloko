@@ -55,7 +55,7 @@ $count = count($services_category['services_products']) + $count;
     </div>
     <div>
       @if($services_category['edit'] == 1)
-      <a class="icon-list-edit sprite" href="/services_categories/{{ $services_category['id'] }}/edit"></a>
+      <a class="icon-list-edit sprite" href="/admin/services_categories/{{ $services_category['id'] }}/edit"></a>
       @endif
     </div>
     <div class="del">
@@ -78,9 +78,9 @@ $count = count($services_category['services_products']) + $count;
     @if ((isset($services_category['children'])) || ($services_category['services_products_count'] > 0))
 
     @if ($services_category['services_products_count'] > 0)
-    @foreach($services_category['services'] as $product)
-    @include('services_categories.services-list', $product)
-    @endforeach
+      @foreach($services_category['services'] as $product)
+      @include('services_categories.services-list', $product)
+      @endforeach
     @endif
     
     @if (isset($services_category['children']))

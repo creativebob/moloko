@@ -28,8 +28,6 @@
 	    for(var i=0; i<checkboxes.length; i++) {
 	      checkboxes[i].onclick = function() {
 
-
-
 	        counter_checkbox = counter_checkbox + 1;
 
 	        var parent = $(this).closest('.item');
@@ -50,7 +48,7 @@
 	          headers: {
 	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 	          },
-	          url: '/booklists',
+	          url: '/admin/booklists',
 	          type: "POST",
 	          data: {item_entity: item_entity, entity_alias: entity_alias},
 	          success: function (data) {

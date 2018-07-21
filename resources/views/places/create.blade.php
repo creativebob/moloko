@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::open(['route' => 'places.store', 'data-abide', 'novalidate', 'class' => '']) }}
+  {{ Form::open(['url' => '/admin/places', 'data-abide', 'novalidate', 'class' => '']) }}
     @include('places.form', ['submitButtonText' => 'Добавить помещение', 'param' => ''])
   {{ Form::close() }}
 

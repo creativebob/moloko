@@ -12,7 +12,7 @@
 @else
 	{{-- Если конечный пункт --}}
 	<li>
-		<a href="/{{ $sidebar['alias'] }}" data-link="{{ $sidebar['id'] }}">{{ $sidebar['name'] }}</a>
+		<a href="{{ $sidebar['alias'] }}" data-link="{{ $sidebar['id'] }}">{{ $sidebar['name'] }}</a>
 	</li>
 @endif
 

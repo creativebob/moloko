@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 
 use App\User;
+use App\Entity;
 use App\Booklist;
 use App\List_item;
 
@@ -114,10 +115,14 @@ class BooklistController extends Controller
 
         } else {
 
+
+            $entity_id = Entity::where('alias', $request->entity_alias)->first()->id;
+
             $booklist = new Booklist;
             $booklist->name = 'Default';
             $booklist->author_id = $user->id;
             $booklist->entity_alias = $request->entity_alias;
+            $booklist->entity_id = $entity_id;
             $booklist->save();
 
             $booklist_id = $booklist->id;

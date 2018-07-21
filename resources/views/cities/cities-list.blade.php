@@ -1,119 +1,170 @@
 {{-- Шаблон вывода и динамического обновления --}}
 @php
-  $drop = 1;
+$drop = 1;
 @endphp
 {{-- @can('sort', App\Region::class)
-  $drop = 1;
+$drop = 1;
 @endcan --}}
 
 
-  @foreach ($regions as $region)      
-  <li class="first-item item @if ((count($region->areas) > 0) || (count($region->cities) > 0)) parent @endif" id="regions-{{ $region->id }}" data-name="{{ $region->name }}">
-    <a class="first-link @if($drop == 0) link-small @endif">
-      <div class="icon-open sprite"></div>
-      <span class="first-item-name">{{ $region->name }}</span>
-      <span class="number">{{ count($region->areas) + count($region->cities) }}</span>
-      @if ($region->moderation == 1)
-      <span class="no-moderation">Не отмодерированная запись!</span>
+@foreach ($regions as $region)      
+<li class="first-item item @if ((count($region->areas) > 0) || (count($region->cities) > 0)) parent @endif" id="regions-{{ $region->id }}" data-name="{{ $region->name }}">
+  <a class="first-link @if($drop == 0) link-small @endif">
+    <div class="icon-open sprite"></div>
+    <span class="first-item-name">{{ $region->name }}</span>
+    <span class="number">{{ count($region->areas) + count($region->cities) }}</span>
+    {{-- @if ($region->moderation == 1)
+    <span class="no-moderation">Не отмодерированная запись!</span>
+    @endif
+    @if ($region->system_item == 1)
+    <span class="system-item">Системная запись!</span>
+    @endif --}}
+  </a>
+  <div class="drop-list checkbox">
+    @if ($drop == 1)
+    <div class="sprite icon-drop"></div>
+    @endif
+    <input type="checkbox" name="" id="region-check-{{ $region->id }}">
+    <label class="label-check white" for="region-check-{{ $region->id }}"></label> 
+  </div>
+
+
+  <div class="icon-list">
+
+    <div class="display-menu">
+      @can ('publisher', App\Region::class)
+      @if ($region['display'] == 1)
+      <div class="icon-display-show white sprite" data-open="item-display"></div>
+      @else
+      <div class="icon-display-hide white sprite" data-open="item-display"></div>
       @endif
-      @if ($region->system_item == 1)
-      <span class="system-item">Системная запись!</span>
-      @endif
-    </a>
-    <div class="drop-list checkbox">
-      @if ($drop == 1)
-      <div class="sprite icon-drop"></div>
-      @endif
-      <input type="checkbox" name="" id="region-check-{{ $region->id }}">
-      <label class="label-check white" for="region-check-{{ $region->id }}"></label> 
+      @endcan
     </div>
 
-    {{-- Список редактирования 
-    <ul class="icon-list">
-      @can('create', App\City::class)
-      <li><div class="icon-list-add sprite" data-open="city-add"></div></li>
-      @endcan
-      @if (($region->system_item !== 1) && ((count($region->areas) + count($region->cities)) == 0))
-        @can('delete', $region)
-        <li><div class="icon-list-delete sprite" data-open="item-delete-ajax"></div></li>
-        @endcan
-      @endif
-    </ul> --}}
+  </div>
 
-    <ul class="menu vertical medium-list" data-entity="areas" data-accordion-menu data-multi-open="false">
+  {{-- Список редактирования 
+    @can('create', App\City::class)
+    <li><div class="icon-list-add sprite" data-open="city-add"></div></li>
+    @endcan
+    @if (($region->system_item !== 1) && ((count($region->areas) + count($region->cities)) == 0))
+    @can('delete', $region)
+    <li><div class="icon-list-delete sprite" data-open="item-delete-ajax"></div></li>
+    @endcan
+    @endif
+  </ul> --}}
+
+
+  <ul class="menu vertical medium-list" data-entity="areas" data-accordion-menu data-multi-open="false">
     @if((count($region->areas) > 0) || (count($region->cities) > 0))
-      @foreach ($region->areas as $area)
-        <li class="medium-item item @if (count($area->cities) > 0) parent @endif" id="areas-{{ $area->id }}" data-name="{{ $area->name }}">
-          <a class="medium-link">
-            <div class="icon-open sprite"></div>
-            <span>{{ $area->name }}</span>
-            <span class="number">{{ count($area->cities) }}</span>
-            @if ($area->moderation == 1)
+    @foreach ($region->areas as $area)
+    <li class="medium-item item @if (count($area->cities) > 0) parent @endif" id="areas-{{ $area->id }}" data-name="{{ $area->name }}">
+      <a class="medium-link">
+        <div class="icon-open sprite"></div>
+        <span>{{ $area->name }}</span>
+        <span class="number">{{ count($area->cities) }}</span>
+        {{-- @if ($area->moderation == 1)
+        <span class="no-moderation">Не отмодерированная запись!</span>
+        @endif
+        @if ($area->system_item == 1)
+        <span class="system-item">Системная запись!</span>
+        @endif --}}
+      </a>
+      <div class="drop-list checkbox">
+        @if ($drop == 1)
+        <div class="sprite icon-drop"></div>
+        @endif
+        <input type="checkbox" name="" id="area-check-{{ $area->id }}">
+        <label class="label-check" for="area-check-{{ $area->id }}"></label> 
+      </div>
+      <div class="icon-list">
+
+        <div class="display-menu">
+          @can ('publisher', App\Area::class)
+          @if ($area['display'] == 1)
+          <div class="icon-display-show white sprite" data-open="item-display"></div>
+          @else
+          <div class="icon-display-hide white sprite" data-open="item-display"></div>
+          @endif
+          @endcan
+        </div>
+
+      </div>
+      <ul class="menu vertical nested last-list" data-entity="cities">
+        @if(count($area->cities) > 0)
+        @foreach ($area->cities as $city)
+        <li class="last-item item" id="cities-{{ $city->id }}" data-name="{{ $city->name }}">
+          <a class="last-link">
+            <span>{{ $city->name }}</span>
+           {{-- @if ($city->moderation == 1)
             <span class="no-moderation">Не отмодерированная запись!</span>
             @endif
-            @if ($area->system_item == 1)
+            @if ($city->system_item == 1)
             <span class="system-item">Системная запись!</span>
-            @endif
+            @endif --}}
           </a>
           <div class="drop-list checkbox">
             @if ($drop == 1)
             <div class="sprite icon-drop"></div>
             @endif
-            <input type="checkbox" name="" id="area-check-{{ $area->id }}">
-            <label class="label-check" for="area-check-{{ $area->id }}"></label> 
+            <input type="checkbox" name="" id="city-check-{{ $city->id }}">
+            <label class="label-check" for="city-check-{{ $city->id }}"></label> 
           </div>
-          <ul class="menu vertical nested last-list" data-entity="cities">
-          @if(count($area->cities) > 0)
-            @foreach ($area->cities as $city)
-              <li class="last-item item" id="cities-{{ $city->id }}" data-name="{{ $city->name }}">
-                <a class="last-link">
-                  <span>{{ $city->name }}</span>
-                  @if ($city->moderation == 1)
-                  <span class="no-moderation">Не отмодерированная запись!</span>
-                  @endif
-                  @if ($city->system_item == 1)
-                  <span class="system-item">Системная запись!</span>
-                  @endif
-                </a>
-                <div class="drop-list checkbox">
-                  @if ($drop == 1)
-                  <div class="sprite icon-drop"></div>
-                  @endif
-                  <input type="checkbox" name="" id="city-check-{{ $city->id }}">
-                  <label class="label-check" for="city-check-{{ $city->id }}"></label> 
-                </div>
-              </li>
-            @endforeach
+          <div class="icon-list">
+
+        <div class="display-menu">
+          @can ('publisher', App\City::class)
+          @if ($city['display'] == 1)
+          <div class="icon-display-show white sprite" data-open="item-display"></div>
+          @else
+          <div class="icon-display-hide white sprite" data-open="item-display"></div>
           @endif
-          </ul>
+          @endcan
+        </div>
+
+      </div>
         </li>
-      @endforeach
-      @if(count($region->cities) > 0)
-        @foreach ($region->cities as $city)
-          <li class="medium-as-last item" id="cities-{{ $city->id }}" data-name="{{ $city->name }}">
-            <a class="medium-as-last-link">
-              <span>{{ $city->name }}</span>
-              @if ($city->moderation == 1)
-              <span class="no-moderation">Не отмодерированная запись!</span>
-              @endif
-              @if ($city->system_item == 1)
-              <span class="system-item">Системная запись!</span>
-              @endif
-            </a>
-            <div class="drop-list checkbox">
-              @if ($drop == 1)
-              <div class="sprite icon-drop"></div>
-              @endif
-              <input type="checkbox" name="" id="city-check-{{ $city->id }}">
-              <label class="label-check" for="city-check-{{ $city->id }}"></label> 
-            </div>
-          </li>
         @endforeach
-      @endif
+        @endif
+      </ul>
+    </li>
+    @endforeach
+    @if(count($region->cities) > 0)
+    @foreach ($region->cities as $city)
+    <li class="medium-as-last item" id="cities-{{ $city->id }}" data-name="{{ $city->name }}">
+      <a class="medium-as-last-link">
+        <span>{{ $city->name }}</span>
+        {{-- @if ($city->moderation == 1)
+        <span class="no-moderation">Не отмодерированная запись!</span>
+        @endif
+        @if ($city->system_item == 1)
+        <span class="system-item">Системная запись!</span>
+        @endif --}}
+      </a>
+      <div class="drop-list checkbox">
+        @if ($drop == 1)
+        <div class="sprite icon-drop"></div>
+        @endif
+        <input type="checkbox" name="" id="city-check-{{ $city->id }}">
+        <label class="label-check" for="city-check-{{ $city->id }}"></label> 
+      </div>
+
+      <div class="display-menu">
+          @can ('publisher', App\City::class)
+          @if ($city['display'] == 1)
+          <div class="icon-display-show white sprite" data-open="item-display"></div>
+          @else
+          <div class="icon-display-hide white sprite" data-open="item-display"></div>
+          @endif
+          @endcan
+        </div>
+    </li>
+    @endforeach
     @endif
-    </ul>
-  </li>
-  @endforeach
+    @endif
+  </ul>
+</li>
+@endforeach
 
 
 {{-- Скрипт чекбоксов и перетаскивания для меню --}}

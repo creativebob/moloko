@@ -10,9 +10,13 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Auth::routes();
+
 Route::resource('/site_api', 'ApiController');
 Route::get('/medcosm', 'ApiController@medcosm');
 
+// Вход в панель управления
 Route::get('/', function () {
   return view('layouts.enter');
 });
@@ -23,9 +27,7 @@ Route::get('/lol', function () {
   return view('demo');
 });
 
-Auth::routes();
-
-Route::any('/getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
+Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
 
 // Директории
 Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');
@@ -49,10 +51,11 @@ Route::post('/albums_category_check', 'AlbumsCategoryController@albums_category_
 Route::post('/albums_categories_list', 'AlbumsCategoryController@albums_categories_list')->middleware('auth');
 // Сортировка категорий альбомов
 Route::post('/albums_categories_sort', 'AlbumsCategoryController@albums_categories_sort')->middleware('auth');
-
+// Отображение на сайте
+Route::post('/albums_categories_display', 'AlbumsCategoryController@ajax_display')->middleware('auth');
 
 // --------------------------------------- Альбомы -----------------------------------------------
-Route::resource('/albums', 'AlbumController')->middleware('auth');
+// Route::resource('/albums', 'AlbumController')->middleware('auth');
 Route::get('/albums', 'AlbumController@index')->middleware('auth')->name('albums.index');
 Route::get('/albums/create', 'AlbumController@create')->middleware('auth')->name('albums.create');
 Route::get('/albums/{alias}', 'AlbumController@show')->middleware('auth')->name('albums.show');
@@ -60,6 +63,7 @@ Route::post('/albums', 'AlbumController@store')->middleware('auth')->name('album
 Route::get('/albums/{alias}/edit', 'AlbumController@edit')->middleware('auth')->name('albums.edit');
 Route::patch('/albums/{id}', 'AlbumController@update')->middleware('auth')->name('albums.update');
 Route::delete('/albums/{id}', 'AlbumController@destroy')->middleware('auth')->name('albums.destroy');
+
 
 // Получение альбомов по категории
 Route::post('/albums_list', 'AlbumController@albums_list')->middleware('auth');
@@ -69,6 +73,8 @@ Route::post('/get_album', 'AlbumController@get_album')->middleware('auth');
 Route::post('/albums_sort', 'AlbumController@albums_sort')->middleware('auth');
 // Отображение на сайте
 Route::post('/albums_display', 'AlbumController@ajax_display')->middleware('auth');
+// Проверка на существование
+Route::post('/albums_check', 'AlbumController@albums_check')->middleware('auth');
 
 // Route::get('/albums/{alias}', 'AlbumController@sections')->middleware('auth')->name('albums.photos');
 // Группа с префиксом
@@ -183,9 +189,11 @@ Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth'
 
 
 // -------------------------------- Категории услуг -------------------------------------------
-// Route::any('/ajax_services_modes', 'ServicesProductController@ajax_modes')->middleware('auth');
+// Route::get('/services_categories/create', 'ServicesCategoryController@create')->middleware('auth');
+
 // Текущая добавленная/удаленная категория
 Route::any('/services_categories', 'ServicesCategoryController@index')->middleware('auth');
+
 // Основные методы
 Route::resource('/services_categories', 'ServicesCategoryController')->middleware('auth');
 
@@ -205,7 +213,7 @@ Route::resource('/services_products', 'ServicesProductController')->middleware('
 Route::any('/ajax_services_count', 'ServicesProductController@ajax_count')->middleware('auth');
 Route::any('/ajax_services_modes', 'ServicesProductController@ajax_modes')->middleware('auth');
 
-
+// ---------------------------------- Услуги (Артикулы) -------------------------------------------
 Route::any('/services/create', 'ServiceController@create')->middleware('auth');
 // Основные методы
 Route::resource('/services', 'ServiceController')->middleware('auth');
@@ -215,6 +223,44 @@ Route::post('/service/photos', 'ServiceController@photos')->middleware('auth');
 
 // Отображение страниц на сайте
 Route::post('/services_display', 'ServiceController@ajax_display')->middleware('auth');
+
+
+
+// -------------------------------- Категории товаров -------------------------------------------
+// Route::any('/goods_categories/create', 'GoodsCategoryController@create')->middleware('auth');
+// Текущая добавленная/удаленная категория
+Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('auth');
+
+Route::match(['get', 'post'], '/goods_categories/{id}/edit', 'GoodsCategoryController@edit')->middleware('auth');
+// Основные методы
+Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('auth');
+
+// Проверка на существование категории продукции
+Route::post('/goods_category_check', 'GoodsCategoryController@goods_category_check')->middleware('auth');
+
+// Отображение страниц на сайте
+Route::post('/goods_categories_display', 'GoodsCategoryController@ajax_display')->middleware('auth');
+// Сортировка
+Route::post('/goods_categories_sort', 'GoodsCategoryController@goods_categories_sort')->middleware('auth');
+
+// --------------------------------- Продукция товаров --------------------------------------------
+// Основные методы
+Route::resource('/goods_products', 'GoodsProductController')->middleware('auth');
+
+
+Route::any('/ajax_goods_count', 'GoodsProductController@ajax_count')->middleware('auth');
+Route::any('/ajax_goods_modes', 'GoodsProductController@ajax_modes')->middleware('auth');
+
+// ---------------------------------- Товары (Артикулы) -------------------------------------------
+Route::any('/goods/create', 'GoodsController@create')->middleware('auth');
+// Основные методы
+Route::resource('/goods', 'GoodsController')->middleware('auth');
+
+Route::any('/cur_good/add_photo', 'GoodsController@add_photo')->middleware('auth');
+Route::post('/cur_good/photos', 'GoodsController@photos')->middleware('auth');
+
+// Отображение страниц на сайте
+Route::post('/goods_display', 'GoodsController@ajax_display')->middleware('auth');
 
 
 // Проверка на существование товара
@@ -282,11 +328,11 @@ Route::resource('/metrics', 'MetricController')->middleware('auth');
 
 
 // --------------------------------------- Компании -----------------------------------------------
-Route::resource('/companies', 'CompanyController')->middleware('auth');
+Route::resource('companies', 'CompanyController')->middleware('auth');
 // Проверка существования компании в базе по ИНН
-Route::post('/companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');
+Route::post('companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');
 // Сортировка компаний
-Route::post('/companies_sort', 'CompanyController@companies_sort')->middleware('auth');
+Route::post('companies_sort', 'CompanyController@companies_sort')->middleware('auth');
 
 // Маршруты для правил доступа
 Route::resource('/rights', 'RightController')->middleware('auth');
@@ -350,6 +396,11 @@ Route::post('/city_vk', 'CityController@get_vk_city')->middleware('auth');
 
 // Тестовый маршрут проверки пришедших с вк данных
 Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
+
+// Отображение на сайте
+Route::post('/cities_display', 'CityController@ajax_display')->middleware('auth');
+Route::post('/areas_display', 'AreaController@ajax_display')->middleware('auth');
+Route::post('/regions_display', 'RegionController@ajax_display')->middleware('auth');
 
 // ----------------------------------------- Филиалы и отделы --------------------------------------
 // Текущий добавленный/удаленный отдел/филиал
@@ -464,6 +515,6 @@ Route::post('/menus_display', 'MenuController@ajax_display')->middleware('auth')
 // ------------------------------------- Отображение сессии -----------------------------------------
 Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');
 
-Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');
+
+

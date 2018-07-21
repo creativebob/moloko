@@ -21,7 +21,7 @@ $(function() {
         },
         data: data,
         type: 'POST',
-        url: '/' + entity + '_sort',
+        url: '/admin/' + entity + '_sort',
         // success: function(date){
         //   var result = $.parseJSON(date);
         //   if (result.error_status == 1) {

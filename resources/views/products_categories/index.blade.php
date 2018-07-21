@@ -89,7 +89,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/products_category_check",
+        url: "/admin/products_category_check",
         type: "POST",
         data: {name: name},
         beforeSend: function () {
@@ -129,7 +129,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/products_categories/' + type + '/create',
+      url: '/admin/products_categories/' + type + '/create',
       type: "GET",
       success: function(html){
         // alert(html);
@@ -168,7 +168,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/products_categories/' + type + '/create',
+      url: '/admin/products_categories/' + type + '/create',
       type: "GET",
       data: {category_id: category, parent_id: parent},
       success: function(html){
@@ -190,7 +190,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/products_categories',
+      url: '/admin/products_categories',
       type: "POST",
       data: $(this).closest('form').serialize(),
       success:function(html) {
@@ -211,7 +211,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/products',
+      url: '/admin/products',
       type: "POST",
       data: $(this).closest('form').serialize(),
       success:function(html) {
@@ -221,8 +221,6 @@
       }
     });
   });
-
-
 
   // ---------------------------------- Закрытие модалки -----------------------------------
   $(document).on('click', '.icon-close-modal, .submit-edit', function() {

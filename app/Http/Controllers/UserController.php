@@ -50,9 +50,9 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // --------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // --------------------------------------------------------------------------------------------------------
 
         $users = User::with('roles', 'staff', 'staff.position')  
         ->moderatorLimit($answer)
@@ -139,9 +139,12 @@ class UserController extends Controller
 
         // Получаем данные для авторизованного пользователя
         $user_auth = $request->user();
+
+        // Скрываем бога
         $user_auth_id = hideGod($user_auth);
-        $user_status = $user_auth->god;
+
         $company_id = $user_auth->company_id;
+
         $filial_id = $request->filial_id;
 
         // Пишем локацию
@@ -171,6 +174,8 @@ class UserController extends Controller
         $user->patronymic = $request->patronymic;
         $user->sex = $request->sex;
         $user->birthday = $request->birthday;
+
+        $user->company_id = $company_id;
 
         $user->phone = cleanPhone($request->phone);
 
@@ -227,52 +232,21 @@ class UserController extends Controller
         // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'documents';
         // Storage::makeDirectory($link_for_folder);
 
-        $company_id = $user_auth->company_id;
-        if ($user_auth->god == 1) {
-
-            // Если бог, то ставим автором робота
-            $user_id = 1;
-            $company_id = null;
-        } else {
-            $user_id = $user_auth->id;
-        }
-
-        if ($request->hasFile('photo')) {
-            $photo = new Photo;
-            $image = $request->file('photo');
-            $directory = $user_auth->company->id.'/media/albums/'.$user->login.'/img/';
-            $extension = $image->getClientOriginalExtension();
-            $photo->extension = $extension;
-            $image_name = 'avatar.'.$extension;
-
-            // $photo->path = '/'.$directory.'/'.$image_name;
-
-            $params = getimagesize($request->file('photo'));
-            $photo->width = $params[0];
-            $photo->height = $params[1];
-
-            $size = filesize($request->file('photo'))/1024;
-            $photo->size = number_format($size, 2, '.', '');
-
-            $photo->name = $image_name;
-            $photo->company_id = $company_id;
-            $photo->author_id = $user_id;
-            $photo->save();
-
-            $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
-
-            $avater = Image::make($request->photo)->widen(30);
-            $save_path = storage_path('app/public/'.$directory);
-            if (!file_exists($save_path)) {
-                mkdir($save_path, 755, true);
-            }
-            $avater->save(storage_path('app/public/'.$directory.$image_name));
-
-            $user->photo = $photo->path;
-            $user->photo_id = $photo->id;
-        }   
-
         $user->save();
+
+        // Если прикрепили фото
+        if ($request->hasFile('photo')) {
+
+            // Директория
+            $directory = $user->company_id.'/media/users/'.$user->id.'/img/';
+
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
+            $array = save_photo($request, $user->id, $company_id, $directory, 'avatar-'.time());
+            $photo = $array['photo'];
+
+            $user->photo_id = $photo->id;
+            $user->save();
+        }
 
         if ($user) {
             // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
@@ -306,7 +280,7 @@ class UserController extends Controller
                 $delete = RoleUser::whereUser_id($user->id)->delete();
             }
 
-            return redirect('users');
+            return Redirect('/admin/users');
 
         } else {
             abort(403, 'Ошибка при обновлении пользователя!');
@@ -385,7 +359,12 @@ class UserController extends Controller
     {
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
+
         $user_auth_id = hideGod($user_auth);
+
+        $company_id = $user_auth->company_id;
+
+        // dd($company_id);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -414,7 +393,12 @@ class UserController extends Controller
 
         $user->login = $request->login;
         $user->email = $request->email;
-        $user->password = bcrypt($request->password);
+
+        // Если пришел не пустой пароль
+        if (isset($request->password)) {
+            $user->password = bcrypt($request->password);
+        }
+        
         $user->nickname = $request->nickname;
 
         $user->first_name = $request->first_name;
@@ -453,60 +437,35 @@ class UserController extends Controller
         $user->filial_id = $request->filial_id;
 
 
-        $company_id = $user_auth->company_id;
-        if ($user_auth->god == 1) {
-            // Если бог, то ставим автором робота
-            $user_id = 1;
-            $company_id = null;
-        } else {
-            $user_id = $user_auth->id;
-        }
-
+        // Если прикрепили фото
         if ($request->hasFile('photo')) {
-            $photo = new Photo;
-            $image = $request->file('photo');
-            $directory = $user_auth->company->id.'/media/albums/'.$user->login.'/img/';
-            $extension = $image->getClientOriginalExtension();
-            $photo->extension = $extension;
-            $image_name = 'avatar.'.$extension;
 
-            // $photo->path = '/'.$directory.'/'.$image_name;
+            // dd($company_id);
+            // Директория
+            $directory = $user->company_id.'/media/users/'.$user->id.'/img/';
 
-            $params = getimagesize($request->file('photo'));
-            $photo->width = $params[0];
-            $photo->height = $params[1];
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            if ($user->photo_id) {
+                $array = save_photo($request, $user_auth_id, $company_id, $directory, 'avatar-'.time(), null, $user->photo_id);
 
-            $size = filesize($request->file('photo'))/1024;
-            $photo->size = number_format($size, 2, '.', '');
-
-            $photo->name = $image_name;
-            $photo->company_id = $company_id;
-            $photo->author_id = $user_id;
-            $photo->save();
-
-            $upload_success = $image->storeAs($directory, 'original-'.$image_name, 'public');
-
-            $avater = Image::make($request->photo)->widen(30);
-            $save_path = storage_path('app/public/'.$directory);
-            if (!file_exists($save_path)) {
-                mkdir($save_path, 755, true);
+            } else {
+                $array = save_photo($request, $user_auth_id, $company_id, $directory, 'avatar-'.time());
             }
-            $avater->save(storage_path('app/public/'.$directory.$image_name));
 
-            // $user->photo = $photo->path;
+            $photo = $array['photo'];
+
             $user->photo_id = $photo->id;
-        }   
+        }
 
         // Модерируем (Временно)
         if($answer['automoderate']){$user->moderation = null;};
 
         $user->save();
 
-        // dd($request->access);
+        // Выполняем, только если данные пришли не из userfrofile!
+        if(!isset($request->users_edit_mode)){
 
-        if ($user) {
-
-            // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
+            // Тут вписываем изменения по правам
             if (isset($request->access)) {
 
                 $delete = RoleUser::whereUser_id($user->id)->delete();
@@ -528,14 +487,17 @@ class UserController extends Controller
                     ];
                 }
 
-                // dd($mass);
                 DB::table('role_user')->insert($mass);
 
             } else {
+
                 // Если удалили последнюю роль для должности и пришел пустой массив
                 $delete = RoleUser::whereUser_id($user->id)->delete();
             }
 
+        };
+
+        if ($user) {
 
             $backroute = $request->backroute;
             if(isset($backroute)){
@@ -543,12 +505,11 @@ class UserController extends Controller
                 return redirect($backroute);
             };
 
-            return redirect('users');
+            return redirect('/admin/users');
 
         } else {
             abort(403, 'Ошибка при обновлении пользователя!');
         }
-
     }
 
     public function destroy(Request $request, $id)
@@ -566,7 +527,7 @@ class UserController extends Controller
         // Удаляем пользователя с обновлением
         $user = User::moderatorLimit($answer)->where('id', $id)->delete();
 
-        if($user) {return Redirect('/users');} else {abort(403,'Что-то пошло не так!');};
+        if($user) {return redirect('/admin/users');} else {abort(403,'Что-то пошло не так!');};
     }
 
     // Сортировка
@@ -598,8 +559,8 @@ class UserController extends Controller
         $auth_user = User::findOrFail(Auth::user()->id);
         $auth_user->company_id = $company_id;
         $auth_user->save();
-
-        return redirect('/getaccess');
+        return redirect()->route('getaccess.set');
+        // return redirect('/getaccess');
     }
 
     public function getauthuser($user_id)
@@ -609,7 +570,9 @@ class UserController extends Controller
         $this->authorize('god', User::class);
         session(['god' => Auth::user()->id]);
         Auth::loginUsingId($user_id);
-        return redirect('/getaccess');
+        
+        // return redirect('/getaccess');
+        return redirect()->route('getaccess.set');
     }
 
     public function getgod()
@@ -621,7 +584,8 @@ class UserController extends Controller
         $user->company_id = null;
         $user->save();
 
-        return redirect('/getaccess');
+        // return redirect('/getaccess');
+        return redirect()->route('getaccess.set');
     }
 
     public function returngod(Request $request)
@@ -634,7 +598,8 @@ class UserController extends Controller
         Auth::loginUsingId($god_id);
         }
 
-        return redirect('/getaccess');
+        return redirect()->route('getaccess.set');
+        // return redirect('/getaccess');
     }
 
 

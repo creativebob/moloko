@@ -33,7 +33,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 
 class PhotoController extends Controller
 {
-  // Сущность над которой производит операции контроллер
+    // Сущность над которой производит операции контроллер
   protected $entity_name = 'photos';
   protected $entity_dependence = false;
 
@@ -43,10 +43,12 @@ class PhotoController extends Controller
     // Подключение политики
     $this->authorize(getmethod(__FUNCTION__), Photo::class);
 
-    $answer_album = operator_right('albums', $this->entity_dependence, getmethod(__FUNCTION__));
+    $answer_album = operator_right('albums', false, getmethod(__FUNCTION__));
 
     // Получаем сайт
-    $album = Album::moderatorLimit($answer_album)->whereAlias($alias)->first();
+    $album = Album::with('album_settings')->moderatorLimit($answer_album)->whereAlias($alias)->first();
+
+    // dd($album);
 
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
     $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -117,6 +119,27 @@ class PhotoController extends Controller
     $departments_list = getLS('users', 'view', 'departments');
     $filials_list = getLS('users', 'view', 'departments');
 
+    // Получаем настройки по умолчанию
+    $settings = config()->get('settings');
+    // dd($settings);
+
+    // Выдергиваем настройки из альбома
+    if (isset($album->album_settings->img_max_size)) {
+      $settings['img_max_size'] = $album->album_settings->img_max_size;
+    }
+    if (isset($album->album_settings->img_formats)) {
+      $settings['img_formats'] = $album->album_settings->img_formats;
+    }
+    if (isset($album->album_settings->img_min_width)) {
+      $settings['img_min_width'] = $album->album_settings->img_min_width;
+    }
+    if (isset($album->album_settings->img_min_height)) {
+      $settings['img_min_height'] = $album->album_settings->img_min_height;
+    }
+
+    $settings['upload_mode'] = $album->album_settings->upload_mode;
+    // dd($settings);
+
     $photo = new Photo;
 
     // Инфо о странице
@@ -125,7 +148,7 @@ class PhotoController extends Controller
     // Так как сущность имеет определенного родителя
     $parent_page_info = pageInfo('albums');
 
-    return view('photos.create', compact('alias', 'photo', 'album', 'roles_list', 'page_info', 'parent_page_info'));
+    return view('photos.create', compact('alias', 'photo', 'album', 'roles_list', 'page_info', 'parent_page_info', 'settings'));
   }
 
   public function store(Request $request, $alias)
@@ -150,70 +173,13 @@ class PhotoController extends Controller
 
     if ($request->hasFile('photo')) {
 
-      $directory = $user->company->id.'/media/albums/'.$album->id.'/img/';
+      $directory = $user->company_id.'/media/albums/'.$album->id.'/img/';
       $name = $album->alias.'-'.time();
 
       // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-        $array = save_photo($request, $user_id, $company_id, $directory, $name);
+      $array = save_photo($request, $user_id, $company_id, $directory, $name, $album->id);
 
       $photo = $array['photo'];
-
-       if(!isset($album->photo_id)){
-        $album->photo_id = $photo->id;
-        $album->save();
-      }
-
-      // $album->photos()->attach($photo->id);
-
-      $media = new AlbumEntity;
-      $media->album_id = $album->id;
-      $media->entity_id = $photo->id;
-      $media->entity = 'photos';
-      $media->save();
-    } 
-
-    if ($request->hasFile('photo')) {
-
-      // Получаем данные для авторизованного пользователя
-      $user = $request->user();
-
-      // Смотрим компанию пользователя
-      $company_id = $user->company_id;
-      if($company_id == null) {
-        abort(403, 'Необходимо авторизоваться под компанией');
-      }
-
-      // Скрываем бога
-      $user_id = hideGod($user);
-
-      $photo = new Photo;
-
-      $image = $request->file('photo');
-        // $filename = str_random(5).date_format($time,'d').rand(1,9).date_format($time,'h').".".$extension;
-      $directory = $user->company->id.'/media/albums/'.$album->id.'/img/';
-
-      $extension = $image->getClientOriginalExtension();
-      $photo->extension = $extension;
-
-      $image_name = $alias.'-'.time().'.'.$extension;
-
-      // $photo->path = '/'.$directory.'/'.$image_name;
-
-      $params = getimagesize($image);
-      $photo->width = $params[0];
-      $photo->height = $params[1];
-
-      $size = filesize($image)/1024;
-      $photo->size = number_format($size, 2, '.', '');
-
-      // Отображение на сайте
-      $photo->display = 1;
-
-      $photo->album_id = $album->id;
-      $photo->name = $image_name;
-      $photo->company_id = $company_id;
-      $photo->author_id = $user_id;
-      $photo->save();
 
       if(!isset($album->photo_id)){
         $album->photo_id = $photo->id;
@@ -228,33 +194,8 @@ class PhotoController extends Controller
       $media->entity = 'photos';
       $media->save();
 
-      $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
+      $upload_success = $array['upload_success'];
 
-      $settings = config()->get('settings');
-
-      // $small = Image::make($request->photo)->grab(150, 99);
-      $small = Image::make($request->photo)->widen($settings['img_small_width']);
-      $save_path = storage_path('app/public/'.$directory.'small');
-      if (!file_exists($save_path)) {
-        mkdir($save_path, 755, true);
-      }
-      $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
-
-      // $medium = Image::make($request->photo)->grab(900, 596);
-      $medium = Image::make($request->photo)->widen($settings['img_medium_width']);
-      $save_path = storage_path('app/public/'.$directory.'medium');
-      if (!file_exists($save_path)) {
-        mkdir($save_path, 755, true);
-      }
-      $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
-
-      // $large = Image::make($request->photo)->grab(1200, 795);
-      $large = Image::make($request->photo)->widen($settings['img_large_width']);
-      $save_path = storage_path('app/public/'.$directory.'large');
-      if (!file_exists($save_path)) {
-        mkdir($save_path, 755, true);
-      }
-      $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
 
       // } 
       // Storage::disk('public')->put($directory.'/small/'.$image_name, $small->stream()->__toString());
@@ -351,161 +292,153 @@ class PhotoController extends Controller
 
 
 
-      return redirect('/albums/'.$alias.'/photos');
+      return redirect('/admin/albums/'.$alias.'/photos');
     } else {
       abort(403, 'Ошибка при обновления фотографии!');
     }
 
   }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request, $alias, $id)
-    {
+  public function destroy(Request $request, $alias, $id)
+  {
       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-      $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+    $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
       // ГЛАВНЫЙ ЗАПРОС:
-      $photo = Photo::with(['avatar', 'album' => function ($query) use ($alias) {
-        $query->whereAlias($alias);
-      }])->moderatorLimit($answer)->findOrFail($id);
+    $photo = Photo::with(['avatar', 'album' => function ($query) use ($alias) {
+      $query->whereAlias($alias);
+    }])->moderatorLimit($answer)->findOrFail($id);
 
       // Подключение политики
-      $this->authorize(getmethod(__FUNCTION__), $photo);
+    $this->authorize(getmethod(__FUNCTION__), $photo);
 
-      if ($photo) {
+    if ($photo) {
 
-        $album = $photo->album->first();
+      $album = $photo->album->first();
 
-        if (isset($photo->album->name)) {
-          $album = Album::findOrFail($photo->album->id);
-          $album->photo_id = null;
-          $album->save();
+      if (isset($photo->album->name)) {
+        $album = Album::findOrFail($photo->album->id);
+        $album->photo_id = null;
+        $album->save();
 
-          if ($album == false) {
-            abort(403, 'Ошибка при удалении аватара альбома');
-          }
+        if ($album == false) {
+          abort(403, 'Ошибка при удалении аватара альбома');
         }
-        $directory = $album->company_id.'/media/albums/'.$album->id.'/img';
+      }
+      $directory = $album->company_id.'/media/albums/'.$album->id.'/img';
 
 
-        $small = Storage::disk('public')->delete($directory.'/small/'.$photo->name);
-        $medium = Storage::disk('public')->delete($directory.'/medium/'.$photo->name);
-        $large = Storage::disk('public')->delete($directory.'/large/'.$photo->name);
-        $original = Storage::disk('public')->delete($directory.'/original/'.$photo->name);
+      $small = Storage::disk('public')->delete($directory.'/small/'.$photo->name);
+      $medium = Storage::disk('public')->delete($directory.'/medium/'.$photo->name);
+      $large = Storage::disk('public')->delete($directory.'/large/'.$photo->name);
+      $original = Storage::disk('public')->delete($directory.'/original/'.$photo->name);
         // dd($storage);
 
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-        $photo->editor_id = $user_id;
-        $photo->save();
-
-        if (isset($photo->album)) {
-          # code...
-        }
-        
-        // Удаляем страницу с обновлением
-        $photo = Photo::destroy($id);
-        if ($photo) {
-          return Redirect('/albums/'.$alias.'/photos');
-        } else {
-          abort(403, 'Ошибка при удалении фотографии');
-        }
-      } else {
-        abort(403, 'Фотография не найдена');
-      }
-    }
-
-    // Сортировка
-    public function photos_sort(Request $request)
-    {
-      $result = '';
-      $i = 1;
-      foreach ($request->photos as $item) {
-        $photo = Photo::findOrFail($item);
-        $photo->sort = $i;
-        $photo->save();
-        $i++;
-      }
-    }
-
-    // ------------------------------------------ Ajax --------------------------------------------------------
-    public function get_photo(Request $request)
-    {
-      // ГЛАВНЫЙ ЗАПРОС:
-      $photo = Photo::with('album')->findOrFail($request->id);
-
-      // return $photo;
-      return view($request->entity.'.photo-edit', ['photo' => $photo]);
-    }
-
-    // Сортировка
-    public function update_photo(Request $request, $id)
-    {
-
-      // Получаем данные для авторизованного пользователя
       $user = $request->user();
 
-      // Скрываем бога
+        // Скрываем бога
       $user_id = hideGod($user);
+      $photo->editor_id = $user_id;
+      $photo->save();
+
+      $photo->albums()->detach();
+
+        // Удаляем страницу с обновлением
+      $photo = Photo::destroy($id);
+      if ($photo) {
+        return redirect('/admin/albums/'.$alias.'/photos');
+      } else {
+        abort(403, 'Ошибка при удалении фотографии');
+      }
+    } else {
+      abort(403, 'Фотография не найдена');
+    }
+  }
+
+    // Сортировка
+  public function photos_sort(Request $request)
+  {
+    $result = '';
+    $i = 1;
+    foreach ($request->photos as $item) {
+      $photo = Photo::findOrFail($item);
+      $photo->sort = $i;
+      $photo->save();
+      $i++;
+    }
+  }
+
+    // ------------------------------------------ Ajax --------------------------------------------------------
+  public function get_photo(Request $request)
+  {
+      // ГЛАВНЫЙ ЗАПРОС:
+    $photo = Photo::with('album')->findOrFail($request->id);
+
+      // return $photo;
+    return view($request->entity.'.photo-edit', ['photo' => $photo]);
+  }
+
+    // Сортировка
+  public function update_photo(Request $request, $id)
+  {
+
+      // Получаем данные для авторизованного пользователя
+    $user = $request->user();
+
+      // Скрываем бога
+    $user_id = hideGod($user);
 
       // ГЛАВНЫЙ ЗАПРОС:
-      $photo = Photo::findOrFail($id);
+    $photo = Photo::findOrFail($id);
 
       // Модерация и системная запись
-      $photo->system_item = $request->system_item;
-      $photo->moderation = $request->moderation;
+    $photo->system_item = $request->system_item;
+    $photo->moderation = $request->moderation;
 
       // Отображение на сайте
-      $photo->display = $request->display;
-      $photo->editor_id = $user_id;
-      $photo->title = $request->title;
-      $photo->description = $request->description;
-      $photo->save();
+    $photo->display = $request->display;
+    $photo->editor_id = $user_id;
+    $photo->title = $request->title;
+    $photo->description = $request->description;
+    $photo->save();
 
-      if ($photo) {
-        return view($request->entity.'.photo-edit', ['photo' => $photo]);
-      } else {
-        $result = [
-          'error_status' => 1,
-          'error_message' => 'Ошибка при записи категории продукции!'
-        ];
-      }
+    if ($photo) {
+      return view($request->entity.'.photo-edit', ['photo' => $photo]);
+    } else {
+      $result = [
+        'error_status' => 1,
+        'error_message' => 'Ошибка при записи категории продукции!'
+      ];
     }
+  }
 
     // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
+  public function ajax_display(Request $request)
+  {
 
-      if ($request->action == 'hide') {
-        $display = null;
-      } else {
-        $display = 1;
-      }
-
-      $photo = Photo::findOrFail($request->id);
-      $photo->display = $display;
-      $photo->save();
-
-      if ($photo) {
-
-        $result = [
-          'error_status' => 0,
-        ];  
-      } else {
-
-        $result = [
-          'error_status' => 1,
-          'error_message' => 'Ошибка при обновлении отображения на сайте!'
-        ];
-      }
-      echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    if ($request->action == 'hide') {
+      $display = null;
+    } else {
+      $display = 1;
     }
 
+    $photo = Photo::findOrFail($request->id);
+    $photo->display = $display;
+    $photo->save();
+
+    if ($photo) {
+
+      $result = [
+        'error_status' => 0,
+      ];  
+    } else {
+
+      $result = [
+        'error_status' => 1,
+        'error_message' => 'Ошибка при обновлении отображения на сайте!'
+      ];
+    }
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
   }
+
+}

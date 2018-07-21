@@ -4,8 +4,16 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+// Подключаем кеш
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+    
+
 class ServicesProduct extends Model
 {
+
+    // Включаем кеш
+    use Cachable;
+
     // Получаем категорию
     public function services_category()
     {

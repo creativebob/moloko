@@ -61,7 +61,7 @@
             @endphp
             @endcan
             @if($edit == 1)
-            <a href="/companies/{{ $company->id }}/edit">
+            <a href="companies/{{ $company->id }}/edit">
               @endif
               {{ $company->name }}
               @if($edit == 1)

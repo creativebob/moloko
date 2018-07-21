@@ -123,10 +123,15 @@
 @section('scripts')
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.scripts.delete-ajax-script')
+
 {{-- Маска ввода --}}
 @include('includes.scripts.inputs-mask')
+
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
+
+{{-- Скрипт отображеняи на сайте --}}
+@include('includes.scripts.display-ajax')
 <script type="text/javascript">
 $(function() {
 
@@ -145,7 +150,7 @@ $(function() {
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/city_vk",
+      url: "/admin/city_vk",
       type: "POST",
       data: {city: $('#city-name-field').val(), checkbox:checkbox},
       beforeSend: function () {
@@ -267,7 +272,7 @@ $(function() {
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
-          url: "/city_check",
+          url: "/admin/city_check",
           type: "POST",
           data: $('#form-add').serialize(),
           success: function (data) {
@@ -300,7 +305,7 @@ $(function() {
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '/cities',
+      url: '/admin/cities',
       type: "POST",
       data: $(this).closest('#form-add').serialize(),
       success:function(html){

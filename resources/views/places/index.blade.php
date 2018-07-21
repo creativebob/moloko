@@ -60,7 +60,7 @@
             @endphp
             @endcan
             @if($edit == 1)
-            <a href="/places/{{ $place->id }}/edit">
+            <a href="/admin/places/{{ $place->id }}/edit">
               @endif
               {{ $place->name }}
               @if($edit == 1)

@@ -8,6 +8,7 @@ use App\ServicesMode;
 use App\ServicesProduct;
 use App\ServicesCategory;
 use App\Property;
+use App\Company;
 
 // use App\Company;
 // use App\Photo;
@@ -21,6 +22,7 @@ use App\Property;
 // use App\Entity;
 // use App\List_item;
 // use App\Unit;
+// 
 use App\UnitsCategory;
 
 // Валидация
@@ -28,7 +30,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ServicesCategoryRequest;
 
 // Политика
-use App\Policies\ServiceServicesCategoryPolicy;
+use App\Policies\ServicesCategoryPolicy;
 
 // Общие классы
 use Illuminate\Support\Facades\Log;
@@ -87,12 +89,24 @@ class ServicesCategoryController extends Controller
 
     public function create(Request $request)
     {
+
+
+        $user = $request->user();
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), ServicesCategory::class);
 
         $services_category = new ServicesCategory;
 
-        $services_modes_list = ServicesMode::where('type', 'services')->get()->pluck('name', 'id');
+        // $services_modes_list = ServicesMode::where('type', 'services')->get()->pluck('name', 'id');
+        $services_types_list = Company::with('services_types')
+        ->where('id', $user->company_id)
+        ->get()->first()
+        ->services_types
+        ->pluck('name', 'id')
+        ->toarray();
+
+        // dd($services_types_list);
 
         // Если добавляем вложенный элемент
         if (isset($request->parent_id)) {
@@ -136,10 +150,10 @@ class ServicesCategoryController extends Controller
             ->pluck('name', 'id');
 
 
-            return view('services_categories.create-medium', compact('services_category', 'services_categories_list', 'type', 'services_modes_list', 'units_categories_list', 'services_list'));
+            return view('services_categories.create-medium', compact('services_category', 'services_categories_list', 'type', 'services_types_list', 'units_categories_list', 'services_list'));
         } else {
 
-            return view('services_categories.create-first', compact('services_category', 'services_modes_list'));
+            return view('services_categories.create-first', compact('services_category', 'services_types_list'));
         }
     }
 
@@ -461,7 +475,8 @@ class ServicesCategoryController extends Controller
 
         if ($services_category) {
 
-            return Redirect('/services_categories/'.$services_category->type)->with('services_category_id', $services_category->id);
+            return Redirect('/admin/services_categories/'.$services_category->type)->with('services_category_id', $services_category->id);
+
         } else {
             $result = [
                 'error_status' => 1,

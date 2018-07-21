@@ -54,7 +54,7 @@
             </div>
             @endif
 
-            {{ Form::model($article, ['url' => ['articles/'.$article->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'article-form']) }}
+            {{ Form::model($article, ['url' => ['/admin/articles/'.$article->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'article-form']) }}
             {{ method_field('PATCH') }}
 
             <!-- Общая информация -->

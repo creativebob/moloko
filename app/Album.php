@@ -13,6 +13,10 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
+// Подключаем кеш
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+    
+
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
@@ -20,6 +24,10 @@ use App\Scopes\Filters\BooklistFilter;
 
 class Album extends Model
 {
+
+    // Включаем кеш
+    use Cachable;
+
     use Notifiable;
 
     // Включаем Scopes
@@ -79,6 +87,13 @@ class Album extends Model
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');
+    }
+
+
+    // Получаем настройки
+    public function album_settings()
+    {
+        return $this->hasOne('App\EntitySetting', 'entity_id')->where('entity', 'albums');
     }
 
 }

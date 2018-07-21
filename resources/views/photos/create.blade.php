@@ -22,9 +22,9 @@
 @section('content')
 <div class="grid-x grid-padding-x">
     <div class="small-12 cell">
-{{ Form::open(['url' => '/albums/'.$alias.'/photos', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
-{{ Form::close() }}
-</div>
+        {{ Form::open(['url' => '/admin/albums/'.$alias.'/photos', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
+        {{ Form::close() }}
+    </div>
 </div>
 @endsection
 
@@ -38,36 +38,47 @@
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.pickmeup-script')
 
-@php
-$settings = config()->get('settings');
-@endphp
-
 <script>
-  var minImageHeight = 795;
-  Dropzone.options.myDropzone = {
-    paramName: 'photo',
-    maxFilesize: {{ $settings['img_max_size'] }}, // MB
-    maxFiles: 20,
-    acceptedFiles: '{{ $settings['img_formats'] }}',
-    addRemoveLinks: true,
-    init: function() {
-    	this.on("success", function(file, responseText) {
-    		file.previewTemplate.setAttribute('id',responseText[0].id);
-    	});
-    	this.on("thumbnail", function(file) {
-    		if (file.width < {{ $settings['img_min_width'] }} || file.height < minImageHeight) {
-    			file.rejectDimensions()
-    		}
-    		else {
-    			file.acceptDimensions();
-    		}
-    	});
-    },
-    accept: function(file, done) {
-    	file.acceptDimensions = done;
-    	file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину"); };
-    }
-  };
+
+    Dropzone.options.myDropzone = {
+        paramName: 'photo',
+        maxFilesize: {{ $settings['img_max_size'] }}, // MB
+        maxFiles: 20,
+        acceptedFiles: '{{ $settings['img_formats'] }}',
+        addRemoveLinks: true,
+        init: function() {
+            this.on("success", function(file, responseText) {
+                file.previewTemplate.setAttribute('id',responseText[0].id);
+            });
+            this.on("thumbnail", function(file) {
+                if ({{ $settings['upload_mode'] }} == 0) {
+                    if (file.width < {{ $settings['img_min_width'] }} || file.height < {{ $settings['img_min_height'] }}) {
+                        file.rejectDimensions()
+                    }
+                    else {
+                        file.acceptDimensions();
+                    }
+                } else {
+                    if (file.width != {{ $settings['img_min_width'] }} || file.height != {{ $settings['img_min_height'] }}) {
+                        file.rejectDimensions()
+                    }
+                    else {
+                        file.acceptDimensions();
+                    }
+                }
+            });
+        },
+        accept: function(file, done) {
+            file.acceptDimensions = done;
+            file.rejectDimensions = function() {
+                if ({{ $settings['upload_mode'] }} == 0) {
+                    done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину, и {{ $settings['img_min_height'] }} в высоту."); 
+                } else {
+                    done("Размер должен быть {{ $settings['img_min_width'] }} px в ширину, и {{ $settings['img_min_height'] }} в высоту."); 
+                }
+            };
+        }
+    };
 </script>
 @endsection
 

@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::model($right, ['route' => ['rights.update', $right->id], 'data-abide', 'novalidate']) }}
+  {{ Form::model($right, ['url' => '/admin/rights/'.$right->id, 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
     @include('rights.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>''])

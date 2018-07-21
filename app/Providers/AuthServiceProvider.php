@@ -31,7 +31,7 @@ use App\Sector;
 
 use App\Album;
 use App\AlbumsCategory;
-use App\AlbumsSetting;
+use App\EntitySetting;
 
 use App\Photo;
 use App\Folder;
@@ -39,6 +39,10 @@ use App\Folder;
 use App\Service;
 use App\ServicesCategory;
 use App\ServicesProduct;
+
+use App\Goods;
+use App\GoodsCategory;
+use App\GoodsProduct;
 
 // use App\Article;
 
@@ -72,7 +76,7 @@ use App\Policies\SectorPolicy;
 
 use App\Policies\AlbumPolicy;
 use App\Policies\AlbumsCategoryPolicy;
-use App\Policies\AlbumsSettingPolicy;
+use App\Policies\EntitySettingPolicy;
 
 use App\Policies\PhotoPolicy;
 use App\Policies\FolderPolicy;
@@ -80,6 +84,10 @@ use App\Policies\FolderPolicy;
 use App\Policies\ServicePolicy;
 use App\Policies\ServicesCategoryPolicy;
 use App\Policies\ServicesProductPolicy;
+
+use App\Policies\GoodsPolicy;
+use App\Policies\GoodsCategoryPolicy;
+use App\Policies\GoodsProductPolicy;
 
 // use App\Policies\ArticlePolicy;
 
@@ -122,12 +130,15 @@ class AuthServiceProvider extends ServiceProvider
         Sector::class => SectorPolicy::class,
         Album::class => AlbumPolicy::class,
         AlbumsCategory::class => AlbumsCategoryPolicy::class,
-        AlbumsSetting::class => AlbumsSettingPolicy::class,
+        EntitySetting::class => EntitySettingPolicy::class,
         Photo::class => PhotoPolicy::class,
         Folder::class => FolderPolicy::class,
         Service::class => ServicePolicy::class,
         ServicesCategory::class => ServicesCategoryPolicy::class,
         ServicesProduct::class => ServicesProductPolicy::class,
+        Goods::class => GoodsPolicy::class,
+        GoodsCategory::class => GoodsCategoryPolicy::class,
+        GoodsProduct::class => GoodsProductPolicy::class,
     ];
 
     public function boot()

@@ -18,7 +18,7 @@
 
         <h2 class="header-content">Альбом &laquo;{{ $album->name }}&raquo;</h2>
         @can('create', App\Photo::class)
-        <a href="/albums/{{ $album->alias }}/photos/create" class="icon-add sprite"></a>
+        <a href="/admin/albums/{{ $album->alias }}/photos/create" class="icon-add sprite"></a>
         @endcan
       </div>
       <div class="top-bar-right">
@@ -90,7 +90,7 @@
             @endif 
             ><label class="label-check" for="check-{{ $photo->id }}"></label></td>
             <td class="td-photo">
-              <a href="/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit">
+              <a href="/admin/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit">
                 <img src="/storage/{{ $photo->company->id }}/media/albums/{{ $album->id }}/img/small/{{ $photo->name }}" alt="Фотография альбома">
               </a>
             </td>
@@ -166,7 +166,7 @@
       var name = parent.data('name');
       $('.title-delete').text(name);
       $('.delete-button').attr('id', 'del-' + type + '-' + id);
-      $('#form-item-del').attr('action', '/albums/'+ alias + '/' + type + '/' + id);
+      $('#form-item-del').attr('action', '/admin/albums/'+ alias + '/' + type + '/' + id);
     });
   });
 </script> 

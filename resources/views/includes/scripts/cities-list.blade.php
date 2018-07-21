@@ -17,7 +17,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/cities_list",
+        url: "/admin/cities_list",
         type: "POST",
         data: {city_name: city},
         beforeSend: function () {
@@ -42,7 +42,7 @@
             crash = 1;
             $('#city-check').addClass('icon-find-no');
             $('#city-check').addClass('sprite-16');
-            data = "<table class=\"table-content-search table-over\"><tbody><tr><td>Населенный пункт не найден в базе данных, @can('create', App\City::class)<a href=\"/cities\" target=\"_blank\">добавьте его!</a>@endcan @cannot('create', App\City::class)обратитесь к администратору!@endcannot</td></tr></tbody><table>";
+            data = "<table class=\"table-content-search table-over\"><tbody><tr><td>Населенный пункт не найден в базе данных, @can('create', App\City::class)<a href=\"/admin/cities\" target=\"_blank\">добавьте его!</a>@endcan @cannot('create', App\City::class)обратитесь к администратору!@endcannot</td></tr></tbody><table>";
           };
           // Выводим пришедшие данные на страницу
           $('.input-icon').after(data);

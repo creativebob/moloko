@@ -6,7 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 use App\Menu;
-use App\AlbumsSetting;
+use App\Site;
+use App\EntitySetting;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -22,14 +23,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
       // Если существует таблица с меню
       if (Schema::hasTable('menus')) {
+
         // Получаем все пункты меню
         // Знаем что статика, поэтому указываем в таблице навигации id, получаем массив
         $sidebar = Menu::with('page', 'page.entities')->where(['navigation_id' => 2, 'display' => 1])->orderBy('sort', 'asc')->get()->toArray();
         // dd($sidebar);
         
         view()->composer('*', function($view) use ($sidebar) {
+
           // Получаем список сущностей из сессии
           $session = app('session')->get('access');
           $entities_list = $session['settings']['entities_list'];
@@ -66,14 +70,14 @@ class AppServiceProvider extends ServiceProvider
             // Если есть потомки то перебераем массив
               $sidebar_id[$node['parent_id']]['children'][$id] = &$node;
             }
-          };
+          }
 
           $sidebar_final = [];
           foreach ($sidebar_tree as $id => &$node) {
             if (isset($node['children'])) {
               $sidebar_final[$id] = &$node;
             }
-          };
+          }
           // dd($sidebar_final);
 
           // Отдаем меню на шаблон
@@ -83,13 +87,31 @@ class AppServiceProvider extends ServiceProvider
         });
       }
 
+        // dd(env('SITE_API_TOKEN'));
+      
+      // Умолчания на случай, если нет доступа к базе (Для формирования autoload)
+     $settings = [];
+     $settings['img_small_width'] = 0;
+     $settings['img_small_height'] = 0;
+     $settings['img_medium_width'] = 0;
+     $settings['img_medium_height'] = 0;
+     $settings['img_large_width'] = 0;
+     $settings['img_large_height'] = 0;   
+
+     $settings['img_formats'] = 0;
+
+     $settings['img_min_width'] = 0;
+     $settings['img_min_height'] = 0;   
+     $settings['img_max_size'] = 0;
+
 
        // Если существует таблица с меню
-      if (Schema::hasTable('albums_settings')) {
-        $get_settings = AlbumsSetting::whereNull('company_id')->first();
+     if (Schema::hasTable('entity_settings')) {
+      $get_settings = EntitySetting::whereNull('company_id')->first();
 
         // dd($get_settings);
 
+      if($get_settings != null){
         $settings['img_small_width'] = $get_settings->img_small_width;
         $settings['img_small_height'] = $get_settings->img_small_height;
         $settings['img_medium_width'] = $get_settings->img_medium_width;
@@ -102,14 +124,15 @@ class AppServiceProvider extends ServiceProvider
         $settings['img_min_width'] = $get_settings->img_min_width;
         $settings['img_min_height'] = $get_settings->img_min_height;   
         $settings['img_max_size'] = $get_settings->img_max_size;
+      };
 
-        config()->set('settings', $settings);
+      config()->set('settings', $settings);
 
         // View::share(compact('settings'));
 
           // dd(config()->get('settings'));
-      }
     }
+  }
     /**
      * Register any application services.
      *
@@ -119,4 +142,4 @@ class AppServiceProvider extends ServiceProvider
     {
       //
     }
-}
+  }

@@ -163,7 +163,7 @@ class SiteController extends Controller
             // Пришем список пришедших филиалов сайта
             $site->departments()->attach($request->departments);
 
-            return Redirect('/sites');
+            return Redirect('/admin/sites');
         } else {
             abort(403, 'Ошибка записи сайта');
         }
@@ -267,7 +267,7 @@ class SiteController extends Controller
                 $site->departments()->detach();
             }
 
-            return Redirect('/sites');
+            return Redirect('/admin/sites');
         } else {
             abort(403, 'Ошибка обновления сайта');
         }
@@ -300,7 +300,7 @@ class SiteController extends Controller
             $site = Site::destroy($id);
 
             if ($site) {
-                return Redirect('/sites');
+                return Redirect('/admin/sites');
             } else {
                 abort(403, 'Ошибка при удалении сайта');
             }

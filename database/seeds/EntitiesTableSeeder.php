@@ -340,8 +340,8 @@ class EntitiesTableSeeder extends Seeder
      
     [
       'name' => 'Настройка альбомов',
-      'alias' => 'albums_settings',
-      'model' => 'AlbumsSetting',
+      'alias' => 'entity_settings',
+      'model' => 'EntitySetting',
       'system_item' => 1,
       'author_id' => 1,
     ], 

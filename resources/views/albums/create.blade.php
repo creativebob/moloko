@@ -21,7 +21,7 @@
 
 @section('content')
 
-  {{ Form::open(['url' => '/albums', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+  {{ Form::open(['url' => '/admin/albums', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
     @include('albums.form', ['submitButtonText' => 'Добавить альбом', 'param' => '', 'form' => null])
   {{ Form::close() }}
 
@@ -35,6 +35,7 @@
 @section('scripts')
   @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
+  @include('albums.scripts')
   @include('includes.scripts.pickmeup-script')
 @endsection
 

@@ -117,7 +117,7 @@
 		    headers: {
 		      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		    },
-		    url: '/booklists/' + booklist_id,
+		    url: '/admin/booklists/' + booklist_id,
 		    type: "DELETE",
 		    data: {entity_alias:entity_alias},
 		    success: function (html) {
@@ -150,7 +150,7 @@
 		    headers: {
 		      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		    },
-		    url: '/setbooklist',
+		    url: '/admin/setbooklist',
 		    type: "POST",
 		    data: {entity_alias:entity_alias, operation_booklist:operation_booklist, booklist_id_send:booklist_id_send},
 		    success: function (html) {
@@ -177,7 +177,7 @@
 		    headers: {
 		      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		    },
-		    url: '/setbooklist',
+		    url: '/admin/setbooklist',
 		    type: "POST",
 		    data: {new_booklist_name: new_booklist_name, entity_alias: entity_alias},
 		    success: function (html) {
@@ -216,7 +216,7 @@
 					headers: {
 					    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 					},
-					url: '/updatebooklist',
+					url: '/admin/updatebooklist',
 					type: "GET",
 					data: {entity_alias: entity_alias, booklist_id: booklist_id},
 					success: function (html) {
@@ -265,7 +265,7 @@
 					headers: {
 					    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 					},
-					url: '/updatebooklist',
+					url: '/admin/updatebooklist',
 					type: "GET",
 					data: {entity_alias: entity_alias, booklist_id: booklist_id},
 					success: function (html) {

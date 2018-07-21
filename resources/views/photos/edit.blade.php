@@ -15,7 +15,7 @@
 @endsection
 
 @section('content')
-{{ Form::model($photo, ['url'=>'/albums/'.$album->alias.'/photos/'.$photo->id,'data-abide', 'novalidate']) }}
+{{ Form::model($photo, ['url'=>'/admin/albums/'.$album->alias.'/photos/'.$photo->id,'data-abide', 'novalidate']) }}
 {{ method_field('PATCH') }}
 
 @if ($errors->any())

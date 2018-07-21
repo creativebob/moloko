@@ -10,14 +10,14 @@
 
 				@case('table')
 				@if (isset($page_alias))
-				<a href="/{{ $page_alias }}/create" class="icon-add sprite"></a>
+				<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
 				@else
-				<a href="/{{ $page_info->alias}}/create" class="icon-add sprite"></a>
+				<a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite"></a>
 				@endif
 				@break
 
 				@case('section-table')
-				<a href="/{{ $page_alias }}/create" class="icon-add sprite"></a>
+				<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
 				@break
 
 				@case('menu')

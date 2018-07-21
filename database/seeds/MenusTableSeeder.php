@@ -25,12 +25,12 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 1,
         ],
         [
             'name' => 'Компании',
             'icon' => null,
-            'alias' => 'companies',
+            'alias' => '/admin/companies',
             'parent_id' => 1,
             'page_id' => 1,
             'navigation_id' => 2,
@@ -43,7 +43,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Пользователи',
             'icon' => null,
-            'alias' => 'users',
+            'alias' => '/admin/users',
             'parent_id' => 1,
             'page_id' => 2,
             'navigation_id' => 2,
@@ -56,7 +56,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Филиалы и отделы',
             'icon' => null,
-            'alias' => 'departments',
+            'alias' => '/admin/departments',
             'parent_id' => 1,
             'page_id' => 3,
             'navigation_id' => 2,
@@ -69,7 +69,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Штат',
             'icon' => null,
-            'alias' => 'staff',
+            'alias' => '/admin/staff',
             'parent_id' => 1,
             'page_id' => 4,
             'navigation_id' => 2,
@@ -82,7 +82,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Сотрудники',
             'icon' => null,
-            'alias' => 'employees',
+            'alias' => '/admin/employees',
             'parent_id' => 1,
             'page_id' => 5,
             'navigation_id' => 2,
@@ -105,12 +105,12 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 7,
         ],
          [
             'name' => 'Сущности',
             'icon' => null,
-            'alias' => 'entities',
+            'alias' => '/admin/entities',
             'parent_id' => 7,
             'page_id' => 6,
             'navigation_id' => 2,
@@ -123,7 +123,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Роли',
             'icon' => null,
-            'alias' => 'roles',
+            'alias' => '/admin/roles',
             'parent_id' => 7,
             'page_id' => 7,
             'navigation_id' => 2,
@@ -136,7 +136,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Права',
             'icon' => null,
-            'alias' => 'rights',
+            'alias' => '/admin/rights',
             'parent_id' => 7,
             'page_id' => 8,
             'navigation_id' => 2,
@@ -159,12 +159,12 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 5,
         ],
         [
             'name' => 'Сайты',
             'icon' => null,
-            'alias' => 'sites',
+            'alias' => '/admin/sites',
             'parent_id' => 11,
             'page_id' => 9,
             'navigation_id' => 2,
@@ -177,7 +177,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Альбомы',
             'icon' => null,
-            'alias' => 'albums',
+            'alias' => '/admin/albums',
             'parent_id' => 11,
             'page_id' => 12,
             'navigation_id' => 2,
@@ -200,12 +200,12 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 6,
         ],
         [
             'name' => 'Должности',
             'icon' => null,
-            'alias' => 'positions',
+            'alias' => '/admin/positions',
             'parent_id' => 14,
             'page_id' => 13,
             'navigation_id' => 2,
@@ -218,7 +218,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Списки',
             'icon' => null,
-            'alias' => 'booklists',
+            'alias' => '/admin/booklists',
             'parent_id' => 14,
             'page_id' => 14,
             'navigation_id' => 2,
@@ -231,7 +231,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Секторы',
             'icon' => null,
-            'alias' => 'sectors',
+            'alias' => '/admin/sectors',
             'parent_id' => 14,
             'page_id' => 15,
             'navigation_id' => 2,
@@ -244,7 +244,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Папки',
             'icon' => null,
-            'alias' => 'folders',
+            'alias' => '/admin/folders',
             'parent_id' => 14,
             'page_id' => 16,
             'navigation_id' => 2,
@@ -257,7 +257,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Категории альбомов',
             'icon' => null,
-            'alias' => 'albums_categories',
+            'alias' => '/admin/albums_categories',
             'parent_id' => 14,
             'page_id' => 17,
             'navigation_id' => 2,
@@ -280,12 +280,12 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 4,
         ],
         [
             'name' => 'Категории товаров',
             'icon' => null,
-            'alias' => 'goods_categories',
+            'alias' => '/admin/goods_categories',
             'parent_id' => 20,
             'page_id' => 19,
             'navigation_id' => 2,
@@ -298,7 +298,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Категории услуг',
             'icon' => null,
-            'alias' => 'services_categories',
+            'alias' => '/admin/services_categories',
             'parent_id' => 20,
             'page_id' => 20,
             'navigation_id' => 2,
@@ -311,7 +311,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Категории сырья',
             'icon' => null,
-            'alias' => 'raws_categories',
+            'alias' => '/admin/raws_categories',
             'parent_id' => 20,
             'page_id' => 21,
             'navigation_id' => 2,
@@ -325,7 +325,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Товары',
             'icon' => null,
-            'alias' => 'goods',
+            'alias' => '/admin/goods',
             'parent_id' => 20,
             'page_id' => 22,
             'navigation_id' => 2,
@@ -338,7 +338,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Услуги',
             'icon' => null,
-            'alias' => 'services',
+            'alias' => '/admin/services',
             'parent_id' => 20,
             'page_id' => 23,
             'navigation_id' => 2,
@@ -351,7 +351,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Сырьё',
             'icon' => null,
-            'alias' => 'raws',
+            'alias' => '/admin/raws',
             'parent_id' => 20,
             'page_id' => 24,
             'navigation_id' => 2,
@@ -365,7 +365,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Помещения',
             'icon' => null,
-            'alias' => 'places',
+            'alias' => '/admin/places',
             'parent_id' => 20,
             'page_id' => 25,
             'navigation_id' => 2,
@@ -388,13 +388,13 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 2,
         ],
 
         [
             'name' => 'Тестовая',
             'icon' => null,
-            'alias' => 'home',
+            'alias' => '/admin/home',
             'parent_id' => 28,
             'page_id' => 26,
             'navigation_id' => 2,
@@ -408,7 +408,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Населенные пункты',
             'icon' => null,
-            'alias' => 'cities',
+            'alias' => '/admin/cities',
             'parent_id' => 14,
             'page_id' => 14,
             'navigation_id' => 2,
@@ -424,7 +424,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Страницы',
             'icon' => null,
-            'alias' => 'pages',
+            'alias' => '/pages',
             'parent_id' => null,
             'page_id' => null,
             'navigation_id' => 1,
@@ -437,7 +437,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Навигации',
             'icon' => null,
-            'alias' => 'navigations',
+            'alias' => '/navigations',
             'parent_id' => null,
             'page_id' => null,
             'navigation_id' => 1,
@@ -450,7 +450,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Новости',
             'icon' => null,
-            'alias' => 'news',
+            'alias' => '/news',
             'parent_id' => null,
             'page_id' => null,
             'navigation_id' => 1,
@@ -463,7 +463,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Галерея',
             'icon' => null,
-            'alias' => 'gallery',
+            'alias' => '/gallery',
             'parent_id' => null,
             'page_id' => null,
             'navigation_id' => 1,
@@ -472,6 +472,19 @@ class MenusTableSeeder extends Seeder
             'author_id' => 1,
             'display' => 1,
             'sort' => null,
+        ],
+        [
+            'name' => 'Прoизводство',
+            'icon' => 'icon-production',
+            'alias' => null,
+            'parent_id' => null,
+            'page_id' => null,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => 3,
         ],
 
 
@@ -489,19 +502,8 @@ class MenusTableSeeder extends Seeder
         //     'display' => 1,
         //     'sort' => null,
         // ],
-        // [
-        //     'name' => 'Прoизводство',
-        //     'icon' => 'icon-production',
-        //     'alias' => null,
-        //     'parent_id' => null,
-        //     'page_id' => null,
-        //     'navigation_id' => 2,
-        //     'company_id' => null,
-        //     'system_item' => 1,
-        //     'author_id' => 1,
-        //     'display' => 1,
-        //     'sort' => null,
-        // ],
+
+
 
     ]);
 }

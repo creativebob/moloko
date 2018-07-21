@@ -216,13 +216,15 @@ class MetricController extends Controller
 
         $metric = Metric::with('unit')->findOrFail($request->id);
 
-        // Смотрим с какой сущностью нужно связать метрику
-        switch ($request->entity) {
-            case 'products_categories':
-            $metric->products_categories()->toggle([$request->entity_id => ['entity' => $request->entity]]);
-            break;
-        }
+        $entity = $request->entity;
+        // Связываем сущность с метрикой
+        $metric->$entity()->toggle([$request->entity_id => ['entity' => $request->entity]]);
 
+        // switch ($request->entity) {
+        //     case 'goods_categories':
+        //     $metric->goods_categories()->toggle([$request->entity_id => ['entity' => $request->entity]]);
+        //     break;
+        // }
 
         return view($request->entity.'.metrics.metric', ['metric' => $metric]);
     }
@@ -232,13 +234,16 @@ class MetricController extends Controller
 
         $metric = Metric::findOrFail($request->id);
 
-        // Смотрим от какой сущности нужно отвязать метрику
-        switch ($request->entity) {
-            case 'products_categories':
-            $res = $metric->products_categories()->toggle([$request->entity_id => ['entity' => $request->entity]]);
-            break;
-        }
+        $entity = $request->entity;
+        // Отвязываем сущность от метрики
+        $res = $metric->$entity()->toggle([$request->entity_id => ['entity' => $request->entity]]);
 
+        // switch ($request->entity) {
+        //     case 'goods_categories':
+        //     $res = $metric->goods_categories()->toggle([$request->entity_id => ['entity' => $request->entity]]);
+        //     break;
+        // }
+       
         if ($res) {
             $result = [
                 'error_status' => 0,

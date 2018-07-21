@@ -15,6 +15,10 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use App\Scopes\Traits\ContragentsTraitScopes;
 
+// Подключаем кеш
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+    
+
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
@@ -22,6 +26,9 @@ use App\Scopes\Filters\BooklistFilter;
 
 class Company extends Model
 {
+
+    // Включаем кеш
+    use Cachable;
 
     use Notifiable;
     use SoftDeletes;
@@ -174,6 +181,12 @@ class Company extends Model
     public function manufacturers()
     {
         return $this->belongsToMany('App\Company', 'contragents', 'company_id', 'contragent_id')->where('manufacturer_status', 1);
+    }
+
+    // Получаем типы услуг
+    public function services_types()
+    {
+        return $this->belongsToMany('App\ServicesType', 'companies_services_types', 'company_id', 'services_type_id');
     }
 
 }

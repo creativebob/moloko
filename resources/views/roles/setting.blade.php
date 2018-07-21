@@ -181,7 +181,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/roles/setright",
+      url: "/admin/roles/setright",
       type: "POST",
       data: {right_id: $(this).attr('id'), role_id: $(this).attr('data-role-id')},
       success: function (data) {
@@ -202,7 +202,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/roles/setright",
+      url: "/admin/roles/setright",
       type: "POST",
       data: {right_id: $(this).attr('id'), role_id: $(this).attr('data-role-id')},
       success: function (data) {
@@ -231,7 +231,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/roles/setright",
+      url: "/admin/roles/setright",
       type: "POST",
       data: {rights: rights, role_id: $(this).data('role-id'), checkbox: check},
       success: function (data) {
@@ -268,7 +268,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/roles/setright",
+      url: "/admin/roles/setright",
       type: "POST",
       data: {rights: rights, role_id: $(this).data('role-id'), checkbox: check},
       success: function (data) {

@@ -2,7 +2,7 @@
 
 // Все index'ы
 Breadcrumbs::register('index', function ($breadcrumbs, $page_info) {
-  $breadcrumbs->push($page_info->name, url('/'.$page_info->alias));
+  $breadcrumbs->push($page_info->name, url('/admin/'.$page_info->alias));
 });
 
 // index > Создать
@@ -34,13 +34,13 @@ Breadcrumbs::register('alias-edit', function ($breadcrumbs, $page_info, $item) {
 // index с алиасом > Разделы
 Breadcrumbs::register('sections', function ($breadcrumbs, $page_info, $parent) {
   $breadcrumbs->parent('index', $page_info);
-  $breadcrumbs->push($parent->name, url('/'.$page_info->alias.'/'.$parent->alias));
+  $breadcrumbs->push($parent->name, url('/admin/'.$page_info->alias.'/'.$parent->alias));
 });
 
 // index с алиасом > Разделы > Раздел
 Breadcrumbs::register('section', function ($breadcrumbs, $parent_page_info, $item, $page_info) {
   $breadcrumbs->parent('sections', $parent_page_info, $item);
-  $breadcrumbs->push($page_info->name, url('/'.$parent_page_info->alias.'/'.$item->alias.'/'.$page_info->alias));
+  $breadcrumbs->push($page_info->name, url('/admin/'.$parent_page_info->alias.'/'.$item->alias.'/'.$page_info->alias));
 });
 
 // index с алиасом > Разделы > Раздел > Создать
