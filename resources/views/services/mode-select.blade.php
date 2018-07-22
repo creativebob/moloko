@@ -12,7 +12,7 @@
 
 <div class="small-12 cell">
 	<label>Название услуги
-		@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+		@include('includes.inputs.string', ['value'=>null, 'name'=>'name', 'required'=>'required'])
 		<div class="item-error">Такая услуга уже существует!</div>
 	</label>
 </div>
