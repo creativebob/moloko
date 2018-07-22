@@ -66,19 +66,28 @@
                         <div class="grid-x grid-margin-x">
                             <div class="small-12 medium-6 cell">
 
-                                <label>Категория
+                                {{-- <label>Категория
                                     <select name="services_category_id" disabled>
                                         @php
                                         echo $services_categories_list;
                                         @endphp
                                     </select>
-                                </label>
+                                </label> --}}
+
                                 <label>Группа
                                     {{ Form::select('services_product_id', $services_products_list, $service->services_product_id) }}
                                 </label>
                                 <label>Название услуги
                                     {{ Form::text('name', null, ['required']) }}
                                 </label>
+
+                                <div class="small-12 cell">
+                                    <label>Описание услуги
+                                        @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$service->description, 'required'=>''])
+                                    </label>
+                                </div>
+
+
 
                             </div>
 
@@ -127,13 +136,7 @@
                             </div>
                         </fieldset>
 
-                        <div class="grid-x">
-                            <div class="small-12 cell">
-                                <label>Описание услуги
-                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$service->description, 'required'=>''])
-                                </label>
-                            </div>
-                        </div>
+
                         @if (($service->services_product->services_category->metrics_count > 0) || ($service->metrics_values_count > 0))
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
