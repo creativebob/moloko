@@ -279,6 +279,8 @@ class PhotoController extends Controller
     $photo->description = $request->description;
     $photo->link = $request->link;
 
+    $photo->color = $request->color;
+
     $photo->save();
 
 
