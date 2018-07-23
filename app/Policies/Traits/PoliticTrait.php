@@ -69,7 +69,7 @@ trait PoliticTrait
         };
 
 
-        // Бог авторизованный под компанией может создавать
+        // Бог не авторизованный под компанией может создавать
         if(($user_status == 1)&&($method == 'create')&&($company_id == null)){
 
             // Разрешаем богу
@@ -83,9 +83,9 @@ trait PoliticTrait
                 // ($entity_name == 'menus')||
                 // ($entity_name == 'roles')||
 
-                // ($entity_name == 'cities')||   
-                // ($entity_name == 'regions')||   
-                // ($entity_name == 'areas')||       
+                ($entity_name == 'cities')||   
+                ($entity_name == 'regions')||   
+                ($entity_name == 'areas')||       
                 // ($entity_name == 'positions')||
                 // ($entity_name == 'entities')
                 ($entity_name == 'sectors')

@@ -218,6 +218,92 @@ class SectorsTableSeeder extends Seeder
                 'author_id' => 1,
                 // 'industry_id' => 3,
         	],
+
+
+            [
+                'name' => 'Недвижимость', // 28
+                'parent_id' => null,
+                'category_status' => 1,
+                'author_id' => 1,
+                // 'industry_id' => null,
+            ],
+                [
+                    'name' => 'Агенство недвижимости',
+                    'parent_id' => 28,
+                    'category_status' => null,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Аренда недвижимости',
+                    'parent_id' => 28,
+                    'category_status' => null,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Жилая недвижимость',
+                    'parent_id' => 28,
+                    'category_status' => null,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Загородная недвижимость',
+                    'parent_id' => 28,
+                    'category_status' => null,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+
+
+            [
+                'name' => 'Одежда и обувь', // 33
+                'parent_id' => null,
+                'category_status' => 1,
+                'author_id' => 1,
+                // 'industry_id' => null,
+            ],
+                [
+                    'name' => 'Аксессуары',
+                    'parent_id' => 33,
+                    'category_status' => null,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Мужская и женская одежда',
+                    'parent_id' => 33,
+                    'category_status' => null,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+
+
+            [
+                'name' => 'Подарки и сувениры', // 36
+                'parent_id' => null,
+                'category_status' => 1,
+                'author_id' => 1,
+                // 'industry_id' => null,
+            ],
+                [
+                    'name' => 'Магазин подарков',
+                    'parent_id' => 36,
+                    'category_status' => null,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+                [
+                    'name' => 'Услуги по организации праздников',
+                    'parent_id' => 36,
+                    'category_status' => null,
+                    'author_id' => 1,
+                    // 'industry_id' => null,
+                ],
+
+
+
         ]);
     }
 }

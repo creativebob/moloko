@@ -331,6 +331,7 @@ class RoleController extends Controller
                 $boxes[] = [
                     'action_method' => $box_allow_name, 
                     'action_id' => $action->id, 
+                    'action_name' => $action->name, 
                     'entity_id' => $entity->id, 
                     'status_box' => $status_box, 
                     'right_id' => $right_id, 
@@ -368,6 +369,7 @@ class RoleController extends Controller
                 $boxes_deny[] = [
                     'action_method' => $box_deny_name, 
                     'action_id' => $action->id, 
+                    'action_name' => $action->name, 
                     'entity_id' => $entity->id, 
                     'status_box' => $status_box, 
                     'right_id' => $right_id, 
@@ -388,6 +390,9 @@ class RoleController extends Controller
             $boxes_deny = [];
 
         }  // Завершение foreach (Наполняем массив данными)
+
+        // dd($main_mass);
+
 
         return view('roles.setting', compact('main_mass', 'main_mass_deny', 'actions', 'role_id', 'role'));
     }

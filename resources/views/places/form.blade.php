@@ -76,7 +76,7 @@
 
                         <div class="small-12 medium-6 cell">
                             <label>Площадь, м2
-                                @include('includes.inputs.varchar', ['name'=>'square', 'value'=>$place->square, 'required'=>'required'])
+                                @include('includes.inputs.digit', ['name'=>'square', 'value'=>$place->square, 'required'=>'required'])
                             </label>
                         </div>
                         <div class="small-12 medium-6 cell">
