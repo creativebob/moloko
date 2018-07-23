@@ -28,6 +28,7 @@
 @section('scripts')
   @include('includes.scripts.inputs-mask')
   @include('pages.scripts')
+  @include('includes.scripts.upload-file')
 @endsection
 
 

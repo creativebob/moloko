@@ -97,4 +97,9 @@ class Page extends Model
         return $this->belongsToMany('App\Entity');
     }
 
+    public function photo()
+    {
+        return $this->belongsTo('App\Photo');
+    }
+
 }

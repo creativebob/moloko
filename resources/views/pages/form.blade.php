@@ -28,41 +28,48 @@
       <div class="sprite-input-right find-status" id="name-check"></div>
       <div class="item-error">Такая страница уже существует!</div>
     </label>
+    <label>Контент:
+      {{ Form::textarea('content', $page->content, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+    </label>
     {{ Form::hidden('check', 0, ['id'=>'check']) }}
     {{ Form::hidden('site_id', $site->id) }}
   </div>
   <div class="small-12 medium-5 large-7 cell">
-    <label>Контент:
-      {{ Form::textarea('content', $page->content, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+
+    <label>Выберите аватар
+      {{ Form::file('photo') }}
     </label>
-  </div>
+    <div class="text-center">
+      <img id="photo" @if (isset($page->photo_id)) src="/storage/{{ $site->company_id }}/media/pages/{{ $page->id }}/img/medium/{{ $page->photo->name }}" @endif>
+   </div>
+ </div>
 
-  {{-- Чекбокс отображения на сайте --}}
-  @can ('publisher', $page)
-  <div class="small-12 cell checkbox">
-    {{ Form::checkbox('display', 1, $page->display, ['id' => 'display']) }}
-    <label for="display"><span>Отображать на сайте</span></label>
-  </div>
-  @endcan
+ {{-- Чекбокс отображения на сайте --}}
+ @can ('publisher', $page)
+ <div class="small-12 cell checkbox">
+  {{ Form::checkbox('display', 1, $page->display, ['id' => 'display']) }}
+  <label for="display"><span>Отображать на сайте</span></label>
+</div>
+@endcan
 
-  {{-- Чекбокс модерации --}}
-  @can ('moderator', $page)
-  @if ($page->moderation == 1)
-  <div class="small-12 cell checkbox">
-    @include('includes.inputs.moderation', ['value'=>$page->moderation, 'name'=>'moderation'])
-  </div>
-  @endif
-  @endcan
+{{-- Чекбокс модерации --}}
+@can ('moderator', $page)
+@if ($page->moderation == 1)
+<div class="small-12 cell checkbox">
+  @include('includes.inputs.moderation', ['value'=>$page->moderation, 'name'=>'moderation'])
+</div>
+@endif
+@endcan
 
-  {{-- Чекбокс системной записи --}}
-  @can ('god', $page)
-  <div class="small-12 cell checkbox">
-    @include('includes.inputs.system', ['value'=>$page->system_item, 'name'=>'system_item']) 
-  </div>
-  @endcan   
+{{-- Чекбокс системной записи --}}
+@can ('god', $page)
+<div class="small-12 cell checkbox">
+  @include('includes.inputs.system', ['value'=>$page->system_item, 'name'=>'system_item']) 
+</div>
+@endcan   
 
-  <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-    {{ Form::submit($submitButtonText, ['class'=>'button']) }}
-  </div>
+<div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
+  {{ Form::submit($submitButtonText, ['class'=>'button']) }}
+</div>
 </div>
 

@@ -111,9 +111,7 @@ class PageController extends Controller
 
         // Смотрим компанию пользователя
         $company_id = $user->company_id;
-        if($company_id == null) {
-            abort(403, 'Необходимо авторизоваться под компанией');
-        }
+
 
         // Скрываем бога
         $user_id = hideGod($user);
@@ -139,6 +137,20 @@ class PageController extends Controller
         $page->company_id = $company_id;
         $page->author_id = $user_id;
         $page->save();
+
+        // Если прикрепили фото
+        if ($request->hasFile('photo')) {
+
+            // Директория
+            $directory = $company_id.'/media/pages/'.$page->id.'/img/';
+
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
+            $array = save_photo($request, $user_id, $company_id, $directory, 'avatar-'.time());
+            $photo = $array['photo'];
+
+            $page->photo_id = $photo->id;
+            $page->save();
+        }
 
         if ($page) {
             return redirect('/admin/sites/'.$alias.'/pages');
@@ -188,9 +200,6 @@ class PageController extends Controller
 
         // Смотрим компанию пользователя
         $company_id = $user->company_id;
-        if($company_id == null) {
-            abort(403, 'Необходимо авторизоваться под компанией');
-        }
 
         // Скрываем бога
         $user_id = hideGod($user);
@@ -209,6 +218,25 @@ class PageController extends Controller
             $page->moderation = 1;
         } else {
             $page->moderation = $request->moderation;
+        }
+
+        // Если прикрепили фото
+        if ($request->hasFile('photo')) {
+
+            // Директория
+            $directory = $company_id.'/media/pages/'.$page->id.'/img/';
+
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            if ($page->photo_id) {
+                $array = save_photo($request, $user_id, $company_id, $directory, 'avatar-'.time(), null, $page->photo_id);
+
+            } else {
+                $array = save_photo($request, $user_id, $company_id, $directory, 'avatar-'.time());
+                
+            }
+            $photo = $array['photo'];
+
+            $page->photo_id = $photo->id;
         }
 
         // Системная запись
