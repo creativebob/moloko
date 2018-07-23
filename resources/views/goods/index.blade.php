@@ -11,76 +11,12 @@
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('exel')
-<!-- <a href="{{ URL::to('productsDownload/xls') }}"><button class="button">Скачать Excel xls</button></a> -->
-<a href="{{ URL::to('/products_download/xlsx') }}">
-  <img src="/img/svg/excel_export.svg">
-  <!--  <button class="button">Скачать Excel xlsx</button> -->
-</a>
-<a>
-  <img src="/img/svg/excel_import.svg" data-toggle="exel-import">
-</a>
-<!-- <button class="button" type="button" data-toggle="exel-import">Загрузить</button> -->
-<div class="dropdown-pane" id="exel-import" data-dropdown data-auto-focus="true" data-close-on-click="true">
-  {{ Form::open(['url' => '/products_import', 'data-abide', 'novalidate', 'files'=>'true']) }}
-  <input type="file" name="file" />
-  <button class="button">Импортировать</button>
-  {{ Form::close() }}
-</div>
+@include('includes.title-exel', ['entity' => $page_info->alias])
 @endsection
 
 @section('title-content')
-{{-- Заголовок и фильтры --}}
-<div data-sticky-container id="head-content">
-  <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
-    <div class="top-bar head-content">
-      <div class="top-bar-left">
-        <h2 class="header-content">{{ $page_info->title }}</h2>
-        <a class="icon-add sprite" data-open="first-add"></a>
-      </div>
-      <div class="top-bar-right">
-        @if (isset($filter))
-        <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
-        @endif
-        <input class="search-field" type="search" name="search_field" placeholder="Поиск" />
-        <button type="button" class="icon-search sprite button"></button>
-      </div>
-    </div>
-    {{-- Блок фильтров --}}
-    @if (isset($filter))
-
-    {{-- Подключаем класс Checkboxer --}}
-    @include('includes.scripts.class.checkboxer')
-
-    <div class="grid-x">
-      <div class="small-12 cell filters fieldset-filters" id="filters">
-        <div class="grid-padding-x">
-          <div class="small-12 cell text-right">
-            {{ link_to(Request::url(), 'Сбросить', ['class' => 'small-link']) }}
-          </div>
-        </div>
-        <div class="grid-padding-x">
-          <div class="small-12 cell">
-            {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
-
-            @include($page_info->alias.'.filters')
-
-            <div class="small-12 cell text-center">
-              {{ Form::submit('Фильтрация', ['class'=>'button']) }}
-            </div>
-            {{ Form::close() }}
-          </div>
-        </div>
-        <div class="grid-x">
-          <a class="small-12 cell text-center filter-close">
-            <button type="button" class="icon-moveup sprite"></button>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    @endif
-  </div>
-</div>
+{{-- Таблица --}}
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Goods::class, 'type' => 'table'])
 @endsection
 
 @section('content')
@@ -123,7 +59,7 @@
           </td>
           <td>
             <a href="/admin/goods/{{ $cur_goods->id }}/edit">
-              <img src="{{ isset($cur_goods->photo_id) ? '/storage/'.$cur_goods->company_id.'/media/goods/'.$cur_goods->id.'/img/small/'.$cur_goods->photo->name : '/crm/img/plug/cur_goods_small_default_color.jpg' }}" alt="{{ isset($cur_goods->photo_id) ? $cur_goods->name : 'Нет фото' }}">
+              <img src="{{ isset($cur_goods->photo_id) ? '/storage/'.$cur_goods->company_id.'/media/goods/'.$cur_goods->id.'/img/small/'.$cur_goods->photo->name : '/crm/img/plug/goods_small_default_color.jpg' }}" alt="{{ isset($cur_goods->photo_id) ? $cur_goods->name : 'Нет фото' }}">
             </a>
           </td>
           <td class="td-name"><a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->name }}</a></td>
