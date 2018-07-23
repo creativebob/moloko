@@ -24,7 +24,7 @@ class CreateGoodsTable extends Migration
 
             $table->string('name')->nullable()->comment('Имя артикула');
 
-            $table->string('description')->nullable()->index()->comment('Описание артикула услуги');
+            $table->text('description')->nullable()->comment('Описание артикула услуги');
 
             $table->string('manually')->nullable()->comment('Имя дял поиска (руками)');
             $table->string('internal')->nullable()->comment('Имя генерируемого артикула');
