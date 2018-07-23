@@ -255,7 +255,7 @@ class RoleController extends Controller
         $boxes = [];
 
         // Получаем сущности
-        $entities = Entity::get();
+        $entities = Entity::whereNull('rights_minus')->get();
         $actions = Action::get();
         $all_deny_right = Right::with('actionentity')->where('directive', 'deny')->get()->toarray();
 

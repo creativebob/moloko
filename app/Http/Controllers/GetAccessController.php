@@ -211,16 +211,14 @@ class GetAccessController extends Controller
             // Создаем массив с сущностями к которым разрешен доступ на Index (Для отображения пунктов меню)
             $entities_list = [];
 
+
             foreach($user->roles as $role) {
                 foreach($role->rights as $right){
 
                     // Статичное указание ID действия 'index' - 2
                     if($right->action_id == 2){
-
                         if($user->can('index', 'App\\' . $right->actionentity->entity->model)) {
-
                             $entities_list[] = $right->actionentity->entity->id;
-
                         };
                     };
                 }

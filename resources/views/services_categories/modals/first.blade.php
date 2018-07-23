@@ -12,7 +12,7 @@
 
       <input type="hidden" name="services_types" value="$services_types_list[0]">
     @else
-    
+
       <label>Тип
         {{ Form::select('services_types', $services_types_list) }}
       </label>
@@ -23,7 +23,6 @@
     <div class="dropdown-pane" data-position="bottom" data-alignment="left" id="example-dropdown-bottom-left" data-dropdown data-auto-focus="true">
       <!-- My dropdown content in here -->
     </div> --}}
- 
 
   </div>
 </div>

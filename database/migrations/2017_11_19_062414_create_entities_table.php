@@ -18,6 +18,7 @@ class CreateEntitiesTable extends Migration
             
             $table->string('alias')->index()->comment('Название как в базе данных');
             $table->string('model')->index()->comment('Название модели');
+            $table->integer('rights_minus')->unsigned()->nullable()->comment('Исключает настройку прав на сущность при равной 1');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

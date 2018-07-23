@@ -14,9 +14,9 @@ class DatabaseExtraSeeder extends Seeder
 
     // Сиды к новым миграциям
     $this->call(ServicesTypesTableSeeder::class);
-
     $this->call(GoodsModesTableSeeder::class);
     
-
+    // Помещения
+    $this->call(PlacesTypesTableSeeder::class);
   }
 }

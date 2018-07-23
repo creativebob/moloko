@@ -9,6 +9,7 @@ trait ModeratorLimitTraitScopes
     public function scopeModeratorLimit($query, $answer)
     {
         $entity_dependence = $answer['dependence'];
+
         $moderator = $answer['moderator']['result'];
         $moderator_filials = $answer['moderator']['filials'];
 

@@ -95,6 +95,7 @@ class PlaceController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_places_types = operator_right('places_types', 'false', 'index');
+        dd($answer_places_types);
 
         // Список типов помещений
         $places_types_query = PlacesType::moderatorLimit($answer_places_types)

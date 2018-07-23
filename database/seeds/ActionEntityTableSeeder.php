@@ -17,7 +17,7 @@ class ActionEntityTableSeeder extends Seeder
     {
 
         $actions = Action::get();
-        $entities = Entity::get();
+        $entities = Entity::whereNull('rights_minus')->get();
        	$mass = [];
 
         foreach($entities as $entity){
