@@ -15,7 +15,7 @@
 @endsection
 
 @section('content')
-  {{ Form::open(['url' => '/admin/sites/'.$alias.'/pages', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['url' => '/admin/sites/'.$alias.'/pages', 'data-abide', 'novalidate', 'files'=>'true']) }}
     @include('pages.form', ['submitButtonText' => 'Добавить страницу', 'param' => ''])
   {{ Form::close() }}
 @endsection

@@ -16,7 +16,7 @@
 
 @section('content')
 
-  {{ Form::model($page, ['url' => '/admin/sites/'.$site->alias.'/pages/'.$page->id, 'data-abide', 'novalidate']) }}
+  {{ Form::model($page, ['url' => '/admin/sites/'.$site->alias.'/pages/'.$page->id, 'data-abide', 'novalidate', 'files'=>'true']) }}
   {{ method_field('PATCH') }}
 
     @include('pages.form', ['submitButtonText' => 'Редактировать страницу', 'param'=>''])

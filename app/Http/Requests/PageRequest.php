@@ -29,6 +29,7 @@ class PageRequest extends FormRequest
             'description' => 'string|required', 
             'alias' => 'string|max:255|required', 
             'site_id' => 'integer|required',
+            'photo_id' => 'integer|nullable',
 
             'moderation' => 'integer|max:1|nullable',
             'system_item' => 'integer|max:1|nullable', 
