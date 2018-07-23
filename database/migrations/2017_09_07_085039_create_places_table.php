@@ -15,7 +15,7 @@ class CreatePlacesTable extends Migration
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             
             $table->string('name', 40)->nullable()->index()->comment('Имя помещения');
-            $table->string('description')->index()->nullable()->comment('Описание для помещения');
+            $table->text('description')->nullable()->comment('Описание для помещения');
 
             $table->bigInteger('phone')->unique()->nullable()->comment('Телефон компании');
             // $table->string('email')->nullable()->comment('Почта');
