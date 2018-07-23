@@ -44,6 +44,18 @@ trait PoliticTrait
         };
 
 
+        // Если запись это сам юзер - сразу даем зеленый свет! 
+        if(($entity_name == 'users')&&($method == 'update')){
+
+            if($user_id == $model->id){
+
+                return true; 
+            };
+
+
+        };
+
+
 
         // Бог авторизованный под компанией может редактировать
         if(($user_status == 1)&&($method == 'update')&&($company_id != null)){
@@ -378,11 +390,6 @@ trait PoliticTrait
             $result_author = false;
         };
 
-
-        // Если запись это сам юзер - сразу даем зеленый свет! 
-        if(($entity_name == 'users')&&($user_id == $model->id)){
-            $result_author = true;
-        };
 
         // Если запись это сам юзер - сразу даем зеленый свет! 
         // if(($entity_name == 'users')&&($user_id == $model->id)&&($method = 'update')){

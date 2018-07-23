@@ -199,7 +199,7 @@
                 } else {$mass_filials_allow = null;};
 
 
-                // Получаем список филиалов в которых разрешено
+                // Получаем список филиалов в которых запрещено
                 if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
 
                     if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny']['filials'])) {
@@ -221,7 +221,7 @@
                 } else {$mass_departments_allow = null;};
 
 
-                // Получаем список филиалов в которых разрешено
+                // Получаем список филиалов в которых запрещено
                 if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny'])) {
 
                     if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny']['departments'])) {

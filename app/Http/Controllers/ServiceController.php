@@ -47,7 +47,7 @@ class ServiceController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------------------------------
 
-        $services = Service::with('author', 'company', 'services_product')
+        $services = Service::with('author', 'company', 'services_product', 'services_product.services_category')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -84,7 +84,7 @@ class ServiceController extends Controller
         // $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // dd($type);
+        // dd($services);
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 

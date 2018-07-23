@@ -17,6 +17,7 @@ class UpdateUsersTable extends Migration
 
             // Переименуем имя столбца name из родной таблицы Laravel в имя login
             $table->renameColumn('name', 'login');
+            $table->unique('login');
 
             $table->string('nickname', 20)->nullable()->index()->comment('Псевдоним')->after('password');
             $table->string('first_name', 20)->nullable()->index()->comment('Полное имя')->after('nickname');
@@ -88,6 +89,7 @@ class UpdateUsersTable extends Migration
     {
 
         Schema::table('users', function (Blueprint $table) {
+            $table->dropUnique('users_login_unique');
             $table->renameColumn('login', 'name');
             $table->dropColumn('nickname');
             $table->dropColumn('first_name');

@@ -15,7 +15,7 @@
                         </div>
                     @endif
 
-                    <img src="/img/work.jpg">
+                    {{-- <img src="/img/work.jpg"> --}}
                 </div>
             </div>
         </div>

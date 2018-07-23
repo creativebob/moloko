@@ -127,6 +127,8 @@ class GetAccessController extends Controller
                     $user_department_id = $user_department->department_id;             
                 } else {abort(403, "Пользователь не устроен в компании!");};
 
+                // dd($user->filial_id);
+
                 // Вырубаемся, если пользователь не имеет ID компании, филиала или департамента
                 if(($user->filial_id == null)||($user_department_id == null)){
                     abort(403, "Пользователь не имеет связи с филиалом или должностью");};

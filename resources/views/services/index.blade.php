@@ -12,12 +12,12 @@
 
 @section('exel')
 <!-- <a href="{{ URL::to('productsDownload/xls') }}"><button class="button">Скачать Excel xls</button></a> -->
-<a href="{{ URL::to('/products_download/xlsx') }}">
-  <img src="/img/svg/excel_export.svg">
+<a href="{{ URL::to('/admin/products_download/xlsx') }}">
+  <img src="/crm/img/svg/excel_export.svg">
   <!--  <button class="button">Скачать Excel xlsx</button> -->
 </a>
 <a>
-  <img src="/img/svg/excel_import.svg" data-toggle="exel-import">
+  <img src="/crm/img/svg/excel_import.svg" data-toggle="exel-import">
 </a>
 <!-- <button class="button" type="button" data-toggle="exel-import">Загрузить</button> -->
 <div class="dropdown-pane" id="exel-import" data-dropdown data-auto-focus="true" data-close-on-click="true">
@@ -94,9 +94,17 @@
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-photo">Фото</th>
-          <th class="td-name">Название артикула</th>
-          <th class="td-service">Услуга</th>
-          <th class="td-company-id">Компания</th>
+          <th class="td-name">Название услуги</th>
+
+          <th class="td-description">Описание</th>
+          <th class="td-price">Цена</th>
+          <th class="td-services_category">Категория</th>
+          <th class="td-service">Группа</th>
+
+          @if(Auth::user()->god == 1) 
+              <th class="td-company-id">Компания</th>
+          @endif
+
           <th class="td-author">Автор</th>
           @can ('publisher', App\Service::class)
           <th class="td-display">Отображение</th>
@@ -127,8 +135,17 @@
             </a>
           </td>
           <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->name }}</a></td>
+          <td class="td-description">{{ $service->description }}</td>
+          <td class="td-price">{{ $service->price }}</td>
+          <td class="td-services_category">{{ $service->services_product->services_category->name }}</td>
           <td class="td-service">{{ $service->services_product->name }}</td>
-          <td class="td-company-id">@if(!empty($service->company->name)) {{ $service->company->name }} @else @if($service->system_item == null) Шаблон @else Системная @endif @endif</td>
+
+
+          @if(Auth::user()->god == 1) 
+            <td class="td-company-id">@if(!empty($service->company->name)) {{ $service->company->name }} @else @if($service->system_item == null) Шаблон @else Системная @endif @endif</td>
+          @endif
+
+
           <td class="td-author">@if(isset($service->author->first_name)) {{ $service->author->first_name . ' ' . $service->author->second_name }} @endif</td>
           @can ('publisher', $service)
           <td class="td-display">

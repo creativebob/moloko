@@ -20,9 +20,8 @@
 
 @section('content')
 
-{{ Form::model($user, ['route' => ['users.update', $user->id], 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
+{{ Form::model($user, ['route' => ['users.updatemyprofile'], 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
 {{ method_field('PATCH') }}
-
 
 <div class="grid-x tabs-wrap">
   <div class="small-12 cell">
@@ -344,8 +343,7 @@
 @endsection
 
 @section('modals')
-{{-- Модалка добавления роли --}}
-@include('includes.modals.modal-add-role')
+
 {{-- Модалка удаления с ajax --}}
 @include('includes.modals.modal-delete-ajax')
 @endsection
