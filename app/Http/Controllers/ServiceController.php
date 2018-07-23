@@ -56,6 +56,7 @@ class ServiceController extends Controller
         // ->filter($request, 'author_id')
         // ->filter($request, 'company_id')
         // ->filter($request, 'products_category_id')
+        ->whereNull('archive')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
@@ -557,6 +558,53 @@ class ServiceController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function archive(Request $request, $id)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, 'delete');
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $service = Service::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize('delete', $service);
+
+        if ($service) {
+
+            // Получаем пользователя
+            $user = $request->user();
+
+            // Скрываем бога
+            $user_id = hideGod($user);
+
+            $service->editor_id = $user_id;
+            $service->archive = 1;
+            $service->save();
+
+            if ($service) {
+                return Redirect('/admin/services');
+            } else {
+                abort(403, 'Ошибка при архивации товара');
+            }
+        } else {
+            abort(403, 'Товар не найден');
+        }
+    }
+
+      // Сортировка
+    public function services_sort(Request $request)
+    {
+        $result = '';
+        $i = 1;
+        foreach ($request->services as $item) {
+            $cervice = Service::findOrFail($item);
+            $cervice->sort = $i;
+            $cervice->save();
+            $i++;
+        }
     }
 
     public function get_inputs(Request $request)

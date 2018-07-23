@@ -56,6 +56,7 @@ class GoodsController extends Controller
         // ->filter($request, 'author_id')
         // ->filter($request, 'company_id')
         // ->filter($request, 'products_category_id')
+        ->whereNull('archive')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
@@ -562,6 +563,53 @@ class GoodsController extends Controller
         //
     }
 
+    public function archive(Request $request, $id)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, 'delete');
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $cur_goods = Goods::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize('delete', $cur_goods);
+
+        if ($cur_goods) {
+
+            // Получаем пользователя
+            $user = $request->user();
+
+            // Скрываем бога
+            $user_id = hideGod($user);
+
+            $cur_goods->editor_id = $user_id;
+            $cur_goods->archive = 1;
+            $cur_goods->save();
+
+            if ($cur_goods) {
+                return Redirect('/admin/goods');
+            } else {
+                abort(403, 'Ошибка при архивации товара');
+            }
+        } else {
+            abort(403, 'Товар не найден');
+        }
+    }
+
+      // Сортировка
+    public function goods_sort(Request $request)
+    {
+        $result = '';
+        $i = 1;
+        foreach ($request->goods as $item) {
+            $cur_goods = Goods::findOrFail($item);
+            $cur_goods->sort = $i;
+            $cur_goods->save();
+            $i++;
+        }
+    }
+
     public function get_inputs(Request $request)
     {
 
@@ -682,27 +730,27 @@ class GoodsController extends Controller
     {
 
         if ($request->action == 'hide') {
-          $display = null;
-      } else {
-          $display = 1;
-      }
+            $display = null;
+        } else {
+            $display = 1;
+        }
 
-      $cur_goods = Goods::findOrFail($request->id);
-      $cur_goods->display = $display;
-      $cur_goods->save();
+        $cur_goods = Goods::findOrFail($request->id);
+        $cur_goods->display = $display;
+        $cur_goods->save();
 
-      if ($cur_goods) {
+        if ($cur_goods) {
 
-          $result = [
-            'error_status' => 0,
-        ];  
-    } else {
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
 
-      $result = [
-        'error_status' => 1,
-        'error_message' => 'Ошибка при обновлении отображения на сайте!'
-    ];
-}
-echo json_encode($result, JSON_UNESCAPED_UNICODE);
-}
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении отображения на сайте!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
 }

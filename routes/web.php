@@ -222,6 +222,12 @@ Route::resource('/services', 'ServiceController')->middleware('auth');
 Route::any('/service/add_photo', 'ServiceController@add_photo')->middleware('auth');
 Route::post('/service/photos', 'ServiceController@photos')->middleware('auth');
 
+// Архивация
+Route::post('/services/archive/{id}', 'ServiceController@archive')->middleware('auth');
+
+// Сортировка
+Route::post('/services_sort', 'ServiceController@services_sort')->middleware('auth');
+
 // Отображение страниц на сайте
 Route::post('/services_display', 'ServiceController@ajax_display')->middleware('auth');
 
@@ -259,6 +265,12 @@ Route::resource('/goods', 'GoodsController')->middleware('auth');
 
 Route::any('/cur_good/add_photo', 'GoodsController@add_photo')->middleware('auth');
 Route::post('/cur_good/photos', 'GoodsController@photos')->middleware('auth');
+
+// Архивация
+Route::post('/goods/archive/{id}', 'GoodsController@archive')->middleware('auth');
+
+// Сортировка
+Route::post('/goods_sort', 'GoodsController@goods_sort')->middleware('auth');
 
 // Отображение страниц на сайте
 Route::post('/goods_display', 'GoodsController@ajax_display')->middleware('auth');
