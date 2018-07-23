@@ -101,7 +101,7 @@
           @can ('publisher', App\Goods::class)
           <th class="td-display">Отображение</th>
           @endcan
-          <th class="td-delete"></th>
+          <th class="td-archive"></th>
         </tr>
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
@@ -139,10 +139,10 @@
             @endif
           </td>
           @endcan
-          <td class="td-delete">
+          <td class="td-archive">
             @if ($cur_goods->system_item != 1)
             @can('delete', $cur_goods)
-            <a class="icon-delete sprite" data-open="item-delete"></a>
+            <a class="icon-delete sprite" data-open="item-archive"></a>
             @endcan
             @endif
           </td>       
@@ -166,10 +166,7 @@
 @section('modals')
 <section id="modal"></section>
 {{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
-
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete-ajax')
+@include('includes.modals.modal-archive')
 
 @endsection
 
@@ -289,7 +286,7 @@
   @include('includes.scripts.checkbox-control')
 
   {{-- Скрипт модалки удаления --}}
-  @include('includes.scripts.modal-delete-script')
+  @include('includes.scripts.modal-archive-script')
   @include('includes.scripts.delete-ajax-script')
   @include('includes.scripts.sortable-table-script')
   @endsection

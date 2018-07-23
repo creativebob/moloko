@@ -78,8 +78,8 @@ $count = count($services_category['services_products']) + $count;
     @if ((isset($services_category['children'])) || ($services_category['services_products_count'] > 0))
 
     @if ($services_category['services_products_count'] > 0)
-      @foreach($services_category['services'] as $product)
-      @include('services_categories.services-list', $product)
+      @foreach($services_category['services_products'] as $product)
+      @include('services_categories.services-products-list', $product)
       @endforeach
     @endif
     
