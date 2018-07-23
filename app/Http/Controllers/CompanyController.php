@@ -103,6 +103,7 @@ class CompanyController extends Controller
 
         // Главный запрос
         $sectors = Sector::moderatorLimit($answer)
+        ->systemItem($answer) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
         ->get(['id','name','category_status','parent_id'])
         ->keyBy('id')
