@@ -18,12 +18,6 @@ class RolesTableSeeder extends Seeder
                 'system_item' => null, 
                 'author_id' => 1
             ], 
-        	[
-                'name' => 'Администратор', 
-                'company_id' => null, 
-                'system_item' => null, 
-                'author_id' => 1
-            ], 
             [
                 'name' => 'Директор', 
                 'company_id' => null, 
@@ -36,6 +30,24 @@ class RolesTableSeeder extends Seeder
                 'system_item' => null, 
                 'author_id' => 1
             ], 
+            [
+                'name' => 'Маркетолог', 
+                'company_id' => null, 
+                'system_item' => null, 
+                'author_id' => 1
+            ], 
+            [
+                'name' => 'Управляющий персоналом', 
+                'company_id' => null, 
+                'system_item' => null, 
+                'author_id' => 1
+            ],
+            // [
+            //        'name' => 'Администратор', 
+            //        'company_id' => null, 
+            //        'system_item' => null, 
+            //        'author_id' => 1
+            //    ], 
  
         ]);
     }
