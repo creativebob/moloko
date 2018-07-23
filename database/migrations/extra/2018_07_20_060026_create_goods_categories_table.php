@@ -21,8 +21,8 @@ class CreateGoodsCategoriesTable extends Migration
 
             $table->string('name')->index()->comment('Название категории товаров');
 
-            $table->string('description')->nullable()->index()->comment('Описание категории товаров');
-            $table->string('seo_description')->nullable()->index()->comment('Описание для сайта для категории товаров');
+            $table->text('description')->nullable()->comment('Описание категории товаров');
+            $table->text('seo_description')->nullable()->comment('Описание для сайта для категории товаров');
 
             $table->integer('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');
