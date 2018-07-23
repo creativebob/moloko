@@ -17,7 +17,6 @@ class CreateSchedulesTable extends Migration
             $table->increments('id');
             
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('name')->index()->comment('Название графика');
             $table->string('description')->nullable()->comment('Примечание к графику');
