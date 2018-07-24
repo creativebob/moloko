@@ -33,7 +33,7 @@ class ServiceController extends Controller
     protected $entity_name = 'services';
     protected $entity_dependence = false;
 
-    public function index()
+    public function index(Request $request)
     {
 
         // Подключение политики
@@ -52,14 +52,15 @@ class ServiceController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        // ->booklistFilter($request)
-        // ->filter($request, 'author_id')
+        ->booklistFilter($request)
+        ->filter($request, 'author_id')
+        ->filter($request, 'services_category_id', 'services_product')
         // ->filter($request, 'company_id')
-        // ->filter($request, 'products_category_id')
+        // ->filter($request, 'services_product_id')
         ->whereNull('archive')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
-        ->paginate(30);
+        ->paginate(6);
 
         // dd($products);
 
@@ -67,29 +68,30 @@ class ServiceController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
         // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-        // $filter_query = Product::with('author', 'company', 'products_category')
-        // ->moderatorLimit($answer)
-        // ->companiesLimit($answer)
-        // ->authors($answer)
-        // ->systemItem($answer) // Фильтр по системным записям
-        // ->get();
-        // // dd($filter_query);
+        $filter_query = Service::with('author', 'company', 'services_product', 'services_product.services_category')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->get();
+        // dd($filter_query);
 
-        // $filter['status'] = null;
+        $filter['status'] = null;
 
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', 'services_product', 'external-id-one');
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id', null, 'internal-id-one');
         // $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'products_category', 'products_category_id');
 
-        // // Добавляем данные по спискам (Требуется на каждом контроллере)
-        // $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        // Добавляем данные по спискам (Требуется на каждом контроллере)
+        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // dd($services);
+        // dd($filter);
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('services.index', compact('services', 'page_info'));
+        return view('services.index', compact('services', 'page_info', 'filter'));
     }
 
     public function create(Request $request)

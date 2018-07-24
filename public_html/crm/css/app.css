@@ -1213,6 +1213,9 @@ tr:hover .icon-display-show {
 .sidebar .icon-product {
   background-position: -96px -1024px;
 }
+.sidebar .icon-personals {
+  background-position: -96px -1056px;
+}
 .sidebar .icon-arrow-forward {
   background-position: -160px -288px;
 }
@@ -1248,6 +1251,9 @@ tr:hover .icon-display-show {
 }
 .sidebar .nav > ul > li > .active .icon-product, .sidebar .gen-menu-bot > li > .active .icon-product {
   background-position: -160px -1024px;
+}
+.sidebar .nav > ul > li > .active .icon-personals, .sidebar .gen-menu-bot > li > .active .icon-personals {
+  background-position: -160px -1056px;
 }
 .sidebar .nav::-webkit-scrollbar {
   width: 0.5rem;

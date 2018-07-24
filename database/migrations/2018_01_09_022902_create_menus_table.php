@@ -20,7 +20,7 @@ class CreateMenusTable extends Migration
       $table->string('alias')->nullable()->comment('Ссылка на страницу');
 
       $table->integer('parent_id')->unsigned()->nullable()->comment('Id родителя пункта меню');
-      $table->foreign('parent_id')->references('id')->on('menus');
+      // $table->foreign('parent_id')->references('id')->on('menus');
 
       $table->integer('navigation_id')->unsigned()->nullable()->comment('Id названия меню');
       $table->foreign('navigation_id')->references('id')->on('navigations');
