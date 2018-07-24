@@ -11,9 +11,9 @@
 			<div class="grid-x cell">
 				<div class="small-12 cell">
 
-					<label>Категория
+					<label>Выберите категорию
 						<select name="services_category_id" id="services-categories-list" required>
-							<option value="0">Выберите категорию</option>
+							<!-- <option value="0">Выберите категорию</option> -->
 							@php
 							echo $services_categories_list;
 							@endphp
@@ -22,8 +22,8 @@
 
 				</div>
 
-				<div id="mode" class="small-12 cell">
-					
+				<div id="mode" class="small-12 cell relative">
+					@include('services.mode-default')
 				</div>
 
 			</div>
@@ -59,6 +59,8 @@
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
 @include('services.scripts')
+
+
 
 
 

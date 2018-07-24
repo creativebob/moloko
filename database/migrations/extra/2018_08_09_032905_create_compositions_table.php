@@ -16,12 +16,11 @@ class CreateCompositionsTable extends Migration
         Schema::create('compositions', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('products_category_id')->nullable()->unsigned()->comment('Id категории продукции');
-            $table->foreign('products_category_id')->references('id')->on('products_categories');
+            $table->integer('goods_category_id')->nullable()->unsigned()->comment('Id категории продукции');
+            $table->foreign('goods_category_id')->references('id')->on('goods_categories');
             
             $table->integer('composition_id')->nullable()->unsigned()->comment('Id сущности связанной с категорией');
-            $table->foreign('composition_id')->references('id')->on('products');
-
+            $table->foreign('composition_id')->references('id')->on('goods_products');
 
             $table->timestamps();
         });

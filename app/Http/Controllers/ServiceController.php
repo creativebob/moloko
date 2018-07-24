@@ -103,21 +103,23 @@ class ServiceController extends Controller
         $answer_services_categories = operator_right('services_categories', false, 'index');
 
         // Главный запрос
-        $services_categories = ServicesCategory::moderatorLimit($answer_services_categories)
+        $services_categories = ServicesCategory::withCount('services_products')
+        ->moderatorLimit($answer_services_categories)
         ->companiesLimit($answer_services_categories)
         ->authors($answer_services_categories)
         ->systemItem($answer_services_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
-        ->keyBy('id')
-        ->toArray();
+        ->get();
+
+        $services_products_count = $services_categories[0]->services_products_count;
+      /*  dd($services_products_count);*/
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $services_categories_list = get_select_tree($services_categories, $request->parent_id, null, null);
+        $services_categories_list = get_select_tree($services_categories->keyBy('id')->toArray(), $request->parent_id, null, null);
         // echo $services_categories_list;
 
 
-        return view('services.create', compact('service', 'services_categories_list'));
+        return view('services.create', compact('service', 'services_categories_list', 'services_products_count'));
     }
 
     public function store(Request $request)
@@ -135,9 +137,35 @@ class ServiceController extends Controller
 
         $name = $request->name;
 
-        if ($request->mode == 'mode-add') {
+        // dd($request);
 
+        switch ($request->mode) {
+            case 'mode_default':
+
+            $services_product = new ServicesProduct;
+            $services_product->name = $name;
+            $services_product->services_category_id = $services_category_id;
+            $services_product->unit_id = 26;
+            // $services_product->unit_id = $request->unit_id;
+
+            // Модерация и системная запись
+            $services_product->system_item = $request->system_item;
+
+            $services_product->display = 1;
+            $services_product->company_id = $company_id;
+            $services_product->author_id = $user_id;
+            $services_product->save();
+
+            if ($services_product) {
+                $services_product_id = $services_product->id;
+            } else {
+                abort(403, 'Ошибка записи группы услуг');
+            }
+            break;
+            
+            case 'mode_add':
             $service_product_name = $request->service_product_name;
+
             $services_product = ServicesProduct::where(['name' => $service_product_name, 'services_category_id' => $services_category_id])->first();
 
             if ($services_product) {
@@ -164,15 +192,17 @@ class ServiceController extends Controller
                 if ($services_product) {
                     $services_product_id = $services_product->id;
                 } else {
-                    abort(403, 'Ошибка записи группы товаров');
+                    abort(403, 'Ошибка записи группы услуг');
                 }
             }
-        } else {
+            break;
 
+            case 'mode_select':
             $services_product = ServicesProduct::findOrFail($request->services_product_id);
 
             $service_product_name = $services_product->name;
             $services_product_id = $services_product->id;
+            break;
         }
 
         $service = new Service;

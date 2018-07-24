@@ -1,3 +1,4 @@
+<a id="mode-default" class="modes up-input-button">Вернуться</a>
 <label>Название группы услуг
   @include('includes.inputs.string', ['value'=>null, 'name'=>'service_product_name', 'required'=>'required'])
   <div class="item-error">Такой товар уже существует!</div>

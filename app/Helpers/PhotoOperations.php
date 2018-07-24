@@ -99,7 +99,7 @@ function save_photo($request, $user_id, $company_id, $directory, $name, $album_i
     $small = Image::make($request->photo)->widen($settings['img_small_width']);
     $save_path = storage_path('app/public/'.$directory.'small');
     if (!file_exists($save_path)) {
-        mkdir($save_path, 755, true);
+        mkdir($save_path, 0755);
     }
     $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
 
@@ -107,7 +107,7 @@ function save_photo($request, $user_id, $company_id, $directory, $name, $album_i
     $medium = Image::make($request->photo)->widen($settings['img_medium_width']);
     $save_path = storage_path('app/public/'.$directory.'medium');
     if (!file_exists($save_path)) {
-        mkdir($save_path, 755, true);
+        mkdir($save_path, 0755);
     }
     $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
 
@@ -115,7 +115,7 @@ function save_photo($request, $user_id, $company_id, $directory, $name, $album_i
     $large = Image::make($request->photo)->widen($settings['img_large_width']);
     $save_path = storage_path('app/public/'.$directory.'large');
     if (!file_exists($save_path)) {
-        mkdir($save_path, 755, true);
+        mkdir($save_path, 0755);
     }
     $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
 

@@ -16,7 +16,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -45,9 +45,9 @@ class GoodsCategory extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-    'name',
-    'parent_id',
-    'category_status',
+        'name',
+        'parent_id',
+        'category_status',
     ];
 
     // Получаем компании.
@@ -80,6 +80,6 @@ class GoodsCategory extends Model
     // Получаем состав
     public function compositions()
     {
-        return $this->belongsToMany('App\GoodsProduct', 'compositions', 'products_category_id', 'composition_id');
+        return $this->belongsToMany('App\GoodsProduct', 'compositions', 'goods_category_id', 'composition_id');
     }
 }

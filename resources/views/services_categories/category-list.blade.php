@@ -17,11 +17,11 @@ $count = 0;
 $count = count($services_category['children']) + $count;
 @endphp
 @endif
-@if (isset($services_category['services_products']))
+{{-- @if (isset($services_category['services_products']))
 @php
 $count = count($services_category['services_products']) + $count;
 @endphp
-@endif
+@endif --}}
 
 
 
@@ -77,11 +77,11 @@ $count = count($services_category['services_products']) + $count;
 
     @if ((isset($services_category['children'])) || ($services_category['services_products_count'] > 0))
 
-    @if ($services_category['services_products_count'] > 0)
+    {{-- @if ($services_category['services_products_count'] > 0)
       @foreach($services_category['services_products'] as $product)
       @include('services_categories.services-products-list', $product)
       @endforeach
-    @endif
+    @endif --}}
     
     @if (isset($services_category['children']))
     @foreach($services_category['children'] as $services_category)

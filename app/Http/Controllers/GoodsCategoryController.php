@@ -330,6 +330,7 @@ class GoodsCategoryController extends Controller
         ->toArray();
 
         // dd($goods_modes);
+        
         $goods_modes_list = [];
         foreach ($goods_modes as $goods_mode) {
             $goods_categories_id = [];
