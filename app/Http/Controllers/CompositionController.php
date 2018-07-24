@@ -107,7 +107,7 @@ class CompositionController extends Controller
         $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
         $goods_category->compositions()->toggle([$request->id]);
 
-        $composition = Goods::findOrFail($request->id);
+        $composition = GoodsProduct::findOrFail($request->id);
 
         return view($request->entity.'.compositions.composition', compact('composition'));
     }

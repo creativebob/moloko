@@ -45,7 +45,7 @@ class Composition extends Model
 	use Filter;
 	use BooklistFilter;
 
-	  // Продукт
+	// Продукт
     // public function products_category()
     // {
     //     return $this->belongsTo('App\ProductsCategory', 'composition_id');

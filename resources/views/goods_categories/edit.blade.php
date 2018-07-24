@@ -13,7 +13,7 @@
 @section('title-content')
 <div class="top-bar head-content">
   <div class="top-bar-left">
-    <h2 class="header-content">Редактирование категории услуг &laquo{{ $goods_category->name }}&raquo</h2>
+    <h2 class="header-content">Редактирование категории товаров &laquo{{ $goods_category->name }}&raquo</h2>
   </div>
   <div class="top-bar-right">
   </div>

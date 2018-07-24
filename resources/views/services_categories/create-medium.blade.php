@@ -8,7 +8,9 @@
 		<div class="small-8 cell">
 			<ul class="tabs-list" data-tabs id="tabs">
 				<li class="tabs-title is-active"><a href="#add-category" aria-selected="true">Подкатегория</a></li>
+				{{-- 
 				<li class="tabs-title"><a data-tabs-target="add-service" href="#add-service">Группа</a></li>
+				--}}
 			</ul>
 		</div>
 	</div>
@@ -78,7 +80,7 @@
 			</div>
 
 			<!-- Добавляем услугу -->
-			<div class="tabs-panel" id="add-service">
+			{{-- <div class="tabs-panel" id="add-service">
 				{{ Form::open(['id'=>'form-product-add', 'data-abide', 'novalidate']) }}
 				<div class="grid-x grid-padding-x align-center modal-content inputs">
 					<div class="small-10 cell">
@@ -92,9 +94,7 @@
 						<label>Группа услуг
 							@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
 							<div class="item-error">Такой товар уже существует!</div>
-						</label>
-
-						{{-- <div class="grid-x grid-margin-x">
+						</label> <div class="grid-x grid-margin-x">
 							<div class="small-12 medium-6 cell">
 								<label>Категория единиц измерения
 									{{ Form::select('units_category_id', $units_categories_list, null, ['placeholder' => 'Выберите категорию', 'id' => 'units-categories-list', 'required']) }}
@@ -105,11 +105,10 @@
 									<select name="unit_id" id="units-list" required disabled></select>
 								</label>
 							</div>
-						</div> --}}
+						</div> 
 
 						{{ Form::hidden('entity', 'services_categories') }}
 
-						{{-- Чекбокс отображения на сайте --}}
 						@can ('publisher', App\ServicesCategory::class)
 						<div class="small-12 cell checkbox">
 							{{ Form::checkbox('display', 1, null, ['id' => 'display-services-position']) }}
@@ -132,7 +131,7 @@
 					</div>
 				</div>
 				{{ Form::close() }}
-			</div>
+			</div> --}}
 			
 		</div>
 		<div data-close class="icon-close-modal sprite close-modal add-item"></div> 

@@ -140,16 +140,13 @@ Route::post('/ajax_store_metric', 'MetricController@ajax_store')->middleware('au
 Route::match(['get', 'post'], '/ajax_add_relation_metric', 'MetricController@ajax_add_relation')->middleware('auth');
 Route::post('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relation')->middleware('auth');
 
-
 Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->middleware('auth');
-
 
 // ------------------------------------- Состав -------------------------------------------------
 Route::post('/ajax_add_relation_composition', 'CompositionController@ajax_add_relation')->middleware('auth');
 Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_delete_relation')->middleware('auth');
 
 Route::post('/ajax_add_page_composition', 'CompositionController@ajax_add')->middleware('auth');
-
 
 Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
@@ -215,7 +212,7 @@ Route::any('/ajax_services_count', 'ServicesProductController@ajax_count')->midd
 Route::any('/ajax_services_modes', 'ServicesProductController@ajax_modes')->middleware('auth');
 
 // ---------------------------------- Услуги (Артикулы) -------------------------------------------
-// Route::any('/services/create', 'ServiceController@create')->middleware('auth');
+Route::any('/services/create', 'ServiceController@create')->middleware('auth');
 // Основные методы
 Route::resource('/services', 'ServiceController')->middleware('auth');
 

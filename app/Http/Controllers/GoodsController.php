@@ -211,7 +211,7 @@ class GoodsController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_goods = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // $cur_goods = cur_goods::with(['goods_product.goods_category' => function ($query) {
+        // $cur_goods = Goods::with(['goods_product.goods_category' => function ($query) {
         //     $query->with(['metrics.property', 'metrics.property', 'compositions' => function ($query) {
         //         $query->with(['goods' => function ($query) {
         //             $query->whereNull('template');
@@ -220,7 +220,16 @@ class GoodsController extends Controller
         //     ->withCount('metrics', 'compositions');
         // }, 'album.photos', 'company.manufacturers', 'metrics_values', 'compositions_values'])->withCount(['metrics_values', 'compositions_values'])->moderatorLimit($answer_goods)->findOrFail($id);
 
-        $cur_goods = Goods::with(['goods_product.goods_category', 'album.photos', 'company.manufacturers'])->moderatorLimit($answer_goods)->findOrFail($id);
+        $cur_goods = Goods::with(['goods_product.goods_category' => function ($query) {
+            $query->with(['metrics.property', 'compositions' => function ($query) {
+                $query->with(['goods' => function ($query) {
+                    $query->whereNull('template');
+                }]);
+            }])
+            ->withCount('metrics', 'compositions');
+        }, 'album.photos', 'company.manufacturers'])->moderatorLimit($answer_goods)->findOrFail($id);
+
+        // $cur_goods = Goods::with(['goods_product.goods_category.metrics', 'goods_product.goods_category.compositions.goods_products',  'album.photos', 'company.manufacturers'])->moderatorLimit($answer_goods)->findOrFail($id);
         // dd($cur_goods);
 
         // Подключение политики
