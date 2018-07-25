@@ -3,11 +3,10 @@
 </div>
 <label>Введите название новой группы
   @include('includes.inputs.string', ['value'=>null, 'name'=>'service_product_name', 'required'=>'required'])
-  <div class="item-error">Такой товар уже существует!</div>
 </label>
 <label>Название услуги
   @include('includes.inputs.string', ['value'=>null, 'name'=>'name', 'required'=>'required'])
-  <div class="item-error">Такой товар уже существует!</div>
+  <div class="item-error">Названия услуги и группы услуг не должны совпадать!</div>
 </label>
 
 {{-- <div class="grid-x grid-margin-x">

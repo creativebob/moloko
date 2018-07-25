@@ -80,6 +80,18 @@
         }); 
     });
 
+    $(document).on('keyup', 'input[name=service_product_name], input[name=name]', function(event) {
+        event.preventDefault();
+
+        if ($('input[name=service_product_name]').val() == $('input[name=name]').val()) {
+            $('.item-error').css('display', 'block');
+            $('.modal-button').attr('disabled', true);
+        } else {
+            $('.item-error').css('display', 'none');
+            $('.modal-button').attr('disabled', false);
+        }
+    });
+
 
 </script>
 

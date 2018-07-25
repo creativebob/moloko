@@ -231,11 +231,11 @@
                                         {{ Form::number('cost', $service->cost) }}
                                     </label>
                                 </div>
-                                {{-- <div class="small-12 medium-6 cell">
+                                <div class="small-12 medium-6 cell">
                                     <label>Цена
                                         {{ Form::number('price', $service->price) }}
                                     </label>
-                                </div> --}}
+                                </div>
                             </div>
                         </fieldset>
                     </div>
