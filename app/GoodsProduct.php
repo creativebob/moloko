@@ -29,6 +29,12 @@ class GoodsProduct extends Model
         return $this->belongsTo('App\Photo');
     }
 
+    // Получаем еденицу измерения
+    public function unit()
+    {
+        return $this->belongsTo('App\Unit');
+    }
+
     
 
     // Альбом

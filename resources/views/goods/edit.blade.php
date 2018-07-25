@@ -130,7 +130,7 @@
 
                         <div class="grid-x">
                             <div class="small-12 cell">
-                                <label>Описание услуги
+                                <label>Описание товара
                                     @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$cur_goods->description, 'required'=>''])
                                 </label>
                             </div>
@@ -235,6 +235,45 @@
                 </div>
             </div>
             {{ Form::close() }}
+
+             <!-- Состав -->
+            <div class="tabs-panel" id="compositions">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-12 cell">
+
+                        {{-- Состав --}}
+                        <div class="small-12 medium-12 cell">
+                            <ul class="menu right">
+
+                            </ul>
+                        </div>
+                        <table class="composition-table">
+                            <thead>
+                                <tr> 
+                                    <th>Категория:</th>
+                                    <th>Продукт:</th>
+                                    <th>Кол-во:</th>
+                                    <th>Использование:</th>
+                                    <th>Отход:</th>
+                                    <th>Остаток:</th>
+                                    <th>Операция над остатком:</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="composition-table">
+                             
+                                {{-- Таблица метрик товара --}}
+                                @if (isset($cur_goods->goods_product->goods_category->compositions))
+
+
+
+                                @each('goods.compositions.composition', $cur_goods->goods_product->goods_category->compositions, 'composition')
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
             <!-- Фотографии -->
             <div class="tabs-panel" id="photos">

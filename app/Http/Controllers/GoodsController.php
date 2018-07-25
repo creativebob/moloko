@@ -251,12 +251,9 @@ class GoodsController extends Controller
         $cur_goods = new Goods;
 
         $cur_goods->template = 1;
-
         $cur_goods->goods_product_id = $goods_product_id;
-
         $cur_goods->company_id = $company_id;
         $cur_goods->author_id = $user_id;
-
         $cur_goods->name = $name;
         $cur_goods->save();
 
@@ -266,29 +263,30 @@ class GoodsController extends Controller
             $mass = [
                 'goods_category' => $goods_category_id,
             ];
+
             Cookie::queue('conditions', $mass, 1440);
 
             if ($request->quickly == 1) {
                 return redirect('/admin/goods');
             } else {
-               return redirect('/admin/goods/'.$cur_goods->id.'/edit'); 
-           }
+                return redirect('/admin/goods/'.$cur_goods->id.'/edit'); 
+            }
 
-       } else {
-        abort(403, 'Ошибка записи артикула товара');
-    }   
-}
+        } else {
+            abort(403, 'Ошибка записи артикула товара');
+        }   
+    }
 
-public function show($id)
-{
+    public function show($id)
+    {
         //
-}
+    }
 
-public function edit(Request $request, $id)
-{
+    public function edit(Request $request, $id)
+    {
 
         // ГЛАВНЫЙ ЗАПРОС:
-    $answer_goods = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_goods = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // $cur_goods = Goods::with(['goods_product.goods_category' => function ($query) {
         //     $query->with(['metrics.property', 'metrics.property', 'compositions' => function ($query) {
@@ -299,35 +297,35 @@ public function edit(Request $request, $id)
         //     ->withCount('metrics', 'compositions');
         // }, 'album.photos', 'company.manufacturers', 'metrics_values', 'compositions_values'])->withCount(['metrics_values', 'compositions_values'])->moderatorLimit($answer_goods)->findOrFail($id);
 
-    $cur_goods = Goods::with(['goods_product.goods_category' => function ($query) {
-        $query->with(['metrics.property', 'compositions' => function ($query) {
-            $query->with(['goods' => function ($query) {
-                $query->whereNull('template');
-            }]);
-        }])
-        ->withCount('metrics', 'compositions');
-    }, 'album.photos', 'company.manufacturers'])->moderatorLimit($answer_goods)->findOrFail($id);
+        $cur_goods = Goods::with(['goods_product.goods_category' => function ($query) {
+            $query->with(['metrics.property', 'compositions' => function ($query) {
+                $query->with(['goods' => function ($query) {
+                    $query->whereNull('template');
+                }]);
+            }])
+            ->withCount('metrics', 'compositions');
+        }, 'album.photos', 'company.manufacturers'])->moderatorLimit($answer_goods)->findOrFail($id);
 
         // $cur_goods = Goods::with(['goods_product.goods_category.metrics', 'goods_product.goods_category.compositions.goods_products',  'album.photos', 'company.manufacturers'])->moderatorLimit($answer_goods)->findOrFail($id);
         // dd($cur_goods);
 
         // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), $cur_goods);
+        $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
-    $manufacturers_list = $cur_goods->company->manufacturers->pluck('name', 'id');
+        $manufacturers_list = $cur_goods->company->manufacturers->pluck('name', 'id');
         // dd($manufacturers_list);
 
         // Получаем данные для авторизованного пользователя
-    $user = $request->user();
+        $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer_goods_categories = operator_right('goods_categories', false, 'index');
+        $answer_goods_categories = operator_right('goods_categories', false, 'index');
         // dd($answer_goods_categories);
 
         // Категории
-    $goods_categories = GoodsCategory::moderatorLimit($answer_goods_categories)
-    ->companiesLimit($answer_goods_categories)
-    ->authors($answer_goods_categories)
+        $goods_categories = GoodsCategory::moderatorLimit($answer_goods_categories)
+        ->companiesLimit($answer_goods_categories)
+        ->authors($answer_goods_categories)
         ->systemItem($answer_goods_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
         ->get(['id','name','category_status','parent_id'])
@@ -342,7 +340,7 @@ public function edit(Request $request, $id)
         $answer_goods_products = operator_right('goods_products', false, 'index');
         // dd($answer_goods_products);
 
-        // Услуги
+        // Группы товаров
         $goods_products_list = GoodsProduct::where('goods_category_id', $cur_goods->goods_product->goods_category_id)
         ->orderBy('sort', 'asc')
         ->get()
@@ -360,12 +358,17 @@ public function edit(Request $request, $id)
 
         // dd($type);
 
-        // $goods_category = $cur_goods->goods_product->goods_category;
+        $goods_category = $cur_goods->goods_product->goods_category;
+
+
 
         // $goods_category_compositions = [];
         // foreach ($goods_category->compositions as $composition) {
         //     $goods_category_compositions[] = $composition->id;
         // }
+
+
+        // dd($goods_category);
 
         // $type = $cur_goods->goods_product->goods_category->type;
 
@@ -389,48 +392,50 @@ public function edit(Request $request, $id)
         //     }
         // }
 
-        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer_goods_modes = operator_right('goods_modes', false, 'index');
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_goods_modes = operator_right('goods_modes', false, 'index');
 
-        // $goods_modes = goodsMode::with(['goods_categories' => function ($query) use ($answer_goods_categories) {
-        //     $query->with(['goods_products' => function ($query) {
-        //         $query->with(['goods' => function ($query) {
-        //             $query->whereNull('template');
-        //         }]);
-        //     }])
-        //     ->withCount('goods_products')
-        //     ->moderatorLimit($answer_goods_categories)
-        //     ->companiesLimit($answer_goods_categories)
-        //     ->authors($answer_goods_categories)
-        //     ->systemItem($answer_goods_categories); // Фильтр по системным записям 
-        // }])
-        // ->moderatorLimit($answer_goods_modes)
-        // ->companiesLimit($answer_goods_modes)
-        // ->authors($answer_goods_modes)
-        // ->systemItem($answer_goods_modes) // Фильтр по системным записям
-        // ->template($answer_goods_modes)
-        // ->orderBy('sort', 'asc')
-        // ->get()
-        // ->toArray();
+        $goods_modes = goodsMode::with(['goods_categories' => function ($query) use ($answer_goods_categories) {
+            $query->with(['goods_products' => function ($query) {
+                $query->with(['goods' => function ($query) {
+                    $query->whereNull('template');
+                }]);
+            }])
+            ->withCount('goods_products')
+            ->moderatorLimit($answer_goods_categories)
+            ->companiesLimit($answer_goods_categories)
+            ->authors($answer_goods_categories)
+            ->systemItem($answer_goods_categories); // Фильтр по системным записям 
+        }])
+        ->moderatorLimit($answer_goods_modes)
+        ->companiesLimit($answer_goods_modes)
+        ->authors($answer_goods_modes)
+        ->systemItem($answer_goods_modes) // Фильтр по системным записям
+        ->template($answer_goods_modes)
+        ->orderBy('sort', 'asc')
+        ->get()
+        ->toArray();
 
-        // // dd($goods_modes);
+        $goods_modes_list = [];
+        foreach ($goods_modes as $goods_mode) {
 
-        // $goods_modes_list = [];
-        // foreach ($goods_modes as $goods_mode) {
-        //     $goods_categories_id = [];
-        //     foreach ($goods_mode['goods_categories'] as $goods_cat) {
-        //         $goods_categories_id[$goods_cat['id']] = $goods_cat;
-        //     }
-        //     // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        //     $goods_cat_list = get_parents_tree($goods_categories_id, null, null, null);
+            $goods_categories_id = [];
+            foreach ($goods_mode['goods_categories'] as $goods_cat) {
+                $goods_categories_id[$goods_cat['id']] = $goods_cat;
+            }
+
+            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+            $goods_cat_list = get_parents_tree($goods_categories_id, null, null, null);
+
+            $goods_modes_list[] = [
+                'name' => $goods_mode['name'],
+                'alias' => $goods_mode['alias'],
+                'goods_categories' => $goods_cat_list,
+            ];
+        }
 
 
-        //     $goods_modes_list[] = [
-        //         'name' => $goods_mode['name'],
-        //         'alias' => $goods_mode['alias'],
-        //         'goods_categories' => $goods_cat_list,
-        //     ];
-        // }
+        // dd($goods_modes_list);
 
         // // dd($goods_modes_list);
 
@@ -443,10 +448,16 @@ public function edit(Request $request, $id)
 
         // $type = $cur_goods->goods_product->goods_category->type;
 
+        // dd($cur_goods->goods_product->goods_category->compositions);
+
+        // foreach ($cur_goods->goods_product->goods_category->compositions as $composition) {
+        //     dd($composition->name);
+        // }
+
         // Инфо о странице
         $page_info = pageInfo('goods');
 
-        return view('goods.edit', compact('cur_goods', 'page_info', 'goods_categories_list', 'goods_products_list', 'manufacturers_list', 'type', 'goods_modes_list', 'goods_category_compositions', 'metrics_values', 'compositions_values'));
+        return view('goods.edit', compact('cur_goods', 'page_info', 'goods_categories_list', 'goods_products_list', 'manufacturers_list', 'goods_modes_list', 'goods_category_compositions', 'metrics_values', 'compositions_values'));
     }
 
     public function update(Request $request, $id)
@@ -565,14 +576,14 @@ public function edit(Request $request, $id)
 
             } else {
                 $array = save_photo($request, $user_id, $company_id, $directory, $name);
-                
+
             }
             $photo = $array['photo'];
 
             $cur_goods->photo_id = $photo->id;
         } 
 
-        
+
 
         // Наполняем сущность данными
         $cur_goods->goods_product_id = $request->goods_product_id;
