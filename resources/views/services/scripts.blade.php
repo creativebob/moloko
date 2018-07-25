@@ -32,6 +32,7 @@
             success: function(html){
                 // alert(html);
                 $('#mode').html(html);
+                Foundation.reInit($('#form-service-add'));
             }
         }); 
     });
