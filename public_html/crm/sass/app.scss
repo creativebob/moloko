@@ -199,15 +199,15 @@
 }
 
 .up-input-button {
-  
+
   display: block;
   position: absolute;
   right: 0px;
-  
+  top: -4px;
   width: auto;
   z-index: 9000;
 
-  a {
+  a, span {
     font-size: 0.8rem;
     color: #999;
   }
@@ -1355,7 +1355,7 @@ input[type=checkbox], input[type=radio] {
                 .dropdown-pane {
                   width: 14rem;
                   padding: 0;
-                  
+
                 }
                 .profile-head {
                   border: 1px solid $header-profile-border-color;
@@ -1497,12 +1497,12 @@ input[type=checkbox], input[type=radio] {
                 bottom: 38px;
                 height: 44px;
                 width: 100%;
-                
+
                 #sidebar-button {
                   display: block;
                   height: 100%;
 
-                  
+
                   background-color: $sidebar-bot-menu-bg-color;
                   border-top: 1px solid $sidebar-li-border-bot;
                   border-bottom: 1px solid $sidebar-li-border-top;
@@ -1855,7 +1855,7 @@ input[type=checkbox], input[type=radio] {
               border: 1px solid $black;
               border-radius: 0;
               background-color: $white;
-              
+
               .modal-title {
                 text-align: center;
                 height: 3rem;
@@ -1905,7 +1905,7 @@ input[type=checkbox], input[type=radio] {
                 margin-bottom: 1rem;
 
               }
-              
+
               tbody {
 
                 // Убираем стандарнтый бордер и бекграунд фонды
@@ -2008,7 +2008,7 @@ input[type=checkbox], input[type=radio] {
                   padding: 0;
                 }
               }
-              
+
               .checkbox {
 
                 label {
@@ -2062,7 +2062,7 @@ input[type=checkbox], input[type=radio] {
                 z-index: 50;
                 // width: 100%;
                 transition: width 0.3s ease;
-                
+
 
                 // Левая сторона
                 .header-content {
@@ -2131,7 +2131,7 @@ input[type=checkbox], input[type=radio] {
                 //   overflow: visible;
 
                 // }
-                
+
                 // --------------------- Список (accordion menu) в контенте------------------------------
                 .accordion-menu .nested.is-accordion-submenu {
                   margin-left: 0;
@@ -2239,7 +2239,7 @@ input[type=checkbox], input[type=radio] {
                       color: $list-item-color;
                       padding: 8px 150px 8px 68px;
                       // padding-left: 68px;
-                      
+
                       .icon-open {
                         background-position: -96px -704px;
                         margin-right: 0.5rem;
@@ -2365,7 +2365,7 @@ input[type=checkbox], input[type=radio] {
                           opacity: 1;
                         }
                       }
-                      
+
                       > .icon-list {
                         opacity: 1;
                         z-index: 5;
@@ -2393,7 +2393,7 @@ input[type=checkbox], input[type=radio] {
                         }
                       }
                     }
-                    
+
                     .nested {
                       margin-left: 0;
                     }
@@ -2609,7 +2609,7 @@ input[type=checkbox], input[type=radio] {
                                         .td-checkbox, .td-delete {
                                           padding: 0;
                                         }
-                                        
+
                                         // Стилизуем thead
                                         thead {
                                           // width: 100%;
@@ -2950,8 +2950,8 @@ input[type=checkbox], input[type=radio] {
                                               padding: 1rem 0.6rem;
                                             }
 
-                                            
-                                            
+
+
                                           }
                                           // Блочим элементы добавления/редактирования/удаления
                                           .content-list {

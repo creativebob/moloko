@@ -1,6 +1,6 @@
 <div class=" up-input-button">
 	@if ($services_products_count > 0)
-	<a id="mode-select" class="modes">Добавить в группу</a> |
+	<a id="mode-select" class="modes">Добавить в группу</a> <span>|</span>
 	@endif
 	<a id="mode-add" class="modes">Создать группу</a>
 </div>

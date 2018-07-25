@@ -1,5 +1,5 @@
-<div class=" up-input-button">
-<a id="mode-default" class="modes up-input-button">Вернуться</a>
+<div class="up-input-button">
+<a id="mode-default" class="modes">Вернуться</a>
 </div>
 <label>Введите название новой группы
   @include('includes.inputs.string', ['value'=>null, 'name'=>'service_product_name', 'required'=>'required'])
