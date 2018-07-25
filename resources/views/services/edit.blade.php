@@ -66,19 +66,20 @@
                         <div class="grid-x grid-margin-x">
                             <div class="small-12 medium-6 cell">
 
-                                {{-- <label>Категория
-                                    <select name="services_category_id" disabled>
-                                        @php
-                                        echo $services_categories_list;
-                                        @endphp
-                                    </select>
-                                </label> --}}
+                                <label>Название услуги
+                                    {{ Form::text('name', null, ['required']) }}
+                                </label>
 
                                 <label>Группа
                                     {{ Form::select('services_product_id', $services_products_list, $service->services_product_id) }}
                                 </label>
-                                <label>Название услуги
-                                    {{ Form::text('name', null, ['required']) }}
+                                    
+                                <label>Категория
+                                    <select name="services_category_id">
+                                        @php
+                                        echo $services_categories_list;
+                                        @endphp
+                                    </select>
                                 </label>
 
                                 <div class="small-12 cell">
@@ -86,9 +87,13 @@
                                         @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$service->description, 'required'=>''])
                                     </label>
                                 </div>
-
-
-
+                                <div class="grid-x grid-margin-x">
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Цена
+                                            {{ Form::number('price', $service->price) }}
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="small-12 medium-6 cell">
@@ -118,12 +123,12 @@
                             <legend>Артикул</legend>
 
                             <div class="grid-x grid-margin-x">
-                                <div class="small-12 cell">
+                                <div class="small-12 medium-4 cell">
                                     <label>Удобный (вручную)
                                         {{ Form::text('manually', null) }}
                                     </label>
                                 </div> 
-                                {{-- <div class="small-12 medium-4 cell">
+                                <div class="small-12 medium-4 cell">
                                     <label>Программный
                                         {{ Form::text('internal', null, ['required', 'disabled']) }}
                                     </label>
@@ -132,7 +137,7 @@
                                     <label>Внешний
                                         {{ Form::text('external') }}
                                     </label>
-                                </div> --}}
+                                </div>
                             </div>
                         </fieldset>
 
@@ -226,11 +231,11 @@
                                         {{ Form::number('cost', $service->cost) }}
                                     </label>
                                 </div>
-                                <div class="small-12 medium-6 cell">
+                                {{-- <div class="small-12 medium-6 cell">
                                     <label>Цена
                                         {{ Form::number('price', $service->price) }}
                                     </label>
-                                </div>
+                                </div> --}}
                             </div>
                         </fieldset>
                     </div>

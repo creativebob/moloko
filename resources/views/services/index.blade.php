@@ -34,7 +34,7 @@
           <th class="td-description">Описание</th>
           <th class="td-price">Цена</th>
           <th class="td-services_category">Категория</th>
-          <th class="td-service">Группа</th>
+          {{-- <th class="td-service">Группа</th>  --}}
 
           @if(Auth::user()->god == 1) 
               <th class="td-company-id">Компания</th>
@@ -72,8 +72,14 @@
           <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->name }}</a></td>
           <td class="td-description">{{ $service->description }}</td>
           <td class="td-price">{{ $service->price }}</td>
-          <td class="td-services_category"><a href="/admin/services?services_category_id%5B%5D={{ $service->services_product->services_category->id }}">{{ $service->services_product->services_category->name }}</a></td>
-          <td class="td-service">{{ $service->services_product->name }}</td>
+          <td class="td-services_category">
+            <a href="/admin/services?services_category_id%5B%5D={{ $service->services_product->services_category->id }}" class="filter_link" title="Фильтровать">{{ $service->services_product->services_category->name }}</a>
+            <br>
+            @if($service->services_product->name != $service->name)
+            <a href="" class="filter_link light-text">{{ $service->services_product->name }}</a>
+            @endif
+          </td>
+          {{-- <td class="td-service">{{ $service->services_product->name }}</td> --}}
 
 
           @if(Auth::user()->god == 1) 

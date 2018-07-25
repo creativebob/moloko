@@ -54,6 +54,7 @@ class ServiceController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request)
         ->filter($request, 'author_id')
+        ->filter($request, 'services_product_id')
         ->filter($request, 'services_category_id', 'services_product')
         // ->filter($request, 'company_id')
         // ->filter($request, 'services_product_id')
@@ -61,8 +62,6 @@ class ServiceController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(6);
-
-        // dd($products);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
@@ -73,13 +72,18 @@ class ServiceController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
+        ->whereNull('archive')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
         ->get();
+
         // dd($filter_query);
 
         $filter['status'] = null;
 
         $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', 'services_product', 'external-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'services_product', 'services_product_id', null, 'internal-id-one');
         // $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id', null, 'internal-id-one');
         // $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'products_category', 'products_category_id');
 

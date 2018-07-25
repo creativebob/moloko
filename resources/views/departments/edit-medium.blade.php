@@ -44,7 +44,7 @@
 			@endphp
 			@include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
 		</label>
-		<label>Адресс отдела
+		<label>Адрес отдела
 			@php
 			$address = null;
 			if (isset($department->location->address)) {

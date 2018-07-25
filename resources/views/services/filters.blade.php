@@ -7,6 +7,11 @@
  	</div>
 	<div class="grid-x">
  		<div class="small-12 medium-6 cell">
+			@include('includes.inputs.checkboxer', ['name'=>'services_product', 'value'=>$filter]) 			
+ 		</div>
+ 	</div>
+	<div class="grid-x">
+ 		<div class="small-12 medium-6 cell">
 			@include('includes.inputs.checkboxer', ['name'=>'author', 'value'=>$filter])			
  		</div>
  	</div>

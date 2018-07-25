@@ -136,6 +136,20 @@ fieldset legend {
   padding: 0 1rem;
 }
 
+.light-text {
+  color: #aaa;
+}
+
+.filter_link {
+  color: #333;
+  border-bottom: 0px dashed #333;
+  line-height: 0.6;
+}
+
+.filter_link:hover {
+  border-bottom: 1px dashed #333;
+}
+
 .compact {
   margin-bottom: 0.25rem !important;
 }
@@ -180,6 +194,18 @@ fieldset legend {
 }
 .wrap-input-table .padding-to-placeholder {
   padding-right: 60px !important;
+}
+
+#search-result-wrap {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  padding: 2rem 1rem;
+  border: 1px solid #000;
+}
+#search-result-wrap .search-result-head {
+  font-weight: 600;
+  padding-bottom: 1rem;
 }
 
 html {

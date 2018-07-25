@@ -221,6 +221,20 @@ fieldset {
     }
 }
 
+.light-text{
+  color: #aaa;
+}
+
+.filter_link{
+  color: #333;
+  border-bottom: 0px dashed #333;
+  line-height: 0.6;
+}
+
+.filter_link:hover{
+  border-bottom: 1px dashed #333;
+}
+
 // Конец базовых корректировок
 
 
@@ -279,6 +293,29 @@ fieldset {
 
 
 }
+
+// СТИЛИЗАЦИЯ ПОИСКА
+#search-result-wrap{
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  // margin-top: 40px;
+  padding: 2rem 1rem;
+  border: 1px solid #000;
+
+  .search-result-head{
+      font-weight: 600;
+      padding-bottom: 1rem;
+  }
+
+  .search-result-list{
+
+  }
+
+}
+
+
+
 
 // Общие настройки шрифта
 html {
