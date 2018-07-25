@@ -1,5 +1,5 @@
 <div class=" up-input-button">
-<a id="mode-default" class="modes up-input-button">Вернуться</a>
+<a id="mode-default" class="modes">Вернуться</a>
 </div>
 <label>Группа услуг
 	@if (isset($services_products_list))

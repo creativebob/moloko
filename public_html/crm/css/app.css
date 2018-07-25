@@ -120,10 +120,11 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   display: block;
   position: absolute;
   right: 0px;
+  top: -4px;
   width: auto;
   z-index: 9000;
 }
-.up-input-button a {
+.up-input-button a, .up-input-button span {
   font-size: 0.8rem;
   color: #999;
 }
