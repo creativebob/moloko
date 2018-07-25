@@ -4,16 +4,14 @@
 			<h5>ДОБАВЛЕНИЕ категории услуг</h5>
 		</div>
 	</div>
-	<div class="grid-x tabs-wrap align-center tabs-margin-top">
+	{{-- <div class="grid-x tabs-wrap align-center tabs-margin-top">
 		<div class="small-8 cell">
 			<ul class="tabs-list" data-tabs id="tabs">
 				<li class="tabs-title is-active"><a href="#add-category" aria-selected="true">Подкатегория</a></li>
-				{{-- 
 				<li class="tabs-title"><a data-tabs-target="add-service" href="#add-service">Группа</a></li>
-				--}}
 			</ul>
 		</div>
-	</div>
+	</div> --}}
 
 	<div class="tabs-wrap inputs">
 		<div class="tabs-content" data-tabs-content="tabs">
@@ -22,8 +20,8 @@
 				{{ Form::open(['id'=>'form-medium-add', 'data-abide', 'novalidate']) }}
 
 				<!-- Основные -->
-				<div class="grid-x grid-padding-x modal-content inputs">
-					<div class="small-10 small-offset-1 cell">
+				<div class="grid-x grid-padding-x modal-content inputs align-center">
+					<div class="small-10 cell">
 						<label>Категория
 							<select name="parent_id">
 								@php

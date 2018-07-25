@@ -122,6 +122,9 @@ class ServiceController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
+        $services_products_count = $services_categories[0]->services_products_count;
+        $parent_id = null;
+
 
         if ($request->cookie('conditions') != null) {
 
@@ -137,9 +140,6 @@ class ServiceController extends Controller
                 // dd($services_products_count);
             }
             
-        } else {
-            $services_products_count = $services_categories[0]->services_products_count;
-            $parent_id = null;
         }
 
         
@@ -177,24 +177,31 @@ class ServiceController extends Controller
         switch ($request->mode) {
             case 'mode-default':
 
-            $services_product = new ServicesProduct;
-            $services_product->name = $name;
-            $services_product->services_category_id = $services_category_id;
-            $services_product->unit_id = 26;
-            // $services_product->unit_id = $request->unit_id;
-
-            // Модерация и системная запись
-            $services_product->system_item = $request->system_item;
-
-            $services_product->display = 1;
-            $services_product->company_id = $company_id;
-            $services_product->author_id = $user_id;
-            $services_product->save();
+            $services_product = ServicesProduct::where(['name' => $name, 'services_category_id' => $services_category_id])->first();
 
             if ($services_product) {
                 $services_product_id = $services_product->id;
             } else {
-                abort(403, 'Ошибка записи группы услуг');
+
+                $services_product = new ServicesProduct;
+                $services_product->name = $name;
+                $services_product->services_category_id = $services_category_id;
+                $services_product->unit_id = 26;
+                // $services_product->unit_id = $request->unit_id;
+
+                // Модерация и системная запись
+                $services_product->system_item = $request->system_item;
+
+                $services_product->display = 1;
+                $services_product->company_id = $company_id;
+                $services_product->author_id = $user_id;
+                $services_product->save();
+
+                if ($services_product) {
+                    $services_product_id = $services_product->id;
+                } else {
+                    abort(403, 'Ошибка записи группы услуг');
+                }
             }
             break;
             
@@ -252,7 +259,6 @@ class ServiceController extends Controller
 
         $service->company_id = $company_id;
         $service->author_id = $user_id;
-        $service->save();
 
         $service->name = $name;
         $service->save();
@@ -268,26 +274,26 @@ class ServiceController extends Controller
             if ($request->quickly == 1) {
                 return redirect('/admin/services');
             } else {
-               return redirect('/admin/services/'.$service->id.'/edit'); 
-            }
+             return redirect('/admin/services/'.$service->id.'/edit'); 
+         }
 
-            
 
-        } else {
-            abort(403, 'Ошибка записи артикула услуги');
-        }  
-    }
 
-    public function show($id)
-    {
+     } else {
+        abort(403, 'Ошибка записи артикула услуги');
+    }  
+}
+
+public function show($id)
+{
         //
-    }
+}
 
-    public function edit(Request $request, $id)
-    {
+public function edit(Request $request, $id)
+{
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $answer_services = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+    $answer_services = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // $service = Service::with(['services_product.services_category' => function ($query) {
         //     $query->with(['metrics.property', 'metrics.property', 'compositions' => function ($query) {
@@ -298,26 +304,26 @@ class ServiceController extends Controller
         //     ->withCount('metrics', 'compositions');
         // }, 'album.photos', 'company.manufacturers', 'metrics_values', 'compositions_values'])->withCount(['metrics_values', 'compositions_values'])->moderatorLimit($answer_services)->findOrFail($id);
 
-        $service = Service::with(['services_product.services_category', 'album.photos', 'company.manufacturers'])->moderatorLimit($answer_services)->findOrFail($id);
+    $service = Service::with(['services_product.services_category', 'album.photos', 'company.manufacturers'])->moderatorLimit($answer_services)->findOrFail($id);
         // dd($service->album->photos);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $service);
+    $this->authorize(getmethod(__FUNCTION__), $service);
 
-        $manufacturers_list = $service->company->manufacturers->pluck('name', 'id');
+    $manufacturers_list = $service->company->manufacturers->pluck('name', 'id');
         // dd($manufacturers_list);
 
         // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+    $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_services_categories = operator_right('services_categories', false, 'index');
+    $answer_services_categories = operator_right('services_categories', false, 'index');
         // dd($answer_services_categories);
 
         // Категории
-        $services_categories = ServicesCategory::moderatorLimit($answer_services_categories)
-        ->companiesLimit($answer_services_categories)
-        ->authors($answer_services_categories)
+    $services_categories = ServicesCategory::moderatorLimit($answer_services_categories)
+    ->companiesLimit($answer_services_categories)
+    ->authors($answer_services_categories)
         ->systemItem($answer_services_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
         ->get(['id','name','category_status','parent_id'])

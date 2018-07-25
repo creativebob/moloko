@@ -907,23 +907,23 @@ class ServicesProductController extends Controller
 
             case 'mode-add':
 
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_units_categories = operator_right('units_categories', false, 'index');
+            // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            // $answer_units_categories = operator_right('units_categories', false, 'index');
 
-                // Главный запрос
-            $units_categories_list = UnitsCategory::with(['units' => function ($query) {
-                $query->pluck('name', 'id');
-            }])
-            ->moderatorLimit($answer_units_categories)
-            ->companiesLimit($answer_units_categories)
-            ->authors($answer_units_categories)
-            ->systemItem($answer_units_categories) // Фильтр по системным записям
-            ->template($answer_units_categories)
-            ->orderBy('sort', 'asc')
-            ->get()
-            ->pluck('name', 'id');
+            //     // Главный запрос
+            // $units_categories_list = UnitsCategory::with(['units' => function ($query) {
+            //     $query->pluck('name', 'id');
+            // }])
+            // ->moderatorLimit($answer_units_categories)
+            // ->companiesLimit($answer_units_categories)
+            // ->authors($answer_units_categories)
+            // ->systemItem($answer_units_categories) // Фильтр по системным записям
+            // ->template($answer_units_categories)
+            // ->orderBy('sort', 'asc')
+            // ->get()
+            // ->pluck('name', 'id');
 
-            return view('services.mode-add', compact('units_categories_list'));
+            return view('services.mode-add');
 
             break;
             

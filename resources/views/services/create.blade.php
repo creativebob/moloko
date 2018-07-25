@@ -26,7 +26,7 @@
 					@include('services.mode-default')
 				</div>
 
-				<div class="small-4 cell">
+				<div class="small-10 medium-4 cell">
 					<label>Цена
 						{{ Form::number('price') }}
 					</label>

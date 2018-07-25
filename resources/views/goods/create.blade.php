@@ -1,19 +1,19 @@
 <div class="reveal" id="first-add" data-reveal data-close-on-click="false">
 	<div class="grid-x">
 		<div class="small-12 cell modal-title">
-			<h5>ДОБАВЛЕНИЕ услуги</h5>
+			<h5>ДОБАВЛЕНИЕ товара</h5>
 		</div>
 	</div>
-	{{ Form::open(['url' => '/admin/goods','id'=>'form-cur-good-add', 'data-abide', 'novalidate']) }}
+	{{ Form::open(['url' => '/admin/goods','id'=>'form-cur-goods-add', 'data-abide', 'novalidate']) }}
 	<div class="grid-x grid-padding-x align-center modal-content inputs">
-		<div class="small-12 cell">
+		<div class="small-10 cell">
 
 			<div class="grid-x cell">
 				<div class="small-12 cell">
 
-					<label>Категория
-						<select name="goods_category_id" id="goods-categories-list" required>
-							<option value="0">Выберите категорию</option>
+					<label>Выберите категорию
+						<select name="goods_category_id" id="goods-categories-list" class="mode-default"  required>
+							<!-- <option value="0">Выберите категорию</option> -->
 							@php
 							echo $goods_categories_list;
 							@endphp
@@ -22,43 +22,64 @@
 
 				</div>
 
-				<div id="mode" class="small-12 cell">
-					
+				<div id="mode" class="small-12 cell relative">
+					@include('goods.mode-default')
+				</div>
+
+				<div class="grid-x grid-margin-x">
+					<div class="small-12 medium-6 cell">
+						<label>Категория единиц измерения
+							{{ Form::select('units_category_id', $units_categories_list, null, ['placeholder' => 'Выберите категорию', 'id' => 'units-categories-list', 'required']) }}
+						</label>
+					</div>
+					<div class="small-12 medium-6 cell">
+						<label>Единица измерения
+							<select name="unit_id" id="units-list" required disabled></select>
+						</label>
+					</div>
+				</div>
+
+
+				<div class="small-10 medium-4 cell">
+					<label>Цена
+						{{ Form::number('price') }}
+					</label>
 				</div>
 
 			</div>
 
 
 
-			{{-- Чекбокс отображения на сайте --}}
-			@can ('publisher', App\Goods::class)
-			<div class="small-12 cell checkbox">
-				{{ Form::checkbox('display', 1, null, ['id' => 'display-position']) }}
-				<label for="display-position"><span>Отображать на сайте</span></label>
+			{{-- Чекбокс отображения на сайте
+				@can ('publisher', App\Goods::class)
+				<div class="small-12 cell checkbox">
+					{{ Form::checkbox('display', 1, null, ['id' => 'display-position']) }}
+					<label for="display-position"><span>Отображать на сайте</span></label>
+				</div>
+				@endcan --}}
+
+				<div class="small-12 cell checkbox">
+					{{ Form::checkbox('quickly', 1, null, ['id' => 'quickly-goods', 'checked']) }}
+					<label for="quickly-goods"><span>Быстрое добавление</span></label>
+				</div>
+
+				@can('god', App\Goods::class)
+				<div class="checkbox">
+					{{ Form::checkbox('system_item', 1, null, ['id' => 'system-item-position']) }}
+					<label for="system-item-position"><span>Системная запись.</span></label>
+				</div>
+				@endcan
+
 			</div>
-			@endcan
-
-			@can('god', App\Goods::class)
-			<div class="checkbox">
-				{{ Form::checkbox('system_item', 1, null, ['id' => 'system-item-position']) }}
-				<label for="system-item-position"><span>Системная запись.</span></label>
+		</div>
+		<div class="grid-x align-center">
+			<div class="small-6 medium-4 cell">
+				{{ Form::submit('Добавить товар', ['data-close', 'class'=>'button modal-button']) }}
 			</div>
-			@endcan
-
 		</div>
+		{{ Form::close() }}
+		<div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 	</div>
-	<div class="grid-x align-center">
-		<div class="small-6 medium-4 cell">
-			{{ Form::submit('Добавить услугу', ['data-close', 'class'=>'button modal-button submit-cur-good-product-add']) }}
-		</div>
-	</div>
-	{{ Form::close() }}
-	<div data-close class="icon-close-modal sprite close-modal add-item"></div> 
-</div>
-
-@include('includes.scripts.inputs-mask')
-@include('includes.scripts.upload-file')
-@include('goods.scripts')
 
 
 

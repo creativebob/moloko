@@ -101,6 +101,7 @@
 
 @section('modals')
 <section id="modal"></section>
+
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-archive')
 
@@ -112,68 +113,66 @@
 @include('includes.scripts.display-ajax')
 
 <script type="text/javascript">
-
-
   // Обозначаем таймер для проверки
-  var timerId;
-  var time = 400;
+  // var timerId;
+  // var time = 400;
 
-  // Первая буква заглавная
-  function newParagraph (name) {
-    name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
-    return name;
-  };
+  // // Первая буква заглавная
+  // function newParagraph (name) {
+  //   name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
+  //   return name;
+  // };
 
-    // ------------------- Проверка на совпадение имени --------------------------------------
-    function goodsCheck (name, submit, db) {
+  //   // ------------------- Проверка на совпадение имени --------------------------------------
+  //   function goodsCheck (name, submit, db) {
 
-    // Блокируем аттрибут базы данных
-    $(db).val(0);
+  //   // Блокируем аттрибут базы данных
+  //   $(db).val(0);
 
-    // Смотрим сколько символов
-    var lenname = name.length;
+  //   // Смотрим сколько символов
+  //   var lenname = name.length;
 
-      // Если символов больше 3 - делаем запрос
-      if (lenname > 3) {
+  //     // Если символов больше 3 - делаем запрос
+  //     if (lenname > 3) {
 
-        // Первая буква сектора заглавная
-        name = newParagraph (name);
+  //       // Первая буква сектора заглавная
+  //       name = newParagraph (name);
 
-        // Сам ajax запрос
-        $.ajax({
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
-          url: "/admin/goods_check",
-          type: "POST",
-          data: {name: name},
-          beforeSend: function () {
-            $('.find-status').addClass('icon-load');
-          },
-          success: function(date){
-            $('.find-status').removeClass('icon-load');
-            var result = $.parseJSON(date);
-            // Если ошибка
-            if (result.error_status == 1) {
-              $(submit).prop('disabled', true);
-              $('.item-error').css('display', 'block');
-              $(db).val(0);
-            } else {
-              // Выводим пришедшие данные на страницу
-              $(submit).prop('disabled', false);
-              $('.item-error').css('display', 'none');
-              $(db).val(1);
-            };
-          }
-        });
-      };
-      // Удаляем все значения, если символов меньше 3х
-      if (lenname <= 3) {
-        $(submit).prop('disabled', false);
-        $('.item-error').css('display', 'none');
-        $(db).val(0);
-      };
-    };
+  //       // Сам ajax запрос
+  //       $.ajax({
+  //         headers: {
+  //           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //         },
+  //         url: "/admin/goods_check",
+  //         type: "POST",
+  //         data: {name: name},
+  //         beforeSend: function () {
+  //           $('.find-status').addClass('icon-load');
+  //         },
+  //         success: function(date){
+  //           $('.find-status').removeClass('icon-load');
+  //           var result = $.parseJSON(date);
+  //           // Если ошибка
+  //           if (result.error_status == 1) {
+  //             $(submit).prop('disabled', true);
+  //             $('.item-error').css('display', 'block');
+  //             $(db).val(0);
+  //           } else {
+  //             // Выводим пришедшие данные на страницу
+  //             $(submit).prop('disabled', false);
+  //             $('.item-error').css('display', 'none');
+  //             $(db).val(1);
+  //           };
+  //         }
+  //       });
+  //     };
+  //     // Удаляем все значения, если символов меньше 3х
+  //     if (lenname <= 3) {
+  //       $(submit).prop('disabled', false);
+  //       $('.item-error').css('display', 'none');
+  //       $(db).val(0);
+  //     };
+  //   };
 
     // ---------------------------- Продукция -----------------------------------------------
 
@@ -197,23 +196,28 @@
 
 
     // Проверка существования
-    $(document).on('keyup', '#form-first-add .name-field', function() {
+    // $(document).on('keyup', '#form-first-add .name-field', function() {
 
-      // Получаем фрагмент текста
-      var name = $('#form-first-add .name-field').val();
+    //   // Получаем фрагмент текста
+    //   var name = $('#form-first-add .name-field').val();
 
-      // Указываем название кнопки
-      var submit = '.modal-button';
+    //   // Указываем название кнопки
+    //   var submit = '.modal-button';
 
-      // Значение поля с разрешением
-      var db = '#form-first-add .first-item';
+    //   // Значение поля с разрешением
+    //   var db = '#form-first-add .first-item';
 
-      // Выполняем запрос
-      clearTimeout(timerId);   
-      timerId = setTimeout(function() {
-        goodsCheck (name, submit, db)
-      }, time); 
-    });
+    //   // Выполняем запрос
+    //   clearTimeout(timerId);   
+    //   timerId = setTimeout(function() {
+    //     goodsCheck (name, submit, db)
+    //   }, time); 
+    // });
+
+    $(document).on('click', '.close-modal', function() {
+      // alert('lol');
+       $('.reveal-overlay').remove();
+     });
   </script>
   {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
   @include('includes.scripts.tablesorter-script')
@@ -223,6 +227,8 @@
 
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-archive-script')
-  @include('includes.scripts.delete-ajax-script')
   @include('includes.scripts.sortable-table-script')
+
+  @include('includes.scripts.inputs-mask')
+  @include('goods.scripts')
   @endsection
