@@ -836,11 +836,10 @@ class ServicesProductController extends Controller
 
     public function ajax_count(Request $request)
     {
-        // $id = 2;
+        $id = 2;
         // $entity = 'services_categories';
 
-        $id = $request->id;
-        $entity = $request->entity;
+        // $id = $request->id;
 
         $services_category = ServicesCategory::withCount('services_products')->with('services_products')->findOrFail($id);
 
@@ -851,7 +850,7 @@ class ServicesProductController extends Controller
 
             if ($services_products_list) {
 
-                return view($entity.'.mode-select', compact('services_products_list'));
+                return view('services.mode-select', compact('services_products_list'));
             } else {
                 $result = [
                     'error_status' => 1,
@@ -877,7 +876,7 @@ class ServicesProductController extends Controller
             ->get()
             ->pluck('name', 'id');
 
-            return view($entity.'.mode-add', compact('units_categories_list'));
+            return view('services.mode-add', compact('units_categories_list'));
         }
     }
 
@@ -925,7 +924,7 @@ class ServicesProductController extends Controller
             ->pluck('name', 'id');
 
             return view('services.mode-add', compact('units_categories_list'));
-            
+
             break;
             
         }
