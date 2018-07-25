@@ -26,35 +26,46 @@
 					@include('services.mode-default')
 				</div>
 
+				<div class="small-4 cell">
+					<label>Цена
+						{{ Form::number('price') }}
+					</label>
+				</div>
+
 			</div>
 
 
 
-			{{-- Чекбокс отображения на сайте --}}
-			@can ('publisher', App\Service::class)
-			<div class="small-12 cell checkbox">
-				{{ Form::checkbox('display', 1, null, ['id' => 'display-service']) }}
-				<label for="display-service"><span>Отображать на сайте</span></label>
-			</div>
-			@endcan
+			{{-- Чекбокс отображения на сайте
+				@can ('publisher', App\Service::class)
+				<div class="small-12 cell checkbox">
+					{{ Form::checkbox('display', 1, null, ['id' => 'display-service']) }}
+					<label for="display-service"><span>Отображать на сайте</span></label>
+				</div>
+				@endcan  --}}
 
-			@can('god', App\Service::class)
-			<div class="checkbox">
-				{{ Form::checkbox('system_item', 1, null, ['id' => 'system-item-service']) }}
-				<label for="system-item-service"><span>Системная запись.</span></label>
-			</div>
-			@endcan
+				<div class="small-12 cell checkbox">
+					{{ Form::checkbox('quickly', 1, null, ['id' => 'quickly-service', 'checked']) }}
+					<label for="quickly-service"><span>Быстрое добавление</span></label>
+				</div>
 
+				@can('god', App\Service::class)
+				<div class="checkbox">
+					{{ Form::checkbox('system_item', 1, null, ['id' => 'system-item-service']) }}
+					<label for="system-item-service"><span>Системная запись.</span></label>
+				</div>
+				@endcan
+
+			</div>
 		</div>
-	</div>
-	<div class="grid-x align-center">
-		<div class="small-6 medium-4 cell">
-			{{ Form::submit('Добавить услугу', ['class'=>'button modal-button']) }}
+		<div class="grid-x align-center">
+			<div class="small-6 medium-4 cell">
+				{{ Form::submit('Добавить услугу', ['class'=>'button modal-button']) }}
+			</div>
 		</div>
+		{{ Form::close() }}
+		<div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 	</div>
-	{{ Form::close() }}
-	<div data-close class="icon-close-modal sprite close-modal add-item"></div> 
-</div>
 
 
 

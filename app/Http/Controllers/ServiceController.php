@@ -193,7 +193,7 @@ class ServiceController extends Controller
                 // Модерация и системная запись
                 $services_product->system_item = $request->system_item;
 
-                $services_product->display = $request->display;
+                $services_product->display = 1;
 
                 $services_product->company_id = $company_id;
                 $services_product->author_id = $user_id;
@@ -223,6 +223,8 @@ class ServiceController extends Controller
 
         $service->services_product_id = $services_product_id;
 
+        $service->price = $request->price;
+
         $service->company_id = $company_id;
         $service->author_id = $user_id;
         $service->save();
@@ -232,7 +234,13 @@ class ServiceController extends Controller
 
         if ($service) {
 
-            return Redirect('/admin/services/'.$service->id.'/edit');
+            if ($request->quickly == 1) {
+                return redirect('/admin/services');
+            } else {
+               return redirect('/admin/services/'.$service->id.'/edit'); 
+            }
+
+            
 
         } else {
             abort(403, 'Ошибка записи артикула услуги');
