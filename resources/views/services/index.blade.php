@@ -37,7 +37,7 @@
           {{-- <th class="td-service">Группа</th>  --}}
 
           @if(Auth::user()->god == 1) 
-              <th class="td-company-id">Компания</th>
+          <th class="td-company-id">Компания</th>
           @endif
 
           <th class="td-author">Автор</th>
@@ -76,14 +76,14 @@
             <a href="/admin/services?services_category_id%5B%5D={{ $service->services_product->services_category->id }}" class="filter_link" title="Фильтровать">{{ $service->services_product->services_category->name }}</a>
             <br>
             @if($service->services_product->name != $service->name)
-            <a href="" class="filter_link light-text">{{ $service->services_product->name }}</a>
+            <a href="/admin/services?services_product_id%5B%5D={{ $service->services_product->id }}" class="filter_link light-text">{{ $service->services_product->name }}</a>
             @endif
           </td>
           {{-- <td class="td-service">{{ $service->services_product->name }}</td> --}}
 
 
           @if(Auth::user()->god == 1) 
-            <td class="td-company-id">@if(!empty($service->company->name)) {{ $service->company->name }} @else @if($service->system_item == null) Шаблон @else Системная @endif @endif</td>
+          <td class="td-company-id">@if(!empty($service->company->name)) {{ $service->company->name }} @else @if($service->system_item == null) Шаблон @else Системная @endif @endif</td>
           @endif
 
 
@@ -126,9 +126,6 @@
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-archive')
 
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete-ajax')
-
 @endsection
 
 @section('scripts')
@@ -140,65 +137,65 @@
 
 
   // Обозначаем таймер для проверки
-  var timerId;
-  var time = 400;
+  // var timerId;
+  // var time = 400;
 
-  // Первая буква заглавная
-  function newParagraph (name) {
-    name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
-    return name;
-  };
+  // // Первая буква заглавная
+  // function newParagraph (name) {
+  //   name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
+  //   return name;
+  // };
 
     // ------------------- Проверка на совпадение имени --------------------------------------
-    function serviceCheck (name, submit, db) {
+    // function serviceCheck (name, submit, db) {
 
-    // Блокируем аттрибут базы данных
-    $(db).val(0);
+    //   // Блокируем аттрибут базы данных
+    //   $(db).val(0);
 
-    // Смотрим сколько символов
-    var lenname = name.length;
+    //   // Смотрим сколько символов
+    //   var lenname = name.length;
 
-      // Если символов больше 3 - делаем запрос
-      if (lenname > 3) {
+    //   // Если символов больше 3 - делаем запрос
+    //   if (lenname > 3) {
 
-        // Первая буква сектора заглавная
-        name = newParagraph (name);
+    //     // Первая буква сектора заглавная
+    //     name = newParagraph (name);
 
-        // Сам ajax запрос
-        $.ajax({
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
-          url: "/admin/service_check",
-          type: "POST",
-          data: {name: name},
-          beforeSend: function () {
-            $('.find-status').addClass('icon-load');
-          },
-          success: function(date){
-            $('.find-status').removeClass('icon-load');
-            var result = $.parseJSON(date);
-            // Если ошибка
-            if (result.error_status == 1) {
-              $(submit).prop('disabled', true);
-              $('.item-error').css('display', 'block');
-              $(db).val(0);
-            } else {
-              // Выводим пришедшие данные на страницу
-              $(submit).prop('disabled', false);
-              $('.item-error').css('display', 'none');
-              $(db).val(1);
-            };
-          }
-        });
-      };
-      // Удаляем все значения, если символов меньше 3х
-      if (lenname <= 3) {
-        $(submit).prop('disabled', false);
-        $('.item-error').css('display', 'none');
-        $(db).val(0);
-      };
-    };
+    //     // Сам ajax запрос
+    //     $.ajax({
+    //       headers: {
+    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //       },
+    //       url: "/admin/service_check",
+    //       type: "POST",
+    //       data: {name: name},
+    //       beforeSend: function () {
+    //         $('.find-status').addClass('icon-load');
+    //       },
+    //       success: function(date){
+    //         $('.find-status').removeClass('icon-load');
+    //         var result = $.parseJSON(date);
+    //         // Если ошибка
+    //         if (result.error_status == 1) {
+    //           $(submit).prop('disabled', true);
+    //           $('.item-error').css('display', 'block');
+    //           $(db).val(0);
+    //         } else {
+    //           // Выводим пришедшие данные на страницу
+    //           $(submit).prop('disabled', false);
+    //           $('.item-error').css('display', 'none');
+    //           $(db).val(1);
+    //         };
+    //       }
+    //     });
+    //   };
+    //   // Удаляем все значения, если символов меньше 3х
+    //   if (lenname <= 3) {
+    //     $(submit).prop('disabled', false);
+    //     $('.item-error').css('display', 'none');
+    //     $(db).val(0);
+    //   };
+    // };
 
     // ---------------------------- Продукция -----------------------------------------------
 
@@ -222,23 +219,28 @@
 
 
     // Проверка существования
-    $(document).on('keyup', '#form-first-add .name-field', function() {
+    // $(document).on('keyup', '#form-first-add .name-field', function() {
 
-      // Получаем фрагмент текста
-      var name = $('#form-first-add .name-field').val();
+    //   // Получаем фрагмент текста
+    //   var name = $('#form-first-add .name-field').val();
 
-      // Указываем название кнопки
-      var submit = '.modal-button';
+    //   // Указываем название кнопки
+    //   var submit = '.modal-button';
 
-      // Значение поля с разрешением
-      var db = '#form-first-add .first-item';
+    //   // Значение поля с разрешением
+    //   var db = '#form-first-add .first-item';
 
-      // Выполняем запрос
-      clearTimeout(timerId);   
-      timerId = setTimeout(function() {
-        serviceCheck (name, submit, db)
-      }, time); 
-    });
+    //   // Выполняем запрос
+    //   clearTimeout(timerId);   
+    //   timerId = setTimeout(function() {
+    //     serviceCheck (name, submit, db)
+    //   }, time); 
+    // });
+
+     $(document).on('click', '.close-modal', function() {
+      // alert('lol');
+       $('.reveal-overlay').remove();
+     });
   </script>
   {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
   @include('includes.scripts.tablesorter-script')
@@ -249,4 +251,7 @@
   {{-- Скрипт модалки удаления --}}
   @include('includes.scripts.modal-archive-script')
   @include('includes.scripts.sortable-table-script')
+
+  @include('includes.scripts.inputs-mask')
+  @include('services.scripts')
   @endsection

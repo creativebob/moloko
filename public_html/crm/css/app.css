@@ -117,13 +117,15 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 }
 
 .up-input-button {
-  font-size: 0.8rem;
   display: block;
   position: absolute;
   right: 0px;
-  color: #999;
   width: auto;
   z-index: 9000;
+}
+.up-input-button a {
+  font-size: 0.8rem;
+  color: #999;
 }
 
 fieldset {

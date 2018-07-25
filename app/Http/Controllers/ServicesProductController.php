@@ -884,7 +884,6 @@ class ServicesProductController extends Controller
     public function ajax_modes(Request $request)
     {
         $mode = $request->mode;
-        $entity = $request->entity;
         $services_category_id = $request->services_category_id;
         // $mode = 'mode-add';
         // $entity = 'service_categories';
@@ -894,17 +893,21 @@ class ServicesProductController extends Controller
             case 'mode-default':
 
             $services_category = ServicesCategory::withCount('services_products')->find($services_category_id);
-
             $services_products_count = $services_category->services_products_count;
-            return view($entity.'.mode-default', compact('services_products_count'));
+
+            return view('services.mode-default', compact('services_products_count'));
+
             break;
 
             case 'mode-select':
+
             $services_products_list = ServicesProduct::where('services_category_id', $services_category_id)->get()->pluck('name', 'id');
-            return view($entity.'.mode-select', compact('services_products_list'));
+            return view('services.mode-select', compact('services_products_list'));
+
             break;
 
             case 'mode-add':
+
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer_units_categories = operator_right('units_categories', false, 'index');
 
@@ -921,33 +924,10 @@ class ServicesProductController extends Controller
             ->get()
             ->pluck('name', 'id');
 
-            return view($entity.'.mode-add', compact('units_categories_list'));
+            return view('services.mode-add', compact('units_categories_list'));
+            
             break;
             
-        }
-
-        if ($mode == 'mode-select') {
-
-        }
-
-        if ($mode == 'mode-add') {
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_units_categories = operator_right('units_categories', false, 'index');
-
-                // Главный запрос
-            $units_categories_list = UnitsCategory::with(['units' => function ($query) {
-                $query->pluck('name', 'id');
-            }])
-            ->moderatorLimit($answer_units_categories)
-            ->companiesLimit($answer_units_categories)
-            ->authors($answer_units_categories)
-            ->systemItem($answer_units_categories) // Фильтр по системным записям
-            ->template($answer_units_categories)
-            ->orderBy('sort', 'asc')
-            ->get()
-            ->pluck('name', 'id');
-
-            return view($entity.'.mode-add', compact('units_categories_list'));
         }
 
     }

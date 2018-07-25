@@ -1,5 +1,7 @@
+<div class=" up-input-button">
 <a id="mode-default" class="modes up-input-button">Вернуться</a>
-<label>Название группы услуг
+</div>
+<label>Введите название новой группы
   @include('includes.inputs.string', ['value'=>null, 'name'=>'service_product_name', 'required'=>'required'])
   <div class="item-error">Такой товар уже существует!</div>
 </label>
@@ -20,4 +22,4 @@
     </label>
   </div>
 </div> --}}
-{{ Form::hidden('mode', 'mode_add') }}
+{{ Form::hidden('mode', 'mode-add') }}
