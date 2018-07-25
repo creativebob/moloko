@@ -7,12 +7,7 @@ $count = 0;
 $count = count($services_category['children']) + $count;
 @endphp
 @endif
-@if (isset($services_category['services_products']))
-@php
-$count = count($services_category['services_products']) + $count;
-@endphp
-@endif
-@if ((isset($services_category['children'])) || ($services_category['services_products_count'] > 0))
+@if (isset($services_category['children']))
 <li class="medium-item item parent" id="services_categories-{{ $services_category['id'] }}" data-name="{{ $services_category['name'] }}">
   <a class="medium-link @if($drop == 0) link-small @endif">
     <div class="icon-open sprite"></div>
@@ -70,13 +65,7 @@ $count = count($services_category['services_products']) + $count;
     <label class="label-check" for="check-{{ $services_category['id'] }}"></label> 
   </div>
   <ul class="menu vertical medium-list nested" data-accordion-menu data-multi-open="false">
-    @if ((isset($services_category['children'])) || ($services_category['services_products_count'] > 0))
-
-    @if ($services_category['services_products_count'] > 0)
-    @foreach($services_category['services_products'] as $product)
-    @include('services_categories.services-products-list', $product)
-    @endforeach
-    @endif
+    @if (isset($services_category['children']))
 
     @if (isset($services_category['children']))
     @foreach($services_category['children'] as $services_category)

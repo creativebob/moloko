@@ -1,4 +1,4 @@
-<div class=" up-input-button">
+<div class="up-input-button">
 <a id="mode-default" class="modes up-input-button">Вернуться</a>
 </div>
 <label>Введите название новой группы
