@@ -19,6 +19,9 @@ use App\Policies\ServicePolicy;
 // use App\Policies\AreaPolicy;
 // use App\Policies\RegionPolicy;
 
+// Куки
+use Illuminate\Support\Facades\Cookie;
+
 
 // Транслитерация
 use Transliterate;
@@ -119,11 +122,33 @@ class ServiceController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        $services_products_count = $services_categories[0]->services_products_count;
+
+        if ($request->cookie('conditions') != null) {
+
+            $condition = Cookie::get('conditions');
+            if(isset($condition['services_category'])) {
+                $services_category_id = $condition['services_category'];
+
+                $services_category = $services_categories->find($services_category_id);
+                // dd($services_category);
+
+                $services_products_count = $services_category->services_products_count;
+                $parent_id = $services_category_id;
+                // dd($services_products_count);
+            }
+            
+        } else {
+            $services_products_count = $services_categories[0]->services_products_count;
+            $parent_id = null;
+        }
+
+        
         // dd($services_categories);
 
+        // dd($request->parent_id);
+
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $services_categories_list = get_select_tree($services_categories->keyBy('id')->toArray(), $request->parent_id, null, null);
+        $services_categories_list = get_select_tree($services_categories->keyBy('id')->toArray(), $parent_id, null, null);
         // echo $services_categories_list;
 
 
@@ -234,6 +259,12 @@ class ServiceController extends Controller
 
         if ($service) {
 
+            // Пишем сессию
+            $mass = [
+                'services_category' => $services_category_id,
+            ];
+            Cookie::queue('conditions', $mass, 1440);
+
             if ($request->quickly == 1) {
                 return redirect('/admin/services');
             } else {
@@ -268,7 +299,7 @@ class ServiceController extends Controller
         // }, 'album.photos', 'company.manufacturers', 'metrics_values', 'compositions_values'])->withCount(['metrics_values', 'compositions_values'])->moderatorLimit($answer_services)->findOrFail($id);
 
         $service = Service::with(['services_product.services_category', 'album.photos', 'company.manufacturers'])->moderatorLimit($answer_services)->findOrFail($id);
-        // dd($service);
+        // dd($service->album->photos);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $service);
