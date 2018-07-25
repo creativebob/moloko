@@ -96,16 +96,18 @@ class ServiceController extends Controller
 
     public function create(Request $request)
     {
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Service::class);
 
-        $service = new Service;
+        // $service = new Service;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_services_categories = operator_right('services_categories', false, 'index');
 
         // Главный запрос
         $services_categories = ServicesCategory::withCount('services_products')
+        ->with('services_products')
         ->moderatorLimit($answer_services_categories)
         ->companiesLimit($answer_services_categories)
         ->authors($answer_services_categories)
@@ -114,18 +116,20 @@ class ServiceController extends Controller
         ->get();
 
         $services_products_count = $services_categories[0]->services_products_count;
-      /*  dd($services_products_count);*/
+        // dd($services_categories);
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         $services_categories_list = get_select_tree($services_categories->keyBy('id')->toArray(), $request->parent_id, null, null);
         // echo $services_categories_list;
 
 
-        return view('services.create', compact('service', 'services_categories_list', 'services_products_count'));
+        return view('services.create', compact('services_categories_list', 'services_products_count'));
     }
 
     public function store(Request $request)
     {
+
+        // dd($request);
         $services_category_id = $request->services_category_id;
 
         // Получаем данные для авторизованного пользователя
@@ -142,7 +146,7 @@ class ServiceController extends Controller
         // dd($request);
 
         switch ($request->mode) {
-            case 'mode_default':
+            case 'mode-default':
 
             $services_product = new ServicesProduct;
             $services_product->name = $name;
@@ -165,7 +169,7 @@ class ServiceController extends Controller
             }
             break;
             
-            case 'mode_add':
+            case 'mode-add':
             $service_product_name = $request->service_product_name;
 
             $services_product = ServicesProduct::where(['name' => $service_product_name, 'services_category_id' => $services_category_id])->first();
@@ -199,7 +203,9 @@ class ServiceController extends Controller
             }
             break;
 
-            case 'mode_select':
+            case 'mode-select':
+
+
             $services_product = ServicesProduct::findOrFail($request->services_product_id);
 
             $service_product_name = $services_product->name;

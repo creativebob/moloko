@@ -1,28 +1,64 @@
 <script type="text/javascript">
 
-    $(document).on('change', '#units-categories-list', function() {
-        var id = $(this).val();
-        // alert(id);
+    // $(document).on('change', '#units-categories-list', function() {
+    //     var id = $(this).val();
+    //     // alert(id);
+
+    //     $.ajax({
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         },
+    //         url: '/admin/get_units_list',
+    //         type: "POST",
+    //         data: {id: id, entity: 'services_categories'},
+    //         success: function(html){
+    //             $('#units-list').html(html);
+    //             $('#units-list').prop('disabled', false);
+    //         }
+    //     }); 
+    // });
+
+    $(document).on('change', '.mode-default', function() {
+
+        // var id = $(this).val();
 
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: '/admin/get_units_list',
+            url: '/admin/ajax_services_modes',
             type: "POST",
-            data: {id: id, entity: 'services_categories'},
+            data: {mode: 'mode-default', services_category_id: $('#services-categories-list').val()},
             success: function(html){
-                $('#units-list').html(html);
-                $('#units-list').prop('disabled', false);
+                // alert(html);
+                $('#mode').html(html);
             }
         }); 
     });
 
+    $(document).on('change', '.mode-select', function() {
+
+        var id = $(this).val();
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '/admin/ajax_services_count',
+            type: "POST",
+            data: {id: id},
+            success: function(html){
+                // alert(html);
+                $('#mode').html(html);
+
+            }
+        }); 
+    });
 
     $(document).on('click', '.modes', function(event) {
         event.preventDefault();
 
-        var id = $(this).attr('id');
+        var mode = $(this).attr('id');
         // alert(id);
 
         $.ajax({
@@ -31,13 +67,19 @@
             },
             url: '/admin/ajax_services_modes',
             type: "POST",
-            data: {mode: id, entity: 'services', services_category_id: $('#services-categories-list').val()},
+            data: {mode: mode, services_category_id: $('#services-categories-list').val()},
             success: function(html){
+                $('#services-categories-list').removeAttr('class');
+                $('#services-categories-list').addClass(mode);
                 // alert(html);
                 $('#mode').html(html);
+                Foundation.reInit($('#form-service-add'));
+
             }
         }); 
     });
+
+
 </script>
 
 

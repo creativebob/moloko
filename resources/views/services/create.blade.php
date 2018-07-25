@@ -12,7 +12,7 @@
 				<div class="small-12 cell">
 
 					<label>Выберите категорию
-						<select name="services_category_id" id="services-categories-list" required>
+						<select name="services_category_id" id="services-categories-list" class="mode-default" required>
 							<!-- <option value="0">Выберите категорию</option> -->
 							@php
 							echo $services_categories_list;
@@ -33,15 +33,15 @@
 			{{-- Чекбокс отображения на сайте --}}
 			@can ('publisher', App\Service::class)
 			<div class="small-12 cell checkbox">
-				{{ Form::checkbox('display', 1, null, ['id' => 'display-position']) }}
-				<label for="display-position"><span>Отображать на сайте</span></label>
+				{{ Form::checkbox('display', 1, null, ['id' => 'display-service']) }}
+				<label for="display-service"><span>Отображать на сайте</span></label>
 			</div>
 			@endcan
 
 			@can('god', App\Service::class)
 			<div class="checkbox">
-				{{ Form::checkbox('system_item', 1, null, ['id' => 'system-item-position']) }}
-				<label for="system-item-position"><span>Системная запись.</span></label>
+				{{ Form::checkbox('system_item', 1, null, ['id' => 'system-item-service']) }}
+				<label for="system-item-service"><span>Системная запись.</span></label>
 			</div>
 			@endcan
 
@@ -49,16 +49,12 @@
 	</div>
 	<div class="grid-x align-center">
 		<div class="small-6 medium-4 cell">
-			{{ Form::submit('Добавить услугу', ['data-close', 'class'=>'button modal-button submit-service-product-add']) }}
+			{{ Form::submit('Добавить услугу', ['class'=>'button modal-button']) }}
 		</div>
 	</div>
 	{{ Form::close() }}
 	<div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
-
-@include('includes.scripts.inputs-mask')
-@include('includes.scripts.upload-file')
-@include('services.scripts')
 
 
 
