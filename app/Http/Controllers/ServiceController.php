@@ -251,7 +251,7 @@ class ServiceController extends Controller
 
         $service = new Service;
 
-        $service->template = 1;
+        $service->draft = 1;
 
         $service->services_product_id = $services_product_id;
 
@@ -298,7 +298,7 @@ public function edit(Request $request, $id)
         // $service = Service::with(['services_product.services_category' => function ($query) {
         //     $query->with(['metrics.property', 'metrics.property', 'compositions' => function ($query) {
         //         $query->with(['services' => function ($query) {
-        //             $query->whereNull('template');
+        //             $query->whereNull('draft');
         //         }]);
         //     }])
         //     ->withCount('metrics', 'compositions');
@@ -391,7 +391,7 @@ public function edit(Request $request, $id)
         // $services_modes = ServicesMode::with(['services_categories' => function ($query) use ($answer_services_categories) {
         //     $query->with(['services_products' => function ($query) {
         //         $query->with(['services' => function ($query) {
-        //             $query->whereNull('template');
+        //             $query->whereNull('draft');
         //         }]);
         //     }])
         //     ->withCount('services_products')
@@ -453,7 +453,7 @@ public function edit(Request $request, $id)
         // $compositions_count = count($request->compositions);
 
         // Если снят флаг черновика
-        // if (empty($request->template)) {
+        // if (empty($request->draft)) {
 
         //     // Проверка на наличие артикула
         //     // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
@@ -595,14 +595,14 @@ public function edit(Request $request, $id)
         $service->system_item = $request->system_item;
 
         $service->display = $request->display;
-        $service->template = $request->template;
+        $service->draft = $request->draft;
         $service->company_id = $company_id;
         $service->author_id = $user_id;
         $service->save();
 
         if ($service) {
 
-            // if ($service->template == 1) {
+            // if ($service->draft == 1) {
 
             //     if (isset($request->metrics)) {
             //         $metrics_insert = [];

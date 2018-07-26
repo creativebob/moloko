@@ -139,7 +139,7 @@
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
-                            @if ($cur_goods->template == 1)
+                            @if ($cur_goods->draft == 1)
 
                            
 
@@ -177,8 +177,8 @@
 
                     {{-- Чекбокс черновика --}}
                     <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('template', 1, $cur_goods->template, ['id' => 'template']) }}
-                        <label for="template"><span>Черновик</span></label>
+                        {{ Form::checkbox('draft', 1, $cur_goods->draft, ['id' => 'draft']) }}
+                        <label for="draft"><span>Черновик</span></label>
                     </div>
 
                     {{-- Чекбокс отображения на сайте --}}

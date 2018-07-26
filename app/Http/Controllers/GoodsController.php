@@ -250,7 +250,7 @@ class GoodsController extends Controller
 
         $cur_goods = new Goods;
 
-        $cur_goods->template = 1;
+        $cur_goods->draft = 1;
         $cur_goods->goods_product_id = $goods_product_id;
         $cur_goods->company_id = $company_id;
         $cur_goods->author_id = $user_id;
@@ -301,7 +301,7 @@ class GoodsController extends Controller
         $cur_goods = Goods::with(['goods_product.goods_category' => function ($query) {
             $query->with(['metrics.property', 'compositions' => function ($query) {
                 $query->with(['goods' => function ($query) {
-                    $query->whereNull('template');
+                    $query->whereNull('draft');
                 }]);
             }])
             ->withCount('metrics', 'compositions');
@@ -400,7 +400,7 @@ class GoodsController extends Controller
         $goods_modes = goodsMode::with(['goods_categories' => function ($query) use ($answer_goods_categories) {
             $query->with(['goods_products' => function ($query) {
                 $query->with(['goods' => function ($query) {
-                    $query->whereNull('template');
+                    $query->whereNull('draft');
                 }]);
             }])
             ->withCount('goods_products')
@@ -616,14 +616,14 @@ class GoodsController extends Controller
         $cur_goods->system_item = $request->system_item;
 
         $cur_goods->display = $request->display;
-        $cur_goods->template = $request->template;
+        $cur_goods->draft = $request->draft;
         $cur_goods->company_id = $company_id;
         $cur_goods->author_id = $user_id;
         $cur_goods->save();
 
         if ($cur_goods) {
 
-            if ($cur_goods->template == 1) {
+            if ($cur_goods->draft == 1) {
 
                 if (isset($request->metrics)) {
                     $metrics_insert = [];
