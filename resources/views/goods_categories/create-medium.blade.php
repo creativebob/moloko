@@ -17,7 +17,7 @@
 		<div class="tabs-content" data-tabs-content="tabs">
 			<!-- Добавляем категорию -->
 			<div class="tabs-panel is-active" id="add-category">
-				{{ Form::open(['id'=>'form-medium-add', 'data-abide', 'novalidate']) }}
+				{{ Form::open(['url' => '/admin/goods_categories', 'id'=>'form-medium-add', 'data-abide', 'novalidate']) }}
 
 				<!-- Основные -->
 				<div class="grid-x grid-padding-x align-center modal-content inputs">

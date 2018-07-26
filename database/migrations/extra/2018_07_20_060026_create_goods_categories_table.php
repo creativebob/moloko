@@ -28,7 +28,7 @@ class CreateGoodsCategoriesTable extends Migration
             $table->foreign('photo_id')->references('id')->on('photos');
 
             $table->integer('parent_id')->nullable()->unsigned()->comment('Id категории товара');
-            $table->foreign('parent_id')->references('id')->on('services_categories');
+            $table->foreign('parent_id')->references('id')->on('goods_categories');
 
             // $table->enum('type', ['services', 'goods', 'raws'])->comment('Тип товара (Услуга/товар/сырье)');
 
@@ -40,7 +40,7 @@ class CreateGoodsCategoriesTable extends Migration
             $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
 
             $table->integer('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
-            $table->foreign('category_id')->references('id')->on('services_categories');
+            $table->foreign('category_id')->references('id')->on('goods_categories');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
