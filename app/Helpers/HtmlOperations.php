@@ -152,4 +152,30 @@ function get_parents_tree ($items) {
     return $items_cat;
 }
 
+// Дерево вложенности
+function get_parents_tree_with_item_id ($items, $item_id) {
+
+    // Формируем дерево вложенности
+    $items_cat = [];
+    foreach ($items as $id => &$node) { 
+
+        // Если нет вложений
+        if (!$node['parent_id']) {
+            $items_cat[$id] = &$node;
+            if ($id == $item_id) {
+                $items_cat[$id]['item_id'] = $item_id;
+            }
+        } else { 
+
+            // Если есть потомки то перебераем массив
+            $items[$node['parent_id']]['children'][$id] = &$node;
+            if ($id == $item_id) {
+                $items[$node['parent_id']]['children'][$id]['item_id'] = $item_id;
+            }
+        }
+    }
+    // dd($items_cat);
+    return $items_cat;
+}
+
 ?>

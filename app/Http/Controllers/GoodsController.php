@@ -255,6 +255,7 @@ class GoodsController extends Controller
         $cur_goods->company_id = $company_id;
         $cur_goods->author_id = $user_id;
         $cur_goods->name = $name;
+        $cur_goods->price = $request->price;
         $cur_goods->save();
 
         if ($cur_goods) {
