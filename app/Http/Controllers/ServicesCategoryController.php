@@ -182,7 +182,7 @@ class ServicesCategoryController extends Controller
 
         $services_category->display = $request->display;
 
-        $services_category->services_mode_id = $request->services_mode_id;
+        
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -196,6 +196,7 @@ class ServicesCategoryController extends Controller
         // Если категория
         if ($request->first_item == 1) {
             $services_category->category_status = 1; 
+            $services_category->services_mode_id = $request->services_mode_id;
         }
 
         // Если вложенный
