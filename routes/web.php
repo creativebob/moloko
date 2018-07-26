@@ -107,7 +107,6 @@ Route::post('/products/', 'ProductController@store')->middleware('auth');
 // Route::resource('/products', 'ProductController')->middleware('auth');
 // Добавление фото для продукции
 Route::get('/products/{id}/photos', 'ProductController@product_photos')->middleware('auth');
-// Запись фото
 Route::any('/product/add_photo', 'ProductController@add_photo')->middleware('auth');
 Route::post('/product/photos', 'ProductController@photos')->middleware('auth');
 
@@ -260,8 +259,8 @@ Route::any('/goods/create', 'GoodsController@create')->middleware('auth');
 // Основные методы
 Route::resource('/goods', 'GoodsController')->middleware('auth');
 
-Route::any('/cur_good/add_photo', 'GoodsController@add_photo')->middleware('auth');
-Route::post('/cur_good/photos', 'GoodsController@photos')->middleware('auth');
+Route::any('/goods/add_photo', 'GoodsController@add_photo')->middleware('auth');
+Route::post('/goods/photos', 'GoodsController@photos')->middleware('auth');
 
 // Архивация
 Route::post('/goods/archive/{id}', 'GoodsController@archive')->middleware('auth');
@@ -271,7 +270,6 @@ Route::post('/goods_sort', 'GoodsController@goods_sort')->middleware('auth');
 
 // Отображение страниц на сайте
 Route::post('/goods_display', 'GoodsController@ajax_display')->middleware('auth');
-
 
 // Проверка на существование товара
 Route::post('/sector_check', 'SectorController@sector_check')->middleware('auth');
