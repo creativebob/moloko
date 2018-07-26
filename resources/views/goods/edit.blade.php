@@ -141,9 +141,13 @@
 
                             @if ($cur_goods->template == 1)
 
+                           
+
                             @foreach ($cur_goods->goods_product->goods_category->metrics as $metric)
                             @include('goods.metrics.metric-input', $metric)
                             @endforeach
+
+                       
 
                             @else
 

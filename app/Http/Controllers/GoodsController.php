@@ -304,7 +304,8 @@ class GoodsController extends Controller
                 }]);
             }])
             ->withCount('metrics', 'compositions');
-        }, 'album.photos', 'company.manufacturers'])->moderatorLimit($answer_goods)->findOrFail($id);
+        }, 'album.photos', 'company.manufacturers', 'metrics_values'])
+        ->withCount(['metrics_values'])->moderatorLimit($answer_goods)->findOrFail($id);
 
         // $cur_goods = Goods::with(['goods_product.goods_category.metrics', 'goods_product.goods_category.compositions.goods_products',  'album.photos', 'company.manufacturers'])->moderatorLimit($answer_goods)->findOrFail($id);
         // dd($cur_goods);
@@ -440,8 +441,12 @@ class GoodsController extends Controller
         // // dd($goods_modes_list);
 
         // // dd($product->goods_group->goods_category->type);
-
-        // $metrics_values = $cur_goods->metrics_values->keyBy('id');
+        if ($cur_goods->metrics_values_count > 0) {
+           $metrics_values = $cur_goods->metrics_values->keyBy('id');
+        } else {
+            $metrics_values = null;
+        }
+        
         // $compositions_values = $cur_goods->compositions_values->keyBy('product_id');
         // // dd($metrics_values);
         // // dd($compositions_values->where('product_id', 4));
@@ -617,19 +622,23 @@ class GoodsController extends Controller
 
         if ($cur_goods) {
 
-            // if ($cur_goods->template == 1) {
+            if ($cur_goods->template == 1) {
 
-            //     if (isset($request->metrics)) {
-            //         $metrics_insert = [];
-            //         foreach ($request->metrics as $metric_id => $value) {
-            //             // dd($value['value']);
-            //             $metrics_insert[$metric_id]['entity'] = 'metrics';
-            //             $metrics_insert[$metric_id]['value'] = $value['value'];
-            //         }
+                if (isset($request->metrics)) {
+                    $metrics_insert = [];
+                    foreach ($request->metrics as $metric_id => $value) {
+                        // dd($value['value']);
+                        $metrics_insert[$metric_id]['entity'] = 'metrics';
+                        $metrics_insert[$metric_id]['value'] = $value['value'];
+                    }
 
-            //         // Пишем метрики
-            //         $cur_goods->metrics_values()->attach($metrics_insert);
-            //     }
+                    // dd($metrics_insert);
+
+                    $cur_goods->metrics_values()->detach();
+
+                    // Пишем метрики
+                    $cur_goods->metrics_values()->attach($metrics_insert);
+                }
 
             //     // dd($metrics_insert);
             //     if (isset($request->compositions)) {
@@ -643,7 +652,7 @@ class GoodsController extends Controller
             //         // Пишем состав
             //         $cur_goods->compositions_values()->attach($compositions_insert);
             //     }
-            // }
+            }
 
             // $result = [
             //     'error_status' => 0,
