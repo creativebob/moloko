@@ -168,8 +168,7 @@ class GoodsCategoryController extends Controller
 
         $goods_category->display = $request->display;
 
-        $goods_category->goods_mode_id = $request->goods_mode_id;
-
+    
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -181,6 +180,7 @@ class GoodsCategoryController extends Controller
         // Смотрим что пришло
         // Если категория
         if ($request->first_item == 1) {
+            $goods_category->goods_mode_id = $request->goods_mode_id;
             $goods_category->category_status = 1; 
         }
 
