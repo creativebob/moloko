@@ -1,4 +1,4 @@
-@extends('layouts.app')
+F@extends('layouts.app')
 
 @section('inhead')
 @include('includes.scripts.dropzone-inhead')

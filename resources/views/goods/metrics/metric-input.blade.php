@@ -2,10 +2,12 @@
 $metrics_value = null;
 @endphp
 
-@if(isset($metrics_values[$metric->id]->pivot->value))
-@php
-$metrics_value = $metrics_values[$metric->id]->pivot->value;
-@endphp
+@if(isset($metrics_values[$metric->id]))
+	@php
+		if (count($metrics_values[$metric->id]) == 1) {
+			$metrics_value = $metrics_values[$metric->id][0];
+		}
+	@endphp
 @endif
 
 @switch($metric->property->type)
@@ -13,14 +15,14 @@ $metrics_value = $metrics_values[$metric->id]->pivot->value;
 @case('numeric')
 <label>
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
-	{{ Form::number('metrics['.$metric->id.'][value]', $metrics_value) }}
+	{{ Form::number('metrics['.$metric->id.'][]', $metrics_value) }}
 </label>
 @break
 
 @case('percent')
 <label>
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
-	{{ Form::number('metrics['.$metric->id.'][value]', $metrics_value) }}
+	{{ Form::number('metrics['.$metric->id.'][]', $metrics_value) }}
 </label>
 @break
 
@@ -33,9 +35,19 @@ $metrics_value = $metrics_values[$metric->id]->pivot->value;
 		<ul>
 
 			@foreach ($metric->values as $value)
+			@php
+			$checked = '';
+			@endphp
+			@if (isset($metrics_values[$metric->id]))
+			@if (in_array($value->value, $metrics_values[$metric->id]))
+			@php
+			$checked = 'checked';
+			@endphp
+			@endif
+			@endif
 			<li class="checkbox">
-				{{ Form::checkbox('metrics-'.$metric->id.'[]', $value->value, null, ['id' => 'add-metric-value-'. $value->id]) }}
-				<label for="add-metric-value-{{ $value->id }}"><span>{{ $value->value }}</span></label>
+				{{ Form::checkbox('metrics['.$metric->id.'][]', $value->value, null, ['id' => 'add-metric-value-'. $value->id, $checked]) }}
+				<label for="add-metric-value-{{ $value->id }}"><span>{{ $value->value }} {{ $checked }}</span></label>
 			</li>
 			@endforeach
 
@@ -53,12 +65,10 @@ $metrics_value = $metrics_values[$metric->id]->pivot->value;
 			$selected = null;
 			@endphp
 
-			@if(isset($metrics_values[$metric->id]->pivot->value))
-			@if($metrics_values[$metric->id]->pivot->value == $value->value)
+			@if($metrics_value == $value->value)
 			@php
 			$selected = 'selected';
 			@endphp
-			@endif
 			@endif
 			<option value="{{ $value->value }}" {{ $selected }}>{{ $value->value }}</option>
 			@endforeach

@@ -255,7 +255,7 @@ Route::any('/ajax_goods_count', 'GoodsProductController@ajax_count')->middleware
 Route::any('/ajax_goods_modes', 'GoodsProductController@ajax_modes')->middleware('auth');
 
 // ---------------------------------- Товары (Артикулы) -------------------------------------------
-Route::any('/goods/create', 'GoodsController@create')->middleware('auth');
+// Route::any('/goods/create', 'GoodsController@create')->middleware('auth');
 // Основные методы
 Route::resource('/goods', 'GoodsController')->middleware('auth');
 

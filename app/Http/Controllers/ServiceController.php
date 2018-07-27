@@ -274,26 +274,26 @@ class ServiceController extends Controller
             if ($request->quickly == 1) {
                 return redirect('/admin/services');
             } else {
-             return redirect('/admin/services/'.$service->id.'/edit'); 
-         }
+                return redirect('/admin/services/'.$service->id.'/edit'); 
+            }
 
 
 
-     } else {
-        abort(403, 'Ошибка записи артикула услуги');
-    }  
-}
+        } else {
+            abort(403, 'Ошибка записи артикула услуги');
+        }  
+    }
 
-public function show($id)
-{
+    public function show($id)
+    {
         //
-}
+    }
 
-public function edit(Request $request, $id)
-{
+    public function edit(Request $request, $id)
+    {
 
         // ГЛАВНЫЙ ЗАПРОС:
-    $answer_services = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_services = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // $service = Service::with(['services_product.services_category' => function ($query) {
         //     $query->with(['metrics.property', 'metrics.property', 'compositions' => function ($query) {
@@ -304,26 +304,26 @@ public function edit(Request $request, $id)
         //     ->withCount('metrics', 'compositions');
         // }, 'album.photos', 'company.manufacturers', 'metrics_values', 'compositions_values'])->withCount(['metrics_values', 'compositions_values'])->moderatorLimit($answer_services)->findOrFail($id);
 
-    $service = Service::with(['services_product.services_category', 'album.photos', 'company.manufacturers'])->moderatorLimit($answer_services)->findOrFail($id);
+        $service = Service::with(['services_product.services_category', 'album.photos', 'company.manufacturers'])->moderatorLimit($answer_services)->findOrFail($id);
         // dd($service->album->photos);
 
         // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), $service);
+        $this->authorize(getmethod(__FUNCTION__), $service);
 
-    $manufacturers_list = $service->company->manufacturers->pluck('name', 'id');
+        $manufacturers_list = $service->company->manufacturers->pluck('name', 'id');
         // dd($manufacturers_list);
 
         // Получаем данные для авторизованного пользователя
-    $user = $request->user();
+        $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer_services_categories = operator_right('services_categories', false, 'index');
+        $answer_services_categories = operator_right('services_categories', false, 'index');
         // dd($answer_services_categories);
 
         // Категории
-    $services_categories = ServicesCategory::moderatorLimit($answer_services_categories)
-    ->companiesLimit($answer_services_categories)
-    ->authors($answer_services_categories)
+        $services_categories = ServicesCategory::moderatorLimit($answer_services_categories)
+        ->companiesLimit($answer_services_categories)
+        ->authors($answer_services_categories)
         ->systemItem($answer_services_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
         ->get(['id','name','category_status','parent_id'])
