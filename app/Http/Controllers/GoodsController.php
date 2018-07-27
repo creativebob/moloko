@@ -470,7 +470,9 @@ class GoodsController extends Controller
     {
 
         // dd($request);
-        // $metrics_count = count($request->metrics);
+        $metrics_count = count($request->metrics);
+
+        dd($metrics_count);
         // $compositions_count = count($request->compositions);
 
         // Если снят флаг черновика

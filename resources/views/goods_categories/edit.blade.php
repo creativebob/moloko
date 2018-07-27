@@ -231,7 +231,7 @@
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
-@include('products.scripts')
+@include('goods_categories.scripts')
 @php
 $settings = config()->get('settings');
 @endphp
@@ -441,7 +441,7 @@ $settings = config()->get('settings');
       },
       url: '/admin/ajax_add_metric_value',
       type: 'POST',
-      data: {value: $('#properties-form input[name=value]').val()},
+      data: {value: $('#properties-form input[name=value]').val(), entity: 'goods_categories'},
       success: function(html){
         // alert(html);
         $('#values-table').append(html);
