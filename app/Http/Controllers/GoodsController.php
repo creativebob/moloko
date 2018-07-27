@@ -158,7 +158,7 @@ class GoodsController extends Controller
 
     public function store(Request $request)
     {
-
+        // dd($request);
 
         $goods_category_id = $request->goods_category_id;
 
@@ -216,7 +216,7 @@ class GoodsController extends Controller
                 // Наполняем сущность данными
                 $goods_product = new GoodsProduct;
 
-                $goods_product->name = $service_product_name;
+                $goods_product->name = $request->goods_product_name;
                 $goods_product->unit_id = 26;
 
                 $goods_product->goods_category_id = $goods_category_id;

@@ -17,11 +17,6 @@ $count = 0;
 $count = count($goods_category['children']) + $count;
 @endphp
 @endif
-@if (isset($goods_category['goods_products']))
-@php
-$count = count($goods_category['goods_products']) + $count;
-@endphp
-@endif
 
 
 
@@ -59,7 +54,7 @@ $count = count($goods_category['goods_products']) + $count;
             @endif
         </div>
         <div class="del">
-            @if (empty($goods_category['children']) && empty($goods_category['goods']) && ($goods_category['system_item'] != 1) && $goods_category['delete'] == 1)
+            @if (empty($goods_category['children']) && empty($goods_category['goods_products']) && ($goods_category['system_item'] != 1) && $goods_category['delete'] == 1)
             <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
             @endif
         </div>
@@ -73,15 +68,7 @@ $count = count($goods_category['goods_products']) + $count;
     </div>
     <ul class="menu vertical medium-list" data-accordion-menu data-multi-open="false">
 
-
-
-        @if ((isset($goods_category['children'])) || ($goods_category['goods_products_count'] > 0))
-
-        @if ($goods_category['goods_products_count'] > 0)
-        @foreach($goods_category['goods_products'] as $product)
-        @include('goods_categories.goods-products-list', $product)
-        @endforeach
-        @endif
+        @if (isset($goods_category['children']))
 
         @if (isset($goods_category['children']))
         @foreach($goods_category['children'] as $goods_category)
