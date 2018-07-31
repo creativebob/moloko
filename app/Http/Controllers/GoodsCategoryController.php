@@ -421,12 +421,12 @@ class GoodsCategoryController extends Controller
             // Директория
             $directory = $company_id.'/media/goods_categories/'.$goods_category->id.'/img/';
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), имя сущности, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             if ($goods_category->photo_id) {
-                $array = save_photo($request, $user_id, $company_id, $directory, 'avatar-'.time(), null, $goods_category->photo_id);
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, $goods_category->photo_id, $this->entity_name);
 
             } else {
-                $array = save_photo($request, $user_id, $company_id, $directory, 'avatar-'.time());
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $this->entity_name);
                 
             }
             $photo = $array['photo'];
@@ -627,12 +627,12 @@ class GoodsCategoryController extends Controller
             // Директория
             $directory = $company_id.'/media/goods_categories/'.$goods_category->id.'/img/';
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), имя сущности, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             if ($goods_category->photo_id) {
-                $array = save_photo($request, $user_id, $company_id, $directory, 'avatar-'.time(), null, $goods_category->photo_id);
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, $goods_category->photo_id, $this->entity_name);
 
             } else {
-                $array = save_photo($request, $user_id, $company_id, $directory, 'avatar-'.time());
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $this->entity_name);
                 
             }
             $photo = $array['photo'];

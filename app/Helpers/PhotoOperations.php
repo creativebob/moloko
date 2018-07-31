@@ -6,7 +6,13 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 
    // Сохраняем фотографию
-function save_photo($request, $user_id, $company_id, $directory, $name, $album_id = null, $id = null){
+function save_photo($request, $directory, $name, $album_id = null, $id = null, $settings){
+
+    $user = $request->user();
+
+    // Скрываем бога
+    $user_id = hideGod($user);
+    $company_id = $user->company_id;
 
     if ($id) {
         $photo = Photo::findOrFail($id);
@@ -45,55 +51,6 @@ function save_photo($request, $user_id, $company_id, $directory, $name, $album_i
     // Сохранияем оригинал
     $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
 
-    // Вытаскиваем настройки сохранения фото
-    $settings = config()->get('settings');
-
-    // Смотрим, есть ли настройки на конкретный альбом
-    $get_settings = EntitySetting::where(['entity_id' => $album_id, 'entity' => 'albums'])->first();
-
-    if($get_settings){
-
-        if ($get_settings->img_small_width != null) {
-            $settings['img_small_width'] = $get_settings->img_small_width;
-        }
-
-        if ($get_settings->img_small_height != null) {
-            $settings['img_small_height'] = $get_settings->img_small_height;
-        }
-
-        if ($get_settings->img_medium_width != null) {
-            $settings['img_medium_width'] = $get_settings->img_medium_width;
-        }
-
-        if ($get_settings->img_medium_height != null) {
-            $settings['img_medium_height'] = $get_settings->img_medium_height;
-        }
-
-        if ($get_settings->img_large_width != null) {
-            $settings['img_large_width'] = $get_settings->img_large_width;
-        }
-
-        if ($get_settings->img_large_height != null) {
-            $settings['img_large_height'] = $get_settings->img_large_height;  
-        }
-
-        if ($get_settings->img_formats != null) {
-            $settings['img_formats'] = $get_settings->img_formats;
-        }
-
-        if ($get_settings->img_min_width != null) {
-            $settings['img_min_width'] = $get_settings->img_min_width;
-        }
-
-        if ($get_settings->img_min_height != null) {
-            $settings['img_min_height'] = $get_settings->img_min_height;   
-        }
-
-        if ($get_settings->img_max_size != null) {
-            $settings['img_max_size'] = $get_settings->img_max_size;
-
-        }
-    }
     // Сохраняем small, medium и large
     // $small = Image::make($request->photo)->grab(150, 99);
     $small = Image::make($request->photo)->widen($settings['img_small_width']);

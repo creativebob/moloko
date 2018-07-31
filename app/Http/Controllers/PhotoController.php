@@ -176,8 +176,8 @@ class PhotoController extends Controller
       $directory = $user->company_id.'/media/albums/'.$album->id.'/img/';
       $name = $album->alias.'-'.time();
 
-      // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-      $array = save_photo($request, $user_id, $company_id, $directory, $name, $album->id);
+      // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), имя сущности, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
+      $array = save_photo($request, $directory, $name, $album->id, null, $this->entity_name);
 
       $photo = $array['photo'];
 

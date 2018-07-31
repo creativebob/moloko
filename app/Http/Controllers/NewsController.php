@@ -217,11 +217,64 @@ class NewsController extends Controller
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
 
+
+            // Вытаскиваем настройки
+            // Вытаскиваем базовые настройки сохранения фото
+            $settings = config()->get('settings');
+
+            // Начинаем проверку настроек, от компании до альбома
+            // Смотрим общие настройки для сущности
+            $get_settings = EntitySetting::where(['entity' => 'news'])->first();
+
+            if ($get_settings) {
+
+                if ($get_settings->img_small_width != null) {
+                    $settings['img_small_width'] = $get_settings->img_small_width;
+                }
+
+                if ($get_settings->img_small_height != null) {
+                    $settings['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings['img_max_size'] = $get_settings->img_max_size;
+
+                }
+            }
+
             // Директория
             $directory = $company_id.'/media/news/'.$cur_news->id.'/img/';
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
-            $array = save_photo($request, $user_id, $company_id, $directory, 'preview-'.time());
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            $array = save_photo($request, $directory, 'preview-'.time(), null, null, $settings);
             $photo = $array['photo'];
 
             $cur_news->photo_id = $photo->id;
@@ -352,15 +405,69 @@ class NewsController extends Controller
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
 
+            // Вытаскиваем настройки
+            // Вытаскиваем базовые настройки сохранения фото
+            $settings = config()->get('settings');
+
+            // Начинаем проверку настроек, от компании до альбома
+            // Смотрим общие настройки для сущности
+            $get_settings = EntitySetting::where(['entity' => 'news'])->first();
+
+            if ($get_settings) {
+
+                if ($get_settings->img_small_width != null) {
+                    $settings['img_small_width'] = $get_settings->img_small_width;
+                }
+
+                if ($get_settings->img_small_height != null) {
+                    $settings['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings['img_max_size'] = $get_settings->img_max_size;
+
+                }
+            }
+
+
+
             // Директория
             $directory = $company_id.'/media/news/'.$cur_news->id.'/img/';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($cur_news->photo_id) {
-                $array = save_photo($request, $user_id, $company_id, $directory, 'preview-'.time(), null, $cur_news->photo_id);
+                $array = save_photo($request, $directory, 'preview-'.time(), null, $cur_news->photo_id, $settings);
 
             } else {
-                $array = save_photo($request, $user_id, $company_id, $directory, 'preview-'.time());
+                $array = save_photo($request, $directory, 'preview-'.time(), null, null, $settings);
                 
             }
             $photo = $array['photo'];

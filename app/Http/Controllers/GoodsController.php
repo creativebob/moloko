@@ -12,6 +12,7 @@ use App\Album;
 use App\AlbumEntity;
 use App\Photo;
 use App\UnitsCategory;
+use App\EntitySetting;
 
 use App\ArticleValue;
 
@@ -476,6 +477,7 @@ class GoodsController extends Controller
         // dd($request);
         $metrics_count = count($request->metrics);
         // dd($metrics_count);
+        
         // $compositions_count = count($request->compositions);
 
         // Если снят флаг черновика
@@ -499,7 +501,7 @@ class GoodsController extends Controller
             $coincidence = [];
 
             // dd($request);
-           
+
 
             // Сравниваем метрики
             $metrics_array = [];
@@ -590,15 +592,68 @@ class GoodsController extends Controller
 
         if ($request->hasFile('photo')) {
 
+            // Вытаскиваем настройки
+            // Вытаскиваем базовые настройки сохранения фото
+            $settings = config()->get('settings');
+
+            // Начинаем проверку настроек, от компании до альбома
+            // Смотрим общие настройки для сущности
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+
+            if($get_settings){
+
+                if ($get_settings->img_small_width != null) {
+                    $settings['img_small_width'] = $get_settings->img_small_width;
+                }
+
+                if ($get_settings->img_small_height != null) {
+                    $settings['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings['img_max_size'] = $get_settings->img_max_size;
+
+                }
+            }
+            
+            
+
             $directory = $company_id.'/media/goods/'.$cur_goods->id.'/img/';
-            $name = 'avatar-'.time();
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($cur_goods->photo_id) {
-                $array = save_photo($request, $user_id, $company_id, $directory, $name, null, $cur_goods->photo_id);
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, $cur_goods->photo_id, $settings);
 
             } else {
-                $array = save_photo($request, $user_id, $company_id, $directory, $name);
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
 
             }
             $photo = $array['photo'];
@@ -640,36 +695,7 @@ class GoodsController extends Controller
 
             if ($cur_goods->draft == 1) {
 
-                // dd($request->metrics);
-                if (isset($request->metrics)) {
 
-                    $cur_goods->metrics_values()->detach();
-
-                    $metrics_insert = [];
-
-                    foreach ($request->metrics as $metric_id => $values) {
-                        foreach ($values as $value) {
-                            // dd($value);
-                            $cur_goods->metrics_values()->attach([
-                                $metric_id => [
-                                    'entity' => 'metrics',
-                                    'value' => $value
-                                ],
-                            ]);
-                            // $metrics_insert[$metric_id]['entity'] = 'metrics';
-                            // $metrics_insert[$metric_id]['value'] = $value; 
-                        }
-                    }
-
-                    
-
-                    // dd($metrics_insert);
-
-                    
-
-                    // Пишем метрики
-                    // $cur_goods->metrics_values()->attach($metrics_insert);
-                }
 
             //     // dd($metrics_insert);
             //     if (isset($request->compositions)) {
@@ -683,6 +709,32 @@ class GoodsController extends Controller
             //         // Пишем состав
             //         $cur_goods->compositions_values()->attach($compositions_insert);
             //     }
+            }
+
+            // dd($request->metrics);
+            if (isset($request->metrics)) {
+
+                $cur_goods->metrics_values()->detach();
+
+                $metrics_insert = [];
+
+                foreach ($request->metrics as $metric_id => $values) {
+                    foreach ($values as $value) {
+                            // dd($value);
+                        $cur_goods->metrics_values()->attach([
+                            $metric_id => [
+                                'entity' => 'metrics',
+                                'value' => $value,
+                            ],
+                        ]);
+                            // $metrics_insert[$metric_id]['entity'] = 'metrics';
+                            // $metrics_insert[$metric_id]['value'] = $value; 
+                    }
+                }
+                    // dd($metrics_insert);
+
+                    // Пишем метрики
+                    // $cur_goods->metrics_values()->attach($metrics_insert);
             }
 
             // $result = [
@@ -755,7 +807,7 @@ class GoodsController extends Controller
         $product = Product::with('metrics.property', 'compositions.unit')->withCount('metrics', 'compositions')->findOrFail($request->product_id);
         return view('products.cur_goods-form', compact('product'));
 
-         // $product = Product::with('metrics.property', 'compositions.unit')->findOrFail(1);
+        // $product = Product::with('metrics.property', 'compositions.unit')->findOrFail(1);
         // dd($product);
 
     }
@@ -810,8 +862,62 @@ class GoodsController extends Controller
                 }
             }
 
+            // Вытаскиваем настройки
+            // Вытаскиваем базовые настройки сохранения фото
+            $settings = config()->get('settings');
+
+            // Начинаем проверку настроек, от компании до альбома
+            // Смотрим общие настройки для сущности
+            $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id'=> 1])->first();
+
+            if ($get_settings) {
+
+                if ($get_settings->img_small_width != null) {
+                    $settings['img_small_width'] = $get_settings->img_small_width;
+                }
+
+                if ($get_settings->img_small_height != null) {
+                    $settings['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings['img_max_size'] = $get_settings->img_max_size;
+
+                }
+            }
+
             $directory = $company_id.'/media/albums/'.$album_id.'/img/';
-            $array = save_photo($request, $user_id, $company_id, $directory,  $alias.'-'.time(), $album_id);
+
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            $array = save_photo($request, $directory,  $alias.'-'.time(), $album_id, null, $settings);
 
             $photo = $array['photo'];
             $upload_success = $array['upload_success'];
