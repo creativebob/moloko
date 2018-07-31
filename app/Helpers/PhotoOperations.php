@@ -8,11 +8,40 @@ use Intervention\Image\ImageManagerStatic as Image;
    // Сохраняем фотографию
 function save_photo($request, $directory, $name, $album_id = null, $id = null, $settings){
 
+    // dd($settings['img_max_size'] * 1024);
+
     $user = $request->user();
 
     // Скрываем бога
     $user_id = hideGod($user);
     $company_id = $user->company_id;
+
+    $image = $request->file('photo');
+
+    $extension = $image->getClientOriginalExtension();
+
+    $params = getimagesize($request->file('photo'));
+
+    $width = $params[0];
+    $height = $params[1];
+
+    $size = filesize($request->file('photo'))/1024;
+
+    // dd($size);
+
+    if ($width < $settings['img_min_width']) {
+        abort(403, 'Ширина фоторафии мала!');
+    }
+
+    if ($height < $settings['img_min_height']) {
+        abort(403, 'Высота фоторафии мала!');
+    }
+
+    if ($size > ($settings['img_max_size'] * 1024)) {
+        abort(403, 'Размер фоторафии высок!');
+    }
+
+    // dd($width);
 
     if ($id) {
         $photo = Photo::findOrFail($id);
@@ -24,20 +53,20 @@ function save_photo($request, $directory, $name, $album_id = null, $id = null, $
             $original = Storage::disk('public')->delete($directory.'original/'.$photo->name);
         }
     } else {
-        $photo = new Photo; 
+        $photo = new Photo;
     }
     
-    $image = $request->file('photo');
+   
 
-    $extension = $image->getClientOriginalExtension();
+    
     $photo->extension = $extension;
     $image_name = $name.'.'.$extension;
 
-    $params = getimagesize($request->file('photo'));
+    
     $photo->width = $params[0];
     $photo->height = $params[1];
 
-    $size = filesize($request->file('photo'))/1024;
+    
     $photo->size = number_format($size, 2, '.', '');
 
     $photo->album_id = $album_id;
