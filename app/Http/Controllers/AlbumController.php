@@ -279,6 +279,7 @@ class AlbumController extends Controller
 
     public function edit(Request $request, $alias)
     {
+
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
         
@@ -286,7 +287,6 @@ class AlbumController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $album = Album::with('album_settings')->moderatorLimit($answer)->where('company_id', $user->company_id)->whereAlias($alias)->first();
-
         // dd($album);
 
         // Подключение политики
@@ -310,17 +310,15 @@ class AlbumController extends Controller
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         $albums_categories_list = get_select_tree($albums_categories, $album->albums_category_id, null, null);
 
-
         // Работаем с сущностью albums_settigs настройка альбомов
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_album_settings = operator_right('album_settings', false, 'index');
-
 
         $album_settings = EntitySetting::moderatorLimit($answer_album_settings)->where(['entity_id' => $album->id, 'entity' => 'albums'])->first();
 
         // if(!isset($album_settings->id)){
         //     $album_settings = new EntitySetting;
-        // };
+        // }
 
         // Подключение политики
         // $this->authorize(getmethod('index'), $album_settings);
@@ -330,7 +328,6 @@ class AlbumController extends Controller
 
         return view('albums.edit', compact('album', 'page_info', 'albums_categories_list', 'album_settings'));
     }
-
 
     public function update(AlbumRequest $request, $id)
     {
