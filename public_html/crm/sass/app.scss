@@ -14,216 +14,211 @@
  // ------------------------------ Медиа ширины -------------------------------
  $small: 640px;
  $medium: 1024px;
- // $fence-sm: $small $medium;
+// $fence-sm: $small $medium;
 
- // ----------------------- Подключаем шрифты ----------------------------------------
+// ----------------------- Подключаем шрифты ----------------------------------------
 
- // PFDinDisplayPro
- @include font-face("PFDinDisplayPro-Light", font-files(
+// PFDinDisplayPro
+@include font-face("PFDinDisplayPro-Light", font-files(
   "/crm/css/fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf"
   ) 
- );
- @include font-face("PFDinDisplayPro-Med", font-files(
+);
+@include font-face("PFDinDisplayPro-Med", font-files(
   "/crm/css/fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf"
   ) 
- );
- @include font-face("PFDinDisplayPro-Reg", font-files(
+);
+@include font-face("PFDinDisplayPro-Reg", font-files(
   "/crm/css/fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf"
   ) 
- );
- @include font-face("PFDinDisplayPro-Thin", font-files(
+);
+@include font-face("PFDinDisplayPro-Thin", font-files(
   "/crm/css/fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf"
   ) 
- );
+);
 
- $PFDDPL: "PFDinDisplayPro-Light";
- $PFDDPM: "PFDinDisplayPro-Med";
- $PFDDPR: "PFDinDisplayPro-Reg";
- $PFDDPT: "PFDinDisplayPro-Thin";
+$PFDDPL: "PFDinDisplayPro-Light";
+$PFDDPM: "PFDinDisplayPro-Med";
+$PFDDPR: "PFDinDisplayPro-Reg";
+$PFDDPT: "PFDinDisplayPro-Thin";
 
- // PFDinTextPro
- @include font-face("PFDinTextPro-Regular", font-files(
+// PFDinTextPro
+@include font-face("PFDinTextPro-Regular", font-files(
   "/crm/css/fonts/DinTextPro/PFDinTextPro-Regular.ttf"
   ) 
- );
+);
 
- $PFDTPR: "PFDinTextPro-Regular";
+$PFDTPR: "PFDinTextPro-Regular";
 
- // DinTextCondensedPro
- @include font-face("PFDinTextCondPro-Regular", font-files(
+// DinTextCondensedPro
+@include font-face("PFDinTextCondPro-Regular", font-files(
   "/crm/css/fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf"
   ) 
- );
+);
 
- $PFDTCPR: "PFDinTextCondPro-Regular";
+$PFDTCPR: "PFDinTextCondPro-Regular";
 
- // SegoeUI
- @include font-face("SegoeUIBold", font-files(
+// SegoeUI
+@include font-face("SegoeUIBold", font-files(
   "/crm/css/fonts/SegoeUI/SegoeUIBold/SegoeUIBold.woff", 
   "/crm/css/fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf"
   ), 
- "/crm/css/fonts/SegoeUI/SegoeUIBold//SegoeUIBold.eot" /* относительный путь к .eot файлу для IE */
- );
- @include font-face("SegoeUIItalic", font-files(
+  "/crm/css/fonts/SegoeUI/SegoeUIBold//SegoeUIBold.eot" /* относительный путь к .eot файлу для IE */
+  );
+@include font-face("SegoeUIItalic", font-files(
   "/crm/css/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.woff", 
   "/crm/css/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf"
   ), 
- "/crm/css/fonts/SegoeUI/SegoeUIItalic//SegoeUIItalic.eot" /* относительный путь к .eot файлу для IE */
- );
- @include font-face("SegoeUILight", font-files(
+  "/crm/css/fonts/SegoeUI/SegoeUIItalic//SegoeUIItalic.eot" /* относительный путь к .eot файлу для IE */
+  );
+@include font-face("SegoeUILight", font-files(
   "/crm/css/fonts/SegoeUI/SegoeUILight/SegoeUILight.woff", 
   "/crm/css/fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf"
   ), 
- "/crm/css/fonts/SegoeUI/SegoeUILight//SegoeUILight.eot" /* относительный путь к .eot файлу для IE */
- );
- @include font-face("SegoeUISemiLight", font-files(
+  "/crm/css/fonts/SegoeUI/SegoeUILight//SegoeUILight.eot" /* относительный путь к .eot файлу для IE */
+  );
+@include font-face("SegoeUISemiLight", font-files(
   "/crm/css/fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf"
   )
- );
- @include font-face("SegoeUIRegular", font-files(
+);
+@include font-face("SegoeUIRegular", font-files(
   "/crm/css/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.woff", 
   "/crm/css/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf"
   ), 
- "/crm/css/fonts/SegoeUI/SegoeUIRegular//SegoeUIRegular.eot" /* относительный путь к .eot файлу для IE */
- );
- @include font-face("SegoeUISemiBold", font-files(
+  "/crm/css/fonts/SegoeUI/SegoeUIRegular//SegoeUIRegular.eot" /* относительный путь к .eot файлу для IE */
+  );
+@include font-face("SegoeUISemiBold", font-files(
   "/crm/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff", 
   "/crm/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf"
   ), 
- "/crm/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot" /* относительный путь к .eot файлу для IE */
- );
+  "/crm/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot" /* относительный путь к .eot файлу для IE */
+  );
 
- $SUIB: "SegoeUIBold";
- $SUII: "SegoeUIItalic";
- $SUIL: "SegoeUILight";
- $SUISL: "SegoeUISemiLight";
- $SUIR: "SegoeUIRegular";
- $SUISB: "SegoeUISemiBold";
+$SUIB: "SegoeUIBold";
+$SUII: "SegoeUIItalic";
+$SUIL: "SegoeUILight";
+$SUISL: "SegoeUISemiLight";
+$SUIR: "SegoeUIRegular";
+$SUISB: "SegoeUISemiBold";
 
- $calibri: "calibri";
+$calibri: "calibri";
 
- // ----------------------------------- Переменные --------------------------------------
+// ----------------------------------- Переменные --------------------------------------
 
- // Цвета
- $mars-red: #ff0000;
- $white: #ffffff;
- $black: #000000;
- $body-bg-color: #eeeeee;
- $crm-blue: #1779ba;
+// Цвета
+$mars-red: #ff0000;
+$white: #ffffff;
+$black: #000000;
+$body-bg-color: #eeeeee;
+$crm-blue: #1779ba;
 
- // Страница входа
- $index-input-border-color: #c2c2c2;
- $index-forgot-color: #1880b1;
+// Страница входа
+$index-input-border-color: #c2c2c2;
+$index-forgot-color: #1880b1;
 
- // Header
- $header-border: #dcdcdc;
+// Header
+$header-border: #dcdcdc;
 
- // Меню профиля/выхода
- $header-profile-bg-color: #ffffff;
- $header-profile-color: #444444;
- $header-profile-hover-bg-color: #eee;
- $header-profile-border-color: #d0d0d0;
+// Меню профиля/выхода
+$header-profile-bg-color: #ffffff;
+$header-profile-color: #444444;
+$header-profile-hover-bg-color: #eee;
+$header-profile-border-color: #d0d0d0;
 
- // Сайдбар
- $sidebar-bg-color: #333333; // Основной бекграунд элементов
- $sidebar-font-color: #bdbdbd;
- $sidebar-hover-color: #ffffff;
- $sidebar-active-color: #ff5454;
- $sidebar-bot-menu-bg-color: #242424;
- $sidebar-li-border-top: #2b2b2b;
- $sidebar-li-border-bot: #3f3f3f;
+// Сайдбар
+$sidebar-bg-color: #333333; // Основной бекграунд элементов
+$sidebar-font-color: #bdbdbd;
+$sidebar-hover-color: #ffffff;
+$sidebar-active-color: #ff5454;
+$sidebar-bot-menu-bg-color: #242424;
+$sidebar-li-border-top: #2b2b2b;
+$sidebar-li-border-bot: #3f3f3f;
 
- // Менеджер задач
- $task-manager-tabs-bg-color: #333333;
- $task-manager-tabs-color: #9c9c9c;
- $task-manager-tabs-active-bg-color: #4a4a4a;
- $task-manager-tabs-active-color: #ffffff;
- $task-manager-tabs-content-color: #cccccc;
- $task-manager-tabs-date-color: #b5daff;
- $task-manager-tabs-hr-color: #4a4a4a;
- $task-manager-tabs-set-color: #888888;
- $task-manager_tabs-name-lead-color: #74b1f5;
- $task-manager-tabs-button-bg-color: #ae4747;
+// Менеджер задач
+$task-manager-tabs-bg-color: #333333;
+$task-manager-tabs-color: #9c9c9c;
+$task-manager-tabs-active-bg-color: #4a4a4a;
+$task-manager-tabs-active-color: #ffffff;
+$task-manager-tabs-content-color: #cccccc;
+$task-manager-tabs-date-color: #b5daff;
+$task-manager-tabs-hr-color: #4a4a4a;
+$task-manager-tabs-set-color: #888888;
+$task-manager_tabs-name-lead-color: #74b1f5;
+$task-manager-tabs-button-bg-color: #ae4747;
 
- // Хлебные крошки
- $breadcrumbs-bg-color: #ffffff;
- $breadcrumbs-color: #888888;
- $breadcrumbs-a-color: #5190ff;
- $breadcrumbs-border-color: #dcdcdc;
+// Хлебные крошки
+$breadcrumbs-bg-color: #ffffff;
+$breadcrumbs-color: #888888;
+$breadcrumbs-a-color: #5190ff;
+$breadcrumbs-border-color: #dcdcdc;
 
- // Контент
- $content-bg-color: #eeeeee;
+// Контент
+$content-bg-color: #eeeeee;
 
- // Инпуты
- $input-color: #000000;
- $label-color: #666666;
+// Инпуты
+$input-color: #000000;
+$label-color: #666666;
 
- $input-border-color: #bbbbbb;
- $input-focus-border-color: #333333;
+$input-border-color: #bbbbbb;
+$input-focus-border-color: #333333;
 
- // Список (accordion menu)
- $list-item-bg-color: #494949;
- $list-item-color: #ffffff;
- $list-item-li-bg-color: #ffffff;
- $list-item-li-color: #000000;
- $list-item-nested-border-bottom-color: #dddddd;
- $list-item-active-bg-color: #ae4747;
+  // Список (accordion menu)
+  $list-item-bg-color: #494949;
+  $list-item-color: #ffffff;
+  $list-item-li-bg-color: #ffffff;
+  $list-item-li-color: #000000;
+  $list-item-nested-border-bottom-color: #dddddd;
+  $list-item-active-bg-color: #ae4747;
 
 
- // Tabs (Несколько вкладок)
- $tabs-active-bg-color: #ac4747;
- $tabs-active-color: #ffffff;
- $tabs-fieldset-border-color: #d6d6d6;
+  // Tabs (Несколько вкладок)
+  $tabs-active-bg-color: #ac4747;
+  $tabs-active-color: #ffffff;
+  $tabs-fieldset-border-color: #d6d6d6;
 
- // Таблица в контенте
- $table-bg-color: #f6f6f6;
- $table-td-border: #eeeeee;
- $table-deleted-color: #646464;
- $table-active-border-color-blue: #5190ff;
- $table-no-moderation: #ffcccc;
+  // Таблица в контенте
+  $table-bg-color: #f6f6f6;
+  $table-td-border: #eeeeee;
+  $table-deleted-color: #646464;
+  $table-active-border-color-blue: #5190ff;
+  $table-no-moderation: #ffcccc;
 
- // Таблица поиска
- $table-search-td-border-color: #dadada;
- $table-search-td-color: #5190ff;
+  // Таблица поиска
+  $table-search-td-border-color: #dadada;
+  $table-search-td-color: #5190ff;
 
- // Footer  
- $footer-color: #bdbdbd;
- $footer-num-color: #ffffff;
+// Footer  
+$footer-color: #bdbdbd;
+$footer-num-color: #ffffff;
 
- // Меняем умолчания фонды
- // Выпадающий список
- $dropdown-width: 14rem;
+// Меняем умолчания фонды
+// Выпадающий список
+$dropdown-width: 14rem;
 
- .relative{
+.relative{
   position: relative;
 }
 
 .up-input-button {
-
+  font-size: 0.8rem;
   display: block;
   position: absolute;
   right: 0px;
-  top: -4px;
+  color: #999;
   width: auto;
   z-index: 9000;
-
-  a, span {
-    font-size: 0.8rem;
-    color: #999;
-  }
 }
 
 
 // Базовые корректировки
 fieldset {
-  border: 1px solid  $tabs-fieldset-border-color;
-  padding: 1rem 2rem 2rem;
-  margin-bottom: 1rem;
+    border: 1px solid  $tabs-fieldset-border-color;
+    padding: 1rem 2rem 2rem;
+    margin-bottom: 1rem;
 
-  legend {
-    font-family: $PFDDPM;
-    padding: 0 1rem;
-  }
+    legend {
+      font-family: $PFDDPM;
+      padding: 0 1rem;
+    }
 }
 
 .light-text{
@@ -301,7 +296,7 @@ fieldset {
 
 // СТИЛИЗАЦИЯ ПОИСКА
 #search-result-wrap{
-  display: none;
+  // display: none;
   position: absolute;
   background-color: #fff;
   // margin-top: 40px;
@@ -314,6 +309,15 @@ fieldset {
   }
 
   .search-result-list{
+
+    li{
+      border-bottom: 1px dotted #999;
+      padding: 0.5rem 0rem; 
+    }
+
+    li:last-child{
+      border-bottom: 0px dotted #999;
+    }
 
   }
 
@@ -483,2670 +487,2670 @@ input[type=checkbox], input[type=radio] {
 }
 // Убираем насильно отступы
 // .clean-pad-left {
-  //   padding-left: 0 !important;
-  // }
-  // .clean-pad-right {
-    //   padding-right: 0 !important;
-    // }
+//   padding-left: 0 !important;
+// }
+// .clean-pad-right {
+//   padding-right: 0 !important;
+// }
 
-    // .file_upload{
-      //   position: relative;
-      //   overflow: hidden;
-      //     font-size: 1em;        /* example */
-      //     height: 2em;           /* example */
-      //     line-height: 2em       /* the same as height */
-      //   }
+// .file_upload{
+//   position: relative;
+//   overflow: hidden;
+//     font-size: 1em;        /* example */
+//     height: 2em;           /* example */
+//     line-height: 2em       /* the same as height */
+//   }
 
-      //   .file_upload > a{
-        //     float: right;
-        //     width: 8em;            /* example */
-        //     height: 100%
-        // }
-        // .file_upload > mark{
-          //     padding-left: 1em      /* example */
-          // }
+//   .file_upload > a{
+//     float: right;
+//     width: 8em;            /* example */
+//     height: 100%
+// }
+// .file_upload > mark{
+//     padding-left: 1em      /* example */
+// }
 
-          // .file_upload input[type=file]{
-            //     position: absolute;
-            //     left: 0;
-            //     top: 0;
-            //     width: 100%;
-            //     height: 100%;
-            //     transform: scale(20);
-            //     letter-spacing: 10em;     /* IE 9 fix */
-            //     -ms-transform: scale(20); /* IE 9 fix */
-            //     opacity: 0;
-            //     cursor: pointer
-            // }
-
-
+// .file_upload input[type=file]{
+//     position: absolute;
+//     left: 0;
+//     top: 0;
+//     width: 100%;
+//     height: 100%;
+//     transform: scale(20);
+//     letter-spacing: 10em;     /* IE 9 fix */
+//     -ms-transform: scale(20); /* IE 9 fix */
+//     opacity: 0;
+//     cursor: pointer
+// }
 
 
-            // ------------------------------------------ Оформление суперменю --------------------------------------------
-
-            .mysupertab
-            {
-              position: absolute;
-              top: 7px;
-              float: left;
-              width: auto;
-              height: auto;
-              display: none;
-              z-index: 9000;
-            }
-
-            .cor20
-            {
-              top: 30px !important;
-            }
-
-            .wrap_supermenu
-            {
-              position: relative;
-              float: left;
-              width: 100%
-            }
-
-            .filter-submit
-            {
-              margin-top: 2rem;
-            }
-
-            .booklist .input-group
-            {
-              margin-bottom: 0rem;
-            }
-
-            .checkboxer-menu
-            {
-              width: 100%;
-              display: block;
-              top: 0px;
-              float: left;
-              border: none;
-              z-index: 1000;
-              margin-left: 0px;
-              padding-top: 1px;
-              box-sizing: border-box;
-              left: 0;
-              height: auto;
-            }
-
-            .checkboxer-menu li
-            {
-              line-height: 1.2;
-              float: left;
-              background: #fff;
-              border-top: 1px solid #eee;
-              border-bottom: 1px solid transparent;
-              list-style-type: none;
-              width: 100%;
-            }
-
-            .checkboxer-menu li label
-            {
-              width: 100%;
-            }
-
-            .checkboxer-menu>li:last-child
-            {
-              // border-bottom: 1px solid #ccc;
-            }
-
-            .checkboxer-menu>li:first-child
-            {
-              border-top: 1px solid transparent;
-            }
-
-            .checkboxer-menu>li:hover
-            {
-              background: #efefef;
-            }
-
-            .checkboxer-menu>li>a
-            {
-              float: left;
-              display: block;
-              width: 230px;
-              padding: 6px 0px 6px 20px;
-              color: #000;
-              text-decoration: none;
-              text-transform: uppercase;
-              margin: 0px 10px 0px 10px;
-              font-size: 0.8em;
-              height: 100%;
-              outline: none;
-            }
-
-            .checkboxer-menu>li.active
-            {
-              background-color: #eee;
-            }
-
-            .checkboxer-menu>li.active:hover
-            {
-              background-color: #e1e1e1;
-            }
-
-            .checkboxer-menu>li:hover>a
-            {
-              color: #000;
-
-            }
-
-            .checkboxer-menu li:first-child>a
-            {
-              border-top: 1px solid transparent;
-            }
 
 
-            // ------------------------------------------ Оформление суперменю--------------------------------------------
+// ------------------------------------------ Оформление суперменю --------------------------------------------
+
+.mysupertab
+{
+  position: absolute;
+  top: 7px;
+  float: left;
+  width: auto;
+  height: auto;
+  display: none;
+  z-index: 9000;
+}
+
+.cor20
+{
+  top: 30px !important;
+}
+
+.wrap_supermenu
+{
+  position: relative;
+  float: left;
+  width: 100%
+}
+
+.filter-submit
+{
+  margin-top: 2rem;
+}
+
+.booklist .input-group
+{
+  margin-bottom: 0rem;
+}
+
+.checkboxer-menu
+{
+  width: 100%;
+  display: block;
+  top: 0px;
+  float: left;
+  border: none;
+  z-index: 1000;
+  margin-left: 0px;
+  padding-top: 1px;
+  box-sizing: border-box;
+  left: 0;
+  height: auto;
+}
+
+.checkboxer-menu li
+{
+  line-height: 1.2;
+  float: left;
+  background: #fff;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid transparent;
+  list-style-type: none;
+  width: 100%;
+}
+
+.checkboxer-menu li label
+{
+  width: 100%;
+}
+
+.checkboxer-menu>li:last-child
+{
+  // border-bottom: 1px solid #ccc;
+}
+
+.checkboxer-menu>li:first-child
+{
+  border-top: 1px solid transparent;
+}
+
+.checkboxer-menu>li:hover
+{
+  background: #efefef;
+}
+
+.checkboxer-menu>li>a
+{
+  float: left;
+  display: block;
+  width: 230px;
+  padding: 6px 0px 6px 20px;
+  color: #000;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin: 0px 10px 0px 10px;
+  font-size: 0.8em;
+  height: 100%;
+  outline: none;
+}
+
+.checkboxer-menu>li.active
+{
+  background-color: #eee;
+}
+
+.checkboxer-menu>li.active:hover
+{
+  background-color: #e1e1e1;
+}
+
+.checkboxer-menu>li:hover>a
+{
+  color: #000;
+
+}
+
+.checkboxer-menu li:first-child>a
+{
+  border-top: 1px solid transparent;
+}
 
 
-            // ------------------------------------------ Спрайты --------------------------------------------
-            .sprite {
-              display: inline-block;
-              vertical-align: middle;
-              width: 32px;
-              height: 32px;
-              background: url(sprites/sprite_menu.png) no-repeat;
-
-              :focus {
-                outline: none;
-              }
-            }
-            .sprite-16 {
-              display: inline-block;
-              vertical-align: middle;
-              width: 16px;
-              height: 16px;
-              background: url(sprites/sprite_16.png) no-repeat;
-
-              :focus {
-                outline: none;
-              }
-            }
-            // ----------------------------------------- Иконки ----------------------------------------------
-            // Страница входа
-            .icon-login {
-              background: url(img/login.svg) no-repeat;
-              // background-position: 0px 0px;
-            }
-            .icon-password {
-              background: url(img/password.svg) no-repeat;
-              // background-position: 0px -16px;
-            }
-            // Поиск города
-            .icon-load {
-              background: url(img/loading.svg) no-repeat;
-              opacity: 0.5;
-            }
-            .icon-find-ok {
-              background-position: -16px -80px;
-              opacity: 1;
-            }
-            .icon-find-no {
-              background-position: -32px -80px;
-              opacity: 1;
-            }
-
-            // Иконки в строке таблицы
-            .icon-list-add {
-              background-position: -128px -768px; 
-            }
-            .icon-list-add:hover {
-              background-position: -96px -768px; 
-            }
-            .icon-list-edit {
-              background-position: -96px -800px; 
-            }
-
-            a.icon-list-edit {
-              display: inline-block;
-            }
-
-            .icon-list-edit:hover {
-              background-position: -128px -800px; 
-            }
-            .icon-list-delete {
-              background-position: -96px -512px; 
-            }
-            .icon-list-delete:hover {
-              background-position: -128px -512px;
-            }
+// ------------------------------------------ Оформление суперменю--------------------------------------------
 
 
-            // Иконка общего добавления
-            .icon-display-hide {
+// ------------------------------------------ Спрайты --------------------------------------------
+.sprite {
+  display: inline-block;
+  vertical-align: middle;
+  width: 32px;
+  height: 32px;
+  background: url(sprites/sprite_menu.png) no-repeat;
 
-              &.black {
-                background-position: -64px -992px;
-              }
+  :focus {
+    outline: none;
+  }
+}
+.sprite-16 {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  background: url(sprites/sprite_16.png) no-repeat;
 
-              &.white {
-                background-position: -160px -992px;
-              }
-              opacity: 0.2;
+  :focus {
+    outline: none;
+  }
+}
+// ----------------------------------------- Иконки ----------------------------------------------
+// Страница входа
+.icon-login {
+  background: url(img/login.svg) no-repeat;
+  // background-position: 0px 0px;
+}
+.icon-password {
+  background: url(img/password.svg) no-repeat;
+  // background-position: 0px -16px;
+}
+// Поиск города
+.icon-load {
+  background: url(img/loading.svg) no-repeat;
+  opacity: 0.5;
+}
+.icon-find-ok {
+  background-position: -16px -80px;
+  opacity: 1;
+}
+.icon-find-no {
+  background-position: -32px -80px;
+  opacity: 1;
+}
 
-              &:hover {
-                opacity: 1;
-              }
-            }
+// Иконки в строке таблицы
+.icon-list-add {
+  background-position: -128px -768px; 
+}
+.icon-list-add:hover {
+  background-position: -96px -768px; 
+}
+.icon-list-edit {
+  background-position: -96px -800px; 
+}
 
-            .icon-display-show {
+a.icon-list-edit {
+  display: inline-block;
+}
 
-              &.black {
-                background-position: -32px -992px;
-              }
+.icon-list-edit:hover {
+  background-position: -128px -800px; 
+}
+.icon-list-delete {
+  background-position: -96px -512px; 
+}
+.icon-list-delete:hover {
+  background-position: -128px -512px;
+}
 
-              &.white {
-                background-position: -96px -992px;
-              }
 
-              opacity: 0;
-              transition: opacity ease 0.3s;
+// Иконка общего добавления
+.icon-display-hide {
 
-              &:hover {
-               opacity: 1;
-             }
-           }
+  &.black {
+    background-position: -64px -992px;
+  }
 
-           tr:hover .icon-display-show {
-            // background-position: -32px -992px;
-            opacity: 0.2;
+  &.white {
+    background-position: -160px -992px;
+  }
+  opacity: 0.2;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.icon-display-show {
+
+  &.black {
+    background-position: -32px -992px;
+  }
+
+  &.white {
+    background-position: -96px -992px;
+  }
+
+  opacity: 0;
+  transition: opacity ease 0.3s;
+
+  &:hover {
+     opacity: 1;
+  }
+}
+
+tr:hover .icon-display-show {
+  // background-position: -32px -992px;
+  opacity: 0.2;
+}
+
+
+// Иконка отображения системного значка
+.icon-system-lock {
+  background-position: -32px -960px;
+  opacity: 0.2;
+}
+
+.icon-system-lock:hover {
+  background-position: -32px -960px;
+  opacity: 1;
+}
+
+.icon-system-unlock {
+  background-position: -64px -960px;
+  opacity: 0.2;
+}
+
+.icon-system-unlock:hover {
+  background-position: -64px -960px;
+  opacity: 1;
+}
+
+
+
+// Иконка отображения системного значка
+.icon-system-template {
+  background-position: -32px -928px;
+  opacity: 0.2;
+  margin-left: 1rem;
+  // z-index: 10;
+}
+
+.icon-system-template:hover {
+  background-position: -32px -928px;
+  opacity: 1;
+  margin-left: 1rem;
+  // z-index: 10;
+}
+
+.icon-system-programm {
+  background-position: -64px -896px;
+  opacity: 0.2;
+  margin-left: 1rem;
+  // z-index: 10;
+}
+
+.icon-system-programm:hover {
+  background-position: -64px -896px;
+  opacity: 1;
+  margin-left: 1rem;
+  // z-index: 10;
+}
+
+
+// Иконка общего добавления
+.icon-add {
+  background-position: 0px -384px;
+  opacity: 0.2;
+  margin-left: 1rem;
+  // z-index: 10;
+}
+.icon-add:hover {
+  background-position: 0px -384px;
+  opacity: 1;
+}
+// Иконка фильтра
+.icon-filter {
+  background-position: 0px -352px;
+  float: left;
+  margin-right: 0.4rem;
+}
+.icon-filter:hover {
+  background-position: -32px -352px;
+  opacity: 0.7;
+}
+.active-filter {
+  background-position: -32px -352px !important;
+}
+
+.filtration-active {
+  background-position: -64px -352px;
+}
+
+.show-elem
+{
+  display: inline-block !important;
+}
+
+.hide-elem
+{
+  display: none !important;
+}
+
+.booklist li 
+{
+  position: relative;
+}
+
+.booklist_button
+{
+  margin-top: 2px;
+  display: inline-block;
+  position: absolute;
+  top: 4px;
+  padding: 2px 7px 5px 7px;
+  background-color: rgba(0,0,0,0);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  text-align: center;
+  transition: background-color ease 0.2s;
+  color: $white;
+  cursor: pointer;
+}
+
+.booklist_delete
+{
+  margin-top: 2px;
+  display: inline-block;
+  position: absolute;
+  top: -1px;
+  padding: 2px 7px 5px 7px;
+  transition: opacity ease 0.2s;
+  color: $white;
+  cursor: pointer;
+  outline: none;
+  opacity: 0;
+}
+
+.dblrename input
+{
+  margin-bottom: 0.25rem !important;
+}
+
+.booklist li:hover .booklist_delete
+{
+  opacity: 1;
+}
+
+.booklist_button.plus
+{
+  right: 72px;
+}
+
+.booklist_button.minus
+{
+  right: 37px;
+}
+
+.booklist_delete
+{
+  right: 5px;
+}
+
+.count_booklist_button
+{
+  position: relative;
+  top: 1px;
+}
+
+.booklist li:hover .booklist_button
+{
+  background-color: rgba(0,0,0,0.3);
+}
+
+.booklist li:hover .booklist_button:hover
+{
+  background-color: $crm-blue;
+}
+
+.checkboxer
+{
+  position: relative;
+  padding: 0.5rem 0rem;
+}
+
+.checkboxer-wrap
+{
+  position: relative;
+  width: 100%;
+  display: block;
+  color: #666666;
+  padding: 0rem 20px 0rem 1rem;
+  border: 1px solid #ccc;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: #f5f5f5 !important;
+  margin-bottom: 1rem;
+
+}
+
+.checkboxer-toggle
+{
+  width: 100%;
+  height: 32px;
+  display: inline-block;
+}
+
+.checkboxer-clean
+{
+  position: absolute;
+  top: 1px;
+  right: 24px;
+  width: 20px;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.checkboxer-pane
+{
+  border-top: 0px solid transparent;
+  max-height: 272px;
+  overflow-y: auto;
+
+}
+
+// .dropdown-pane.checkboxer-pane
+// {
+//   width: 90% !important;
+//   margin-right: 1rem;
+// }
+
+.checkboxer-pane::-webkit-scrollbar {
+  width:0.5rem;
+}
+
+.checkboxer-button
+{
+  width: 34px;
+  position: absolute;
+  display: block;
+  text-align: right;
+  right: 0px;
+  top: 0px;
+}
+
+.checkboxer-title
+{
+  width: 100%;
+}
+
+.checkboxer-button span, .checkboxer-title span
+{
+  height: 32px;
+  display: inline-block;
+  padding-top: 0.7rem;
+}
+
+.checkboxer-title span.count
+{
+  margin-left: 0.3rem;
+}
+
+// Иконка checkboxer в фильтре
+// Состояние 1
+.icon-checkboxer {
+  background-position: 0px -672px;
+  opacity: 0.6;
+}
+.checkboxer-toggle:hover .icon-checkboxer {
+  background-position: 0px -672px;
+  opacity: 1;
+}
+
+// Состояние 2
+.hover .icon-checkboxer {
+  background-position: -32px -672px;
+}
+.hover.checkboxer-toggle:hover .icon-checkboxer {
+  background-position: -32px -672px;
+  opacity: 1;
+}
+
+// Иконка снятия checkbox'ов в checkboxer в фильтре
+// Состояние 1
+.icon-clean {
+  background-position: -6px -320px;
+  opacity: 0.6;
+  width: 20px;
+}
+
+// Закрытие фильтра
+.icon-moveup {
+  background-position: 0px -672px;
+  opacity: 0.8;
+} 
+
+.icon-moveup:hover {
+  cursor: pointer;
+} 
+
+.filter-close:hover .icon-moveup {
+  background-position: 0px -672px;
+  opacity: 1;
+}
+
+#filters {
+  box-shadow: 3px 3px rgba(38, 137, 255, 0.16);
+}
+
+.small-link {
+  font-size: 0.8rem;
+  border-bottom: 1px dashed #888;
+}
+
+.small-link:hover {
+  font-size: 0.8rem;
+  border-bottom: 1px solid transparent;
+}
+
+// Закрытие модалки
+.icon-close-modal {
+  background-position: 0px -608px;
+}  
+.icon-close-modal:hover {
+  background-position: -32px -608px;
+}
+
+// Иконки в таблице
+.icon-drop {
+  background-position: 0px -832px;
+  cursor: -webkit-grabbing;
+}
+.icon-edit {
+  background-position: -96px -800px; 
+}  
+.icon-edit:hover {
+  background-position: -128px -800px; 
+} 
+
+.icon-delete {
+  background-position: 0px -512px;
+}  
+.icon-delete:hover {
+  background-position: -32px -512px;
+}
+
+
+
+// ---------- Инпуты (вынесены за контент т.к. модальное окно образуется за контентом) ---------
+.inputs {
+
+  label {
+    font-family: $calibri;
+    font-size: 0.8rem;
+    color: $label-color;
+    position: relative;
+  }
+
+  input:not([type="submit"]), textarea {
+    margin-top: 0.25rem;
+    margin-bottom: 1rem;
+    height: 28px;
+    color: $input-color;
+    background-color: $white;
+    font-size: 0.85rem;
+    padding: 5px 10px;
+    border: 1px solid $input-border-color;
+    box-shadow: none;
+  }
+  input[type=file]{
+    height: 2rem;
+  }
+  textarea {
+    height: 8rem;
+  }
+    // Сообщение об ошибке в инпутах
+    .is-invalid-input:not(:focus) {
+      border-color: #cc4b37;
+      background-color: #f9ecea;
+    }
+    select {
+      margin-top: 0.25rem;
+      margin-bottom: 1rem;
+      height: 28px;
+      background-color: $white;
+      font-size: 0.85rem;
+      border: 1px solid $input-border-color;
+      padding: 4px 4px 3px 10px;
+      color: $input-color;
+
+      // Меняем положение стрелочки фонды
+      background-position: 100% center;
+    }
+    input:focus, select:focus, textarea:focus {
+      border: 1px solid $input-focus-border-color;
+    }
+
+    .input-group-label:first-child
+    {
+
+      margin-top: 0.25rem;
+      margin-bottom: 0.85rem;
+      height: 26px;
+      color: #666666;
+      background-color: #f5f5f5;
+      font-size: 0.8rem;
+      padding: 5px 10px 5px 10px;
+      border: 1px solid #ccc;
+      box-shadow: none;
+    }
+
+    .input-group-button input
+    {
+      background-color: $black;
+      border-color: $black;
+      color: $white;
+    }
+
+    .input-group-button a
+    {
+      background-color: $black;
+      border-color: $black;
+      color: $white;
+      height: 26px;
+      margin-top: 4px;
+      padding-top: 5px;
+      font-size: 0.8rem;
+    }
+
+  }
+
+
+  #cke_content-ckeditor {
+    margin-top: 0.25rem;
+    border: 1px solid #999999;
+  }
+// Расположение иконки в инпуте
+.sprite-input-left {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  // opacity: 0.5;
+}
+.sprite-input-right {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 23px;
+  right: 8px;
+  // opacity: 0.5;
+  transition: 0.5s ease opacity;
+}
+.item-error {
+  padding-bottom: 1rem;
+  color: #cc4b37;
+  display: none;
+}
+// ---------------------------------------------------------------------------------------------
+.first {
+
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+// ---------------------------------------- Страница входа -------------------------------------
+.enter-page {
+  background-color: $white;
+}
+.enter {
+  max-width: 15rem;
+  margin: 10rem auto 0 auto;
+  font-family: $SUISL;
+  font-size: 0.75rem;
+
+  .logo {
+    display: block;
+    margin: 0 auto 2rem auto;
+  }
+  label {
+    position: relative;
+    // Страница входа
+  }
+  input {
+    border: none;
+    border-bottom: 1px solid $index-input-border-color;
+    height: 2rem;
+    padding-left: 2rem;
+    box-shadow: none;
+  }
+  .input-icon {
+    position: relative;
+
+    .sprite-input-left {
+      top: 8px;
+      left: 8px;
+      opacity: 0.5;
+      transition: 0.5s ease opacity;
+    }
+  }
+  input:focus {
+    border: none;
+    border-bottom: 1px solid $black;
+    outline: none;
+    box-shadow: none;
+  }
+  input:focus + .sprite-input-left {
+    opacity: 1;
+  }
+  .button {
+    width: 100%;
+    text-transform: uppercase;
+    font-family: $SUISB;
+    font-size: 0.75rem;
+    background-color: $sidebar-bg-color;
+    margin-top: 1rem;
+    margin-bottom: 0.4rem;
+
+  }
+  .button:hover {
+    background-color: $black;
+  }
+  .remember {
+    margin-left: -8px;
+  }
+  .forgot {
+    display: block;
+    margin-top: 0.8rem;
+    color: $index-forgot-color;
+    text-decoration: underline;
+    font-size: 0.7rem;
+  }
+  .forgot:hover {
+    text-decoration: none;
+  }
+}
+// ------------------------------------------- Шапка -------------------------------------------
+.header-z-index {
+  z-index: 98;
+}
+.header {
+  background-color: $sidebar-bg-color;
+  border-bottom: 1px solid $header-border;
+  padding: 0.4rem 1.2rem;
+  height: 38px;
+  position: relative;
+  z-index: 98;
+
+  // Хедер левая сторона
+  .left-head {
+    margin: auto 0;
+
+    h1 {
+      text-transform: uppercase;
+      color: $white;
+      font-weight: bold;
+      font-size: 1rem;
+      font-family: $SUISB;
+      display: inline-block;
+      vertical-align: middle;
+
+      span {
+        color: $mars-red;
+      }
+    }
+  }
+  // Хедер правая сторона
+  .right-head {
+    text-align: right;
+
+    ul {
+      background-color: $sidebar-bg-color; // Убираем стандартный бекграунд фонды
+      float: right;
+
+      li {
+        float: left;
+        margin-right: 1rem;
+
+        a {
+          display: block;
+          color: $white;
+          font-size: 0.8rem;
+
+
+          span {
+            margin-right: 1rem;
           }
 
-
-          // Иконка отображения системного значка
-          .icon-system-lock {
-            background-position: -32px -960px;
-            opacity: 0.2;
+          img {
+            vertical-align: middle;
+            width: 25px;
+            height: 25px;
           }
 
-          .icon-system-lock:hover {
-            background-position: -32px -960px;
-            opacity: 1;
+          .avatar {
+            @include border-radius(100%);
           }
+        }
+      }
+    } 
+    // Обнуляем фондовские умолчания
+    .dropdown-pane {
+      width: 14rem;
+      padding: 0;
+      
+    }
+    .profile-head {
+      border: 1px solid $header-profile-border-color;
+      box-sizing: border-box;
+      width: 14rem;
+      // z-index: 50;
 
-          .icon-system-unlock {
-            background-position: -64px -960px;
-            opacity: 0.2;
+      ul {
+        background-color: $header-profile-bg-color;
+        color: $header-profile-color;
+        float: left;
+        text-align: left;
+        width: 100%;
+
+        li {
+          margin: 0;
+
+          hr {
+            margin: 0.2rem 0;
+            color: $header-profile-border-color;
           }
-
-          .icon-system-unlock:hover {
-            background-position: -64px -960px;
-            opacity: 1;
+          a {
+            color: $header-profile-color;
+            padding: 0.7rem 2.8rem;
           }
-
-
-
-          // Иконка отображения системного значка
-          .icon-system-template {
-            background-position: -32px -928px;
-            opacity: 0.2;
-            margin-left: 1rem;
-            // z-index: 10;
+          a:hover {
+            background-color: $header-profile-hover-bg-color;
           }
+        }
+      }
+    }
+    .profile-list {
+      display: block !important;
+    }
+  } 
+}
+// ------------------------------------------- Сайдбар ----------------------------------------
+.sidebar {
+  font-family: $PFDDPR;
+  text-align: left;
+  background-color: $sidebar-bg-color;
+  position: fixed;
+  height: 100%;
+  color: $sidebar-font-color;
+  box-shadow: 0 0 5px 0 rgba(0,0,0,.35);
+  z-index: 97;
 
-          .icon-system-template:hover {
-            background-position: -32px -928px;
-            opacity: 1;
-            margin-left: 1rem;
-            // z-index: 10;
-          }
+  a {
+    color: #eeeeee;
+    font-weight: light;
+    font-size: 1rem;
+  }
+  // Убираем настройки фонды для ссылки в меню по умолчанию
+  .menu a {
+    display: inline;
+    padding: 0;
+  }
+  // Создаем наш стиль элементов списка в главной навигации, и в меню внизу
+  .nav>ul>li  {
+    border-top: 1px solid $sidebar-li-border-bot;
+    border-bottom: 1px solid $sidebar-li-border-top;
+    padding: 0.4rem 0.5rem;
+    text-transform: uppercase;
+    width: 100%;
 
-          .icon-system-programm {
-            background-position: -64px -896px;
-            opacity: 0.2;
-            margin-left: 1rem;
-            // z-index: 10;
-          }
+    a {
+      color: #eeeeee;
+      font-weight: light;
+      font-size: 0.75rem;
+      display: block;
+      box-sizing: border-box;
+      width: 210px;
 
-          .icon-system-programm:hover {
-            background-position: -64px -896px;
-            opacity: 1;
-            margin-left: 1rem;
-            // z-index: 10;
+      span {
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+    .active, .active:hover {
+      color: $sidebar-active-color !important;
+
+      span {
+        color: $white;
+      }
+    }
+    .active::after {
+      display: block;
+      border-color: $sidebar-active-color transparent transparent !important;
+      right: 0rem;
+    }
+    a:hover {
+      color: $sidebar-hover-color;
+    }
+  }
+
+  // Главная навигация
+  .nav {
+    height: auto;
+    overflow: hidden;
+    overflow-y: scroll;
+    margin-left: 0.5rem;
+    margin-top: 40px;
+    margin-bottom: 82px;
+
+    >ul>li {
+
+      >ul {
+        margin-left: 3rem;
+
+        li {
+          border-bottom: none;
+          text-transform: none;
+          font-family: $SUIL;
+
+          a {
+            padding: 0.4rem 1rem 0.4rem 0;
+            font-size: 0.7rem;
+            line-height: 1;
           }
+          a:after {
+            display: block;
+          }
+        }
+      }
+    }
+    // Убираем стандартные стрелочки аккордеонов Foundation
+    .accordion-menu>li a::after {
+      display: none;
+    }
+    .accordion-menu li>ul li a::after {
+      display: block;
+      border-color: $sidebar-font-color transparent transparent;
+      right: 0rem;
+    }
+  }
+  // Меню внизу (кнопка)
+  .gen-menu-bot {
+    position: absolute;
+    bottom: 38px;
+    height: 44px;
+    width: 100%;
+    
+    #sidebar-button {
+      display: block;
+      height: 100%;
+
+      
+      background-color: $sidebar-bot-menu-bg-color;
+      border-top: 1px solid $sidebar-li-border-bot;
+      border-bottom: 1px solid $sidebar-li-border-top;
+      cursor: pointer;
+
+      #cursor {
+        display: block;
+        width: 32px;
+        height: 32px;
+        margin: 5px auto 0 auto;
+      }
+    }
+  }
+  .sprite {
+    margin-right: 1rem;
+  }
+  .icon-mcc {
+    background-position: -96px 0px;
+  }
+  .icon-sale {
+    background-position: -96px -32px;
+  }
+  .icon-finance {
+    background-position: -96px -64px;
+  }
+  .icon-production {
+    background-position: -96px -96px;
+  }
+  .icon-marketing {
+    background-position:  -96px -128px;
+  }
+  .icon-study {
+    background-position:  -96px -160px;
+  }
+  .icon-guide {
+    background-position:  -96px -192px;
+  }
+  .icon-chatbot {
+    background-position:  -96px -256px;
+  }
+  .icon-settings {
+    background-position:  -96px -224px;
+  }
+  .icon-product {
+    background-position:  -96px -1024px;
+  }
+
+  .icon-personals {
+    background-position: -96px -1056px;
+  }
+
+  .icon-arrow-forward {
+    background-position: -160px -288px;
+  }
+  .icon-arrow-back {
+    background-position: -96px -288px;
+  }
+  // Спрайты на сайдбар в активном состоянии
+  .nav > ul > li > .active , .gen-menu-bot > li > .active {
+    .icon-mcc {
+      background-position: -160px 0px;
+    }
+    .icon-sale {
+      background-position: -160px -32px;
+    }
+    .icon-finance {
+      background-position: -160px -64px;
+    }
+    .icon-production {
+      background-position: -160px -96px;
+    }
+    .icon-marketing {
+      background-position: -160px -128px;
+    }
+    .icon-study {
+      background-position: -160px -160px;
+    }
+    .icon-guide {
+      background-position: -160px -192px;
+    }
+    .icon-chatbot {
+      background-position: -160px -256px;
+    }
+    .icon-settings {
+      background-position: -160px -224px;
+    }
+    .icon-product {
+      background-position: -160px -1024px;
+    }
+    .icon-personals {
+      background-position: -160px -1056px;
+    }
 
 
-          // Иконка общего добавления
-          .icon-add {
-            background-position: 0px -384px;
-            opacity: 0.2;
-            margin-left: 1rem;
-            // z-index: 10;
+  }
+  // Скролл в сайбаре по умолчанию
+  .nav::-webkit-scrollbar {
+    width:0.5rem;
+  }
+  // Скролл в сайбаре при наведении
+  .nav:hover {
+    overflow-y: scroll;
+  }
+  .nav:hover::-webkit-scrollbar {
+    width:0.5rem;
+  }
+  .nav:hover::-webkit-scrollbar-thumb {
+    border-width:1px 1px 1px 2px;
+    border-color: #777;
+    background-color: #aaa;
+    border-radius: 0.2rem;
+  }
+  .nav:hover::-webkit-scrollbar-thumb:hover {
+    border-width: 1px 1px 1px 2px;
+    border-color: #555;
+    background-color: #777;
+  }
+  // Скрол для мозилы вроде
+  scrollbar[orient="vertical"] {
+    max-width:10px !important;
+  }
+  scrollbar[orient="vertical"] > scrollbarbutton {
+    max-height:10px !important;
+  } 
+  thumb[orient="vertical"] {
+    max-width:10px !important;
+  }
+}
+
+// ----------------------------------------- Редактирование режима работы ---------------------
+
+.worktime_edit {
+  width: 0;
+}
+
+.worktime_edit input.time-field {
+  margin-bottom: 0rem;
+}
+
+.time-field {
+  width: 60px;
+}
+
+
+// ---------------------------------------- Менеджер задач ------------------------------------
+.task-manager {
+  position: fixed;
+  right: 0;
+  width: 240px;
+  height: 100%;
+  margin-bottom: 48px;
+  background-color: $sidebar-bg-color;
+  z-index: 50;
+  padding: 20px;
+  display: block;
+  margin-right: -240px;
+
+  // Tabs в менеджере задач
+  .tabs-wrap {
+    font-family: $SUISL;
+
+    // Обнуляем фонду, в активном состоянии
+    .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
+      background-color: $task-manager-tabs-active-bg-color;
+      color: $task-manager-tabs-active-color;
+    }
+    // Меню с заголовками
+    .tabs-list {
+      margin-bottom: 2rem;
+
+      // Обнуляем фонду
+      border: none;
+      background: none;
+
+      li {
+        border: 1px solid $task-manager-tabs-active-bg-color;
+        background-color: $task-manager-tabs-bg-color;
+        width: 50%;
+
+        a {
+          color: $task-manager-tabs-color;
+          padding: 5px 15px;
+          font-size: 0.8rem;
+
+          // Обнуляем фонду
+          outline: none;
+        }
+        .is-active {
+          a{
+            background-color: $tabs-active-color;
           }
-          .icon-add:hover {
-            background-position: 0px -384px;
-            opacity: 1;
-          }
-          // Иконка фильтра
-          .icon-filter {
-            background-position: 0px -352px;
+        }
+      }
+    }
+    // Контент tabs
+    .tabs-content {
+      margin-top: 1.4rem;
+
+      // Обнуляем фонду
+      border: none;
+      background: none;
+
+      .tabs-panel {
+        background: none;
+        padding: 0;
+
+        .task-head {
+          display: block;
+          margin-bottom: 1rem;
+          float: none;
+          height: 1rem;
+          overflow: hidden;
+
+          div {
+            padding: 0 3px;
+            display: inline-block;
+            vertical-align: middle;
             float: left;
+          }
+
+          .icon-task {
+            margin: -2px 0 0 -2px;
+            background-position: -48px -32px;
+            opacity: 0.6;
+          }
+
+          .task-date {
+            font-family: $SUISB;
+            font-size: 0.7rem;
+            color: $task-manager-tabs-content-color;
+            padding-right: 6px;
+          }
+
+          .task-hr {
+            // max-width: auto;
+            // min-width: 20%;
+
+          }
+          hr {
+            border: none;
+            border-bottom: 1px solid $task-manager-tabs-hr-color;
+
+            // Обнуляем фонду
+            margin: 6px 3px;
+            overflow: hidden;
+            clear: none;
+
+          }
+          .task-count{
+            font-family: $SUISL;
+            font-size: 0.7rem;
+            color: $white;
+            float: right;
+            padding-left: 6px;
+          }      
+        }
+        .task-content {
+          margin-top: 1rem;
+          font-family: $SUISL;
+          color: $task-manager-tabs-content-color;
+          font-size: 0.8rem;
+          line-height: 1.4;
+
+          .task-content-head {
+            font-family: $SUISB;
+            font-size: 1rem;
+            margin-bottom: 0.4rem;
+          }
+          .task-time {
+            font-family: $PFDDPL;
+            color: $task-manager-tabs-date-color;
             margin-right: 0.4rem;
           }
-          .icon-filter:hover {
-            background-position: -32px -352px;
-            opacity: 0.7;
-          }
-          .active-filter {
-            background-position: -32px -352px !important;
+          .task-set {
+            font-family: $PFDDPL;
+            color: $task-manager-tabs-set-color;
           }
 
-          .filtration-active {
-            background-position: -64px -352px;
-          }
+          .task-target {
+            margin-top: 0.6rem;
 
-          .show-elem
-          {
-            display: inline-block !important;
           }
+          .task-list {
+            margin: 1rem 0 0 0;
 
-          .hide-elem
-          {
-            display: none !important;
+            .task-data {
+              color: $task-manager-tabs-set-color;
+            }
+            .task-name-lead {
+              color: $task-manager_tabs-name-lead-color;
+            }
           }
-
-          .booklist li 
-          {
-            position: relative;
+          .task-button {
+            font-family: $SUIR;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-top: 1rem;
+            background-color: $task-manager-tabs-button-bg-color;
+            width: 100%;
+            border: none;
           }
-
-          .booklist_button
-          {
-            margin-top: 2px;
-            display: inline-block;
-            position: absolute;
-            top: 4px;
-            padding: 2px 7px 5px 7px;
-            background-color: rgba(0,0,0,0);
-            border-radius: 4px;
-            font-size: 0.7rem;
-            text-align: center;
-            transition: background-color ease 0.2s;
-            color: $white;
-            cursor: pointer;
+          .task-button:hover {
+            background-color: red;
           }
+        }
+      }
+    }
+  }
+}
+.task-active {
+  margin-right: 0;
+}
+// ----------------------------------------- Хлебные крошки -----------------------------------
+.breadcrumbs {
+  margin: 0; // Обнуляем класс фонды
+  background-color: $breadcrumbs-bg-color;
+  padding: 12px 20px;
+  height: auto;
+  border-bottom: 1px solid $breadcrumbs-border-color;
 
-          .booklist_delete
-          {
-            margin-top: 2px;
-            display: inline-block;
-            position: absolute;
-            top: -1px;
-            padding: 2px 7px 5px 7px;
-            transition: opacity ease 0.2s;
-            color: $white;
-            cursor: pointer;
+  li {
+    text-transform: none; // Обнуляем класс фонды
+    color: $breadcrumbs-color;
+    font-family: $PFDTPR;
+    font-size: 0.8rem;
+    line-height: 1;
+  }
+  a {
+    color: $breadcrumbs-a-color;
+  }
+}
+
+// -------------------------------------------- Exel --------------------------------------
+
+#exel {
+
+  img {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  #exel-import {
+    z-index: 95;
+  }
+}
+
+// -------------------------------------- Переопределяем модалку фонды -------------------------
+.reveal {
+  padding: 0;
+  border: 1px solid $black;
+  border-radius: 0;
+  background-color: $white;
+  
+  .modal-title {
+    text-align: center;
+    height: 3rem;
+    background-color: $sidebar-bg-color;
+
+    h5 {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      margin: 1.125rem;
+      font-weight: normal;
+      color: $white;
+    }
+  }
+
+  .modal-content {
+    padding: 2rem;
+  }
+  .modal-button {
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.5rem;
+    cursor: pointer;
+
+  }
+}
+.rev-small {
+  width: 500px;
+}
+.rev-large {
+  width: 800px;
+}
+// ------------------------------------- Таблица поиска в модалке ------------------------------
+.table-content-search {
+
+  caption {
+    font-family: $PFDDPL;
+    font-size: 0.875rem;
+    font-weight: normal;
+    color: $input-color;
+    padding: 0;
+    margin-bottom: 1rem;
+
+  }
+  
+  tbody {
+
+    // Убираем стандарнтый бордер и бекграунд фонды
+    border: none;
+    background: none;
+
+    // Убираем выделение каждой четной строки
+    tr:nth-child(even) {
+      border-bottom: 0;
+      background-color: $table-bg-color;
+    }
+
+    td {
+      font-family: $SUISL;
+      font-size: 0.8rem;
+      border-bottom: 1px solid $table-search-td-border-color;
+      line-height: 1;
+      padding: 0.4rem 10px;
+
+      a {
+        color: $table-search-td-color;
+      }
+
+
+    }
+    .icon-delete {
+      background-position: -32px -512px;
+    }  
+    .icon-delete:hover {
+      background-position: 0px -512px;
+    } 
+  }
+}
+.table-over {
+  position: absolute;
+  background-color: white;
+  width: 400px;
+  z-index: 50;
+  margin-top: -16px;
+}
+// ------------------------------------------- Tabs -------------------------------------------
+
+#photos-list {
+
+      .active {
+        border: 2px solid red;
+      }
+    }
+
+.tabs-margin-top {
+  margin-top: 2rem;
+}
+.tabs-wrap {
+  padding: 0 10px;
+  font-family: $PFDDPL;
+
+
+
+  //Обнуляем фонду, в активном состоянии
+  .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
+    background-color: $tabs-active-bg-color;
+    color: $tabs-active-color;
+  }
+  //Меню с заголовками
+  .tabs-list {
+    margin-bottom: 2rem;
+
+    // Обнуляем фонду
+    border: none;
+    background: none;
+
+    li {
+      border: 1px solid $content-bg-color;
+      background-color: $white;
+
+      a {
+        color: $black;
+        padding: 5px 20px;
+        font-size: 0.875rem;
+
+        // Обнуляем фонду
+        outline: none;
+      }
+      .is-active {
+        a{
+          background-color: $tabs-active-color;
+        }
+      }
+    }
+  }
+  //Контент tabs
+  .tabs-content {
+
+    // Обнуляем фонду
+    border: none;
+    background: none;
+
+    .tabs-panel {
+      background: none;
+      padding: 0;
+    }
+  }
+  
+  .checkbox {
+
+    label {
+      margin-left: -7px;
+    }
+    #company-checkbox+label {
+      margin-bottom: 1rem;
+    }
+  }
+  .radiobutton {
+    color: $input-color;
+
+    label {
+      margin-left: -8px;
+      margin-right: 8px;
+    }
+  }
+  .fieldset-access {
+    border: 1px solid  $tabs-fieldset-border-color;
+    padding: 1rem 2rem 2rem;
+
+    legend {
+      font-family: $PFDDPM;
+      padding: 0 1rem;
+    }
+  }
+}
+// ---------------------------------- Подсветка разрешений/запретов ---------------------------
+.allow {
+  color: green;
+}
+.deny {
+  color: red;
+}
+// ---------------------------------------- Основной контент ----------------------------------
+.content {
+  padding: 30px 20px 44px 20px;
+  z-index: 60;
+  // width: 100%;
+
+  // Обнуляем бекграунд фонды
+  .top-bar, .top-bar ul {
+    background-color: $content-bg-color;
+  }
+  // Заголовки контента
+  #head-sticky {
+    z-index: 30;
+  }
+  .head-content {
+    padding: 1rem 10px;
+    z-index: 50;
+    // width: 100%;
+    transition: width 0.3s ease;
+    
+
+    // Левая сторона
+    .header-content {
+      text-transform: uppercase;
+      font-family: $PFDTCPR;
+      font-size: 1.8rem;
+      float: left;
+    }
+
+    // Правая сторона
+
+    // обнуляем отступ фонды от кнопок и инпутов
+    [type='search'], button {
+      margin: 0;
+    }
+    .search-field {
+      border-radius: 0.2rem;
+      width: 9rem;
+      height: 2rem;
+      float: left;
+      font-family: $PFDDPT;
+      padding: 0 0.8rem;
+    }
+    .icon-search {
+      background-position: 0px -448px;
+    }
+    .icon-search:hover {
+      background-position: -32px -448px;
+      background-color: $content-bg-color;
+    }
+    .icon-search:focus {
+      background-color: $content-bg-color;
+    }
+  }
+  .filters {
+    display: none;
+    background-color: $content-bg-color;
+    z-index: 1;
+    position: absolute;
+    // overflow: hidden;
+    // transition: 1s;
+
+
+
+  }
+
+  .fieldset-filters {
+    border: 1px solid  $tabs-fieldset-border-color;
+    padding-top: 1rem;
+
+    legend {
+      font-family: $PFDDPM;
+      padding: 0 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .filter-close {
+      background-color: rgb(245, 245, 245);
+      height: 2rem;
+      cursor: pointer;
+
+    }
+  }
+  // .filters-active {
+  //   height: 60px;
+  //   overflow: visible;
+
+  // }
+  
+  // --------------------- Список (accordion menu) в контенте------------------------------
+  .accordion-menu .nested.is-accordion-submenu {
+    margin-left: 0;
+  }
+  .content-list {
+    outline: none;
+
+    .menu-drop-color {
+      background-color: $white;
+      height: 2rem;
+    }
+
+    .no-moderation {
+      color: red;
+      display: inline-block;
+      margin-left: 1rem;
+    }
+
+    .system-item {
+      color: blue;
+      display: inline-block;
+      margin-left: 1rem;
+    }
+
+    // При наведении отображаем элемент сортировки
+    a:hover ~ .drop-list, .drop-list:hover, .icon-list:hover ~ .drop-list {
+
+      .icon-drop {
+        opacity: 0.3;
+
+        &:hover {
+          opacity: 1;
+        }
+      }  
+    }
+
+    .is-accordion-submenu-parent:not(.has-submenu-toggle) > a::after {
+      display: none;
+    }
+
+    .icon-list {
+      position: absolute;
+      right: 2rem;
+      transition: 0.2s ease opacity;
+      cursor: pointer;
+      z-index: -1;
+      top: 0;
+      opacity: 0;
+
+      div {
+        display: inline-block;
+        width: 32px;
+      }
+    }
+
+    .drop-list {
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      // left: 0;
+      z-index: 5;
+      padding: 8px 0 8px 4px;
+
+      .icon-drop {
+        opacity: 0;
+      }
+      .icon-drop:hover {
+        opacity: 1;
+      }
+    }
+
+    .icon-list:focus {
+      outline-color: none;
+    }
+
+    .number {
+      font-size: 0.7rem;
+      margin-left: 0.6rem;
+      padding: 6px 12px;
+      border-radius: 0.3rem;
+      opacity: 0;
+      transition: 0.3s ease opacity;
+    }
+
+    .link-recursion {
+      display: inline;
+      padding: 0;
+    }
+
+    .empty-item {
+      height: 8px;
+      background-color: $list-item-li-bg-color;
+    }
+
+    // Первые элементы списка
+    .first-item {
+      background-color: $list-item-bg-color;
+      margin-bottom: 2px;
+      position: relative;
+
+      // Ссылка в первом элементе списка
+      .first-link {
+        font-family: $PFDDPL;
+        font-size: 1rem;
+        color: $list-item-color;
+        padding: 8px 150px 8px 68px;
+        // padding-left: 68px;
+        
+        .icon-open {
+          background-position: -96px -704px;
+          margin-right: 0.5rem;
+          width: 32px;
+          height: 32px;
+        }
+        span {
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+      .icon-list {
+        padding: 8px 0;
+
+      }
+      .link-small {
+        padding-left: 32px;
+      }
+      .icon-drop {
+        background-position: -96px -832px;
+      }
+    }
+
+    // Активные первые элементы списка
+    .first-active {
+      background-color: $list-item-active-bg-color;
+
+      .first-link {
+        background-color: $list-item-active-bg-color;
+
+        .icon-open {
+          background-position: -128px -704px;
+        }
+        .number {
+          background: rgba(255, 255, 255, 0.1);
+          opacity: 1;
+        }
+      }
+      > .icon-list {
+        opacity: 1;
+        padding: 8px 0;
+        z-index: 5;
+
+        div {
+
+          .sprite:focus {
             outline: none;
-            opacity: 0;
+          }
+          .icon-list-add {
+            background-position: -128px -768px; 
+          }
+          .icon-list-add:hover {
+            background-position: -96px -768px; 
+          }
+          .icon-list-edit {
+            background-position: -96px -800px; 
+          }
+          .icon-list-edit:hover {
+            background-position: -128px -800px; 
+          }
+          .icon-list-delete {
+            background-position: -96px -512px; 
+          }
+          .icon-list-delete:hover {
+            background-position: -128px -512px;
+          }
+        }
+      }
+    }
+
+    // Средний список
+    .medium-list {
+
+      // Средние элементы списка
+      .medium-item {
+        background-color: $list-item-li-bg-color;
+        position: relative;
+        padding-left: 2rem;
+
+        .checkbox {
+          padding: 0;
+        }
+
+        .icon-drop {
+          background-position: 0px -832px;
+        }
+        .medium-link {
+          font-family: $SUISL;
+          font-size: 0.8rem;
+          color: $list-item-li-color;
+          padding: 0 0 0 8px;
+          padding-left: 68px;
+
+
+          span {
+            display: inline-block;
+            vertical-align: middle;
           }
 
-          .dblrename input
-          {
-            margin-bottom: 0.25rem !important;
+          .icon-open {
+            background-position: 0px -704px;
+            opacity: 0.6;
           }
+        }
+        .link-small {
+          padding-left: 32px;
+        }
+        .icon-list {
+          padding: 0;
+        }
+      }
 
-          .booklist li:hover .booklist_delete
-          {
+      // Активные средние элементы списка
+      .medium-active {
+        // width: 80%;
+
+        > .medium-link {
+          .icon-open {
+            background-position: -32px -704px;
+          }
+          .number {
+            background: rgba(0, 0, 0, 0.2);
             opacity: 1;
           }
+        }
+        
+        > .icon-list {
+          opacity: 1;
+          z-index: 5;
 
-          .booklist_button.plus
-          {
-            right: 72px;
-          }
+          div {
 
-          .booklist_button.minus
-          {
-            right: 37px;
-          }
-
-          .booklist_delete
-          {
-            right: 5px;
-          }
-
-          .count_booklist_button
-          {
-            position: relative;
-            top: 1px;
-          }
-
-          .booklist li:hover .booklist_button
-          {
-            background-color: rgba(0,0,0,0.3);
-          }
-
-          .booklist li:hover .booklist_button:hover
-          {
-            background-color: $crm-blue;
-          }
-
-          .checkboxer
-          {
-            position: relative;
-            padding: 0.5rem 0rem;
-          }
-
-          .checkboxer-wrap
-          {
-            position: relative;
-            width: 100%;
-            display: block;
-            color: #666666;
-            padding: 0rem 20px 0rem 1rem;
-            border: 1px solid #ccc;
-            font-size: 0.8rem;
-            cursor: pointer;
-            background: #f5f5f5 !important;
-            margin-bottom: 1rem;
-
-          }
-
-          .checkboxer-toggle
-          {
-            width: 100%;
-            height: 32px;
-            display: inline-block;
-          }
-
-          .checkboxer-clean
-          {
-            position: absolute;
-            top: 1px;
-            right: 24px;
-            width: 20px;
-            display: inline-block;
-            margin-right: 6px;
-          }
-
-          .checkboxer-pane
-          {
-            border-top: 0px solid transparent;
-            max-height: 272px;
-            overflow-y: auto;
-
-          }
-
-          // .dropdown-pane.checkboxer-pane
-          // {
-            //   width: 90% !important;
-            //   margin-right: 1rem;
-            // }
-
-            .checkboxer-pane::-webkit-scrollbar {
-              width:0.5rem;
+            .icon-list-add {
+              background-position: 0px -768px; 
             }
-
-            .checkboxer-button
-            {
-              width: 34px;
-              position: absolute;
-              display: block;
-              text-align: right;
-              right: 0px;
-              top: 0px;
+            .icon-list-add:hover {
+              background-position: -32px -768px; 
             }
-
-            .checkboxer-title
-            {
-              width: 100%;
+            .icon-list-edit {
+              background-position: 0px -800px; 
             }
-
-            .checkboxer-button span, .checkboxer-title span
-            {
-              height: 32px;
-              display: inline-block;
-              padding-top: 0.7rem;
+            .icon-list-edit:hover {
+              background-position: -32px -800px; 
             }
-
-            .checkboxer-title span.count
-            {
-              margin-left: 0.3rem;
+            .icon-list-delete {
+              background-position: 0px -512px; 
             }
-
-            // Иконка checkboxer в фильтре
-            // Состояние 1
-            .icon-checkboxer {
-              background-position: 0px -672px;
-              opacity: 0.6;
-            }
-            .checkboxer-toggle:hover .icon-checkboxer {
-              background-position: 0px -672px;
-              opacity: 1;
-            }
-
-            // Состояние 2
-            .hover .icon-checkboxer {
-              background-position: -32px -672px;
-            }
-            .hover.checkboxer-toggle:hover .icon-checkboxer {
-              background-position: -32px -672px;
-              opacity: 1;
-            }
-
-            // Иконка снятия checkbox'ов в checkboxer в фильтре
-            // Состояние 1
-            .icon-clean {
-              background-position: -6px -320px;
-              opacity: 0.6;
-              width: 20px;
-            }
-
-            // Закрытие фильтра
-            .icon-moveup {
-              background-position: 0px -672px;
-              opacity: 0.8;
-            } 
-
-            .icon-moveup:hover {
-              cursor: pointer;
-            } 
-
-            .filter-close:hover .icon-moveup {
-              background-position: 0px -672px;
-              opacity: 1;
-            }
-
-            #filters {
-              box-shadow: 3px 3px rgba(38, 137, 255, 0.16);
-            }
-
-            .small-link {
-              font-size: 0.8rem;
-              border-bottom: 1px dashed #888;
-            }
-
-            .small-link:hover {
-              font-size: 0.8rem;
-              border-bottom: 1px solid transparent;
-            }
-
-            // Закрытие модалки
-            .icon-close-modal {
-              background-position: 0px -608px;
-            }  
-            .icon-close-modal:hover {
-              background-position: -32px -608px;
-            }
-
-            // Иконки в таблице
-            .icon-drop {
-              background-position: 0px -832px;
-              cursor: -webkit-grabbing;
-            }
-            .icon-edit {
-              background-position: -96px -800px; 
-            }  
-            .icon-edit:hover {
-              background-position: -128px -800px; 
-            } 
-
-            .icon-delete {
-              background-position: 0px -512px;
-            }  
-            .icon-delete:hover {
+            .icon-list-delete:hover {
               background-position: -32px -512px;
             }
-
-
-
-            // ---------- Инпуты (вынесены за контент т.к. модальное окно образуется за контентом) ---------
-            .inputs {
-
-              label {
-                font-family: $calibri;
-                font-size: 0.8rem;
-                color: $label-color;
-                position: relative;
-              }
-
-              input:not([type="submit"]), textarea {
-                margin-top: 0.25rem;
-                margin-bottom: 1rem;
-                height: 28px;
-                color: $input-color;
-                background-color: $white;
-                font-size: 0.85rem;
-                padding: 5px 10px;
-                border: 1px solid $input-border-color;
-                box-shadow: none;
-              }
-              input[type=file]{
-                height: 2rem;
-              }
-              textarea {
-                height: 8rem;
-              }
-              // Сообщение об ошибке в инпутах
-              .is-invalid-input:not(:focus) {
-                border-color: #cc4b37;
-                background-color: #f9ecea;
-              }
-              select {
-                margin-top: 0.25rem;
-                margin-bottom: 1rem;
-                height: 28px;
-                background-color: $white;
-                font-size: 0.85rem;
-                border: 1px solid $input-border-color;
-                padding: 4px 4px 3px 10px;
-                color: $input-color;
-
-                // Меняем положение стрелочки фонды
-                background-position: 100% center;
-              }
-              input:focus, select:focus, textarea:focus {
-                border: 1px solid $input-focus-border-color;
-              }
-
-              .input-group-label:first-child
-              {
-
-                margin-top: 0.25rem;
-                margin-bottom: 0.85rem;
-                height: 26px;
-                color: #666666;
-                background-color: #f5f5f5;
-                font-size: 0.8rem;
-                padding: 5px 10px 5px 10px;
-                border: 1px solid #ccc;
-                box-shadow: none;
-              }
-
-              .input-group-button input
-              {
-                background-color: $black;
-                border-color: $black;
-                color: $white;
-              }
-
-              .input-group-button a
-              {
-                background-color: $black;
-                border-color: $black;
-                color: $white;
-                height: 26px;
-                margin-top: 4px;
-                padding-top: 5px;
-                font-size: 0.8rem;
-              }
-
-            }
-
-
-            #cke_content-ckeditor {
-              margin-top: 0.25rem;
-              border: 1px solid #999999;
-            }
-            // Расположение иконки в инпуте
-            .sprite-input-left {
-              display: inline-block;
-              vertical-align: middle;
-              width: 16px;
-              height: 16px;
-              position: absolute;
-              top: 0;
-              left: 0;
-              // opacity: 0.5;
-            }
-            .sprite-input-right {
-              display: inline-block;
-              vertical-align: middle;
-              width: 16px;
-              height: 16px;
-              position: absolute;
-              top: 23px;
-              right: 8px;
-              // opacity: 0.5;
-              transition: 0.5s ease opacity;
-            }
-            .item-error {
-              padding-bottom: 1rem;
-              color: #cc4b37;
-              display: none;
-            }
-            // ---------------------------------------------------------------------------------------------
-            .first {
-
-              font-weight: 700;
-              font-size: 0.9rem;
-              line-height: 1.2;
-            }
-            // ---------------------------------------- Страница входа -------------------------------------
-            .enter-page {
-              background-color: $white;
-            }
-            .enter {
-              max-width: 15rem;
-              margin: 10rem auto 0 auto;
-              font-family: $SUISL;
-              font-size: 0.75rem;
-
-              .logo {
-                display: block;
-                margin: 0 auto 2rem auto;
-              }
-              label {
-                position: relative;
-                // Страница входа
-              }
-              input {
-                border: none;
-                border-bottom: 1px solid $index-input-border-color;
-                height: 2rem;
-                padding-left: 2rem;
-                box-shadow: none;
-              }
-              .input-icon {
-                position: relative;
-
-                .sprite-input-left {
-                  top: 8px;
-                  left: 8px;
-                  opacity: 0.5;
-                  transition: 0.5s ease opacity;
-                }
-              }
-              input:focus {
-                border: none;
-                border-bottom: 1px solid $black;
-                outline: none;
-                box-shadow: none;
-              }
-              input:focus + .sprite-input-left {
-                opacity: 1;
-              }
-              .button {
-                width: 100%;
-                text-transform: uppercase;
-                font-family: $SUISB;
-                font-size: 0.75rem;
-                background-color: $sidebar-bg-color;
-                margin-top: 1rem;
-                margin-bottom: 0.4rem;
-
-              }
-              .button:hover {
-                background-color: $black;
-              }
-              .remember {
-                margin-left: -8px;
-              }
-              .forgot {
-                display: block;
-                margin-top: 0.8rem;
-                color: $index-forgot-color;
-                text-decoration: underline;
-                font-size: 0.7rem;
-              }
-              .forgot:hover {
-                text-decoration: none;
-              }
-            }
-            // ------------------------------------------- Шапка -------------------------------------------
-            .header-z-index {
-              z-index: 98;
-            }
-            .header {
-              background-color: $sidebar-bg-color;
-              border-bottom: 1px solid $header-border;
-              padding: 0.4rem 1.2rem;
-              height: 38px;
-              position: relative;
-              z-index: 98;
-
-              // Хедер левая сторона
-              .left-head {
-                margin: auto 0;
-
-                h1 {
-                  text-transform: uppercase;
-                  color: $white;
-                  font-weight: bold;
-                  font-size: 1rem;
-                  font-family: $SUISB;
-                  display: inline-block;
-                  vertical-align: middle;
-
-                  span {
-                    color: $mars-red;
-                  }
-                }
-              }
-              // Хедер правая сторона
-              .right-head {
-                text-align: right;
-
-                ul {
-                  background-color: $sidebar-bg-color; // Убираем стандартный бекграунд фонды
-                  float: right;
-
-                  li {
-                    float: left;
-                    margin-right: 1rem;
-
-                    a {
-                      display: block;
-                      color: $white;
-                      font-size: 0.8rem;
-
-
-                      span {
-                        margin-right: 1rem;
-                      }
-
-                      img {
-                        vertical-align: middle;
-                        width: 25px;
-                        height: 25px;
-                      }
-
-                      .avatar {
-                        @include border-radius(100%);
-                      }
-                    }
-                  }
-                } 
-                // Обнуляем фондовские умолчания
-                .dropdown-pane {
-                  width: 14rem;
-                  padding: 0;
-
-                }
-                .profile-head {
-                  border: 1px solid $header-profile-border-color;
-                  box-sizing: border-box;
-                  width: 14rem;
-                  // z-index: 50;
-
-                  ul {
-                    background-color: $header-profile-bg-color;
-                    color: $header-profile-color;
-                    float: left;
-                    text-align: left;
-                    width: 100%;
-
-                    li {
-                      margin: 0;
-
-                      hr {
-                        margin: 0.2rem 0;
-                        color: $header-profile-border-color;
-                      }
-                      a {
-                        color: $header-profile-color;
-                        padding: 0.7rem 2.8rem;
-                      }
-                      a:hover {
-                        background-color: $header-profile-hover-bg-color;
-                      }
-                    }
-                  }
-                }
-                .profile-list {
-                  display: block !important;
-                }
-              } 
-            }
-            // ------------------------------------------- Сайдбар ----------------------------------------
-            .sidebar {
-              font-family: $PFDDPR;
-              text-align: left;
-              background-color: $sidebar-bg-color;
-              position: fixed;
-              height: 100%;
-              color: $sidebar-font-color;
-              box-shadow: 0 0 5px 0 rgba(0,0,0,.35);
-              z-index: 97;
-
-              a {
-                color: #eeeeee;
-                font-weight: light;
-                font-size: 1rem;
-              }
-              // Убираем настройки фонды для ссылки в меню по умолчанию
-              .menu a {
-                display: inline;
-                padding: 0;
-              }
-              // Создаем наш стиль элементов списка в главной навигации, и в меню внизу
-              .nav>ul>li  {
-                border-top: 1px solid $sidebar-li-border-bot;
-                border-bottom: 1px solid $sidebar-li-border-top;
-                padding: 0.4rem 0.5rem;
-                text-transform: uppercase;
-                width: 100%;
-
-                a {
-                  color: #eeeeee;
-                  font-weight: light;
-                  font-size: 0.75rem;
-                  display: block;
-                  box-sizing: border-box;
-                  width: 210px;
-
-                  span {
-                    display: inline-block;
-                    vertical-align: middle;
-                  }
-                }
-                .active, .active:hover {
-                  color: $sidebar-active-color !important;
-
-                  span {
-                    color: $white;
-                  }
-                }
-                .active::after {
-                  display: block;
-                  border-color: $sidebar-active-color transparent transparent !important;
-                  right: 0rem;
-                }
-                a:hover {
-                  color: $sidebar-hover-color;
-                }
-              }
-
-              // Главная навигация
-              .nav {
-                height: auto;
-                overflow: hidden;
-                overflow-y: scroll;
-                margin-left: 0.5rem;
-                margin-top: 40px;
-                margin-bottom: 82px;
-
-                >ul>li {
-
-                  >ul {
-                    margin-left: 3rem;
-
-                    li {
-                      border-bottom: none;
-                      text-transform: none;
-                      font-family: $SUIL;
-
-                      a {
-                        padding: 0.4rem 1rem 0.4rem 0;
-                        font-size: 0.7rem;
-                        line-height: 1;
-                      }
-                      a:after {
-                        display: block;
-                      }
-                    }
-                  }
-                }
-                // Убираем стандартные стрелочки аккордеонов Foundation
-                .accordion-menu>li a::after {
-                  display: none;
-                }
-                .accordion-menu li>ul li a::after {
-                  display: block;
-                  border-color: $sidebar-font-color transparent transparent;
-                  right: 0rem;
-                }
-              }
-              // Меню внизу (кнопка)
-              .gen-menu-bot {
-                position: absolute;
-                bottom: 38px;
-                height: 44px;
-                width: 100%;
-
-                #sidebar-button {
-                  display: block;
-                  height: 100%;
-
-
-                  background-color: $sidebar-bot-menu-bg-color;
-                  border-top: 1px solid $sidebar-li-border-bot;
-                  border-bottom: 1px solid $sidebar-li-border-top;
-                  cursor: pointer;
-
-                  #cursor {
-                    display: block;
-                    width: 32px;
-                    height: 32px;
-                    margin: 5px auto 0 auto;
-                  }
-                }
-              }
-              .sprite {
-                margin-right: 1rem;
-              }
-              .icon-mcc {
-                background-position: -96px 0px;
-              }
-              .icon-sale {
-                background-position: -96px -32px;
-              }
-              .icon-finance {
-                background-position: -96px -64px;
-              }
-              .icon-production {
-                background-position: -96px -96px;
-              }
-              .icon-marketing {
-                background-position:  -96px -128px;
-              }
-              .icon-study {
-                background-position:  -96px -160px;
-              }
-              .icon-guide {
-                background-position:  -96px -192px;
-              }
-              .icon-chatbot {
-                background-position:  -96px -256px;
-              }
-              .icon-settings {
-                background-position:  -96px -224px;
-              }
-              .icon-product {
-                background-position:  -96px -1024px;
-              }
-
-              .icon-personals {
-                background-position: -96px -1056px;
-              }
-
-              .icon-arrow-forward {
-                background-position: -160px -288px;
-              }
-              .icon-arrow-back {
-                background-position: -96px -288px;
-              }
-              // Спрайты на сайдбар в активном состоянии
-              .nav > ul > li > .active , .gen-menu-bot > li > .active {
-                .icon-mcc {
-                  background-position: -160px 0px;
-                }
-                .icon-sale {
-                  background-position: -160px -32px;
-                }
-                .icon-finance {
-                  background-position: -160px -64px;
-                }
-                .icon-production {
-                  background-position: -160px -96px;
-                }
-                .icon-marketing {
-                  background-position: -160px -128px;
-                }
-                .icon-study {
-                  background-position: -160px -160px;
-                }
-                .icon-guide {
-                  background-position: -160px -192px;
-                }
-                .icon-chatbot {
-                  background-position: -160px -256px;
-                }
-                .icon-settings {
-                  background-position: -160px -224px;
-                }
-                .icon-product {
-                  background-position: -160px -1024px;
-                }
-                .icon-personals {
-                  background-position: -160px -1056px;
-                }
-
-
-              }
-              // Скролл в сайбаре по умолчанию
-              .nav::-webkit-scrollbar {
-                width:0.5rem;
-              }
-              // Скролл в сайбаре при наведении
-              .nav:hover {
-                overflow-y: scroll;
-              }
-              .nav:hover::-webkit-scrollbar {
-                width:0.5rem;
-              }
-              .nav:hover::-webkit-scrollbar-thumb {
-                border-width:1px 1px 1px 2px;
-                border-color: #777;
-                background-color: #aaa;
-                border-radius: 0.2rem;
-              }
-              .nav:hover::-webkit-scrollbar-thumb:hover {
-                border-width: 1px 1px 1px 2px;
-                border-color: #555;
-                background-color: #777;
-              }
-              // Скрол для мозилы вроде
-              scrollbar[orient="vertical"] {
-                max-width:10px !important;
-              }
-              scrollbar[orient="vertical"] > scrollbarbutton {
-                max-height:10px !important;
-              } 
-              thumb[orient="vertical"] {
-                max-width:10px !important;
-              }
-            }
-
-            // ----------------------------------------- Редактирование режима работы ---------------------
-
-            .worktime_edit {
-              width: 0;
-            }
-
-            .worktime_edit input.time-field {
-              margin-bottom: 0rem;
-            }
-
-            .time-field {
-              width: 60px;
-            }
-
-
-            // ---------------------------------------- Менеджер задач ------------------------------------
-            .task-manager {
-              position: fixed;
-              right: 0;
-              width: 240px;
-              height: 100%;
-              margin-bottom: 48px;
-              background-color: $sidebar-bg-color;
-              z-index: 50;
-              padding: 20px;
-              display: block;
-              margin-right: -240px;
-
-              // Tabs в менеджере задач
-              .tabs-wrap {
-                font-family: $SUISL;
-
-                // Обнуляем фонду, в активном состоянии
-                .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
-                  background-color: $task-manager-tabs-active-bg-color;
-                  color: $task-manager-tabs-active-color;
-                }
-                // Меню с заголовками
-                .tabs-list {
-                  margin-bottom: 2rem;
-
-                  // Обнуляем фонду
-                  border: none;
-                  background: none;
-
-                  li {
-                    border: 1px solid $task-manager-tabs-active-bg-color;
-                    background-color: $task-manager-tabs-bg-color;
-                    width: 50%;
-
-                    a {
-                      color: $task-manager-tabs-color;
-                      padding: 5px 15px;
-                      font-size: 0.8rem;
-
-                      // Обнуляем фонду
-                      outline: none;
-                    }
-                    .is-active {
-                      a{
-                        background-color: $tabs-active-color;
-                      }
-                    }
-                  }
-                }
-                // Контент tabs
-                .tabs-content {
-                  margin-top: 1.4rem;
-
-                  // Обнуляем фонду
-                  border: none;
-                  background: none;
-
-                  .tabs-panel {
-                    background: none;
-                    padding: 0;
-
-                    .task-head {
-                      display: block;
-                      margin-bottom: 1rem;
-                      float: none;
-                      height: 1rem;
-                      overflow: hidden;
-
-                      div {
-                        padding: 0 3px;
-                        display: inline-block;
-                        vertical-align: middle;
-                        float: left;
-                      }
-
-                      .icon-task {
-                        margin: -2px 0 0 -2px;
-                        background-position: -48px -32px;
-                        opacity: 0.6;
-                      }
-
-                      .task-date {
-                        font-family: $SUISB;
-                        font-size: 0.7rem;
-                        color: $task-manager-tabs-content-color;
-                        padding-right: 6px;
-                      }
-
-                      .task-hr {
-                        // max-width: auto;
-                        // min-width: 20%;
-
-                      }
-                      hr {
-                        border: none;
-                        border-bottom: 1px solid $task-manager-tabs-hr-color;
-
-                        // Обнуляем фонду
-                        margin: 6px 3px;
-                        overflow: hidden;
-                        clear: none;
-
-                      }
-                      .task-count{
-                        font-family: $SUISL;
-                        font-size: 0.7rem;
-                        color: $white;
-                        float: right;
-                        padding-left: 6px;
-                      }      
-                    }
-                    .task-content {
-                      margin-top: 1rem;
-                      font-family: $SUISL;
-                      color: $task-manager-tabs-content-color;
-                      font-size: 0.8rem;
-                      line-height: 1.4;
-
-                      .task-content-head {
-                        font-family: $SUISB;
-                        font-size: 1rem;
-                        margin-bottom: 0.4rem;
-                      }
-                      .task-time {
-                        font-family: $PFDDPL;
-                        color: $task-manager-tabs-date-color;
-                        margin-right: 0.4rem;
-                      }
-                      .task-set {
-                        font-family: $PFDDPL;
-                        color: $task-manager-tabs-set-color;
-                      }
-
-                      .task-target {
-                        margin-top: 0.6rem;
-
-                      }
-                      .task-list {
-                        margin: 1rem 0 0 0;
-
-                        .task-data {
-                          color: $task-manager-tabs-set-color;
-                        }
-                        .task-name-lead {
-                          color: $task-manager_tabs-name-lead-color;
-                        }
-                      }
-                      .task-button {
-                        font-family: $SUIR;
-                        font-size: 0.8rem;
-                        text-transform: uppercase;
-                        margin-top: 1rem;
-                        background-color: $task-manager-tabs-button-bg-color;
-                        width: 100%;
-                        border: none;
-                      }
-                      .task-button:hover {
-                        background-color: red;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            .task-active {
-              margin-right: 0;
-            }
-            // ----------------------------------------- Хлебные крошки -----------------------------------
-            .breadcrumbs {
-              margin: 0; // Обнуляем класс фонды
-              background-color: $breadcrumbs-bg-color;
-              padding: 12px 20px;
-              height: auto;
-              border-bottom: 1px solid $breadcrumbs-border-color;
-
-              li {
-                text-transform: none; // Обнуляем класс фонды
-                color: $breadcrumbs-color;
-                font-family: $PFDTPR;
-                font-size: 0.8rem;
-                line-height: 1;
-              }
-              a {
-                color: $breadcrumbs-a-color;
-              }
-            }
-
-            // -------------------------------------------- Exel --------------------------------------
-
-            #exel {
-
-              img {
-                width: 1rem;
-                height: 1rem;
-              }
-
-              #exel-import {
-                z-index: 95;
-              }
-            }
-
-            // -------------------------------------- Переопределяем модалку фонды -------------------------
-            .reveal {
+          }
+        }
+      }
+      
+      .nested {
+        margin-left: 0;
+      }
+
+      // Средний элемент не имеющий вложенного списка
+      .medium-as-last {
+        background-color: $list-item-li-bg-color;
+        position: relative;
+        padding-left: 2rem;
+        cursor: pointer;
+
+        .checkbox {
+          padding: 0;
+        }
+
+        .icon-drop {
+          background-position: 0px -832px;
+        }
+
+        .icon-list {
+          padding: 0;
+          // transition: 0.2s ease opacity;
+          // // opacity: 0;
+          // right: 0.2rem;
+        }
+
+        .medium-as-last-link {
+          position: relative;
+          margin: 0 1.8rem 0 2rem;
+          display: block;
+          // border-bottom: 1px solid $list-item-nested-border-bottom-color;
+          font-family: $SUISB;
+          font-size: 0.8rem;
+          color: $list-item-li-color;
+          padding: 10px 6.5rem 10px 3rem;
+
+        } 
+        &:hover {
+
+          .icon-list {
+            opacity: 1;
+            z-index: 5;
+
+            div {
               padding: 0;
-              border: 1px solid $black;
-              border-radius: 0;
-              background-color: $white;
 
-              .modal-title {
-                text-align: center;
-                height: 3rem;
-                background-color: $sidebar-bg-color;
-
-                h5 {
-                  text-transform: uppercase;
-                  font-size: 0.75rem;
-                  margin: 1.125rem;
-                  font-weight: normal;
-                  color: $white;
-                }
+              .icon-list-add {
+                background-position: 0px -768px; 
               }
-
-              .modal-content {
-                padding: 2rem;
+              .icon-list-add:hover {
+                background-position: -32px -768px; 
               }
-              .modal-button {
-                margin-top: 1rem;
-                width: 100%;
+              .icon-list-edit {
+                background-position: 0px -800px; 
               }
-
-              .close-modal {
-                position: absolute;
-                top: 0;
-                right: 0;
-                margin: 0.5rem;
-                cursor: pointer;
-
+              .icon-list-edit:hover {
+                background-position: -32px -800px; 
+              }
+              .icon-list-delete {
+                background-position: 0px -512px; 
+              }
+              .icon-list-delete:hover {
+                background-position: -32px -512px;
               }
             }
-            .rev-small {
-              width: 500px;
+          }
+        }
+      }
+    }
+
+    // Конечный список
+    .last-list {
+      border-left: 2px solid $list-item-active-bg-color;
+      border-right: 2px solid $list-item-active-bg-color;
+      overflow: hidden;
+
+      // Обнуляем отступ фонды
+      margin-left: 0;
+
+      // Элементы конечного списка
+      .last-item {
+        position: relative;
+        background-color: $list-item-li-bg-color;
+
+        .last-link {
+          // position: relative;
+          margin: 0 1.8rem 0 2.5rem;
+          border-bottom: 1px solid $list-item-nested-border-bottom-color;
+          font-family: $SUISB;
+          font-size: 0.8rem;
+          padding: 10px 1.4rem 10px 3.9rem;
+          color: $list-item-li-color;
+          cursor: default;
+
+          // .icon-list {
+          //   right: 0.1rem;
+          //   // opacity: 0;
+          //   div {
+          //     padding: 0;
+          //   }
+          // }
+        }
+        .last-link:hover {
+
+          // .icon-list {
+          //   // opacity: 1;
+
+          //   div {
+
+          //     .icon-list-add {
+          //       background-position: 0px -768px; 
+          //     }
+          //     .icon-list-add:hover {
+          //       background-position: -64px -768px; 
+          //     }
+          //     .icon-list-edit {
+          //       background-position: 0px -800px; 
+          //     }
+          //     .icon-list-edit:hover {
+          //       background-position: -32px -800px; 
+          //     }
+          //     .icon-list-delete {
+          //       background-position: 0px -512px; 
+          //     }
+          //     .icon-list-delete:hover {
+          //       background-position: -32px -512px;
+          //     }
+          //   }
+          // }
+        }
+
+        .drop-list {
+          left: 1.8rem;
+        }
+        &:last-child {
+          .last-link {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+  }
+
+  // ----------------------------- Таблица в контенте --------------------------------------
+  .table-content {
+
+    th:first-child:hover {
+      cursor: default;
+    }
+
+    .is-stuck {
+     background-color: $body-bg-color; 
+
+     tr {
+      display: block;
+
+      //   th {
+      //     display: block;
+      //     float: left;
+      //   }
+      //   
+
+    }
+  }
+}
+
+.table-content {
+  border-collapse: separate;
+  width: 100%;
+
+  .table-drop-color {
+
+    // td {
+      background-color: $white;
+    // }
+  }
+
+  caption {
+    font-family: $PFDDPM;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: normal;
+      // color: $input-color;
+    }
+
+    td.details-control {
+      background: url('../resources/details_open.png') no-repeat center center;
+      cursor: pointer;
+    }
+    tr.shown td.details-control {
+      background: url('../resources/details_close.png') no-repeat center center;
+    }
+
+
+    .td-checkbox, .td-drop, .td-delete {
+      width: 32px;
+      // max-width: 32px !important;
+    }
+    // Убираем стандарнтый бордер и бекграунд фонды
+    thead, tbody, tfoot {
+      border: none;
+      background-color: $table-bg-color;
+    }
+    // Отступ между tbody
+    .tbody-margin {
+      height: 1rem;
+      background-color: $content-bg-color;
+    }
+    // Убираем отступы
+    thead th, tbody td {
+      padding: 4px;
+    }
+    .td-checkbox, .td-delete {
+      padding: 0;
+    }
+    
+    // Стилизуем thead
+    thead {
+      // width: 100%;
+
+
+      th {
+        font-family: $PFDDPM;
+        font-size: 0.8rem;
+        font-weight: normal;
+        background-color: $content-bg-color;
+        line-height: 0.8;
+
+        // Ставим картинку градиент = 10пх вниз, и делаем под нее отступ
+        padding-bottom: 5px;
+        background-image: url(img/table-th-border-gradient.jpg);
+        background-repeat: repeat-x;
+        background-position: bottom;
+
+        .icon-drop {
+          opacity: 0;
+        }
+      }
+      th:hover {
+        cursor: pointer;
+      }
+      th:focus {
+        outline: none;
+      }
+      .td-drop {
+        width: 32px;
+        padding: 0;
+      }
+    }
+    // Стилизуем tbody
+    tbody {
+      overflow-x: hidden;
+
+      tr {
+
+        .icon-drop {
+          opacity: 0;
+        }
+        .button {
+          margin-bottom: 0;
+        }
+
+      }
+      .no-moderation {
+        td {
+          background-color: $table-no-moderation;
+        }
+      }
+      // Убираем выделение каждой четной строки
+      tr:nth-child(even) {
+        border-bottom: 0;
+        background-color: $table-bg-color;
+      }
+      tr:hover {
+        .icon-drop {
+          opacity: 0.3;
+          transition: 0.5s;
+        }
+        .icon-drop:hover {
+          opacity: 0.8;
+        }
+
+      }
+      .td-drop {
+        width: 32px;
+        padding: 0;
+      }
+      td {
+        font-family: $SUISL;
+        font-size: 0.8rem;
+        border-top: 1px solid $table-td-border;
+        border-bottom: 1px solid $table-td-border;
+        line-height: 1.4;
+      }
+      td.td-news-photo{
+        width: 150px;
+      }
+
+
+    }
+    // Активная таблица (схлапывающаяся)
+    .active {
+
+      // Ярлычок для схлапывания
+      tr:first-child {
+
+        td {
+          text-align: right;
+          padding: 0;
+          background-color: $body-bg-color;
+          border: none;
+
+          a {
+            background-color: $table-active-border-color-blue;
+            color: white;
+            padding: 0 16px;
+            display: inline-block;
+
+            .icon-search-table-close {
+              background-position: -38px -678px;
+              margin-right: 1rem;
+              width: 20px;
+              height: 20px;
             }
-            .rev-large {
-              width: 800px;
+            span {
+              display: inline-block;
+              vertical-align: middle;
             }
-            // ------------------------------------- Таблица поиска в модалке ------------------------------
-            .table-content-search {
+          }
+        }
+      }
+      // Сама таблица
+      tr:nth-child(2) {
+        td{
+          border-top: 2px solid $table-active-border-color-blue;
+        }
+      }
+      tr:last-child {
+        td {
+          border-bottom: 2px solid $table-active-border-color-blue;
+        }
+      }
+      tr:not(.tr-close) {
+        td:first-child {
+          border-left: 2px solid $table-active-border-color-blue;
+        }
+        td:last-child {
+          border-right: 2px solid $table-active-border-color-blue;
+        }
+      }
+    } 
+    // Таблица в схлопнутом состоянии
+    .tr-border {
 
-              caption {
-                font-family: $PFDDPL;
-                font-size: 0.875rem;
-                font-weight: normal;
-                color: $input-color;
-                padding: 0;
-                margin-bottom: 1rem;
-
-              }
-
-              tbody {
-
-                // Убираем стандарнтый бордер и бекграунд фонды
-                border: none;
-                background: none;
-
-                // Убираем выделение каждой четной строки
-                tr:nth-child(even) {
-                  border-bottom: 0;
-                  background-color: $table-bg-color;
-                }
-
-                td {
-                  font-family: $SUISL;
-                  font-size: 0.8rem;
-                  border-bottom: 1px solid $table-search-td-border-color;
-                  line-height: 1;
-                  padding: 0.4rem 10px;
-
-                  a {
-                    color: $table-search-td-color;
-                  }
-
-
-                }
-                .icon-delete {
-                  background-position: -32px -512px;
-                }  
-                .icon-delete:hover {
-                  background-position: 0px -512px;
-                } 
-              }
+      tr:first-child {
+        td {
+          border-bottom: 4px solid $table-active-border-color-blue;
+          a {
+            .icon-search-table-close {
+              background-position: -6px -678px;  
             }
-            .table-over {
-              position: absolute;
-              background-color: white;
-              width: 400px;
-              z-index: 50;
-              margin-top: -16px;
-            }
-            // ------------------------------------------- Tabs -------------------------------------------
-
-            #photos-list {
-
-              .active {
-                border: 2px solid red;
-              }
-            }
-
-            .tabs-margin-top {
-              margin-top: 2rem;
-            }
-            .tabs-wrap {
-              padding: 0 10px;
-              font-family: $PFDDPL;
-
-
-
-              //Обнуляем фонду, в активном состоянии
-              .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
-                background-color: $tabs-active-bg-color;
-                color: $tabs-active-color;
-              }
-              //Меню с заголовками
-              .tabs-list {
-                margin-bottom: 2rem;
-
-                // Обнуляем фонду
-                border: none;
-                background: none;
-
-                li {
-                  border: 1px solid $content-bg-color;
-                  background-color: $white;
-
-                  a {
-                    color: $black;
-                    padding: 5px 20px;
-                    font-size: 0.875rem;
-
-                    // Обнуляем фонду
-                    outline: none;
-                  }
-                  .is-active {
-                    a{
-                      background-color: $tabs-active-color;
-                    }
-                  }
-                }
-              }
-              //Контент tabs
-              .tabs-content {
-
-                // Обнуляем фонду
-                border: none;
-                background: none;
-
-                .tabs-panel {
-                  background: none;
-                  padding: 0;
-                }
-              }
-
-              .checkbox {
-
-                label {
-                  margin-left: -7px;
-                }
-                #company-checkbox+label {
-                  margin-bottom: 1rem;
-                }
-              }
-              .radiobutton {
-                color: $input-color;
-
-                label {
-                  margin-left: -8px;
-                  margin-right: 8px;
-                }
-              }
-              .fieldset-access {
-                border: 1px solid  $tabs-fieldset-border-color;
-                padding: 1rem 2rem 2rem;
-
-                legend {
-                  font-family: $PFDDPM;
-                  padding: 0 1rem;
-                }
-              }
-            }
-            // ---------------------------------- Подсветка разрешений/запретов ---------------------------
-            .allow {
-              color: green;
-            }
-            .deny {
-              color: red;
-            }
-            // ---------------------------------------- Основной контент ----------------------------------
-            .content {
-              padding: 30px 20px 44px 20px;
-              z-index: 60;
-              // width: 100%;
-
-              // Обнуляем бекграунд фонды
-              .top-bar, .top-bar ul {
-                background-color: $content-bg-color;
-              }
-              // Заголовки контента
-              #head-sticky {
-                z-index: 30;
-              }
-              .head-content {
-                padding: 1rem 10px;
-                z-index: 50;
-                // width: 100%;
-                transition: width 0.3s ease;
-
-
-                // Левая сторона
-                .header-content {
-                  text-transform: uppercase;
-                  font-family: $PFDTCPR;
-                  font-size: 1.8rem;
-                  float: left;
-                }
-
-                // Правая сторона
-
-                // обнуляем отступ фонды от кнопок и инпутов
-                [type='search'], button {
-                  margin: 0;
-                }
-                .search-field {
-                  border-radius: 0.2rem;
-                  width: 9rem;
-                  height: 2rem;
-                  float: left;
-                  font-family: $PFDDPT;
-                  padding: 0 0.8rem;
-                }
-                .icon-search {
-                  background-position: 0px -448px;
-                }
-                .icon-search:hover {
-                  background-position: -32px -448px;
-                  background-color: $content-bg-color;
-                }
-                .icon-search:focus {
-                  background-color: $content-bg-color;
-                }
-              }
-              .filters {
-                display: none;
-                background-color: $content-bg-color;
-                z-index: 1;
-                position: absolute;
-                // overflow: hidden;
-                // transition: 1s;
-
-
-
-              }
-
-              .fieldset-filters {
-                border: 1px solid  $tabs-fieldset-border-color;
-                padding-top: 1rem;
-
-                legend {
-                  font-family: $PFDDPM;
-                  padding: 0 1rem;
-                  margin-bottom: 1rem;
-                }
-
-                .filter-close {
-                  background-color: rgb(245, 245, 245);
-                  height: 2rem;
-                  cursor: pointer;
-
-                }
-              }
-              // .filters-active {
-                //   height: 60px;
-                //   overflow: visible;
-
-                // }
-
-                // --------------------- Список (accordion menu) в контенте------------------------------
-                .accordion-menu .nested.is-accordion-submenu {
-                  margin-left: 0;
-                }
-                .content-list {
-                  outline: none;
-
-                  .menu-drop-color {
-                    background-color: $white;
-                    height: 2rem;
-                  }
-
-                  .no-moderation {
-                    color: red;
-                    display: inline-block;
-                    margin-left: 1rem;
-                  }
-
-                  .system-item {
-                    color: blue;
-                    display: inline-block;
-                    margin-left: 1rem;
-                  }
-
-                  // При наведении отображаем элемент сортировки
-                  a:hover ~ .drop-list, .drop-list:hover, .icon-list:hover ~ .drop-list {
-
-                    .icon-drop {
-                      opacity: 0.3;
-
-                      &:hover {
-                        opacity: 1;
-                      }
-                    }  
-                  }
-
-                  .is-accordion-submenu-parent:not(.has-submenu-toggle) > a::after {
-                    display: none;
-                  }
-
-                  .icon-list {
-                    position: absolute;
-                    right: 2rem;
-                    transition: 0.2s ease opacity;
-                    cursor: pointer;
-                    z-index: -1;
-                    top: 0;
-                    opacity: 0;
-
-                    div {
-                      display: inline-block;
-                      width: 32px;
-                    }
-                  }
-
-                  .drop-list {
-                    display: inline-block;
-                    position: absolute;
-                    top: 0;
-                    // left: 0;
-                    z-index: 5;
-                    padding: 8px 0 8px 4px;
-
-                    .icon-drop {
-                      opacity: 0;
-                    }
-                    .icon-drop:hover {
-                      opacity: 1;
-                    }
-                  }
-
-                  .icon-list:focus {
-                    outline-color: none;
-                  }
-
-                  .number {
-                    font-size: 0.7rem;
-                    margin-left: 0.6rem;
-                    padding: 6px 12px;
-                    border-radius: 0.3rem;
-                    opacity: 0;
-                    transition: 0.3s ease opacity;
-                  }
-
-                  .link-recursion {
-                    display: inline;
-                    padding: 0;
-                  }
-
-                  .empty-item {
-                    height: 8px;
-                    background-color: $list-item-li-bg-color;
-                  }
-
-                  // Первые элементы списка
-                  .first-item {
-                    background-color: $list-item-bg-color;
-                    margin-bottom: 2px;
-                    position: relative;
-
-                    // Ссылка в первом элементе списка
-                    .first-link {
-                      font-family: $PFDDPL;
-                      font-size: 1rem;
-                      color: $list-item-color;
-                      padding: 8px 150px 8px 68px;
-                      // padding-left: 68px;
-
-                      .icon-open {
-                        background-position: -96px -704px;
-                        margin-right: 0.5rem;
-                        width: 32px;
-                        height: 32px;
-                      }
-                      span {
-                        display: inline-block;
-                        vertical-align: middle;
-                      }
-                    }
-                    .icon-list {
-                      padding: 8px 0;
-
-                    }
-                    .link-small {
-                      padding-left: 32px;
-                    }
-                    .icon-drop {
-                      background-position: -96px -832px;
-                    }
-                  }
-
-                  // Активные первые элементы списка
-                  .first-active {
-                    background-color: $list-item-active-bg-color;
-
-                    .first-link {
-                      background-color: $list-item-active-bg-color;
-
-                      .icon-open {
-                        background-position: -128px -704px;
-                      }
-                      .number {
-                        background: rgba(255, 255, 255, 0.1);
-                        opacity: 1;
-                      }
-                    }
-                    > .icon-list {
-                      opacity: 1;
-                      padding: 8px 0;
-                      z-index: 5;
-
-                      div {
-
-                        .sprite:focus {
-                          outline: none;
-                        }
-                        .icon-list-add {
-                          background-position: -128px -768px; 
-                        }
-                        .icon-list-add:hover {
-                          background-position: -96px -768px; 
-                        }
-                        .icon-list-edit {
-                          background-position: -96px -800px; 
-                        }
-                        .icon-list-edit:hover {
-                          background-position: -128px -800px; 
-                        }
-                        .icon-list-delete {
-                          background-position: -96px -512px; 
-                        }
-                        .icon-list-delete:hover {
-                          background-position: -128px -512px;
-                        }
-                      }
-                    }
-                  }
-
-                  // Средний список
-                  .medium-list {
-
-                    // Средние элементы списка
-                    .medium-item {
-                      background-color: $list-item-li-bg-color;
-                      position: relative;
-                      padding-left: 2rem;
-
-                      .checkbox {
-                        padding: 0;
-                      }
-
-                      .icon-drop {
-                        background-position: 0px -832px;
-                      }
-                      .medium-link {
-                        font-family: $SUISL;
-                        font-size: 0.8rem;
-                        color: $list-item-li-color;
-                        padding: 0 0 0 8px;
-                        padding-left: 68px;
-
-
-                        span {
-                          display: inline-block;
-                          vertical-align: middle;
-                        }
-
-                        .icon-open {
-                          background-position: 0px -704px;
-                          opacity: 0.6;
-                        }
-                      }
-                      .link-small {
-                        padding-left: 32px;
-                      }
-                      .icon-list {
-                        padding: 0;
-                      }
-                    }
-
-                    // Активные средние элементы списка
-                    .medium-active {
-                      // width: 80%;
-
-                      > .medium-link {
-                        .icon-open {
-                          background-position: -32px -704px;
-                        }
-                        .number {
-                          background: rgba(0, 0, 0, 0.2);
-                          opacity: 1;
-                        }
-                      }
-
-                      > .icon-list {
-                        opacity: 1;
-                        z-index: 5;
-
-                        div {
-
-                          .icon-list-add {
-                            background-position: 0px -768px; 
-                          }
-                          .icon-list-add:hover {
-                            background-position: -32px -768px; 
-                          }
-                          .icon-list-edit {
-                            background-position: 0px -800px; 
-                          }
-                          .icon-list-edit:hover {
-                            background-position: -32px -800px; 
-                          }
-                          .icon-list-delete {
-                            background-position: 0px -512px; 
-                          }
-                          .icon-list-delete:hover {
-                            background-position: -32px -512px;
-                          }
-                        }
-                      }
-                    }
-
-                    .nested {
-                      margin-left: 0;
-                    }
-
-                    // Средний элемент не имеющий вложенного списка
-                    .medium-as-last {
-                      background-color: $list-item-li-bg-color;
-                      position: relative;
-                      padding-left: 2rem;
-                      cursor: pointer;
-
-                      .checkbox {
-                        padding: 0;
-                      }
-
-                      .icon-drop {
-                        background-position: 0px -832px;
-                      }
-
-                      .icon-list {
-                        padding: 0;
-                        // transition: 0.2s ease opacity;
-                        // // opacity: 0;
-                        // right: 0.2rem;
-                      }
-
-                      .medium-as-last-link {
-                        position: relative;
-                        margin: 0 1.8rem 0 2rem;
-                        display: block;
-                        // border-bottom: 1px solid $list-item-nested-border-bottom-color;
-                        font-family: $SUISB;
-                        font-size: 0.8rem;
-                        color: $list-item-li-color;
-                        padding: 10px 6.5rem 10px 3rem;
-
-                      } 
-                      &:hover {
-
-                        .icon-list {
-                          opacity: 1;
-                          z-index: 5;
-
-                          div {
-                            padding: 0;
-
-                            .icon-list-add {
-                              background-position: 0px -768px; 
-                            }
-                            .icon-list-add:hover {
-                              background-position: -32px -768px; 
-                            }
-                            .icon-list-edit {
-                              background-position: 0px -800px; 
-                            }
-                            .icon-list-edit:hover {
-                              background-position: -32px -800px; 
-                            }
-                            .icon-list-delete {
-                              background-position: 0px -512px; 
-                            }
-                            .icon-list-delete:hover {
-                              background-position: -32px -512px;
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-
-                  // Конечный список
-                  .last-list {
-                    border-left: 2px solid $list-item-active-bg-color;
-                    border-right: 2px solid $list-item-active-bg-color;
-                    overflow: hidden;
-
-                    // Обнуляем отступ фонды
-                    margin-left: 0;
-
-                    // Элементы конечного списка
-                    .last-item {
-                      position: relative;
-                      background-color: $list-item-li-bg-color;
-
-                      .last-link {
-                        // position: relative;
-                        margin: 0 1.8rem 0 2.5rem;
-                        border-bottom: 1px solid $list-item-nested-border-bottom-color;
-                        font-family: $SUISB;
-                        font-size: 0.8rem;
-                        padding: 10px 1.4rem 10px 3.9rem;
-                        color: $list-item-li-color;
-                        cursor: default;
-
-                        // .icon-list {
-                          //   right: 0.1rem;
-                          //   // opacity: 0;
-                          //   div {
-                            //     padding: 0;
-                            //   }
-                            // }
-                          }
-                          .last-link:hover {
-
-                            // .icon-list {
-                              //   // opacity: 1;
-
-                              //   div {
-
-                                //     .icon-list-add {
-                                  //       background-position: 0px -768px; 
-                                  //     }
-                                  //     .icon-list-add:hover {
-                                    //       background-position: -64px -768px; 
-                                    //     }
-                                    //     .icon-list-edit {
-                                      //       background-position: 0px -800px; 
-                                      //     }
-                                      //     .icon-list-edit:hover {
-                                        //       background-position: -32px -800px; 
-                                        //     }
-                                        //     .icon-list-delete {
-                                          //       background-position: 0px -512px; 
-                                          //     }
-                                          //     .icon-list-delete:hover {
-                                            //       background-position: -32px -512px;
-                                            //     }
-                                            //   }
-                                            // }
-                                          }
-
-                                          .drop-list {
-                                            left: 1.8rem;
-                                          }
-                                          &:last-child {
-                                            .last-link {
-                                              border-bottom: none;
-                                            }
-                                          }
-                                        }
-                                      }
-                                    }
-
-                                    // ----------------------------- Таблица в контенте --------------------------------------
-                                    .table-content {
-
-                                      th:first-child:hover {
-                                        cursor: default;
-                                      }
-
-                                      .is-stuck {
-                                       background-color: $body-bg-color; 
-
-                                       tr {
-                                        display: block;
-
-                                        //   th {
-                                          //     display: block;
-                                          //     float: left;
-                                          //   }
-                                          //   
-
-                                        }
-                                      }
-                                    }
-
-                                    .table-content {
-                                      border-collapse: separate;
-                                      width: 100%;
-
-                                      .table-drop-color {
-
-                                        // td {
-                                          background-color: $white;
-                                          // }
-                                        }
-
-                                        caption {
-                                          font-family: $PFDDPM;
-                                          text-align: center;
-                                          font-size: 0.875rem;
-                                          font-weight: normal;
-                                          // color: $input-color;
-                                        }
-
-                                        td.details-control {
-                                          background: url('../resources/details_open.png') no-repeat center center;
-                                          cursor: pointer;
-                                        }
-                                        tr.shown td.details-control {
-                                          background: url('../resources/details_close.png') no-repeat center center;
-                                        }
-
-
-                                        .td-checkbox, .td-drop, .td-delete {
-                                          width: 32px;
-                                          // max-width: 32px !important;
-                                        }
-                                        // Убираем стандарнтый бордер и бекграунд фонды
-                                        thead, tbody, tfoot {
-                                          border: none;
-                                          background-color: $table-bg-color;
-                                        }
-                                        // Отступ между tbody
-                                        .tbody-margin {
-                                          height: 1rem;
-                                          background-color: $content-bg-color;
-                                        }
-                                        // Убираем отступы
-                                        thead th, tbody td {
-                                          padding: 4px;
-                                        }
-                                        .td-checkbox, .td-delete {
-                                          padding: 0;
-                                        }
-
-                                        // Стилизуем thead
-                                        thead {
-                                          // width: 100%;
-
-
-                                          th {
-                                            font-family: $PFDDPM;
-                                            font-size: 0.8rem;
-                                            font-weight: normal;
-                                            background-color: $content-bg-color;
-                                            line-height: 0.8;
-
-                                            // Ставим картинку градиент = 10пх вниз, и делаем под нее отступ
-                                            padding-bottom: 5px;
-                                            background-image: url(img/table-th-border-gradient.jpg);
-                                            background-repeat: repeat-x;
-                                            background-position: bottom;
-
-                                            .icon-drop {
-                                              opacity: 0;
-                                            }
-                                          }
-                                          th:hover {
-                                            cursor: pointer;
-                                          }
-                                          th:focus {
-                                            outline: none;
-                                          }
-                                          .td-drop {
-                                            width: 32px;
-                                            padding: 0;
-                                          }
-                                        }
-                                        // Стилизуем tbody
-                                        tbody {
-                                          overflow-x: hidden;
-
-                                          tr {
-
-                                            .icon-drop {
-                                              opacity: 0;
-                                            }
-                                            .button {
-                                              margin-bottom: 0;
-                                            }
-
-                                          }
-                                          .no-moderation {
-                                            td {
-                                              background-color: $table-no-moderation;
-                                            }
-                                          }
-                                          // Убираем выделение каждой четной строки
-                                          tr:nth-child(even) {
-                                            border-bottom: 0;
-                                            background-color: $table-bg-color;
-                                          }
-                                          tr:hover {
-                                            .icon-drop {
-                                              opacity: 0.3;
-                                              transition: 0.5s;
-                                            }
-                                            .icon-drop:hover {
-                                              opacity: 0.8;
-                                            }
-
-                                          }
-                                          .td-drop {
-                                            width: 32px;
-                                            padding: 0;
-                                          }
-                                          td {
-                                            font-family: $SUISL;
-                                            font-size: 0.8rem;
-                                            border-top: 1px solid $table-td-border;
-                                            border-bottom: 1px solid $table-td-border;
-                                            line-height: 1.4;
-                                          }
-                                          td.td-news-photo{
-                                            width: 150px;
-                                          }
-
-
-                                        }
-                                        // Активная таблица (схлапывающаяся)
-                                        .active {
-
-                                          // Ярлычок для схлапывания
-                                          tr:first-child {
-
-                                            td {
-                                              text-align: right;
-                                              padding: 0;
-                                              background-color: $body-bg-color;
-                                              border: none;
-
-                                              a {
-                                                background-color: $table-active-border-color-blue;
-                                                color: white;
-                                                padding: 0 16px;
-                                                display: inline-block;
-
-                                                .icon-search-table-close {
-                                                  background-position: -38px -678px;
-                                                  margin-right: 1rem;
-                                                  width: 20px;
-                                                  height: 20px;
-                                                }
-                                                span {
-                                                  display: inline-block;
-                                                  vertical-align: middle;
-                                                }
-                                              }
-                                            }
-                                          }
-                                          // Сама таблица
-                                          tr:nth-child(2) {
-                                            td{
-                                              border-top: 2px solid $table-active-border-color-blue;
-                                            }
-                                          }
-                                          tr:last-child {
-                                            td {
-                                              border-bottom: 2px solid $table-active-border-color-blue;
-                                            }
-                                          }
-                                          tr:not(.tr-close) {
-                                            td:first-child {
-                                              border-left: 2px solid $table-active-border-color-blue;
-                                            }
-                                            td:last-child {
-                                              border-right: 2px solid $table-active-border-color-blue;
-                                            }
-                                          }
-                                        } 
-                                        // Таблица в схлопнутом состоянии
-                                        .tr-border {
-
-                                          tr:first-child {
-                                            td {
-                                              border-bottom: 4px solid $table-active-border-color-blue;
-                                              a {
-                                                .icon-search-table-close {
-                                                  background-position: -6px -678px;  
-                                                }
-                                              }
-                                            }
-                                          }
-
-                                          tr:not(.tr-close) {
-
-                                            td {
-                                              line-height: 0;
-                                              padding: 0;
-                                              visibility: hidden;
-                                              // display: block;
-                                              height: 0;
-                                              // transition: height ease 1s;
-                                              // transition: line-height ease 1s;
-                                              label, a {
-                                                display: none;
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }
-                                      // ---------------------------------------- Табы -----------------------------------------
-                                      .tabs-wrap {
-                                        .tabs-content {
-                                          margin: 0 -15px;
-                                        } 
-                                      }
-
-                                      // Pagination
-                                      #pagination {
-                                        margin-top: 1rem;
-
-                                        // Левая сторона
-                                        .pagination-head {
-
-                                          .pagination-title {
-                                            font-size: 0.8rem;
-                                          }
-                                          .pagination {
-                                            margin-top: 0.4rem;
-                                          }
-                                        }
-                                        // Правая сторона
-                                        .right {
-                                          text-align: right;
-
-                                          a {
-                                            color: $table-deleted-color;
-
-                                            .icon-deleted {
-                                              background-position: 0px -544px; 
-                                            }
-                                          }
-                                          a:hover {
-                                            .icon-deleted {
-                                              background-position: -32px -544px;
-                                            }
-                                          }
-                                        }
-                                      }
-                                    }
-
-                                    // --------------------------------------------- Футер ----------------------------------------
-                                    .footer {
-                                      background-color: $sidebar-bg-color;
-                                      padding: 6px 0 6px 240px;
-                                      position: fixed;
-                                      bottom: 0;
-                                      width: 100%;
-                                      z-index: 96;
-
-                                      .right {
-                                        text-align: right;
-
-                                        li {
-                                          display: inline;
-                                          font-family: $SUISB;
-                                          font-size: 0.6rem;
-                                          color: $footer-color;
-                                          text-transform: uppercase;
-                                          padding: 10px 0;
-                                          margin-right: 2rem;
-
-                                          span {
-                                            font-family: $SUIB;
-                                            color: $footer-num-color;
-                                          }
-                                        }
-                                        .foot-drop {
-                                          padding: 0;
-
-                                          .icon-footer {
-                                            background-position: -96px -736px;
-                                          }
-                                          .icon-footer:hover {
-                                            background-position: -128px -736px;
-                                          }
-                                        }
-                                        .active-foot-drop {
-                                          .icon-footer {
-                                            background-position: -160px -736px;
-                                          }
-                                        }
-                                      }
-
-                                      .foot-options {
-                                        background-color: $sidebar-bg-color;
-                                        border: none;
-
-                                        span {
-                                          font-family: $SUIR;
-                                          font-size: 0.7rem;
-                                          color: $footer-num-color; 
-                                        }
-                                      }
-                                    }
-
-                                    // ------------------------------------- Мобильное расширение ---------------------------------
-                                    @media screen and (min-width: 1px) and (max-width: 639px) {
-                                      .enter {
-                                        margin: 2rem auto 2rem auto;
-                                      }
-                                      #wrapper {
-                                        margin-left: 0;
-                                      }
-                                      // -------------------------------------- Мобильный Хедер -----------------------------------
-                                      .header {
-                                        height: auto;
-
-                                        .title-bar {
-                                          width: 2.5rem;
-                                          float: left;
-                                          padding: 0;
-                                          background: $sidebar-bg-color;
-                                        }
-                                        h1 {
-                                          margin-left: 0.25rem;
-                                        }
-                                        ul {
-                                          li {
-                                            span {
-                                              display: none;
-                                            }
-                                          }
-                                        }  
-                                      }
-                                      // -------------------------Раздвигаем мобильный сайдбар на всю ширину ------------------------
-                                      .sidebar {
-                                        position: fixed;
-                                        width: 100%;
-                                        display: block;
-
-                                        .nav {
-                                          margin-top: 0;
-                                          height: 100%;
-                                          padding-bottom: 3rem;
-                                        }
-                                        .gen-menu-bot {
-                                          display: none;
-                                        }
-                                      }
-                                      // --------------------------------- Мобильный менеджер задач ---------------------------------
-                                      .task-active {
-
-                                        width: 100%;
-                                      }
-                                      .task-manager {
-                                        margin-bottom: 0;
-                                      }
-                                      // ---------------------------------- Мобильный Хлебные крошки ---------------------------------
-                                      .breadcrumbs {
-                                        display: none;
-                                      }
-                                      // ------------------------------------- Мобильный контент -------------------------------------
-                                      .content {
-                                        padding: 30px 0 20px 0;
-
-                                        // .head-content {
-                                          //   text-align: center;
-
-                                          //   .top-bar-left, .top-bar-right {
-                                            //     display: inline;
-                                            //   }
-                                            // }
-
-                                            .tabs-wrap {
-
-                                             .tabs-content {
-                                              margin: 0; 
-                                              padding: 0 0.7rem;
-                                            }
-                                            .fieldset-access {
-                                              padding: 1rem 0.6rem;
-                                            }
-
-
-
-                                          }
-                                          // Блочим элементы добавления/редактирования/удаления
-                                          .content-list {
-                                            .first-active {
-                                              .icon-list {
-                                                opacity: 0;
-                                                display: none;
-                                                z-index: -1;
-                                              }
-                                            }
-                                            .medium-list {
-                                              .medium-item {
-                                                .icon-list {
-                                                  opacity: 0;
-                                                  display: none;
-                                                  z-index: -1;
-                                                }
-                                              }
-                                            } 
-                                          }
-                                        }
-                                        // Активные первые элементы списка (Шапки)
-                                        .first-active {
-
-                                          .first-link {
-                                            -webkit-touch-action: cross-slide-x;
-                                          }
-                                        }
-                                        // --------------------------------------- Футер ----------------------------------------------
-                                        .footer {
-                                          display: none;
-                                        }
-                                      }
-
-
-
-
-                                      // --------------------------------------- Чекер -------------------------------------
-
-                                      .checker
-                                      {
-                                        width: 100%;
-                                        display: block;
-                                        top: 0px;
-                                        float: left;
-                                        border: none;
-                                        z-index: 1000;
-                                        margin-left: 0px;
-                                        padding-top: 1px;
-                                        box-sizing: border-box;
-                                        left: 0;
-                                        height: auto;
-                                        position: relative;
-
-                                        li {
-                                          line-height: 1.2;
-                                          float: left;
-                                          background: #fff;
-                                          border-top: 1px solid #eee;
-                                          border-bottom: 1px solid transparent;
-                                          list-style-type: none;
-                                          width: 100%;
-
-                                          &:first-child {
-                                            border-top: 1px solid transparent;
-                                          }
-
-                                          &:hover {
-                                            background: #efefef;
-                                          }
-
-                                          span {
-                                            display: block;
-                                            padding: 6px 0px 6px 20px;
-                                            color: #000;
-                                            text-decoration: none;
-                                            margin: 0px 10px 0px 10px;
-                                            outline: none;
-                                            cursor: pointer;
-                                          }
-                                        }
-
-                                        .checker-nested {
-
-                                          // line-height: 1.2;
-                                          // float: left;
-                                          // background: #fff;
-                                          // border-top: 1px solid #eee;
-                                          // border-bottom: 1px solid transparent;
-                                          // list-style-type: none;
-                                          // width: 100%;
-
-                                          position: absolute;
-                                          left: -250px;
-                                          top: -17px;
-                                          z-index: 10;
-                                          width: 230px;
-                                          padding: 1rem;
-                                          // visibility: hidden;
-                                          display: none;
-                                          border: 1px solid #cacaca;
-                                          border-radius: 0;
-                                          background-color: #fefefe;
-                                          font-size: 1rem;
-                                          @include box-sizing(border-box);
-
-                                          li {
-
-                                            span {
-                                              display: inline-block;
-                                              padding: 0;
-                                              color: #000;
-                                              text-decoration: none;
-                                              margin: 0;
-                                              outline: none;
-                                              cursor: pointer;
-                                            }
-                                          }
-                                        }
-                                      }
-
-
-
-                                      // .checkboxer-menu li label
-                                      // {
-                                        //   width: 100%;
-                                        // }
-
-                                        // .checkboxer-menu>li:last-child
-                                        // {
-                                          //   // border-bottom: 1px solid #ccc;
-                                          // }
-
-                                          // .checkboxer-menu>li
-
-                                          // .checkboxer-menu>li
-
-                                          // .checkboxer-menu>li>a
-                                          // {
-                                            //   float: left;
-                                            //   display: block;
-                                            //   width: 230px;
-                                            //   padding: 6px 0px 6px 20px;
-                                            //   color: #000;
-                                            //   text-decoration: none;
-                                            //   text-transform: uppercase;
-                                            //   margin: 0px 10px 0px 10px;
-                                            //   font-size: 0.8em;
-                                            //   height: 100%;
-                                            //   outline: none;
-                                            // }
-
-                                            // .checkboxer-menu>li.active
-                                            // {
-                                              //   background-color: #eee;
-                                              // }
-
-                                              // .checkboxer-menu>li.active:hover
-                                              // {
-                                                //   background-color: #e1e1e1;
-                                                // }
-
-                                                // .checkboxer-menu>li:hover>a
-                                                // {
-                                                  //   color: #000;
-
-                                                  // }
-
-                                                  // .checkboxer-menu li:first-child>a
-                                                  // {
-                                                    //   border-top: 1px solid transparent;
-                                                    // }
-
-                                                    // Оформление страницы ТОВАРЫ
-
-                                                    .composition-table{
-                                                      border-collapse: separate;
-                                                      border-spacing: 0px 5px !important;
-                                                    }
-
-                                                    table.composition-table thead {
-                                                      background-color: transparent;
-                                                    }
-
-                                                    .composition-table tr th{
-                                                      background-color: transparent !important;
-                                                      border-bottom: 3px solid #000;
-                                                    }
-
-                                                    .composition-table tr td{
-                                                      background-color: #fff;
-                                                      border-top: 2px solid #fff;
-                                                      padding: 0.1rem 0.625rem 0.1rem;
-                                                    }
-
-                                                    .composition-table tr:first-child td{
-                                                      background-color: #fff;
-                                                    }
+          }
+        }
+      }
+
+      tr:not(.tr-close) {
+
+        td {
+          line-height: 0;
+          padding: 0;
+          visibility: hidden;
+          // display: block;
+          height: 0;
+          // transition: height ease 1s;
+          // transition: line-height ease 1s;
+          label, a {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+  // ---------------------------------------- Табы -----------------------------------------
+  .tabs-wrap {
+    .tabs-content {
+      margin: 0 -15px;
+    } 
+  }
+
+  // Pagination
+  #pagination {
+    margin-top: 1rem;
+
+    // Левая сторона
+    .pagination-head {
+
+      .pagination-title {
+        font-size: 0.8rem;
+      }
+      .pagination {
+        margin-top: 0.4rem;
+      }
+    }
+    // Правая сторона
+    .right {
+      text-align: right;
+
+      a {
+        color: $table-deleted-color;
+
+        .icon-deleted {
+          background-position: 0px -544px; 
+        }
+      }
+      a:hover {
+        .icon-deleted {
+          background-position: -32px -544px;
+        }
+      }
+    }
+  }
+}
+
+// --------------------------------------------- Футер ----------------------------------------
+.footer {
+  background-color: $sidebar-bg-color;
+  padding: 6px 0 6px 240px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 96;
+
+  .right {
+    text-align: right;
+
+    li {
+      display: inline;
+      font-family: $SUISB;
+      font-size: 0.6rem;
+      color: $footer-color;
+      text-transform: uppercase;
+      padding: 10px 0;
+      margin-right: 2rem;
+
+      span {
+        font-family: $SUIB;
+        color: $footer-num-color;
+      }
+    }
+    .foot-drop {
+      padding: 0;
+
+      .icon-footer {
+        background-position: -96px -736px;
+      }
+      .icon-footer:hover {
+        background-position: -128px -736px;
+      }
+    }
+    .active-foot-drop {
+      .icon-footer {
+        background-position: -160px -736px;
+      }
+    }
+  }
+
+  .foot-options {
+    background-color: $sidebar-bg-color;
+    border: none;
+
+    span {
+      font-family: $SUIR;
+      font-size: 0.7rem;
+      color: $footer-num-color; 
+    }
+  }
+}
+
+// ------------------------------------- Мобильное расширение ---------------------------------
+@media screen and (min-width: 1px) and (max-width: 639px) {
+  .enter {
+    margin: 2rem auto 2rem auto;
+  }
+  #wrapper {
+    margin-left: 0;
+  }
+  // -------------------------------------- Мобильный Хедер -----------------------------------
+  .header {
+    height: auto;
+
+    .title-bar {
+      width: 2.5rem;
+      float: left;
+      padding: 0;
+      background: $sidebar-bg-color;
+    }
+    h1 {
+      margin-left: 0.25rem;
+    }
+    ul {
+      li {
+        span {
+          display: none;
+        }
+      }
+    }  
+  }
+  // -------------------------Раздвигаем мобильный сайдбар на всю ширину ------------------------
+  .sidebar {
+    position: fixed;
+    width: 100%;
+    display: block;
+
+    .nav {
+      margin-top: 0;
+      height: 100%;
+      padding-bottom: 3rem;
+    }
+    .gen-menu-bot {
+      display: none;
+    }
+  }
+  // --------------------------------- Мобильный менеджер задач ---------------------------------
+  .task-active {
+
+    width: 100%;
+  }
+  .task-manager {
+    margin-bottom: 0;
+  }
+  // ---------------------------------- Мобильный Хлебные крошки ---------------------------------
+  .breadcrumbs {
+    display: none;
+  }
+  // ------------------------------------- Мобильный контент -------------------------------------
+  .content {
+    padding: 30px 0 20px 0;
+
+    // .head-content {
+    //   text-align: center;
+
+    //   .top-bar-left, .top-bar-right {
+    //     display: inline;
+    //   }
+    // }
+
+    .tabs-wrap {
+
+     .tabs-content {
+      margin: 0; 
+      padding: 0 0.7rem;
+    }
+    .fieldset-access {
+      padding: 1rem 0.6rem;
+    }
+
+    
+    
+  }
+    // Блочим элементы добавления/редактирования/удаления
+    .content-list {
+      .first-active {
+        .icon-list {
+          opacity: 0;
+          display: none;
+          z-index: -1;
+        }
+      }
+      .medium-list {
+        .medium-item {
+          .icon-list {
+            opacity: 0;
+            display: none;
+            z-index: -1;
+          }
+        }
+      } 
+    }
+  }
+  // Активные первые элементы списка (Шапки)
+  .first-active {
+
+    .first-link {
+      -webkit-touch-action: cross-slide-x;
+    }
+  }
+  // --------------------------------------- Футер ----------------------------------------------
+  .footer {
+    display: none;
+  }
+}
+
+
+
+
+// --------------------------------------- Чекер -------------------------------------
+
+.checker
+{
+  width: 100%;
+  display: block;
+  top: 0px;
+  float: left;
+  border: none;
+  z-index: 1000;
+  margin-left: 0px;
+  padding-top: 1px;
+  box-sizing: border-box;
+  left: 0;
+  height: auto;
+  position: relative;
+
+  li {
+    line-height: 1.2;
+    float: left;
+    background: #fff;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid transparent;
+    list-style-type: none;
+    width: 100%;
+
+    &:first-child {
+      border-top: 1px solid transparent;
+    }
+
+    &:hover {
+      background: #efefef;
+    }
+
+    span {
+      display: block;
+      padding: 6px 0px 6px 20px;
+      color: #000;
+      text-decoration: none;
+      margin: 0px 10px 0px 10px;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+
+  .checker-nested {
+
+    // line-height: 1.2;
+    // float: left;
+    // background: #fff;
+    // border-top: 1px solid #eee;
+    // border-bottom: 1px solid transparent;
+    // list-style-type: none;
+    // width: 100%;
+
+    position: absolute;
+    left: -250px;
+    top: -17px;
+    z-index: 10;
+    width: 230px;
+    padding: 1rem;
+    // visibility: hidden;
+    display: none;
+    border: 1px solid #cacaca;
+    border-radius: 0;
+    background-color: #fefefe;
+    font-size: 1rem;
+    @include box-sizing(border-box);
+
+    li {
+
+      span {
+        display: inline-block;
+        padding: 0;
+        color: #000;
+        text-decoration: none;
+        margin: 0;
+        outline: none;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+
+
+// .checkboxer-menu li label
+// {
+//   width: 100%;
+// }
+
+// .checkboxer-menu>li:last-child
+// {
+//   // border-bottom: 1px solid #ccc;
+// }
+
+// .checkboxer-menu>li
+
+// .checkboxer-menu>li
+
+// .checkboxer-menu>li>a
+// {
+//   float: left;
+//   display: block;
+//   width: 230px;
+//   padding: 6px 0px 6px 20px;
+//   color: #000;
+//   text-decoration: none;
+//   text-transform: uppercase;
+//   margin: 0px 10px 0px 10px;
+//   font-size: 0.8em;
+//   height: 100%;
+//   outline: none;
+// }
+
+// .checkboxer-menu>li.active
+// {
+//   background-color: #eee;
+// }
+
+// .checkboxer-menu>li.active:hover
+// {
+//   background-color: #e1e1e1;
+// }
+
+// .checkboxer-menu>li:hover>a
+// {
+//   color: #000;
+
+// }
+
+// .checkboxer-menu li:first-child>a
+// {
+//   border-top: 1px solid transparent;
+// }
+
+// Оформление страницы ТОВАРЫ
+
+.composition-table{
+  border-collapse: separate;
+  border-spacing: 0px 5px !important;
+}
+
+table.composition-table thead {
+  background-color: transparent;
+}
+
+.composition-table tr th{
+  background-color: transparent !important;
+  border-bottom: 3px solid #000;
+}
+
+.composition-table tr td{
+  background-color: #fff;
+  border-top: 2px solid #fff;
+  padding: 0.1rem 0.625rem 0.1rem;
+}
+
+.composition-table tr:first-child td{
+  background-color: #fff;
+}

@@ -213,8 +213,11 @@ Route::any('/ajax_services_modes', 'ServicesProductController@ajax_modes')->midd
 
 // ---------------------------------- Услуги (Артикулы) -------------------------------------------
 Route::any('/services/create', 'ServiceController@create')->middleware('auth');
+
 // Основные методы
 Route::resource('/services', 'ServiceController')->middleware('auth');
+// Route::get('/services/search/{text_fragment}', 'ServiceController@search')->middleware('auth');
+Route::post('/services/search/{text_fragment}', 'ServiceController@search')->middleware('auth');
 
 Route::any('/service/add_photo', 'ServiceController@add_photo')->middleware('auth');
 Route::post('/service/photos', 'ServiceController@photos')->middleware('auth');
@@ -338,11 +341,13 @@ Route::resource('/metrics', 'MetricController')->middleware('auth');
 
 
 // --------------------------------------- Компании -----------------------------------------------
-Route::resource('companies', 'CompanyController')->middleware('auth');
+Route::resource('/companies', 'CompanyController')->middleware('auth');
+
+
 // Проверка существования компании в базе по ИНН
-Route::post('companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');
+Route::post('/companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');
 // Сортировка компаний
-Route::post('companies_sort', 'CompanyController@companies_sort')->middleware('auth');
+Route::post('/companies_sort', 'CompanyController@companies_sort')->middleware('auth');
 
 // Маршруты для правил доступа
 Route::resource('/rights', 'RightController')->middleware('auth');

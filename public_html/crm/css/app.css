@@ -117,16 +117,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 }
 
 .up-input-button {
+  font-size: 0.8rem;
   display: block;
   position: absolute;
   right: 0px;
-  top: -4px;
+  color: #999;
   width: auto;
   z-index: 9000;
-}
-.up-input-button a, .up-input-button span {
-  font-size: 0.8rem;
-  color: #999;
 }
 
 fieldset {
@@ -200,7 +197,6 @@ fieldset legend {
 }
 
 #search-result-wrap {
-  display: none;
   position: absolute;
   background-color: #fff;
   padding: 2rem 1rem;
@@ -209,6 +205,13 @@ fieldset legend {
 #search-result-wrap .search-result-head {
   font-weight: 600;
   padding-bottom: 1rem;
+}
+#search-result-wrap .search-result-list li {
+  border-bottom: 1px dotted #999;
+  padding: 0.5rem 0rem;
+}
+#search-result-wrap .search-result-list li:last-child {
+  border-bottom: 0px dotted #999;
 }
 
 html {

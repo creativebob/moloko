@@ -52,9 +52,9 @@ class CompanyController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------
 
         $companies = Company::with('author', 'director', 'location.city', 'sector', 'contragents')
         ->contragents($user->company_id)
@@ -68,7 +68,7 @@ class CompanyController extends Controller
         // dd($companies);
 
         $filter_query = Company::with('location.city', 'sector')
-        ->contragents($user->company_id)
+        // ->contragents($user->company_id, 'client')
         ->moderatorLimit($answer)
         ->get();
 

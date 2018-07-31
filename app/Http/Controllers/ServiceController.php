@@ -98,6 +98,40 @@ class ServiceController extends Controller
         return view('services.index', compact('services', 'page_info', 'filter'));
     }
 
+
+    public function search($text_fragment)
+    {
+
+        // Подключение политики
+        $this->authorize('index', Service::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // -----------------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -----------------------------------------------------------------------------------------------------------------------
+
+        $result_search = Service::with('author', 'company', 'services_product', 'services_product.services_category')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->where('name', 'LIKE', '%'.$text_fragment.'%')
+        ->whereNull('archive')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
+
+        if($result_search->count()){
+
+            return view('includes.search', compact('result_search'));
+        } else {
+            
+            return view('includes.search');
+        }
+    }
+
     public function create(Request $request)
     {
 

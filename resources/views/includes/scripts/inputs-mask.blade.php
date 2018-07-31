@@ -1,7 +1,6 @@
 <script type="text/javascript" src="/crm/js/jquery.maskedinput.js"></script>
 <script type="text/javascript">
 
-
   jQuery(function($) {
     // --------------------------------- Буквы --------------------------
     // C дефисом ru

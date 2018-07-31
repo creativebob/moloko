@@ -37,20 +37,17 @@
 				<a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
 				@endif
 
-				<input class="search-field" type="search" name="search_field" placeholder="Поиск" />
+				<input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />
 
 				<button type="button" class="icon-search sprite button"></button>
 			</div>
 
 		</div>
-		<div class="small-12 cell" id="search-result-wrap">
-			<h3 class="search-result-head">Вот, что удалось найти:</h3>
-			<ul class="search-result-list">
-				<li><a>Бла бла бла</a></li>
-				<li>Хуела</li>
-				<li>Камамандра баклаша</li>
-			</ul>
+
+		<div id="port-result-search">
 		</div>
+		{{-- Подключаем стандартный ПОИСК --}}
+		@include('includes.scripts.search-script')
 
 		{{-- Блок фильтров --}}
 		@if (isset($filter))
