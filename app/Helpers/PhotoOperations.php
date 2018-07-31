@@ -30,15 +30,15 @@ function save_photo($request, $directory, $name, $album_id = null, $id = null, $
     // dd($size);
 
     if ($width < $settings['img_min_width']) {
-        abort(403, 'Ширина фоторафии мала!');
+        abort(403, 'Ширина фотографии мала!');
     }
 
     if ($height < $settings['img_min_height']) {
-        abort(403, 'Высота фоторафии мала!');
+        abort(403, 'Высота фотографии мала!');
     }
 
     if ($size > ($settings['img_max_size'] * 1024)) {
-        abort(403, 'Размер фоторафии высок!');
+        abort(403, 'Размер фотографии высок!');
     }
 
     // dd($width);
