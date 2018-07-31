@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\User;
+use App\Supplier;
 use App\Company;
 use App\Page;
 use App\Sector;
@@ -14,7 +15,6 @@ use App\Schedule;
 use App\Worktime;
 use App\Location;
 use App\ScheduleEntity;
-use App\Supplier;
 use App\Country;
 use App\ServicesType;
 
@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Auth;
 // Запросы и их валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\CompanyRequest;
+use App\Http\Requests\SupplierRequest;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
@@ -33,18 +34,18 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class CompanyController extends Controller
+class SupplierController extends Controller
 {
 
     // Сущность над которой производит операции контроллер
-    protected $entity_name = 'companies';
+    protected $entity_name = 'suppliers';
     protected $entity_dependence = false;
 
     public function index(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Company::class);
+        $this->authorize(getmethod(__FUNCTION__), Supplier::class);
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -56,26 +57,19 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------
 
-        $companies = Company::with('author', 'director', 'location.city', 'sector', 'suppliers')
-        ->suppliers($user->company_id)
+        $suppliers = Supplier::with('author', 'company')
+        ->where('company_id', '!=', null)
         ->moderatorLimit($answer)
-        ->filter($request, 'city_id', 'location')
-        ->filter($request, 'sector_id')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
-        // dd($companies);
+        // dd($suppliers);
 
-        $filter_query = Company::with('location.city', 'sector')
-        // ->suppliers($user->company_id, 'client')
-        ->moderatorLimit($answer)
-        ->get();
-
+        $filter_query = Supplier::moderatorLimit($answer)->get();
         $filter['status'] = null;
 
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id', null, 'internal-id-one');
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
@@ -84,19 +78,19 @@ class CompanyController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        // dd($filter);
+        // dd($suppliers);
 
-        return view('companies.index', compact('companies', 'page_info', 'filter', 'user'));
+        return view('suppliers.index', compact('suppliers', 'page_info', 'filter', 'user'));
     }
 
     public function create(Request $request)
         {
 
         //Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Company::class);
+        $this->authorize(getmethod(__FUNCTION__), Supplier::class);
 
         // Подключение политики
-        $company = new Company;
+        $supplier = new Supplier;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('sectors', false, 'index');
@@ -132,7 +126,7 @@ class CompanyController extends Controller
         $worktime = [];
         for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
 
-        return view('companies.create', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
+        return view('suppliers.create', compact('supplier', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
     }
 
     public function store(CompanyRequest $request)
@@ -262,11 +256,11 @@ class CompanyController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
+        $supplier = Supplier::with('company.location.city', 'company.schedules.worktimes', 'company.sector', 'company.services_types')
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
-        $this->authorize(getmethod(__FUNCTION__), $company);
+        $this->authorize(getmethod(__FUNCTION__), $supplier);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('sectors', false, 'index');
@@ -279,7 +273,7 @@ class CompanyController extends Controller
         ->toArray();
 
         $services_types = [];
-        foreach ($company->services_types as $service_type){
+        foreach ($supplier->company->services_types as $service_type){
             $services_types[] = $service_type->id;
         }
 
@@ -294,10 +288,10 @@ class CompanyController extends Controller
 
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $sectors_list = get_select_tree($sectors, $company->sector_id, 1, null);
+        $sectors_list = get_select_tree($sectors, $supplier->company->sector_id, 1, null);
 
-        if(isset($company->schedules->first()->worktimes)){
-            $worktime_mass = $company->schedules->first()->worktimes->keyBy('weekday');
+        if(isset($supplier->company->schedules->first()->worktimes)){
+            $worktime_mass = $supplier->company->schedules->first()->worktimes->keyBy('weekday');
         }
 
         for($x = 1; $x<8; $x++){
@@ -338,11 +332,11 @@ class CompanyController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-        return view('companies.edit', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
+        return view('suppliers.edit', compact('supplier', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
     }
 
 
-    public function update(CompanyRequest $request, $id)
+    public function update(SupplierRequest $request, $id)
     {
 
         // Получаем авторизованного пользователя
@@ -352,7 +346,19 @@ class CompanyController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $company = Company::with('location', 'schedules.worktimes')->moderatorLimit($answer)->findOrFail($id);
+        $supplier = Supplier::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $supplier);
+
+
+        $company_id = $supplier->company->id;
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_company = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $company = Company::with('location', 'schedules.worktimes')->moderatorLimit($answer_company)->findOrFail($company_id);
 
         // Скрываем бога
         $user_id = hideGod($user);
@@ -440,7 +446,7 @@ class CompanyController extends Controller
         // Записываем связи: id-шники в таблицу companies_services_types
         $result = $company->services_types()->sync($request->services_types_id);
 
-        return redirect('/admin/companies');
+        return redirect('/admin/suppliers');
     }
 
 

@@ -13,18 +13,17 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\ContragentsTraitScopes;
+use App\Scopes\Traits\SuppliersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
 
 // Фильтры
-// use App\Scopes\Filters\Filter;
-// use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\Filter;
+use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class Contragent extends Model
+class Supplier extends Model
 {
 
     // Включаем кеш
@@ -40,48 +39,22 @@ class Contragent extends Model
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-    use ContragentsTraitScopes;
+    use SuppliersTraitScopes;
 
     // Фильтры
-    // use Filter;
-    // use BooklistFilter;
+    use Filter;
+    use BooklistFilter;
     // use DateIntervalFilter;
 
     // protected $dates = ['deleted_at'];
     protected $fillable = [
         'company_id', 
         'contragent_id', 
-        'client_status', 
-        'vendor_status',
         'manufacturer_status',
     ];
 
-    public function getVendorStatusAttribute($value) {
-        if($value == 1){
-            $value = 'Поставщик';
-            return $value;
-        } else {
-            return $value;
-        };
-    }
-
-    public function getClientStatusAttribute($value) {
-        if($value == 1){
-            $value = 'Клиент';
-            return $value;
-        } else {
-            return $value;
-        };
-    }
-
     // Получаем компанию.
     public function company()
-    {
-        return $this->belongsTo('App\Company');
-    }
-
-    // Получаем компанию.
-    public function contragent()
     {
         return $this->belongsTo('App\Company', 'contragent_id');
     }

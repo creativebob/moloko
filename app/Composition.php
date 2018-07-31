@@ -13,7 +13,7 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\ContragentsTraitScopes;
+use App\Scopes\Traits\SuppliersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
@@ -39,7 +39,7 @@ class Composition extends Model
 	use FilialsTraitScopes;
 	use TemplateTraitScopes;
 	use ModeratorLimitTraitScopes;
-	use ContragentsTraitScopes;
+	use SuppliersTraitScopes;
 
     // Фильтры
 	use Filter;

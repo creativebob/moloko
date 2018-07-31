@@ -40,7 +40,6 @@ Route::patch('/updatemyprofile', 'UserController@updatemyprofile')->middleware('
 // Сортировка пользователей
 Route::post('/users_sort', 'UserController@users_sort')->middleware('auth');
 
-
 // ---------------------------------- Категории альбомов -------------------------------------------
 // Текущая добавленная/удаленная категория альбомов
 Route::any('/albums_categories', 'AlbumsCategoryController@index')->middleware('auth');
@@ -136,9 +135,7 @@ Route::post('/articles_display', 'ArticleController@ajax_display')->middleware('
 Route::any('/article/add_photo', 'ArticleController@add_photo')->middleware('auth');
 Route::post('/article/photos', 'ArticleController@photos')->middleware('auth');
 
-
 // ------------------------------------ Категории продукции --------------------------------------
-
 
 // -------------------------------- Категории товаров -----------------------------------------
 // Текущая добавленная/удаленная категория
@@ -151,7 +148,6 @@ Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('aut
 Route::any('/raws_categories', 'RawsCategoryController@index')->middleware('auth');
 // Основные методы
 Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth');
-
 
 
 // -------------------------------- Категории услуг -------------------------------------------
@@ -174,7 +170,6 @@ Route::post('/services_categories_sort', 'ServicesCategoryController@services_ca
 // --------------------------------- Продукция услуг --------------------------------------------
 // Основные методы
 Route::resource('/services_products', 'ServicesProductController')->middleware('auth');
-
 
 Route::any('/ajax_services_count', 'ServicesProductController@ajax_count')->middleware('auth');
 Route::any('/ajax_services_modes', 'ServicesProductController@ajax_modes')->middleware('auth');
@@ -199,10 +194,9 @@ Route::post('/services_sort', 'ServiceController@services_sort')->middleware('au
 // Отображение страниц на сайте
 Route::post('/services_display', 'ServiceController@ajax_display')->middleware('auth');
 
-
-
 // -------------------------------- Категории товаров -------------------------------------------
 // Route::any('/goods_categories/create', 'GoodsCategoryController@create')->middleware('auth');
+
 // Текущая добавленная/удаленная категория
 Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('auth');
 
@@ -262,6 +256,7 @@ Route::resource('/metrics', 'MetricController')->middleware('auth');
 // --------------------------------------- Компании -----------------------------------------------
 Route::resource('/companies', 'CompanyController')->middleware('auth');
 
+Route::resource('suppliers', 'SupplierController')->middleware('auth');
 
 // Проверка существования компании в базе по ИНН
 Route::post('/companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');

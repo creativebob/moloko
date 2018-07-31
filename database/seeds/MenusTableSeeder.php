@@ -474,6 +474,7 @@ class MenusTableSeeder extends Seeder
             'sort' => null,
         ],
 
+        // 35
         [
             'name' => 'Прoизводство',
             'icon' => 'icon-production',
@@ -500,8 +501,32 @@ class MenusTableSeeder extends Seeder
             'display' => 1,
             'sort' => 4,
         ],
-
-
+        [
+            'name' => 'Поставщики',
+            'icon' => null,
+            'alias' => 'admin/suppliers',
+            'parent_id' => 35,
+            'page_id' => 29,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+        [
+            'name' => 'Клиенты',
+            'icon' => null,
+            'alias' => 'admin/clients',
+            'parent_id' => 28,
+            'page_id' => 30,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
 
         // Остальное
                 // [

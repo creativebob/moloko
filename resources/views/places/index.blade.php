@@ -24,7 +24,7 @@
         <tr id="thead-content">
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-name" data-serversort="name" >Название помещения</th>
+          <th class="td-name" data-serversort="name">Название помещения</th>
           <th class="td-description">Описание</th>
           <th class="td-address">Адрес</th>
           <th class="td-square">Площадь</th>

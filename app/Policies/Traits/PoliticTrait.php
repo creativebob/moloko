@@ -35,9 +35,7 @@ trait PoliticTrait
 
         // Бог авторизованный под компанией может редактировать
         if(($user_status == 1)&&($company_id != null)){
-
             if(isset($session['company_info']['filials'])){
-
                 return true;            
             };
             
@@ -59,6 +57,8 @@ trait PoliticTrait
 
         // Бог авторизованный под компанией может редактировать
         if(($user_status == 1)&&($method == 'update')&&($company_id != null)){
+
+
 
             if(isset($session['company_info']['filials'])){
                 return true;            

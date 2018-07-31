@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\User;
 use App\RightsRole;
 use App\Company;
+use App\Supplier;
 use App\Role;
 use App\Place;
 use App\PlacesType;
@@ -49,6 +50,7 @@ use App\GoodsProduct;
 use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
 use App\Policies\CompanyPolicy;
+use App\Policies\SupplierPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\PlacePolicy;
 use App\Policies\PlacesTypePolicy;
@@ -109,6 +111,7 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class, 
         RightsRole::class => RightsRolePolicy::class, 
         Company::class => CompanyPolicy::class, 
+        Supplier::class => SupplierPolicy::class, 
         Right::class => RightPolicy::class, 
         Entity::class => EntityPolicy::class, 
         Role::class => RolePolicy::class,

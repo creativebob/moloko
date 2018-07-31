@@ -175,6 +175,8 @@
             } else {
 
                 // Получаем список отделов для бога
+                // dd($session['company_info'][$type_list]);
+                if(!isset($session['company_info'][$type_list])){abort(403, 'Необходимо создать филиал');};
                 $departments = $session['company_info'][$type_list];
             };
         };

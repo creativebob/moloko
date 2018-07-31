@@ -330,6 +330,28 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => null,
             ],
+            [
+                'name' => 'Поставщики',
+                'site_id' => 1,
+                'title' => 'Поставщики',
+                'description' => 'Поставщики товаров и услуг',
+                'alias' => 'suppliers',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+            [
+                'name' => 'Клиенты',
+                'site_id' => 1,
+                'title' => 'Клиенты',
+                'description' => 'Все наши клиенты: от физического лица до юридических организаций.',
+                'alias' => 'clients',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
 
 
             // [

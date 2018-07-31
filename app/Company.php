@@ -13,11 +13,10 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\ContragentsTraitScopes;
+use App\Scopes\Traits\SuppliersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -40,7 +39,7 @@ class Company extends Model
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-    use ContragentsTraitScopes;
+    use SuppliersTraitScopes;
 
     // Фильтры
     use Filter;
@@ -49,21 +48,10 @@ class Company extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-
-        'company_name', 
-        'company_alias', 
+        'name', 
+        'alias', 
         'phone', 
-        'extra_phone', 
-        'email', 
-        'city_id', 
-        'address', 
-        'inn', 
-        'kpp', 
-        'account_settlement', 
-        'account_correspondent', 
-        'bank', 
-        'director_user_id', 
-        'admin_user_id'
+        'extra_phone'
     ];
 
     // Фильтрация по городу
@@ -148,9 +136,9 @@ class Company extends Model
     }
 
     // Получаем контрагентов
-    public function contragents()
+    public function suppliers()
     {
-        return $this->hasMany('App\Contragent', 'contragent_id');
+        return $this->hasMany('App\Supplier', 'contragent_id');
     }
 
     // Получаем категории продукции
@@ -165,23 +153,23 @@ class Company extends Model
         return $this->hasMany('App\ServicesProduct');
     }
 
-    // Получаем клиентов
-    public function clients()
-    {   
-        return $this->belongsToMany('App\Company', 'contragents', 'company_id', 'contragent_id')->where('client_status', 1);
-    }
+    // // Получаем клиентов
+    // public function clients()
+    // {   
+    //     return $this->belongsToMany('App\Company', 'suppliers', 'company_id', 'supplier_id')->where('client_status', 1);
+    // }
 
-    // Получаем поставщиков
-    public function vendors()
-    {
-        return $this->belongsToMany('App\Company', 'contragents', 'company_id', 'contragent_id')->where('vendor_status', 1);
-    }
+    // // Получаем поставщиков
+    // public function vendors()
+    // {
+    //     return $this->belongsToMany('App\Company', 'suppliers', 'company_id', 'supplier_id')->where('vendor_status', 1);
+    // }
 
-    // Получаем производителей
-    public function manufacturers()
-    {
-        return $this->belongsToMany('App\Company', 'contragents', 'company_id', 'contragent_id')->where('manufacturer_status', 1);
-    }
+    // // Получаем производителей
+    // public function manufacturers()
+    // {
+    //     return $this->belongsToMany('App\Company', 'suppliers', 'company_id', 'supplier_id')->where('manufacturer_status', 1);
+    // }
 
     // Получаем типы услуг
     public function services_types()

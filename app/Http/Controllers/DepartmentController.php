@@ -712,6 +712,9 @@ class DepartmentController extends Controller
 
             if ($department) {
 
+                // Перезаписываем сессию: меняем список филиалов и отделов на новый
+                $this->RSDepartments($user);
+
                 // Переадресовываем на index
                 return redirect()->action('DepartmentController@index', ['id' => $parent, 'item' => 'department']);
             } else {
