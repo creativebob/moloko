@@ -490,12 +490,12 @@ class ServicesProductController extends Controller
             $directory = $company_id.'/media/products/'.$product->id.'/img/';
             $name = 'avatar-'.time();
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), имя сущности, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             if ($product->photo_id) {
-                $array = save_photo($request, $user_id, $company_id, $directory, $name, null, $product->photo_id);
+                $array = save_photo($request, $directory, $name, null, $product->photo_id, $this->entity_name);
 
             } else {
-                $array = save_photo($request, $user_id, $company_id, $directory, $name);
+                $array = save_photo($request, $directory, $name, null, null, $this->entity_name);
                 
             }
             $photo = $array['photo'];
@@ -700,7 +700,9 @@ class ServicesProductController extends Controller
             }
 
             $directory = $company_id.'/media/albums/'.$album_id.'/img/';
-            $array = save_photo($request, $user_id, $company_id, $directory,  $alias.'-'.time(), $album_id);
+
+            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), имя сущности, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
+            $array = save_photo($request, $directory,  $alias.'-'.time(), $album_id, null, $this->entity_name);
 
             $photo = $array['photo'];
             $upload_success = $array['upload_success'];
@@ -836,11 +838,10 @@ class ServicesProductController extends Controller
 
     public function ajax_count(Request $request)
     {
-        // $id = 2;
+        $id = 2;
         // $entity = 'services_categories';
 
-        $id = $request->id;
-        $entity = $request->entity;
+        // $id = $request->id;
 
         $services_category = ServicesCategory::withCount('services_products')->with('services_products')->findOrFail($id);
 
@@ -851,7 +852,7 @@ class ServicesProductController extends Controller
 
             if ($services_products_list) {
 
-                return view($entity.'.mode-select', compact('services_products_list'));
+                return view('services.mode-select', compact('services_products_list'));
             } else {
                 $result = [
                     'error_status' => 1,
@@ -877,7 +878,7 @@ class ServicesProductController extends Controller
             ->get()
             ->pluck('name', 'id');
 
-            return view($entity.'.mode-add', compact('units_categories_list'));
+            return view('services.mode-add', compact('units_categories_list'));
         }
     }
 
@@ -908,24 +909,24 @@ class ServicesProductController extends Controller
 
             case 'mode-add':
 
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_units_categories = operator_right('units_categories', false, 'index');
+            // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            // $answer_units_categories = operator_right('units_categories', false, 'index');
 
-                // Главный запрос
-            $units_categories_list = UnitsCategory::with(['units' => function ($query) {
-                $query->pluck('name', 'id');
-            }])
-            ->moderatorLimit($answer_units_categories)
-            ->companiesLimit($answer_units_categories)
-            ->authors($answer_units_categories)
-            ->systemItem($answer_units_categories) // Фильтр по системным записям
-            ->template($answer_units_categories)
-            ->orderBy('sort', 'asc')
-            ->get()
-            ->pluck('name', 'id');
+            //     // Главный запрос
+            // $units_categories_list = UnitsCategory::with(['units' => function ($query) {
+            //     $query->pluck('name', 'id');
+            // }])
+            // ->moderatorLimit($answer_units_categories)
+            // ->companiesLimit($answer_units_categories)
+            // ->authors($answer_units_categories)
+            // ->systemItem($answer_units_categories) // Фильтр по системным записям
+            // ->template($answer_units_categories)
+            // ->orderBy('sort', 'asc')
+            // ->get()
+            // ->pluck('name', 'id');
 
-            return view('services.mode-add', compact('units_categories_list'));
-            
+            return view('services.mode-add');
+
             break;
             
         }

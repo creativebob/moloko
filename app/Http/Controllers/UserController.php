@@ -13,6 +13,7 @@ use App\Location;
 use App\Booklist;
 use App\Role;
 use App\Country;
+use App\EntitySetting;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -240,11 +241,110 @@ class UserController extends Controller
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
 
+            // Вытаскиваем настройки
+            // Вытаскиваем базовые настройки сохранения фото
+            $settings = config()->get('settings');
+
+            // Начинаем проверку настроек, от компании до альбома
+            // Смотрим общие настройки для сущности
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+
+            if($get_settings){
+
+                if ($get_settings->img_small_width != null) {
+                    $settings['img_small_width'] = $get_settings->img_small_width;
+                }
+
+                if ($get_settings->img_small_height != null) {
+                    $settings['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings['img_max_size'] = $get_settings->img_max_size;
+
+                }
+            }
+
+            // Смотрим, есть ли настройки на конкретный альбом
+            // $get_settings = EntitySetting::where(['entity_id' => $album_id, 'entity' => 'albums'])->first();
+
+            // if($get_settings){
+
+            //     if ($get_settings->img_small_width != null) {
+            //         $settings['img_small_width'] = $get_settings->img_small_width;
+            //     }
+
+            //     if ($get_settings->img_small_height != null) {
+            //         $settings['img_small_height'] = $get_settings->img_small_height;
+            //     }
+
+            //     if ($get_settings->img_medium_width != null) {
+            //         $settings['img_medium_width'] = $get_settings->img_medium_width;
+            //     }
+
+            //     if ($get_settings->img_medium_height != null) {
+            //         $settings['img_medium_height'] = $get_settings->img_medium_height;
+            //     }
+
+            //     if ($get_settings->img_large_width != null) {
+            //         $settings['img_large_width'] = $get_settings->img_large_width;
+            //     }
+
+            //     if ($get_settings->img_large_height != null) {
+            //         $settings['img_large_height'] = $get_settings->img_large_height;  
+            //     }
+
+            //     if ($get_settings->img_formats != null) {
+            //         $settings['img_formats'] = $get_settings->img_formats;
+            //     }
+
+            //     if ($get_settings->img_min_width != null) {
+            //         $settings['img_min_width'] = $get_settings->img_min_width;
+            //     }
+
+            //     if ($get_settings->img_min_height != null) {
+            //         $settings['img_min_height'] = $get_settings->img_min_height;   
+            //     }
+
+            //     if ($get_settings->img_max_size != null) {
+            //         $settings['img_max_size'] = $get_settings->img_max_size;
+
+            //     }
+            // }
+
             // Директория
             $directory = $user->company_id.'/media/users/'.$user->id.'/img/';
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
-            $array = save_photo($request, $user->id, $company_id, $directory, 'avatar-'.time());
+            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
+            $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
             $photo = $array['photo'];
 
             $user->photo_id = $photo->id;
@@ -262,16 +362,16 @@ class UserController extends Controller
                     $item = explode(',', $string);
 
                     if ($item[2] == 'null') {
-                    $position = null;
+                        $position = null;
                     } else {
-                    $position = $item[2];
+                        $position = $item[2];
                     }
 
                     $mass[] = [
-                    'role_id' => $item[0],
-                    'department_id' => $item[1],
-                    'user_id' => $user->id,
-                    'position_id' => $position,
+                        'role_id' => $item[0],
+                        'department_id' => $item[1],
+                        'user_id' => $user->id,
+                        'position_id' => $position,
                     ];
                 }
 
@@ -443,17 +543,68 @@ class UserController extends Controller
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
 
+            // Вытаскиваем настройки
+            // Вытаскиваем базовые настройки сохранения фото
+            $settings = config()->get('settings');
+
+            // Начинаем проверку настроек, от компании до альбома
+            // Смотрим общие настройки для сущности
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+
+            if($get_settings){
+
+                if ($get_settings->img_small_width != null) {
+                    $settings['img_small_width'] = $get_settings->img_small_width;
+                }
+
+                if ($get_settings->img_small_height != null) {
+                    $settings['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings['img_max_size'] = $get_settings->img_max_size;
+
+                }
+            }
+
             // dd($company_id);
             // Директория
             $directory = $user->company_id.'/media/users/'.$user->id.'/img/';
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-
+            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             if ($user->photo_id) {
-                $array = save_photo($request, $user_auth_id, $company_id, $directory, 'avatar-'.time(), null, $user->photo_id);
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, $user->photo_id, $settings);
 
             } else {
-                $array = save_photo($request, $user_auth_id, $company_id, $directory, 'avatar-'.time());
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
             }
 
             $photo = $array['photo'];
@@ -508,14 +659,14 @@ class UserController extends Controller
         };
 
 
-            $backroute = $request->backroute;
+        $backroute = $request->backroute;
 
-            if(isset($backroute)){
+        if(isset($backroute)){
                 // return redirect()->back();
-                return redirect($backroute);
-            };
+            return redirect($backroute);
+        };
 
-            return redirect('/admin/users');
+        return redirect('/admin/users');
 
     }
 
@@ -601,9 +752,9 @@ class UserController extends Controller
 
         if ($request->session()->has('god')) {
 
-        $god_id = $request->session()->get('god');
-        $request->session()->forget('god');
-        Auth::loginUsingId($god_id);
+            $god_id = $request->session()->get('god');
+            $request->session()->forget('god');
+            Auth::loginUsingId($god_id);
         }
 
         return redirect()->route('getaccess.set');
@@ -737,16 +888,70 @@ class UserController extends Controller
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
 
+            // Вытаскиваем настройки
+            // Вытаскиваем базовые настройки сохранения фото
+            $settings = config()->get('settings');
+
+            // Начинаем проверку настроек, от компании до альбома
+            // Смотрим общие настройки для сущности
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+
+            if($get_settings){
+
+                if ($get_settings->img_small_width != null) {
+                    $settings['img_small_width'] = $get_settings->img_small_width;
+                }
+
+                if ($get_settings->img_small_height != null) {
+                    $settings['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings['img_max_size'] = $get_settings->img_max_size;
+
+                }
+            }
+            
+
+
             // dd($company_id);
             // Директория
             $directory = $user->company_id.'/media/users/'.$user->id.'/img/';
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             if ($user->photo_id) {
-                $array = save_photo($request, $user_auth_id, $company_id, $directory, 'avatar-'.time(), null, $user->photo_id);
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, $user->photo_id, $settings);
 
             } else {
-                $array = save_photo($request, $user_auth_id, $company_id, $directory, 'avatar-'.time());
+                 $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
             }
 
             $photo = $array['photo'];

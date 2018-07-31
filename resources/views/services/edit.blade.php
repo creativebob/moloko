@@ -1,4 +1,4 @@
-@extends('layouts.app')
+F@extends('layouts.app')
 
 @section('inhead')
 @include('includes.scripts.dropzone-inhead')
@@ -146,7 +146,7 @@
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
-                            @if ($service->template == 1)
+                            @if ($service->draft == 1)
 
                             @foreach ($service->services_product->services_category->metrics as $metric)
                             @include('services.metrics.metric-input', $metric)
@@ -180,8 +180,8 @@
 
                     {{-- Чекбокс черновика --}}
                     <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('template', 1, $service->template, ['id' => 'template']) }}
-                        <label for="template"><span>Черновик</span></label>
+                        {{ Form::checkbox('draft', 1, $service->draft, ['id' => 'draft']) }}
+                        <label for="draft"><span>Черновик</span></label>
                     </div>
 
                     {{-- Чекбокс отображения на сайте --}}

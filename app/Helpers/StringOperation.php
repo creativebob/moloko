@@ -81,6 +81,28 @@ function decorPhone($value) {
     return $result;
 }
 
+function callPhone($value) {
+
+      // dd($value);
+
+        if(strlen($value) == 11 ){
+                // $value = strtolower($value, "UTF-8");
+            $rest1 = '+7';
+                $rest2 = mb_substr($value, 1, 10); // возвращает "bcd"
+                $result = $rest1.$rest2;
+            };
+
+            if(strlen($value) < 6){
+                $result = "Номер не указан";
+            };
+
+            if(strlen($value) == 0){
+                $result = NULL;
+            };
+
+            return $result;
+        }
+
 function date_to_mysql($value)
 {
     $date_parts = explode('.', $value);

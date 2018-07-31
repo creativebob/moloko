@@ -123,6 +123,7 @@
 
 @section('modals')
 <section id="modal"></section>
+
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-archive')
 

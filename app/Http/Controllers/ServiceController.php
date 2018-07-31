@@ -19,6 +19,9 @@ use App\Policies\ServicePolicy;
 // use App\Policies\AreaPolicy;
 // use App\Policies\RegionPolicy;
 
+// Куки
+use Illuminate\Support\Facades\Cookie;
+
 
 // Транслитерация
 use Transliterate;
@@ -154,10 +157,32 @@ class ServiceController extends Controller
         ->get();
 
         $services_products_count = $services_categories[0]->services_products_count;
+        $parent_id = null;
+
+
+        if ($request->cookie('conditions') != null) {
+
+            $condition = Cookie::get('conditions');
+            if(isset($condition['services_category'])) {
+                $services_category_id = $condition['services_category'];
+
+                $services_category = $services_categories->find($services_category_id);
+                // dd($services_category);
+
+                $services_products_count = $services_category->services_products_count;
+                $parent_id = $services_category_id;
+                // dd($services_products_count);
+            }
+            
+        }
+
+        
         // dd($services_categories);
 
+        // dd($request->parent_id);
+
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $services_categories_list = get_select_tree($services_categories->keyBy('id')->toArray(), $request->parent_id, null, null);
+        $services_categories_list = get_select_tree($services_categories->keyBy('id')->toArray(), $parent_id, null, null);
         // echo $services_categories_list;
 
 
@@ -186,24 +211,31 @@ class ServiceController extends Controller
         switch ($request->mode) {
             case 'mode-default':
 
-            $services_product = new ServicesProduct;
-            $services_product->name = $name;
-            $services_product->services_category_id = $services_category_id;
-            $services_product->unit_id = 26;
-            // $services_product->unit_id = $request->unit_id;
-
-            // Модерация и системная запись
-            $services_product->system_item = $request->system_item;
-
-            $services_product->display = 1;
-            $services_product->company_id = $company_id;
-            $services_product->author_id = $user_id;
-            $services_product->save();
+            $services_product = ServicesProduct::where(['name' => $name, 'services_category_id' => $services_category_id])->first();
 
             if ($services_product) {
                 $services_product_id = $services_product->id;
             } else {
-                abort(403, 'Ошибка записи группы услуг');
+
+                $services_product = new ServicesProduct;
+                $services_product->name = $name;
+                $services_product->services_category_id = $services_category_id;
+                $services_product->unit_id = 26;
+                // $services_product->unit_id = $request->unit_id;
+
+                // Модерация и системная запись
+                $services_product->system_item = $request->system_item;
+
+                $services_product->display = 1;
+                $services_product->company_id = $company_id;
+                $services_product->author_id = $user_id;
+                $services_product->save();
+
+                if ($services_product) {
+                    $services_product_id = $services_product->id;
+                } else {
+                    abort(403, 'Ошибка записи группы услуг');
+                }
             }
             break;
             
@@ -253,7 +285,7 @@ class ServiceController extends Controller
 
         $service = new Service;
 
-        $service->template = 1;
+        $service->draft = 1;
 
         $service->services_product_id = $services_product_id;
 
@@ -261,20 +293,25 @@ class ServiceController extends Controller
 
         $service->company_id = $company_id;
         $service->author_id = $user_id;
-        $service->save();
 
         $service->name = $name;
         $service->save();
 
         if ($service) {
 
+            // Пишем сессию
+            $mass = [
+                'services_category' => $services_category_id,
+            ];
+            Cookie::queue('conditions', $mass, 1440);
+
             if ($request->quickly == 1) {
                 return redirect('/admin/services');
             } else {
-               return redirect('/admin/services/'.$service->id.'/edit'); 
+                return redirect('/admin/services/'.$service->id.'/edit'); 
             }
 
-            
+
 
         } else {
             abort(403, 'Ошибка записи артикула услуги');
@@ -295,14 +332,14 @@ class ServiceController extends Controller
         // $service = Service::with(['services_product.services_category' => function ($query) {
         //     $query->with(['metrics.property', 'metrics.property', 'compositions' => function ($query) {
         //         $query->with(['services' => function ($query) {
-        //             $query->whereNull('template');
+        //             $query->whereNull('draft');
         //         }]);
         //     }])
         //     ->withCount('metrics', 'compositions');
         // }, 'album.photos', 'company.manufacturers', 'metrics_values', 'compositions_values'])->withCount(['metrics_values', 'compositions_values'])->moderatorLimit($answer_services)->findOrFail($id);
 
         $service = Service::with(['services_product.services_category', 'album.photos', 'company.manufacturers'])->moderatorLimit($answer_services)->findOrFail($id);
-        // dd($service);
+        // dd($service->album->photos);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $service);
@@ -388,7 +425,7 @@ class ServiceController extends Controller
         // $services_modes = ServicesMode::with(['services_categories' => function ($query) use ($answer_services_categories) {
         //     $query->with(['services_products' => function ($query) {
         //         $query->with(['services' => function ($query) {
-        //             $query->whereNull('template');
+        //             $query->whereNull('draft');
         //         }]);
         //     }])
         //     ->withCount('services_products')
@@ -450,7 +487,7 @@ class ServiceController extends Controller
         // $compositions_count = count($request->compositions);
 
         // Если снят флаг черновика
-        // if (empty($request->template)) {
+        // if (empty($request->draft)) {
 
         //     // Проверка на наличие артикула
         //     // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
@@ -552,12 +589,12 @@ class ServiceController extends Controller
             $directory = $company_id.'/media/services/'.$service->id.'/img/';
             $name = 'avatar-'.time();
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), имя сущности, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             if ($service->photo_id) {
-                $array = save_photo($request, $user_id, $company_id, $directory, $name, null, $service->photo_id);
+                $array = save_photo($request, $directory, $name, null, $service->photo_id, $this->entity_name);
 
             } else {
-                $array = save_photo($request, $user_id, $company_id, $directory, $name);
+                $array = save_photo($request, $directory, $name, null, null, $this->entity_name);
                 
             }
             $photo = $array['photo'];
@@ -592,14 +629,14 @@ class ServiceController extends Controller
         $service->system_item = $request->system_item;
 
         $service->display = $request->display;
-        $service->template = $request->template;
+        $service->draft = $request->draft;
         $service->company_id = $company_id;
         $service->author_id = $user_id;
         $service->save();
 
         if ($service) {
 
-            // if ($service->template == 1) {
+            // if ($service->draft == 1) {
 
             //     if (isset($request->metrics)) {
             //         $metrics_insert = [];
@@ -753,7 +790,9 @@ class ServiceController extends Controller
             }
 
             $directory = $company_id.'/media/albums/'.$album_id.'/img/';
-            $array = save_photo($request, $user_id, $company_id, $directory,  $alias.'-'.time(), $album_id);
+
+            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), имя сущности, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
+            $array = save_photo($request, $directory,  $alias.'-'.time(), $album_id, null, $this->entity_name);
 
             $photo = $array['photo'];
             $upload_success = $array['upload_success'];

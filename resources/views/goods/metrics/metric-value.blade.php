@@ -1,6 +1,7 @@
 <table>
 	<tbody>
 		@switch($metric->property->type)
+
 		@case('numeric')
 		<tr>
 			<td>{{ $metric->name }}</td>
@@ -16,34 +17,26 @@
 		@break
 
 		@case('list')
-		<label>
-			@switch($metric->list_type)
-			@case('list')
-			<a data-toggle="metric-{{ $metric->id }}-dropdown">Список: {{ $metric->name }}</a>
-			<div class="dropdown-pane" id="metric-{{ $metric->id }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
-				<ul>
 
-					@foreach ($metric->values as $value)
-					<li class="checkbox">
-						{{ Form::checkbox('metrics-'.$metric->id.'[]', $value->value, null, ['id' => 'add-metric-value-'. $value->id]) }}
-						<label for="add-metric-value-{{ $value->id }}"><span>{{ $value->value }}</span></label>
-					</li>
-					@endforeach
+		@switch($metric->list_type)
 
-				</ul>
-			</div>
-			@break
-
-			@case('select')
-			<tr>
-				<td>{{ $metric->name }}</td>
-				<td>{{ $metric->pivot->value }}</td>
-			</tr>
-			@break
-			@endswitch
-		</label>
+		@case('list')
+		<tr>
+			<td>Список: {{ $metric->name }}</td>
+			<td>{{ $metric->pivot->value }}</td>
+		</tr>
 		@break
 
+		@case('select')
+		<tr>
+			<td>Select: {{ $metric->name }}</td>
+			<td>{{ $metric->pivot->value }}</td>
+		</tr>
+		@break
+
+		@endswitch
+		
+		@break
 
 		@endswitch
 	</tbody>

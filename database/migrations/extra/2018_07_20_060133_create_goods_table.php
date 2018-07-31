@@ -50,7 +50,7 @@ class CreateGoodsTable extends Migration
             $table->integer('photo_id')->nullable()->unsigned()->comment('ID аватара');
             $table->foreign('photo_id')->references('id')->on('photos');
 
-            $table->integer('template')->nullable()->unsigned()->comment('Статус шаблона');
+            $table->integer('draft')->nullable()->unsigned()->comment('Статус шаблона');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

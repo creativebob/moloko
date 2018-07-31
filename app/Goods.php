@@ -26,7 +26,7 @@ use App\Scopes\Filters\BooklistFilter;
 class Goods extends Model
 {
     // Включаем кеш
-    use Cachable;
+    // use Cachable;
 
     use Notifiable;
     use SoftDeletes;
@@ -48,7 +48,7 @@ class Goods extends Model
     // Метрики
     public function metrics_values()
     {
-        return $this->belongsToMany('App\Metric', 'article_values', 'article_id', 'entity_id')->where('entity', 'metrics')->withPivot('entity', 'value');
+        return $this->belongsToMany('App\Metric', 'goods_values', 'goods_id', 'entity_id')->where('entity', 'metrics')->withPivot('entity', 'value');
     }
 
     // // Состав
