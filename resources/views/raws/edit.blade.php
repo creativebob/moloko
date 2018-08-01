@@ -6,14 +6,14 @@
 @include('includes.scripts.sortable-inhead')
 @endsection
 
-@section('title', 'Редактировать товар')
+@section('title', 'Редактировать сырьё')
 
-@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $cur_goods))
+@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $raw))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ товар &laquo{{ $cur_goods->name }}&raquo</h2>
+        <h2 class="header-content">РЕДАКТИРОВАТЬ сырьё &laquo{{ $raw->name }}&raquo</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -50,7 +50,7 @@
             </div>
             @endif
 
-            {{ Form::model($cur_goods, ['url' => ['/admin/goods/'.$cur_goods->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'cur-goods-form']) }}
+            {{ Form::model($raw, ['url' => ['/admin/raws/'.$raw->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'raws-form']) }}
             {{ method_field('PATCH') }}
 
             <!-- Общая информация -->
@@ -67,14 +67,14 @@
                             <div class="small-12 medium-6 cell">
 
                                 <label>Категория
-                                    <select name="goods_category_id" disabled>
+                                    <select name="raws_category_id" disabled>
                                         @php
-                                        echo $goods_categories_list;
+                                        echo $raws_categories_list;
                                         @endphp
                                     </select>
                                 </label>
                                 <label>Группа
-                                    {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_product_id) }}
+                                    {{ Form::select('raws_product_id', $raws_products_list, $raw->raws_product_id) }}
                                 </label>
                                 <label>Название услуги
                                     {{ Form::text('name', null, ['required']) }}
@@ -110,7 +110,7 @@
                                 </fieldset>
 
                                 <label>Производитель
-                                    {{ Form::select('manufacturer_id', $manufacturers_list, $cur_goods->manufacturer_id, ['placeholder' => 'Выберите производителя'])}}
+                                    {{ Form::select('manufacturer_id', $manufacturers_list, $raw->manufacturer_id, ['placeholder' => 'Выберите производителя'])}}
                                 </label>
 
                             </div>
@@ -124,7 +124,7 @@
                                         {{ Form::file('photo') }}
                                     </label>
                                     <div class="text-center">
-                                        <img id="photo" @if (isset($cur_goods->photo_id)) src="/storage/{{ $cur_goods->company->id }}/media/goods/{{ $cur_goods->id }}/img/medium/{{ $cur_goods->photo->name }}" @endif>
+                                        <img id="photo" @if (isset($raw->photo_id)) src="/storage/{{ $raw->company->id }}/media/raws/{{ $raw->id }}/img/medium/{{ $raw->photo->name }}" @endif>
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@
 
                     {{-- Правый блок на первой вкладке --}}
                     <div class="small-12 large-6 cell">
-                        {{ Form::open(['url' => 'goods', 'data-abide', 'novalidate', 'id' => 'cur-goods-form']) }}
+                        {{ Form::open(['url' => 'raws', 'data-abide', 'novalidate', 'id' => 'raws-form']) }}
 
                         <fieldset class="fieldset-access">
                             <legend>Артикул</legend>
@@ -164,78 +164,78 @@
 
                         <div class="grid-x">
                             <div class="small-12 cell">
-                                <label>Описание товара
-                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$cur_goods->description, 'required'=>''])
+                                <label>Описание сырья
+                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$raw->description, 'required'=>''])
                                 </label>
                             </div>
                         </div>
-                        @if (($cur_goods->goods_product->goods_category->metrics_count > 0) || ($cur_goods->metrics_values_count > 0))
+                        @if (($raw->raws_product->raws_category->metrics_count > 0) || ($raw->metrics_values_count > 0))
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
-                            @if ($cur_goods->draft == 1)
+                            @if ($raw->draft == 1)
 
-                            @foreach ($cur_goods->goods_product->goods_category->metrics as $metric)
-                            @include('goods.metrics.metric-input', $metric)
+                            @foreach ($raw->raws_product->raws_category->metrics as $metric)
+                            @include('raws.metrics.metric-input', $metric)
                             @endforeach
 
                             @else
 
-                            @foreach ($cur_goods->metrics_values as $metric)
-                            @include('goods.metrics.metric-value', $metric)
+                            @foreach ($raw->metrics_values as $metric)
+                            @include('raws.metrics.metric-value', $metric)
                             @endforeach
 
                             @endif
 
-                            {{-- @if ($cur_goods->metrics_values_count > 0)
-                               @each('goods.metrics.metric-input', $cur_goods->goods_product->goods_category->metrics, 'metric')
-                               @each('goods.metrics.metric-value', $cur_goods->metrics_values, 'metric')
+                            {{-- @if ($raw->metrics_values_count > 0)
+                               @each('raws.metrics.metric-input', $raw->raws_product->raws_category->metrics, 'metric')
+                               @each('raws.metrics.metric-value', $raw->metrics_values, 'metric')
                                @endif --}}
 
                            </fieldset>
                            @endif
-                           <div id="cur-goods-inputs"></div>
+                           <div id="raws-inputs"></div>
                            <div class="small-12 cell tabs-margin-top text-center">
-                            <div class="item-error" id="cur-goods-error">Такой артикул уже существует!<br>Измените значения!</div>
+                            <div class="item-error" id="raws-error">Такой артикул уже существует!<br>Измените значения!</div>
                         </div>
-                        {{ Form::hidden('cur_goods_id', $cur_goods->id) }}
+                        {{ Form::hidden('raw_id', $raw->id) }}
 
                     </div>
                     {{-- Конец правого блока на первой вкладке --}}
 
                     {{-- Чекбокс черновика --}}
                     <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('draft', 1, $cur_goods->draft, ['id' => 'draft']) }}
+                        {{ Form::checkbox('draft', 1, $raw->draft, ['id' => 'draft']) }}
                         <label for="draft"><span>Черновик</span></label>
                     </div>
 
                     {{-- Чекбокс отображения на сайте --}}
-                    @can ('publisher', $cur_goods)
+                    @can ('publisher', $raw)
                     <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('display', 1, $cur_goods->display, ['id' => 'display']) }}
+                        {{ Form::checkbox('display', 1, $raw->display, ['id' => 'display']) }}
                         <label for="display"><span>Отображать на сайте</span></label>
                     </div>
                     @endcan
 
                     {{-- Чекбокс модерации --}}
-                    @can ('moderator', $cur_goods)
-                    @if ($cur_goods->moderation == 1)
+                    @can ('moderator', $raw)
+                    @if ($raw->moderation == 1)
                     <div class="small-12 cell checkbox">
-                        @include('includes.inputs.moderation', ['value'=>$cur_goods->moderation, 'name'=>'moderation'])
+                        @include('includes.inputs.moderation', ['value'=>$raw->moderation, 'name'=>'moderation'])
                     </div>
                     @endif
                     @endcan
 
                     {{-- Чекбокс системной записи --}}
-                    @can ('god', $cur_goods)
+                    @can ('god', $raw)
                     <div class="small-12 cell checkbox">
-                        @include('includes.inputs.system', ['value'=>$cur_goods->system_item, 'name'=>'system_item']) 
+                        @include('includes.inputs.system', ['value'=>$raw->system_item, 'name'=>'system_item']) 
                     </div>
                     @endcan
 
                     {{-- Кнопка --}}
                     <div class="small-12 cell tabs-button tabs-margin-top">
-                        {{ Form::submit('Редактировать товар', ['class'=>'button', 'id' => 'add-cur-goods']) }}
+                        {{ Form::submit('Редактировать сырьё', ['class'=>'button', 'id' => 'add-raws']) }}
                     </div>
 
                 </div>{{-- Закрытие разделителя на блоки --}}
@@ -252,12 +252,12 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Себестоимость
-                                        {{ Form::number('cost', $cur_goods->cost) }}
+                                        {{ Form::number('cost', $raw->cost) }}
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Цена
-                                        {{ Form::number('price', $cur_goods->price) }}
+                                        {{ Form::number('price', $raw->price) }}
                                     </label>
                                 </div>
                             </div>
@@ -293,12 +293,12 @@
                             </thead>
                             <tbody id="composition-table">
 
-                                {{-- Таблица метрик товара --}}
-                                @if (isset($cur_goods->goods_product->goods_category->compositions))
+                                {{-- Таблица метрик сырья --}}
+                                @if (isset($raw->raws_product->raws_category->compositions))
 
 
 
-                                @each('goods.compositions.composition', $cur_goods->goods_product->goods_category->compositions, 'composition')
+                                @each('raws.compositions.composition', $raw->raws_product->raws_category->compositions, 'composition')
                                 @endif
                             </tbody>
                         </table>
@@ -311,14 +311,14 @@
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-7 cell">
-                        {{ Form::open(['url' => '/admin/goods/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
-                        {{ Form::hidden('name', $cur_goods->name) }}
-                        {{ Form::hidden('id', $cur_goods->id) }}
+                        {{ Form::open(['url' => '/admin/raws/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
+                        {{ Form::hidden('name', $raw->name) }}
+                        {{ Form::hidden('id', $raw->id) }}
                         {{ Form::close() }}
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
-                            @if (isset($cur_goods->album_id))
+                            @if (isset($raw->album_id))
 
-                            @include('goods.photos', $cur_goods)
+                            @include('raws.photos', $raw)
 
                             @endif
                         </ul>
@@ -327,10 +327,10 @@
                     <div class="small-12 medium-5 cell">
 
                         {{-- Форма редактированя фотки --}}
-                        {{ Form::open(['url' => '/admin/goods/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
+                        {{ Form::open(['url' => '/admin/raws/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
 
-                        {{ Form::hidden('name', $cur_goods->name) }}
-                        {{ Form::hidden('id', $cur_goods->id) }}
+                        {{ Form::hidden('name', $raw->name) }}
+                        {{ Form::hidden('id', $raw->id) }}
                         {{ Form::close() }}
                     </div>
 
@@ -346,12 +346,12 @@
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
-@include('goods.scripts')
+@include('raws.scripts')
 
 <script>
 
     // Основные ностойки
-    var cur_goods_id = '{{ $cur_goods->id }}';
+    var raw_id = '{{ $raw->id }}';
 
     // При клике на удаление метрики со страницы
     $(document).on('click', '[data-open="delete-metric"]', function() {
@@ -368,7 +368,7 @@
             },
             url: '/admin/ajax_delete_relation_metric',
             type: 'POST',
-            data: {id: id, entity: 'goods', entity_id: cur_goods_id},
+            data: {id: id, entity: 'raws', entity_id: raw_id},
             success: function(date){
 
                 var result = $.parseJSON(date);
@@ -384,7 +384,7 @@
                     //   headers: {
                     //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     //   },
-                    //   url: '/goods/' + cur_goods_id + '/edit',
+                    //   url: '/raws/' + raw_id + '/edit',
                     //   type: 'GET',
                     //   data: $('#service-form').serialize(),
                     //   success: function(html){
@@ -418,7 +418,7 @@
             },
             url: '/admin/ajax_delete_relation_composition',
             type: 'POST',
-            data: {id: id, cur_goods_id: cur_goods_id},
+            data: {id: id, raw_id: raw_id},
             success: function(date){
 
                 var result = $.parseJSON(date);
@@ -448,19 +448,19 @@
 
     // Когда при клике по табам активная вкладка артикула
     $(document).on('change.zf.tabs', '.tabs-list', function() {
-        if ($('#goods:visible').length) {
+        if ($('#raws:visible').length) {
 
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '/admin/ajax_get_cur_goods_inputs',
+                url: '/admin/ajax_get_raw_inputs',
                 type: 'POST',
-                data: {cur_goods_id: cur_goods_id},
+                data: {raw_id: raw_id},
                 success: function(html){
                     // alert(html);
-                    $('#cur-goods-inputs').html(html);
-                    $('#cur-goods-inputs').foundation();
+                    $('#raws-inputs').html(html);
+                    $('#raws-inputs').foundation();
                     // Foundation.reInit($('#service-inputs'));
                 }
             })
@@ -468,25 +468,25 @@
     });
 
     // Проверяем наличие артикула в базе при клике на кнопку добавления артикула
-    // $(document).on('click', '#add-cur-goods', function(event) {
+    // $(document).on('click', '#add-raws', function(event) {
     //     event.preventDefault();
-    //     // alert($('#cur-goods-form').serialize());
-    //     // alert(cur_goods_id);
+    //     // alert($('#raws-form').serialize());
+    //     // alert(raw_id);
 
     //     $.ajax({
     //         headers: {
     //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     //         },
-    //         url: '/admin/goods/' + cur_goods_id,
+    //         url: '/admin/raws/' + raw_id,
     //         type: 'PATCH',
-    //         data: $('#cur-goods-form').serialize(),
+    //         data: $('#raws-form').serialize(),
     //         success: function(data) {
     //             var result = $.parseJSON(data);
     //             // alert(result['error_status']);
     //             // alert(data['metric_values']);
     //             if (result['error_status'] == 1) {
-    //                 $('#add-cur-goods').prop('disabled', true);
-    //                 $('#cur-goods-error').css('display', 'block');
+    //                 $('#add-raws').prop('disabled', true);
+    //                 $('#raws-error').css('display', 'block');
     //             } else {
 
     //             }
@@ -494,10 +494,10 @@
     //     })
     // });
 
-    $(document).on('change', '#cur-goods-form input', function() {
+    $(document).on('change', '#raws-form input', function() {
         // alert('lol');
-        $('#add-cur-goods').prop('disabled', false);
-        $('#cur-goods-error').css('display', 'none');
+        $('#add-raws').prop('disabled', false);
+        $('#raws-error').css('display', 'none');
     });
 
     // При смнене свойства в select
@@ -518,7 +518,7 @@
                 },
                 url: '/admin/ajax_add_property',
                 type: 'POST',
-                data: {id: id, entity: 'goods'},
+                data: {id: id, entity: 'raws'},
                 success: function(html){
                     // alert(html);
                     $('#property-form').html(html);
@@ -552,9 +552,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: '/admin/goods/' + cur_goods_id + '/edit',
+                    url: '/admin/raws/' + raw_id + '/edit',
                     type: 'GET',
-                    data: $('#cur-goods-form').serialize(),
+                    data: $('#raws-form').serialize(),
                     success: function(html){
                         // alert(html);
 
@@ -599,7 +599,7 @@
                 },
                 url: '/admin/ajax_add_relation_metric',
                 type: 'POST',
-                data: {id: $(this).val(), entity: 'goods', entity_id: cur_goods_id},
+                data: {id: $(this).val(), entity: 'raws', entity_id: raw_id},
                 success: function(html){
 
                     // alert(html);
@@ -616,7 +616,7 @@
                 },
                 url: '/admin/ajax_delete_relation_metric',
                 type: 'POST',
-                data: {id: $(this).val(), entity: 'goods', entity_id: cur_goods_id},
+                data: {id: $(this).val(), entity: 'raws', entity_id: raw_id},
                 success: function(date){
 
                     var result = $.parseJSON(date);
@@ -657,7 +657,7 @@
                 },
                 url: '/admin/ajax_add_page_composition',
                 type: 'POST',
-                data: {id: $(this).val(), entity: 'goods', cur_goods_id: cur_goods_id},
+                data: {id: $(this).val(), entity: 'raws', raw_id: raw_id},
                 success: function(html){
 
                     // alert(html);
@@ -690,7 +690,7 @@
             },
             url: '/admin/ajax_get_photo',
             type: 'POST',
-            data: {id: id, entity: 'goods'},
+            data: {id: id, entity: 'raws'},
             success: function(html){
 
                 // alert(html);
@@ -760,9 +760,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: '/admin/goods/photos',
+                    url: '/admin/raws/photos',
                     type: 'POST',
-                    data: {cur_goods_id: cur_goods_id},
+                    data: {raw_id: raw_id},
                     success: function(html){
                         // alert(html);
                         $('#photos-list').html(html);
