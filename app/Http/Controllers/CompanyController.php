@@ -15,11 +15,14 @@ use App\Worktime;
 use App\Location;
 use App\ScheduleEntity;
 use App\Supplier;
+use App\Manufacturer;
 use App\Country;
 use App\ServicesType;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
+use App\Policies\SupplierPolicy;
+use App\Policies\ManufacturerPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 
@@ -56,8 +59,10 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------
 
-        $companies = Company::with('author', 'director', 'location.city', 'sector', 'suppliers')
-        ->suppliers($user->company_id)
+        $companies = Company::with('author', 'director', 'location.city', 'sector', 'suppliers', 'manufacturers')
+
+        // ->suppliers($user->company_id)
+        // ->manufacturers($user->company_id)
         ->moderatorLimit($answer)
         ->filter($request, 'city_id', 'location')
         ->filter($request, 'sector_id')
@@ -222,6 +227,9 @@ class CompanyController extends Controller
         } else {
             abort(403, 'Ошибка записи компании');
         };
+
+
+        // Указываем ее как поставщика
 
         $supplier = new Supplier;
         $supplier->company_id = $company_id;
@@ -458,6 +466,8 @@ class CompanyController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $company);
+
+
 
         if ($company) {
 

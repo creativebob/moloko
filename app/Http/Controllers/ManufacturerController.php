@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\User;
-use App\Supplier;
+use App\Manufacturer;
 use App\Company;
 use App\Page;
 use App\Sector;
@@ -20,14 +20,14 @@ use App\ServicesType;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
-use App\Policies\SupplierPolicy;
+use App\Policies\ManufacturerPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\CompanyRequest;
-use App\Http\Requests\SupplierRequest;
+use App\Http\Requests\ManufacturerRequest;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
@@ -35,18 +35,18 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class SupplierController extends Controller
+class ManufacturerController extends Controller
 {
 
     // Сущность над которой производит операции контроллер
-    protected $entity_name = 'suppliers';
+    protected $entity_name = 'manufacturers';
     protected $entity_dependence = false;
 
     public function index(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Supplier::class);
+        $this->authorize(getmethod(__FUNCTION__), Manufacturer::class);
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -58,7 +58,7 @@ class SupplierController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $suppliers = Supplier::with('author', 'company')
+        $manufacturers = Manufacturer::with('author', 'company')
         ->where('company_id', '!=', null)
         ->moderatorLimit($answer)
         ->booklistFilter($request)
@@ -66,7 +66,7 @@ class SupplierController extends Controller
         ->paginate(30);
 
 
-        $filter_query = Supplier::moderatorLimit($answer)->get();
+        $filter_query = Manufacturer::moderatorLimit($answer)->get();
         $filter['status'] = null;
 
         // $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
@@ -77,18 +77,18 @@ class SupplierController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('suppliers.index', compact('suppliers', 'page_info', 'filter', 'user'));
+        return view('manufacturers.index', compact('manufacturers', 'page_info', 'filter', 'user'));
     }
 
     public function create(Request $request)
         {
 
         //Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Supplier::class);
+        $this->authorize(getmethod(__FUNCTION__), Manufacturer::class);
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 
         // Создаем новый экземляр компании 
-        $supplier = new Supplier;
+        $manufacturer = new Manufacturer;
 
         // Создаем новый экземляр поставщика
         $company = new Company;
@@ -125,14 +125,14 @@ class SupplierController extends Controller
         $worktime = [];
         for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
 
-        return view('suppliers.create', compact('company', 'supplier', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
+        return view('manufacturers.create', compact('company', 'manufacturer', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
     }
 
     public function store(CompanyRequest $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Supplier::class);
+        $this->authorize(getmethod(__FUNCTION__), Manufacturer::class);
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -216,10 +216,10 @@ class SupplierController extends Controller
             abort(403, 'Ошибка записи компании');
         };
 
-        $supplier = new Supplier;
-        $supplier->company_id = $company_id;
-        $supplier->contragent_id = $company->id;
-        $supplier->save();
+        $manufacturer = new Manufacturer;
+        $manufacturer->company_id = $company_id;
+        $manufacturer->contragent_id = $company->id;
+        $manufacturer->save();
 
         // Создаем связь расписания с компанией
         $schedule_entity = new ScheduleEntity;
@@ -228,7 +228,7 @@ class SupplierController extends Controller
         $schedule_entity->entity = 'companies';
         $schedule_entity->save();
 
-        return redirect('/admin/suppliers');
+        return redirect('/admin/manufacturers');
         // return redirect('admin/companies');
     }
 
@@ -240,11 +240,11 @@ class SupplierController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $supplier = Supplier::moderatorLimit($answer)->findOrFail($id);
+        $manufacturer = Manufacturer::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('view', $supplier);
-        return view('suppliers.show', compact('supplier'));
+        $this->authorize('view', $manufacturer);
+        return view('manufacturers.show', compact('manufacturer'));
     }
 
 
@@ -260,16 +260,16 @@ class SupplierController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $supplier = Supplier::moderatorLimit($answer)->findOrFail($id);
+        $manufacturer = Manufacturer::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $supplier);
+        $this->authorize(getmethod(__FUNCTION__), $manufacturer);
 
 
 
         // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
 
-        $company_id = $supplier->company->id;
+        $company_id = $manufacturer->company->id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_company = operator_right('company', false, getmethod(__FUNCTION__));
@@ -352,11 +352,11 @@ class SupplierController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-        return view('suppliers.edit', compact('company', 'supplier', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
+        return view('manufacturers.edit', compact('company', 'manufacturer', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
     }
 
 
-    public function update(SupplierRequest $request, $id)
+    public function update(ManufacturerRequest $request, $id)
     {
 
         // Получаем авторизованного пользователя
@@ -366,13 +366,13 @@ class SupplierController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $supplier = Supplier::moderatorLimit($answer)->findOrFail($id);
+        $manufacturer = Manufacturer::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $supplier);
+        $this->authorize(getmethod(__FUNCTION__), $manufacturer);
 
 
-        $company_id = $supplier->company->id;
+        $company_id = $manufacturer->company->id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
@@ -466,7 +466,7 @@ class SupplierController extends Controller
         // Записываем связи: id-шники в таблицу companies_services_types
         $result = $company->services_types()->sync($request->services_types_id);
 
-        return redirect('/admin/suppliers');
+        return redirect('/admin/manufacturers');
     }
 
 
@@ -477,25 +477,25 @@ class SupplierController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $supplier = Supplier::moderatorLimit($answer)->findOrFail($id);
+        $manufacturer = Manufacturer::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $supplier);
+        $this->authorize(getmethod(__FUNCTION__), $manufacturer);
 
-        if ($supplier) {
+        if ($manufacturer) {
 
             $user = $request->user();
 
             // Скрываем бога
             $user_id = hideGod($user);
-            $supplier->editor_id = $user_id;
-            $supplier->save();
+            $manufacturer->editor_id = $user_id;
+            $manufacturer->save();
 
-            $supplier = Supplier::destroy($id);
+            $manufacturer = Manufacturer::destroy($id);
 
             // Удаляем компанию с обновлением
-            if($supplier) {
-                return redirect('/admin/suppliers');
+            if($manufacturer) {
+                return redirect('/admin/manufacturers');
 
             } else {
                 abort(403, 'Ошибка при удалении поставщика');
@@ -507,15 +507,15 @@ class SupplierController extends Controller
     }
 
     // Сортировка
-    public function suppliers_sort(Request $request)
+    public function Manufacturers_sort(Request $request)
     {
         $result = '';
         $i = 1;
-        foreach ($request->suppliers as $item) {
+        foreach ($request->manufacturers as $item) {
 
-            $suppliers = Supplier::findOrFail($item);
-            $suppliers->sort = $i;
-            $suppliers->save();
+            $manufacturers = Manufacturer::findOrFail($item);
+            $manufacturers->sort = $i;
+            $manufacturers->save();
             $i++;
         }
     }

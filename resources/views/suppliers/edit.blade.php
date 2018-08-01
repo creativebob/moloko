@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Редактировать компанию')
+@section('title', 'Редактировать поставщика')
 
 @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $supplier->company->name))
 

@@ -352,7 +352,17 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => null,
             ],
-
+            [
+                'name' => 'Производители',
+                'site_id' => 1,
+                'title' => 'Производители',
+                'description' => 'Производители чего-либо - вот кто рулит миром!',
+                'alias' => 'manufacturers',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
 
             [
                 'name' => 'Рабочий стол',

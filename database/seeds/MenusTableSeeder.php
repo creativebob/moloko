@@ -527,7 +527,19 @@ class MenusTableSeeder extends Seeder
             'display' => 1,
             'sort' => null,
         ],
-
+        [
+            'name' => 'Производители',
+            'icon' => null,
+            'alias' => 'admin/manufacturers',
+            'parent_id' => 14,
+            'page_id' => 31,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
         // Остальное
                 // [
         //     'name' => 'Типы помещений',
