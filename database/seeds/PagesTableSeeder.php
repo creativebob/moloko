@@ -354,6 +354,19 @@ class PagesTableSeeder extends Seeder
             ],
 
 
+            [
+                'name' => 'Рабочий стол',
+                'site_id' => 1,
+                'title' => 'Рабочий стол',
+                'description' => 'Рабочий стол',
+                'alias' => 'dashboard',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+
             // [
             //     'name' => 'Категории продукции',
             //     'site_id' => 1,

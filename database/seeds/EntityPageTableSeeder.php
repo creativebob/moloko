@@ -40,6 +40,10 @@ class EntityPageTableSeeder extends Seeder
             'entity_id' => 31,
             'page_id' => 28,
         ];
+        // $mass[] = [
+        //     'entity_id' => 54,
+        //     'page_id' => 31,
+        // ];
 
         DB::table('entity_page')->insert($mass);
     }

@@ -2,6 +2,7 @@
   <nav class="nav" id="sidebar-navigation">
     @if($sidebar_tree)
       <ul class="vertical menu accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
+        <li><a href="/admin/dashboard" data-link="0"><div class="icon-mcc sprite"></div><span>ЦУП</span></a></li>
         @foreach ($sidebar_tree as $sidebar)
           @if($sidebar['parent_id'] == null)
           {{-- Если родитель --}}

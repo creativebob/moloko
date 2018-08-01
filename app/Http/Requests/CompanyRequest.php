@@ -26,7 +26,7 @@ class CompanyRequest extends FormRequest
         return [
 
             'name' => 'string|max:255|required', 
-            'alias' => 'string|max:255|alpha', 
+            'alias' => 'string|max:255|alpha|unique:companies', 
             'phone' => 'string|max:17|required', 
             'extra_phone' => 'string|max:17|nullable', 
             'email' => 'nullable|string|email|max:255', 

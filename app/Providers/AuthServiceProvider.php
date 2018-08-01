@@ -45,6 +45,10 @@ use App\Goods;
 use App\GoodsCategory;
 use App\GoodsProduct;
 
+use App\Raw;
+use App\RawsCategory;
+use App\RawsProduct;
+
 // use App\Article;
 
 use App\Policies\UserPolicy;
@@ -90,6 +94,10 @@ use App\Policies\ServicesProductPolicy;
 use App\Policies\GoodsPolicy;
 use App\Policies\GoodsCategoryPolicy;
 use App\Policies\GoodsProductPolicy;
+
+use App\Policies\RawPolicy;
+use App\Policies\RawsCategoryPolicy;
+use App\Policies\RawsProductPolicy;
 
 // use App\Policies\ArticlePolicy;
 
@@ -142,6 +150,9 @@ class AuthServiceProvider extends ServiceProvider
         Goods::class => GoodsPolicy::class,
         GoodsCategory::class => GoodsCategoryPolicy::class,
         GoodsProduct::class => GoodsProductPolicy::class,
+        Raw::class => RawPolicy::class,
+        RawsCategory::class => RawsCategoryPolicy::class,
+        RawsProduct::class => RawsProductPolicy::class,
     ];
 
     public function boot()

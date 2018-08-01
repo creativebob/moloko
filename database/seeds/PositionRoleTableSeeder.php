@@ -12,8 +12,8 @@ class PositionRoleTableSeeder extends Seeder
     public function run()
     {
          DB::table('position_role')->insert([
-        	['position_id' => 1, 'role_id' => 3], 
-        	['position_id' => 2, 'role_id' => 4], 
+        	['position_id' => 1, 'role_id' => 2], 
+        	// ['position_id' => 2, 'role_id' => 4], 
 
 
         ]);

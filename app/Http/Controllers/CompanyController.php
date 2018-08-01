@@ -90,7 +90,7 @@ class CompanyController extends Controller
     }
 
     public function create(Request $request)
-        {
+    {
 
         //Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Company::class);
@@ -132,7 +132,7 @@ class CompanyController extends Controller
         $worktime = [];
         for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
 
-        return view('companies.create', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
+            return view('companies.create', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
     }
 
     public function store(CompanyRequest $request)
@@ -196,6 +196,7 @@ class CompanyController extends Controller
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
+        $company->bank = $request->bank;
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
 
@@ -212,7 +213,7 @@ class CompanyController extends Controller
 
             // Записываем связи: id-шники в таблицу Rooms
             if(isset($request->services_types_id)){
-                
+
                 $result = $company->services_types()->sync($request->services_types_id);               
             } else {
                 $result = $company->services_types()->detach(); 
@@ -395,9 +396,11 @@ class CompanyController extends Controller
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
+        $company->bank = $request->bank;
+        
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
-        $company->bank = $request->bank;
+        
 
         if ($company->sector_id != $request->sector_id) {
             $company->sector_id = $request->sector_id;
@@ -506,6 +509,6 @@ class CompanyController extends Controller
             return 0;
         } else {
             return $company->name;};
-    }
+        }
 
-}
+    }

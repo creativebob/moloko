@@ -16,6 +16,9 @@ Auth::routes();
 Route::resource('/site_api', 'ApiController');
 Route::get('/medcosm', 'ApiController@medcosm');
 
+
+Route::get('/dashboard', 'HomeController@index')->name('home');
+
 // Вход в панель управления
 Route::get('/', function () {
   return view('layouts.enter');
@@ -137,12 +140,6 @@ Route::post('/article/photos', 'ArticleController@photos')->middleware('auth');
 
 // ------------------------------------ Категории продукции --------------------------------------
 
-// -------------------------------- Категории товаров -----------------------------------------
-// Текущая добавленная/удаленная категория
-Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('auth');
-// Основные методы
-Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('auth');
-
 // -------------------------------- Категории сырья -------------------------------------------
 // Текущая добавленная/удаленная категория
 Route::any('/raws_categories', 'RawsCategoryController@index')->middleware('auth');
@@ -195,8 +192,6 @@ Route::post('/services_sort', 'ServiceController@services_sort')->middleware('au
 Route::post('/services_display', 'ServiceController@ajax_display')->middleware('auth');
 
 // -------------------------------- Категории товаров -------------------------------------------
-// Route::any('/goods_categories/create', 'GoodsCategoryController@create')->middleware('auth');
-
 // Текущая добавленная/удаленная категория
 Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('auth');
 
@@ -243,6 +238,51 @@ Route::post('/sector_check', 'SectorController@sector_check')->middleware('auth'
 Route::post('/sectors_list', 'SectorController@sectors_list')->middleware('auth');
 // Сортировка секторов
 Route::post('/sectors_sort', 'SectorController@sectors_sort')->middleware('auth');
+
+
+// -------------------------------- Категории сырья -------------------------------------------
+// Route::get('/services_categories/create', 'ServicesCategoryController@create')->middleware('auth');
+
+// Текущая добавленная/удаленная категория
+Route::any('/raws_categories', 'RawsCategoryController@index')->middleware('auth');
+
+// Основные методы
+Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth');
+
+// Проверка на существование категории продукции
+Route::post('/raws_category_check', 'RawsCategoryController@raws_category_check')->middleware('auth');
+
+// Отображение страниц на сайте
+Route::post('/raws_categories_display', 'RawsCategoryController@ajax_display')->middleware('auth');
+// Сортировка
+Route::post('/raws_categories_sort', 'RawsCategoryController@raws_categories_sort')->middleware('auth');
+
+// --------------------------------- Продукция сырья --------------------------------------------
+// Основные методы
+Route::resource('/raws_products', 'RawsProductController')->middleware('auth');
+
+Route::any('/ajax_raws_count', 'RawsProductController@ajax_count')->middleware('auth');
+Route::any('/ajax_raws_modes', 'RawsProductController@ajax_modes')->middleware('auth');
+
+// ---------------------------------- Сырьё (Артикулы) -------------------------------------------
+Route::any('/raws/create', 'RawController@create')->middleware('auth');
+
+// Основные методы
+Route::resource('/raws', 'RawController')->middleware('auth');
+// Route::get('/raws/search/{text_fragment}', 'RawController@search')->middleware('auth');
+Route::post('/raws/search/{text_fragment}', 'RawController@search')->middleware('auth');
+
+Route::any('/service/add_photo', 'RawController@add_photo')->middleware('auth');
+Route::post('/service/photos', 'RawController@photos')->middleware('auth');
+
+// Архивация
+Route::post('/raws/archive/{id}', 'RawController@archive')->middleware('auth');
+
+// Сортировка
+Route::post('/raws_sort', 'RawController@raws_sort')->middleware('auth');
+
+// Отображение страниц на сайте
+Route::post('/raws_display', 'RawController@ajax_display')->middleware('auth');
 
 // --------------------------------------- Свойства -----------------------------------------------
 Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware('auth');
