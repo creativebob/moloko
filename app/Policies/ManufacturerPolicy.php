@@ -4,20 +4,18 @@ namespace App\Policies;
 
 use App\Policies\Traits\PoliticTrait;
 use App\User;
-use App\Company;
-use App\Supplier;
-
+use App\Manufacturer;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class CompanyPolicy
+class ManufacturerPolicy
 {
     
     use HandlesAuthorization;
     use PoliticTrait;
 
-    protected $entity_name = 'companies';
+    protected $entity_name = 'manufacturers';
     protected $entity_dependence = false;
 
     public function before($user)
@@ -32,7 +30,7 @@ class CompanyPolicy
         return $result;
     }
 
-    public function view(User $user, Company $model)
+    public function view(User $user, Manufacturer $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
         return $result;
@@ -44,37 +42,25 @@ class CompanyPolicy
         return $result;
     }
 
-    public function update(User $user, Company $model)
+    public function update(User $user, Manufacturer $model)
     { 
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
 
-    public function delete(User $user, Company $model)
+    public function delete(User $user, Manufacturer $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
-
-        // Проверяем на наличие связей
-        $suppliers = Supplier::where('company_id', $model->id);
-
-        // Проверяем на наличие связей
-        $companies = Supplier::where('contragent_id', $model->id);
-
-        // Если есть связи - запрещаем удаление
-        if(($suppliers->count() > 0)||($companies->count() > 0)){
-            return false;
-        };
-
         return $result;
     }
 
-    public function moderator(User $user, Company $model)
+    public function moderator(User $user, Manufacturer $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
         return $result;
     }
 
-    public function automoderate(User $user, Company $model)
+    public function automoderate(User $user, Manufacturer $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'automoderate', $this->entity_dependence);
         return $result;

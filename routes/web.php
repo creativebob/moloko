@@ -256,7 +256,15 @@ Route::resource('/metrics', 'MetricController')->middleware('auth');
 // --------------------------------------- Компании -----------------------------------------------
 Route::resource('/companies', 'CompanyController')->middleware('auth');
 
-Route::resource('suppliers', 'SupplierController')->middleware('auth');
+// Поставщики
+Route::resource('/suppliers', 'SupplierController')->middleware('auth');
+// Сортировка поставщиков
+Route::post('/suppliers_sort', 'SupplierController@suppliers_sort')->middleware('auth');
+
+// Производители
+Route::resource('/manufacturers', 'ManufacturerController')->middleware('auth');
+// Сортировка поставщиков
+Route::post('/manufacturers_sort', 'ManufacturerController@manufacturers_sort')->middleware('auth');
 
 // Проверка существования компании в базе по ИНН
 Route::post('/companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');

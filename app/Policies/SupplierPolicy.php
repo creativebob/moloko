@@ -15,7 +15,7 @@ class SupplierPolicy
     use HandlesAuthorization;
     use PoliticTrait;
 
-    protected $entity_name = 'companies';
+    protected $entity_name = 'suppliers';
     protected $entity_dependence = false;
 
     public function before($user)

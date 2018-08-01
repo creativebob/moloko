@@ -451,6 +451,14 @@ class EntitiesTableSeeder extends Seeder
       'system_item' => 1,
       'author_id' => 1,
     ],
+    [
+      'name' => 'Производители',
+      'alias' => 'manufacturers',
+      'model' => 'Manufacturer',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
 
 
     // [

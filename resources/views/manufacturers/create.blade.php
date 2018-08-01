@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Новый поставщик')
+@section('title', 'Новый производитель')
 
 @section('breadcrumbs', Breadcrumbs::render('create', $page_info))
 
 @section('title-content')
 	<div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">ДОБАВЛЕНИЕ НОВОГО ПОСТАВЩИКА</h2>
+       <h2 class="header-content">ДОБАВЛЕНИЕ НОВОГО ПРОИЗВОДИТЕЛЯ</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -16,8 +16,8 @@
 
 @section('content')
 
-  {{ Form::open(['url' => '/admin/suppliers', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
-    @include('suppliers.form', ['submitButtonText' => 'Добавить поставщика', 'param' => ''])
+  {{ Form::open(['url' => '/admin/manufacturers', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+    @include('manufacturers.form', ['submitButtonText' => 'Добавить производителя', 'param' => ''])
   {{ Form::close() }}
 
 @endsection

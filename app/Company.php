@@ -14,6 +14,7 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use App\Scopes\Traits\SuppliersTraitScopes;
+use App\Scopes\Traits\ManufacturersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
@@ -40,6 +41,7 @@ class Company extends Model
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
     use SuppliersTraitScopes;
+    use ManufacturersTraitScopes;
 
     // Фильтры
     use Filter;
@@ -139,6 +141,12 @@ class Company extends Model
     public function suppliers()
     {
         return $this->hasMany('App\Supplier', 'contragent_id');
+    }
+
+    // Получаем контрагентов
+    public function manufacturers()
+    {
+        return $this->hasMany('App\Manufacturer', 'contragent_id');
     }
 
     // Получаем категории продукции
