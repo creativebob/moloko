@@ -12,6 +12,8 @@ use App\Album;
 use App\AlbumEntity;
 use App\Photo;
 
+use App\EntitySetting;
+
 use App\ArticleValue;
 
 // Политика
@@ -586,23 +588,71 @@ class ServiceController extends Controller
 
         if ($request->hasFile('photo')) {
 
-            $directory = $company_id.'/media/services/'.$service->id.'/img/';
-            $name = 'avatar-'.time();
+            // Вытаскиваем настройки
+            // Вытаскиваем базовые настройки сохранения фото
+            $settings = config()->get('settings');
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), имя сущности, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
-            if ($service->photo_id) {
-                $array = save_photo($request, $directory, $name, null, $service->photo_id, $this->entity_name);
+            // Начинаем проверку настроек, от компании до альбома
+            // Смотрим общие настройки для сущности
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
 
-            } else {
-                $array = save_photo($request, $directory, $name, null, null, $this->entity_name);
-                
+            if ($get_settings) {
+
+                if ($get_settings->img_small_width != null) {
+                    $settings['img_small_width'] = $get_settings->img_small_width;
+                }
+
+                if ($get_settings->img_small_height != null) {
+                    $settings['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings['img_max_size'] = $get_settings->img_max_size;
+
+                }
             }
+
+            $directory = $company_id.'/media/services/'.$service->id.'/img/';
+
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            if ($service->photo_id) {
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, $service->photo_id, $settings);
+            } else {
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
+            }
+
             $photo = $array['photo'];
 
             $service->photo_id = $photo->id;
         } 
-
-        
 
         // Наполняем сущность данными
         $service->services_product_id = $request->services_product_id;
@@ -789,10 +839,64 @@ class ServiceController extends Controller
                 }
             }
 
+            // Вытаскиваем настройки
+            // Вытаскиваем базовые настройки сохранения фото
+            $settings = config()->get('settings');
+
+            // Начинаем проверку настроек, от компании до альбома
+            // Смотрим общие настройки для сущности
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+
+            if ($get_settings) {
+
+                if ($get_settings->img_small_width != null) {
+                    $settings['img_small_width'] = $get_settings->img_small_width;
+                }
+
+                if ($get_settings->img_small_height != null) {
+                    $settings['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings['img_max_size'] = $get_settings->img_max_size;
+
+                }
+            }
+
+
+
             $directory = $company_id.'/media/albums/'.$album_id.'/img/';
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), имя сущности, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
-            $array = save_photo($request, $directory,  $alias.'-'.time(), $album_id, null, $this->entity_name);
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            $array = save_photo($request, $directory, $alias.'-'.time(), $album_id, null, $settings);
 
             $photo = $array['photo'];
             $upload_success = $array['upload_success'];

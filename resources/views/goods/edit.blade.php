@@ -329,7 +329,6 @@
                         {{-- Форма редактированя фотки --}}
                         {{ Form::open(['url' => '/admin/goods/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
 
-
                         {{ Form::hidden('name', $cur_goods->name) }}
                         {{ Form::hidden('id', $cur_goods->id) }}
                         {{ Form::close() }}
@@ -348,10 +347,6 @@
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
 @include('goods.scripts')
-
-@php
-$settings = config()->get('settings');
-@endphp
 
 <script>
 
@@ -751,12 +746,11 @@ $settings = config()->get('settings');
     });
 
     // Настройки dropzone
-    var minImageHeight = 795;
     Dropzone.options.myDropzone = {
         paramName: 'photo',
-        maxFilesize: {{ $settings['img_max_size'] }}, // MB
+        maxFilesize: {{ $settings_album['img_max_size'] }}, // MB
         maxFiles: 20,
-        acceptedFiles: '{{ $settings['img_formats'] }}',
+        acceptedFiles: '{{ $settings_album['img_formats'] }}',
         addRemoveLinks: true,
         init: function() {
             this.on("success", function(file, responseText) {
@@ -767,7 +761,7 @@ $settings = config()->get('settings');
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     url: '/admin/goods/photos',
-                    type: 'post',
+                    type: 'POST',
                     data: {cur_goods_id: cur_goods_id},
                     success: function(html){
                         // alert(html);
@@ -779,7 +773,7 @@ $settings = config()->get('settings');
                 })
             });
             this.on("thumbnail", function(file) {
-                if (file.width < {{ $settings['img_min_width'] }} || file.height < minImageHeight) {
+                if (file.width < {{ $settings_album['img_min_width'] }} || file.height < {{ $settings_album['img_min_height'] }}) {
                     file.rejectDimensions();
                 } else {
                     file.acceptDimensions();
@@ -788,7 +782,7 @@ $settings = config()->get('settings');
         },
         accept: function(file, done) {
             file.acceptDimensions = done;
-            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину"); };
+            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings_album['img_min_width'] }} px в ширину"); };
         }
     };
 

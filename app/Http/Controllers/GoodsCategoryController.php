@@ -9,6 +9,8 @@ use App\GoodsProduct;
 use App\GoodsCategory;
 use App\Property;
 
+use App\EntitySetting;
+
 // use App\Company;
 // use App\Photo;
 // use App\Album;
@@ -424,7 +426,7 @@ class GoodsCategoryController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => 'goods_categories'])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
 
             if ($get_settings) {
 
@@ -683,7 +685,7 @@ class GoodsCategoryController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => 'goods_categories'])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
 
             if ($get_settings) {
 

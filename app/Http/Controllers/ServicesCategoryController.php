@@ -10,6 +10,8 @@ use App\ServicesCategory;
 use App\Property;
 use App\Company;
 
+use App\EntitySetting;
+
 // use App\Company;
 // use App\Photo;
 // use App\Album;
@@ -438,7 +440,7 @@ class ServicesCategoryController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => 'services_categories'])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
 
             if ($get_settings) {
 
@@ -697,7 +699,7 @@ class ServicesCategoryController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => 'services_categories'])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
 
             if ($get_settings) {
 
