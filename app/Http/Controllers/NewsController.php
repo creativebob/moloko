@@ -10,6 +10,8 @@ use App\AlbumsCategory;
 use App\AlbumEntity;
 use App\CityEntity;
 
+use App\EntitySetting;
+
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\NewsRequest;
@@ -224,7 +226,7 @@ class NewsController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => 'news'])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
 
             if ($get_settings) {
 
@@ -273,7 +275,7 @@ class NewsController extends Controller
             // Директория
             $directory = $company_id.'/media/news/'.$cur_news->id.'/img/';
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            // Отправляем на хелпер request (в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             $array = save_photo($request, $directory, 'preview-'.time(), null, null, $settings);
             $photo = $array['photo'];
 
@@ -411,7 +413,7 @@ class NewsController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => 'news'])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
 
             if ($get_settings) {
 

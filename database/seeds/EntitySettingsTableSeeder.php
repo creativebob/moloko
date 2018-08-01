@@ -14,7 +14,7 @@ class EntitySettingsTableSeeder extends Seeder
         DB::table('entity_settings')->insert([
         	[
                 'company_id' => null,
-		        'name' => 'img_small_width',
+		        'name' => null,
 		        'description' => 'Комментарий к настройке',
                 'entity_id' => null,
                 'entity' => null,
@@ -35,7 +35,7 @@ class EntitySettingsTableSeeder extends Seeder
 
             [
                 'company_id' => null,
-                'name' => 'img_small_width',
+                'name' => null,
                 'description' => 'Нстройка аватра пользователя',
                 'entity_id' => null,
                 'entity' => 'users',
@@ -56,7 +56,7 @@ class EntitySettingsTableSeeder extends Seeder
 
             [
                 'company_id' => null,
-                'name' => 'img_small_width',
+                'name' => null,
                 'description' => 'Настойка аватара товара',
                 'entity_id' => null,
                 'entity' => 'goods',
@@ -77,7 +77,7 @@ class EntitySettingsTableSeeder extends Seeder
 
             [
                 'company_id' => null,
-                'name' => 'img_small_width',
+                'name' => null,
                 'description' => 'Настройка альбомной категории товаров',
                 'entity_id' => 1,
                 'entity' => 'albums_categories',

@@ -12,6 +12,7 @@ use App\Album;
 use App\AlbumEntity;
 use App\Photo;
 use App\UnitsCategory;
+
 use App\EntitySetting;
 
 use App\ArticleValue;
@@ -465,10 +466,111 @@ class GoodsController extends Controller
         //     dd($composition->name);
         // }
 
+
+        // Получаем настройки по умолчанию
+        $settings = config()->get('settings');
+        // dd($settings);
+
+        $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+
+        if($get_settings){
+
+            if ($get_settings->img_small_width != null) {
+                $settings['img_small_width'] = $get_settings->img_small_width;
+            }
+
+            if ($get_settings->img_small_height != null) {
+                $settings['img_small_height'] = $get_settings->img_small_height;
+            }
+
+            if ($get_settings->img_medium_width != null) {
+                $settings['img_medium_width'] = $get_settings->img_medium_width;
+            }
+
+            if ($get_settings->img_medium_height != null) {
+                $settings['img_medium_height'] = $get_settings->img_medium_height;
+            }
+
+            if ($get_settings->img_large_width != null) {
+                $settings['img_large_width'] = $get_settings->img_large_width;
+            }
+
+            if ($get_settings->img_large_height != null) {
+                $settings['img_large_height'] = $get_settings->img_large_height;  
+            }
+
+            if ($get_settings->img_formats != null) {
+                $settings['img_formats'] = $get_settings->img_formats;
+            }
+
+            if ($get_settings->img_min_width != null) {
+                $settings['img_min_width'] = $get_settings->img_min_width;
+            }
+
+            if ($get_settings->img_min_height != null) {
+                $settings['img_min_height'] = $get_settings->img_min_height;   
+            }
+
+            if ($get_settings->img_max_size != null) {
+                $settings['img_max_size'] = $get_settings->img_max_size;
+            }
+        }
+
+        // Получаем настройки по умолчанию
+        $settings_album = config()->get('settings');
+        // dd($settings_album);
+
+        $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id' => 1])->first();
+
+        if($get_settings){
+
+            if ($get_settings->img_small_width != null) {
+                $settings_album['img_small_width'] = $get_settings->img_small_width;
+            }
+
+            if ($get_settings->img_small_height != null) {
+                $settings_album['img_small_height'] = $get_settings->img_small_height;
+            }
+
+            if ($get_settings->img_medium_width != null) {
+                $settings_album['img_medium_width'] = $get_settings->img_medium_width;
+            }
+
+            if ($get_settings->img_medium_height != null) {
+                $settings_album['img_medium_height'] = $get_settings->img_medium_height;
+            }
+
+            if ($get_settings->img_large_width != null) {
+                $settings_album['img_large_width'] = $get_settings->img_large_width;
+            }
+
+            if ($get_settings->img_large_height != null) {
+                $settings_album['img_large_height'] = $get_settings->img_large_height;  
+            }
+
+            if ($get_settings->img_formats != null) {
+                $settings_album['img_formats'] = $get_settings->img_formats;
+            }
+
+            if ($get_settings->img_min_width != null) {
+                $settings_album['img_min_width'] = $get_settings->img_min_width;
+            }
+
+            if ($get_settings->img_min_height != null) {
+                $settings_album['img_min_height'] = $get_settings->img_min_height;   
+            }
+
+            if ($get_settings->img_max_size != null) {
+                $settings_album['img_max_size'] = $get_settings->img_max_size;
+            }
+        }
+
+        // dd($settings_album);
+
         // Инфо о странице
         $page_info = pageInfo('goods');
 
-        return view('goods.edit', compact('cur_goods', 'page_info', 'goods_categories_list', 'goods_products_list', 'manufacturers_list', 'goods_modes_list', 'goods_category_compositions', 'metrics_values', 'compositions_values'));
+        return view('goods.edit', compact('cur_goods', 'page_info', 'goods_categories_list', 'goods_products_list', 'manufacturers_list', 'goods_modes_list', 'goods_category_compositions', 'metrics_values', 'compositions_values', 'settings', 'settings_album'));
     }
 
     public function update(Request $request, $id)
@@ -910,7 +1012,6 @@ class GoodsController extends Controller
 
                 if ($get_settings->img_max_size != null) {
                     $settings['img_max_size'] = $get_settings->img_max_size;
-
                 }
             }
 

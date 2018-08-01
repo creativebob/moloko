@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use App\Page;
 use App\Site;
 
+use App\EntitySetting;
+
 // Валидация
 use App\Http\Requests\PageRequest;
 
@@ -112,7 +114,6 @@ class PageController extends Controller
         // Смотрим компанию пользователя
         $company_id = $user->company_id;
 
-
         // Скрываем бога
         $user_id = hideGod($user);
 
@@ -141,11 +142,64 @@ class PageController extends Controller
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
 
+            // Вытаскиваем настройки
+            // Вытаскиваем базовые настройки сохранения фото
+            $settings = config()->get('settings');
+
+            // Начинаем проверку настроек, от компании до альбома
+            // Смотрим общие настройки для сущности
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+
+            if ($get_settings) {
+
+                if ($get_settings->img_small_width != null) {
+                    $settings['img_small_width'] = $get_settings->img_small_width;
+                }
+
+                if ($get_settings->img_small_height != null) {
+                    $settings['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings['img_max_size'] = $get_settings->img_max_size;
+
+                }
+            }
+
             // Директория
             $directory = $company_id.'/media/pages/'.$page->id.'/img/';
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), имя сущности, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
-            $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $this->entity_name);
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
+
             $photo = $array['photo'];
 
             $page->photo_id = $photo->id;
@@ -223,16 +277,66 @@ class PageController extends Controller
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
 
+            // Вытаскиваем настройки
+            // Вытаскиваем базовые настройки сохранения фото
+            $settings = config()->get('settings');
+
+            // Начинаем проверку настроек, от компании до альбома
+            // Смотрим общие настройки для сущности
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+
+            if ($get_settings) {
+
+                if ($get_settings->img_small_width != null) {
+                    $settings['img_small_width'] = $get_settings->img_small_width;
+                }
+
+                if ($get_settings->img_small_height != null) {
+                    $settings['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings['img_max_size'] = $get_settings->img_max_size;
+
+                }
+            }
+
             // Директория
             $directory = $company_id.'/media/pages/'.$page->id.'/img/';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($page->photo_id) {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, $page->photo_id, $this->entity_name);
-
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, $page->photo_id, $settings);
             } else {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $this->entity_name);
-                
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
             }
             $photo = $array['photo'];
 
