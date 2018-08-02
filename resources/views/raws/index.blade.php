@@ -186,6 +186,7 @@
         url: '/admin/raws/create',
         type: "GET",
         success: function(html){
+          
           $('#modal').html(html);
           $('#first-add').foundation();
           $('#first-add').foundation('open');

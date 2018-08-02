@@ -40,6 +40,12 @@ class Metric extends Model
         return $this->belongsToMany('App\GoodsCategory', 'metric_entity', 'metric_id', 'entity_id')->where('entity', 'goods_categories');
     }
 
+    // Получаем проодукцию
+    public function raws_categories()
+    {
+        return $this->belongsToMany('App\RawsCategory', 'metric_entity', 'metric_id', 'entity_id')->where('entity', 'raws_categories');
+    }
+
      // Получаем единицу измерения
     public function unit()
     {

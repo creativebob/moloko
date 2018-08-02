@@ -218,7 +218,7 @@ class MetricController extends Controller
 
         $entity = $request->entity;
         // Связываем сущность с метрикой
-        $metric->$entity()->toggle([$request->entity_id => ['entity' => $request->entity]]);
+        $metric->$entity()->attach([$request->entity_id => ['entity' => $request->entity]]);
 
         // switch ($request->entity) {
         //     case 'goods_categories':
@@ -236,7 +236,7 @@ class MetricController extends Controller
 
         $entity = $request->entity;
         // Отвязываем сущность от метрики
-        $res = $metric->$entity()->toggle([$request->entity_id => ['entity' => $request->entity]]);
+        $res = $metric->$entity()->detach($request->entity_id);
 
         // switch ($request->entity) {
         //     case 'goods_categories':

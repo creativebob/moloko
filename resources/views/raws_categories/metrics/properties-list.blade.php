@@ -1,7 +1,7 @@
 <ul class="checker" id="properties-list">
 	@foreach ($properties as $property)
 	@if(count($property->metrics) > 0)
-	@include('goods_categories.metrics.property', $property)
+	@include('raws_categories.metrics.property', $property)
 	@endif
 	@endforeach
 

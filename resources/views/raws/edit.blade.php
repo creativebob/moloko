@@ -26,7 +26,6 @@
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
             <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
-            <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
             <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li> 
         </ul>
     </div>
@@ -188,14 +187,14 @@
                             @endif
 
                             {{-- @if ($raw->metrics_values_count > 0)
-                               @each('raws.metrics.metric-input', $raw->raws_product->raws_category->metrics, 'metric')
-                               @each('raws.metrics.metric-value', $raw->metrics_values, 'metric')
-                               @endif --}}
+                             @each('raws.metrics.metric-input', $raw->raws_product->raws_category->metrics, 'metric')
+                             @each('raws.metrics.metric-value', $raw->metrics_values, 'metric')
+                             @endif --}}
 
-                           </fieldset>
-                           @endif
-                           <div id="raws-inputs"></div>
-                           <div class="small-12 cell tabs-margin-top text-center">
+                         </fieldset>
+                         @endif
+                         <div id="raws-inputs"></div>
+                         <div class="small-12 cell tabs-margin-top text-center">
                             <div class="item-error" id="raws-error">Такой артикул уже существует!<br>Измените значения!</div>
                         </div>
                         {{ Form::hidden('raw_id', $raw->id) }}
@@ -260,51 +259,17 @@
                                         {{ Form::number('price', $raw->price) }}
                                     </label>
                                 </div>
+
+                                <div class="small-12 cell checkbox">
+                                    {{ Form::checkbox('sail_status', 1, $raw->sail_status, ['id' => 'sail-status']) }}
+                                    <label for="sail-status"><span>Для продажи</span></label>
+                                </div>
                             </div>
                         </fieldset>
                     </div>
                 </div>
             </div>
             {{ Form::close() }}
-
-            <!-- Состав -->
-            <div class="tabs-panel" id="compositions">
-                <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-12 cell">
-
-                        {{-- Состав --}}
-                        <div class="small-12 medium-12 cell">
-                            <ul class="menu right">
-
-                            </ul>
-                        </div>
-                        <table class="composition-table">
-                            <thead>
-                                <tr> 
-                                    <th>Категория:</th>
-                                    <th>Продукт:</th>
-                                    <th>Кол-во:</th>
-                                    <th>Использование:</th>
-                                    <th>Отход:</th>
-                                    <th>Остаток:</th>
-                                    <th>Операция над остатком:</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="composition-table">
-
-                                {{-- Таблица метрик сырья --}}
-                                @if (isset($raw->raws_product->raws_category->compositions))
-
-
-
-                                @each('raws.compositions.composition', $raw->raws_product->raws_category->compositions, 'composition')
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
             <!-- Фотографии -->
             <div class="tabs-panel" id="photos">

@@ -6,14 +6,14 @@
 @include('includes.scripts.sortable-inhead')
 @endsection
 
-@section('title', 'Редактирование категории услуг')
+@section('title', 'Редактирование категории сырья')
 
 @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $raws_category->name))
 
 @section('title-content')
 <div class="top-bar head-content">
   <div class="top-bar-left">
-    <h2 class="header-content">Редактирование категории товаров &laquo{{ $raws_category->name }}&raquo</h2>
+    <h2 class="header-content">Редактирование категории сырья &laquo{{ $raws_category->name }}&raquo</h2>
   </div>
   <div class="top-bar-right">
   </div>
@@ -89,7 +89,7 @@
 
           {{-- Кнопка --}}
           <div class="small-12 cell tabs-button tabs-margin-top">
-            {{ Form::submit('Редактировать услугу', ['class'=>'button']) }}
+            {{ Form::submit('Редактировать категорию сырья', ['class'=>'button']) }}
           </div>
         </div>
       </div>
@@ -405,7 +405,7 @@ $settings = config()->get('settings');
   // При клике на чекбокс метрики отображаем ее на странице
   $(document).on('click', '.add-metric', function() {
 
-    // alert($(this).val());
+    // alert(raws_category_id);
     var id = $(this).val();
     
     // Если нужно добавить метрику

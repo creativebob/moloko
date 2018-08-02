@@ -296,8 +296,6 @@
                                 {{-- Таблица метрик товара --}}
                                 @if (isset($cur_goods->goods_product->goods_category->compositions))
 
-
-
                                 @each('goods.compositions.composition', $cur_goods->goods_product->goods_category->compositions, 'composition')
                                 @endif
                             </tbody>

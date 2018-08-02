@@ -257,7 +257,7 @@ class RawController extends Controller
         $raw->company_id = $company_id;
         $raw->author_id = $user_id;
         $raw->name = $name;
-        $raw->price = $request->price;
+        $raw->cost = $request->cost;
         $raw->save();
 
         if ($raw) {
@@ -301,7 +301,7 @@ class RawController extends Controller
         // }, 'album.photos', 'company.manufacturers', 'metrics_values', 'compositions_values'])->withCount(['metrics_values', 'compositions_values'])->moderatorLimit($answer_raws)->findOrFail($id);
 
         $raw = Raw::with(['raws_product.raws_category' => function ($query) {
-            $query->with(['metrics.property'])
+            $query->with(['metrics.property', 'metrics.unit'])
             ->withCount('metrics');
         }, 'album.photos', 'company.manufacturers', 'metrics_values'])
         ->withCount(['metrics_values'])->moderatorLimit($answer_raws)->findOrFail($id);
@@ -566,6 +566,8 @@ class RawController extends Controller
         // Инфо о странице
         $page_info = pageInfo('raws');
 
+        // dd($raw);
+
         return view('raws.edit', compact('raw', 'page_info', 'raws_categories_list', 'raws_products_list', 'manufacturers_list', 'raws_modes_list', 'raws_category_compositions', 'metrics_values', 'compositions_values', 'settings', 'settings_album'));
     }
 
@@ -779,6 +781,8 @@ class RawController extends Controller
         if ($answer['automoderate'] == false) {
             $raw->moderation = 1;
         }
+
+        $raw->sail_status = $request->sail_status;
 
         // Системная запись
         $raw->system_item = $request->system_item;

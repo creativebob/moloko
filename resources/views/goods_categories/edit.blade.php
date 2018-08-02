@@ -195,24 +195,27 @@
         </div>
 
         <div class="small-12 medium-3 cell">
-
+          @if (isset($composition_list))
           <ul class="menu vertical">
 
-            @foreach ($goods_modes_list as $goods_mode)
+            @if (isset($composition_list['composition_categories']))
             <li>
-              <a class="button" data-toggle="{{ $goods_mode['alias'] }}-dropdown">{{ $goods_mode['name'] }}</a>
-              <div class="dropdown-pane" id="{{ $goods_mode['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
+              <a class="button" data-toggle="{{ $composition_list['alias'] }}-dropdown">{{ $composition_list['name'] }}</a>
+              <div class="dropdown-pane" id="{{ $composition_list['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
 
                 <ul class="checker" id="products-categories-list">
-                  @foreach ($goods_mode['goods_categories'] as $goods_cat)
-                  @include('goods_categories.compositions.goods-category', $goods_cat)
+  
+                  @foreach ($composition_list['composition_categories'] as $composition_category)
+                  @include('goods_categories.compositions.raws-category', $composition_category)
                   @endforeach
                 </ul>
 
               </div>
             </li>
-            @endforeach
+            @endif
+   
           </ul>
+          @endif
 
         </div>
 

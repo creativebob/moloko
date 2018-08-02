@@ -41,8 +41,8 @@
 
 
 				<div class="small-10 medium-4 cell">
-					<label>Цена
-						{{ Form::number('price') }}
+					<label>Себестоимость
+						{{ Form::number('cost') }}
 					</label>
 				</div>
 

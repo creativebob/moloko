@@ -2,7 +2,7 @@
 $checked = '';
 @endphp
 
-@if (in_array($metric->id, $goods_category_metrics))
+@if (in_array($metric->id, $raws_category_metrics))
 @php
 $checked = 'checked';
 @endphp

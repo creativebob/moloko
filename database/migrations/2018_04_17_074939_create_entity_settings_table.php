@@ -21,7 +21,7 @@ class CreateEntitySettingsTable extends Migration
 
             $table->integer('entity_id')->nullable()->unsigned()->comment('Id сущности');
             // $table->foreign('entity_id')->references('id')->on('entities');
-             $table->string('entity')->nullable()->comment('Имя сущности');
+            $table->string('entity')->nullable()->comment('Имя сущности');
 
             $table->string('name')->nullable()->index()->comment('Название настройки');
             $table->string('description')->nullable()->comment('Описание настройки');

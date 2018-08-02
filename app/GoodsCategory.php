@@ -80,6 +80,6 @@ class GoodsCategory extends Model
     // Получаем состав
     public function compositions()
     {
-        return $this->belongsToMany('App\GoodsProduct', 'compositions', 'goods_category_id', 'composition_id');
+        return $this->belongsToMany('App\Raw', 'compositions', 'goods_category_id', 'entity_id')->where('entity', 'raws');;
     }
 }

@@ -3,20 +3,24 @@ $metrics_value = null;
 @endphp
 
 @if(isset($metrics_values[$metric->id]))
-	@php
-		if (count($metrics_values[$metric->id]) == 1) {
-			$metrics_value = $metrics_values[$metric->id][0];
-		}
-	@endphp
+@php
+if (count($metrics_values[$metric->id]) == 1) {
+$metrics_value = $metrics_values[$metric->id][0];
+}
+@endphp
 @endif
 
 @switch($metric->property->type)
 
 @case('numeric')
-<label>
+<div class="wrap-input-table">
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
-	{{ Form::number('metrics['.$metric->id.'][]', $metrics_value) }}
-</label>
+	{{ Form::number('metrics['.$metric->id.'][]', $metrics_value, ['id' => 'label-metric-'.$metric->id]) }}
+	<label for="label-metric-{{ $metric->id }}" class="text-to-placeholder">{{ $metric->unit->abbreviation}}</label>
+	<div class="sprite-input-right find-status" id="name-check"></div>
+	<span class="form-error">Введите количество</span>
+</div>
+
 @break
 
 @case('percent')

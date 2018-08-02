@@ -1,24 +1,6 @@
 <tr class="item" id="compositions-{{ $composition->id }}" data-name="{{ $composition->name }}">
+	<td>{{ $composition->raws_product->name }}</td>
 	<td>{{ $composition->name }}</td>
-	<td>
-		@if (count($composition->goods) > 0)
-		<select class="compact" name="compositions[{{ $composition->id }}][article]">
-			@foreach ($composition->goods as $article)
-			{{-- @php
-			$selected = '';
-			@endphp
-			@if ($compositions_values->find($article->id))
-			@php
-			$selected = 'selected';
-			@endphp
-			@endif --}}
-			<option value="{{ $article->id }}">{{ $article->name }}</option>
-			@endforeach
-		</select>
-		@else
-		Нет артикулов сырья
-		@endif
-	</td>
 	<td>
 		<div class="wrap-input-table">
 			{{-- @php
@@ -32,7 +14,7 @@
 			{{-- Количество чего-либо --}}
 			{{ Form::text('raw_count', '', ['class'=>'digit-field name-field compact w12 padding-to-placeholder', 'id'=>'2', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0']) }}
 			{{-- Form::text('compositions['.$composition->id.'][count]', $value, ['class'=>'digit-field name-field compact w12 padding-to-placeholder', 'id'=>'1', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0']) --}}
-			<label for="1" class="text-to-placeholder">{{ $composition->unit->abbreviation}}.</label>
+			<label for="1" class="text-to-placeholder">{{ $composition->raws_product->unit->abbreviation}}.</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>
 			<span class="form-error">Введите количество</span>
 		</div>
@@ -41,7 +23,7 @@
 		<div class="wrap-input-table">
 			{{-- Количество чего-либо --}}
 			{{ Form::text('raw_count', '', ['class'=>'digit-field name-field compact w12 padding-to-placeholder', 'id'=>'2', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0']) }}
-			<label for="2" class="text-to-placeholder">{{ $composition->unit->abbreviation}}</label>
+			<label for="2" class="text-to-placeholder">{{ $composition->raws_product->unit->abbreviation}}</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>
 			<span class="form-error">Введите количество</span>
 		</div>
@@ -50,7 +32,7 @@
 		<div class="wrap-input-table">
 			{{-- Количество чего-либо --}}
 			{{ Form::text('raw_count', '', ['class'=>'digit-field name-field compact w12 padding-to-placeholder', 'id'=>'3', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0']) }}
-			<label for="3" class="text-to-placeholder">{{ $composition->unit->abbreviation}}</label>
+			<label for="3" class="text-to-placeholder">{{ $composition->raws_product->unit->abbreviation}}</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>
 			<span class="form-error">Введите количество</span>
 		</div>
@@ -59,7 +41,7 @@
 		<div class="wrap-input-table">
 			{{-- Количество чего-либо --}}
 			{{ Form::text('raw_count', '', ['class'=>'digit-field name-field compact w12 padding-to-placeholder', 'id'=>'4', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0']) }}
-			<label for="4" class="text-to-placeholder">{{ $composition->unit->abbreviation}}.</label>
+			<label for="4" class="text-to-placeholder">{{ $composition->raws_product->unit->abbreviation}}.</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>
 			<span class="form-error">Введите количество</span>
 		</div>

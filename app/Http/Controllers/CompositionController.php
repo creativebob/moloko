@@ -7,6 +7,8 @@ use App\GoodsProduct;
 use App\GoodsCategory;
 use App\Goods;
 
+use App\Raw;
+
 use Illuminate\Http\Request;
 
 class CompositionController extends Controller
@@ -105,9 +107,9 @@ class CompositionController extends Controller
     {
 
         $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
-        $goods_category->compositions()->toggle([$request->id]);
+        $goods_category->compositions()->toggle([$request->id => ['entity' => 'raws']]);
 
-        $composition = GoodsProduct::findOrFail($request->id);
+        $composition = Raw::findOrFail($request->id);
 
         return view($request->entity.'.compositions.composition', compact('composition'));
     }
@@ -116,7 +118,7 @@ class CompositionController extends Controller
     {
 
         $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
-        $res = $goods_category->compositions()->toggle([$request->id]);
+        $res = $goods_category->compositions()->toggle([$request->id => ['entity' => 'raws']]);
 
         if ($res) {
             $result = [

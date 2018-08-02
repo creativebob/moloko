@@ -56,6 +56,8 @@ class CreateRawsTable extends Migration
 
             $table->integer('archive')->nullable()->unsigned()->comment('Статус архива');
 
+            $table->integer('sail_status')->nullable()->unsigned()->comment('Статус для продажи');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');

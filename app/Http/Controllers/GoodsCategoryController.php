@@ -9,6 +9,8 @@ use App\GoodsProduct;
 use App\GoodsCategory;
 use App\Property;
 
+use App\RawsCategory;
+
 use App\EntitySetting;
 
 // use App\Company;
@@ -170,7 +172,7 @@ class GoodsCategoryController extends Controller
 
         $goods_category->display = $request->display;
 
-    
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -196,12 +198,6 @@ class GoodsCategoryController extends Controller
             $goods_category->goods_mode_id = $category->goods_mode_id;
         }
 
-        
-        if ($request->status == 'set') {
-            $goods_category->status = $request->status;
-        } else {
-            $goods_category->status = 'one';
-        }
 
         // Делаем заглавной первую букву
         $goods_category->name = get_first_letter($request->name);
@@ -311,47 +307,52 @@ class GoodsCategoryController extends Controller
         //     }
         // }
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods_modes = operator_right('goods_modes', false, 'index');
 
-        $goods_modes = GoodsMode::with(['goods_categories' => function ($query) use ($answer_goods_categories) {
-            $query->with('goods_products')
-            ->withCount('goods_products')
-            ->moderatorLimit($answer_goods_categories)
-            ->companiesLimit($answer_goods_categories)
-            ->authors($answer_goods_categories)
-            ->systemItem($answer_goods_categories); // Фильтр по системным записям 
-        }])
-        ->moderatorLimit($answer_goods_modes)
-        ->companiesLimit($answer_goods_modes)
-        ->authors($answer_goods_modes)
-        ->systemItem($answer_goods_modes) // Фильтр по системным записям
-        ->template($answer_goods_modes)
-        ->orderBy('sort', 'asc')
-        ->get()
-        ->toArray();
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer_raws_categories = operator_right('raws_categories', false, 'index');
 
-        // dd($goods_modes);
-        
-        $goods_modes_list = [];
-        foreach ($goods_modes as $goods_mode) {
-            $goods_categories_id = [];
-            foreach ($goods_mode['goods_categories'] as $goods_cat) {
-                $goods_categories_id[$goods_cat['id']] = $goods_cat;
-            }
+            $answer_raws_products = operator_right('raws_products', false, 'index');
+
+            $answer_raws = operator_right('raws', false, 'index');
+
+            $raws_categories = RawsCategory::with(['raws_products' => function ($query) use ($answer_raws_products, $answer_raws) {
+                $query->with(['raws' => function ($query) use ($answer_raws) {
+                    $query
+                    // ->moderatorLimit($answer_raws)
+                    // ->companiesLimit($answer_raws)
+                    // ->authors($answer_raws)
+                    // ->systemItem($answer_raws) // Фильтр по системным записям 
+                    ->whereNull('draft');
+                }])
+                ->withCount('raws');
+                // ->moderatorLimit($answer_raws_products)
+                // ->companiesLimit($answer_raws_products)
+                // ->authors($answer_raws_products)
+                // ->systemItem($answer_raws_products); // Фильтр по системным записям 
+            }])
+            ->withCount('raws_products')
+            ->moderatorLimit($answer_raws_categories)
+            ->companiesLimit($answer_raws_categories)
+            ->authors($answer_raws_categories)
+            ->systemItem($answer_raws_categories) // Фильтр по системным записям 
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+
             // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $goods_categories_list = get_parents_tree($goods_categories_id, null, null, null);
+            $composition_categories_list = get_parents_tree($raws_categories, null, null, null);
 
+            // dd($composition_categories_list);
 
-            $goods_modes_list[] = [
-                'name' => $goods_mode['name'],
-                'alias' => $goods_mode['alias'],
-                'goods_categories' => $goods_categories_list,
+            $composition_list = [
+                'name' => 'Сырье',
+                'alias' => 'raws',
+                'composition_categories' => $composition_categories_list,
             ];
-        }
+
+            // dd($composition_list);
 
 
-        
         // dd($goods_modes_list);
         // $grouped_goods_types = $goods_modes->groupBy('alias');
         // dd($grouped_goods_types);
@@ -368,7 +369,7 @@ class GoodsCategoryController extends Controller
 
             // echo $id;
             // Меняем категорию
-            return view('goods_categories.edit', compact('goods_category', 'page_info', 'properties', 'properties_list', 'goods_category_metrics', 'goods_category_compositions', 'goods_modes_list', 'units_categories_list', 'units_list'));
+            return view('goods_categories.edit', compact('goods_category', 'page_info', 'properties', 'properties_list', 'goods_category_metrics', 'goods_category_compositions', 'composition_list', 'units_categories_list', 'units_list'));
         } else {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -391,7 +392,7 @@ class GoodsCategoryController extends Controller
 
             // dd($goods_category);
 
-            return view('goods_categories.edit', compact('goods_category', 'goods_categories_list', 'page_info', 'properties', 'properties_list', 'goods_category_metrics', 'goods_category_compositions', 'goods_modes_list', 'units_categories_list', 'units_list'));
+            return view('goods_categories.edit', compact('goods_category', 'goods_categories_list', 'page_info', 'properties', 'properties_list', 'goods_category_metrics', 'goods_category_compositions', 'composition_list', 'units_categories_list', 'units_list'));
         }
     }
 

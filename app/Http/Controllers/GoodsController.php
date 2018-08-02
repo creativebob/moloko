@@ -188,8 +188,13 @@ class GoodsController extends Controller
                 $goods_product->name = $name;
                 $goods_product->goods_category_id = $goods_category_id;
                 $goods_product->unit_id = $request->unit_id;
-                // $goods_product->unit_id = $request->unit_id;
 
+                if (isset($request->status)) {
+                    $goods_product->status = 'set';
+                } else {
+                    $goods_product->status = 'one';
+                }
+                
                 // Модерация и системная запись
                 $goods_product->system_item = $request->system_item;
 
@@ -219,7 +224,13 @@ class GoodsController extends Controller
                 $goods_product = new GoodsProduct;
 
                 $goods_product->name = $request->goods_product_name;
-                $goods_product->unit_id = 26;
+                $goods_product->unit_id = $request->unit_id;
+
+                if (isset($request->status)) {
+                    $goods_product->status = 'set';
+                } else {
+                    $goods_product->status = 'one';
+                }
 
                 $goods_product->goods_category_id = $goods_category_id;
 
@@ -301,17 +312,15 @@ class GoodsController extends Controller
         // }, 'album.photos', 'company.manufacturers', 'metrics_values', 'compositions_values'])->withCount(['metrics_values', 'compositions_values'])->moderatorLimit($answer_goods)->findOrFail($id);
 
         $cur_goods = Goods::with(['goods_product.goods_category' => function ($query) {
-            $query->with(['metrics.property', 'compositions' => function ($query) {
-                $query->with(['goods' => function ($query) {
-                    $query->whereNull('draft');
-                }]);
-            }])
+            $query->with(['metrics.property', 'compositions.raws_product.unit'])
             ->withCount('metrics', 'compositions');
         }, 'album.photos', 'company.manufacturers', 'metrics_values'])
-        ->withCount(['metrics_values'])->moderatorLimit($answer_goods)->findOrFail($id);
+        ->withCount(['metrics_values'])
+        ->moderatorLimit($answer_goods)
+        ->findOrFail($id);
 
         // $cur_goods = Goods::with(['goods_product.goods_category.metrics', 'goods_product.goods_category.compositions.goods_products',  'album.photos', 'company.manufacturers'])->moderatorLimit($answer_goods)->findOrFail($id);
-        // dd($cur_goods);
+        // dd($cur_goods->goods_product->goods_category->compositions);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);

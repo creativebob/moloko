@@ -32,7 +32,7 @@ class CreateGoodsCategoriesTable extends Migration
 
             // $table->enum('type', ['services', 'goods', 'raws'])->comment('Тип товара (Услуга/товар/сырье)');
 
-            $table->enum('status', ['one', 'set'])->comment('Статус набора (Один/набор)');
+            
 
             $table->integer('goods_mode_id')->nullable()->unsigned()->comment('Вид продукции');
             $table->foreign('goods_mode_id')->references('id')->on('goods_modes');

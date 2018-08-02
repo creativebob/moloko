@@ -4,9 +4,9 @@
 	@endif
 	<a id="mode-add" class="modes">Создать группу</a>
 </div>
-<label>Название товара
+<label>Название сырья
 	@include('includes.inputs.string', ['value'=>null, 'name'=>'name', 'required'=>'required'])
-	<div class="item-error">Такой товар уже существует!</div>
+	<div class="item-error">Такое сырье уже существует!</div>
 </label>
 {{ Form::hidden('mode', 'mode-default') }}
 
