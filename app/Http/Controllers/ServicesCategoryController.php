@@ -248,8 +248,8 @@ class ServicesCategoryController extends Controller
         $answer_services_categories = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $services_category = ServicesCategory::with(['services_mode', 'metrics.unit', 'metrics.values', 'compositions'])
-        ->withCount('metrics', 'compositions')
+        $services_category = ServicesCategory::with(['services_mode', 'metrics.unit', 'metrics.values'])
+        ->withCount('metrics')
         ->moderatorLimit($answer_services_categories)
         ->findOrFail($id);
         // dd($services_category);
@@ -260,10 +260,10 @@ class ServicesCategoryController extends Controller
         }
         // dd($product_metrics);
 
-        $services_category_compositions = [];
-        foreach ($services_category->compositions as $composition) {
-            $services_category_compositions[] = $composition->id;
-        }
+        // $services_category_compositions = [];
+        // foreach ($services_category->compositions as $composition) {
+        //     $services_category_compositions[] = $composition->id;
+        // }
 
         // dd($services_category_compositions);
 

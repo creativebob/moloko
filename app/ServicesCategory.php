@@ -79,9 +79,9 @@ class ServicesCategory extends Model
     }
 
     // Получаем состав
-    public function compositions()
-    {
-        return $this->belongsToMany('App\Product', 'compositions', 'products_category_id', 'composition_id');
-    }
+    // public function compositions()
+    // {
+    //     return $this->belongsToMany('App\Product', 'compositions', 'products_category_id', 'composition_id');
+    // }
 
 }
