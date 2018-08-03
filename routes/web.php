@@ -219,6 +219,7 @@ Route::any('/ajax_goods_modes', 'GoodsProductController@ajax_modes')->middleware
 // Route::any('/goods/create', 'GoodsController@create')->middleware('auth');
 // Основные методы
 Route::resource('/goods', 'GoodsController')->middleware('auth');
+Route::post('/goods/search/{text_fragment}', 'GoodsController@search')->middleware('auth');
 
 Route::any('/goods/add_photo', 'GoodsController@add_photo')->middleware('auth');
 Route::post('/goods/photos', 'GoodsController@photos')->middleware('auth');

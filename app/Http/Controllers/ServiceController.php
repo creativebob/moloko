@@ -107,15 +107,17 @@ class ServiceController extends Controller
     public function search($text_fragment)
     {
 
+        $entity_name = $this->entity_name;
+
         // Подключение политики
         $this->authorize('index', Service::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // -----------------------------------------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
-        // -----------------------------------------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------
 
         $result_search = Service::with('author', 'company', 'services_product', 'services_product.services_category')
         ->moderatorLimit($answer)
@@ -130,7 +132,7 @@ class ServiceController extends Controller
 
         if($result_search->count()){
 
-            return view('includes.search', compact('result_search'));
+            return view('includes.search', compact('result_search', 'entity_name'));
         } else {
             
             return view('includes.search');

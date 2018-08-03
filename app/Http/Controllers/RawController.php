@@ -574,9 +574,11 @@ class RawController extends Controller
     public function update(Request $request, $id)
     {
 
-        // dd($request);
-        $metrics_count = count($request->metrics);
-        // dd($metrics_count);
+        if (isset($request->metrics)) {
+            $metrics_count = count($request->metrics);
+        } else {
+            $metrics_count = 0;
+        }
         
         // $compositions_count = count($request->compositions);
 

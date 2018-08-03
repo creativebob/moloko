@@ -4,7 +4,9 @@
 		<h3 class="search-result-head">Вот, что удалось найти:</h3>
 		<ul class="search-result-list">
 			@foreach($result_search as $item)
-			<li><a href="">{{ $item->name }}</a></li>
+			<li>
+				<a href="{{ $entity_name . '/' .$item->id . '/edit' }}">{{ $item->name }}</a>
+			</li>
 			@endforeach
 		</ul>
 	</div>

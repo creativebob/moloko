@@ -42,6 +42,8 @@ class GoodsController extends Controller
     public function index(Request $request)
     {
 
+
+
         // Подключение политики
         $this->authorize('index', Goods::class);
 
@@ -67,9 +69,7 @@ class GoodsController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // dd($products);
-
-         // ----------------------------------------------------------------------------------------------------------
+        // ----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
@@ -102,6 +102,44 @@ class GoodsController extends Controller
 
         return view('goods.index', compact('goods', 'page_info', 'filter'));
     }
+
+    public function search($text_fragment)
+    {
+
+        $entity_name = $this->entity_name;
+
+        // Подключение политики
+        $this->authorize('index', Goods::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // --------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // --------------------------------------------------------------------------------------------------------------
+
+        $result_search = Goods::with('author', 'company', 'goods_product', 'goods_product.goods_category')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->where('name', 'LIKE', '%'.$text_fragment.'%')
+        ->whereNull('archive')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
+
+
+
+        if($result_search->count()){
+
+            return view('includes.search', compact('result_search', 'entity_name'));
+        } else {
+            
+            return view('includes.search');
+        }
+    }
+
 
     public function create(Request $request)
     {
