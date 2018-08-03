@@ -72,9 +72,13 @@ class GoodsCategory extends Model
     }
 
     // Получаем метрики
+    // public function metrics()
+    // {
+    //     return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'goods_categories');
+    // }
     public function metrics()
     {
-        return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'goods_categories');
+        return $this->morphToMany('App\Metric', 'metric_entity');
     }
 
     // Получаем состав

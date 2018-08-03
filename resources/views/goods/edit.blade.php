@@ -76,7 +76,7 @@
                                 <label>Группа
                                     {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_product_id) }}
                                 </label>
-                                <label>Название услуги
+                                <label>Название товара
                                     {{ Form::text('name', null, ['required']) }}
                                 </label>
 

@@ -8,11 +8,21 @@
 			@foreach ($composition_category['raws_products'] as $raws_product)
 
 			@if(count($raws_product['raws']) > 0)
-	
+
 			@foreach ($raws_product['raws'] as $raw)
 
+			@php
+			$checked = '';
+			@endphp
+
+			@if (in_array($raw['id'], $goods_category_compositions))
+			@php
+			$checked = 'checked';
+			@endphp
+			@endif
+
 			<li class="checkbox">
-				{{ Form::checkbox('add_products_id', $raw['id'], null, ['class' => 'add-composition', 'id' => 'add-raws-'.$raw['id']]) }}
+				{{ Form::checkbox('add_products_id', $raw['id'], null, ['class' => 'add-composition', 'id' => 'add-raws-'.$raw['id'], $checked]) }}
 				<label for="add-raws-{{ $raw['id'] }}"><span>{{ $raw['name'] }}</span></label>
 			</li>
 			@endforeach

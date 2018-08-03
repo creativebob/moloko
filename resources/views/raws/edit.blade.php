@@ -75,7 +75,7 @@
                                 <label>Группа
                                     {{ Form::select('raws_product_id', $raws_products_list, $raw->raws_product_id) }}
                                 </label>
-                                <label>Название услуги
+                                <label>Название сырья
                                     {{ Form::text('name', null, ['required']) }}
                                 </label>
 
