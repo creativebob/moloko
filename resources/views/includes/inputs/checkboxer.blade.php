@@ -36,7 +36,7 @@
 			@foreach ($filter[$name]['list_select']['item_list'] as $key => $value)
 				<li>
 					{{ Form::checkbox($filter[$name]['column'] . '[]', $key, $filter[$name]['mass_id'], ['id'=>$name.'-'.$key]) }}
-					<label for="{{$name}}-{{ $key }}"><span>{{ $value }}</span></label>
+					<label for="{{$name}}-{{ $key }}"><span class="wrap-label-checkboxer">{{ $value }}</span></label>
 				</li>
 			@endforeach
 		@endif

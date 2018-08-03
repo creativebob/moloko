@@ -408,6 +408,10 @@ input[type=checkbox], input[type=radio] {
   width: 100%;
 }
 
+span.wrap-label-checkboxer {
+  max-width: 80%;
+}
+
 .checkboxer-menu > li:first-child {
   border-top: 1px solid transparent;
 }

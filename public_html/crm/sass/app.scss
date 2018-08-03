@@ -221,6 +221,8 @@ fieldset {
     }
 }
 
+
+
 .light-text{
   color: #aaa;
 }
@@ -590,6 +592,10 @@ input[type=checkbox], input[type=radio] {
 .checkboxer-menu li label
 {
   width: 100%;
+}
+
+span.wrap-label-checkboxer {
+  max-width: 80%;
 }
 
 .checkboxer-menu>li:last-child
