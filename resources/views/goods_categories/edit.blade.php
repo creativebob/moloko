@@ -233,6 +233,7 @@
 
 @section('modals')
 @include('includes.modals.modal-metric-delete')
+@include('includes.modals.modal-composition-delete')
 @endsection
 
 @section('scripts')
@@ -243,6 +244,8 @@
 
 
 @include('includes.scripts.modal-metric-delete-script')
+@include('includes.scripts.modal-composition-delete-script')
+
 @php
 $settings = config()->get('settings');
 @endphp
@@ -262,92 +265,6 @@ $settings = config()->get('settings');
 
   // Основные ностойки
   var goods_category_id = '{{ $goods_category->id }}';
-
-  // При клике на удаление метрики со страницы
-  // $(document).on('click', '[data-open="delete-metric"]', function() {
-
-  //   // Находим описание сущности, id и название удаляемого элемента в родителе
-  //   var parent = $(this).closest('.item');
-  //   var id = parent.attr('id').split('-')[1];
-
-  //   // alert(id);
-
-  //   $.ajax({
-  //     headers: {
-  //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  //     },
-  //     url: '/admin/ajax_delete_relation_metric',
-  //     type: 'POST',
-  //     data: {id: id, entity: 'goods_categories', entity_id: goods_category_id},
-  //     success: function(date){
-
-  //       var result = $.parseJSON(date);
-  //         // alert(result);
-
-  //         if (result['error_status'] == 0) {
-
-  //           // Удаляем элемент со страницы
-  //           $('#metrics-' + id).remove();
-
-  //           // В случае успеха обновляем список метрик
-  //           // $.ajax({
-  //           //   headers: {
-  //           //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  //           //   },
-  //           //   url: '/products/' + product_id + '/edit',
-  //           //   type: 'GET',
-  //           //   data: $('#product-form').serialize(),
-  //           //   success: function(html){
-  //           //     // alert(html);
-  //           //     $('#properties-dropdown').html(html);
-  //           //   }
-  //           // })
-
-  //           // Убираем отмеченный чекбокс в списке метрик
-  //           $('#add-metric-' + id).prop('checked', false);
-            
-  //         } else {
-  //           alert(result['error_message']);
-  //         }; 
-  //       }
-  //     })
-  // });
-
-  // При клике на удаление состава со страницы
-  $(document).on('click', '[data-open="delete-composition"]', function() {
-
-    // Находим описание сущности, id и название удаляемого элемента в родителе
-    var parent = $(this).closest('.item');
-    var id = parent.attr('id').split('-')[1];
-
-    // alert(id);
-
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/ajax_delete_relation_composition',
-      type: 'POST',
-      data: {id: id, goods_category_id: goods_category_id},
-      success: function(date){
-
-        var result = $.parseJSON(date);
-        // alert(result);
-
-        if (result['error_status'] == 0) {
-
-            // Удаляем элемент со страницы
-            $('#compositions-' + id).remove();
-
-            // Убираем отмеченный чекбокс в списке метрик
-            $('#add-product-' + id).prop('checked', false);
-            
-          } else {
-            alert(result['error_message']);
-          }; 
-        }
-      })
-  });
 
   // При клике на удаление состава со страницы
   $(document).on('click', '[data-open="delete-value"]', function() {
