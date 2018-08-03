@@ -586,7 +586,12 @@ class GoodsController extends Controller
     {
 
         // dd($request);
-        $metrics_count = count($request->metrics);
+        if (isset($request->metrics)) {
+            $metrics_count = count($request->metrics);
+        } else {
+            $metrics_count = 0;
+        }
+        
         // dd($metrics_count);
         
         // $compositions_count = count($request->compositions);
