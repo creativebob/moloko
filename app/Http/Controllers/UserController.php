@@ -86,6 +86,8 @@ class UserController extends Controller
 
         $filter['status'] = null;
 
+
+
         // Перечень подключаемых фильтров:
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
 

@@ -30,9 +30,17 @@
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-photo">Фото</th>
-          <th class="td-name">Название артикула</th>
-          <th class="td-cur_goods">Услуга</th>
+          <th class="td-name">Название товара</th>
+
+          <th class="td-description">Описание</th>
+          <th class="td-price">Цена</th>
+          <th class="td-goods_category">Категория</th>
+          {{-- <th class="td-goods">Группа</th>  --}}
+
+          @if(Auth::user()->god == 1) 
           <th class="td-company-id">Компания</th>
+          @endif
+
           <th class="td-author">Автор</th>
           @can ('publisher', App\Goods::class)
           <th class="td-display">Отображение</th>
@@ -63,8 +71,23 @@
             </a>
           </td>
           <td class="td-name"><a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->name }}</a></td>
-          <td class="td-cur_goods">{{ $cur_goods->goods_product->name }}</td>
+          <td class="td-description">{{ $cur_goods->description }}</td>
+          <td class="td-price">{{ $cur_goods->price }}</td>
+          <td class="td-goods_category">
+            <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->goods_product->goods_category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->goods_product->goods_category->name }}</a>
+            <br>
+            @if($cur_goods->goods_product->name != $cur_goods->name)
+            <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->goods_product->id }}" class="filter_link light-text">{{ $cur_goods->goods_product->name }}</a>
+            @endif
+          </td>
+          {{-- <td class="td-goods">{{ $cur_goods->goods_product->name }}</td> --}}
+
+
+          @if(Auth::user()->god == 1) 
           <td class="td-company-id">@if(!empty($cur_goods->company->name)) {{ $cur_goods->company->name }} @else @if($cur_goods->system_item == null) Шаблон @else Системная @endif @endif</td>
+          @endif
+
+
           <td class="td-author">@if(isset($cur_goods->author->first_name)) {{ $cur_goods->author->first_name . ' ' . $cur_goods->author->second_name }} @endif</td>
           @can ('publisher', $cur_goods)
           <td class="td-display">

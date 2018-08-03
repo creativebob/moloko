@@ -12,6 +12,7 @@ use App\Album;
 use App\AlbumEntity;
 use App\Photo;
 use App\UnitsCategory;
+use App\Product;
 
 use App\EntitySetting;
 
@@ -38,7 +39,7 @@ class GoodsController extends Controller
     protected $entity_name = 'goods';
     protected $entity_dependence = false;
 
-    public function index()
+    public function index(Request $request)
     {
 
         // Подключение политики
@@ -57,10 +58,10 @@ class GoodsController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        // ->booklistFilter($request)
-        // ->filter($request, 'author_id')
-        // ->filter($request, 'company_id')
-        // ->filter($request, 'products_category_id')
+        ->booklistFilter($request)
+        ->filter($request, 'author_id')
+        ->filter($request, 'goods_product_id')
+        ->filter($request, 'goods_category_id', 'goods_product')
         ->whereNull('archive')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
@@ -68,33 +69,38 @@ class GoodsController extends Controller
 
         // dd($products);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+         // ----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        // $filter_query = Product::with('author', 'company', 'products_category')
-        // ->moderatorLimit($answer)
-        // ->companiesLimit($answer)
-        // ->authors($answer)
-        // ->systemItem($answer) // Фильтр по системным записям
-        // ->get();
-        // // dd($filter_query);
+        $filter_query = Goods::with('author', 'company', 'goods_product', 'goods_product.goods_category')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->whereNull('archive')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
 
-        // $filter['status'] = null;
+        // dd($filter_query);
 
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id');
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'products_category', 'products_category_id');
+        $filter['status'] = null;
 
-        // // Добавляем данные по спискам (Требуется на каждом контроллере)
-        // $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'goods_category', 'goods_category_id', 'goods_product', 'external-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'goods_product', 'goods_product_id', null, 'internal-id-one');
+
+
+        // Добавляем данные по спискам (Требуется на каждом контроллере)
+        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // dd($type);
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('goods.index', compact('goods', 'page_info'));
+        return view('goods.index', compact('goods', 'page_info', 'filter'));
     }
 
     public function create(Request $request)
