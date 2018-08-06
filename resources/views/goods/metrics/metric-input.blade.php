@@ -21,7 +21,7 @@ $metrics_value = null;
 
 @case('percent')
 <label>
-	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
+	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span> ({{ $metric->unit->abbreviation }})
 	{{ Form::number('metrics['.$metric->id.'][]', $metrics_value) }}
 </label>
 @break

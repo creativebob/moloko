@@ -265,19 +265,13 @@
                     </div>
                 </div>
             </div>
-            {{ Form::close() }}
+            
 
             <!-- Состав -->
             <div class="tabs-panel" id="compositions">
                 <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-12 cell">
-
+                    <div class="small-12 medium-9 cell">
                         {{-- Состав --}}
-                        <div class="small-12 medium-12 cell">
-                            <ul class="menu right">
-
-                            </ul>
-                        </div>
                         <table class="composition-table">
                             <thead>
                                 <tr> 
@@ -296,13 +290,55 @@
                                 {{-- Таблица метрик товара --}}
                                 @if (isset($cur_goods->goods_product->goods_category->compositions))
 
-                                @each('goods.compositions.composition', $cur_goods->goods_product->goods_category->compositions, 'composition')
+                                @foreach ($cur_goods->goods_product->goods_category->compositions as $composition)
+
+                                @if ($cur_goods->draft == 1)
+
+                                @include ('goods.compositions.composition-input', $composition)
+
+                                @else
+
+                                @include ('goods.compositions.composition-value', $composition)
+
+                                @endif
+                                @endforeach
+
                                 @endif
                             </tbody>
                         </table>
                     </div>
+
+                    @if ($cur_goods->draft == 1)
+                    <div class="small-12 medium-3 cell">
+
+                        @if (isset($composition_list))
+                        <ul class="menu vertical">
+
+                            @if (isset($composition_list['composition_categories']))
+                            <li>
+                                <a class="button" data-toggle="{{ $composition_list['alias'] }}-dropdown">{{ $composition_list['name'] }}</a>
+                                <div class="dropdown-pane" id="{{ $composition_list['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
+
+                                    <ul class="checker" id="products-categories-list">
+
+                                        @foreach ($composition_list['composition_categories'] as $composition_category)
+                                        @include('goods.compositions.raws-category', $composition_category)
+                                        @endforeach
+                                    </ul>
+
+                                </div>
+                            </li>
+                            @endif
+
+                        </ul>
+                        @endif
+
+                    </div>
+                    @endif
                 </div>
             </div>
+
+            {{ Form::close() }}
 
             <!-- Фотографии -->
             <div class="tabs-panel" id="photos">
@@ -340,6 +376,10 @@
 </div>
 @endsection
 
+@section('modals')
+@include('includes.modals.modal-composition-delete')
+@endsection
+
 @section('scripts')
 
 @include('includes.scripts.inputs-mask')
@@ -347,6 +387,8 @@
 @include('goods.scripts')
 
 <script>
+
+
 
     // Основные ностойки
     var cur_goods_id = '{{ $cur_goods->id }}';
@@ -403,39 +445,89 @@
 
     // При клике на удаление состава со страницы
     $(document).on('click', '[data-open="delete-composition"]', function() {
-
-        // Находим описание сущности, id и название удаляемого элемента в родителе
+        // находим описание сущности, id и название удаляемого элемента в родителе
         var parent = $(this).closest('.item');
+        var type = parent.attr('id').split('-')[0];
         var id = parent.attr('id').split('-')[1];
+        var name = parent.data('name');
+        $('.title-composition').text(name);
+        // $('.delete-button').attr('id', 'del-' + type + '-' + id);
+        $('.composition-delete-button').attr('id', 'delete_metric-' + id);
+    });
+
+    // При клике на удаление метрики со страницы
+    $(document).on('click', '.composition-delete-button', function() {
+
+        // Находим id элемента в родителе
+        var id = $(this).attr('id').split('-')[1];
 
         // alert(id);
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_delete_relation_composition',
-            type: 'POST',
-            data: {id: id, cur_goods_id: cur_goods_id},
-            success: function(date){
+        // Удаляем элемент со страницы
+        $('#compositions-' + id).remove();
 
-                var result = $.parseJSON(date);
-                // alert(result);
-
-                if (result['error_status'] == 0) {
-
-                    // Удаляем элемент со страницы
-                    $('#compositions-' + id).remove();
-
-                    // Убираем отмеченный чекбокс в списке метрик
-                    $('#add-composition-' + id).prop('checked', false);
-
-                } else {
-                    alert(result['error_message']);
-                }; 
-            }
-        })
     });
+
+    // При клике на чекбокс метрики отображаем ее на странице
+    // $(document).on('click', '.add-composition', function() {
+
+    //     var id = $(this).val();
+    //     // alert(goods_category_id + ' ' + id);
+
+    //     // Если нужно добавить состав
+    //     if ($(this).prop('checked') == true) {
+    //         $.ajax({
+    //             headers: {
+    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //             },
+    //             url: '/admin/ajax_add_page_composition',
+    //             type: 'POST',
+    //             data: {id: id, item_id: cur_goods_id, entity: 'goods'},
+    //             success: function(html){
+    //                 // alert(html);
+    //                 $('#composition-table').append(html);
+    //             }
+    //         })
+    //     } else {
+
+    //         // Если нужно удалить состав
+    //         $('#compositions-' + id).remove();
+    //     }
+    // });
+    // $(document).on('click', '[data-open="delete-composition"]', function() {
+
+    //     // Находим описание сущности, id и название удаляемого элемента в родителе
+    //     var parent = $(this).closest('.item');
+    //     var id = parent.attr('id').split('-')[1];
+
+    //     // alert(id);
+
+    //     $.ajax({
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         },
+    //         url: '/admin/ajax_delete_relation_composition',
+    //         type: 'POST',
+    //         data: {id: id, cur_goods_id: cur_goods_id},
+    //         success: function(date){
+
+    //             var result = $.parseJSON(date);
+    //             // alert(result);
+
+    //             if (result['error_status'] == 0) {
+
+    //                 // Удаляем элемент со страницы
+    //                 $('#compositions-' + id).remove();
+
+    //                 // Убираем отмеченный чекбокс в списке метрик
+    //                 $('#add-composition-' + id).prop('checked', false);
+
+    //             } else {
+    //                 alert(result['error_message']);
+    //             }; 
+    //         }
+    //     })
+    // });
 
     // При клике на удаление состава со страницы
     $(document).on('click', '[data-open="delete-value"]', function() {

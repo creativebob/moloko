@@ -84,6 +84,11 @@ class GoodsCategory extends Model
     // Получаем состав
     public function compositions()
     {
-        return $this->belongsToMany('App\Raw', 'compositions', 'goods_category_id', 'entity_id')->where('entity', 'raws');;
+        return $this->morphedByMany('App\Raw', 'compositions');
     }
+
+    // public function compositions()
+    // {
+    //     return $this->belongsToMany('App\Raw', 'compositions', 'goods_category_id', 'entity_id')->where('entity', 'raws');;
+    // }
 }

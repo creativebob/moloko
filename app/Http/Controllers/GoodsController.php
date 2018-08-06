@@ -14,6 +14,8 @@ use App\Photo;
 use App\UnitsCategory;
 use App\Product;
 
+use App\RawsCategory;
+
 use App\EntitySetting;
 
 use App\ArticleValue;
@@ -135,7 +137,7 @@ class GoodsController extends Controller
 
             return view('includes.search', compact('result_search', 'entity_name'));
         } else {
-            
+
             return view('includes.search');
         }
     }
@@ -358,13 +360,38 @@ class GoodsController extends Controller
         $cur_goods = Goods::with(['goods_product.goods_category' => function ($query) {
             $query->with(['metrics.property', 'compositions.raws_product.unit'])
             ->withCount('metrics', 'compositions');
-        }, 'album.photos', 'company.manufacturers', 'metrics_values'])
-        ->withCount(['metrics_values'])
+        }, 'album.photos', 'company.manufacturers', 'metrics_values', 'raws_compositions_values'])
+        ->withCount(['metrics_values', 'raws_compositions_values'])
         ->moderatorLimit($answer_goods)
         ->findOrFail($id);
 
         // $cur_goods = Goods::with(['goods_product.goods_category.metrics', 'goods_product.goods_category.compositions.goods_products',  'album.photos', 'company.manufacturers'])->moderatorLimit($answer_goods)->findOrFail($id);
-        // dd($cur_goods->goods_product->goods_category->compositions);
+        // dd($cur_goods);
+
+        if ($cur_goods->draft == 1) {
+
+            $cur_goods_compositions = [];
+            foreach ($cur_goods->raws_compositions_values as $composition) {
+                $cur_goods_compositions[] = $composition->id;
+            }
+        } else {
+            $goods_category = GoodsCategory::with(['goods_mode', 'metrics.unit', 'metrics.values', 'compositions.raws_product.unit'])
+            ->withCount('metrics', 'compositions')
+            ->moderatorLimit($answer_goods_categories)
+            ->findOrFail($cur_goods->goods_product->goods_category_id);
+
+            $cur_goods_compositions = [];
+            foreach ($goods_category->compositions as $composition) {
+                $cur_goods_compositions[] = $composition->id;
+            }
+
+        // dd($goods_category_compositions);
+
+        }
+
+        
+
+        // dd($cur_goods_compositions);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
@@ -494,21 +521,65 @@ class GoodsController extends Controller
 
         // dd($goods_modes_list);
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_raws_categories = operator_right('raws_categories', false, 'index');
+
+        $answer_raws_products = operator_right('raws_products', false, 'index');
+
+        $answer_raws = operator_right('raws', false, 'index');
+
+        $raws_categories = RawsCategory::with(['raws_products' => function ($query) use ($answer_raws_products, $answer_raws) {
+            $query->with(['raws' => function ($query) use ($answer_raws) {
+                $query
+                    // ->moderatorLimit($answer_raws)
+                    // ->companiesLimit($answer_raws)
+                    // ->authors($answer_raws)
+                    // ->systemItem($answer_raws) // Фильтр по системным записям 
+                ->whereNull('draft');
+            }])
+            ->withCount('raws');
+                // ->moderatorLimit($answer_raws_products)
+                // ->companiesLimit($answer_raws_products)
+                // ->authors($answer_raws_products)
+                // ->systemItem($answer_raws_products); // Фильтр по системным записям 
+        }])
+        ->withCount('raws_products')
+        ->moderatorLimit($answer_raws_categories)
+        ->companiesLimit($answer_raws_categories)
+        ->authors($answer_raws_categories)
+            ->systemItem($answer_raws_categories) // Фильтр по системным записям 
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+
+            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+            $composition_categories_list = get_parents_tree($raws_categories, null, null, null);
+
+            // dd($composition_categories_list);
+
+            $composition_list = [
+                'name' => 'Сырье',
+                'alias' => 'raws',
+                'composition_categories' => $composition_categories_list,
+            ];
+
+            // dd($composition_list);
+
         // // dd($goods_modes_list);
 
         // // dd($product->goods_group->goods_category->type);
-        if ($cur_goods->metrics_values_count > 0) {
-            $metrics_values = [];
-            foreach ($cur_goods->metrics_values as $metric) {
-                $metrics_values[$metric->id][] = $metric->pivot->value;
+            if ($cur_goods->metrics_values_count > 0) {
+                $metrics_values = [];
+                foreach ($cur_goods->metrics_values as $metric) {
+                    $metrics_values[$metric->id][] = $metric->pivot->value;
+                }
+            } else {
+                $metrics_values = null;
             }
-        } else {
-            $metrics_values = null;
-        }
 
 
-        // $compositions_values = $cur_goods->compositions_values->keyBy('product_id');
-        // dd($metrics_values);
+            $raws_compositions_values = $cur_goods->raws_compositions_values->keyBy('id');
+        // dd($raws_compositions_values[2]->pivot->value);
         // // dd($compositions_values->where('product_id', 4));
 
         // $type = $cur_goods->goods_product->goods_category->type;
@@ -521,127 +592,131 @@ class GoodsController extends Controller
 
 
         // Получаем настройки по умолчанию
-        $settings = config()->get('settings');
+            $settings = config()->get('settings');
         // dd($settings);
 
-        $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
 
-        if($get_settings){
+            if ($get_settings){
 
-            if ($get_settings->img_small_width != null) {
-                $settings['img_small_width'] = $get_settings->img_small_width;
+                if ($get_settings->img_small_width != null) {
+                    $settings['img_small_width'] = $get_settings->img_small_width;
+                }
+
+                if ($get_settings->img_small_height != null) {
+                    $settings['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings['img_max_size'] = $get_settings->img_max_size;
+                }
             }
-
-            if ($get_settings->img_small_height != null) {
-                $settings['img_small_height'] = $get_settings->img_small_height;
-            }
-
-            if ($get_settings->img_medium_width != null) {
-                $settings['img_medium_width'] = $get_settings->img_medium_width;
-            }
-
-            if ($get_settings->img_medium_height != null) {
-                $settings['img_medium_height'] = $get_settings->img_medium_height;
-            }
-
-            if ($get_settings->img_large_width != null) {
-                $settings['img_large_width'] = $get_settings->img_large_width;
-            }
-
-            if ($get_settings->img_large_height != null) {
-                $settings['img_large_height'] = $get_settings->img_large_height;  
-            }
-
-            if ($get_settings->img_formats != null) {
-                $settings['img_formats'] = $get_settings->img_formats;
-            }
-
-            if ($get_settings->img_min_width != null) {
-                $settings['img_min_width'] = $get_settings->img_min_width;
-            }
-
-            if ($get_settings->img_min_height != null) {
-                $settings['img_min_height'] = $get_settings->img_min_height;   
-            }
-
-            if ($get_settings->img_max_size != null) {
-                $settings['img_max_size'] = $get_settings->img_max_size;
-            }
-        }
 
         // Получаем настройки по умолчанию
-        $settings_album = config()->get('settings');
+            $settings_album = config()->get('settings');
         // dd($settings_album);
 
-        $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id' => 1])->first();
+            $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id' => 1])->first();
 
-        if($get_settings){
+            if ($get_settings){
 
-            if ($get_settings->img_small_width != null) {
-                $settings_album['img_small_width'] = $get_settings->img_small_width;
+                if ($get_settings->img_small_width != null) {
+                    $settings_album['img_small_width'] = $get_settings->img_small_width;
+                }
+
+                if ($get_settings->img_small_height != null) {
+                    $settings_album['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings_album['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings_album['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings_album['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings_album['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings_album['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings_album['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings_album['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings_album['img_max_size'] = $get_settings->img_max_size;
+                }
             }
-
-            if ($get_settings->img_small_height != null) {
-                $settings_album['img_small_height'] = $get_settings->img_small_height;
-            }
-
-            if ($get_settings->img_medium_width != null) {
-                $settings_album['img_medium_width'] = $get_settings->img_medium_width;
-            }
-
-            if ($get_settings->img_medium_height != null) {
-                $settings_album['img_medium_height'] = $get_settings->img_medium_height;
-            }
-
-            if ($get_settings->img_large_width != null) {
-                $settings_album['img_large_width'] = $get_settings->img_large_width;
-            }
-
-            if ($get_settings->img_large_height != null) {
-                $settings_album['img_large_height'] = $get_settings->img_large_height;  
-            }
-
-            if ($get_settings->img_formats != null) {
-                $settings_album['img_formats'] = $get_settings->img_formats;
-            }
-
-            if ($get_settings->img_min_width != null) {
-                $settings_album['img_min_width'] = $get_settings->img_min_width;
-            }
-
-            if ($get_settings->img_min_height != null) {
-                $settings_album['img_min_height'] = $get_settings->img_min_height;   
-            }
-
-            if ($get_settings->img_max_size != null) {
-                $settings_album['img_max_size'] = $get_settings->img_max_size;
-            }
-        }
 
         // dd($settings_album);
 
         // Инфо о странице
-        $page_info = pageInfo('goods');
+            $page_info = pageInfo('goods');
 
-        return view('goods.edit', compact('cur_goods', 'page_info', 'goods_categories_list', 'goods_products_list', 'manufacturers_list', 'goods_modes_list', 'goods_category_compositions', 'metrics_values', 'compositions_values', 'settings', 'settings_album'));
-    }
+            return view('goods.edit', compact('cur_goods', 'page_info', 'goods_categories_list', 'goods_products_list', 'manufacturers_list', 'goods_modes_list', 'cur_goods_compositions', 'metrics_values', 'raws_compositions_values', 'settings', 'settings_album', 'composition_list'));
+        }
 
-    public function update(Request $request, $id)
-    {
+        public function update(Request $request, $id)
+        {
 
         // dd($request);
-        if (isset($request->metrics)) {
-            $metrics_count = count($request->metrics);
-        } else {
-            $metrics_count = 0;
-        }
-        
+            if (isset($request->metrics)) {
+                $metrics_count = count($request->metrics);
+            } else {
+                $metrics_count = 0;
+            }
+
         // dd($metrics_count);
-        
-        // $compositions_count = count($request->compositions);
+
+            if (isset($request->compositions)) {
+                $compositions_count = count($request->compositions);
+            } else {
+                $compositions_count = 0;
+            }
 
         // Если снят флаг черновика
-        if (empty($request->template)) {
+            if (empty($request->draft)) {
 
             // Проверка на наличие артикула
             // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
@@ -650,38 +725,38 @@ class GoodsController extends Controller
             // ->where(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count])
             // ->get();
 
-            $goods = Goods::with('metrics_values')
-            ->withCount('metrics_values')
-            ->where('goods_product_id', $request->goods_product_id)
-            ->where('metrics_count', $metrics_count)
-            ->get();
+                $goods = Goods::with('metrics_values')
+                ->withCount('metrics_values')
+                ->where('goods_product_id', $request->goods_product_id)
+                ->where('metrics_count', $metrics_count)
+                ->get();
             // dd($goods);
 
             // Создаем массив совпадений
-            $coincidence = [];
+                $coincidence = [];
 
             // dd($request);
 
 
             // Сравниваем метрики
-            $metrics_array = [];
-            foreach ($goods as $cur_goods) {
+                $metrics_array = [];
+                foreach ($goods as $cur_goods) {
 
                 // dd($cur_goods);
-                foreach ($cur_goods->metrics_values as $metric) {
+                    foreach ($cur_goods->metrics_values as $metric) {
                 // dd($metric);
-                    $metrics_array[$cur_goods->id][$metric->id][] = $metric->pivot->value;
+                        $metrics_array[$cur_goods->id][$metric->id][] = $metric->pivot->value;
+                    }
                 }
-            }
             // dd($metrics_array);
 
-            $metrics_values[$id] = $request->metrics;
+                $metrics_values[$id] = $request->metrics;
             // dd($metrics_values);
 
-            if ($metrics_values == $metrics_array) {
+                if ($metrics_values == $metrics_array) {
                 // Если значения метрик совпали, создаюм ключ метрик
-                $coincidence['metric'] = 1;
-            }
+                    $coincidence['metric'] = 1;
+                }
             // dd($coincidence);
             // dd($request->compositions);
 
@@ -717,143 +792,143 @@ class GoodsController extends Controller
             //     echo json_encode($result, JSON_UNESCAPED_UNICODE);
             // }
 
-            if (array_key_exists('metric', $coincidence)) {
+                if (array_key_exists('metric', $coincidence)) {
                 // Если ключи присутствуют, даем ошибку
-                $result = [
-                    'error_status' => 1,
-                    'error_message' => 'Такой артикул уже существует!',
-                ];
+                    $result = [
+                        'error_status' => 1,
+                        'error_message' => 'Такой артикул уже существует!',
+                    ];
 
-                echo json_encode($result, JSON_UNESCAPED_UNICODE);
-            }
+                    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+                }
 
             // dd($coincidence);
-        }
+            }
 
         // Если что то не совпало, пишем новый артикул
 
         // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+            $user = $request->user();
 
         // Смотрим компанию пользователя
-        $company_id = $user->company_id;
+            $company_id = $user->company_id;
 
         // Скрываем бога
-        $user_id = hideGod($user);
+            $user_id = hideGod($user);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+            $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $cur_goods = Goods::moderatorLimit($answer)->findOrFail($id);
+            $cur_goods = Goods::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $cur_goods);
+            $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
-        if ($request->hasFile('photo')) {
+            if ($request->hasFile('photo')) {
 
             // Вытаскиваем настройки
             // Вытаскиваем базовые настройки сохранения фото
-            $settings = config()->get('settings');
+                $settings = config()->get('settings');
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+                $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
 
-            if($get_settings){
+                if($get_settings){
 
-                if ($get_settings->img_small_width != null) {
-                    $settings['img_small_width'] = $get_settings->img_small_width;
+                    if ($get_settings->img_small_width != null) {
+                        $settings['img_small_width'] = $get_settings->img_small_width;
+                    }
+
+                    if ($get_settings->img_small_height != null) {
+                        $settings['img_small_height'] = $get_settings->img_small_height;
+                    }
+
+                    if ($get_settings->img_medium_width != null) {
+                        $settings['img_medium_width'] = $get_settings->img_medium_width;
+                    }
+
+                    if ($get_settings->img_medium_height != null) {
+                        $settings['img_medium_height'] = $get_settings->img_medium_height;
+                    }
+
+                    if ($get_settings->img_large_width != null) {
+                        $settings['img_large_width'] = $get_settings->img_large_width;
+                    }
+
+                    if ($get_settings->img_large_height != null) {
+                        $settings['img_large_height'] = $get_settings->img_large_height;  
+                    }
+
+                    if ($get_settings->img_formats != null) {
+                        $settings['img_formats'] = $get_settings->img_formats;
+                    }
+
+                    if ($get_settings->img_min_width != null) {
+                        $settings['img_min_width'] = $get_settings->img_min_width;
+                    }
+
+                    if ($get_settings->img_min_height != null) {
+                        $settings['img_min_height'] = $get_settings->img_min_height;   
+                    }
+
+                    if ($get_settings->img_max_size != null) {
+                        $settings['img_max_size'] = $get_settings->img_max_size;
+
+                    }
                 }
 
-                if ($get_settings->img_small_height != null) {
-                    $settings['img_small_height'] = $get_settings->img_small_height;
-                }
 
-                if ($get_settings->img_medium_width != null) {
-                    $settings['img_medium_width'] = $get_settings->img_medium_width;
-                }
 
-                if ($get_settings->img_medium_height != null) {
-                    $settings['img_medium_height'] = $get_settings->img_medium_height;
-                }
-
-                if ($get_settings->img_large_width != null) {
-                    $settings['img_large_width'] = $get_settings->img_large_width;
-                }
-
-                if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
-                }
-
-                if ($get_settings->img_formats != null) {
-                    $settings['img_formats'] = $get_settings->img_formats;
-                }
-
-                if ($get_settings->img_min_width != null) {
-                    $settings['img_min_width'] = $get_settings->img_min_width;
-                }
-
-                if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
-                }
-
-                if ($get_settings->img_max_size != null) {
-                    $settings['img_max_size'] = $get_settings->img_max_size;
-
-                }
-            }
-            
-            
-
-            $directory = $company_id.'/media/goods/'.$cur_goods->id.'/img/';
+                $directory = $company_id.'/media/goods/'.$cur_goods->id.'/img/';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-            if ($cur_goods->photo_id) {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, $cur_goods->photo_id, $settings);
+                if ($cur_goods->photo_id) {
+                    $array = save_photo($request, $directory, 'avatar-'.time(), null, $cur_goods->photo_id, $settings);
 
-            } else {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
+                } else {
+                    $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
 
-            }
-            $photo = $array['photo'];
+                }
+                $photo = $array['photo'];
 
-            $cur_goods->photo_id = $photo->id;
-        } 
+                $cur_goods->photo_id = $photo->id;
+            } 
 
         // Наполняем сущность данными
-        $cur_goods->goods_product_id = $request->goods_product_id;
-        $cur_goods->name = $request->name;
+            $cur_goods->goods_product_id = $request->goods_product_id;
+            $cur_goods->name = $request->name;
 
-        $cur_goods->manually = $request->manually;
+            $cur_goods->manually = $request->manually;
         // $cur_goods->external = $request->external;
-        $cur_goods->cost = $request->cost;
-        $cur_goods->price = $request->price;
+            $cur_goods->cost = $request->cost;
+            $cur_goods->price = $request->price;
 
-        $cur_goods->description = $request->description;
+            $cur_goods->description = $request->description;
 
-        $cur_goods->manufacturer_id = $request->manufacturer_id;
+            $cur_goods->manufacturer_id = $request->manufacturer_id;
 
-        $cur_goods->metrics_count = $metrics_count;
+            $cur_goods->metrics_count = $metrics_count;
         // $cur_goods->compositions_count = $compositions_count;
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false) {
-            $cur_goods->moderation = 1;
-        }
+            if ($answer['automoderate'] == false) {
+                $cur_goods->moderation = 1;
+            }
 
         // Системная запись
-        $cur_goods->system_item = $request->system_item;
+            $cur_goods->system_item = $request->system_item;
 
-        $cur_goods->display = $request->display;
-        $cur_goods->draft = $request->draft;
-        $cur_goods->company_id = $company_id;
-        $cur_goods->author_id = $user_id;
-        $cur_goods->save();
+            $cur_goods->display = $request->display;
+            $cur_goods->draft = $request->draft;
+            $cur_goods->company_id = $company_id;
+            $cur_goods->author_id = $user_id;
+            $cur_goods->save();
 
-        if ($cur_goods) {
+            if ($cur_goods) {
 
-            if ($cur_goods->draft == 1) {
+                if ($cur_goods->draft == 1) {
 
 
 
@@ -869,223 +944,243 @@ class GoodsController extends Controller
             //         // Пишем состав
             //         $cur_goods->compositions_values()->attach($compositions_insert);
             //     }
-            }
+                }
 
             // dd($request->metrics);
-            if (isset($request->metrics)) {
+                if (isset($request->metrics)) {
 
-                $cur_goods->metrics_values()->detach();
+                    $cur_goods->metrics_values()->detach();
 
-                $metrics_insert = [];
+                    $metrics_insert = [];
 
-                foreach ($request->metrics as $metric_id => $values) {
-                    foreach ($values as $value) {
+                    foreach ($request->metrics as $metric_id => $values) {
+                        foreach ($values as $value) {
                             // dd($value);
-                        $cur_goods->metrics_values()->attach([
-                            $metric_id => [
-                                'entity' => 'metrics',
+                            $cur_goods->metrics_values()->attach([
+                                $metric_id => [
+                                    'value' => $value,
+                                ],
+                            ]);
+                            // $metrics_insert[$metric_id]['entity'] = 'metrics';
+                            // $metrics_insert[$metric_id]['value'] = $value; 
+                        }
+                    }
+
+
+                    // dd($metrics_insert);
+
+                    // Пишем метрики
+                    // $cur_goods->metrics_values()->attach($metrics_insert);
+                }
+
+                if (isset($request->compositions)) {
+
+                    $cur_goods->raws_compositions_values()->detach();
+
+                    $compositions_insert = [];
+
+                    foreach ($request->compositions as $composition_id => $value) {
+                            // dd($value);
+                        $cur_goods->raws_compositions_values()->attach([
+                            $composition_id => [
                                 'value' => $value,
                             ],
                         ]);
                             // $metrics_insert[$metric_id]['entity'] = 'metrics';
                             // $metrics_insert[$metric_id]['value'] = $value; 
+
                     }
                 }
-                    // dd($metrics_insert);
-
-                    // Пишем метрики
-                    // $cur_goods->metrics_values()->attach($metrics_insert);
-            }
 
             // $result = [
             //     'error_status' => 0,
             // ];
 
             // echo json_encode($result, JSON_UNESCAPED_UNICODE);
-            return Redirect('/admin/goods');
+                return Redirect('/admin/goods');
 
-        } else {
-            abort(403, 'Ошибка записи группы товаров');
+            } else {
+                abort(403, 'Ошибка записи группы товаров');
+            }
         }
-    }
 
-    public function destroy($id)
-    {
+        public function destroy($id)
+        {
         //
-    }
+        }
 
-    public function archive(Request $request, $id)
-    {
+        public function archive(Request $request, $id)
+        {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'delete');
+            $answer = operator_right($this->entity_name, $this->entity_dependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $cur_goods = Goods::moderatorLimit($answer)->findOrFail($id);
+            $cur_goods = Goods::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('delete', $cur_goods);
-
-        if ($cur_goods) {
-
-            // Получаем пользователя
-            $user = $request->user();
-
-            // Скрываем бога
-            $user_id = hideGod($user);
-
-            $cur_goods->editor_id = $user_id;
-            $cur_goods->archive = 1;
-            $cur_goods->save();
+            $this->authorize('delete', $cur_goods);
 
             if ($cur_goods) {
-                return Redirect('/admin/goods');
+
+            // Получаем пользователя
+                $user = $request->user();
+
+            // Скрываем бога
+                $user_id = hideGod($user);
+
+                $cur_goods->editor_id = $user_id;
+                $cur_goods->archive = 1;
+                $cur_goods->save();
+
+                if ($cur_goods) {
+                    return Redirect('/admin/goods');
+                } else {
+                    abort(403, 'Ошибка при архивации товара');
+                }
             } else {
-                abort(403, 'Ошибка при архивации товара');
+                abort(403, 'Товар не найден');
             }
-        } else {
-            abort(403, 'Товар не найден');
         }
-    }
 
       // Сортировка
-    public function goods_sort(Request $request)
-    {
-        $result = '';
-        $i = 1;
-        foreach ($request->goods as $item) {
-            $cur_goods = Goods::findOrFail($item);
-            $cur_goods->sort = $i;
-            $cur_goods->save();
-            $i++;
+        public function goods_sort(Request $request)
+        {
+            $result = '';
+            $i = 1;
+            foreach ($request->goods as $item) {
+                $cur_goods = Goods::findOrFail($item);
+                $cur_goods->sort = $i;
+                $cur_goods->save();
+                $i++;
+            }
         }
-    }
 
-    public function get_inputs(Request $request)
-    {
+        public function get_inputs(Request $request)
+        {
 
-        $product = Product::with('metrics.property', 'compositions.unit')->withCount('metrics', 'compositions')->findOrFail($request->product_id);
-        return view('products.cur_goods-form', compact('product'));
+            $product = Product::with('metrics.property', 'compositions.unit')->withCount('metrics', 'compositions')->findOrFail($request->product_id);
+            return view('products.cur_goods-form', compact('product'));
 
         // $product = Product::with('metrics.property', 'compositions.unit')->findOrFail(1);
         // dd($product);
 
-    }
+        }
 
-    public function add_photo(Request $request)
-    {
+        public function add_photo(Request $request)
+        {
 
         // Подключение политики
-        $this->authorize(getmethod('store'), Photo::class);
+            $this->authorize(getmethod('store'), Photo::class);
 
-        if ($request->hasFile('photo')) {
+            if ($request->hasFile('photo')) {
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
 
             // Получаем авторизованного пользователя
-            $user = $request->user();
+                $user = $request->user();
 
             // Смотрим компанию пользователя
-            $company_id = $user->company_id;
+                $company_id = $user->company_id;
 
             // Скрываем бога
-            $user_id = hideGod($user);
+                $user_id = hideGod($user);
 
            // Иначе переводим заголовок в транслитерацию
-            $alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
+                $alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
 
-            $album = Album::where(['company_id' => $company_id, 'name' => $request->name, 'albums_category_id' => 1])->first();
+                $album = Album::where(['company_id' => $company_id, 'name' => $request->name, 'albums_category_id' => 1])->first();
 
-            if ($album) {
-                $album_id = $album->id;
-            } else {
-                $album = new Album;
-                $album->company_id = $company_id;
-                $album->name = $request->name;
-                $album->alias = $alias;
-                $album->albums_category_id = 1;
-                $album->description = $request->name;
-                $album->author_id = $user_id;
-                $album->save();
+                if ($album) {
+                    $album_id = $album->id;
+                } else {
+                    $album = new Album;
+                    $album->company_id = $company_id;
+                    $album->name = $request->name;
+                    $album->alias = $alias;
+                    $album->albums_category_id = 1;
+                    $album->description = $request->name;
+                    $album->author_id = $user_id;
+                    $album->save();
 
-                $album_id = $album->id;
-            }
-
-            $cur_goods = Goods::findOrFail($request->id);
-
-            if ($cur_goods->album_id == null) {
-                $cur_goods->album_id = $album_id;
-                $cur_goods->save();
-
-                if (!$cur_goods) {
-                    abort(403, 'Ошибка записи альбома в продукцию');
+                    $album_id = $album->id;
                 }
-            }
+
+                $cur_goods = Goods::findOrFail($request->id);
+
+                if ($cur_goods->album_id == null) {
+                    $cur_goods->album_id = $album_id;
+                    $cur_goods->save();
+
+                    if (!$cur_goods) {
+                        abort(403, 'Ошибка записи альбома в продукцию');
+                    }
+                }
 
             // Вытаскиваем настройки
             // Вытаскиваем базовые настройки сохранения фото
-            $settings = config()->get('settings');
+                $settings = config()->get('settings');
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id'=> 1])->first();
+                $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id'=> 1])->first();
 
-            if ($get_settings) {
+                if ($get_settings) {
 
-                if ($get_settings->img_small_width != null) {
-                    $settings['img_small_width'] = $get_settings->img_small_width;
+                    if ($get_settings->img_small_width != null) {
+                        $settings['img_small_width'] = $get_settings->img_small_width;
+                    }
+
+                    if ($get_settings->img_small_height != null) {
+                        $settings['img_small_height'] = $get_settings->img_small_height;
+                    }
+
+                    if ($get_settings->img_medium_width != null) {
+                        $settings['img_medium_width'] = $get_settings->img_medium_width;
+                    }
+
+                    if ($get_settings->img_medium_height != null) {
+                        $settings['img_medium_height'] = $get_settings->img_medium_height;
+                    }
+
+                    if ($get_settings->img_large_width != null) {
+                        $settings['img_large_width'] = $get_settings->img_large_width;
+                    }
+
+                    if ($get_settings->img_large_height != null) {
+                        $settings['img_large_height'] = $get_settings->img_large_height;  
+                    }
+
+                    if ($get_settings->img_formats != null) {
+                        $settings['img_formats'] = $get_settings->img_formats;
+                    }
+
+                    if ($get_settings->img_min_width != null) {
+                        $settings['img_min_width'] = $get_settings->img_min_width;
+                    }
+
+                    if ($get_settings->img_min_height != null) {
+                        $settings['img_min_height'] = $get_settings->img_min_height;   
+                    }
+
+                    if ($get_settings->img_max_size != null) {
+                        $settings['img_max_size'] = $get_settings->img_max_size;
+                    }
                 }
 
-                if ($get_settings->img_small_height != null) {
-                    $settings['img_small_height'] = $get_settings->img_small_height;
-                }
-
-                if ($get_settings->img_medium_width != null) {
-                    $settings['img_medium_width'] = $get_settings->img_medium_width;
-                }
-
-                if ($get_settings->img_medium_height != null) {
-                    $settings['img_medium_height'] = $get_settings->img_medium_height;
-                }
-
-                if ($get_settings->img_large_width != null) {
-                    $settings['img_large_width'] = $get_settings->img_large_width;
-                }
-
-                if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
-                }
-
-                if ($get_settings->img_formats != null) {
-                    $settings['img_formats'] = $get_settings->img_formats;
-                }
-
-                if ($get_settings->img_min_width != null) {
-                    $settings['img_min_width'] = $get_settings->img_min_width;
-                }
-
-                if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
-                }
-
-                if ($get_settings->img_max_size != null) {
-                    $settings['img_max_size'] = $get_settings->img_max_size;
-                }
-            }
-
-            $directory = $company_id.'/media/albums/'.$album_id.'/img/';
+                $directory = $company_id.'/media/albums/'.$album_id.'/img/';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-            $array = save_photo($request, $directory,  $alias.'-'.time(), $album_id, null, $settings);
+                $array = save_photo($request, $directory,  $alias.'-'.time(), $album_id, null, $settings);
 
-            $photo = $array['photo'];
-            $upload_success = $array['upload_success'];
+                $photo = $array['photo'];
+                $upload_success = $array['upload_success'];
 
-            $media = new AlbumEntity;
-            $media->album_id = $album_id;
-            $media->entity_id = $photo->id;
-            $media->entity = 'photos';
-            $media->save();
+                $media = new AlbumEntity;
+                $media->album_id = $album_id;
+                $media->entity_id = $photo->id;
+                $media->entity = 'photos';
+                $media->save();
 
             // $check_media = AlbumEntity::where(['album_id' => $album_id, 'entity_id' => $request->id, 'entity' => 'product'])->first();
 
@@ -1097,64 +1192,64 @@ class GoodsController extends Controller
             //     $media->save();
             // }
 
-            if ($upload_success) {
+                if ($upload_success) {
 
                 // Переадресовываем на index
                 // return redirect()->route('/products/'.$product->id.'/edit', ['photo' => $photo, 'upload_success' => $upload_success]);
 
-                return response()->json($upload_success, 200);
+                    return response()->json($upload_success, 200);
+                } else {
+                    return response()->json('error', 400);
+                } 
+
             } else {
                 return response()->json('error', 400);
             } 
+        }
 
-        } else {
-            return response()->json('error', 400);
-        } 
-    }
-
-    public function photos(Request $request)
-    {
+        public function photos(Request $request)
+        {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+            $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $cur_goods = Goods::with('album.photos')->moderatorLimit($answer)->findOrFail($request->cur_goods_id);
+            $cur_goods = Goods::with('album.photos')->moderatorLimit($answer)->findOrFail($request->cur_goods_id);
         // dd($product);
 
         // Подключение политики
-        $this->authorize(getmethod('edit'), $cur_goods);
+            $this->authorize(getmethod('edit'), $cur_goods);
 
-        return view('goods.photos', compact('cur_goods'));
+            return view('goods.photos', compact('cur_goods'));
 
-    }
+        }
 
     // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
+        public function ajax_display(Request $request)
+        {
 
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
+            if ($request->action == 'hide') {
+                $display = null;
+            } else {
+                $display = 1;
+            }
+
+            $cur_goods = Goods::findOrFail($request->id);
+            $cur_goods->display = $display;
+            $cur_goods->save();
+
+            if ($cur_goods) {
+
+                $result = [
+                    'error_status' => 0,
+                ];  
+            } else {
+
+                $result = [
+                    'error_status' => 1,
+                    'error_message' => 'Ошибка при обновлении отображения на сайте!'
+                ];
+            }
+            echo json_encode($result, JSON_UNESCAPED_UNICODE);
         }
-
-        $cur_goods = Goods::findOrFail($request->id);
-        $cur_goods->display = $display;
-        $cur_goods->save();
-
-        if ($cur_goods) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
-}

@@ -48,16 +48,26 @@ class Goods extends Model
     // use DateIntervalFilter;
 
     // Метрики
+    // public function metrics_values()
+    // {
+    //     return $this->belongsToMany('App\Metric', 'goods_values', 'goods_id', 'entity_id')->where('entity', 'metrics')->withPivot('entity', 'value');
+    // }
+
     public function metrics_values()
     {
-        return $this->belongsToMany('App\Metric', 'goods_values', 'goods_id', 'entity_id')->where('entity', 'metrics')->withPivot('entity', 'value');
+        return $this->morphedByMany('App\Metric', 'goods_values')->withPivot('value');
     }
 
-    // // Состав
+    // Состав
     // public function compositions_values()
     // {
     //     return $this->belongsToMany('App\Article', 'article_values', 'article_id', 'entity_id')->where('entity', 'articles')->withPivot('entity', 'value');
     // }
+
+    public function raws_compositions_values()
+    {
+        return $this->morphedByMany('App\Raw', 'goods_values')->withPivot('value');
+    }
 
     // public function compositions_values()
     // {

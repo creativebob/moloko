@@ -51,6 +51,11 @@ class Raw extends Model
         return $this->belongsToMany('App\Metric', 'raws_values', 'raw_id', 'entity_id')->where('entity', 'metrics')->withPivot('entity', 'value');
     }
 
+    public function goods()
+    {
+        return $this->morphedByMany('App\Goods', 'goods_values');
+    }
+
     // // Состав
     // public function compositions_values()
     // {

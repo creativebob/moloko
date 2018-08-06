@@ -15,7 +15,7 @@
 			$checked = '';
 			@endphp
 
-			@if (in_array($raw['id'], $goods_category_compositions))
+			@if (in_array($raw['id'], $cur_goods_compositions))
 			@php
 			$checked = 'checked';
 			@endphp
@@ -40,6 +40,8 @@
 
 			@endif
 
+			
+			
 		</ul>
 	</div>
 </li>

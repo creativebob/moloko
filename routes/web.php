@@ -116,7 +116,7 @@ Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->midd
 Route::post('/ajax_add_relation_composition', 'CompositionController@ajax_add_relation')->middleware('auth');
 Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_delete_relation')->middleware('auth');
 
-Route::post('/ajax_add_page_composition', 'CompositionController@ajax_add')->middleware('auth');
+Route::any('/ajax_add_page_composition', 'CompositionController@ajax_add')->middleware('auth');
 
 Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
