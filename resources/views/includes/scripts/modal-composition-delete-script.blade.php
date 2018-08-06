@@ -37,7 +37,7 @@ $(document).on('click', '[data-open="delete-composition"]', function() {
             $('#compositions-' + id).remove();
 
             // Убираем отмеченный чекбокс в списке метрик
-            $('#add-product-' + id).prop('checked', false);
+            $('#add-raws-' + id).prop('checked', false);
             
           } else {
             alert(result['error_message']);
