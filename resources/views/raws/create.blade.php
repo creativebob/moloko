@@ -74,7 +74,7 @@
 		</div>
 		<div class="grid-x align-center">
 			<div class="small-6 medium-4 cell">
-				{{ Form::submit('Добавить товар', ['data-close', 'class'=>'button modal-button']) }}
+				{{ Form::submit('Добавить сырье', ['data-close', 'class'=>'button modal-button']) }}
 			</div>
 		</div>
 		{{ Form::close() }}
