@@ -22,8 +22,8 @@ class CreateGoodsValuesTable extends Migration
             $table->integer('goods_id')->nullable()->unsigned()->comment('ID метрики');
             $table->foreign('goods_id')->references('id')->on('goods');
 
-            $table->integer('entity_id')->nullable()->unsigned()->comment('Id сущности связанной с товаром');
-            $table->string('entity')->index()->comment('Сущность обьекта');
+            $table->integer('goods_values_id')->nullable()->unsigned()->comment('Id сущности связанной с товаром');
+            $table->string('goods_values_type')->index()->comment('Сущность обьекта');
 
             $table->string('value')->nullable()->comment('Значение');
 
