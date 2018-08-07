@@ -375,6 +375,9 @@ class GoodsController extends Controller
                 $cur_goods_compositions[] = $composition->id;
             }
         } else {
+
+            $answer_goods_categories = operator_right('goods_categories', false, 'index');
+
             $goods_category = GoodsCategory::with(['goods_mode', 'metrics.unit', 'metrics.values', 'compositions.raws_product.unit'])
             ->withCount('metrics', 'compositions')
             ->moderatorLimit($answer_goods_categories)
