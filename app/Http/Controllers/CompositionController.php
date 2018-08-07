@@ -93,32 +93,27 @@ class CompositionController extends Controller
     public function ajax_add(Request $request)
     {
 
-        $composition = GoodsProduct::with(['unit', 'articles' => function ($query) {
-            $query->whereNull('template');
-        }])->findOrFail($request->id);
+        $composition = Raw::with(['raws_product.unit'])->findOrFail($request->id);
 
-        $article = Goods::with('compositions_values')->findOrFail($request->article_id);
-        $compositions_values = $article->compositions_values->keyBy('product_id');
-
-        return view($request->entity.'.compositions.composition', compact('composition', 'compositions_values'));
+        return view($request->entity.'.compositions.composition-input', compact('composition'));
     }
     
     public function ajax_add_relation(Request $request)
     {
 
         $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
-        $goods_category->compositions()->toggle([$request->id => ['entity' => 'raws']]);
+        $goods_category->compositions()->attach($request->id);
 
         $composition = Raw::findOrFail($request->id);
 
-        return view($request->entity.'.compositions.composition', compact('composition'));
+        return view($request->entity.'.compositions.composition-input', compact('composition'));
     }
 
     public function ajax_delete_relation(Request $request)
     {
 
         $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
-        $res = $goods_category->compositions()->toggle([$request->id => ['entity' => 'raws']]);
+        $res = $goods_category->compositions()->detach($request->id);
 
         if ($res) {
             $result = [

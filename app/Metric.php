@@ -16,7 +16,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 class Metric extends Model
 {
@@ -34,15 +34,15 @@ class Metric extends Model
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
 
-     public function goods_categories()
-   {
-     return $this->morphedByMany('App\GoodsCategory', 'metric_entity');
-   }
- 
-   public function raws_categories()
-   {
-     return $this->morphedByMany('App\RawsCategory', 'metric_entity');
-   }
+    public function goods_categories()
+    {
+        return $this->morphedByMany('App\GoodsCategory', 'metric_entity');
+    }
+
+    public function raws_categories()
+    {
+        return $this->morphedByMany('App\RawsCategory', 'metric_entity');
+    }
 
     // Получаем проодукцию
     // public function goods_categories()
@@ -68,7 +68,7 @@ class Metric extends Model
         return $this->belongsTo('App\Property');
     }
 
-     public function values()
+    public function values()
     {
         return $this->hasMany('App\MetricValue');
     }
