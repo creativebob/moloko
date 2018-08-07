@@ -189,7 +189,13 @@
             <tbody id="composition-table">
               {{-- Таблица метрик товара --}}
               @if (!empty($goods_category->compositions))
-              @each('goods_categories.compositions.composition', $goods_category->compositions, 'composition')
+
+              @foreach ($goods_category->compositions as $composition)
+
+              @include ('goods_categories.compositions.composition-input', $composition)
+
+              @endforeach
+
               @endif
             </tbody>
           </table>
@@ -205,7 +211,7 @@
               <div class="dropdown-pane" id="{{ $composition_list['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
 
                 <ul class="checker" id="products-categories-list">
-  
+
                   @foreach ($composition_list['composition_categories'] as $composition_category)
                   @include('goods_categories.compositions.raws-category', $composition_category)
                   @endforeach
@@ -214,7 +220,7 @@
               </div>
             </li>
             @endif
-   
+
           </ul>
           @endif
 
@@ -258,7 +264,7 @@ $settings = config()->get('settings');
 
   // Конфигурация 
   CKEDITOR.config.toolbar = [
-    ['Bold', 'Italic', 'NumberedList', 'BulletedList', 'Maximize', 'Source']
+  ['Bold', 'Italic', 'NumberedList', 'BulletedList', 'Maximize', 'Source']
   ];
 
 
