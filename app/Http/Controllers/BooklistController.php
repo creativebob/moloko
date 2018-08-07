@@ -223,10 +223,13 @@ class BooklistController extends Controller
 
                 $booklist_id = $booklist->id;
 
+                $entity_id = Entity::where('alias', $request->entity_alias)->first()->id;
+
                 $booklist = new Booklist;
                 $booklist->name = 'Default';
                 $booklist->author_id = $request->user()->id;
                 $booklist->entity_alias = $request->entity_alias;
+                $booklist->entity_id = $entity_id;
                 $booklist->save();
 
             } else {
