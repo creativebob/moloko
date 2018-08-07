@@ -48,7 +48,7 @@
         <tr class="item @if($raw->moderation == 1)no-moderation @endif" id="raws-{{ $raw->id }}" data-name="{{ $raw->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
-            <input type="checkbox" class="table-check" name="album_id" id="check-{{ $raw->id }}"
+            <input type="checkbox" class="table-check" name="raw_id" id="check-{{ $raw->id }}"
             {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
             @if(!empty($filter['booklist']['booklists']['default']))
             {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}

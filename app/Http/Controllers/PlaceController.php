@@ -90,24 +90,20 @@ class PlaceController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        // Подключение политики
-        $this->authorize(getmethod('index'), PlacesType::class);
+        // // Подключение политики
+        // $this->authorize(getmethod('index'), PlacesType::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_places_types = operator_right('places_types', 'false', 'index');
-        dd($answer_places_types);
+        // dd($answer_places_types);
 
         // Список типов помещений
-        $places_types_query = PlacesType::moderatorLimit($answer_places_types)
-        ->companiesLimit($answer_places_types)
-        ->authors($answer_places_types)
-        ->systemItem($answer_places_types) // Фильтр по системным записям
-        ->template($answer_places_types) // Выводим шаблоны в список
-        ->get();
-
+        $places_types_query = PlacesType::get();
         $filter['status'] = null;
 
-        $places_types_checkboxer = addFilter($filter, $places_types_query, $request, 'Тип помещения', 'places_types', 'id', 'internal-self-one');
+        $places_types_checkboxer = addFilter($filter, $places_types_query, $request, 'Тип помещения', 'places_types', 'id', 'places_types', 'internal-self-one');
+
+        // dd($places_types_checkboxer);
 
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
@@ -167,8 +163,9 @@ class PlaceController extends Controller
         if($place){
 
             // Записываем связи: id-шники в таблицу Rooms
-            if(isset($request->places_types)){
-                $result = $place->places_types()->sync($request->places_types);               
+            if(isset($request->places_types_id)){
+                
+                $result = $place->places_types()->sync($request->places_types_id);               
             } else {
                 $result = $place->places_types()->detach(); 
             };
@@ -215,20 +212,8 @@ class PlaceController extends Controller
         $place = Place::with('places_types')->moderatorLimit($answer)->findOrFail($id);
         // dd($place->places_types);
 
-
-        // Подключение политики
-        $this->authorize(getmethod('index'), PlacesType::class);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_places_types = operator_right('places_types', 'false', 'index');
-
         // Список типов помещений
-        $places_types_query = PlacesType::moderatorLimit($answer_places_types)
-        ->companiesLimit($answer_places_types)
-        ->authors($answer_places_types)
-        ->systemItem($answer_places_types) // Фильтр по системным записям
-        ->template($answer_places_types) // Выводим шаблоны в список
-        ->get();
+        $places_types_query = PlacesType::get();
 
         $places_types = [];
 
