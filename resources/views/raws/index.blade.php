@@ -30,9 +30,10 @@
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-photo">Фото</th>
-          <th class="td-name">Название артикула</th>
-          <th class="td-raw">Услуга</th>
-          <th class="td-company-id">Компания</th>
+          <th class="td-name">Название сырья</th>
+          <th class="td-description">Описание</th>
+          <th class="td-price">Себестоимость</th>
+          <th class="td-services_category">Категория</th>
           <th class="td-author">Автор</th>
           @can ('publisher', App\Raw::class)
           <th class="td-display">Отображение</th>
@@ -63,8 +64,18 @@
             </a>
           </td>
           <td class="td-name"><a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->name }}</a></td>
-          <td class="td-raw">{{ $raw->raws_product->name }}</td>
-          <td class="td-company-id">@if(!empty($raw->company->name)) {{ $raw->company->name }} @else @if($raw->system_item == null) Шаблон @else Системная @endif @endif</td>
+
+          <td class="td-description">{{ $raw->description }}</td>
+          <td class="td-price">{{ num_format($raw->cost, 0) }}</td>
+          <td class="td-raws_category">
+            <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->raws_product->raws_category->id }}" class="filter_link" title="Фильтровать">{{ $raw->raws_product->raws_category->name }}</a>
+            <br>
+            @if($raw->raws_product->name != $raw->name)
+            <a href="/admin/raws?raws_product_id%5B%5D={{ $raw->raws_product->id }}" class="filter_link light-text">{{ $raw->raws_product->name }}</a>
+            @endif
+          </td>
+
+
           <td class="td-author">@if(isset($raw->author->first_name)) {{ $raw->author->first_name . ' ' . $raw->author->second_name }} @endif</td>
           @can ('publisher', $raw)
           <td class="td-display">

@@ -38,7 +38,7 @@ class RawController extends Controller
     protected $entity_name = 'raws';
     protected $entity_dependence = false;
 
-    public function index()
+    public function index(Request $request)
     {
 
         // Подключение политики
@@ -48,53 +48,54 @@ class RawController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
 
-        // --------------------------------------------------------------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
-        // --------------------------------------------------------------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
 
         $raws = Raw::with('author', 'company', 'raws_product')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        // ->booklistFilter($request)
-        // ->filter($request, 'author_id')
-        // ->filter($request, 'company_id')
-        // ->filter($request, 'products_category_id')
+        ->booklistFilter($request)
+        ->filter($request, 'author_id')
+        ->filter($request, 'raws_product_id')
+        ->filter($request, 'raws_category_id', 'raws_product')
         ->whereNull('archive')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // dd($products);
+        // --------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА
+        // --------------------------------------------------------------------------------------------------------
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        $filter_query = Raw::with('author', 'company', 'raws_product', 'raws_product.raws_category')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->whereNull('archive')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
 
-        // $filter_query = Product::with('author', 'company', 'products_category')
-        // ->moderatorLimit($answer)
-        // ->companiesLimit($answer)
-        // ->authors($answer)
-        // ->systemItem($answer) // Фильтр по системным записям
-        // ->get();
-        // // dd($filter_query);
 
-        // $filter['status'] = null;
+        $filter['status'] = null;
 
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id');
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'products_category', 'products_category_id');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'raws_category', 'raws_category_id', 'raws_product', 'external-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'raws_product', 'raws_product_id', null, 'internal-id-one');
 
-        // // Добавляем данные по спискам (Требуется на каждом контроллере)
-        // $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        // Добавляем данные по спискам (Требуется на каждом контроллере)
+        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // dd($type);
+        // -------------------------------------------------------------------------------------------------------------
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('raws.index', compact('raws', 'page_info'));
+        return view('raws.index', compact('raws', 'page_info', 'filter'));
     }
 
     public function create(Request $request)

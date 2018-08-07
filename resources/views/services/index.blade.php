@@ -71,7 +71,7 @@
           </td>
           <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->name }}</a></td>
           <td class="td-description">{{ $service->description }}</td>
-          <td class="td-price">{{ $service->price }}</td>
+          <td class="td-price">{{ num_format($service->price, 0) }}</td>
           <td class="td-services_category">
             <a href="/admin/services?services_category_id%5B%5D={{ $service->services_product->services_category->id }}" class="filter_link" title="Фильтровать">{{ $service->services_product->services_category->name }}</a>
             <br>

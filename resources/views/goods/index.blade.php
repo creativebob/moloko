@@ -72,7 +72,7 @@
           </td>
           <td class="td-name"><a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->name }}</a></td>
           <td class="td-description">{{ $cur_goods->description }}</td>
-          <td class="td-price">{{ $cur_goods->price }}</td>
+          <td class="td-price">{{ num_format($cur_goods->price, 0) }} </td>
           <td class="td-goods_category">
             <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->goods_product->goods_category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->goods_product->goods_category->name }}</a>
             <br>
