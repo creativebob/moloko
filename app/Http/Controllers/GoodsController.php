@@ -899,28 +899,59 @@ class GoodsController extends Controller
                 $cur_goods->photo_id = $photo->id;
             } 
 
-        // Наполняем сущность данными
-            $cur_goods->goods_product_id = $request->goods_product_id;
             $cur_goods->name = $request->name;
 
             $cur_goods->manually = $request->manually;
-        // $cur_goods->external = $request->external;
+            // $cur_goods->external = $request->external;
             $cur_goods->cost = $request->cost;
             $cur_goods->price = $request->price;
 
+
+
+            // -------------------------------------------------------------------------------------------------
+            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+            
+            // Получаем выбранную категорию со старницы (то, что указал пользователь)
+            $goods_category_id = $request->goods_category_id;
+
+            // Смотрим: была ли она изменена
+            if($cur_goods->goods_product->goods_category_id != $goods_category_id){
+
+                // Была изменена! Переназначаем категорию группе:
+                // Получаем группу
+                $goods_product = GoodsProduct::findOrFail($request->goods_product_id);
+                $goods_product->goods_category_id = $goods_category_id;
+                $goods_product->save();
+            };
+
+
+
+            // -------------------------------------------------------------------------------------------------
+            // ПЕРЕНОС ТОВАРА В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
+            // Важно! Важно проверить, соответствеут ли группа в которую переноситься товар, метрикам самого товара
+            // Если не соответствует - дать отказ. Если соответствует - осуществить перенос
+
+
+            // Тут должен быть код проверки !!! 
+
+
+            // А, пока изменяем без проверки
+            $cur_goods->goods_product_id = $request->goods_product_id;
+
+
+
+
             $cur_goods->description = $request->description;
-
             $cur_goods->manufacturer_id = $request->manufacturer_id;
-
             $cur_goods->metrics_count = $metrics_count;
-        // $cur_goods->compositions_count = $compositions_count;
+            // $cur_goods->compositions_count = $compositions_count;
 
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+            // Если нет прав на создание полноценной записи - запись отправляем на модерацию
             if ($answer['automoderate'] == false) {
                 $cur_goods->moderation = 1;
             }
 
-        // Системная запись
+            // Системная запись
             $cur_goods->system_item = $request->system_item;
 
             $cur_goods->display = $request->display;

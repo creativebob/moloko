@@ -31,6 +31,7 @@ $metrics_value = null;
 	@switch($metric->list_type)
 	@case('list')
 	<a data-toggle="metric-{{ $metric->id }}-dropdown">Список: {{ $metric->name }}</a>
+</label>
 	<div class="dropdown-pane" id="metric-{{ $metric->id }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
 		<ul>
 
@@ -47,12 +48,13 @@ $metrics_value = null;
 			@endif
 			<li class="checkbox">
 				{{ Form::checkbox('metrics['.$metric->id.'][]', $value->value, null, ['id' => 'add-metric-value-'. $value->id, $checked]) }}
-				<label for="add-metric-value-{{ $value->id }}"><span>{{ $value->value }} {{ $checked }}</span></label>
+				<label for="add-metric-value-{{ $value->id }}"><span>{{ $value->value }}</span></label>
 			</li>
 			@endforeach
 
 		</ul>
 	</div>
+
 	@break
 
 	@case('select')
@@ -74,9 +76,9 @@ $metrics_value = null;
 			@endforeach
 		</select>
 	</ul>
+</label>
 	@break
 	@endswitch
-</label>
 @break
 
 

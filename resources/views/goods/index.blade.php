@@ -76,9 +76,9 @@
           <td class="td-goods_category">
             <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->goods_product->goods_category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->goods_product->goods_category->name }}</a>
             <br>
-            @if($cur_goods->goods_product->name != $cur_goods->name)
+            {{-- @if($cur_goods->goods_product->name != $cur_goods->name) --}}
             <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->goods_product->id }}" class="filter_link light-text">{{ $cur_goods->goods_product->name }}</a>
-            @endif
+            {{-- @endif --}}
           </td>
           {{-- <td class="td-goods">{{ $cur_goods->goods_product->name }}</td> --}}
 

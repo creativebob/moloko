@@ -67,7 +67,7 @@
                             <div class="small-12 medium-6 cell">
 
                                 <label>Категория
-                                    <select name="goods_category_id" disabled>
+                                    <select name="goods_category_id">
                                         @php
                                         echo $goods_categories_list;
                                         @endphp
