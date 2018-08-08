@@ -146,7 +146,7 @@ class Company extends Model
     // Получаем контрагентов
     public function manufacturers()
     {
-        return $this->hasMany('App\Manufacturer', 'contragent_id');
+        return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'contragent_id');
     }
 
     // Получаем категории продукции

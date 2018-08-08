@@ -6,9 +6,10 @@
             <div class="item-error">Такая категория уже существует!</div>
         </label>
 
-        <label>Тип
+        {{--<label>Тип
             {{ Form::select('goods_mode_id', $goods_modes_list) }}
-        </label>
+        </label> --}}
+        {{ Form::hidden('goods_mode_id', 1) }}
 
 
 
