@@ -540,6 +540,49 @@ class MenusTableSeeder extends Seeder
             'display' => 1,
             'sort' => null,
         ],
+
+        [
+            'name' => 'Группы товаров',
+            'icon' => null,
+            'alias' => 'admin/goods_products',
+            'parent_id' => 20,
+            'page_id' => 33,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
+        [
+            'name' => 'Группы услуг',
+            'icon' => null,
+            'alias' => 'admin/services_products',
+            'parent_id' => 20,
+            'page_id' => 34,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
+        [
+            'name' => 'Группы сырья',
+            'icon' => null,
+            'alias' => 'admin/raws_products',
+            'parent_id' => 20,
+            'page_id' => 35,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
         // Остальное
                 // [
         //     'name' => 'Типы помещений',

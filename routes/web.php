@@ -210,7 +210,8 @@ Route::post('/goods_categories_sort', 'GoodsCategoryController@goods_categories_
 // --------------------------------- Продукция товаров --------------------------------------------
 // Основные методы
 Route::resource('/goods_products', 'GoodsProductController')->middleware('auth');
-
+// Сортировка
+Route::post('/goods_products_sort', 'GoodsProductController@goods_products_sort')->middleware('auth');
 
 Route::any('/ajax_goods_count', 'GoodsProductController@ajax_count')->middleware('auth');
 Route::any('/ajax_goods_modes', 'GoodsProductController@ajax_modes')->middleware('auth');

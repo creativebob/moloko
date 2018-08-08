@@ -56,17 +56,17 @@ class GoodsProductController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Product::class);
+        $this->authorize(getmethod(__FUNCTION__), GoodsProduct::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
 
-        // --------------------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
-        // --------------------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------------
 
-        $products = Product::with('author', 'company', 'products_category', 'unit', 'country')
+        $goods_products = GoodsProduct::with('author', 'company', 'goods_category', 'unit')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -81,11 +81,11 @@ class GoodsProductController extends Controller
 
         // dd($products);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------
 
-        $filter_query = Product::with('author', 'company', 'products_category')
+        $filter_query = GoodsProduct::with('author', 'company', 'goods_category')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -107,16 +107,16 @@ class GoodsProductController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('products.index', compact('products', 'page_info', 'product', 'filter'));
+        return view('goods_products.index', compact('goods_products', 'page_info', 'product', 'filter'));
     }
 
     public function create(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(__FUNCTION__, Product::class);
+        $this->authorize(__FUNCTION__, GoodsProduct::class);
 
-        $product = new Product;
+        $product = new GoodsProduct;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_products_categories = operator_right('products_categories', false, 'index');
@@ -892,14 +892,25 @@ class GoodsProductController extends Controller
 
             case 'mode-add':
 
-            
-
             return view('goods.mode-add');
 
             break;
 
+        }
+   }
+
+    // Сортировка
+    public function goods_products_sort(Request $request)
+    {
+
+        $result = '';
+        $i = 1;
+        foreach ($request->goods_products as $item) {
+            $cur_goods_products = GoodsProduct::findOrFail($item);
+            $cur_goods_products->sort = $i;
+            $cur_goods_products->save();
+            $i++;
+        }
     }
 
-   
-   } 
 }
