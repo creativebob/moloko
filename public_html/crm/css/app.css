@@ -243,6 +243,10 @@ a, a:focus {
   transition-duration: 1ms;
 }
 
+p {
+  line-height: 1.4;
+}
+
 .pickmeup {
   z-index: 100;
 }

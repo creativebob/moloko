@@ -97,8 +97,9 @@ class GoodsController extends Controller
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // dd($type);
+        // ----------------------------------------------------------------------------------------------------------------------
+
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
@@ -160,6 +161,18 @@ class GoodsController extends Controller
         ->systemItem($answer_goods_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
         ->get();
+
+        if($goods_categories->count() < 1){
+
+            // Описание ошибки
+            $ajax_error = [];
+            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+            $ajax_error['text'] = "Для начала необходимо создать категории товаров. А уже потом будем добавлять товары. Ок?";
+            $ajax_error['link'] = "/admin/goods_categories"; // Ссылка на кнопке
+            $ajax_error['title_link'] = "Идем в раздел категорий"; // Текст на кнопке
+
+            return view('ajax_error', compact('ajax_error'));
+        }
 
         $goods_products_count = $goods_categories[0]->goods_products_count;
         $parent_id = null;

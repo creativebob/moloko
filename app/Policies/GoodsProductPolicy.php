@@ -59,6 +59,7 @@ class GoodsProductPolicy
     public function delete(User $user, GoodsProduct $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
+        if($model->goods->count() > 0){$result = false;};
         return $result;
     }
 

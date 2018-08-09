@@ -6,6 +6,7 @@ use App\Policies\Traits\PoliticTrait;
 use App\User;
 
 use App\Goods;
+use App\GoodsCategory;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 

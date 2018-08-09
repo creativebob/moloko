@@ -2,7 +2,7 @@
 	<legend>Фильтры:</legend>
 	<div class="grid-x">
  		<div class="small-12 medium-6 cell">
-			@include('includes.inputs.checkboxer', ['name'=>'goods_category', 'value'=>$filter]) 			
+			@include('includes.inputs.checkboxer', ['name'=>'services_category', 'value'=>$filter]) 			
  		</div>
  	</div>
 	<div class="grid-x">

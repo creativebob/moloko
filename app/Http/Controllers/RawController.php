@@ -116,6 +116,20 @@ class RawController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
+        if($raws_categories->count() < 1){
+
+            // Описание ошибки
+            $ajax_error = [];
+            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+            $ajax_error['text'] = "Для начала необходимо создать категории сырья. А уже потом будем добавлять сырье. Ок?";
+            $ajax_error['link'] = "/admin/raws_categories"; // Ссылка на кнопке
+            $ajax_error['title_link'] = "Идем в раздел категорий"; // Текст на кнопке
+
+            return view('ajax_error', compact('ajax_error'));
+        }
+
+
+
         $raws_products_count = $raws_categories[0]->raws_products_count;
         $parent_id = null;
 

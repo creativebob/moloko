@@ -59,6 +59,7 @@ class ServicesProductPolicy
     public function delete(User $user, ServicesProduct $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
+        if($model->services->count() > 0){$result = false;};
         return $result;
     }
 

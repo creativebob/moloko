@@ -27,21 +27,21 @@
                     <div class="grid-x grid-padding-x">
 
                         <div class="small-12 medium-12 cell">
-                            <label>Название группы товара
-                                @include('includes.inputs.string', ['name'=>'name', 'value'=>$goods_product->name, 'required'=>'required'])
+                            <label>Название группы услуг
+                                @include('includes.inputs.string', ['name'=>'name', 'value'=>$services_product->name, 'required'=>'required'])
                             </label>
                         </div>
                         <div class="small-12 medium-12 cell">
                             <label>Описание
-                                @include('includes.inputs.varchar', ['name'=>'description', 'value'=>$goods_product->description, 'required'=>''])
+                                @include('includes.inputs.varchar', ['name'=>'description', 'value'=>$services_product->description, 'required'=>''])
                             </label>
                         </div>
 
                         <div class="small-12 medium-12 cell">
                             <label>Категория
-                                <select name="goods_category_id">
+                                <select name="services_category_id">
                                     @php
-                                    echo $goods_categories_list;
+                                    echo $services_categories_list;
                                     @endphp
                                 </select>
                             </label>
@@ -59,18 +59,18 @@
     </div>
 
     {{-- Чекбокс модерации --}}
-    @can ('moderator', $goods_product)
-        @if ($goods_product->moderation == 1)
+    @can ('moderator', $services_product)
+        @if ($services_product->moderation == 1)
             <div class="small-12 cell checkbox">
-                @include('includes.inputs.moderation', ['value'=>$goods_product->moderation, 'name'=>'moderation'])
+                @include('includes.inputs.moderation', ['value'=>$services_product->moderation, 'name'=>'moderation'])
             </div>
         @endif
     @endcan
 
     {{-- Чекбокс системной записи --}}
-    @can ('god', $goods_product)
+    @can ('god', $services_product)
         <div class="small-12 cell checkbox">
-            @include('includes.inputs.system', ['value'=>$goods_product->system_item, 'name'=>'system_item']) 
+            @include('includes.inputs.system', ['value'=>$services_product->system_item, 'name'=>'system_item']) 
         </div>
     @endcan   
 

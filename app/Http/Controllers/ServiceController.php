@@ -68,9 +68,9 @@ class ServiceController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // --------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА
+        // --------------------------------------------------------------------------------------------------------
 
         $filter_query = Service::with('author', 'company', 'services_product', 'services_product.services_category')
         ->moderatorLimit($answer)
@@ -159,6 +159,18 @@ class ServiceController extends Controller
         ->systemItem($answer_services_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
         ->get();
+
+        if($services_categories->count() < 1){
+
+            // Описание ошибки
+            $ajax_error = [];
+            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+            $ajax_error['text'] = "Для начала необходимо создать категории услуг. А уже потом будем добавлять сами услуги. Ок?";
+            $ajax_error['link'] = "/admin/services_categories"; // Ссылка на кнопке
+            $ajax_error['title_link'] = "Идем в раздел категорий"; // Текст на кнопке
+
+            return view('ajax_error', compact('ajax_error'));
+        }
 
         $services_products_count = $services_categories[0]->services_products_count;
         $parent_id = null;
@@ -664,6 +676,38 @@ class ServiceController extends Controller
         // $service->external = $request->external;
         $service->cost = $request->cost;
         $service->price = $request->price;
+
+
+
+        // -------------------------------------------------------------------------------------------------
+        // ПЕРЕНОС ГРУППЫ УСЛУГИ В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+        
+        // Получаем выбранную категорию со старницы (то, что указал пользователь)
+        $services_category_id = $request->services_category_id;
+
+        // Смотрим: была ли она изменена
+        if($service->services_product->services_category_id != $services_category_id){
+
+            // Была изменена! Переназначаем категорию группе:
+            // Получаем группу
+            $services_product = ServicesProduct::findOrFail($request->services_product_id);
+            $services_product->services_category_id = $services_category_id;
+            $services_product->save();
+        };
+
+
+
+        // -------------------------------------------------------------------------------------------------
+        // ПЕРЕНОС ТОВАРА В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
+        // Важно! Важно проверить, соответствеут ли группа в которую переноситься товар, метрикам самого товара
+        // Если не соответствует - дать отказ. Если соответствует - осуществить перенос
+
+
+        // Тут должен быть код проверки !!! 
+
+
+        // А, пока изменяем без проверки
+        $service->services_product_id = $request->services_product_id;
 
         $service->description = $request->description;
 

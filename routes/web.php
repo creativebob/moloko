@@ -167,6 +167,9 @@ Route::post('/services_categories_sort', 'ServicesCategoryController@services_ca
 // --------------------------------- Продукция услуг --------------------------------------------
 // Основные методы
 Route::resource('/services_products', 'ServicesProductController')->middleware('auth');
+// Сортировка
+Route::post('/services_products_sort', 'ServicesProductController@services_products_sort')->middleware('auth');
+
 
 Route::any('/ajax_services_count', 'ServicesProductController@ajax_count')->middleware('auth');
 Route::any('/ajax_services_modes', 'ServicesProductController@ajax_modes')->middleware('auth');
