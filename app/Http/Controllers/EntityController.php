@@ -49,6 +49,7 @@ class EntityController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
         ->paginate(30);
 
         // Информация о странице
@@ -184,5 +185,17 @@ class EntityController extends Controller
         }; 
 
         Log::info('Удалили запись из таблица Сущности. ID: ' . $id);
+    }
+
+    // Сортировка
+    public function entities_sort(Request $request)
+    {
+
+        $i = 1;
+
+        foreach ($request->entities as $item) {
+            Entity::where('id', $item)->update(['sort' => $i]);
+            $i++;
+        }
     }
 }

@@ -57,18 +57,21 @@ class NavigationController extends Controller
             ->authors($answer_navigations)
             ->systemItem($answer_navigations) // Фильтр по системным записям
             ->withCount('menus')
+            ->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
         }, 'navigations.menus' => function ($query) use ($answer_menus) {
             $query->moderatorLimit($answer_menus)
             ->companiesLimit($answer_menus)
             ->authors($answer_menus)
             ->systemItem($answer_menus) // Фильтр по системным записям
+            ->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
         }, 'navigations.menus.page' => function ($query) use ($answer_pages) {
             $query->moderatorLimit($answer_pages)
             ->companiesLimit($answer_pages)
             ->authors($answer_pages)
             ->systemItem($answer_pages) // Фильтр по системным записям
+            ->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
         }, 'navigations.navigations_category'
         //  => function ($query) use ($answer_navigations_categories) {
@@ -99,7 +102,7 @@ class NavigationController extends Controller
         // ->orderBy('sort', 'asc')
         // ->get();
 
-        // dd($site);
+        // dd($site->quantity);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -450,13 +453,11 @@ class NavigationController extends Controller
 
     public function navigations_sort(Request $request)
     {
-        $result = '';
+
         $i = 1;
 
         foreach ($request->navigations as $item) {
-            $navigation = Navigation::findOrFail($item);
-            $navigation->sort = $i;
-            $navigation->save();
+            Navigation::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

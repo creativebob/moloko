@@ -62,6 +62,7 @@ class ManufacturerController extends Controller
         ->where('company_id', '!=', null)
         ->moderatorLimit($answer)
         ->booklistFilter($request)
+        ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
@@ -507,15 +508,13 @@ class ManufacturerController extends Controller
     }
 
     // Сортировка
-    public function Manufacturers_sort(Request $request)
+    public function manufacturers_sort(Request $request)
     {
-        $result = '';
-        $i = 1;
-        foreach ($request->manufacturers as $item) {
 
-            $manufacturers = Manufacturer::findOrFail($item);
-            $manufacturers->sort = $i;
-            $manufacturers->save();
+        $i = 1;
+
+        foreach ($request->manufacturers as $item) {
+            Manufacturer::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

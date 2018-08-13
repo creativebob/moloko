@@ -76,6 +76,7 @@ class UserController extends Controller
         ->filter($request, 'city_id', 'location')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
         ->paginate(30);
 
         // dd($users->first());
@@ -701,13 +702,10 @@ class UserController extends Controller
     public function users_sort(Request $request)
     {
 
-        $result = '';
         $i = 1;
-        foreach ($request->users as $item) {
 
-            $users = User::findOrFail($item);
-            $users->sort = $i;
-            $users->save();
+        foreach ($request->users as $item) {
+            USer::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

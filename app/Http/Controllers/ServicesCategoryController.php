@@ -66,6 +66,7 @@ class ServicesCategoryController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
+        ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
         // dd($services_categories);
@@ -657,14 +658,10 @@ class ServicesCategoryController extends Controller
     public function services_categories_sort(Request $request)
     {
 
-        $result = '';
         $i = 1;
 
         foreach ($request->services_categories as $item) {
-
-            $services_category = ServicesCategory::findOrFail($item);
-            $services_category->sort = $i;
-            $services_category->save();
+            ServicesCategory::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

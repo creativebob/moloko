@@ -45,6 +45,7 @@ class AlbumsCategoryController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->template($answer) // Выводим шаблоны альбомов
+        ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
 
@@ -363,13 +364,10 @@ class AlbumsCategoryController extends Controller
     public function albums_categories_sort(Request $request)
     {
 
-        $result = '';
         $i = 1;
+        
         foreach ($request->albums_categories as $item) {
-
-            $albums_category = AlbumsCategory::findOrFail($item);
-            $albums_category->sort = $i;
-            $albums_category->save();
+            AlbumsCategory::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

@@ -70,6 +70,7 @@ class PhotoController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request) 
+        ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
@@ -411,12 +412,11 @@ class PhotoController extends Controller
     // Сортировка
     public function photos_sort(Request $request)
     {
-        $result = '';
+
         $i = 1;
+
         foreach ($request->photos as $item) {
-            $photo = Photo::findOrFail($item);
-            $photo->sort = $i;
-            $photo->save();
+            Photo::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

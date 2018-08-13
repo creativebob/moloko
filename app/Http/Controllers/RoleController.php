@@ -58,6 +58,7 @@ class RoleController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->template($answer) // Выводим шаблоны в список
         ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
         ->paginate(30);
 
         // Получаем авторизованного пользователя
@@ -211,6 +212,18 @@ class RoleController extends Controller
         $role = Role::destroy($id);
         if ($role) {return Redirect('/admin/roles');} else {echo 'Произошла ошибка';};
 
+    }
+
+    // Сортировка
+    public function roles_sort(Request $request)
+    {
+
+        $i = 1;
+
+        foreach ($request->roles as $item) {
+            Role::where('id', $item)->update(['sort' => $i]);
+            $i++;
+        }
     }
 
     public function setting(Request $request, $role_id)

@@ -16,7 +16,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -45,10 +45,25 @@ class Site extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+
+    protected $table = 'sites';
+
+    protected $model = 'Site';
+    
+    protected $quantity = 0;
+
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    
+
     protected $fillable = [
         'name',
         'domain',
         'company_id',
+        'appends',
     ];
 
     // Получаем страницы.

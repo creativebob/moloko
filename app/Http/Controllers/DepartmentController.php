@@ -66,6 +66,7 @@ class DepartmentController extends Controller
             ->filials($answer_staff) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
             ->authors($answer_staff)
             ->systemItem($answer_staff) // Фильтр по системным записям
+            ->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
         }, 'staff.position' => function ($query) use ($answer_positions) {
             $query->moderatorLimit($answer_positions)
@@ -73,6 +74,7 @@ class DepartmentController extends Controller
             ->authors($answer_positions)
             ->systemItem($answer_positions) // Фильтр по системным записям
             ->template($answer_positions) // Выводим шаблоны альбомов
+            ->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
         }, 'staff.user'])
         ->moderatorLimit($answer_departments)
@@ -80,6 +82,7 @@ class DepartmentController extends Controller
         ->filials($answer_departments) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer_departments)
         ->systemItem($answer_departments) // Фильтр по системным записям
+        ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
 
@@ -426,7 +429,7 @@ class DepartmentController extends Controller
             // $action_method = "DepartmentController@get_content";
             // $action_arrray = ['id' => $department->id, 'item' => 'department'];
             // return redirect()->action('GetAccessController@set', ['action_method' => $action_method, 'action_arrray' => $action_arrray]);
-        
+
         } else {
             abort(403, 'Ошибка при записи отдела!');
         }
@@ -778,25 +781,21 @@ class DepartmentController extends Controller
     {
 
         if (isset($request->departments)) {
+
             $i = 1;
+
             foreach ($request->departments as $item) {
-
-                $department = Department::findOrFail($item);
-                $department->sort = $i;
-                $department->save();
-
+                Department::where('id', $item)->update(['sort' => $i]);
                 $i++;
             }
         }
 
         if (isset($request->staff)) {
+
             $i = 1;
+            
             foreach ($request->staff as $item) {
-
-                $staffer = Staffer::findOrFail($item);
-                $staffer->sort = $i;
-                $staffer->save();
-
+                Staffer::where('id', $item)->update(['sort' => $i]);
                 $i++;
             }
         }

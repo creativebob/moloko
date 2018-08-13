@@ -59,6 +59,7 @@ class PositionController extends Controller
         ->filter($request, 'author_id')
         ->filter($request, 'company_id')
         ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
         ->paginate(30);
 
         // --------------------------------------------------------------------------------------------------------------------------
@@ -368,13 +369,11 @@ class PositionController extends Controller
     // Сортировка
     public function positions_sort(Request $request)
     {
-        $result = '';
-        $i = 1;
-        foreach ($request->positions as $item) {
 
-            $positions = Position::findOrFail($item);
-            $positions->sort = $i;
-            $positions->save();
+        $i = 1;
+
+        foreach ($request->positions as $item) {
+            Position::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

@@ -64,6 +64,7 @@ class RawsCategoryController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
+        ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
         // dd($raws_categories);
@@ -636,14 +637,10 @@ class RawsCategoryController extends Controller
     public function raws_categories_sort(Request $request)
     {
 
-        $result = '';
         $i = 1;
 
         foreach ($request->raws_categories as $item) {
-
-            $raws_category = RawsCategory::findOrFail($item);
-            $raws_category->sort = $i;
-            $raws_category->save();
+            RawsCategory::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

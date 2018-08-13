@@ -33,7 +33,7 @@
       @if(!empty($entities))
         @foreach($entities as $entity)
         <tr class="item @if(Auth::user()->entity_id == $entity->id)active @endif  @if($entity->moderation == 1)no-moderation @endif" id="entities-{{ $entity->id }}" data-name="{{ $entity->name }}">
-          <td class="td-drop"></td>
+          <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $entity->id }}"><label class="label-check" for="check-{{ $entity->id }}"></label></td>
           <td class="td-name">
             @can('update', $entity)
@@ -76,6 +76,9 @@
 @section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
+
+  {{-- Скрипт сортировки --}}
+  @include('includes.scripts.sortable-table-script')
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')

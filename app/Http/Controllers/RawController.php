@@ -915,12 +915,11 @@ class RawController extends Controller
       // Сортировка
     public function raws_sort(Request $request)
     {
-        $result = '';
+
         $i = 1;
+
         foreach ($request->raws as $item) {
-            $raw = Raw::findOrFail($item);
-            $raw->sort = $i;
-            $raw->save();
+            Raw::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

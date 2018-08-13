@@ -52,21 +52,25 @@ class CityController extends Controller
             $query->moderatorLimit($answer_areas)
             ->authors($answer_areas)
             ->systemItem($answer_areas) // Фильтр по системным записям
+            ->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
         }, 'areas.cities' => function ($query) use ($answer_cities) {
             $query->moderatorLimit($answer_cities)
             ->authors($answer_cities)
             ->systemItem($answer_cities) // Фильтр по системным записям
+            ->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
         }, 'cities' => function ($query) use ($answer_cities) {
             $query->moderatorLimit($answer_cities)
             ->authors($answer_cities)
             ->systemItem($answer_cities) // Фильтр по системным записям
+            ->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
         }])
         ->moderatorLimit($answer_regions)
         ->authors($answer_regions)
         ->systemItem($answer_regions) // Фильтр по системным записям
+        ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
 
@@ -516,13 +520,11 @@ class CityController extends Controller
     // Сортировка
     public function cities_sort(Request $request)
     {
+        
         $i = 1;
+
         foreach ($request->cities as $item) {
-
-            $city = City::findOrFail($item);
-            $city->sort = $i;
-            $city->save();
-
+            City::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

@@ -56,6 +56,7 @@ class SiteController extends Controller
         // ->filter($request, 'position_id')
         // ->filter($request, 'department_id')
         ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
         ->paginate(30);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -312,13 +313,11 @@ class SiteController extends Controller
     // Сортировка
     public function sites_sort(Request $request)
     {
-        $result = '';
-        $i = 1;
-        foreach ($request->sites as $item) {
 
-            $sites = Site::findOrFail($item);
-            $sites->sort = $i;
-            $sites->save();
+        $i = 1;
+
+        foreach ($request->sites as $item) {
+            Site::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

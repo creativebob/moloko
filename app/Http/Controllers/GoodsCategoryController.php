@@ -66,6 +66,7 @@ class GoodsCategoryController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
+        ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
         // dd($goods_categories);
@@ -642,14 +643,10 @@ class GoodsCategoryController extends Controller
     public function goods_categories_sort(Request $request)
     {
 
-        $result = '';
         $i = 1;
 
         foreach ($request->goods_categories as $item) {
-
-            $goods_category = GoodsCategory::findOrFail($item);
-            $goods_category->sort = $i;
-            $goods_category->save();
+            GoodsCategory::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

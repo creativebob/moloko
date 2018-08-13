@@ -47,7 +47,7 @@
         @endphp
         @endcan
         <tr class="item @if(Auth::user()->role_id == $role->id)active @endif  @if($role->moderation == 1)no-moderation @endif" id="roles-{{ $role->id }}" data-name="{{ $role->name }}">
-          <td class="td-drop"></td>
+          <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $role->id }}"><label class="label-check" for="check-{{ $role->id }}"></label></td>
           <td class="td-name">
             @if($edit == 1)
@@ -134,6 +134,9 @@
 @section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
+
+  {{-- Скрипт сортировки --}}
+  @include('includes.scripts.sortable-table-script')
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')

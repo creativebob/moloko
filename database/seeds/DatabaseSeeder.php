@@ -109,5 +109,14 @@ class DatabaseSeeder extends Seeder
     $this->call(MetricsTableSeeder::class);
     $this->call(MetricEntityTableSeeder::class);
 
+    // Сиды к новым миграциям
+    $this->call(ServicesTypesTableSeeder::class);
+    $this->call(GoodsModesTableSeeder::class);
+
+    $this->call(RawsModesTableSeeder::class);
+    
+    // Помещения
+    $this->call(PlacesTypesTableSeeder::class);
+
   }
 }
