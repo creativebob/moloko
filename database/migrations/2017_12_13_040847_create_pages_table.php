@@ -26,6 +26,9 @@ class CreatePagesTable extends Migration
             $table->text('description')->comment('Description для страницы');
             $table->string('alias')->index()->comment('Алиас');
 
+            $table->integer('photo_id')->nullable()->unsigned()->comment('Фотография');
+            // $table->foreign('photo_id')->references('id')->on('photos');
+
             $table->text('content')->nullable()->comment('Контент страницы');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');

@@ -54,6 +54,8 @@ class CreateServicesTable extends Migration
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
+            $table->integer('archive')->nullable()->unsigned()->comment('Статус архива');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
