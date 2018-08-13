@@ -109,7 +109,9 @@ class PlaceController extends Controller
 
         // Список типов помещений
         $places_types_query = PlacesType::get();
+        
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
 
         $places_types_checkboxer = addFilter($filter, $places_types_query, $request, 'Тип помещения', 'places_types', 'id', 'places_types', 'internal-self-one');
 
@@ -236,9 +238,7 @@ class PlaceController extends Controller
         $request[$column] = $places_types;
 
         $filter['status'] = null;
-
-        // dd($request);
-        
+        $filter['entity_name'] = $this->entity_name;
 
         $places_types_checkboxer = addFilter($filter, $places_types_query, $request, 'Тип помещения', 'places_types', 'id', 'places_types', 'internal-self-one');
 

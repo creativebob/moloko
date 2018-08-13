@@ -135,7 +135,10 @@ class CompanyController extends Controller
 
         // Формируем checkboxer со списком типов услуг
         $services_types_query = ServicesType::get();
+
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
+
         $services_types_checkboxer = addFilter($filter, $services_types_query, $request, 'Возможные типы услуг', 'services_types', 'id', 'services_types', 'internal-self-one');
 
         // Формируем пуcтой массив
@@ -304,6 +307,8 @@ class CompanyController extends Controller
         $services_types_query = ServicesType::get();
 
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
+        
         $services_types_checkboxer = addFilter($filter, $services_types_query, $request, 'Возможные типы услуг', 'services_types', 'id', 'services_types', 'internal-self-one');
 
 
