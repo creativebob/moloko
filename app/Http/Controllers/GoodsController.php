@@ -45,7 +45,7 @@ class GoodsController extends Controller
     {
 
 
-
+        // dd('lol');
         // Подключение политики
         $this->authorize('index', Goods::class);
 
@@ -338,6 +338,8 @@ class GoodsController extends Controller
             ];
 
             Cookie::queue('conditions', $mass, 1440);
+
+            // dd($request->quickly);
 
             if ($request->quickly == 1) {
                 return redirect('/admin/goods');
@@ -1090,15 +1092,13 @@ class GoodsController extends Controller
             }
         }
 
-      // Сортировка
+        // Сортировка
         public function goods_sort(Request $request)
         {
-            $result = '';
             $i = 1;
+
             foreach ($request->goods as $item) {
-                $cur_goods = Goods::findOrFail($item);
-                $cur_goods->sort = $i;
-                $cur_goods->save();
+                Goods::where('id', $item)->update(['sort' => $i]);
                 $i++;
             }
         }

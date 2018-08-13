@@ -46,6 +46,7 @@ class SectorController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->template($answer) // Выводим шаблоны альбомов
         ->booklistFilter($request)
+        ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
 
@@ -377,11 +378,9 @@ class SectorController extends Controller
     {
         $result = '';
         $i = 1;
-        foreach ($request->sectors as $item) {
 
-            $sector = Sector::findOrFail($item);
-            $sector->sort = $i;
-            $sector->save();
+        foreach ($request->sectors as $item) {
+            Sector::where('id', $item)->update(['sort' => $i]);
 
             // if ($sector) {
             //   $result = [

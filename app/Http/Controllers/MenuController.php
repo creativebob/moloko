@@ -568,15 +568,14 @@ class MenuController extends Controller
 
     public function menus_sort(Request $request)
     {
-        $result = '';
+
         $i = 1;
 
         foreach ($request->menus as $item) {
-            $menu = Menu::findOrFail($item);
-            $menu->sort = $i;
-            $menu->save();
+            Menu::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
+
     }
 
     // Отображение на сайте

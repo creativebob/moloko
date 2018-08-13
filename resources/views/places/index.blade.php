@@ -110,6 +110,9 @@
   {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
   @include('includes.scripts.tablesorter-script')
 
+    {{-- Скрипт сортировки --}}
+  @include('includes.scripts.sortable-table-script')
+
   {{-- Скрипт чекбоксов --}}
   @include('includes.scripts.checkbox-control')
 

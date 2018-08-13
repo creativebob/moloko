@@ -62,6 +62,7 @@ class SupplierController extends Controller
         ->where('company_id', '!=', null)
         ->moderatorLimit($answer)
         ->booklistFilter($request)
+        ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
@@ -509,13 +510,11 @@ class SupplierController extends Controller
     // Сортировка
     public function suppliers_sort(Request $request)
     {
-        $result = '';
-        $i = 1;
-        foreach ($request->suppliers as $item) {
 
-            $suppliers = Supplier::findOrFail($item);
-            $suppliers->sort = $i;
-            $suppliers->save();
+        $i = 1;
+
+        foreach ($request->suppliers as $item) {
+            Supplier::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

@@ -814,12 +814,11 @@ class ServiceController extends Controller
       // Сортировка
     public function services_sort(Request $request)
     {
-        $result = '';
+
         $i = 1;
+
         foreach ($request->services as $item) {
-            $cervice = Service::findOrFail($item);
-            $cervice->sort = $i;
-            $cervice->save();
+            Service::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

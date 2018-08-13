@@ -49,6 +49,7 @@ class PageController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->whereSite_id($site->id) // Только для страниц сайта
         ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
         ->paginate(30);
 
         // dd($answer);
@@ -392,6 +393,18 @@ class PageController extends Controller
             }
         } else {
             abort(403, 'Страница не найдена');
+        }
+    }
+
+    // Сортировка
+    public function pages_sort(Request $request)
+    {
+
+        $i = 1;
+
+        foreach ($request->pages as $item) {
+            Page::where('id', $item)->update(['sort' => $i]);
+            $i++;
         }
     }
 

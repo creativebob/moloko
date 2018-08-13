@@ -56,6 +56,7 @@ class EmployeeController extends Controller
         ->filter($request, 'department_id', 'staffer')
         ->dateIntervalFilter($request, 'date_employment')
         ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
         ->paginate(30);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -177,14 +178,12 @@ class EmployeeController extends Controller
     // Сортировка
     public function employees_sort(Request $request)
     {
-      $result = '';
-      $i = 1;
-      foreach ($request->employees as $item) {
 
-        $employees = Employee::findOrFail($item);
-        $employees->sort = $i;
-        $employees->save();
-        $i++;
-      }
+      $i = 1;
+      
+      foreach ($request->employees as $item) {
+            Employee::where('id', $item)->update(['sort' => $i]);
+            $i++;
+        }
     }
 }

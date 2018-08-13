@@ -352,12 +352,10 @@ class ServicesProductController extends Controller
     public function services_products_sort(Request $request)
     {
 
-        $result = '';
         $i = 1;
+
         foreach ($request->services_products as $item) {
-            $cur_services_products = ServicesProduct::findOrFail($item);
-            $cur_services_products->sort = $i;
-            $cur_services_products->save();
+            ServicesProduct::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

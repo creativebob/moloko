@@ -69,6 +69,7 @@ class AlbumController extends Controller
         ->booklistFilter($request)
         ->filter($request, 'author')
         ->filter($request, 'company')
+        ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
@@ -514,14 +515,11 @@ class AlbumController extends Controller
     // Сортировка
     public function albums_sort(Request $request)
     {
-        $result = '';
+
         $i = 1;
+
         foreach ($request->albums as $item) {
-
-            $album = Album::findOrFail($item);
-            $album->sort = $i;
-            $album->save();
-
+            Album::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

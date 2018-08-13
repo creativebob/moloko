@@ -59,6 +59,7 @@ class PlaceController extends Controller
         ->filter($request, 'places_type_id', 'places_types')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
         ->paginate(30);
 
 
@@ -317,5 +318,17 @@ class PlaceController extends Controller
         $place = Place::moderatorLimit($answer)->where('id', $id)->delete();
 
         if($place) {return redirect('/admin/places');} else {abort(403,'Что-то пошло не так!');};
+    }
+
+    // Сортировка
+    public function places_sort(Request $request)
+    {
+
+        $i = 1;
+
+        foreach ($request->places as $item) {
+            Place::where('id', $item)->update(['sort' => $i]);
+            $i++;
+        }
     }
 }

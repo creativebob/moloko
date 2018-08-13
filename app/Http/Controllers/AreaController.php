@@ -97,24 +97,22 @@ class AreaController extends Controller
 
         // Если не пустой район
         if (isset($request->areas)) {
+
             $i = 1;
 
             foreach ($request->areas as $item) {
-                $area = Area::findOrFail($item);
-                $area->sort = $i;
-                $area->save();
+                Area::where('id', $item)->update(['sort' => $i]);
                 $i++;
             }
         }
 
         // Если не пустой город
         if (isset($request->cities)) {
+            
             $i = 1;
 
-            foreach ($request->cities as $item) {
-                $city = City::findOrFail($item);
-                $city->sort = $i;
-                $city->save();
+            foreach ($request->ciites as $item) {
+                City::where('id', $item)->update(['sort' => $i]);
                 $i++;
             }
         }

@@ -340,12 +340,10 @@ class GoodsProductController extends Controller
     public function goods_products_sort(Request $request)
     {
 
-        $result = '';
         $i = 1;
+        
         foreach ($request->goods_products as $item) {
-            $cur_goods_products = GoodsProduct::findOrFail($item);
-            $cur_goods_products->sort = $i;
-            $cur_goods_products->save();
+            GoodsProduct::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

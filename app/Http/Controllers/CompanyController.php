@@ -68,6 +68,7 @@ class CompanyController extends Controller
         ->filter($request, 'sector_id')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
         ->paginate(30);
 
         // dd($companies);
@@ -499,13 +500,11 @@ class CompanyController extends Controller
     // Сортировка
     public function companies_sort(Request $request)
     {
-        $result = '';
-        $i = 1;
-        foreach ($request->companies as $item) {
 
-            $companies = Company::findOrFail($item);
-            $companies->sort = $i;
-            $companies->save();
+        $i = 1;
+        
+        foreach ($request->companies as $item) {
+            Company::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

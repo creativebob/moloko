@@ -40,7 +40,7 @@
         @if(!empty($pages))
         @foreach($pages as $page)
         <tr class="item @if($page->moderation == 1)no-moderation @endif" id="pages-{{ $page->id }}" data-name="{{ $page->name }}">
-          <td class="td-drop"></td>
+          <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $page->id }}"><label class="label-check" for="check-{{ $page->id }}"></label></td>
           <td class="td-name">
             @can('update', $page)
@@ -95,6 +95,10 @@
 @endsection
 
 @section('scripts')
+
+  {{-- Скрипт сортировки --}}
+  @include('includes.scripts.sortable-table-script')
+  
 <script type="text/javascript">
   $(function() {
   // Берем алиас сайта

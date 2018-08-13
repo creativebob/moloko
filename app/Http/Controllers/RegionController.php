@@ -161,14 +161,11 @@ class RegionController extends Controller
   public function regions_sort(Request $request)
   {
     $i = 1;
+
     foreach ($request->regions as $item) {
-
-      $region = Region::findOrFail($item);
-      $region->sort = $i;
-      $region->save();
-
-      $i++;
-    }
+            Region::where('id', $item)->update(['sort' => $i]);
+            $i++;
+        }
   }
 
   // Отображение на сайте

@@ -52,6 +52,7 @@ class RightController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
         ->paginate(30);
 
         // Инфо о странице

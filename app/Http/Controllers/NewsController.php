@@ -76,6 +76,7 @@ class NewsController extends Controller
         ->booklistFilter($request)  // Фильтр по спискам
         ->dateIntervalFilter($request, 'publish_begin_date') // Интервальный фильтр по дате публикации
         ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
         ->orderBy('publish_begin_date', 'desc')
         ->paginate(30);
 
@@ -696,13 +697,9 @@ class NewsController extends Controller
     public function news_sort(Request $request)
     {
 
-        $result = '';
         $i = 1;
         foreach ($request->news as $item) {
-
-            $cur_news = News::findOrFail($item);
-            $cur_news->sort = $i;
-            $cur_news->save();
+            News::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

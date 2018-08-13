@@ -610,16 +610,13 @@ class RawsProductController extends Controller
     }
 
     // Сортировка
-    public function products_sort(Request $request)
+    public function raws_products_sort(Request $request)
     {
-        $result = '';
+
         $i = 1;
-        foreach ($request->products as $item) {
 
-            $product = Product::findOrFail($item);
-            $product->sort = $i;
-            $product->save();
-
+        foreach ($request->raws_products as $item) {
+            RawsProduct::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }

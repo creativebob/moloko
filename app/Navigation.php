@@ -45,6 +45,7 @@ class Navigation extends Model
     // use DateIntervalFilter;
     
     protected $dates = ['deleted_at'];
+
     protected $fillable = [
         'name',
         'site_id',
