@@ -26,12 +26,15 @@ use App\Policies\ManufacturerPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 
+// Общие классы
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cookie;
+
 // Запросы и их валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\CompanyRequest;
 
 // Прочие необходимые классы
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -45,6 +48,9 @@ class CompanyController extends Controller
 
     public function index(Request $request)
     {
+
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Company::class);
@@ -78,6 +84,7 @@ class CompanyController extends Controller
         ->get();
 
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
 
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id', null, 'internal-id-one');
@@ -85,11 +92,8 @@ class CompanyController extends Controller
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
-        // dd($filter);
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-
-        // dd($filter);
 
         return view('companies.index', compact('companies', 'page_info', 'filter', 'user'));
     }

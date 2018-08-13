@@ -2,6 +2,10 @@
 
     use App\Booklist;
     use App\List_item;
+
+    // Куки
+    use Illuminate\Support\Facades\Cookie;
+
     //Формируем необходимые для фильтра выпадающие списки и прочее
     // --------------------------------------------------------------------------------------------------------------------
     // КОМПАНИЯ -----------------------------------------------------------------------------------------------------------
@@ -143,7 +147,8 @@
         $filter[$filter_name]['list_select'] = $list_select; 
         $filter[$filter_name]['title'] = $title; // Назавние фильтра
 
-        // dd($filter);
+
+
         return $filter;
     }
 
@@ -155,6 +160,7 @@
 
         // Готовим массив для наполнения пунктами коллекции
         $list_select = [];
+        if(!isset($filter['count'])){$filter['count'] = 0;};
 
         // Пишем режим в фильтр
         $filter[$filter_name]['mode'] = $filter_mode;
@@ -301,6 +307,7 @@
 
                 $filter[$filter_name]['count_mass'] = count($request->$column);
                 $filter['status'] = 'active';
+                $filter['count'] = $filter['count'] + 1;
 
             } else {
                 $filter[$filter_name]['count_mass'] = 0;
@@ -312,8 +319,47 @@
         $filter[$filter_name]['list_select'] = $list_select; 
         $filter[$filter_name]['title'] = $title; // Назавние фильтра
 
-        // dd($filter);
+
+        if(count($filter[$filter_name]['list_select']) == 0){
+            $filter[$filter_name] = null;
+        };
+
+        $filter_entity_name = $filter['entity_name'];
+
+        if($filter['count'] > 0) {
+
+            // Пишем в куку
+            $filter_url = $request->fullUrl();
+            Cookie::queue('filter_' . $filter_entity_name, $filter_url, 1440);
+
+        } else {
+
+            // Удаляем куку
+            Cookie::queue(Cookie::forget('filter_' . $filter_entity_name)); 
+        };
+
+
         return $filter;
+
+    }
+
+
+    function autoFilter($request, $entity_name){
+
+            if($request->cookie('filter_' . $entity_name) != null) {
+
+                if($request->filter == 'disable'){
+
+                    Cookie::queue(Cookie::forget('filter_' . $entity_name));
+                    $filter_url = null;
+                    return $filter_url;
+                };
+
+            $filter_url = Cookie::get('filter_' . $entity_name);
+            // dd($filter_url);
+            return $filter_url;
+        };
+
     }
 
 ?>

@@ -28,6 +28,8 @@ use App\Http\Requests\PlaceRequest;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cookie;
+
 // use Illuminate\Support\Facades\Storage;
 // use Carbon\Carbon;
 // use Illuminate\Support\Facades\DB;
@@ -42,6 +44,10 @@ class PlaceController extends Controller
     public function index(Request $request)
     {
 
+        // Включение контроля активного фильтра 
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Place::class);
 
@@ -51,9 +57,9 @@ class PlaceController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------
 
         $places = Place::moderatorLimit($answer)
         ->filter($request, 'places_type_id', 'places_types')
@@ -61,13 +67,16 @@ class PlaceController extends Controller
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
-
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА -------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------
 
         $filter_query = Place::with('places_types')->moderatorLimit($answer)->get();
+
+        // Создаем контейнер фильтра
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
+
         $filter = addFilter($filter, $filter_query, $request, 'Тип помещения:', 'places_types', 'places_type_id', 'places_types', 'external-id-many');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)

@@ -40,6 +40,7 @@ class User extends Authenticatable
     use BooklistFilter;
     // use DateIntervalFilter;
 
+
     // Фильтрация по городу
     public function scopeUserFilter($query, $request)
     {

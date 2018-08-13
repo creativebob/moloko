@@ -22,6 +22,7 @@ use App\Policies\AlbumPolicy;
 
 // Общие классы
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cookie;
 
 // Специфические классы 
 use Illuminate\Support\Facades\Storage;
@@ -40,6 +41,10 @@ class AlbumController extends Controller
     public function index(Request $request)
     {
 
+        // Включение контроля активного фильтра 
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Album::class);
 
@@ -47,9 +52,9 @@ class AlbumController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
 
-        // --------------------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
-        // --------------------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------------
 
         $albums = Album::with('author', 'company', 'albums_category')
         ->withCount('photos')
@@ -74,9 +79,9 @@ class AlbumController extends Controller
 
         // dd($albums);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------------
 
         $filter_query = Album::with('author', 'company', 'albums_category')
         ->withCount('photos')
@@ -90,6 +95,7 @@ class AlbumController extends Controller
 
         // Создаем контейнер фильтра
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
 
         $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id', null, 'internal-id-one');

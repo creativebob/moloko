@@ -25,6 +25,7 @@ use App\Policies\UserPolicy;
 
 // Общие классы
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cookie;
 
 // Специфические классы 
 use Illuminate\Support\Facades\Storage;
@@ -35,6 +36,8 @@ use App\Http\Controllers\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+
+
 class UserController extends Controller
 {
 
@@ -44,6 +47,10 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
+
+        // Включение контроля активного фильтра 
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         $user_auth = $request->user();
 
@@ -71,6 +78,8 @@ class UserController extends Controller
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
+        // dd($users->first());
+
         // --------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
         // --------------------------------------------------------------------------------------------------------------------------
@@ -85,8 +94,7 @@ class UserController extends Controller
         ->get();
 
         $filter['status'] = null;
-
-
+        $filter['entity_name'] = $this->entity_name;
 
         // Перечень подключаемых фильтров:
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
@@ -97,8 +105,6 @@ class UserController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-
-
 
         return view('users.index', compact('users', 'page_info', 'filter', 'user'));
     }

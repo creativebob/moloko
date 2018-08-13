@@ -37,6 +37,10 @@ class StafferController extends Controller
     public function index(Request $request)
     {
 
+        // Включение контроля активного фильтра 
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Staffer::class);
 
@@ -60,9 +64,9 @@ class StafferController extends Controller
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА --------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
 
         $filter_query = Staffer::moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -71,8 +75,8 @@ class StafferController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->get();
 
-        // dd($filter_query);
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
 
         $filter = addFilter($filter, $filter_query, $request, 'Выберите должность:', 'position', 'position_id');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите отдел:', 'department', 'department_id');

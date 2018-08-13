@@ -525,7 +525,9 @@ class ServicesCategoryController extends Controller
         $services_category->display = $request->display;
 
         // Делаем заглавной первую букву
-        $services_category->name = get_first_letter($request->name); 
+        // $services_category->name = get_first_letter($request->name); 
+        // 
+        $services_category->name = $request->name;
 
         $services_category->save();
 

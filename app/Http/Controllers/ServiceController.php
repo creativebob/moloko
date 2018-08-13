@@ -24,7 +24,6 @@ use App\Policies\ServicePolicy;
 // Куки
 use Illuminate\Support\Facades\Cookie;
 
-
 // Транслитерация
 use Transliterate;
 
@@ -40,6 +39,9 @@ class ServiceController extends Controller
 
     public function index(Request $request)
     {
+        // Включение контроля активного фильтра 
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Подключение политики
         $this->authorize('index', Service::class);
@@ -82,9 +84,9 @@ class ServiceController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        // dd($filter_query);
-
+        // Создаем контейнер фильтра
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
 
         $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', 'services_product', 'external-id-one');

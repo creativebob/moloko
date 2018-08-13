@@ -20,6 +20,7 @@ use App\Http\Requests\GoodsProductRequest;
 use App\Policies\GoodsProductPolicy;
 
 // Общие классы
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
@@ -41,6 +42,10 @@ class GoodsProductController extends Controller
 
     public function index(Request $request)
     {
+
+        // Включение контроля активного фильтра 
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), GoodsProduct::class);
@@ -79,7 +84,10 @@ class GoodsProductController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
+
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
+        
         $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'goods_category', 'goods_category_id', null, 'internal-id-one');
 

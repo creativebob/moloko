@@ -20,6 +20,9 @@ use App\Policies\StafferPolicy;
 use App\Policies\PositionPolicy;
 use App\Policies\DepartmentPolicy;
 
+// Общие классы
+use Illuminate\Support\Facades\Cookie;
+
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +36,10 @@ class EmployeeController extends Controller
 
     public function index(Request $request)
     {
+
+        // Включение контроля активного фильтра 
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Employee::class);
@@ -58,9 +65,9 @@ class EmployeeController extends Controller
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ----------------------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА -----------------------------------------------------------------------------------------------
+        // ----------------------------------------------------------------------------------------------------------------------------
 
         $filter_query = Employee::with('staffer.position', 'staffer.department')
         ->moderatorLimit($answer)
@@ -70,8 +77,8 @@ class EmployeeController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->get();
 
-        // dd($filter_query);
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
 
         $filter = addFilter($filter, $filter_query, $request, 'Выберите должность:', 'position', 'position_id', 'staffer', 'external-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите отдел:', 'department', 'department_id', 'staffer', 'external-id-one');

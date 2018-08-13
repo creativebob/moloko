@@ -44,8 +44,10 @@ class GoodsController extends Controller
     public function index(Request $request)
     {
 
-
-
+        // Включение контроля активного фильтра 
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+        
         // Подключение политики
         $this->authorize('index', Goods::class);
 
@@ -53,9 +55,9 @@ class GoodsController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
 
-        // --------------------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
-        // --------------------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------------
 
         $goods = Goods::with('author', 'company', 'goods_product')
         ->moderatorLimit($answer)
@@ -88,6 +90,7 @@ class GoodsController extends Controller
         // dd($filter_query);
 
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
 
         $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'goods_category', 'goods_category_id', 'goods_product', 'external-id-one');
@@ -192,6 +195,11 @@ class GoodsController extends Controller
             }
             
         }
+
+        // Пише в куку страницу на которой находимся
+        $backlink = url()->previous();
+        Cookie::queue('backlink', $backlink, 1440);
+
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         $goods_categories_list = get_select_tree($goods_categories->keyBy('id')->toArray(), $parent_id, null, null);
@@ -1044,6 +1052,17 @@ class GoodsController extends Controller
             // ];
 
             // echo json_encode($result, JSON_UNESCAPED_UNICODE);
+
+
+            // Есть ли есть 
+            if ($request->cookie('backlink') != null) {
+
+                $backlink = Cookie::get('backlink');
+                return Redirect($backlink);
+                
+            }
+
+
                 return Redirect('/admin/goods');
 
             } else {

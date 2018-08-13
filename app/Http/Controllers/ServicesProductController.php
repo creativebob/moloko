@@ -29,6 +29,7 @@ use App\Http\Requests\ServicesProductRequest;
 use App\Policies\ServicesProductPolicy;
 
 // Общие классы
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
@@ -53,6 +54,10 @@ class ServicesProductController extends Controller
 
     public function index(Request $request)
     {
+
+        // Включение контроля активного фильтра 
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), ServicesProduct::class);
@@ -93,6 +98,8 @@ class ServicesProductController extends Controller
         ->get();
 
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
+
         $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', null, 'internal-id-one');
 

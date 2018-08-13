@@ -20,6 +20,7 @@ use App\Policies\PostionPolicy;
 
 // Общие классы
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cookie;
 
 // На удаление
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,10 @@ class PositionController extends Controller
 
     public function index(Request $request)
     {
+
+        // Включение контроля активного фильтра 
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Position::class);
@@ -56,9 +61,9 @@ class PositionController extends Controller
         ->orderBy('moderation', 'desc')
         ->paginate(30);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // --------------------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
+        // --------------------------------------------------------------------------------------------------------------------------
 
         $filter_query = Position::with('author', 'company')
         ->moderatorLimit($answer)
@@ -69,8 +74,8 @@ class PositionController extends Controller
         ->template($answer) // Выводим шаблоны в список
         ->get();
 
-        // dd($filter_query);
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
 
         $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id');
@@ -78,7 +83,7 @@ class PositionController extends Controller
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------------------------
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
