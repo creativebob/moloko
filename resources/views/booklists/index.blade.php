@@ -29,6 +29,7 @@
           <th class="td-entity-id">Имя сущности</th>
           <th class="td-company-name">Компания</th>
           <th class="td-author">Автор</th>
+          <th class="td-control"></th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -44,6 +45,10 @@
           <td class="td-entity-name">{{ $booklist->entity->name }}</td>
           <td class="td-company-id">@if(!empty($booklist->company->name)) {{ $booklist->company->name }} @else @if($booklist->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-author">@if(isset($booklist->author->first_name)) {{ $booklist->author->name }} @endif</td>
+
+          {{-- Элементы управления --}}
+          @include('includes.control.table-td', ['item' => $booklist])
+
           <td class="td-delete"><a class="icon-delete sprite" data-open="item-delete"></a></td>       
         </tr>
         @endforeach
@@ -63,16 +68,24 @@
 @endsection
 
 @section('modals')
-
-
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-delete')
+
 @endsection
 
 @section('scripts')
-{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+{{-- Скрипт перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
+@include('includes.scripts.sortable-table-script')
+@include('includes.scripts.checkbox-control')
+
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
+
 @endsection

@@ -46,19 +46,6 @@ class Site extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $table = 'sites';
-
-    protected $model = 'Site';
-    
-    protected $quantity = 0;
-
-    public function getQuantity()
-    {
-        return $this->quantity;
-    }
-
-    
-
     protected $fillable = [
         'name',
         'domain',

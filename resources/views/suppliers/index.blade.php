@@ -28,6 +28,7 @@
           <th class="td-address">Адрес</th>
           <th class="td-phone">Телефон</th>
           <th class="td-user_id">Руководитель</th>
+          <th class="td-control"></th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -39,11 +40,11 @@
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="supplier_id" id="check-{{ $supplier->id }}"
 
-              {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
-              @if(!empty($filter['booklist']['booklists']['default']))
-                {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-                @if (in_array($supplier->id, $filter['booklist']['booklists']['default'])) checked 
-              @endif
+            {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+            @if(!empty($filter['booklist']['booklists']['default']))
+            {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+            @if (in_array($supplier->id, $filter['booklist']['booklists']['default'])) checked 
+            @endif
             @endif
             ><label class="label-check" for="check-{{ $supplier->id }}"></label>
           </td>
@@ -68,6 +69,9 @@
           <td class="td-address">@if(!empty($supplier->company->location->address)){{ $supplier->company->location->address }}@endif </td>
           <td class="td-phone">{{ decorPhone($supplier->company->phone) }} </td>
           <td class="td-user_id">{{ $supplier->company->director->first_name or ' ... ' }} {{ $supplier->company->director->second_name or ' ... ' }} </td>
+
+          {{-- Элементы управления --}}
+          @include('includes.control.table-td', ['item' => $supplier])
 
           <td class="td-delete">
             @if ($supplier->system_item != 1)
@@ -94,25 +98,30 @@
 @endsection
 
 @section('modals')
-  {{-- Модалка удаления с refresh --}}
-  @include('includes.modals.modal-delete')
+{{-- Модалка удаления с refresh --}}
+@include('includes.modals.modal-delete')
 
-  {{-- Модалка удаления с refresh --}}
-  @include('includes.modals.modal-delete-ajax')
+{{-- Модалка удаления с refresh --}}
+@include('includes.modals.modal-delete-ajax')
 
 @endsection
 
 @section('scripts')
-  {{-- Скрипт сортировки и перетаскивания для таблицы --}}
-  @include('includes.scripts.tablesorter-script')
+{{-- Скрипт сортировки и перетаскивания для таблицы --}}
+@include('includes.scripts.tablesorter-script')
+@include('includes.scripts.sortable-table-script')
 
-  {{-- Скрипт чекбоксов --}}
-  @include('includes.scripts.checkbox-control')
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
 
-  @include('includes.scripts.sortable-table-script')
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
 
-  {{-- Скрипт модалки удаления --}}
-  @include('includes.scripts.modal-delete-script')
-  @include('includes.scripts.delete-ajax-script')
+{{-- Скрипт чекбоксов --}}
+@include('includes.scripts.checkbox-control')
+
+{{-- Скрипт модалки удаления --}}
+@include('includes.scripts.modal-delete-script')
+@include('includes.scripts.delete-ajax-script')
 
 @endsection

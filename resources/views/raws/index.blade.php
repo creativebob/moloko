@@ -35,9 +35,7 @@
           <th class="td-price">Себестоимость</th>
           <th class="td-services_category">Категория</th>
           <th class="td-author">Автор</th>
-          @can ('publisher', App\Raw::class)
-          <th class="td-display">Отображение</th>
-          @endcan
+          <th class="td-control"></th>
           <th class="td-archive"></th>
         </tr>
       </thead>
@@ -77,15 +75,10 @@
 
 
           <td class="td-author">@if(isset($raw->author->first_name)) {{ $raw->author->first_name . ' ' . $raw->author->second_name }} @endif</td>
-          @can ('publisher', $raw)
-          <td class="td-display">
-            @if ($raw['display'] == 1)
-            <a class="icon-display-show black sprite" data-open="item-display"></a>
-            @else
-            <a class="icon-display-hide black sprite" data-open="item-display"></a>
-            @endif
-          </td>
-          @endcan
+
+          {{-- Элементы управления --}}
+          @include('includes.control.table-td', ['item' => $raw])
+
           <td class="td-archive">
             @if ($raw->system_item != 1)
             @can('delete', $raw)
@@ -119,9 +112,24 @@
 @endsection
 
 @section('scripts')
+{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+@include('includes.scripts.tablesorter-script')
+@include('includes.scripts.sortable-table-script')
 
-{{-- Скрипт отображеняи на сайте --}}
-@include('includes.scripts.display-ajax')
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
+
+{{-- Скрипт чекбоксов --}}
+@include('includes.scripts.checkbox-control')
+
+{{-- Скрипт модалки удаления --}}
+@include('includes.scripts.modal-archive-script')
+
+@include('includes.scripts.inputs-mask')
+@include('raws.scripts')
 
 <script type="text/javascript">
   // Обозначаем таймер для проверки
@@ -197,7 +205,7 @@
         url: '/admin/raws/create',
         type: "GET",
         success: function(html){
-          
+
           $('#modal').html(html);
           $('#first-add').foundation();
           $('#first-add').foundation('open');
@@ -228,19 +236,7 @@
 
     $(document).on('click', '.close-modal', function() {
       // alert('lol');
-       $('.reveal-overlay').remove();
-     });
+      $('.reveal-overlay').remove();
+    });
   </script>
-  {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-  @include('includes.scripts.tablesorter-script')
-
-  {{-- Скрипт чекбоксов --}}
-  @include('includes.scripts.checkbox-control')
-
-  {{-- Скрипт модалки удаления --}}
-  @include('includes.scripts.modal-archive-script')
-  @include('includes.scripts.sortable-table-script')
-
-  @include('includes.scripts.inputs-mask')
-  @include('raws.scripts')
   @endsection

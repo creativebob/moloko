@@ -451,7 +451,7 @@ class NavigationController extends Controller
         return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-    public function navigations_sort(Request $request)
+    public function ajax_sort(Request $request)
     {
 
         $i = 1;
@@ -460,6 +460,33 @@ class NavigationController extends Controller
             Navigation::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
+    }
+
+    // Системная запись
+    public function ajax_system_item(Request $request)
+    {
+
+        if ($request->action == 'lock') {
+            $system = 1;
+        } else {
+            $system = null;
+        }
+
+        $item = Navigation::where('id', $request->id)->update(['system_item' => $system]);
+
+        if ($item) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении статуса системной записи!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     // Отображение на сайте
@@ -472,11 +499,9 @@ class NavigationController extends Controller
             $display = 1;
         }
 
-        $navigation = Navigation::findOrFail($request->id);
-        $navigation->display = $display;
-        $navigation->save();
+        $item = Navigation::where('id', $request->id)->update(['display' => $display]);
 
-        if ($navigation) {
+        if ($item) {
 
             $result = [
                 'error_status' => 0,

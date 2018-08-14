@@ -37,6 +37,7 @@
           
           <th class="td-status">Статус</th>
           <th class="td-dismissal-desc">Причина увольнения</th>
+          <th class="td-control"></th>
           <!-- <th class="td-delete"></th> -->
         </tr>
       </thead>
@@ -51,91 +52,97 @@
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="" id="check-{{ $employee->id }}"
 
-              {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
-              @if(!empty($filter['booklist']['booklists']['default']))
-                {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-                @if (in_array($employee->id, $filter['booklist']['booklists']['default'])) checked 
-              @endif
+            {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+            @if(!empty($filter['booklist']['booklists']['default']))
+            {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+            @if (in_array($employee->id, $filter['booklist']['booklists']['default'])) checked 
+            @endif
             @endif
 
             >
             <label class="label-check" for="check-{{ $employee->id }}"></label></td>
-          <td class="td-name">
-            @if ($employee->dismissal_date == null)
+            <td class="td-name">
+              @if ($employee->dismissal_date == null)
               @can('update', $employee)
               <a href="/admin/staff/{{ $employee->staffer->id }}/edit">
-              @endcan
-            @else
-              @can('update', $employee)
-              <a href="/admin/employees/{{ $employee->id }}/edit">
-              @endcan
-            @endif
-            {{ $employee->user->name }}
-            @can('update', $employee)
-              </a>
-            @endcan
-            </td>
-            <td class="td-position">
-              {{ $employee->staffer->position->name }}
-            </td>
-            @if ($filials > 1)
-            <td class="td-filial">{{ $employee->staffer->filial->name }}</td>
-            @endif
-            <td class="td-department">
-              @if ($employee->staffer->filial->name !== $employee->staffer->department->name)
-              {{ $employee->staffer->department->name }}
+                @endcan
+                @else
+                @can('update', $employee)
+                <a href="/admin/employees/{{ $employee->id }}/edit">
+                  @endcan
+                  @endif
+                  {{ $employee->user->name }}
+                  @can('update', $employee)
+                </a>
+                @endcan
+              </td>
+              <td class="td-position">
+                {{ $employee->staffer->position->name }}
+              </td>
+              @if ($filials > 1)
+              <td class="td-filial">{{ $employee->staffer->filial->name }}</td>
               @endif
-            </td>
-            <td class="td-employment-date">{{ $employee->employment_date }}</td>
-            <td class="td-dismissal-date">{{ $employee->dismissal_date }}</td>
-            <td class="td-status">
-              @if (!empty($employee->dismissal_date))
-              Уволен
-              @else
-              Работает
-              @endif
-            </td>
-            <td class="td-dismissal-description">{{ $employee->dismissal_description }}</td>    
-          </tr>
-          @endif
+              <td class="td-department">
+                @if ($employee->staffer->filial->name !== $employee->staffer->department->name)
+                {{ $employee->staffer->department->name }}
+                @endif
+              </td>
+              <td class="td-employment-date">{{ $employee->employment_date }}</td>
+              <td class="td-dismissal-date">{{ $employee->dismissal_date }}</td>
+              <td class="td-status">
+                @if (!empty($employee->dismissal_date))
+                Уволен
+                @else
+                Работает
+                @endif
+              </td>
+              <td class="td-dismissal-description">{{ $employee->dismissal_description }}</td>  
+
+              {{-- Элементы управления --}}
+          @include('includes.control.table-td', ['item' => $employee])
+
+            </tr>
+            @endif
 
 
-          @endforeach
-          @endif
-        </tbody>
-      </table>
+            @endforeach
+            @endif
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
 
-  {{-- Pagination --}}
-  <div class="grid-x" id="pagination">
-    <div class="small-6 cell pagination-head">
-      <span class="pagination-title">Кол-во записей: {{ $employees->count() }}</span>
-      {{ $employees->links() }}
+    {{-- Pagination --}}
+    <div class="grid-x" id="pagination">
+      <div class="small-6 cell pagination-head">
+        <span class="pagination-title">Кол-во записей: {{ $employees->count() }}</span>
+        {{ $employees->links() }}
+      </div>
     </div>
-  </div>
-  @endsection
+    @endsection
 
-  @section('modals')
-  {{-- Модалка удаления с refresh --}}
-  @include('includes.modals.modal-delete')
-  @endsection
+    @section('modals')
+    {{-- Модалка удаления с refresh --}}
+    @include('includes.modals.modal-delete')
+    @endsection
 
-  @section('scripts')
-  
-  {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-  @include('includes.scripts.tablesorter-script')
+    @section('scripts')
 
-  {{-- Скрипт чекбоксов --}}
-  @include('includes.scripts.checkbox-control')
+    {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+    @include('includes.scripts.tablesorter-script')
+    @include('includes.scripts.sortable-table-script')
+    @include('includes.scripts.checkbox-control')
 
-  {{-- Скрипт перетаскивания для меню --}}
-  @include('includes.scripts.sortable-table-script')
+    {{-- Скрипт отображения на сайте --}}
+    @include('includes.scripts.ajax-display')
 
-  @include('includes.scripts.inputs-mask')
-  @include('includes.scripts.pickmeup-script')
-  
-  {{-- Скрипт модалки удаления --}}
-  @include('includes.scripts.modal-delete-script')
+    {{-- Скрипт системной записи --}}
+    @include('includes.scripts.ajax-system')
 
-  @endsection
+    @include('includes.scripts.inputs-mask')
+    @include('includes.scripts.pickmeup-script')
+
+    {{-- Скрипт модалки удаления --}}
+    @include('includes.scripts.modal-delete-script')
+
+    @endsection

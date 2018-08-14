@@ -518,8 +518,10 @@ class AlbumController extends Controller
         return view('news.albums', ['album' => $album]);
     }
 
+    // ------------------------------------------- Ajax ---------------------------------------------
+
     // Сортировка
-    public function albums_sort(Request $request)
+    public function ajax_sort(Request $request)
     {
 
         $i = 1;
@@ -528,6 +530,33 @@ class AlbumController extends Controller
             Album::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
+    }
+
+    // Системная запись
+    public function ajax_system_item(Request $request)
+    {
+
+        if ($request->action == 'lock') {
+            $system = 1;
+        } else {
+            $system = null;
+        }
+
+        $item = Album::where('id', $request->id)->update(['system_item' => $system]);
+
+        if ($item) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении статуса системной записи!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     // Отображение на сайте
@@ -540,11 +569,9 @@ class AlbumController extends Controller
             $display = 1;
         }
 
-        $album = Album::findOrFail($request->id);
-        $album->display = $display;
-        $album->save();
+        $item = Album::where('id', $request->id)->update(['display' => $display]);
 
-        if ($album) {
+        if ($item) {
 
             $result = [
                 'error_status' => 0,

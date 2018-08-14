@@ -31,6 +31,7 @@
           <th class="td-company-name">Компания</th>
           <th class="td-edit">Изменить</th>
           <th class="td-author">Автор</th>
+          <th class="td-control"></th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -76,6 +77,10 @@
             @endif
           </td>
           <td class="td-author">@if(isset($site->author->first_name)) {{ $site->author->first_name . ' ' . $site->author->second_name }} @endif</td>
+
+          {{-- Элементы управления --}}
+          @include('includes.control.table-td', ['item' => $site])
+
           <td class="td-delete">
             @if ($site->system_item != 1)
               @can('delete', $site)
@@ -108,12 +113,16 @@
 @section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
+@include('includes.scripts.sortable-table-script')
+
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
 
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox-control')
-
-{{-- Скрипт перетаскивания для меню --}}
-@include('includes.scripts.sortable-table-script')
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')

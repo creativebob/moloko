@@ -360,7 +360,7 @@ class ServicesProductController extends Controller
     }
 
     // Сортировка
-    public function services_products_sort(Request $request)
+    public function ajax_sort(Request $request)
     {
 
         $i = 1;
@@ -369,6 +369,60 @@ class ServicesProductController extends Controller
             ServicesProduct::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
+    }
+
+    // Системная запись
+    public function ajax_system_item(Request $request)
+    {
+
+        if ($request->action == 'lock') {
+            $system = 1;
+        } else {
+            $system = null;
+        }
+
+        $item = ServicesProduct::where('id', $request->id)->update(['system_item' => $system]);
+
+        if ($item) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении статуса системной записи!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+    // Отображение на сайте
+    public function ajax_display(Request $request)
+    {
+
+        if ($request->action == 'hide') {
+            $display = null;
+        } else {
+            $display = 1;
+        }
+
+        $item = ServicesProduct::where('id', $request->id)->update(['display' => $display]);
+
+        if ($item) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении отображения на сайте!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
 

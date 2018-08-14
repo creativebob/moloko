@@ -1116,7 +1116,7 @@ class GoodsController extends Controller
         }
 
         // Сортировка
-        public function goods_sort(Request $request)
+        public function ajax_sort(Request $request)
         {
             $i = 1;
 
@@ -1125,6 +1125,60 @@ class GoodsController extends Controller
                 $i++;
             }
         }
+
+        // Системная запись
+    public function ajax_system_item(Request $request)
+    {
+
+        if ($request->action == 'lock') {
+            $system = 1;
+        } else {
+            $system = null;
+        }
+
+        $item = Goods::where('id', $request->id)->update(['system_item' => $system]);
+
+        if ($item) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении статуса системной записи!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+    // Отображение на сайте
+    public function ajax_display(Request $request)
+    {
+
+        if ($request->action == 'hide') {
+            $display = null;
+        } else {
+            $display = 1;
+        }
+
+        $item = Goods::where('id', $request->id)->update(['display' => $display]);
+
+        if ($item) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении отображения на сайте!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
 
         public function get_inputs(Request $request)
         {
@@ -1294,32 +1348,5 @@ class GoodsController extends Controller
 
         }
 
-    // Отображение на сайте
-        public function ajax_display(Request $request)
-        {
 
-            if ($request->action == 'hide') {
-                $display = null;
-            } else {
-                $display = 1;
-            }
-
-            $cur_goods = Goods::findOrFail($request->id);
-            $cur_goods->display = $display;
-            $cur_goods->save();
-
-            if ($cur_goods) {
-
-                $result = [
-                    'error_status' => 0,
-                ];  
-            } else {
-
-                $result = [
-                    'error_status' => 1,
-                    'error_message' => 'Ошибка при обновлении отображения на сайте!'
-                ];
-            }
-            echo json_encode($result, JSON_UNESCAPED_UNICODE);
-        }
     }
