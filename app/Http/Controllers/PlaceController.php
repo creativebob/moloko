@@ -105,17 +105,28 @@ class PlaceController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_places_types = operator_right('places_types', 'false', 'index');
-        // dd($answer_places_types);
 
         // Список типов помещений
         $places_types_query = PlacesType::get();
-        
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
 
-        $places_types_checkboxer = addFilter($filter, $places_types_query, $request, 'Тип помещения', 'places_types', 'id', 'places_types', 'internal-self-one');
+        // Контейнер для checkbox'а - инициируем
+        $checkboxer['status'] = null;
+        $checkboxer['entity_name'] = $this->entity_name;
 
-        // dd($places_types_checkboxer);
+        // Настраиваем checkboxer
+        $places_types_checkboxer = addFilter(
+
+            $checkboxer,                // Контейнер для checkbox'а
+            $places_types_query,        // Коллекция которая будет взята
+            $request,
+            'Тип помещения',            // Название чекбокса для пользователя в форме
+            'places_types',             // Имя checkboxa для системы
+            'id',                       // Поле записи которую ищем
+            'places_types', 
+            'internal-self-one',        // Режим выборки через связи
+            'checkboxer'                // Режим: checkboxer или filter
+
+        );
 
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
@@ -237,10 +248,25 @@ class PlaceController extends Controller
         $column = 'places_types_id';
         $request[$column] = $places_types;
 
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
+        // Контейнер для checkbox'а - инициируем
+        $checkboxer['status'] = null;
+        $checkboxer['entity_name'] = $this->entity_name;
 
-        $places_types_checkboxer = addFilter($filter, $places_types_query, $request, 'Тип помещения', 'places_types', 'id', 'places_types', 'internal-self-one');
+
+        // Настраиваем checkboxer
+        $places_types_checkboxer = addFilter(
+
+            $checkboxer,                // Контейнер для checkbox'а
+            $places_types_query,        // Коллекция которая будет взята
+            $request,
+            'Тип помещения',            // Название чекбокса для пользователя в форме
+            'places_types',             // Имя checkboxa для системы
+            'id',                       // Поле записи которую ищем
+            'places_types', 
+            'internal-self-one',        // Режим выборки через связи
+            'checkboxer'                // Режим: checkboxer или filter
+
+        );
 
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
