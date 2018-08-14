@@ -73,7 +73,7 @@
                                 <label>Группа
                                     {{ Form::select('services_product_id', $services_products_list, $service->services_product_id) }}
                                 </label>
-                                    
+                                
                                 <label>Категория
                                     <select name="services_category_id">
                                         @php
@@ -161,14 +161,14 @@
                             @endif
 
                             {{-- @if ($service->metrics_values_count > 0)
-                               @each('services.metrics.metric-input', $service->services_product->services_category->metrics, 'metric')
-                               @each('services.metrics.metric-value', $service->metrics_values, 'metric')
-                               @endif --}}
+                             @each('services.metrics.metric-input', $service->services_product->services_category->metrics, 'metric')
+                             @each('services.metrics.metric-value', $service->metrics_values, 'metric')
+                             @endif --}}
 
-                           </fieldset>
-                           @endif
-                           <div id="service-inputs"></div>
-                           <div class="small-12 cell tabs-margin-top text-center">
+                         </fieldset>
+                         @endif
+                         <div id="service-inputs"></div>
+                         <div class="small-12 cell tabs-margin-top text-center">
                             <div class="item-error" id="service-error">Такой артикул уже существует!<br>Измените значения!</div>
                         </div>
                         {{ Form::hidden('service_id', $service->id) }}
@@ -184,29 +184,8 @@
                         <label for="draft"><span>Черновик</span></label>
                     </div>
 
-                    {{-- Чекбокс отображения на сайте --}}
-                    @can ('publisher', $service)
-                    <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('display', 1, $service->display, ['id' => 'display']) }}
-                        <label for="display"><span>Отображать на сайте</span></label>
-                    </div>
-                    @endcan
-
-                    {{-- Чекбокс модерации --}}
-                    @can ('moderator', $service)
-                    @if ($service->moderation == 1)
-                    <div class="small-12 cell checkbox">
-                        @include('includes.inputs.moderation', ['value'=>$service->moderation, 'name'=>'moderation'])
-                    </div>
-                    @endif
-                    @endcan
-
-                    {{-- Чекбокс системной записи --}}
-                    @can ('god', $service)
-                    <div class="small-12 cell checkbox">
-                        @include('includes.inputs.system', ['value'=>$service->system_item, 'name'=>'system_item']) 
-                    </div>
-                    @endcan
+                    {{-- Чекбоксы управления --}}
+                    @include('includes.control.checkboxes', ['item' => $service])
 
                     {{-- Кнопка --}}
                     <div class="small-12 cell tabs-button tabs-margin-top">

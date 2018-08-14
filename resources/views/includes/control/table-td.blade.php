@@ -1,7 +1,7 @@
 <td class="td-control">
 
     {{-- Отображение на сайте --}}
-    @can ('publisher', $item)
+    @can ('display', $item)
     @display ($item)
     <a class="icon-display-show black sprite" data-open="item-display"></a>
     @else

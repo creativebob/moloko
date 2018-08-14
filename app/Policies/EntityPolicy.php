@@ -54,6 +54,18 @@ class EntityPolicy
         return $result;
     }
 
+    public function display(User $user)
+    {
+        $result = $this->getstatus($this->entity_name, null, 'display', $this->entity_dependence);
+        return $result;
+    }
+
+    public function system(User $user, City $model)
+    {
+        $result = $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
+        return $result;
+    }
+
     public function god(User $user)
     {
         if(Auth::user()->god){return true;} else {return false;};

@@ -143,6 +143,11 @@ class AppServiceProvider extends ServiceProvider
             return $item->display == 1;
         });
 
+        // Moderation
+        Blade::if('moderation', function ($item) {
+            return $item->moderation == 1;
+        });
+
         // System item
         // Blade::if('system', function ($item) {
         //     return $item->display == 1;

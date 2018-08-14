@@ -108,29 +108,8 @@
 
     </div>
 
-    {{-- Чекбокс отображения на сайте --}}
-    @can ('publisher', $cur_news)
-    <div class="small-12 cell checkbox">
-      {{ Form::checkbox('display', 1, $cur_news->display, ['id' => 'display']) }}
-      <label for="display"><span>Отображать на сайте</span></label>
-    </div>
-    @endcan
-
-    {{-- Чекбокс модерации --}}
-    @can ('moderator', $cur_news)
-    @if ($cur_news->moderation == 1)
-    <div class="small-12 cell checkbox">
-      @include('includes.inputs.moderation', ['value'=>$cur_news->moderation, 'name'=>'moderation'])
-    </div>
-    @endif
-    @endcan
-
-    {{-- Чекбокс системной записи --}}
-    @can ('god', $cur_news)
-    <div class="small-12 cell checkbox">
-      @include('includes.inputs.system', ['value'=>$cur_news->system_item, 'name'=>'system_item']) 
-    </div>
-    @endcan
+    {{-- Чекбоксы управления --}}
+                @include('includes.control.checkboxes', ['item' => $cur_news]) 
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}

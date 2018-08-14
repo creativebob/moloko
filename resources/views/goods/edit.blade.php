@@ -188,14 +188,14 @@
                             @endif
 
                             {{-- @if ($cur_goods->metrics_values_count > 0)
-                               @each('goods.metrics.metric-input', $cur_goods->goods_product->goods_category->metrics, 'metric')
-                               @each('goods.metrics.metric-value', $cur_goods->metrics_values, 'metric')
-                               @endif --}}
+                             @each('goods.metrics.metric-input', $cur_goods->goods_product->goods_category->metrics, 'metric')
+                             @each('goods.metrics.metric-value', $cur_goods->metrics_values, 'metric')
+                             @endif --}}
 
-                           </fieldset>
-                           @endif
-                           <div id="cur-goods-inputs"></div>
-                           <div class="small-12 cell tabs-margin-top text-center">
+                         </fieldset>
+                         @endif
+                         <div id="cur-goods-inputs"></div>
+                         <div class="small-12 cell tabs-margin-top text-center">
                             <div class="item-error" id="cur-goods-error">Такой артикул уже существует!<br>Измените значения!</div>
                         </div>
                         {{ Form::hidden('cur_goods_id', $cur_goods->id) }}
@@ -209,29 +209,8 @@
                         <label for="draft"><span>Черновик</span></label>
                     </div>
 
-                    {{-- Чекбокс отображения на сайте --}}
-                    @can ('publisher', $cur_goods)
-                    <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('display', 1, $cur_goods->display, ['id' => 'display']) }}
-                        <label for="display"><span>Отображать на сайте</span></label>
-                    </div>
-                    @endcan
-
-                    {{-- Чекбокс модерации --}}
-                    @can ('moderator', $cur_goods)
-                    @if ($cur_goods->moderation == 1)
-                    <div class="small-12 cell checkbox">
-                        @include('includes.inputs.moderation', ['value'=>$cur_goods->moderation, 'name'=>'moderation'])
-                    </div>
-                    @endif
-                    @endcan
-
-                    {{-- Чекбокс системной записи --}}
-                    @can ('god', $cur_goods)
-                    <div class="small-12 cell checkbox">
-                        @include('includes.inputs.system', ['value'=>$cur_goods->system_item, 'name'=>'system_item']) 
-                    </div>
-                    @endcan
+                    {{-- Чекбоксы управления --}}
+                    @include('includes.control.checkboxes', ['item' => $cur_goods]) 
 
                     {{-- Кнопка --}}
                     <div class="small-12 cell tabs-button tabs-margin-top">
@@ -467,7 +446,7 @@
         $('#compositions-' + id).remove();
 
         // Убираем отмеченный чекбокс в списке метрик
-            $('#add-raws-' + id).prop('checked', false);
+        $('#add-raws-' + id).prop('checked', false);
 
     });
 

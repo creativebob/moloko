@@ -74,9 +74,15 @@ class UserPolicy
         return $result;
     }
 
-    public function publisher(User $user)
+    public function display(User $user)
     {
-        $result = $this->getstatus($this->entity_name, null, 'publisher', $this->entity_dependence);
+        $result = $this->getstatus($this->entity_name, null, 'display', $this->entity_dependence);
+        return $result;
+    }
+
+    public function system(User $user, User $model)
+    {
+        $result = $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
         return $result;
     }
 

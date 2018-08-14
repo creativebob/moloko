@@ -66,29 +66,8 @@
               </label>
             </div>
 
-            {{-- Чекбокс отображения на сайте --}}
-            @can ('publisher', $staffer)
-            <div class="small-12 cell checkbox">
-              {{ Form::checkbox('display', 1, $staffer->display, ['id' => 'display']) }}
-              <label for="display"><span>Отображать на сайте</span></label>
-            </div>
-            @endcan
-
-            {{-- Чекбокс модерации --}}
-            @can ('moderator', $staffer)
-            @if ($staffer->moderation == 1)
-            <div class="small-12 cell checkbox">
-              @include('includes.inputs.moderation', ['value'=>$staffer->moderation, 'name'=>'moderation'])
-            </div>
-            @endif
-            @endcan
-
-            {{-- Чекбокс системной записи --}}
-            @can ('god', $staffer)
-            <div class="small-12 cell checkbox">
-              @include('includes.inputs.system', ['value'=>$staffer->system_item, 'name'=>'system_item']) 
-            </div>
-            @endcan  
+            {{-- Чекбоксы управления --}}
+    @include('includes.control.checkboxes', ['item' => $staffer]) 
           </div>
         </div>
         <div class="small-12 medium-5 large-5 cell tabs-margin-top">

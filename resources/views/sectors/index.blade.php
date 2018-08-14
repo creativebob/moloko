@@ -48,6 +48,12 @@
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox-control')
 
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
+
 <script type="text/javascript">
   $(function() {
   // Функция появления окна с ошибкой

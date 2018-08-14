@@ -58,21 +58,8 @@
     <div class="small-12 medium-6 large-6 cell tabs-margin-top">
     </div>
 
-    {{-- Чекбокс модерации --}}
-    @can ('moderator', $goods_product)
-        @if ($goods_product->moderation == 1)
-            <div class="small-12 cell checkbox">
-                @include('includes.inputs.moderation', ['value'=>$goods_product->moderation, 'name'=>'moderation'])
-            </div>
-        @endif
-    @endcan
-
-    {{-- Чекбокс системной записи --}}
-    @can ('god', $goods_product)
-        <div class="small-12 cell checkbox">
-            @include('includes.inputs.system', ['value'=>$goods_product->system_item, 'name'=>'system_item']) 
-        </div>
-    @endcan   
+    {{-- Чекбоксы управления --}}
+                @include('includes.control.checkboxes', ['item' => $goods_product])   
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
         {{ Form::submit($submitButtonText, ['class'=>'button']) }}
