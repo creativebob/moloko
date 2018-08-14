@@ -396,18 +396,6 @@ class PageController extends Controller
         }
     }
 
-    // Сортировка
-    public function pages_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->pages as $item) {
-            Page::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
     // ------------------------------------------- Ajax ---------------------------------------------
 
     // Проверка наличия в базе
@@ -436,6 +424,45 @@ class PageController extends Controller
         return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
+    // Сортировка
+    public function ajax_sort(Request $request)
+    {
+
+        $i = 1;
+
+        foreach ($request->pages as $item) {
+            Page::where('id', $item)->update(['sort' => $i]);
+            $i++;
+        }
+    }
+
+    // Системная запись
+    public function ajax_system_item(Request $request)
+    {
+
+        if ($request->action == 'lock') {
+            $system = 1;
+        } else {
+            $system = null;
+        }
+
+        $item = Page::where('id', $request->id)->update(['system_item' => $system]);
+
+        if ($item) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении статуса системной записи!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
     // Отображение на сайте
     public function ajax_display(Request $request)
     {
@@ -446,9 +473,9 @@ class PageController extends Controller
             $display = 1;
         }
 
-        $page = Page::where('id', $request->id)->update(['display' => $display]);
+        $item = Page::where('id', $request->id)->update(['display' => $display]);
 
-        if ($page) {
+        if ($item) {
 
             $result = [
                 'error_status' => 0,
@@ -458,33 +485,6 @@ class PageController extends Controller
             $result = [
                 'error_status' => 1,
                 'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $page = Page::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($page) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
             ];
         }
         echo json_encode($result, JSON_UNESCAPED_UNICODE);

@@ -92,7 +92,7 @@ class AreaController extends Controller
         }
     }
 
-    public function areas_sort(Request $request)
+    public function ajax_sort(Request $request)
     {
 
         // Если не пустой район
@@ -118,6 +118,33 @@ class AreaController extends Controller
         }
     }
 
+    // Системная запись
+    public function ajax_system_item(Request $request)
+    {
+
+        if ($request->action == 'lock') {
+            $system = 1;
+        } else {
+            $system = null;
+        }
+
+        $page = Area::where('id', $request->id)->update(['system_item' => $system]);
+
+        if ($page) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении статуса системной записи!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
     // Отображение на сайте
     public function ajax_display(Request $request)
     {
@@ -128,9 +155,7 @@ class AreaController extends Controller
             $display = 1;
         }
 
-        $area = Area::findOrFail($request->id);
-        $area->display = $display;
-        $area->save();
+        $area = Area::where('id', $request->id)->update(['display' => $display]);
 
         if ($area) {
 

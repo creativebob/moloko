@@ -518,7 +518,7 @@ class CityController extends Controller
     }
 
     // Сортировка
-    public function cities_sort(Request $request)
+    public function ajax_sort(Request $request)
     {
         
         $i = 1;
@@ -527,6 +527,33 @@ class CityController extends Controller
             City::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
+    }
+
+    // Системная запись
+    public function ajax_system_item(Request $request)
+    {
+
+        if ($request->action == 'lock') {
+            $system = 1;
+        } else {
+            $system = null;
+        }
+
+        $item = City::where('id', $request->id)->update(['system_item' => $system]);
+
+        if ($item) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении статуса системной записи!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     // Отображение на сайте
@@ -539,11 +566,9 @@ class CityController extends Controller
             $display = 1;
         }
 
-        $city = City::findOrFail($request->id);
-        $city->display = $display;
-        $city->save();
+        $item = City::where('id', $request->id)->update(['display' => $display]);
 
-        if ($city) {
+        if ($item) {
 
             $result = [
                 'error_status' => 0,

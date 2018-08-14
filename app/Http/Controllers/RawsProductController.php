@@ -345,7 +345,7 @@ class RawsProductController extends Controller
     }
 
     // Сортировка
-    public function raws_products_sort(Request $request)
+    public function ajax_sort(Request $request)
     {
 
         $i = 1;

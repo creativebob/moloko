@@ -188,7 +188,7 @@ class EntityController extends Controller
     }
 
     // Сортировка
-    public function entities_sort(Request $request)
+    public function ajax_sort(Request $request)
     {
 
         $i = 1;

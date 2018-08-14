@@ -34,7 +34,7 @@ class RegionController extends Controller
   public function store(RegionRequest $request)
   {
     // Подключение политики
-    
+
     $this->authorize('create', Region::class);
 
     // Получаем данные для авторизованного пользователя
@@ -54,54 +54,54 @@ class RegionController extends Controller
         $result = [
           'error_message' => 'Область уже добавлена в нашу базу!',
           'error_status' => 1
-        ];
-      } else {
-        $result = [
-          'region_database' => 1,
-          'error_status' => 0,
+      ];
+  } else {
+    $result = [
+      'region_database' => 1,
+      'error_status' => 0,
           // 'session' => $lol
-        ];
-      }
-      echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    };
+  ];
+}
+echo json_encode($result, JSON_UNESCAPED_UNICODE);
+};
     // Если область не найдена, то меняем значение на 1, пишем в базу и отдаем результат
-    if ($region_database == 1) {
-      $region = new Region;
-      $region->region_name = $request->region_name;
-      $region->region_code = $request->region_code;
-      $region->region_vk_external_id = $request->region_vk_external_id;
-      $region->author_id = $user_id;
-      $region->system_item = 1;
-      $region->save();
+if ($region_database == 1) {
+  $region = new Region;
+  $region->region_name = $request->region_name;
+  $region->region_code = $request->region_code;
+  $region->region_vk_external_id = $request->region_vk_external_id;
+  $region->author_id = $user_id;
+  $region->system_item = 1;
+  $region->save();
 
-      if ($region) {
-        $region_id = $region->id;
-        $region = [
-          'region_id' => $region_id,
-          'region_name' => $region->region_name,
-          'region_vk_external_id' => $region->region_vk_external_id
-        ];
-        echo json_encode($region, JSON_UNESCAPED_UNICODE);
-      } else {
-        abort(403, 'Не удалось записать область!');
-      }
-    };
-  }
+  if ($region) {
+    $region_id = $region->id;
+    $region = [
+      'region_id' => $region_id,
+      'region_name' => $region->region_name,
+      'region_vk_external_id' => $region->region_vk_external_id
+  ];
+  echo json_encode($region, JSON_UNESCAPED_UNICODE);
+} else {
+    abort(403, 'Не удалось записать область!');
+}
+};
+}
 
-  public function show($id)
-  {
+public function show($id)
+{
     //
-  }
+}
 
-  public function edit($id)
-  {
+public function edit($id)
+{
     //
-  }
+}
 
-  public function update(Request $request, $id)
-  {
+public function update(Request $request, $id)
+{
     //
-  }
+}
   /**
   * Удаляем регион из бд.
   */
@@ -118,29 +118,29 @@ class RegionController extends Controller
       $data = [
         'status' => 0,
         'msg' => 'Данная область содержит населенные пункты, удаление невозможно'
-      ];
-    } else {
-      $region->editor_id = $user->id;
-      $region->save();
+    ];
+} else {
+  $region->editor_id = $user->id;
+  $region->save();
       // Если нет, мягко удаляем
-      $region = Region::destroy($id);
-      if ($region){
-        $data = [
-          'status'=> 1,
-          'type' => 'regions',
-          'id' => $id,
-          'msg' => 'Успешно удалено'
-        ];
-      } else {
+  $region = Region::destroy($id);
+  if ($region){
+    $data = [
+      'status'=> 1,
+      'type' => 'regions',
+      'id' => $id,
+      'msg' => 'Успешно удалено'
+  ];
+} else {
         // В случае непредвиденной ошибки
-        $data = [
-          'status' => 0,
-          'msg' => 'Произошла непредвиденная ошибка, попробуйте перезагрузить страницу и попробуйте еще раз'
-        ];
-      };
-    };
-    echo json_encode($data, JSON_UNESCAPED_UNICODE);
-  }
+    $data = [
+      'status' => 0,
+      'msg' => 'Произошла непредвиденная ошибка, попробуйте перезагрузить страницу и попробуйте еще раз'
+  ];
+};
+};
+echo json_encode($data, JSON_UNESCAPED_UNICODE);
+}
   /**
   * Получаем сторонние данные по области (из vk).
   */
@@ -148,27 +148,54 @@ class RegionController extends Controller
   {
     $region = $request->region; 
     $request_params = [
-    'country_id' => '1',
-    'q' => $region,
-    'count' => '100',
-    'v' => '5.71'
+        'country_id' => '1',
+        'q' => $region,
+        'count' => '100',
+        'v' => '5.71'
     ];
     $get_params = http_build_query($request_params);
     $result = (file_get_contents('https://api.vk.com/method/database.getRegions?'. $get_params));
     echo $result;
-  }
+}
 
-  public function regions_sort(Request $request)
-  {
+public function ajax_sort(Request $request)
+{
     $i = 1;
 
     foreach ($request->regions as $item) {
-            Region::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-  }
+        Region::where('id', $item)->update(['sort' => $i]);
+        $i++;
+    }
+}
 
-  // Отображение на сайте
+// Системная запись
+    public function ajax_system_item(Request $request)
+    {
+
+        if ($request->action == 'lock') {
+            $system = 1;
+        } else {
+            $system = null;
+        }
+
+        $item = Region::where('id', $request->id)->update(['system_item' => $system]);
+
+        if ($item) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении статуса системной записи!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+    // Отображение на сайте
     public function ajax_display(Request $request)
     {
 
@@ -178,11 +205,9 @@ class RegionController extends Controller
             $display = 1;
         }
 
-        $region = Region::findOrFail($request->id);
-        $region->display = $display;
-        $region->save();
+        $item = Region::where('id', $request->id)->update(['display' => $display]);
 
-        if ($region) {
+        if ($item) {
 
             $result = [
                 'error_status' => 0,
@@ -196,4 +221,6 @@ class RegionController extends Controller
         }
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
+
+
 }

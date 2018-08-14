@@ -639,8 +639,10 @@ class GoodsCategoryController extends Controller
         echo json_encode($goods_categories_list, JSON_UNESCAPED_UNICODE);
     }
 
+    // ------------------------------------------------ Ajax -------------------------------------------------
+
     // Сортировка
-    public function goods_categories_sort(Request $request)
+    public function ajax_sort(Request $request)
     {
 
         $i = 1;
@@ -651,8 +653,62 @@ class GoodsCategoryController extends Controller
         }
     }
 
+    // Системная запись
+    public function ajax_system_item(Request $request)
+    {
 
-    // ------------------------------------------------ Ajax -------------------------------------------------
+        if ($request->action == 'lock') {
+            $system = 1;
+        } else {
+            $system = null;
+        }
+
+        $item = GoodsCategory::where('id', $request->id)->update(['system_item' => $system]);
+
+        if ($item) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении статуса системной записи!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+    // Отображение на сайте
+    public function ajax_display(Request $request)
+    {
+
+        if ($request->action == 'hide') {
+            $display = null;
+        } else {
+            $display = 1;
+        }
+
+        $item = GoodsCategory::where('id', $request->id)->update(['display' => $display]);
+
+        if ($item) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении отображения на сайте!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+
+    
 
     public function ajax_update(Request $request, $id)
     {
@@ -779,35 +835,6 @@ class GoodsCategoryController extends Controller
                 'error_message' => 'Ошибка при записи категории продукции!'
             ];
         }
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $goods_category = GoodsCategory::findOrFail($request->id);
-        $goods_category->display = $display;
-        $goods_category->save();
-
-        if ($goods_category) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
     
 }

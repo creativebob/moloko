@@ -411,6 +411,46 @@ class StafferController extends Controller
 
 
     // ---------------------------------------------- Ajax -----------------------------------------------------------
+
+    // Сортировка
+    public function ajax_sort(Request $request)
+    {
+
+        $i = 1;
+
+        foreach ($request->staff as $item) {
+            Staffer::where('id', $item)->update(['sort' => $i]);
+            $i++;
+        }
+    }
+
+    // Системная запись
+    public function ajax_system_item(Request $request)
+    {
+
+        if ($request->action == 'lock') {
+            $system = 1;
+        } else {
+            $system = null;
+        }
+
+        $item = Staffer::where('id', $request->id)->update(['system_item' => $system]);
+
+        if ($item) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении статуса системной записи!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
     // Отображение на сайте
     public function ajax_display(Request $request)
     {
@@ -421,11 +461,9 @@ class StafferController extends Controller
             $display = 1;
         }
 
-        $staffer = Staffer::findOrFail($request->id);
-        $staffer->display = $display;
-        $staffer->save();
+        $item = Staffer::where('id', $request->id)->update(['display' => $display]);
 
-        if ($staffer) {
+        if ($item) {
 
             $result = [
                 'error_status' => 0,
@@ -438,18 +476,6 @@ class StafferController extends Controller
             ];
         }
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Сортировка
-    public function staff_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->staff as $item) {
-            Staffer::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
     }
 
     // ---------------------------------------------- API --------------------------------------------------
