@@ -1,5 +1,5 @@
 {{-- Чекбокс отображения на сайте --}}
-@can ('publisher', $item)
+@can ('display', $item)
 <div class="small-12 cell checkbox">
     {{ Form::checkbox('display', 1, $item->display, ['id' => 'display']) }}
     <label for="display"><span>Отображать на сайте</span></label>
@@ -8,11 +8,11 @@
 
 {{-- Чекбокс модерации --}}
 @can ('moderator', $item)
-@if ($item->moderation == 1)
+@moderation ($item)
 <div class="small-12 cell checkbox">
     @include('includes.inputs.moderation', ['value'=>$item->moderation, 'name'=>'moderation'])
 </div>
-@endif
+@endmoderation
 @endcan
 
 {{-- Чекбокс системной записи --}}

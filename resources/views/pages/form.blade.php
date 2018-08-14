@@ -41,35 +41,14 @@
     </label>
     <div class="text-center">
       <img id="photo" @if (isset($page->photo_id)) src="/storage/{{ $site->company_id }}/media/pages/{{ $page->id }}/img/medium/{{ $page->photo->name }}" @endif>
-   </div>
- </div>
+    </div>
+  </div>
 
- {{-- Чекбокс отображения на сайте --}}
- @can ('publisher', $page)
- <div class="small-12 cell checkbox">
-  {{ Form::checkbox('display', 1, $page->display, ['id' => 'display']) }}
-  <label for="display"><span>Отображать на сайте</span></label>
-</div>
-@endcan
+  {{-- Чекбоксы управления --}}
+  @include('includes.control.checkboxes', ['item' => $page])   
 
-{{-- Чекбокс модерации --}}
-@can ('moderator', $page)
-@if ($page->moderation == 1)
-<div class="small-12 cell checkbox">
-  @include('includes.inputs.moderation', ['value'=>$page->moderation, 'name'=>'moderation'])
-</div>
-@endif
-@endcan
-
-{{-- Чекбокс системной записи --}}
-@can ('god', $page)
-<div class="small-12 cell checkbox">
-  @include('includes.inputs.system', ['value'=>$page->system_item, 'name'=>'system_item']) 
-</div>
-@endcan   
-
-<div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-  {{ Form::submit($submitButtonText, ['class'=>'button']) }}
-</div>
+  <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
+    {{ Form::submit($submitButtonText, ['class'=>'button']) }}
+  </div>
 </div>
 

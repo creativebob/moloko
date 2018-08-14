@@ -187,14 +187,14 @@
                             @endif
 
                             {{-- @if ($raw->metrics_values_count > 0)
-                             @each('raws.metrics.metric-input', $raw->raws_product->raws_category->metrics, 'metric')
-                             @each('raws.metrics.metric-value', $raw->metrics_values, 'metric')
-                             @endif --}}
+                               @each('raws.metrics.metric-input', $raw->raws_product->raws_category->metrics, 'metric')
+                               @each('raws.metrics.metric-value', $raw->metrics_values, 'metric')
+                               @endif --}}
 
-                         </fieldset>
-                         @endif
-                         <div id="raws-inputs"></div>
-                         <div class="small-12 cell tabs-margin-top text-center">
+                           </fieldset>
+                           @endif
+                           <div id="raws-inputs"></div>
+                           <div class="small-12 cell tabs-margin-top text-center">
                             <div class="item-error" id="raws-error">Такой артикул уже существует!<br>Измените значения!</div>
                         </div>
                         {{ Form::hidden('raw_id', $raw->id) }}
@@ -208,29 +208,8 @@
                         <label for="draft"><span>Черновик</span></label>
                     </div>
 
-                    {{-- Чекбокс отображения на сайте --}}
-                    @can ('publisher', $raw)
-                    <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('display', 1, $raw->display, ['id' => 'display']) }}
-                        <label for="display"><span>Отображать на сайте</span></label>
-                    </div>
-                    @endcan
-
-                    {{-- Чекбокс модерации --}}
-                    @can ('moderator', $raw)
-                    @if ($raw->moderation == 1)
-                    <div class="small-12 cell checkbox">
-                        @include('includes.inputs.moderation', ['value'=>$raw->moderation, 'name'=>'moderation'])
-                    </div>
-                    @endif
-                    @endcan
-
-                    {{-- Чекбокс системной записи --}}
-                    @can ('god', $raw)
-                    <div class="small-12 cell checkbox">
-                        @include('includes.inputs.system', ['value'=>$raw->system_item, 'name'=>'system_item']) 
-                    </div>
-                    @endcan
+                    {{-- Чекбоксы управления --}}
+                    @include('includes.control.checkboxes', ['item' => $raw])  
 
                     {{-- Кнопка --}}
                     <div class="small-12 cell tabs-button tabs-margin-top">

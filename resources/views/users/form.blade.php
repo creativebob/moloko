@@ -344,21 +344,8 @@
     </fieldset> 
   </div>
 
-  {{-- Чекбокс модерации --}}
-  @can ('moderator', $user)
-  @if ($user->moderation == 1)
-  <div class="small-12 small-text-center cell checkbox">
-    @include('includes.inputs.moderation', ['value'=>$user->moderation, 'name'=>'moderation'])
-  </div>
-  @endif
-  @endcan
-
-  {{-- Чекбокс системной записи --}}
-  @can ('god', $user)
-  <div class="small-12 cell checkbox">
-    @include('includes.inputs.system', ['value'=>$user->system_item, 'name'=>'system_item'])
-  </div>
-  @endcan    
+{{-- Чекбоксы управления --}}
+    @include('includes.control.checkboxes', ['item' => $user])  
 
   <div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}

@@ -147,21 +147,8 @@
                 @include('includes.inputs.checkboxer', ['name'=>'services_types', 'value'=>$services_types_checkboxer])      
             </div>
 
-            {{-- Чекбокс модерации --}}
-            @can ('moderator', $company)
-            @if ($company->moderation == 1)
-            <div class="small-12 cell checkbox">
-              @include('includes.inputs.moderation', ['value'=>$company->moderation, 'name'=>'moderation'])
-            </div>
-            @endif
-            @endcan
-
-            {{-- Чекбокс системной записи --}}
-            @can ('god', $company)
-            <div class="small-12 cell checkbox">
-              @include('includes.inputs.system', ['value'=>$company->system_item, 'name'=>'system_item']) 
-            </div>
-            @endcan 
+            {{-- Чекбоксы управления --}}
+    @include('includes.control.checkboxes', ['item' => $company])
 
           </div>
         </div>
