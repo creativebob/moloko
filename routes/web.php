@@ -230,7 +230,7 @@ Route::post('/goods_categories_sort', 'GoodsCategoryController@goods_categories_
 // Системная запись
 Route::post('/goods_categories_system_item', 'GoodsCategoryController@ajax_system_item')->middleware('auth');
 
-// --------------------------------- Продукция товаров --------------------------------------------
+// --------------------------------- Группы товаров --------------------------------------------
 // Основные методы
 Route::resource('/goods_products', 'GoodsProductController')->middleware('auth');
 // Сортировка
@@ -293,9 +293,14 @@ Route::post('/raws_categories_system_item', 'RawsCategoryController@ajax_system_
 // Основные методы
 Route::resource('/raws_products', 'RawsProductController')->middleware('auth');
 // Сортировка
+<<<<<<< HEAD
 Route::post('/raws_sort', 'RawsProductController@companies_sort')->middleware('auth');
 // Системная запись
 Route::post('/raws_system_item', 'RawsProductController@ajax_system_item')->middleware('auth');
+=======
+Route::post('/raws_products_sort', 'RawsProductController@raws_products_sort')->middleware('auth');
+
+>>>>>>> origin/master
 
 Route::any('/ajax_raws_count', 'RawsProductController@ajax_count')->middleware('auth');
 Route::any('/ajax_raws_modes', 'RawsProductController@ajax_modes')->middleware('auth');

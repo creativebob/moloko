@@ -147,8 +147,6 @@
         $filter[$filter_name]['list_select'] = $list_select; 
         $filter[$filter_name]['title'] = $title; // Назавние фильтра
 
-
-
         return $filter;
     }
 
@@ -156,7 +154,7 @@
     // $filter - массив / тело фильтра
 
 
-    function addFilter($filter, $filter_query, $request, $title, $filter_name, $column, $relations = null, $filter_mode = null){
+    function addFilter($filter, $filter_query, $request, $title, $filter_name, $column, $relations = null, $filter_mode = null, $checkboxer_mode = 'filter'){
 
         // Готовим массив для наполнения пунктами коллекции
         $list_select = [];
@@ -326,16 +324,18 @@
 
         $filter_entity_name = $filter['entity_name'];
 
-        if($filter['count'] > 0) {
+        // Если работаем в режиме фильтра - будем записывать куки
+        if($checkboxer_mode == 'filter'){
+            if($filter['count'] > 0) {
+                
+                // Пишем в куку
+                $filter_url = $request->fullUrl();
+                Cookie::queue('filter_' . $filter_entity_name, $filter_url, 1440);
+            } else {
 
-            // Пишем в куку
-            $filter_url = $request->fullUrl();
-            Cookie::queue('filter_' . $filter_entity_name, $filter_url, 1440);
-
-        } else {
-
-            // Удаляем куку
-            Cookie::queue(Cookie::forget('filter_' . $filter_entity_name)); 
+                // Удаляем куку
+                Cookie::queue(Cookie::forget('filter_' . $filter_entity_name)); 
+            };
         };
 
 

@@ -105,7 +105,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => 7,
+            'sort' => 8,
         ],
          [
             'name' => 'Сущности',
@@ -159,7 +159,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => 5,
+            'sort' => 6,
         ],
         [
             'name' => 'Сайты',
@@ -200,7 +200,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => 6,
+            'sort' => 7,
         ],
         [
             'name' => 'Должности',
@@ -293,7 +293,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 4,
         ],
         [
             'name' => 'Категории услуг',
@@ -306,7 +306,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 5,
         ],
         [
             'name' => 'Категории сырья',
@@ -319,7 +319,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 6,
         ],
 
         [
@@ -333,7 +333,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 1,
         ],
         [
             'name' => 'Услуги',
@@ -346,7 +346,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 2,
         ],
         [
             'name' => 'Сырьё',
@@ -359,7 +359,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 3,
         ],
 
         [
@@ -388,7 +388,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => 2,
+            'sort' => 3,
         ],
 
         [
@@ -486,7 +486,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => 3,
+            'sort' => 5,
         ],
         [
             'name' => 'Персонал',
@@ -499,7 +499,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => 4,
+            'sort' => 2,
         ],
         [
             'name' => 'Поставщики',
@@ -552,7 +552,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 7,
         ],
 
         [
@@ -566,7 +566,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 8,
         ],
 
         [
@@ -580,7 +580,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 9,
         ],
 
         // Остальное

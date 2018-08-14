@@ -133,13 +133,27 @@ class CompanyController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        // Формируем checkboxer со списком типов услуг
+        // Запрос для чекбокса - список типов услуг
         $services_types_query = ServicesType::get();
 
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
+        // Контейнер для checkbox'а - инициируем
+        $checkboxer['status'] = null;
+        $checkboxer['entity_name'] = $this->entity_name;
 
-        $services_types_checkboxer = addFilter($filter, $services_types_query, $request, 'Возможные типы услуг', 'services_types', 'id', 'services_types', 'internal-self-one');
+        // Настраиваем checkboxer
+        $services_types_checkboxer = addFilter(
+
+            $checkboxer,                // Контейнер для checkbox'а
+            $services_types_query,        // Коллекция которая будет взята
+            $request,
+            'Возможные типы услуг',            // Название чекбокса для пользователя в форме
+            'services_types',             // Имя checkboxa для системы
+            'id',                       // Поле записи которую ищем
+            'services_types', 
+            'internal-self-one',        // Режим выборки через связи
+            'checkboxer'                // Режим: checkboxer или filter
+
+        );
 
         // Формируем пуcтой массив
         $worktime = [];
@@ -304,12 +318,27 @@ class CompanyController extends Controller
         $column = 'services_types_id';
         $request[$column] = $services_types;
 
+        // Запрос для чекбокса - список типов услуг
         $services_types_query = ServicesType::get();
 
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        
-        $services_types_checkboxer = addFilter($filter, $services_types_query, $request, 'Возможные типы услуг', 'services_types', 'id', 'services_types', 'internal-self-one');
+        // Контейнер для checkbox'а - инициируем
+        $checkboxer['status'] = null;
+        $checkboxer['entity_name'] = $this->entity_name;
+
+        // Настраиваем checkboxer
+        $services_types_checkboxer = addFilter(
+
+            $checkboxer,                // Контейнер для checkbox'а
+            $services_types_query,        // Коллекция которая будет взята
+            $request,
+            'Возможные типы услуг',            // Название чекбокса для пользователя в форме
+            'services_types',             // Имя checkboxa для системы
+            'id',                       // Поле записи которую ищем
+            'services_types', 
+            'internal-self-one',        // Режим выборки через связи
+            'checkboxer'                // Режим: checkboxer или filter
+
+        );
 
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
