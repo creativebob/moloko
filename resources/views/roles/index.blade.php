@@ -31,7 +31,7 @@
           <th class="td-description">Описание</th>
           <th class="td-author">Автор</th>
           <th class="td-system">Статус</th>
-          <th class="td-display"></th>
+          <th class="td-control"></th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -101,6 +101,8 @@
 
           </td>
 
+          {{-- Элементы управления --}}
+          @include('includes.control.table-td', ['item' => $role])
 
           <td class="td-delete">
             @if (($role->system_item !== 1) && ($role->company_id !== null))
@@ -134,9 +136,13 @@
 @section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
+@include('includes.scripts.sortable-table-script')
 
-  {{-- Скрипт сортировки --}}
-  @include('includes.scripts.sortable-table-script')
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')

@@ -32,9 +32,7 @@
           <th class="td-department">Отдел</th>
           <th class="td-phone">Телефон</th>
           <th class="td-employment-date">Дата приема</th>
-          @can ('publisher', App\Staffer::class)
-          <th class="td-display">Отображение</th>
-          @endcan
+          <th class="td-control"></th>
           
           <!-- <th class="td-delete"></th> -->
         </tr>
@@ -89,15 +87,9 @@
             @endif
             @endforeach
           </td>
-          @can ('publisher', $staffer)
-          <td class="td-display">
-            @if ($staffer['display'] == 1)
-            <a class="icon-display-show black sprite" data-open="item-display"></a>
-            @else
-            <a class="icon-display-hide black sprite" data-open="item-display"></a>
-            @endif
-          </td>
-          @endcan
+
+          {{-- Элементы управления --}}
+          @include('includes.control.table-td', ['item' => $staffer])
           
          <!--  <td class="td-delete">
             @if (isset($employee->company_id))
@@ -129,16 +121,17 @@
 @section('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
+@include('includes.scripts.sortable-table-script')
+
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
 
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox-control')
 
-{{-- Скрипт перетаскивания для меню --}}
-@include('includes.scripts.sortable-table-script')
-
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
-
-{{-- Скрипт отображеняи на сайте --}}
-@include('includes.scripts.display-ajax')
 @endsection

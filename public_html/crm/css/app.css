@@ -1,8 +1,8 @@
 @charset "UTF-8";
 /* Welcome to Compass.
- * In this file you should write your main styles. (or centralize your imports)
- * Import this file using the following HTML or equivalent:
- * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/crm/css" /> */
+* In this file you should write your main styles. (or centralize your imports)
+* Import this file using the following HTML or equivalent:
+* <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/crm/css" /> */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -145,7 +145,6 @@ fieldset legend {
   border-bottom: 0px dashed #333;
   line-height: 0.6;
 }
-
 .filter_link:hover {
   border-bottom: 1px dashed #333;
 }
@@ -461,7 +460,7 @@ span.wrap-label-checkboxer {
   height: 32px;
   background: url(sprites/sprite_menu.png) no-repeat;
 }
-.sprite :focus {
+.sprite:focus {
   outline: none;
 }
 
@@ -472,7 +471,7 @@ span.wrap-label-checkboxer {
   height: 16px;
   background: url(sprites/sprite_16.png) no-repeat;
 }
-.sprite-16 :focus {
+.sprite-16:focus {
   outline: none;
 }
 
@@ -554,40 +553,36 @@ a.icon-list-edit {
   opacity: 1;
 }
 
-tr:hover .icon-display-show {
-  opacity: 0.2;
-}
-
 .icon-system-lock {
   background-position: -32px -960px;
   opacity: 0.2;
 }
-
 .icon-system-lock:hover {
-  background-position: -32px -960px;
   opacity: 1;
 }
 
 .icon-system-unlock {
   background-position: -64px -960px;
-  opacity: 0.2;
+  opacity: 0;
+  transition: opacity ease 0.3s;
+}
+.icon-system-unlock:hover {
+  opacity: 1;
 }
 
-.icon-system-unlock:hover {
-  background-position: -64px -960px;
+tr:hover .icon-display-show, tr:hover .icon-system-unlock {
+  opacity: 0.2;
+}
+tr:hover .icon-display-show:hover, tr:hover .icon-system-unlock:hover {
   opacity: 1;
 }
 
 .icon-system-template {
   background-position: -32px -928px;
   opacity: 0.2;
-  margin-left: 1rem;
 }
-
 .icon-system-template:hover {
-  background-position: -32px -928px;
   opacity: 1;
-  margin-left: 1rem;
 }
 
 .icon-system-programm {
@@ -607,9 +602,7 @@ tr:hover .icon-display-show {
   opacity: 0.2;
   margin-left: 1rem;
 }
-
 .icon-add:hover {
-  background-position: 0px -384px;
   opacity: 1;
 }
 
@@ -618,7 +611,6 @@ tr:hover .icon-display-show {
   float: left;
   margin-right: 0.4rem;
 }
-
 .icon-filter:hover {
   background-position: -32px -352px;
   opacity: 0.7;

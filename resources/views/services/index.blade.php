@@ -41,9 +41,7 @@
           @endif
 
           <th class="td-author">Автор</th>
-          @can ('publisher', App\Service::class)
-          <th class="td-display">Отображение</th>
-          @endcan
+          <th class="td-control"></th>
           <th class="td-archive"></th>
         </tr>
       </thead>
@@ -88,15 +86,10 @@
 
 
           <td class="td-author">@if(isset($service->author->first_name)) {{ $service->author->first_name . ' ' . $service->author->second_name }} @endif</td>
-          @can ('publisher', $service)
-          <td class="td-display">
-            @if ($service['display'] == 1)
-            <a class="icon-display-show black sprite" data-open="item-display"></a>
-            @else
-            <a class="icon-display-hide black sprite" data-open="item-display"></a>
-            @endif
-          </td>
-          @endcan
+
+          {{-- Элементы управления --}}
+          @include('includes.control.table-td', ['item' => $service])
+          
           <td class="td-archive">
             @if ($service->system_item != 1)
             @can('delete', $service)
@@ -131,8 +124,24 @@
 
 @section('scripts')
 
-{{-- Скрипт отображеняи на сайте --}}
-@include('includes.scripts.display-ajax')
+{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+@include('includes.scripts.tablesorter-script')
+@include('includes.scripts.sortable-table-script')
+
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
+
+{{-- Скрипт чекбоксов --}}
+@include('includes.scripts.checkbox-control')
+
+{{-- Скрипт модалки удаления --}}
+@include('includes.scripts.modal-archive-script')
+
+@include('includes.scripts.inputs-mask')
+@include('services.scripts')
 
 <script type="text/javascript">
 
@@ -238,21 +247,9 @@
     //   }, time); 
     // });
 
-     $(document).on('click', '.close-modal', function() {
+    $(document).on('click', '.close-modal', function() {
       // alert('lol');
-       $('.reveal-overlay').remove();
-     });
+      $('.reveal-overlay').remove();
+    });
   </script>
-  {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-  @include('includes.scripts.tablesorter-script')
-
-  {{-- Скрипт чекбоксов --}}
-  @include('includes.scripts.checkbox-control')
-
-  {{-- Скрипт модалки удаления --}}
-  @include('includes.scripts.modal-archive-script')
-  @include('includes.scripts.sortable-table-script')
-
-  @include('includes.scripts.inputs-mask')
-  @include('services.scripts')
   @endsection

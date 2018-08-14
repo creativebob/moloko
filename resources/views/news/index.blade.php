@@ -31,9 +31,7 @@
           <th class="td-info">Инфо</th>
           <th class="td-date-publish">Срок публикации</th>
           <th class="td-author">Автор</th>
-          @can ('publisher', App\News::class)
-          <th class="td-display">Отображение</th>
-          @endcan
+          <th class="td-control"></th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -96,15 +94,10 @@
     <span>{{ $cur_news->publish_end_date }} {{ getWeekDay($cur_news->publish_end_date, 1) }}</span>
   </td>
   <td class="td-author">@if(isset($cur_news->author->first_name)) {{ $cur_news->author->first_name . ' ' . $cur_news->author->second_name }} @endif</td>
-  @can ('publisher', $cur_news)
-  <td class="td-display">
-    @if ($cur_news['display'] == 1)
-    <a class="icon-display-show black sprite" data-open="item-display"></a>
-    @else
-    <a class="icon-display-hide black sprite" data-open="item-display"></a>
-    @endif
-  </td>
-  @endcan
+
+  {{-- Элементы управления --}}
+            @include('includes.control.table-td', ['item' => $cur_news])
+            
   <td class="td-delete">
     @if ($cur_news->system_item != 1)
     @can('delete', $cur_news)
@@ -141,6 +134,23 @@
 @endsection
 
 @section('scripts')
+{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+@include('includes.scripts.tablesorter-script')
+@include('includes.scripts.sortable-table-script')
+
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
+
+{{-- Скрипт чекбоксов --}}
+@include('includes.scripts.checkbox-control')
+
+{{-- Скрипт модалки удаления --}}
+@include('includes.scripts.modal-delete-script')
+@include('includes.scripts.delete-ajax-script')
+
 <script type="text/javascript">
   $(function() {
   // Берем алиас сайта
@@ -158,20 +168,6 @@
   });
 });
 </script>
-{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.tablesorter-script')
-
-{{-- Скрипт чекбоксов --}}
-@include('includes.scripts.checkbox-control')
-
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
-@include('includes.scripts.delete-ajax-script')
-@include('includes.scripts.sortable-table-script')
-
-{{-- Скрипт отображеняи на сайте --}}
-@include('includes.scripts.display-ajax')
-
 @endsection
 
 

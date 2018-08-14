@@ -29,6 +29,9 @@
           <th class="td-page">Alias страницы</th>
           <th class="td-company">Компания</th>
           <th class="td-author">Автор</th>
+
+          <th class="td-control"></th>
+
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -61,6 +64,10 @@
           <td class="td-page">{{ $position->page->alias }}</td>
           <td class="td-company-id">@if(!empty($position->company->name)) {{ $position->company->name }} @else @if($position->system_item == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-author">@if(isset($position->author->first_name)) {{ $position->author->first_name . ' ' . $position->author->second_name }} @endif</td>
+
+          {{-- Элементы управления --}}
+          @include('includes.control.table-td', ['item' => $position])
+
           <td class="td-delete">
             @if (($position->system_item !== 1) && ($position->company_id !== null))
               @can('delete', $position)
@@ -94,6 +101,12 @@
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
 @include('includes.scripts.sortable-table-script')
+
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
 
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox-control')

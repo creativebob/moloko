@@ -30,9 +30,7 @@
           <th class="td-alias">Алиас</th>
           <th class="td-site-id">Сайт</th>
           <th class="td-author">Автор</th>
-          @can ('publisher', App\Page::class)
-          <th class="td-display">Отображение</th>
-          @endcan
+          <th class="td-control"></th>
           <th class="td-delete"></th>
         </tr>
       </thead>
@@ -56,15 +54,10 @@
           <td class="td-alias">{{ $page->alias }}</td>
           <td class="td-site-id">{{ $page->site->name or ' ... ' }}</td>
           <td class="td-author">@if(isset($page->author->first_name)) {{ $page->author->first_name . ' ' . $page->author->second_name }} @endif</td>
-          @can ('publisher', $page)
-          <td class="td-display">
-            @if ($page['display'] == 1)
-            <a class="icon-display-show black sprite" data-open="item-display"></a>
-            @else
-            <a class="icon-display-hide black sprite" data-open="item-display"></a>
-            @endif
-          </td>
-          @endcan
+
+          {{-- Элементы управления --}}
+          @include('includes.control.table-td', ['item' => $page])
+
           <td class="td-delete">
             @if ($page->system_item != 1)
             @can('delete', $page)
@@ -96,9 +89,18 @@
 
 @section('scripts')
 
-  {{-- Скрипт сортировки --}}
-  @include('includes.scripts.sortable-table-script')
-  
+{{-- Скрипт сортировки --}}
+@include('includes.scripts.sortable-table-script')
+
+{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+@include('includes.scripts.tablesorter-script')
+
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
+
 <script type="text/javascript">
   $(function() {
   // Берем алиас сайта
@@ -117,9 +119,5 @@
 });
 </script> 
 
-{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.tablesorter-script')
 
-{{-- Скрипт отображеняи на сайте --}}
-@include('includes.scripts.display-ajax')
 @endsection

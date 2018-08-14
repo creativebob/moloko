@@ -63,6 +63,12 @@ class PositionPolicy
         $result = $this->getstatus($this->entity_name, null, 'publisher', $this->entity_dependence);
         return $result;
     }
+
+    public function system(User $user, Position $model)
+    {
+        $result = $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
+        return $result;
+    }
     
     public function god(User $user)
     {
