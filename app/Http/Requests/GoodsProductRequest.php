@@ -26,12 +26,10 @@ class GoodsProductRequest extends FormRequest
         return [
             'company_id' => 'integer|nullable', 
             'name' => 'string|max:255|required', 
-            'article' => 'string|max:255', 
-            'cost' => 'integer|nullable',
-            'avatar' => 'integer|nullable',
+            // 'article' => 'string|max:255', 
+            // 'cost' => 'integer|nullable',
+            // 'avatar' => 'integer|nullable',
             'description' => 'string|nullable', 
-            'unit_id' => 'integer|nullable',
-            'rule_id' => 'integer|nullable', 
             'goods_category_id' => 'integer|nullable',
             
             'author_id' => 'integer|nullable', 

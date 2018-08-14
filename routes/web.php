@@ -212,7 +212,7 @@ Route::post('/goods_categories_display', 'GoodsCategoryController@ajax_display')
 // Сортировка
 Route::post('/goods_categories_sort', 'GoodsCategoryController@goods_categories_sort')->middleware('auth');
 
-// --------------------------------- Продукция товаров --------------------------------------------
+// --------------------------------- Группы товаров --------------------------------------------
 // Основные методы
 Route::resource('/goods_products', 'GoodsProductController')->middleware('auth');
 // Сортировка
@@ -267,6 +267,9 @@ Route::post('/raws_categories_sort', 'RawsCategoryController@raws_categories_sor
 // --------------------------------- Продукция сырья --------------------------------------------
 // Основные методы
 Route::resource('/raws_products', 'RawsProductController')->middleware('auth');
+// Сортировка
+Route::post('/raws_products_sort', 'RawsProductController@raws_products_sort')->middleware('auth');
+
 
 Route::any('/ajax_raws_count', 'RawsProductController@ajax_count')->middleware('auth');
 Route::any('/ajax_raws_modes', 'RawsProductController@ajax_modes')->middleware('auth');
