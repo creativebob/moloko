@@ -45,8 +45,11 @@
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
 
-{{-- Скрипт отображеняи на сайте --}}
-@include('includes.scripts.display-ajax')
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
 
 <script type="text/javascript">
 

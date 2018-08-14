@@ -80,29 +80,8 @@
                     <label for="private-checkbox"><span>Личный альбом.</span></label>
                 </div>
 
-                {{-- Чекбокс отображения на сайте --}}
-                @can ('publisher', $album)
-                    <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('display', 1, $album->display, ['id' => 'display']) }}
-                        <label for="display"><span>Отображать на сайте</span></label>
-                    </div>
-                @endcan
-
-                {{-- Чекбокс модерации --}}
-                @can ('moderator', $album)
-                    @if ($album->moderation == 1)
-                    <div class="small-12 cell checkbox">
-                        @include('includes.inputs.moderation', ['value'=>$album->moderation, 'name'=>'moderation'])
-                    </div>
-                    @endif
-                @endcan
-
-                {{-- Чекбокс системной записи --}}
-                @can ('god', $album)
-                    <div class="small-12 cell checkbox">
-                        @include('includes.inputs.system', ['value'=>$album->system_item, 'name'=>'system_item']) 
-                    </div>
-                @endcan   
+                {{-- Чекбоксы управления --}}
+                @include('includes.control.checkboxes', ['item' => $album]) 
 
                 <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
                     {{ Form::submit($submitButtonText, ['class'=>'button']) }}
