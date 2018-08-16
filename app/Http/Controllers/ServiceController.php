@@ -39,9 +39,14 @@ class ServiceController extends Controller
 
     public function index(Request $request)
     {
+        
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
-        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+        if(($filter_url != null)&&($request->filter != 'active')){
+
+            Cookie::queue(Cookie::forget('filter_' . $this->entity_name));
+            return Redirect($filter_url);
+        };
 
         // Подключение политики
         $this->authorize('index', Service::class);

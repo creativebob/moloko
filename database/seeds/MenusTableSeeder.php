@@ -105,7 +105,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => 8,
+            'sort' => 9,
         ],
          [
             'name' => 'Сущности',
@@ -159,7 +159,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => 6,
+            'sort' => 7,
         ],
         [
             'name' => 'Сайты',
@@ -200,7 +200,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => 7,
+            'sort' => 8,
         ],
         [
             'name' => 'Должности',
@@ -486,7 +486,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => 5,
+            'sort' => 6,
         ],
         [
             'name' => 'Персонал',
@@ -582,6 +582,22 @@ class MenusTableSeeder extends Seeder
             'display' => 1,
             'sort' => 9,
         ],
+
+        // Финансы
+        [
+            'name' => 'Финансы',
+            'icon' => 'icon-finance',
+            'alias' => null,
+            'parent_id' => null,
+            'page_id' => null,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => 5,
+        ],
+
 
         // Остальное
                 // [

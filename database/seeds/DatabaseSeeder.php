@@ -118,5 +118,10 @@ class DatabaseSeeder extends Seeder
     // Помещения
     $this->call(PlacesTypesTableSeeder::class);
 
+    // Маркетинг
+    $this->call(MediumsTableSeeder::class);
+    $this->call(SourcesTableSeeder::class);
+    $this->call(LeadTypesTableSeeder::class);
+
   }
 }

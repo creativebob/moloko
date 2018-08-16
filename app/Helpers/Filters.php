@@ -239,7 +239,6 @@
             };
 
 
-
             // Вытаскиеваем в зависимости от режима нужную коллекцию
             if($filter_mode == 'external-id-one'){
 
@@ -325,12 +324,15 @@
         $filter_entity_name = $filter['entity_name'];
 
         // Если работаем в режиме фильтра - будем записывать куки
+        // 
         if($checkboxer_mode == 'filter'){
+
             if($filter['count'] > 0) {
                 
                 // Пишем в куку
                 $filter_url = $request->fullUrl();
                 Cookie::queue('filter_' . $filter_entity_name, $filter_url, 1440);
+                
             } else {
 
                 // Удаляем куку

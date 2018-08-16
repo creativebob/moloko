@@ -246,7 +246,6 @@
                 $mass_right['departments'] = $departments;
                 $mass_right['filials'] = $filials;
 
-                // dd($mass_right);
                 return $mass_right;
 
 

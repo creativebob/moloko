@@ -22,7 +22,7 @@ class ActionsTableSeeder extends Seeder
         	['name' => 'Нет ограничений', 'method' => 'nolimit'],
             ['name' => 'Автомодерация', 'method' => 'automoderate'],
             ['name' => 'Модератор', 'method' => 'moderator'],
-            ['name' => 'Отображение на сайте', 'method' => 'publisher'],
+            ['name' => 'Отображение на сайте', 'method' => 'display'],
         ]);
     }
 }

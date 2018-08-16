@@ -819,6 +819,27 @@ tr:hover {
 
 
 
+.icon-sync {
+    background-position: 0px -1088px;
+    float: left;
+    margin-right: 0.6rem;
+    opacity: 0.4;
+    transition: opacity 0.5s ease;
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.active-filter {
+    background-position: -32px -352px !important;
+
+    &:hover {
+        background-position: -32px -352px;
+        opacity: 0.7;
+    }
+}
+
+
     // Иконка общего добавления
     .icon-add {
         background-position: 0px -384px;
