@@ -53,6 +53,7 @@ class RawPolicy
     { 
 
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
+        // dd($result);
         return $result;
     }
 

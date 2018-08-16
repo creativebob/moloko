@@ -232,6 +232,10 @@ Route::post('/goods_sort', 'GoodsController@ajax_sort')->middleware('auth');
 Route::post('/goods_system_item', 'GoodsController@ajax_system_item')->middleware('auth');
 // Отображение на сайте
 Route::post('/goods_display', 'GoodsController@ajax_display')->middleware('auth');
+
+// Отображение на сайте
+Route::post('/goods_sync', 'GoodsController@ajax_sync')->middleware('auth');
+
 // Фотки
 Route::any('/goods/add_photo', 'GoodsController@add_photo')->middleware('auth');
 Route::post('/goods/photos', 'GoodsController@photos')->middleware('auth');

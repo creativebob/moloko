@@ -336,6 +336,7 @@ class RawController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raw);
 
+
         $manufacturers_list = $raw->company->manufacturers->pluck('name', 'id');
         // dd($manufacturers_list);
 

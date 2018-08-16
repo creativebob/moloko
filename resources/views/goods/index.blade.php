@@ -31,7 +31,6 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-photo">Фото</th>
           <th class="td-name">Название товара</th>
-
           <th class="td-description">Описание</th>
           <th class="td-price">Цена</th>
           <th class="td-goods_category">Категория</th>
@@ -39,6 +38,7 @@
 
           @if(Auth::user()->god == 1) 
           <th class="td-company-id">Компания</th>
+          <th class="td-sync-id">Добавить на сайт</th>
           @endif
 
           <th class="td-author">Автор</th>
@@ -85,6 +85,7 @@
           <td class="td-company-id">@if(!empty($cur_goods->company->name)) {{ $cur_goods->company->name }} @else @if($cur_goods->system_item == null) Шаблон @else Системная @endif @endif</td>
           @endif
 
+          <td class="td-sync-id"><a class="icon-sync sprite" data-open="item-sync"></a></td>
 
           <td class="td-author">@if(isset($cur_goods->author->first_name)) {{ $cur_goods->author->first_name . ' ' . $cur_goods->author->second_name }} @endif</td>
 
@@ -143,6 +144,9 @@
 
 @include('includes.scripts.inputs-mask')
 @include('goods.scripts')
+
+{{-- Скрипт синхронизации товара с сайтом на сайте --}}
+@include('includes.scripts.ajax-sync')
 
 <script type="text/javascript">
   // Обозначаем таймер для проверки

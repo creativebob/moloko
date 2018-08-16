@@ -616,6 +616,17 @@ tr:hover .icon-display-show:hover, tr:hover .icon-system-unlock:hover {
   opacity: 0.7;
 }
 
+.icon-sync {
+  background-position: 0px -1088px;
+  float: left;
+  margin-right: 0.6rem;
+  opacity: 0.4;
+  transition: opacity 0.5s ease;
+}
+.icon-sync:hover {
+  opacity: 1;
+}
+
 .active-filter {
   background-position: -32px -352px !important;
 }

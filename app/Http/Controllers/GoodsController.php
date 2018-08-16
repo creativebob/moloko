@@ -57,7 +57,6 @@ class GoodsController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-        // dd($answer);
 
         // -----------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -96,9 +95,9 @@ class GoodsController extends Controller
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
 
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'goods_category', 'goods_category_id', 'goods_product', 'external-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'goods_product', 'goods_product_id', null, 'internal-id-one');
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'goods_product', 'goods_product_id', null, 'internal-id-one');
 
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
@@ -1179,6 +1178,26 @@ class GoodsController extends Controller
         }
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
+
+
+    // Отображение на сайте
+    public function ajax_sync(Request $request)
+    {
+
+            // Описание ошибки
+            $ajax_error = [];
+            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+            $ajax_error['text'] = "Для начала необходимо создать категории товаров. А уже потом будем добавлять товары. Ок?";
+            $ajax_error['link'] = "/admin/goods_categories"; // Ссылка на кнопке
+            $ajax_error['title_link'] = "Идем в раздел категорий"; // Текст на кнопке
+
+            return view('ajax_error', compact('ajax_error'));
+
+    }
+
+
+
+
 
         public function get_inputs(Request $request)
         {
