@@ -42,6 +42,8 @@
       {{ Form::hidden('department_id', $department->id, ['id' => 'department-id']) }}
       {{ Form::hidden('first_item', 0, ['class' => 'first-item']) }}
 
+      @include('includes.control.checkboxes', ['item' => $department])
+
     </div>
   </div>
 </div>
@@ -54,30 +56,6 @@
   </div>
 </div>
 
-<div class="grid-x align-center">
-  {{-- Чекбокс отображения на сайте  --}}
-  @can ('publisher', $department)
-  <div class="small-8 cell checkbox">
-    {{ Form::checkbox('display', 1, $department->display, ['id' => 'display']) }}
-    <label for="display"><span>Отображать на сайте</span></label>
-  </div>
-  @endcan
-
-  @if ($department->moderation == 1)
-  <div class="small-8 cell checkbox">
-    {{ Form::checkbox('moderation', 1, $department->moderation, ['id' => 'moderation']) }}
-    <label for="moderation"><span>Временная запись.</span></label>
-  </div>
-  @endif
-
-  @can('god', App\Department::class)
-  <div class="small-8 cell checkbox">
-    {{ Form::checkbox('system_item', 1, $department->system_item, ['id' => 'system-item']) }}
-    <label for="system-item"><span>Системная запись.</span></label>
-  </div>
-  @endcan
-
-</div>
 <div class="grid-x align-center">
   <div class="small-6 medium-4 cell text-center">
     {{ Form::submit($submitButtonText, ['data-close', 'class'=>'button modal-button '.$class]) }}

@@ -150,6 +150,8 @@ class SectorController extends Controller
 
         // Модерация и системная запись
         $sector->system_item = $request->system_item;
+
+        $sector->display = $request->display;
         
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -254,6 +256,8 @@ class SectorController extends Controller
         // Модерация и системная запись
         $sector->system_item = $request->system_item;
         $sector->moderation = $request->moderation;
+
+        $sector->display = $request->display;
 
         $sector->parent_id = $request->parent_id;
         $sector->editor_id = $user_id;

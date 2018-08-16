@@ -18,6 +18,7 @@
         </select>
       </label>
 
+      @include('includes.control.checkboxes', ['item' => $menu])
 
     </div>
   </div>
@@ -44,27 +45,7 @@
     </div>
   </div>
 </div>
-<div class="grid-x align-center">
-   {{-- Чекбокс отображения на сайте  --}}
-      @can ('publisher', $menu)
-      <div class="small-8 cell checkbox">
-        {{ Form::checkbox('display', 1, $menu->display, ['id' => 'display']) }}
-        <label for="display"><span>Отображать на сайте</span></label>
-      </div>
-      @endcan
-      @if ($menu->moderation == 1)
-      <div class="small-8 cell checkbox">
-        {{ Form::checkbox('moderation', 1, $menu->moderation, ['id' => 'moderation']) }}
-        <label for="moderation"><span>Временная запись.</span></label>
-      </div>
-      @endif
-      @can('god', App\Menu::class)
-      <div class="small-8 cell checkbox">
-        {{ Form::checkbox('system_item', 1, $menu->system_item, ['id' => 'system-item']) }}
-        <label for="system-item"><span>Системная запись.</span></label>
-      </div>
-      @endcan
-</div>
+
 <div class="grid-x align-center">
   <div class="small-6 medium-4 cell">
     {{ Form::submit($submitButtonText, ['data-close', 'class'=>'button modal-button', 'id'=>$id]) }}
