@@ -30,15 +30,7 @@ $count = count($services_category['children']) + $count;
     </a>
     <div class="icon-list">
 
-        <div class="display-menu">
-            @can ('publisher', App\ServicesCategory::class)
-            @if ($services_category['display'] == 1)
-            <div class="icon-display-show white sprite" data-open="item-display"></div>
-            @else
-            <div class="icon-display-hide white sprite" data-open="item-display"></div>
-            @endif
-            @endcan
-        </div>
+        @include ('includes.control.menu-div', ['item' => $services_category, 'entity' => App\ServicesCategory::class])
 
         <div>
             @can('create', App\ServicesCategory::class)

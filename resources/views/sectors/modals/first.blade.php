@@ -6,18 +6,8 @@
     </label>
     {{ Form::hidden('first_item', 0, ['class' => 'first-item', 'pattern' => '[0-9]{1}']) }}
     {{ Form::hidden('sector_id', $sector->id, ['id' => 'sector-id']) }}
-    @if ($sector->moderation == 1)
-    <div class="checkbox">
-      {{ Form::checkbox('moderation', 1, $sector->moderation, ['id' => 'moderation']) }}
-      <label for="moderation"><span>Временная запись.</span></label>
-    </div>
-    @endif
-    @can('god', App\Sector::class)
-    <div class="checkbox">
-      {{ Form::checkbox('system_item', 1, $sector->system_item, ['id' => 'system-item']) }}
-      <label for="system-item"><span>Системная запись.</span></label>
-    </div>
-    @endcan
+
+    @include('includes.control.checkboxes', ['item' => $sector])
   </div>
 </div>
 <div class="grid-x align-center">

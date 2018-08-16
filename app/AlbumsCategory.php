@@ -62,4 +62,9 @@ class AlbumsCategory extends Model
     	return $this->hasMany('App\Album');
     }
 
+    public function childs()
+    {
+        return $this->hasMany('App\AlbumsCategory', 'parent_id', 'id')->orderBy('id');
+    }
+
 }

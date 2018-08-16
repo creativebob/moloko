@@ -68,26 +68,29 @@ class GoodsCategoryController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
-        ->get();
+        ->get()
+        ->groupBy('parent_id');
         // dd($goods_categories);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
         // Получаем массив с вложенными элементами дял отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
-        $goods_categories_tree = get_index_tree_with_rights($goods_categories, $user);
+        // $goods_categories_tree = get_index_tree_with_rights($goods_categories, $user);
         // dd($goods_categories_tree);
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('goods_categories.category-list', ['goods_categories_tree' => $goods_categories_tree, 'id' => $request->id]);
+            return view('includes.menu-views.enter', ['grouped_items' => $goods_categories, 'class' => 'App\GoodsCategory', 'entity' => $this->entity_name, 'type' => 'edit', 'id' => $request->id]);
         }
 
+        $entity = $this->entity_name;
+
         // Инфо о странице
-        $page_info = pageInfo('goods_categories');
+        $page_info = pageInfo($this->entity_name);
         // dd($page_info);
 
-        return view('goods_categories.index', ['goods_categories_tree' => $goods_categories_tree, 'page_info' => $page_info]);
+        return view('goods_categories.index', compact('goods_categories', 'page_info', 'entity'));
     }
 
     public function create(Request $request)

@@ -47,26 +47,49 @@ class AlbumsCategoryController extends Controller
         ->template($answer) // Выводим шаблоны альбомов
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
-        ->get();
+        ->get()
+        ->groupBy('parent_id');
+
+        // dd($albums_categories);
+
+        // $albums_categories[3]->merge('lol');
+
+        // dd($albums_categories[3]);
+
+        // $items_cat = [];
+        // foreach ($albums_categories as $id => &$node) { 
+
+        //     // Если нет вложений
+        //     if (!$node->parent_id) {
+        //         $items_cat[$id] = $items_cat->push($node);
+        //     } else { 
+
+        //         // Если есть потомки то перебераем массив
+        //         $albums_categories[$node->parent_id]['children'][$id] = &$node;
+        //     }
+        // }
+
+        // dd($items_cat);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
         // Получаем массив с вложенными элементами дял отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
-        $albums_categories_tree = get_index_tree_with_rights($albums_categories, $user);
+        // $albums_categories_tree = get_index_tree_with_rights($albums_categories, $user);
+        // dd($albums_categories_tree);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('albums_categories.category-list', ['albums_categories_tree' => $albums_categories_tree, 'id' => $request->id]);
+            return view('includes.menu-views.enter', ['grouped_items' => $albums_categories, 'class' => 'App\AlbumsCategory', 'entity' => $this->entity_name, 'type' => 'modal', 'id' => $request->id]);
         }
 
-        // dd($albums_categories_tree);
-
+        $entity = $this->entity_name;
+        
         // Отдаем на шаблон
-        return view('albums_categories.index', compact('albums_categories_tree', 'page_info'));
+        return view('albums_categories.index', compact('albums_categories', 'page_info', 'entity'));
     }
 
     public function create(Request $request)

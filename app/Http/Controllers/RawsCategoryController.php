@@ -56,26 +56,29 @@ class RawsCategoryController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
-        ->get();
+        ->get()
+        ->groupBy('parent_id');
         // dd($raws_categories);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
         // Получаем массив с вложенными элементами дял отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
-        $raws_categories_tree = get_index_tree_with_rights($raws_categories, $user);
+        // $raws_categories_tree = get_index_tree_with_rights($raws_categories, $user);
         // dd($raws_categories_tree);
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('raws_categories.category-list', ['raws_categories_tree' => $raws_categories_tree, 'id' => $request->id]);
+            return view('includes.menu-views.enter', ['grouped_items' => $raws_categories, 'class' => 'App\RawsCategory', 'entity' => $this->entity_name, 'type' => 'edit', 'id' => $request->id]);
         }
 
+        $entity = $this->entity_name;
+
         // Инфо о странице
-        $page_info = pageInfo('raws_categories');
+        $page_info = pageInfo($this->entity_name);
         // dd($page_info);
 
-        return view('raws_categories.index', ['raws_categories_tree' => $raws_categories_tree, 'page_info' => $page_info]);
+        return view('raws_categories.index', compact('raws_categories', 'page_info', 'entity'));
     }
 
     public function create(Request $request)

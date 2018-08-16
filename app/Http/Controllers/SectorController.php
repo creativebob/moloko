@@ -48,7 +48,8 @@ class SectorController extends Controller
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
-        ->get();
+        ->get()
+        ->groupBy('parent_id');
 
         // dd($sectors);
 
@@ -74,7 +75,7 @@ class SectorController extends Controller
         $user = $request->user();
 
         // Получаем массив с вложенными элементами для отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
-        $sectors_tree = get_index_tree_with_rights($sectors, $user);
+        // $sectors_tree = get_index_tree_with_rights($sectors, $user);
         // dd($sectors_tree);
 
         // Инфо о странице
@@ -82,10 +83,13 @@ class SectorController extends Controller
         
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('sectors.category-list', ['sectors_tree' => $sectors_tree, 'id' => $request->id]);
+            return view('includes.menu-views.enter', ['grouped_items' => $sectors, 'class' => 'App\Sector', 'entity' => $this->entity_name, 'type' => 'modal', 'id' => $request->id]);
         }
 
-        return view('sectors.index', compact('sectors_tree', 'page_info', 'filter'));
+        $entity = $this->entity_name;
+
+        // Отдаем на шаблон
+        return view('sectors.index', compact('sectors', 'page_info', 'filter', 'entity'));
     }
 
 
