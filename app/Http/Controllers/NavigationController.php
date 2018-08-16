@@ -107,71 +107,73 @@ class NavigationController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        $navigation_id = [];
-        $navigations_tree = [];
-        $navigations = $site->navigations->keyBy('id');
+        // $navigation_id = [];
+        // $navigations_tree = [];
+        $navigations = $site->navigations;
 
-        foreach ($navigations as $navigation) {
-            $navigation_id[$navigation->id]['menus'] = $navigation->menus->keyBy('id')->toArray();
+        // foreach ($navigations as $navigation) {
+        //     $navigation_id[$navigation->id]['menus'] = $navigation->menus->keyBy('id')->toArray();
 
-            // Проверяем права на редактирование и удаление
-            foreach ($navigation_id[$navigation->id]['menus'] as $id => &$menu) {
+        //     // Проверяем права на редактирование и удаление
+        //     foreach ($navigation_id[$navigation->id]['menus'] as $id => &$menu) {
 
-                $edit = 0;
-                $delete = 0;
+        //         $edit = 0;
+        //         $delete = 0;
 
-                if ($user->can('update', $navigation->menus->where('id', $id)->first())) {
-                    $edit = 1;
-                }
+        //         if ($user->can('update', $navigation->menus->where('id', $id)->first())) {
+        //             $edit = 1;
+        //         }
 
-                if ($user->can('delete', $navigation->menus->where('id', $id)->first())) {
-                    $delete = 1;
-                }
+        //         if ($user->can('delete', $navigation->menus->where('id', $id)->first())) {
+        //             $delete = 1;
+        //         }
 
-                $navigation_id[$navigation->id]['menus'][$id]['edit'] = $edit;
-                $navigation_id[$navigation->id]['menus'][$id]['delete'] = $delete;
+        //         $navigation_id[$navigation->id]['menus'][$id]['edit'] = $edit;
+        //         $navigation_id[$navigation->id]['menus'][$id]['delete'] = $delete;
 
-                // dd($navigation->menus->where('id', $id));
+        //         // dd($navigation->menus->where('id', $id));
 
-                // Функция построения дерева из массива от Tommy Lacroix
-                // Если нет вложений
-                if (!$menu['parent_id']){
-                    $navigations_tree[$navigation->id]['menus'][$id] = &$menu;
-                } else { 
+        //         // Функция построения дерева из массива от Tommy Lacroix
+        //         // Если нет вложений
+        //         if (!$menu['parent_id']){
+        //             $navigations_tree[$navigation->id]['menus'][$id] = &$menu;
+        //         } else { 
 
-                // Если есть потомки то перебераем массив
-                    $navigation_id[$navigation->id]['menus'][$menu['parent_id']]['children'][$id] = &$menu;
-                }
-            }
+        //         // Если есть потомки то перебераем массив
+        //             $navigation_id[$navigation->id]['menus'][$menu['parent_id']]['children'][$id] = &$menu;
+        //         }
+        //     }
 
-            // Записываем даныне навигации
-            $navigations_tree[$navigation->id]['id'] = $navigation->id;
-            $navigations_tree[$navigation->id]['name'] = $navigation->name;
-            $navigations_tree[$navigation->id]['system_item'] = $navigation->system_item;
-            $navigations_tree[$navigation->id]['display'] = $navigation->display;
-            $navigations_tree[$navigation->id]['moderation'] = $navigation->moderation;
-            $navigations_tree[$navigation->id]['navigations_category'] = $navigation->navigations_category;
-            $navigations_tree[$navigation->id]['menus_count'] = $navigation->menus_count;
+        //     // Записываем даныне навигации
+        //     $navigations_tree[$navigation->id]['id'] = $navigation->id;
+        //     $navigations_tree[$navigation->id]['name'] = $navigation->name;
+        //     $navigations_tree[$navigation->id]['system_item'] = $navigation->system_item;
+        //     $navigations_tree[$navigation->id]['display'] = $navigation->display;
+        //     $navigations_tree[$navigation->id]['moderation'] = $navigation->moderation;
+        //     $navigations_tree[$navigation->id]['navigations_category'] = $navigation->navigations_category;
+        //     $navigations_tree[$navigation->id]['menus_count'] = $navigation->menus_count;
 
-            // Проверяем права на редактирование и удаление навигации
-            $edit = 0;
-            $delete = 0;
+        //     // Проверяем права на редактирование и удаление навигации
+        //     $edit = 0;
+        //     $delete = 0;
 
-            if ($user->can('update', $navigation)) {
-                $edit = 1;
-            }
+        //     if ($user->can('update', $navigation)) {
+        //         $edit = 1;
+        //     }
 
-            if ($user->can('delete', $navigation)) {
-                $delete = 1;
-            }
+        //     if ($user->can('delete', $navigation)) {
+        //         $delete = 1;
+        //     }
 
-            $navigations_tree[$navigation->id]['edit'] = $edit;
-            $navigations_tree[$navigation->id]['delete'] = $delete;
-        }
+        //     $navigations_tree[$navigation->id]['edit'] = $edit;
+        //     $navigations_tree[$navigation->id]['delete'] = $delete;
+        // }
         // dd($navigations_tree);
 
-        $navigations = $site->navigations->pluck('name', 'id');
+        // $navigations = $site->navigations->pluck('name', 'id');
         $pages_list = $site->pages->pluck('name', 'id');
+
+        $entity = $this->entity_name;
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -181,10 +183,10 @@ class NavigationController extends Controller
 
         // После записи переходим на созданный пункт меню
         if($request->ajax()) {
-            return view('navigations.navigations-list', ['navigations_tree' => $navigations_tree, 'item' => $request->item, 'id' => $request->id]); 
+            return view('navigations.navigations-list', ['navigations' => $navigations, 'item' => $request->item, 'id' => $request->id, 'class' => 'App\Navigation', 'entity' => $entity, 'type' => 'modal']); 
         }
 
-        return view('navigations.index', compact('site', 'navigations_tree', 'page_info' , 'parent_page_info', 'pages_list', 'alias', 'menus', 'navigations'));
+        return view('navigations.index', compact('site', 'page_info' , 'parent_page_info', 'pages_list', 'alias', 'menus', 'navigations', 'entity'));
     }
 
 

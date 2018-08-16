@@ -84,7 +84,10 @@ class DepartmentController extends Controller
         ->systemItem($answer_departments) // Фильтр по системным записям
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
-        ->get();
+        ->get()
+        ->groupBy('parent_id');
+
+        // dd($departments);
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
@@ -105,84 +108,86 @@ class DepartmentController extends Controller
         // --------------------------------------------------------------------------------------------------------------------------------------
         
         // Создаем масив где ключ массива является ID меню
-        $departments_rights = [];
-        $departments_rights = $departments->keyBy('id');
+        // $departments_rights = [];
+        // $departments_rights = $departments->keyBy('id');
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
         // Проверяем прапва на редактирование и удаление
-        $departments_id = [];
+        // $departments_id = [];
 
-        foreach ($departments_rights as $department) {
-            $edit = 0;
-            $delete = 0;
+        // foreach ($departments_rights as $department) {
+        //     $edit = 0;
+        //     $delete = 0;
 
-            if ($user->can('update', $department)) {
-                $edit = 1;
-            }
+        //     if ($user->can('update', $department)) {
+        //         $edit = 1;
+        //     }
 
-            if ($user->can('delete', $department)) {
-                $delete = 1;
-            }
+        //     if ($user->can('delete', $department)) {
+        //         $delete = 1;
+        //     }
 
-            $department_right = $department->toArray();
-            $departments_id[$department_right['id']] = $department_right;
-            $departments_id[$department_right['id']]['edit'] = $edit;
-            $departments_id[$department_right['id']]['delete'] = $delete;
+        //     $department_right = $department->toArray();
+        //     $departments_id[$department_right['id']] = $department_right;
+        //     $departments_id[$department_right['id']]['edit'] = $edit;
+        //     $departments_id[$department_right['id']]['delete'] = $delete;
 
-            // Проверяем права на удаление
-            foreach ($department->staff as $id => $staffer) {
-                $del_staff = 0;
+        //     // Проверяем права на удаление
+        //     foreach ($department->staff as $id => $staffer) {
+        //         $del_staff = 0;
 
-                if ($user->can('delete', $staffer)) {
-                    $del_staff = 1;
-                }
+        //         if ($user->can('delete', $staffer)) {
+        //             $del_staff = 1;
+        //         }
 
-                $departments_id[$department_right['id']]['staff'][$id]['delete'] = $del_staff;
-            }
-        }
-        // dd($departments_id);
+        //         $departments_id[$department_right['id']]['staff'][$id]['delete'] = $del_staff;
+        //     }
+        // }
+        // // dd($departments_id);
 
-        // Функция построения дерева из массива от Tommy Lacroix
-        $departments_tree = [];
+        // // Функция построения дерева из массива от Tommy Lacroix
+        // $departments_tree = [];
 
-        foreach ($departments_id as $id => &$node) {   
+        // foreach ($departments_id as $id => &$node) {   
 
-            // Если нет вложений
-            if (!$node['parent_id']){
+        //     // Если нет вложений
+        //     if (!$node['parent_id']){
 
-                $departments_tree[$id] = &$node;
-            } else { 
+        //         $departments_tree[$id] = &$node;
+        //     } else { 
 
-                // Если есть потомки то перебераем массив
-                $departments_id[$node['parent_id']]  ['children'][$id] = &$node;
-            }
-        }
+        //         // Если есть потомки то перебераем массив
+        //         $departments_id[$node['parent_id']]  ['children'][$id] = &$node;
+        //     }
+        // }
 
-        foreach ($departments_tree as $department) {
-            $count = 0;
+        // foreach ($departments_tree as $department) {
+        //     $count = 0;
 
-            if (isset($department['children'])) {
-                $count = count($department['children']) + $count;
-            }
-            if (isset($department['staff'])) {
-                $count = count($department['staff']) + $count;
-            }
-            $departments_tree[$department['id']]['count'] = $count;
-            // dd($department);
-        }
+        //     if (isset($department['children'])) {
+        //         $count = count($department['children']) + $count;
+        //     }
+        //     if (isset($department['staff'])) {
+        //         $count = count($department['staff']) + $count;
+        //     }
+        //     $departments_tree[$department['id']]['count'] = $count;
+        //     // dd($department);
+        // }
         // dd($departments_tree);
+
+        $entity = $this->entity_name;
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
         // После записи переходим на созданный пункт меню
         if ($request->ajax()) {
-            return view('departments.filials-list', ['departments_tree' => $departments_tree, 'item' => $request->item, 'id' => $request->id]); 
+            return view('departments.enter', ['grouped_items' => $departments, 'class' => 'App\Department', 'entity' => $this->entity_name, 'type' => 'edit', 'id' => $request->id]);
         }
 
-        return view('departments.index', compact('departments_tree', 'positions', 'page_info', 'pages', 'departments', 'filter'));
+        return view('departments.index', compact('departments', 'page_info', 'pages', 'departments', 'filter', 'entity'));
     }
 
 
@@ -345,7 +350,7 @@ class DepartmentController extends Controller
 
         $department = new Department;
 
-        if (isset($request->address)) {
+        if (isset($request->city_name)) {
 
             // Пишем локацию
             $location = new Location;

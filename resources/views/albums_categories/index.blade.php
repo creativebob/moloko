@@ -18,14 +18,16 @@
 @section('content')
 {{-- Список --}}
 <div class="grid-x">
-  <div class="small-12 cell">
-    <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="albums_categories">
-    @if($albums_categories_tree)
-    {{-- Шаблон вывода и динамического обновления --}}
-    @include('albums_categories.category-list', $albums_categories_tree)
-    @endif
-    </ul>
-  </div>
+    <div class="small-12 cell">
+        <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="albums_categories">
+            @if($albums_categories)
+
+            {{-- Шаблон вывода и динамического обновления --}}
+            @include('includes.menu-views.enter', ['grouped_items' => $albums_categories, 'class' => 'App\AlbumsCategory', 'entity' => $entity, 'type' => 'modal'])
+
+            @endif
+        </ul>
+    </div>
 </div>
 @endsection
 
@@ -52,22 +54,22 @@
 @include('includes.scripts.ajax-system')
 
 <script type="text/javascript">
-  $(function() {
-  // Функция появления окна с ошибкой
-  function showError (msg) {
-    var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
-    return error;
-  };
-  
-  // Обозначаем таймер для проверки
-  var timerId;
-  var time = 400;
+    $(function() {
+    // Функция появления окна с ошибкой
+    function showError (msg) {
+        var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
+        return error;
+    };
+
+    // Обозначаем таймер для проверки
+    var timerId;
+    var time = 400;
 
   // Первая буква заглавная
   function newParagraph (name) {
     name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
     return name;
-  };
+};
 
   // ------------------- Проверка на совпадение имени --------------------------------------
   function albumsCategoryCheck (name, submit, db) {
@@ -88,14 +90,14 @@
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "/admin/albums_category_check",
-        type: "POST",
-        data: {name: name},
-        beforeSend: function () {
+      },
+      url: "/admin/albums_category_check",
+      type: "POST",
+      data: {name: name},
+      beforeSend: function () {
           $('.find-status').addClass('icon-load');
-        },
-        success: function(date){
+      },
+      success: function(date){
           $('.find-status').removeClass('icon-load');
           var result = $.parseJSON(date);
           // Если ошибка
@@ -103,22 +105,22 @@
             $(submit).prop('disabled', true);
             $('.item-error').css('display', 'block');
             $(db).val(0);
-          } else {
+        } else {
             // Выводим пришедшие данные на страницу
             $(submit).prop('disabled', false);
             $('.item-error').css('display', 'none');
             $(db).val(1);
-          };
-        }
-      });
-    };
+        };
+    }
+});
+  };
     // Удаляем все значения, если символов меньше 3х
     if (lenname <= 3) {
       $(submit).prop('disabled', false);
       $('.item-error').css('display', 'none');
       $(db).val(0);
-    };
   };
+};
 
   // ---------------------------- Категория -----------------------------------------------
 
@@ -128,16 +130,16 @@
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/albums_categories/create',
-      type: "GET",
-      success: function(html){
+    },
+    url: '/admin/albums_categories/create',
+    type: "GET",
+    success: function(html){
         $('#modal').html(html);
         $('#first-add').foundation();
         $('#first-add').foundation('open');
-      }
-    }); 
-  });
+    }
+}); 
+});
 
   // Проверка существования
   $(document).on('keyup', '#form-first-add .name-field', function() {
@@ -151,8 +153,8 @@
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
       albumsCategoryCheck (name, submit, db)
-    }, time); 
-  });
+  }, time); 
+});
 
   // ----------- Изменение -------------
 
@@ -166,16 +168,16 @@
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/admin/albums_categories/" + id + "/edit",
-      type: "GET",
-      success: function(html) {
+    },
+    url: "/admin/albums_categories/" + id + "/edit",
+    type: "GET",
+    success: function(html) {
         $('#modal').html(html);
         $('#first-edit').foundation();
         $('#first-edit').foundation('open');
-      }
-    });
-  });
+    }
+});
+});
 
   // Проверка существования
   $(document).on('keyup', '#form-first-edit .name-field', function() {
@@ -189,8 +191,8 @@
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
       albumsCategoryCheck (name, submit, db)
-    }, time); 
-  });
+  }, time); 
+});
 
   // ------------------------------- Сектор --------------------------------------------
 
@@ -201,24 +203,24 @@
     var parent;
     if ($(this).closest('.first-item').hasClass('parent')) {
       parent = $(this).closest('.item').attr('id').split('-')[1];
-    } else {
+  } else {
       parent = $(this).closest('.item').attr('id').split('-')[1];
-    };
-    
-    $.ajax({
+  };
+
+  $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/albums_categories/create',
-      type: "GET",
-      data: {parent_id: parent},
-      success: function(html){
+    },
+    url: '/admin/albums_categories/create',
+    type: "GET",
+    data: {parent_id: parent},
+    success: function(html){
         $('#modal').html(html);
         $('#medium-add').foundation();
         $('#medium-add').foundation('open');
-      }
-    }); 
-  });
+    }
+}); 
+});
 
   // Проверка существования
   $(document).on('keyup', '#form-medium-add .name-field', function() {
@@ -232,8 +234,8 @@
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
       albumsCategoryCheck (name, submit, db)
-    }, time); 
-  });
+  }, time); 
+});
 
   // ----------- Изменение -------------
   // Открываем модалку
@@ -245,16 +247,16 @@
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/admin/albums_categories/" + id + "/edit",
-      type: "GET",
-      success: function(html) {
+    },
+    url: "/admin/albums_categories/" + id + "/edit",
+    type: "GET",
+    success: function(html) {
         $('#modal').html(html);
         $('#medium-edit').foundation();
         $('#medium-edit').foundation('open');
-      }
-    });
-  });
+    }
+});
+});
 
   // Проверка существования
   $(document).on('keyup', '#form-medium-edit .name-field', function() {
@@ -268,8 +270,8 @@
     clearTimeout(timerId);   
     timerId = setTimeout(function() {
       albumsCategoryCheck (name, submit, db)
-    }, time); 
-  });
+  }, time); 
+});
 
   // ------------------------ Кнопка добавления ---------------------------------------
   $(document).on('click', '.submit-add', function(event) {
@@ -280,16 +282,16 @@
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/albums_categories',
-      type: "POST",
-      data: $(this).closest('form').serialize(),
-      success:function(html) {
+    },
+    url: '/admin/albums_categories',
+    type: "POST",
+    data: $(this).closest('form').serialize(),
+    success:function(html) {
         $('#content').html(html);
         Foundation.reInit($('#content'));
-      }
-    });
-  });
+    }
+});
+});
 
   // ------------------------ Кнопка обновления ---------------------------------------
   $(document).on('click', '.submit-edit', function(event) {
@@ -301,21 +303,21 @@
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/albums_categories/' + id,
-      type: "PATCH",
-      data: $(this).closest('form').serialize(),
-      success:function(html) {
+    },
+    url: '/admin/albums_categories/' + id,
+    type: "PATCH",
+    data: $(this).closest('form').serialize(),
+    success:function(html) {
         $('#content').html(html);
         Foundation.reInit($('#content'));
-      }
-    });
-  });
+    }
+});
+});
 
   // ---------------------------------- Закрытие модалки -----------------------------------
   $(document).on('click', '.icon-close-modal, .submit-add, .submit-edit', function() {
     $(this).closest('.reveal-overlay').remove();
-  });
+});
 });
 </script>
 @endsection

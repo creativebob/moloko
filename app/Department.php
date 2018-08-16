@@ -108,6 +108,12 @@ class Department extends Model
         return $this->hasMany('App\Staffer');
     }
 
+    // Получаем вложенные отделы
+    public function childs()
+    {
+        return $this->hasMany('App\Department', 'parent_id', 'id');
+    }
+
     // Получаем город.
     public function city()
     {

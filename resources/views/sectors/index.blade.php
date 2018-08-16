@@ -20,9 +20,11 @@
 <div class="grid-x">
   <div class="small-12 cell">
     <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="sectors">
-    @if($sectors_tree)
+    @if($sectors)
+
     {{-- Шаблон вывода и динамического обновления --}}
-    @include('sectors.category-list', $sectors_tree)
+    @include('includes.menu-views.enter', ['grouped_items' => $sectors, 'class' => 'App\Sector', 'entity' => $entity, 'type' => 'modal'])
+
     @endif
     </ul>
   </div>

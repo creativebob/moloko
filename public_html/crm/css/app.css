@@ -459,6 +459,7 @@ span.wrap-label-checkboxer {
   width: 32px;
   height: 32px;
   background: url(sprites/sprite_menu.png) no-repeat;
+  transition: opacity ease 0.3s;
 }
 .sprite:focus {
   outline: none;
@@ -470,6 +471,7 @@ span.wrap-label-checkboxer {
   width: 16px;
   height: 16px;
   background: url(sprites/sprite_16.png) no-repeat;
+  transition: opacity ease 0.3s;
 }
 .sprite-16:focus {
   outline: none;
@@ -554,17 +556,28 @@ a.icon-list-edit {
 }
 
 .icon-system-lock {
-  background-position: -32px -960px;
   opacity: 0.2;
+  transition: opacity ease 0.3s;
+}
+.icon-system-lock.black {
+  background-position: -32px -960px;
+}
+.icon-system-lock.white {
+  background-position: -96px -960px;
 }
 .icon-system-lock:hover {
   opacity: 1;
 }
 
 .icon-system-unlock {
-  background-position: -64px -960px;
   opacity: 0;
   transition: opacity ease 0.3s;
+}
+.icon-system-unlock.black {
+  background-position: -64px -960px;
+}
+.icon-system-unlock.white {
+  background-position: -160px -960px;
 }
 .icon-system-unlock:hover {
   opacity: 1;
@@ -578,23 +591,37 @@ tr:hover .icon-display-show:hover, tr:hover .icon-system-unlock:hover {
 }
 
 .icon-system-template {
-  background-position: -32px -928px;
   opacity: 0.2;
 }
-.icon-system-template:hover {
-  opacity: 1;
+.icon-system-template.black {
+  background-position: -32px -928px;
+}
+.icon-system-template.white {
+  background-position: -128px -928px;
 }
 
 .icon-system-programm {
   background-position: -64px -896px;
   opacity: 0.2;
-  margin-left: 1rem;
 }
 
-.icon-system-programm:hover {
-  background-position: -64px -896px;
+.icon-sync {
+  background-position: 0px -1088px;
+  float: left;
+  margin-right: 0.6rem;
+  opacity: 0.4;
+  transition: opacity 0.5s ease;
+}
+.icon-sync:hover {
   opacity: 1;
-  margin-left: 1rem;
+}
+
+.active-filter {
+  background-position: -32px -352px !important;
+}
+.active-filter:hover {
+  background-position: -32px -352px;
+  opacity: 0.7;
 }
 
 .icon-add {
@@ -614,17 +641,6 @@ tr:hover .icon-display-show:hover, tr:hover .icon-system-unlock:hover {
 .icon-filter:hover {
   background-position: -32px -352px;
   opacity: 0.7;
-}
-
-.icon-sync {
-  background-position: 0px -1088px;
-  float: left;
-  margin-right: 0.6rem;
-  opacity: 0.4;
-  transition: opacity 0.5s ease;
-}
-.icon-sync:hover {
-  opacity: 1;
 }
 
 .active-filter {
@@ -1751,13 +1767,18 @@ tr:hover .icon-display-show:hover, tr:hover .icon-system-unlock:hover {
   right: 2rem;
   transition: 0.2s ease opacity;
   cursor: pointer;
-  z-index: -1;
   top: 0;
-  opacity: 0;
 }
-.content .content-list .icon-list div {
+.content .content-list .icon-list .controls-list, .content .content-list .icon-list .actions-list {
+  display: inline-block;
+}
+.content .content-list .icon-list .controls-list div, .content .content-list .icon-list .actions-list div {
   display: inline-block;
   width: 32px;
+}
+.content .content-list .icon-list .actions-list {
+  z-index: -1;
+  opacity: 0;
 }
 .content .content-list .drop-list {
   display: inline-block;
@@ -1835,8 +1856,10 @@ tr:hover .icon-display-show:hover, tr:hover .icon-system-unlock:hover {
   opacity: 1;
 }
 .content .content-list .first-active > .icon-list {
-  opacity: 1;
   padding: 8px 0;
+}
+.content .content-list .first-active > .icon-list .actions-list {
+  opacity: 1;
   z-index: 5;
 }
 .content .content-list .first-active > .icon-list div .sprite:focus {
@@ -1899,7 +1922,7 @@ tr:hover .icon-display-show:hover, tr:hover .icon-system-unlock:hover {
   background: rgba(0, 0, 0, 0.2);
   opacity: 1;
 }
-.content .content-list .medium-list .medium-active > .icon-list {
+.content .content-list .medium-list .medium-active > .icon-list .actions-list {
   opacity: 1;
   z-index: 5;
 }
@@ -1948,7 +1971,7 @@ tr:hover .icon-display-show:hover, tr:hover .icon-system-unlock:hover {
   color: #000000;
   padding: 10px 6.5rem 10px 3rem;
 }
-.content .content-list .medium-list .medium-as-last:hover .icon-list {
+.content .content-list .medium-list .medium-as-last:hover .icon-list .actions-list {
   opacity: 1;
   z-index: 5;
 }
