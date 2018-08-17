@@ -603,6 +603,14 @@ Route::prefix('/sites/{alias}')->group(function () {
 	Route::resource('/news', 'NewsController')->middleware('auth');
   	// Проверка на существование новости
 	Route::post('/news_check', 'NewsController@news_check')->middleware('auth');
+
+	// ----------------------------------------- Каталог ------------------------------------------
+
+	// Основные методы
+	Route::resource('/catalogs', 'CatalogController')->middleware('auth');
+
+  	// Проверка на существование страницы
+	Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
 });
 
 // Сортировка
