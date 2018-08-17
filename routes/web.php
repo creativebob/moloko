@@ -317,6 +317,68 @@ Route::post('/companies_system_item', 'CompanyController@ajax_system_item')->mid
 // Отображение на сайте
 Route::post('/companies_display', 'CompanyController@ajax_display')->middleware('auth');
 
+
+// --------------------------------------- Лиды -----------------------------------------------
+
+// Основные методы
+Route::resource('leads', 'LeadController')->middleware('auth');
+// Сортировка
+Route::post('/leads_sort', 'LeadController@ajax_sort')->middleware('auth');
+// Системная запись
+Route::post('/leads_system_item', 'LeadController@ajax_system_item')->middleware('auth');
+// Отображение на сайте
+Route::post('/leads_display', 'LeadController@ajax_display')->middleware('auth');
+
+
+// --------------------------------------- Рекламные кампании -----------------------------------------------
+
+// Основные методы
+Route::resource('campaigns', 'CampaignController')->middleware('auth');
+// Сортировка
+Route::post('/campaigns_sort', 'CampaignController@ajax_sort')->middleware('auth');
+// Системная запись
+Route::post('/campaigns_system_item', 'CampaignController@ajax_system_item')->middleware('auth');
+// Отображение на сайте
+Route::post('/campaigns_display', 'CampaignController@ajax_display')->middleware('auth');
+
+
+// --------------------------------------- Расходы -----------------------------------------------
+
+// Основные методы
+Route::resource('expenses', 'ExpenseController')->middleware('auth');
+// Сортировка
+Route::post('/expenses_sort', 'ExpenseController@ajax_sort')->middleware('auth');
+// Системная запись
+Route::post('/expenses_system_item', 'ExpenseController@ajax_system_item')->middleware('auth');
+// Отображение на сайте
+Route::post('/expenses_display', 'ExpenseController@ajax_display')->middleware('auth');
+
+
+// --------------------------------------- Зарплаты -----------------------------------------------
+
+// Основные методы
+Route::resource('salaries', 'SalaryController')->middleware('auth');
+// Сортировка
+Route::post('/salaries_sort', 'SalaryController@ajax_sort')->middleware('auth');
+// Системная запись
+Route::post('/salaries_system_item', 'SalaryController@ajax_system_item')->middleware('auth');
+// Отображение на сайте
+Route::post('/salaries_display', 'SalaryController@ajax_display')->middleware('auth');
+
+
+
+// --------------------------------------- Социальные сети -----------------------------------------------
+
+// Основные методы
+Route::resource('social_networks', 'SocialNetworkController')->middleware('auth');
+// Сортировка
+Route::post('/social_networks_sort', 'SocialNetworkController@ajax_sort')->middleware('auth');
+// Системная запись
+Route::post('/social_networks_system_item', 'SocialNetworkController@ajax_system_item')->middleware('auth');
+// Отображение на сайте
+Route::post('/social_networks_display', 'SocialNetworkController@ajax_display')->middleware('auth');
+
+
 // -------------------------------------- Поставщики -----------------------------------------------
 
 // Основные методы

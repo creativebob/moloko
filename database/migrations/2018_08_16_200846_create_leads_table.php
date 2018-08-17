@@ -25,6 +25,9 @@ class CreateLeadsTable extends Migration
             $table->string('name', 20)->nullable()->index()->comment('Имя лида');
             $table->text('description')->nullable()->comment('Описание для лида');
 
+            $table->integer('badget')->nullable()->unsigned()->comment('Предполагаемая сумма сделки');
+            $table->string('case_number', 20)->nullable()->index()->comment('Номер обращения по правилам компании');
+
             $table->bigInteger('phone')->unique()->nullable()->comment('Телефон компании');
             $table->bigInteger('extra_phone')->nullable()->comment('Дополнительный телефон');
             $table->string('email')->nullable()->comment('Почта');

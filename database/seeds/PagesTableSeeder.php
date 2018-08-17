@@ -400,6 +400,7 @@ class PagesTableSeeder extends Seeder
                 'display' => null,
             ],
 
+            // 35
             [
                 'name' => 'Группы сырья',
                 'site_id' => 1,
@@ -412,6 +413,70 @@ class PagesTableSeeder extends Seeder
                 'display' => null,
             ],
 
+            // 36
+            [
+                'name' => 'Операционные расходы',
+                'site_id' => 1,
+                'title' => 'Операционные расходы',
+                'description' => 'Операционные расходы',
+                'alias' => 'expenses',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+            // 37
+            [
+                'name' => 'Зарплаты',
+                'site_id' => 1,
+                'title' => 'Зарплаты',
+                'description' => 'Зарплаты',
+                'alias' => 'salaries',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+            // 38
+            [
+                'name' => 'Лиды',
+                'site_id' => 1,
+                'title' => 'Лиды',
+                'description' => 'Обращения в компанию',
+                'alias' => 'leads',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+            // 39
+            [
+                'name' => 'Рекламные кампании',
+                'site_id' => 1,
+                'title' => 'Рекламные кампании',
+                'description' => 'Рекламные кампании',
+                'alias' => 'campaigns',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+            // 40
+            [
+                'name' => 'Социальные сети',
+                'site_id' => 1,
+                'title' => 'Социальные сети',
+                'description' => 'Социальные сети',
+                'alias' => 'social_networks',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
 
             // [
             //     'name' => 'Категории продукции',

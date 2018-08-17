@@ -392,7 +392,7 @@ class MenusTableSeeder extends Seeder
         ],
 
         [
-            'name' => 'Тестовая',
+            'name' => 'Скрипты',
             'icon' => null,
             'alias' => 'admin/home',
             'parent_id' => 28,
@@ -402,7 +402,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 3,
         ],
         
         [
@@ -525,7 +525,7 @@ class MenusTableSeeder extends Seeder
             'system_item' => 1,
             'author_id' => 1,
             'display' => 1,
-            'sort' => null,
+            'sort' => 2,
         ],
         [
             'name' => 'Производители',
@@ -583,7 +583,7 @@ class MenusTableSeeder extends Seeder
             'sort' => 9,
         ],
 
-        // Финансы
+        // Финансы 43
         [
             'name' => 'Финансы',
             'icon' => 'icon-finance',
@@ -598,6 +598,95 @@ class MenusTableSeeder extends Seeder
             'sort' => 5,
         ],
 
+        // 44
+        [
+            'name' => 'Операционные расходы',
+            'icon' => null,
+            'alias' => 'admin/expenses',
+            'parent_id' => 43,
+            'page_id' => 36,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => 1,
+        ],
+
+        // 45
+        [
+            'name' => 'Зарплаты',
+            'icon' => null,
+            'alias' => 'admin/salaries',
+            'parent_id' => 43,
+            'page_id' => 37,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => 2,
+        ],
+
+        // 46
+        [
+            'name' => 'Реклама',
+            'icon' => null,
+            'alias' => 'null',
+            'parent_id' => 11,
+            'page_id' => null,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
+        // 47
+        [
+            'name' => 'Рекламные кампании',
+            'icon' => null,
+            'alias' => 'admin/campaigns',
+            'parent_id' => 46,
+            'page_id' => 39,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => 1,
+        ],
+
+        // 48
+        [
+            'name' => 'Социальные сети',
+            'icon' => null,
+            'alias' => 'admin/social_networks',
+            'parent_id' => 46,
+            'page_id' => 40,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => 2,
+        ],
+
+        // 49
+        [
+            'name' => 'Лиды',
+            'icon' => null,
+            'alias' => 'admin/leads',
+            'parent_id' => 28,
+            'page_id' => 40,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => 1,
+        ],
 
         // Остальное
                 // [
