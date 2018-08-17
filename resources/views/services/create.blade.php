@@ -34,8 +34,6 @@
 
 			</div>
 
-
-
 			{{-- Чекбокс отображения на сайте
 				@can ('publisher', App\Service::class)
 				<div class="small-12 cell checkbox">

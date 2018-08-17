@@ -15,6 +15,8 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use App\Scopes\Traits\SuppliersTraitScopes;
 
+// use Illuminate\Support\Facades\Auth;
+
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
     
@@ -26,7 +28,7 @@ use App\Scopes\Filters\BooklistFilter;
 class Service extends Model
 {
 
-    // Включаем кеш
+	// Включаем кеш
     // use Cachable;
 
     use Notifiable;
@@ -46,45 +48,10 @@ class Service extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    // Метрики
-    // public function metrics_values()
-    // {
-    //     return $this->belongsToMany('App\Metric', 'article_values', 'article_id', 'entity_id')->where('entity', 'metrics')->withPivot('entity', 'value');
-    // }
-
-    // // Состав
-    // public function compositions_values()
-    // {
-    //     return $this->belongsToMany('App\Article', 'article_values', 'article_id', 'entity_id')->where('entity', 'articles')->withPivot('entity', 'value');
-    // }
-
-    // public function compositions_values()
-    // {
-    //     return $this->belongsToMany('App\Product', 'article_values', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
-    // }
-
-    // public function compositions()
-    // {
-    //     return $this->belongsToMany('App\Product', 'compositions', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
-    // }
-
-     // Продукт
-    public function services_product()
+    public function services_article()
     {
-        return $this->belongsTo('App\ServicesProduct');
+        return $this->belongsTo('App\ServicesArticle');
     }
-
-    // Производитель
-    // public function manufacturer()
-    // {
-    //     return $this->belongsTo('App\Company', 'manufacturer_id');
-    // }
-
-    //  // Продукт
-    // public function metrics_list($metrics_list)
-    // {
-    //     return $this->belongsToMany('App\Metric', 'article_values', 'article_id', 'entity_id')->where('entity', 'metrics')->wherePivotIn('entity_id', $metrics_list);
-    // }
 
     // Получаем компанию.
     public function company()

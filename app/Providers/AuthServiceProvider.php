@@ -39,9 +39,10 @@ use App\EntitySetting;
 use App\Photo;
 use App\Folder;
 
-use App\Service;
+use App\ServicesArticle;
 use App\ServicesCategory;
 use App\ServicesProduct;
+use App\Service;
 
 use App\Goods;
 use App\GoodsCategory;
@@ -94,6 +95,7 @@ use App\Policies\FolderPolicy;
 use App\Policies\ServicePolicy;
 use App\Policies\ServicesCategoryPolicy;
 use App\Policies\ServicesProductPolicy;
+use App\Policies\ServicesArticlePolicy;
 
 use App\Policies\GoodsPolicy;
 use App\Policies\GoodsCategoryPolicy;
@@ -152,6 +154,7 @@ class AuthServiceProvider extends ServiceProvider
         Service::class => ServicePolicy::class,
         ServicesCategory::class => ServicesCategoryPolicy::class,
         ServicesProduct::class => ServicesProductPolicy::class,
+        ServicesArticle::class => ServicesArticlePolicy::class,
         Goods::class => GoodsPolicy::class,
         GoodsCategory::class => GoodsCategoryPolicy::class,
         GoodsProduct::class => GoodsProductPolicy::class,

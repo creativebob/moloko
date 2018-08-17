@@ -8,12 +8,12 @@
 
 @section('title', 'Редактировать услугу')
 
-@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $service))
+@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $service->services_article))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ услугу &laquo{{ $service->name }}&raquo</h2>
+        <h2 class="header-content">РЕДАКТИРОВАТЬ услугу &laquo{{ $service->services_article->name }}&raquo</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -67,7 +67,7 @@
                             <div class="small-12 medium-6 cell">
 
                                 <label>Название услуги
-                                    {{ Form::text('name', null, ['required']) }}
+                                    {{ Form::text('name', $service->services_article->name, ['required']) }}
                                 </label>
 
                                 <label>Группа
@@ -103,7 +103,7 @@
                                         {{ Form::file('photo') }}
                                     </label>
                                     <div class="text-center">
-                                        <img id="photo" @if (isset($service->photo_id)) src="/storage/{{ $service->company->id }}/media/services/{{ $service->id }}/img/medium/{{ $service->photo->name }}" @endif>
+                                        <img id="photo" @if (isset($service->photo_id)) src="/storage/{{ $service->company_id }}/media/services/{{ $service->id }}/img/medium/{{ $service->photo->name }}" @endif>
                                     </div>
                                 </div>
                             </div>
@@ -125,30 +125,30 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-4 cell">
                                     <label>Удобный (вручную)
-                                        {{ Form::text('manually', null) }}
+                                        {{ Form::text('manually', $service->manually) }}
                                     </label>
                                 </div> 
                                 <div class="small-12 medium-4 cell">
                                     <label>Программный
-                                        {{ Form::text('internal', null, ['required', 'disabled']) }}
+                                        {{ Form::text('internal', $service->services_article->internal, ['required', 'disabled']) }}
                                     </label>
                                 </div>
                                 <div class="small-12 medium-4 cell">
                                     <label>Внешний
-                                        {{ Form::text('external') }}
+                                        {{ Form::text('external', $service->external) }}
                                     </label>
                                 </div>
                             </div>
                         </fieldset>
 
 
-                        @if (($service->services_product->services_category->metrics_count > 0) || ($service->metrics_values_count > 0))
+                        @if (($service->services_article->services_product->services_category->metrics_count > 0) || ($service->metrics_values_count > 0))
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
                             @if ($service->draft == 1)
 
-                            @foreach ($service->services_product->services_category->metrics as $metric)
+                            @foreach ($service->services_article->services_product->services_category->metrics as $metric)
                             @include('services.metrics.metric-input', $metric)
                             @endforeach
 
@@ -208,11 +208,6 @@
                                 <div class="small-12 medium-6 cell">
                                     <label>Себестоимость
                                         {{ Form::number('cost', $service->cost) }}
-                                    </label>
-                                </div>
-                                <div class="small-12 medium-6 cell">
-                                    <label>Цена
-                                        {{ Form::number('price', $service->price) }}
                                     </label>
                                 </div>
                             </div>

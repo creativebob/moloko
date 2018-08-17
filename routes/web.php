@@ -272,6 +272,8 @@ Route::any('/ajax_services_modes', 'ServicesProductController@ajax_modes')->midd
 
 // ---------------------------------- Услуги (Артикулы) -------------------------------------------
 
+Route::any('/services/create', 'ServiceController@create')->middleware('auth');
+
 // Основные методы
 Route::resource('/services', 'ServiceController')->middleware('auth');
 // Route::get('/services/search/{text_fragment}', 'ServiceController@search')->middleware('auth');

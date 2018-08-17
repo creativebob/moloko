@@ -56,9 +56,9 @@ class ServicesProduct extends Model
     }
 
      // Получаем категорию
-    public function services()
+    public function services_articles()
     {
-        return $this->hasMany('App\Service');
+        return $this->hasMany('App\ServicesArticle');
     }
 
     public function photo()
