@@ -500,6 +500,15 @@ class EntitiesTableSeeder extends Seeder
       'author_id' => 1,
     ],
 
+    [
+      'name' => 'Артикулы услуг',
+      'alias' => 'services_articles',
+      'model' => 'ServicesArticle',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
     // [
     //   'name' => 'Рабочий стол',
     //   'alias' => 'dashboard',

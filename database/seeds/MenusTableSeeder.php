@@ -461,9 +461,9 @@ class MenusTableSeeder extends Seeder
             'sort' => null,
         ],
         [
-            'name' => 'Галерея',
+            'name' => 'Каталог',
             'icon' => null,
-            'alias' => 'gallery',
+            'alias' => 'catalogs',
             'parent_id' => null,
             'page_id' => null,
             'navigation_id' => 1,

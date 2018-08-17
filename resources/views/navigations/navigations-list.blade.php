@@ -61,7 +61,7 @@ $id = null;
 
             <div class="del">
                 @can('delete', $navigation)
-                @if(($navigation->system_item != 1) && (!isset($navigation->menus)))
+                @if(($navigation->system_item != 1) && (empty($navigation->menus)))
                 <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
                 @endif
                 @endcan

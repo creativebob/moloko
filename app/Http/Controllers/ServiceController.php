@@ -8,6 +8,7 @@ use App\Service;
 use App\ServicesCategory;
 use App\ServicesMode;
 use App\ServicesProduct;
+use App\ServicesArticle;
 use App\Album;
 use App\AlbumEntity;
 use App\Photo;
@@ -18,8 +19,6 @@ use App\ArticleValue;
 
 // Политика
 use App\Policies\ServicePolicy;
-// use App\Policies\AreaPolicy;
-// use App\Policies\RegionPolicy;
 
 // Куки
 use Illuminate\Support\Facades\Cookie;
@@ -39,7 +38,7 @@ class ServiceController extends Controller
 
     public function index(Request $request)
     {
-        
+
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){
@@ -59,7 +58,7 @@ class ServiceController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------------------------------
 
-        $services = Service::with('author', 'company', 'services_product', 'services_product.services_category')
+        $services = Service::with('author', 'company', 'services_article.services_product.services_category')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -75,11 +74,13 @@ class ServiceController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
+        // dd($services);
+
         // --------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА
         // --------------------------------------------------------------------------------------------------------
 
-        $filter_query = Service::with('author', 'company', 'services_product', 'services_product.services_category')
+        $filter_query = Service::with('author', 'company', 'services_article.services_product.services_category')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -93,11 +94,11 @@ class ServiceController extends Controller
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
 
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', 'services_product', 'external-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'services_product', 'services_product_id', null, 'internal-id-one');
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id', null, 'internal-id-one');
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'products_category', 'products_category_id');
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', 'services_product', 'external-id-one');
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'services_product', 'services_product_id', null, 'internal-id-one');
+        // // $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id', null, 'internal-id-one');
+        // // $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'products_category', 'products_category_id');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
@@ -141,7 +142,7 @@ class ServiceController extends Controller
 
             return view('includes.search', compact('result_search', 'entity_name'));
         } else {
-            
+
             return view('includes.search');
         }
     }
@@ -199,7 +200,6 @@ class ServiceController extends Controller
             
         }
 
-        
         // dd($services_categories);
 
         // dd($request->parent_id);
@@ -306,38 +306,47 @@ class ServiceController extends Controller
             break;
         }
 
-        $service = new Service;
+        $services_article = new ServicesArticle;
 
-        $service->draft = 1;
+        $services_article->services_product_id = $services_product_id;
 
-        $service->services_product_id = $services_product_id;
+        $services_article->company_id = $company_id;
+        $services_article->author_id = $user_id;
 
-        $service->price = $request->price;
+        $services_article->name = $name;
+        $services_article->save();
 
-        $service->company_id = $company_id;
-        $service->author_id = $user_id;
+        if ($services_article) {
 
-        $service->name = $name;
-        $service->save();
+            $service = new Service;
 
-        if ($service) {
+            $service->price = $request->price;
+            $service->company_id = $company_id;
+            $service->author_id = $user_id;
+            $service->draft = 1;
+            $service->services_article()->associate($services_article);
 
-            // Пишем сессию
-            $mass = [
-                'services_category' => $services_category_id,
-            ];
-            Cookie::queue('conditions', $mass, 1440);
+            $service->save();
 
-            if ($request->quickly == 1) {
-                return redirect('/admin/services');
+            if ($service) {
+
+                 // Пишем сессию
+                $mass = [
+                    'services_category' => $services_category_id,
+                ];
+                Cookie::queue('conditions', $mass, 1440);
+
+                if ($request->quickly == 1) {
+                    return redirect('/admin/services');
+                } else {
+                    return redirect('/admin/services/'.$service->id.'/edit'); 
+                }
             } else {
-                return redirect('/admin/services/'.$service->id.'/edit'); 
-            }
-
-
+                abort(403, 'Ошибка записи услуги');
+            } 
 
         } else {
-            abort(403, 'Ошибка записи артикула услуги');
+            abort(403, 'Ошибка записи информации услуги');
         }  
     }
 
@@ -352,6 +361,10 @@ class ServiceController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_services = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+        // $answer_services_articles = operator_right('services_articles', false, 'index');
+
+        // dd($answer_services_infos);
+
         // $service = Service::with(['services_product.services_category' => function ($query) {
         //     $query->with(['metrics.property', 'metrics.property', 'compositions' => function ($query) {
         //         $query->with(['services' => function ($query) {
@@ -361,17 +374,17 @@ class ServiceController extends Controller
         //     ->withCount('metrics', 'compositions');
         // }, 'album.photos', 'company.manufacturers', 'metrics_values', 'compositions_values'])->withCount(['metrics_values', 'compositions_values'])->moderatorLimit($answer_services)->findOrFail($id);
 
-        $service = Service::with(['services_product.services_category', 'album.photos', 'company.manufacturers'])->moderatorLimit($answer_services)->findOrFail($id);
-        // dd($service->album->photos);
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        $service = Service::with(['services_article.services_product.services_category', 'album.photos', 'company.manufacturers', 'photo'])->moderatorLimit($answer_services)->findOrFail($id);
+        // dd($service);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $service);
 
         $manufacturers_list = $service->company->manufacturers->pluck('name', 'id');
         // dd($manufacturers_list);
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_services_categories = operator_right('services_categories', false, 'index');
@@ -388,7 +401,7 @@ class ServiceController extends Controller
         ->toArray();
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
-        $services_categories_list = get_select_tree($services_categories, $service->services_product->services_category_id, null, null);
+        $services_categories_list = get_select_tree($services_categories, $service->services_article->services_product->services_category_id, null, null);
         // dd($services_categories_list);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -396,7 +409,7 @@ class ServiceController extends Controller
         // dd($answer_services_products);
 
         // Услуги
-        $services_products_list = ServicesProduct::where('services_category_id', $service->services_product->services_category_id)
+        $services_products_list = ServicesProduct::where('services_category_id', $service->services_article->services_product->services_category_id)
         ->orderBy('sort', 'asc')
         ->get()
         ->pluck('name', 'id');
@@ -497,7 +510,7 @@ class ServiceController extends Controller
         // $type = $service->services_product->services_category->type;
 
         // Инфо о странице
-        $page_info = pageInfo('services');
+        $page_info = pageInfo($this->entity_name);
 
         return view('services.edit', compact('service', 'page_info', 'services_categories_list', 'services_products_list', 'manufacturers_list', 'type', 'services_modes_list', 'services_category_compositions', 'metrics_values', 'compositions_values'));
     }
@@ -602,7 +615,7 @@ class ServiceController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $service = Service::moderatorLimit($answer)->findOrFail($id);
+        $service = Service::with('services_article')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $service);
@@ -676,15 +689,8 @@ class ServiceController extends Controller
         } 
 
         // Наполняем сущность данными
-        $service->services_product_id = $request->services_product_id;
-        $service->name = $request->name;
-
-        $service->manually = $request->manually;
-        // $service->external = $request->external;
-        $service->cost = $request->cost;
-        $service->price = $request->price;
-
-
+        // $service->services_product_id = $request->services_product_id;
+        // $service->name = $request->name;
 
         // -------------------------------------------------------------------------------------------------
         // ПЕРЕНОС ГРУППЫ УСЛУГИ В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
@@ -693,7 +699,7 @@ class ServiceController extends Controller
         $services_category_id = $request->services_category_id;
 
         // Смотрим: была ли она изменена
-        if($service->services_product->services_category_id != $services_category_id){
+        if($service->services_article->services_product->services_category_id != $services_category_id){
 
             // Была изменена! Переназначаем категорию группе:
             // Получаем группу
@@ -714,9 +720,9 @@ class ServiceController extends Controller
 
 
         // А, пока изменяем без проверки
-        $service->services_product_id = $request->services_product_id;
+        $service->services_article->services_product_id = $request->services_product_id;
 
-        $service->description = $request->description;
+        
 
         // $service->manufacturer_id = $request->manufacturer_id;
 
@@ -731,13 +737,34 @@ class ServiceController extends Controller
         // Системная запись
         $service->system_item = $request->system_item;
 
+        $service->description = $request->description;
         $service->display = $request->display;
         $service->draft = $request->draft;
+
+        $service->manually = $request->manually;
+        $service->cost = $request->cost;
+        $service->price = $request->price;
+
+        
         $service->company_id = $company_id;
         $service->author_id = $user_id;
         $service->save();
 
         if ($service) {
+
+
+            if ($service->services_article->name != $request->name) {
+                $services_article = $service->services_article;
+                $services_article->name = $request->name;
+                $services_article->save();
+            }
+            
+
+            
+            // $service->external = $request->external;
+            
+
+            
 
             // if ($service->draft == 1) {
 

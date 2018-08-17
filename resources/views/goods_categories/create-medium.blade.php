@@ -34,6 +34,9 @@
 							<div class="sprite-input-right find-status"></div>
 							<div class="item-error">Такой уже существует!</div>
 						</label>
+
+						@include('includes.control.checkboxes', ['item' => $goods_category])
+						
 					</div>
 				</div>
 
@@ -41,30 +44,7 @@
 				{{ Form::hidden('medium_item', 1, ['class' => 'medium-item', 'pattern' => '[0-9]{1}']) }}
 				{{ Form::hidden('category_id', 0, ['class' => 'category-id']) }}
 
-				<div class="grid-x align-center">
 
-					{{-- Чекбокс отображения на сайте --}}
-					@can ('publisher', $goods_category)
-					<div class="small-8 cell checkbox">
-						{{ Form::checkbox('display', 1, $goods_category->display, ['id' => 'display']) }}
-						<label for="display"><span>Отображать на сайте</span></label>
-					</div>
-					@endcan
-
-					@if ($goods_category->moderation == 1)
-					<div class="small-8 cell checkbox">
-						{{ Form::checkbox('moderation', 1, $goods_category->moderation, ['id' => 'moderation']) }}
-						<label for="moderation"><span>Временная запись.</span></label>
-					</div>
-					@endif
-
-					@can('god', App\GoodsCategory::class)
-					<div class="small-8 cell checkbox">
-						{{ Form::checkbox('system_item', 1, $goods_category->system_item, ['id' => 'system-item']) }}
-						<label for="system-item"><span>Системная запись.</span></label>
-					</div>
-					@endcan
-				</div>
 
 				<div class="grid-x align-center">
 					<div class="small-6 medium-6 cell">

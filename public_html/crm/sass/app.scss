@@ -775,11 +775,16 @@ a.icon-list-edit {
 tr:hover {
 
     .icon-display-show, .icon-system-unlock {
+
         opacity: 0.2; 
+
+        &:hover {
+            opacity: 1; 
+        }
     }
 
-    .icon-display-show:hover, .icon-system-unlock:hover {
-        opacity: 1; 
+    .icon-display-show, .icon-display-hide, .icon-system-unlock, .icon-system-lock {
+        cursor: pointer;
     }
     // background-position: -32px -992px;
 
@@ -825,6 +830,7 @@ tr:hover {
     margin-right: 0.6rem;
     opacity: 0.4;
     transition: opacity 0.5s ease;
+
     &:hover {
         opacity: 1;
     }

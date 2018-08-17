@@ -197,6 +197,9 @@ class DepartmentController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Department::class);
 
+        $department = new Department;
+
+
         if (isset($request->parent_id)) {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -318,19 +321,20 @@ class DepartmentController extends Controller
             ->whereNotIn('id', $repeat)
             ->pluck('name', 'id');
 
+            $staffer = new Staffer;
+
             // echo $positions_list;
             // echo $department . ' ' . $positions_list . ' ' . $departments_list;
 
-            return view('departments.create-medium', ['departments_list' => $departments_list, 'positions_list' => $positions_list]);
+            return view('departments.create-medium', compact('departments_list', 'positions_list', 'department', 'staffer'));
         } else {
 
-            $department = new Department;
-
+            
             // Формируем пуcтой массив
             $worktime = [];
             for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
 
-                return view('departments.create-first', compact('department', 'worktime'));
+            return view('departments.create-first', compact('department', 'worktime'));
         }
     }
 

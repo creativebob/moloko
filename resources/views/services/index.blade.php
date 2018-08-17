@@ -49,7 +49,7 @@
         @if(!empty($services))
 
         @foreach($services as $service)
-        <tr class="item @if($service->moderation == 1)no-moderation @endif" id="services-{{ $service->id }}" data-name="{{ $service->name }}">
+        <tr class="item @if($service->moderation == 1)no-moderation @endif" id="services-{{ $service->id }}" data-name="{{ $service->services_article->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="service_id" id="check-{{ $service->id }}"
@@ -67,17 +67,17 @@
               <img src="{{ isset($service->photo_id) ? '/storage/'.$service->company_id.'/media/services/'.$service->id.'/img/small/'.$service->photo->name : '/crm/img/plug/service_small_default_color.jpg' }}" alt="{{ isset($service->photo_id) ? $service->name : 'Нет фото' }}">
             </a>
           </td>
-          <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->name }}</a></td>
+          <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->services_article->name }}</a></td>
           <td class="td-description">{{ $service->description }}</td>
           <td class="td-price">{{ num_format($service->price, 0) }}</td>
           <td class="td-services_category">
-            <a href="/admin/services?services_category_id%5B%5D={{ $service->services_product->services_category->id }}" class="filter_link" title="Фильтровать">{{ $service->services_product->services_category->name }}</a>
+            <a href="/admin/services?services_category_id%5B%5D={{ $service->services_article->services_product->services_category->id }}" class="filter_link" title="Фильтровать">{{ $service->services_article->services_product->services_category->name }}</a>
             <br>
-            @if($service->services_product->name != $service->name)
-            <a href="/admin/services?services_product_id%5B%5D={{ $service->services_product->id }}" class="filter_link light-text">{{ $service->services_product->name }}</a>
+            @if($service->services_article->services_product->name != $service->name)
+            <a href="/admin/services?services_product_id%5B%5D={{ $service->services_article->services_product->id }}" class="filter_link light-text">{{ $service->services_article->services_product->name }}</a>
             @endif
           </td>
-          {{-- <td class="td-service">{{ $service->services_product->name }}</td> --}}
+          {{-- <td class="td-service">{{ $service->services_article->services_product->name }}</td> --}}
 
 
           @if(Auth::user()->god == 1) 

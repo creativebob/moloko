@@ -589,6 +589,9 @@ tr:hover .icon-display-show, tr:hover .icon-system-unlock {
 tr:hover .icon-display-show:hover, tr:hover .icon-system-unlock:hover {
   opacity: 1;
 }
+tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-unlock, tr:hover .icon-system-lock {
+  cursor: pointer;
+}
 
 .icon-system-template {
   opacity: 0.2;

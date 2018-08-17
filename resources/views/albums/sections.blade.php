@@ -103,4 +103,6 @@
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
+
+
 @endsection

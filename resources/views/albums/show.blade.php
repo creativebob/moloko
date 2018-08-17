@@ -149,6 +149,20 @@
   @endsection
 
   @section('scripts')
+  {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+  @include('includes.scripts.tablesorter-script')
+
+  {{-- Скрипт модалки удаления --}}
+  @include('includes.scripts.modal-delete-script')
+  @include('includes.scripts.delete-ajax-script')
+  @include('includes.scripts.sortable-table-script')
+
+  {{-- Скрипт отображения на сайте --}}
+  @include('includes.scripts.ajax-display')
+
+  {{-- Скрипт системной записи --}}
+  @include('includes.scripts.ajax-system')
+  
   <script type="text/javascript">
     $(function() {
     // Берем алиас сайта
@@ -166,16 +180,4 @@
     });
   });
 </script> 
-
-
-{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.tablesorter-script')
-
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
-@include('includes.scripts.delete-ajax-script')
-@include('includes.scripts.sortable-table-script')
-
-{{-- Скрипт отображеняи на сайте --}}
-@include('includes.scripts.display-ajax')
 @endsection
