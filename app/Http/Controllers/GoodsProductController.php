@@ -326,7 +326,7 @@ class GoodsProductController extends Controller
     }
 
     // Проверка наличия в базе
-    public function goods_product_check(Request $request)
+    public function ajax_check(Request $request)
     {
         $user = $request->user();
 

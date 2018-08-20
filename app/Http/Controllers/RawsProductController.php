@@ -326,7 +326,7 @@ class RawsProductController extends Controller
     }
 
     // Проверка наличия в базе
-    public function raws_product_check(Request $request)
+    public function ajax_check(Request $request)
     {
         $user = $request->user();
 

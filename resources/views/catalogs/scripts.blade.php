@@ -10,7 +10,7 @@
       },
       url: '/admin/get_units_list',
       type: "POST",
-      data: {id: id, entity: 'services_categories'},
+      data: {id: id, entity: 'catalogs'},
       success: function(html){
         $('#units-list').html(html);
         $('#units-list').prop('disabled', false);
@@ -36,7 +36,7 @@
         },
         url: '/admin/ajax_services_count',
         type: "POST",
-        data: {id: id, entity: 'services_categories'},
+        data: {id: id, entity: 'catalogs'},
         success: function(html){
         // alert(html);
         $('#mode').html(html);
@@ -59,7 +59,7 @@
         },
         url: '/admin/ajax_services_modes',
         type: "POST",
-        data: {mode: id, entity: 'services_categories'},
+        data: {mode: id, entity: 'catalogs'},
         success: function(html){
         // alert(html);
         $('#mode').html(html);

@@ -399,7 +399,7 @@ class PageController extends Controller
     // ------------------------------------------- Ajax ---------------------------------------------
 
     // Проверка наличия в базе
-    public function page_check (Request $request, $alias)
+    public function ajax_check (Request $request, $alias)
     {
 
         // Проверка навигации по сайту в нашей базе данных

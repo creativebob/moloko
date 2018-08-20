@@ -186,7 +186,7 @@ class NavigationController extends Controller
             return view('navigations.navigations-list', ['navigations' => $navigations, 'item' => $request->item, 'id' => $request->id, 'class' => 'App\Navigation', 'entity' => $entity, 'type' => 'modal']); 
         }
 
-        return view('navigations.index', compact('site', 'page_info' , 'parent_page_info', 'pages_list', 'alias', 'menus', 'navigations', 'entity'));
+        return view('navigations.index', compact('site', 'page_info', 'parent_page_info', 'pages_list', 'alias', 'menus', 'navigations', 'entity'));
     }
 
 
@@ -427,7 +427,7 @@ class NavigationController extends Controller
     }
 
     // Проверка наличия в базе
-    public function navigation_check(Request $request, $alias)
+    public function ajax_check(Request $request, $alias)
     {
 
         // Проверка навигации по сайту в нашей базе данных

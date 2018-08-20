@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Catalog;
+use App\Site;
+use App\EntitySetting;
 
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\Catalogequest;
+use App\Http\Requests\CatalogRequest;
 
 // Политика
 use App\Policies\CatalogPolicy;
@@ -24,62 +26,75 @@ use Illuminate\Support\Facades\Auth;
 class CatalogController extends Controller
 {
     // Сущность над которой производит операции контроллер
-    protected $entity_name = 'goods_categories';
+    protected $entity_name = 'catalogs';
     protected $entity_dependence = false;
 
-    public function index(Request $request)
+    public function index(Request $request, $alias)
     {
         // dd($alias);
         // Подключение политики
-        $this->authorize('index', GoodsCategory::class);
+        $this->authorize('index', Catalog::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_catalogs = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // -----------------------------------------------------------------------------------------------------------------------
+        $answer_sites = operator_right('sites', false,  getmethod(__FUNCTION__));
+
+        
+        // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
-        // -----------------------------------------------------------------------------------------------------------------------
-        $goods_categories = GoodsCategory::with('goods_products')
-        ->withCount('goods_products')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get()
-        ->groupBy('parent_id');
-        // dd($goods_categories);
+        // -------------------------------------------------------------------------------------------
+        $site = Site::with(['catalogs' => function ($query) use ($answer_catalogs) {
+            $query->moderatorLimit($answer_catalogs)
+            ->companiesLimit($answer_catalogs)
+            ->authors($answer_catalogs)
+            ->systemItem($answer_catalogs) // Фильтр по системным записям
+            ->orderBy('moderation', 'desc')
+            ->orderBy('sort', 'asc');
+        }])
+        ->moderatorLimit($answer_sites)
+        ->companiesLimit($answer_sites)
+        ->authors($answer_sites)
+        ->systemItem($answer_sites) // Фильтр по системным записям
+        ->whereAlias($alias)
+        ->first();
+        // dd($site);
+
+        $catalogs = $site->catalogs->groupBy('parent_id');
+        // dd($catalogs);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
         // Получаем массив с вложенными элементами дял отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
-        // $goods_categories_tree = get_index_tree_with_rights($goods_categories, $user);
-        // dd($goods_categories_tree);
+        // $catalogs_tree = get_index_tree_with_rights($catalogs, $user);
+        // dd($catalogs_tree);
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('includes.menu-views.enter', ['grouped_items' => $goods_categories, 'class' => 'App\GoodsCategory', 'entity' => $this->entity_name, 'type' => 'edit', 'id' => $request->id]);
+            return view('includes.menu-views.enter', ['grouped_items' => $catalogs, 'class' => 'App\Catalog', 'entity' => $this->entity_name, 'type' => 'edit', 'id' => $request->id]);
         }
 
         $entity = $this->entity_name;
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-        // dd($page_info);
 
-        return view('goods_categories.index', compact('goods_categories', 'page_info', 'entity'));
+        // Так как сущность имеет определенного родителя
+        $parent_page_info = pageInfo('sites');
+
+        return view('catalogs.index', compact('catalogs', 'site', 'page_info', 'parent_page_info', 'alias', 'entity'));
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $alias)
     {
+
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), GoodsCategory::class);
+        $this->authorize(getmethod(__FUNCTION__), Catalog::class);
 
-        $goods_category = new GoodsCategory;
+        $site = Site::whereAlias($alias)->first();
 
-        $goods_modes_list = GoodsMode::get()->pluck('name', 'id');
+        $catalog = new Catalog;
 
         // Если добавляем вложенный элемент
         if (isset($request->parent_id)) {
@@ -88,7 +103,7 @@ class CatalogController extends Controller
             $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
             // Главный запрос
-            $goods_categories = GoodsCategory::moderatorLimit($answer)
+            $catalogs = Catalog::moderatorLimit($answer)
             ->companiesLimit($answer)
             ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
@@ -100,41 +115,21 @@ class CatalogController extends Controller
             ->toArray();
 
             // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $goods_categories_list = get_select_tree($goods_categories, $request->parent_id, null, null);
-            // echo $goods_categories_list;
+            $catalogs_list = get_select_tree($catalogs, $request->parent_id, null, null);
+            // echo $catalogs_list;
 
-            $goods_category = GoodsCategory::with('goods_products')->findOrFail($request->parent_id);
-            $goods_list = $goods_category->goods_products->pluck('name', 'id');
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_units_categories = operator_right('units_categories', false, 'index');
-
-                // Главный запрос
-            $units_categories_list = UnitsCategory::with(['units' => function ($query) {
-                $query->pluck('name', 'id');
-            }])
-            ->moderatorLimit($answer_units_categories)
-            ->companiesLimit($answer_units_categories)
-            ->authors($answer_units_categories)
-            ->systemItem($answer_units_categories) // Фильтр по системным записям
-            ->template($answer_units_categories)
-            ->orderBy('sort', 'asc')
-            ->get()
-            ->pluck('name', 'id');
-
-
-            return view('goods_categories.create-medium', compact('goods_category', 'goods_categories_list', 'type', 'goods_modes_list', 'units_categories_list', 'goods_list'));
+            return view('catalogs.create-medium', compact('catalog', 'catalogs_list', 'type', 'site'));
         } else {
 
-            return view('goods_categories.create-first', compact('goods_category', 'goods_modes_list'));
+            return view('catalogs.create-first', compact('catalog', 'goods_modes_list', 'site'));
         }
     }
 
-    public function store(GoodsCategoryRequest $request)
+    public function store(CatalogRequest $request, $alias)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), GoodsCategory::class);
+        $this->authorize(getmethod(__FUNCTION__), Catalog::class);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -146,51 +141,43 @@ class CatalogController extends Controller
         $user_id = hideGod($user);
 
         // Пишем в базу
-        $goods_category = new GoodsCategory;
-        $goods_category->company_id = $company_id;
-        $goods_category->author_id = $user_id;
+        $catalog = new Catalog;
+        $catalog->company_id = $company_id;
+        $catalog->author_id = $user_id;
 
         // Системная запись
-        $goods_category->system_item = $request->system_item;
+        $catalog->system_item = $request->system_item;
 
-        $goods_category->display = $request->display;
+        $catalog->site_id = $request->site_id;
 
+        $catalog->display = $request->display;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
-            $goods_category->moderation = 1;
+            $catalog->moderation = 1;
         }
 
         // Смотрим что пришло
         // Если категория
         if ($request->first_item == 1) {
-            $goods_category->goods_mode_id = $request->goods_mode_id;
-            $goods_category->category_status = 1; 
+            $catalog->category_status = 1; 
+        } else {
+            $catalog->parent_id = $request->parent_id;
+            $catalog->category_id = $request->category_id;
         }
-
-        // Если вложенный
-        if ($request->medium_item == 1) {
-            $goods_category->parent_id = $request->parent_id;
-            $goods_category->category_id = $request->category_id;
-
-            $category = GoodsCategory::findOrFail($request->category_id);
-
-            $goods_category->goods_mode_id = $category->goods_mode_id;
-        }
-
 
         // Делаем заглавной первую букву
-        $goods_category->name = get_first_letter($request->name);
+        $catalog->name = get_first_letter($request->name);
 
-        $goods_category->save();
+        $catalog->save();
 
-        if ($goods_category) {
+        if ($catalog) {
 
             // Переадресовываем на index
-            return redirect()->action('GoodsCategoryController@index', ['id' => $goods_category->id]);
+            return redirect()->action('CatalogController@index', ['id' => $catalog->id, 'alias' => $alias]);
 
         } else {
             $result = [
@@ -205,161 +192,49 @@ class CatalogController extends Controller
         //
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request, $alias, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods_categories = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_catalogs = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $goods_category = GoodsCategory::with(['goods_mode', 'metrics.unit', 'metrics.values', 'compositions.raws_product.unit'])
-        ->withCount('metrics', 'compositions')
-        ->moderatorLimit($answer_goods_categories)
+        $catalog = Catalog::moderatorLimit($answer_catalogs)
         ->findOrFail($id);
-        // dd($goods_category);
+        // dd($catalog);
 
-        $goods_category_metrics = [];
-        foreach ($goods_category->metrics as $metric) {
-            $goods_category_metrics[] = $metric->id;
-        }
-        // dd($product_metrics);
-
-        $goods_category_compositions = [];
-        foreach ($goods_category->compositions as $composition) {
-            $goods_category_compositions[] = $composition->id;
-        }
-
-        // dd($goods_category_compositions);
+        // Вытаскиваем сайт
+        $site = $catalog->site;
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $goods_category);
+        $this->authorize(getmethod(__FUNCTION__), $catalog);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_properties = operator_right('properties', false, 'index');
-
-        $answer_metrics = operator_right('metrics', false, 'index');
-
-        $properties = Property::moderatorLimit($answer_properties)
-        ->companiesLimit($answer_properties)
-        ->authors($answer_properties)
-        ->systemItem($answer_properties) // Фильтр по системным записям
-        ->template($answer_properties)
-        ->with(['metrics' => function ($query) use ($answer_metrics) {
-            $query->with('values')
-            ->moderatorLimit($answer_metrics)
-            ->companiesLimit($answer_metrics)
-            ->authors($answer_metrics)
-            ->systemItem($answer_metrics); // Фильтр по системным записям 
-        }])
-        ->withCount('metrics')
-        ->orderBy('sort', 'asc')
-        ->get();
-
-
-        
-
-        $properties_list = $properties->pluck('name', 'id');
-
-         // Отдаем Ajax
-        if ($request->ajax()) {
-            return view('goods_categories.metrics.properties-list', compact('properties', 'properties_list', 'goods_category_metrics'));
-        }
-
-        // dd($properties_list);
-
-        // if ($goods_category->type == 'goods') {
-        //     if ($goods_category->status == 'one') {
-        //         $type = ['raws'];
-        //     } else {
-        //         $type = ['goods'];
-        //     }
-        // }
-
-        // if ($goods_category->type == 'raws') {
-        //     $type = [];
-        // }
-
-        // if ($goods_category->type == 'goods') {
-        //     if ($goods_category->status == 'one') {
-        //         $type = ['staff'];
-        //     } else {
-        //         $type = ['goods'];
-        //     }
-        // }
-
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_raws_categories = operator_right('raws_categories', false, 'index');
-
-            $answer_raws_products = operator_right('raws_products', false, 'index');
-
-            $answer_raws = operator_right('raws', false, 'index');
-
-            $raws_categories = RawsCategory::with(['raws_products' => function ($query) use ($answer_raws_products, $answer_raws) {
-                $query->with(['raws' => function ($query) use ($answer_raws) {
-                    $query
-                    // ->moderatorLimit($answer_raws)
-                    // ->companiesLimit($answer_raws)
-                    // ->authors($answer_raws)
-                    // ->systemItem($answer_raws) // Фильтр по системным записям 
-                    ->whereNull('draft');
-                }])
-                ->withCount('raws');
-                // ->moderatorLimit($answer_raws_products)
-                // ->companiesLimit($answer_raws_products)
-                // ->authors($answer_raws_products)
-                // ->systemItem($answer_raws_products); // Фильтр по системным записям 
-            }])
-            ->withCount('raws_products')
-            ->moderatorLimit($answer_raws_categories)
-            ->companiesLimit($answer_raws_categories)
-            ->authors($answer_raws_categories)
-            ->systemItem($answer_raws_categories) // Фильтр по системным записям 
-            ->get()
-            ->keyBy('id')
-            ->toArray();
-
-            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $composition_categories_list = get_parents_tree($raws_categories, null, null, null);
-
-            // dd($composition_categories_list);
-
-            $composition_list = [
-                'name' => 'Сырье',
-                'alias' => 'raws',
-                'composition_categories' => $composition_categories_list,
-            ];
-
-            // dd($composition_list);
-
-
-        // dd($goods_modes_list);
-        // $grouped_goods_types = $goods_modes->groupBy('alias');
-        // dd($grouped_goods_types);
-
         // Инфо о странице
-        $page_info = pageInfo('goods_categories');
+        $page_info = pageInfo($this->entity_name);
 
-        if ($goods_category->category_status == 1) {
+        // Так как сущность имеет определенного родителя
+        $parent_page_info = pageInfo('sites');
+
+        if ($catalog->category_status == 1) {
 
             // Выбираем все типы без проверки, так как они статичны, добавляться не будут
             // $goods_types_list = goodsType::get()->pluck('name', 'id');
 
-            // dd($goods_category);
+            // dd($catalog);
 
             // echo $id;
             // Меняем категорию
-            return view('goods_categories.edit', compact('goods_category', 'page_info', 'properties', 'properties_list', 'goods_category_metrics', 'goods_category_compositions', 'composition_list', 'units_categories_list', 'units_list'));
+            return view('catalogs.edit', compact('catalog', 'page_info', 'parent_page_info', 'site'));
         } else {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
             // Главный запрос
-            $goods_categories = GoodsCategory::moderatorLimit($answer)
+            $catalogs = Catalog::moderatorLimit($answer)
             ->companiesLimit($answer)
             ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
@@ -371,15 +246,15 @@ class CatalogController extends Controller
             ->toArray();
 
             // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $goods_categories_list = get_select_tree($goods_categories, $goods_category->parent_id, null, $goods_category->id);
+            $catalogs_list = get_select_tree($catalogs, $catalog->parent_id, null, $catalog->id);
 
-            // dd($goods_category);
+            // dd($catalog);
 
-            return view('goods_categories.edit', compact('goods_category', 'goods_categories_list', 'page_info', 'properties', 'properties_list', 'goods_category_metrics', 'goods_category_compositions', 'composition_list', 'units_categories_list', 'units_list'));
+            return view('catalogs.edit', compact('catalog', 'catalogs_list', 'page_info', 'parent_page_info', 'site'));
         }
     }
 
-    public function update(GoodsCategoryRequest $request, $id)
+    public function update(CatalogRequest $request, $alias, $id)
     {
 
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
@@ -388,10 +263,10 @@ class CatalogController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $goods_category = GoodsCategory::moderatorLimit($answer)->findOrFail($id);
+        $catalog = Catalog::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $goods_category);
+        $this->authorize(getmethod(__FUNCTION__), $catalog);
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -459,49 +334,42 @@ class CatalogController extends Controller
 
 
             // Директория
-            $directory = $company_id.'/media/goods_categories/'.$goods_category->id.'/img/';
+            $directory = $company_id.'/media/catalogs/'.$catalog->id.'/img/';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-            if ($goods_category->photo_id) {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, $goods_category->photo_id, $settings);
+            if ($catalog->photo_id) {
+                $array = save_photo($request, $directory, 'avatar-'.time(), null, $catalog->photo_id, $settings);
             } else {
                 $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
             }
 
             $photo = $array['photo'];
 
-            $goods_category->photo_id = $photo->id;
+            $catalog->photo_id = $photo->id;
         }
 
-        $goods_category->description = $request->description;
-        $goods_category->seo_description = $request->seo_description;
+        $catalog->description = $request->description;
+        $catalog->seo_description = $request->seo_description;
 
         // Модерация и системная запись
-        $goods_category->system_item = $request->system_item;
-        $goods_category->moderation = $request->moderation;
+        $catalog->system_item = $request->system_item;
+        $catalog->moderation = $request->moderation;
 
-        // $goods_category->parent_id = $request->parent_id;
-        $goods_category->editor_id = $user_id;
-
-        // Если сменили тип категории продукции, то меняем его и всем вложенным элементам
-        if (($goods_category->category_status == 1) && ($goods_category->goods_type_id != $request->goods_type_id)) {
-            $goods_category->goods_type_id = $request->goods_type_id;
-
-            $goods_categories = GoodsCategory::whereCategory_id($id)
-            ->update(['goods_mode_id' => $request->goods_mode_id]);
-
-        }
+        // $catalog->parent_id = $request->parent_id;
+        $catalog->editor_id = $user_id;
         
-        $goods_category->display = $request->display;
+        $catalog->display = $request->display;
 
         // Делаем заглавной первую букву
-        $goods_category->name = get_first_letter($request->name); 
+        $catalog->name = get_first_letter($request->name); 
 
-        $goods_category->save();
+        $catalog->save();
 
-        if ($goods_category) {
+        if ($catalog) {
 
-            return Redirect('/admin/goods_categories/'.$goods_category->type)->with('goods_category_id', $goods_category->id);
+            // Переадресовываем на index
+            return redirect()->action('CatalogController@index', ['id' => $catalog->id, 'alias' => $alias]);
+            // return Redirect('/admin/sites/'.$alias.'/catalogs/'.$catalog->type)->with('catalog_id', $catalog->id);
 
         } else {
             $result = [
@@ -511,21 +379,21 @@ class CatalogController extends Controller
         }
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $alias, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $goods_category = GoodsCategory::withCount('goods_products')->moderatorLimit($answer)->findOrFail($id);
+        $catalog = Catalog::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $goods_category);
+        $this->authorize(getmethod(__FUNCTION__), $catalog);
 
         // Удаляем ajax
         // Проверяем содержит ли индустрия вложения
-        $goods_category_parent = GoodsCategory::moderatorLimit($answer)->whereParent_id($id)->first();
+        $catalog_parent = Catalog::moderatorLimit($answer)->whereParent_id($id)->first();
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -534,91 +402,39 @@ class CatalogController extends Controller
         $user_id = hideGod($user);
 
         // Если содержит, то даем сообщение об ошибке
-        if ($goods_category_parent || ($goods_category->goods_products_count > 0)) {
+        if ($catalog_parent) {
 
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Данная область содержит населенные пункты, удаление невозможно'
+                'error_message' => 'Данный каталог содержит вложенные пункты'
             ];
         } else {
 
             // Если нет, мягко удаляем
-            if ($goods_category->category_status == 1) {
+            if ($catalog->category_status == 1) {
                 $parent = null;
             } else {
-                $parent = $goods_category->parent_id;
+                $parent = $catalog->parent_id;
             }
 
-            $goods_category->editor_id = $user_id;
-            $goods_category->save();
+            $catalog->editor_id = $user_id;
+            $catalog->save();
 
-            $goods_category = GoodsCategory::destroy($id);
+            $catalog = Catalog::destroy($id);
 
-            if ($goods_category) {
+            if ($catalog) {
 
                 // Переадресовываем на index
-                return redirect()->action('GoodsCategoryController@index', ['id' => $parent]);
+                return redirect()->action('CatalogController@index', ['id' => $parent, 'alias' => $alias]);
+
+                // return redirect('/admin/sites/'.$alias.'/catalogs')->with('id', $catalog->id);
             } else {
                 $result = [
                     'error_status' => 1,
-                    'error_message' => 'Ошибка при записи сектора!'
+                    'error_message' => 'Ошибка при удалении каталога!'
                 ];
             }
         }
-    }
-
-
-    
-
-    // Проверка наличия в базе
-    public function goods_category_check(Request $request)
-    {
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        // Проверка отдела в нашей базе данных
-        $goods_category = GoodsCategory::where(['name' => $request->name, 'company_id' => $user->company_id])->first();
-
-        // Если такое название есть
-        if ($goods_category) {
-            $result = [
-                'error_status' => 1,
-            ];
-
-        // Если нет
-        } else {
-            $result = [
-                'error_status' => 0,
-            ];
-        }
-
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Список категорий альбомов
-    public function goods_category_list(Request $request)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
-
-        // Главный запрос
-        $goods_categories = GoodsCategory::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->get(['id','name','category_status','parent_id'])
-        ->keyBy('id')
-        ->toArray();
-
-        // dd($goods_categories);
-
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $goods_categories_list = get_select_tree($goods_categories, $request->parent, null, $request->id);
-        // dd($goods_categories_list);
-
-        // Отдаем ajax
-        echo json_encode($goods_categories_list, JSON_UNESCAPED_UNICODE);
     }
 
     // ------------------------------------------------ Ajax -------------------------------------------------
@@ -629,8 +445,8 @@ class CatalogController extends Controller
 
         $i = 1;
 
-        foreach ($request->goods_categories as $item) {
-            GoodsCategory::where('id', $item)->update(['sort' => $i]);
+        foreach ($request->catalogs as $item) {
+            Catalog::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
     }
@@ -645,7 +461,7 @@ class CatalogController extends Controller
             $system = null;
         }
 
-        $item = GoodsCategory::where('id', $request->id)->update(['system_item' => $system]);
+        $item = Catalog::where('id', $request->id)->update(['system_item' => $system]);
 
         if ($item) {
 
@@ -672,7 +488,7 @@ class CatalogController extends Controller
             $display = 1;
         }
 
-        $item = GoodsCategory::where('id', $request->id)->update(['display' => $display]);
+        $item = Catalog::where('id', $request->id)->update(['display' => $display]);
 
         if ($item) {
 
@@ -689,134 +505,33 @@ class CatalogController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-
-    
-
-    public function ajax_update(Request $request, $id)
+    // Проверка наличия в базе
+    public function ajax_check(Request $request, $alias)
     {
-        // dd($request);
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_name, 'update');
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $goods_category = GoodsCategory::moderatorLimit($answer)->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod('update'), $goods_category);
-
         // Получаем авторизованного пользователя
         $user = $request->user();
 
-        // Скрываем бога
-        $user_id = hideGod($user);
+        // Проверка каталога в нашей базе данных
+        $catalog = Catalog::whereHas('site', function ($query) use ($alias) {
+            $query->whereAlias($alias);
+        })
+        ->whereName($request->name)
+        ->first();
 
-        $company_id = $user->company_id;
-        
-        // Если прикрепили фото
-        if ($request->hasFile('photo')) {
-
-            // Вытаскиваем настройки
-            // Вытаскиваем базовые настройки сохранения фото
-            $settings = config()->get('settings');
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
-
-            if ($get_settings) {
-
-                if ($get_settings->img_small_width != null) {
-                    $settings['img_small_width'] = $get_settings->img_small_width;
-                }
-
-                if ($get_settings->img_small_height != null) {
-                    $settings['img_small_height'] = $get_settings->img_small_height;
-                }
-
-                if ($get_settings->img_medium_width != null) {
-                    $settings['img_medium_width'] = $get_settings->img_medium_width;
-                }
-
-                if ($get_settings->img_medium_height != null) {
-                    $settings['img_medium_height'] = $get_settings->img_medium_height;
-                }
-
-                if ($get_settings->img_large_width != null) {
-                    $settings['img_large_width'] = $get_settings->img_large_width;
-                }
-
-                if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
-                }
-
-                if ($get_settings->img_formats != null) {
-                    $settings['img_formats'] = $get_settings->img_formats;
-                }
-
-                if ($get_settings->img_min_width != null) {
-                    $settings['img_min_width'] = $get_settings->img_min_width;
-                }
-
-                if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
-                }
-
-                if ($get_settings->img_max_size != null) {
-                    $settings['img_max_size'] = $get_settings->img_max_size;
-
-                }
-            }
-
-            // Директория
-            $directory = $company_id.'/media/goods_categories/'.$goods_category->id.'/img/';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-            if ($goods_category->photo_id) {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, $goods_category->photo_id, $settings);
-            } else {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
-            }
-            $photo = $array['photo'];
-
-            $goods_category->photo_id = $photo->id;
-        }
-
-        $goods_category->description = $request->description;
-        $goods_category->seo_description = $request->seo_description;
-
-        // Модерация и системная запись
-        $goods_category->system_item = $request->system_item;
-        $goods_category->moderation = $request->moderation;
-
-        $goods_category->parent_id = $request->parent_id;
-        $goods_category->editor_id = $user_id;
-
-        // Если сменили тип категории продукции, то меняем его и всем вложенным элементам
-        if (($goods_category->category_status == 1) && ($goods_category->goods_type_id != $request->goods_type_id)) {
-            $goods_category->goods_type_id = $request->goods_type_id;
-
-            $goods_categories = GoodsCategory::whereCategory_id($id)
-            ->update(['goods_type_id' => $request->goods_type_id]);
-
-        }
-        
-        $goods_category->display = $request->display;
-
-        // Делаем заглавной первую букву
-        $goods_category->name = get_first_letter($request->name); 
-
-        $goods_category->save();
-
-        if ($goods_category) {
-
-            // Переадресовываем на index
-            return redirect()->action('GoodsCategoryController@index', ['id' => $goods_category->id]);
-        } else {
+        // Если такое название есть
+        if ($catalog) {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи категории продукции!'
+            ];
+
+        // Если нет
+        } else {
+            $result = [
+                'error_status' => 0,
             ];
         }
+
+        return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
     
 }

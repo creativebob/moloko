@@ -6,14 +6,14 @@
 @include('includes.scripts.sortable-inhead')
 @endsection
 
-@section('title', 'Редактирование категории услуг')
+@section('title', 'Редактирование каталога')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $services_category->name))
+@section('breadcrumbs', Breadcrumbs::render('section-edit', $parent_page_info, $site, $page_info, $catalog))
 
 @section('title-content')
 <div class="top-bar head-content">
   <div class="top-bar-left">
-    <h2 class="header-content">Редактирование категории услуг &laquo{{ $services_category->name }}&raquo</h2>
+    <h2 class="header-content">Редактирование категории услуг &laquo{{ $catalog->name }}&raquo</h2>
   </div>
   <div class="top-bar-right">
   </div>
@@ -27,11 +27,6 @@
       <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
       <li class="tabs-title"><a data-tabs-target="site" href="#site">Сайт</a></li>
 
-        {{--
-      <li class="tabs-title"><a data-tabs-target="properties" href="#properties">Свойства</a></li>
-      <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
-      <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
-      --}}
     </ul>
   </div>
 </div>
@@ -54,7 +49,7 @@
       </div>
       @endif
 
-      {{ Form::model($services_category, ['url' => '/admin/services_categories/'.$services_category->id, 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'products-category-form']) }}
+      {{ Form::model($catalog, ['url' => '/admin/sites/'.$site->alias.'/catalogs/'.$catalog->id, 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'products-category-form']) }}
       {{ method_field('PATCH') }}
 
       <!-- Общая информация -->
@@ -63,37 +58,37 @@
 
           <div class="small-12 medium-6 cell">
             <label>Название категории
-              @include('includes.inputs.name', ['value'=>$services_category->name, 'name'=>'name', 'required'=>'required'])
+              @include('includes.inputs.name', ['value'=>$catalog->name, 'name'=>'name', 'required'=>'required'])
             </label>
           </div>
 
           {{-- Чекбокс отображения на сайте --}}
-          @can ('publisher', $services_category)
+          @can ('publisher', $catalog)
           <div class="small-12 cell checkbox">
-            {{ Form::checkbox('display', 1, $services_category->display, ['id' => 'display']) }}
+            {{ Form::checkbox('display', 1, $catalog->display, ['id' => 'display']) }}
             <label for="display"><span>Отображать на сайте</span></label>
           </div>
           @endcan
 
           {{-- Чекбокс модерации --}}
-          @can ('moderator', $services_category)
-          @if ($services_category->moderation == 1)
+          @can ('moderator', $catalog)
+          @if ($catalog->moderation == 1)
           <div class="small-12 cell checkbox">
-            @include('includes.inputs.moderation', ['value'=>$services_category->moderation, 'name'=>'moderation'])
+            @include('includes.inputs.moderation', ['value'=>$catalog->moderation, 'name'=>'moderation'])
           </div>
           @endif
           @endcan
 
           {{-- Чекбокс системной записи --}}
-          @can ('god', $services_category)
+          @can ('god', $catalog)
           <div class="small-12 cell checkbox">
-            @include('includes.inputs.system', ['value'=>$services_category->system_item, 'name'=>'system_item']) 
+            @include('includes.inputs.system', ['value'=>$catalog->system_item, 'name'=>'system_item']) 
           </div>
           @endcan
 
           {{-- Кнопка --}}
           <div class="small-12 cell tabs-button tabs-margin-top">
-            {{ Form::submit('Редактировать услугу', ['class'=>'button']) }}
+            {{ Form::submit('Редактировать каталог', ['class'=>'button']) }}
           </div>
         </div>
       </div>
@@ -104,11 +99,11 @@
           <div class="small-12 medium-6 cell">
 
             <label>Описание:
-              {{ Form::textarea('description', $services_category->description, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+              {{ Form::textarea('description', $catalog->description, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
             </label><br>
 
             <label>Description для сайта
-              @include('includes.inputs.textarea', ['value'=>$services_category->seo_description, 'name'=>'seo_description', 'required'=>''])
+              @include('includes.inputs.textarea', ['value'=>$catalog->seo_description, 'name'=>'seo_description', 'required'=>''])
             </label>
 
           </div>
@@ -117,111 +112,18 @@
               {{ Form::file('photo') }}
             </label>
             <div class="text-center">
-             <img id="photo" @if (isset($services_category->photo_id)) src="/storage/{{ $services_category->company->id }}/media/services_categories/{{ $services_category->id }}/img/medium/{{ $services_category->photo->name }}" @endif>
+             <img id="photo" @if (isset($catalog->photo_id)) src="/storage/{{ $catalog->company_id }}/media/catalogs/{{ $catalog->id }}/img/medium/{{ $catalog->photo->name }}" @endif>
            </div>
          </div>
 
          {{-- Кнопка --}}
          <div class="small-12 cell tabs-button tabs-margin-top">
-          {{ Form::submit('Редактировать категорию услуг', ['class'=>'button']) }}
+          {{ Form::submit('Редактировать каталог', ['class'=>'button']) }}
         </div>
       </div>
     </div>
 
     {{ Form::close() }}
-
-    <!-- Свойства -->
-    <div class="tabs-panel" id="properties">
-      <div class="grid-x grid-padding-x">
-        <div class="small-12 medium-8 cell">
-          <table>
-            <thead>
-              <tr> 
-                <th>Название</th>
-                <th>Минимум</th>
-                <th>Максимум</th>
-                <th>Подтверждение</th>
-                <th>Отрицание</th>
-                <th>Цвет</th>
-                <th>Список</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="metrics-table">
-              {{-- Таблица метрик товара --}}
-              @if (!empty($services_category->metrics))
-              @each('services_categories.metrics.metric', $services_category->metrics, 'metric')
-              @endif
-            </tbody>
-          </table>
-        </div>
-        <div class="small-12 medium-4 cell">
-          {{ Form::open(['url' => '/add_services_category_metric', 'id' => 'properties-form', 'data-abide', 'novalidate']) }}
-          <fieldset>
-            <legend><a data-toggle="properties-dropdown">Добавить метрику</a></legend>
-
-            <div class="grid-x grid-padding-x" id="property-form"></div>
-
-          </fieldset>
-          {{ Form::hidden('entity_id', $services_category->id) }}
-          {{ Form::close() }}
-          {{-- Список свойств с метриками --}}
-          <div class="dropdown-pane" id="properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
-            @include('services_categories.metrics.properties-list', $properties)
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    {{-- Исключаем состав из сырья --}}
-
-    <!-- Состав -->
-    <div class="tabs-panel" id="compositions">
-      <div class="grid-x grid-padding-x">
-        <div class="small-12 medium-9 cell">
-          <table class="composition-table">
-            <thead>
-              <tr> 
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="composition-table">
-              {{-- Таблица метрик товара --}}
-              @if (!empty($services_category->compositions))
-              @each('services_categories.compositions.composition', $services_category->compositions, 'composition')
-              @endif
-            </tbody>
-          </table>
-        </div>
-
-        <div class="small-12 medium-3 cell">
-
-          <ul class="menu vertical">
-
-            @foreach ($services_modes_list as $services_mode)
-            <li>
-              <a class="button" data-toggle="{{ $services_mode['alias'] }}-dropdown">{{ $services_mode['name'] }}</a>
-              <div class="dropdown-pane" id="{{ $services_mode['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
-
-                <ul class="checker" id="products-categories-list">
-                  @foreach ($services_mode['services_categories'] as $services_cat)
-                  @include('services_categories.compositions.services-category', $services_cat)
-                  @endforeach
-                </ul>
-
-              </div>
-            </li>
-            @endforeach
-          </ul>
-
-        </div>
-
-      </div>
-    </div>
-
 
   </div>
 </div>
@@ -234,7 +136,7 @@
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
-@include('services_categories.scripts')
+@include('catalogs.scripts')
 @php
 $settings = config()->get('settings');
 @endphp
@@ -253,7 +155,7 @@ $settings = config()->get('settings');
 
 
   // Основные ностойки
-  var services_category_id = '{{ $services_category->id }}';
+  var catalog_id = '{{ $catalog->id }}';
 
   // При клике на удаление метрики со страницы
   $(document).on('click', '[data-open="delete-metric"]', function() {
@@ -270,7 +172,7 @@ $settings = config()->get('settings');
       },
       url: '/ajax_delete_relation_metric',
       type: 'POST',
-      data: {id: id, entity: 'services_categories', entity_id: services_category_id},
+      data: {id: id, entity: 'catalogs', entity_id: catalog_id},
       success: function(date){
 
         var result = $.parseJSON(date);
@@ -320,7 +222,7 @@ $settings = config()->get('settings');
       },
       url: '/ajax_delete_relation_composition',
       type: 'POST',
-      data: {id: id, services_category_id: services_category_id},
+      data: {id: id, catalog_id: catalog_id},
       success: function(date){
 
         var result = $.parseJSON(date);
@@ -359,7 +261,7 @@ $settings = config()->get('settings');
       },
       url: '/get_units_list',
       type: "POST",
-      data: {id: id, entity: 'services_categories'},
+      data: {id: id, entity: 'catalogs'},
       success: function(html){
         $('#units-list').html(html);
         $('#units-list').prop('disabled', false);
@@ -386,7 +288,7 @@ $settings = config()->get('settings');
         },
         url: '/ajax_add_property',
         type: 'POST',
-        data: {id: id, entity: 'services_categories'},
+        data: {id: id, entity: 'catalogs'},
         success: function(html){
         // alert(html);
         $('#property-form').html(html);
@@ -421,7 +323,7 @@ $settings = config()->get('settings');
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
-          url: '/admin/services_categories/' + services_category_id + '/edit',
+          url: '/admin/catalogs/' + catalog_id + '/edit',
           type: 'POST',
           success: function(html){
             // alert(html);
@@ -444,7 +346,7 @@ $settings = config()->get('settings');
       },
       url: '/ajax_add_metric_value',
       type: 'POST',
-      data: {value: $('#properties-form input[name=value]').val(), entity: 'services_categories'},
+      data: {value: $('#properties-form input[name=value]').val(), entity: 'catalogs'},
       success: function(html){
         // alert(html);
         $('#values-table').append(html);
@@ -467,7 +369,7 @@ $settings = config()->get('settings');
         },
         url: '/ajax_add_relation_metric',
         type: 'POST',
-        data: {id: $(this).val(), entity: 'services_categories', entity_id: services_category_id},
+        data: {id: $(this).val(), entity: 'catalogs', entity_id: catalog_id},
         success: function(html){
 
           // alert(html);
@@ -484,7 +386,7 @@ $settings = config()->get('settings');
         },
         url: '/ajax_delete_relation_metric',
         type: 'POST',
-        data: {id: $(this).val(), entity: 'services_categories', entity_id: services_category_id},
+        data: {id: $(this).val(), entity: 'catalogs', entity_id: catalog_id},
         success: function(date){
 
           var result = $.parseJSON(date);
@@ -515,7 +417,7 @@ $settings = config()->get('settings');
   $(document).on('click', '.add-composition', function() {
 
     var id = $(this).val();
-    // alert(services_category_id + ' ' + id);
+    // alert(catalog_id + ' ' + id);
     
     // Если нужно добавить состав
     if ($(this).prop('checked') == true) {
@@ -525,7 +427,7 @@ $settings = config()->get('settings');
         },
         url: '/ajax_add_relation_composition',
         type: 'POST',
-        data: {id: id, services_category_id: services_category_id, entity: 'services_categories'},
+        data: {id: id, catalog_id: catalog_id, entity: 'catalogs'},
         success: function(html){
           // alert(html);
           $('#composition-table').append(html);
@@ -540,7 +442,7 @@ $settings = config()->get('settings');
         },
         url: '/ajax_delete_relation_composition',
         type: 'POST',
-        data: {id: id, services_category_id: services_category_id, entity: 'services_categories'},
+        data: {id: id, catalog_id: catalog_id, entity: 'catalogs'},
         success: function(date){
 
           var result = $.parseJSON(date);
@@ -649,7 +551,7 @@ $settings = config()->get('settings');
           },
           url: '/product/photos',
           type: 'post',
-          data: {services_category_id: services_category_id},
+          data: {catalog_id: catalog_id},
           success: function(html){
         // alert(html);
         $('#photos-list').html(html);

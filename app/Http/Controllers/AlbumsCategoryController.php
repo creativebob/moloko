@@ -334,7 +334,7 @@ class AlbumsCategoryController extends Controller
     }
 
     // Проверка наличия в базе
-    public function albums_category_check(Request $request)
+    public function ajax_check(Request $request)
     {
 
         // Получаем авторизованного пользователя

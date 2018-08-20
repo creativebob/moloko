@@ -446,7 +446,7 @@ class CityController extends Controller
     }
 
     // Проверяем наличие города в базе
-    public function city_check(CityRequest $request)
+    public function ajax_check(CityRequest $request)
     {
         $city_name = $request->city_name;
 

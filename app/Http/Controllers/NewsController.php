@@ -607,7 +607,7 @@ class NewsController extends Controller
     // ------------------------------------------- Ajax ---------------------------------------------
 
     // Проверка наличия в базе
-    public function news_check(Request $request, $alias)
+    public function ajax_check(Request $request, $alias)
     {
 
         // Проверка новости по сайту в нашей базе данных

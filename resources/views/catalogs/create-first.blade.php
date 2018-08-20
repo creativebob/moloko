@@ -1,12 +1,12 @@
 <div class="reveal" id="first-add" data-reveal data-close-on-click="false">
 	<div class="grid-x">
 		<div class="small-12 cell modal-title">
-			<h5>ДОБАВЛЕНИЕ категории</h5>
+			<h5>ДОБАВЛЕНИЕ каталога</h5>
 		</div>
 	</div>
-	{{ Form::open(['url' => '/admin/services_categories', 'id'=>'form-first-add', 'data-abide', 'novalidate']) }}
+	{{ Form::open(['id'=>'form-first-add', 'data-abide', 'novalidate']) }}
 
-	@include('services_categories.modals.first', ['submitButtonText' => 'Добавить категорию', 'class' => 'submit-add', 'disabled' => ''])
+	@include('catalogs.modals.first', ['submitButtonText' => 'Добавить каталог', 'class' => 'submit-add', 'disabled' => ''])
 
 	{{ Form::close() }}
 	<div data-close class="icon-close-modal sprite close-modal add-item"></div> 

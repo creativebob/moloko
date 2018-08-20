@@ -54,7 +54,7 @@ Route::any('/albums_categories', 'AlbumsCategoryController@index')->middleware('
 // Основные методы
 Route::resource('/albums_categories', 'AlbumsCategoryController')->middleware('auth');
 // Проверка на существование категории альбомов
-Route::post('/albums_category_check', 'AlbumsCategoryController@albums_category_check')->middleware('auth');
+Route::post('/albums_category_check', 'AlbumsCategoryController@ajax_check')->middleware('auth');
 // Select категорий альбомов
 Route::post('/albums_categories_list', 'AlbumsCategoryController@albums_categories_list')->middleware('auth');
 // Сортировка
@@ -80,7 +80,7 @@ Route::post('/albums_list', 'AlbumController@albums_list')->middleware('auth');
 // Получение альбома
 Route::post('/get_album', 'AlbumController@get_album')->middleware('auth');
 // Проверка на существование
-Route::post('/albums_check', 'AlbumController@albums_check')->middleware('auth');
+Route::post('/albums_check', 'AlbumController@ajax_check')->middleware('auth');
 // Сортировка
 Route::post('/albums_sort', 'AlbumController@ajax_sort')->middleware('auth');
 // Системная запись
@@ -109,7 +109,7 @@ Route::post('/photos_display', 'PhotoController@ajax_display')->middleware('auth
 
 // --------------------------------------- Помещения -----------------------------------------------
 
-Route::resource('places', 'PlaceController')->middleware('auth');
+Route::resource('/places', 'PlaceController')->middleware('auth');
 // Сортировка
 Route::post('/places_sort', 'PlaceController@ajax_sort')->middleware('auth');
 // Системная запись
@@ -149,7 +149,7 @@ Route::any('/raws_categories', 'RawsCategoryController@index')->middleware('auth
 // Основные методы
 Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth');
 // Проверка на существование категории продукции
-Route::post('/raws_category_check', 'RawsCategoryController@raws_category_check')->middleware('auth');
+Route::post('/raws_category_check', 'RawsCategoryController@ajax_check')->middleware('auth');
 // Сортировка
 Route::post('/raws_categories_sort', 'RawsCategoryController@ajax_sort')->middleware('auth');
 // Системная запись
@@ -197,7 +197,7 @@ Route::match(['get', 'post'], '/goods_categories/{id}/edit', 'GoodsCategoryContr
 // Основные методы
 Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('auth');
 // Проверка на существование
-Route::post('/goods_category_check', 'GoodsCategoryController@goods_category_check')->middleware('auth');
+Route::post('/goods_category_check', 'GoodsCategoryController@ajax_check')->middleware('auth');
 // Сортировка
 Route::post('/goods_categories_sort', 'GoodsCategoryController@ajax_sort')->middleware('auth');
 // Системная запись
@@ -248,7 +248,7 @@ Route::any('/services_categories', 'ServicesCategoryController@index')->middlewa
 // Основные методы
 Route::resource('/services_categories', 'ServicesCategoryController')->middleware('auth');
 // Проверка на существование
-Route::post('/services_category_check', 'ServicesCategoryController@services_category_check')->middleware('auth');
+Route::post('/services_category_check', 'ServicesCategoryController@ajax_check')->middleware('auth');
 // Сортировка
 Route::post('/services_categories_sort', 'ServicesCategoryController@ajax_sort')->middleware('auth');
 // Системная запись
@@ -296,7 +296,7 @@ Route::any('/sectors', 'SectorController@index')->middleware('auth');
 // Основные методы
 Route::resource('/sectors', 'SectorController')->middleware('auth');
 // Проверка на существование сектора
-Route::post('/sector_check', 'SectorController@sector_check')->middleware('auth');
+Route::post('/sector_check', 'SectorController@ajax_check')->middleware('auth');
 // Select секторов
 Route::post('/sectors_list', 'SectorController@sectors_list')->middleware('auth');
 // Сортировка
@@ -323,7 +323,7 @@ Route::post('/companies_display', 'CompanyController@ajax_display')->middleware(
 // --------------------------------------- Лиды -----------------------------------------------
 
 // Основные методы
-Route::resource('leads', 'LeadController')->middleware('auth');
+Route::resource('/leads', 'LeadController')->middleware('auth');
 // Сортировка
 Route::post('/leads_sort', 'LeadController@ajax_sort')->middleware('auth');
 // Системная запись
@@ -335,7 +335,7 @@ Route::post('/leads_display', 'LeadController@ajax_display')->middleware('auth')
 // --------------------------------------- Рекламные кампании -----------------------------------------------
 
 // Основные методы
-Route::resource('campaigns', 'CampaignController')->middleware('auth');
+Route::resource('/campaigns', 'CampaignController')->middleware('auth');
 // Сортировка
 Route::post('/campaigns_sort', 'CampaignController@ajax_sort')->middleware('auth');
 // Системная запись
@@ -347,7 +347,7 @@ Route::post('/campaigns_display', 'CampaignController@ajax_display')->middleware
 // --------------------------------------- Расходы -----------------------------------------------
 
 // Основные методы
-Route::resource('expenses', 'ExpenseController')->middleware('auth');
+Route::resource('/expenses', 'ExpenseController')->middleware('auth');
 // Сортировка
 Route::post('/expenses_sort', 'ExpenseController@ajax_sort')->middleware('auth');
 // Системная запись
@@ -359,7 +359,7 @@ Route::post('/expenses_display', 'ExpenseController@ajax_display')->middleware('
 // --------------------------------------- Зарплаты -----------------------------------------------
 
 // Основные методы
-Route::resource('salaries', 'SalaryController')->middleware('auth');
+Route::resource('/salaries', 'SalaryController')->middleware('auth');
 // Сортировка
 Route::post('/salaries_sort', 'SalaryController@ajax_sort')->middleware('auth');
 // Системная запись
@@ -479,7 +479,7 @@ Route::any('/cities', 'CityController@index')->middleware('auth');
 // Основные методы
 Route::resource('/cities', 'CityController')->middleware('auth');
 // Проверка на существование города
-Route::post('/city_check', 'CityController@city_check')->middleware('auth');
+Route::post('/city_check', 'CityController@ajax_check')->middleware('auth');
 // Сортировка
 Route::post('/cities_sort', 'CityController@ajax_sort')->middleware('auth');
 // Системная запись
@@ -494,7 +494,6 @@ Route::post('/city_vk', 'CityController@get_vk_city')->middleware('auth');
 // Тестовый маршрут проверки пришедших с вк данных
 Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
 
-
 // ----------------------------------------- Филиалы и отделы --------------------------------------
 
 // Текущий добавленный/удаленный отдел/филиал
@@ -506,7 +505,7 @@ Route::get('/current_department/{section_id}/{item_id}', 'DepartmentController@c
 // Список отделов филиала
 Route::post('/departments_list', 'DepartmentController@departments_list')->middleware('auth');
 // Проверка на существование филиала/отдела
-Route::post('/department_check', 'DepartmentController@department_check')->middleware('auth');
+Route::post('/department_check', 'DepartmentController@ajax_check')->middleware('auth');
 // Сортировка
 Route::post('/departments_sort', 'DepartmentController@ajax_sort')->middleware('auth');
 // Системная запись
@@ -564,7 +563,7 @@ Route::patch('/sites/{id}', 'SiteController@update')->middleware('auth')->name('
 Route::delete('/sites/{id}', 'SiteController@destroy')->middleware('auth')->name('sites.destroy');
 Route::get('/sites/{alias}', 'SiteController@sections')->middleware('auth')->name('sites.sections');
 // Проверка на существование домена сайта
-Route::post('/site_check', 'SiteController@site_check')->middleware('auth');
+Route::post('/site_check', 'SiteController@ajax_check')->middleware('auth');
 // Сортировка
 Route::post('/sites_sort', 'SiteController@ajax_sort')->middleware('auth');
 // Системная запись
@@ -581,7 +580,7 @@ Route::prefix('/sites/{alias}')->group(function () {
 	Route::resource('/pages', 'PageController')->middleware('auth');
 
   	// Проверка на существование страницы
-	Route::post('/page_check', 'PageController@page_check')->middleware('auth');
+	Route::post('/page_check', 'PageController@ajax_check')->middleware('auth');
 
   	// --------------------------------------- Навигации --------------------------------------------
 
@@ -590,7 +589,7 @@ Route::prefix('/sites/{alias}')->group(function () {
   	// Основные методы
 	Route::resource('/navigations', 'NavigationController')->middleware('auth');
 	// Проверка на существование навигации
-	Route::post('/navigation_check', 'NavigationController@navigation_check')->middleware('auth');
+	Route::post('/navigation_check', 'NavigationController@ajax_check')->middleware('auth');
 
   	// -------------------------------------------Меню ---------------------------------------------
 
@@ -602,34 +601,38 @@ Route::prefix('/sites/{alias}')->group(function () {
   	// Основные методы
 	Route::resource('/news', 'NewsController')->middleware('auth');
   	// Проверка на существование новости
-	Route::post('/news_check', 'NewsController@news_check')->middleware('auth');
+	Route::post('/news_check', 'NewsController@ajax_check')->middleware('auth');
 
 	// ----------------------------------------- Каталог ------------------------------------------
 
+	// Текущий добавленный/удаленный каталог
+	Route::any('/catalogs', 'CatalogController@index')->middleware('auth');
 	// Основные методы
 	Route::resource('/catalogs', 'CatalogController')->middleware('auth');
-
-  	// Проверка на существование страницы
+  	// Проверка на существование каталога
 	Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
 });
 
 // Сортировка
 Route::post('/pages_sort', 'PageController@ajax_sort')->middleware('auth');
 Route::post('/navigations_sort', 'NavigationController@ajax_sort')->middleware('auth');
-Route::any('/menus_sort', 'MenuController@ajax_sort')->middleware('auth');
+Route::post('/menus_sort', 'MenuController@ajax_sort')->middleware('auth');
 Route::post('/news_sort', 'NewsController@ajax_sort')->middleware('auth');
+Route::post('/catalogs_sort', 'CatalogController@ajax_sort')->middleware('auth');
 
 // Системаня запись
 Route::post('/pages_system_item', 'PageController@ajax_system_item')->middleware('auth');
 Route::post('/news_system_item', 'NewsController@ajax_system_item')->middleware('auth');
 Route::post('/navigations_system_item', 'NavigationController@ajax_system_item')->middleware('auth');
 Route::post('/menus_system_item', 'MenuController@ajax_system_item')->middleware('auth');
+Route::post('/catalogs_system_item', 'CatalogController@ajax_system_item')->middleware('auth');
 
 // Отображение на сайте
 Route::post('/pages_display', 'PageController@ajax_display')->middleware('auth');
 Route::post('/news_display', 'NewsController@ajax_display')->middleware('auth');
 Route::post('/navigations_display', 'NavigationController@ajax_display')->middleware('auth');
 Route::post('/menus_display', 'MenuController@ajax_display')->middleware('auth');
+Route::post('/catalogs_display', 'CatalogController@ajax_display')->middleware('auth');
 
 // ------------------------------------- Отображение сессии -----------------------------------------
 

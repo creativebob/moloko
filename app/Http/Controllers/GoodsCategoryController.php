@@ -592,7 +592,7 @@ class GoodsCategoryController extends Controller
     
 
     // Проверка наличия в базе
-    public function goods_category_check(Request $request)
+    public function ajax_check(Request $request)
     {
         // Получаем авторизованного пользователя
         $user = $request->user();
