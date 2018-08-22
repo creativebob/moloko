@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CatalogController extends Controller
 {
+    
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'catalogs';
     protected $entity_dependence = false;
@@ -220,6 +221,15 @@ class CatalogController extends Controller
 
         if ($catalog->category_status == 1) {
 
+
+            $catalogs_list = Catalog::whereHas('site', function ($query) use ($alias) {
+                $query->whereAlias($alias);
+            })
+            ->orderBy('sort', 'asc')
+            ->get()
+            ->groupBy('parent_id');
+            // dd($tests);
+
             // Выбираем все типы без проверки, так как они статичны, добавляться не будут
             // $goods_types_list = goodsType::get()->pluck('name', 'id');
 
@@ -227,7 +237,7 @@ class CatalogController extends Controller
 
             // echo $id;
             // Меняем категорию
-            return view('catalogs.edit', compact('catalog', 'page_info', 'parent_page_info', 'site'));
+            return view('catalogs.edit', compact('catalog', 'page_info', 'parent_page_info', 'site', 'catalogs_list'));
         } else {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)

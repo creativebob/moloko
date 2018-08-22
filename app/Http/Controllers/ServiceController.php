@@ -12,6 +12,9 @@ use App\ServicesArticle;
 use App\Album;
 use App\AlbumEntity;
 use App\Photo;
+use App\Catalog;
+
+use App\Sector;
 
 use App\EntitySetting;
 
@@ -58,7 +61,7 @@ class ServiceController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------------------------------
 
-        $services = Service::with('author', 'company', 'services_article.services_product.services_category')
+        $services = Service::with('author', 'company', 'services_article.services_product.services_category', 'catalogs')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -377,7 +380,9 @@ class ServiceController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        $service = Service::with(['services_article.services_product.services_category', 'album.photos', 'company.manufacturers', 'photo'])->moderatorLimit($answer_services)->findOrFail($id);
+        $service = Service::with(['services_article.services_product.services_category', 'album.photos', 'company.manufacturers', 'photo', 'catalogs'])
+        ->moderatorLimit($answer_services)
+        ->findOrFail($id);
         // dd($service);
 
         // Подключение политики
@@ -401,8 +406,12 @@ class ServiceController extends Controller
         ->toArray();
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
+        
         $services_categories_list = get_select_tree($services_categories, $service->services_article->services_product->services_category_id, null, null);
+        
+        
         // dd($services_categories_list);
+
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_services_products = operator_right('services_products', false, 'index');
@@ -413,6 +422,89 @@ class ServiceController extends Controller
         ->orderBy('sort', 'asc')
         ->get()
         ->pluck('name', 'id');
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_catalogs = operator_right('catalogs', false, 'index');
+
+        // $catalogs_list = Catalog::moderatorLimit($answer_catalogs)
+        // ->companiesLimit($answer_catalogs)
+        // ->systemItem($answer_catalogs) // Фильтр по системным записям
+        // ->whereSite_id(2)
+        // // ->orderBy('sort', 'asc')
+        // ->get()
+        // ->pluck('name', 'id');
+
+        $catalogs = Catalog::moderatorLimit($answer_catalogs)
+        ->companiesLimit($answer_catalogs)
+        ->systemItem($answer_catalogs) // Фильтр по системным записям
+        ->whereSite_id(2)
+        // ->orderBy('sort', 'asc')
+        ->get(['id','name','category_status','parent_id'])
+        ->keyBy('id')
+        ->toArray();
+
+        // // dd($catalogs);
+
+        // // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+        $catalogs_tree = get_parents_tree($catalogs);
+
+        // Рекурсивно считываем наш шаблон
+        function show_cats($items, $padding, $parents){
+            $string = '';
+            $padding = $padding;
+
+    // dd($items);
+            foreach($items as $item){
+                $string .= tpl_menus($item, $padding, $parents);
+            }
+            return $string;
+        }
+
+// Функция отрисовки option'ов
+        function tpl_menus($item, $padding, $parents) {
+
+            // Выбираем пункт родителя
+                $selected = '';
+                if (in_array($item['id'], $parents)) {
+                    $selected = ' selected';
+                }
+
+            // отрисовываем option's
+                if ($item['category_status'] == 1) {
+                    $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
+                } else {
+                    $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
+                }
+
+            // Добавляем пробелы вложенному элементу
+                if (isset($item['children'])) {
+                    $i = 1;
+                    for($j = 0; $j < $i; $j++){
+                        $padding .= '&nbsp;&nbsp';
+                    }     
+                    $i++;
+
+                    $menu .= show_cats($item['children'], $padding, $parents);
+                }
+
+             // dd('lol');
+                return $menu;
+            
+        }
+
+        // dd($service->catalogs->implode('id', ', '));
+
+        $parents = [];
+
+        foreach ($service->catalogs as $catalog) {
+            $parents[] = $catalog->id;
+        }
+        // dd($parents);
+
+        // Получаем HTML разметку
+    $catalogs_list = show_cats($catalogs_tree, '', $parents);
+
+        // dd($catalogs_list);
 
         // $services_products_list = ServicesProduct::moderatorLimit($answer_services_products)
         // ->companiesLimit($answer_services_products)
@@ -509,10 +601,12 @@ class ServiceController extends Controller
 
         // $type = $service->services_product->services_category->type;
 
+
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('services.edit', compact('service', 'page_info', 'services_categories_list', 'services_products_list', 'manufacturers_list', 'type', 'services_modes_list', 'services_category_compositions', 'metrics_values', 'compositions_values'));
+        return view('services.edit', compact('service', 'page_info', 'services_categories_list', 'services_products_list', 'manufacturers_list', 'type', 'services_modes_list', 'services_category_compositions', 'metrics_values', 'compositions_values', 'catalogs_list'));
     }
 
     public function update(Request $request, $id)
@@ -694,7 +788,7 @@ class ServiceController extends Controller
 
         // -------------------------------------------------------------------------------------------------
         // ПЕРЕНОС ГРУППЫ УСЛУГИ В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-        
+
         // Получаем выбранную категорию со старницы (то, что указал пользователь)
         $services_category_id = $request->services_category_id;
 
@@ -722,7 +816,7 @@ class ServiceController extends Controller
         // А, пока изменяем без проверки
         $service->services_article->services_product_id = $request->services_product_id;
 
-        
+
 
         // $service->manufacturer_id = $request->manufacturer_id;
 
@@ -745,7 +839,7 @@ class ServiceController extends Controller
         $service->cost = $request->cost;
         $service->price = $request->price;
 
-        
+
         $service->company_id = $company_id;
         $service->author_id = $user_id;
         $service->save();
@@ -758,13 +852,19 @@ class ServiceController extends Controller
                 $services_article->name = $request->name;
                 $services_article->save();
             }
-            
 
-            
+            if (isset($request->catalogs)) {
+                $service->catalogs()->sync($request->catalogs);
+            } else {
+                $service->catalogs()->detach();
+            }
+
+
+
             // $service->external = $request->external;
-            
 
-            
+
+
 
             // if ($service->draft == 1) {
 

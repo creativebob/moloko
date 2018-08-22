@@ -62,4 +62,10 @@ class Catalog extends Model
     {
         return $this->belongsTo('App\Photo');
     }
+
+    // Услуги
+    public function services()
+    {
+        return $this->morphedByMany('App\Service', 'catalog_products');
+    }
 }

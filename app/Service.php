@@ -75,4 +75,10 @@ class Service extends Model
     {
         return $this->belongsTo('App\Photo');
     }
+
+    // Каталоги
+    public function catalogs()
+    {
+        return $this->morphToMany('App\Catalog', 'catalog_products');
+    }
 }

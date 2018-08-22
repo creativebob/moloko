@@ -26,6 +26,7 @@ use App\Navigation;
 use App\Menu;
 use App\News;
 use App\Catalog;
+use App\CatalogProduct;
 
 use App\Position;
 
@@ -82,6 +83,7 @@ use App\Policies\NavigationPolicy;
 use App\Policies\MenuPolicy;
 use App\Policies\NewsPolicy;
 use App\Policies\CatalogPolicy;
+use App\Policies\CatalogProductPolicy;
 
 use App\Policies\PositionPolicy;
 use App\Policies\StafferPolicy;
@@ -147,6 +149,7 @@ class AuthServiceProvider extends ServiceProvider
         Site::class => SitePolicy::class,
         News::class => NewsPolicy::class,
         Catalog::class => CatalogPolicy::class,
+        CatalogProduct::class => CatalogProductPolicy::class,
         Staffer::class => StafferPolicy::class,
         Booklist::class => BooklistPolicy::class,
         Sector::class => SectorPolicy::class,

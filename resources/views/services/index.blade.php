@@ -34,6 +34,7 @@
           <th class="td-description">Описание</th>
           <th class="td-price">Цена</th>
           <th class="td-services_category">Категория</th>
+          <th class="td-catalog">Каталог</th>
           {{-- <th class="td-service">Группа</th>  --}}
 
           @if(Auth::user()->god == 1) 
@@ -76,6 +77,12 @@
             @if($service->services_article->services_product->name != $service->name)
             <a href="/admin/services?services_product_id%5B%5D={{ $service->services_article->services_product->id }}" class="filter_link light-text">{{ $service->services_article->services_product->name }}</a>
             @endif
+          </td>
+
+          <td class="td-catalog">
+            @foreach ($service->catalogs as $catalog)
+            <a href="/admin/services?catalog_id%5B%5D={{ $catalog->id }}" class="filter_link" title="Фильтровать">{{ $catalog->name }}</a><br>
+            @endforeach
           </td>
           {{-- <td class="td-service">{{ $service->services_article->services_product->name }}</td> --}}
 

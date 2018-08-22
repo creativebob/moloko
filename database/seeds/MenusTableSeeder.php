@@ -688,6 +688,21 @@ class MenusTableSeeder extends Seeder
             'sort' => 1,
         ],
 
+        // 50
+        [
+            'name' => 'Продукция на сайте',
+            'icon' => null,
+            'alias' => 'admin/catalog_products',
+            'parent_id' => 11,
+            'page_id' => 42,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => 1,
+        ],
+
         // Остальное
                 // [
         //     'name' => 'Типы помещений',
