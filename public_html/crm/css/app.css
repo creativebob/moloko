@@ -140,6 +140,11 @@ fieldset legend {
   color: #aaa;
 }
 
+.tiny-text {
+  color: #aaa;
+  font-size: 0.8rem;
+}
+
 .filter_link {
   color: #333;
   border-bottom: 0px dashed #333;

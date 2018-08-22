@@ -52,6 +52,8 @@ use App\Raw;
 use App\RawsCategory;
 use App\RawsProduct;
 
+use App\Lead;
+
 // use App\Article;
 
 use App\Policies\UserPolicy;
@@ -104,6 +106,8 @@ use App\Policies\GoodsProductPolicy;
 use App\Policies\RawPolicy;
 use App\Policies\RawsCategoryPolicy;
 use App\Policies\RawsProductPolicy;
+
+use App\Policies\LeadPolicy;
 
 // use App\Policies\ArticlePolicy;
 
@@ -161,6 +165,7 @@ class AuthServiceProvider extends ServiceProvider
         Raw::class => RawPolicy::class,
         RawsCategory::class => RawsCategoryPolicy::class,
         RawsProduct::class => RawsProductPolicy::class,
+        Lead::class => LeadPolicy::class,
     ];
 
     public function boot()

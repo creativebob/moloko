@@ -48,7 +48,7 @@ class Lead extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'created_at'];
     protected $fillable = [
         // 'name', 
     ];
@@ -68,11 +68,6 @@ class Lead extends Model
     public function sites()
     {
         return $this->hasMany('App\Site');
-    }
-
-    public function manager()
-    {
-        return $this->belongsTo('App\User');
     }
 
     // Получаем автора
@@ -116,4 +111,29 @@ class Lead extends Model
     {
         return $this->belongsTo('App\LeadType');
     }
+
+    // Получаем тип обращения
+    public function choices_goods_categories()
+    {
+        return $this->morphedByMany('App\GoodsCategory', 'choices');
+    }
+
+    // Получаем тип обращения
+    public function choices_services_categories()
+    {
+        return $this->morphedByMany('App\ServicesCategory', 'choices');
+    }
+
+    // Получаем тип обращения
+    public function choices_raws_categories()
+    {
+        return $this->morphedByMany('App\RawsCategory', 'choices');
+    }
+
+    // Получаем автора
+    public function manager()
+    {
+        return $this->belongsTo('App\User', 'manager_id');
+    }
+
 }

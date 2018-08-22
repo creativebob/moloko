@@ -122,8 +122,6 @@
 </div>
 @endsection
 
-
-
 @section('modals')
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-delete')
