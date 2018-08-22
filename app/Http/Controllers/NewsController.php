@@ -194,7 +194,7 @@ class NewsController extends Controller
         } else {
 
             // Иначе переводим заголовок в транслитерацию
-            $cur_news->alias = Transliterate::make($title, ['type' => 'url', 'lowercase' => true]);
+            $cur_news->alias = Transliterate::make($request->title, ['type' => 'url', 'lowercase' => true]);
         }
 
         $cur_news->content = $request->content;
@@ -493,7 +493,7 @@ class NewsController extends Controller
             } else {
 
             // Иначе переводим заголовок в транслитерацию
-                $cur_news->alias = Transliterate::make($title, ['type' => 'url', 'lowercase' => true]);
+                $cur_news->alias = Transliterate::make($request->title, ['type' => 'url', 'lowercase' => true]);
             }
         }
 

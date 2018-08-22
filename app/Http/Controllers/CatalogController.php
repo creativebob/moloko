@@ -7,7 +7,6 @@ use App\Catalog;
 use App\Site;
 use App\EntitySetting;
 
-
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\CatalogRequest;
@@ -19,6 +18,8 @@ use App\Policies\CatalogPolicy;
 use Illuminate\Support\Facades\Log;
 
 // Специфические классы 
+// Транслитерация
+use Transliterate;
 
 // На удаление
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +35,7 @@ class CatalogController extends Controller
     {
         // dd($alias);
         // Подключение политики
-        $this->authorize('index', Catalog::class);
+        $this->authorize(getmethod(__FUNCTION__), Catalog::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_catalogs = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -188,9 +189,35 @@ class CatalogController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(Request $request, $alias, $catalog_alias)
     {
-        //
+        // Подключение политики
+        $this->authorize('index', Catalog::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_catalogs = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $answer_sites = operator_right('sites', false,  getmethod(__FUNCTION__));
+
+        
+        // -------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -------------------------------------------------------------------------------------------
+        $site = Site::with(['catalogs' => function ($query) use ($answer_catalogs) {
+            $query->moderatorLimit($answer_catalogs)
+            ->companiesLimit($answer_catalogs)
+            ->authors($answer_catalogs)
+            ->systemItem($answer_catalogs) // Фильтр по системным записям
+            ->orderBy('moderation', 'desc')
+            ->orderBy('sort', 'asc');
+        }])
+        ->moderatorLimit($answer_sites)
+        ->companiesLimit($answer_sites)
+        ->authors($answer_sites)
+        ->systemItem($answer_sites) // Фильтр по системным записям
+        ->whereAlias($alias)
+        ->first();
+        // dd($site);
     }
 
     public function edit(Request $request, $alias, $id)
@@ -361,6 +388,15 @@ class CatalogController extends Controller
         $catalog->description = $request->description;
         $catalog->seo_description = $request->seo_description;
 
+        // Если ввели алиас руками
+        if (isset($request->alias)) {
+            $catalog->alias = $request->alias;
+        } else {
+
+            // Иначе переводим заголовок в транслитерацию
+            $catalog->alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
+        }
+
         // Модерация и системная запись
         $catalog->system_item = $request->system_item;
         $catalog->moderation = $request->moderation;
@@ -516,7 +552,7 @@ class CatalogController extends Controller
     }
 
     // Проверка наличия в базе
-    public function ajax_check(Request $request, $alias)
+    public function ajax_check (Request $request, $alias)
     {
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -526,6 +562,35 @@ class CatalogController extends Controller
             $query->whereAlias($alias);
         })
         ->whereName($request->name)
+        ->first();
+
+        // Если такое название есть
+        if ($catalog) {
+            $result = [
+                'error_status' => 1,
+            ];
+
+        // Если нет
+        } else {
+            $result = [
+                'error_status' => 0,
+            ];
+        }
+
+        return json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+    // Проверка наличия в базе
+    public function ajax_check_alias (Request $request, $alias)
+    {
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // Проверка каталога в нашей базе данных
+        $catalog = Catalog::whereHas('site', function ($query) use ($alias) {
+            $query->whereAlias($alias);
+        })
+        ->whereAlias($request->alias)
         ->first();
 
         // Если такое название есть

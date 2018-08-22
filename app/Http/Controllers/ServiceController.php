@@ -51,7 +51,7 @@ class ServiceController extends Controller
         };
 
         // Подключение политики
-        $this->authorize('index', Service::class);
+        $this->authorize(getmethod(__FUNCTION__), Service::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -61,7 +61,7 @@ class ServiceController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------------------------------
 
-        $services = Service::with('author', 'company', 'services_article.services_product.services_category', 'catalogs')
+        $services = Service::with('author', 'company', 'services_article.services_product.services_category', 'catalogs.site')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -113,7 +113,6 @@ class ServiceController extends Controller
 
         return view('services.index', compact('services', 'page_info', 'filter'));
     }
-
 
     public function search($text_fragment)
     {
@@ -443,9 +442,9 @@ class ServiceController extends Controller
         ->keyBy('id')
         ->toArray();
 
-        // // dd($catalogs);
+        // dd($catalogs);
 
-        // // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         $catalogs_tree = get_parents_tree($catalogs);
 
         // Рекурсивно считываем наш шаблон
@@ -453,42 +452,42 @@ class ServiceController extends Controller
             $string = '';
             $padding = $padding;
 
-    // dd($items);
+            // dd($items);
             foreach($items as $item){
                 $string .= tpl_menus($item, $padding, $parents);
             }
             return $string;
         }
 
-// Функция отрисовки option'ов
+        // Функция отрисовки option'ов
         function tpl_menus($item, $padding, $parents) {
 
             // Выбираем пункт родителя
-                $selected = '';
-                if (in_array($item['id'], $parents)) {
-                    $selected = ' selected';
-                }
+            $selected = '';
+            if (in_array($item['id'], $parents)) {
+                $selected = ' selected';
+            }
 
             // отрисовываем option's
-                if ($item['category_status'] == 1) {
-                    $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
-                } else {
-                    $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
-                }
+            if ($item['category_status'] == 1) {
+                $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
+            } else {
+                $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
+            }
 
             // Добавляем пробелы вложенному элементу
-                if (isset($item['children'])) {
-                    $i = 1;
-                    for($j = 0; $j < $i; $j++){
-                        $padding .= '&nbsp;&nbsp';
-                    }     
-                    $i++;
+            if (isset($item['children'])) {
+                $i = 1;
+                for($j = 0; $j < $i; $j++){
+                    $padding .= '&nbsp;&nbsp';
+                }     
+                $i++;
 
-                    $menu .= show_cats($item['children'], $padding, $parents);
-                }
+                $menu .= show_cats($item['children'], $padding, $parents);
+            }
 
              // dd('lol');
-                return $menu;
+            return $menu;
             
         }
 
@@ -502,7 +501,7 @@ class ServiceController extends Controller
         // dd($parents);
 
         // Получаем HTML разметку
-    $catalogs_list = show_cats($catalogs_tree, '', $parents);
+        $catalogs_list = show_cats($catalogs_tree, '', $parents);
 
         // dd($catalogs_list);
 

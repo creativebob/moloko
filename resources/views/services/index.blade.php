@@ -81,7 +81,7 @@
 
           <td class="td-catalog">
             @foreach ($service->catalogs as $catalog)
-            <a href="/admin/services?catalog_id%5B%5D={{ $catalog->id }}" class="filter_link" title="Фильтровать">{{ $catalog->name }}</a><br>
+            <a href="/admin/sites/{{ $catalog->site->alias }}/catalog_products/{{ $catalog->id }}" class="filter_link" title="Редактировать каталог">{{ $catalog->name }}</a><br>
             @endforeach
           </td>
           {{-- <td class="td-service">{{ $service->services_article->services_product->name }}</td> --}}

@@ -127,7 +127,7 @@ Route::post('/places_display', 'PlaceController@ajax_display')->middleware('auth
 Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware('auth');
 
 
-// ------------------------------------- Метрики -------------------------------------------------
+// ---------------------------------------- Метрики -------------------------------------------------
 // Основные методы
 Route::resource('/metrics', 'MetricController')->middleware('auth');
 
@@ -140,7 +140,7 @@ Route::post('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relati
 Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->middleware('auth');
 
 
-// ------------------------------------- Состав -------------------------------------------------
+// ---------------------------------------- Состав -------------------------------------------------
 
 Route::post('/ajax_add_relation_composition', 'CompositionController@ajax_add_relation')->middleware('auth');
 Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_delete_relation')->middleware('auth');
@@ -151,7 +151,7 @@ Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
 
 
-// -------------------------------- Категории сырья -------------------------------------------
+// ------------------------------------- Категории сырья -------------------------------------------
 
 // Текущая добавленная/удаленная категория
 Route::any('/raws_categories', 'RawsCategoryController@index')->middleware('auth');
@@ -645,6 +645,16 @@ Route::prefix('/sites/{alias}')->group(function () {
 	Route::resource('/catalogs', 'CatalogController')->middleware('auth');
   	// Проверка на существование каталога
 	Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
+	// Проверка на существование алиаса каталога
+	Route::post('/catalog_check_alias', 'CatalogController@ajax_check_alias')->middleware('auth');
+
+
+	// -------------------------------- Продукция для каталогов сайта -------------------------------------
+	// Основные методы
+	Route::any('/catalog_products/{{ $id }}', 'CatalogProductController@show')->middleware('auth');
+	// Основные методы
+	Route::resource('/catalog_products', 'CatalogProductController')->middleware('auth');
+
 });
 
 
@@ -654,14 +664,16 @@ Route::post('/navigations_sort', 'NavigationController@ajax_sort')->middleware('
 Route::post('/menus_sort', 'MenuController@ajax_sort')->middleware('auth');
 Route::post('/news_sort', 'NewsController@ajax_sort')->middleware('auth');
 Route::post('/catalogs_sort', 'CatalogController@ajax_sort')->middleware('auth');
+Route::post('/catalog_products_sort', 'CatalogProductController@ajax_sort')->middleware('auth');
 
 
-// Системаня запись
+// Системная запись
 Route::post('/pages_system_item', 'PageController@ajax_system_item')->middleware('auth');
 Route::post('/news_system_item', 'NewsController@ajax_system_item')->middleware('auth');
 Route::post('/navigations_system_item', 'NavigationController@ajax_system_item')->middleware('auth');
 Route::post('/menus_system_item', 'MenuController@ajax_system_item')->middleware('auth');
 Route::post('/catalogs_system_item', 'CatalogController@ajax_system_item')->middleware('auth');
+Route::post('/catalog_products_system_item', 'CatalogProductController@ajax_system_item')->middleware('auth');
 
 
 // Отображение на сайте
@@ -670,11 +682,8 @@ Route::post('/news_display', 'NewsController@ajax_display')->middleware('auth');
 Route::post('/navigations_display', 'NavigationController@ajax_display')->middleware('auth');
 Route::post('/menus_display', 'MenuController@ajax_display')->middleware('auth');
 Route::post('/catalogs_display', 'CatalogController@ajax_display')->middleware('auth');
+Route::post('/catalog_products_display', 'CatalogProductController@ajax_display')->middleware('auth');
 
-
-// -------------------------------- Продукция для каталогов сайта -------------------------------------
-// Основные методы
-Route::resource('/catalog_products', 'CatalogProductController')->middleware('auth');
 
 // ------------------------------------- Отображение сессии -----------------------------------------
 Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');

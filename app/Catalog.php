@@ -66,6 +66,6 @@ class Catalog extends Model
     // Услуги
     public function services()
     {
-        return $this->morphedByMany('App\Service', 'catalog_products');
+        return $this->morphedByMany('App\Service', 'catalog_products')->withPivot('id', 'display', 'sort');
     }
 }

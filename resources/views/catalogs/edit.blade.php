@@ -13,7 +13,7 @@
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">Редактирование категории услуг &laquo{{ $catalog->name }}&raquo</h2>
+        <h2 class="header-content">Редактирование категории каталога &laquo{{ $catalog->name }}&raquo</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -59,34 +59,21 @@
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-6 cell">
-                        <label>Название категории
+                        <label>Название каталога
                             @include('includes.inputs.name', ['value'=>$catalog->name, 'name'=>'name', 'required'=>'required'])
+                            <div class="sprite-input-right find-status" id="name-check"></div>
+                            <div class="item-error">Такой каталог уже существует!</div>
+                        </label>
+
+                        <label>Алиас каталога
+                            @include('includes.inputs.varchar', ['name'=>'alias', 'value'=>$catalog->alias, 'required'=>''])
+                            <div class="sprite-input-right find-status" id="alias-check"></div>
+                            <div class="item-error">Каталог с таким алиасом уже существует!</div>
                         </label>
                     </div>
 
-                    {{-- Чекбокс отображения на сайте --}}
-                    @can ('publisher', $catalog)
-                    <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('display', 1, $catalog->display, ['id' => 'display']) }}
-                        <label for="display"><span>Отображать на сайте</span></label>
-                    </div>
-                    @endcan
-
-                    {{-- Чекбокс модерации --}}
-                    @can ('moderator', $catalog)
-                    @if ($catalog->moderation == 1)
-                    <div class="small-12 cell checkbox">
-                        @include('includes.inputs.moderation', ['value'=>$catalog->moderation, 'name'=>'moderation'])
-                    </div>
-                    @endif
-                    @endcan
-
-                    {{-- Чекбокс системной записи --}}
-                    @can ('god', $catalog)
-                    <div class="small-12 cell checkbox">
-                        @include('includes.inputs.system', ['value'=>$catalog->system_item, 'name'=>'system_item']) 
-                    </div>
-                    @endcan
+                    {{-- Чекбоксы управления --}}
+                    @include('includes.control.checkboxes', ['item' => $catalog])
 
                     {{-- Кнопка --}}
                     <div class="small-12 cell tabs-button tabs-margin-top">
@@ -164,7 +151,7 @@
             ];
 
 
-            // Основные ностойки
+            // Основные настройки
             var catalog_id = '{{ $catalog->id }}';
 
             // При клике на удаление метрики со страницы

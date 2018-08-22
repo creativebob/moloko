@@ -8,15 +8,11 @@
 
 @section('title', $page_info->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
-
-@section('exel')
-@include('includes.title-exel', ['entity' => $page_info->alias])
-@endsection
+@section('breadcrumbs', Breadcrumbs::render('section', $parent_page_info, $site, $page_info))
 
 @section('title-content')
-{{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\CatalogProduct::class, 'type' => 'table'])
+{{-- Меню --}}
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\CatalogProduct::class, 'type' => 'menu'])
 @endsection
 
 @section('control-content')
@@ -24,19 +20,21 @@
     <div class="small-12 cell inputs">
 
         <div class="grid-x grid-margin-x">
+            @if($catalog->site->company->sites_count > 1)
             <div class="small-12 medium-6 cell">
-                <label>Название каталога
-                    @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
-                    <div class="sprite-input-right find-status" id="name-check"></div>
-                    <div class="item-error">Такой каталог уже существует!</div>
-                </label>
+                
+
             </div>
+            @endif
 
             <div class="small-12 medium-6 cell">
-                <label>Алиас каталога
-                    @include('includes.inputs.varchar', ['name'=>'alias', 'value'=>null, 'required'=>''])
-                    <div class="sprite-input-right find-status" id="alias-check"></div>
-                    <div class="item-error">Каталог с таким алиасом уже существует!</div>
+                <label>Каталоги
+                    <select name="catalog_id" id="catalogs-list">
+                        @php
+                        echo $catalogs_list;
+                        @endphp
+                    </select>
+                    
                 </label>
             </div>
 
@@ -65,17 +63,15 @@
 
                     <th class="td-author">Автор</th>
                     <th class="td-control"></th>
-                    <th class="td-archive"></th>
+                    <th class="td-delete"></th>
                 </tr>
             </thead>
             <tbody data-tbodyId="1" class="tbody-width">
-                @if(!empty($catalogs))
-
-                @foreach($catalogs as $catalog)
+                @if(!empty($catalog))
 
                 @if (count($catalog->services) > 0)
                 @foreach ($catalog->services as $service)
-                <tr class="item @if($service->moderation == 1)no-moderation @endif" id="services-{{ $service->id }}" data-name="{{ $service->services_article->name }}">
+                <tr class="item @if($service->moderation == 1)no-moderation @endif" id="catalog_products-{{ $service->pivot->id }}" data-name="{{ $service->services_article->name }}">
                     <td class="td-drop"><div class="sprite icon-drop"></div></td>
                     <td class="td-checkbox checkbox">
                         <input type="checkbox" class="table-check" name="service_id" id="check-{{ $service->id }}"
@@ -104,12 +100,23 @@
                     <td class="td-author">@if(isset($service->author->first_name)) {{ $service->author->first_name . ' ' . $service->author->second_name }} @endif</td>
 
                     {{-- Элементы управления --}}
-                    @include('includes.control.table-td', ['item' => $service])
+                    <td class="td-control">
 
-                    <td class="td-archive">
+                        {{-- Отображение на сайте --}}
+                        @can ('display', App\CatalogProduct::class)
+                        @display ($service->pivot)
+                        <div class="icon-display-show black sprite" data-open="item-display"></div>
+                        @else
+                        <div class="icon-display-hide black sprite" data-open="item-display"></div>
+                        @enddisplay
+                        @endcan
+
+                    </td>
+
+                    <td class="td-delete">
                         @if ($service->system_item != 1)
                         @can('delete', $service)
-                        <a class="icon-delete sprite" data-open="item-archive"></a>
+                        <a class="icon-delete sprite" data-open="item-delete"></a>
                         @endcan
                         @endif
                     </td>       
@@ -117,27 +124,20 @@
 
                 @endforeach
                 @endif
-                @endforeach
+
                 @endif
             </tbody>
         </table>
     </div>
 </div>
 
-{{-- Pagination --}}
-<div class="grid-x" id="pagination">
-    <div class="small-6 cell pagination-head">
-        <span class="pagination-title">Кол-во записей: {{ $catalogs->count() }}</span>
-        {{ $catalogs->links() }}
-    </div>
-</div>
 @endsection
 
 @section('modals')
 <section id="modal"></section>
 
 {{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-archive')
+@include('includes.modals.modal-delete')
 
 @endsection
 
@@ -157,12 +157,32 @@
 @include('includes.scripts.checkbox-control')
 
 {{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-archive-script')
+@include('includes.scripts.modal-delete-script')
 
 @include('includes.scripts.inputs-mask')
 @include('catalog_products.scripts')
 
 <script type="text/javascript">
+
+    var alias = '{{ $site->alias }}';
+    // Мягкое удаление с refresh
+    $(document).on('click', '[data-open="item-delete"]', function() {
+        // находим описание сущности, id и название удаляемого элемента в родителе
+        var parent = $(this).closest('.item');
+        var type = parent.attr('id').split('-')[0];
+        var id = parent.attr('id').split('-')[1];
+        var name = parent.data('name');
+        $('.title-delete').text(name);
+        $('.delete-button').attr('id', 'del-' + type + '-' + id);
+        $('#form-item-del').attr('action', '/admin/sites/'+ alias + '/' + type + '/' + id);
+    });
+
+
+    $(document).on('change', '#catalogs-list', function(event) {
+        event.preventDefault();
+        window.location = "/admin/sites/" + alias + "/catalog_products/" + $(this).val();
+
+    });
 
 
     // Обозначаем таймер для проверки
