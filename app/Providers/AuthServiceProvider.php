@@ -25,6 +25,8 @@ use App\Page;
 use App\Navigation;
 use App\Menu;
 use App\News;
+use App\Catalog;
+use App\CatalogProduct;
 
 use App\Position;
 
@@ -54,8 +56,6 @@ use App\RawsProduct;
 
 use App\Lead;
 
-// use App\Article;
-
 use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
 use App\Policies\CompanyPolicy;
@@ -80,7 +80,8 @@ use App\Policies\PagePolicy;
 use App\Policies\NavigationPolicy;
 use App\Policies\MenuPolicy;
 use App\Policies\NewsPolicy;
-
+use App\Policies\CatalogPolicy;
+use App\Policies\CatalogProductPolicy;
 
 use App\Policies\PositionPolicy;
 use App\Policies\StafferPolicy;
@@ -108,8 +109,6 @@ use App\Policies\RawsCategoryPolicy;
 use App\Policies\RawsProductPolicy;
 
 use App\Policies\LeadPolicy;
-
-// use App\Policies\ArticlePolicy;
 
 
 use Illuminate\Support\Facades\Gate as GateContract;
@@ -147,6 +146,8 @@ class AuthServiceProvider extends ServiceProvider
         Page::class => PagePolicy::class,
         Site::class => SitePolicy::class,
         News::class => NewsPolicy::class,
+        Catalog::class => CatalogPolicy::class,
+        CatalogProduct::class => CatalogProductPolicy::class,
         Staffer::class => StafferPolicy::class,
         Booklist::class => BooklistPolicy::class,
         Sector::class => SectorPolicy::class,

@@ -478,6 +478,32 @@ class PagesTableSeeder extends Seeder
                 'display' => null,
             ],
 
+            // 41
+
+            [
+                'name' => 'Каталоги',
+                'site_id' => 1,
+                'title' => 'Каталоги',
+                'description' => 'Каталоги',
+                'alias' => 'catalogs',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+            [
+                'name' => 'Продукция на сайте',
+                'site_id' => 1,
+                'title' => 'Продукция на сайте',
+                'description' => 'Продукция на сайте',
+                'alias' => 'catalog_products',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
             // [
             //     'name' => 'Категории продукции',
             //     'site_id' => 1,

@@ -607,7 +607,7 @@ class ServicesCategoryController extends Controller
     
 
     // Проверка наличия в базе
-    public function services_category_check(Request $request)
+    public function ajax_check(Request $request)
     {
         // Получаем авторизованного пользователя
         $user = $request->user();

@@ -98,10 +98,10 @@ class NewsController extends Controller
         // Создаем контейнер фильтра
         $filter['status'] = null;
 
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
+        // $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        // $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
         // dd($filter);
 
@@ -194,7 +194,7 @@ class NewsController extends Controller
         } else {
 
             // Иначе переводим заголовок в транслитерацию
-            $cur_news->alias = Transliterate::make($title, ['type' => 'url', 'lowercase' => true]);
+            $cur_news->alias = Transliterate::make($request->title, ['type' => 'url', 'lowercase' => true]);
         }
 
         $cur_news->content = $request->content;
@@ -493,7 +493,7 @@ class NewsController extends Controller
             } else {
 
             // Иначе переводим заголовок в транслитерацию
-                $cur_news->alias = Transliterate::make($title, ['type' => 'url', 'lowercase' => true]);
+                $cur_news->alias = Transliterate::make($request->title, ['type' => 'url', 'lowercase' => true]);
             }
         }
 
@@ -607,7 +607,7 @@ class NewsController extends Controller
     // ------------------------------------------- Ajax ---------------------------------------------
 
     // Проверка наличия в базе
-    public function news_check(Request $request, $alias)
+    public function ajax_check(Request $request, $alias)
     {
 
         // Проверка новости по сайту в нашей базе данных
@@ -630,38 +630,6 @@ class NewsController extends Controller
         }
         return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $cur_news = News::findOrFail($request->id);
-        $cur_news->display = $display;
-        $cur_news->save();
-
-        if ($cur_news) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    
-
 
     public function get_albums(Request $request)
     {

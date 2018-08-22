@@ -576,7 +576,7 @@ class RawsCategoryController extends Controller
     
 
     // Проверка наличия в базе
-    public function raws_category_check(Request $request)
+    public function ajax_check(Request $request)
     {
         // Получаем авторизованного пользователя
         $user = $request->user();

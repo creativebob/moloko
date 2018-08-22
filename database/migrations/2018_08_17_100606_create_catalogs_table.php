@@ -23,6 +23,7 @@ class CreateCatalogsTable extends Migration
             $table->foreign('site_id')->references('id')->on('sites');
 
             $table->string('name')->index()->comment('Название каталога');
+            $table->string('alias')->index()->nullable()->comment('Алиас');
 
             $table->text('description')->nullable()->comment('Описание каталога');
             $table->text('seo_description')->nullable()->comment('Описание для сайта для каталога');

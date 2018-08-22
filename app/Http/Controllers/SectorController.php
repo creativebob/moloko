@@ -333,7 +333,7 @@ class SectorController extends Controller
     }
 
     // Проверка наличия в базе
-    public function sector_check(Request $request)
+    public function ajax_check(Request $request)
     {
 
         // Проверка отдела в нашей базе данных

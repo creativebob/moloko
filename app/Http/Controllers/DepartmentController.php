@@ -751,7 +751,7 @@ class DepartmentController extends Controller
         echo json_encode($departments_list, JSON_UNESCAPED_UNICODE);
     }
 
-    public function department_check(Request $request)
+    public function ajax_check(Request $request)
     {
 
         // Получаем данные для авторизованного пользователя

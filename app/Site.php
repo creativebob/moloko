@@ -83,6 +83,12 @@ class Site extends Model
         return $this->hasMany('App\News');
     }
 
+    // Получаем каталоги.
+    public function catalogs()
+    {
+        return $this->hasMany('App\Catalog');
+    }
+
     // Получаем автора
     public function author()
     {

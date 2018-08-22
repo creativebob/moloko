@@ -114,7 +114,7 @@
     var name = parent.data('name');
     $('.title-delete').text(name);
     $('.delete-button').attr('id', 'del-' + type + '-' + id);
-    $('#form-item-del').attr('action', '/sites/'+ alias + '/' + type + '/' + id);
+    $('#form-item-del').attr('action', '/admin/sites/'+ alias + '/' + type + '/' + id);
   });
 });
 </script> 

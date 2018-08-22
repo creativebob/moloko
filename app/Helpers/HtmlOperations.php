@@ -3,6 +3,63 @@
 // Необходимые расширения
 use Carbon\Carbon;
 
+// Рекурсивно считываем наш шаблон
+function show_cat($items, $padding, $parent, $disable, $exception){
+    $string = '';
+    $padding = $padding;
+
+    // dd($items);
+    foreach($items as $item){
+        $string .= tpl_menu($item, $padding, $parent, $disable, $exception);
+    }
+    return $string;
+}
+
+// Функция отрисовки option'ов
+function tpl_menu($item, $padding, $parent, $disable, $exception) {
+
+    // dd($exception);
+    // Убираем из списка пришедший пункт меню 
+    if ($item['id'] != $exception) {
+
+
+
+            // Выбираем пункт родителя
+        $selected = '';
+        if ($item['id'] == $parent) {
+            $selected = ' selected';
+        }
+
+
+            // Блокируем категории
+        $disabled = '';
+        if($disable == 1) {
+            $disabled = ' disabled';
+        }
+
+            // отрисовываем option's
+        if ($item['category_status'] == 1) {
+            $menu = '<option value="'.$item['id'].'" class="first"'.$selected.''.$disabled.'>'.$item['name'].'</option>';
+        } else {
+            $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
+        }
+
+            // Добавляем пробелы вложенному элементу
+        if (isset($item['children'])) {
+            $i = 1;
+            for($j = 0; $j < $i; $j++){
+                $padding .= '&nbsp;&nbsp';
+            }     
+            $i++;
+
+            $menu .= show_cat($item['children'], $padding, $parent, $disable, $exception);
+        }
+
+             // dd('lol');
+        return $menu;
+    }
+}
+
 // Для отрисовки списка вложенности для index с правами удаления/редактирования записи принимаем выбранные из базы записи, и пользователя, что применимо его выставить эти права
 function get_index_tree_with_rights ($items, $user) {
     // Создаем массив где ключ массива является ID меню
@@ -58,7 +115,7 @@ function get_index_tree_with_rights ($items, $user) {
 }
 
 // Для отрисовки списка вложенности принимаем выбранные из базы записи в виде массива, родителя, параметр блокировки категорий, запрет на отображение самого элемента в списке
-function get_select_tree ($items, $parent, $disable, $exception){
+function get_select_tree ($items, $parent = null, $disable = null, $exception = null){
 
     // Формируем дерево вложенности
     $items_cat = [];
@@ -74,55 +131,9 @@ function get_select_tree ($items, $parent, $disable, $exception){
         }
     }
 
-    // Функция отрисовки option'ов
-    function tpl_menu($item, $padding, $parent, $disable, $exception) {
 
-    // dd($exeption);
-    // Убираем из списка пришедший пункт меню 
-        if ($item['id'] != $exception) {
 
-            // Выбираем пункт родителя
-            $selected = '';
-            if ($item['id'] == $parent) {
-                $selected = ' selected';
-            }
 
-            // Блокируем категории
-            $disabled = '';
-            if($disable == 1) {
-                $disabled = ' disabled';
-            }
-
-            // отрисовываем option's
-            if ($item['category_status'] == 1) {
-                $menu = '<option value="'.$item['id'].'" class="first"'.$selected.''.$disabled.'>'.$item['name'].'</option>';
-            } else {
-                $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
-            }
-
-            // Добавляем пробелы вложенному элементу
-            if (isset($item['children'])) {
-                $i = 1;
-                for($j = 0; $j < $i; $j++){
-                    $padding .= '&nbsp;&nbsp';
-                }     
-                $i++;
-
-                $menu .= show_cat($item['children'], $padding, $parent, $disable, $exception);
-            }
-            return $menu;
-        }
-    }
-
-    // Рекурсивно считываем наш шаблон
-    function show_cat($items, $padding, $parent, $disable, $exception){
-        $string = '';
-        $padding = $padding;
-        foreach($items as $item){
-            $string .= tpl_menu($item, $padding, $parent, $disable, $exception);
-        }
-        return $string;
-    }
 
     // Получаем HTML разметку
     $items_list = show_cat($items_cat, '', $parent, $disable, $exception);
