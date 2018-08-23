@@ -13,7 +13,8 @@ class DatabaseTestSeeder extends Seeder
   {
 
     // Сиды к новым миграциям
-    $this->call(CompaniesTestTableSeeder::class);
-
+    $this->call(GoodsCategoriesTesterTableSeeder::class);
+    $this->call(ServicesCategoriesTestTableSeeder::class);
+    
   }
 }
