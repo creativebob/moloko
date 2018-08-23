@@ -97,11 +97,12 @@ class NewsController extends Controller
 
         // Создаем контейнер фильтра
         $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
 
         // $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
-        // $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
         // dd($filter);
 
