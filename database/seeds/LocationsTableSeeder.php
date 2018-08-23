@@ -10,7 +10,7 @@ class LocationsTableSeeder extends Seeder
 		DB::table('locations')->insert([
 			[
 				'city_id' => 1,
-				'address' => 'СОвершенно секретно',
+				'address' => 'Совершенно секретно',
 				'author_id' => 1,
 				'country_id' => 1,
 			],
