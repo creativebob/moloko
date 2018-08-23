@@ -38,7 +38,7 @@
 
           @if(Auth::user()->god == 1) 
           <th class="td-company-id">Компания</th>
-          <th class="td-sync-id">Добавить на сайт</th>
+          {{-- <th class="td-sync-id">Добавить на сайт</th> --}}
           @endif
 
           <th class="td-author">Автор</th>
@@ -85,7 +85,7 @@
           <td class="td-company-id">@if(!empty($cur_goods->company->name)) {{ $cur_goods->company->name }} @else @if($cur_goods->system_item == null) Шаблон @else Системная @endif @endif</td>
           @endif
 
-          <td class="td-sync-id"><a class="icon-sync sprite" data-open="item-sync"></a></td>
+          {{-- <td class="td-sync-id"><a class="icon-sync sprite" data-open="item-sync"></a></td> --}}
 
           <td class="td-author">@if(isset($cur_goods->author->first_name)) {{ $cur_goods->author->first_name . ' ' . $cur_goods->author->second_name }} @endif</td>
 

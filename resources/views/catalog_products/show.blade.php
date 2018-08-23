@@ -28,7 +28,7 @@
             @endif
 
             <div class="small-12 medium-6 cell">
-                <label>Каталоги
+                <label>Разделы каталога:
                     <select name="catalog_id" id="catalogs-list">
                         @php
                         echo $catalogs_list;
@@ -88,7 +88,7 @@
                     <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->services_article->name }}</a></td>
                     <td class="td-type">Услуга</td>
 
-                    <td class="td-cost">{{ $service->price }}</td>
+                    <td class="td-price">{{ num_format($service->price, 0) }}</td>
 
                     @if(Auth::user()->god == 1) 
                     <td class="td-company-id">@if(!empty($service->company->name)) {{ $service->company->name }} @else @if($service->system_item == null) Шаблон @else Системная @endif @endif</td>
