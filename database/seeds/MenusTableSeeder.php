@@ -692,15 +692,15 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Продукция на сайте',
             'icon' => null,
-            'alias' => 'admin/catalog_products',
-            'parent_id' => 11,
-            'page_id' => 42,
-            'navigation_id' => 2,
+            'alias' => 'catalog_products',
+            'parent_id' => null,
+            'page_id' => null,
+            'navigation_id' => 1,
             'company_id' => null,
-            'system_item' => 1,
+            'system_item' => null,
             'author_id' => 1,
             'display' => 1,
-            'sort' => 1,
+            'sort' => null,
         ],
 
         // Остальное

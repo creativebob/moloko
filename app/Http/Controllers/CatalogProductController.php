@@ -76,12 +76,30 @@ class CatalogProductController extends Controller
     }
 
 
-    public function show(Request $request, $alias, $id)
+    public function show(Request $request, $alias, $id = null)
     {
 
         // dd($alias);
         // Подключение политики
         // $this->authorize(getmethod(__FUNCTION__), CatalogProduct::class);
+
+
+
+
+        if ($id == null) {
+            $catalog = Catalog::whereHas('site', function ($query) use ($alias) {
+                $query->whereAlias($alias);
+            })->first();
+
+            if ($catalog) {
+                $id = $catalog->id;
+
+            } else {
+
+                return redirect("/admin/sites/".$alias."/catalogs");
+            }
+
+        }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -104,7 +122,7 @@ class CatalogProductController extends Controller
         $site = $catalog->site;
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $catalogs_list = get_select_tree($site->catalogs->toArray(), $catalog->id, null, null);
+        $catalogs_list = get_select_tree($site->catalogs->keyBy('id')->toArray(), $catalog->id, null, null);
         // dd($catalogs_list);
 
         $entity = $this->entity_name;

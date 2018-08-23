@@ -651,7 +651,7 @@ Route::prefix('/sites/{alias}')->group(function () {
 
 	// -------------------------------- Продукция для каталогов сайта -------------------------------------
 	// Основные методы
-	Route::any('/catalog_products/{{ $id }}', 'CatalogProductController@show')->middleware('auth');
+	Route::any('/catalog_products/{id?}', 'CatalogProductController@show')->middleware('auth');
 	// Основные методы
 	Route::resource('/catalog_products', 'CatalogProductController')->middleware('auth');
 
