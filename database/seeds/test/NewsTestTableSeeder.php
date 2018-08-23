@@ -54,7 +54,7 @@ class NewsTestTableSeeder extends Seeder
           'alias' => 'airport',
           'company_id' => 1,
           'system_item' => null,
-          'author_id' => 14,
+          'author_id' => 11,
           'display' => 1,
         ],
         [
@@ -82,7 +82,7 @@ class NewsTestTableSeeder extends Seeder
           'alias' => 'success-project',
           'company_id' => 1,
           'system_item' => null,
-          'author_id' => 14,
+          'author_id' => 11,
           'display' => 1,
         ],
     	]);
