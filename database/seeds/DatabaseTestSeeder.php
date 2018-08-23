@@ -8,11 +8,7 @@ class DatabaseTestSeeder extends Seeder
     public function run()
     {
 
-    // Сиды к новым миграциям
-    $this->call(GoodsCategoriesTesterTableSeeder::class);
-    $this->call(ServicesCategoriesTestTableSeeder::class);
-
-        // Сиды к новым миграциям
+        // Кампания со штатом и расписанием
         $this->call(LocationsTestTableSeeder::class);
         $this->call(CompaniesTestTableSeeder::class);
         $this->call(SchedulesTestTableSeeder::class);
@@ -23,12 +19,17 @@ class DatabaseTestSeeder extends Seeder
         $this->call(StaffTestTableSeeder::class);
         $this->call(EmployeesTestTableSeeder::class);
 
+        // Сайт компании
         $this->call(SitesTestTableSeeder::class);
         $this->call(MenuSiteTestTableSeeder::class);
         $this->call(PagesTestTableSeeder::class);
         $this->call(NewsTestTableSeeder::class);
         $this->call(NavigationsTestTableSeeder::class);
         $this->call(MenusTestTableSeeder::class);
+
+        // Категории продукции
+        $this->call(GoodsCategoriesTestTableSeeder::class);
+        $this->call(ServicesCategoriesTestTableSeeder::class);
 
     }
 

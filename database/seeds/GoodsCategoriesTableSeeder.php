@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class GoodsCategoriesTestTableSeeder extends Seeder
+class GoodsCategoriesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +11,7 @@ class GoodsCategoriesTestTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('services_categories')->insert([
+        DB::table('goods_categories')->insert([
 
 
 
