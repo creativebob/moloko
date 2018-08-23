@@ -11,11 +11,23 @@
 |
 */
 
-Route::resource('/news', 'Project\NewsProjectController')->middleware('auth');
+// Route::resource('/news', 'Project\NewsProjectController')->middleware('auth');
 
-Route::resource('/lolkek', 'Project\ServicesProjectController')->middleware('auth');
+// Route::resource('/lolkek', 'Project\ServicesProjectController')->middleware('auth');
 
-// Главная
-Route::get('/', function () {
-  return view('welcome');
-});
+// Кабинет
+Route::resource('/', 'Project\CabinetProjectController');
+Route::resource('/cabinet', 'Project\CabinetProjectController');
+
+// Клиника
+Route::resource('/clinic', 'Project\ClinicProjectController');
+
+// Услуги
+Route::get('/services/{id?}', 'Project\ServicesProjectController@show');
+// Route::resource('/services', 'Project\ServicesProjectController');
+
+// О нас
+Route::resource('/about', 'Project\AboutProjectController');
+
+// Контакты
+Route::resource('/contacts', 'Project\ContactsProjectController');

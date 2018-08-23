@@ -1,0 +1,513 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+html {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+q, blockquote {
+  quotes: none;
+}
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+a img {
+  border: none;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+@font-face {
+  font-family: "SegoeUIBold";
+  src: url(/project/css/fonts/SegoeUI/SegoeUIBold//SegoeUIBold.eot);
+  src: url(/project/css/fonts/SegoeUI/SegoeUIBold//SegoeUIBold.eot?#iefix) format('embedded-opentype'), url(/project/css/fonts/SegoeUI/SegoeUIBold/PSegoeUIBold.woff) format('woff'), url(/project/css/fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf) format('truetype');
+}
+@font-face {
+  font-family: "SegoeUIItalic";
+  src: url(/project/css/fonts/SegoeUI/SegoeUIItalic//SegoeUIItalic.eot);
+  src: url(/project/css/fonts/SegoeUI/SegoeUIItalic//SegoeUIItalic.eot?#iefix) format('embedded-opentype'), url(/project/css/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.woff) format('woff'), url(/project/css/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf) format('truetype');
+}
+@font-face {
+  font-family: "SegoeUILight";
+  src: url(/project/css/fonts/SegoeUI/SegoeUILight//SegoeUILight.eot);
+  src: url(/project/css/fonts/SegoeUI/SegoeUILight//SegoeUILight.eot?#iefix) format('embedded-opentype'), url(/project/css/fonts/SegoeUI/SegoeUILight/SegoeUILight.woff) format('woff'), url(/project/css/fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf) format('truetype');
+}
+@font-face {
+  font-family: "SegoeUISemiLight";
+  src: url(/project/css/fonts/SegoeUI/SegoeUISemiLight//SegoeUISemiLight.eot);
+  src: url(/project/css/fonts/SegoeUI/SegoeUISemiLight//SegoeUISemiLight.eot?#iefix) format('embedded-opentype'), url(/project/css/fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf) format('truetype');
+}
+@font-face {
+  font-family: "SegoeUIRegular";
+  src: url(/project/css/fonts/SegoeUI/SegoeUIRegular//SegoeUIRegular.eot);
+  src: url(/project/css/fonts/SegoeUI/SegoeUIRegular//SegoeUIRegular.eot?#iefix) format('embedded-opentype'), url(/project/css/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.woff) format('woff'), url(/project/css/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf) format('truetype');
+}
+@font-face {
+  font-family: "SegoeUISemiBold";
+  src: url(/project/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot);
+  src: url(/project/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot?#iefix) format('embedded-opentype'), url(/project/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff) format('woff'), url(/project/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf) format('truetype');
+}
+@font-face {
+  font-family: "PFDinTextPro-Light";
+  src: url(/project/css/fonts/DinTextPro/PFDinTextPro-Light.ttf) format('truetype');
+}
+@font-face {
+  font-family: "PFDinTextPro-Medium";
+  src: url(/project/css/fonts/DinTextPro/PFDinTextPro-Medium.ttf) format('truetype');
+}
+@font-face {
+  font-family: "PFDinTextCondPro-Light";
+  src: url(/project/css/fonts/DinTextCondensedPro/PFDinTextCondPro-Light.ttf) format('truetype');
+}
+@font-face {
+  font-family: "PFDinTextCondPro-Thin";
+  src: url(/project/css/fonts/DinTextCondensedPro/PFDinTextCondPro-Thin.ttf) format('truetype');
+}
+@font-face {
+  font-family: "PFDinTextCondPro-Regular";
+  src: url(/project/css/fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: "PFDinTextCompPro-Light";
+  src: url(/project/css/fonts/DinTextCompressedPro/PFDinTextCompPro-Light.ttf) format('truetype');
+}
+@font-face {
+  font-family: "PFDinTextCompPro-Regular";
+  src: url(/project/css/fonts/DinTextCompressedPro/PFDinTextCompPro-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: "PFDinTextCompPro-Thin";
+  src: url(/project/css/fonts/DinTextCompressedPro/PFDinTextCompPro-Thin.ttf) format('truetype');
+}
+@font-face {
+  font-family: "Calibri";
+  src: url(/project/css/fonts/Calibri.ttf) format('truetype');
+}
+html {
+  font: 16px;
+}
+
+body {
+  background: url("img/bg.png");
+  height: auto;
+}
+
+a {
+  font-family: "Calibri";
+  font-size: 1rem;
+  line-height: 2;
+  color: #00a0ca;
+  padding: 0.4rem;
+}
+
+p {
+  font-family: "SegoeUISemiLight";
+  font-size: 1rem;
+  line-height: 1.6666666667;
+  margin-bottom: 2rem;
+}
+
+.sprite {
+  display: inline-block;
+  vertical-align: middle;
+  width: 32px;
+  height: 32px;
+  background: url(sprites/sprites.png) no-repeat;
+}
+.sprite :focus {
+  outline: none;
+}
+
+.icon-vk {
+  background-position: 0px 0px;
+}
+
+.header {
+  margin: 2rem 0 0 0;
+}
+.header h1 {
+  font-family: "PFDinTextCondPro-Regular";
+  font-size: 1.6666666667rem;
+  line-height: 1.3333333333;
+  color: #010731;
+}
+.header address {
+  font-family: "PFDinTextPro-Light";
+  font-size: 1rem;
+  line-height: 1.3333333333;
+  color: #000;
+}
+.header .staff-list {
+  margin-top: 5rem;
+}
+@media (min-width: 0) and (max-width: 1024px) {
+  .header .staff-list {
+    margin-bottom: 2rem;
+  }
+}
+@media (min-width: 0) and (max-width: 640px) {
+  .header .staff-list li {
+    margin-bottom: 2rem;
+  }
+}
+.header .staff-list li .staffer {
+  font-family: "PFDinTextCondPro-Light";
+  font-size: 1.3333333333rem;
+  line-height: 1.3333333333;
+  color: #010731;
+  background-color: #fff;
+  padding: 0.4rem 1rem;
+}
+.header .staff-list li .phone {
+  font-family: "PFDinTextPro-Medium";
+  font-size: 1.2222222222rem;
+  line-height: 1;
+  color: #010731;
+  padding: 0.4rem 1rem;
+}
+.header .staff-list li .worktime-open {
+  font-family: "PFDinTextPro-Light";
+  font-size: 0.8888888889rem;
+  line-height: 1.3333333333;
+  color: #336470;
+  display: inline-block;
+  text-decoration: underline;
+}
+.header .staff-list li .worktime-open:hover {
+  text-decoration: none;
+}
+.header .staff-list li .worktimes-pane {
+  width: 200px;
+  padding: 0;
+  background-color: #a6a65c;
+}
+.header .staff-list li .worktimes {
+  font-family: "PFDinTextPro-Light";
+  font-size: 1rem;
+  line-height: 1.3333333333;
+  color: #fff;
+  background-color: #a6a65c;
+  padding: 0.4rem 1rem;
+}
+.header .staff-list li .worktimes-table {
+  font-family: "PFDinTextPro-Light";
+  font-size: 0.8888888889rem;
+  line-height: 1.3333333333;
+  color: #fff;
+  border-collapse: collapse;
+}
+.header .staff-list li .worktimes-table caption {
+  font-weight: normal;
+}
+.header .staff-list li .worktimes-table tbody {
+  border: none;
+}
+.header .staff-list li .worktimes-table tr td {
+  background-color: #a6a65c;
+}
+.header .staff-list li .worktimes-table .day-now td {
+  background-color: #c5a74d;
+}
+
+.navigation {
+  margin-bottom: 4rem;
+}
+
+.menu-hover-lines {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: all 0.35s ease;
+}
+.menu-hover-lines li a {
+  font-family: "PFDinTextPro-Light";
+  font-size: 1rem;
+  line-height: 1.3333333333;
+  color: #35636f;
+  padding: 0.75rem 1rem;
+  color: rgba(53, 99, 111, 0.5);
+  position: relative;
+  margin-left: 1rem;
+}
+.menu-hover-lines li:first-child a {
+  margin-left: 0;
+}
+.menu-hover-lines li.active > a {
+  background-color: #fff;
+}
+.menu-hover-lines a:before,
+.menu-hover-lines a::after {
+  height: 3px;
+  position: absolute;
+  content: '';
+  transition: all 0.35s ease;
+  background-color: #010731;
+  width: 0;
+}
+.menu-hover-lines a::before {
+  top: 0;
+  left: 0;
+}
+.menu-hover-lines a::after {
+  bottom: 0;
+  right: 0;
+}
+.menu-hover-lines a:hover,
+.menu-hover-lines li.active > a {
+  color: #010731;
+  transition: all 0.35s ease;
+}
+.menu-hover-lines a:hover::before,
+.menu-hover-lines a:hover::after {
+  width: 100%;
+}
+
+.orbit {
+  margin-bottom: 2rem;
+}
+
+.services h2 {
+  font-family: "PFDinTextCondPro-Regular";
+  font-size: 1.6666666667rem;
+  line-height: 1.3333333333;
+  color: #010731;
+}
+.services a {
+  font-family: "Calibri";
+  font-size: 1.2222222222rem;
+  line-height: 1.2222222222;
+  color: #00a0ca;
+  text-decoration: none;
+  padding: 0.4rem 0;
+}
+.services a:hover {
+  text-decoration: underline;
+}
+
+.service h2 {
+  font-family: "Calibri";
+  font-size: 1rem;
+  line-height: 1.3333333333;
+  color: #010731;
+  text-transform: uppercase;
+}
+.service a {
+  color: #00a0ca;
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  margin-left: -0.8rem;
+}
+.service a:hover {
+  text-decoration: underline;
+}
+.service .active {
+  color: #fff;
+  background-color: #000;
+}
+.service .services-nav h2 {
+  margin-bottom: 0.8rem;
+}
+.service .services-nav ul {
+  margin-bottom: 2rem;
+}
+.service .services-nav ul a {
+  font-family: "Calibri";
+  font-size: 1.2222222222rem;
+  line-height: 1.2222222222;
+}
+.service .service-category h3 {
+  font-family: "PFDinTextCondPro-Light";
+  font-size: 1.3333333333rem;
+  line-height: 1.6666666667;
+  color: #000;
+  border-bottom: 3px solid #fff;
+  margin-bottom: 2rem;
+}
+.service .service-category .service-photo {
+  margin-bottom: 2rem;
+}
+.service .service-category .services-table caption {
+  font-family: "SegoeUISemiBold";
+  font-size: 0.8888888889rem;
+  line-height: 1.6666666667;
+}
+.service .service-category .services-table tbody tr td {
+  font-family: "SegoeUIRegular";
+  font-size: 0.8888888889rem;
+  line-height: 1.6666666667;
+}
+
+.title {
+  font-family: "SegoeUISemiLight";
+  font-size: 1.1111111111rem;
+  line-height: 1.6666666667;
+  margin-bottom: 4rem;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+.title:before, .title:after {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  box-sizing: border-box;
+  width: 100%;
+  height: 3px;
+  background: #fff;
+}
+
+.title:before {
+  margin-left: -100%;
+  margin-right: 2rem;
+}
+
+.title:after {
+  margin-right: -100%;
+  margin-left: 2rem;
+}
+
+.about .media-object {
+  margin-bottom: 3rem;
+}
+.about h3 {
+  font-family: "SegoeUISemiLight";
+  font-size: 1.1111111111rem;
+  line-height: 1.6666666667;
+  margin-bottom: 2rem;
+}
+.about dl dt {
+  font-family: "SegoeUISemiLight";
+  font-size: 0.8888888889rem;
+  line-height: 1.6666666667;
+  font-weight: normal;
+}
+.about dl dd {
+  font-family: "SegoeUISemiBold";
+  font-size: 0.8888888889rem;
+  line-height: 1.6666666667;
+}
+
+dl {
+  margin-bottom: 2rem;
+}
+
+.contacts .contacts-info h3 {
+  font-family: "PFDinTextPro-Medium";
+  font-size: 1.1111111111rem;
+  line-height: 1.6666666667;
+  color: #000;
+  margin-bottom: 2rem;
+}
+.contacts .contacts-info address, .contacts .contacts-info ul, .contacts .contacts-info a {
+  font-family: "PFDinTextPro-Light";
+  font-size: 1rem;
+  line-height: 1;
+  color: #000;
+  padding: 0.4rem 0;
+}
+.contacts .contacts-info a {
+  display: inline-block;
+}
+.contacts .contacts-info a:hover {
+  color: #00a0ca;
+}
+.contacts .departments {
+  margin-top: 4rem;
+}
+.contacts .departments h4 {
+  font-family: "SegoeUISemiLight";
+  font-size: 1rem;
+  line-height: 1;
+  color: #000;
+  margin-bottom: 2rem;
+}
+.contacts .departments dl dt {
+  font-family: "SegoeUISemiBold";
+  font-size: 1rem;
+  line-height: 1;
+  color: #000;
+}
+.contacts .departments dl dd {
+  font-family: "SegoeUISemiLight";
+  font-size: 1rem;
+  line-height: 1;
+  color: #000;
+}
+
+.footer {
+  margin-top: 5rem;
+  background-color: #fff;
+  height: 5rem;
+}
+.footer .copyright {
+  display: block;
+}
+.footer .studio {
+  margin-top: 2rem;
+}
+.footer .studio span, .footer .studio a {
+  font-family: "SegoeUISemiLight";
+  font-size: 0.8888888889rem;
+  line-height: 1.6666666667;
+  color: #010731;
+}
+.footer .studio a {
+  text-decoration: underline;
+}
+.footer .studio a em {
+  color: #ff6565;
+}
+.footer .studio a:hover {
+  text-decoration: none;
+  color: #00a0ca;
+}
+@media (min-width: 0) and (max-width: 640px) {
+  .footer .cell {
+    margin-bottom: 2rem;
+  }
+  .footer .cell:last-child {
+    margin-bottom: 0;
+  }
+}

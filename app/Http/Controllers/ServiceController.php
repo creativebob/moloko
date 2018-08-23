@@ -845,7 +845,6 @@ class ServiceController extends Controller
 
         if ($service) {
 
-
             if ($service->services_article->name != $request->name) {
                 $services_article = $service->services_article;
                 $services_article->name = $request->name;
@@ -853,7 +852,14 @@ class ServiceController extends Controller
             }
 
             if (isset($request->catalogs)) {
-                $service->catalogs()->sync($request->catalogs);
+
+                $mass = [];
+                foreach ($request->catalogs as $catalog) {
+                    $mass[$catalog] = ['display' => 1];
+                }
+
+                // dd($mass);
+                $service->catalogs()->sync($mass);
             } else {
                 $service->catalogs()->detach();
             }

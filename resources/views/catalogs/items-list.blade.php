@@ -43,7 +43,7 @@ $count = count($item->children);
             @break
 
             @case($type == 'edit')
-            <a class="icon-list-edit sprite" href="/admin/sites/{{ $site->alias }}/{{ $entity }}/{{ $category['id'] }}/edit"></a>
+            <a class="icon-list-edit sprite" href="/admin/sites/{{ $site->alias }}/{{ $entity }}/{{ $item->id }}/edit"></a>
             @break
             @break
 
@@ -108,7 +108,7 @@ $count = count($item->children);
             @break
 
             @case($type == 'edit')
-            <a class="icon-list-edit sprite" href="/admin/sites/{{ $site->alias }}/{{ $entity }}/{{ $category['id'] }}/edit"></a>
+            <a class="icon-list-edit sprite" href="/admin/sites/{{ $site->alias }}/{{ $entity }}/{{ $item->id }}/edit"></a>
             @break
             @break
 

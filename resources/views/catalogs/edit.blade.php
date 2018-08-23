@@ -27,7 +27,7 @@
             <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
             <li class="tabs-title"><a data-tabs-target="site" href="#site">Сайт</a></li>
 
-            <li class="tabs-title"><a data-tabs-target="test" href="#test">дерево</a></li>
+            {{-- <li class="tabs-title"><a data-tabs-target="test" href="#test">дерево</a></li> --}}
 
         </ul>
     </div>
@@ -120,9 +120,9 @@
             <div class="tabs-panel" id="test">
                 <div class="grid-x grid-padding-x">
 
-                    @if(isset($catalogs_list))
+                    {{-- @if(isset($catalogs_list))
                     @include('includes.checkboxes-list.checkboxes-category-list', ['grouped_items' => $catalogs_list])
-                    @endif
+                    @endif --}}
 
                 </div>
             </div>
