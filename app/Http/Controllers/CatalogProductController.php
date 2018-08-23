@@ -83,9 +83,6 @@ class CatalogProductController extends Controller
         // Подключение политики
         // $this->authorize(getmethod(__FUNCTION__), CatalogProduct::class);
 
-
-
-
         if ($id == null) {
             $catalog = Catalog::whereHas('site', function ($query) use ($alias) {
                 $query->whereAlias($alias);
