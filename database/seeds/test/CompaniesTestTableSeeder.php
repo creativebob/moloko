@@ -13,14 +13,22 @@ class CompaniesTestTableSeeder extends Seeder
     {
         DB::table('companies')->insert([
             [
-                'name' => 'Моя компания',
-                'phone' => 89000000000, 
-                'location_id' => 1,
-                'sector_id' => 1,
-                'system_item' => 1, 
-                'author_id' => 1, 
-                'moderation' => null, 
-                'alias' => 'mycompany',
+                'name' => 'Воротная компания "Марс"',
+                'alias' => 'vkmars',
+                'phone' => '83952717775',
+                // 'extra_phone' => '83952717775',
+                'email' => null,
+                'location_id' => 2,
+                // 'inn' => '',
+                // 'kpp' => '',
+                // 'account_settlement' => '',
+                // 'account_correspondent' => '',
+                // 'bank' => '',
+                'director_user_id' => 4,  
+                // 'admin_user_id' => '1', 
+                'moderation' => null,
+                'sector_id' => 24,
+                'author_id' => 1,
             ],
         ]);
     }
