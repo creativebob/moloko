@@ -320,15 +320,17 @@ class GoodsCategoryController extends Controller
             $answer_raws = operator_right('raws', false, 'index');
 
             $raws_categories = RawsCategory::with(['raws_products' => function ($query) use ($answer_raws_products, $answer_raws) {
-                $query->with(['raws' => function ($query) use ($answer_raws) {
-                    $query
+                $query->with(['raws_articles' => function ($query) use ($answer_raws) {
+                    $query->whereHas('raws', function ($query) {
+                       $query->whereNull('draft'); 
+                    });
                     // ->moderatorLimit($answer_raws)
                     // ->companiesLimit($answer_raws)
                     // ->authors($answer_raws)
                     // ->systemItem($answer_raws) // Фильтр по системным записям 
-                    ->whereNull('draft');
+                    
                 }])
-                ->withCount('raws');
+                ->withCount('raws_articles');
                 // ->moderatorLimit($answer_raws_products)
                 // ->companiesLimit($answer_raws_products)
                 // ->authors($answer_raws_products)

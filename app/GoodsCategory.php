@@ -84,7 +84,7 @@ class GoodsCategory extends Model
     // Получаем состав
     public function compositions()
     {
-        return $this->morphedByMany('App\Raw', 'compositions');
+        return $this->morphedByMany('App\RawsArticle', 'compositions');
     }
 
     // public function compositions()

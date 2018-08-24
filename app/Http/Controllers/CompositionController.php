@@ -7,7 +7,7 @@ use App\GoodsProduct;
 use App\GoodsCategory;
 use App\Goods;
 
-use App\Raw;
+use App\RawsArticle;
 
 use Illuminate\Http\Request;
 
@@ -93,7 +93,7 @@ class CompositionController extends Controller
     public function ajax_add(Request $request)
     {
 
-        $composition = Raw::with(['raws_product.unit'])->findOrFail($request->id);
+        $composition = RawsArticle::with(['raws_product.unit'])->findOrFail($request->id);
 
         return view($request->entity.'.compositions.composition-input', compact('composition'));
     }
@@ -104,7 +104,7 @@ class CompositionController extends Controller
         $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
         $goods_category->compositions()->attach($request->id);
 
-        $composition = Raw::findOrFail($request->id);
+        $composition = RawsArticle::findOrFail($request->id);
 
         return view($request->entity.'.compositions.composition-input', compact('composition'));
     }

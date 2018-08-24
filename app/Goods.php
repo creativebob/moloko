@@ -81,4 +81,32 @@ class Goods extends Model
     {
         return $this->morphToMany('App\Catalog', 'catalog_products');
     }
+
+    // Метрики
+    public function metrics_values()
+    {
+        return $this->morphedByMany('App\Metric', 'goods_values')->withPivot('value');
+    }
+
+    // Состав
+    // public function compositions_values()
+    // {
+    //     return $this->belongsToMany('App\Article', 'article_values', 'article_id', 'entity_id')->where('entity', 'articles')->withPivot('entity', 'value');
+    // }
+
+    public function raws_compositions_values()
+    {
+        return $this->morphedByMany('App\Raw', 'goods_values')->withPivot('value');
+    }
+
+    // public function compositions_values()
+    // {
+    //     return $this->belongsToMany('App\Product', 'article_values', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
+    // }
+
+    // public function compositions()
+    // {
+    //     return $this->belongsToMany('App\Product', 'compositions', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
+    // }
+
 }

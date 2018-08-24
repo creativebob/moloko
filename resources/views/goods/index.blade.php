@@ -50,7 +50,7 @@
         @if(!empty($goods))
 
         @foreach($goods as $cur_goods)
-        <tr class="item @if($cur_goods->moderation == 1)no-moderation @endif" id="goods-{{ $cur_goods->id }}" data-name="{{ $cur_goods->name }}">
+        <tr class="item @if($cur_goods->moderation == 1)no-moderation @endif" id="goods-{{ $cur_goods->id }}" data-name="{{ $cur_goods->goods_article->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="cur_goods_id" id="check-{{ $cur_goods->id }}"
@@ -68,14 +68,14 @@
               <img src="{{ isset($cur_goods->photo_id) ? '/storage/'.$cur_goods->company_id.'/media/goods/'.$cur_goods->id.'/img/small/'.$cur_goods->photo->name : '/crm/img/plug/goods_small_default_color.jpg' }}" alt="{{ isset($cur_goods->photo_id) ? $cur_goods->name : 'Нет фото' }}">
             </a>
           </td>
-          <td class="td-name"><a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->name }}</a></td>
+          <td class="td-name"><a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->goods_article->name }}</a></td>
           <td class="td-description">{{ $cur_goods->description }}</td>
           <td class="td-price">{{ num_format($cur_goods->price, 0) }} </td>
           <td class="td-goods_category">
-            <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->goods_product->goods_category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->goods_product->goods_category->name }}</a>
+            <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->goods_article->goods_product->goods_category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->goods_article->goods_product->goods_category->name }}</a>
             <br>
-            {{-- @if($cur_goods->goods_product->name != $cur_goods->name) --}}
-            <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->goods_product->id }}" class="filter_link light-text">{{ $cur_goods->goods_product->name }}</a>
+            {{-- @if($cur_goods->goods_article->goods_product->name != $cur_goods->name) --}}
+            <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->goods_article->goods_product->id }}" class="filter_link light-text">{{ $cur_goods->goods_article->goods_product->name }}</a>
             {{-- @endif --}}
           </td>
           {{-- <td class="td-goods">{{ $cur_goods->goods_product->name }}</td> --}}

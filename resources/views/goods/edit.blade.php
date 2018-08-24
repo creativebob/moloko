@@ -8,12 +8,12 @@
 
 @section('title', 'Редактировать товар')
 
-@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $cur_goods))
+@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $cur_goods->goods_article))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ товар &laquo{{ $cur_goods->name }}&raquo</h2>
+        <h2 class="header-content">РЕДАКТИРОВАТЬ товар &laquo{{ $cur_goods->goods_article->name }}&raquo</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -66,6 +66,14 @@
                         <div class="grid-x grid-margin-x">
                             <div class="small-12 medium-6 cell">
 
+                                <label>Название товара
+                                    {{ Form::text('name', $cur_goods->goods_article->name, ['required']) }}
+                                </label>
+
+                                <label>Группа
+                                    {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_article->goods_product_id) }}
+                                </label>
+
                                 <label>Категория
                                     <select name="goods_category_id">
                                         @php
@@ -73,13 +81,7 @@
                                         @endphp
                                     </select>
                                 </label>
-                                <label>Группа
-                                    {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_product_id) }}
-                                </label>
-                                <label>Название товара
-                                    {{ Form::text('name', null, ['required']) }}
-                                </label>
-
+                                
                                 <fieldset class="fieldset">
                                     <legend class="checkbox">
                                         {{ Form::checkbox('portion', 1, null, ['id' => 'portion']) }}
@@ -169,13 +171,13 @@
                                 </label>
                             </div>
                         </div>
-                        @if (($cur_goods->goods_product->goods_category->metrics_count > 0) || ($cur_goods->metrics_values_count > 0))
+                        @if (($cur_goods->goods_article->goods_product->goods_category->metrics_count > 0) || ($cur_goods->metrics_values_count > 0))
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
                             @if ($cur_goods->draft == 1)
 
-                            @foreach ($cur_goods->goods_product->goods_category->metrics as $metric)
+                            @foreach ($cur_goods->goods_article->goods_product->goods_category->metrics as $metric)
                             @include('goods.metrics.metric-input', $metric)
                             @endforeach
 
@@ -188,7 +190,7 @@
                             @endif
 
                             {{-- @if ($cur_goods->metrics_values_count > 0)
-                             @each('goods.metrics.metric-input', $cur_goods->goods_product->goods_category->metrics, 'metric')
+                             @each('goods.metrics.metric-input', $cur_goods->goods_article->goods_product->goods_category->metrics, 'metric')
                              @each('goods.metrics.metric-value', $cur_goods->metrics_values, 'metric')
                              @endif --}}
 
@@ -267,9 +269,9 @@
                             <tbody id="composition-table">
 
                                 {{-- Таблица метрик товара --}}
-                                @if (isset($cur_goods->goods_product->goods_category->compositions))
+                                @if (isset($cur_goods->goods_article->goods_product->goods_category->compositions))
 
-                                @foreach ($cur_goods->goods_product->goods_category->compositions as $composition)
+                                @foreach ($cur_goods->goods_article->goods_product->goods_category->compositions as $composition)
 
                                 @if ($cur_goods->draft == 1)
 

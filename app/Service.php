@@ -19,7 +19,7 @@ use App\Scopes\Traits\SuppliersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -81,4 +81,5 @@ class Service extends Model
     {
         return $this->morphToMany('App\Catalog', 'catalog_products');
     }
+
 }

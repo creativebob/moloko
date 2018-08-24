@@ -77,7 +77,7 @@ class RawsArticle extends Model
     }
 
     // Продукт
-    public function rawes()
+    public function raws()
     {
         return $this->hasMany('App\Raw');
     }

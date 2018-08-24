@@ -56,9 +56,9 @@ class RawsProduct extends Model
     }
 
      // Получаем категорию
-    public function raws()
+    public function raws_articles()
     {
-        return $this->hasMany('App\Raw');
+        return $this->hasMany('App\RawsArticle');
     }
 
     public function photo()
