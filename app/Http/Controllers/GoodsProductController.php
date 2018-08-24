@@ -61,7 +61,7 @@ class GoodsProductController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------------
 
-        $goods_products = GoodsProduct::with('author', 'company', 'goods_category', 'goods')
+        $goods_products = GoodsProduct::with('author', 'company', 'goods_category', 'goods_articles.goods')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)

@@ -58,7 +58,7 @@
             @if($edit == 1)
             <a href="/admin/raws_products/{{ $raws_product->id }}/edit">
               @endif
-              {{ $raws_product->name }} (<a href="/admin/raws?raws_product_id%5B%5D={{ $raws_product->id }}" title="Перейти на список товаров" class="filter_link light-text">{{ $raws_product->raws->count() }}</a>)
+              {{ $raws_product->name }} (<a href="/admin/raws?raws_product_id%5B%5D={{ $raws_product->id }}" title="Перейти на список товаров" class="filter_link light-text">{{ $raws_product->raws_articles->count() }}</a>)
               @if($edit == 1)
             </a>
             @endif
