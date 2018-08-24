@@ -76,7 +76,7 @@ class CatalogProductController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------
 
-        $result_search_goods = Goods::with('author', 'company', 'goods_article.goods_product.goods_category')
+        $result_search_goods = Goods::with('goods_article.goods_product.goods_category')
         ->moderatorLimit($answer_goods)
         ->companiesLimit($answer_goods)
         ->authors($answer_goods)
@@ -89,7 +89,8 @@ class CatalogProductController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        $result_search_services = Service::with('author', 'company', 'services_article.services_product.services_category')
+
+        $result_search_services = Service::with('services_article.services_product.services_category')
         ->moderatorLimit($answer_services)
         ->companiesLimit($answer_services)
         ->authors($answer_services)
@@ -102,9 +103,8 @@ class CatalogProductController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        dd($result_search_services);
 
-        $result_search_raws = Raw::with('author', 'company', 'raws_article.raws_product.raws_category')
+        $result_search_raws = Raw::with('raws_article.raws_product.raws_category')
         ->moderatorLimit($answer_raws)
         ->companiesLimit($answer_raws)
         ->authors($answer_raws)
@@ -117,12 +117,18 @@ class CatalogProductController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        dd($result_search_goods);
 
-        if(($result_search_goods->count())||($result_search_services->count())||($result_search_raws->count())){
+        // dd($result_search_goods);
+
+        if(
+            ($result_search_goods->count())||
+            ($result_search_services->count())||
+            ($result_search_raws->count())
+        ){
 
             return view('catalog_products.search-add-product', compact('result_search_goods', 'result_search_services', 'result_search_raws'));
         } else {
+
             return view('catalog_products.search-add-product');
         }
     }
@@ -329,22 +335,38 @@ class CatalogProductController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-    public function ajax_add_product()
+    public function ajax_add_product(Request $request)
     {
+
+
+        $id = $request->id;
+        $product_type = $request->product_type;
+        $catalog_id = $request->catalog_id;
+    
+
+        // $id = 1;
+        // $product_type = 'services';
+        // $catalog_id = 1;  
 
         // Подключение политики
         // $this->authorize('create', Goods::class);
 
-        $answer_catalogs = operator_right($this->entity_name, $this->entity_dependence, 'index');
+
+        // Добавление связи
+        $catalog = Catalog::findOrFail($catalog_id);
+        $catalog->$product_type()->attach($id, ['display'=>1]);
+
+        // Вывод результата с изменением
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
-        $catalogs = Catalog::with(['services' => function ($query) {
-            $query->with('services_article', 'catalogs');
+        $catalog = Catalog::with([$product_type => function ($query) {
+            $query->orderBy('catalog_products.sort', 'asc');
         }])
-        ->whereSite_id(2)
-        ->paginate(30);
+        ->findOrFail($catalog_id);
 
         return view('catalog_products.content-core', compact('catalog'));
     }

@@ -658,7 +658,7 @@ Route::prefix('/sites/{alias}')->group(function () {
 });
 
 // Поиск продукции для добавления на сайт
-Route::get('/catalog_products/search_add_product/{text_fragment}', 'CatalogProductController@search_add_product')->middleware('auth');
+Route::post('/catalog_products/search_add_product/{text_fragment}', 'CatalogProductController@search_add_product')->middleware('auth');
 
 // Поиск продукции для добавления на сайт
 Route::post('/catalog_products/add_product', 'CatalogProductController@ajax_add_product')->middleware('auth');

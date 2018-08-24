@@ -62,8 +62,8 @@
 
     // Получаем ID добавляемго продукта и его тип (goods / services / raws)
     var product_type = $(this).attr('id').split('-')[0];
-    var id = $(this).attr('id').split('-')[1];
-
+    var product_id = $(this).attr('id').split('-')[1];
+    var category_id = $('#catalogs-list').val();
 
       $.ajax({
 
@@ -72,7 +72,7 @@
         },
         url: "/admin/catalog_products/add_product",
         type: "POST",
-        data: {product_type: product_type, id: id},
+        data: {product_type: product_type, product_id: product_id, category_id: category_id},
 
         success: function(html){
 
