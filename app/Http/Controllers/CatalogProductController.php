@@ -83,12 +83,18 @@ class CatalogProductController extends Controller
         // Подключение политики
         // $this->authorize(getmethod(__FUNCTION__), CatalogProduct::class);
 
-
         if ($id == null) {
             $catalog = Catalog::whereHas('site', function ($query) use ($alias) {
                 $query->whereAlias($alias);
             })->first();
-            $id = $catalog->id;
+
+            if ($catalog) {
+                $id = $catalog->id;
+
+            } else {
+
+                return redirect("/admin/sites/".$alias."/catalogs");
+            }
         }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)

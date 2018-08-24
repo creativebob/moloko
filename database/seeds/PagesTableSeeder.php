@@ -481,10 +481,10 @@ class PagesTableSeeder extends Seeder
             // 41
 
             [
-                'name' => 'Каталоги',
+                'name' => 'Каталог продукции для сайта',
                 'site_id' => 1,
-                'title' => 'Каталоги',
-                'description' => 'Каталоги',
+                'title' => 'Каталог продукции для сайта',
+                'description' => 'Каталог продукции для сайта',
                 'alias' => 'catalogs',
                 'company_id' => null,
                 'system_item' => 1,

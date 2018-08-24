@@ -59,7 +59,7 @@
             @if($edit == 1)
             <a href="/admin/services_products/{{ $services_product->id }}/edit">
               @endif
-              {{ $services_product->name }} (<a href="/admin/services?services_product_id%5B%5D={{ $services_product->id }}" title="Перейти на список услуг" class="filter_link light-text">{{ $services_product->services->count() }}</a>)
+              {{ $services_product->name }} (<a href="/admin/services?services_product_id%5B%5D={{ $services_product->id }}" title="Перейти на список услуг" class="filter_link light-text">{{ $services_product->services_articles->count() }}</a>)
               @if($edit == 1)
             </a>
             @endif

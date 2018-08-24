@@ -8,12 +8,12 @@
 
 @section('title', 'Редактировать сырьё')
 
-@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $raw))
+@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $raw->raws_article))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ сырьё &laquo{{ $raw->name }}&raquo</h2>
+        <h2 class="header-content">РЕДАКТИРОВАТЬ сырьё &laquo{{ $raw->raws_article->name }}&raquo</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -65,20 +65,22 @@
                         <div class="grid-x grid-margin-x">
                             <div class="small-12 medium-6 cell">
 
-                                <label>Категория
-                                    <select name="raws_category_id" disabled>
+                                <label>Название сырья
+                                    {{ Form::text('name', $raw->raws_article->name, ['required']) }}
+                                </label>
+
+                                <label>Группа
+                                    {{ Form::select('raws_product_id', $raws_products_list, $raw->raws_article->raws_product_id) }}
+                                </label>
+
+                                 <label>Категория
+                                    <select name="raws_category_id">
                                         @php
                                         echo $raws_categories_list;
                                         @endphp
                                     </select>
                                 </label>
-                                <label>Группа
-                                    {{ Form::select('raws_product_id', $raws_products_list, $raw->raws_product_id) }}
-                                </label>
-                                <label>Название сырья
-                                    {{ Form::text('name', null, ['required']) }}
-                                </label>
-
+                                
                                 <fieldset class="fieldset">
                                     <legend class="checkbox">
                                         {{ Form::checkbox('portion', 1, null, ['id' => 'portion']) }}
@@ -168,13 +170,13 @@
                                 </label>
                             </div>
                         </div>
-                        @if (($raw->raws_product->raws_category->metrics_count > 0) || ($raw->metrics_values_count > 0))
+                        @if (($raw->raws_article->raws_product->raws_category->metrics_count > 0) || ($raw->metrics_values_count > 0))
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
                             @if ($raw->draft == 1)
 
-                            @foreach ($raw->raws_product->raws_category->metrics as $metric)
+                            @foreach ($raw->raws_article->raws_product->raws_category->metrics as $metric)
                             @include('raws.metrics.metric-input', $metric)
                             @endforeach
 
@@ -187,7 +189,7 @@
                             @endif
 
                             {{-- @if ($raw->metrics_values_count > 0)
-                               @each('raws.metrics.metric-input', $raw->raws_product->raws_category->metrics, 'metric')
+                               @each('raws.metrics.metric-input', $raw->raws_article->raws_product->raws_category->metrics, 'metric')
                                @each('raws.metrics.metric-value', $raw->metrics_values, 'metric')
                                @endif --}}
 

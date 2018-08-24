@@ -13,9 +13,8 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\SuppliersTraitScopes;
 
-// use Illuminate\Support\Facades\Auth;
+use App\Scopes\Traits\ManufacturersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
@@ -25,10 +24,9 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 
-class Goods extends Model
+class GoodsArticle extends Model
 {
-
-	// Включаем кеш
+    // Включаем кеш
     // use Cachable;
 
     use Notifiable;
@@ -41,48 +39,20 @@ class Goods extends Model
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-    use SuppliersTraitScopes;
+
+    use ManufacturersTraitScopes;
 
     // Фильтры
     use Filter;
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    public function goods_article()
-    {
-        return $this->belongsTo('App\GoodsArticle');
-    }
-
-    // Получаем компанию.
-    public function company()
-    {
-        return $this->belongsTo('App\Company');
-    }
-
-    // Получаем автора
-    public function author()
-    {
-        return $this->belongsTo('App\User', 'author_id');
-    }
-
-    // Получаем альбом
-    public function album()
-    {
-        return $this->belongsTo('App\Album');
-    }
-
-    public function photo()
-    {
-        return $this->belongsTo('App\Photo');
-    }
-
-    // Каталоги
-    public function catalogs()
-    {
-        return $this->morphToMany('App\Catalog', 'catalog_products');
-    }
-
     // Метрики
+    // public function metrics_values()
+    // {
+    //     return $this->belongsToMany('App\Metric', 'goods_values', 'goods_id', 'entity_id')->where('entity', 'metrics')->withPivot('entity', 'value');
+    // }
+
     public function metrics_values()
     {
         return $this->morphedByMany('App\Metric', 'goods_values')->withPivot('value');
@@ -109,4 +79,48 @@ class Goods extends Model
     //     return $this->belongsToMany('App\Product', 'compositions', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
     // }
 
+     // Продукт
+    public function goods_product()
+    {
+        return $this->belongsTo('App\GoodsProduct');
+    }
+
+    // Производитель
+    // public function manufacturer()
+    // {
+    //     return $this->belongsTo('App\Company', 'manufacturer_id');
+    // }
+
+    //  // Продукт
+    // public function metrics_list($metrics_list)
+    // {
+    //     return $this->belongsToMany('App\Metric', 'article_values', 'article_id', 'entity_id')->where('entity', 'metrics')->wherePivotIn('entity_id', $metrics_list);
+    // }
+
+    // Продукт
+    public function goods()
+    {
+        return $this->hasMany('App\Goods');
+    }
+public function company()
+    {
+        return $this->belongsTo('App\Company');
+    }
+
+    // Получаем автора
+    public function author()
+    {
+        return $this->belongsTo('App\User', 'author_id');
+    }
+
+    // Получаем альбом
+    public function album()
+    {
+        return $this->belongsTo('App\Album');
+    }
+
+    public function photo()
+    {
+        return $this->belongsTo('App\Photo');
+    }
 }

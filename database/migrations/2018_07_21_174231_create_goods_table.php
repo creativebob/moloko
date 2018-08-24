@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateServicesTable extends Migration
+class CreateGoodsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateServicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('services', function (Blueprint $table) {
+        Schema::create('goods', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('services_article_id')->nullable()->unsigned()->comment('ID артикула услуги');
-            $table->foreign('services_article_id')->references('id')->on('services_articles');
+            $table->integer('goods_article_id')->nullable()->unsigned()->comment('ID артикула товара');
+            $table->foreign('goods_article_id')->references('id')->on('goods_articles');
 
-            $table->string('description')->nullable()->index()->comment('Описание услуги');
+            $table->string('description')->nullable()->index()->comment('Описание товара');
 
             $table->string('manually')->nullable()->comment('Имя для поиска (руками)');
             $table->string('external')->nullable()->comment('Имя внешнего артикула');
@@ -71,6 +71,6 @@ class CreateServicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('services');
+        Schema::dropIfExists('goods');
     }
 }

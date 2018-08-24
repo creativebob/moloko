@@ -12,7 +12,7 @@
 
 @section('title-content')
 {{-- Меню --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\CatalogProduct::class, 'type' => 'menu'])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => null, 'type' => 'menu'])
 @endsection
 
 @section('control-content')
@@ -28,7 +28,7 @@
             @endif
 
             <div class="small-12 medium-6 cell">
-                <label>Каталоги
+                <label>Разделы каталога:
                     <select name="catalog_id" id="catalogs-list">
                         @php
                         echo $catalogs_list;
@@ -53,9 +53,9 @@
                 <tr id="thead-content">
                     <th class="td-drop"></th>
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-                    <th class="td-name">Название товара</th>
-                    <th class="td-type">Тип товара</th>
-                    <th class="td-catalog">Каталог</th>
+                    <th class="td-name">Название продукции</th>
+                    <th class="td-type">Тип продукции</th>
+                    <th class="td-cost">Цена</th>
 
                     @if(Auth::user()->god == 1) 
                     <th class="td-company-id">Компания</th>
@@ -88,10 +88,7 @@
                     <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->services_article->name }}</a></td>
                     <td class="td-type">Услуга</td>
 
-                    <td class="td-catalog">
-                        <a href="/admin/services?catalog_id%5B%5D={{ $catalog->id }}" class="filter_link" title="Фильтровать">{{ $catalog->name }}</a><br>
-
-                    </td>
+                    <td class="td-price">{{ num_format($service->price, 0) }}</td>
 
                     @if(Auth::user()->god == 1) 
                     <td class="td-company-id">@if(!empty($service->company->name)) {{ $service->company->name }} @else @if($service->system_item == null) Шаблон @else Системная @endif @endif</td>

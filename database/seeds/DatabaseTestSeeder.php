@@ -19,6 +19,8 @@ class DatabaseTestSeeder extends Seeder
         $this->call(StaffTestTableSeeder::class);
         $this->call(EmployeesTestTableSeeder::class);
 
+        $this->call(RoleUserTestTableSeeder::class);
+
         // Сайт компании
         $this->call(SitesTestTableSeeder::class);
         $this->call(MenuSiteTestTableSeeder::class);
