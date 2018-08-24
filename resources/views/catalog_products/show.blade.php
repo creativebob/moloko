@@ -17,13 +17,12 @@
 
 @section('control-content')
 <div class="grid-x grid-padding-x">
-    <div class="small-12 cell inputs">
 
+    <div class="small-12 medium-6 cell inputs">
         <div class="grid-x grid-margin-x">
             @if($catalog->site->company->sites_count > 1)
             <div class="small-12 medium-6 cell">
                 
-
             </div>
             @endif
 
@@ -37,15 +36,29 @@
                     
                 </label>
             </div>
-
+        </div>
+    </div>
+    <div class="small-12 medium-6 cell inputs">
+        <label>Добавление продукта через поиск:
+            <input type='text' name="product_name" id="search_add_product_field" placeholder="Название, артикул">
+        </label>
+        <div id="port-result-search-add-product">
         </div>
 
     </div>
+
+
+    {{-- Подключаем ПОИСК продукции для добавления на сайт --}}
+    @include('catalog_products.search-add-product-script')
+
+
 </div>
 @endsection
 
 @section('content')
 {{-- Таблица --}}
+
+
 <div class="grid-x">
     <div class="small-12 cell">
         <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="services">
@@ -66,67 +79,12 @@
                     <th class="td-delete"></th>
                 </tr>
             </thead>
-            <tbody data-tbodyId="1" class="tbody-width">
-                @if(!empty($catalog))
-
-                @if (count($catalog->services) > 0)
-                @foreach ($catalog->services as $service)
-                <tr class="item @if($service->moderation == 1)no-moderation @endif" id="catalog_products-{{ $service->pivot->id }}" data-name="{{ $service->services_article->name }}">
-                    <td class="td-drop"><div class="sprite icon-drop"></div></td>
-                    <td class="td-checkbox checkbox">
-                        <input type="checkbox" class="table-check" name="service_id" id="check-{{ $service->id }}"
-                        {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
-                        @if(!empty($filter['booklist']['booklists']['default']))
-                        {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-                        @if (in_array($service->id, $filter['booklist']['booklists']['default'])) checked 
-                        @endif
-                        @endif
-                        >
-                        <label class="label-check" for="check-{{ $service->id }}"></label>
-                    </td>
-
-                    <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->services_article->name }}</a></td>
-                    <td class="td-type">Услуга</td>
-
-                    <td class="td-price">{{ num_format($service->price, 0) }}</td>
-
-                    @if(Auth::user()->god == 1) 
-                    <td class="td-company-id">@if(!empty($service->company->name)) {{ $service->company->name }} @else @if($service->system_item == null) Шаблон @else Системная @endif @endif</td>
-                    @endif
-
-                    <td class="td-author">@if(isset($service->author->first_name)) {{ $service->author->first_name . ' ' . $service->author->second_name }} @endif</td>
-
-                    {{-- Элементы управления --}}
-                    <td class="td-control">
-
-                        {{-- Отображение на сайте --}}
-                        @can ('display', App\CatalogProduct::class)
-                        @display ($service->pivot)
-                        <div class="icon-display-show black sprite" data-open="item-display"></div>
-                        @else
-                        <div class="icon-display-hide black sprite" data-open="item-display"></div>
-                        @enddisplay
-                        @endcan
-
-                    </td>
-
-                    <td class="td-delete">
-                        @if ($service->system_item != 1)
-                        @can('delete', $service)
-                        <a class="icon-delete sprite" data-open="item-delete"></a>
-                        @endcan
-                        @endif
-                    </td>       
-                </tr>
-
-                @endforeach
-                @endif
-
-                @endif
-            </tbody>
+            {{-- Подрубаем ядро контента для ajax перезагрузки --}}
+            @include('catalog_products.content-core')
         </table>
     </div>
 </div>
+
 
 @endsection
 

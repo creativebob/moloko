@@ -6,6 +6,10 @@ namespace App\Http\Controllers;
 use App\Catalog;
 use App\CatalogProduct;
 
+use App\Goods;
+use App\Service;
+use App\Raw;
+
 // Политика
 use App\Policies\CatalogProductPolicy;
 
@@ -54,11 +58,76 @@ class CatalogProductController extends Controller
         return view('catalog_products.index', compact('catalogs', 'page_info'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    public function search_add_product($text_fragment)
+    {
+
+        // Подключение политики
+        // $this->authorize('index', Goods::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_goods = operator_right('goods', false, 'index');
+        $answer_services = operator_right('services', false, 'index');
+        $answer_raws = operator_right('raws', false, 'index');    
+
+
+
+        // --------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // --------------------------------------------------------------------------------------------------------------
+
+        $result_search_goods = Goods::with('author', 'company', 'goods_article.goods_product.goods_category')
+        ->moderatorLimit($answer_goods)
+        ->companiesLimit($answer_goods)
+        ->authors($answer_goods)
+        ->systemItem($answer_goods) // Фильтр по системным записям
+        ->whereHas('goods_article', function ($query) use ($text_fragment){
+            $query->where('name', 'LIKE', '%'.$text_fragment.'%');
+        })
+        ->whereNull('archive')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
+
+        $result_search_services = Service::with('author', 'company', 'services_article.services_product.services_category')
+        ->moderatorLimit($answer_services)
+        ->companiesLimit($answer_services)
+        ->authors($answer_services)
+        ->systemItem($answer_services) // Фильтр по системным записям
+        ->whereHas('services_article', function ($query) use ($text_fragment){
+            $query->where('name', 'LIKE', '%'.$text_fragment.'%');
+        })
+        ->whereNull('archive')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
+
+        dd($result_search_services);
+
+        $result_search_raws = Raw::with('author', 'company', 'raws_article.raws_product.raws_category')
+        ->moderatorLimit($answer_raws)
+        ->companiesLimit($answer_raws)
+        ->authors($answer_raws)
+        ->systemItem($answer_raws) // Фильтр по системным записям
+        ->whereHas('raws_article', function ($query) use ($text_fragment){
+            $query->where('name', 'LIKE', '%'.$text_fragment.'%');
+        })
+        ->whereNull('archive')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
+
+        dd($result_search_goods);
+
+        if(($result_search_goods->count())||($result_search_services->count())||($result_search_raws->count())){
+
+            return view('catalog_products.search-add-product', compact('result_search_goods', 'result_search_services', 'result_search_raws'));
+        } else {
+            return view('catalog_products.search-add-product');
+        }
+    }
+
+
     public function create()
     {
         //
@@ -83,9 +152,6 @@ class CatalogProductController extends Controller
         // Подключение политики
         // $this->authorize(getmethod(__FUNCTION__), CatalogProduct::class);
 
-
-
-
         if ($id == null) {
             $catalog = Catalog::whereHas('site', function ($query) use ($alias) {
                 $query->whereAlias($alias);
@@ -98,7 +164,6 @@ class CatalogProductController extends Controller
 
                 return redirect("/admin/sites/".$alias."/catalogs");
             }
-
         }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -136,12 +201,6 @@ class CatalogProductController extends Controller
         return view('catalog_products.show', compact('catalog', 'catalogs_list', 'site', 'page_info', 'parent_page_info', 'alias', 'entity'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
@@ -187,6 +246,9 @@ class CatalogProductController extends Controller
             abort(403, 'Новость не найдена');
         }
     }
+
+
+
 
 
 
@@ -266,4 +328,30 @@ class CatalogProductController extends Controller
         }
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
+
+    public function ajax_add_product()
+    {
+
+        // Подключение политики
+        // $this->authorize('create', Goods::class);
+
+        $answer_catalogs = operator_right($this->entity_name, $this->entity_dependence, 'index');
+
+        // -------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -------------------------------------------------------------------------------------------
+        $catalogs = Catalog::with(['services' => function ($query) {
+            $query->with('services_article', 'catalogs');
+        }])
+        ->whereSite_id(2)
+        ->paginate(30);
+
+        return view('catalog_products.content-core', compact('catalog'));
+    }
+
+
+
+
+
+
 }
