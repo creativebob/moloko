@@ -61,7 +61,7 @@ class RawsProductController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------------
 
-        $raws_products = RawsProduct::with('author', 'company', 'raws_category', 'raws')
+        $raws_products = RawsProduct::with('author', 'company', 'raws_category', 'raws_articles.raws')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)

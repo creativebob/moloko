@@ -25,10 +25,10 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 
-class Raw extends Model
+class RawsArticle extends Model
 {
 
-	// Включаем кеш
+    // Включаем кеш
     // use Cachable;
 
     use Notifiable;
@@ -48,10 +48,51 @@ class Raw extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    public function raws_article()
+    // Метрики
+    // public function metrics_values()
+    // {
+    //     return $this->belongsToMany('App\Metric', 'article_values', 'article_id', 'entity_id')->where('entity', 'metrics')->withPivot('entity', 'value');
+    // }
+
+    // // Состав
+    // public function compositions_values()
+    // {
+    //     return $this->belongsToMany('App\Article', 'article_values', 'article_id', 'entity_id')->where('entity', 'articles')->withPivot('entity', 'value');
+    // }
+
+    // public function compositions_values()
+    // {
+    //     return $this->belongsToMany('App\Product', 'article_values', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
+    // }
+
+    // public function compositions()
+    // {
+    //     return $this->belongsToMany('App\Product', 'compositions', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
+    // }
+
+    // Продукт
+    public function raws_product()
     {
-        return $this->belongsTo('App\RawsArticle');
+        return $this->belongsTo('App\RawsProduct');
     }
+
+    // Продукт
+    public function raws()
+    {
+        return $this->hasMany('App\Raw');
+    }
+
+    // Производитель
+    // public function manufacturer()
+    // {
+    //     return $this->belongsTo('App\Company', 'manufacturer_id');
+    // }
+
+    //  // Продукт
+    // public function metrics_list($metrics_list)
+    // {
+    //     return $this->belongsToMany('App\Metric', 'article_values', 'article_id', 'entity_id')->where('entity', 'metrics')->wherePivotIn('entity_id', $metrics_list);
+    // }
 
     // Получаем компанию.
     public function company()
@@ -74,11 +115,5 @@ class Raw extends Model
     public function photo()
     {
         return $this->belongsTo('App\Photo');
-    }
-
-    // Каталоги
-    public function catalogs()
-    {
-        return $this->morphToMany('App\Catalog', 'catalog_products');
     }
 }

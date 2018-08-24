@@ -37,61 +37,62 @@
           <th class="td-author">Автор</th>
           <th class="td-control"></th>
           <th class="td-archive"></th>
-        </tr>
-      </thead>
-      <tbody data-tbodyId="1" class="tbody-width">
-        @if(!empty($raws))
+      </tr>
+  </thead>
+  <tbody data-tbodyId="1" class="tbody-width">
+    @if(!empty($raws))
 
-        @foreach($raws as $raw)
-        <tr class="item @if($raw->moderation == 1)no-moderation @endif" id="raws-{{ $raw->id }}" data-name="{{ $raw->name }}">
-          <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox">
-            <input type="checkbox" class="table-check" name="raw_id" id="check-{{ $raw->id }}"
-            {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
-            @if(!empty($filter['booklist']['booklists']['default']))
-            {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-            @if (in_array($raw->id, $filter['booklist']['booklists']['default'])) checked 
-            @endif
-            @endif
-            >
-            <label class="label-check" for="check-{{ $raw->id }}"></label>
-          </td>
-          <td>
-            <a href="/admin/raws/{{ $raw->id }}/edit">
-              <img src="{{ isset($raw->photo_id) ? '/storage/'.$raw->company_id.'/media/raws/'.$raw->id.'/img/small/'.$raw->photo->name : '/crm/img/plug/goods_small_default_color.jpg' }}" alt="{{ isset($raw->photo_id) ? $raw->name : 'Нет фото' }}">
-            </a>
-          </td>
-          <td class="td-name"><a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->name }}</a></td>
-
-          <td class="td-description">{{ $raw->description }}</td>
-          <td class="td-price">{{ num_format($raw->cost, 0) }}</td>
-          <td class="td-raws_category">
-            <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->raws_product->raws_category->id }}" class="filter_link" title="Фильтровать">{{ $raw->raws_product->raws_category->name }}</a>
-            <br>
-            @if($raw->raws_product->name != $raw->name)
-            <a href="/admin/raws?raws_product_id%5B%5D={{ $raw->raws_product->id }}" class="filter_link light-text">{{ $raw->raws_product->name }}</a>
-            @endif
-          </td>
-
-
-          <td class="td-author">@if(isset($raw->author->first_name)) {{ $raw->author->first_name . ' ' . $raw->author->second_name }} @endif</td>
-
-          {{-- Элементы управления --}}
-          @include('includes.control.table-td', ['item' => $raw])
-
-          <td class="td-archive">
-            @if ($raw->system_item != 1)
-            @can('delete', $raw)
-            <a class="icon-delete sprite" data-open="item-archive"></a>
-            @endcan
-            @endif
-          </td>       
-        </tr>
-        @endforeach
+    @foreach($raws as $raw)
+    <tr class="item @if($raw->moderation == 1)no-moderation @endif" id="raws-{{ $raw->id }}" data-name="{{ $raw->raws_article->name }}">
+      <td class="td-drop"><div class="sprite icon-drop"></div></td>
+      <td class="td-checkbox checkbox">
+        <input type="checkbox" class="table-check" name="raw_id" id="check-{{ $raw->id }}"
+        {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+        @if(!empty($filter['booklist']['booklists']['default']))
+        {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+        @if (in_array($raw->id, $filter['booklist']['booklists']['default'])) checked 
         @endif
-      </tbody>
-    </table>
-  </div>
+        @endif
+        >
+        <label class="label-check" for="check-{{ $raw->id }}"></label>
+    </td>
+    <td>
+        <a href="/admin/raws/{{ $raw->id }}/edit">
+          <img src="{{ isset($raw->photo_id) ? '/storage/'.$raw->company_id.'/media/raws/'.$raw->id.'/img/small/'.$raw->photo->name : '/crm/img/plug/goods_small_default_color.jpg' }}" alt="{{ isset($raw->photo_id) ? $raw->name : 'Нет фото' }}">
+      </a>
+  </td>
+  <td class="td-name"><a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->raws_article->name }}</a></td>
+
+  <td class="td-description">{{ $raw->description }}</td>
+  <td class="td-price">{{ num_format($raw->cost, 0) }}</td>
+  <td class="td-raws_category">
+    <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->raws_article->raws_product->raws_category->id }}" class="filter_link" title="Фильтровать">{{ $raw->raws_article->raws_product->raws_category->name }}</a>
+    
+    <br>
+    @if($raw->raws_article->raws_product->name != $raw->raws_article->name)
+    <a href="/admin/raws?raws_product_id%5B%5D={{ $raw->raws_article->raws_product->id }}" class="filter_link light-text">{{ $raw->raws_article->raws_product->name }}</a>
+    @endif
+</td>
+
+
+<td class="td-author">@if(isset($raw->author->first_name)) {{ $raw->author->first_name . ' ' . $raw->author->second_name }} @endif</td>
+
+{{-- Элементы управления --}}
+@include('includes.control.table-td', ['item' => $raw])
+
+<td class="td-archive">
+    @if ($raw->system_item != 1)
+    @can('delete', $raw)
+    <a class="icon-delete sprite" data-open="item-archive"></a>
+    @endcan
+    @endif
+</td>       
+</tr>
+@endforeach
+@endif
+</tbody>
+</table>
+</div>
 </div>
 
 {{-- Pagination --}}
@@ -99,7 +100,7 @@
   <div class="small-6 cell pagination-head">
     <span class="pagination-title">Кол-во записей: {{ $raws->count() }}</span>
     {{ $raws->links() }}
-  </div>
+</div>
 </div>
 @endsection
 
@@ -201,17 +202,17 @@
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/admin/raws/create',
-        type: "GET",
-        success: function(html){
+      },
+      url: '/admin/raws/create',
+      type: "GET",
+      success: function(html){
 
           $('#modal').html(html);
           $('#first-add').foundation();
           $('#first-add').foundation('open');
-        }
-      }); 
-    });
+      }
+  }); 
+  });
 
 
 
@@ -237,6 +238,6 @@
     $(document).on('click', '.close-modal', function() {
       // alert('lol');
       $('.reveal-overlay').remove();
-    });
-  </script>
-  @endsection
+  });
+</script>
+@endsection

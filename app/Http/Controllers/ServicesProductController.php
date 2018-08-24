@@ -6,17 +6,8 @@ namespace App\Http\Controllers;
 use App\ServicesProduct;
 use App\User;
 use App\ServicesCategory;
-use App\ServicesMode;
-use App\UnitsCategory;
 use App\Company;
 use App\Photo;
-use App\Album;
-use App\AlbumEntity;
-use App\Property;
-use App\Metric;
-use App\Article;
-use App\Unit;
-use App\Value;
 use App\Booklist;
 use App\Entity;
 use App\List_item;
@@ -38,9 +29,6 @@ use DB;
 // Специфические классы 
 use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\ImageManagerStatic as Image;
-
-// Транслитерация
-use Transliterate;
 
 // На удаление
 use Illuminate\Support\Facades\Auth;
@@ -68,13 +56,12 @@ class ServicesProductController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-        // dd($answer);
 
-        // -----------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
-        // -----------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------------
 
-        $services_products = ServicesProduct::with('author', 'company', 'services_category')
+        $services_products = ServicesProduct::with('author', 'company', 'services_category', 'services_articles.services')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -87,7 +74,7 @@ class ServicesProductController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-
+        
         // ----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
@@ -101,9 +88,10 @@ class ServicesProductController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
+
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
-
+        
         $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', null, 'internal-id-one');
 
@@ -115,14 +103,14 @@ class ServicesProductController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('services_products.index', compact('services_products', 'page_info', 'filter'));
+        return view('services_products.index', compact('services_products', 'page_info', 'product', 'filter'));
     }
 
     public function create(Request $request)
     {
 
-        // Подключение политики
-        $this->authorize(__FUNCTION__, ServicesProduct::class);
+        // ГЛАВНЫЙ ЗАПРОС:
+        $answer_services_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $services_product = new ServicesProduct;
 
@@ -142,7 +130,7 @@ class ServicesProductController extends Controller
         ->keyBy('id')
         ->toArray();
 
-        // dd($goods_categories);
+        // dd($services_categories);
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         $services_categories_list = get_select_tree($services_categories, 1, null, null);
@@ -197,7 +185,6 @@ class ServicesProductController extends Controller
     public function edit(Request $request, $id)
     {
 
-        
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_services_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -299,14 +286,13 @@ class ServicesProductController extends Controller
             return Redirect('/admin/services_products');
         } else {
 
-            abort(403, 'Ошибка обновления группы услуг');
+            abort(403, 'Ошибка обновления группы товаров');
         }
     }
 
     public function destroy(Request $request, $id)
     {
 
-        
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -326,6 +312,9 @@ class ServicesProductController extends Controller
             $services_product = ServicesProduct::destroy($id);
 
             if ($services_product) {
+            // $relations = AlbumMedia::whereAlbum_id($id)->pluck('media_id')->toArray();
+            // $photos = Photo::whereIn('id', $relations)->delete();
+            // $media = AlbumMedia::whereAlbum_id($id)->delete();
 
                 return Redirect('/admin/services_products');
             } else {
@@ -364,7 +353,7 @@ class ServicesProductController extends Controller
     {
 
         $i = 1;
-
+        
         foreach ($request->services_products as $item) {
             ServicesProduct::where('id', $item)->update(['sort' => $i]);
             $i++;
@@ -425,7 +414,6 @@ class ServicesProductController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-
     // Добавление фоток
     public function product_photos(Request $request, $id)
     {
@@ -434,7 +422,7 @@ class ServicesProductController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $services_product = ServicesProduct::with('album.photos')->moderatorLimit($answer)->findOrFail($id);
+        $product = Product::with('album.photos')->moderatorLimit($answer)->findOrFail($id);
         // dd($product);
 
         // Подключение политики
@@ -443,25 +431,41 @@ class ServicesProductController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('services_products.photos', compact('page_info', 'services_product'));
+        return view('products.photos', compact('page_info', 'product'));
 
     }
 
-    // -------------------------------------- Exel ------------------------------------------
-    public function products_download($type)
+
+
+    public function get_product_inputs(Request $request)
     {
-        $data = ServicesProduct::get(['name', 'article', 'cost'])->toArray();
+
+        $product = Product::with('metrics.property', 'compositions')->findOrFail(1);
+
+        // $request->product_id
+
+        dd($product);
+
+        
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+
+    // -------------------------------------- Exel ------------------------------------------
+    public function services_products_download($type)
+    {
+        $data = ServicesProduct::get(['name', 'description'])->toArray();
         // dd($data);
 
-        return Excel::create('products-'.Carbon::now()->format('d.m.Y'), function($excel) use ($data) {
-            $excel->sheet('Продукция', function($sheet) use ($data)
+        return Excel::create('services_products-'.Carbon::now()->format('d.m.Y'), function($excel) use ($data) {
+            $excel->sheet('Группы товаров', function($sheet) use ($data)
             {
                 $sheet->fromArray($data);
             });
         })->download($type);
     }
 
-    public function products_import(Request $request)
+    public function services_products_import(Request $request)
     {
         if($request->hasFile('file')) {
 
@@ -478,13 +482,12 @@ class ServicesProductController extends Controller
                 foreach ($reader->toArray() as $key => $row) {
                     $data['company_id'] = $company_id;
                     $data['name'] = $row['name'];
-                    $data['article'] = $row['article'];
-                    $data['cost'] = $row['cost'];
-                    // $data['description'] = $row['description'];
+                    $data['description'] = $row['description'];
+                    $data['services_category_id'] = $row['services_category_id'];
                     $data['author_id'] = $user_id;
 
                     if(!empty($data)) {
-                        DB::table('products')->insert($data);
+                        DB::table('services_products')->insert($data);
                     }
                 }
             });
@@ -495,17 +498,16 @@ class ServicesProductController extends Controller
 
     public function ajax_count(Request $request)
     {
-        $id = 2;
-        // $entity = 'services_categories';
+        // $id = 2;
 
-        // $id = $request->id;
+        $id = $request->id;
 
         $services_category = ServicesCategory::withCount('services_products')->with('services_products')->findOrFail($id);
 
 
         if ($services_category->services_products_count > 0) {
 
-            $services_products_list = $services_category->services_services_products->pluck('name', 'id');
+            $services_products_list = $services_category->services_products->pluck('name', 'id');
 
             if ($services_products_list) {
 
@@ -519,23 +521,7 @@ class ServicesProductController extends Controller
 
         } else {
 
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_units_categories = operator_right('units_categories', false, 'index');
-
-            // Главный запрос
-            $units_categories_list = UnitsCategory::with(['units' => function ($query) {
-                $query->pluck('name', 'id');
-            }])
-            ->moderatorLimit($answer_units_categories)
-            ->companiesLimit($answer_units_categories)
-            ->authors($answer_units_categories)
-            ->systemItem($answer_units_categories) // Фильтр по системным записям
-            ->template($answer_units_categories)
-            ->orderBy('sort', 'asc')
-            ->get()
-            ->pluck('name', 'id');
-
-            return view('services.mode-add', compact('units_categories_list'));
+            return view('services.mode-add');
         }
     }
 
@@ -566,29 +552,12 @@ class ServicesProductController extends Controller
 
             case 'mode-add':
 
-            // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            // $answer_units_categories = operator_right('units_categories', false, 'index');
-
-            //     // Главный запрос
-            // $units_categories_list = UnitsCategory::with(['units' => function ($query) {
-            //     $query->pluck('name', 'id');
-            // }])
-            // ->moderatorLimit($answer_units_categories)
-            // ->companiesLimit($answer_units_categories)
-            // ->authors($answer_units_categories)
-            // ->systemItem($answer_units_categories) // Фильтр по системным записям
-            // ->template($answer_units_categories)
-            // ->orderBy('sort', 'asc')
-            // ->get()
-            // ->pluck('name', 'id');
-
             return view('services.mode-add');
 
             break;
-            
+
         }
+   }
 
-    }
 
-    
 }

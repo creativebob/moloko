@@ -185,7 +185,6 @@ class ServiceController extends Controller
         $services_products_count = $services_categories[0]->services_products_count;
         $parent_id = null;
 
-
         if ($request->cookie('conditions') != null) {
 
             $condition = Cookie::get('conditions');
@@ -199,7 +198,6 @@ class ServiceController extends Controller
                 $parent_id = $services_category_id;
                 // dd($services_products_count);
             }
-            
         }
 
         // dd($services_categories);
@@ -407,10 +405,7 @@ class ServiceController extends Controller
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
         
         $services_categories_list = get_select_tree($services_categories, $service->services_article->services_product->services_category_id, null, null);
-        
-        
         // dd($services_categories_list);
-
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_services_products = operator_right('services_products', false, 'index');
@@ -769,7 +764,7 @@ class ServiceController extends Controller
 
             $directory = $company_id.'/media/services/'.$service->id.'/img/';
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($service->photo_id) {
                 $array = save_photo($request, $directory, 'avatar-'.time(), null, $service->photo_id, $settings);
             } else {
