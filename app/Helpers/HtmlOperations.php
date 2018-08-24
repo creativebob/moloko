@@ -133,8 +133,6 @@ function get_select_tree ($items, $parent = null, $disable = null, $exception = 
 
 
 
-
-
     // Получаем HTML разметку
     $items_list = show_cat($items_cat, '', $parent, $disable, $exception);
 

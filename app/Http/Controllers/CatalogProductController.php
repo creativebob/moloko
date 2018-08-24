@@ -187,10 +187,12 @@ class CatalogProductController extends Controller
         }])
         ->findOrFail($id);
 
-        // dd($catalog);
+        dd($catalog);
         // dd($catalog->services[0]->pivot);
 
         $site = $catalog->site;
+
+        // dd($site->catalogs->toArray());
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         $catalogs_list = get_select_tree($site->catalogs->keyBy('id')->toArray(), $catalog->id, null, null);

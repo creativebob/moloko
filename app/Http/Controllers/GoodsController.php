@@ -844,94 +844,94 @@ class GoodsController extends Controller
             }
 
             // Если снят флаг черновика
-            if (empty($request->draft)) {
+            // if (empty($request->draft)) {
 
-                // Проверка на наличие артикула
-                // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
-                // $goods = cur_goods::with('metrics_values', 'compositions_values')
-                // ->where('product_id', $request->product_id)
-                // ->where(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count])
-                // ->get();
+            //     // Проверка на наличие артикула
+            //     // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
+            //     // $goods = cur_goods::with('metrics_values', 'compositions_values')
+            //     // ->where('product_id', $request->product_id)
+            //     // ->where(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count])
+            //     // ->get();
 
-                $goods = Goods::with('metrics_values')
-                ->withCount('metrics_values')
-                ->where('goods_product_id', $request->goods_product_id)
-                ->where('metrics_count', $metrics_count)
-                ->get();
-                // dd($goods);
+            //     $goods = Goods::with('metrics_values')
+            //     ->withCount('metrics_values')
+            //     ->where('goods_product_id', $request->goods_product_id)
+            //     ->where('metrics_count', $metrics_count)
+            //     ->get();
+            //     // dd($goods);
 
-                // Создаем массив совпадений
-                $coincidence = [];
+            //     // Создаем массив совпадений
+            //     $coincidence = [];
 
-                // dd($request);
+            //     // dd($request);
 
 
-                // Сравниваем метрики
-                $metrics_array = [];
-                foreach ($goods as $cur_goods) {
+            //     // Сравниваем метрики
+            //     $metrics_array = [];
+            //     foreach ($goods as $cur_goods) {
 
-                    // dd($cur_goods);
-                    foreach ($cur_goods->metrics_values as $metric) {
-                    // dd($metric);
-                        $metrics_array[$cur_goods->id][$metric->id][] = $metric->pivot->value;
-                    }
-                }
-                // dd($metrics_array);
+            //         // dd($cur_goods);
+            //         foreach ($cur_goods->metrics_values as $metric) {
+            //         // dd($metric);
+            //             $metrics_array[$cur_goods->id][$metric->id][] = $metric->pivot->value;
+            //         }
+            //     }
+            //     // dd($metrics_array);
 
-                $metrics_values[$id] = $request->metrics;
-                // dd($metrics_values);
+            //     $metrics_values[$id] = $request->metrics;
+            //     // dd($metrics_values);
 
-                if ($metrics_values == $metrics_array) {
-                    // Если значения метрик совпали, создаюм ключ метрик
-                    $coincidence['metric'] = 1;
-                }
-                // dd($coincidence);
-                // dd($request->compositions);
+            //     if ($metrics_values == $metrics_array) {
+            //         // Если значения метрик совпали, создаюм ключ метрик
+            //         $coincidence['metric'] = 1;
+            //     }
+            //     // dd($coincidence);
+            //     // dd($request->compositions);
 
-                // $compositions_values = [];
-                // foreach ($request->compositions as $composition_id => $value) {
-                //     // dd($value['value']);
-                //     $compositions_values[$id][$value['cur_goods']] = $value['count'];
-                // }
-                // // dd($compositions_values);
+            //     // $compositions_values = [];
+            //     // foreach ($request->compositions as $composition_id => $value) {
+            //     //     // dd($value['value']);
+            //     //     $compositions_values[$id][$value['cur_goods']] = $value['count'];
+            //     // }
+            //     // // dd($compositions_values);
 
-                // // Сравниваем составы
-                // $compositions_array = [];
-                // foreach ($goods as $cur_goods) {
-                //     foreach ($cur_goods->compositions_values as $composition) {
-                //         $compositions_array[$cur_goods->id][$composition->id] = $composition->pivot->value;
-                //     }
-                // }
-                // dd($compositions_array);
+            //     // // Сравниваем составы
+            //     // $compositions_array = [];
+            //     // foreach ($goods as $cur_goods) {
+            //     //     foreach ($cur_goods->compositions_values as $composition) {
+            //     //         $compositions_array[$cur_goods->id][$composition->id] = $composition->pivot->value;
+            //     //     }
+            //     // }
+            //     // dd($compositions_array);
 
-                // if ($compositions_values == $compositions_array) {
-                //     // Если значения составов совпали, создаюм ключ составов
-                //     $coincidence['composition'] = 1;
-                // }
+            //     // if ($compositions_values == $compositions_array) {
+            //     //     // Если значения составов совпали, создаюм ключ составов
+            //     //     $coincidence['composition'] = 1;
+            //     // }
 
-                // Проверяем наличие ключей в массиве
-                // if ((array_key_exists('metric', $coincidence) && array_key_exists('composition', $coincidence)) || (array_key_exists('metric', $coincidence) && $cur_goods->product->products_category->compositions) || (array_key_exists('composition', $coincidence) && $cur_goods->product->products_category->metrics)) {
-                //     // Если ключи присутствуют, даем ошибку
-                //     $result = [
-                //         'error_status' => 1,
-                //         'error_message' => 'Такой артикул уже существует!',
-                //     ];
+            //     // Проверяем наличие ключей в массиве
+            //     // if ((array_key_exists('metric', $coincidence) && array_key_exists('composition', $coincidence)) || (array_key_exists('metric', $coincidence) && $cur_goods->product->products_category->compositions) || (array_key_exists('composition', $coincidence) && $cur_goods->product->products_category->metrics)) {
+            //     //     // Если ключи присутствуют, даем ошибку
+            //     //     $result = [
+            //     //         'error_status' => 1,
+            //     //         'error_message' => 'Такой артикул уже существует!',
+            //     //     ];
 
-                //     echo json_encode($result, JSON_UNESCAPED_UNICODE);
-                // }
+            //     //     echo json_encode($result, JSON_UNESCAPED_UNICODE);
+            //     // }
 
-                if (array_key_exists('metric', $coincidence)) {
-                    // Если ключи присутствуют, даем ошибку
-                    $result = [
-                        'error_status' => 1,
-                        'error_message' => 'Такой артикул уже существует!',
-                    ];
+            //     if (array_key_exists('metric', $coincidence)) {
+            //         // Если ключи присутствуют, даем ошибку
+            //         $result = [
+            //             'error_status' => 1,
+            //             'error_message' => 'Такой артикул уже существует!',
+            //         ];
 
-                    echo json_encode($result, JSON_UNESCAPED_UNICODE);
-                }
+            //         echo json_encode($result, JSON_UNESCAPED_UNICODE);
+            //     }
 
-                // dd($coincidence);
-            }
+            //     // dd($coincidence);
+            // }
 
             // Если что то не совпало, пишем новый артикул
 
@@ -1041,10 +1041,7 @@ class GoodsController extends Controller
             if($cur_goods->goods_article->goods_product->goods_category_id != $goods_category_id){
 
                 // Была изменена! Переназначаем категорию группе:
-                // Получаем группу
-                $goods_product = GoodsProduct::findOrFail($request->goods_product_id);
-                $goods_product->goods_category_id = $goods_category_id;
-                $goods_product->save();
+                $item = GoodsProduct::where('id', $cur_goods->goods_article->goods_product_id)->update(['goods_category_id' => $goods_category_id]);
             };
 
             // -------------------------------------------------------------------------------------------------

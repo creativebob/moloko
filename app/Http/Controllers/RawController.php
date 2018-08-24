@@ -711,7 +711,7 @@ class RawController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $raw = Raw::with('raws_article')->moderatorLimit($answer)->findOrFail($id);
+        $raw = Raw::with('raws_article.raws_product')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raw);
@@ -796,10 +796,7 @@ class RawController extends Controller
         if($raw->raws_article->raws_product->raws_category_id != $raws_category_id){
 
             // Была изменена! Переназначаем категорию группе:
-            // Получаем группу
-            $raws_product = RawsProduct::findOrFail($request->raws_product_id);
-            $raws_product->raws_category_id = $raws_category_id;
-            $raws_product->save();
+            $item = RawsProduct::where('id', $raw->raws_article->raws_product_id)->update(['raws_category_id' => $raws_category_id]);
         };
 
         // -------------------------------------------------------------------------------------------------
