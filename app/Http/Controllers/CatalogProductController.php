@@ -112,7 +112,7 @@ class CatalogProductController extends Controller
         }])
         ->findOrFail($id);
 
-        // dd($catalog);
+        dd($catalog);
         // dd($catalog->services[0]->pivot);
 
         $site = $catalog->site;

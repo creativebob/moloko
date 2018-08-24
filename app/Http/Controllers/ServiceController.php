@@ -790,10 +790,7 @@ class ServiceController extends Controller
         if($service->services_article->services_product->services_category_id != $services_category_id){
 
             // Была изменена! Переназначаем категорию группе:
-            // Получаем группу
-            $services_product = ServicesProduct::findOrFail($request->services_product_id);
-            $services_product->services_category_id = $services_category_id;
-            $services_product->save();
+            $item = ServicesProduct::where('id', $service->services_article->services_product_id)->update(['services_category_id' => $services_category_id]);
         };
 
 

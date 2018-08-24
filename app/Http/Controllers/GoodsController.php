@@ -1041,10 +1041,7 @@ class GoodsController extends Controller
             if($cur_goods->goods_article->goods_product->goods_category_id != $goods_category_id){
 
                 // Была изменена! Переназначаем категорию группе:
-                // Получаем группу
-                $goods_product = GoodsProduct::findOrFail($request->goods_product_id);
-                $goods_product->goods_category_id = $goods_category_id;
-                $goods_product->save();
+                $item = GoodsProduct::where('id', $cur_goods->goods_article->goods_product_id)->update(['goods_category_id' => $goods_category_id]);
             };
 
             // -------------------------------------------------------------------------------------------------
