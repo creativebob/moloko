@@ -50,6 +50,7 @@
         } 
 
       });
+
     } else {
         $('#port-result-search-add-product').html('');
     };
@@ -63,7 +64,7 @@
     // Получаем ID добавляемго продукта и его тип (goods / services / raws)
     var product_type = $(this).attr('id').split('-')[0];
     var product_id = $(this).attr('id').split('-')[1];
-    var category_id = $('#catalogs-list').val();
+    var catalog_id = $('#catalogs-list').val();
 
       $.ajax({
 
@@ -72,12 +73,13 @@
         },
         url: "/admin/catalog_products/add_product",
         type: "POST",
-        data: {product_type: product_type, product_id: product_id, category_id: category_id},
+        data: {product_type: product_type, product_id: product_id, catalog_id: catalog_id},
 
         success: function(html){
 
           // Выводим пришедшие данные на страницу
           $('#content-core').html(html);
+          // $('#search-add-product-result-wrap').hide();
 
         } 
 

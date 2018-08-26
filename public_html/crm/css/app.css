@@ -218,6 +218,30 @@ fieldset legend {
   border-bottom: 0px dotted #999;
 }
 
+#search-add-product-result-wrap {
+  position: absolute;
+  margin-top: -10px;
+  background-color: #fff;
+  padding: 2rem 1rem;
+  border: 1px solid #000;
+}
+#search-add-product-result-wrap .search-result-head {
+  font-weight: 600;
+  padding-bottom: 1rem;
+}
+#search-add-product-result-wrap .search-result-list li {
+  border-bottom: 1px dotted #999;
+  padding: 0.5rem 0rem;
+}
+#search-add-product-result-wrap .search-result-list li:last-child {
+  border-bottom: 0px dotted #999;
+}
+
+#port-result-search-add-product {
+  position: relative;
+  z-index: 1000;
+}
+
 html {
   font-family: "SegoeUISemiLight";
   font-size: 16px;

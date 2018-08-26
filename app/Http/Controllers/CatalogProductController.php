@@ -187,7 +187,7 @@ class CatalogProductController extends Controller
         }])
         ->findOrFail($id);
 
-        dd($catalog);
+        // dd($catalog);
         // dd($catalog->services[0]->pivot);
 
         $site = $catalog->site;
@@ -337,11 +337,11 @@ class CatalogProductController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-    public function ajax_add_product(Request $request)
+    public function add_product(Request $request)
     {
 
 
-        $id = $request->id;
+        $product_id = $request->product_id;
         $product_type = $request->product_type;
         $catalog_id = $request->catalog_id;
     
@@ -350,17 +350,20 @@ class CatalogProductController extends Controller
         // $product_type = 'services';
         // $catalog_id = 1;  
 
+
         // Подключение политики
         // $this->authorize('create', Goods::class);
-
+        // return $catalog_id;
 
         // Добавление связи
         $catalog = Catalog::findOrFail($catalog_id);
-        $catalog->$product_type()->attach($id, ['display'=>1]);
+        // return $catalog->count();
+
+        $catalog->$product_type()->attach($product_id, ['display'=>1, 'sort'=>1]);
 
         // Вывод результата с изменением
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        // $answer = operator_right($this->entity_name, false, 'index');
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС

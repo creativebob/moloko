@@ -30,11 +30,10 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-photo">Фото</th>
           <th class="td-name">Название услуги</th>
-
+          <th class="td-services_category">Категория</th>
           <th class="td-description">Описание</th>
           <th class="td-price">Цена</th>
-          <th class="td-services_category">Категория</th>
-          <th class="td-catalog">Каталог</th>
+          <th class="td-catalog">Разделы на сайте:</th>
           {{-- <th class="td-service">Группа</th>  --}}
 
           @if(Auth::user()->god == 1) 
@@ -69,8 +68,6 @@
             </a>
           </td>
           <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->services_article->name }}</a></td>
-          <td class="td-description">{{ $service->description }}</td>
-          <td class="td-price">{{ num_format($service->price, 0) }}</td>
           <td class="td-services_category">
             <a href="/admin/services?services_category_id%5B%5D={{ $service->services_article->services_product->services_category->id }}" class="filter_link" title="Фильтровать">{{ $service->services_article->services_product->services_category->name }}</a>
             <br>
@@ -78,11 +75,14 @@
             <a href="/admin/services?services_product_id%5B%5D={{ $service->services_article->services_product->id }}" class="filter_link light-text">{{ $service->services_article->services_product->name }}</a>
             @endif
           </td>
-
+          <td class="td-description">{{ $service->description }}</td>
+          <td class="td-price">{{ num_format($service->price, 0) }}</td>
           <td class="td-catalog">
+
             @foreach ($service->catalogs as $catalog)
-            <a href="/admin/sites/{{ $catalog->site->alias }}/catalog_products/{{ $catalog->id }}" class="filter_link" title="Редактировать каталог">{{ $catalog->name }}</a><br>
+            <a href="/admin/sites/{{ $catalog->site->alias }}/catalog_products/{{ $catalog->id }}" class="filter_link" title="Редактировать каталог">{{ $catalog->name }}</a>, 
             @endforeach
+
           </td>
           {{-- <td class="td-service">{{ $service->services_article->services_product->name }}</td> --}}
 

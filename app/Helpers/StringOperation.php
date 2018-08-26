@@ -4,7 +4,7 @@ use Carbon\Carbon;
 
 function num_format($number, $value) {
 
-    $result = number_format($number, $value, ',', ' ');
+    $result = number_format($number, $value, ',', '&nbsp;');
     return $result;
 }
 

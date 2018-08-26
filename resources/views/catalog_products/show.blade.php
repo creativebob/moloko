@@ -47,10 +47,8 @@
 
     </div>
 
-
-    {{-- Подключаем ПОИСК продукции для добавления на сайт --}}
-    @include('catalog_products.search-add-product-script')
-
+            {{-- Подключаем ПОИСК продукции для добавления на сайт --}}
+            @include('catalog_products.search-add-product-script')
 
 </div>
 @endsection
@@ -79,8 +77,12 @@
                     <th class="td-delete"></th>
                 </tr>
             </thead>
-            {{-- Подрубаем ядро контента для ajax перезагрузки --}}
-            @include('catalog_products.content-core')
+
+            <tbody data-tbodyId="1" class="tbody-width" id="content-core">
+                {{-- Подрубаем ядро контента для ajax перезагрузки --}}
+                @include('catalog_products.content-core')
+            </tbody>
+            
         </table>
     </div>
 </div>

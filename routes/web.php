@@ -49,6 +49,10 @@ Route::post('/users_system_item', 'UserController@ajax_system_item')->middleware
 Route::post('/users_display', 'UserController@ajax_display')->middleware('auth');
 
 
+
+// Поиск продукции для добавления на сайт
+Route::any('/catalog_products/add_product', 'CatalogProductController@add_product')->middleware('auth');
+
 // ---------------------------------- Категории альбомов -------------------------------------------
 
 // Текущая добавленная/удаленная категория альбомов
@@ -651,7 +655,7 @@ Route::prefix('/sites/{alias}')->group(function () {
 
 	// -------------------------------- Продукция для каталогов сайта -------------------------------------
 	// Основные методы
-	Route::any('/catalog_products/{id?}', 'CatalogProductController@show')->middleware('auth');
+	Route::get('/catalog_products/{id?}', 'CatalogProductController@show')->middleware('auth');
 	// Основные методы
 	Route::resource('/catalog_products', 'CatalogProductController')->middleware('auth');
 
@@ -660,8 +664,6 @@ Route::prefix('/sites/{alias}')->group(function () {
 // Поиск продукции для добавления на сайт
 Route::post('/catalog_products/search_add_product/{text_fragment}', 'CatalogProductController@search_add_product')->middleware('auth');
 
-// Поиск продукции для добавления на сайт
-Route::post('/catalog_products/add_product', 'CatalogProductController@ajax_add_product')->middleware('auth');
 
 // Сортировка
 Route::post('/pages_sort', 'PageController@ajax_sort')->middleware('auth');
