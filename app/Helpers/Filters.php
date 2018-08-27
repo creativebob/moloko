@@ -242,7 +242,7 @@
             // Вытаскиеваем в зависимости от режима нужную коллекцию
             if($filter_mode == 'external-id-one'){
 
-
+                // dd($column);
                 // Выбираем только уникальные ID
                 $filter_entity = $filter_query->unique($relations . '.' . $column);
 
@@ -252,7 +252,6 @@
                         if($entity->$relations == null){$list_select['item_list'][null] = 'Не указано';};
                     }
                 }
-
 
             };
             
@@ -285,6 +284,31 @@
                 }
 
             };
+
+
+            // Вытаскиеваем в зависимости от режима нужную коллекцию
+            if($filter_mode == 'external-id-one-one'){
+
+                $array_relations = explode(".", $relations);
+                $relations_1 = $array_relations[0];
+                $relations_2 = $array_relations[1];
+
+                // Выбираем только уникальные ID
+
+                $filter_entity = $filter_query->unique($relations_1 . '.' . $relations_2 . '.' . $column);
+
+                if(count($filter_entity) > 0){
+                    foreach($filter_entity as $entity){
+                        $list_select['item_list'][$entity->$relations_1->$relations_2->$column] = $entity->$relations_1->$relations_2->$filter_name->name;
+                        if($entity->$relations_1->$relations_2 == null){$list_select['item_list'][null] = 'Не указано';};
+                    }
+                }
+
+            };
+
+
+
+
 
         };
 

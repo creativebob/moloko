@@ -70,8 +70,8 @@ class GoodsController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request)
         ->filter($request, 'author_id')
-        ->filter($request, 'goods_product_id')
-        ->filter($request, 'goods_category_id', 'goods_product')
+        ->filter($request, 'goods_category_id', 'goods_article.goods_product')
+        ->filter($request, 'goods_product_id', 'goods_article')
         ->whereNull('archive')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
@@ -96,9 +96,9 @@ class GoodsController extends Controller
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
 
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'goods_category', 'goods_category_id', 'goods_product', 'external-id-one');
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'goods_product', 'goods_product_id', null, 'internal-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'goods_category', 'goods_category_id', 'goods_article.goods_product', 'external-id-one-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'goods_product', 'goods_product_id', 'goods_article', 'external-id-one');
 
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)

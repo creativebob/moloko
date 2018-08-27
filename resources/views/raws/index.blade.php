@@ -31,9 +31,11 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-photo">Фото</th>
           <th class="td-name">Название сырья</th>
-          <th class="td-description">Описание</th>
-          <th class="td-price">Себестоимость</th>
           <th class="td-services_category">Категория</th>
+          <th class="td-description">Описание</th>
+          <th class="td-cost">Себестоимость</th>
+          <th class="td-price">Цена</th>
+          <th class="td-catalog">Разделы на сайте:</th>
           <th class="td-author">Автор</th>
           <th class="td-control"></th>
           <th class="td-archive"></th>
@@ -62,18 +64,24 @@
       </a>
   </td>
   <td class="td-name"><a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->raws_article->name }}</a></td>
-
-  <td class="td-description">{{ $raw->description }}</td>
-  <td class="td-price">{{ num_format($raw->cost, 0) }}</td>
   <td class="td-raws_category">
-    <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->raws_article->raws_product->raws_category->id }}" class="filter_link" title="Фильтровать">{{ $raw->raws_article->raws_product->raws_category->name }}</a>
-    
-    <br>
-    @if($raw->raws_article->raws_product->name != $raw->raws_article->name)
-    <a href="/admin/raws?raws_product_id%5B%5D={{ $raw->raws_article->raws_product->id }}" class="filter_link light-text">{{ $raw->raws_article->raws_product->name }}</a>
-    @endif
-</td>
+      <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->raws_article->raws_product->raws_category->id }}" class="filter_link" title="Фильтровать">{{ $raw->raws_article->raws_product->raws_category->name }}</a>
+      
+      <br>
+      @if($raw->raws_article->raws_product->name != $raw->raws_article->name)
+      <a href="/admin/raws?raws_product_id%5B%5D={{ $raw->raws_article->raws_product->id }}" class="filter_link light-text">{{ $raw->raws_article->raws_product->name }}</a>
+      @endif
+  </td>
+  <td class="td-description">{{ $raw->description }}</td>
+  <td class="td-cost">{{ num_format($raw->cost, 0) }}</td>
+  <td class="td-price">{{ num_format($raw->price, 0) }}</td>
+  <td class="td-catalog">
 
+    @foreach ($raw->catalogs as $catalog)
+    <a href="/admin/sites/{{ $catalog->site->alias }}/catalog_products/{{ $catalog->id }}" class="filter_link" title="Редактировать каталог">{{ $catalog->name }}</a>, 
+    @endforeach
+
+  </td>
 
 <td class="td-author">@if(isset($raw->author->first_name)) {{ $raw->author->first_name . ' ' . $raw->author->second_name }} @endif</td>
 

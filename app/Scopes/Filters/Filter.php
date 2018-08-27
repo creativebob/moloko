@@ -33,27 +33,72 @@ trait Filter
             // --------------------------------------------------------------------------------------------------------------------------------------
             } else {
 
-                // Если приходит массив только с нулем (Требуеться выбрать только записи без города)
-                if($request->$column == [0 => 'null']){
 
-                    $query = $query->WhereNull($relations_id);
-                } else 
-                {
+                $array_relations = explode(".", $relations);
 
-                    // Если приходит массив с нулем и другими ID
-                    if(in_array('null', $request->$column)){
+                if(count($array_relations) > 1){
 
-                        $query = $query->whereHas($relations, function ($query) use ($request, $column) {
-                            $query = $query->whereIn($column, $request->$column);
-                        })->orWhereNull($relations_id);
-
-                    // Если массив приходит без нуля
-                    } else {
+                $relations_1 = $array_relations[0];
+                $relations_2 = $array_relations[1];
+                $relations_id = $relations_2 . '_id';
 
 
-                        $query = $query->whereHas($relations, function ($query) use ($request, $column) {
-                            $query = $query->whereIn($column, $request->$column);
-                        });
+                    // Если приходит массив только с нулем (Требуеться выбрать только записи без города)
+                    if($request->$column == [0 => 'null']){
+
+                        $query = $query->WhereNull($relations_id);
+                    } else 
+                    {
+
+                        // Если приходит массив с нулем и другими ID
+                        if(in_array('null', $request->$column)){
+
+                            $query = $query->whereHas($relations_1, function ($query) use ($request, $column, $relations_2, $relations_id) {
+                                $query = $query->whereHas($relations_2, function ($query) use ($request, $column, $relations_id) {
+                                    $query = $query->whereIn($column, $request->$column);
+                                })->orWhereNull($relations_id);
+                            })->orWhereNull($relations_id);
+
+                        // Если массив приходит без нуля
+                        } else {
+
+                            $query = $query->whereHas($relations_1, function ($query) use ($request, $column, $relations_2) {
+                                $query = $query->whereHas($relations_2, function ($query) use ($request, $column) {
+                                    $query = $query->whereIn($column, $request->$column);
+                                });
+                            });
+                        };
+
+                    };
+
+
+
+
+                } else {
+
+                    // Если приходит массив только с нулем (Требуеться выбрать только записи без города)
+                    if($request->$column == [0 => 'null']){
+
+                        $query = $query->WhereNull($relations_id);
+                    } else 
+                    {
+
+                        // Если приходит массив с нулем и другими ID
+                        if(in_array('null', $request->$column)){
+
+                            $query = $query->whereHas($relations, function ($query) use ($request, $column) {
+                                $query = $query->whereIn($column, $request->$column);
+                            })->orWhereNull($relations_id);
+
+                        // Если массив приходит без нуля
+                        } else {
+
+
+                            $query = $query->whereHas($relations, function ($query) use ($request, $column) {
+                                $query = $query->whereIn($column, $request->$column);
+                            });
+                        };
+
                     };
 
                 };

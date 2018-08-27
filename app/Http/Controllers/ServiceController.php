@@ -69,9 +69,9 @@ class ServiceController extends Controller
         ->booklistFilter($request)
         ->filter($request, 'author_id')
         // ->filter($request, 'services_article_id', 'services_product_id')
-        // ->filter($request, 'services_category_id', 'services_article_id')
+        ->filter($request, 'services_category_id', 'services_article.services_product')
         // ->filter($request, 'company_id')
-        ->filter($request, 'services_product_id', 'services_articles')
+        ->filter($request, 'services_product_id', 'services_article')
         ->whereNull('archive')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
@@ -98,9 +98,10 @@ class ServiceController extends Controller
         $filter['entity_name'] = $this->entity_name;
 
         $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', 'services_product', 'external-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', 'services_article.services_product', 'external-id-one-one');
 
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'services_product', 'services_product_id', 'services_articles', 'external-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'services_product', 'services_product_id', 'services_article', 'external-id-one');
+        // 
         // // $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id', null, 'internal-id-one');
         // // $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'products_category', 'products_category_id');
 

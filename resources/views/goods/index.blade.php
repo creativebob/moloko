@@ -31,9 +31,12 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-photo">Фото</th>
           <th class="td-name">Название товара</th>
+          <th class="td-goods_category">Категория</th>
           <th class="td-description">Описание</th>
           <th class="td-price">Цена</th>
-          <th class="td-goods_category">Категория</th>
+          <th class="td-catalog">Разделы на сайте:</th>
+
+
           {{-- <th class="td-goods">Группа</th>  --}}
 
           @if(Auth::user()->god == 1) 
@@ -69,8 +72,6 @@
             </a>
           </td>
           <td class="td-name"><a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->goods_article->name }}</a></td>
-          <td class="td-description">{{ $cur_goods->description }}</td>
-          <td class="td-price">{{ num_format($cur_goods->price, 0) }} </td>
           <td class="td-goods_category">
             <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->goods_article->goods_product->goods_category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->goods_article->goods_product->goods_category->name }}</a>
             <br>
@@ -78,6 +79,17 @@
             <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->goods_article->goods_product->id }}" class="filter_link light-text">{{ $cur_goods->goods_article->goods_product->name }}</a>
             {{-- @endif --}}
           </td>
+          <td class="td-description">{{ $cur_goods->description }}</td>
+          <td class="td-price">{{ num_format($cur_goods->price, 0) }} </td>
+
+          <td class="td-catalog">
+
+            @foreach ($cur_goods->catalogs as $catalog)
+            <a href="/admin/sites/{{ $catalog->site->alias }}/catalog_products/{{ $catalog->id }}" class="filter_link" title="Редактировать каталог">{{ $catalog->name }}</a>, 
+            @endforeach
+
+          </td>
+
           {{-- <td class="td-goods">{{ $cur_goods->goods_product->name }}</td> --}}
 
 

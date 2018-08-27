@@ -69,8 +69,8 @@ class RawController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request)
         ->filter($request, 'author_id')
-        ->filter($request, 'raws_product_id')
-        ->filter($request, 'raws_category_id', 'raws_product')
+        ->filter($request, 'raws_category_id', 'raws_article.raws_product')
+        ->filter($request, 'raws_product_id', 'raws_article')
         ->whereNull('archive')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
@@ -94,9 +94,9 @@ class RawController extends Controller
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
 
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'raws_category', 'raws_category_id', 'raws_product', 'external-id-one');
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'raws_product', 'raws_product_id', null, 'internal-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'raws_category', 'raws_category_id', 'raws_article.raws_product', 'external-id-one-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'raws_product', 'raws_product_id', 'raws_article', 'external-id-one');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
