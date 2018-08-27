@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 // Модели
 use App\Catalog;
 use App\CatalogProduct;
-
 use App\Goods;
 use App\Service;
 use App\Raw;
@@ -34,7 +33,7 @@ class CatalogProductController extends Controller
     {
         // dd($alias);
         // Подключение политики
-        // $this->authorize('index', CatalogProduct::class);
+        $this->authorize('index', CatalogProduct::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_catalogs = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -47,7 +46,6 @@ class CatalogProductController extends Controller
         }])
         ->whereSite_id(2)
         ->paginate(30);
-
         // dd($catalogs);
 
         $entity = $this->entity_name;
@@ -63,7 +61,7 @@ class CatalogProductController extends Controller
     {
 
         // Подключение политики
-        // $this->authorize('index', Goods::class);
+        $this->authorize('index', Goods::class);
 
         // $text_fragment = 'това';
         // $catalog_id = 1;
@@ -93,7 +91,6 @@ class CatalogProductController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-
         $result_search_goods = $result_search_goods->diff($catalog->goods);
         // dd($result_search_goods);
 
@@ -109,7 +106,6 @@ class CatalogProductController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
-
 
         $result_search_services = $result_search_services->diff($catalog->services);
 
@@ -127,8 +123,6 @@ class CatalogProductController extends Controller
         ->get();
 
         $result_search_raws = $result_search_raws->diff($catalog->raws);
-
-        // dd($result_search_goods);
 
         if(
             ($result_search_goods->count())||
@@ -166,7 +160,7 @@ class CatalogProductController extends Controller
 
         // dd($alias);
         // Подключение политики
-        // $this->authorize(getmethod(__FUNCTION__), CatalogProduct::class);
+        $this->authorize('index', CatalogProduct::class);
 
         if ($id == null) {
             $catalog = Catalog::whereHas('site', function ($query) use ($alias) {
@@ -196,12 +190,9 @@ class CatalogProductController extends Controller
             $query->orderBy('catalog_products.sort', 'asc');
         }])
         ->findOrFail($id);
-
-        // dd($catalog);
-        // dd($catalog->services[0]->pivot);
+        // d($catalog);
 
         $site = $catalog->site;
-
         // dd($site->catalogs->toArray());
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
@@ -224,13 +215,6 @@ class CatalogProductController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
@@ -238,8 +222,6 @@ class CatalogProductController extends Controller
 
     public function destroy(Request $request, $alias, $id)
     {
-
-        // dd('lol');
 
         // ГЛАВНЫЙ ЗАПРОС:
         $catalog_product = CatalogProduct::findOrFail($id);
@@ -256,7 +238,6 @@ class CatalogProductController extends Controller
             $catalog_product = CatalogProduct::destroy($id);
 
             if ($catalog_product) {
-
                 $result = [
                     'error_status' => 0,
                 ];
@@ -278,9 +259,8 @@ class CatalogProductController extends Controller
     // Сортировка
     public function ajax_sort(Request $request)
     {
-
+        
         $i = 1;
-
         foreach ($request->catalog_products as $item) {
             CatalogProduct::where('id', $item)->update(['sort' => $i]);
             $i++;
@@ -318,15 +298,6 @@ class CatalogProductController extends Controller
     public function ajax_display(Request $request)
     {
 
-        // $action = 'hide';
-        // $id = 2;
-
-        // if ($action == 'hide') {
-        //     $display = null;
-        // } else {
-        //     $display = 1;
-        // }
-
         if ($request->action == 'hide') {
             $display = null;
         } else {
@@ -336,7 +307,6 @@ class CatalogProductController extends Controller
         $item = CatalogProduct::where('id', $request->id)->update(['display' => $display]);
 
         if ($item) {
-
             $result = [
                 'error_status' => 0,
             ];  

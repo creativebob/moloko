@@ -189,7 +189,7 @@ fieldset legend {
   color: #000;
   opacity: 0.4;
   transition: opacity ease 0.3s;
-  z-index: 900;
+  z-index: 9;
   width: 60px !important;
   text-align: right;
 }

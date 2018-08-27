@@ -292,21 +292,30 @@
                             </thead>
                             <tbody id="composition-table">
 
+                                @if (($cur_goods->goods_article->goods_product->goods_category->compositions) || ($cur_goods->raws_compositions_values))
+
                                 {{-- Таблица метрик товара --}}
-                                @if (isset($cur_goods->goods_article->goods_product->goods_category->compositions))
+                                @if (isset($cur_goods->raws_compositions_values))
 
-                                @foreach ($cur_goods->goods_article->goods_product->goods_category->compositions as $composition)
-
+                                @foreach ($cur_goods->raws_compositions_values as $composition)
                                 @if ($cur_goods->draft == 1)
-
                                 @include ('goods.compositions.composition-input', $composition)
+                                @else
+                                @include ('goods.compositions.composition-value', $composition)
+                                @endif
+                                @endforeach
 
                                 @else
 
+                                @foreach ($cur_goods->goods_article->goods_product->goods_category->compositions as $composition)
+                                @if ($cur_goods->draft == 1)
+                                @include ('goods.compositions.composition-input', $composition)
+                                @else
                                 @include ('goods.compositions.composition-value', $composition)
-
                                 @endif
                                 @endforeach
+
+                                @endif
 
                                 @endif
                             </tbody>
@@ -398,6 +407,7 @@
     // Основные ностойки
     var cur_goods_id = '{{ $cur_goods->id }}';
 
+    // Мульти Select
     $(".chosen-select").chosen({width: "95%"});
 
     // При клике на удаление метрики со страницы

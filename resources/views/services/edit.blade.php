@@ -295,6 +295,7 @@ $settings = config()->get('settings');
     // Основные ностойки
     var service_id = '{{ $service->id }}';
 
+    // Мульти Select
     $(".chosen-select").chosen({width: "95%"});
 
     // При клике на удаление метрики со страницы
