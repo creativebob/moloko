@@ -22,7 +22,7 @@
         <div class="grid-x grid-margin-x">
             @if($catalog->site->company->sites_count > 1)
             <div class="small-12 medium-6 cell">
-                
+
             </div>
             @endif
 
@@ -47,8 +47,8 @@
 
     </div>
 
-            {{-- Подключаем ПОИСК продукции для добавления на сайт --}}
-            @include('catalog_products.search-add-product-script')
+    {{-- Подключаем ПОИСК продукции для добавления на сайт --}}
+    @include('catalog_products.search-add-product-script')
 
 </div>
 @endsection
@@ -94,7 +94,7 @@
 <section id="modal"></section>
 
 {{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
+@include('includes.modals.modal-delete-ajax')
 
 @endsection
 
@@ -113,27 +113,51 @@
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox-control')
 
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
-
 @include('includes.scripts.inputs-mask')
 @include('catalog_products.scripts')
 
 <script type="text/javascript">
 
     var alias = '{{ $site->alias }}';
-    // Мягкое удаление с refresh
-    $(document).on('click', '[data-open="item-delete"]', function() {
-        // находим описание сущности, id и название удаляемого элемента в родителе
+    // Мягкое удаление с ajax
+    $(document).on('click', '[data-open="item-delete-ajax"]', function() {
+
+        // Находим описание сущности, id и название удаляемого элемента в родителе
         var parent = $(this).closest('.item');
-        var type = parent.attr('id').split('-')[0];
+        var entity_alias = parent.attr('id').split('-')[0];
         var id = parent.attr('id').split('-')[1];
         var name = parent.data('name');
         $('.title-delete').text(name);
-        $('.delete-button').attr('id', 'del-' + type + '-' + id);
-        $('#form-item-del').attr('action', '/admin/sites/'+ alias + '/' + type + '/' + id);
+        $('.delete-button-ajax').attr('id', 'del-' + entity_alias + '-' + id);
     });
 
+    // Подтверждение удаления и само удаление
+    $(document).on('click', '.delete-button-ajax', function(event) {
+
+        // Блочим отправку формы
+        event.preventDefault();
+        var entity_alias = $(this).attr('id').split('-')[1];
+        var id = $(this).attr('id').split('-')[2];
+
+        // Ajax
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '/admin/sites/' + alias + '/catalog_products/' + id,
+            type: "DELETE",
+            success: function (date) {
+                var result = $.parseJSON(date);
+            // Если ошибка
+            if (result.error_status == 1) {
+              alert('ошибка');
+            } else {
+              // Выводим пришедшие данные на страницу
+              $('#catalog_products-' + id).remove();
+            };
+            }
+        });
+    });
 
     $(document).on('change', '#catalogs-list', function(event) {
         event.preventDefault();

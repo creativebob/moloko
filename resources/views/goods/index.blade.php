@@ -23,6 +23,7 @@
 
 {{-- Таблица --}}
 <div class="grid-x">
+
   <div class="small-12 cell">
     <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="goods">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
@@ -117,6 +118,7 @@
       </tbody>
     </table>
   </div>
+
 </div>
 
 {{-- Pagination --}}
@@ -124,7 +126,7 @@
   <div class="small-6 cell pagination-head">
     <span class="pagination-title">Кол-во записей: {{ $goods->count() }}</span>
     {{ $goods->links() }}
-  </div>
+</div>
 </div>
 @endsection
 
@@ -230,16 +232,16 @@
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/admin/goods/create',
-        type: "GET",
-        success: function(html){
+      },
+      url: '/admin/goods/create',
+      type: "GET",
+      success: function(html){
           $('#modal').html(html);
           $('#first-add').foundation();
           $('#first-add').foundation('open');
-        }
-      }); 
-    });
+      }
+  }); 
+  });
 
 
 
@@ -265,7 +267,7 @@
     $(document).on('click', '.close-modal', function() {
       // alert('lol');
       $('.reveal-overlay').remove();
-    });
-  </script>
+  });
+</script>
 
-  @endsection
+@endsection

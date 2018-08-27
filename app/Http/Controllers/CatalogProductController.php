@@ -59,24 +59,28 @@ class CatalogProductController extends Controller
     }
 
 
-    public function search_add_product($text_fragment)
+    public function search_add_product($text_fragment, $catalog_id)
     {
 
         // Подключение политики
         // $this->authorize('index', Goods::class);
+
+        // $text_fragment = 'това';
+        // $catalog_id = 1;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_goods = operator_right('goods', false, 'index');
         $answer_services = operator_right('services', false, 'index');
         $answer_raws = operator_right('raws', false, 'index');    
 
-
-
         // --------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------
 
-        $result_search_goods = Goods::with('goods_article.goods_product.goods_category')
+        $catalog = Catalog::with('goods', 'services', 'raws')->findOrFail($catalog_id);
+        // dd($catalog->goods->keyBy('id')->toArray());
+
+        $result_search_goods = Goods::with('goods_article')
         ->moderatorLimit($answer_goods)
         ->companiesLimit($answer_goods)
         ->authors($answer_goods)
@@ -90,7 +94,10 @@ class CatalogProductController extends Controller
         ->get();
 
 
-        $result_search_services = Service::with('services_article.services_product.services_category')
+        $result_search_goods = $result_search_goods->diff($catalog->goods);
+        // dd($result_search_goods);
+
+        $result_search_services = Service::with('services_article')
         ->moderatorLimit($answer_services)
         ->companiesLimit($answer_services)
         ->authors($answer_services)
@@ -104,7 +111,9 @@ class CatalogProductController extends Controller
         ->get();
 
 
-        $result_search_raws = Raw::with('raws_article.raws_product.raws_category')
+        $result_search_services = $result_search_services->diff($catalog->services);
+
+        $result_search_raws = Raw::with('raws_article')
         ->moderatorLimit($answer_raws)
         ->companiesLimit($answer_raws)
         ->authors($answer_raws)
@@ -117,6 +126,7 @@ class CatalogProductController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
+        $result_search_raws = $result_search_raws->diff($catalog->raws);
 
         // dd($result_search_goods);
 
@@ -246,21 +256,24 @@ class CatalogProductController extends Controller
             $catalog_product = CatalogProduct::destroy($id);
 
             if ($catalog_product) {
-                return redirect('/admin/sites/'.$alias.'/catalog_products/'.$catalog_product_id);
+
+                $result = [
+                    'error_status' => 0,
+                ];
             } else {
-                abort(403, 'Ошибка при удалении новости');
+                $result = [
+                    'error_status' => 1,
+                    'error_message' => 'Ошибка при удалении продукции из каталога!'
+                ];
             }
+
+            echo json_encode($result, JSON_UNESCAPED_UNICODE);
         } else {
-            abort(403, 'Новость не найдена');
+            abort(403, 'Ошибка при удалении продукции из каталога!');
         }
     }
 
-
-
-
-
-
-     // ------------------------------------------------ Ajax -------------------------------------------------
+    // ------------------------------------------------ Ajax -------------------------------------------------
 
     // Сортировка
     public function ajax_sort(Request $request)
@@ -340,45 +353,43 @@ class CatalogProductController extends Controller
     public function add_product(Request $request)
     {
 
-
         $product_id = $request->product_id;
         $product_type = $request->product_type;
         $catalog_id = $request->catalog_id;
-    
 
         // $id = 1;
         // $product_type = 'services';
         // $catalog_id = 1;  
-
 
         // Подключение политики
         // $this->authorize('create', Goods::class);
         // return $catalog_id;
 
         // Добавление связи
-        $catalog = Catalog::findOrFail($catalog_id);
+        $catalog = Catalog::with($product_type)->findOrFail($catalog_id);
         // return $catalog->count();
 
-        $catalog->$product_type()->attach($product_id, ['display'=>1, 'sort'=>1]);
+        if ($catalog->$product_type->find($product_id)) {
 
-        // Вывод результата с изменением
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer = operator_right($this->entity_name, false, 'index');
+            return 'empty';
 
-        // -------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -------------------------------------------------------------------------------------------
-        $catalog = Catalog::with([$product_type => function ($query) {
-            $query->orderBy('catalog_products.sort', 'asc');
-        }])
-        ->findOrFail($catalog_id);
+        } else {
 
-        return view('catalog_products.content-core', compact('catalog'));
+            $catalog->$product_type()->attach($product_id, ['display'=>1]);
+
+            // Вывод результата с изменением
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            // $answer = operator_right($this->entity_name, false, 'index');
+
+            // -------------------------------------------------------------------------------------------
+            // ГЛАВНЫЙ ЗАПРОС
+            // -------------------------------------------------------------------------------------------
+            $catalog = Catalog::with([$product_type => function ($query) {
+                $query->orderBy('catalog_products.sort', 'asc');
+            }])
+            ->findOrFail($catalog_id);
+
+            return view('catalog_products.content-core', compact('catalog'));
+        }
     }
-
-
-
-
-
-
 }

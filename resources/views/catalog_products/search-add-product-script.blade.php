@@ -1,62 +1,55 @@
 <script type="text/javascript">
-  // Обозначаем таймер для проверки
-  var timerId;
-  var time = 400;
+    // Обозначаем таймер для проверки
+    var timerId;
+    var time = 400;
 
 
-  // Проверка существования
-  $(document).on('keyup', '#search_add_product_field', function() {
+    var catalog_id = '{{ $catalog->id }}';
 
-    // Получаем фрагмент текста
-    var text_fragment = $('#search_add_product_field').val();
+    // Проверка существования
+    $(document).on('keyup', '#search_add_product_field', function() {
 
-    // Выполняем запрос
-    clearTimeout(timerId);   
+        // Получаем фрагмент текста
+        var text_fragment = $('#search_add_product_field').val();
 
-    timerId = setTimeout(function() {
+        // Выполняем запрос
+        clearTimeout(timerId);   
 
-      SearchAddProductFragment();
+        timerId = setTimeout(function() {
 
-    }, time); 
-  });
+            SearchAddProductFragment();
 
+        }, time); 
+    });
 
-  function SearchAddProductFragment() {
+    function SearchAddProductFragment() {
 
-    // Получаем фрагмент текста
-    var text_fragment = $('#search_add_product_field').val();
+        // Получаем фрагмент текста
+        var text_fragment = $('#search_add_product_field').val();
 
-    // Смотрим сколько символов
-    var len_text_fragment = text_fragment.length;
-    // Если символов больше 3 - делаем запрос
+        // Смотрим сколько символов
+        var len_text_fragment = text_fragment.length;
 
-    if (len_text_fragment > 2) {
+        // Если символов больше 3 - делаем запрос
+        if (len_text_fragment > 2) {
 
-      $.ajax({
+            $.ajax({
 
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "/admin/catalog_products/search_add_product/" + text_fragment,
-        type: "POST",
-        data: {text_fragment: text_fragment},
-
-        success: function(html){
-
-
-          // Выводим пришедшие данные на страницу
-          $('#port-result-search-add-product').html(html);
-
-        } 
-
-      });
-
-    } else {
-        $('#port-result-search-add-product').html('');
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "/admin/catalog_products/search_add_product/" + text_fragment + "/" + catalog_id,
+                type: "POST",
+                data: {text_fragment: text_fragment},
+                success: function(html){
+                    // Выводим пришедшие данные на страницу
+                    $('#port-result-search-add-product').html(html);
+                } 
+            });
+        } else {
+            $('#port-result-search-add-product').html('');
+        };
     };
-
-
-  };
 
   // Проверка существования
   $(document).on('click', '.add-product-button', function() {
@@ -66,10 +59,12 @@
     var product_id = $(this).attr('id').split('-')[1];
     var catalog_id = $('#catalogs-list').val();
 
-      $.ajax({
+    var item = $(this);
+
+    $.ajax({
 
         headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         url: "/admin/catalog_products/add_product",
         type: "POST",
@@ -77,18 +72,29 @@
 
         success: function(html){
 
-          // Выводим пришедшие данные на страницу
-          $('#content-core').html(html);
-          // $('#search-add-product-result-wrap').hide();
+            if (html == 'empty') {
+                // alert(html); 
+            } else {
+                // Выводим пришедшие данные на страницу
+                $('#content-core').html(html);
+                item.remove();
+            };
+
+
+            // var result = $.parseJSON(date);
+            // // Если ошибка
+            // if (result.error_status == 1) {
+            //     $(submit).prop('disabled', true);
+            //     $('.item-error').css('display', 'block');
+            //     $(db).val(0);
+            // } else {
+
+            // }
+
+            
+            // $('#search-add-product-result-wrap').hide();
 
         } 
-
-      });
-
-
-  });
-
-
-
-
+    });
+});
 </script>

@@ -4,6 +4,7 @@
 @include('includes.scripts.dropzone-inhead')
 @include('includes.scripts.fancybox-inhead')
 @include('includes.scripts.sortable-inhead')
+@include('includes.scripts.chosen-inhead')
 @endsection
 
 @section('title', 'Редактировать сырьё')
@@ -26,6 +27,9 @@
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
             <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
+
+            <li class="tabs-title"><a data-tabs-target="catalogs" href="#catalogs">Каталоги</a></li> 
+
             <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li> 
         </ul>
     </div>
@@ -250,6 +254,27 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Каталоги -->
+            <div class="tabs-panel" id="catalogs">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-6 cell">
+
+
+                        <fieldset class="fieldset-access">
+                            <legend>Каталоги</legend>
+
+                            {{-- Form::select('catalogs[]', $catalogs_list, $raw->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
+                            <select name="catalogs[]" data-placeholder="Выберите каталоги..." multiple class="chosen-select">
+                                @php
+                                echo $catalogs_list;
+                                @endphp
+                            </select>
+
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
             {{ Form::close() }}
 
             <!-- Фотографии -->
@@ -298,6 +323,8 @@
 
     // Основные ностойки
     var raw_id = '{{ $raw->id }}';
+
+    $(".chosen-select").chosen({width: "95%"});
 
     // При клике на удаление метрики со страницы
     $(document).on('click', '[data-open="delete-metric"]', function() {

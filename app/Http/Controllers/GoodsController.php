@@ -433,8 +433,6 @@ class GoodsController extends Controller
 
         }
 
-
-
         // dd($cur_goods_compositions);
 
         // Подключение политики
@@ -460,8 +458,6 @@ class GoodsController extends Controller
         ->keyBy('id')
         ->toArray();
 
-
-
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
         $goods_categories_list = get_select_tree($goods_categories, $cur_goods->goods_article->goods_product->goods_category_id, null, null);
         // dd($goods_categories_list);
@@ -478,14 +474,6 @@ class GoodsController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_catalogs = operator_right('catalogs', false, 'index');
-
-        // $catalogs_list = Catalog::moderatorLimit($answer_catalogs)
-        // ->companiesLimit($answer_catalogs)
-        // ->systemItem($answer_catalogs) // Фильтр по системным записям
-        // ->whereSite_id(2)
-        // // ->orderBy('sort', 'asc')
-        // ->get()
-        // ->pluck('name', 'id');
 
         $catalogs = Catalog::moderatorLimit($answer_catalogs)
         ->companiesLimit($answer_catalogs)
@@ -606,7 +594,7 @@ class GoodsController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_goods_modes = operator_right('goods_modes', false, 'index');
 
-        $goods_modes = goodsMode::with(['goods_categories' => function ($query) use ($answer_goods_categories) {
+        $goods_modes = GoodsMode::with(['goods_categories' => function ($query) use ($answer_goods_categories) {
             $query->with(['goods_products' => function ($query) {
                 $query->with(['goods_articles.goods' => function ($query) {
                     $query->whereNull('draft');

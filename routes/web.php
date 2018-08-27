@@ -662,7 +662,7 @@ Route::prefix('/sites/{alias}')->group(function () {
 });
 
 // Поиск продукции для добавления на сайт
-Route::post('/catalog_products/search_add_product/{text_fragment}', 'CatalogProductController@search_add_product')->middleware('auth');
+Route::any('/catalog_products/search_add_product/{text_fragment}/{catalog_id}', 'CatalogProductController@search_add_product')->middleware('auth');
 
 
 // Сортировка

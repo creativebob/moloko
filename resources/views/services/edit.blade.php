@@ -4,9 +4,7 @@
 @include('includes.scripts.dropzone-inhead')
 @include('includes.scripts.fancybox-inhead')
 @include('includes.scripts.sortable-inhead')
-
-<script src="/crm/js/plugins/chosen/chosen.jquery.js"></script>
-<link rel="stylesheet" href="/crm/js/plugins/chosen/chosen.css">
+@include('includes.scripts.chosen-inhead')
 @endsection
 
 @section('title', 'Редактировать услугу')
@@ -167,14 +165,14 @@
                             @endif
 
                             {{-- @if ($service->metrics_values_count > 0)
-                               @each('services.metrics.metric-input', $service->services_product->services_category->metrics, 'metric')
-                               @each('services.metrics.metric-value', $service->metrics_values, 'metric')
-                               @endif --}}
+                             @each('services.metrics.metric-input', $service->services_product->services_category->metrics, 'metric')
+                             @each('services.metrics.metric-value', $service->metrics_values, 'metric')
+                             @endif --}}
 
-                           </fieldset>
-                           @endif
-                           <div id="service-inputs"></div>
-                           <div class="small-12 cell tabs-margin-top text-center">
+                         </fieldset>
+                         @endif
+                         <div id="service-inputs"></div>
+                         <div class="small-12 cell tabs-margin-top text-center">
                             <div class="item-error" id="service-error">Такой артикул уже существует!<br>Измените значения!</div>
                         </div>
                         {{ Form::hidden('service_id', $service->id) }}
@@ -225,12 +223,12 @@
             <div class="tabs-panel" id="catalogs">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
-                       
+
 
                         <fieldset class="fieldset-access">
                             <legend>Каталоги</legend>
 
-                             {{-- Form::select('catalogs[]', $catalogs_list, $service->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
+                            {{-- Form::select('catalogs[]', $catalogs_list, $service->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
                             <select name="catalogs[]" data-placeholder="Выберите каталоги..." multiple class="chosen-select">
                                 @php
                                 echo $catalogs_list;
@@ -275,8 +273,6 @@
                 </div>
             </div>
 
-            
-
         </div>
     </div>
 </div>
@@ -296,158 +292,158 @@ $settings = config()->get('settings');
 <script>
 
 
-        // Основные ностойки
-        var service_id = '{{ $service->id }}';
+    // Основные ностойки
+    var service_id = '{{ $service->id }}';
 
-        $(".chosen-select").chosen({width: "95%"});
+    $(".chosen-select").chosen({width: "95%"});
 
-        // При клике на удаление метрики со страницы
-        $(document).on('click', '[data-open="delete-metric"]', function() {
+    // При клике на удаление метрики со страницы
+    $(document).on('click', '[data-open="delete-metric"]', function() {
 
-            // Находим описание сущности, id и название удаляемого элемента в родителе
-            var parent = $(this).closest('.item');
-            var id = parent.attr('id').split('-')[1];
+        // Находим описание сущности, id и название удаляемого элемента в родителе
+        var parent = $(this).closest('.item');
+        var id = parent.attr('id').split('-')[1];
 
-            // alert(id);
+        // alert(id);
 
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_delete_relation_metric',
-                type: 'POST',
-                data: {id: id, entity: 'services', entity_id: service_id},
-                success: function(date){
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '/admin/ajax_delete_relation_metric',
+            type: 'POST',
+            data: {id: id, entity: 'services', entity_id: service_id},
+            success: function(date){
 
-                    var result = $.parseJSON(date);
-        // alert(result);
+                var result = $.parseJSON(date);
+                // alert(result);
 
-        if (result['error_status'] == 0) {
+                if (result['error_status'] == 0) {
+
+                    // Удаляем элемент со страницы
+                    $('#metrics-' + id).remove();
+
+                    // В случае успеха обновляем список метрик
+                    // $.ajax({
+                    //   headers: {
+                    //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    //   },
+                    //   url: '/services/' + service_id + '/edit',
+                    //   type: 'GET',
+                    //   data: $('#service-form').serialize(),
+                    //   success: function(html){
+                    //     // alert(html);
+                    //     $('#properties-dropdown').html(html);
+                    //   }
+                    // })
+
+                    // Убираем отмеченный чекбокс в списке метрик
+                    $('#add-metric-' + id).prop('checked', false);
+
+                } else {
+                    alert(result['error_message']);
+                }; 
+            }
+        })
+    });
+
+    // При клике на удаление состава со страницы
+    $(document).on('click', '[data-open="delete-composition"]', function() {
+
+        // Находим описание сущности, id и название удаляемого элемента в родителе
+        var parent = $(this).closest('.item');
+        var id = parent.attr('id').split('-')[1];
+
+        // alert(id);
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '/admin/ajax_delete_relation_composition',
+            type: 'POST',
+            data: {id: id, service_id: service_id},
+            success: function(date){
+
+                var result = $.parseJSON(date);
+                // alert(result);
+
+                if (result['error_status'] == 0) {
+
+                    // Удаляем элемент со страницы
+                    $('#compositions-' + id).remove();
+
+                    // Убираем отмеченный чекбокс в списке метрик
+                    $('#add-composition-' + id).prop('checked', false);
+
+                } else {
+                    alert(result['error_message']);
+                }; 
+            }
+        })
+    });
+
+    // При клике на удаление состава со страницы
+    $(document).on('click', '[data-open="delete-value"]', function() {
 
         // Удаляем элемент со страницы
-        $('#metrics-' + id).remove();
+        $(this).closest('.item').remove();
+    });
 
-        // В случае успеха обновляем список метрик
-        // $.ajax({
-        //   headers: {
-        //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //   },
-        //   url: '/services/' + service_id + '/edit',
-        //   type: 'GET',
-        //   data: $('#service-form').serialize(),
-        //   success: function(html){
-        //     // alert(html);
-        //     $('#properties-dropdown').html(html);
-        //   }
-        // })
-
-        // Убираем отмеченный чекбокс в списке метрик
-        $('#add-metric-' + id).prop('checked', false);
-
-    } else {
-        alert(result['error_message']);
-    }; 
-}
-})
-        });
-
-        // При клике на удаление состава со страницы
-        $(document).on('click', '[data-open="delete-composition"]', function() {
-
-            // Находим описание сущности, id и название удаляемого элемента в родителе
-            var parent = $(this).closest('.item');
-            var id = parent.attr('id').split('-')[1];
-
-            // alert(id);
+    // Когда при клике по табам активная вкладка артикула
+    $(document).on('change.zf.tabs', '.tabs-list', function() {
+        if ($('#services:visible').length) {
 
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '/admin/ajax_delete_relation_composition',
+                url: '/admin/ajax_get_service_inputs',
                 type: 'POST',
-                data: {id: id, service_id: service_id},
-                success: function(date){
-
-                    var result = $.parseJSON(date);
-                    // alert(result);
-
-                    if (result['error_status'] == 0) {
-
-                        // Удаляем элемент со страницы
-                        $('#compositions-' + id).remove();
-
-                        // Убираем отмеченный чекбокс в списке метрик
-                        $('#add-composition-' + id).prop('checked', false);
-
-                    } else {
-                        alert(result['error_message']);
-                    }; 
+                data: {service_id: service_id},
+                success: function(html){
+                    // alert(html);
+                    $('#service-inputs').html(html);
+                    $('#service-inputs').foundation();
+                    // Foundation.reInit($('#service-inputs'));
                 }
             })
-        });
+        }
+    });
 
-        // При клике на удаление состава со страницы
-        $(document).on('click', '[data-open="delete-value"]', function() {
+    // Проверяем наличие артикула в базе при клике на кнопку добавления артикула
+    // $(document).on('click', '#add-service', function(event) {
+    //     event.preventDefault();
+    //     // alert($('#service-form').serialize());
 
-            // Удаляем элемент со страницы
-            $(this).closest('.item').remove();
-        });
+    //     $.ajax({
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         },
+    //         url: '/services/' + service_id,
+    //         type: 'PATCH',
+    //         data: $('#service-form').serialize(),
+    //         success: function(data) {
+    //             var result = $.parseJSON(data);
+    //             alert(result['error_status']);
+    //             // alert(data['metric_values']);
+    //             if (result['error_status'] == 1) {
+    //                 $('#add-service').prop('disabled', true);
+    //                 $('#service-error').css('display', 'block');
+    //             } else {
 
-        // Когда при клике по табам активная вкладка артикула
-        $(document).on('change.zf.tabs', '.tabs-list', function() {
-            if ($('#services:visible').length) {
+    //             }
+    //         }
+    //     })
+    // });
 
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/ajax_get_service_inputs',
-                    type: 'POST',
-                    data: {service_id: service_id},
-                    success: function(html){
-                        // alert(html);
-                        $('#service-inputs').html(html);
-                        $('#service-inputs').foundation();
-                        // Foundation.reInit($('#service-inputs'));
-                    }
-                })
-            }
-        });
+    $(document).on('change', '#service-form input', function() {
+        $('#add-service').prop('disabled', false);
+        $('#service-error').css('display', 'none');
+    });
 
-        // Проверяем наличие артикула в базе при клике на кнопку добавления артикула
-        // $(document).on('click', '#add-service', function(event) {
-        //     event.preventDefault();
-        //     // alert($('#service-form').serialize());
-
-        //     $.ajax({
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         },
-        //         url: '/services/' + service_id,
-        //         type: 'PATCH',
-        //         data: $('#service-form').serialize(),
-        //         success: function(data) {
-        //             var result = $.parseJSON(data);
-        //             alert(result['error_status']);
-        //             // alert(data['metric_values']);
-        //             if (result['error_status'] == 1) {
-        //                 $('#add-service').prop('disabled', true);
-        //                 $('#service-error').css('display', 'block');
-        //             } else {
-
-        //             }
-        //         }
-        //     })
-        // });
-
-        $(document).on('change', '#service-form input', function() {
-            $('#add-service').prop('disabled', false);
-            $('#service-error').css('display', 'none');
-        });
-
-        // При смнене свойства в select
-        $(document).on('change', '#properties-select', function() {
+    // При смнене свойства в select
+    $(document).on('change', '#properties-select', function() {
         // alert($(this).val());
 
         var id = $(this).val();
@@ -456,28 +452,28 @@ $settings = config()->get('settings');
         if (id == '') {
             $('#property-form').html('');
         } else {
-        // alert(id);
-        $('#property-id').val(id);
+            // alert(id);
+            $('#property-id').val(id);
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_add_property',
-            type: 'POST',
-            data: {id: id, entity: 'services'},
-            success: function(html){
-        // alert(html);
-        $('#property-form').html(html);
-        $('#properties-dropdown').foundation('close');
-    }
-})
-    }
-});
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/admin/ajax_add_property',
+                type: 'POST',
+                data: {id: id, entity: 'services'},
+                success: function(html){
+                    // alert(html);
+                    $('#property-form').html(html);
+                    $('#properties-dropdown').foundation('close');
+                }
+            })
+        }
+    });
 
-        // При клике на кнопку под Select'ом свойств
-        $(document).on('click', '#add-metric', function(event) {
-            event.preventDefault();
+    // При клике на кнопку под Select'ом свойств
+    $(document).on('click', '#add-metric', function(event) {
+        event.preventDefault();
 
         // alert($('#properties-form').serialize());
 
@@ -490,31 +486,31 @@ $settings = config()->get('settings');
             data: $('#properties-form').serialize(),
             success: function(html){
 
-        // alert(html);
-        $('#metrics-table').append(html);
-        $('#property-form').html('');
+                // alert(html);
+                $('#metrics-table').append(html);
+                $('#property-form').html('');
 
-        // В случае успеха обновляем список метрик
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/services/' + service_id + '/edit',
-            type: 'GET',
-            data: $('#service-form').serialize(),
-            success: function(html){
-        // alert(html);
+                // В случае успеха обновляем список метрик
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '/admin/services/' + service_id + '/edit',
+                    type: 'GET',
+                    data: $('#service-form').serialize(),
+                    success: function(html){
+                        // alert(html);
 
-        $('#properties-dropdown').html(html);
-    }
-})
-    }
-})
+                        $('#properties-dropdown').html(html);
+                    }
+                })
+            }
+        })
     });
 
-        // При клике на кнопку под Select'ом свойств
-        $(document).on('click', '#add-value', function(event) {
-            event.preventDefault();
+    // При клике на кнопку под Select'ом свойств
+    $(document).on('click', '#add-value', function(event) {
+        event.preventDefault();
 
         // alert($('#properties-form input[name=value]').val());
         $.ajax({
@@ -525,15 +521,15 @@ $settings = config()->get('settings');
             type: 'POST',
             data: {value: $('#properties-form input[name=value]').val()},
             success: function(html){
-        // alert(html);
-        $('#values-table').append(html);
-        $('#properties-form input[name=value]').val('');
-    }
-})
+                // alert(html);
+                $('#values-table').append(html);
+                $('#properties-form input[name=value]').val('');
+            }
+        })
     });
 
-        // При клике на чекбокс метрики отображаем ее на странице
-        $(document).on('click', '.add-metric', function() {
+    // При клике на чекбокс метрики отображаем ее на странице
+    $(document).on('click', '.add-metric', function() {
 
         // alert($(this).val());
         var id = $(this).val();
@@ -549,39 +545,39 @@ $settings = config()->get('settings');
                 data: {id: $(this).val(), entity: 'services', entity_id: service_id},
                 success: function(html){
 
-        // alert(html);
-        $('#metrics-table').append(html);
-        $('#property-form').html('');
-    }
-})
+                    // alert(html);
+                    $('#metrics-table').append(html);
+                    $('#property-form').html('');
+                }
+            })
         } else {
 
-        // Если нужно удалить метрику
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_delete_relation_metric',
-            type: 'POST',
-            data: {id: $(this).val(), entity: 'services', entity_id: service_id},
-            success: function(date){
+            // Если нужно удалить метрику
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/admin/ajax_delete_relation_metric',
+                type: 'POST',
+                data: {id: $(this).val(), entity: 'services', entity_id: service_id},
+                success: function(date){
 
-                var result = $.parseJSON(date);
-        // alert(result);
+                    var result = $.parseJSON(date);
+                    // alert(result);
 
-        if (result['error_status'] == 0) {
+                    if (result['error_status'] == 0) {
 
-            $('#metrics-' + id).remove();
-        } else {
-            alert(result['error_message']);
-        }; 
-    }
-})
-    }
-});
+                        $('#metrics-' + id).remove();
+                    } else {
+                        alert(result['error_message']);
+                    }; 
+                }
+            })
+        }
+    });
 
-        // При клике на свойство отображаем или скрываем его метрики
-        $(document).on('click', '.parent', function() {
+    // При клике на свойство отображаем или скрываем его метрики
+    $(document).on('click', '.parent', function() {
 
         // Скрываем все метрики
         $('.checker-nested').hide();
@@ -590,8 +586,8 @@ $settings = config()->get('settings');
         $('#' +$(this).data('open')).show();
     });
 
-        // При клике на чекбокс метрики отображаем ее на странице
-        $(document).on('click', '.add-composition', function() {
+    // При клике на чекбокс метрики отображаем ее на странице
+    $(document).on('click', '.add-composition', function() {
 
         // alert($(this).val());
         var id = $(this).val();
@@ -607,25 +603,21 @@ $settings = config()->get('settings');
                 data: {id: $(this).val(), entity: 'services', service_id: service_id},
                 success: function(html){
 
-        // alert(html);
-        $('#composition-table').append(html);
-    }
-})
+                    // alert(html);
+                    $('#composition-table').append(html);
+                }
+            })
         } else {
 
-        // Если нужно удалить состав
+            // Если нужно удалить состав
+            $('#compositions-' + id).remove();
 
+        }
+    });
 
-        $('#compositions-' + id).remove();
-
-
-
-    }
-});
-
-        // При клике на фотку подствляем ее значения в блок редактирования
-        $(document).on('click', '#photos-list img', function(event) {
-            event.preventDefault();
+    // При клике на фотку подствляем ее значения в блок редактирования
+    $(document).on('click', '#photos-list img', function(event) {
+        event.preventDefault();
 
         // Удаляем всем фоткам активынй класс
         $('#photos-list img').removeClass('active');
@@ -645,19 +637,19 @@ $settings = config()->get('settings');
             data: {id: id, entity: 'services'},
             success: function(html){
 
-        // alert(html);
-        $('#form-photo-edit').html(html);
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
-    }
-})
+                // alert(html);
+                $('#form-photo-edit').html(html);
+                // $('#first-add').foundation();
+                // $('#first-add').foundation('open');
+            }
+        })
     });
 
-        // При сохранении информации фотки
-        $(document).on('click', '#form-photo-edit .button', function(event) {
-            event.preventDefault();
+    // При сохранении информации фотки
+    $(document).on('click', '#form-photo-edit .button', function(event) {
+        event.preventDefault();
 
-            var id = $(this).closest('#form-photo-edit').find('input[name=id]').val();
+        var id = $(this).closest('#form-photo-edit').find('input[name=id]').val();
         // alert(id);
 
         // Записываем инфу и обновляем
@@ -669,25 +661,25 @@ $settings = config()->get('settings');
             type: 'PATCH',
             data: $(this).closest('#form-photo-edit').serialize(),
             success: function(html){
-        // alert(html);
-        $('#form-photo-edit').html(html);
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
-    }
-})
+                // alert(html);
+                $('#form-photo-edit').html(html);
+                // $('#first-add').foundation();
+                // $('#first-add').foundation('open');
+            }
+        })
     });
 
-        // Оставляем ширину у вырванного из потока элемента
-        var fixHelper = function(e, ui) {
-            ui.children().each(function() {
-                $(this).width($(this).width());
-            });
-            return ui;
-        };
+    // Оставляем ширину у вырванного из потока элемента
+    var fixHelper = function(e, ui) {
+        ui.children().each(function() {
+            $(this).width($(this).width());
+        });
+        return ui;
+    };
 
-        // Включаем перетаскивание
-        $("#values-table tbody").sortable({
-            axis: 'y',
+    // Включаем перетаскивание
+    $("#values-table tbody").sortable({
+        axis: 'y',
         helper: fixHelper, // ширина вырванного элемента
         handle: 'td:first', // указываем за какой элемент можно тянуть
         placeholder: "table-drop-color", // фон вырванного элемента
@@ -697,10 +689,10 @@ $settings = config()->get('settings');
         }
     });
 
-        // Настройки dropzone
-        var minImageHeight = 795;
-        Dropzone.options.myDropzone = {
-            paramName: 'photo',
+    // Настройки dropzone
+    var minImageHeight = 795;
+    Dropzone.options.myDropzone = {
+        paramName: 'photo',
         maxFilesize: {{ $settings['img_max_size'] }}, // MB
         maxFiles: 20,
         acceptedFiles: '{{ $settings['img_formats'] }}',
@@ -717,13 +709,13 @@ $settings = config()->get('settings');
                     type: 'post',
                     data: {service_id: service_id},
                     success: function(html){
-        // alert(html);
-        $('#photos-list').html(html);
+                        // alert(html);
+                        $('#photos-list').html(html);
 
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
-    }
-})
+                        // $('#first-add').foundation();
+                        // $('#first-add').foundation('open');
+                    }
+                })
             });
             this.on("thumbnail", function(file) {
                 if (file.width < {{ $settings['img_min_width'] }} || file.height < minImageHeight) {
