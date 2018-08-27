@@ -23,88 +23,92 @@
 
 {{-- Таблица --}}
 <div class="grid-x">
-  <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="goods">
-      <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
-        <tr id="thead-content">
-          <th class="td-drop"></th>
-          <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-photo">Фото</th>
-          <th class="td-name">Название товара</th>
-          <th class="td-description">Описание</th>
-          <th class="td-price">Цена</th>
-          <th class="td-goods_category">Категория</th>
-          {{-- <th class="td-goods">Группа</th>  --}}
+    <div class="small-12 cell">
+        <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="goods">
+            <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
+                <tr id="thead-content">
+                    <th class="td-drop"></th>
+                    <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+                    <th class="td-photo">Фото</th>
+                    <th class="td-name">Название товара</th>
+                    <th class="td-goods_category">Категория</th>
+                    <th class="td-description">Описание</th>
+                    <th class="td-price">Цена</th>
+                    <th class="td-catalog">Разделы на сайте:</th>
+                    {{-- <th class="td-goods">Группа</th>  --}}
 
-          @if(Auth::user()->god == 1) 
-          <th class="td-company-id">Компания</th>
-          {{-- <th class="td-sync-id">Добавить на сайт</th> --}}
-          @endif
+                    @if(Auth::user()->god == 1) 
+                    <th class="td-company-id">Компания</th>
+                    {{-- <th class="td-sync-id">Добавить на сайт</th> --}}
+                    @endif
 
-          <th class="td-author">Автор</th>
-          <th class="td-control"></th>
-          <th class="td-archive"></th>
-        </tr>
-      </thead>
-      <tbody data-tbodyId="1" class="tbody-width">
-        @if(!empty($goods))
+                    <th class="td-author">Автор</th>
+                    <th class="td-control"></th>
+                    <th class="td-archive"></th>
+                </tr>
+            </thead>
+            <tbody data-tbodyId="1" class="tbody-width">
+                @if(!empty($goods))
 
-        @foreach($goods as $cur_goods)
-        <tr class="item @if($cur_goods->moderation == 1)no-moderation @endif" id="goods-{{ $cur_goods->id }}" data-name="{{ $cur_goods->goods_article->name }}">
-          <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox">
-            <input type="checkbox" class="table-check" name="cur_goods_id" id="check-{{ $cur_goods->id }}"
-            {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
-            @if(!empty($filter['booklist']['booklists']['default']))
-            {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-            @if (in_array($cur_goods->id, $filter['booklist']['booklists']['default'])) checked 
-            @endif
-            @endif
-            >
-            <label class="label-check" for="check-{{ $cur_goods->id }}"></label>
-          </td>
-          <td>
-            <a href="/admin/goods/{{ $cur_goods->id }}/edit">
-              <img src="{{ isset($cur_goods->photo_id) ? '/storage/'.$cur_goods->company_id.'/media/goods/'.$cur_goods->id.'/img/small/'.$cur_goods->photo->name : '/crm/img/plug/goods_small_default_color.jpg' }}" alt="{{ isset($cur_goods->photo_id) ? $cur_goods->name : 'Нет фото' }}">
-            </a>
-          </td>
-          <td class="td-name"><a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->goods_article->name }}</a></td>
-          <td class="td-description">{{ $cur_goods->description }}</td>
-          <td class="td-price">{{ num_format($cur_goods->price, 0) }} </td>
-          <td class="td-goods_category">
-            <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->goods_article->goods_product->goods_category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->goods_article->goods_product->goods_category->name }}</a>
-            <br>
-            {{-- @if($cur_goods->goods_article->goods_product->name != $cur_goods->name) --}}
-            <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->goods_article->goods_product->id }}" class="filter_link light-text">{{ $cur_goods->goods_article->goods_product->name }}</a>
-            {{-- @endif --}}
-          </td>
-          {{-- <td class="td-goods">{{ $cur_goods->goods_product->name }}</td> --}}
-
-
-          @if(Auth::user()->god == 1) 
-          <td class="td-company-id">@if(!empty($cur_goods->company->name)) {{ $cur_goods->company->name }} @else @if($cur_goods->system_item == null) Шаблон @else Системная @endif @endif</td>
-          @endif
-
-          {{-- <td class="td-sync-id"><a class="icon-sync sprite" data-open="item-sync"></a></td> --}}
-
-          <td class="td-author">@if(isset($cur_goods->author->first_name)) {{ $cur_goods->author->first_name . ' ' . $cur_goods->author->second_name }} @endif</td>
-
-          {{-- Элементы управления --}}
-          @include('includes.control.table-td', ['item' => $cur_goods])
-
-          <td class="td-archive">
-            @if ($cur_goods->system_item != 1)
-            @can('delete', $cur_goods)
-            <a class="icon-delete sprite" data-open="item-archive"></a>
-            @endcan
-            @endif
-          </td>       
-        </tr>
-        @endforeach
-        @endif
-      </tbody>
-    </table>
-  </div>
+                @foreach($goods as $cur_goods)
+                <tr class="item @if($cur_goods->moderation == 1)no-moderation @endif" id="goods-{{ $cur_goods->id }}" data-name="{{ $cur_goods->goods_article->name }}">
+                    <td class="td-drop">
+                        <div class="sprite icon-drop"></div>
+                    </td>
+                    <td class="td-checkbox checkbox">
+                        <input type="checkbox" class="table-check" name="cur_goods_id" id="check-{{ $cur_goods->id }}"
+                        {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+                        @if(!empty($filter['booklist']['booklists']['default']))
+                        {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+                        @if (in_array($cur_goods->id, $filter['booklist']['booklists']['default'])) checked 
+                        @endif
+                        @endif
+                        >
+                        <label class="label-check" for="check-{{ $cur_goods->id }}"></label>
+                    </td>
+                    <td class="td-photo">
+                        <a href="/admin/goods/{{ $cur_goods->id }}/edit">
+                            <img src="{{ isset($cur_goods->photo_id) ? '/storage/'.$cur_goods->company_id.'/media/goods/'.$cur_goods->id.'/img/small/'.$cur_goods->photo->name : '/crm/img/plug/goods_small_default_color.jpg' }}" alt="{{ isset($cur_goods->photo_id) ? $cur_goods->name : 'Нет фото' }}">
+                        </a>
+                    </td>
+                    <td class="td-name">
+                        <a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->goods_article->name }}</a>
+                    </td>
+                    <td class="td-goods_category">
+                        <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->goods_article->goods_product->goods_category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->goods_article->goods_product->goods_category->name }}</a>
+                        <br>
+                        {{-- @if($cur_goods->goods_article->goods_product->name != $cur_goods->name) --}}
+                        <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->goods_article->goods_product->id }}" class="filter_link light-text">{{ $cur_goods->goods_article->goods_product->name }}</a>
+                        {{-- @endif --}}
+                    </td>
+                    <td class="td-description">{{ $cur_goods->description }}</td>
+                    <td class="td-price">{{ num_format($cur_goods->price, 0) }} </td>
+                    <td class="td-catalog">
+                        @foreach ($cur_goods->catalogs as $catalog)
+                        <a href="/admin/sites/{{ $catalog->site->alias }}/catalog_products/{{ $catalog->id }}" class="filter_link" title="Редактировать каталог">{{ $catalog->name }}</a>, 
+                        @endforeach
+                    </td>
+                    {{-- <td class="td-goods">{{ $cur_goods->goods_product->name }}</td> --}}
+                    @if(Auth::user()->god == 1) 
+                    <td class="td-company-id">@if(!empty($cur_goods->company->name)) {{ $cur_goods->company->name }} @else @if($cur_goods->system_item == null) Шаблон @else Системная @endif @endif</td>
+                    @endif
+                    {{-- <td class="td-sync-id"><a class="icon-sync sprite" data-open="item-sync"></a></td> --}}
+                    <td class="td-author">@if(isset($cur_goods->author->first_name)) {{ $cur_goods->author->first_name . ' ' . $cur_goods->author->second_name }} @endif</td>
+                    {{-- Элементы управления --}}
+                    @include('includes.control.table-td', ['item' => $cur_goods])
+                    <td class="td-archive">
+                        @if ($cur_goods->system_item != 1)
+                        @can('delete', $cur_goods)
+                        <a class="icon-delete sprite" data-open="item-archive"></a>
+                        @endcan
+                        @endif
+                    </td>       
+                </tr>
+                @endforeach
+                @endif
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {{-- Pagination --}}
@@ -112,7 +116,7 @@
   <div class="small-6 cell pagination-head">
     <span class="pagination-title">Кол-во записей: {{ $goods->count() }}</span>
     {{ $goods->links() }}
-  </div>
+</div>
 </div>
 @endsection
 
@@ -218,16 +222,16 @@
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/admin/goods/create',
-        type: "GET",
-        success: function(html){
+      },
+      url: '/admin/goods/create',
+      type: "GET",
+      success: function(html){
           $('#modal').html(html);
           $('#first-add').foundation();
           $('#first-add').foundation('open');
-        }
-      }); 
-    });
+      }
+  }); 
+  });
 
 
 
@@ -253,7 +257,7 @@
     $(document).on('click', '.close-modal', function() {
       // alert('lol');
       $('.reveal-overlay').remove();
-    });
-  </script>
+  });
+</script>
 
-  @endsection
+@endsection

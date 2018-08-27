@@ -23,76 +23,84 @@
 
 {{-- Таблица --}}
 <div class="grid-x">
-  <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="raws">
-      <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
-        <tr id="thead-content">
-          <th class="td-drop"></th>
-          <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-photo">Фото</th>
-          <th class="td-name">Название сырья</th>
-          <th class="td-description">Описание</th>
-          <th class="td-price">Себестоимость</th>
-          <th class="td-services_category">Категория</th>
-          <th class="td-author">Автор</th>
-          <th class="td-control"></th>
-          <th class="td-archive"></th>
-      </tr>
-  </thead>
-  <tbody data-tbodyId="1" class="tbody-width">
-    @if(!empty($raws))
+    <div class="small-12 cell">
+        <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="raws">
+            <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
+                <tr id="thead-content">
+                    <th class="td-drop"></th>
+                    <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+                    <th class="td-photo">Фото</th>
+                    <th class="td-name">Название сырья</th>
+                    <th class="td-raws_category">Категория</th>
+                    <th class="td-description">Описание</th>
+                    <th class="td-price">Себестоимость</th>
+                    <th class="td-catalog">Разделы на сайте:</th>
+                    <th class="td-author">Автор</th>
+                    <th class="td-control"></th>
+                    <th class="td-archive"></th>
+                </tr>
+            </thead>
+            <tbody data-tbodyId="1" class="tbody-width">
+                @if(!empty($raws))
 
-    @foreach($raws as $raw)
-    <tr class="item @if($raw->moderation == 1)no-moderation @endif" id="raws-{{ $raw->id }}" data-name="{{ $raw->raws_article->name }}">
-      <td class="td-drop"><div class="sprite icon-drop"></div></td>
-      <td class="td-checkbox checkbox">
-        <input type="checkbox" class="table-check" name="raw_id" id="check-{{ $raw->id }}"
-        {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
-        @if(!empty($filter['booklist']['booklists']['default']))
-        {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-        @if (in_array($raw->id, $filter['booklist']['booklists']['default'])) checked 
-        @endif
-        @endif
-        >
-        <label class="label-check" for="check-{{ $raw->id }}"></label>
-    </td>
-    <td>
-        <a href="/admin/raws/{{ $raw->id }}/edit">
-          <img src="{{ isset($raw->photo_id) ? '/storage/'.$raw->company_id.'/media/raws/'.$raw->id.'/img/small/'.$raw->photo->name : '/crm/img/plug/goods_small_default_color.jpg' }}" alt="{{ isset($raw->photo_id) ? $raw->name : 'Нет фото' }}">
-      </a>
-  </td>
-  <td class="td-name"><a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->raws_article->name }}</a></td>
+                @foreach($raws as $raw)
+                <tr class="item @if($raw->moderation == 1)no-moderation @endif" id="raws-{{ $raw->id }}" data-name="{{ $raw->raws_article->name }}">
+                    <td class="td-drop">
+                        <div class="sprite icon-drop"></div>
+                    </td>
+                    <td class="td-checkbox checkbox">
+                        <input type="checkbox" class="table-check" name="raw_id" id="check-{{ $raw->id }}"
+                        {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+                        @if(!empty($filter['booklist']['booklists']['default']))
+                        {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+                        @if (in_array($raw->id, $filter['booklist']['booklists']['default'])) checked 
+                        @endif
+                        @endif
+                        >
+                        <label class="label-check" for="check-{{ $raw->id }}"></label>
+                    </td>
+                    <td>
+                        <a href="/admin/raws/{{ $raw->id }}/edit">
+                            <img src="{{ isset($raw->photo_id) ? '/storage/'.$raw->company_id.'/media/raws/'.$raw->id.'/img/small/'.$raw->photo->name : '/crm/img/plug/goods_small_default_color.jpg' }}" alt="{{ isset($raw->photo_id) ? $raw->name : 'Нет фото' }}">
+                        </a>
+                    </td>
+                    <td class="td-name">
+                        <a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->raws_article->name }}</a>
+                    </td>
+                    <td class="td-raws_category">
+                        <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->raws_article->raws_product->raws_category->id }}" class="filter_link" title="Фильтровать">{{ $raw->raws_article->raws_product->raws_category->name }}</a>
+                        <br>
+                        @if($raw->raws_article->raws_product->name != $raw->raws_article->name)
+                        <a href="/admin/raws?raws_product_id%5B%5D={{ $raw->raws_article->raws_product->id }}" class="filter_link light-text">{{ $raw->raws_article->raws_product->name }}</a>
+                        @endif
+                    </td>
+                    <td class="td-description">{{ $raw->description }}</td>
+                    <td class="td-price">{{ num_format($raw->cost, 0) }}</td>
+                    <td class="td-catalog">
 
-  <td class="td-description">{{ $raw->description }}</td>
-  <td class="td-price">{{ num_format($raw->cost, 0) }}</td>
-  <td class="td-raws_category">
-    <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->raws_article->raws_product->raws_category->id }}" class="filter_link" title="Фильтровать">{{ $raw->raws_article->raws_product->raws_category->name }}</a>
-    
-    <br>
-    @if($raw->raws_article->raws_product->name != $raw->raws_article->name)
-    <a href="/admin/raws?raws_product_id%5B%5D={{ $raw->raws_article->raws_product->id }}" class="filter_link light-text">{{ $raw->raws_article->raws_product->name }}</a>
-    @endif
-</td>
+                        @foreach ($raw->catalogs as $catalog)
+                        <a href="/admin/sites/{{ $catalog->site->alias }}/catalog_products/{{ $catalog->id }}" class="filter_link" title="Редактировать каталог">{{ $catalog->name }}</a>, 
+                        @endforeach
 
+                    </td>
+                    <td class="td-author">@if(isset($raw->author->first_name)) {{ $raw->author->first_name . ' ' . $raw->author->second_name }} @endif</td>
 
-<td class="td-author">@if(isset($raw->author->first_name)) {{ $raw->author->first_name . ' ' . $raw->author->second_name }} @endif</td>
+                    {{-- Элементы управления --}}
+                    @include('includes.control.table-td', ['item' => $raw])
 
-{{-- Элементы управления --}}
-@include('includes.control.table-td', ['item' => $raw])
-
-<td class="td-archive">
-    @if ($raw->system_item != 1)
-    @can('delete', $raw)
-    <a class="icon-delete sprite" data-open="item-archive"></a>
-    @endcan
-    @endif
-</td>       
-</tr>
-@endforeach
-@endif
-</tbody>
-</table>
-</div>
+                    <td class="td-archive">
+                        @if ($raw->system_item != 1)
+                        @can('delete', $raw)
+                        <a class="icon-delete sprite" data-open="item-archive"></a>
+                        @endcan
+                        @endif
+                    </td>       
+                </tr>
+                @endforeach
+                @endif
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {{-- Pagination --}}
