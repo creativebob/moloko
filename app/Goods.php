@@ -96,7 +96,7 @@ class Goods extends Model
 
     public function raws_compositions_values()
     {
-        return $this->morphedByMany('App\Raw', 'goods_values')->withPivot('value');
+        return $this->morphedByMany('App\RawsArticle', 'goods_values')->withPivot('value');
     }
 
     // public function compositions_values()

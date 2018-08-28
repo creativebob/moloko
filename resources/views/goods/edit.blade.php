@@ -40,344 +40,350 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            @if ($errors->any())
-            <div class="alert callout" data-closable>
-                <h5>Неправильный формат данных:</h5>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
 
             {{ Form::model($cur_goods, ['url' => ['/admin/goods/'.$cur_goods->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'cur-goods-form']) }}
             {{ method_field('PATCH') }}
 
-            <!-- Общая информация -->
-            <div class="tabs-panel is-active" id="options">
+            @php
+            if ($cur_goods->draft == 1) {
+                $disabled = '';
+            } else {
+                $disabled = 'disabled';
+            }
+            @endphp
 
-                {{-- Разделитель на первой вкладке --}}
-                <div class="grid-x grid-padding-x">
+    <!-- Общая информация -->
+    <div class="tabs-panel is-active" id="options">
 
-                    {{-- Левый блок на первой вкладке --}}
-                    <div class="small-12 large-6 cell">
+        {{-- Разделитель на первой вкладке --}}
+        <div class="grid-x grid-padding-x">
 
-                        {{-- Основная инфа --}}
-                        <div class="grid-x grid-margin-x">
-                            <div class="small-12 medium-6 cell">
+            {{-- Левый блок на первой вкладке --}}
+            <div class="small-12 large-6 cell">
 
-                                <label>Название товара
-                                    {{ Form::text('name', $cur_goods->goods_article->name, ['required']) }}
-                                </label>
-
-                                <label>Группа
-                                    {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_article->goods_product_id) }}
-                                </label>
-
-                                <label>Категория
-                                    <select name="goods_category_id">
-                                        @php
-                                        echo $goods_categories_list;
-                                        @endphp
-                                    </select>
-                                </label>
-                                
-                                <fieldset class="fieldset">
-                                    <legend class="checkbox">
-                                        {{ Form::checkbox('portion', 1, null, ['id' => 'portion']) }}
-                                        <label for="portion"><span>Принимать порциями</span></label>
-
-                                    </legend>
-
-                                    <div class="grid-x grid-margin-x">
-                                        <div class="small-12 medium-6 cell">
-                                            <label>Имя порции
-                                                {{ Form::text('lol', "", ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
-                                            </label>
-                                        </div>
-                                        <div class="small-6 medium-3 cell">
-                                            <label>Сокр. имя
-                                                {{ Form::text('lol',  "", ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
-                                            </label>
-                                        </div>
-                                        <div class="small-6 medium-3 cell">
-                                            <label>Кол-во
-                                                {{-- Количество чего-либо --}}
-                                                {{ Form::text('raw_count', 0, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
-                                                <div class="sprite-input-right find-status" id="name-check"></div>
-                                                <span class="form-error">Введите количество</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-
-                                <label>Производитель
-                                    {{ Form::select('manufacturer_id', $manufacturers_list, $cur_goods->manufacturer_id, ['placeholder' => 'Выберите производителя'])}}
-                                </label>
-
-                            </div>
-
-
-
-                            <div class="small-12 medium-6 cell">
-
-                                <div class="small-12 cell">
-                                    <label>Фотография
-                                        {{ Form::file('photo') }}
-                                    </label>
-                                    <div class="text-center">
-                                        <img id="photo" @if (isset($cur_goods->photo_id)) src="/storage/{{ $cur_goods->company->id }}/media/goods/{{ $cur_goods->id }}/img/medium/{{ $cur_goods->photo->name }}" @endif>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                    </div>
-                    {{-- Конец левого блока на первой вкладке --}}
-
-
-                    {{-- Правый блок на первой вкладке --}}
-                    <div class="small-12 large-6 cell">
-                        {{ Form::open(['url' => 'goods', 'data-abide', 'novalidate', 'id' => 'cur-goods-form']) }}
-
-                        <fieldset class="fieldset-access">
-                            <legend>Артикул</legend>
-
-                            <div class="grid-x grid-margin-x">
-                                <div class="small-12 medium-4 cell">
-                                    <label>Удобный (вручную)
-                                        {{ Form::text('manually', null) }}
-                                    </label>
-                                </div> 
-                                <div class="small-12 medium-4 cell">
-                                    <label>Программный
-                                        {{ Form::text('internal', null, ['required', 'disabled']) }}
-                                    </label>
-                                </div>
-                                <div class="small-12 medium-4 cell">
-                                    <label>Внешний
-                                        {{ Form::text('external') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-
-                        <div class="grid-x">
-                            <div class="small-12 cell">
-                                <label>Описание товара
-                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$cur_goods->description, 'required'=>''])
-                                </label>
-                            </div>
-                        </div>
-                        @if (($cur_goods->goods_article->goods_product->goods_category->metrics_count > 0) || ($cur_goods->metrics_values_count > 0))
-                        <fieldset class="fieldset-access">
-                            <legend>Метрики</legend>
-
-                            @if ($cur_goods->draft == 1)
-
-                            @foreach ($cur_goods->goods_article->goods_product->goods_category->metrics as $metric)
-                            @include('goods.metrics.metric-input', $metric)
-                            @endforeach
-
-                            @else
-
-                            @foreach ($cur_goods->metrics_values as $metric)
-                            @include('goods.metrics.metric-value', $metric)
-                            @endforeach
-
-                            @endif
-
-                            {{-- @if ($cur_goods->metrics_values_count > 0)
-                             @each('goods.metrics.metric-input', $cur_goods->goods_article->goods_product->goods_category->metrics, 'metric')
-                             @each('goods.metrics.metric-value', $cur_goods->metrics_values, 'metric')
-                             @endif --}}
-
-                         </fieldset>
-                         @endif
-                         <div id="cur-goods-inputs"></div>
-                         <div class="small-12 cell tabs-margin-top text-center">
-                            <div class="item-error" id="cur-goods-error">Такой артикул уже существует!<br>Измените значения!</div>
-                        </div>
-                        {{ Form::hidden('cur_goods_id', $cur_goods->id) }}
-
-                    </div>
-                    {{-- Конец правого блока на первой вкладке --}}
-
-                    {{-- Чекбокс черновика --}}
-                    <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('draft', 1, $cur_goods->draft, ['id' => 'draft']) }}
-                        <label for="draft"><span>Черновик</span></label>
-                    </div>
-
-                    {{-- Чекбоксы управления --}}
-                    @include('includes.control.checkboxes', ['item' => $cur_goods]) 
-
-                    {{-- Кнопка --}}
-                    <div class="small-12 cell tabs-button tabs-margin-top">
-                        {{ Form::submit('Редактировать товар', ['class'=>'button', 'id' => 'add-cur-goods']) }}
-                    </div>
-
-                </div>{{-- Закрытие разделителя на блоки --}}
-            </div>{{-- Закрытите таба --}}
-
-            <!-- Ценообразование -->
-            <div class="tabs-panel" id="price-rules">
-                <div class="grid-x grid-padding-x">
+                {{-- Основная инфа --}}
+                <div class="grid-x grid-margin-x">
                     <div class="small-12 medium-6 cell">
 
-                        <fieldset class="fieldset-access">
-                            <legend>Базовые настройки</legend>
+                        <label>Название товара
+                            {{ Form::text('name', $cur_goods->goods_article->name, ['required', $disabled]) }}
+                        </label>
 
-                            <div class="grid-x grid-margin-x">
-                                <div class="small-12 medium-6 cell">
-                                    <label>Себестоимость
-                                        {{ Form::number('cost', $cur_goods->cost) }}
-                                    </label>
-                                </div>
-                                <div class="small-12 medium-6 cell">
-                                    <label>Цена
-                                        {{ Form::number('price', $cur_goods->price) }}
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
-            </div>
+                        <label>Группа
+                            {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_article->goods_product_id, [$disabled]) }}
+                        </label>
 
-            <!-- Каталоги -->
-            <div class="tabs-panel" id="catalogs">
-                <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-6 cell">
-                       
-
-                        <fieldset class="fieldset-access">
-                            <legend>Каталоги</legend>
-
-                             {{-- Form::select('catalogs[]', $catalogs_list, $cur_goods->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
-                            <select name="catalogs[]" data-placeholder="Выберите каталоги..." multiple class="chosen-select">
+                        <label>Категория
+                            <select name="goods_category_id" {{ $disabled }}>
                                 @php
-                                echo $catalogs_list;
+                                echo $goods_categories_list;
                                 @endphp
                             </select>
+                        </label>
 
+                        <fieldset class="fieldset">
+                            <legend class="checkbox">
+                                {{ Form::checkbox('portion', 1, null, ['id' => 'portion']) }}
+                                <label for="portion"><span>Принимать порциями</span></label>
+
+                            </legend>
+
+                            <div class="grid-x grid-margin-x">
+                                <div class="small-12 medium-6 cell">
+                                    <label>Имя порции
+                                        {{ Form::text('lol', "", ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
+                                    </label>
+                                </div>
+                                <div class="small-6 medium-3 cell">
+                                    <label>Сокр. имя
+                                        {{ Form::text('lol',  "", ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
+                                    </label>
+                                </div>
+                                <div class="small-6 medium-3 cell">
+                                    <label>Кол-во
+                                        {{-- Количество чего-либо --}}
+                                        {{ Form::text('raw_count', 0, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
+                                        <div class="sprite-input-right find-status" id="name-check"></div>
+                                        <span class="form-error">Введите количество</span>
+                                    </label>
+                                </div>
+                            </div>
                         </fieldset>
+
+                        <label>Производитель
+                            {{ Form::select('manufacturer_id', $manufacturers_list, $cur_goods->manufacturer_id, ['placeholder' => 'Выберите производителя', $disabled])}}
+                        </label>
+
+                    </div>
+
+
+
+                    <div class="small-12 medium-6 cell">
+
+                        <div class="small-12 cell">
+                            <label>Фотография
+                                {{ Form::file('photo') }}
+                            </label>
+                            <div class="text-center">
+                                <img id="photo" @if (isset($cur_goods->photo_id)) src="/storage/{{ $cur_goods->company->id }}/media/goods/{{ $cur_goods->id }}/img/medium/{{ $cur_goods->photo->name }}" @endif>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+            {{-- Конец левого блока на первой вкладке --}}
+
+
+            {{-- Правый блок на первой вкладке --}}
+            <div class="small-12 large-6 cell">
+                {{ Form::open(['url' => 'goods', 'data-abide', 'novalidate', 'id' => 'cur-goods-form']) }}
+
+                <fieldset class="fieldset-access">
+                    <legend>Артикул</legend>
+
+                    <div class="grid-x grid-margin-x">
+                        <div class="small-12 medium-4 cell">
+                            <label>Удобный (вручную)
+                                {{ Form::text('manually', null, [$disabled]) }}
+                            </label>
+                        </div> 
+                        <div class="small-12 medium-4 cell">
+                            <label>Программный
+                                {{ Form::text('internal', null, ['required', 'disabled']) }}
+                            </label>
+                        </div>
+                        <div class="small-12 medium-4 cell">
+                            <label>Внешний
+                                {{ Form::text('external') }}
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="grid-x">
+                    <div class="small-12 cell">
+                        <label>Описание товара
+                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$cur_goods->description, 'required'=>''])
+                        </label>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Состав -->
-            <div class="tabs-panel" id="compositions">
-                <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-9 cell">
-                        {{-- Состав --}}
-                        <table class="composition-table">
-                            <thead>
-                                <tr> 
-                                    <th>Категория:</th>
-                                    <th>Продукт:</th>
-                                    <th>Кол-во:</th>
-                                    <th>Использование:</th>
-                                    <th>Отход:</th>
-                                    <th>Остаток:</th>
-                                    <th>Операция над остатком:</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="composition-table">
-
-                                {{-- Таблица метрик товара --}}
-                                @if (isset($cur_goods->goods_article->goods_product->goods_category->compositions))
-
-                                @foreach ($cur_goods->goods_article->goods_product->goods_category->compositions as $composition)
-
-                                @if ($cur_goods->draft == 1)
-
-                                @include ('goods.compositions.composition-input', $composition)
-
-                                @else
-
-                                @include ('goods.compositions.composition-value', $composition)
-
-                                @endif
-                                @endforeach
-
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
+                @if (($cur_goods->goods_article->goods_product->goods_category->metrics_count > 0) || ($cur_goods->metrics_values_count > 0))
+                <fieldset class="fieldset-access">
+                    <legend>Метрики</legend>
 
                     @if ($cur_goods->draft == 1)
-                    <div class="small-12 medium-3 cell">
 
-                        @if (isset($composition_list))
-                        <ul class="menu vertical">
+                    @foreach ($cur_goods->goods_article->goods_product->goods_category->metrics as $metric)
+                    @include('goods.metrics.metric-input', $metric)
+                    @endforeach
 
-                            @if (isset($composition_list['composition_categories']))
-                            <li>
-                                <a class="button" data-toggle="{{ $composition_list['alias'] }}-dropdown">{{ $composition_list['name'] }}</a>
-                                <div class="dropdown-pane" id="{{ $composition_list['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
+                    @else
 
-                                    <ul class="checker" id="products-categories-list">
+                    @foreach ($cur_goods->metrics_values as $metric)
+                    @include('goods.metrics.metric-value', $metric)
+                    @endforeach
 
-                                        @foreach ($composition_list['composition_categories'] as $composition_category)
-                                        @include('goods.compositions.raws-category', $composition_category)
-                                        @endforeach
-                                    </ul>
-
-                                </div>
-                            </li>
-                            @endif
-
-                        </ul>
-                        @endif
-
-                    </div>
                     @endif
+
+                    {{-- @if ($cur_goods->metrics_values_count > 0)
+                       @each('goods.metrics.metric-input', $cur_goods->goods_article->goods_product->goods_category->metrics, 'metric')
+                       @each('goods.metrics.metric-value', $cur_goods->metrics_values, 'metric')
+                       @endif --}}
+
+                   </fieldset>
+                   @endif
+                   <div id="cur-goods-inputs"></div>
+                   <div class="small-12 cell tabs-margin-top text-center">
+                    <div class="item-error" id="cur-goods-error">Такой артикул уже существует!<br>Измените значения!</div>
                 </div>
+                {{ Form::hidden('cur_goods_id', $cur_goods->id) }}
+
+            </div>
+            {{-- Конец правого блока на первой вкладке --}}
+
+            {{-- Чекбокс черновика --}}
+            @if ($cur_goods->draft == 1)
+            <div class="small-12 cell checkbox">
+                {{ Form::checkbox('draft', 1, $cur_goods->draft, ['id' => 'draft']) }}
+                <label for="draft"><span>Черновик</span></label>
+            </div>
+            @endif
+
+            {{-- Чекбоксы управления --}}
+            @include('includes.control.checkboxes', ['item' => $cur_goods]) 
+
+            {{-- Кнопка --}}
+            <div class="small-12 cell tabs-button tabs-margin-top">
+                {{ Form::submit('Редактировать товар', ['class'=>'button', 'id' => 'add-cur-goods']) }}
             </div>
 
-            {{ Form::close() }}
+        </div>{{-- Закрытие разделителя на блоки --}}
+    </div>{{-- Закрытите таба --}}
 
-            <!-- Фотографии -->
-            <div class="tabs-panel" id="photos">
-                <div class="grid-x grid-padding-x">
+    <!-- Ценообразование -->
+    <div class="tabs-panel" id="price-rules">
+        <div class="grid-x grid-padding-x">
+            <div class="small-12 medium-6 cell">
 
-                    <div class="small-12 medium-7 cell">
-                        {{ Form::open(['url' => '/admin/goods/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
-                        {{ Form::hidden('name', $cur_goods->name) }}
-                        {{ Form::hidden('id', $cur_goods->id) }}
-                        {{ Form::close() }}
-                        <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
-                            @if (isset($cur_goods->album_id))
+                <fieldset class="fieldset-access">
+                    <legend>Базовые настройки</legend>
 
-                            @include('goods.photos', $cur_goods)
-
-                            @endif
-                        </ul>
+                    <div class="grid-x grid-margin-x">
+                        <div class="small-12 medium-6 cell">
+                            <label>Себестоимость
+                                {{ Form::number('cost', $cur_goods->cost, [$disabled]) }}
+                            </label>
+                        </div>
+                        <div class="small-12 medium-6 cell">
+                            <label>Цена
+                                {{ Form::number('price', $cur_goods->price, [$disabled]) }}
+                            </label>
+                        </div>
                     </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
 
-                    <div class="small-12 medium-5 cell">
+    <!-- Каталоги -->
+    <div class="tabs-panel" id="catalogs">
+        <div class="grid-x grid-padding-x">
+            <div class="small-12 medium-6 cell">
 
-                        {{-- Форма редактированя фотки --}}
-                        {{ Form::open(['url' => '/admin/goods/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
 
-                        {{ Form::hidden('name', $cur_goods->name) }}
-                        {{ Form::hidden('id', $cur_goods->id) }}
-                        {{ Form::close() }}
-                    </div>
+                <fieldset class="fieldset-access">
+                    <legend>Каталоги</legend>
 
-                </div>
+                    {{-- Form::select('catalogs[]', $catalogs_list, $cur_goods->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
+                    <select name="catalogs[]" data-placeholder="Выберите каталоги..." multiple class="chosen-select">
+                        @php
+                        echo $catalogs_list;
+                        @endphp
+                    </select>
+
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+    <!-- Состав -->
+    <div class="tabs-panel" id="compositions">
+        <div class="grid-x grid-padding-x">
+            <div class="small-12 medium-9 cell">
+                {{-- Состав --}}
+                <table class="composition-table">
+                    <thead>
+                        <tr> 
+                            <th>Категория:</th>
+                            <th>Продукт:</th>
+                            <th>Кол-во:</th>
+                            <th>Использование:</th>
+                            <th>Отход:</th>
+                            <th>Остаток:</th>
+                            <th>Операция над остатком:</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="composition-table">
+
+                        @if (($cur_goods->goods_article->goods_product->goods_category->compositions) || ($cur_goods->raws_compositions_values))
+
+                        {{-- Таблица метрик товара --}}
+                        @if (isset($cur_goods->raws_compositions_values))
+
+                        @foreach ($cur_goods->raws_compositions_values as $composition)
+                        @if ($cur_goods->draft == 1)
+                        @include ('goods.compositions.composition-input', $composition)
+                        @else
+                        @include ('goods.compositions.composition-value', $composition)
+                        @endif
+                        @endforeach
+
+                        @else
+
+                        @foreach ($cur_goods->goods_article->goods_product->goods_category->compositions as $composition)
+                        @if ($cur_goods->draft == 1)
+                        @include ('goods.compositions.composition-input', $composition)
+                        @else
+                        @include ('goods.compositions.composition-value', $composition)
+                        @endif
+                        @endforeach
+
+                        @endif
+
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+
+            @if ($cur_goods->draft == 1)
+            <div class="small-12 medium-3 cell">
+
+                @if (isset($composition_list))
+                <ul class="menu vertical">
+
+                    @if (isset($composition_list['composition_categories']))
+                    <li>
+                        <a class="button" data-toggle="{{ $composition_list['alias'] }}-dropdown">{{ $composition_list['name'] }}</a>
+                        <div class="dropdown-pane" id="{{ $composition_list['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
+
+                            <ul class="checker" id="products-categories-list">
+
+                                @foreach ($composition_list['composition_categories'] as $composition_category)
+                                @include('goods.compositions.raws-category', $composition_category)
+                                @endforeach
+                            </ul>
+
+                        </div>
+                    </li>
+                    @endif
+
+                </ul>
+                @endif
+
+            </div>
+            @endif
+        </div>
+    </div>
+
+    {{ Form::close() }}
+
+    <!-- Фотографии -->
+    <div class="tabs-panel" id="photos">
+        <div class="grid-x grid-padding-x">
+
+            <div class="small-12 medium-7 cell">
+                {{ Form::open(['url' => '/admin/goods/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
+                {{ Form::hidden('name', $cur_goods->name) }}
+                {{ Form::hidden('id', $cur_goods->id) }}
+                {{ Form::close() }}
+                <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
+                    @if (isset($cur_goods->album_id))
+
+                    @include('goods.photos', $cur_goods)
+
+                    @endif
+                </ul>
+            </div>
+
+            <div class="small-12 medium-5 cell">
+
+                {{-- Форма редактированя фотки --}}
+                {{ Form::open(['url' => '/admin/goods/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
+
+                {{ Form::hidden('name', $cur_goods->name) }}
+                {{ Form::hidden('id', $cur_goods->id) }}
+                {{ Form::close() }}
             </div>
 
         </div>
     </div>
+
+</div>
+</div>
 </div>
 @endsection
 
@@ -398,6 +404,7 @@
     // Основные ностойки
     var cur_goods_id = '{{ $cur_goods->id }}';
 
+    // Мульти Select
     $(".chosen-select").chosen({width: "95%"});
 
     // При клике на удаление метрики со страницы

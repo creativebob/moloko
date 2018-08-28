@@ -55,7 +55,13 @@ class GoodsProduct extends Model
         return $this->belongsTo('App\GoodsCategory');
     }
 
-     // Получаем категорию
+    // Получаем артикулы
+    public function goods_articles()
+    {
+        return $this->hasMany('App\GoodsArticle');
+    }
+
+    // Получаем категорию
     public function goods()
     {
         return $this->hasMany('App\Goods');
