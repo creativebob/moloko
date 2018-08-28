@@ -175,7 +175,7 @@ fieldset legend {
 }
 
 .padding-no {
-  margin-left: 0 -15px !important;
+  margin-left: 0 -15px;
 }
 
 .wrap-input-table {
@@ -220,6 +220,26 @@ fieldset legend {
 }
 #search-result-wrap .search-result-list li:last-child {
   border-bottom: 0px dotted #999;
+}
+
+.table-order {
+  border-collapse: separate;
+  border-spacing: 0px 5px !important;
+}
+.table-order thead {
+  background-color: transparent;
+}
+.table-order tr th {
+  background-color: transparent !important;
+  border-bottom: 3px solid #000;
+}
+.table-order tr td {
+  background-color: #fff;
+  border-top: 2px solid #fff;
+  padding: 0.1rem 0.625rem 0.1rem;
+}
+.table-order tr:first-child td {
+  background-color: #fff;
 }
 
 #search-add-product-result-wrap {

@@ -263,7 +263,7 @@ fieldset {
 }
 
 .padding-no {
-    margin-left: 0 -15px !important;
+    margin-left: 0 -15px;
 }
 
 
@@ -324,6 +324,38 @@ fieldset {
         }
     }
 }
+
+// СТРАНИЦА ЛИДЫ ======================================================================
+
+.table-order{
+
+    border-collapse: separate;
+    border-spacing: 0px 5px !important;
+
+    thead{
+        background-color: transparent;
+    }
+
+    tr th{
+        background-color: transparent !important;
+        border-bottom: 3px solid #000;
+    }
+
+    tr td{
+        background-color: #fff;
+        border-top: 2px solid #fff;
+        padding: 0.1rem 0.625rem 0.1rem;
+    }
+
+    tr:first-child td {
+        background-color: #fff;
+    }
+
+}
+
+
+// ОКОНЧАНИЕ СТРАНИЦЫ ЛИДЫ ============================================================
+
 
 // СТИЛИЗАЦИЯ ПОИСКА ТОВАРА ДЛЯ ДОБАВЛЕНИЯ В КАТАЛОГ
 #search-add-product-result-wrap{

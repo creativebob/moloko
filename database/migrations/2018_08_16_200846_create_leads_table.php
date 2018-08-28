@@ -59,6 +59,14 @@ class CreateLeadsTable extends Migration
             $table->integer('manager_id')->nullable()->unsigned()->comment('ID пользователя');
             $table->foreign('manager_id')->references('id')->on('users');
 
+            $table->integer('stage_id')->nullable()->unsigned()->comment('ID этапа');
+            $table->foreign('stage_id')->references('id')->on('stages');
+
+            // Старый id из другой базы
+            $table->integer('old_lead_id')->nullable()->unsigned()->comment('ID из другой базы');
+
+            $table->integer('old_case_number')->nullable()->unsigned()->comment('Номер обращения из другой базы');
+
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 

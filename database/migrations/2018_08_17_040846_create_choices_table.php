@@ -16,8 +16,8 @@ class CreateChoicesTable extends Migration
         Schema::create('choices', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('choice_id')->nullable()->unsigned()->comment('Id сущности');
-            $table->string('choice_type')->nullable()->comment('Сущность');
+            $table->integer('choices_id')->nullable()->unsigned()->comment('Id сущности');
+            $table->string('choices_type')->nullable()->comment('Сущность');
 
             $table->integer('lead_id')->nullable()->unsigned()->comment('Id лида');
             $table->foreign('lead_id')->references('id')->on('leads');

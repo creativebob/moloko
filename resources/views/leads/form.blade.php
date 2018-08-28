@@ -92,7 +92,7 @@
         <!-- ЗАКАЗ -->
         <div class="grid-x grid-padding-x">
             <div class="small-12 medium-12 large-12 cell">
-                <table>
+                <table class="table-order">
                     <thead>
                         <tr>
                             <td>Наименование</td>
@@ -135,11 +135,15 @@
                     <li class="tabs-title is-active"><a href="#content-panel-history" aria-selected="true">История</a></li>
                     <li class="tabs-title"><a href="#content-panel-catalog" aria-selected="true">Каталог</a></li>
                     <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li>
+                    <li class="tabs-title"><a href="#content-panel-claims" aria-selected="true">Рекламации</a></li>
+                    <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="tabs-content" data-tabs-content="tabs-leads">
+
+            {{-- История взаимодействия --}}
             <div class="tabs-panel is-active" id="content-panel-history">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 large-6 cell">
@@ -158,13 +162,33 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Каталог продукции --}}
             <div class="tabs-panel" id="content-panel-catalog">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 large-6 cell">
                     </div>
                 </div>
             </div>
+
+            {{-- Документы --}}
             <div class="tabs-panel" id="content-panel-documents">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 large-6 cell">
+                    </div>
+                </div>
+            </div>
+
+            {{-- Рекламации --}}
+            <div class="tabs-panel" id="content-panel-claims">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 large-6 cell">
+                    </div>
+                </div>
+            </div>
+
+            {{-- Замеры --}}
+            <div class="tabs-panel" id="content-panel-measurements">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 large-6 cell">
                     </div>
