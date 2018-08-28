@@ -40,22 +40,16 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            @if ($errors->any())
-            <div class="alert callout" data-closable>
-                <h5>Неправильный формат данных:</h5>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
-
             {{ Form::model($service, ['url' => ['/admin/services/'.$service->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'service-form']) }}
             {{ method_field('PATCH') }}
+
+            @php
+            if ($service->draft == 1) {
+                $disabled = '';
+            } else {
+                $disabled = 'disabled';
+            }
+            @endphp
 
             <!-- Общая информация -->
             <div class="tabs-panel is-active" id="options">
@@ -71,15 +65,15 @@
                             <div class="small-12 medium-6 cell">
 
                                 <label>Название услуги
-                                    {{ Form::text('name', $service->services_article->name, ['required']) }}
+                                    {{ Form::text('name', $service->services_article->name, ['required', $disabled]) }}
                                 </label>
 
                                 <label>Группа
-                                    {{ Form::select('services_product_id', $services_products_list, $service->services_product_id) }}
+                                    {{ Form::select('services_product_id', $services_products_list, $service->services_product_id, [$disabled]) }}
                                 </label>
                                 
                                 <label>Категория
-                                    <select name="services_category_id">
+                                    <select name="services_category_id" {{ $disabled }}>
                                         @php
                                         echo $services_categories_list;
                                         @endphp
@@ -94,7 +88,7 @@
                                 <div class="grid-x grid-margin-x">
                                     <div class="small-12 medium-6 cell">
                                         <label>Цена
-                                            {{ Form::number('price', $service->price) }}
+                                            {{ Form::number('price', $service->price, [$disabled]) }}
                                         </label>
                                     </div>
                                 </div>
@@ -129,7 +123,7 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-4 cell">
                                     <label>Удобный (вручную)
-                                        {{ Form::text('manually', $service->manually) }}
+                                        {{ Form::text('manually', $service->manually, [$disabled]) }}
                                     </label>
                                 </div> 
                                 <div class="small-12 medium-4 cell">
@@ -181,12 +175,13 @@
                     </div>
                     {{-- Конец правого блока на первой вкладке --}}
 
-
+                    @if ($service->draft == 1)
                     {{-- Чекбокс черновика --}}
                     <div class="small-12 cell checkbox">
                         {{ Form::checkbox('draft', 1, $service->draft, ['id' => 'draft']) }}
                         <label for="draft"><span>Черновик</span></label>
                     </div>
+                    @endif
 
                     {{-- Чекбоксы управления --}}
                     @include('includes.control.checkboxes', ['item' => $service])
@@ -210,7 +205,7 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Себестоимость
-                                        {{ Form::number('cost', $service->cost) }}
+                                        {{ Form::number('cost', $service->cost, [$disabled]) }}
                                     </label>
                                 </div>
                             </div>

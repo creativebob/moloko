@@ -749,7 +749,6 @@ class GoodsController extends Controller
             ->where('goods_product_id', $request->goods_product_id)
             ->where(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count])
             ->get();
-
             // dd($goods_articles);
 
             // Создаем массив совпадений
@@ -758,97 +757,74 @@ class GoodsController extends Controller
 
             // Сравниваем метрики
             $metrics_array = [];
+            $raws_compositions_array = [];
             foreach ($goods_articles as $goods_article) {
                 foreach ($goods_article->goods as $cur_goods) {
-
                     // dd($cur_goods);
                     foreach ($cur_goods->metrics_values as $metric) {
                         // dd($metric);
                         $metrics_array[$cur_goods->id][$metric->id][] = $metric->pivot->value;
                     }
+
+                    foreach ($cur_goods->raws_compositions_values as $raws_composition) {
+                        // dd($raws_composition);
+                        $raws_compositions_array[$cur_goods->id][$raws_composition->id] = $raws_composition->pivot->value;
+                    }
                 }
             }
-            
             // dd($metrics_array);
-
+            // dd($raws_compositions_array);
             $metrics_values = $request->metrics;
             // dd($metrics_values);
             foreach ($metrics_array as $item) {
                 if ($metrics_values == $item) {
-                // Если значения метрик совпали, создаюм ключ метрик
-                $coincidence['metric'] = 1;
+                    // Если значения метрик совпали, создаюм ключ метрик
+                    $coincidence['metric'] = 1;
+                }
             }
+
+            $raws_compositions_values = $request->compositions;
+            // dd($raws_compositions_values);
+            foreach ($raws_compositions_array as $item) {
+                if ($raws_compositions_values == $item) {
+                    // Если значения метрик совпали, создаюм ключ метрик
+                    $coincidence['raws_composition'] = 1;
+                }
             }
             
-            dd($coincidence);
-            // dd($request->compositions);
+            // dd($coincidence);
 
-            // $compositions_values = [];
-            // foreach ($request->compositions as $composition_id => $value) {
-            //     // dd($value['value']);
-            //     $compositions_values[$id][$value['cur_goods']] = $value['count'];
-            // }
-            // // dd($compositions_values);
-
-            // // Сравниваем составы
-            // $compositions_array = [];
-            // foreach ($goods as $cur_goods) {
-            //     foreach ($cur_goods->compositions_values as $composition) {
-            //         $compositions_array[$cur_goods->id][$composition->id] = $composition->pivot->value;
-            //     }
-            // }
-            // dd($compositions_array);
-
-            // if ($compositions_values == $compositions_array) {
-            //     // Если значения составов совпали, создаюм ключ составов
-            //     $coincidence['composition'] = 1;
-            // }
 
             // Проверяем наличие ключей в массиве
-            // if ((array_key_exists('metric', $coincidence) && array_key_exists('composition', $coincidence)) || (array_key_exists('metric', $coincidence) && $cur_goods->product->products_category->compositions) || (array_key_exists('composition', $coincidence) && $cur_goods->product->products_category->metrics)) {
-            //     // Если ключи присутствуют, даем ошибку
-            //     $result = [
-            //         'error_status' => 1,
-            //         'error_message' => 'Такой артикул уже существует!',
-            //     ];
-
-            //     echo json_encode($result, JSON_UNESCAPED_UNICODE);
-            // }
-
-            if (array_key_exists('metric', $coincidence)) {
+            if (array_key_exists('metric', $coincidence) && array_key_exists('raws_composition', $coincidence)) {
                 // Если ключи присутствуют, даем ошибку
-                $result = [
-                    'error_status' => 1,
-                    'error_message' => 'Такой артикул уже существует!',
-                ];
-
-                echo json_encode($result, JSON_UNESCAPED_UNICODE);
-            }
+             return redirect()->back()->withInput()->withErrors('Такой артикул уже существует!');
 
             // dd($coincidence);
-        }
+         }
+     }
 
         // Если что то не совпало, пишем новый артикул
 
         // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+         $user = $request->user();
 
         // Смотрим компанию пользователя
-        $company_id = $user->company_id;
+         $company_id = $user->company_id;
 
         // Скрываем бога
-        $user_id = hideGod($user);
+         $user_id = hideGod($user);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $cur_goods = Goods::with('goods_article')->moderatorLimit($answer)->findOrFail($id);
+         $cur_goods = Goods::with('goods_article')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $cur_goods);
+         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
-        if ($request->hasFile('photo')) {
+         if ($request->hasFile('photo')) {
 
             // Вытаскиваем настройки
             // Вытаскиваем базовые настройки сохранения фото

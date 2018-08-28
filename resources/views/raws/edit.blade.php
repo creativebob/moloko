@@ -39,22 +39,16 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            @if ($errors->any())
-            <div class="alert callout" data-closable>
-                <h5>Неправильный формат данных:</h5>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
-
             {{ Form::model($raw, ['url' => ['/admin/raws/'.$raw->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'raws-form']) }}
             {{ method_field('PATCH') }}
+
+            @php
+            if ($raw->draft == 1) {
+                $disabled = '';
+            } else {
+                $disabled = 'disabled';
+            }
+            @endphp
 
             <!-- Общая информация -->
             <div class="tabs-panel is-active" id="options">
@@ -70,15 +64,15 @@
                             <div class="small-12 medium-6 cell">
 
                                 <label>Название сырья
-                                    {{ Form::text('name', $raw->raws_article->name, ['required']) }}
+                                    {{ Form::text('name', $raw->raws_article->name, ['required', $disabled]) }}
                                 </label>
 
                                 <label>Группа
-                                    {{ Form::select('raws_product_id', $raws_products_list, $raw->raws_article->raws_product_id) }}
+                                    {{ Form::select('raws_product_id', $raws_products_list, $raw->raws_article->raws_product_id, [$disabled]) }}
                                 </label>
 
                                  <label>Категория
-                                    <select name="raws_category_id">
+                                    <select name="raws_category_id" {{ $disabled }}>
                                         @php
                                         echo $raws_categories_list;
                                         @endphp
@@ -115,7 +109,7 @@
                                 </fieldset>
 
                                 <label>Производитель
-                                    {{ Form::select('manufacturer_id', $manufacturers_list, $raw->manufacturer_id, ['placeholder' => 'Выберите производителя'])}}
+                                    {{ Form::select('manufacturer_id', $manufacturers_list, $raw->manufacturer_id, ['placeholder' => 'Выберите производителя', $disabled])}}
                                 </label>
 
                             </div>
@@ -151,7 +145,7 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-4 cell">
                                     <label>Удобный (вручную)
-                                        {{ Form::text('manually', null) }}
+                                        {{ Form::text('manually', null, [$disabled]) }}
                                     </label>
                                 </div> 
                                 <div class="small-12 medium-4 cell">
@@ -208,11 +202,13 @@
                     </div>
                     {{-- Конец правого блока на первой вкладке --}}
 
+                    @if ($raw->draft == 1)
                     {{-- Чекбокс черновика --}}
                     <div class="small-12 cell checkbox">
                         {{ Form::checkbox('draft', 1, $raw->draft, ['id' => 'draft']) }}
                         <label for="draft"><span>Черновик</span></label>
                     </div>
+                    @endif
 
                     {{-- Чекбоксы управления --}}
                     @include('includes.control.checkboxes', ['item' => $raw])  
@@ -236,12 +232,12 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Себестоимость
-                                        {{ Form::number('cost', $raw->cost) }}
+                                        {{ Form::number('cost', $raw->cost, [$disabled]) }}
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Цена
-                                        {{ Form::number('price', $raw->price) }}
+                                        {{ Form::number('price', $raw->price, [$disabled]) }}
                                     </label>
                                 </div>
 
