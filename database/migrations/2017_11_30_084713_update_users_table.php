@@ -47,9 +47,11 @@ class UpdateUsersTable extends Migration
             $table->text('about')->nullable()->comment('Информация о пользователе')->after('passport_address');
             $table->text('specialty')->nullable()->comment('Специальность')->after('about');
             $table->text('degree')->nullable()->comment('Ученая степень, звание')->after('specialty');
-            $table->text('quote')->nullable()->comment('Цитата, высказывание, фраза')->after('degree');      
+            $table->text('quote')->nullable()->comment('Цитата, высказывание, фраза')->after('degree');   
 
-            $table->integer('user_type')->nullable()->unsigned()->comment('Сотрудник 1 или Клиент 0')->after('quote');
+            $table->string('liter')->nullable()->unique()->comment('Литера')->after('quote');   
+
+            $table->integer('user_type')->nullable()->unsigned()->comment('Сотрудник 1 или Клиент 0')->after('liter');
             $table->integer('lead_id')->nullable()->unsigned()->comment('Id лида')->after('user_type');
             // $table->foreign('lead_id')->references('lead_id')->on('leads');
             $table->integer('employee_id')->nullable()->unsigned()->comment('Id сотрудника')->after('lead_id');

@@ -82,4 +82,15 @@ class Service extends Model
         return $this->morphToMany('App\Catalog', 'catalog_products');
     }
 
+
+    // public function boot(DispatcherContract $events)
+    // {
+    //     parent::boot($events);
+
+    //     Service::created(function($service) {
+    //         event(new UserSignup($service));
+    //     });
+
+    // }
+
 }

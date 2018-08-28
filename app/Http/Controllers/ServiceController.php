@@ -16,6 +16,9 @@ use App\Sector;
 use App\EntitySetting;
 use App\ArticleValue;
 
+
+use App\Events\TestEvent;
+
 // Политика
 use App\Policies\ServicePolicy;
 
@@ -298,6 +301,8 @@ class ServiceController extends Controller
             $service->save();
 
             if ($service) {
+
+                event(new TestEvent($service));
 
                 // Пишем сессию
                 $mass = [
