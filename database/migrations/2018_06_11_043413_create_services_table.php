@@ -22,7 +22,7 @@ class CreateServicesTable extends Migration
             $table->integer('services_article_id')->nullable()->unsigned()->comment('ID артикула услуги');
             $table->foreign('services_article_id')->references('id')->on('services_articles');
 
-            $table->string('description')->nullable()->index()->comment('Описание услуги');
+            $table->text('description')->nullable()->comment('Описание услуги');
 
             $table->string('manually')->nullable()->comment('Имя для поиска (руками)');
             $table->string('external')->nullable()->comment('Имя внешнего артикула');

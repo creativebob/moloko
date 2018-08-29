@@ -56,6 +56,8 @@ use App\RawsProduct;
 
 use App\Lead;
 
+use App\Stage;
+
 use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
 use App\Policies\CompanyPolicy;
@@ -109,6 +111,8 @@ use App\Policies\RawsCategoryPolicy;
 use App\Policies\RawsProductPolicy;
 
 use App\Policies\LeadPolicy;
+
+use App\Policies\StagePolicy;
 
 
 use Illuminate\Support\Facades\Gate as GateContract;
@@ -167,6 +171,7 @@ class AuthServiceProvider extends ServiceProvider
         RawsCategory::class => RawsCategoryPolicy::class,
         RawsProduct::class => RawsProductPolicy::class,
         Lead::class => LeadPolicy::class,
+        Stage::class => StagePolicy::class,
     ];
 
     public function boot()

@@ -24,7 +24,7 @@ class CreateUnitsTable extends Migration
 
             $table->decimal('ratio', 15, 8)->nullable()->comment('Коэффициент умножения');
 
-            $table->string('description')->nullable()->comment('Описание единицы измерения');
+            $table->text('description')->nullable()->comment('Описание единицы измерения');
 
             $table->integer('units_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться юнит');
             $table->foreign('units_category_id')->references('id')->on('units_categories');

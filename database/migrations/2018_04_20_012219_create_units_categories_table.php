@@ -20,7 +20,7 @@ class CreateUnitsCategoriesTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('name')->index()->comment('Название категории единицы измерения');
-            // $table->string('description')->nullable()->comment('Описание категории единицы измерения');
+            // $table->text('description')->nullable()->comment('Описание категории единицы измерения');
 
             $table->string('unit')->comment('Единица измерения');
             $table->string('abbreviation')->comment('Сокращенное название категории');

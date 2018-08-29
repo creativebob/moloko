@@ -16,7 +16,7 @@ class CreateMetricsTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('name')->comment('Имя метрики');
-            $table->string('description')->nullable()->comment('Описание метрики');
+            $table->text('description')->nullable()->comment('Описание метрики');
 
             $table->integer('property_id')->nullable()->unsigned()->comment('ID свойства');
             $table->foreign('property_id')->references('id')->on('properties');

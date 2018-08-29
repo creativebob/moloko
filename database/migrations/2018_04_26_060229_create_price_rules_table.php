@@ -20,7 +20,7 @@ class CreatePriceRulesTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('name')->nullable()->comment('Имя ценовой политики');
-            $table->string('description')->index()->nullable()->comment('Описание ценовой политики');
+            $table->text('description')->nullable()->comment('Описание ценовой политики');
 
             $table->boolean('margin_status')->comment('Статус наценки');
             $table->decimal('margin_percent_min', 10, 2)->nullable()->comment('Минимум (проценты)');

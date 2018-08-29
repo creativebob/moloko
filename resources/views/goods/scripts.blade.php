@@ -1,5 +1,10 @@
 <script type="text/javascript">
 
+    $(document).on('click', '#unit-change', function(event) {
+        event.preventDefault();
+        $('#units-block div').toggle();
+    });
+
     $(document).on('change', '#units-categories-list', function() {
         var id = $(this).val();
         // alert(id);
@@ -10,12 +15,19 @@
             },
             url: '/admin/get_units_list',
             type: "POST",
-            data: {id: id, entity: 'goods_categories'},
+            data: {id: id, entity: 'goods'},
             success: function(html){
                 $('#units-list').html(html);
-                $('#units-list').prop('disabled', false);
+                // $('#units-list').prop('disabled', false);
+                $('#unit-change').text($('#units-list option:first').data('abbreviation'));
             }
         }); 
+    });
+
+    $(document).on('change', '#units-list', function() {
+        var abbr = $(this).find(':selected').data('abbreviation');
+        // alert(abbr);
+        $('#unit-change').text(abbr);
     });
 
     $(document).on('change', '.mode-default', function() {

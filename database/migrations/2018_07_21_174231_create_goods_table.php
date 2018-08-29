@@ -22,7 +22,7 @@ class CreateGoodsTable extends Migration
             $table->integer('goods_article_id')->nullable()->unsigned()->comment('ID артикула товара');
             $table->foreign('goods_article_id')->references('id')->on('goods_articles');
 
-            $table->string('description')->nullable()->index()->comment('Описание товара');
+            $table->text('description')->nullable()->comment('Описание товара');
 
             $table->string('manually')->nullable()->comment('Имя для поиска (руками)');
             $table->string('external')->nullable()->comment('Имя внешнего артикула');
@@ -45,6 +45,11 @@ class CreateGoodsTable extends Migration
             $table->foreign('photo_id')->references('id')->on('photos');
 
             $table->integer('draft')->nullable()->unsigned()->comment('Статус шаблона');
+
+            $table->string('portion_status')->nullable()->comment('Статус порции');
+            $table->string('portion_name')->nullable()->comment('Имя порции');
+            $table->string('portion_abbreviation')->nullable()->comment('Сокращение порции');
+            $table->integer('portion_count')->nullable()->unsigned()->comment('Количество в порции');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

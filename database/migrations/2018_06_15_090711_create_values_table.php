@@ -20,7 +20,7 @@ class CreateValuesTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('value')->comment('Значение');
-            $table->string('description')->nullable()->comment('Описание значения');
+            $table->text('description')->nullable()->comment('Описание значения');
 
             $table->integer('photo_id')->nullable()->unsigned()->comment('Id фото');
             $table->foreign('photo_id')->references('id')->on('photos');

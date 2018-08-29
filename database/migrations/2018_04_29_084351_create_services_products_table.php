@@ -25,7 +25,7 @@ class CreateServicesProductsTable extends Migration
             // $table->foreign('photo_id')->references('id')->on('photos');
 
 
-            $table->string('description')->index()->nullable()->comment('Описание товара');
+            $table->text('description')->nullable()->comment('Описание товара');
 
             $table->integer('unit_id')->nullable()->unsigned()->comment('ID еденицы измерения');
             $table->foreign('unit_id')->references('id')->on('units');

@@ -504,6 +504,18 @@ class PagesTableSeeder extends Seeder
                 'display' => null,
             ],
 
+            [
+                'name' => 'Этапы',
+                'site_id' => 1,
+                'title' => 'Этапы',
+                'description' => 'Этапы',
+                'alias' => 'stages',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
             // [
             //     'name' => 'Категории продукции',
             //     'site_id' => 1,

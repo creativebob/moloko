@@ -12,7 +12,7 @@
 				<div class="small-12 cell">
 
 					<label>Выберите категорию
-						<select name="goods_category_id" id="goods-categories-list" class="mode-default"  required>
+						<select name="goods_category_id" id="goods-categories-list" class="mode-default" required>
 							<!-- <option value="0">Выберите категорию</option> -->
 							@php
 							echo $goods_categories_list;
@@ -26,22 +26,22 @@
 					@include('goods.mode-default')
 				</div>
 
-				<div class="grid-x grid-margin-x">
+				<div class="grid-x grid-margin-x" id="units-block">
 					<div class="small-12 medium-6 cell">
 						<label>Категория единиц измерения
-							{{ Form::select('units_category_id', $units_categories_list, null, ['placeholder' => 'Выберите категорию', 'id' => 'units-categories-list', 'required']) }}
+							{{ Form::select('units_category_id', $units_categories_list, 6, ['id' => 'units-categories-list', 'required']) }}
 						</label>
 					</div>
 					<div class="small-12 medium-6 cell">
 						<label>Единица измерения
-							<select name="unit_id" id="units-list" required disabled></select>
+							{{ Form::select('unit_id', $units_list, 26, ['id' => 'units-list', 'required']) }}
 						</label>
 					</div>
 				</div>
 
 
 				<div class="small-10 medium-4 cell">
-					<label>Цена
+					<label>Цена за (<span id="unit-change">{{ $unit_abbreviation }}</span>)
 						{{ Form::number('price') }}
 					</label>
 				</div>

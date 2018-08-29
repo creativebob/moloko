@@ -33,6 +33,8 @@ class DatabaseTestSeeder extends Seeder
         $this->call(GoodsCategoriesTestTableSeeder::class);
         $this->call(ServicesCategoriesTestTableSeeder::class);
 
+        $this->call(StagesTestTableSeeder::class);
+
     }
 
 }
