@@ -637,4 +637,42 @@ class LeadController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
+
+    public function ajax_autofind_phone($phone)
+    {
+
+        // Подключение политики
+        $this->authorize('index', Lead::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_lead = operator_right('leads', true, 'index');    
+
+        $phone = cleanPhone($phone);
+
+        // --------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // --------------------------------------------------------------------------------------------------------------
+
+
+        $finded_lead = Lead::moderatorLimit($answer_lead)
+        ->companiesLimit($answer_lead)
+        ->authors($answer_lead)
+        ->systemItem($answer_lead) // Фильтр по системным записям
+        // ->whereNull('archive')
+        ->where('phone', $phone)
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
+
+
+        if($find_lead){
+
+            return view('leads.autofind', compact('finded_lead'));
+        } else {
+
+            return false;
+        }
+    }
+
+
 }

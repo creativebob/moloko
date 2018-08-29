@@ -32,8 +32,14 @@
                     </div>
                     <div class="small-6 medium-6 cell">
                         <label>Телефон
-                            @include('includes.inputs.phone', ['value'=>$lead->phone, 'name'=>'phone', 'required'=>'required'])
+                            @include('includes.inputs.phone', ['value'=>$lead->phone, 'name'=>'phone', 'id'=>'phone' ,'required'=>'required'])
                         </label>
+
+                        <div id="port_autofind">
+                        </div>
+                        {{-- Подключаем ПОИСК продукции для добавления на сайт --}}
+                        @include('leads.autofind-lead-script')
+
                     </div>
                     <div class="small-6 medium-6 large-6 cell">
                         <label class="input-icon">Введите город
