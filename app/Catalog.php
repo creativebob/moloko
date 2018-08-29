@@ -25,7 +25,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 class Catalog extends Model
 {
-     // Включаем кеш
+    // Включаем кеш
     use Cachable;
 
     use SoftDeletes;

@@ -136,4 +136,22 @@ class Lead extends Model
         return $this->belongsTo('App\User', 'manager_id');
     }
 
+    // Получаем задачи
+    public function challenges()
+    {
+        return $this->hasMany('App\Challenge');
+    }
+
+    // Получаем рекламации
+    public function claims()
+    {
+        return $this->hasMany('App\Claim');
+    }
+
+    // Получаем этап
+    public function stage()
+    {
+        return $this->hasOne('App\Stage');
+    }
+
 }

@@ -123,5 +123,8 @@ class DatabaseSeeder extends Seeder
     $this->call(SourcesTableSeeder::class);
     $this->call(LeadTypesTableSeeder::class);
 
+    $this->call(ChallengesTypesTableSeeder::class);
+    $this->call(StagesTableSeeder::class);
+
   }
 }
