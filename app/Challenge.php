@@ -23,7 +23,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 // use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class Catalog extends Model
+class Challenge extends Model
 {
     // Включаем кеш
     use Cachable;
@@ -45,11 +45,16 @@ class Catalog extends Model
 
     protected $dates = ['deleted_at'];
 
-
-    // Получаем сайт.
-    public function site()
+    // Получаем тип задачи
+    public function challanges_type()
     {
-        return $this->belongsTo('App\Site');
+        return $this->belongsTo('App\ChallangesType');
+    }
+
+    // Получаем права категории.
+    public function rights()
+    {
+        return $this->hasMany('App\Rights');
     }
 
     // Получаем автора
@@ -58,26 +63,21 @@ class Catalog extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
-    public function photo()
+    // Получаем пользователя, кому назначена задача
+    public function appointed()
     {
-        return $this->belongsTo('App\Photo');
+        return $this->belongsTo('App\User', 'appointed_id');
     }
 
-    // Услуги
-    public function services()
+    // Получаем пользователя, завершившего задачу
+    public function finisher()
     {
-        return $this->morphedByMany('App\Service', 'catalog_products')->withPivot('id', 'display', 'sort');
+        return $this->belongsTo('App\User', 'finisher_id');
     }
 
-     // Товары
-    public function goods()
+    // Получаем лида
+    public function lead()
     {
-        return $this->morphedByMany('App\Goods', 'catalog_products')->withPivot('id', 'display', 'sort');
-    }
-
-     // Сырье
-    public function raws()
-    {
-        return $this->morphedByMany('App\Raw', 'catalog_products')->withPivot('id', 'display', 'sort');
+        return $this->belongsTo('App\Lead');
     }
 }

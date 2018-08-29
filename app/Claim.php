@@ -23,7 +23,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 // use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class Catalog extends Model
+class Claim extends Model
 {
     // Включаем кеш
     use Cachable;
@@ -45,39 +45,9 @@ class Catalog extends Model
 
     protected $dates = ['deleted_at'];
 
-
-    // Получаем сайт.
-    public function site()
+    // Получаем лида
+    public function lead()
     {
-        return $this->belongsTo('App\Site');
-    }
-
-    // Получаем автора
-    public function author()
-    {
-        return $this->belongsTo('App\User', 'author_id');
-    }
-
-    public function photo()
-    {
-        return $this->belongsTo('App\Photo');
-    }
-
-    // Услуги
-    public function services()
-    {
-        return $this->morphedByMany('App\Service', 'catalog_products')->withPivot('id', 'display', 'sort');
-    }
-
-     // Товары
-    public function goods()
-    {
-        return $this->morphedByMany('App\Goods', 'catalog_products')->withPivot('id', 'display', 'sort');
-    }
-
-     // Сырье
-    public function raws()
-    {
-        return $this->morphedByMany('App\Raw', 'catalog_products')->withPivot('id', 'display', 'sort');
+        return $this->belongsTo('App\Lead');
     }
 }
