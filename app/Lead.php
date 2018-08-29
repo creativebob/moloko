@@ -151,7 +151,7 @@ class Lead extends Model
     // Получаем этап
     public function stage()
     {
-        return $this->hasOne('App\Stage');
+        return $this->belongsTo('App\Stage');
     }
 
 }

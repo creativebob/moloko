@@ -327,6 +327,11 @@ fieldset {
 
 // СТРАНИЦА ЛИДЫ ======================================================================
 
+.tabs-leads{
+    padding-top: 1rem; 
+}
+
+
 #table-order.table-order{
 
     border-collapse: separate;
@@ -357,6 +362,106 @@ fieldset {
 
 }
 
+.table-notes, .table-challenges
+{
+  border-collapse: separate;
+  width: 100%;
+
+    thead{
+
+        tr th{
+            background-color: #eee;
+            border-bottom: 1px solid #000 !important;
+            font-weight: 400;
+            font-size: 0.8rem;
+            font-family: $SUIR;
+        }
+
+    }
+
+    tbody tr:first-child td {
+        border-top: 3px solid #eee;
+    }
+
+    tr th
+    {
+      padding: 1rem;
+    }
+
+    tr th:nth-child(1), .table-notes tr td:nth-child(1)
+    {
+      width: 35px !important;
+    }
+
+    // tr th:nth-child(2), .table-notes tr td:nth-child(2)
+    // {
+    //   width: 20px !important;
+    // }
+
+    tr td:nth-child(1)
+    {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    // tr td:nth-child(2)
+    // {
+    //   color: #666;
+    //   font-size: 0.8rem;
+    // }
+
+    tr td
+    {
+      background-color: #f9f9f9;
+    }
+
+    tr td
+    {
+      padding: 10px;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      border-bottom: 1px solid #eee;
+    } 
+
+}
+
+.table-challenges
+{
+
+    tr th:nth-child(4), tr td:nth-child(4)
+    {
+      min-width: 100px !important;
+    }
+
+    tr td:nth-child(3)
+    {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    tr td:nth-child(2)
+    {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+}
+
+.table-notes
+{
+    
+    tr th:nth-child(4), tr td:nth-child(4)
+    {
+      min-width: 35px !important;
+    }
+
+    .note_date, .note_time{
+        color: #666;
+        font-size: 0.8rem;
+        line-height:1.2;
+    }
+
+}
 
 // ОКОНЧАНИЕ СТРАНИЦЫ ЛИДЫ ============================================================
 

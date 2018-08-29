@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 // Модели
 use App\User;
 use App\Lead;
+use App\Stage;
 use App\Choice;
 use App\Position;
 use App\Staffer;
@@ -76,7 +77,8 @@ class LeadController extends Controller
             'choices_goods_categories', 
             'choices_services_categories', 
             'choices_raws_categories', 
-            'manager'
+            'manager',
+            'stage'
         )
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -89,7 +91,7 @@ class LeadController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // dd($leads);
+
 
         // --------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
@@ -135,10 +137,13 @@ class LeadController extends Controller
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
 
+        // Получаем список этапов
+        $stages_list = Stage::get()->pluck('name', 'id');
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('leads.create', compact('lead', 'page_info', 'countries_list'));
+        return view('leads.create', compact('lead', 'page_info', 'countries_list', 'stages_list'));
     }
 
     public function store(LeadRequest $request)
@@ -180,6 +185,9 @@ class LeadController extends Controller
         $lead->name =   $request->name;
         // $lead->sex = $request->sex;
         // $lead->birthday = $request->birthday;
+
+        $lead->stage_id =   $request->stage_id;
+        $lead->badget =   $request->badget;
 
         $lead->display = 1; // Включаем видимость
         $lead->company_id = $company_id;
@@ -356,11 +364,13 @@ class LeadController extends Controller
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
 
+        // Получаем список этапов
+        $stages_list = Stage::get()->pluck('name', 'id');
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
         // dd($lead);
 
-        return view('leads.edit', compact('lead', 'page_info', 'countries_list'));
+        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list'));
     }
 
     public function update(LeadRequest $request, $id)
@@ -400,11 +410,12 @@ class LeadController extends Controller
             $location->author_id = $user->id;
             $location->save();
 
-        if ($location) {
-            $location_id = $location->id;
-        } else {
-            abort(403, 'Ошибка записи адреса');
-        }
+            if ($location) {
+                $location_id = $location->id;
+            } else {
+                abort(403, 'Ошибка записи адреса');
+            }
+
         }
 
         if($location->address != $request->address) {
@@ -414,10 +425,12 @@ class LeadController extends Controller
         }
 
 
-        $lead->location_id = $location_id;
+        $lead->location_id = $location->id;
         $lead->email = $request->email;
     
         $lead->name = $request->name;
+        $lead->stage_id =   $request->stage_id;
+        $lead->badget =   $request->badget;
 
         // $lead->first_name = $request->first_name;
         // $lead->second_name = $request->second_name;

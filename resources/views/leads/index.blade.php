@@ -30,6 +30,7 @@
           <th class="td-phone">Телефон</th>
           <th class="td-choice">Спрос</th>
           <th class="td-badget">Сумма сделки</th>
+          <th class="td-stage">Этап</th>
           <th class="td-manager">Менеджер</th>
           <th class="td-control"></th>
           <th class="td-delete"></th>
@@ -88,6 +89,7 @@
           </td>
 
           <td class="td-badget">{{ num_format($lead->badget, 0) }}</td>
+          <td class="td-stage">{{ $lead->stage->name }}</td>
           <td class="td-manager">
             @if(!empty($lead->manager->first_name))
             {{ $lead->manager->first_name . ' ' . $lead->manager->second_name }}
