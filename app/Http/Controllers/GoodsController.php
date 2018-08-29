@@ -12,6 +12,7 @@ use App\Album;
 use App\AlbumEntity;
 use App\Photo;
 use App\UnitsCategory;
+use App\Unit;
 use App\Catalog;
 use App\RawsCategory;
 use App\EntitySetting;
@@ -201,10 +202,7 @@ class GoodsController extends Controller
         $answer_units_categories = operator_right('units_categories', false, 'index');
 
         // Главный запрос
-        $units_categories_list = UnitsCategory::with(['units' => function ($query) {
-            $query->pluck('name', 'id');
-        }])
-        ->moderatorLimit($answer_units_categories)
+        $units_categories_list = UnitsCategory::moderatorLimit($answer_units_categories)
         ->companiesLimit($answer_units_categories)
         ->authors($answer_units_categories)
         ->systemItem($answer_units_categories) // Фильтр по системным записям
@@ -212,8 +210,24 @@ class GoodsController extends Controller
         ->orderBy('sort', 'asc')
         ->get()
         ->pluck('name', 'id');
+        // dd($units_categories_list);
 
-        return view('goods.create', compact('goods_categories_list', 'goods_products_count', 'units_categories_list'));
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_units = operator_right('units', false, 'index');
+
+        // Главный запрос
+        $units = Unit::where('units_category_id', 6) // Статичная категория с количеством для товаров
+        ->orderBy('sort', 'asc')
+        ->get();
+        // dd($units);
+
+        $unit_abbreviation = $units->where('id', 26)->first()->abbreviation;
+        // dd($unit_abbreviation);
+
+        $units_list = $units->pluck('name', 'id');
+        // dd($units_list);
+
+        return view('goods.create', compact('goods_categories_list', 'goods_products_count', 'units_categories_list', 'units_list', 'unit_abbreviation'));
     }
 
     public function store(Request $request)
@@ -798,33 +812,33 @@ class GoodsController extends Controller
             // Проверяем наличие ключей в массиве
             if (array_key_exists('metric', $coincidence) && array_key_exists('raws_composition', $coincidence)) {
                 // Если ключи присутствуют, даем ошибку
-             return redirect()->back()->withInput()->withErrors('Такой артикул уже существует!');
+                return redirect()->back()->withInput()->withErrors('Такой артикул уже существует!');
 
             // dd($coincidence);
-         }
-     }
+            }
+        }
 
         // Если что то не совпало, пишем новый артикул
 
         // Получаем данные для авторизованного пользователя
-         $user = $request->user();
+        $user = $request->user();
 
         // Смотрим компанию пользователя
-         $company_id = $user->company_id;
+        $company_id = $user->company_id;
 
         // Скрываем бога
-         $user_id = hideGod($user);
+        $user_id = hideGod($user);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-         $cur_goods = Goods::with('goods_article')->moderatorLimit($answer)->findOrFail($id);
+        $cur_goods = Goods::with('goods_article')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
+        $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
-         if ($request->hasFile('photo')) {
+        if ($request->hasFile('photo')) {
 
             // Вытаскиваем настройки
             // Вытаскиваем базовые настройки сохранения фото
@@ -931,6 +945,15 @@ class GoodsController extends Controller
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false) {
             $cur_goods->moderation = 1;
+        }
+
+        if ($request->portion_status == 1) {
+            $cur_goods->portion_status = $request->portion_status;
+            $cur_goods->portion_name = $request->portion_name;
+            $cur_goods->portion_abbreviation = $request->portion_abbreviation;
+            $cur_goods->portion_count = $request->portion_count;
+        } else {
+            $cur_goods->portion_status = null;
         }
 
         $cur_goods->system_item = $request->system_item;

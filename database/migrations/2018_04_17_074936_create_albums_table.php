@@ -30,7 +30,7 @@ class CreateAlbumsTable extends Migration
 
             $table->string('photo_id')->index()->nullable()->comment('Обложка альбома');
             
-            $table->string('description')->index()->nullable()->comment('Описание альбома');
+            $table->text('description')->nullable()->comment('Описание альбома');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

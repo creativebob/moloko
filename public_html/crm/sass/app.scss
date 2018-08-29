@@ -3226,6 +3226,44 @@ a:hover {
 
 
 
+
+#units-block {
+    div {
+        display: none;
+    }
+}
+
+#unit-change {
+    color: #1779ba;
+
+    &:hover {
+        color: #1468a0;
+        cursor: pointer;
+    }
+}
+
+#portion-block {
+    .portion-hide {
+        display: none;
+    }
+}
+
+#portion-change {
+    color: #1779ba;
+
+    &:hover {
+        color: #1468a0;
+        cursor: pointer;
+    }
+}
+
+.portion-fieldset {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+}
+
+
+
 // .checkboxer-menu li label
 // {
     //   width: 100%;

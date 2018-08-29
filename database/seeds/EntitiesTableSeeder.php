@@ -527,6 +527,15 @@ class EntitiesTableSeeder extends Seeder
       'author_id' => 1,
     ],
 
+    [
+      'name' => 'Этапы',
+      'alias' => 'stages',
+      'model' => 'Stage',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
     // [
     //   'name' => 'Рабочий стол',
     //   'alias' => 'dashboard',

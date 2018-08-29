@@ -20,7 +20,7 @@ class CreatePropertiesTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('name')->index()->comment('Название свойства');
-            $table->string('description')->index()->nullable()->comment('Описание свойства');
+            $table->text('description')->nullable()->comment('Описание свойства');
 
             $table->integer('sector_id')->nullable()->unsigned()->comment('ID сектора');
             $table->foreign('sector_id')->references('id')->on('sectors');

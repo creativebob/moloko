@@ -46,11 +46,11 @@
 
             @php
             if ($cur_goods->draft == 1) {
-                $disabled = '';
-            } else {
-                $disabled = 'disabled';
-            }
-            @endphp
+            $disabled = '';
+        } else {
+        $disabled = 'disabled';
+    }
+    @endphp
 
     <!-- Общая информация -->
     <div class="tabs-panel is-active" id="options">
@@ -80,35 +80,6 @@
                                 @endphp
                             </select>
                         </label>
-
-                        <fieldset class="fieldset">
-                            <legend class="checkbox">
-                                {{ Form::checkbox('portion', 1, null, ['id' => 'portion']) }}
-                                <label for="portion"><span>Принимать порциями</span></label>
-
-                            </legend>
-
-                            <div class="grid-x grid-margin-x">
-                                <div class="small-12 medium-6 cell">
-                                    <label>Имя порции
-                                        {{ Form::text('lol', "", ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
-                                    </label>
-                                </div>
-                                <div class="small-6 medium-3 cell">
-                                    <label>Сокр. имя
-                                        {{ Form::text('lol',  "", ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
-                                    </label>
-                                </div>
-                                <div class="small-6 medium-3 cell">
-                                    <label>Кол-во
-                                        {{-- Количество чего-либо --}}
-                                        {{ Form::text('raw_count', 0, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
-                                        <div class="sprite-input-right find-status" id="name-check"></div>
-                                        <span class="form-error">Введите количество</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
 
                         <label>Производитель
                             {{ Form::select('manufacturer_id', $manufacturers_list, $cur_goods->manufacturer_id, ['placeholder' => 'Выберите производителя', $disabled])}}
@@ -189,14 +160,14 @@
                     @endif
 
                     {{-- @if ($cur_goods->metrics_values_count > 0)
-                       @each('goods.metrics.metric-input', $cur_goods->goods_article->goods_product->goods_category->metrics, 'metric')
-                       @each('goods.metrics.metric-value', $cur_goods->metrics_values, 'metric')
-                       @endif --}}
+                     @each('goods.metrics.metric-input', $cur_goods->goods_article->goods_product->goods_category->metrics, 'metric')
+                     @each('goods.metrics.metric-value', $cur_goods->metrics_values, 'metric')
+                     @endif --}}
 
-                   </fieldset>
-                   @endif
-                   <div id="cur-goods-inputs"></div>
-                   <div class="small-12 cell tabs-margin-top text-center">
+                 </fieldset>
+                 @endif
+                 <div id="cur-goods-inputs"></div>
+                 <div class="small-12 cell tabs-margin-top text-center">
                     <div class="item-error" id="cur-goods-error">Такой артикул уже существует!<br>Измените значения!</div>
                 </div>
                 {{ Form::hidden('cur_goods_id', $cur_goods->id) }}
@@ -238,10 +209,40 @@
                             </label>
                         </div>
                         <div class="small-12 medium-6 cell">
-                            <label>Цена
+                            <label>Цена за (<span id="unit">{{ $cur_goods->goods_article->goods_product->unit->abbreviation }}</span>)
                                 {{ Form::number('price', $cur_goods->price, [$disabled]) }}
                             </label>
                         </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="fieldset portion-fieldset" id="portion-fieldset">
+                    <legend class="checkbox">
+                        {{ Form::checkbox('portion', 1, $cur_goods->portion_status, ['id' => 'portion']) }}
+                        <label for="portion"><span id="portion-change">Принимать порциями</span></label>
+
+                    </legend>
+
+                    <div class="grid-x grid-margin-x" id="portion-block">
+                        <div class="small-12 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
+                            <label>Имя&nbsp;порции
+                                {{ Form::text('portion_name', $cur_goods->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
+                            </label>
+                        </div>
+                        <div class="small-6 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
+                            <label>Сокр.&nbsp;имя
+                                {{ Form::text('portion_abbreviation',  $cur_goods->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
+                            </label>
+                        </div>
+                        <div class="small-6 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
+                            <label>Кол-во,&nbsp;{{ $cur_goods->goods_article->goods_product->unit->abbreviation }}
+                                {{-- Количество чего-либо --}}
+                                {{ Form::text('portion_count', $cur_goods->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
+                                <div class="sprite-input-right find-status" id="name-check"></div>
+                                <span class="form-error">Введите количество</span>
+                            </label>
+                        </div>
+                        {{ Form::hidden('portion_status', 0, ['id' => 'portion-status']) }}
                     </div>
                 </fieldset>
             </div>
@@ -399,13 +400,24 @@
 
 <script>
 
-
-
-    // Основные ностойки
+    // Основные настройки
     var cur_goods_id = '{{ $cur_goods->id }}';
 
     // Мульти Select
     $(".chosen-select").chosen({width: "95%"});
+
+    $(document).on('click', '#portion-change', function() {
+        $('#portion-block div').toggleClass('portion-hide');
+        $('#portion-fieldset').toggleClass('portion-fieldset');
+
+        if ($('#portion-status').val() == 0) {
+            $('#unit').text('порцию');
+            $('#portion-status').val(1);
+        } else {
+            $('#unit').text('{{ $cur_goods->goods_article->goods_product->unit->abbreviation }}');
+            $('#portion-status').val(0);
+        }
+    });
 
     // При клике на удаление метрики со страницы
     $(document).on('click', '[data-open="delete-metric"]', function() {

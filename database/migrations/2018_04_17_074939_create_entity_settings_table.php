@@ -24,7 +24,7 @@ class CreateEntitySettingsTable extends Migration
             $table->string('entity')->nullable()->comment('Имя сущности');
 
             $table->string('name')->nullable()->index()->comment('Название настройки');
-            $table->string('description')->nullable()->comment('Описание настройки');
+            $table->text('description')->nullable()->comment('Описание настройки');
 
             $table->integer('img_small_width')->nullable()->unsigned()->comment('Ширина маленького изображения');
             $table->integer('img_small_height')->nullable()->unsigned()->comment('Высота маленького изображения');

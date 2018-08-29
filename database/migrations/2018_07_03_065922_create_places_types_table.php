@@ -19,7 +19,7 @@ class CreatePlacesTypesTable extends Migration
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             
             $table->string('name')->index()->comment('Имя типа помещения');
-            $table->string('description')->index()->comment('Описание типа помещения');
+            $table->text('description')->comment('Описание типа помещения');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

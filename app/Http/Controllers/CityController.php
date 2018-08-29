@@ -34,31 +34,23 @@ class CityController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Region::class);
-        $this->authorize(getmethod(__FUNCTION__), Area::class);
         $this->authorize(getmethod(__FUNCTION__), City::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_cities = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $answer_areas = operator_right('areas', false,  getmethod(__FUNCTION__));
+        // $answer_areas = operator_right('areas', false,  getmethod(__FUNCTION__));
 
-        $answer_regions = operator_right('regions', false,  getmethod(__FUNCTION__));
+        // $answer_regions = operator_right('regions', false,  getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
-        $regions = Region::with(['areas'  => function ($query) use ($answer_areas) {
-            $query->moderatorLimit($answer_areas)
-            ->authors($answer_areas)
-            ->systemItem($answer_areas) // Фильтр по системным записям
-            ->orderBy('moderation', 'desc')
+        $regions = Region::with(['areas'  => function ($query) {
+            $query->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
         }, 'areas.cities' => function ($query) use ($answer_cities) {
-            $query->moderatorLimit($answer_cities)
-            ->authors($answer_cities)
-            ->systemItem($answer_cities) // Фильтр по системным записям
-            ->orderBy('moderation', 'desc')
+            $query->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
         }, 'cities' => function ($query) use ($answer_cities) {
             $query->moderatorLimit($answer_cities)
@@ -67,9 +59,6 @@ class CityController extends Controller
             ->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
         }])
-        ->moderatorLimit($answer_regions)
-        ->authors($answer_regions)
-        ->systemItem($answer_regions) // Фильтр по системным записям
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
@@ -95,8 +84,6 @@ class CityController extends Controller
         if ($request->city_db == 1) {
 
             // Подключение политики
-            $this->authorize(getmethod(__FUNCTION__), Region::class);
-            $this->authorize(getmethod(__FUNCTION__), Area::class);
             $this->authorize(getmethod(__FUNCTION__), City::class);
 
             // Получаем данные для авторизованного пользователя

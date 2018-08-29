@@ -124,7 +124,7 @@ class DatabaseSeeder extends Seeder
     $this->call(LeadTypesTableSeeder::class);
 
     $this->call(ChallengesTypesTableSeeder::class);
-    $this->call(StagesTableSeeder::class);
+    
 
   }
 }

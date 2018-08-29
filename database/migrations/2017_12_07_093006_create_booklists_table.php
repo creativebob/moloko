@@ -17,7 +17,7 @@ class CreateBooklistsTable extends Migration
             $table->increments('id');
 
             $table->string('name')->nullable()->comment('Имя списка');
-            $table->string('description')->index()->nullable()->comment('Описание списка');
+            $table->text('description')->nullable()->comment('Описание списка');
 
             $table->integer('entity_id')->nullable()->unsigned()->comment('Id сущности');
             $table->foreign('entity_id')->references('id')->on('entities');

@@ -2448,6 +2448,35 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   cursor: pointer;
 }
 
+#units-block div {
+  display: none;
+}
+
+#unit-change {
+  color: #1779ba;
+}
+#unit-change:hover {
+  color: #1468a0;
+  cursor: pointer;
+}
+
+#portion-block .portion-hide {
+  display: none;
+}
+
+#portion-change {
+  color: #1779ba;
+}
+#portion-change:hover {
+  color: #1468a0;
+  cursor: pointer;
+}
+
+.portion-fieldset {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+
 .composition-table {
   border-collapse: separate;
   border-spacing: 0px 5px !important;

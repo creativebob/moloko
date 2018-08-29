@@ -28,7 +28,7 @@ class CreateEmployeesTable extends Migration
             $table->date('employment_date')->nullable()->comment('Дата приема на работу');
             $table->date('dismissal_date')->nullable()->comment('Дата увольнения');
 
-            $table->string('dismissal_description')->nullable()->comment('Причина увольнения');
+            $table->text('dismissal_description')->nullable()->comment('Причина увольнения');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

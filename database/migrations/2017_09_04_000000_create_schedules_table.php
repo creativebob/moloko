@@ -19,7 +19,7 @@ class CreateSchedulesTable extends Migration
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
 
             $table->string('name')->index()->comment('Название графика');
-            $table->string('description')->nullable()->comment('Примечание к графику');
+            $table->text('description')->nullable()->comment('Примечание к графику');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

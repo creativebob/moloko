@@ -22,7 +22,7 @@ class CreateRawsTable extends Migration
             $table->integer('raws_article_id')->nullable()->unsigned()->comment('ID артикула сырья');
             $table->foreign('raws_article_id')->references('id')->on('raws_articles');
 
-            $table->string('description')->nullable()->index()->comment('Описание сырья');
+            $table->text('description')->nullable()->comment('Описание сырья');
 
             $table->string('manually')->nullable()->comment('Имя для поиска (руками)');
             $table->string('external')->nullable()->comment('Имя внешнего артикула');

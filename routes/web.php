@@ -149,9 +149,9 @@ Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->midd
 Route::post('/ajax_add_relation_composition', 'CompositionController@ajax_add_relation')->middleware('auth');
 Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_delete_relation')->middleware('auth');
 
-Route::any('/ajax_add_page_composition', 'CompositionController@ajax_add')->middleware('auth');
+Route::post('/ajax_add_page_composition', 'CompositionController@ajax_add')->middleware('auth');
 
-Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
+Route::post('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
 
 
@@ -238,6 +238,7 @@ Route::any('/ajax_goods_modes', 'GoodsProductController@ajax_modes')->middleware
 
 
 // ---------------------------------- Товары (Артикулы) -------------------------------------------
+Route::any('/goods/create', 'GoodsController@create')->middleware('auth');
 
 // Основные методы
 Route::resource('/goods', 'GoodsController')->middleware('auth');
@@ -352,6 +353,18 @@ Route::post('/leads_sort', 'LeadController@ajax_sort')->middleware('auth');
 Route::post('/leads_system_item', 'LeadController@ajax_system_item')->middleware('auth');
 // Отображение на сайте
 Route::post('/leads_display', 'LeadController@ajax_display')->middleware('auth');
+
+
+// --------------------------------------- Этапы --------------------------------------------
+
+// Основные методы
+Route::resource('/stages', 'StageController')->middleware('auth');
+// Сортировка
+Route::post('/stages_sort', 'StageController@ajax_sort')->middleware('auth');
+// Системная запись
+Route::post('/stages_system_item', 'StageController@ajax_system_item')->middleware('auth');
+// Отображение на сайте
+Route::post('/stages_display', 'StageController@ajax_display')->middleware('auth');
 
 
 // --------------------------------------- Рекламные кампании -----------------------------------------------

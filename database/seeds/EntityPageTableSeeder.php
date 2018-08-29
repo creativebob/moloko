@@ -20,12 +20,8 @@ class EntityPageTableSeeder extends Seeder
             ];
         }
         $mass[] = [
-            'entity_id' => 27,
-            'page_id' => 27,
-        ];
-        $mass[] = [
             'entity_id' => 28,
-            'page_id' => 27,
+            'page_id' => 28,
         ];
 
         $mass[] = [
@@ -36,10 +32,10 @@ class EntityPageTableSeeder extends Seeder
             'entity_id' => 30,
             'page_id' => 28,
         ];
-        $mass[] = [
-            'entity_id' => 31,
-            'page_id' => 28,
-        ];
+        // $mass[] = [
+        //     'entity_id' => 31,
+        //     'page_id' => 28,
+        // ];
         // $mass[] = [
         //     'entity_id' => 54,
         //     'page_id' => 31,
