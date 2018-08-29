@@ -61,6 +61,24 @@
                     </div>
                 </div>
 
+                <!-- Пустой блок -->
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-12 large-6 cell">
+
+                        <div class="small-12 medium-6 large-6 cell">
+                            <label>Бюджет
+                                @include('includes.inputs.name', ['name'=>'badget', 'value'=>$lead->badget, 'required'=>''])
+                            </label>
+                        </div>
+                        <div class="small-12 medium-6 large-6 cell">
+                            <label>Этап
+                                {{ Form::select('stage_id', $stage_list, $stage_id) }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
                 {{-- <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-4 large-4 cell">
                         <label>Страна
@@ -83,24 +101,18 @@
             </div>
         </div>
 
-        <!-- Пустой блок -->
-        <div class="grid-x">
-            <div class="small-12 medium-12 large-4 cell">
-            </div>
-        </div>
-
         <!-- ЗАКАЗ -->
         <div class="grid-x grid-padding-x">
             <div class="small-12 medium-12 large-12 cell">
-                <table class="table-order">
+                <table class="table-order" id="table-order">
                     <thead>
                         <tr>
-                            <td>Наименование</td>
-                            <td>Кол-во</td>
-                            <td>Закуп</td>
-                            <td>ДопРасх</td>
-                            <td>Наценка</td>
-                            <td>Цена</td>
+                            <th>Наименование</th>
+                            <th>Кол-во</th>
+                            <th>Закуп</th>
+                            <th>ДопРасх</th>
+                            <th>Наценка</th>
+                            <th>Цена</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -198,8 +210,9 @@
 
     </div>
 
-{{-- Чекбоксы управления --}}
-    @include('includes.control.checkboxes', ['item' => $lead])  
+{{-- Чекбоксы управления 
+@include('includes.control.checkboxes', ['item' => $lead])  
+--}}
 
   <div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}
