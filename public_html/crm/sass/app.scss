@@ -458,14 +458,54 @@ fieldset {
     .note_date, .note_time{
         color: #666;
         font-size: 0.8rem;
-        line-height:1.2;
+        line-height: 1.2;
     }
 
 }
 
+// Оформление портала / Результат автопоиска лида по номеру телефона
+
 #port_autofind{
-    position: absolute;
-    display: none;
+
+}
+
+.wrap-autofind{
+    border: 1px solid #000;
+    background-color: #fff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+
+    legend{
+        padding-bottom: 0.5rem;
+    }
+
+    table{
+
+        tbody{
+            border-left: 0px;
+            border-right: 0px;
+            padding-left: 0px;
+            padding-right: 0px;        
+        }
+
+        tr td {
+            font-size: 0.8rem;
+            color: #999;
+            padding-left: 0px;
+
+            .lead-name{
+                color: #000;
+                border-bottom: 1px dashed #666;
+            }
+
+            .lead-name:hover{
+                border-bottom: 1px dashed #999;
+                cursor: pointer;
+            }
+        }
+    }
+
 }
 
 

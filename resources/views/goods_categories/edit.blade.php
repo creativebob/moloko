@@ -268,8 +268,7 @@ $settings = config()->get('settings');
   ];
 
 
-
-  // Основные ностойки
+  // Основные настройки
   var goods_category_id = '{{ $goods_category->id }}';
 
   // При клике на удаление состава со страницы

@@ -354,7 +354,7 @@ Route::post('/leads_system_item', 'LeadController@ajax_system_item')->middleware
 // Отображение на сайте
 Route::post('/leads_display', 'LeadController@ajax_display')->middleware('auth');
 // Поиск лида по номеру телефона
-Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->middleware('auth');
+Route::any('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->middleware('auth');
 
 // --------------------------------------- Этапы --------------------------------------------
 

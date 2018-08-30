@@ -23,12 +23,14 @@
 
         // Получаем фрагмент текста
         var phone = $('#phone').val();
+        var phone = phone.replace(/\D/g, "");
 
         // Смотрим сколько символов
         var len_phone = phone.length;
+        var lead_id = $('#lead_id').data('lead-id');
 
         // Если символов больше 3 - делаем запрос
-        if (phone.charAt(17) == 9) {
+        if(phone.length == 11) {
 
             $.ajax({
 
@@ -37,62 +39,38 @@
                 },
                 url: "/admin/leads/autofind/" + phone,
                 type: "POST",
-                data: {phone: phone},
+                data: {phone: phone, lead_id: lead_id},
                 success: function(html){
+
                     // Выводим пришедшие данные на страницу
+                    // alert(html);
                     $('#port-autofind').html(html);
+                    $('#port-autofind').show();
                 } 
             });
-        } else {
-            // alert('Ничего не найдено');
-            // $('#port-result-search-add-product').html('');
+
         };
     };
 
-  // Проверка существования
-//   $(document).on('click', '.add-product-button', function() {
+// Проверка существования
+  $(document).on('click', '#lead-name', function() {
 
-//     // Получаем ID добавляемго продукта и его тип (goods / services / raws)
-//     var product_type = $(this).attr('id').split('-')[0];
-//     var product_id = $(this).attr('id').split('-')[1];
-//     var catalog_id = $('#catalogs-list').val();
+    // Получаем данные на лида из строчки по которой кликнули
+    var lead_name = $('#lead-name').text();
+    var lead_city = $('#lead-city').text();
+    var lead_address = $('#lead-address').text();
+    var lead_city_id = $('#lead-city').data('city-id');
 
-//     var item = $(this);
+    $('input[name=name]').val(lead_name);
+    $('input[name=city_name]').val(lead_city);
+    $('input[name=address]').val(lead_address);
+    $('input[name=city_id]').val(lead_city_id);
 
-//     $.ajax({
-
-//         headers: {
-//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//         },
-//         url: "/admin/catalog_products/add_product",
-//         type: "POST",
-//         data: {product_type: product_type, product_id: product_id, catalog_id: catalog_id},
-
-//         success: function(html){
-
-//             if (html == 'empty') {
-//                 // alert(html); 
-//             } else {
-//                 // Выводим пришедшие данные на страницу
-//                 $('#content-core').html(html);
-//                 item.remove();
-//             };
+    $('#city-check').addClass('icon-find-ok sprite-16');
+    $('#port-autofind').hide();
 
 
-//             // var result = $.parseJSON(date);
-//             // // Если ошибка
-//             // if (result.error_status == 1) {
-//             //     $(submit).prop('disabled', true);
-//             //     $('.item-error').css('display', 'block');
-//             //     $(db).val(0);
-//             // } else {
+});
 
-//             // }
 
-            
-//             // $('#search-add-product-result-wrap').hide();
-
-//         } 
-//     });
-// });
 </script>

@@ -25,21 +25,22 @@
             <div class="small-12 medium-12 large-8 cell">
 
                 <div class="grid-x grid-padding-x">
-                    <div class="small-6 medium-6 large-6 cell">
-                        <label>Контактное лицо
-                            @include('includes.inputs.name', ['name'=>'name', 'value'=>$lead->name, 'required'=>'required'])
-                        </label>
-                    </div>
                     <div class="small-6 medium-6 cell">
                         <label>Телефон
-                            @include('includes.inputs.phone', ['value'=>$lead->phone, 'name'=>'phone', 'id'=>'phone' ,'required'=>'required'])
+                            @include('includes.inputs.phone', ['value'=>$lead->phone, 'name'=>'phone', 'id'=>'phone' ,'required'=>'required', 'singleattribute'=>'autofocus'])
                         </label>
 
-                        <div id="port_autofind">
-                        </div>
                         {{-- Подключаем ПОИСК продукции для добавления на сайт --}}
                         @include('leads.autofind-lead-script')
 
+                    </div>
+                    <div class="small-6 medium-6 large-6 cell">
+                        <label>Контактное лицо
+                            @include('includes.inputs.name', ['name'=>'name', 'value'=>$lead->name, 'required'=>'required'])
+                            <input type="hidden" id="lead_id" data-lead-id="{{$lead->id }}">
+                        </label>
+                    </div>
+                    <div id="port-autofind" class="small-12 cell">
                     </div>
                     <div class="small-6 medium-6 large-6 cell">
                         <label class="input-icon">Введите город

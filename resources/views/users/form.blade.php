@@ -137,6 +137,13 @@
                 <span class="form-error">Укажите номер Telegram</span>
               </label>
             </div>
+
+            <div class="small-12 medium-6 cell">
+              <label>Метка пользователя (литер):
+                @include('includes.inputs.string', ['name'=>'liter', 'value'=>$user->liter, 'required'=>'required'])
+              </label>
+            </div>
+
         </div>
 
       </div>

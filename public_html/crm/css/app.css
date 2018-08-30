@@ -301,9 +301,34 @@ fieldset legend {
   line-height: 1.2;
 }
 
-#port_autofind {
-  position: absolute;
-  display: none;
+.wrap-autofind {
+  border: 1px solid #000;
+  background-color: #fff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.wrap-autofind legend {
+  padding-bottom: 0.5rem;
+}
+.wrap-autofind table tbody {
+  border-left: 0px;
+  border-right: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.wrap-autofind table tr td {
+  font-size: 0.8rem;
+  color: #999;
+  padding-left: 0px;
+}
+.wrap-autofind table tr td .lead-name {
+  color: #000;
+  border-bottom: 1px dashed #666;
+}
+.wrap-autofind table tr td .lead-name:hover {
+  border-bottom: 1px dashed #999;
+  cursor: pointer;
 }
 
 #search-add-product-result-wrap {

@@ -182,6 +182,7 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->nickname = $request->nickname;
+        $user->liter = $request->liter;
 
         $user->first_name =   $request->first_name;
         $user->second_name = $request->second_name;
@@ -513,6 +514,7 @@ class UserController extends Controller
         }
         
         $user->nickname = $request->nickname;
+        $user->liter = $request->liter;
 
         $user->first_name = $request->first_name;
         $user->second_name = $request->second_name;
