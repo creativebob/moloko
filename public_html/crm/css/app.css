@@ -301,6 +301,11 @@ fieldset legend {
   line-height: 1.2;
 }
 
+#port_autofind {
+  position: absolute;
+  display: none;
+}
+
 #search-add-product-result-wrap {
   position: absolute;
   margin-top: -10px;
