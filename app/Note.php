@@ -30,7 +30,7 @@ class Note extends Model
     use Cachable;
 
     use Notifiable;
-    use SoftDeletes;
+    // use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -45,7 +45,7 @@ class Note extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    // protected $dates = ['deleted_at'];
     protected $fillable = [
 
     ];
@@ -65,6 +65,11 @@ class Note extends Model
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');
+    }
+
+    public function noted()
+    {
+        return $this->morphTo();
     }
     
 }

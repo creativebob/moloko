@@ -1303,7 +1303,8 @@ tr:hover {
           background-position: -96px -800px; 
       }  
       .icon-edit:hover {
-          background-position: -128px -800px; 
+          background-position: -128px -800px;
+          cursor: pointer; 
       } 
 
       .icon-delete {
@@ -1311,6 +1312,7 @@ tr:hover {
       }  
       .icon-delete:hover {
           background-position: -32px -512px;
+          cursor: pointer;
       }
 
 

@@ -136,12 +136,6 @@ class Lead extends Model
         return $this->belongsTo('App\User', 'manager_id');
     }
 
-    // Получаем задачи
-    public function challenges()
-    {
-        return $this->hasMany('App\Challenge');
-    }
-
     // Получаем рекламации
     public function claims()
     {
@@ -153,5 +147,19 @@ class Lead extends Model
     {
         return $this->belongsTo('App\Stage');
     }
+
+    // Получаем комментарии
+    public function notes()
+    {
+        return $this->morphMany('App\Note', 'notes');
+    }
+
+    // Получаем задачи
+    public function challenges()
+    {
+        return $this->morphMany('App\Challenge', 'challenges');
+    }
+
+    
 
 }

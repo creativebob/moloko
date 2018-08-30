@@ -354,6 +354,15 @@ Route::post('/leads_system_item', 'LeadController@ajax_system_item')->middleware
 // Отображение на сайте
 Route::post('/leads_display', 'LeadController@ajax_display')->middleware('auth');
 
+// Добавление комментария
+Route::any('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth');
+
+// ------------------------------Внутренние комментарии -----------------------------------------------
+
+// Route::any('/notes', 'NoteController@store')->middleware('auth');
+// Основные методы
+Route::resource('/notes', 'NoteController')->middleware('auth');
+
 
 // --------------------------------------- Этапы --------------------------------------------
 

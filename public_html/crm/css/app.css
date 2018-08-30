@@ -977,6 +977,7 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 
 .icon-edit:hover {
   background-position: -128px -800px;
+  cursor: pointer;
 }
 
 .icon-delete {
@@ -985,6 +986,7 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 
 .icon-delete:hover {
   background-position: -32px -512px;
+  cursor: pointer;
 }
 
 .inputs label {

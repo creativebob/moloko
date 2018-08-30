@@ -16,6 +16,7 @@ use App\Location;
 use App\Booklist;
 use App\Role;
 use App\Country;
+use App\Note;
 
 use App\EntitySetting;
 
@@ -352,11 +353,15 @@ class LeadController extends Controller
 
     public function edit(Request $request, $id)
     {
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $lead = Lead::with('location.city')->moderatorLimit($answer)->findOrFail($id);
+        $lead = Lead::with(['location.city', 'notes' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }])->moderatorLimit($answer)->findOrFail($id);
+        // dd($lead);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
@@ -366,16 +371,18 @@ class LeadController extends Controller
 
         // Получаем список этапов
         $stages_list = Stage::get()->pluck('name', 'id');
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
+
+        $entity = $this->entity_name;
         // dd($lead);
 
-        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list'));
+        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity'));
     }
 
     public function update(LeadRequest $request, $id)
     {
-
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -427,7 +434,7 @@ class LeadController extends Controller
 
         $lead->location_id = $location->id;
         $lead->email = $request->email;
-    
+
         $lead->name = $request->name;
         $lead->stage_id =   $request->stage_id;
         $lead->badget =   $request->badget;
@@ -635,6 +642,33 @@ class LeadController extends Controller
             ];
         }
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+    // Добавление комментария
+    public function ajax_add_note(Request $request)
+    {
+
+        $lead = Lead::findOrFail($request->id);
+
+        if ($lead) {
+
+            // Получаем данные для авторизованного пользователя
+            $user = $request->user();
+
+            // Скрываем бога
+            $user_id = hideGod($user);
+
+            $company_id = $user->company_id;
+
+            $note = new Note;
+            $note->body = $request->body;
+            $note->company_id = $company_id;
+            $note->author_id = $user_id;
+
+            $lead->notes()->save($note);
+
+            return view($request->entity.'.note', compact('note'));
+        }
     }
 
 }

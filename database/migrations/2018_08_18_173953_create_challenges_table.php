@@ -21,14 +21,16 @@ class CreateChallengesTable extends Migration
 
             $table->string('name')->index()->comment('Название задачи');
 
+            $table->text('description')->nullable()->comment('Описание задачи');
+
             $table->integer('appointed_id')->nullable()->unsigned()->comment('ID пользователя, которому назначена задача');
             $table->foreign('appointed_id')->references('id')->on('users');
 
             $table->integer('finisher_id')->nullable()->unsigned()->comment('ID пользователя, завершил задачу');
             $table->foreign('finisher_id')->references('id')->on('users');
 
-            $table->integer('lead_id')->nullable()->unsigned()->comment('ID лида');
-            $table->foreign('lead_id')->references('id')->on('leads');
+            $table->integer('challenges_id')->nullable()->unsigned()->comment('ID сущности');
+            $table->string('challenges_type')->nullable()->comment('Сущность');
 
             $table->integer('challenges_type_id')->nullable()->unsigned()->comment('ID типа задачи');
             $table->foreign('challenges_type_id')->references('id')->on('challenges_types');
@@ -39,7 +41,6 @@ class CreateChallengesTable extends Migration
             $table->datetime('deadline_date')->nullable()->comment('Дата дедлайна');
             $table->datetime('completed_date')->nullable()->comment('Дата завершения');
             
-            $table->text('description')->nullable()->comment('Описание типа задачи');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

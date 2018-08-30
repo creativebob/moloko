@@ -55,6 +55,8 @@ use App\RawsCategory;
 use App\RawsProduct;
 
 use App\Lead;
+use App\Note;
+use App\Challenge;
 
 use App\Stage;
 
@@ -111,6 +113,8 @@ use App\Policies\RawsCategoryPolicy;
 use App\Policies\RawsProductPolicy;
 
 use App\Policies\LeadPolicy;
+use App\Policies\NotePolicy;
+use App\Policies\ChallengePolicy;
 
 use App\Policies\StagePolicy;
 
@@ -171,6 +175,8 @@ class AuthServiceProvider extends ServiceProvider
         RawsCategory::class => RawsCategoryPolicy::class,
         RawsProduct::class => RawsProductPolicy::class,
         Lead::class => LeadPolicy::class,
+        Note::class => NotePolicy::class,
+        Challenge::class => ChallengePolicy::class,
         Stage::class => StagePolicy::class,
     ];
 

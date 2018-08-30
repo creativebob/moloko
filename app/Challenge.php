@@ -51,11 +51,11 @@ class Challenge extends Model
         return $this->belongsTo('App\ChallangesType');
     }
 
-    // Получаем права категории.
-    public function rights()
-    {
-        return $this->hasMany('App\Rights');
-    }
+    // // Получаем права категории.
+    // public function rights()
+    // {
+    //     return $this->hasMany('App\Rights');
+    // }
 
     // Получаем автора
     public function author()
@@ -76,8 +76,8 @@ class Challenge extends Model
     }
 
     // Получаем лида
-    public function lead()
+    public function challenged()
     {
-        return $this->belongsTo('App\Lead');
+        return $this->morphTo();
     }
 }

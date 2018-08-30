@@ -10,11 +10,11 @@
 
 @section('title-content')
 <div class="top-bar head-content">
-  <div class="top-bar-left">
-   <h2 class="header-content">РЕДАКТИРОВАТЬ ЛИД</h2>
- </div>
- <div class="top-bar-right">
- </div>
+	<div class="top-bar-left">
+		<h2 class="header-content">РЕДАКТИРОВАТЬ ЛИД</h2>
+	</div>
+	<div class="top-bar-right">
+	</div>
 </div>
 @endsection
 
@@ -30,9 +30,7 @@
 @endsection
 
 @section('modals')
-
-{{-- Модалка удаления с ajax --}}
-@include('includes.modals.modal-delete-ajax')
+@include('includes.modals.modal-add-challenge')
 @endsection
 
 @section('scripts')
@@ -40,8 +38,9 @@
 @include('includes.scripts.cities-list')
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.pickmeup-script')
-@include('includes.scripts.delete-from-page-script')
 @include('includes.scripts.upload-file')
+
+@include('includes.scripts.notes', ['id' => $lead->id, 'model' => 'Lead'])
 @endsection
 
 

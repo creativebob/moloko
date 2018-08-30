@@ -19,8 +19,8 @@ class CreateNotesTable extends Migration
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('notable_id')->nullable()->unsigned()->comment('Id сущности');
-            $table->string('notable_type')->nullable()->comment('Сущность');
+            $table->integer('notes_id')->nullable()->unsigned()->comment('Id сущности');
+            $table->string('notes_type')->nullable()->comment('Сущность');
 
             $table->text('body')->nullable()->comment('Тело комментария');
 
