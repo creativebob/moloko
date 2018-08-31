@@ -362,7 +362,7 @@ fieldset {
 
 }
 
-.table-notes, .table-challenges
+.table-notes, .table-challenges, .table-attributions
 {
   border-collapse: separate;
   width: 100%;
@@ -504,6 +504,16 @@ fieldset {
                 cursor: pointer;
             }
         }
+    }
+
+}
+
+// ВКЛАДКА ИСТОРИЯ (Заказов и обращений)
+.tabs-panel{
+
+    padding-left: 0 !important;
+    #port_history{
+
     }
 
 }

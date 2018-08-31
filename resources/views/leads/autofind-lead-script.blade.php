@@ -52,7 +52,7 @@
         };
     };
 
-// Проверка существования
+// 
   $(document).on('click', '#lead-name', function() {
 
     // Получаем данные на лида из строчки по которой кликнули
@@ -69,8 +69,44 @@
     $('#city-check').addClass('icon-find-ok sprite-16');
     $('#port-autofind').hide();
 
-
 });
 
+// Получение данных об истории обращений по клику на вкладку ИСТОРИЯ
+  $(document).on('change.zf.tabs', '#tabs-extra-leads', function() {
+
+        var tabId = $('div[data-tabs-content="'+$(this).attr('id')+'"]').find('.tabs-panel.is-active').attr('id');
+        if(tabId == 'content-panel-history'){
+
+            // Получаем фрагмент текста
+            var phone = $('#phone').val();
+            var phone = phone.replace(/\D/g, "");
+
+            // Смотрим сколько символов
+            var len_phone = phone.length;
+            var lead_id = $('#lead_id').data('lead-id');
+
+            // Если символов больше 3 - делаем запрос
+            if(phone.length == 11) {
+
+                $.ajax({
+
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "/admin/leads/autofind/" + phone,
+                    type: "POST",
+                    data: {phone: phone, lead_id: lead_id},
+                    success: function(html){
+
+                        // Выводим пришедшие данные на страницу
+                        $('#port-history').html(html);
+                    } 
+                });
+            };
+
+
+        };
+
+});
 
 </script>

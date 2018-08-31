@@ -16,6 +16,9 @@ use App\Location;
 use App\Booklist;
 use App\Role;
 use App\Country;
+use App\Source;
+use App\Medium;
+use App\Campaign;
 
 use App\EntitySetting;
 
@@ -380,7 +383,11 @@ class LeadController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $lead = Lead::with('location.city')->moderatorLimit($answer)->findOrFail($id);
+        $lead = Lead::with('location.city', 'medium', 'campaign', 'source', 'site')
+        ->moderatorLimit($answer)
+        ->findOrFail($id);
+
+        // dd($lead);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
@@ -682,8 +689,6 @@ class LeadController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_lead = operator_right('leads', true, 'index');    
-
-        // $phone = cleanPhone($phone);
 
         // --------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС

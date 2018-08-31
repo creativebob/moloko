@@ -44,6 +44,7 @@ class Medium extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
+    protected $table = 'mediums';
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'name',

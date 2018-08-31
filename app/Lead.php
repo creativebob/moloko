@@ -65,9 +65,9 @@ class Lead extends Model
         return $this->hasMany('App\Department')->where('filial_status', 1);
     }
 
-    public function sites()
+    public function site()
     {
-        return $this->hasMany('App\Site');
+        return $this->belongsTo('App\Site');
     }
 
     // Получаем автора
@@ -97,13 +97,13 @@ class Lead extends Model
     // Получаем тип трафика
     public function medium()
     {
-        return $this->belongsTo('App\Medium');
+        return $this->belongsTo('App\Medium', 'medium_id')->withDefault(['name'=>'Не установлен']);
     }
 
     // Получаем рекламную кампанию
     public function campaign()
     {
-        return $this->belongsTo('App\Campaign');
+        return $this->belongsTo('App\Campaign')->withDefault(['name'=>'Нет данных']);
     }
 
     // Получаем тип обращения

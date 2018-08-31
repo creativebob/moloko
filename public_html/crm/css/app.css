@@ -246,34 +246,34 @@ fieldset legend {
   border-top: 5px solid #eee;
 }
 
-.table-notes, .table-challenges {
+.table-notes, .table-challenges, .table-attributions {
   border-collapse: separate;
   width: 100%;
 }
-.table-notes thead tr th, .table-challenges thead tr th {
+.table-notes thead tr th, .table-challenges thead tr th, .table-attributions thead tr th {
   background-color: #eee;
   border-bottom: 1px solid #000 !important;
   font-weight: 400;
   font-size: 0.8rem;
   font-family: "SegoeUIRegular";
 }
-.table-notes tbody tr:first-child td, .table-challenges tbody tr:first-child td {
+.table-notes tbody tr:first-child td, .table-challenges tbody tr:first-child td, .table-attributions tbody tr:first-child td {
   border-top: 3px solid #eee;
 }
-.table-notes tr th, .table-challenges tr th {
+.table-notes tr th, .table-challenges tr th, .table-attributions tr th {
   padding: 1rem;
 }
-.table-notes tr th:nth-child(1), .table-notes .table-notes tr td:nth-child(1), .table-challenges tr th:nth-child(1), .table-challenges .table-notes tr td:nth-child(1) {
+.table-notes tr th:nth-child(1), .table-notes .table-notes tr td:nth-child(1), .table-challenges tr th:nth-child(1), .table-challenges .table-notes tr td:nth-child(1), .table-attributions tr th:nth-child(1), .table-attributions .table-notes tr td:nth-child(1) {
   width: 35px !important;
 }
-.table-notes tr td:nth-child(1), .table-challenges tr td:nth-child(1) {
+.table-notes tr td:nth-child(1), .table-challenges tr td:nth-child(1), .table-attributions tr td:nth-child(1) {
   color: #666;
   font-size: 0.8rem;
 }
-.table-notes tr td, .table-challenges tr td {
+.table-notes tr td, .table-challenges tr td, .table-attributions tr td {
   background-color: #f9f9f9;
 }
-.table-notes tr td, .table-challenges tr td {
+.table-notes tr td, .table-challenges tr td, .table-attributions tr td {
   padding: 10px;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -329,6 +329,10 @@ fieldset legend {
 .wrap-autofind table tr td .lead-name:hover {
   border-bottom: 1px dashed #999;
   cursor: pointer;
+}
+
+.tabs-panel {
+  padding-left: 0 !important;
 }
 
 #search-add-product-result-wrap {

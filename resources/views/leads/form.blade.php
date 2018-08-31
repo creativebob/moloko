@@ -27,11 +27,11 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-6 medium-6 cell">
                         <label>Телефон
-                            @include('includes.inputs.phone', ['value'=>$lead->phone, 'name'=>'phone', 'id'=>'phone' ,'required'=>'required', 'singleattribute'=>'autofocus'])
-                        </label>
 
-                        {{-- Подключаем ПОИСК продукции для добавления на сайт --}}
-                        @include('leads.autofind-lead-script')
+                            {{ Form::text('phone', $lead->phone, ['class'=>'phone-field', 'maxlength'=>'17', 'autocomplete'=>'off', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'id'=>'phone', $autofocus, $readonly]) }}
+                            <span class="form-error">Укажите номер</span>
+
+                        </label>
 
                     </div>
                     <div class="small-6 medium-6 large-6 cell">
@@ -109,9 +109,10 @@
         <div class="grid-x grid-padding-x">
             <div class="small-12 medium-12 large-12 cell">
                 <ul class="tabs-list" data-tabs id="tabs-extra-leads">
-                    <li class="tabs-title is-active"><a href="#content-panel-order" aria-selected="true">Заказ</a></li>
-                    <li class="tabs-title"><a href="#content-panel-client" aria-selected="true">Клиент</a></li>
-                    <li class="tabs-title"><a href="#content-panel-attribution" aria-selected="true">Аттрибуция</a></li>
+                    <li class="tabs-title is-active" id="tab-order"><a href="#content-panel-order" aria-selected="true">Заказ</a></li>
+                    <li class="tabs-title" id="tab-client"><a href="#content-panel-client" aria-selected="true">Клиент</a></li>
+                    <li class="tabs-title" id="tab-history"><a href="#content-panel-history" aria-selected="true">История</a></li>
+                    <li class="tabs-title" id="tab-attribution"><a href="#content-panel-attribution" aria-selected="true">Аттрибуция</a></li>
                 </ul>
 
 
@@ -168,12 +169,42 @@
                         </div>
                     </div>
 
+                    {{-- ИСТОРИЯ --}}
+                    <div class="tabs-panel" id="content-panel-history">
+                        <div class="grid-x grid-padding-x">
+                            <div id="port-history" class="small-12 cell">
+                            </div>  
+                        </div>
+                    </div>
+
                     {{-- АТТРИБУЦИЯ --}}
                     <div class="tabs-panel" id="content-panel-attribution">
                         <div class="grid-x grid-padding-x">
 
+                            <table class="table-attributions">
+                                <tr>
+                                    <td>Источник: </td><td>{{ $lead->source->name or 'Не установлен' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Сайт: </td><td>{{ $lead->site->name or 'Не определен' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Тип трафика: </td><td>{{ $lead->medium->name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Рекламная кампания: </td><td>{{ $lead->campaign->name or ''}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Объявление: </td><td>{{ $lead->utm_content->name or ''}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Ключевая фраза: </td><td>{{ $lead->utm_term->name or ''}}</td>
+                                </tr>
+                            </table>
+
                         </div>
                     </div>
+
 
                 {{-- Конец контента доп таба --}}
                 </div>
@@ -314,6 +345,8 @@
   </div>
 </div>
 
+{{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
+@include('leads.autofind-lead-script')
 
 
 
