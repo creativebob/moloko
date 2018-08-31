@@ -33,26 +33,12 @@
                     </div>
                     <div class="small-4 cell">
                         <label class="input-icon">Введите город
-                            @php
-                            $city_name = null;
-                            $city_id = null;
-                            if (isset($department->location->city->name)) {
-                            $city_name = $department->location->city->name;
-                            $city_id = $department->location->city->id;
-                        }
-                        @endphp
-                        @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
+                        @include('includes.inputs.city_search', ['city_value'=>null, 'city_id_value'=>null, 'required'=>'required'])
                     </label>
                 </div>
                 <div class="small-8 cell">
                     <label>Адрес отдела
-                        @php
-                        $address = null;
-                        if (isset($department->location->address)) {
-                        $address = $department->location->address;
-                    }
-                    @endphp
-                    @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+                    @include('includes.inputs.address', ['value'=>null, 'name'=>'address', 'required'=>''])
                 </label>            
             </div>
             <div class="small-12 cell">
