@@ -3,7 +3,9 @@
 	<td>{{ $challenge->challenge_type->name }}</td>
 	<td>{{ $challenge->deadline_date->format('d.m.Y') }}</td>
 	<td>{{ $challenge->deadline_date->format('H:i') }}</td>
-	<td>{{ $challenge->description }}</td>
+	<td>@php 
+		echo str_replace("\n", '<br>', $challenge->description);
+		@endphp</td>
 	<td>{{ $challenge->appointed->second_name . ' ' . $challenge->appointed->first_name }}</td>
 	<td>
 		@if ($challenge->appointed_id == Auth::user()->id) 

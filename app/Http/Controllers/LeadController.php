@@ -363,7 +363,7 @@ class LeadController extends Controller
         }, 'challenges' => function ($query) {
             $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
         }])->moderatorLimit($answer)->findOrFail($id);
-        // dd($lead->challenges);
+        // dd($lead->notes);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);

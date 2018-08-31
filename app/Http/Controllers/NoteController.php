@@ -48,6 +48,7 @@ class NoteController extends Controller
         $company_id = $user->company_id;
 
         $note = new Note;
+
         $note->body = $request->body;
         $note->company_id = $company_id;
         $note->author_id = $user_id;

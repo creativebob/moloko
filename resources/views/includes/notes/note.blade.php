@@ -5,7 +5,11 @@
 		<span class="note_time">{{ $note->created_at->format('H:i') }}</span>
 	</td>
 
-	<td>{{ $note->body }}</td>
+	<td>
+		@php 
+		echo str_replace("\n", '<br>', $note->body);
+		@endphp
+	</td>
 
 	<td>
 		@can('update', $note)

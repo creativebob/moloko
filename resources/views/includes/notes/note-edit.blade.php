@@ -6,7 +6,7 @@
 	</td>
 
 	<td>
-		@include('includes.inputs.varchar', ['name'=>'edit-body', 'value'=>$note->body, 'required'=>''])
+		@include('includes.inputs.textarea', ['name'=>'edit_body', 'value'=>$note->body, 'required'=>''])
 	</td>
 
 	<td>

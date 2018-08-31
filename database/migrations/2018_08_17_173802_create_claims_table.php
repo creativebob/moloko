@@ -22,8 +22,13 @@ class CreateClaimsTable extends Migration
             // $table->string('name')->index()->comment('Название этапа');
             $table->text('body')->nullable()->comment('Описание рекламации');
 
+            $table->string('case_number')->index()->comment('Номер рекламации');
+
             $table->integer('lead_id')->nullable()->unsigned()->comment('ID лида');
             $table->foreign('lead_id')->references('id')->on('leads');
+
+            $table->integer('manager_id')->nullable()->unsigned()->comment('ID лида');
+            $table->foreign('manager_id')->references('id')->on('users');
 
             $table->integer('old_claim_id')->nullable()->unsigned()->comment('ID рекламации из старой базы');
 
