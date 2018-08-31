@@ -35,7 +35,7 @@
 			},
 			url: '/admin/notes/' + id,
 			type: "PATCH",
-			data: {body: $('input[name=edit-body]').val()},
+			data: {body: $('textarea[name=edit_body]').val()},
 			success: function(html){
 				$('#notes-' + id).replaceWith(html);
 				// alert($('input[name=add-body]').val());
@@ -81,7 +81,7 @@
 			type: "GET",
 			success: function(html){
 				$('#notes-' + id).replaceWith(html);
-				$('#notes-' + id + ' input[name=edit-body]').focus();
+				$('#notes-' + id + ' textarea[name=edit_body]').focus();
 				// alert($('input[name=add-body]').val());
 			}
 		}); 
@@ -96,18 +96,19 @@
 	});
 
 	// При редактировании коммента ловим enter
-	$(document).on('keydown', 'input[name=edit-body]', function(event) {
-		if (event.keyCode == 13) { //если нажали Enter, то true
+	$(document).on('keydown', 'textarea[name=edit_body]', function(event) {
+		if ((event.keyCode == 13) && (event.shiftKey == false)) { //если нажали Enter, то true
 			event.preventDefault();
 			// event.stopPropagation();
-			parent = $('input[name=edit-body]').closest('.item');
+			var parent = $('textarea[name=edit_body]').closest('.item');
+			// alert(parent.html());
 			editNote(parent);
 			// alert($('input[name=add-body]').val());
 		}
 	});
 
 	// При потере фокуса при редактировании возвращаем обратно
-	$(document).on('focusout', 'input[name=edit-body]', function(event) {
+	$(document).on('focusout', 'textarea[name=edit_body]', function(event) {
 		event.preventDefault();
 
 		// Находим описание сущности, id и название удаляемого элемента в родителе
