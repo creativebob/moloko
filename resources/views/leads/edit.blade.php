@@ -21,9 +21,10 @@
 @section('content')
 
 {{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
+
 {{ method_field('PATCH') }}
 
-@include('leads.form', ['submitButtonText' => 'Редактировать лид', 'param'=>''])
+@include('leads.form', ['submitButtonText' => 'Редактировать лид', 'param'=>'', 'readonly'=>'readonly', 'autofocus'=>''])
 
 {{ Form::close() }}
 
@@ -42,8 +43,22 @@
 @include('includes.scripts.pickmeup-script')
 @include('includes.scripts.upload-file')
 
+<script>
+
+	$(document).on('dblclick', '#phone', function() {
+		
+    // Снятие блокировки с поля номер телефона
+    $('#phone').attr('readonly', false);
+
+});
+
+</script>
+
+
 @include('includes.scripts.notes', ['id' => $lead->id, 'model' => 'Lead'])
 @include('includes.scripts.challenges', ['id' => $lead->id, 'model' => 'Lead'])
+
 @endsection
+
 
 

@@ -21,7 +21,7 @@
 @section('content')
 
   {{ Form::open(['url' => '/admin/leads', 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
-    @include('leads.form', ['submitButtonText' => 'Добавить лида', 'param' => ''])
+    @include('leads.form', ['submitButtonText' => 'Добавить лида', 'param' => '', 'readonly'=>'', 'autofocus'=>'autofocus'])
   {{ Form::close() }}
 
 @endsection

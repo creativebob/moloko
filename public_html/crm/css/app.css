@@ -222,90 +222,6 @@ fieldset legend {
   border-bottom: 0px dotted #999;
 }
 
-.tabs-leads {
-  padding-top: 1rem;
-}
-
-#table-order.table-order {
-  border-collapse: separate;
-  border-spacing: 0px 2px !important;
-}
-#table-order.table-order thead tr th {
-  background-color: #eee;
-  border-bottom: 1px solid #000 !important;
-  font-style: 400;
-  font-size: 0.9rem;
-}
-#table-order.table-order tr td {
-  background-color: #f5f5f5 !important;
-  padding: 0.6rem 0.625rem 0.1rem !important;
-  font-size: 0.9rem;
-  line-height: 1.2rem;
-}
-#table-order.table-order tbody tr:first-child td {
-  border-top: 5px solid #eee;
-}
-
-.table-notes, .table-challenges {
-  border-collapse: separate;
-  width: 100%;
-}
-.table-notes thead tr th, .table-challenges thead tr th {
-  background-color: #eee;
-  border-bottom: 1px solid #000 !important;
-  font-weight: 400;
-  font-size: 0.8rem;
-  font-family: "SegoeUIRegular";
-}
-.table-notes tbody tr:first-child td, .table-challenges tbody tr:first-child td {
-  border-top: 3px solid #eee;
-}
-.table-notes tr th, .table-challenges tr th {
-  padding: 1rem;
-}
-.table-notes tr th:nth-child(1), .table-notes .table-notes tr td:nth-child(1), .table-challenges tr th:nth-child(1), .table-challenges .table-notes tr td:nth-child(1) {
-  width: 35px !important;
-}
-.table-notes tr td:nth-child(1), .table-challenges tr td:nth-child(1) {
-  color: #666;
-  font-size: 0.8rem;
-}
-.table-notes tr td, .table-challenges tr td {
-  background-color: #f9f9f9;
-}
-.table-notes tr td, .table-challenges tr td {
-  padding: 10px;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  border-bottom: 1px solid #eee;
-}
-
-.table-challenges tr th:nth-child(4), .table-challenges tr td:nth-child(4) {
-  min-width: 100px !important;
-}
-.table-challenges tr td:nth-child(3) {
-  color: #666;
-  font-size: 0.8rem;
-}
-.table-challenges tr td:nth-child(2) {
-  color: #666;
-  font-size: 0.8rem;
-}
-
-.table-notes tr th:nth-child(4), .table-notes tr td:nth-child(4) {
-  min-width: 35px !important;
-}
-.table-notes .note_date, .table-notes .note_time {
-  color: #666;
-  font-size: 0.8rem;
-  line-height: 1.2;
-}
-
-#port_autofind {
-  position: absolute;
-  display: none;
-}
-
 #search-add-product-result-wrap {
   position: absolute;
   margin-top: -10px;
@@ -1464,6 +1380,144 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 }
 .sidebar thumb[orient="vertical"] {
   max-width: 10px !important;
+}
+
+.challenge-add {
+  background-color: #7e9a06;
+  padding: 0.3em 1em;
+  margin-top: 0.5rem;
+}
+.challenge-add:hover {
+  background-color: #6e8a00;
+}
+
+.tabs-leads {
+  padding-top: 1rem;
+}
+
+#table-order.table-order {
+  border-collapse: separate;
+  border-spacing: 0px 2px !important;
+}
+#table-order.table-order thead tr th {
+  background-color: #eee;
+  border-bottom: 1px solid #000 !important;
+  font-style: 400;
+  font-size: 0.9rem;
+}
+#table-order.table-order tr td {
+  background-color: #f5f5f5 !important;
+  padding: 0.6rem 0.625rem 0.1rem !important;
+  font-size: 0.9rem;
+  line-height: 1.2rem;
+}
+#table-order.table-order tbody tr:first-child td {
+  border-top: 5px solid #eee;
+}
+
+.table-notes, .table-challenges, .table-attributions {
+  border-collapse: separate;
+  width: 100%;
+}
+.table-notes thead tr th, .table-challenges thead tr th, .table-attributions thead tr th {
+  background-color: #eee;
+  border-bottom: 1px solid #000 !important;
+  font-weight: 400;
+  font-size: 0.8rem;
+  font-family: "SegoeUIRegular";
+}
+.table-notes tbody tr:first-child td, .table-challenges tbody tr:first-child td, .table-attributions tbody tr:first-child td {
+  border-top: 3px solid #eee;
+}
+.table-notes tr th, .table-challenges tr th, .table-attributions tr th {
+  padding: 1rem;
+}
+.table-notes tr th:nth-child(1), .table-notes .table-notes tr td:nth-child(1), .table-challenges tr th:nth-child(1), .table-challenges .table-notes tr td:nth-child(1), .table-attributions tr th:nth-child(1), .table-attributions .table-notes tr td:nth-child(1) {
+  width: 35px !important;
+}
+.table-notes tr td:nth-child(1), .table-challenges tr td:nth-child(1), .table-attributions tr td:nth-child(1) {
+  color: #666;
+  font-size: 0.8rem;
+}
+.table-notes tr td, .table-challenges tr td, .table-attributions tr td {
+  background-color: #f9f9f9;
+}
+.table-notes tr td, .table-challenges tr td, .table-attributions tr td {
+  padding: 4px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.table-challenges tr th:nth-child(4), .table-challenges tr td:nth-child(4) {
+  min-width: 100px !important;
+}
+.table-challenges tr td:nth-child(3) {
+  color: #666;
+  font-size: 0.8rem;
+}
+.table-challenges tr td:nth-child(2) {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.table-notes tr th:nth-child(4), .table-notes tr td:nth-child(4) {
+  min-width: 35px !important;
+}
+.table-notes .note_date, .table-notes .note_time {
+  color: #666;
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+.table-notes .note_time {
+  line-height: 1.3;
+  font-size: 0.7rem;
+  color: #888;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.table-notes tr:hover .note_time {
+  opacity: 1;
+}
+.table-notes textarea {
+  height: 2rem;
+}
+.table-notes td.actions {
+  width: 100px;
+}
+
+.wrap-autofind {
+  border: 1px solid #000;
+  background-color: #fff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.wrap-autofind legend {
+  padding-bottom: 0.5rem;
+}
+.wrap-autofind table tbody {
+  border-left: 0px;
+  border-right: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.wrap-autofind table tr td {
+  font-size: 0.8rem;
+  color: #999;
+  padding-left: 0px;
+}
+.wrap-autofind table tr td .lead-name {
+  color: #000;
+  border-bottom: 1px dashed #666;
+}
+.wrap-autofind table tr td .lead-name:hover {
+  border-bottom: 1px dashed #999;
+  cursor: pointer;
+}
+
+.tabs-panel {
+  padding-left: 0 !important;
 }
 
 .worktime_edit {

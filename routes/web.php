@@ -358,7 +358,7 @@ Route::post('/leads_display', 'LeadController@ajax_display')->middleware('auth')
 // Добавление комментария
 Route::any('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth');
 // Поиск лида по номеру телефона
-Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->middleware('auth');
+Route::any('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->middleware('auth');
 
 // ------------------------------ Внутренние комментарии -----------------------------------------------
 

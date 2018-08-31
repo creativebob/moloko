@@ -109,6 +109,8 @@ $white: #ffffff;
 $black: #000000;
 $body-bg-color: #eeeeee;
 $crm-blue: #1779ba;
+$green: #7e9a06;
+$green-light: #6e8a00;
 
 // Страница входа
 $index-input-border-color: #c2c2c2;
@@ -325,151 +327,7 @@ fieldset {
     }
 }
 
-// СТРАНИЦА ЛИДЫ ======================================================================
 
-.tabs-leads{
-    padding-top: 1rem; 
-}
-
-
-#table-order.table-order{
-
-    border-collapse: separate;
-    border-spacing: 0px 2px !important;
-
-    thead{
-
-        tr th{
-            background-color: #eee;
-            border-bottom: 1px solid #000 !important;
-            font-style: 400;
-            font-size: 0.9rem;
-        }
-
-    }
-
-    tr td{
-
-        background-color: #f5f5f5 !important;
-        padding: 0.6rem 0.625rem 0.1rem !important;
-        font-size: 0.9rem;
-        line-height: 1.2rem;
-    }
-
-    tbody tr:first-child td {
-        border-top: 5px solid #eee;
-    }
-
-}
-
-.table-notes, .table-challenges
-{
-  border-collapse: separate;
-  width: 100%;
-
-    thead{
-
-        tr th{
-            background-color: #eee;
-            border-bottom: 1px solid #000 !important;
-            font-weight: 400;
-            font-size: 0.8rem;
-            font-family: $SUIR;
-        }
-
-    }
-
-    tbody tr:first-child td {
-        border-top: 3px solid #eee;
-    }
-
-    tr th
-    {
-      padding: 1rem;
-    }
-
-    tr th:nth-child(1), .table-notes tr td:nth-child(1)
-    {
-      width: 35px !important;
-    }
-
-    // tr th:nth-child(2), .table-notes tr td:nth-child(2)
-    // {
-    //   width: 20px !important;
-    // }
-
-    tr td:nth-child(1)
-    {
-      color: #666;
-      font-size: 0.8rem;
-    }
-
-    // tr td:nth-child(2)
-    // {
-    //   color: #666;
-    //   font-size: 0.8rem;
-    // }
-
-    tr td
-    {
-      background-color: #f9f9f9;
-    }
-
-    tr td
-    {
-      padding: 10px;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      border-bottom: 1px solid #eee;
-    } 
-
-}
-
-.table-challenges
-{
-
-    tr th:nth-child(4), tr td:nth-child(4)
-    {
-      min-width: 100px !important;
-    }
-
-    tr td:nth-child(3)
-    {
-      color: #666;
-      font-size: 0.8rem;
-    }
-
-    tr td:nth-child(2)
-    {
-      color: #666;
-      font-size: 0.8rem;
-    }
-
-}
-
-.table-notes
-{
-    
-    tr th:nth-child(4), tr td:nth-child(4)
-    {
-      min-width: 35px !important;
-    }
-
-    .note_date, .note_time{
-        color: #666;
-        font-size: 0.8rem;
-        line-height:1.2;
-    }
-
-}
-
-#port_autofind{
-    position: absolute;
-    display: none;
-}
-
-
-// ОКОНЧАНИЕ СТРАНИЦЫ ЛИДЫ ============================================================
 
 
 // СТИЛИЗАЦИЯ ПОИСКА ТОВАРА ДЛЯ ДОБАВЛЕНИЯ В КАТАЛОГ
@@ -1861,6 +1719,243 @@ thumb[orient="vertical"] {
     max-width:10px !important;
 }
 }
+
+
+// СТРАНИЦА ЛИДЫ ======================================================================
+
+
+// Вкладка задачи - НАЧАЛО =======================
+
+.challenge-add{
+
+    background-color: $green;
+    padding: 0.3em 1em;
+    margin-top: 0.5rem;
+
+    &:hover{
+        background-color: $green-light;
+    }
+}
+
+
+// Вкладка задачи - КОНЕЦ =======================
+
+
+.tabs-leads{
+    padding-top: 1rem; 
+}
+
+
+#table-order.table-order{
+
+    border-collapse: separate;
+    border-spacing: 0px 2px !important;
+
+    thead{
+
+        tr th{
+            background-color: #eee;
+            border-bottom: 1px solid #000 !important;
+            font-style: 400;
+            font-size: 0.9rem;
+        }
+
+    }
+
+    tr td{
+
+        background-color: #f5f5f5 !important;
+        padding: 0.6rem 0.625rem 0.1rem !important;
+        font-size: 0.9rem;
+        line-height: 1.2rem;
+    }
+
+    tbody tr:first-child td {
+        border-top: 5px solid #eee;
+    }
+
+}
+
+.table-notes, .table-challenges, .table-attributions
+{
+  border-collapse: separate;
+  width: 100%;
+
+    thead{
+
+        tr th{
+            background-color: #eee;
+            border-bottom: 1px solid #000 !important;
+            font-weight: 400;
+            font-size: 0.8rem;
+            font-family: $SUIR;
+        }
+
+    }
+
+    tbody tr:first-child td {
+        border-top: 3px solid #eee;
+    }
+
+    tr th
+    {
+      padding: 1rem;
+    }
+
+    tr th:nth-child(1), .table-notes tr td:nth-child(1)
+    {
+      width: 35px !important;
+    }
+
+    // tr th:nth-child(2), .table-notes tr td:nth-child(2)
+    // {
+    //   width: 20px !important;
+    // }
+
+    tr td:nth-child(1)
+    {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    // tr td:nth-child(2)
+    // {
+    //   color: #666;
+    //   font-size: 0.8rem;
+    // }
+
+    tr td
+    {
+      background-color: #f9f9f9;
+    }
+
+    tr td
+    {
+      padding: 4px;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      border-bottom: 1px solid #eee;
+    } 
+
+}
+
+.table-challenges
+{
+
+    tr th:nth-child(4), tr td:nth-child(4)
+    {
+      min-width: 100px !important;
+    }
+
+    tr td:nth-child(3)
+    {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    tr td:nth-child(2)
+    {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+}
+
+.table-notes
+{
+    
+    tr th:nth-child(4), tr td:nth-child(4)
+    {
+      min-width: 35px !important;
+    }
+
+    .note_date, .note_time{
+        color: #666;
+        font-size: 0.8rem;
+        line-height: 1.2;
+    }
+
+    .note_time{
+        line-height: 1.3;
+        font-size: 0.7rem;
+        color: #888;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+    }
+
+    tr:hover .note_time{
+        opacity: 1;
+    }
+
+    textarea {
+        height: 2rem;
+    }
+
+    td.actions{
+        width: 100px;
+    }
+
+}
+
+// Оформление портала / Результат автопоиска лида по номеру телефона
+
+#port_autofind{
+
+}
+
+.wrap-autofind{
+    border: 1px solid #000;
+    background-color: #fff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+
+    legend{
+        padding-bottom: 0.5rem;
+    }
+
+    table{
+
+        tbody{
+            border-left: 0px;
+            border-right: 0px;
+            padding-left: 0px;
+            padding-right: 0px;        
+        }
+
+        tr td {
+            font-size: 0.8rem;
+            color: #999;
+            padding-left: 0px;
+
+            .lead-name{
+                color: #000;
+                border-bottom: 1px dashed #666;
+            }
+
+            .lead-name:hover{
+                border-bottom: 1px dashed #999;
+                cursor: pointer;
+            }
+        }
+    }
+
+}
+
+// ВКЛАДКА ИСТОРИЯ (Заказов и обращений)
+.tabs-panel{
+
+    padding-left: 0 !important;
+    #port_history{
+
+    }
+
+}
+
+
+// ОКОНЧАНИЕ СТРАНИЦЫ ЛИДЫ ============================================================
+
+
 
 // ----------------------------------------- Редактирование режима работы ---------------------
 

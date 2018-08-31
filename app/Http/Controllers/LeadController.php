@@ -16,7 +16,11 @@ use App\Location;
 use App\Booklist;
 use App\Role;
 use App\Country;
+use App\Source;
+use App\Medium;
+use App\Campaign;
 use App\Note;
+
 
 use App\EntitySetting;
 
@@ -139,7 +143,15 @@ class LeadController extends Controller
         $countries_list = Country::get()->pluck('name', 'id');
 
         // Получаем список этапов
-        $stages_list = Stage::get()->pluck('name', 'id');
+        $answer_stages = operator_right('stages', false, 'index'); 
+
+        $stages_list = Stage::moderatorLimit($answer_stages)
+        ->companiesLimit($answer_stages)
+        ->authors($answer_stages)
+        ->systemItem($answer_stages) // Фильтр по системным записям
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get()->pluck('name', 'id');
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -230,18 +242,34 @@ class LeadController extends Controller
         if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
         $lead->filial_id = $filial_id;
 
-        // Создаем папку в файловой системе
-        // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'avatars';
-        // Storage::makeDirectory($link_for_folder);
 
-        // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'photos';
-        // Storage::makeDirectory($link_for_folder);
+        // Формируем номер обращения --------------------------------------------
+        $today = Carbon::now();
 
-        // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'video';
-        // Storage::makeDirectory($link_for_folder);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_all_leads = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
-        // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'documents';
-        // Storage::makeDirectory($link_for_folder);
+        $leads = Lead::moderatorLimit($answer_all_leads)
+        ->companiesLimit($answer_all_leads)
+        ->filials($answer_all_leads) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->where('author_id', $user->id)
+        ->whereDay('created_at', Carbon::today()->format('d'))
+        ->get();
+
+        $serial_number = $leads->max('serial_number');
+
+        if(empty($serial_number)){$serial_number = 0;};
+
+        $serial_number = $serial_number + 1;
+
+        // Создаем номер
+        $case_number = $today->format('d') . $today->format('m') . $today->format('Y') . '/' .  $serial_number . '/' . $user->liter;
+        $lead->case_number = $case_number;
+        $lead->serial_number = $serial_number;
+
+        // Конец формирования номера обращения ----------------------------------
+
+
 
         $lead->save();
 
@@ -358,12 +386,13 @@ class LeadController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $lead = Lead::with(['location.city', 'notes' => function ($query) {
-            $query->orderBy('created_at', 'desc');
-        }, 'challenges' => function ($query) {
+
+        $lead = Lead::with(['location.city', 'medium', 'campaign', 'source', 'site', 'notes' => function ($query) {
+            $query->orderBy('created_at', 'desc');}, 'challenges' => function ($query) {
             $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
-        }])->moderatorLimit($answer)->findOrFail($id);
-        // dd($lead->notes);
+        }])
+        ->moderatorLimit($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
@@ -372,7 +401,16 @@ class LeadController extends Controller
         $countries_list = Country::get()->pluck('name', 'id');
 
         // Получаем список этапов
-        $stages_list = Stage::get()->pluck('name', 'id');
+
+        $answer_stages = operator_right('stages', false, 'index'); 
+
+        $stages_list = Stage::moderatorLimit($answer_stages)
+        ->companiesLimit($answer_stages)
+        ->authors($answer_stages)
+        ->systemItem($answer_stages) // Фильтр по системным записям
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get()->pluck('name', 'id');
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -673,40 +711,48 @@ class LeadController extends Controller
         }
     }
 
-    public function ajax_autofind_phone($phone)
+    public function ajax_autofind_phone(Request $request)
     {
 
         // Подключение политики
-        $this->authorize('index', Lead::class);
+        // $this->authorize('index', Lead::class);
+
+        $phone = $request->phone;
+        $lead_id = $request->lead_id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_lead = operator_right('leads', true, 'index');    
-
-        $phone = cleanPhone($phone);
 
         // --------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------
 
 
-        $finded_lead = Lead::moderatorLimit($answer_lead)
+        $finded_leads = Lead::with('location.city', 'choices_goods_categories', 'choices_services_categories', 'choices_raws_categories')
+        ->moderatorLimit($answer_lead)
         ->companiesLimit($answer_lead)
         ->authors($answer_lead)
         ->systemItem($answer_lead) // Фильтр по системным записям
         // ->whereNull('archive')
         ->where('phone', $phone)
+        ->where('id', '!=', $lead_id)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
 
+        // dd($finded_leads);
 
-        if($find_lead){
+        $count_finded_leads = $finded_leads->count();
 
-            return view('leads.autofind', compact('finded_lead'));
-        } else {
 
-            return false;
-        }
+            if($count_finded_leads > 0){
+
+                return view('leads.autofind', compact('finded_leads'));
+            } else {
+
+                return '';
+            };
+
     }
 
 }

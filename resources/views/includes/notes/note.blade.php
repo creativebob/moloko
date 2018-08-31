@@ -11,7 +11,7 @@
 		@endphp
 	</td>
 
-	<td>
+	<td class="actions">
 		@can('update', $note)
 		<div class="icon-edit sprite" data-open="note-edit"></div>
 		@endcan

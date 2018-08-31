@@ -25,7 +25,7 @@
 	@can ('create', App\Challenge::class)
 	<div class="grid-x grid-padding-x align-center">
 		<div class="small-4 cell">
-			<a class="button" data-open="challenge-add">Добавить</a>
+			<a class="button challenge-add" data-open="challenge-add">Добавить</a>
 		</div>
 	</div>
 	@endcan
