@@ -8,12 +8,24 @@ $drop = 1;
 
 @foreach ($categories as $category)
 @if($category->filial_status == 1)
+
+@php
+$count = 0;
+
+if (isset($grouped_items[$category->id])) {
+    $count = $count + count($grouped_items[$category->id]);
+};
+if (isset($category->staff)) {
+    $count = $count + count($category->staff);
+};
+@endphp
+
 {{-- Если категория --}}
 <li class="first-item item @if (isset($grouped_items[$category->id])) parent @endif" id="{{ $entity }}-{{ $category->id }}" data-name="{{ $category->name }}">
     <a class="first-link @if($drop == 0) link-small @endif">
         <div class="icon-open sprite"></div>
         <span class="first-item-name">{{ $category->name }}</span>
-        <span class="number">{{ isset($grouped_items[$category->id]) ? count($grouped_items[$category->id]) : 0 }}</span>
+        <span class="number">{{ $count }}</span>
         @moderation ($category)
         <span class="no-moderation">Не отмодерированная запись!</span>
         @endmoderation
@@ -96,32 +108,32 @@ $drop = 1;
 <script type="text/javascript">
 
 // Если первый элемент
-if ($('#{{ $entity }}-{{ $id }}').hasClass('first-item')) {
+if ($('#{{ $item }}-{{ $id }}').hasClass('first-item')) {
 
     // Присваиваем активный класс
-    $('#{{ $entity }}-{{ $id }}').addClass('first-active');
+    $('#{{ $item }}-{{ $id }}').addClass('first-active');
 
     // Открываем элемент
-    $('#{{ $entity }}-{{ $id }}').children('.medium-list').addClass('is-active');
+    $('#{{ $item }}-{{ $id }}').children('.medium-list').addClass('is-active');
 } else {
 
     // Если средний элемент
-    if ($('#{{ $entity }}-{{ $id }}').hasClass('medium-item')) {
+    if ($('#{{ $item }}-{{ $id }}').hasClass('medium-item')) {
 
         // Присваиваем элементу активный клас и открываем его и вышестоящий
-        $('#{{ $entity }}-{{ $id }}').addClass('medium-active');
-        $('#{{ $entity }}-{{ $id }}').parent('.medium-list').addClass('is-active');
-        $('#{{ $entity }}-{{ $id }}').children('.medium-list').addClass('is-active');
+        $('#{{ $item }}-{{ $id }}').addClass('medium-active');
+        $('#{{ $item }}-{{ $id }}').parent('.medium-list').addClass('is-active');
+        $('#{{ $item }}-{{ $id }}').children('.medium-list').addClass('is-active');
     };
 
-    if ($('#{{ $entity }}-{{ $id }}').hasClass('medium-as-last')) {
+    if ($('#{{ $item }}-{{ $id }}').hasClass('medium-as-last')) {
 
         // Открываем вышестоящий
-        $('#{{ $entity }}-{{ $id }}').parent('.medium-list').addClass('is-active');
+        $('#{{ $item }}-{{ $id }}').parent('.medium-list').addClass('is-active');
     };
 
     // Перебираем родителей
-    $.each($('#{{ $entity }}-{{ $id }}').parents('.item'), function (index) {
+    $.each($('#{{ $item }}-{{ $id }}').parents('.item'), function (index) {
 
         // Если первый элемент, присваиваем активный класс
         if ($(this).hasClass('first-item')) {

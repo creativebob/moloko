@@ -536,6 +536,24 @@ class EntitiesTableSeeder extends Seeder
       'author_id' => 1,
     ],
 
+    [
+      'name' => 'Внутренние комментарии',
+      'alias' => 'notes',
+      'model' => 'Note',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
+    [
+      'name' => 'Задачи',
+      'alias' => 'challenges',
+      'model' => 'Challenge',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
     // [
     //   'name' => 'Рабочий стол',
     //   'alias' => 'dashboard',

@@ -152,7 +152,7 @@ class StafferController extends Controller
         if ($staffer) {
 
         // Переадресовываем на index
-            return redirect()->action('DepartmentController@index', ['id' => $staffer->id, 'item' => 'staffer']);
+            return redirect()->action('DepartmentController@index', ['id' => $staffer->id, 'item' => 'staff']);
         } else {
             abort(403, 'Ошибка при записи штата!');
         }

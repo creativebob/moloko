@@ -184,7 +184,7 @@ class DepartmentController extends Controller
 
         // После записи переходим на созданный пункт меню
         if ($request->ajax()) {
-            return view('departments.enter', ['grouped_items' => $departments, 'class' => 'App\Department', 'entity' => $this->entity_name, 'type' => 'edit', 'id' => $request->id]);
+            return view('departments.enter', ['grouped_items' => $departments, 'class' => 'App\Department', 'entity' => $this->entity_name, 'type' => 'edit', 'id' => $request->id, 'item' => $request->item]);
         }
 
         return view('departments.index', compact('departments', 'page_info', 'pages', 'departments', 'filter', 'entity'));
@@ -433,7 +433,7 @@ class DepartmentController extends Controller
             $this->RSDepartments($user);
 
             // Переадресовываем на index
-            return redirect()->action('DepartmentController@index', ['id' => $department->id, 'item' => 'department']);
+            return redirect()->action('DepartmentController@index', ['id' => $department->id, 'item' => 'departments']);
 
             // $action_method = "DepartmentController@get_content";
             // $action_arrray = ['id' => $department->id, 'item' => 'department'];

@@ -43,19 +43,19 @@ class Challenge extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'deadline_date', 'completed_date'];
 
     // Получаем тип задачи
-    public function challanges_type()
+    public function challenge_type()
     {
-        return $this->belongsTo('App\ChallangesType');
+        return $this->belongsTo('App\ChallengesType', 'challenges_type_id');
     }
 
-    // Получаем права категории.
-    public function rights()
-    {
-        return $this->hasMany('App\Rights');
-    }
+    // // Получаем права категории.
+    // public function rights()
+    // {
+    //     return $this->hasMany('App\Rights');
+    // }
 
     // Получаем автора
     public function author()
@@ -76,8 +76,8 @@ class Challenge extends Model
     }
 
     // Получаем лида
-    public function lead()
+    public function challenged()
     {
-        return $this->belongsTo('App\Lead');
+        return $this->morphTo();
     }
 }

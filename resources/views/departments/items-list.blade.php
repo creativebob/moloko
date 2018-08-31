@@ -1,21 +1,24 @@
 {{-- Если вложенный --}}
-@php
-$count = 0;
-@endphp
-@if (isset($item->children))
-@php
-$count = count($item->children);
-@endphp
-@endif
 
 @foreach ($items as $item)
 
-@if (isset($grouped_items[$item->id]))
+@php
+$count = 0;
+
+if (isset($grouped_items[$item->id])) {
+    $count = $count + count($grouped_items[$item->id]);
+};
+if (isset($item->staff)) {
+    $count = $count + count($item->staff);
+};
+@endphp
+
+@if ((isset($grouped_items[$item->id])) || (count($item->staff) > 0))
 <li class="medium-item item parent" id="{{ $entity }}-{{ $item->id }}" data-name="{{ $item->name }}">
     <a class="medium-link @if($drop == 0) link-small @endif">
         <div class="icon-open sprite"></div>
         <span class="medium-item-name">{{ $item->name }}</span>
-        <span class="number">{{ count($grouped_items[$item->id]) }}</span>
+        <span class="number">{{ $count }}</span>
         @moderation ($item)
         <span class="no-moderation">Не отмодерированная запись!</span>
         @endmoderation
@@ -68,8 +71,17 @@ $count = count($item->children);
         <label class="label-check" for="check-{{ $item->id }}"></label> 
     </div>
     <ul class="menu vertical medium-list nested" data-accordion-menu data-multi-open="false">
+        @if ((isset($grouped_items[$item->id])) || (count($item->staff) > 0))
+
         @if(isset($grouped_items[$item->id]))
-        @include('departments.items-list', ['grouped_items' => $grouped_items, 'items' => $grouped_items[$item->id], 'class' => $class, 'entity' => $entity])
+        @include('departments.items-list', ['grouped_items' => $grouped_items, 'items' => $grouped_items[$item->id], 'class' => $class, 'entity' => $entity, 'type' => $type])
+        @endif
+
+        @if(count($item->staff) > 0)
+        @foreach ($item->staff as $staffer)
+        @include('departments.staff-list', ['grouped_items' => $grouped_items, 'staffer' => $staffer, 'class' => 'App\Staffer', 'entity' => 'staff', 'type' => $type])
+        @endforeach
+        @endif
 
         @else
         <li class="empty-item"></li>

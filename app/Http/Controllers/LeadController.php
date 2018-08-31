@@ -19,6 +19,8 @@ use App\Country;
 use App\Source;
 use App\Medium;
 use App\Campaign;
+use App\Note;
+
 
 use App\EntitySetting;
 
@@ -379,15 +381,18 @@ class LeadController extends Controller
 
     public function edit(Request $request, $id)
     {
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $lead = Lead::with('location.city', 'medium', 'campaign', 'source', 'site')
+
+        $lead = Lead::with(['location.city', 'medium', 'campaign', 'source', 'site', 'notes' => function ($query) {
+            $query->orderBy('created_at', 'desc');}, 'challenges' => function ($query) {
+            $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
+        }])
         ->moderatorLimit($answer)
         ->findOrFail($id);
-
-        // dd($lead);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
@@ -396,6 +401,7 @@ class LeadController extends Controller
         $countries_list = Country::get()->pluck('name', 'id');
 
         // Получаем список этапов
+
         $answer_stages = operator_right('stages', false, 'index'); 
 
         $stages_list = Stage::moderatorLimit($answer_stages)
@@ -408,14 +414,15 @@ class LeadController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
+
+        $entity = $this->entity_name;
         // dd($lead);
 
-        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list'));
+        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity'));
     }
 
     public function update(LeadRequest $request, $id)
     {
-
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -467,7 +474,7 @@ class LeadController extends Controller
 
         $lead->location_id = $location->id;
         $lead->email = $request->email;
-    
+
         $lead->name = $request->name;
         $lead->stage_id =   $request->stage_id;
         $lead->badget =   $request->badget;
@@ -677,6 +684,32 @@ class LeadController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
+    // Добавление комментария
+    public function ajax_add_note(Request $request)
+    {
+
+        $lead = Lead::findOrFail($request->id);
+
+        if ($lead) {
+
+            // Получаем данные для авторизованного пользователя
+            $user = $request->user();
+
+            // Скрываем бога
+            $user_id = hideGod($user);
+
+            $company_id = $user->company_id;
+
+            $note = new Note;
+            $note->body = $request->body;
+            $note->company_id = $company_id;
+            $note->author_id = $user_id;
+
+            $lead->notes()->save($note);
+
+            return view($request->entity.'.note', compact('note'));
+        }
+    }
 
     public function ajax_autofind_phone(Request $request)
     {
@@ -721,6 +754,5 @@ class LeadController extends Controller
             };
 
     }
-
 
 }

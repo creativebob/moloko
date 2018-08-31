@@ -3,11 +3,11 @@
 
 <script type="text/javascript">
 
-CKEDITOR.replace('content-ckeditor');
+    CKEDITOR.replace('content-ckeditor');
 
   // Конфигурация 
   CKEDITOR.config.toolbar = [
-    ['Bold', 'Italic', 'NumberedList', 'BulletedList', 'Maximize', 'Source']
+  ['Bold', 'Italic', 'NumberedList', 'BulletedList', 'Maximize', 'Source']
   ];
 
 // // Toolbar configuration generated automatically by the editor based on config.toolbarGroups.
@@ -30,7 +30,7 @@ CKEDITOR.replace('content-ckeditor');
 // ];
 
 
-  $(function() {
+$(function() {
 
     $(document).on('click', '#submit-role-add', function(event) {
       event.preventDefault();
@@ -39,15 +39,15 @@ CKEDITOR.replace('content-ckeditor');
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "/admin/get_role",
-        type: "POST",
-        data: $(this).closest('form').serialize(),
-        success: function(html){
+      },
+      url: "/admin/get_role",
+      type: "POST",
+      data: $(this).closest('form').serialize(),
+      success: function(html){
           $('.table-content > tbody').append(html);
-        }
-      });
-    });
+      }
+  });
+  });
 
     // Мягкое удаление с ajax
     $(document).on('click', '[data-open="item-delete-ajax"]', function() {
@@ -60,7 +60,7 @@ CKEDITOR.replace('content-ckeditor');
       var name = parent.data('name');
       $('.title-delete').text(name);
       $('.delete-button-ajax').attr('id', entity_alias + '-' + role + '-' + department);
-    });
+  });
 
     // Подтверждение удаления и само удаление
     $(document).on('click', '.delete-button-ajax', function(event) {
@@ -72,9 +72,10 @@ CKEDITOR.replace('content-ckeditor');
       var department = $(this).attr('id').split('-')[2];
 
       $('#' + entity_alias + '-' + role + '-' + department).remove();
-    });
-
   });
+
+});
+
 </script>
 
 

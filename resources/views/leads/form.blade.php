@@ -1,7 +1,7 @@
 
 
 <div class="grid-x tabs-wrap inputs">
-  <div class="small-12 medium-6 large-6 cell">
+    <div class="small-12 medium-6 large-6 cell">
 
 
         @if ($errors->any())
@@ -219,7 +219,7 @@
         <div class="grid-x tabs-right">
             <div class="small-12 cell">
                 <ul class="tabs-list" data-tabs id="tabs-leads">
-                    <li class="tabs-title is-active"><a href="#content-panel-history" aria-selected="true">События</a></li>
+                    <li class="tabs-title is-active"><a href="#content-panel-notes" aria-selected="true">События</a></li>
                     <li class="tabs-title"><a href="#content-panel-catalog" aria-selected="true">Каталог</a></li>
                     <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li>
                     <li class="tabs-title"><a href="#content-panel-claims" aria-selected="true">Рекламации</a></li>
@@ -231,72 +231,14 @@
         <div class="tabs-content tabs-leads" data-tabs-content="tabs-leads">
 
             {{-- Взаимодействия: задачи и события --}}
-            <div class="tabs-panel is-active" id="content-panel-history">
+            <div class="tabs-panel is-active" id="content-panel-notes">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 large-12 cell">
-                        <fieldset class="fieldset-access">
-                            <legend>Задачи:</legend>
-                            <div class="grid-x grid-padding-x"> 
-                                <table class="table-challenges" id="table-challenges">
-                                    <thead>
-                                        <tr>
-                                            <th>Задача</th>
-                                            <th>Дата</th>
-                                            <th>Время</th>
-                                            <th>Описание</th>
-                                            <th>Исполнитель</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Перезвонить</td>
-                                            <td>12.06.2016</td>
-                                            <td>13:45</td>
-                                            <td>Да, да. Нужно перезвонить клиенту! Срочно!</td>
-                                            <td>Виноградова Алена</td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </fieldset>
-                        <fieldset class="fieldset-access">
-                            <legend>События:</legend>
-                            <div class="grid-x grid-padding-x"> 
-                                <table class="table-notes" id="table-notes">
-                                    <thead>
-                                        <tr>
-                                            <th>Время</th>
-                                            <th>Событие</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <span class="note_date">12.06.2016</span>
-                                                <br>
-                                                <span class="note_time">11:40</span>
-                                            </td>
-                                            <td>
-                                                @include('includes.inputs.varchar', ['name'=>'body', 'value'=>null, 'required'=>''])
-                                            </td>
-                                            <td><a href="#" class="button">Добавить</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span class="note_date">12.06.2016</span>
-                                                <br>
-                                                <span class="note_time">11:40</span>
-                                            </td>
-                                            <td>Кое что интересное мне сказал тут клиент на днях. Говорит в соседней конторе он купил бы эти ворота за сущие гроши. А у нас они стоят еще меньше. Еще меньше, Карл!</td>
-                                            <td><a class="icon-delete sprite" data-open="item-delete"></a></td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </fieldset> 
+                        {{-- Подключаем комментарии --}}
+                        @include('includes.challenges.fieldset', ['item' => $lead])
+                        
+                        {{-- Подключаем комментарии --}}
+                        @include('includes.notes.fieldset', ['item' => $lead])
                     </div>
                 </div>
             </div>
@@ -332,6 +274,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
 
     </div>

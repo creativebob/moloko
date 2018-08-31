@@ -353,8 +353,25 @@ Route::post('/leads_sort', 'LeadController@ajax_sort')->middleware('auth');
 Route::post('/leads_system_item', 'LeadController@ajax_system_item')->middleware('auth');
 // Отображение на сайте
 Route::post('/leads_display', 'LeadController@ajax_display')->middleware('auth');
+
+
+// Добавление комментария
+Route::any('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth');
 // Поиск лида по номеру телефона
 Route::any('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->middleware('auth');
+
+// ------------------------------ Внутренние комментарии -----------------------------------------------
+
+// Основные методы
+Route::resource('/notes', 'NoteController')->middleware('auth');
+
+
+// --------------------------------------- Задачи -----------------------------------------------
+
+// Route::any('/challenges/{id}', 'ChallengeController@update')->middleware('auth');
+// Основные методы
+Route::resource('/challenges', 'ChallengeController')->middleware('auth');
+
 
 // --------------------------------------- Этапы --------------------------------------------
 

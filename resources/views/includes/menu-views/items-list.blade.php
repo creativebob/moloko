@@ -1,12 +1,4 @@
 {{-- Если вложенный --}}
-@php
-$count = 0;
-@endphp
-@if (isset($item->children))
-@php
-$count = count($item->children);
-@endphp
-@endif
 
 @foreach ($items as $item)
 
