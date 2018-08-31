@@ -360,8 +360,10 @@ class LeadController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $lead = Lead::with(['location.city', 'notes' => function ($query) {
             $query->orderBy('created_at', 'desc');
+        }, 'challenges' => function ($query) {
+            $query->with('challenge_type')->orderBy('deadline_date', 'asc');
         }])->moderatorLimit($answer)->findOrFail($id);
-        // dd($lead);
+        // dd($lead->challenges);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);

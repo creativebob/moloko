@@ -3,63 +3,46 @@
 	var id = '{{ $id }}';
 	var model = 'App\\{{ $model }}';
 
-	// alert(model);
-	// Функция добавленяи комментария
-	function addNote (id, model) {
-		$.ajax({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
-			url: '/admin/notes',
-			type: "POST",
-			data: {id: id, model: model, body: $('textarea[name=add_body]').val()},
-			success: function(html){
-				$('#tr-add-note').after(html);
-				$('textarea[name=add_body]').val('');
-				$('textarea[name=add_body]').blur();
-				// alert($('input[name=add-body]').val());
-			}
-		}); 
-	};
-
-	// Функция редактирования комментария
-	function editNote (parent) {
-		// Находим описание сущности, id и название удаляемого элемента в родителе
-		
-		var id = parent.attr('id').split('-')[1];
-		var name = parent.data('name');
-
-		$.ajax({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
-			url: '/admin/notes/' + id,
-			type: "PATCH",
-			data: {body: $('input[name=edit-body]').val()},
-			success: function(html){
-				$('#notes-' + id).replaceWith(html);
-				// alert($('input[name=add-body]').val());
-			}
-		}); 
-	};
-
 	// -------------------------- Добавление ----------------------------------
 	// Добавление комментария
-	$(document).on('click', '#add-note', function(event) {
+	$(document).on('click', '[data-open="challenge-add"]', function(event) {
 		event.preventDefault();
-		addNote (id, model);
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: '/admin/challenges/create',
+			type: "GET",
+			success: function(html){
+				$('#modal').html(html);
+
+				$('input[name=id]').val(id);
+				$('input[name=model]').val(model);
+
+				$('#add-challenge').foundation();
+				$('#add-challenge').foundation('open');
+			}
+		});
 	});
 
-	// При создании коммента ловим enter
+	// При нажатии на кнопку пишем в базу и отображаем
+	$(document).on('click', '#submit-add-challenge', function(event) {
+		event.preventDefault();
 
-	$(document).on('keydown', 'textarea[name=add_body]', function(event) {
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: '/admin/challenges',
+			type: "POST",
+			data: $('#form-challenge-add').serialize(),
+			success: function(html){
+				$('.reveal-overlay').remove();
+				$('#challenges-list').html(html);
+			}
+		});
 
-		if ((event.keyCode == 13) && (event.shiftKey == false)) { //если нажали Enter, то true
-			event.preventDefault();
-			// event.stopPropagation();
-			addNote (id, model);
-			// alert($('input[name=add-body]').val());
-		}
 	});
 
 	// -------------------------- Редактирование ----------------------------------
@@ -168,5 +151,10 @@
           	}
           });
   	});
+
+  	  // ---------------------------------- Закрытие модалки -----------------------------------
+  $(document).on('click', '.icon-close-modal, .submit-edit, .submit-add, .submit-goods-product-add', function() {
+    $(this).closest('.reveal-overlay').remove();
+});
 
   </script>

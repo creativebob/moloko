@@ -18,7 +18,7 @@
 					</td>
 
 					<td>
-						@include('includes.inputs.varchar', ['name'=>'add-body', 'value'=>null, 'required'=>''])
+						@include('includes.inputs.textarea', ['name'=>'add_body', 'value'=>null, 'required'=>''])
 					</td>
 					<td><a class="button" id="add-note">Добавить</a></td>
 				</tr>

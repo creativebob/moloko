@@ -32,13 +32,13 @@
                 </div>
                 <div class="small-6 medium-6 cell">
                     <label>Телефон
-                        @include('includes.inputs.phone', ['value'=>$lead->phone, 'name'=>'phone', 'id'=>'phone' ,'required'=>'required'])
-                    </label>
+                        @include('includes.inputs.phone', ['value'=>$lead->phone, 'name'=>'phone', 'required'=>'required'])
 
-                    <div id="port_autofind">
-                    </div>
-                    {{-- Подключаем ПОИСК продукции для добавления на сайт --}}
-                    @include('leads.autofind-lead-script')
+                        <div id="port_autofind">
+                        </div>
+                        {{-- Подключаем ПОИСК продукции для добавления на сайт --}}
+                        @include('leads.autofind-lead-script')
+                    </label>
                 </div>
                 <div class="small-6 medium-6 large-6 cell">
                     <label class="input-icon">Введите город
@@ -66,42 +66,38 @@
         </div>
     </div>
 
+    <!-- Пустой блок -->
+    <div class="grid-x grid-padding-x">
+        <div class="small-6 medium-6 large-6 cell">
+            <label>Бюджет
+                @include('includes.inputs.digit', ['name'=>'badget', 'value'=>$lead->badget, 'required'=>''])
+            </label>
+        </div>
+        <div class="small-6 medium-6 large-6 cell">
+            <label>Этап
+                {{ Form::select('stage_id', $stages_list, $lead->stage_id) }}
+            </label>
+        </div>
+    </div>
 
 
-</div>
-
-<!-- Пустой блок -->
-<div class="grid-x grid-padding-x">
-    <div class="small-6 medium-6 large-6 cell">
-        <label>Бюджет
-            @include('includes.inputs.digit', ['name'=>'badget', 'value'=>$lead->badget, 'required'=>''])
+    {{-- <div class="grid-x grid-padding-x">
+        <div class="small-12 medium-4 large-4 cell">
+            <label>Страна
+                @php
+                $country_id = null;
+                if (isset($lead->location->country_id)) {
+                $country_id = $lead->location->country_id;
+            }
+            @endphp
+            {{ Form::select('country_id', $countries_list, $country_id)}}
         </label>
     </div>
-    <div class="small-6 medium-6 large-6 cell">
-        <label>Этап
-            {{ Form::select('stage_id', $stages_list, $lead->stage_id) }}
-        </label>
+    <div class="small-12 medium-6 cell">
+        <label>Почта
+            @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email', 'required'=>''])
+        </label> 
     </div>
-</div>
-
-
-{{-- <div class="grid-x grid-padding-x">
-    <div class="small-12 medium-4 large-4 cell">
-        <label>Страна
-            @php
-            $country_id = null;
-            if (isset($lead->location->country_id)) {
-            $country_id = $lead->location->country_id;
-        }
-        @endphp
-        {{ Form::select('country_id', $countries_list, $country_id)}}
-    </label>
-</div>
-<div class="small-12 medium-6 cell">
-    <label>Почта
-        @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email', 'required'=>''])
-    </label> 
-</div>
 </div>--}}
 
 </div>

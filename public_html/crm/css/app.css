@@ -364,7 +364,7 @@ p {
 }
 
 .pickmeup {
-  z-index: 100;
+  z-index: 1010;
 }
 
 .block-refresh .title-bar {

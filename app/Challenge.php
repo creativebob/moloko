@@ -43,12 +43,12 @@ class Challenge extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'deadline_date'];
 
     // Получаем тип задачи
-    public function challanges_type()
+    public function challenge_type()
     {
-        return $this->belongsTo('App\ChallangesType');
+        return $this->belongsTo('App\ChallengesType', 'challenges_type_id');
     }
 
     // // Получаем права категории.

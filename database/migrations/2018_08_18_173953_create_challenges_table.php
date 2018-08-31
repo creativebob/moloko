@@ -19,7 +19,7 @@ class CreateChallengesTable extends Migration
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->string('name')->index()->comment('Название задачи');
+            // $table->string('name')->index()->comment('Название задачи');
 
             $table->text('description')->nullable()->comment('Описание задачи');
 

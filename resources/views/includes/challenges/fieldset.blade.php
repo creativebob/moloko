@@ -12,24 +12,19 @@
 					<th>Исполнитель</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="challenges-list">
 
 				@if (count($item->challenges) > 0)
-
-				@foreach ($item->challenges as $challenge)
-				@include('includes.challenges.challenge', ['challenge' => $challenge])
-				@endforeach
-
+				@include('includes.challenges.challenges', ['challenges' => $item->challenges])
 				@endif
 				
-
 			</tbody>
 		</table>
 	</div>
 	@can ('create', App\Challenge::class)
 	<div class="grid-x grid-padding-x align-center">
 		<div class="small-4 cell">
-			<a class="button" data-open="add-challenge">Добавить</a>
+			<a class="button" data-open="challenge-add">Добавить</a>
 		</div>
 	</div>
 	@endcan

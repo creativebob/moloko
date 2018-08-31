@@ -360,11 +360,17 @@ Route::any('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth'
 // Поиск лида по номеру телефона
 Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->middleware('auth');
 
-// ------------------------------Внутренние комментарии -----------------------------------------------
+// ------------------------------ Внутренние комментарии -----------------------------------------------
 
-// Route::any('/notes', 'NoteController@store')->middleware('auth');
 // Основные методы
 Route::resource('/notes', 'NoteController')->middleware('auth');
+
+
+// --------------------------------------- Задачи -----------------------------------------------
+
+// Route::any('/challenges', 'ChallengeController@create')->middleware('auth');
+// Основные методы
+Route::resource('/challenges', 'ChallengeController')->middleware('auth');
 
 
 // --------------------------------------- Этапы --------------------------------------------
