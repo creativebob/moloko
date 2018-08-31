@@ -97,13 +97,13 @@ class Lead extends Model
     // Получаем тип трафика
     public function medium()
     {
-        return $this->belongsTo('App\Medium', 'medium_id')->withDefault(['name'=>'Не установлен']);
+        return $this->belongsTo('App\Medium', 'medium_id');
     }
 
     // Получаем рекламную кампанию
     public function campaign()
     {
-        return $this->belongsTo('App\Campaign')->withDefault(['name'=>'Нет данных']);
+        return $this->belongsTo('App\Campaign');
     }
 
     // Получаем тип обращения

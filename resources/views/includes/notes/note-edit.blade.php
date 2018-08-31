@@ -9,7 +9,7 @@
 		@include('includes.inputs.varchar', ['name'=>'edit-body', 'value'=>$note->body, 'required'=>''])
 	</td>
 
-	<td>
+	<td class="actions">
 		@can('update', $note)
 		<a class="button" id="edit-note">Редактировать</a>
 		@endcan
