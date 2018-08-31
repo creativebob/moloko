@@ -10,6 +10,7 @@
 					<th>Время</th>
 					<th>Описание</th>
 					<th>Исполнитель</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody id="challenges-list">

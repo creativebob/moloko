@@ -368,7 +368,7 @@ Route::resource('/notes', 'NoteController')->middleware('auth');
 
 // --------------------------------------- Задачи -----------------------------------------------
 
-// Route::any('/challenges', 'ChallengeController@create')->middleware('auth');
+// Route::any('/challenges/{id}', 'ChallengeController@update')->middleware('auth');
 // Основные методы
 Route::resource('/challenges', 'ChallengeController')->middleware('auth');
 

@@ -9,6 +9,7 @@ use App\Staffer;
 
 use App\Lead;
 
+use Carbon\Carbon;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -111,7 +112,7 @@ class ChallengeController extends Controller
             $item->challenges()->save($challenge);
 
             $item = $request->model::with(['challenges' => function ($query) {
-                $query->with('challenge_type')->orderBy('deadline_date', 'asc');
+                $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
             }])->findOrFail($request->id);
 
             $challenges = $item->challenges;
@@ -151,7 +152,41 @@ class ChallengeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__))
+        ;
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $challenge = Challenge::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $challenge);
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        $challenge->status = 1;
+        $challenge->finisher_id = $user_id;
+        $challenge->completed_date = Carbon::now();
+        $challenge->save();
+
+        if ($challenge) {
+            $result = [
+                'error_status' => 0,
+            ];
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при выполнении задачи!',
+            ];
+        }  
+
+        return json_encode($result, JSON_UNESCAPED_UNICODE); 
     }
 
     /**

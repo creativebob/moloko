@@ -361,7 +361,7 @@ class LeadController extends Controller
         $lead = Lead::with(['location.city', 'notes' => function ($query) {
             $query->orderBy('created_at', 'desc');
         }, 'challenges' => function ($query) {
-            $query->with('challenge_type')->orderBy('deadline_date', 'asc');
+            $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
         }])->moderatorLimit($answer)->findOrFail($id);
         // dd($lead->challenges);
 
