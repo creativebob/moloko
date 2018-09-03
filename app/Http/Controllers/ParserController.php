@@ -178,7 +178,7 @@ class ParserController extends Controller
 
             }
 
-            echo '50 записей';	
+            echo '50 записей, id:'.$lead->id;	
         });
 
 }
