@@ -11,7 +11,7 @@ class OldHistory extends Model
     
     
     // Автор
-    public function user()
+    public function author()
     {
         return $this->belongsTo('App\OldUser', 'id_user');
     }

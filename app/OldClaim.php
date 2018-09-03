@@ -10,7 +10,7 @@ class OldClaim extends Model
     protected $connection = 'mysql2';
     
     // Манеджер
-    public function user()
+    public function author()
     {
         return $this->belongsTo('App\OldUser', 'id_user');
     }
