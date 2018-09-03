@@ -35,6 +35,15 @@ Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('ge
 Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');
 
 
+Route::any('/lol', function () {
+    
+    dd(App\OldLead::with(['comments.user', 'claims', 'task', 'stage', 'user', 'city', 'service', 'challenges' => function ($query) {
+    	$query->with('author', 'appointed', 'finisher', 'stage', 'task');
+    }])->find(5468));
+});
+
+Route::get('/parser', 'ParserController@index')->middleware('auth');
+
 // -------------------------------------- Пользователи ------------------------------------------------
 
 Route::resource('/users', 'UserController')->middleware('auth');
