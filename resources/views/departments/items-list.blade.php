@@ -55,7 +55,7 @@ if (isset($item->staff)) {
 
             <div class="del">
                 @can('delete', $item)
-                @if(empty($grouped_items[$item->id]) && ($item->system_item != 1))
+                @if(empty($grouped_items[$item->id]) && ($item->system_item != 1) && (count($item->staff)) == 0)
                 <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
                 @endif
                 @endcan

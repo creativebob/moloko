@@ -35,7 +35,7 @@
             @break
 
             @case($type == 'edit')
-            <a class="icon-list-edit sprite" href="/admin/{{ $entity }}/{{ $category['id'] }}/edit"></a>
+            <a class="icon-list-edit sprite" href="/admin/{{ $entity }}/{{ $item->id }}/edit"></a>
             @break
             @break
 
@@ -100,7 +100,7 @@
             @break
 
             @case($type == 'edit')
-            <a class="icon-list-edit sprite" href="/admin/{{ $entity }}/{{ $category['id'] }}/edit"></a>
+            <a class="icon-list-edit sprite" href="/admin/{{ $entity }}/{{ $item->id }}/edit"></a>
             @break
             @break
 

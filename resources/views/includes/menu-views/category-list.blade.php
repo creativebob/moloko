@@ -42,7 +42,7 @@ $drop = 1;
             @break
 
             @case($type == 'edit')
-            <a class="icon-list-edit sprite" href="/admin/{{ $entity }}/{{ $category['id'] }}/edit"></a>
+            <a class="icon-list-edit sprite" href="/admin/{{ $entity }}/{{ $category->id }}/edit"></a>
             @break
             @break
 
