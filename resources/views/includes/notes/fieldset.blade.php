@@ -20,14 +20,14 @@
 					<td>
 						@include('includes.inputs.textarea', ['name'=>'add_body', 'value'=>null, 'required'=>''])
 					</td>
-					<td><a class="button" id="add-note">Добавить</a></td>
+					<td class="actions"><a class="button" id="add-note">Добавить</a></td>
 				</tr>
 				@endcan
 
 				@if (count($item->notes) > 0)
 
 				@foreach ($item->notes as $note)
-				@include('includes.notes.note', ['note' => $note])
+					@include('includes.notes.note', ['note' => $note])
 				@endforeach
 
 				@endif

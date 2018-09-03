@@ -183,13 +183,32 @@
 
                             <table class="table-attributions">
                                 <tr>
-                                    <td>Источник: </td><td>{{ $lead->source->name or 'Не установлен' }}</td>
+                                <tr>
+                                    <td>Тип обращения: </td><td>{{ $lead->lead_type->name or ''}}</td>
+                                </tr>
+                                    <td>Интерес: </td>
+                                        <td>
+                                            @if(!empty($lead->choices_goods_categories->implode('name', ',')))
+                                                {{ $lead->choices_goods_categories->implode('name', ',') }}<br>
+                                            @endif
+
+                                            @if(!empty($lead->choices_services_categories->implode('name', ',')))
+                                                {{ $lead->choices_services_categories->implode('name', ',') }}<br>
+                                            @endif
+
+                                            @if(!empty($lead->choices_raws_categories->implode('name', ',')))
+                                                {{ $lead->choices_raws_categories->implode('name', ',') }}<br>
+                                            @endif
+                                        </td>     
                                 </tr>
                                 <tr>
-                                    <td>Сайт: </td><td>{{ $lead->site->name or 'Не определен' }}</td>
+                                    <td>Источник: </td><td>{{ $lead->source->name or ''}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Тип трафика: </td><td>{{ $lead->medium->name }}</td>
+                                    <td>Сайт: </td><td>{{ $lead->site->name or ''}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Тип трафика: </td><td>{{ $lead->medium->name or ''}}</td>
                                 </tr>
                                 <tr>
                                     <td>Рекламная кампания: </td><td>{{ $lead->campaign->name or ''}}</td>
