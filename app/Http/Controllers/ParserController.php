@@ -177,7 +177,6 @@ class ParserController extends Controller
                 $lead->save();
 
             }
-
             echo '50 записей, id:'.$lead->id;	
         });
 
