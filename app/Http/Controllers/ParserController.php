@@ -31,7 +31,7 @@ class ParserController extends Controller
 
         OldLead::with(['comments.user', 'claims', 'task', 'stage', 'user', 'city', 'service', 'challenges' => function ($query) {
             $query->with('author', 'appointed', 'finisher', 'stage', 'task');
-        }])->chunk(100, function ($leads) {
+        }])->chunk(50, function ($leads) {
             foreach ($leads as $old_lead) {
 
                 // Пишем локацию
@@ -173,7 +173,12 @@ class ParserController extends Controller
                     $lead->challenges()->createMany($lead_claims);
                 }
 
-            }	
+                $lead->parse_status = 1;
+                $lead->save();
+
+            }
+
+            echo '50 записей';	
         });
 
 }
