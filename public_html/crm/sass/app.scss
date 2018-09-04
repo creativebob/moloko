@@ -2369,6 +2369,31 @@ tbody {
   color: red;
 }
 // ---------------------------------------- Основной контент ----------------------------------
+
+
+// Оформление страницы ЛИДОВ на индексе
+
+#content {
+    td.td-case-number{
+        min-width: 80px;
+    }
+
+    td.td-phone{
+        min-width: 120px;
+    }
+
+    td.td-name{
+        max-width: 240px;
+    }
+
+}
+
+
+
+
+
+
+
 .content {
   padding: 30px 20px 44px 20px;
   z-index: 60;

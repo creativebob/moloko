@@ -83,7 +83,8 @@ class LeadController extends Controller
             'choices_services_categories', 
             'choices_raws_categories', 
             'manager',
-            'stage'
+            'stage',
+            'challenges.challenge_type'
         )
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -91,12 +92,13 @@ class LeadController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->filter($request, 'city_id', 'location')
+        ->filter($request, 'stage_id')
+        ->filter($request, 'manager_id')
+        ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
-
-
 
         // --------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
@@ -107,15 +109,16 @@ class LeadController extends Controller
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям              
+        ->systemItem($answer) // Фильтр по системным записям           
         ->get();
 
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
 
         // Перечень подключаемых фильтров:
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
-
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите этап:', 'stage', 'stage_id', null, 'internal-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Менеджер:', 'manager', 'manager_id', null, 'internal-id-one');
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
@@ -391,6 +394,10 @@ class LeadController extends Controller
             $query->orderBy('created_at', 'desc');}, 'challenges' => function ($query) {
             $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
         }])
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям 
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
@@ -436,7 +443,13 @@ class LeadController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $lead = Lead::with('location', 'company')->moderatorLimit($answer)->findOrFail($id);
+        $lead = Lead::with('location', 'company')
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям 
+        ->moderatorLimit($answer)
+        ->findOrFail($id);
 
         $filial_id = $request->filial_id;
 
@@ -607,7 +620,13 @@ class LeadController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $lead = Lead::moderatorLimit($answer)->findOrFail($id);
+        $lead = Lead::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям 
+        ->moderatorLimit($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);

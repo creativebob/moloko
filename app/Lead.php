@@ -50,7 +50,7 @@ class Lead extends Model
 
     protected $dates = ['deleted_at', 'created_at'];
     protected $fillable = [
-        // 'name', 
+        'name', 
     ];
 
 
@@ -82,7 +82,7 @@ class Lead extends Model
         return $this->belongsTo('App\Sector');
     }
 
-    // Получаем локацию объекта лида
+    // Получаем локацию пользователя
     public function location()
     {
         return $this->belongsTo('App\Location');
@@ -160,6 +160,15 @@ class Lead extends Model
         return $this->morphMany('App\Challenge', 'challenges');
     }
 
-    
+    public function getFirstChallengeAttribute() {
+        if(!empty($this->challenges->where('status', null)->sortByDesc('deadline_date')->first()))
+        {
+            $value = $this->challenges->where('status', null)->sortByDesc('deadline_date')->first();
+        } else {
+            $value = null;
+        };
+
+        return $value;
+    }
 
 }

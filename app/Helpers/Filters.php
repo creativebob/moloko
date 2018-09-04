@@ -244,15 +244,24 @@
 
                 // dd($column);
                 // Выбираем только уникальные ID
+
                 $filter_entity = $filter_query->unique($relations . '.' . $column);
+                // dd($filter_entity);
 
                 if(count($filter_entity) > 0){
                     foreach($filter_entity as $entity){
-                        $list_select['item_list'][$entity->$relations->$column] = $entity->$relations->$filter_name->name;
-                        if($entity->$relations == null){$list_select['item_list'][null] = 'Не указано';};
+
+                        if(empty($entity->$relations)){
+                            $list_select['item_list'][null] = 'Не указано';
+                        } else {
+                            if(isset($entity->$relations->$filter_name->name)){
+                                $list_select['item_list'][$entity->$relations->$column] = $entity->$relations->$filter_name->name;
+                            }
+                        };
                     }
                 }
-
+                
+                asort($list_select['item_list']);
             };
             
             if($filter_mode == 'external-id-many'){

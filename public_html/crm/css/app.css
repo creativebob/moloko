@@ -1847,6 +1847,16 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   color: red;
 }
 
+#content td.td-case-number {
+  min-width: 80px;
+}
+#content td.td-phone {
+  min-width: 120px;
+}
+#content td.td-name {
+  max-width: 240px;
+}
+
 .content {
   padding: 30px 20px 44px 20px;
   z-index: 60;
