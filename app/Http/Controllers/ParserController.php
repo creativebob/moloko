@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\OldLead;
 use App\Lead;
 use App\Note;
+use App\Choice;
 
 use App\Location;
 
@@ -29,9 +30,9 @@ class ParserController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-        OldLead::with(['comments.user', 'claims', 'task', 'stage', 'user', 'city', 'service', 'challenges' => function ($query) {
+        OldLead::with(['comments.author', 'claims.author', 'task', 'stage', 'manager', 'city', 'service', 'challenges' => function ($query) {
             $query->with('author', 'appointed', 'finisher', 'stage', 'task');
-        }])->chunk(50, function ($leads) {
+        }])->whereNull('parse_status')->where('phone_contact', '!=', '')->chunk(50, function ($leads) {
             foreach ($leads as $old_lead) {
 
                 // Пишем локацию
@@ -65,7 +66,7 @@ class ParserController extends Controller
                 $lead->badget = $old_lead->badget;
                 $lead->case_number = $old_lead->num_order;
                 $lead->serial_number = $old_lead->serial_number;
-                $lead->phone = $old_lead->phone_contact;
+                $lead->phone = cleanPhone($old_lead->phone_contact);
                 $lead->email = $old_lead->email_contact;
                 $lead->location_id = $location_id;
                 $lead->site_id = 2;
@@ -74,7 +75,7 @@ class ParserController extends Controller
                 $lead->stage_id = $old_lead->id_stage;
                 $lead->old_lead_id = $old_lead->id;
                 $lead->display = 1;
-                $lead->author_id = $old_lead->author->new_user_id;
+                $lead->author_id = $old_lead->manager->new_user_id;
                 $lead->save();
 
                 if ($lead) {
@@ -83,20 +84,22 @@ class ParserController extends Controller
                     dd('Ошибка записи лида: '.$old_lead->name_contact);
                 }
 
+
+                // dd($old_lead);
                 // Пишем комменты
                 $lead_comments = [];
 
-                if (isset($old_lead->comment)) {
+                if ($old_lead->comment == '') {
                     $lead_comments[] = [
                         'body' => $old_lead->comment,
-                        'author_id' => $old_lead->author->new_user_id,
+                        'author_id' => $old_lead->manager->new_user_id,
                     ];
                 }
 
-                if (isset($old_lead->comment2)) {
+                if ($old_lead->comment2 == '') {
                     $lead_comments[] = [
                         'body' => $old_lead->comment2,
-                        'author_id' => $old_lead->author->new_user_id,
+                        'author_id' => $old_lead->manager->new_user_id,
                     ];
                 }
 
@@ -104,19 +107,22 @@ class ParserController extends Controller
                     foreach ($old_lead->comments as $comment) {
                         $lead_comments[] = [
                             'body' => $comment->body_note,
-                            'author_id' => $comment->author->new_user_id,
+                            'author_id' => $old_lead->manager->new_user_id,
                         ];
                     }
                 }
 
                 if ($old_lead->fact_pay != 0) {
+                    $fact_pay = num_format($old_lead->fact_pay, 0);
                     $lead_comments[] = [
-                        'body' => 'Фактически оплачено: '.$old_lead->fact_pay,
-                        'author_id' => $old_lead->author->new_user_id,
+                        'body' => 'Фактически оплачено: '. $fact_pay,
+                        'author_id' => $old_lead->manager->new_user_id,
                     ];
                 }
 
-                $lead->comments()->saveMany($lead_comments);
+                // dd($lead_comments);
+
+                $lead->notes()->createMany($lead_comments);
 
                 // Пишем задачи
                 if (count($old_lead->challenges) > 0) {
@@ -137,20 +143,41 @@ class ParserController extends Controller
                             $challenge_type_id = 1;
                         }
 
+                        if (isset($challenge->finisher->new_user_id)) {
+                            $finisher_id = $challenge->finisher->new_user_id;
+                            # code...
+                        } else {
+                            $finisher_id = null;
+                        }
+
+
+                        if($challenge->deadline_challenge == '0000-00-00 00:00:00'){
+                            $deadline_challenge = null;
+                        } else {
+                            $deadline_challenge = $challenge->deadline_challenge;
+                        };
+
+                        if($challenge->date_completed == '0000-00-00 00:00:00'){
+                            $date_completed = null;
+                        } else {
+                            $date_completed = $challenge->date_completed;
+                        };
+
                         $lead_challenges[] = [
                             'company_id' => 1,
                             'description' => $challenge->comment_challenge,
                             'appointed_id' => $challenge->appointed->new_user_id,
-                            'finisher_id' => $challenge->finisher->new_user_id,
+                            'finisher_id' => $finisher_id,
                             'author_id' => $challenge->author->new_user_id,
-                            'deadline_date' => $challenge->deadline_challenge,
+                            'deadline_date' => $deadline_challenge,
                             'status' => $status,
-                            'completed_date' => $challenge->date_completed,
+                            'completed_date' => $date_completed,
                             'challenges_type_id' => $challenge_type_id,
                         ];
                     }
 
-                    $lead->challenges()->saveMany($lead_challenges);
+                    // dd($lead_challenges);
+                    $lead->challenges()->createMany($lead_challenges);
                 }
 
                 // Пишем рекламации
@@ -159,22 +186,40 @@ class ParserController extends Controller
 
                     foreach ($old_lead->claims as $claim) {
 
-                        $lead_claims = [
+                        $lead_claims[] = [
                             'company_id' => 1,
                             'body' => $claim->body_claim,
-                            'lead_id' => $lead_id,
+                            // 'lead_id' => $lead_id,
                             'old_claim_id' => $claim->id,
                             'author_id' => $claim->author->new_user_id,
 
                         ];
 
                     }
-
-                    $lead->challenges()->createMany($lead_claims);
+                    // dd($lead_claims);
+                    $lead->claims()->createMany($lead_claims);
                 }
 
-                $lead->parse_status = 1;
-                $lead->save();
+
+                if (isset($old_lead->id_service)) {
+
+                    $choice = new Choice;
+                    $choice->lead_id = $lead_id;
+                    $choice->choices_id = $old_lead->service->choise_id;
+                    $choice->choices_type = $old_lead->service->choise_type;
+                    $choice->save();
+
+                    if ($choice == false) {
+                        dd('Ошибка записи предпочтения лида.');
+                    }
+                }
+
+
+
+                $old_lead->parse_status = 1;
+                $old_lead->save();
+
+                // echo 'Текущий лид:'.$lead->id;   
 
             }
             echo '50 записей, id:'.$lead->id;	

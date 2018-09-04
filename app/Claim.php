@@ -44,6 +44,10 @@ class Claim extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+    protected $fillable = [
+        'company_id', 'body', 'lead_id', 'old_claim_id', 'author_id'
+    ];
+
 
     // Получаем лида
     public function lead()

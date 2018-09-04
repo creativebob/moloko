@@ -44,6 +44,9 @@ class Challenge extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at', 'deadline_date', 'completed_date'];
+    protected $fillable = [
+        'company_id', 'description', 'appointed_id', 'finisher_id', 'author_id', 'deadline_date', 'status', 'completed_date', 'challenges_type_id'
+    ];
 
     // Получаем тип задачи
     public function challenge_type()

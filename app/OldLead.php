@@ -21,8 +21,8 @@ class OldLead extends Model
         return $this->hasMany('App\OldClaim', 'id_lead');
     }
     
-    // Манеджер
-    public function user()
+    // Менеджер
+    public function manager()
     {
         return $this->belongsTo('App\OldUser', 'id_manager');
     }

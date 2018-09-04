@@ -22,7 +22,7 @@ class CreateClaimsTable extends Migration
             // $table->string('name')->index()->comment('Название этапа');
             $table->text('body')->nullable()->comment('Описание рекламации');
 
-            $table->string('case_number')->index()->comment('Номер рекламации');
+            $table->string('case_number')->nullable()->index()->comment('Номер рекламации');
 
             $table->integer('lead_id')->nullable()->unsigned()->comment('ID лида');
             $table->foreign('lead_id')->references('id')->on('leads');

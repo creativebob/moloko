@@ -47,7 +47,7 @@ class Note extends Model
 
     // protected $dates = ['deleted_at'];
     protected $fillable = [
-
+        'body', 'author_id'
     ];
 
     // Фильтрация по городу
