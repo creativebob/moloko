@@ -82,14 +82,14 @@ if (isset($category->staff)) {
     <ul class="menu vertical medium-list" data-accordion-menu data-multi-open="false">
         @if((isset($grouped_items[$category->id])) || (count($category->staff) > 0))
 
-        @if(isset($grouped_items[$category->id]))
-        @include('departments.items-list', ['grouped_items' => $grouped_items, 'items' => $grouped_items[$category->id], 'class' => $class, 'entity' => $entity, 'type' => $type,])
-        @endif
-
         @if(count($category->staff) > 0)
         @foreach ($category->staff as $staffer)
         @include('departments.staff-list', ['grouped_items' => $grouped_items, 'staffer' => $staffer, 'class' => 'App\Staffer', 'entity' => 'staff', 'type' => $type,])
         @endforeach
+        @endif
+
+        @if(isset($grouped_items[$category->id]))
+        @include('departments.items-list', ['grouped_items' => $grouped_items, 'items' => $grouped_items[$category->id], 'class' => $class, 'entity' => $entity, 'type' => $type,])
         @endif
 
         @else

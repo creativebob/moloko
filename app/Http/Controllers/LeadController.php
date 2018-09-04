@@ -96,6 +96,7 @@ class LeadController extends Controller
         ->filter($request, 'manager_id')
         ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
+        ->orderBy('created_at', 'desc')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
@@ -400,6 +401,8 @@ class LeadController extends Controller
         ->systemItem($answer) // Фильтр по системным записям 
         ->moderatorLimit($answer)
         ->findOrFail($id);
+
+        // dd($lead->notes->toArray());
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);

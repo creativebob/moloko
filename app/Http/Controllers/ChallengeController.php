@@ -51,9 +51,14 @@ class ChallengeController extends Controller
         ->systemItem($answer_staff) // Фильтр по системным записям
         ->get();
 
+        // dd($staff);
+
         $staff_list = [];
         foreach ($staff as $staffer) {
-            $staff_list[$staffer->user->id] = $staffer->user->second_name.' '.$staffer->user->first_name;
+            // Исключаем вакансии
+            if (isset($staffer->user->id)) {
+                $staff_list[$staffer->user->id] = $staffer->user->second_name.' '.$staffer->user->first_name;
+            }
         }
 
         // dd($staff_list);
@@ -116,7 +121,7 @@ class ChallengeController extends Controller
             }])->findOrFail($request->id);
 
             $challenges = $item->challenges;
-    
+
             return view('includes.challenges.challenges', compact('challenges'));
         }
     }

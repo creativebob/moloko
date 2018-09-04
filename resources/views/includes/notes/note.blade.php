@@ -1,4 +1,5 @@
 <tr class="item" id="notes-{{ $note->id }}" data-name="{{ $note->body }}">
+
 	<td>
 		<span class="note_date">{{ $note->created_at->format('d.m.Y') }}</span>
 		<br>

@@ -8,6 +8,8 @@ class OldLead extends Model
 {
     protected $table = 'leads';
     protected $connection = 'mysql2';
+
+    public $timestamps = false;
     
     // Комментарии
     public function comments()

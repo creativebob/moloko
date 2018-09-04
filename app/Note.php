@@ -45,9 +45,10 @@ class Note extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    // protected $dates = ['deleted_at'];
+    public $timestamps = false;
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = [
-        'body', 'author_id'
+        'body', 'author_id', 'created_at'
     ];
 
     // Фильтрация по городу

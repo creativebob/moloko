@@ -679,7 +679,7 @@ class MenusTableSeeder extends Seeder
             'icon' => null,
             'alias' => 'admin/leads',
             'parent_id' => 28,
-            'page_id' => 40,
+            'page_id' => 38,
             'navigation_id' => 2,
             'company_id' => null,
             'system_item' => 1,

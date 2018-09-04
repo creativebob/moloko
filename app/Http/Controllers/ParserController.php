@@ -6,8 +6,11 @@ use App\OldLead;
 use App\Lead;
 use App\Note;
 use App\Choice;
+use App\City;
 
 use App\Location;
+
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 
@@ -30,16 +33,24 @@ class ParserController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
+        // $cities = City::get('id', 'name');
+
         OldLead::with(['comments.author', 'claims.author', 'task', 'stage', 'manager', 'city', 'service', 'challenges' => function ($query) {
             $query->with('author', 'appointed', 'finisher', 'stage', 'task');
-        }])->whereNull('parse_status')->where('phone_contact', '!=', '')->chunk(50, function ($leads) {
+        }])->whereNull('parse_status')->where('phone_contact', '!=', '')->chunk(500, function ($leads) {
             foreach ($leads as $old_lead) {
 
                 // Пишем локацию
                 $location = new Location;
                 $location->country_id = 1;
                 $location->address = $old_lead->address_company;
-                $location->city_id = $old_lead->city->new_city_id;
+
+                if ($old_lead->id_city == 0) {
+                    $location->city_id = 2;
+                } else {
+                    $location->city_id = $old_lead->city->new_city_id;
+                }
+                
                 $location->author_id = 1;
                 $location->save();
 
@@ -49,7 +60,7 @@ class ParserController extends Controller
                     dd('Ошибка записи адреса для лида: '.$old_lead->name_contact);
                 }
 
-                //Определяем тип лида
+                // Определяем тип лида
                 $lead_type_id = null;
                 if ($old_lead->status_site == 1) {
                     $lead_type_id = 2;
@@ -65,17 +76,26 @@ class ParserController extends Controller
                 $lead->description = null;
                 $lead->badget = $old_lead->badget;
                 $lead->case_number = $old_lead->num_order;
-                $lead->serial_number = $old_lead->serial_number;
+                $lead->serial_number = $old_lead->serial_order;
                 $lead->phone = cleanPhone($old_lead->phone_contact);
                 $lead->email = $old_lead->email_contact;
                 $lead->location_id = $location_id;
-                $lead->site_id = 2;
-                $lead->lead_type_id = $lead_type_id;
+
+                // Определяем тип лида
+                $lead_type_id = null;
+                if ($old_lead->status_site == 1) {
+                    $lead->lead_type_id = 2;
+                } else {
+                    $lead->lead_type_id = 1;
+                    $lead->site_id = 2;
+                }
+
                 $lead->manager_id = $old_lead->manager->new_user_id;
                 $lead->stage_id = $old_lead->id_stage;
                 $lead->old_lead_id = $old_lead->id;
                 $lead->display = 1;
                 $lead->author_id = $old_lead->manager->new_user_id;
+                $lead->created_at = $old_lead->date_order;
                 $lead->save();
 
                 if ($lead) {
@@ -84,31 +104,37 @@ class ParserController extends Controller
                     dd('Ошибка записи лида: '.$old_lead->name_contact);
                 }
 
-
                 // dd($old_lead);
                 // Пишем комменты
                 $lead_comments = [];
 
-                if ($old_lead->comment == '') {
+                if (($old_lead->comment != '') || empty($old_lead->comment)) {
                     $lead_comments[] = [
                         'body' => $old_lead->comment,
                         'author_id' => $old_lead->manager->new_user_id,
+                        'created_at' => $old_lead->date_order,
                     ];
                 }
 
-                if ($old_lead->comment2 == '') {
+                if (($old_lead->comment2 == '') || empty($old_lead->comment2)) {
                     $lead_comments[] = [
                         'body' => $old_lead->comment2,
                         'author_id' => $old_lead->manager->new_user_id,
+                        'created_at' => $old_lead->date_order,
                     ];
                 }
 
                 if (count($old_lead->comments) > 0) {
+
                     foreach ($old_lead->comments as $comment) {
-                        $lead_comments[] = [
-                            'body' => $comment->body_note,
-                            'author_id' => $old_lead->manager->new_user_id,
-                        ];
+                        if ($comment->body_note != '') {
+                            $lead_comments[] = [
+                                'body' => $comment->body_note,
+                                'author_id' => $old_lead->manager->new_user_id,
+                                'created_at' => $comment->date_note.' '.$comment->time_note.':00',
+                            ];
+                        }
+                        
                     }
                 }
 
@@ -117,6 +143,7 @@ class ParserController extends Controller
                     $lead_comments[] = [
                         'body' => 'Фактически оплачено: '. $fact_pay,
                         'author_id' => $old_lead->manager->new_user_id,
+                        'created_at' => Carbon::now(),
                     ];
                 }
 
@@ -173,6 +200,7 @@ class ParserController extends Controller
                             'status' => $status,
                             'completed_date' => $date_completed,
                             'challenges_type_id' => $challenge_type_id,
+                            'created_at' => $challenge->date_challenge,
                         ];
                     }
 
@@ -192,6 +220,7 @@ class ParserController extends Controller
                             // 'lead_id' => $lead_id,
                             'old_claim_id' => $claim->id,
                             'author_id' => $claim->author->new_user_id,
+                            'created_at' => $claim->date_claim,
 
                         ];
 
@@ -200,8 +229,7 @@ class ParserController extends Controller
                     $lead->claims()->createMany($lead_claims);
                 }
 
-
-                if (isset($old_lead->id_service)) {
+                if (isset($old_lead->service->choise_type)) {
 
                     $choice = new Choice;
                     $choice->lead_id = $lead_id;
@@ -214,16 +242,17 @@ class ParserController extends Controller
                     }
                 }
 
-
-
                 $old_lead->parse_status = 1;
                 $old_lead->save();
 
                 // echo 'Текущий лид:'.$lead->id;   
 
             }
-            echo '50 записей, id:'.$lead->id;	
+            echo '500 записей, id: '.$lead->id.', ';	
         });
+
+
+    return redirect('/admin/leads');
 
 }
 

@@ -73,14 +73,14 @@ if (isset($item->staff)) {
     <ul class="menu vertical medium-list nested" data-accordion-menu data-multi-open="false">
         @if ((isset($grouped_items[$item->id])) || (count($item->staff) > 0))
 
-        @if(isset($grouped_items[$item->id]))
-        @include('departments.items-list', ['grouped_items' => $grouped_items, 'items' => $grouped_items[$item->id], 'class' => $class, 'entity' => $entity, 'type' => $type])
-        @endif
-
         @if(count($item->staff) > 0)
         @foreach ($item->staff as $staffer)
         @include('departments.staff-list', ['grouped_items' => $grouped_items, 'staffer' => $staffer, 'class' => 'App\Staffer', 'entity' => 'staff', 'type' => $type])
         @endforeach
+        @endif
+
+        @if(isset($grouped_items[$item->id]))
+        @include('departments.items-list', ['grouped_items' => $grouped_items, 'items' => $grouped_items[$item->id], 'class' => $class, 'entity' => $entity, 'type' => $type])
         @endif
 
         @else

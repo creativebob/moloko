@@ -48,6 +48,8 @@ class Lead extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
+    public $timestamps = false;
+
     protected $dates = ['deleted_at', 'created_at'];
     protected $fillable = [
         'name', 

@@ -43,9 +43,11 @@ class Claim extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
+    public $timestamps = false;
+
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'company_id', 'body', 'lead_id', 'old_claim_id', 'author_id'
+        'company_id', 'body', 'lead_id', 'old_claim_id', 'author_id', 'created_at'
     ];
 
 
