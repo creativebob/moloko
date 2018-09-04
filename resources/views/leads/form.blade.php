@@ -126,6 +126,7 @@
                         <div class="grid-x">
                             <div class="small-12 medium-12 large-12 cell">
 
+                                {{--
                                 <table class="table-order" id="table-order">
                                     <thead>
                                         <tr>
@@ -156,7 +157,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
+                                --}}
                             </div>
                         </div>
 
