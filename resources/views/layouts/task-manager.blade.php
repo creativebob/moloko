@@ -17,27 +17,34 @@
 	      <!-- Задачи мне -->
 	      <div class="tabs-panel is-active" id="task-panel2">
 	      	<ul>
+	      			@if(!empty($challenges))
+	      			@foreach($challenges as $challenge)
+
 	     			<li>
 	     				<div class="task-head">
    							<div class="sprite-16 icon-task"></div>
-   							<div class="task-date">25.10.2017</div>
-   							<div class="task-count">6</div>
+   							<div class="task-date">{{ date('d.m.Y') }}</div>
+   							<div class="task-count">{{ $challenges->count() }}</div>
    							<hr />
 	     				</div>
 	     				<div class="task-content">
-		     				<h5 class="task-content-head">Перезвонить</h5>
-		     				<span class="task-time">09:30</span><span class="task-set">От: Бутин Николай</span>
-		     				<p class="task-target">Перезвонить клиенту. Просит посчитать с доп скидкой. Хуй а не скидка ему.</p>
+		     				<h5 class="task-content-head">{{ $challenge->challenge_type->name }}</h5>
+		     				<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">От: {{ $challenge->author->first_name . ' ' . $challenge->author->second_name }}</span>
+		     				<p class="task-target">{{ $challenge->description or ''}}</p>
 		     				<ul class="task-list">
-		     					<li><span class="task-data">Клиент: </span><span class="task-name-lead">Николаев sfsfsdfsdfsdfsdfsdfsВиталий</span></li>
-		     					<li><span class="task-data">Телефон: </span>8 (392) 576-77-01</span></li>
-		     					<li><span class="task-data">Чек: </span>34 000</li>
-		     					<li><span class="task-data">Товар: </span>Откатные воротsdffffff ffddddddddddddddddd ddddddddddddd ddddddddddddddа</li>
-		     					<li><span class="task-data">Адрес: </span>ул. Ленина, dddddddddddd dddddddddfsdfsdfsdfsdfsdf23</li>
+		     					<li><span class="task-data">Клиент: </span><span class="task-name-lead">{{ $challenge->challenges->name }}</span></li>
+		     					<li><span class="task-data">Телефон: </span>{{ $challenge->challenges->phone }}</span></li>
+		     					<li><span class="task-data">Чек: </span>{{ $challenge->challenges->badget }}</li>
+		     					<li><span class="task-data">Товар: </span>Откатные ворота</li>
+		     					<li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li>
 		     				</ul>
 		     				<a href="#" class="task-button button">ГОТОВО</a>
 	     				</div>
 	     			</li>
+
+	     			@endforeach
+	     			@endif
+
 	     		</ul>
 	      </div>
 	    </div>

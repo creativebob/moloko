@@ -20,7 +20,7 @@ use App\Source;
 use App\Medium;
 use App\Campaign;
 use App\Note;
-
+use App\Challenge;
 
 use App\EntitySetting;
 
@@ -101,6 +101,33 @@ class LeadController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
+
+        $answer_challenge = operator_right('challenges', false, 'index');
+
+        $challenges = Challenge::with(
+            'author',
+            'appointed',
+            'finisher',
+            'challenges'
+        )
+        ->where('appointed_id', $user->id)
+        ->moderatorLimit($answer_challenge)
+        ->companiesLimit($answer_challenge)
+        ->authors($answer_challenge)
+        ->systemItem($answer_challenge) // Фильтр по системным записям
+        ->where('status', null)
+        ->whereDay('deadline_date', Carbon::now()->format('d'))
+        ->orderBy('deadline_date', 'desc')
+        ->orderBy('moderation', 'desc')
+        ->get();
+
+        // dd($challenges);
+
+
+
+
+
+
         // --------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
         // --------------------------------------------------------------------------------------------------------------------------
@@ -120,6 +147,8 @@ class LeadController extends Controller
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите этап:', 'stage', 'stage_id', null, 'internal-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Менеджер:', 'manager', 'manager_id', null, 'internal-id-one');
+
+
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
@@ -127,7 +156,7 @@ class LeadController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('leads.index', compact('leads', 'page_info', 'filter', 'user'));
+        return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'challenges'));
     }
 
     public function create(Request $request)
@@ -753,7 +782,7 @@ class LeadController extends Controller
         $finded_leads = Lead::with('location.city', 'choices_goods_categories', 'choices_services_categories', 'choices_raws_categories')
         ->moderatorLimit($answer_lead)
         ->companiesLimit($answer_lead)
-        ->authors($answer_lead)
+        // ->authors($answer_lead) // Не фильтруем по авторам
         ->systemItem($answer_lead) // Фильтр по системным записям
         // ->whereNull('archive')
         ->where('phone', $phone)

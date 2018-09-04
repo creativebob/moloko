@@ -81,7 +81,7 @@ class Challenge extends Model
     }
 
     // Получаем лида
-    public function challenged()
+    public function challenges()
     {
         return $this->morphTo();
     }
