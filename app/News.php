@@ -118,9 +118,13 @@ class News extends Model
     }
 
     // Получаем города
+    // public function cities()
+    // {
+    //     return $this->belongsToMany('App\City', 'city_entity', 'entity_id', 'city_id')->where('entity', 'news');
+    // }
     public function cities()
     {
-        return $this->belongsToMany('App\City', 'city_entity', 'entity_id', 'city_id')->where('entity', 'news');
+        return $this->morphToMany('App\City', 'city_entity');
     }
 
 }
