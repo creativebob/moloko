@@ -152,6 +152,15 @@ $breadcrumbs-color: #888888;
 $breadcrumbs-a-color: #5190ff;
 $breadcrumbs-border-color: #dcdcdc;
 
+// Подсветка лидов по этапам
+.stage-4 td:first-child{
+    border-left: 8px solid #afefb9;
+}
+
+.stage-7 td:first-child{
+    border-left: 8px solid #ffc2c2;
+}
+
 // Контент
 $content-bg-color: #eeeeee;
 
@@ -1973,21 +1982,90 @@ thumb[orient="vertical"] {
 
 
 // ---------------------------------------- Менеджер задач ------------------------------------
+
+#task-panel2{
+    height: 100%;
+}
+
+.for_scroll{
+    height: 700px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+// Скролл в сайбаре по умолчанию
+.for_scroll::-webkit-scrollbar {
+    width:0.5rem;
+}
+// Скролл в сайбаре при наведении
+.for_scroll:hover {
+    overflow-y: scroll;
+}
+.for_scroll:hover::-webkit-scrollbar {
+    width:0.5rem;
+}
+.for_scroll:hover::-webkit-scrollbar-thumb {
+    border-width:1px 1px 1px 2px;
+    border-color: #777;
+    background-color: #aaa;
+    border-radius: 0.2rem;
+}
+.for_scroll:hover::-webkit-scrollbar-thumb:hover {
+    border-width: 1px 1px 1px 2px;
+    border-color: #555;
+    background-color: #777;
+}
+
+.challenge_date{
+    padding-bottom: 1rem;
+}
+
+.my-task{
+    padding-right: 1rem;
+}
+
+.task-list{
+    padding-bottom: 2rem;
+}
+
+.task-data a{
+    color: #55aee8;
+}
+
+a#task-toggle{
+    position: relative;
+    display: block;
+}
+
+#task-toggle{
+    margin-right: 1rem;
+}
+
+.challenges_count{
+    position: absolute;
+    display: block;
+    color: #ffffff;
+    font-size: 0.8rem;
+    right: -27px !important;
+    top: 6px;
+}
+
 .task-manager {
-  position: fixed;
-  right: 0;
-  width: 240px;
-  height: 100%;
-  margin-bottom: 48px;
-  background-color: $sidebar-bg-color;
-  z-index: 50;
-  padding: 20px;
-  display: block;
-  margin-right: -240px;
+    position: fixed;
+    height: 100%;
+    right: 0;
+    width: 240px;
+    margin-bottom: 48px;
+    background-color: $sidebar-bg-color;
+    z-index: 50;
+    padding-left: 10px;
+    display: block;
+    margin-right: -240px;
 
   // Tabs в менеджере задач
   .tabs-wrap {
     font-family: $SUISL;
+    padding-top: 13px;
 
     // Обнуляем фонду, в активном состоянии
     .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
@@ -3312,6 +3390,7 @@ a:hover {
 .task-manager {
     margin-bottom: 0;
 }
+
 // ---------------------------------- Мобильный Хлебные крошки ---------------------------------
 .breadcrumbs {
     display: none;

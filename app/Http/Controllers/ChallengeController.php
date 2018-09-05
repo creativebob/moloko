@@ -47,7 +47,7 @@ class ChallengeController extends Controller
         $staff = Staffer::with('user')
         ->moderatorLimit($answer_staff)
         ->companiesLimit($answer_staff)
-        ->authors($answer_staff)
+        // ->authors($answer_staff)
         ->systemItem($answer_staff) // Фильтр по системным записям
         ->get();
 

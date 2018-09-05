@@ -112,6 +112,14 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   src: url(/crm/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot);
   src: url(/crm/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot?#iefix) format('embedded-opentype'), url(/crm/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff) format('woff'), url(/crm/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf) format('truetype');
 }
+.stage-4 td:first-child {
+  border-left: 8px solid #afefb9;
+}
+
+.stage-7 td:first-child {
+  border-left: 8px solid #ffc2c2;
+}
+
 .relative {
   position: relative;
 }
@@ -1532,20 +1540,90 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   width: 60px;
 }
 
+#task-panel2 {
+  height: 100%;
+}
+
+.for_scroll {
+  height: 700px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+.for_scroll::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.for_scroll:hover {
+  overflow-y: scroll;
+}
+
+.for_scroll:hover::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.for_scroll:hover::-webkit-scrollbar-thumb {
+  border-width: 1px 1px 1px 2px;
+  border-color: #777;
+  background-color: #aaa;
+  border-radius: 0.2rem;
+}
+
+.for_scroll:hover::-webkit-scrollbar-thumb:hover {
+  border-width: 1px 1px 1px 2px;
+  border-color: #555;
+  background-color: #777;
+}
+
+.challenge_date {
+  padding-bottom: 1rem;
+}
+
+.my-task {
+  padding-right: 1rem;
+}
+
+.task-list {
+  padding-bottom: 2rem;
+}
+
+.task-data a {
+  color: #55aee8;
+}
+
+a#task-toggle {
+  position: relative;
+  display: block;
+}
+
+#task-toggle {
+  margin-right: 1rem;
+}
+
+.challenges_count {
+  position: absolute;
+  display: block;
+  color: #ffffff;
+  font-size: 0.8rem;
+  right: -27px !important;
+  top: 6px;
+}
+
 .task-manager {
   position: fixed;
+  height: 100%;
   right: 0;
   width: 240px;
-  height: 100%;
   margin-bottom: 48px;
   background-color: #333333;
   z-index: 50;
-  padding: 20px;
+  padding-left: 10px;
   display: block;
   margin-right: -240px;
 }
 .task-manager .tabs-wrap {
   font-family: "SegoeUISemiLight";
+  padding-top: 13px;
 }
 .task-manager .tabs-wrap .tabs-title > a:focus, .task-manager .tabs-wrap .tabs-title > a[aria-selected='true'] {
   background-color: #4a4a4a;

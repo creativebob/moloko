@@ -10,4 +10,5 @@ use App\Page;
         $result = Page::where(['alias' => $alias, 'site_id' => 2])->first();
         return $result;
     };
+
 ?>

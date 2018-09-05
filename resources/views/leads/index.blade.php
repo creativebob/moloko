@@ -28,6 +28,7 @@
           <th class="td-date">Дата</th>
           <th class="td-case-number">Номер</th>
           <th class="td-name">Контакт</th>
+          <th class="td-action">Действие</th>
           <th class="td-phone">Телефон</th>
           <th class="td-choice">Спрос</th>
           <th class="td-badget">Сумма сделки</th>
@@ -43,7 +44,7 @@
         @if(!empty($leads))
 
         @foreach($leads as $lead)
-        <tr class="item @if($lead->moderation == 1)no-moderation @endif" id="leads-{{ $lead->id }}" data-name="{{ $lead->name }}">
+        <tr class="item @if($lead->moderation == 1)no-moderation @endif stage-{{$lead->stage->id }}" id="leads-{{ $lead->id }}" data-name="{{ $lead->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
 
@@ -82,6 +83,12 @@
             @endif
 
           </td>
+          <td class="td-action">
+          @if($lead->manager->id == 1)
+            <a href="#" class="button tiny">Принять</a>
+          @endif
+          </td>
+
           <td class="td-phone">{{ decorPhone($lead->phone) }}</td>
           <td class="td-choice">
             {{ $lead->choices_goods_categories->implode('name', ',') }}

@@ -58,6 +58,6 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 
-        'filtermode' => \App\Http\Middleware\FilterModeMiddleware::class,
+        // 'task' => \App\Http\Middleware\TaskMiddleware::class,
     ];
 }

@@ -16,6 +16,8 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use App\Scopes\Traits\SuppliersTraitScopes;
 use App\Scopes\Traits\ManufacturersTraitScopes;
 
+use App\Scopes\Traits\ManagerTraitScopes;
+
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
@@ -42,6 +44,8 @@ class Lead extends Model
     use ModeratorLimitTraitScopes;
     use SuppliersTraitScopes;
     use ManufacturersTraitScopes;
+
+    use ManagerTraitScopes;
 
     // Фильтры
     use Filter;

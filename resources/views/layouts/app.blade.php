@@ -64,7 +64,13 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                             {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 
                             @endif
                         </li> --}}
-                        <li><a id="task-toggle"><img src="/crm/img/header/alert.png"></a></li>
+
+                        <li>
+                            <a id="task-toggle"><img src="/crm/img/header/alert.png">
+                            @if(!empty($challenges))
+                                <span class="challenges_count">{{ $challenges->flatten()->count() }}</span>
+                            @endif
+                            </a></li>
                         <li>
                             <a data-toggle="profile">
                                 <span>

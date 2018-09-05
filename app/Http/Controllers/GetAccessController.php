@@ -14,6 +14,8 @@ use App\ListUser;
 use App\Booklist;
 use App\List_item;
 use App\Position;
+use App\Challenge;
+
 
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
@@ -27,6 +29,7 @@ use App\Http\Requests\UpdateUser;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class GetAccessController extends Controller
 {
@@ -42,6 +45,7 @@ class GetAccessController extends Controller
 
         // Собираем данные о компании
         if($user->company_id != null){
+
 
             // Получаем все отделы компании
             $departments = Department::whereCompany_id($user->company_id)->get();
@@ -192,6 +196,29 @@ class GetAccessController extends Controller
             $access['user_info']['company_id'] = $user->company_id;
             $access['user_info']['filial_id'] = $user->filial_id;
             $access['user_info']['department_id'] = $user_department_id;
+
+            $challenges = Challenge::with(
+                'author',
+                'appointed',
+                'finisher',
+                'challenges'
+            )
+            ->where('appointed_id', $user->id)
+            ->companiesLimit($user->company_id)
+            ->where('status', null)
+            ->whereDay('deadline_date', Carbon::now()->format('d'))
+            ->orderBy('deadline_date', 'asc')
+            ->orderBy('moderation', 'desc')
+            ->get()
+            ->groupBy(function($challenges) {
+                return Carbon::parse($challenges->deadline_date)->format('d.m.Y'); // А это то-же поле по нему мы и будем группировать
+            });
+
+            // dd($challenges);
+
+            $user_challenges = $challenges;
+            $access['user_info']['challenges'] = $user_challenges;
+
 
             if($user->company != null){
                 $access['company_info']['company_id'] = $user->company_id;

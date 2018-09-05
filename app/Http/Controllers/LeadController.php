@@ -21,6 +21,7 @@ use App\Medium;
 use App\Campaign;
 use App\Note;
 use App\Challenge;
+// use App\Challenge_type;
 
 use App\EntitySetting;
 
@@ -89,50 +90,25 @@ class LeadController extends Controller
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
+        // ->authors($answer)
+        ->manager($user)
         ->systemItem($answer) // Фильтр по системным записям
         ->filter($request, 'city_id', 'location')
         ->filter($request, 'stage_id')
         ->filter($request, 'manager_id')
         ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
+        ->orderBy('manager_id', 'asc')
         ->orderBy('created_at', 'desc')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-
-        $answer_challenge = operator_right('challenges', false, 'index');
-
-        $challenges = Challenge::with(
-            'author',
-            'appointed',
-            'finisher',
-            'challenges'
-        )
-        ->where('appointed_id', $user->id)
-        ->moderatorLimit($answer_challenge)
-        ->companiesLimit($answer_challenge)
-        ->authors($answer_challenge)
-        ->systemItem($answer_challenge) // Фильтр по системным записям
-        ->where('status', null)
-        ->whereDay('deadline_date', Carbon::now()->format('d'))
-        ->orderBy('deadline_date', 'desc')
-        ->orderBy('moderation', 'desc')
-        ->get();
-
-        // dd($challenges);
-
-
-
-
-
-
         // --------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
         // --------------------------------------------------------------------------------------------------------------------------
 
-        $filter_query = Lead::with('location.city')
+        $filter_query = Lead::with('location.city', 'manager', 'stage')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -155,6 +131,10 @@ class LeadController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
+
+        // Задачи пользователя
+        $challenges = challenges($request);
+        // dd($challenges);
 
         return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'challenges'));
     }
@@ -189,7 +169,10 @@ class LeadController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('leads.create', compact('lead', 'page_info', 'countries_list', 'stages_list'));
+        // Задачи пользователя
+        $challenges = challenges($request);
+
+        return view('leads.create', compact('lead', 'page_info', 'countries_list', 'stages_list', 'challenges'));
     }
 
     public function store(LeadRequest $request)
@@ -454,10 +437,13 @@ class LeadController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
+        // Задачи пользователя
+        $challenges = challenges($request);
+
         $entity = $this->entity_name;
         // dd($lead);
 
-        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity'));
+        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity', 'challenges'));
     }
 
     public function update(LeadRequest $request, $id)

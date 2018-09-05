@@ -20,6 +20,8 @@ use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Carbon\Carbon;
+use App\Challenge;
 
 class User extends Authenticatable
 {
@@ -267,6 +269,22 @@ class User extends Authenticatable
     public function photo()
     {
         return $this->belongsTo('App\Photo');
+    }
+
+    // Получаем задачи
+    public function challenges()
+    {
+        $result = $this->hasMany('App\Challenge', 'appointed_id');
+        return $result;
+    }
+
+    // Получаем задачи
+    public function challenges_active()
+    {
+        $result = $this->hasMany('App\Challenge', 'appointed_id')
+        ->where('status', null)
+        ->orderBy('deadline_date', 'desc');
+        return $result;
     }
 
 }
