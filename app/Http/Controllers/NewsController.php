@@ -301,14 +301,7 @@ class NewsController extends Controller
 
             // Когда новость записалась, смотрим пришедние для нее города и пишем, т.к. это первая запись новости
             if (isset($request->cities)) {
-                $cities = [];
-                foreach ($request->cities as $city) {
-                    $cities[$city] = [
-                        'entity' => $this->entity_name,
-                    ];
-                }
-
-                $cur_news->cities()->attach($cities);
+                $cur_news->cities()->saveMany($request->cities);
             }
             return redirect('/admin/sites/'.$alias.'/news');
         } else {
@@ -529,13 +522,7 @@ class NewsController extends Controller
 
             // Когда новость обновилась, смотрим пришедние для нее города и сравниваем с существующими
             if (isset($request->cities)) {
-                $cities = [];
-                foreach ($request->cities as $city) {
-                    $cities[$city] = [
-                        'entity' => $this->entity_name,
-                    ];
-                }
-                $cur_news->cities()->sync($cities);
+                $cur_news->cities()->sync($request->cities);
             } else {
 
                 // Если удалили последний город для новости и пришел пустой массив

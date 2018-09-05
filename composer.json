@@ -21,6 +21,7 @@
     "maatwebsite/excel": "2.*",
     "nesbot/carbon": "1.24.1",
     "predis/predis": "^1.1",
+    "irazasyed/telegram-bot-sdk": "^2.0",
     "unisharp/laravel-ckeditor": "^4.7",
     "unisharp/laravel-filemanager": "^1.8"
   },

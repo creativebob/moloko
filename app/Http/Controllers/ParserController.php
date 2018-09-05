@@ -85,11 +85,11 @@ class ParserController extends Controller
                 $lead_type_id = null;
                 if ($old_lead->status_site == 1) {
                     $lead->lead_type_id = 2;
+                    $lead->site_id = 2;
                 } else {
                     $lead->lead_type_id = 1;
-                    $lead->site_id = 2;
+                    
                 }
-
                 $lead->manager_id = $old_lead->manager->new_user_id;
                 $lead->stage_id = $old_lead->id_stage;
                 $lead->old_lead_id = $old_lead->id;
@@ -108,7 +108,7 @@ class ParserController extends Controller
                 // Пишем комменты
                 $lead_comments = [];
 
-                if (($old_lead->comment != '') || empty($old_lead->comment)) {
+                if ($old_lead->comment != '') {
                     $lead_comments[] = [
                         'body' => $old_lead->comment,
                         'author_id' => $old_lead->manager->new_user_id,
@@ -116,7 +116,7 @@ class ParserController extends Controller
                     ];
                 }
 
-                if (($old_lead->comment2 == '') || empty($old_lead->comment2)) {
+                if ($old_lead->comment2 != '') {
                     $lead_comments[] = [
                         'body' => $old_lead->comment2,
                         'author_id' => $old_lead->manager->new_user_id,
