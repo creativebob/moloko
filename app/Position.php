@@ -92,4 +92,10 @@ class Position extends Model
     {
         return $this->belongsTo('App\Sector');
     }
+
+    // Оповещения
+    public function notifications()
+    {
+        return $this->belongsToMany('App\Notification');
+    }
 }

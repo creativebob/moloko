@@ -188,6 +188,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Unisharp\Ckeditor\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Telegram\Bot\Laravel\TelegramServiceProvider::class,
 
 
     ],
@@ -245,6 +246,7 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'Transliterate' => ElForastero\Transliterate\TransliterationFacade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Telegram'  => Telegram\Bot\Laravel\Facades\Telegram::class,
 
         
 

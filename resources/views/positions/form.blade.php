@@ -46,6 +46,25 @@
           </div>
         </div>
       </fieldset> 
+
+      <fieldset class="fieldset-access">
+        <legend>Настройка оповещений</legend>
+        <div class="grid-x grid-padding-x"> 
+          <div class="small-12 cell">
+            <ul>
+              @foreach ($notifications as $notification)
+              <li>
+                <div class="small-12 cell checkbox">
+                  {{ Form::checkbox('notifications[]', $notification->id, null, ['id'=>'notification-'.$notification->id, 'class'=>'access-checkbox']) }}
+                  <label for="notification-{{ $notification->id }}"><span>{{ $notification->name }}</span></label>
+                </div>
+              </li>
+              @endforeach
+            </ul>
+
+          </div>
+        </div>
+      </fieldset> 
   </div>
 
     {{-- Чекбоксы управления --}}
