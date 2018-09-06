@@ -63,24 +63,20 @@
           <td class="td-case-number">{{ $lead->case_number }}</td>
           <td class="td-name">
 
-            @php
-            $edit = 0;
-            @endphp
-            @can('update', $lead)
-            @php
-            $edit = 1;
-            @endphp
-            @endcan
 
-            @if($edit == 1)
-            <a href="/admin/leads/{{ $lead->id }}/edit">
-              @endif
+            @can('edit', $lead)
+              @can('update', $lead)
+              <a href="/admin/leads/{{ $lead->id }}/edit">
+              @endcan
+            @endcan
 
               {{ $lead->name }}
 
-              @if($edit == 1)
-            </a>
-            @endif
+            @can('edit', $lead)
+              @can('update', $lead)
+                </a>
+              @endcan
+            @endcan
 
           </td>
           <td class="td-action">

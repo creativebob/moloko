@@ -54,10 +54,10 @@ class CreateLeadsTable extends Migration
             $table->integer('sector_id')->nullable()->unsigned()->comment('Сектор');
             $table->foreign('sector_id')->references('id')->on('sectors');
 
-            $table->integer('lead_type_id')->nullable()->unsigned()->comment('Тип обращения');
+            $table->integer('lead_type_id')->nullable()->unsigned()->comment()->default(1)->('Тип обращения');
             $table->foreign('lead_type_id')->references('id')->on('lead_types');
 
-            $table->integer('manager_id')->nullable()->unsigned()->comment('ID пользователя');
+            $table->integer('manager_id')->nullable()->unsigned()->default(1)->comment('ID пользователя');
             $table->foreign('manager_id')->references('id')->on('users');
 
             $table->integer('stage_id')->nullable()->unsigned()->comment('ID этапа');
@@ -70,6 +70,7 @@ class CreateLeadsTable extends Migration
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
+            $table->integer('draft')->nullable()->unsigned()->comment('Черновик - удаляется по графику');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');

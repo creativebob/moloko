@@ -92,6 +92,7 @@ class LeadController extends Controller
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         // ->authors($answer)
         ->manager($user)
+        ->whereNull('draft')
         ->systemItem($answer) // Фильтр по системным записям
         ->filter($request, 'city_id', 'location')
         ->filter($request, 'stage_id')
@@ -112,7 +113,8 @@ class LeadController extends Controller
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
+        ->manager($user)
+        // ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям           
         ->get();
 
@@ -142,37 +144,90 @@ class LeadController extends Controller
     public function create(Request $request)
     {
 
-        $user = $request->user();
+        // $user = $request->user();
 
-        // Подключение политики
-        $this->authorize(__FUNCTION__, Lead::class);
+        // // Подключение политики
+        // $this->authorize(__FUNCTION__, Lead::class);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $lead = new Lead;
+        // $lead = new Lead;
 
-        // Получаем список стран
-        $countries_list = Country::get()->pluck('name', 'id');
+        // // Получаем список стран
+        // $countries_list = Country::get()->pluck('name', 'id');
 
-        // Получаем список этапов
-        $answer_stages = operator_right('stages', false, 'index'); 
+        // // Получаем список этапов
+        // $answer_stages = operator_right('stages', false, 'index'); 
 
-        $stages_list = Stage::moderatorLimit($answer_stages)
-        ->companiesLimit($answer_stages)
-        ->authors($answer_stages)
-        ->systemItem($answer_stages) // Фильтр по системным записям
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get()->pluck('name', 'id');
+        // $stages_list = Stage::moderatorLimit($answer_stages)
+        // ->companiesLimit($answer_stages)
+        // ->authors($answer_stages)
+        // ->systemItem($answer_stages) // Фильтр по системным записям
+        // ->orderBy('moderation', 'desc')
+        // ->orderBy('sort', 'asc')
+        // ->get()->pluck('name', 'id');
 
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        // // Инфо о странице
+        // $page_info = pageInfo($this->entity_name);
 
-        // Задачи пользователя
-        $challenges = challenges($request);
+        // // Задачи пользователя
+        // $challenges = challenges($request);
 
-        return view('leads.create', compact('lead', 'page_info', 'countries_list', 'stages_list', 'challenges'));
+        // return view('leads.create', compact('lead', 'page_info', 'countries_list', 'stages_list', 'challenges'));
+
+        
+            $user = $request->user();
+
+            // Подключение политики
+            $this->authorize(__FUNCTION__, Lead::class); // Проверка на create
+            // dd($user);
+
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+            $lead = new Lead;
+
+            $company_id = $user->company_id;
+            $filial_id = $user->filial_id;
+
+            // Пишем локацию
+            $location = new Location;
+            $location->country_id = 1; // TODO: сюда умолчания из settings!
+            $location->city_id = 1; // TODO: сюда умолчания из settings!
+            $location->address = '';
+            $location->author_id = $user->id;
+            $location->save();
+
+            if ($location) {
+                $location_id = $location->id;
+            } else {
+                abort(403, 'Ошибка записи адреса');
+            }
+
+            $lead->company_id = $company_id;
+            $lead->filial_id = $filial_id;
+            $lead->name = 'Не указано';
+            $lead->location_id = $location_id;
+            $lead->phone = 00000000000;
+            $lead->draft = 1;
+            $lead->author_id = $user->id;
+            $lead->manager_id = $user->id;
+            $lead->stage_id = 2;
+            $lead->lead_type_id = 2;
+            $lead->display = 1;
+
+            // Формируем номера обращения
+            $lead_number = getLeadNumbers($user);
+            $lead->case_number = $lead_number['case'];
+            $lead->serial_number = $lead_number['serial'];
+
+            // Конец формирования номера обращения ----------------------------------
+
+            $lead->save();
+
+            return Redirect('/admin/leads/' . $lead->id . '/edit');
+
     }
 
     public function store(LeadRequest $request)
@@ -244,6 +299,7 @@ class LeadController extends Controller
         // $user->quote = $request->quote;
 
         $lead->author_id = $user_id;
+        $lead->manager_id = $user->id;
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
@@ -259,33 +315,12 @@ class LeadController extends Controller
         $lead->filial_id = $filial_id;
 
 
-        // Формируем номер обращения --------------------------------------------
-        $today = Carbon::now();
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_all_leads = operator_right($this->entity_name, $this->entity_dependence, 'index');
-
-        $leads = Lead::moderatorLimit($answer_all_leads)
-        ->companiesLimit($answer_all_leads)
-        ->filials($answer_all_leads) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->where('author_id', $user->id)
-        ->whereDay('created_at', Carbon::today()->format('d'))
-        ->get();
-
-        $serial_number = $leads->max('serial_number');
-
-        if(empty($serial_number)){$serial_number = 0;};
-
-        $serial_number = $serial_number + 1;
-
-        // Создаем номер
-        $case_number = $today->format('d') . $today->format('m') . $today->format('Y') . '/' .  $serial_number . '/' . $user->liter;
-        $lead->case_number = $case_number;
-        $lead->serial_number = $serial_number;
+        // Формируем номера обращения
+        $lead_number = getLeadNumbers($user);
+        $lead->case_number = $lead_number['case'];
+        $lead->serial_number = $lead_number['serial'];
 
         // Конец формирования номера обращения ----------------------------------
-
-
 
         $lead->save();
 
@@ -388,7 +423,8 @@ class LeadController extends Controller
         $roles_list = Role::moderatorLimit($answer_roles)
         ->companiesLimit($answer_roles)
         ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_roles)
+        ->manager($user)
+        // ->authors($answer_roles)
         ->systemItem($answer_roles) // Фильтр по системным записям 
         ->pluck('name', 'id');
 
@@ -409,7 +445,8 @@ class LeadController extends Controller
         }])
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
+        ->where('manager_id', '!=', 1)
+        // ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям 
         ->moderatorLimit($answer)
         ->findOrFail($id);
@@ -452,10 +489,10 @@ class LeadController extends Controller
         // Получаем авторизованного пользователя
         $user = $request->user();
 
-        $user_id = hideGod($user);
+        // $user_id = hideGod($user);
 
         $company_id = $user->company_id;
-        $filial_id = $request->user()->filial_id;
+        $filial_id = $user->filial_id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -464,12 +501,11 @@ class LeadController extends Controller
         $lead = Lead::with('location', 'company')
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
+        ->manager($user)
+        // ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям 
         ->moderatorLimit($answer)
         ->findOrFail($id);
-
-        $filial_id = $request->filial_id;
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
@@ -502,13 +538,16 @@ class LeadController extends Controller
             $location->save();
         }
 
-
+        $lead->filial_id = $filial_id;
         $lead->location_id = $location->id;
         $lead->email = $request->email;
 
         $lead->name = $request->name;
-        $lead->stage_id =   $request->stage_id;
-        $lead->badget =   $request->badget;
+        $lead->stage_id = $request->stage_id;
+        $lead->badget = $request->badget;
+        $lead->draft = NULL;
+
+        $lead->editor_id = $user->id;
 
         // $lead->first_name = $request->first_name;
         // $lead->second_name = $request->second_name;
@@ -530,11 +569,6 @@ class LeadController extends Controller
         // $lead->passport_number = $request->passport_number;
         // $lead->passport_released = $request->passport_released;
         // $lead->passport_date = $request->passport_date;
-
-
-
-        $lead->filial_id = $request->filial_id;
-
 
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
@@ -641,7 +675,8 @@ class LeadController extends Controller
         $lead = Lead::moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
+        ->manager($user)
+        // ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям 
         ->moderatorLimit($answer)
         ->findOrFail($id);
@@ -771,6 +806,7 @@ class LeadController extends Controller
         // ->authors($answer_lead) // Не фильтруем по авторам
         ->systemItem($answer_lead) // Фильтр по системным записям
         // ->whereNull('archive')
+        ->whereNull('draft')
         ->where('phone', $phone)
         ->where('id', '!=', $lead_id)
         ->orderBy('moderation', 'desc')
