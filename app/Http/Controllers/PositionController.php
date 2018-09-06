@@ -10,6 +10,7 @@ use App\Role;
 use App\Staffer;
 use App\PositionRole;
 use App\Sector;
+use App\Notification;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -119,6 +120,9 @@ class PositionController extends Controller
         ->template($answer_pages)
         ->get();
 
+        // Список оповещений для должности
+        $notifications = Notification::get();
+
         $position = new Position;
 
         // Получаем список секторов
@@ -147,7 +151,7 @@ class PositionController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('positions.create', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info'));  
+        return view('positions.create', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications'));  
     }
 
     public function store(PositionRequest $request)
@@ -204,6 +208,11 @@ class PositionController extends Controller
                 $position->roles()->attach($roles);
             }
 
+            // Смотрим оповещения
+            if (isset($request->notifications)) {
+                $position->notifications()->attach($request->notifications);
+            }
+
             return redirect('/admin/positions');
         } else {
             abort(403, 'Ошибка записи должности');
@@ -247,6 +256,9 @@ class PositionController extends Controller
         ->template($answer_pages)
         ->get();
 
+        // Список оповещений для должности
+        $notifications = Notification::get();
+
         // Получаем список секторов
         $sectors = Sector::get()->keyBy('id')->toArray();
         $sectors_cat = [];
@@ -274,7 +286,7 @@ class PositionController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('positions.edit', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info'));
+        return view('positions.edit', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications'));
     }
 
     public function update(PositionRequest $request, $id)
@@ -324,7 +336,16 @@ class PositionController extends Controller
             } else {
 
                 // Если удалили последнюю роль для должности и пришел пустой массив
-                $delete = PositionRole::where('position_id', $id)->delete();
+                $position->roles()->detach();
+            }
+
+            // Смотрим оповещения
+            if (isset($request->notifications)) {
+                $position->notifications()->sync($request->notifications);
+            } else {
+
+                // Если удалили последнюю роль для должности и пришел пустой массив
+                $position->notifications()->detach();
             }
             return redirect('/admin/positions');
         } else {
