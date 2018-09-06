@@ -405,8 +405,8 @@ class LeadController extends Controller
 
         $lead = Lead::with(['location.city', 'medium', 'campaign', 'source', 'site', 'notes' => function ($query) {
             $query->orderBy('created_at', 'desc');}, 'challenges' => function ($query) {
-            $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
-        }])
+                $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
+            }])
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
@@ -782,13 +782,13 @@ class LeadController extends Controller
         $count_finded_leads = $finded_leads->count();
 
 
-            if($count_finded_leads > 0){
+        if($count_finded_leads > 0){
 
-                return view('leads.autofind', compact('finded_leads'));
-            } else {
+            return view('leads.autofind', compact('finded_leads'));
+        } else {
 
-                return '';
-            };
+            return '';
+        };
 
     }
 
