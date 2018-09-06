@@ -39,7 +39,11 @@ class NotePolicy
     public function update(User $user, Note $model)
     { 
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
-        return $result;
+        $diff = $model->created_at->diffInMinutes(Carbon::now());
+        // dd($diff);
+        if ($diff <= 60*24) {
+            return $result;
+        }
     }
 
     public function delete(User $user, Note $model)

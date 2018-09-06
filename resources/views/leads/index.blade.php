@@ -65,24 +65,24 @@
 
 
             @can('edit', $lead)
-              @can('update', $lead)
-              <a href="/admin/leads/{{ $lead->id }}/edit">
+            @can('update', $lead)
+            <a href="/admin/leads/{{ $lead->id }}/edit">
               @endcan
-            @endcan
+              @endcan
 
               {{ $lead->name }}
 
-            @can('edit', $lead)
+              @can('edit', $lead)
               @can('update', $lead)
-                </a>
-              @endcan
+            </a>
+            @endcan
             @endcan
 
           </td>
           <td class="td-action">
-          @if($lead->manager->id == 1)
-            <a href="#" class="button tiny">Принять</a>
-          @endif
+            @if($lead->manager->id == 1)
+            <a href="#" class="button tiny take-lead">Принять</a>
+            @endif
           </td>
 
           <td class="td-phone">{{ decorPhone($lead->phone) }}</td>
@@ -97,13 +97,13 @@
           <td class="td-badget">{{ num_format($lead->badget, 0) }}</td>
           <td class="td-stage">{{ $lead->stage->name }}</td>
           <td class="td-challenge">
-              {{ $lead->first_challenge->challenge_type->name or '' }}
+            {{ $lead->first_challenge->challenge_type->name or '' }}
           </td>
           <td>
-              @if(!empty($lead->first_challenge->deadline_date))
-                <span class="">{{ $lead->first_challenge->deadline_date->format('d.m.Y') }}</span><br>
-                <span class="tiny-text">{{ $lead->first_challenge->deadline_date->format('H:i') }}</span> 
-               @endif
+            @if(!empty($lead->first_challenge->deadline_date))
+            <span class="">{{ $lead->first_challenge->deadline_date->format('d.m.Y') }}</span><br>
+            <span class="tiny-text">{{ $lead->first_challenge->deadline_date->format('H:i') }}</span> 
+            @endif
           </td>
           <td class="td-manager">
             @if(!empty($lead->manager->first_name))
@@ -142,6 +142,8 @@
 @endsection
 
 @section('modals')
+<section id="modal"></section>
+
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-delete')
 
@@ -151,6 +153,123 @@
 @endsection
 
 @section('scripts')
+
+<script type="text/javascript">
+
+  $(document).on('click', '.take-lead', function(event) {
+    event.preventDefault();
+
+    var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
+    var id = $(this).closest('.item').attr('id').split('-')[1];
+    var item = $(this);
+
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/admin/lead_direction_check",
+      type: "POST",
+      success: function(data){
+
+        if (data == 1) {
+
+          $.ajax({
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "/admin/lead_appointed",
+            type: "POST",
+            data: {id: id},
+            success: function(html){
+              $('#modal').html(html);
+              $('#add-appointed').foundation();
+              $('#add-appointed').foundation('open');
+            }
+          });
+        } else {
+
+          $.ajax({
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "/admin/lead_take",
+            type: "POST",
+            data: {id: id},
+            success: function(date){
+              var result = $.parseJSON(date);
+
+              $('#leads-' + result.id + ' .td-case-number').text(result.case_number);
+              $('#leads-' + result.id + ' .td-name').html('<a href="/admin/leads/' + result.id + '/edit">' + result.name + '</a>');
+              $('#leads-' + result.id + ' .td-action').html('');
+              $('#leads-' + result.id + ' .td-manager').text(result.manager);
+            }
+          });
+        }
+      }
+    });
+    /* Act on the event */
+  }); 
+
+  $(document).on('click', '#submit-appointed', function(event) {
+    event.preventDefault();
+
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "/admin/lead_distribute",
+      type: "POST",
+      data: $(this).closest('form').serialize(),
+      success: function(date){
+
+        $('#add-appointed').foundation('close');
+
+        var result = $.parseJSON(date);
+
+        $('#leads-' + result.id + ' .td-case-number').text(result.case_number);
+        $('#leads-' + result.id + ' .td-name').html('<a href="/admin/leads/' + result.id + '/edit">' + result.name + '</a>');
+        $('#leads-' + result.id + ' .td-action').html('');
+        $('#leads-' + result.id + ' .td-manager').text(result.manager);
+
+      }
+    });
+  });
+
+  // $(document).on('click', '.take-lead', function(event) {
+  //   event.preventDefault();
+
+  //   var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
+  //   var id = $(this).closest('.item').attr('id').split('-')[1];
+  //   var item = $(this);
+
+  //   $.ajax({
+  //     headers: {
+  //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //     },
+  //     url: "/admin/lead_take",
+  //     type: "POST",
+  //     data: {id: id},
+  //     success: function(date){
+  //       var result = $.parseJSON(date);
+  //       // alert(result);
+
+  //       $('#leads-' + result.id + ' .td-case-number').text(result.case_number);
+  //       $('#leads-' + result.id + ' .td-name').html('<a href="/admin/leads/' + result.id + '/edit">' + result.name + '</a>');
+  //       $('#leads-' + result.id + ' .td-action').html('');
+  //       $('#leads-' + result.id + ' .td-manager').text(result.manager);
+  //     }
+  //   });
+
+
+  //   /* Act on the event */
+  // }); 
+
+// ---------------------------------- Закрытие модалки -----------------------------------
+$(document).on('click', '.icon-close-modal, .submit-edit, .submit-add, .submit-appointed', function() {
+  $(this).closest('.reveal-overlay').remove();
+});
+
+</script>
 {{-- Скрипт сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
 @include('includes.scripts.sortable-table-script')

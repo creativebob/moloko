@@ -56,12 +56,43 @@
 
 <script>
 
+	var lead_id = '{{ $lead->id }}';
+
 	$(document).on('dblclick', '#phone', function() {
 		
     // Снятие блокировки с поля номер телефона
     $('#phone').attr('readonly', false);
 
 });
+
+	$(document).on('click', '#lead-free', function(event) {
+		event.preventDefault();
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: "/admin/lead_free",
+			type: "POST",
+			data: {id: lead_id},
+			success: function(date){
+
+				var result = $.parseJSON(date);
+				if (result.error_status == 0) {
+
+					var url = '{{ url("admin/leads") }}';
+
+					window.location.replace(url);
+
+					// $(location).attr('href', );
+				} else {
+                	// Выводим ошибку на страницу
+                	alert(result.error_message);
+                };
+
+            }
+        });
+	});
 
 </script>
 

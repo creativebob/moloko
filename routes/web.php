@@ -362,11 +362,21 @@ Route::post('/leads_sort', 'LeadController@ajax_sort')->middleware('auth');
 Route::post('/leads_system_item', 'LeadController@ajax_system_item')->middleware('auth');
 // Отображение на сайте
 Route::post('/leads_display', 'LeadController@ajax_display')->middleware('auth');
+
 // Поиск
 Route::post('/leads/search/{text_fragment}', 'LeadController@search')->middleware('auth');
 
+// Назначение лида
+Route::any('/lead_direction_check', 'LeadController@ajax_lead_direction_check')->middleware('auth');
+Route::any('/lead_appointed', 'LeadController@ajax_lead_appointed')->middleware('auth');
+Route::any('/lead_distribute', 'LeadController@ajax_distribute')->middleware('auth');
+Route::any('/lead_take', 'LeadController@ajax_lead_take')->middleware('auth');
+
+// Освобождаем лида
+Route::post('/lead_free', 'LeadController@free')->middleware('auth');
+
 // Добавление комментария
-Route::any('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth');
+Route::post('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth');
 // Поиск лида по номеру телефона
 Route::any('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->middleware('auth');
 
