@@ -144,39 +144,6 @@ class LeadController extends Controller
     public function create(Request $request)
     {
 
-        // $user = $request->user();
-
-        // // Подключение политики
-        // $this->authorize(__FUNCTION__, Lead::class);
-
-        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // $lead = new Lead;
-
-        // // Получаем список стран
-        // $countries_list = Country::get()->pluck('name', 'id');
-
-        // // Получаем список этапов
-        // $answer_stages = operator_right('stages', false, 'index'); 
-
-        // $stages_list = Stage::moderatorLimit($answer_stages)
-        // ->companiesLimit($answer_stages)
-        // ->authors($answer_stages)
-        // ->systemItem($answer_stages) // Фильтр по системным записям
-        // ->orderBy('moderation', 'desc')
-        // ->orderBy('sort', 'asc')
-        // ->get()->pluck('name', 'id');
-
-        // // Инфо о странице
-        // $page_info = pageInfo($this->entity_name);
-
-        // // Задачи пользователя
-        // $challenges = challenges($request);
-
-        // return view('leads.create', compact('lead', 'page_info', 'countries_list', 'stages_list', 'challenges'));
-
-        
             $user = $request->user();
 
             // Подключение политики
