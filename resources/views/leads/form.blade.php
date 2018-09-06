@@ -166,7 +166,7 @@
                     {{-- КЛИЕНТ --}}
                     <div class="tabs-panel" id="content-panel-client">
                         <div class="grid-x grid-padding-x">
-
+                            <a id="lead-free" class="button">Освободить лида</a>
                         </div>
                     </div>
 

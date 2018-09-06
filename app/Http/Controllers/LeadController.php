@@ -21,6 +21,8 @@ use App\Medium;
 use App\Campaign;
 use App\Note;
 use App\Challenge;
+use App\Staff;
+
 // use App\Challenge_type;
 
 use App\EntitySetting;
@@ -144,7 +146,7 @@ class LeadController extends Controller
     public function create(Request $request)
     {
 
-            $user = $request->user();
+        $user = $request->user();
 
             // Подключение политики
             $this->authorize(__FUNCTION__, Lead::class); // Проверка на create
@@ -195,50 +197,50 @@ class LeadController extends Controller
 
             return Redirect('/admin/leads/' . $lead->id . '/edit');
 
-    }
+        }
 
-    public function store(LeadRequest $request)
-    {
+        public function store(LeadRequest $request)
+        {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Lead::class);
+            $this->authorize(getmethod(__FUNCTION__), Lead::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+            $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+            $user = $request->user();
 
         // Скрываем бога
-        $user_id = hideGod($user);
+            $user_id = hideGod($user);
 
-        $company_id = $user->company_id;
-        $filial_id = $request->user()->filial_id;
+            $company_id = $user->company_id;
+            $filial_id = $request->user()->filial_id;
 
 
         // Пишем локацию
-        $location = new Location;
-        $location->country_id = $request->country_id;
-        $location->city_id = $request->city_id;
-        $location->address = $request->address;
-        $location->author_id = $user->id;
-        $location->save();
+            $location = new Location;
+            $location->country_id = $request->country_id;
+            $location->city_id = $request->city_id;
+            $location->address = $request->address;
+            $location->author_id = $user->id;
+            $location->save();
 
-        if ($location) {
-            $location_id = $location->id;
-        } else {
-            abort(403, 'Ошибка записи адреса');
-        }
+            if ($location) {
+                $location_id = $location->id;
+            } else {
+                abort(403, 'Ошибка записи адреса');
+            }
 
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
-        $lead = new Lead;
+            $lead = new Lead;
 
-        $lead->name =   $request->name;
+            $lead->name =   $request->name;
         // $lead->sex = $request->sex;
         // $lead->birthday = $request->birthday;
 
-        $lead->stage_id =   $request->stage_id;
-        $lead->badget =   $request->badget;
+            $lead->stage_id =   $request->stage_id;
+            $lead->badget =   $request->badget;
 
         $lead->display = 1; // Включаем видимость
         $lead->company_id = $company_id;
@@ -657,6 +659,44 @@ class LeadController extends Controller
         if($lead) {return redirect('/admin/leads');} else {abort(403,'Что-то пошло не так!');};
     }
 
+
+    public function free(Request $request)
+    {
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        $lead = Lead::findOrFail($request->id);
+
+        $note = new Note;
+
+        $note->body = 'Менеджер: '. $user->first_name.' '.$user->second_name. ' освободил(а) лида.';
+        $note->company_id = $user->company_id;
+        $note->author_id = $user->id;
+        $note->save();
+
+        $lead->notes()->save($note);
+
+        $lead->manager_id = 1;
+        $lead->save();
+
+        if ($lead) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении освобождении лида!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+
+
+    }
+
     // Сортировка
     public function ajax_sort(Request $request)
     {
@@ -792,6 +832,104 @@ class LeadController extends Controller
 
             return '';
         };
+
+    }
+
+    // Назначение лида
+    public function ajax_lead_direction_check(Request $request)
+    {
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        foreach ($user->staff as $staffer) {
+            $direction = null;
+            if ($staffer->position->direction_status == 1) {
+                $direction = 1;
+            }
+        }
+        echo $direction;
+    }
+
+    // Назначение лида
+    public function ajax_lead_take(Request $request)
+    {
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+        $lead = Lead::findOrFail($request->id);
+
+        
+             // dd($direction);
+        $lead->manager_id = $user->id;
+
+                // Формируем номера обращения
+        $lead_number = getLeadNumbers($user);
+        $lead->case_number = $lead_number['case'];
+        $lead->serial_number = $lead_number['serial'];
+        $lead->editor_id = $user->id;
+        $lead->save();
+
+        $result = [
+            'id' => $lead->id,
+            'name' => $lead->name,
+            'case_number' => $lead->case_number,
+            'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
+        ];
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+
+
+        
+        // }
+    }
+
+    // Назначение лида
+    public function ajax_distribute(Request $request)
+    {
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+        $lead = Lead::findOrFail($request->lead_id);
+
+        
+             // dd($direction);
+        $lead->manager_id = $request->appointed_id;
+
+        $manager = User::find($request->appointed_id);
+
+                // Формируем номера обращения
+        $lead_number = getLeadNumbers($manager);
+        $lead->case_number = $lead_number['case'];
+        $lead->serial_number = $lead_number['serial'];
+        $lead->editor_id = $user->id;
+        $lead->save();
+
+        $result = [
+            'id' => $lead->id,
+            'name' => $lead->name,
+            'case_number' => $lead->case_number,
+            'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
+        ];
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+
+
+        
+        // }
+    }
+
+    public function ajax_lead_appointed(Request $request)
+    {
+
+        $users_list = User::whereHas('staff', function ($query) {
+            $query->whereHas('position', function ($query) {
+                $query->whereIn('id', [2, 4]);
+            });
+        })->get()->pluck('name', 'id');
+
+            // dd($users_list);
+        $lead_id = $request->id;
+            // $lead_id = 1;
+        return view('leads.modal-appointed', compact('users_list', 'lead_id'));
 
     }
 
