@@ -692,6 +692,8 @@ class LeadController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+        $user = $request->user();
+
         // ГЛАВНЫЙ ЗАПРОС:
         $lead = Lead::moderatorLimit($answer)
         ->companiesLimit($answer)
