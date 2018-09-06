@@ -24,7 +24,18 @@
 
 {{ method_field('PATCH') }}
 
-@include('leads.form', ['submitButtonText' => 'Редактировать лид', 'param'=>'', 'readonly'=>'readonly', 'autofocus'=>''])
+@php 
+	if($lead->phone != null){
+		$readonly = 'readonly';
+		$autofocus = '';
+	} else {
+		$readonly = '';
+		$autofocus = 'autofocus';
+}
+
+@endphp
+
+@include('leads.form', ['submitButtonText' => 'Редактировать лид', 'param'=>'', $readonly, $autofocus])
 
 {{ Form::close() }}
 

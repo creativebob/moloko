@@ -141,6 +141,58 @@ class LeadController extends Controller
         return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'challenges'));
     }
 
+    public function search($text_fragment)
+    {
+
+        // Подключение политики
+        $this->authorize('index', Lead::class);
+
+        $entity_name = $this->entity_name;
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+            $fragment_phone = 0;
+
+        if(strlen($text_fragment) == 11){
+            $fragment_phone = $text_fragment;
+        }
+
+        if(strlen($text_fragment) == 17){
+            $fragment_phone = cleanPhone($text_fragment);
+        }
+
+        // ------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // ------------------------------------------------------------------------------------------------------------
+
+        $result_search = Lead::with(
+            'location.city', 
+            'choices_goods_categories', 
+            'choices_services_categories', 
+            'choices_raws_categories', 
+            'manager',
+            'stage',
+            'challenges.challenge_type')
+        ->companiesLimit($answer)
+        ->where('name', 'LIKE', '%'.$text_fragment.'%')
+        ->whereNull('draft')
+        ->orderBy('created_at', 'asc')
+        ->orWhere('phone', 'LIKE', $fragment_phone)
+        ->where('phone', '!=', 0)
+        ->get();
+
+        if($result_search->count()){
+
+            return view('includes.search_lead', compact('result_search', 'entity_name'));
+        } else {
+
+            return view('includes.search_lead');
+        }
+    }
+
+
+
     public function create(Request $request)
     {
 

@@ -770,7 +770,7 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 
 .checkboxer {
   position: relative;
-  padding: 0.5rem 0rem;
+  padding: 0rem 0rem;
 }
 
 .checkboxer-wrap {
@@ -1492,6 +1492,43 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 }
 .table-notes td.actions {
   width: 100px;
+}
+
+.wrap-autofind-leads {
+  position: absolute;
+  right: 0;
+  border: 1px solid #000;
+  background-color: #fff;
+  padding: 5px;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  max-height: 300px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.wrap-autofind-leads legend {
+  margin-top: 1rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+}
+.wrap-autofind-leads table tbody {
+  border-left: 0px;
+  border-right: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.wrap-autofind-leads table tr td {
+  font-size: 0.8rem;
+  color: #999;
+  padding-left: 1rem;
+}
+.wrap-autofind-leads table tr td .lead-name {
+  color: #000;
+  border-bottom: 1px dashed #666;
+}
+.wrap-autofind-leads table tr td .lead-name:hover {
+  border-bottom: 1px dashed #999;
+  cursor: pointer;
 }
 
 .wrap-autofind {

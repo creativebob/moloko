@@ -157,7 +157,8 @@ $breadcrumbs-border-color: #dcdcdc;
     border-left: 8px solid #afefb9;
 }
 
-.stage-7 td:first-child{
+.stage-7 td:first-child
+{
     border-left: 8px solid #ffc2c2;
 }
 
@@ -1022,7 +1023,7 @@ tr:hover {
     .checkboxer
     {
         position: relative;
-        padding: 0.5rem 0rem;
+        padding: 0rem 0rem;
     }
 
     .checkboxer-wrap
@@ -1909,6 +1910,52 @@ thumb[orient="vertical"] {
 // Оформление портала / Результат автопоиска лида по номеру телефона
 
 #port_autofind{
+
+}
+
+.wrap-autofind-leads{
+    position: absolute;
+    right: 0;
+    border: 1px solid #000;
+    background-color: #fff;
+    padding: 5px;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    max-height: 300px;
+    overflow: hidden;
+    overflow-y: scroll;
+
+    legend{
+        margin-top: 1rem;
+        padding-bottom: 0.5rem;
+        padding-left: 1rem;
+    }
+
+    table{
+
+        tbody{
+            border-left: 0px;
+            border-right: 0px;
+            padding-left: 0px;
+            padding-right: 0px;        
+        }
+
+        tr td {
+            font-size: 0.8rem;
+            color: #999;
+            padding-left: 1rem;
+
+            .lead-name{
+                color: #000;
+                border-bottom: 1px dashed #666;
+            }
+
+            .lead-name:hover{
+                border-bottom: 1px dashed #999;
+                cursor: pointer;
+            }
+        }
+    }
 
 }
 

@@ -362,7 +362,8 @@ Route::post('/leads_sort', 'LeadController@ajax_sort')->middleware('auth');
 Route::post('/leads_system_item', 'LeadController@ajax_system_item')->middleware('auth');
 // Отображение на сайте
 Route::post('/leads_display', 'LeadController@ajax_display')->middleware('auth');
-
+// Поиск
+Route::post('/leads/search/{text_fragment}', 'LeadController@search')->middleware('auth');
 
 // Добавление комментария
 Route::any('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth');

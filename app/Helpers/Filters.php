@@ -261,7 +261,7 @@
                     }
                 }
                 
-                asort($list_select['item_list']);
+                if(isset($list_select['item_list'])){asort($list_select['item_list']);}
             };
             
             if($filter_mode == 'external-id-many'){
