@@ -45,7 +45,7 @@ class Note extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    // public $timestamps = false;
+    public $timestamps = false;
     
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = [

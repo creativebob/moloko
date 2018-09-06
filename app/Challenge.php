@@ -43,7 +43,7 @@ class Challenge extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
-    // public $timestamps = false;
+    public $timestamps = false;
     
     protected $dates = ['deleted_at', 'deadline_date', 'completed_date'];
     protected $fillable = [
