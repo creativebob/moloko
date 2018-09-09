@@ -492,6 +492,7 @@ class PagesTableSeeder extends Seeder
                 'display' => null,
             ],
 
+            // 42
             [
                 'name' => 'Продукция на сайте',
                 'site_id' => 1,
@@ -504,6 +505,7 @@ class PagesTableSeeder extends Seeder
                 'display' => null,
             ],
 
+            // 43
             [
                 'name' => 'Этапы',
                 'site_id' => 1,
@@ -515,6 +517,33 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => null,
             ],
+
+            // 44
+            [
+                'name' => 'Посты',
+                'site_id' => 1,
+                'title' => 'Посты',
+                'description' => 'Посты',
+                'alias' => 'posts',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+            // 45
+            [
+                'name' => 'Аккаунты',
+                'site_id' => 1,
+                'title' => 'Аккаунты',
+                'description' => 'Аккаунты',
+                'alias' => 'accounts',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],         
+
 
             // [
             //     'name' => 'Категории продукции',

@@ -662,9 +662,9 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Социальные сети',
             'icon' => null,
-            'alias' => 'admin/social_networks',
-            'parent_id' => 46,
-            'page_id' => 40,
+            'alias' => null,
+            'parent_id' => 11,
+            'page_id' => null,
             'navigation_id' => 2,
             'company_id' => null,
             'system_item' => 1,
@@ -718,22 +718,37 @@ class MenusTableSeeder extends Seeder
             'sort' => null,
         ],
 
-        // Остальное
-                // [
-        //     'name' => 'Типы помещений',
-        //     'icon' => null,
-        //     'alias' => 'places_types',
-        //     'parent_id' => 4,
-        //     'page_id' => 54,
-        //     'navigation_id' => 2,
-        //     'company_id' => null,
-        //     'system_item' => 1,
-        //     'author_id' => 1,
-        //     'display' => 1,
-        //     'sort' => null,
-        // ],
 
+        // 52
+        [
+            'name' => 'Посты',
+            'icon' => null,
+            'alias' => 'admin/posts',
+            'parent_id' => 48,
+            'page_id' => 44,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
 
+        // 53
+        [
+            'name' => 'Аккаунты',
+            'icon' => null,
+            'alias' => 'admin/accouts',
+            'parent_id' => 48,
+            'page_id' => 45,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ]
+   
 
     ]);
 }

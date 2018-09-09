@@ -18,9 +18,9 @@ Route::resource('/site_api', 'ApiController');
 Route::get('/medcosm', 'ApiController@medcosm');
 Route::get('/dashboard', 'HomeController@index')->name('home');
 Route::get('/img/{path}', 'ImageController@show')->where('path', '.*');
-Route::get('/lol', function () {
-	return view('demo');
-});
+// Route::get('/lol', function () {
+// 	return view('demo');
+// });
 
 Route::get('/home', 'HomeController@index')->name('home');
 
@@ -405,6 +405,22 @@ Route::post('/stages_system_item', 'StageController@ajax_system_item')->middlewa
 Route::post('/stages_display', 'StageController@ajax_display')->middleware('auth');
 
 
+
+	// ---------------------------------------- Посты --------------------------------------------
+
+	// Основные методы
+Route::resource('/posts', 'PostController')->middleware('auth');
+	// Проверка на существование поста
+Route::post('/posts_check', 'PostController@ajax_check')->middleware('auth');
+
+	// ---------------------------------------- Аккаунты --------------------------------------------
+
+	// Основные методы
+Route::resource('/accounts', 'AccountController')->middleware('auth');
+	// Проверка на существование аккаунта
+Route::post('/accounts_check', 'AccountController@ajax_check')->middleware('auth');
+	
+
 // --------------------------------------- Рекламные кампании -----------------------------------------------
 
 // Основные методы
@@ -690,7 +706,6 @@ Route::prefix('/sites/{alias}')->group(function () {
 	Route::resource('/news', 'NewsController')->middleware('auth');
   	// Проверка на существование новости
 	Route::post('/news_check', 'NewsController@ajax_check')->middleware('auth');
-
 
 	// ----------------------------------------- Каталог ------------------------------------------
 

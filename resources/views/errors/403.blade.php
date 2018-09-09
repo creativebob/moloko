@@ -69,11 +69,17 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        <a href="/admin{{ url('/home') }}">Home</a>
+                        <a href="{{ route('logout') }}"
+                            onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">Выход</a>
                     @else
                         <a href="{{ route('login') }}">Login</a>
                         <a href="{{ route('register') }}">Register</a>
                     @endauth
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
                 </div>
             @endif
 

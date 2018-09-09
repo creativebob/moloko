@@ -23,7 +23,7 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
 
-class News extends Model
+class Post extends Model
 {
 
     // Включаем кеш
@@ -89,12 +89,6 @@ class News extends Model
         };
     }
 
-    // Получаем сайт.
-    public function site()
-    {
-        return $this->belongsTo('App\Site');
-    }
-
     // Получаем компанию.
     public function company()
     {
@@ -117,15 +111,5 @@ class News extends Model
         return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'news');
     }
 
-    // Получаем города
-    // public function cities()
-    // {
-    //     return $this->belongsToMany('App\City', 'city_entity', 'entity_id', 'city_id')->where('entity', 'news');
-    // }
-    
-    public function cities()
-    {
-        return $this->morphToMany('App\CityEntity', 'city_entity');
-    }
 
 }
