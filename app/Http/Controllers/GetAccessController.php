@@ -15,6 +15,7 @@ use App\Booklist;
 use App\List_item;
 use App\Position;
 use App\Challenge;
+use App\Setting;
 
 
 // Модели которые отвечают за работу с правами + политики
@@ -220,6 +221,10 @@ class GetAccessController extends Controller
             $access['user_info']['challenges'] = $user_challenges;
 
 
+
+            
+
+
             if($user->company != null){
                 $access['company_info']['company_id'] = $user->company_id;
                 $access['company_info']['company_name'] = $user->company->name;
@@ -253,9 +258,22 @@ class GetAccessController extends Controller
             // dd($entities_list);
 
             $access['settings']['entities_list'] = $entities_list;
+
+            // Пишем настройки пользователя
+            $settings = Setting::where('user_id', $user->id)->get();
+
+            // dd($settings);
+
+            $conditions = [];
+
+            foreach ($settings as $setting) {
+                $conditions['conditions'][$setting->key] = $setting->value;
+            }
+
+            // dd($user_settings);
             
             // Перезаписываем сессию
-            session(['access' => $access]);
+            session(['access' => $access, 'conditions' => $conditions]);
 
 
             if(isset($user_redirect)){
@@ -268,6 +286,8 @@ class GetAccessController extends Controller
 
             if(isset($request->method)){$action_method = $request->method;};
             if(isset($request->action_array)){$action_array = $request->action_array;};
+
+            
 
             // if((isset($action_method))&&(isset($action_method))){
 

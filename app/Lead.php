@@ -18,6 +18,8 @@ use App\Scopes\Traits\ManufacturersTraitScopes;
 
 use App\Scopes\Traits\ManagerTraitScopes;
 
+use Carbon\Carbon;
+
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
@@ -175,6 +177,24 @@ class Lead extends Model
         };
 
         return $value;
+    }
+
+    public function getExpiredChallengeAttribute() {
+        if(!empty($this->challenges->where('status', null)->sortByDesc('deadline_date')->first()))
+        {
+            $value = $this->challenges->where('status', null)->sortByDesc('deadline_date')->first();
+        } else {
+            $value = null;
+        };
+
+        return $value;
+    }
+
+    public function expired_challenge()
+    {
+        // return $this->morphMany('App\Challenge', 'challenges')->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'));
+
+        return $this->morphOne('App\Challenge', 'challenges')->where('challenges_type_id', 2)->whereNull('status')->oldest('deadline_date');
     }
 
 }

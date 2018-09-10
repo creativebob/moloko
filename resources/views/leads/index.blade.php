@@ -10,6 +10,10 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
+@section('exel')
+<a href="/admin/leads?calls=yes" class="button tiny">Перезвоны</a>
+@endsection
+
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Lead::class, 'type' => 'table'])
