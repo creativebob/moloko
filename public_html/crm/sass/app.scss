@@ -881,41 +881,12 @@ tr:hover {
         // z-index: 10;
 
         // &:hover {
-        //     opacity: 1;
-        //     // z-index: 10;
-        // }
-    }
+            //     opacity: 1;
+            //     // z-index: 10;
+            // }
+        }
 
 
-
-.icon-sync {
-    background-position: 0px -1088px;
-    float: left;
-    margin-right: 0.6rem;
-    opacity: 0.4;
-    transition: opacity 0.5s ease;
-
-    &:hover {
-        opacity: 1;
-    }
-}
-
-.icon-project {
-    background-position: 0px -1110px;
-    float: left;
-    margin-right: 0.6rem;
-    opacity: 0.4;
-    transition: opacity 0.5s ease;
-
-    &:hover {
-        opacity: 1;
-    }
-}
-
-
-
-.active-filter {
-    background-position: -32px -352px !important;
 
 
 
@@ -931,6 +902,18 @@ tr:hover {
                 opacity: 1;
             }
         }
+
+        .icon-project {
+    background-position: 0px -1110px;
+    float: left;
+    margin-right: 0.6rem;
+    opacity: 0.4;
+    transition: opacity 0.5s ease;
+
+    &:hover {
+        opacity: 1;
+    }
+}
 
         .active-filter {
             background-position: -32px -352px !important;
