@@ -54,7 +54,7 @@ class CreateLeadsTable extends Migration
             $table->integer('sector_id')->nullable()->unsigned()->comment('Сектор');
             $table->foreign('sector_id')->references('id')->on('sectors');
 
-            $table->integer('lead_type_id')->nullable()->unsigned()->comment()->default(1)->('Тип обращения');
+            $table->integer('lead_type_id')->nullable()->unsigned()->default(1)->comment('Тип обращения');
             $table->foreign('lead_type_id')->references('id')->on('lead_types');
 
             $table->integer('manager_id')->nullable()->unsigned()->default(1)->comment('ID пользователя');

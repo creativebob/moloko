@@ -676,7 +676,7 @@ class LeadController extends Controller
         // dd($lead->notes->toArray());
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $lead);
+        // $this->authorize(getmethod(__FUNCTION__), $lead);
 
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
@@ -723,7 +723,7 @@ class LeadController extends Controller
         $lead = Lead::with('location', 'company')
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->manager($user)
+        // ->manager($user)
         // ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям 
         ->moderatorLimit($answer)
@@ -892,6 +892,8 @@ class LeadController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $user = $request->user();
 
         // ГЛАВНЫЙ ЗАПРОС:
         $lead = Lead::moderatorLimit($answer)

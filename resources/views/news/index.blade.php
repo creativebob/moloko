@@ -78,6 +78,7 @@
   не отображается
   @endif
   <br>
+  {{-- 
   <span title="{{ $cur_news->cities->implode('name', ', ') }}">Города:&nbsp;
     @if (count($cur_news->cities) > 0)
     @if (count($cur_news->cities) == 1)
@@ -89,8 +90,9 @@
     Нет
     @endif
   </span>
+  --}}
   <td class="td-date-publish">
-    <span>{{ $cur_news->publish_begin_date }} {{ getWeekDay($cur_news->publish_begin_date, 1) }}</span>
+    <span>{{ $cur_news->publish_begin_date }} {{ getWeekDay($cur_news->publish_begin_date, 1) }}</span><br>
     <span>{{ $cur_news->publish_end_date }} {{ getWeekDay($cur_news->publish_end_date, 1) }}</span>
   </td>
   <td class="td-author">@if(isset($cur_news->author->first_name)) {{ $cur_news->author->first_name . ' ' . $cur_news->author->second_name }} @endif</td>

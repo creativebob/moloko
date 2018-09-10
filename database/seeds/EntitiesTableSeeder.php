@@ -545,6 +545,7 @@ class EntitiesTableSeeder extends Seeder
       'author_id' => 1,
     ],
 
+    // 65
     [
       'name' => 'Задачи',
       'alias' => 'challenges',
@@ -554,65 +555,27 @@ class EntitiesTableSeeder extends Seeder
       'author_id' => 1,
     ],
 
-    // [
-    //   'name' => 'Рабочий стол',
-    //   'alias' => 'dashboard',
-    //   'model' => 'Dashboard',
-    //   'rights_minus' => null,
-    //   'system_item' => 1,
-    //   'author_id' => 1,
-    // ],
+    // 66
+    [
+      'name' => 'Посты',
+      'alias' => 'posts',
+      'model' => 'Post',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
 
-
-    // [
-    //   'name' => 'Типы продукции',
-    //   'alias' => 'products_types',
-    //   'model' => 'ProductsType',
-    //   'system_item' => 1,
-    //   'author_id' => 1,
-    // ],
-    // [
-    //   'name' => 'Категории продукции',
-    //   'alias' => 'products_categories',
-    //   'model' => 'ProductsCategory',
-    //   'system_item' => 1,
-    //   'author_id' => 1,
-    // ],
-    // [
-    //   'name' => 'Продукция',
-    //   'alias' => 'products',
-    //   'model' => 'Product',
-    //   'system_item' => 1,
-    //   'author_id' => 1,
-    // ], 
-
-            // [
-            //     'name' => 'Рабочее время дня',
-            //     'alias' => 'worktimes',
-            //     'model' => 'Worktime',
-            //     'system_item' => 1,
-            //     'author_id' => 1,
-            // ], 
-
-
-            // Связующие сущности
-
-            // [
-            //     'name' => 'Связь Право-Роль',
-            //     'alias' => 'right_role',
-            //     'author_id' => 1,
-            // ],
-            // [
-            //     'name' => 'Связь Роль-Пользователь',
-            //     'alias' => 'role_user',
-            //     'author_id' => 1,
-            // ],
-            // [
-            //     'name' => 'Связь Действие-Сущность',
-            //     'alias' => 'action_entity',
-            //     'author_id' => 1,
-            // ],
+    // 67
+    [
+      'name' => 'Аккаунты',
+      'alias' => 'accounts',
+      'model' => 'Account',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ]
 
   ]);
-}
+
+  }
 }

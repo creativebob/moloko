@@ -28,6 +28,9 @@ use App\News;
 use App\Catalog;
 use App\CatalogProduct;
 
+use App\Account;
+use App\Post;
+
 use App\Position;
 
 use App\Staffer;
@@ -87,6 +90,9 @@ use App\Policies\NewsPolicy;
 use App\Policies\CatalogPolicy;
 use App\Policies\CatalogProductPolicy;
 
+use App\Policies\AccountPolicy;
+use App\Policies\PostPolicy;
+
 use App\Policies\PositionPolicy;
 use App\Policies\StafferPolicy;
 use App\Policies\BooklistPolicy;
@@ -143,6 +149,10 @@ class AuthServiceProvider extends ServiceProvider
         Role::class => RolePolicy::class,
         Place::class => PlacePolicy::class,
         PlacesType::class => PlacesTypePolicy::class,
+
+        Account::class => AccountPolicy::class,
+        Post::class => PostPolicy::class,
+
         Position::class => PositionPolicy::class,
         Region::class => RegionPolicy::class,
         Area::class => AreaPolicy::class,
