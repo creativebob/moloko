@@ -1,4 +1,19 @@
-<aside class="task-manager el" id="task-manager">
+@php
+$session = session('conditions');
+$setting = $session['conditions']['task'];
+if (isset($setting)) {
+if ($session['conditions']['task'] == 'open') {
+	$open = 'open';
+} else {
+	$open = '';
+}
+} else {
+$open = '';
+}
+@endphp
+
+
+<aside class="task-manager el {{ $open }}" id="task-manager">
 	<div class="grid-x tabs-wrap">
 		<div class="small-12 cell">
 			<ul class="tabs-list" data-tabs id="tabs">

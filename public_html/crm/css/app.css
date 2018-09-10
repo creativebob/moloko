@@ -308,7 +308,11 @@ p {
   display: none;
 }
 
-.sidebar .expand {
+.sidebar {
+  width: 64px;
+}
+
+.sidebar-open {
   width: 240px;
 }
 
@@ -1658,6 +1662,9 @@ a#task-toggle {
   display: block;
   margin-right: -240px;
 }
+.task-manager .open {
+  margin-right: 0;
+}
 .task-manager .tabs-wrap {
   font-family: "SegoeUISemiLight";
   padding-top: 13px;
@@ -1776,10 +1783,6 @@ a#task-toggle {
 }
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-button:hover {
   background-color: red;
-}
-
-.task-active {
-  margin-right: 0;
 }
 
 .breadcrumbs {

@@ -44,6 +44,12 @@ Route::any('/lol', function () {
 
 Route::get('/parser', 'ParserController@index')->middleware('auth');
 
+// --------------------------------------- Настройки -----------------------------------------------
+
+Route::any('/set_setting', 'SettingController@ajax_set_setting')->middleware('auth');
+
+Route::resource('/settings', 'SettingController')->middleware('auth');
+
 // -------------------------------------- Пользователи ------------------------------------------------
 
 Route::resource('/users', 'UserController')->middleware('auth');
@@ -355,7 +361,9 @@ Route::post('/companies_display', 'CompanyController@ajax_display')->middleware(
 // --------------------------------------- Лиды -----------------------------------------------
 
 // Основные методы
+// Route::get('/lead/calls', 'LeadController@index')->middleware('auth');
 Route::resource('/leads', 'LeadController')->middleware('auth');
+// Route::resource('/leads_calls', 'LeadController@leads_calls')->middleware('auth');
 // Сортировка
 Route::post('/leads_sort', 'LeadController@ajax_sort')->middleware('auth');
 // Системная запись

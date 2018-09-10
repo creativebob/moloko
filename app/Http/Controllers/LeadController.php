@@ -57,7 +57,7 @@ class LeadController extends Controller
     protected $entity_name = 'leads';
     protected $entity_dependence = true;
 
-    public function index(Request $request)
+    public function index(Request $request )
     {
 
         Carbon::setLocale('en');
@@ -107,6 +107,207 @@ class LeadController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
+        if (isset($request->calls)) {
+            // Запрос с выбором лидов по дате задачи == сегодняшней дате или меньше, не получается отсортировать по дате задачи, т.к. задач может быть много на одном лиде
+            $leads = Lead::with([
+                'location.city',
+                // 'choices_goods_categories', 
+                // 'choices_services_categories', 
+                // 'choices_raws_categories', 
+                // 'manager',
+                // 'stage',
+                // 'challenges',
+                'expired_challenge'
+                // 'challenges' => function ($query) {
+                //     $query->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'))->oldest('deadline_date', 'asc');
+                // }
+            ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+            // ->authors($answer)
+            ->manager($user)
+            ->whereNull('draft')
+            // ->whereHas('challenges', function ($query) {
+            //     $query->whereHas('challenge_type', function ($query) {
+            //         $query->where('id', 2);
+            //     })->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'));
+            // })
+            // ->whereHas('challenges', function ($query) {
+            //     $query->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'))->oldest('deadline_date');
+            // })
+            ->systemItem($answer) // Фильтр по системным записям
+            ->filter($request, 'city_id', 'location')
+            ->filter($request, 'stage_id')
+            ->filter($request, 'manager_id')
+            ->dateIntervalFilter($request, 'created_at')
+            ->booklistFilter($request)
+
+            // ->orderBy(function ($query) {
+            //     $query->whereHas('challenges', function ($query) {
+            //         $query->oldest('deadline_date')->first();
+            //     });
+            // }, 'desc')
+            // ->orderBy(function($query) {
+            //     $query->oldest('expired_challenge.deadline_date');
+            // }, 'desc')
+            // ->orderBy('expired_challenge.deadline_date', 'asc')
+            ->orderBy('manager_id', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->orderBy('moderation', 'desc')
+            ->orderBy('sort', 'asc')
+            // ->get();
+
+            // $leads = Lead::all();
+            ->paginate(30);
+            // ->toSql();
+
+            // dd($leads);
+
+            // $leads = Lead::with([
+            //     'location.city'
+            //     // 'choices_goods_categories', 
+            //     // 'choices_services_categories', 
+            //     // 'choices_raws_categories', 
+            //     // 'manager',
+            //     // 'stage',
+            //     // 'expired_challenge'
+            //     // 'challenges' => function ($query) {
+            //     //     $query->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'))->oldest('deadline_date', 'asc');
+            //     // }
+            // ])
+            // // ->moderatorLimit($answer)
+            // // ->companiesLimit($answer)
+            // // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+            // // ->authors($answer)
+            // ->manager($user)
+            // ->whereNull('draft')
+            // // ->whereHas('challenges', function ($query) {
+            // //     $query->whereHas('challenge_type', function ($query) {
+            // //         $query->where('id', 2);
+            // //     })->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'));
+            // // })
+            // ->whereHas('challenges', function ($query) {
+            //     $query->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'))->oldest('deadline_date');
+            // })
+            // ->dateIntervalFilter($request, 'created_at')
+            // ->booklistFilter($request)
+
+            // ->join('challenges', 'challenges.challenges_id', '=', 'leads.id')
+            // ->join('challenges', 'challenges.challenges_type', '=', 'App\Lead')
+            // ->paginate(30);
+
+
+            // $leads = $leads->sortBy('expired_challenge.deadline_date');
+
+
+            // dd($leads->sortByDesc('expired_challenge.deadline_date'));
+        }
+
+
+
+
+
+
+    //     dd($leads->challenges);
+
+        // --------------------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
+        // --------------------------------------------------------------------------------------------------------------------------
+
+        $filter_query = Lead::with('location.city', 'manager', 'stage')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->manager($user)
+        // ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям           
+        ->get();
+
+        $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
+
+        // Перечень подключаемых фильтров:
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Выберите этап:', 'stage', 'stage_id', null, 'internal-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Менеджер:', 'manager', 'manager_id', null, 'internal-id-one');
+
+
+        // Добавляем данные по спискам (Требуется на каждом контроллере)
+        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        // Задачи пользователя
+        $challenges = challenges($request);
+        // dd($challenges);
+
+        return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'challenges'));
+    }
+
+    public function leads_calls(Request $request)
+    {
+
+      Carbon::setLocale('en');
+        // dd(Carbon::getLocale());
+
+        // Включение контроля активного фильтра 
+      $filter_url = autoFilter($request, $this->entity_name);
+      if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+
+      $user = $request->user();
+
+        // Подключение политики
+      $this->authorize(getmethod('index'), Lead::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+      $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+        // dd($answer);
+
+        // --------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // --------------------------------------------------------------------------------------------------------
+
+      // Запрос с выбором лидов по дате задачи == сегодняшней дате или меньше, не получается отсортировать по дате задачи, т.к. задач может быть много на одном лиде
+      $leads = Lead::with(
+        'location.city', 
+        'choices_goods_categories', 
+        'choices_services_categories', 
+        'choices_raws_categories', 
+        'manager',
+        'stage',
+        'challenges.challenge_type'
+    )
+      ->moderatorLimit($answer)
+      ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        // ->authors($answer)
+        ->manager($user)
+        ->whereNull('draft')
+        ->whereHas('challenges', function ($query) {
+            $query->whereHas('challenge_type', function ($query) {
+                $query->where('id', 2);
+            })->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'));
+        })
+        ->systemItem($answer) // Фильтр по системным записям
+        ->filter($request, 'city_id', 'location')
+        ->filter($request, 'stage_id')
+        ->filter($request, 'manager_id')
+        ->dateIntervalFilter($request, 'created_at')
+        ->booklistFilter($request)
+        // ->orderBy('challenges.deadline_date', 'desc')
+        ->orderBy('manager_id', 'asc')
+        ->orderBy('created_at', 'desc')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->paginate(30);
+
+
+
+    //     dd($leads->challenges);
+
         // --------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
         // --------------------------------------------------------------------------------------------------------------------------
@@ -154,7 +355,7 @@ class LeadController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-            $fragment_phone = 0;
+        $fragment_phone = 0;
 
         if(strlen($text_fragment) == 11){
             $fragment_phone = $text_fragment;

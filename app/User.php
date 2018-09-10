@@ -287,4 +287,11 @@ class User extends Authenticatable
         return $result;
     }
 
+    // Настройки
+    public function settings()
+    {
+        $result = $this->hasMany('App\Setting');
+        return $result;
+    }
+
 }

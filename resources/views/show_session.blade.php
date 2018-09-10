@@ -11,6 +11,8 @@
                         <div class="alert alert-success">
                           @php
 
+                            
+                            dd(session('conditions'));
                             dd(session('access'));
                             
                             $session_god = session('god'); 
@@ -18,9 +20,13 @@
                             $user_filial_id = $session_access['user_info']['filial_id'];
                             $rights_user_filial = collect($session_access['all_rights'])->keys()->implode('\n');
 
+
                           @endphp
 
                             {{  $user_filial_id }} \r {{!!  $rights_user_filial  !!}}
+
+
+
 
 
 
