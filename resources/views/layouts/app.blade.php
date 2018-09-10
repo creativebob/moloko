@@ -130,8 +130,9 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 {{-- Основной сайдбар, весь функционал --}}
 @include('layouts.sidebar')
 
-{{-- Менеджер задач --}}
-@include('layouts.task-manager')
+
+    {{-- Менеджер задач --}}
+    @include('layouts.task-manager')
 
 
 {{-- Основной контент --}}

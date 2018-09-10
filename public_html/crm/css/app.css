@@ -1624,19 +1624,19 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 }
 
 .challenge_date {
-  padding-bottom: 1rem;
-}
-
-.my-task {
-  padding-right: 1rem;
+  padding-bottom: 1.2rem;
 }
 
 .task-list {
-  padding-bottom: 2rem;
+  padding-bottom: 1rem;
 }
 
-.task-data a {
+.task-list a {
   color: #55aee8;
+}
+
+.task-data {
+  width: 50px;
 }
 
 a#task-toggle {
@@ -1657,17 +1657,36 @@ a#task-toggle {
   top: 6px;
 }
 
+.task-content {
+  border-radius: 5px;
+  border: 1px solid #333;
+  background: #3a3a3a;
+  padding: 5px 5px 5px 15px;
+}
+
+.task-content:hover {
+  background: #444;
+}
+
+.deadline-active {
+  border-left: 6px solid #d00;
+}
+
+.deadline-active:hover {
+  border-left: 6px solid #f00;
+}
+
 .task-manager {
   position: fixed;
   height: 100%;
   right: 0;
-  width: 240px;
+  width: 300px;
   margin-bottom: 48px;
   background-color: #333333;
   z-index: 50;
   padding-left: 10px;
   display: block;
-  margin-right: -240px;
+  margin-right: -300px;
 }
 .task-manager .tabs-wrap {
   font-family: "SegoeUISemiLight";
@@ -1744,7 +1763,7 @@ a#task-toggle {
   padding-left: 6px;
 }
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content {
-  margin-top: 1rem;
+  margin-top: 0.4rem;
   font-family: "SegoeUISemiLight";
   color: #cccccc;
   font-size: 0.8rem;
@@ -1757,7 +1776,7 @@ a#task-toggle {
 }
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-time {
   font-family: "PFDinDisplayPro-Light";
-  color: #b5daff;
+  color: #fff;
   margin-right: 0.4rem;
 }
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-set {

@@ -2078,19 +2078,23 @@ thumb[orient="vertical"] {
 }
 
 .challenge_date{
-    padding-bottom: 1rem;
+    padding-bottom: 1.2rem;
 }
 
 .my-task{
-    padding-right: 1rem;
+
 }
 
 .task-list{
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
 }
 
-.task-data a{
+.task-list a{
     color: #55aee8;
+}
+
+.task-data{
+    width: 50px;
 }
 
 a#task-toggle{
@@ -2111,17 +2115,37 @@ a#task-toggle{
     top: 6px;
 }
 
+.task-content{
+    border-radius: 5px;
+    border: 1px solid #333; 
+    background: #3a3a3a;
+    padding: 5px 5px 5px 15px;
+}
+
+.task-content:hover{
+    background: #444;
+}
+
+.deadline-active{
+    border-left: 6px solid #d00;
+}
+
+.deadline-active:hover{
+    border-left: 6px solid #f00;
+}
+
+
 .task-manager {
     position: fixed;
     height: 100%;
     right: 0;
-    width: 240px;
+    width: 300px;
     margin-bottom: 48px;
     background-color: $sidebar-bg-color;
     z-index: 50;
     padding-left: 10px;
     display: block;
-    margin-right: -240px;
+    margin-right: -300px;
 
   // Tabs в менеджере задач
   .tabs-wrap {
@@ -2224,7 +2248,7 @@ a#task-toggle{
     }      
 }
 .task-content {
-  margin-top: 1rem;
+  margin-top: 0.4rem;
   font-family: $SUISL;
   color: $task-manager-tabs-content-color;
   font-size: 0.8rem;
@@ -2237,7 +2261,7 @@ a#task-toggle{
 }
 .task-time {
     font-family: $PFDDPL;
-    color: $task-manager-tabs-date-color;
+    color: #fff;
     margin-right: 0.4rem;
 }
 .task-set {

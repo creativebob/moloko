@@ -4,14 +4,14 @@
 	@include('includes.scripts.pickmeup-inhead')
 @endsection
 
-@section('title', 'Редактировать новость')
+@section('title', 'Редактировать пост')
 
-@section('breadcrumbs', Breadcrumbs::render('section-edit', $parent_page_info, $site, $page_info, $cur_news))
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $post->name))
 
 @section('title-content')
 <div class="top-bar head-content">
   <div class="top-bar-left">
-    <h2 class="header-content">РЕДАКТИРОВАние новости "{{ $cur_news->name }}"</h2>
+    <h2 class="header-content">РЕДАКТИРОВАНИЕ поста "{{ $post->name }}"</h2>
  </div>
  <div class="top-bar-right">
  </div>
@@ -20,10 +20,10 @@
 
 @section('content')
 
-{{ Form::model($cur_news, ['url' => '/admin/sites/'.$site->alias.'/news/'.$cur_news->id, 'data-abide', 'novalidate', 'files'=>'true']) }}
+{{ Form::model($post, ['url' => '/admin/posts/'.$post->id, 'data-abide', 'novalidate', 'files'=>'true']) }}
 {{ method_field('PATCH') }}
 
-@include('news.form', ['submitButtonText' => 'Редактировать новость', 'param'=>''])
+@include('posts.form', ['submitButtonText' => 'Редактировать пост', 'param'=>''])
 
 {{ Form::close() }}
 @endsection
@@ -37,7 +37,7 @@
 
 @section('scripts')
 	@include('includes.scripts.inputs-mask')
-	@include('news.scripts')
+	@include('posts.scripts')
 	@include('includes.scripts.pickmeup-script')
 	@include('includes.scripts.upload-file')
 	@include('includes.scripts.delete-from-page-script')

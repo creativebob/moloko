@@ -555,7 +555,7 @@ class LeadController extends Controller
 
         if($location->address != $request->address) {
             $location->address = $request->address;
-            $location->editor_id = $user_id;
+            $location->editor_id = $user->id;
             $location->save();
         }
 

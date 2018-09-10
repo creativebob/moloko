@@ -3,7 +3,7 @@ $(document).foundation();
 // Время применения изменений
 var transitionTime = 200;
 // Ширина менеджера задач
-var widthTask = 240;
+var widthTask = 300;
 // Выставляем отступ контента по умолчанию = ширине сайдбара
 var widthSidebarSmall = 64;
 // Значение развернутого сайдбара

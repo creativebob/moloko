@@ -22,7 +22,7 @@ class CreateLeadsTable extends Migration
             $table->integer('filial_id')->unsigned()->nullable()->comment('Id отдела');
             $table->foreign('filial_id')->references('id')->on('departments');
 
-            $table->string('name', 20)->nullable()->index()->comment('Имя лида');
+            $table->string('name', 80)->nullable()->index()->comment('Имя лида');
             $table->text('description')->nullable()->comment('Описание для лида');
 
             $table->integer('badget')->nullable()->unsigned()->comment('Предполагаемая сумма сделки');

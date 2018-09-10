@@ -40,6 +40,7 @@
 			success: function(html){
 				$('.reveal-overlay').remove();
 				$('#challenges-list').html(html);
+				get_challenges();
 			}
 		});
 	});
@@ -61,7 +62,8 @@
 			type: "PATCH",
 			success: function(data){
 				var result = $.parseJSON(data);
-          		// alert(result);
+
+				get_challenges();
 
           		if (result['error_status'] == 0) {
           			$('#challenges-' + id).remove();
@@ -72,7 +74,29 @@
 		});
 	});
 
-	
+	function get_challenges(){
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: '/admin/get_challenges_user',
+			type: "POST",
+			success: function(html){
+
+			$('#portal-challenges-for-me').html(html);
+				// var result = $.parseJSON(data);
+
+    //       		if (result['error_status'] == 0) {
+    //       			$('#challenges-' + id).remove();
+    //       		} else {
+    //       			alert(result['error_message']);
+    //       		};
+			}
+		});
+	}
+
+
 
   	// ---------------------------------- Закрытие модалки -----------------------------------
   	$(document).on('click', '.icon-close-modal, .submit-edit, .submit-add, .submit-goods-product-add', function() {

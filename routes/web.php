@@ -391,7 +391,7 @@ Route::resource('/notes', 'NoteController')->middleware('auth');
 // Route::any('/challenges/{id}', 'ChallengeController@update')->middleware('auth');
 // Основные методы
 Route::resource('/challenges', 'ChallengeController')->middleware('auth');
-
+Route::post('/get_challenges_user', 'ChallengeController@ajax_get_challenges')->middleware('auth');
 
 // --------------------------------------- Этапы --------------------------------------------
 
@@ -410,8 +410,12 @@ Route::post('/stages_display', 'StageController@ajax_display')->middleware('auth
 
 	// Основные методы
 Route::resource('/posts', 'PostController')->middleware('auth');
-	// Проверка на существование поста
-Route::post('/posts_check', 'PostController@ajax_check')->middleware('auth');
+// Сортировка
+Route::post('/posts_sort', 'PostController@ajax_sort')->middleware('auth');
+// Системная запись
+Route::post('/posts_system_item', 'PostController@ajax_system_item')->middleware('auth');
+// Отображение на сайте
+Route::post('/posts_display', 'PostController@ajax_display')->middleware('auth');
 
 	// ---------------------------------------- Аккаунты --------------------------------------------
 

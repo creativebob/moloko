@@ -41,7 +41,7 @@
         <tr class="item @if($post->moderation == 1)no-moderation @endif" id="posts-{{ $post->id }}" data-name="{{ $post->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
-            <input type="checkbox" class="table-check" name="cur_news_id" id="check-{{ $post->id }}"
+            <input type="checkbox" class="table-check" name="post_id" id="check-{{ $post->id }}"
             {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
             @if(!empty($filter['booklist']['booklists']['default']))
             {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
@@ -54,7 +54,7 @@
 
             </label></td>
             <td class="td-photo">
-              <img src="{{ isset($post->photo_id) ? '/storage/'.$post->company_id.'/media/posts/'.$post->id.'/img/small/'.$post->photo->name : '/img/plug/news_small_default_color.jpg' }}" alt="{{ isset($post->photo_id) ? $post->name : 'Нет фото' }}">
+              <img src="{{ isset($post->photo_id) ? '/storage/'.$post->company_id.'/media/posts/'.$post->id.'/img/small/'.$post->photo->name : '/crm/img/plug/news_small_default_color.jpg' }}" alt="{{ isset($post->photo_id) ? $post->name : 'Нет фото' }}">
             </td>
             <td class="td-name">
               @can('update', $post)
@@ -72,9 +72,15 @@
 
   <td class="td-date-publish">
     <span>{{ $post->publish_begin_date }} {{ getWeekDay($post->publish_begin_date, 1) }}</span><br>
-    <span>{{ $post->publish_end_date }} {{ getWeekDay($post->publish_end_date, 1) }}</span>
+    <span>
+      @if(!empty($post->publish_end_date))
+      {{ $post->publish_end_date }} {{ getWeekDay($post->publish_end_date, 1) }}
+      @else
+      <!--       Без срока -->
+      @endif
+    </span>
   </td>
-  <td class="td-author">@if(isset($cur_news->author->first_name)) {{ $post->author->first_name . ' ' . $post->author->second_name }} @endif</td>
+  <td class="td-author">@if(isset($post->author->first_name)) {{ $post->author->first_name . ' ' . $post->author->second_name }} @endif</td>
 
   {{-- Элементы управления --}}
             @include('includes.control.table-td', ['item' => $post])

@@ -105,7 +105,7 @@ class PostController extends Controller
         return view('posts.index', compact('posts', 'page_info', 'filter'));
     }
 
-    public function create(Request $request, $alias)
+    public function create(Request $request)
     {
 
         // Подключение политики
@@ -126,22 +126,16 @@ class PostController extends Controller
         ->keyBy('id')
         ->toArray();
 
-        // dd($albums_categories);
-
-        // Города для новости на основании подключенных к сайту филиалов
-        $filials = $site->departments;
-        // dd($filials);
-
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         $albums_categories_list = get_select_tree($albums_categories, null, null, null);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('news.create', compact('post', 'page_info', 'albums_categories_list', 'filials'));  
+        return view('posts.create', compact('post', 'page_info', 'albums_categories_list'));  
     }
 
-    public function store(PostRequest $request, $alias)
+    public function store(PostRequest $request)
     {
 
         // Подключение политики
@@ -163,17 +157,7 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->preview = $request->preview;
 
-        // Если ввели алиас руками
-        if (isset($request->alias)) {
-            $post->alias = $request->alias;
-        } else {
-
-            // Иначе переводим заголовок в транслитерацию
-            $post->alias = Transliterate::make($request->title, ['type' => 'url', 'lowercase' => true]);
-        }
-
         $post->content = $request->content;
-
         $post->publish_begin_date = $request->publish_begin_date;
         $post->publish_end_date = $request->publish_end_date;
 
@@ -184,10 +168,8 @@ class PostController extends Controller
 
         // Cистемная запись
         $post->system_item = $request->system_item;
-
         $post->display = $request->display;
 
-        $post->site_id = $request->site_id;
         $post->company_id = $user->company_id;
         $post->author_id = $user_id;
         $post->save();
@@ -249,7 +231,7 @@ class PostController extends Controller
             }
 
             // Директория
-            $directory = $company_id.'/media/news/'.$post->id.'/img/';
+            $directory = $company_id.'/media/posts/'.$post->id.'/img/';
 
             // Отправляем на хелпер request (в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             $array = save_photo($request, $directory, 'preview-'.time(), null, null, $settings);
@@ -279,7 +261,7 @@ class PostController extends Controller
             }
             return redirect('/admin/posts');
         } else {
-            abort(403, 'Ошибка при записи новости!');
+            abort(403, 'Ошибка при записи поста!');
         }
     }
 
@@ -288,26 +270,16 @@ class PostController extends Controller
         //
     }
 
-    public function edit(Request $request, $alias, $posts_alias)
+    public function edit(Request $request, $id)
     {
 
-        $answer_post = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));             
 
         // ГЛАВНЫЙ ЗАПРОС:
-        // Вытаскиваем через сайт, так как его нужно отдать на шаблон
-
-        // Вытаскиваем новость
-        $post = $site->news[0];
-
-        // $post = Post::with(['albums.albums_category', 'cities', 'company.filials.city', 'site' => function ($query) use ($alias) {
-        //   $query->whereAlias($alias);
-        // }])->moderatorLimit($answer)->whereAlias($posts_alias)->first();
+        $post = Post::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $post);
-
-        // Города для новости на основании подключенных к сайту филиалов
-        $filials = $site->departments;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_albums_categories = operator_right('albums_categories', false, 'index');
@@ -322,8 +294,6 @@ class PostController extends Controller
         ->keyBy('id')
         ->toArray();
 
-        // dd($albums_categories);
-
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         $albums_categories_list = get_select_tree($albums_categories, null, null, null);
         // dd($albums_categories_list);
@@ -331,13 +301,10 @@ class PostController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        // Так как сущность имеет определенного родителя
-        $parent_page_info = pageInfo('sites');
-
-        return view('news.edit', compact('cur_news', 'parent_page_info', 'page_info', 'site', 'albums_categories_list', 'filials', 'cities', 'alias'));
+        return view('posts.edit', compact('post', 'page_info', 'albums_categories_list'));
     }
 
-    public function update(PostRequest $request, $alias, $id)
+    public function update(PostRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -415,7 +382,7 @@ class PostController extends Controller
 
 
             // Директория
-            $directory = $company_id.'/media/news/'.$post->id.'/img/';
+            $directory = $company_id.'/media/posts/'.$post->id.'/img/';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($post->photo_id) {
@@ -436,18 +403,6 @@ class PostController extends Controller
 
         $post->name = $request->name;
         $post->title = $request->title;
-
-        if ($post->alias != $request->alias) {
-
-            // Если ввели алиас руками
-            if (isset($request->alias)) {
-                $post->alias = $request->alias;
-            } else {
-
-            // Иначе переводим заголовок в транслитерацию
-                $post->alias = Transliterate::make($request->title, ['type' => 'url', 'lowercase' => true]);
-            }
-        }
 
         $post->preview = $request->preview;
         $post->content = $request->content;
@@ -478,28 +433,20 @@ class PostController extends Controller
                 $post->albums()->detach();
             }
 
-            // Когда новость обновилась, смотрим пришедние для нее города и сравниваем с существующими
-            if (isset($request->cities)) {
-                $post->cities()->sync($request->cities);
-            } else {
-
-                // Если удалили последний город для новости и пришел пустой массив
-                $post->cities()->detach();
-            }
-            return redirect('/admin/sites/'.$alias.'/news');
+            return redirect('/admin/posts');
         } else {
-            abort(403, 'Ошибка при обновлении новости!');
+            abort(403, 'Ошибка при обновлении поста!');
         }
     }
 
-    public function destroy(Request $request, $alias, $id)
+    public function destroy(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $post = Post::withCount('albums', 'cities')->moderatorLimit($answer)->findOrFail($id);
+        $post = Post::withCount('albums')->moderatorLimit($answer)->findOrFail($id);
         // dd($post);
 
         // Подключение политики
@@ -532,7 +479,7 @@ class PostController extends Controller
             }
 
             // Удаляем файлы
-            $directory = $post->company_id.'/media/news/'.$post->id;
+            $directory = $post->company_id.'/media/posts/'.$post->id;
             $del_dir = Storage::disk('public')->deleteDirectory($directory);
 
             $post->photo()->delete();
@@ -541,41 +488,17 @@ class PostController extends Controller
             $post = Post::destroy($id);
 
             if ($post) {
-                return redirect('/admin/sites/'.$alias.'/news');
+                return redirect('/admin/posts');
             } else {
-                abort(403, 'Ошибка при удалении новости');
+                abort(403, 'Ошибка при удалении поста');
             }
         } else {
-            abort(403, 'Новость не найдена');
+            abort(403, 'Пост не найден');
         }
     }
 
     // ------------------------------------------- Ajax ---------------------------------------------
 
-    // Проверка наличия в базе
-    public function ajax_check(Request $request, $alias)
-    {
-
-        // Проверка новости по сайту в нашей базе данных
-        $posts_alias = $request->alias;
-        $post = Post::whereHas('site', function ($query) use ($alias) {
-            $query->whereAlias($alias);
-        })->whereAlias($request->alias)->first();
-
-        // Если такая новость есть
-        if ($post) {
-            $result = [
-                'error_status' => 1,
-            ];
-
-        // Если нет
-        } else {
-            $result = [
-                'error_status' => 0,
-            ];
-        }
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
 
     public function get_albums(Request $request)
     {
@@ -583,7 +506,7 @@ class PostController extends Controller
         // Подключение политики
         $this->authorize(getmethod('index'), Post::class);
 
-        $answer_news = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_posts = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $answer_albums_categories = operator_right('albums_categories', false, getmethod(__FUNCTION__));
 
@@ -596,15 +519,15 @@ class PostController extends Controller
             ->authors($answer_albums_categories)
             ->systemItem($answer_albums_categories); // Фильтр по системным записям
         }])
-        ->moderatorLimit($answer_news)
-        ->companiesLimit($answer_news)
-        ->authors($answer_news)
-        ->systemItem($answer_news) // Фильтр по системным записям
-        ->whereId($request->cur_news_id) // Только для страниц сайта
+        ->moderatorLimit($answer_posts)
+        ->companiesLimit($answer_posts)
+        ->authors($answer_posts)
+        ->systemItem($answer_posts) // Фильтр по системным записям
+        ->whereId($request->post_id) // Только для страниц сайта
         ->first();
 
         // Отдаем Ajax
-        return view('news.albums', ['cur_news' => $post]);
+        return view('posts.albums', ['post' => $post]);
     }
 
     // Сортировка
@@ -612,7 +535,7 @@ class PostController extends Controller
     {
 
         $i = 1;
-        foreach ($request->news as $item) {
+        foreach ($request->posts as $item) {
             Post::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
@@ -674,61 +597,61 @@ class PostController extends Controller
 
     // ----------------------------------------- API ----------------------------------------------------
     // Получаем новости по api
-    public function api_index (Request $request, $city)
-    {
-        $token = $request->token;
+    // public function api_index (Request $request, $city)
+    // {
+    //     $token = $request->token;
 
-        // Cache::forget($domen.'-news');
+    //     // Cache::forget($domen.'-news');
 
-        $site = Site::with(['news' => function ($query) {
-            $query->where('display', 1)
-            ->whereNull('moderation')
-            ->where('publish_begin_date', '<', Carbon::now())
-            ->where('publish_end_date', '>', Carbon::now());
-        }, 'news.cities' => function($query) use ($city) {
-            $query->whereAlias($city);
-        }, 'news.company', 'news.author.staff' => function ($query) {
-            $query->with('position')->whereDisplay(1);
-        }, 'news.photo'])
-        ->where('api_token', $request->token)
-        ->first();
+    //     $site = Site::with(['news' => function ($query) {
+    //         $query->where('display', 1)
+    //         ->whereNull('moderation')
+    //         ->where('publish_begin_date', '<', Carbon::now())
+    //         ->where('publish_end_date', '>', Carbon::now());
+    //     }, 'news.cities' => function($query) use ($city) {
+    //         $query->whereAlias($city);
+    //     }, 'news.company', 'news.author.staff' => function ($query) {
+    //         $query->with('position')->whereDisplay(1);
+    //     }, 'news.photo'])
+    //     ->where('api_token', $request->token)
+    //     ->first();
 
-        if ($site) {
-            // return Cache::forever($domen.'-news', $site, function() use ($city, $token) {
-            $posts = [];
-            foreach ($site->news as $post) {
-                if (in_array($city, $post->cities->pluck('alias')->toArray())) {
-                    $posts[] = $post;
-                }
-            }
-            // $token = $request->token;
-            // $posts = Post::with(['site' => function($query) use ($token) {
-            //   $query->where('api_token', $token);
-            // }, 'cities' => function($query) use ($city) {
-            //   $query->where('alias', $city);
-            // }, 'photo', 'author', 'company'])->get();
-            // if ($posts) {
-            return $posts;
-            // });
-        } else {
-            return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
-        }  
-    }
+    //     if ($site) {
+    //         // return Cache::forever($domen.'-news', $site, function() use ($city, $token) {
+    //         $posts = [];
+    //         foreach ($site->news as $post) {
+    //             if (in_array($city, $post->cities->pluck('alias')->toArray())) {
+    //                 $posts[] = $post;
+    //             }
+    //         }
+    //         // $token = $request->token;
+    //         // $posts = Post::with(['site' => function($query) use ($token) {
+    //         //   $query->where('api_token', $token);
+    //         // }, 'cities' => function($query) use ($city) {
+    //         //   $query->where('alias', $city);
+    //         // }, 'photo', 'author', 'company'])->get();
+    //         // if ($posts) {
+    //         return $posts;
+    //         // });
+    //     } else {
+    //         return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
+    //     }  
+    // }
 
     // Показываем новость на сайте
-    public function api_show(Request $request, $city, $link)
-    {
+    // public function api_show(Request $request, $city, $link)
+    // {
 
-        $site = Site::with(['news.author', 'news' => function ($query) use ($link) {
-            $query->where(['alias' => $link, 'display' => 1])
-            ->whereNull('moderation');
-        }])->where('api_token', $request->token)->first();
-        if ($site) {
-            // return Cache::remember('staff', 1, function() use ($domen) {
-            return $site->news;
-            // });
-        } else {
-            return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
-        }
-    }
+    //     $site = Site::with(['news.author', 'news' => function ($query) use ($link) {
+    //         $query->where(['alias' => $link, 'display' => 1])
+    //         ->whereNull('moderation');
+    //     }])->where('api_token', $request->token)->first();
+    //     if ($site) {
+    //         // return Cache::remember('staff', 1, function() use ($domen) {
+    //         return $site->news;
+    //         // });
+    //     } else {
+    //         return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
+    //     }
+    // }
 }
