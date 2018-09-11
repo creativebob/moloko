@@ -1,6 +1,11 @@
-@if(!empty($challenges))
-			@foreach($challenges as $date => $challenge_date)
 
+{{-- Запускаем если пришли задачи --}}
+@if(!empty($challenges['today']))
+
+			{{-- Перебераем по дням  --}}
+			@foreach($challenges['today'] as $date => $challenge_date)
+
+				{{-- Если есть дата  --}}
 				@if(!empty($challenge_date))
 
 					<li class="challenge_date">
@@ -22,6 +27,7 @@
 							<hr />
 						</div>
 
+						{{-- Если есть задача в этой дате  --}}
 						@if(!empty($challenge_date))
 							@foreach($challenge_date as $challenge)
 
