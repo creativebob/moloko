@@ -166,7 +166,9 @@
                     {{-- КЛИЕНТ --}}
                     <div class="tabs-panel" id="content-panel-client">
                         <div class="grid-x grid-padding-x">
+                            @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
                             <a id="lead-free" class="button">Освободить лида</a>
+                            @endif
                         </div>
                     </div>
 

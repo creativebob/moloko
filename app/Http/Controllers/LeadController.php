@@ -586,7 +586,7 @@ class LeadController extends Controller
         $stages_list = Stage::moderatorLimit($answer_stages)
         // ->companiesLimit($answer_stages)
         // ->authors($answer_stages)
-        // ->template($answer_stages)
+        ->template($answer_stages)
         // ->systemItem($answer_stages) // Фильтр по системным записям
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
@@ -1008,6 +1008,8 @@ class LeadController extends Controller
         $user = $request->user();
         $lead = Lead::findOrFail($request->id);
 
+
+
         
              // dd($direction);
         $lead->manager_id = $user->id;
@@ -1053,12 +1055,22 @@ class LeadController extends Controller
         $lead->editor_id = $user->id;
         $lead->save();
 
+        $note = new Note;
+
+        $note->body = 'Менеджер: '. $user->first_name.' '.$user->second_name. ' принял(а) лида.';
+        $note->company_id = $user->company_id;
+        $note->author_id = $user->id;
+        $note->save();
+
+        $lead->notes()->save($note);
+
         $result = [
             'id' => $lead->id,
             'name' => $lead->name,
             'case_number' => $lead->case_number,
             'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
         ];
+        
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
 

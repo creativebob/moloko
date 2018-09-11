@@ -37,7 +37,7 @@ class ParserController extends Controller
 
         OldLead::with(['comments.author', 'claims.author', 'task', 'stage', 'manager', 'city', 'service', 'challenges' => function ($query) {
             $query->with('author', 'appointed', 'finisher', 'stage', 'task');
-        }])->whereNull('parse_status')->where('phone_contact', '!=', '')->chunk(500, function ($leads) {
+        }])->whereNull('parse_status')->where('phone_contact', '!=', '')->chunk(800, function ($leads) {
             foreach ($leads as $old_lead) {
 
                 // Пишем локацию
