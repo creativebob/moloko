@@ -1442,6 +1442,9 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   border-collapse: separate;
   width: 100%;
 }
+.table-notes .button, .table-challenges .button, .table-attributions .button {
+  margin: 0;
+}
 .table-notes thead tr th, .table-challenges thead tr th, .table-attributions thead tr th {
   background-color: #eee;
   border-bottom: 1px solid #000 !important;
@@ -1453,7 +1456,7 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   border-top: 3px solid #eee;
 }
 .table-notes tr th, .table-challenges tr th, .table-attributions tr th {
-  padding: 1rem;
+  padding: 1rem 1rem 0.4rem 1rem;
 }
 .table-notes tr th:nth-child(1), .table-notes .table-notes tr td:nth-child(1), .table-challenges tr th:nth-child(1), .table-challenges .table-notes tr td:nth-child(1), .table-attributions tr th:nth-child(1), .table-attributions .table-notes tr td:nth-child(1) {
   width: 35px !important;
@@ -1472,16 +1475,37 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   border-bottom: 1px solid #eee;
 }
 
-.table-challenges tr th:nth-child(4), .table-challenges tr td:nth-child(4) {
+.fieldset-challenge {
+  padding-bottom: 0px;
+}
+
+.table-challenges tr.deadline-active td {
+  background-color: #ffc2c2;
+}
+.table-challenges tr td {
+  color: #888;
+  line-height: 1.2;
+}
+.table-challenges span {
+  color: #000;
+}
+.table-challenges tr th.appointed, .table-challenges tr td.appointed {
   min-width: 100px !important;
-}
-.table-challenges tr td:nth-child(3) {
-  color: #666;
   font-size: 0.8rem;
 }
-.table-challenges tr td:nth-child(2) {
-  color: #666;
+.table-challenges tr td.description {
+  font-size: 0.9rem;
+  color: #000;
+}
+.table-challenges tr td.date {
   font-size: 0.8rem;
+}
+.table-challenges tr td.name {
+  font-size: 0.8rem;
+  min-width: 170px;
+}
+.table-challenges tr td.action {
+  text-align: right;
 }
 
 .table-notes tr th:nth-child(4), .table-notes tr td:nth-child(4) {
@@ -1507,6 +1531,19 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 }
 .table-notes td.actions {
   width: 100px;
+  vertical-align: middle;
+}
+.table-notes td.body {
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+.table-notes td.body textarea {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.fieldset-notes {
+  padding-bottom: 1rem;
 }
 
 .wrap-autofind-leads {
@@ -1649,7 +1686,7 @@ a#task-toggle {
 }
 
 #task-toggle {
-  margin-right: 1rem;
+  margin-right: 2rem;
 }
 
 .challenges_count {
@@ -1807,7 +1844,7 @@ a#task-toggle {
 }
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-set {
   font-family: "PFDinDisplayPro-Light";
-  color: #888888;
+  color: #fff;
 }
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-target {
   margin-top: 0.6rem;

@@ -140,7 +140,7 @@
 				{{-- Если есть дата  --}}
 				@if(!empty($challenge_date))
 
-					{{-- Если дата сегодняшняя --}}
+					{{-- Если дата будущая --}}
 					@if($date > Carbon\Carbon::now()->format('d.m.Y'))
 
 						<li class="challenge_date">

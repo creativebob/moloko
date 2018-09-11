@@ -1,5 +1,5 @@
 @can ('index', App\Challenge::class)
-<fieldset class="fieldset-access">
+<fieldset class="fieldset-challenge">
 	<legend>Задачи:</legend>
 	<div class="grid-x grid-padding-x"> 
 		<table class="table-challenges" id="table-challenges">
@@ -7,9 +7,7 @@
 				<tr>
 					<th>Задача</th>
 					<th>Дата</th>
-					<th>Время</th>
 					<th>Описание</th>
-					<th>Исполнитель</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -23,7 +21,7 @@
 		</table>
 	</div>
 	@can ('create', App\Challenge::class)
-	<div class="grid-x grid-padding-x align-right">
+	<div class="grid-x grid-padding-x align-left">
 		<div class="small-4 cell">
 			<a class="button challenge-add" data-open="challenge-add">Добавить</a>
 		</div>

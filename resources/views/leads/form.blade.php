@@ -1,7 +1,7 @@
 
 
 <div class="grid-x tabs-wrap inputs">
-    <div class="small-12 medium-6 large-6 cell">
+    <div class="small-12 medium-5 large-6 cell">
 
 
         @if ($errors->any())
@@ -235,15 +235,15 @@
     </div>
 
     <!-- Правый блок -->
-    <div class="small-12 medium-6 large-6 cell">
+    <div class="small-12 medium-7 large-6 cell">
         <div class="grid-x tabs-right">
             <div class="small-12 cell">
                 <ul class="tabs-list" data-tabs id="tabs-leads">
                     <li class="tabs-title is-active"><a href="#content-panel-notes" aria-selected="true">События</a></li>
                     <li class="tabs-title"><a href="#content-panel-catalog" aria-selected="true">Каталог</a></li>
-                    <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li>
+                    {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
                     <li class="tabs-title"><a href="#content-panel-claims" aria-selected="true">Рекламации</a></li>
-                    <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li>
+                    {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
                 </ul>
             </div>
         </div>
@@ -271,13 +271,13 @@
                 </div>
             </div>
 
-            {{-- Документы --}}
+            {{-- Документы 
             <div class="tabs-panel" id="content-panel-documents">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 large-6 cell">
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             {{-- Рекламации --}}
             <div class="tabs-panel" id="content-panel-claims">
@@ -287,13 +287,13 @@
                 </div>
             </div>
 
-            {{-- Замеры --}}
+            {{-- Замеры 
             <div class="tabs-panel" id="content-panel-measurements">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 large-6 cell">
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
 
         </div>

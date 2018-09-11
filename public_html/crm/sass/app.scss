@@ -110,7 +110,9 @@ $black: #000000;
 $body-bg-color: #eeeeee;
 $crm-blue: #1779ba;
 $green: #7e9a06;
+
 $green-light: #6e8a00;
+$red-light: #ffc2c2;
 
 // Страница входа
 $index-input-border-color: #c2c2c2;
@@ -1809,8 +1811,13 @@ thumb[orient="vertical"] {
 
 .table-notes, .table-challenges, .table-attributions
 {
-  border-collapse: separate;
-  width: 100%;
+
+    .button{
+        margin: 0;
+    }
+
+    border-collapse: separate;
+    width: 100%;
 
   thead{
 
@@ -1830,7 +1837,7 @@ tbody tr:first-child td {
 
 tr th
 {
-  padding: 1rem;
+  padding: 1rem 1rem 0.4rem 1rem;
 }
 
 tr th:nth-child(1), .table-notes tr td:nth-child(1)
@@ -1870,24 +1877,55 @@ tr th:nth-child(1), .table-notes tr td:nth-child(1)
 
 }
 
+.fieldset-challenge{
+    padding-bottom: 0px;
+}
+
 .table-challenges
 {
 
-    tr th:nth-child(4), tr td:nth-child(4)
+
+    tr.deadline-active td {
+        // border-left: 6px solid #f00;
+        background-color: $red-light;
+    }
+
+    tr td{
+        color: #888;
+        line-height: 1.2;
+    }
+
+    span{
+        color: #000;
+    }
+
+    tr th.appointed, tr td.appointed
     {
       min-width: 100px !important;
+      font-size: 0.8rem;
+    }
+
+  tr td.description
+  {
+
+      font-size: 0.9rem;
+      color: #000;
   }
 
-  tr td:nth-child(3)
+  tr td.date
   {
-      color: #666;
       font-size: 0.8rem;
   }
 
-  tr td:nth-child(2)
+  tr td.name
   {
-      color: #666;
       font-size: 0.8rem;
+      min-width: 170px;
+  }
+
+  tr td.action
+  {
+      text-align: right;
   }
 
 }
@@ -1924,8 +1962,22 @@ textarea {
 
 td.actions{
     width: 100px;
+    vertical-align: middle;
 }
 
+td.body{
+    font-size: 0.9rem;
+    vertical-align: middle;
+    textarea{
+        margin-top: 0.25rem;
+        margin-bottom: 0.25rem;
+    }
+}
+
+}
+
+.fieldset-notes{
+    padding-bottom: 1rem;
 }
 
 // Оформление портала / Результат автопоиска лида по номеру телефона
@@ -2110,7 +2162,7 @@ a#task-toggle{
 }
 
 #task-toggle{
-    margin-right: 1rem;
+    margin-right: 2rem;
 }
 
 .challenges_count{
@@ -2161,7 +2213,7 @@ a#task-toggle{
     .period-task .tabs-wrap {
         padding-bottom: 1rem;
     }
-    
+
   // Tabs в менеджере задач
   .tabs-wrap {
     font-family: $SUISL;
@@ -2304,7 +2356,7 @@ a#task-toggle{
 }
 .task-set {
     font-family: $PFDDPL;
-    color: $task-manager-tabs-set-color;
+    color: #fff;
 }
 
 .task-target {

@@ -1,5 +1,5 @@
 @can ('index', App\Note::class)
-<fieldset class="fieldset-access">
+<fieldset class="fieldset-notes">
 	<legend>События:</legend>
 	<div class="grid-x grid-padding-x"> 
 		<table class="table-notes" id="table-notes">
@@ -17,7 +17,7 @@
 						<span class="note_date">{{ date('d.m.Y') }}</span>
 					</td>
 
-					<td>
+					<td class="body">
 						@include('includes.inputs.textarea', ['name'=>'add_body', 'value'=>null, 'required'=>''])
 					</td>
 					<td class="actions"><a class="button" id="add-note">Добавить</a></td>

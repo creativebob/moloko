@@ -6,7 +6,7 @@
 		<span class="note_time">{{ $note->created_at->format('H:i') }}</span>
 	</td>
 
-	<td>
+	<td class="body">
 		@php 
 		echo str_replace("\n", '<br>', $note->body);
 		@endphp
