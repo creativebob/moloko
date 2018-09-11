@@ -1,17 +1,3 @@
-@php
-$session = session('conditions');
-$setting = $session['conditions']['sidebar'];
-if (isset($setting)) {
-if ($session['conditions']['sidebar'] == 'open') {
-$open = 'sidebar-open';
-} else {
-$open = '';
-}
-} else {
-$open = '';
-}
-@endphp
-
 <aside class="sidebar {{ $open }}" id="sidebar">
   <nav class="nav" id="sidebar-navigation">
     @if($sidebar_tree)

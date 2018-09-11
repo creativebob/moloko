@@ -127,12 +127,39 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
     </div>
 </div>
 
+@php
+$session = session('conditions');
+
+$setting_sidebar = $session['conditions']['sidebar'];
+if (isset($setting_sidebar)) {
+if ($session['conditions']['sidebar'] == 'open') {
+$sidebar = 'sidebar-open';
+} else {
+$sidebar = '';
+}
+} else {
+$sidebar = '';
+}
+
+$setting_task = $session['conditions']['task'];
+if (isset($setting_task)) {
+if ($session['conditions']['task'] == 'open') {
+    $task = 'task-open';
+} else {
+    $task = '';
+}
+} else {
+$task = '';
+}
+
+@endphp
+
 {{-- Основной сайдбар, весь функционал --}}
-@include('layouts.sidebar')
+@include('layouts.sidebar', ['open' => $sidebar])
 
 
     {{-- Менеджер задач --}}
-    @include('layouts.task-manager')
+    @include('layouts.task-manager', ['open' => $task])
 
 
 {{-- Основной контент --}}

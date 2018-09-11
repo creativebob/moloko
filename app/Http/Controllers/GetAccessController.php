@@ -266,14 +266,22 @@ class GetAccessController extends Controller
 
             $conditions = [];
 
-            foreach ($settings as $setting) {
-                $conditions['conditions'][$setting->key] = $setting->value;
+            if ($settings) {
+                
+                foreach ($settings as $setting) {
+                    $conditions['conditions'][$setting->key] = $setting->value;
+                }
+
+                // dd($user_settings);
+                
+                
             }
 
-            // dd($user_settings);
-            
+
             // Перезаписываем сессию
             session(['access' => $access, 'conditions' => $conditions]);
+
+            
 
 
             if(isset($user_redirect)){
