@@ -436,7 +436,7 @@ class LeadController extends Controller
             $lead->author_id = $user->id;
             $lead->manager_id = $user->id;
             $lead->stage_id = 2;
-            $lead->lead_type_id = 2;
+            $lead->lead_type_id = 1;
             $lead->display = 1;
 
             // Формируем номера обращения
@@ -686,9 +686,10 @@ class LeadController extends Controller
         $answer_stages = operator_right('stages', false, 'index'); 
 
         $stages_list = Stage::moderatorLimit($answer_stages)
-        ->companiesLimit($answer_stages)
-        ->authors($answer_stages)
-        ->systemItem($answer_stages) // Фильтр по системным записям
+        // ->companiesLimit($answer_stages)
+        // ->authors($answer_stages)
+        // ->template($answer_stages)
+        // ->systemItem($answer_stages) // Фильтр по системным записям
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get()->pluck('name', 'id');
@@ -884,7 +885,6 @@ class LeadController extends Controller
         };
 
         return redirect('/admin/leads');
-
     }
 
     public function destroy(Request $request, $id)
@@ -948,8 +948,6 @@ class LeadController extends Controller
             ];
         }
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
-
-
     }
 
     // Сортировка
@@ -1087,7 +1085,6 @@ class LeadController extends Controller
 
             return '';
         };
-
     }
 
     // Назначение лида
@@ -1185,7 +1182,6 @@ class LeadController extends Controller
         $lead_id = $request->id;
             // $lead_id = 1;
         return view('leads.modal-appointed', compact('users_list', 'lead_id'));
-
     }
 
 }

@@ -23,7 +23,7 @@ class PositionsTableSeeder extends Seeder
         	],
             [
                 'name' => 'Менеджер',
-                'page_id' => 32,
+                'page_id' => 38,
                 'direction_status' => null,
                 'company_id' => null,
                 'system_item' => null,

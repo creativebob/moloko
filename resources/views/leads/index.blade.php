@@ -11,7 +11,7 @@
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('exel')
-<a href="/admin/leads?calls=yes" class="button tiny">Перезвоны</a>
+<!-- <a href="/admin/leads?calls=yes" class="button tiny">Перезвоны</a> -->
 @endsection
 
 @section('title-content')

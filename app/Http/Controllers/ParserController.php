@@ -87,11 +87,11 @@ class ParserController extends Controller
                     $lead->lead_type_id = 2;
                     $lead->site_id = 2;
                 } else {
-                    $lead->lead_type_id = 1;
-                    
+                    $lead->lead_type_id = 1; 
                 }
+
                 $lead->manager_id = $old_lead->manager->new_user_id;
-                $lead->stage_id = $old_lead->id_stage;
+                $lead->stage_id = $old_lead->stage->new_stage_id;
                 $lead->old_lead_id = $old_lead->id;
                 $lead->display = 1;
                 $lead->author_id = $old_lead->manager->new_user_id;
@@ -251,8 +251,7 @@ class ParserController extends Controller
             echo '500 записей, id: '.$lead->id.', ';	
         });
 
-
-    return redirect('/admin/leads');
+return redirect('/admin/leads');
 
 }
 

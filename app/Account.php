@@ -23,7 +23,7 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class Site extends Model
+class Account extends Model
 {
 
     // Включаем кеш
