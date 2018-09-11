@@ -130,6 +130,8 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 @php
 $session = session('conditions');
 
+if ($session) {
+
 $setting_sidebar = $session['conditions']['sidebar'];
 if (isset($setting_sidebar)) {
 if ($session['conditions']['sidebar'] == 'open') {
@@ -151,6 +153,13 @@ if ($session['conditions']['task'] == 'open') {
 } else {
 $task = '';
 }
+    
+} else {
+    $sidebar = 'sidebar-open';
+    $task = '';
+}
+
+
 
 @endphp
 
