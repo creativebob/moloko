@@ -101,115 +101,13 @@ class LeadController extends Controller
         ->filter($request, 'manager_id')
         ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
-        ->orderBy('manager_id', 'asc')
         ->orderBy('created_at', 'desc')
         ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
+        ->orderBy('manager_id', 'asc')
+        // ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        if (isset($request->calls)) {
-            // Запрос с выбором лидов по дате задачи == сегодняшней дате или меньше, не получается отсортировать по дате задачи, т.к. задач может быть много на одном лиде
-            $leads = Lead::with([
-                'location.city',
-                // 'choices_goods_categories', 
-                // 'choices_services_categories', 
-                // 'choices_raws_categories', 
-                // 'manager',
-                // 'stage',
-                // 'challenges',
-                'expired_challenge'
-                // 'challenges' => function ($query) {
-                //     $query->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'))->oldest('deadline_date', 'asc');
-                // }
-            ])
-            ->moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-            // ->authors($answer)
-            ->manager($user)
-            ->whereNull('draft')
-            // ->whereHas('challenges', function ($query) {
-            //     $query->whereHas('challenge_type', function ($query) {
-            //         $query->where('id', 2);
-            //     })->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'));
-            // })
-            // ->whereHas('challenges', function ($query) {
-            //     $query->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'))->oldest('deadline_date');
-            // })
-            ->systemItem($answer) // Фильтр по системным записям
-            ->filter($request, 'city_id', 'location')
-            ->filter($request, 'stage_id')
-            ->filter($request, 'manager_id')
-            ->dateIntervalFilter($request, 'created_at')
-            ->booklistFilter($request)
 
-            // ->orderBy(function ($query) {
-            //     $query->whereHas('challenges', function ($query) {
-            //         $query->oldest('deadline_date')->first();
-            //     });
-            // }, 'desc')
-            // ->orderBy(function($query) {
-            //     $query->oldest('expired_challenge.deadline_date');
-            // }, 'desc')
-            // ->orderBy('expired_challenge.deadline_date', 'asc')
-            ->orderBy('manager_id', 'asc')
-            ->orderBy('created_at', 'desc')
-            ->orderBy('moderation', 'desc')
-            ->orderBy('sort', 'asc')
-            // ->get();
-
-            // $leads = Lead::all();
-            ->paginate(30);
-            // ->toSql();
-
-            // dd($leads);
-
-            // $leads = Lead::with([
-            //     'location.city'
-            //     // 'choices_goods_categories', 
-            //     // 'choices_services_categories', 
-            //     // 'choices_raws_categories', 
-            //     // 'manager',
-            //     // 'stage',
-            //     // 'expired_challenge'
-            //     // 'challenges' => function ($query) {
-            //     //     $query->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'))->oldest('deadline_date', 'asc');
-            //     // }
-            // ])
-            // // ->moderatorLimit($answer)
-            // // ->companiesLimit($answer)
-            // // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-            // // ->authors($answer)
-            // ->manager($user)
-            // ->whereNull('draft')
-            // // ->whereHas('challenges', function ($query) {
-            // //     $query->whereHas('challenge_type', function ($query) {
-            // //         $query->where('id', 2);
-            // //     })->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'));
-            // // })
-            // ->whereHas('challenges', function ($query) {
-            //     $query->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'))->oldest('deadline_date');
-            // })
-            // ->dateIntervalFilter($request, 'created_at')
-            // ->booklistFilter($request)
-
-            // ->join('challenges', 'challenges.challenges_id', '=', 'leads.id')
-            // ->join('challenges', 'challenges.challenges_type', '=', 'App\Lead')
-            // ->paginate(30);
-
-
-            // $leads = $leads->sortBy('expired_challenge.deadline_date');
-
-
-            // dd($leads->sortByDesc('expired_challenge.deadline_date'));
-        }
-
-
-
-
-
-
-    //     dd($leads->challenges);
 
         // --------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
@@ -1059,9 +957,14 @@ class LeadController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------
 
-
-        $finded_leads = Lead::with('location.city', 'choices_goods_categories', 'choices_services_categories', 'choices_raws_categories')
-        ->moderatorLimit($answer_lead)
+        $finded_leads = Lead::with(
+            'location.city', 
+            'choices_goods_categories', 
+            'choices_services_categories', 
+            'choices_raws_categories', 
+            'manager',
+            'stage',
+            'challenges.challenge_type')
         ->companiesLimit($answer_lead)
         // ->authors($answer_lead) // Не фильтруем по авторам
         ->systemItem($answer_lead) // Фильтр по системным записям
@@ -1069,22 +972,16 @@ class LeadController extends Controller
         ->whereNull('draft')
         ->where('phone', $phone)
         ->where('id', '!=', $lead_id)
-        ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
 
-        // dd($finded_leads);
-
         $count_finded_leads = $finded_leads->count();
 
-
         if($count_finded_leads > 0){
-
             return view('leads.autofind', compact('finded_leads'));
         } else {
-
             return '';
-        };
+        }
     }
 
     // Назначение лида

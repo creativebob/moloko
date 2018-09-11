@@ -22,7 +22,6 @@ use Carbon\Carbon;
         ->where('status', null)
         // ->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'))
         ->orderBy('deadline_date', 'asc')
-        ->orderBy('moderation', 'desc')
         ->get()
         ->groupBy(function($challenges) {
             return Carbon::parse($challenges->deadline_date)->format('d.m.Y'); // А это то-же поле по нему мы и будем группировать

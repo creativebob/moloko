@@ -124,8 +124,12 @@ class GetAccessController extends Controller
                 // Проверяем, устроен ли пользователь в компании
                 $user_department = $user->staff->first();
 
-                if($user->staff->first() == null){abort(403, "Пользователь не устроен в компании!");};
+                if($user->staff->first() == null){
+                    abort(403, "Пользователь не устроен в компании!");
+                };
+
                 $user_redirect = '/admin/' . $user->staff->first()->position->page->alias;
+                $user_position_id = $user->staff->first()->position->id;
 
                 if($user_department != null){
                     $user_filial_id = $user_department->filial_id;
@@ -197,6 +201,9 @@ class GetAccessController extends Controller
             $access['user_info']['company_id'] = $user->company_id;
             $access['user_info']['filial_id'] = $user->filial_id;
             $access['user_info']['department_id'] = $user_department_id;
+            if(isset($user_position_id)){
+                $access['user_info']['position_id'] = $user_position_id;
+            }
 
             $challenges = Challenge::with(
                 'author',

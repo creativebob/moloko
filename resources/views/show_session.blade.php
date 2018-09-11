@@ -9,10 +9,11 @@
                 <div class="panel-body">
 
                         <div class="alert alert-success">
+                            {{-- dd(session('conditions')); --}}          
                           @php
 
                             
-                            dd(session('conditions'));
+
                             dd(session('access'));
                             
                             $session_god = session('god'); 

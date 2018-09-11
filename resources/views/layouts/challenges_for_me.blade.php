@@ -10,7 +10,7 @@
 				@if(!empty($challenge_date))
 
 					{{-- Если дата прошедших дней --}}
-					@if($date < Carbon\Carbon::now()->format('d.m.Y'))
+					@if(Carbon\Carbon::createFromFormat('d.m.Y', $date) < Carbon\Carbon::today())
 
 						<li class="challenge_date">
 							<div class="task-head">
@@ -19,9 +19,9 @@
 								@if($date == Carbon\Carbon::now()->format('d.m.Y'))
 									Сегодня: {{ $date }}
 								@elseif($date == Carbon\Carbon::now()->addDays(1)->format('d.m.Y'))
-									Завтра
+									Завтра: {{ $date }}
 								@elseif($date == Carbon\Carbon::now()->addDays(-1)->format('d.m.Y'))
-									Вчерашние
+									Вчерашние: {{ $date }}
 								@else
 									{{ $date }}
 								@endif
@@ -86,9 +86,9 @@
 								@if($date == Carbon\Carbon::now()->format('d.m.Y'))
 									Сегодня: {{ $date }}
 								@elseif($date == Carbon\Carbon::now()->addDays(1)->format('d.m.Y'))
-									Завтра
+									Завтра: {{ $date }}
 								@elseif($date == Carbon\Carbon::now()->addDays(-1)->format('d.m.Y'))
-									Вчерашние
+									Вчерашние: {{ $date }}
 								@else
 									{{ $date }}
 								@endif
@@ -144,7 +144,7 @@
 				@if(!empty($challenge_date))
 
 					{{-- Если дата будущая --}}
-					@if($date > Carbon\Carbon::now()->format('d.m.Y'))
+					@if(Carbon\Carbon::createFromFormat('d.m.Y', $date) > Carbon\Carbon::tomorrow())
 
 						<li class="challenge_date">
 							<div class="task-head">
@@ -153,9 +153,9 @@
 								@if($date == Carbon\Carbon::now()->format('d.m.Y'))
 									Сегодня: {{ $date }}
 								@elseif($date == Carbon\Carbon::now()->addDays(1)->format('d.m.Y'))
-									Завтра
+									Завтра: {{ $date }}
 								@elseif($date == Carbon\Carbon::now()->addDays(-1)->format('d.m.Y'))
-									Вчерашние
+									Вчерашние: {{ $date }}
 								@else
 									{{ $date }}
 								@endif
