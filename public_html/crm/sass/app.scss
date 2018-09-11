@@ -2158,6 +2158,10 @@ a#task-toggle{
       margin-right: 0;
   }
 
+    .period-task .tabs-wrap {
+        padding-bottom: 1rem;
+    }
+    
   // Tabs в менеджере задач
   .tabs-wrap {
     font-family: $SUISL;
@@ -2196,9 +2200,32 @@ a#task-toggle{
     }
 }
 }
+
+
+.tabs-period-task li{
+    width: 33%;
+    text-align: center;
+}
+
+.tabs-period-task li a:hover{
+    background-color: #424242;
+    color: #fff;
+}
+
+.tabs-period-task li.active a:hover{
+    background-color: #5a5959;
+    color: #fff;
+}
+
+.tabs-period-task li a{
+    padding: 1rem 0.5rem;
+    color: #aaa;
+}
+
+
 // Контент tabs
 .tabs-content {
-  margin-top: 1.4rem;
+  margin-top: 0rem;
 
   // Обнуляем фонду
   border: none;

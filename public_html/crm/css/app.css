@@ -1695,6 +1695,9 @@ a#task-toggle {
 .task-manager .open {
   margin-right: 0;
 }
+.task-manager .period-task .tabs-wrap {
+  padding-bottom: 1rem;
+}
 .task-manager .tabs-wrap {
   font-family: "SegoeUISemiLight";
   padding-top: 13px;
@@ -1722,8 +1725,24 @@ a#task-toggle {
 .task-manager .tabs-wrap .tabs-list li .is-active a {
   background-color: #ffffff;
 }
+.task-manager .tabs-wrap .tabs-period-task li {
+  width: 33%;
+  text-align: center;
+}
+.task-manager .tabs-wrap .tabs-period-task li a:hover {
+  background-color: #424242;
+  color: #fff;
+}
+.task-manager .tabs-wrap .tabs-period-task li.active a:hover {
+  background-color: #5a5959;
+  color: #fff;
+}
+.task-manager .tabs-wrap .tabs-period-task li a {
+  padding: 1rem 0.5rem;
+  color: #aaa;
+}
 .task-manager .tabs-wrap .tabs-content {
-  margin-top: 1.4rem;
+  margin-top: 0rem;
   border: none;
   background: none;
 }
