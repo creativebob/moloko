@@ -204,9 +204,35 @@ class ChallengeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $user = $request->user();
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $challenge = Challenge::findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $challenge);
+
+        // Удаляем пользователя с обновлением
+        $challenge->forceDelete();
+
+        if ($challenge) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении освобождении лида!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     public function ajax_get_challenges()

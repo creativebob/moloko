@@ -848,7 +848,7 @@ class LeadController extends Controller
     }
 
 
-    public function free(Request $request)
+    public function ajax_lead_free(Request $request)
     {
 
         // Получаем данные для авторизованного пользователя
@@ -856,14 +856,12 @@ class LeadController extends Controller
 
         $lead = Lead::findOrFail($request->id);
 
-        $note = new Note;
-
-        $note->body = 'Менеджер: '. $user->first_name.' '.$user->second_name. ' освободил(а) лида.';
-        $note->company_id = $user->company_id;
-        $note->author_id = $user->id;
-        $note->save();
-
-        $lead->notes()->save($note);
+        if ($user->sex == 1) {
+            $sex = 'освободил';
+        } else {
+            $sex = 'освободила';
+        }
+        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$sex.' лида.');
 
         $lead->manager_id = 1;
         $lead->save();
@@ -1053,14 +1051,12 @@ class LeadController extends Controller
         $lead->editor_id = $user->id;
         $lead->save();
 
-        $note = new Note;
-
-        $note->body = 'Менеджер: '. $user->first_name.' '.$user->second_name. ' принял(а) лида.';
-        $note->company_id = $user->company_id;
-        $note->author_id = $user->id;
-        $note->save();
-
-        $lead->notes()->save($note);
+        if ($user->sex == 1) {
+            $sex = 'принял';
+        } else {
+            $sex = 'приняла';
+        }
+        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$sex.' лида.');
 
         $result = [
             'id' => $lead->id,
@@ -1069,10 +1065,6 @@ class LeadController extends Controller
             'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
         ];
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
-
-
-        
-        // }
     }
 
     // Назначение лида
@@ -1096,14 +1088,12 @@ class LeadController extends Controller
         $lead->editor_id = $user->id;
         $lead->save();
 
-        $note = new Note;
-
-        $note->body = 'Руководитель: '. $user->first_name.' '.$user->second_name. ' назначил(а) лида менеджеру: '. $manager->first_name.' '.$manager->second_name;
-        $note->company_id = $user->company_id;
-        $note->author_id = $user->id;
-        $note->save();
-
-        $lead->notes()->save($note);
+        if ($user->sex == 1) {
+            $sex = 'назначил';
+        } else {
+            $sex = 'назначила';
+        }
+        $note = add_note($lead, 'Руководитель: '. $user->first_name.' '.$user->second_name. ' '.$sex.' лида менеджеру: '. $manager->first_name.' '.$manager->second_name);
 
         $result = [
             'id' => $lead->id,

@@ -381,7 +381,7 @@ Route::any('/lead_distribute', 'LeadController@ajax_distribute')->middleware('au
 Route::any('/lead_take', 'LeadController@ajax_lead_take')->middleware('auth');
 
 // Освобождаем лида
-Route::post('/lead_free', 'LeadController@free')->middleware('auth');
+Route::post('/lead_free', 'LeadController@ajax_lead_free')->middleware('auth');
 
 // Добавление комментария
 Route::post('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth');
