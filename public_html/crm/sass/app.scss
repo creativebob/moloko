@@ -3415,6 +3415,29 @@ tr:not(.tr-close) {
 }
 }
 }
+
+.case_number_field{
+    padding: 5px 0.8rem;
+    width: 180px;
+    height: 2.4rem;
+    min-width: 4rem;
+    background-color: transparent;
+    cursor: text;
+    border-style: none;
+    border: 1px solid transparent;
+}
+
+.case_number_field:hover{
+    background-color: white;
+    cursor: text;
+    border: 1px solid #ddd;
+    &[readonly]{
+        cursor: text;
+    }
+
+}
+
+
 // ---------------------------------------- Табы -----------------------------------------
 .tabs-wrap {
     .tabs-content {
@@ -3455,6 +3478,12 @@ a:hover {
 }
 }
 }
+
+
+
+
+
+
 
 // --------------------------------------------- Футер ----------------------------------------
 .footer {
@@ -3510,6 +3539,11 @@ a:hover {
   }
 }
 }
+
+
+
+
+
 
 // ------------------------------------- Мобильное расширение ---------------------------------
 @media screen and (min-width: 1px) and (max-width: 639px) {

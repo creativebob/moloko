@@ -63,11 +63,18 @@
     var lead_city_id = $('#lead-city').data('city-id');
 
     $('input[name=name]').val(lead_name);
-    $('input[name=city_name]').val(lead_city);
     $('input[name=address]').val(lead_address);
-    $('input[name=city_id]').val(lead_city_id);
 
-    $('#city-check').addClass('icon-find-ok sprite-16');
+    if(lead_city == '- Город не указан -'){
+        $('input[name=city_name]').val('');
+        $('input[name=city_name]').focus();
+    } else {
+        $('input[name=city_id]').val(lead_city_id);
+        $('input[name=city_name]').val(lead_city);
+        $('#city-check').addClass('icon-find-ok sprite-16');        
+    };
+
+
     $('#port-autofind').hide();
 
 });

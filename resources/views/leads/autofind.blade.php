@@ -12,9 +12,8 @@
                                 {{ $lead->created_at->format('d.m.Y') }}
                             </td>
                             <td>
-                                <span class="lead-name" id="lead-name" title="Использовать данные">{{ $lead->name or '' }}</span><br>
-                                <span id="lead-city" data-city-id="{{ $lead->location->city->id or '' }}">
-                                    {{ $lead->location->city->name  or '- Город не указан - ' }}</span>,
+                                <span class="lead-name" id="lead-name" title="Использовать данные">{{$lead->name or ''}}</span><br>
+                                <span id="lead-city" data-city-id="{{$lead->location->city->id or ''}}">{{$lead->location->city->name or '- Город не указан -'}}</span>,
                                 <span id="lead-address">{{ $lead->location->address or ''}}</span>
                             </td>
                             <td>

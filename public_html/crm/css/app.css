@@ -2567,6 +2567,24 @@ a#task-toggle {
 .content .table-content .tr-border tr:not(.tr-close) td label, .content .table-content .tr-border tr:not(.tr-close) td a {
   display: none;
 }
+.content .case_number_field {
+  padding: 5px 0.8rem;
+  width: 180px;
+  height: 2.4rem;
+  min-width: 4rem;
+  background-color: transparent;
+  cursor: text;
+  border-style: none;
+  border: 1px solid transparent;
+}
+.content .case_number_field:hover {
+  background-color: white;
+  cursor: text;
+  border: 1px solid #ddd;
+}
+.content .case_number_field:hover[readonly] {
+  cursor: text;
+}
 .content .tabs-wrap .tabs-content {
   margin: 0 -15px;
 }
