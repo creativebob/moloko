@@ -13,7 +13,7 @@ class RightRole extends Model
 {
 
 	// Включаем кеш
-    use Cachable;
+    // use Cachable;
 
 
     protected $table = 'right_role';

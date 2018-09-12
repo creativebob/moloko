@@ -26,7 +26,7 @@ class BooklistUser extends Model
 {
 
     // Включаем кеш
-    use Cachable;
+    // use Cachable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;

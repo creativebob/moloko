@@ -27,7 +27,7 @@ class Source extends Model
 {
 
     // Включаем кеш
-    use Cachable;
+    // use Cachable;
 
     use SoftDeletes;
 

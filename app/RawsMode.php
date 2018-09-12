@@ -26,7 +26,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 class RawsMode extends Model
 {
      // Включаем кеш
-    use Cachable;
+    // use Cachable;
 
     use SoftDeletes;
 

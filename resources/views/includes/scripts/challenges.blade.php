@@ -63,6 +63,34 @@
 			success: function(data){
 				var result = $.parseJSON(data);
 
+          		if (result['error_status'] == 0) {
+          			$('#challenges-' + id).remove();
+          			get_challenges();
+          		} else {
+          			alert(result['error_message']);
+          		};
+			}
+		});
+	});
+
+	// Снятие задачи
+	$(document).on('click', '.remove-challenge', function(event) {
+		event.preventDefault();
+
+		// Находим описание сущности, id и название удаляемого элемента в родителе
+		var parent = $(this).closest('.item');
+		var id = parent.attr('id').split('-')[1];
+		var name = parent.data('name');
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: '/admin/challenges/' + id,
+			type: "DELETE",
+			success: function(data){
+				var result = $.parseJSON(data);
+
 				get_challenges();
 
           		if (result['error_status'] == 0) {
@@ -85,6 +113,8 @@
 			success: function(html){
 
 			$('#portal-challenges-for-me').html(html);
+			$('#challenges-count').text($('input[name=challenges_count]').val());
+
 				// var result = $.parseJSON(data);
 
     //       		if (result['error_status'] == 0) {

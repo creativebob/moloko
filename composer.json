@@ -46,6 +46,7 @@
       "app/Helpers/SessionOperation.php",
       "app/Helpers/PhotoOperations.php",
       "app/Helpers/PageInfo.php",
+      "app/Helpers/Robot.php",
       "app/Helpers/Challenges.php",
       "app/Helpers/Filters.php",
       "app/Helpers/GeneralOperations.php"

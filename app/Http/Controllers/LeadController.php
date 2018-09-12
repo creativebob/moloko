@@ -127,7 +127,11 @@ class LeadController extends Controller
 
         // Перечень подключаемых фильтров:
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
+       
+        
         $filter = addFilter($filter, $filter_query, $request, 'Выберите этап:', 'stage', 'stage_id', null, 'internal-id-one');
+         //dd($filter);
+        
         $filter = addFilter($filter, $filter_query, $request, 'Менеджер:', 'manager', 'manager_id', null, 'internal-id-one');
 
 
@@ -844,7 +848,7 @@ class LeadController extends Controller
     }
 
 
-    public function free(Request $request)
+    public function ajax_lead_free(Request $request)
     {
 
         // Получаем данные для авторизованного пользователя
@@ -852,14 +856,12 @@ class LeadController extends Controller
 
         $lead = Lead::findOrFail($request->id);
 
-        $note = new Note;
-
-        $note->body = 'Менеджер: '. $user->first_name.' '.$user->second_name. ' освободил(а) лида.';
-        $note->company_id = $user->company_id;
-        $note->author_id = $user->id;
-        $note->save();
-
-        $lead->notes()->save($note);
+        if ($user->sex == 1) {
+            $sex = 'освободил';
+        } else {
+            $sex = 'освободила';
+        }
+        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$sex.' лида.');
 
         $lead->manager_id = 1;
         $lead->save();
@@ -1039,9 +1041,6 @@ class LeadController extends Controller
         $user = $request->user();
         $lead = Lead::findOrFail($request->id);
 
-
-
-        
              // dd($direction);
         $lead->manager_id = $user->id;
 
@@ -1052,6 +1051,13 @@ class LeadController extends Controller
         $lead->editor_id = $user->id;
         $lead->save();
 
+        if ($user->sex == 1) {
+            $sex = 'принял';
+        } else {
+            $sex = 'приняла';
+        }
+        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$sex.' лида.');
+
         $result = [
             'id' => $lead->id,
             'name' => $lead->name,
@@ -1059,10 +1065,6 @@ class LeadController extends Controller
             'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
         ];
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
-
-
-        
-        // }
     }
 
     // Назначение лида
@@ -1086,14 +1088,12 @@ class LeadController extends Controller
         $lead->editor_id = $user->id;
         $lead->save();
 
-        $note = new Note;
-
-        $note->body = 'Менеджер: '. $user->first_name.' '.$user->second_name. ' принял(а) лида.';
-        $note->company_id = $user->company_id;
-        $note->author_id = $user->id;
-        $note->save();
-
-        $lead->notes()->save($note);
+        if ($user->sex == 1) {
+            $sex = 'назначил';
+        } else {
+            $sex = 'назначила';
+        }
+        $note = add_note($lead, 'Руководитель: '. $user->first_name.' '.$user->second_name. ' '.$sex.' лида менеджеру: '. $manager->first_name.' '.$manager->second_name);
 
         $result = [
             'id' => $lead->id,
