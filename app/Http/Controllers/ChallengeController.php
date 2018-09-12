@@ -63,7 +63,11 @@ class ChallengeController extends Controller
 
         // dd($staff_list);
 
-        return view('includes.modals.modal-add-challenge', compact('challenge', 'challenges_types_list', 'staff_list'));
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+        $user_id = $user->id;
+
+        return view('includes.modals.modal-add-challenge', compact('challenge', 'challenges_types_list', 'staff_list', 'user_id'));
     }
 
     public function store(Request $request)

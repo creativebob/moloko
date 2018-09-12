@@ -10,9 +10,8 @@
 
             <div class="grid-x grid-margin-x">
                 <div class="small-12 medium-6 cell">
-
-                    <label>Ииполнитель
-                        {{ Form::select('appointed_id', $staff_list) }}
+                    <label>Иcполнитель
+                        {{ Form::select('appointed_id', $staff_list, $user_id) }}
                     </label>
                 </div>
                 <div class="small-12 medium-6 cell">
