@@ -113,7 +113,12 @@
 			success: function(html){
 
 			$('#portal-challenges-for-me').html(html);
-			$('#challenges-count').text($('input[name=challenges_count]').val());
+
+			$('#challenges-count').html(last_challenges_count + today_challenges_count + tomorrow_challenges_count);
+
+			$('#last-challenges-count').html(last_challenges_count);
+			$('#today-challenges-count').html(today_challenges_count);
+			$('#tomorrow-challenges-count').html(tomorrow_challenges_count);
 
 				// var result = $.parseJSON(data);
 
@@ -125,7 +130,6 @@
 			}
 		});
 	}
-
 
 
   	// ---------------------------------- Закрытие модалки -----------------------------------

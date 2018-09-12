@@ -1,5 +1,12 @@
 <div class="tabs-panel" id="lost">
 <ul class="for_scroll my-task">
+
+		@php 
+			$last_challenges_count = 0;
+			$today_challenges_count = 0;
+			$tomorrow_challenges_count = 0;
+		@endphp
+
 		{{-- Запускаем если пришли задачи --}}
 		@if(!empty($challenges))
 
@@ -35,6 +42,9 @@
 							@if(!empty($challenge_date))
 								@foreach($challenge_date as $challenge)
 
+									{{-- Считаем количество задач --}}
+									@php $last_challenges_count = $last_challenges_count + 1; @endphp
+
 									<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
 										{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
 										<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
@@ -50,7 +60,10 @@
 
 										{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
 									</div>
+
+
 								@endforeach
+								<input name="last_challenges_count" type="hidden" value="{{ $last_challenges_count }}">								
 							@endif
 						</li>
 
@@ -102,6 +115,9 @@
 							@if(!empty($challenge_date))
 								@foreach($challenge_date as $challenge)
 
+									{{-- Считаем количество задач --}}
+									@php $today_challenges_count = $today_challenges_count + 1; @endphp
+
 									<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
 										{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
 										<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
@@ -117,7 +133,9 @@
 
 										{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
 									</div>
+
 								@endforeach
+								<input name="today_challenges_count" type="hidden" value="{{ $today_challenges_count }}">								
 							@endif
 						</li>
 
@@ -169,6 +187,9 @@
 							@if(!empty($challenge_date))
 								@foreach($challenge_date as $challenge)
 
+									{{-- Считаем количество задач --}}
+									@php $tomorrow_challenges_count = $tomorrow_challenges_count + 1; @endphp
+
 									<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
 										{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
 										<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
@@ -185,6 +206,8 @@
 										{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
 									</div>
 								@endforeach
+								<input name="tomorrow_challenges_count" type="hidden" value="{{ $tomorrow_challenges_count }}">
+
 							@endif
 						</li>
 
@@ -195,6 +218,13 @@
 				@endif
 			@endforeach
 		@endif
-		<input name="challenges_count" type="hidden" value="{{ isset($challenges) ? $challenges->count() :0}}">
 	</ul>										
 </div>
+
+<script>
+
+			$('#last-challenges-count').html({{ $last_challenges_count }});
+			$('#today-challenges-count').html({{ $today_challenges_count }});
+			$('#tomorrow-challenges-count').html({{ $tomorrow_challenges_count }});
+
+</script>

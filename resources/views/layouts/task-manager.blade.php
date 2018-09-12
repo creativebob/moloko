@@ -16,9 +16,18 @@
 					<div class="grid-x tabs-wrap">
 						<div class="small-12 cell">
 							<ul class="tabs-period-task" data-tabs id="tabs-period-task">
-								<li class="tabs-title"><a href="#lost">Прошлые</a></li>
-								<li class="tabs-title is-active"><a data-tabs-target="today" href="#today" aria-selected="true">Сегодня</a></li>
-								<li class="tabs-title"><a href="#tomorrow">Будущие</a></li>
+								<li class="tabs-title">
+									<span class="tab-challanges-count" id="last-challenges-count"></span>
+									<a href="#lost">Прошлые</a>
+								</li>
+								<li class="tabs-title is-active">
+									<span class="tab-challanges-count" id="today-challenges-count"></span>
+									<a data-tabs-target="today" href="#today" aria-selected="true">Сегодня</a>
+								</li>
+								<li class="tabs-title">
+									<span class="tab-challanges-count" id="tomorrow-challenges-count"></span>
+									<a href="#tomorrow">Будущие</a>
+								</li>
 							</ul>
 						</div>
 					</div>

@@ -230,6 +230,13 @@ fieldset legend {
   border-bottom: 0px dotted #999;
 }
 
+.tab-challanges-count {
+  color: #fff;
+  font-size: 2rem;
+  font-family: "PFDinTextCondPro-Regular";
+  padding-bottom: 0.4rem;
+}
+
 #search-add-product-result-wrap {
   position: absolute;
   margin-top: -10px;
