@@ -242,17 +242,21 @@ class LeadController extends Controller
         return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'challenges'));
     }
 
-    public function search($text_fragment)
+    public function search(Request $request)
     {
 
         // Подключение политики
         $this->authorize('index', Lead::class);
+
+
 
         $entity_name = $this->entity_name;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+
+        $text_fragment = $request->text_fragment;
         $fragment_phone = 0;
 
         if(strlen($text_fragment) == 11){
@@ -261,6 +265,12 @@ class LeadController extends Controller
 
         if(strlen($text_fragment) == 17){
             $fragment_phone = cleanPhone($text_fragment);
+        }
+
+        if(strlen($text_fragment) > 6){
+            $fragment_case_number = $text_fragment;
+        } else {
+            $fragment_case_number = '';
         }
 
         // ------------------------------------------------------------------------------------------------------------
@@ -276,11 +286,15 @@ class LeadController extends Controller
             'stage',
             'challenges.challenge_type')
         ->companiesLimit($answer)
-        ->where('name', 'LIKE', '%'.$text_fragment.'%')
         ->whereNull('draft')
-        ->orderBy('created_at', 'asc')
-        ->orWhere('phone', 'LIKE', $fragment_phone)
         ->where('phone', '!=', 0)
+        ->where(function ($query) use ($fragment_phone, $fragment_case_number, $text_fragment) {
+                    $query
+                    ->where('name', 'LIKE', '%'.$text_fragment.'%')
+                    ->orWhere('phone', 'LIKE', $fragment_phone)
+                    ->orWhere('case_number', 'LIKE', $fragment_case_number.'%');
+                })
+        ->orderBy('created_at', 'asc')
         ->get();
 
         if($result_search->count()){

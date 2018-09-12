@@ -372,7 +372,7 @@ Route::post('/leads_system_item', 'LeadController@ajax_system_item')->middleware
 Route::post('/leads_display', 'LeadController@ajax_display')->middleware('auth');
 
 // Поиск
-Route::post('/leads/search/{text_fragment}', 'LeadController@search')->middleware('auth');
+Route::post('/leads/search', 'LeadController@search')->middleware('auth');
 
 // Назначение лида
 Route::any('/lead_direction_check', 'LeadController@ajax_lead_direction_check')->middleware('auth');

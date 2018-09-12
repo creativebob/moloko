@@ -24,8 +24,6 @@
 
   function SearchFragment() {
 
-    // alert('Есть!');
-
     // Получаем фрагмент текста
     var text_fragment = $('#search_field').val();
 
@@ -37,13 +35,12 @@
 
       var entity_alias = $('#content').data('entity-alias'); 
 
-
       $.ajax({
 
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/admin/" + entity_alias + '/search/' + text_fragment,
+        url: "/admin/" + entity_alias + '/search',
         type: "POST",
         data: {text_fragment: text_fragment},
 
