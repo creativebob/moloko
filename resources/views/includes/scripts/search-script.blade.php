@@ -48,6 +48,7 @@
 
           // Выводим пришедшие данные на страницу
           $('#port-result-search').html(html);
+          $('#port-result-search').show();
 
         } 
 
@@ -58,5 +59,17 @@
 
 
   };
+
+  // Отключаем отображение формы поиска
+  $(document).on('dblclick', '#search_field', function(event) {
+      $('#port-result-search').toggle();
+  });
+
+  // Отключаем отображение формы поиска
+  // $(document).on('focusin', '#search_field', function(event) {
+  //     $('#port-result-search').show();
+  // });
+
+
 
 </script>

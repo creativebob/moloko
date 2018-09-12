@@ -89,7 +89,10 @@
             @endif
           </td>
 
-          <td class="td-phone">{{ decorPhone($lead->phone) }}</td>
+          <td class="td-phone">
+            {{ decorPhone($lead->phone) }}
+            @if($lead->email)<br><span class="tiny-text">{{ $lead->email or '' }}</span>@endif
+          </td>
           <td class="td-choice">
             {{ $lead->choices_goods_categories->implode('name', ',') }}
             <br>

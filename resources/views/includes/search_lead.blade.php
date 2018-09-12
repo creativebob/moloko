@@ -1,8 +1,7 @@
 <div class="wrap-autofind-leads">
 	@if(!empty($result_search))
-            <legend>Найдены обращения:</legend>
             <div class="grid-x">
-                <div class="small-12 medium-12 large-12 cell">
+                <div class="small-12 medium-12 large-12 cell wrap-table-autofind-leads">
                     <table class="">
                     @foreach($result_search as $lead)
                         <tr>

@@ -14,7 +14,7 @@
                 @endforeach
             </ul>
             <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-            <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true">&times;</span>
             </button>
         </div>
 
@@ -82,9 +82,11 @@
                         </div>
                 </div>
 
+            </div>
 
-                {{-- <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-4 large-4 cell">
+            <div class="small-12 medium-12 large-4 cell">
+                <div class="grid-x grid-padding-x">
+                    {{-- <div class="small-12 medium-12 large-12 cell">
                         <label>Страна
                             @php
                                 $country_id = null;
@@ -94,15 +96,15 @@
                             @endphp
                             {{ Form::select('country_id', $countries_list, $country_id)}}
                         </label>
-                    </div>
-                    <div class="small-12 medium-6 cell">
+                    </div> --}}
+                    <div class="small-12 medium-12 cell">
                         <label>Почта
                             @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email', 'required'=>''])
                         </label> 
                     </div>
-                </div>--}}
-
+                </div>
             </div>
+
         </div>
 
         <!-- ЗАКАЗ -->

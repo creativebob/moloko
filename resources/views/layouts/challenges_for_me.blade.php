@@ -195,5 +195,6 @@
 				@endif
 			@endforeach
 		@endif
+		<input name="challenges_count" type="hidden" value="{{ isset($challenges) ? $challenges->count() :0}}">
 	</ul>										
 </div>
