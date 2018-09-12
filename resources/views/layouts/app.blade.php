@@ -8,6 +8,16 @@ $user_status = $session_access['user_info']['user_status'];
 $company_id = $session_access['user_info']['company_id'];
 $company_name = $session_access['company_info']['company_name'];
 
+
+if (isset($session_access['user_info']['position_id'])) {
+    $position_id = $session_access['user_info']['position_id'];
+} else {
+    $position_id = null;
+}
+
+
+
+
 $rights_user_filial = collect($session_access['all_rights'])->keys()->implode('\n');
 
 if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' . count($session_access['list_authors']['authors_id']);} else {$count_authors = "";};
@@ -44,6 +54,8 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 </head>
 {{-- Блочим все подергивания в блоке  --}}
 <body id="body" class="block-refresh"> 
+
+
     {{-- Хедер --}}
     <div class="top-bar-container header-z-index" id="header" data-sticky-container>
         <div class="sticky sticky-topbar" data-sticky data-margin-top="0" data-options="stickyOn: small;" data-top-anchor="header:top">
