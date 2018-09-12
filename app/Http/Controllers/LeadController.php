@@ -258,6 +258,7 @@ class LeadController extends Controller
 
         $text_fragment = $request->text_fragment;
         $fragment_phone = 0;
+        $len_text = strlen($text_fragment);
 
         if(strlen($text_fragment) == 11){
             $fragment_phone = $text_fragment;
@@ -273,36 +274,52 @@ class LeadController extends Controller
             $fragment_case_number = '';
         }
 
-        // ------------------------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // ------------------------------------------------------------------------------------------------------------
 
-        $result_search = Lead::with(
-            'location.city', 
-            'choices_goods_categories', 
-            'choices_services_categories', 
-            'choices_raws_categories', 
-            'manager',
-            'stage',
-            'challenges.challenge_type')
-        ->companiesLimit($answer)
-        ->whereNull('draft')
-        ->where('phone', '!=', 0)
-        ->where(function ($query) use ($fragment_phone, $fragment_case_number, $text_fragment) {
-                    $query
-                    ->where('name', 'LIKE', '%'.$text_fragment.'%')
-                    ->orWhere('phone', 'LIKE', $fragment_phone)
-                    ->orWhere('case_number', 'LIKE', $fragment_case_number.'%');
-                })
-        ->orderBy('created_at', 'asc')
-        ->get();
+        if($len_text > 4){
+
+            // ------------------------------------------------------------------------------------------------------------
+            // ГЛАВНЫЙ ЗАПРОС
+            // ------------------------------------------------------------------------------------------------------------
+
+            $result_search = Lead::with(
+                'location.city', 
+                'choices_goods_categories', 
+                'choices_services_categories', 
+                'choices_raws_categories', 
+                'manager',
+                'stage',
+                'challenges.challenge_type')
+            ->companiesLimit($answer)
+            ->whereNull('draft')
+            ->where('phone', '!=', 0)
+            ->where(function ($query) use ($fragment_phone, $fragment_case_number, $text_fragment, $len_text) {
+
+                        if($len_text > 5){
+                            $query->where('name', $text_fragment);
+                        };
+
+                        if(isset($fragment_phone)){
+                            $query->orWhere('phone', $fragment_phone);
+                        };
+
+                        if(($len_text > 6)||($len_text < 14)){
+                            $query->orWhere('case_number', 'LIKE', $fragment_case_number);
+                        };
+
+                    })
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        } else {
+            return '';
+        };
 
         if($result_search->count()){
 
             return view('includes.search_lead', compact('result_search', 'entity_name'));
         } else {
 
-            return view('includes.search_lead');
+            return '';
         }
     }
 

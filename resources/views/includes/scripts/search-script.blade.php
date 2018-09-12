@@ -21,7 +21,6 @@
   });
 
 
-
   function SearchFragment() {
 
     // Получаем фрагмент текста
