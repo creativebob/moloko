@@ -26,7 +26,7 @@ use App\Scopes\Filters\BooklistFilter;
 class Stage extends Model
 {
     // Включаем кеш
-    use Cachable;
+    // use Cachable;
 
     use SoftDeletes;
 

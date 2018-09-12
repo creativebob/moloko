@@ -26,7 +26,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 class Access_group extends Model
 {
     // Включаем кеш
-    use Cachable;
+    // use Cachable;
     use SoftDeletes;
 
     // Включаем Scopes

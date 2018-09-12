@@ -27,7 +27,7 @@ class Booklist extends Model
 {
 
     // Включаем кеш
-    use Cachable;
+    // use Cachable;
 
     use Notifiable;
     use SoftDeletes;

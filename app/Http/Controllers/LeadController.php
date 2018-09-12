@@ -127,7 +127,11 @@ class LeadController extends Controller
 
         // Перечень подключаемых фильтров:
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
+       
+        
         $filter = addFilter($filter, $filter_query, $request, 'Выберите этап:', 'stage', 'stage_id', null, 'internal-id-one');
+         //dd($filter);
+        
         $filter = addFilter($filter, $filter_query, $request, 'Менеджер:', 'manager', 'manager_id', null, 'internal-id-one');
 
 
@@ -1039,9 +1043,6 @@ class LeadController extends Controller
         $user = $request->user();
         $lead = Lead::findOrFail($request->id);
 
-
-
-        
              // dd($direction);
         $lead->manager_id = $user->id;
 
@@ -1051,6 +1052,15 @@ class LeadController extends Controller
         $lead->serial_number = $lead_number['serial'];
         $lead->editor_id = $user->id;
         $lead->save();
+
+        $note = new Note;
+
+        $note->body = 'Менеджер: '. $user->first_name.' '.$user->second_name. ' принял(а) лида.';
+        $note->company_id = $user->company_id;
+        $note->author_id = $user->id;
+        $note->save();
+
+        $lead->notes()->save($note);
 
         $result = [
             'id' => $lead->id,
@@ -1088,7 +1098,7 @@ class LeadController extends Controller
 
         $note = new Note;
 
-        $note->body = 'Менеджер: '. $user->first_name.' '.$user->second_name. ' принял(а) лида.';
+        $note->body = 'Руководитель: '. $user->first_name.' '.$user->second_name. ' назначил(а) лида менеджеру: '. $manager->first_name.' '.$manager->second_name;
         $note->company_id = $user->company_id;
         $note->author_id = $user->id;
         $note->save();

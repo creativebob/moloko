@@ -22,7 +22,7 @@ class Metric extends Model
 {
 
     // Включаем кеш
-    use Cachable;
+    // use Cachable;
 
     use SoftDeletes;
 
