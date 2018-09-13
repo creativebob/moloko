@@ -39,10 +39,10 @@
             </div>
             <div class="small-6 cell radiobutton">Генерировать права?<br>
 
-              {{ Form::radio('rights_minus', 1, true, ['id'=>'Yes']) }}
+              {{ Form::radio('rights_minus', 0, true, ['id'=>'Yes']) }}
               <label for="Yes"><span>Да</span></label>
 
-              {{ Form::radio('rights_minus', 0, false, ['id'=>'No']) }}
+              {{ Form::radio('rights_minus', 1, false, ['id'=>'No']) }}
               <label for="No"><span>Нет</span></label>
 
             </div>

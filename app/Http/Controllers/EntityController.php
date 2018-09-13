@@ -131,7 +131,11 @@ class EntityController extends Controller
         $entity->name = $request->name;
         $entity->alias = $request->alias;
         $entity->model = $request->model;
-        $entity->rights_minus = $request->rights_minus;
+
+        if($request->rights_minus == 0){
+            $entity->rights_minus = Null;} else {
+                $entity->rights_minus = $rights_minus;     
+            };
 
         // Вносим общие данные
         $entity->author_id = 1;
@@ -153,7 +157,7 @@ class EntityController extends Controller
 
         $entity->save();
 
-        if($request->rights_minus == 1){
+        if($request->rights_minus == 0){
 
             // Генерируем права
             $actions = Action::get();
