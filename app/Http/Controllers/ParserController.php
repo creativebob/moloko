@@ -35,10 +35,365 @@ class ParserController extends Controller
 
         // $cities = City::get('id', 'name');
 
-        OldLead::with(['comments.author', 'claims.author', 'task', 'stage', 'manager', 'city', 'service', 'challenges' => function ($query) {
+        set_time_limit(0);
+
+        $old_leads = OldLead::with(['comments.author', 'claims.author', 'task', 'stage', 'manager', 'city', 'service', 'challenges' => function ($query) {
             $query->with('author', 'appointed', 'finisher', 'stage', 'task');
-        }])->whereNull('parse_status')->where('phone_contact', '!=', '')->chunk(800, function ($leads) {
-            foreach ($leads as $old_lead) {
+        }])->whereNull('parse_status')->where('phone_contact', '!=', '')->get();
+
+        // dd($old)
+
+        // OldLead::with(['comments.author', 'claims.author', 'task', 'stage', 'manager', 'city', 'service', 'challenges' => function ($query) {
+        //     $query->with('author', 'appointed', 'finisher', 'stage', 'task');
+        // }])->whereNull('parse_status')->where('phone_contact', '!=', '')->chunk(100, function ($leads) {
+
+        $mass = [];
+
+        foreach ($old_leads as $old_lead) {
+
+            $mass['get_lead'] = $old_lead->id;
+
+                // Пишем локацию
+            $location = new Location;
+            $location->country_id = 1;
+            $location->address = $old_lead->address_company;
+
+            if ($old_lead->id_city == 0) {
+                $location->city_id = 2;
+            } else {
+                $location->city_id = $old_lead->city->new_city_id;
+            }
+
+            $location->author_id = 1;
+            $location->save();
+
+            if ($location) {
+                $location_id = $location->id;
+
+                $mass['location'] = $location;
+            } else {
+                dd('Ошибка записи адреса для лида: '.$old_lead->name_contact);
+            }
+
+                // Определяем тип лида
+            $lead_type_id = null;
+            if ($old_lead->status_site == 1) {
+                $lead_type_id = 2;
+            } else {
+                $lead_type_id = 1;
+            }
+
+                // Начинаем писать лида
+            $lead = new Lead;
+            $lead->company_id = 1;
+            $lead->filial_id = 1;
+            $lead->name = $old_lead->name_contact;
+            $lead->description = null;
+            $lead->badget = $old_lead->badget;
+            $lead->case_number = $old_lead->num_order;
+            $lead->serial_number = $old_lead->serial_order;
+            $lead->phone = cleanPhone($old_lead->phone_contact);
+            $lead->email = $old_lead->email_contact;
+            $lead->location_id = $location_id;
+
+                // Определяем тип лида
+            $lead_type_id = null;
+            if ($old_lead->status_site == 1) {
+                $lead->lead_type_id = 2;
+                $lead->site_id = 2;
+            } else {
+                $lead->lead_type_id = 1; 
+            }
+
+            $lead->manager_id = $old_lead->manager->new_user_id;
+            $lead->stage_id = $old_lead->stage->new_stage_id;
+            $lead->old_lead_id = $old_lead->id;
+            $lead->display = 1;
+            $lead->author_id = $old_lead->manager->new_user_id;
+            $lead->created_at = $old_lead->date_order;
+            $lead->save();
+
+            $mass['save_lead'] = $lead->id;
+
+            if ($lead) {
+                $lead_id = $lead->id;
+
+                $mass['lead'] = $lead;
+            } else {
+                dd('Ошибка записи лида: '.$old_lead->name_contact);
+            }
+
+                // dd($old_lead);
+                // Пишем комменты
+            $lead_comments = [];
+
+            if ($old_lead->comment != '') {
+                $lead_comments[] = [
+                    'body' => $old_lead->comment,
+                    'company_id' => 1,
+                    'author_id' => $old_lead->manager->new_user_id,
+                    'created_at' => $old_lead->date_order,
+                ];
+            }
+
+            if ($old_lead->comment2 != '') {
+                $lead_comments[] = [
+                    'body' => $old_lead->comment2,
+                    'author_id' => $old_lead->manager->new_user_id,
+                    'created_at' => $old_lead->date_order,
+                ];
+            }
+
+            if (count($old_lead->comments) > 0) {
+
+                foreach ($old_lead->comments as $comment) {
+                    if ($comment->body_note != '') {
+                        $lead_comments[] = [
+                            'body' => $comment->body_note,
+                            'company_id' => 1,
+                            'author_id' => $old_lead->manager->new_user_id,
+                            'created_at' => $comment->date_note.' '.$comment->time_note.':00',
+                        ];
+                    }
+
+                }
+            }
+
+            if ($old_lead->fact_pay != 0) {
+                $fact_pay = num_format($old_lead->fact_pay, 0);
+                $lead_comments[] = [
+                    'body' => 'Фактически оплачено: '. $fact_pay,
+                    'company_id' => 1,
+                    'author_id' => $old_lead->manager->new_user_id,
+                    'created_at' => Carbon::now(),
+                ];
+            }
+
+                // dd($lead_comments);
+
+            $lead->notes()->createMany($lead_comments);
+
+            $mass['comments'] = $lead_comments;
+
+                // Пишем задачи
+            if (count($old_lead->challenges) > 0) {
+                $lead_challenges = [];
+
+                foreach ($old_lead->challenges as $challenge) {
+
+                    $status = null;
+                    if ($challenge->status_challenge == 2) {
+                        $status = 1;
+                    }
+
+                    if ($challenge->id_model_challenge == 2) {
+                        $challenge_type_id = 2;
+                    } elseif ($challenge->id_model_challenge == 4) {
+                        $challenge_type_id = 3;
+                    } else {
+                        $challenge_type_id = 1;
+                    }
+
+                    if (isset($challenge->finisher->new_user_id)) {
+                        $finisher_id = $challenge->finisher->new_user_id;
+                            # code...
+                    } else {
+                        $finisher_id = null;
+                    }
+
+
+                    if($challenge->deadline_challenge == '0000-00-00 00:00:00'){
+                        $deadline_challenge = null;
+                    } else {
+                        $deadline_challenge = $challenge->deadline_challenge;
+                    };
+
+                    if($challenge->date_completed == '0000-00-00 00:00:00'){
+                        $date_completed = null;
+                    } else {
+                        $date_completed = $challenge->date_completed;
+                    };
+
+                    $lead_challenges[] = [
+                        'company_id' => 1,
+                        'description' => $challenge->comment_challenge,
+                        'appointed_id' => $challenge->appointed->new_user_id,
+                        'finisher_id' => $finisher_id,
+                        'author_id' => $challenge->author->new_user_id,
+                        'deadline_date' => $deadline_challenge,
+                        'status' => $status,
+                        'completed_date' => $date_completed,
+                        'challenges_type_id' => $challenge_type_id,
+                        'created_at' => $challenge->date_challenge,
+                    ];
+                }
+
+                    // dd($lead_challenges);
+                $lead->challenges()->createMany($lead_challenges);
+
+                $mass['lead_challenges'] = $lead_challenges;
+            }
+
+                // Пишем рекламации
+            if (count($old_lead->claims) > 0) {
+                $lead_claims = [];
+
+                foreach ($old_lead->claims as $claim) {
+
+                    $lead_claims[] = [
+                        'company_id' => 1,
+                        'body' => $claim->body_claim,
+                            // 'lead_id' => $lead_id,
+                        'old_claim_id' => $claim->id,
+                        'author_id' => $claim->author->new_user_id,
+                        'created_at' => $claim->date_claim,
+
+                    ];
+
+                }
+                    // dd($lead_claims);
+                $lead->claims()->createMany($lead_claims);
+
+                $mass['lead_claims'] = $lead_claims;
+            }
+
+            if (isset($old_lead->service->choise_type)) {
+
+                $choice = new Choice;
+                $choice->lead_id = $lead_id;
+                $choice->choices_id = $old_lead->service->choise_id;
+                $choice->choices_type = $old_lead->service->choise_type;
+                $choice->save();
+
+                if ($choice == false) {
+                    dd('Ошибка записи предпочтения лида.');
+                }
+
+                $mass['choice'] = $choice;
+            }
+
+            $old_lead->parse_status = 1;
+            $old_lead->save();
+
+            if ($old_lead) {
+
+                $mass['old_lead'] = $old_lead;
+
+                $mass['parse_lead'] = $old_lead->parse_status;
+            } else {
+                dd('Ошибка проставления отметки старому лиду: '.$old_lead->id);
+
+            }
+
+
+            echo 'Текущий лид: '.$mass['get_lead'].', записан в новую базу: '.$mass['save_lead'].', отметка: '.$mass['parse_lead']."\r\n";   
+
+        }
+            // echo '500 записей, id: '.$lead->id.', ';	
+        // });
+
+        return redirect('/admin/leads');
+
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    public function dublicator(Request $request)
+    {
+
+
+        $leads = Lead::with('location', 'notes', 'challenges', 'claims')->get(['id', 'old_lead_id']);
+        // dd($leads);
+        $mass = [];
+        $count = 0;
+        foreach ($leads as $lead) {
+
+            $dubl_lead = Lead::where('old_lead_id', $lead->old_lead_id)->where('id', '!=', $lead->id)->first();
+
+            if($dubl_lead) {
+                    // dd($dubl_lead);
+
+                $dubl_lead->location()->forceDelete();
+                $dubl_lead->notes()->forceDelete();
+                $dubl_lead->challenges()->forceDelete();
+                $dubl_lead->claims()->forceDelete();
+                $dubl_lead->choices_goods_categories()->forceDelete();
+                $dubl_lead->choices_services_categories()->forceDelete();
+                $dubl_lead->choices_raws_categories()->forceDelete();
+
+                $dubl_lead->forceDelete();
+
+                if ($dubl_lead) {
+                    // $mass[$dubl_lead->id][] = $dubl_lead->case_number;
+                    // $mass[$dubl_lead->id][] = $dubl_lead->old_lead_id;
+                    $count++;
+                }
+
+
+            }
+
+            if ($count == 200) {
+                    // break;
+                    return redirect('/admin/cities');
+                }
+
+        } 
+
+
+        return redirect('/admin/users');
+        // $mass['count'] = $count;
+            // dd($mass);
+
+        
+    }
+
+    public function adder(Request $request)
+    {
+       // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        // Смотрим компанию пользователя
+        $company_id = $user->company_id;
+
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        // $cities = City::get('id', 'name');
+
+        set_time_limit(0);
+
+        $old_leads = OldLead::with(['comments.author', 'claims.author', 'task', 'stage', 'manager', 'city', 'service', 'challenges' => function ($query) {
+            $query->with('author', 'appointed', 'finisher', 'stage', 'task');
+        }])->whereNull('parse_status')->where('phone_contact', '!=', '')->get();
+
+        // dd($old)
+
+        // OldLead::with(['comments.author', 'claims.author', 'task', 'stage', 'manager', 'city', 'service', 'challenges' => function ($query) {
+        //     $query->with('author', 'appointed', 'finisher', 'stage', 'task');
+        // }])->whereNull('parse_status')->where('phone_contact', '!=', '')->chunk(100, function ($leads) {
+
+        $mass = [];
+
+        foreach ($old_leads as $old_lead) {
+
+            $new_lead = Lead::where('old_lead_id', $old_lead->id)->first();
+
+            if ($new_lead) {
+
+                $old_lead->parse_status = 1;
+                $old_lead->save();
+
+            } else {
+
+                $mass['get_lead'] = $old_lead->id;
 
                 // Пишем локацию
                 $location = new Location;
@@ -56,6 +411,8 @@ class ParserController extends Controller
 
                 if ($location) {
                     $location_id = $location->id;
+
+                    $mass['location'] = $location;
                 } else {
                     dd('Ошибка записи адреса для лида: '.$old_lead->name_contact);
                 }
@@ -98,8 +455,12 @@ class ParserController extends Controller
                 $lead->created_at = $old_lead->date_order;
                 $lead->save();
 
+                $mass['save_lead'] = $lead->id;
+
                 if ($lead) {
                     $lead_id = $lead->id;
+
+                    $mass['lead'] = $lead;
                 } else {
                     dd('Ошибка записи лида: '.$old_lead->name_contact);
                 }
@@ -111,6 +472,7 @@ class ParserController extends Controller
                 if ($old_lead->comment != '') {
                     $lead_comments[] = [
                         'body' => $old_lead->comment,
+                        'company_id' => 1,
                         'author_id' => $old_lead->manager->new_user_id,
                         'created_at' => $old_lead->date_order,
                     ];
@@ -130,6 +492,7 @@ class ParserController extends Controller
                         if ($comment->body_note != '') {
                             $lead_comments[] = [
                                 'body' => $comment->body_note,
+                                'company_id' => 1,
                                 'author_id' => $old_lead->manager->new_user_id,
                                 'created_at' => $comment->date_note.' '.$comment->time_note.':00',
                             ];
@@ -142,6 +505,7 @@ class ParserController extends Controller
                     $fact_pay = num_format($old_lead->fact_pay, 0);
                     $lead_comments[] = [
                         'body' => 'Фактически оплачено: '. $fact_pay,
+                        'company_id' => 1,
                         'author_id' => $old_lead->manager->new_user_id,
                         'created_at' => Carbon::now(),
                     ];
@@ -150,6 +514,8 @@ class ParserController extends Controller
                 // dd($lead_comments);
 
                 $lead->notes()->createMany($lead_comments);
+
+                $mass['comments'] = $lead_comments;
 
                 // Пишем задачи
                 if (count($old_lead->challenges) > 0) {
@@ -206,6 +572,8 @@ class ParserController extends Controller
 
                     // dd($lead_challenges);
                     $lead->challenges()->createMany($lead_challenges);
+
+                    $mass['lead_challenges'] = $lead_challenges;
                 }
 
                 // Пишем рекламации
@@ -227,6 +595,8 @@ class ParserController extends Controller
                     }
                     // dd($lead_claims);
                     $lead->claims()->createMany($lead_claims);
+
+                    $mass['lead_claims'] = $lead_claims;
                 }
 
                 if (isset($old_lead->service->choise_type)) {
@@ -240,30 +610,38 @@ class ParserController extends Controller
                     if ($choice == false) {
                         dd('Ошибка записи предпочтения лида.');
                     }
+
+                    $mass['choice'] = $choice;
                 }
 
                 $old_lead->parse_status = 1;
                 $old_lead->save();
 
-                // echo 'Текущий лид:'.$lead->id;   
+                if ($old_lead) {
 
+                    $mass['old_lead'] = $old_lead;
+
+                    $mass['parse_lead'] = $old_lead->parse_status;
+                } else {
+                    dd('Ошибка проставления отметки старому лиду: '.$old_lead->id);
+
+                }
+
+                
+                echo 'Текущий лид: '.$mass['get_lead'].', записан в новую базу: '.$mass['save_lead'].', отметка: '.$mass['parse_lead']."\r\n";   
             }
-            echo '500 записей, id: '.$lead->id.', ';	
-        });
+        }
+            // echo '500 записей, id: '.$lead->id.', '; 
+        // });
 
-return redirect('/admin/leads');
+        return redirect('/admin/users');
 
-}
+        
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        
     }
+
+    
 
     /**
      * Store a newly created resource in storage.
@@ -271,6 +649,34 @@ return redirect('/admin/leads');
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    public function leads_check_bases(Request $request)
+    {
+
+        $a = Lead::whereYear('created_at', 2017)->count();
+        $b = Lead::whereYear('created_at', 2018)->count();
+        $b1 = Lead::whereYear('created_at', 2016)->count();
+
+        $c = OldLead::whereYear('date_order', 2017)->count();
+        $d = OldLead::whereYear('date_order', 2018)->count();
+        $d1 = OldLead::whereYear('date_order', 2016)->count();
+
+        $mass = [
+            'Новая' => [
+                '2016' => $b1,
+                '2017' => $a,
+                '2018' => $b
+            ],
+            'Старая' => [
+                '2016' => $d1,
+                '2017' => $c,
+                '2018' => $d
+            ],
+        ];
+        dd($mass);
+
+    }
+
     public function store(Request $request)
     {
         //
