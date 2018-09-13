@@ -25,6 +25,7 @@
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-name">Название таблицы</th>
+          <th class="td-model">Имя модели</th>
           <th class="td-alias">Название в DB</th>
           <th class="td-delete"></th>
         </tr>
@@ -43,6 +44,7 @@
             @can('update', $entity)
             </a> 
             @endcan
+          <td class="td-model">{{ $entity->model }}</td>
           <td class="td-alias">{{ $entity->alias }}</td>
           <td class="td-delete">
           @if ($entity->system_item !== 1)

@@ -300,6 +300,7 @@ class RoleController extends Controller
 
         // Получим все права и их ID в массив
         $allrights = Right::with('actionentity')->get();
+        // dd($allrights);
 
         // Находим все возможные в системе права и кладем их в массив с указанием их ID
         $allrights_array = [];

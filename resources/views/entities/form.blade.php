@@ -32,6 +32,20 @@
                 @include('includes.inputs.text-en', ['value'=>$entity->alias, 'name'=>'alias', 'required'=>'required'])
               </label>
             </div>
+            <div class="small-12 medium-6 cell">
+              <label>Имя модели во фреймворке
+                @include('includes.inputs.text-en', ['value'=>$entity->model, 'name'=>'model', 'required'=>'required'])
+              </label>
+            </div>
+            <div class="small-6 cell radiobutton">Генерировать права?<br>
+
+              {{ Form::radio('rights_minus', 1, true, ['id'=>'Yes']) }}
+              <label for="Yes"><span>Да</span></label>
+
+              {{ Form::radio('rights_minus', 0, false, ['id'=>'No']) }}
+              <label for="No"><span>Нет</span></label>
+
+            </div>
           </div>
 
       </div>
