@@ -362,7 +362,7 @@ class LeadController extends Controller
 
             $lead->company_id = $company_id;
             $lead->filial_id = $filial_id;
-            $lead->name = 'Не указано';
+            $lead->name = NULL;
             $lead->location_id = $location_id;
             $lead->phone = 00000000000;
             $lead->draft = 1;

@@ -31,7 +31,7 @@
 
                 <div class="small-6 medium-2 cell">
                     <label>Время
-                        @include('includes.inputs.time', ['name'=>'deadline_time', 'value'=>null, 'required'=>''])
+                        @include('includes.inputs.time', ['name'=>'deadline_time', 'value'=>null, 'required'=>'', 'default' => '10:00'])
                     </label>
                 </div>
             </div>

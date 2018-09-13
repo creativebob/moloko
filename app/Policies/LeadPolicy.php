@@ -88,6 +88,7 @@ class LeadPolicy
     public function display(User $user)
     {
         $result = $this->getstatus($this->entity_name, null, 'display', $this->entity_dependence);
+        // dd($result);
         return $result;
     }
 
