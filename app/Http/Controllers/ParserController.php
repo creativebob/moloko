@@ -309,8 +309,8 @@ class ParserController extends Controller
     public function dublicator(Request $request)
     {
 
-
-        $leads = Lead::with('location', 'notes', 'challenges', 'claims')->get(['id', 'old_lead_id']);
+        set_time_limit(0);
+        $leads = Lead::with('location', 'notes', 'challenges', 'claims')->where('old_lead_id', '!=', null)->get(['id', 'old_lead_id']);
         // dd($leads);
         $mass = [];
         $count = 0;

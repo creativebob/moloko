@@ -45,6 +45,8 @@
 <section id="modal"></section>
 {{-- Модалка удаления с ajax --}}
 @include('includes.modals.modal-delete-ajax')
+
+@include('includes.modals.modal-add-claim', ['lead' => $lead])
 @endsection
 
 @section('scripts')
@@ -91,6 +93,53 @@
                 };
 
             }
+        });
+	});
+
+	$(document).on('click', '#submit-add-claim', function(event) {
+		event.preventDefault();
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: "/admin/claim_add",
+			type: "POST",
+			data: $('#form-claim-add').serialize(),
+			success: function(html){
+				$('#add-claim').foundation('close')
+				$('#claims-list').html(html);
+				$('#form-claim-add textarea[name=body]').val('');
+
+			
+            }
+        });
+	});
+
+	$(document).on('click', '.finish-claim', function(event) {
+		event.preventDefault();
+
+		// Находим описание сущности, id и название удаляемого элемента в родителе
+		var parent = $(this).closest('.item');
+		var id = parent.attr('id').split('-')[1];
+		var name = parent.data('name');
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: "/admin/claim_finish",
+			type: "POST",
+			data: {id: id},
+			success: function(data){
+				var result = $.parseJSON(data);
+
+          		if (result['error_status'] == 0) {
+          			$('#claims-' + id + ' .action a').remove();
+          		} else {
+          			alert(result['error_message']);
+          		};
+			}
         });
 	});
 

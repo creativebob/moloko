@@ -407,6 +407,14 @@ Route::resource('/notes', 'NoteController')->middleware('auth');
 Route::resource('/challenges', 'ChallengeController')->middleware('auth');
 Route::post('/get_challenges_user', 'ChallengeController@ajax_get_challenges')->middleware('auth');
 
+// -----------------------------------------Рекламации -----------------------------------------------
+
+// Основные методы
+Route::resource('/claims', 'ClaimController')->middleware('auth');
+
+Route::post('/claim_add', 'ClaimController@ajax_store')->middleware('auth');
+Route::post('/claim_finish', 'ClaimController@ajax_finish')->middleware('auth');
+
 // --------------------------------------- Этапы --------------------------------------------
 
 // Основные методы

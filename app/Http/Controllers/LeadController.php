@@ -107,8 +107,6 @@ class LeadController extends Controller
         // ->orderBy('sort', 'asc')
         ->paginate(30);
 
-
-
         // --------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
         // --------------------------------------------------------------------------------------------------------------------------
@@ -127,7 +125,7 @@ class LeadController extends Controller
 
         // Перечень подключаемых фильтров:
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
-       
+
         
         $filter = addFilter($filter, $filter_query, $request, 'Выберите этап:', 'stage', 'stage_id', null, 'internal-id-one');
          //dd($filter);
@@ -152,38 +150,38 @@ class LeadController extends Controller
     public function leads_calls(Request $request)
     {
 
-      Carbon::setLocale('en');
+        Carbon::setLocale('en');
         // dd(Carbon::getLocale());
 
         // Включение контроля активного фильтра 
-      $filter_url = autoFilter($request, $this->entity_name);
-      if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
-      $user = $request->user();
+        $user = $request->user();
 
         // Подключение политики
-      $this->authorize(getmethod('index'), Lead::class);
+        $this->authorize(getmethod('index'), Lead::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-      $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
         // dd($answer);
 
         // --------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------
 
-      // Запрос с выбором лидов по дате задачи == сегодняшней дате или меньше, не получается отсортировать по дате задачи, т.к. задач может быть много на одном лиде
-      $leads = Lead::with(
-        'location.city', 
-        'choices_goods_categories', 
-        'choices_services_categories', 
-        'choices_raws_categories', 
-        'manager',
-        'stage',
-        'challenges.challenge_type'
-    )
-      ->moderatorLimit($answer)
-      ->companiesLimit($answer)
+        // Запрос с выбором лидов по дате задачи == сегодняшней дате или меньше, не получается отсортировать по дате задачи, т.к. задач может быть много на одном лиде
+        $leads = Lead::with(
+            'location.city', 
+            'choices_goods_categories', 
+            'choices_services_categories', 
+            'choices_raws_categories', 
+            'manager',
+            'stage',
+            'challenges.challenge_type'
+        )
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         // ->authors($answer)
         ->manager($user)
@@ -208,7 +206,7 @@ class LeadController extends Controller
 
 
 
-    //     dd($leads->challenges);
+        //     dd($leads->challenges);
 
         // --------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
@@ -298,19 +296,19 @@ class LeadController extends Controller
             ->where('phone', '!=', 0)
             ->where(function ($query) use ($fragment_phone, $fragment_case_number, $text_fragment, $len_text) {
 
-                        if($len_text > 5){
-                            $query->where('name', $text_fragment);
-                        };
+                if($len_text > 5){
+                    $query->where('name', $text_fragment);
+                };
 
-                        if(isset($fragment_phone)){
-                            $query->orWhere('phone', $fragment_phone);
-                        };
+                if(isset($fragment_phone)){
+                    $query->orWhere('phone', $fragment_phone);
+                };
 
-                        if(($len_text > 6)||($len_text < 14)){
-                            $query->orWhere('case_number', 'LIKE', $fragment_case_number);
-                        };
+                if(($len_text > 6)||($len_text < 14)){
+                    $query->orWhere('case_number', 'LIKE', $fragment_case_number);
+                };
 
-                    })
+            })
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -326,8 +324,6 @@ class LeadController extends Controller
             return '';
         }
     }
-
-
 
     public function create(Request $request)
     {
@@ -594,10 +590,13 @@ class LeadController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
 
-        $lead = Lead::with(['location.city', 'medium', 'campaign', 'source', 'site', 'notes' => function ($query) {
-            $query->orderBy('created_at', 'desc');}, 'challenges' => function ($query) {
-                $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
-            }])
+        $lead = Lead::with(['location.city', 'medium', 'campaign', 'source', 'site', 'claims' => function ($query) {
+            $query->orderBy('created_at', 'asc');
+        }, 'notes' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }, 'challenges' => function ($query) {
+            $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
+        }])
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->where('manager_id', '!=', 1)
@@ -605,6 +604,8 @@ class LeadController extends Controller
         ->systemItem($answer) // Фильтр по системным записям 
         ->moderatorLimit($answer)
         ->findOrFail($id);
+
+        // dd(Carbon::parse($lead->claims[0]->created_at)->format('d.m.Y'));
 
         // dd($lead->notes->toArray());
 

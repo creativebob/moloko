@@ -16,7 +16,11 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
     
+use Carbon\Carbon;
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -26,7 +30,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 class Claim extends Model
 {
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use SoftDeletes;
 
@@ -43,11 +47,11 @@ class Claim extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'created_at'];
     protected $fillable = [
-        'company_id', 'body', 'lead_id', 'old_claim_id', 'author_id', 'created_at'
+        'company_id', 'body', 'lead_id', 'old_claim_id', 'author_id'
     ];
 
 

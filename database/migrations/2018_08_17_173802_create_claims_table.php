@@ -30,6 +30,8 @@ class CreateClaimsTable extends Migration
             $table->integer('manager_id')->nullable()->unsigned()->comment('ID лида');
             $table->foreign('manager_id')->references('id')->on('users');
 
+            $table->integer('status')->nullable()->unsigned()->comment('Статус выполнения (1 - не выполнено)');
+
             $table->integer('old_claim_id')->nullable()->unsigned()->comment('ID рекламации из старой базы');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
