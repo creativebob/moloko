@@ -605,6 +605,8 @@ class LeadController extends Controller
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
+        // dd($lead);
+
         // dd(Carbon::parse($lead->claims[0]->created_at)->format('d.m.Y'));
 
         // dd($lead->notes->toArray());
