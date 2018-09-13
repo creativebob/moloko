@@ -42,6 +42,12 @@ Route::any('/lol', function () {
     }])->find(5468));
 });
 
+Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
+
+Route::get('/dublicator_old', 'ParserController@dublicator_old')->middleware('auth');
+
+Route::get('/adder', 'ParserController@adder')->middleware('auth');
+
 Route::get('/parser', 'ParserController@index')->middleware('auth');
 
 // --------------------------------------- Настройки -----------------------------------------------
