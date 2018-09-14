@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 // Модели
 use App\Claim;
 use App\Lead;
+use App\User;
 
 
 // use App\Http\Requests\ClaimRequest;
@@ -13,6 +14,9 @@ use App\Lead;
 // use App\Policies\ClaimPolicy;
 
 use Illuminate\Support\Facades\Auth;
+
+// Телеграм
+use Telegram;
 
 use Illuminate\Http\Request;
 
@@ -104,6 +108,9 @@ class ClaimController extends Controller
         $claim->author_id = $user->id;
         $claim->system_item = $request->system_item;
         $claim->moderation = $request->moderation;
+
+
+
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         // if($answer['automoderate'] == false){$entity->moderation = 1;};
@@ -208,6 +215,7 @@ class ClaimController extends Controller
         if ($claim) {
 
 
+
                 // Если рекламация записалась - пишем обращение (Лида)
 
                 // ГЛАВНЫЙ ЗАПРОС:
@@ -241,14 +249,34 @@ class ClaimController extends Controller
                 $new_lead->save();
 
 
-            $lead = Lead::with(['claims' => function ($query) {
+            $lead = Lead::with(['location.city', 'stage', 'manager', 'claims' => function ($query) {
                 $query->orderBy('created_at', 'asc');
             }])->find($request->lead_id);
+            
+            if (isset($lead->location->city->name)) {
+                $address = $lead->location->city->name . ', ' . $lead->location->address;
+            } else {
+                $address = $lead->location->address;
+            }
+
+            $telegram_message  = "РЕКЛАМАЦИЯ №" . $claim->case_number . "\r\n\r\nОписание: " . $claim->body . "\r\n\r\nНомер заказа: " . $lead->case_number . "\r\nКлиент: " . $lead->name . "\r\nТелефон: " . $lead->phone . "\r\nАдрес: " . $address . "\r\nЭтап: " . $lead->stage->name. "\r\nМенеджер: " . $lead->manager->first_name . " " . $lead->manager->second_name;
+            
+            $telegram_destinations = User::whereHas('staff', function ($query) {
+                $query->whereHas('position', function ($query) {
+                    $query->whereHas('notifications', function ($query) {
+                        $query->where('notification_id', 2);
+                    });
+                });
+            })
+            ->where('telegram_id', '!=', null)
+            ->get(['telegram_id']);
+        
+            send_message($telegram_destinations, $telegram_message);
 
             $claims = $lead->claims;
 
             return view('leads.claim', compact('claims'));
-        }  
+        }   
     }
 
     public function ajax_finish(Request $request)

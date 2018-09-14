@@ -7,6 +7,8 @@ use App\Lead;
 use App\Note;
 use App\Choice;
 use App\City;
+use App\Challenge;
+
 
 use App\Location;
 
@@ -725,5 +727,14 @@ class ParserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    public function andrey(Request $request)
+    {
+        $leads = Lead::where('manager_id', 9)->update(['manager_id' => 7]);
+        $challenges = Challenge::where('appointed_id', 9)->update(['appointed_id' => 7]);
+
+        // dd(count($leads) . ' ' . count($challenges));
     }
 }

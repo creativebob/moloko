@@ -50,6 +50,8 @@ Route::get('/adder', 'ParserController@adder')->middleware('auth');
 
 Route::get('/parser', 'ParserController@index')->middleware('auth');
 
+Route::get('/andrey', 'ParserController@andrey')->middleware('auth');
+
 // --------------------------------------- Настройки -----------------------------------------------
 
 Route::any('/set_setting', 'SettingController@ajax_set_setting')->middleware('auth');
