@@ -68,10 +68,10 @@ class EntityPageTableSeeder extends Seeder
             'entity_id' => 62,
             'page_id' => 42,
         ];
-        $mass[] = [
-            'entity_id' => 65,
-            'page_id' => 43,
-        ];
+        // $mass[] = [
+        //     'entity_id' => 65,
+        //     'page_id' => 43,
+        // ];
 
         $mass[] = [
             'entity_id' => 49,

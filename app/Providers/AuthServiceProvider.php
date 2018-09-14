@@ -60,6 +60,7 @@ use App\RawsProduct;
 use App\Lead;
 use App\Note;
 use App\Challenge;
+use App\Claim;
 
 use App\Stage;
 
@@ -121,6 +122,7 @@ use App\Policies\RawsProductPolicy;
 use App\Policies\LeadPolicy;
 use App\Policies\NotePolicy;
 use App\Policies\ChallengePolicy;
+use App\Policies\ClaimPolicy;
 
 use App\Policies\StagePolicy;
 
@@ -187,6 +189,7 @@ class AuthServiceProvider extends ServiceProvider
         Lead::class => LeadPolicy::class,
         Note::class => NotePolicy::class,
         Challenge::class => ChallengePolicy::class,
+        Claim::class => ClaimPolicy::class,
         Stage::class => StagePolicy::class,
     ];
 
