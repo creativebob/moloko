@@ -28,6 +28,6 @@ class AddLeadListener
      */
     public function handle(onAddLeadEvent $event)
     {
-       Log::info('Лид: ' . $event->case_number . ' добавлен в базу данных. Автор: ' . $event->user_name);
+ 
     }
 }

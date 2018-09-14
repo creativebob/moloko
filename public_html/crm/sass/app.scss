@@ -894,10 +894,6 @@ tr:hover {
         }
 
 
-
-
-
-
         .icon-sync {
             background-position: 0px -1088px;
             float: left;
@@ -910,17 +906,6 @@ tr:hover {
             }
         }
 
-        .icon-process {
-            background-position: 0px -1110px;
-            float: left;
-            margin-right: 0.6rem;
-            opacity: 0.4;
-            transition: opacity 0.5s ease;
-
-    &:hover {
-        opacity: 1;
-    }
-}
 
         .active-filter {
             background-position: -32px -352px !important;
@@ -1680,6 +1665,10 @@ a:hover {
     background-position: -96px -1056px;
 }
 
+.icon-process {
+    background-position:  -96px -1120px;
+}
+
 .icon-arrow-forward {
     background-position: -160px -288px;
 }
@@ -1721,7 +1710,9 @@ a:hover {
   .icon-personals {
       background-position: -160px -1056px;
   }
-
+  .icon-process {
+      background-position: -160px -1120px;
+  }
 
 }
 // Скролл в сайбаре по умолчанию

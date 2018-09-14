@@ -173,7 +173,7 @@ class ClaimController extends Controller
     public function ajax_store(Request $request)
     {
         // Проверяем право на создание сущности
-        // $this->authorize('store', Claim::class);
+        $this->authorize('store', Claim::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, 'store');

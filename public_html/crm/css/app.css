@@ -671,17 +671,6 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   opacity: 1;
 }
 
-.icon-process {
-  background-position: 0px -1110px;
-  float: left;
-  margin-right: 0.6rem;
-  opacity: 0.4;
-  transition: opacity 0.5s ease;
-}
-.icon-process:hover {
-  opacity: 1;
-}
-
 .active-filter {
   background-position: -32px -352px !important;
 }
@@ -1343,6 +1332,9 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 .sidebar .icon-personals {
   background-position: -96px -1056px;
 }
+.sidebar .icon-process {
+  background-position: -96px -1120px;
+}
 .sidebar .icon-arrow-forward {
   background-position: -160px -288px;
 }
@@ -1381,6 +1373,9 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 }
 .sidebar .nav > ul > li > .active .icon-personals, .sidebar .gen-menu-bot > li > .active .icon-personals {
   background-position: -160px -1056px;
+}
+.sidebar .nav > ul > li > .active .icon-process, .sidebar .gen-menu-bot > li > .active .icon-process {
+  background-position: -160px -1120px;
 }
 .sidebar .nav::-webkit-scrollbar {
   width: 0.5rem;
