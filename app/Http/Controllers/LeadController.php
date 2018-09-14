@@ -43,6 +43,9 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 use Carbon\Carbon;
 
+use App\Events\onAddLeadEvent;
+use Event;
+
 // На удаление
 use App\Http\Controllers\Session;
 use Illuminate\Support\Facades\DB;
@@ -57,7 +60,7 @@ class LeadController extends Controller
     protected $entity_name = 'leads';
     protected $entity_dependence = true;
 
-    public function index(Request $request )
+    public function index(Request $request)
     {
 
         Carbon::setLocale('en');
@@ -804,6 +807,9 @@ class LeadController extends Controller
 
         $lead->save();
 
+        Event::fire(new onAddLeadEvent($lead, $user));
+
+
         if ($lead) {
 
         } else {
@@ -1045,10 +1051,14 @@ class LeadController extends Controller
              // dd($direction);
         $lead->manager_id = $user->id;
 
-                // Формируем номера обращения
-        $lead_number = getLeadNumbers($user);
-        $lead->case_number = $lead_number['case'];
-        $lead->serial_number = $lead_number['serial'];
+        if($lead->case_number == NULL){
+
+            // Формируем номера обращения
+            $lead_number = getLeadNumbers($user);
+            $lead->case_number = $lead_number['case'];
+            $lead->serial_number = $lead_number['serial'];
+        }
+
         $lead->editor_id = $user->id;
         $lead->save();
 
@@ -1076,16 +1086,17 @@ class LeadController extends Controller
         $user = $request->user();
         $lead = Lead::findOrFail($request->lead_id);
 
-        
-             // dd($direction);
-        $lead->manager_id = $request->appointed_id;
-
         $manager = User::find($request->appointed_id);
+        $lead->manager_id = $manager->id;       
 
-                // Формируем номера обращения
-        $lead_number = getLeadNumbers($manager);
-        $lead->case_number = $lead_number['case'];
-        $lead->serial_number = $lead_number['serial'];
+        if($lead->case_number == NULL){
+            
+            // Формируем номера обращения
+            $lead_number = getLeadNumbers($manager);
+            $lead->case_number = $lead_number['case'];
+            $lead->serial_number = $lead_number['serial'];
+        }
+
         $lead->editor_id = $user->id;
         $lead->save();
 

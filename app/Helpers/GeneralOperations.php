@@ -6,7 +6,7 @@ use Carbon\Carbon;
 function getLeadNumbers($user) {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
 
-		$today = Carbon::now();
+	$today = Carbon::now();
         $answer_all_leads = operator_right('leads', 'true', 'index');
 
         $leads = Lead::moderatorLimit($answer_all_leads)

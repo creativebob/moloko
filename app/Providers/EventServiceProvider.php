@@ -19,6 +19,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\TestEvent' => [
             'App\Listeners\TestListener',
         ],
+        'App\Events\onAddLeadEvent' => [
+            'App\Listeners\AddLeadListener',
+        ],
     ];
 
     /**

@@ -23,16 +23,57 @@ class ClaimController extends Controller
     protected $entity_name = 'claims';
     protected $entity_dependence = false;
 
-    public function index()
+    public function index(Request $request)
     {
-        //
+
+        // Включение контроля активного фильтра 
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+
+        // Подключение политики
+        // $this->authorize(getmethod(__FUNCTION__), Claim::class);
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // -------------------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -------------------------------------------------------------------------------------------------------------------------
+
+        $claims = Claim::with('lead', 'manager')
+        ->moderatorLimit($answer)
+        // ->filter($request, 'places_type_id', 'places_types')
+        ->booklistFilter($request)
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->paginate(30);
+
+        // ------------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА -------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------
+
+        $filter_query = Claim::with('manager')->moderatorLimit($answer)->get();
+
+        // Создаем контейнер фильтра
+        $filter['status'] = null;
+        $filter['entity_name'] = $this->entity_name;
+
+        // $filter = addFilter($filter, $filter_query, $request, 'Тип помещения:', 'places_types', 'places_type_id', 'places_types', 'external-id-many');
+
+        // Добавляем данные по спискам (Требуется на каждом контроллере)
+        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('claims.index', compact('claims', 'page_info', 'filter', 'user'));
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         //

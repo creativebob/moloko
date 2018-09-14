@@ -141,7 +141,7 @@ class Lead extends Model
         return $this->morphedByMany('App\RawsCategory', 'choices');
     }
 
-    // Получаем автора
+    // Получаем менеджера
     public function manager()
     {
         return $this->belongsTo('App\User', 'manager_id');
