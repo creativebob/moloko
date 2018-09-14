@@ -32,7 +32,7 @@ class ChallengesTableSeeder extends Seeder
     		$page->name = 'Задачи';
     		$page->title = 'Задачи';
     		$page->description = 'Задачи';
-    		$page->alias = 'admin/challenges';
+    		$page->alias = 'challenges';
     		$page->site_id = 1;
     		$page->company_id = null;
     		$page->display = 1;

@@ -28,7 +28,7 @@ class ClaimsTableSeeder extends Seeder
     		$page->name = 'Рекламации';
     		$page->title = 'Рекламации';
     		$page->description = 'Рекламации';
-    		$page->alias = 'admin/claims';
+    		$page->alias = 'claims';
     		$page->site_id = 1;
     		$page->company_id = null;
     		$page->display = 1;
