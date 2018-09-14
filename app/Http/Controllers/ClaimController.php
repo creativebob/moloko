@@ -197,7 +197,7 @@ class ClaimController extends Controller
         $claim = new Claim;
         $claim->body = $request->body;
         $claim->status = 1;
-        $claim->lead_id = $lead_id;
+        $claim->lead_id = $request->lead_id;
 
         // Формируем номера обращения
         $claim_number = getClaimNumbers($user);
