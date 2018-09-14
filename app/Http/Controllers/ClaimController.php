@@ -176,7 +176,7 @@ class ClaimController extends Controller
         $this->authorize('store', Claim::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'store');
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('store'));
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();

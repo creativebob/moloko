@@ -53,7 +53,7 @@ function getClaimNumbers($user) {
         $claim_numbers = [];
 
         // Создаем номера
-        $claim_numbers['case'] = $today->format('dmy') . '/сц' .  $serial_number;
+        $claim_numbers['case'] = $today->format('dmy') . '/сц/' .  $serial_number;
         $claim_numbers['serial']  = $serial_number;
 
         return $claim_numbers;
