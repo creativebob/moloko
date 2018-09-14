@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 
 // Модели
-use App\Challenge;
+use App\Claim;
 use App\Navigation;
 use App\Menu;
 use App\Page;
@@ -13,26 +13,22 @@ use App\Action;
 use App\ActionEntity;
 use App\Right;
 
-class ChallengesTableSeeder extends Seeder
+class ClaimsTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+
     public function run()
     {
 
-    	$page = Page::where('alias', 'challenges')->first();
+    	$page = Page::where('alias', 'claims')->first();
 
     	if ($page) {
     		$page_id = $page->id;
     	} else {
     		$page = new Page;
-    		$page->name = 'Задачи';
-    		$page->title = 'Задачи';
-    		$page->description = 'Задачи';
-    		$page->alias = 'admin/challenges';
+    		$page->name = 'Рекламации';
+    		$page->title = 'Рекламации';
+    		$page->description = 'Рекламации';
+    		$page->alias = 'admin/claims';
     		$page->site_id = 1;
     		$page->company_id = null;
     		$page->display = 1;
@@ -43,15 +39,14 @@ class ChallengesTableSeeder extends Seeder
     		$page_id = $page->id;
     	}
 
-    	$entity = Entity::where('alias', 'challenges')->first();
-        
+    	$entity = Entity::where('alias', 'claims')->first();
     	if ($entity) {
     		$entity_id = $entity->id;
     	} else {
     		$entity = new Entity;
-    		$entity->name = 'Задачи';
-    		$entity->alias = 'challenges';
-    		$entity->model = 'Challenge';
+    		$entity->name = 'Рекламации';
+    		$entity->alias = 'claims';
+    		$entity->model = 'Claim';
     		$entity->rights_minus = null;
     		$entity->system_item = 1;
     		$entity->author_id = 1;
@@ -80,11 +75,11 @@ class ChallengesTableSeeder extends Seeder
 
     		$actionentities = $actionentities->pluck('id')->toArray();
 
-        // Получаем все существующие разрешения (allow) 
+        	// Получаем все существующие разрешения (allow) 
     		$rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
 
     		$mass = [];
-        // Генерируем права на полный доступ
+        	// Генерируем права на полный доступ
     		foreach($rights as $right){
     			$mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system_item' => 1];
     		};
@@ -103,22 +98,14 @@ class ChallengesTableSeeder extends Seeder
 
     	$navigation_id = $navigation->id;
 
-    	$menu = new Menu;
-    	$menu->name = 'Процессы';
-    	$menu->icon = 'icon-process';
-    	$menu->tag = 'process';
-    	$menu->navigation_id = $navigation_id;
-    	$menu->system_item = 1;
-    	$menu->author_id = 1;
-    	$menu->display = 1;
-    	$menu->save();
+    	$menu = Menu::where('tag', 'production')->first();
 
     	$parent_menu_id = $menu->id;
 
     	$menu = new Menu;
-    	$menu->name = 'Задачи';
-    	$menu->alias = 'admin/challenges';
-    	$menu->tag = 'challenges';
+    	$menu->name = 'Рекламации';
+    	$menu->alias = 'admin/claims';
+    	$menu->tag = 'claims';
     	$menu->parent_id = $parent_menu_id;
     	$menu->page_id = $page_id;
     	$menu->navigation_id = $navigation_id;
@@ -126,7 +113,6 @@ class ChallengesTableSeeder extends Seeder
     	$menu->author_id = 1;
     	$menu->display = 1;
     	$menu->save();
-
 
     }
 }
