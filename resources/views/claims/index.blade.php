@@ -50,11 +50,11 @@
         ><label class="label-check" for="check-{{ $claim->id }}"></label>
     </td>
     <td class="td-date">
-      <span>{{ $lead->created_at->format('d.m.Y') }}</span><br>
-      <span class="tiny-text">{{ $lead->created_at->format('H:i') }}</span>        
+      <span>{{ $claim->created_at->format('d.m.Y') }}</span><br>
+      <span class="tiny-text">{{ $claim->created_at->format('H:i') }}</span>        
     </td>
 
-    <td class="td-case-number">{{ $lead->case_number }}
+    <td class="td-case-number">{{ $claim->lead->case_number }}
 
           @php
           $edit = 0;

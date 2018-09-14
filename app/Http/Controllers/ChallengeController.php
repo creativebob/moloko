@@ -67,6 +67,8 @@ class ChallengeController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
+        // dd($page_info);
+
         // Задачи пользователя
         $challenges = challenges($request);
 
