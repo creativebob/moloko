@@ -197,7 +197,7 @@ class ClaimController extends Controller
         $claim = new Claim;
         $claim->body = $request->body;
         $claim->status = 1;
-        $claim->lead_id = $request->lead_id;
+        $claim->lead_id = $lead_id;
 
         // Формируем номера обращения
         $claim_number = getClaimNumbers($user);
@@ -215,8 +215,15 @@ class ClaimController extends Controller
             $lead = Lead::with(['location.city', 'stage', 'manager', 'claims' => function ($query) {
                 $query->orderBy('created_at', 'asc');
             }])->find($request->lead_id);
+            
+            if (isset($lead->location->city->name)) {
+                $address = $lead->location->city->name . ', ' . $lead->location->address;
+            } else {
+                $address = $lead->location->address;
+            }
 
-
+            $telegram_message  = "РЕКЛАМАЦИЯ №" . $claim->case_number . "\r\n\r\nОписание: " . $claim->body . "\r\n\r\nНомер заказа: " . $lead->case_number . "\r\nКлиент: " . $lead->name . "\r\nТелефон: " . $lead->phone . "\r\nАдрес: " . $address . "\r\nЭтап: " . $lead->stage->name. "\r\nМенеджер: " . $lead->manager->first_name . " " . $lead->manager->second_name;
+            
             $telegram_destinations = User::whereHas('staff', function ($query) {
                 $query->whereHas('position', function ($query) {
                     $query->whereHas('notifications', function ($query) {
@@ -226,22 +233,13 @@ class ClaimController extends Controller
             })
             ->where('telegram_id', '!=', null)
             ->get(['telegram_id']);
-
-
-            if (isset($lead->location->city->name)) {
-                $address = $lead->location->city->name . ', ' . $lead->location->address;
-            } else {
-                $address = $lead->location->address;
-            }
-
-            $telegram_message  = "РЕКЛАМАЦИЯ №" . $claim->case_number . "\r\n\r\nОписание: " . $claim->body . "\r\n\r\nНомер заказа: " . $claim->lead->case_number . "\r\nКлиент: " . $lead->name . "\r\nТелефон: " . $lead->phone . "\r\nАддрес: " . $address . "\r\nТовар: " . $lead->name . "\r\nЭтап: " . $lead->stage->name. "\r\nМенеджер: " . $lead->maneger->first_name . " " . $lead->maneger->second_name;
-
+        
             send_message($telegram_destinations, $telegram_message);
 
             $claims = $lead->claims;
 
             return view('leads.claim', compact('claims'));
-        }  
+        }   
     }
 
     public function ajax_finish(Request $request)
