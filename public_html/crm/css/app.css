@@ -1619,6 +1619,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   padding-left: 0 !important;
 }
 
+.claims .td-body {
+  max-width: 400px;
+}
+
 .worktime_edit {
   width: 0;
 }

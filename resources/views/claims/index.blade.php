@@ -19,7 +19,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="claims">
+    <table class="table-content tablesorter claims" id="content" data-sticky-container data-entity-alias="claims">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -27,6 +27,7 @@
           <th class="td-date">Дата</th>
           <th class="td-case-number">Номер</th>
           <th class="td-body">Описание проблемы</th>
+          <th class="td-status">Статус</th>
           <th class="td-lead-number-case">№ заказа</th>
           <th class="td-manager">Менеджер</th>
           <th class="td-control"></th>
@@ -54,34 +55,32 @@
       <span class="tiny-text">{{ $claim->created_at->format('H:i') }}</span>        
     </td>
 
-    <td class="td-case-number">{{ $claim->lead->case_number }}
+    <td class="td-case-number">
 
-          @php
-          $edit = 0;
-          @endphp
-          @can('update', $claim)
-          @php
-          $edit = 1;
-          @endphp
-
-          @endcan
-          @if($edit == 1)
-            <a href="/admin/claims/{{ $claim->id }}/edit">
-          @endif
-
-          {{ $claim->case_number }}
-          @if($edit == 1)
-            </a>
-          @endif
-
+    @if(empty($claim->case_number))
+      {{ $claim->old_claim_id or ''}}
+    @else
+      {{ $claim->case_number or 'Нет номера!' }}
+    @endif
 
     </td>
     <td class="td-body">{{ $claim->body }}</td>
-    <td class="td-lead-number-case">{{ $claim->lead->number_case }}</td>
-    <td class="td-manager">
-      @if(!empty($lead->manager->first_name))
-      {{ $lead->manager->first_name . ' ' . $lead->manager->second_name }}
+    <td class="td-status">
+      @if($claim->status == 1)
+      Выполнена
+      @else
+      Не выполнена
+      @endif
+    </td>
+    <td class="td-case-number">
+        <a href="/admin/leads/{{ $claim->lead->id }}/edit">
+            {{ $claim->lead->case_number }}
+        </a>
+    </td>
 
+    <td class="td-manager">
+      @if(!empty($claim->manager->first_name))
+      {{ $claim->manager->first_name . ' ' . $claim->manager->second_name }}
       @else
       Не назначен
       @endif

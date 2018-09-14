@@ -7,10 +7,11 @@
 	<td class="case-number-claim">
 		<span>
 			@if(empty($claim->case_number))
-			Старый номер: {{ $claim->old_claim_id or ''}}
+				Старый номер: {{ $claim->old_claim_id or ''}}
 			@else
-			{{ $claim->case_number or 'Нет номера!' }}</span>
+				{{ $claim->case_number or 'Нет номера!' }}
 			@endif
+		</span>
 	</td>
 	<td class="description">
 		@php

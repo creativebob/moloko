@@ -47,8 +47,7 @@ class ClaimController extends Controller
         ->moderatorLimit($answer)
         // ->filter($request, 'places_type_id', 'places_types')
         ->booklistFilter($request)
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
+        ->orderBy('created_at', 'desc')
         ->paginate(30);
 
         // ------------------------------------------------------------------------------------------------------------
@@ -173,10 +172,11 @@ class ClaimController extends Controller
     public function ajax_store(Request $request)
     {
         // Проверяем право на создание сущности
-        $this->authorize('store', Claim::class);
+        $this->authorize('create', Claim::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('store'));
+
+        $answer = operator_right($this->entity_name, $this->entity_dependence, 'create');
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -197,13 +197,49 @@ class ClaimController extends Controller
         $claim->case_number = $claim_number['case'];
         $claim->serial_number = $claim_number['serial'];
 
+        $claim->manager_id = $user->id;
+
         // Вносим общие данные
         $claim->author_id = $user->id;
-        $claim->company_id = $request->company_id;
+        $claim->company_id = $company_id;
 
         $claim->save();
 
         if ($claim) {
+
+
+                // Если рекламация записалась - пишем обращение (Лида)
+
+                // ГЛАВНЫЙ ЗАПРОС:
+                $lead = Lead::with('location')->findOrFail($request->lead_id);
+
+                $filial_id = $user->filial_id;
+
+                // Пишем локацию
+                $location_id = $lead->location->id;
+
+                $new_lead = new Lead;
+                $new_lead->name = $lead->name;
+                $new_lead->filial_id = $filial_id;
+                $new_lead->stage_id = 2; // Обращение
+                $new_lead->display = 1; // Включаем видимость
+                $new_lead->company_id = $company_id;
+
+                $new_lead->phone = $lead->phone;
+                $new_lead->location_id = $location_id;
+
+                $new_lead->author_id = $user->id;
+                $new_lead->manager_id = $user->id;
+
+                // // Формируем номера обращения
+                $lead_number = getClaimNumbers($user);
+                $new_lead->case_number = $lead_number['case'];
+                $new_lead->serial_number = $lead_number['serial'];
+
+                // // Конец формирования номера обращения ----------------------------------
+
+                $new_lead->save();
+
 
             $lead = Lead::with(['claims' => function ($query) {
                 $query->orderBy('created_at', 'asc');
