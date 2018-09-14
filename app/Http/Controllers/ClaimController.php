@@ -175,7 +175,6 @@ class ClaimController extends Controller
         // Проверяем право на создание сущности
         // $this->authorize('store', Claim::class);
 
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, 'store');
 
@@ -192,6 +191,11 @@ class ClaimController extends Controller
         $claim->body = $request->body;
         $claim->status = 1;
         $claim->lead_id = $request->lead_id;
+
+        // Формируем номера обращения
+        $claim_number = getClaimNumbers($user);
+        $claim->case_number = $claim_number['case'];
+        $claim->serial_number = $claim_number['serial'];
 
         // Вносим общие данные
         $claim->author_id = $user->id;

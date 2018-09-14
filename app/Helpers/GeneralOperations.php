@@ -1,6 +1,7 @@
 <?php
 
 use App\Lead;
+use App\Claim;
 use Carbon\Carbon;
 
 function getLeadNumbers($user) {
@@ -32,5 +33,30 @@ function getLeadNumbers($user) {
         return $lead_numbers;
 }
 
+function getClaimNumbers($user) {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+
+        $today = Carbon::now();
+        $answer_all_claims = operator_right('claims', 'false', 'index');
+
+        $claims = Claim::companiesLimit($answer_all_claims)
+        ->whereDay('created_at', Carbon::today()->format('d'))
+        ->get();
+
+        $serial_number = $claims->max('serial_number');
+
+        if(empty($serial_number)){$serial_number = 0;};
+
+        $serial_number = $serial_number + 1;
+
+        // Контейнер для хранения номеров заказа
+        $claim_numbers = [];
+
+        // Создаем номера
+        $claim_numbers['case'] = $today->format('dmy') . '/сц' .  $serial_number;
+        $claim_numbers['serial']  = $serial_number;
+
+        return $claim_numbers;
+}
 
 ?>
