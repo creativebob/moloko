@@ -18,6 +18,7 @@ class CreateMenusTable extends Migration
       $table->string('name')->nullable()->comment('Имя категории меню');
       $table->string('icon')->nullable()->comment('Имя иконки меню');
       $table->string('alias')->nullable()->comment('Ссылка на страницу');
+      $table->string('tag')->nullable()->comment('Ключ для поиска');
 
       $table->integer('parent_id')->unsigned()->nullable()->comment('Id родителя пункта меню');
       // $table->foreign('parent_id')->references('id')->on('menus');

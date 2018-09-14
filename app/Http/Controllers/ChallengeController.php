@@ -25,9 +25,52 @@ class ChallengeController extends Controller
     protected $entity_name = 'challenges';
     protected $entity_dependence = false;
 
-    public function index()
+    public function index(Request $request)
     {
-        //
+
+        $user = $request->user();
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Lead::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        // dd($answer);
+
+        // --------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // --------------------------------------------------------------------------------------------------------
+
+        $challenges_page = Challenge::with(
+            'challenge_type', 
+            'author', 
+            'appointed', 
+            'finisher', 
+            'challenges'
+        )
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        // ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        // ->filter($request, 'city_id', 'location')
+        // ->filter($request, 'stage_id')
+        // ->filter($request, 'manager_id')
+        // ->dateIntervalFilter($request, 'created_at')
+        // ->booklistFilter($request)
+        ->orderBy('deadline_date', 'desc')
+        ->orderBy('moderation', 'desc')
+        // ->orderBy('sort', 'asc')
+        ->paginate(30);
+
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        // Задачи пользователя
+        $challenges = challenges($request);
+
+        return view('challenges.index', compact('challenges_page', 'page_info', 'challenges'));
     }
 
     public function create(Request $request)
