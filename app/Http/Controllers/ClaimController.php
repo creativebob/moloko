@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 // Модели
 use App\Claim;
 use App\Lead;
+use App\User;
 
 
 // use App\Http\Requests\ClaimRequest;
@@ -13,6 +14,9 @@ use App\Lead;
 // use App\Policies\ClaimPolicy;
 
 use Illuminate\Support\Facades\Auth;
+
+// Телеграм
+use Telegram;
 
 use Illuminate\Http\Request;
 
@@ -105,6 +109,9 @@ class ClaimController extends Controller
         $claim->author_id = $user->id;
         $claim->system_item = $request->system_item;
         $claim->moderation = $request->moderation;
+
+
+
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         // if($answer['automoderate'] == false){$entity->moderation = 1;};
@@ -205,9 +212,31 @@ class ClaimController extends Controller
 
         if ($claim) {
 
-            $lead = Lead::with(['claims' => function ($query) {
+            $lead = Lead::with(['location.city', 'stage', 'manager', 'claims' => function ($query) {
                 $query->orderBy('created_at', 'asc');
             }])->find($request->lead_id);
+
+
+            $telegram_destinations = User::whereHas('staff', function ($query) {
+                $query->whereHas('position', function ($query) {
+                    $query->whereHas('notifications', function ($query) {
+                        $query->where('notification_id', 2);
+                    });
+                });
+            })
+            ->where('telegram_id', '!=', null)
+            ->get(['telegram_id']);
+
+
+            if (isset($lead->location->city->name)) {
+                $address = $lead->location->city->name . ', ' . $lead->location->address;
+            } else {
+                $address = $lead->location->address;
+            }
+
+            $telegram_message  = "РЕКЛАМАЦИЯ №" . $claim->case_number . "\r\n\r\nОписание: " . $claim->body . "\r\n\r\nНомер заказа: " . $claim->lead->case_number . "\r\nКлиент: " . $lead->name . "\r\nТелефон: " . $lead->phone . "\r\nАддрес: " . $address . "\r\nТовар: " . $lead->name . "\r\nЭтап: " . $lead->stage->name. "\r\nМенеджер: " . $lead->maneger->first_name . " " . $lead->maneger->second_name;
+
+            send_message($telegram_destinations, $telegram_message);
 
             $claims = $lead->claims;
 
