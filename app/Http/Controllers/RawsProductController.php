@@ -43,6 +43,9 @@ class RawsProductController extends Controller
     public function index(Request $request)
     {
 
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), RawsProduct::class);
+
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){
@@ -50,9 +53,6 @@ class RawsProductController extends Controller
             Cookie::queue(Cookie::forget('filter_' . $this->entity_name));
             return Redirect($filter_url);
         };
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), RawsProduct::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -74,7 +74,6 @@ class RawsProductController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        
         // ----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
@@ -87,7 +86,6 @@ class RawsProductController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
-
 
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
@@ -109,13 +107,13 @@ class RawsProductController extends Controller
     public function create(Request $request)
     {
 
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), RawsProduct::class);
+
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_raws_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $raws_product = new RawsProduct;
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_raws_categories = operator_right('raws_categories', false, 'index');
@@ -129,7 +127,6 @@ class RawsProductController extends Controller
         ->get(['id','name','category_status','parent_id'])
         ->keyBy('id')
         ->toArray();
-
         // dd($raws_categories);
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
@@ -162,12 +159,8 @@ class RawsProductController extends Controller
         $raws_product->description = $request->description;
         $raws_product->raws_category_id = $request->raws_category_id;
 
-        // Автоматически отправляем запись на модерацию
-        // $product->moderation = 1;
-
         // Модерация и системная запись
         $raws_product->system_item = $request->system_item;
-
         $raws_product->display = $request->display;
 
         $raws_product->company_id = $company_id;
@@ -189,9 +182,11 @@ class RawsProductController extends Controller
         $answer_raws_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $raws_product = RawsProduct::with(['raws_category'])
-
         ->moderatorLimit($answer_raws_products)
         ->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $raws_product);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -208,7 +203,6 @@ class RawsProductController extends Controller
         ->get(['id','name','category_status','parent_id'])
         ->keyBy('id')
         ->toArray();
-
         // dd($products_categories);
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
@@ -216,16 +210,6 @@ class RawsProductController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-
-
-
-        // Вот это вообще надо? Или это уже упразднили?
-        // --------------------------------------------------------------------------------------
-        if ($request->ajax()) {
-            // echo json_encode($properties);
-            return view('products.properties-list', ['properties' => $properties, 'product_metrics' => $product_metrics, 'properties_list' => $properties_list]);
-        }
-        // --------------------------------------------------------------------------------------
 
         return view('raws_products.edit', compact('raws_product', 'page_info', 'raws_categories_list'));
     }
@@ -240,11 +224,10 @@ class RawsProductController extends Controller
         $raws_product = RawsProduct::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('update', $raws_product);
+        $this->authorize(getmethod(__FUNCTION__), $raws_product);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
-        $company_id = $user->company_id;
 
         // Скрываем бога
         $user_id = hideGod($user);
@@ -380,22 +363,6 @@ class RawsProductController extends Controller
         return view('products.photos', compact('page_info', 'product'));
 
     }
-
-
-
-    public function get_product_inputs(Request $request)
-    {
-
-        $product = Product::with('metrics.property', 'compositions')->findOrFail(1);
-
-        // $request->product_id
-
-        dd($product);
-
-        
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
 
     // -------------------------------------- Exel ------------------------------------------
     public function raws_products_download($type)

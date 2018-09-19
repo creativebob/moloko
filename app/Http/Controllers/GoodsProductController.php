@@ -43,16 +43,16 @@ class GoodsProductController extends Controller
     public function index(Request $request)
     {
 
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), GoodsProduct::class);
+
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){
 
             Cookie::queue(Cookie::forget('filter_' . $this->entity_name));
             return Redirect($filter_url);
-        };
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), GoodsProduct::class);
+        }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -74,7 +74,6 @@ class GoodsProductController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        
         // ----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
@@ -108,6 +107,9 @@ class GoodsProductController extends Controller
 
     public function create(Request $request)
     {
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), GoodsProduct::class);
 
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_goods_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -189,9 +191,11 @@ class GoodsProductController extends Controller
         $answer_goods_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $goods_product = GoodsProduct::with(['goods_category'])
-
         ->moderatorLimit($answer_goods_products)
         ->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $goods_product);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -240,11 +244,10 @@ class GoodsProductController extends Controller
         $goods_product = GoodsProduct::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('update', $goods_product);
+        $this->authorize(getmethod(__FUNCTION__), $goods_product);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
-        $company_id = $user->company_id;
 
         // Скрываем бога
         $user_id = hideGod($user);
@@ -434,22 +437,6 @@ class GoodsProductController extends Controller
         return view('products.photos', compact('page_info', 'product'));
 
     }
-
-
-
-    public function get_product_inputs(Request $request)
-    {
-
-        $product = Product::with('metrics.property', 'compositions')->findOrFail(1);
-
-        // $request->product_id
-
-        dd($product);
-
-        
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
 
     // -------------------------------------- Exel ------------------------------------------
     public function goods_products_download($type)

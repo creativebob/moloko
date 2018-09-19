@@ -36,12 +36,9 @@ class CityController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), City::class);
 
+        // Решили обьеденить проверку регионов, районов и городов только в города
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_cities = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // $answer_areas = operator_right('areas', false,  getmethod(__FUNCTION__));
-
-        // $answer_regions = operator_right('regions', false,  getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -88,9 +85,9 @@ class CityController extends Controller
 
             // Получаем данные для авторизованного пользователя
             $user = $request->user();
+
+            // Скрываем бога
             $user_id = hideGod($user);
-            // $company_id = $user->company_id;
-            // $filial_id = $user->filial_id;
 
             $city_name = $request->city_name;
 
@@ -102,11 +99,13 @@ class CityController extends Controller
 
                 // Смотрим область
                 $region = Region::where('name', $region_name)->first();
+
                 if ($region) {
 
                     // Если существует, берем id существующий
                     $region_id = $region->id;
                 } else {
+
                     // Записываем новую область
                     $region = new Region;
                     $region->name = $region_name;
@@ -116,7 +115,7 @@ class CityController extends Controller
 
                     if ($region) {
 
-                    // Берем id записанной области
+                        // Берем id записанной области
                         $region_id = $region->id;
                     } else {
                         $result = [
@@ -220,7 +219,7 @@ class CityController extends Controller
                 $city->area_id = $area_id;
             }
 
-            $city->author_id = $user->id;
+            $city->author_id = $user_id;
             $city->system_item = 1;
             $city->save();
 
@@ -388,7 +387,10 @@ class CityController extends Controller
 
     // Получаем список городов из нашей базы
     public function cities_list(Request $request)
-    {
+    {   
+
+        // Подключение политики
+        $this->authorize('index', City::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');

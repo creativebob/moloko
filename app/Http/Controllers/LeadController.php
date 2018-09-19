@@ -372,7 +372,13 @@ class LeadController extends Controller
             $lead->display = 1;
 
             // Формируем номера обращения
-            $lead_number = getLeadNumbers($user);
+
+            if ($user->id == 9) {
+                $lead_number = getClaimNumbers($user); 
+            } else {
+                $lead_number = getLeadNumbers($user); 
+            }
+
             $lead->case_number = $lead_number['case'];
             $lead->serial_number = $lead_number['serial'];
 
@@ -1092,7 +1098,7 @@ class LeadController extends Controller
         $lead->manager_id = $manager->id;       
 
         if($lead->case_number == NULL){
-            
+
             // Формируем номера обращения
             $lead_number = getLeadNumbers($manager);
             $lead->case_number = $lead_number['case'];

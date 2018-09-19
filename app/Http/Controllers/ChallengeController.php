@@ -6,10 +6,7 @@ namespace App\Http\Controllers;
 use App\Challenge;
 use App\ChallengesType;
 use App\Staffer;
-
 use App\Lead;
-
-use Carbon\Carbon;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -17,6 +14,9 @@ use App\Http\Requests\ChallengeRequest;
 
 // Политика
 use App\Policies\ChallengePolicy;
+
+// Карбон
+use Carbon\Carbon;
 
 class ChallengeController extends Controller
 {
@@ -27,8 +27,6 @@ class ChallengeController extends Controller
 
     public function index(Request $request)
     {
-
-        $user = $request->user();
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Lead::class);
@@ -63,10 +61,8 @@ class ChallengeController extends Controller
         // ->orderBy('sort', 'asc')
         ->paginate(30);
 
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-
         // dd($page_info);
 
         // Задачи пользователя
@@ -95,7 +91,6 @@ class ChallengeController extends Controller
         // ->authors($answer_staff)
         ->systemItem($answer_staff) // Фильтр по системным записям
         ->get();
-
         // dd($staff);
 
         $staff_list = [];
@@ -105,7 +100,6 @@ class ChallengeController extends Controller
                 $staff_list[$staffer->user->id] = $staffer->user->second_name.' '.$staffer->user->first_name;
             }
         }
-
         // dd($staff_list);
 
         // Получаем данные для авторизованного пользователя
@@ -120,7 +114,6 @@ class ChallengeController extends Controller
         // $body = 'sfsdf432';
         // $entity_model = 'App\Lead';
         // $id = 1;  
-
         // dd($request);    
 
         // Подключение политики
@@ -138,7 +131,6 @@ class ChallengeController extends Controller
 
         $deadline_date_explode = explode('.', $request->deadline_date);
         $deadline_date = $deadline_date_explode[2].'-'.$deadline_date_explode[1].'-'.$deadline_date_explode[0];
-
         // dd($deadline_date);
 
         $deadline_time_explode = explode(':', $request->deadline_time);
@@ -146,8 +138,8 @@ class ChallengeController extends Controller
         // dd($deadline_time);
 
         $deadline = $deadline_date.' '.$deadline_time;
-
         // dd($deadline);
+
         $challenge->deadline_date = $deadline;
 
         $challenge->challenges_type_id = $request->challenges_type_id;
@@ -162,7 +154,7 @@ class ChallengeController extends Controller
 
             $item = $request->model::findOrFail($request->id);
 
-            // Создание отношений между Car и buyer (Men/Women).
+            // Сохранение отношения
             $item->challenges()->save($challenge);
 
             $item = $request->model::with(['challenges' => function ($query) {
@@ -175,41 +167,21 @@ class ChallengeController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__))
-        ;
+        $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $challenge = Challenge::moderatorLimit($answer)->findOrFail($id);
@@ -243,12 +215,6 @@ class ChallengeController extends Controller
         return json_encode($result, JSON_UNESCAPED_UNICODE); 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)

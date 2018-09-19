@@ -8,9 +8,7 @@ use App\GoodsMode;
 use App\GoodsProduct;
 use App\GoodsCategory;
 use App\Property;
-
 use App\RawsCategory;
-
 use App\EntitySetting;
 
 // use App\Company;
@@ -44,15 +42,16 @@ use Illuminate\Support\Facades\Auth;
 
 class GoodsCategoryController extends Controller
 {
+
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'goods_categories';
     protected $entity_dependence = false;
 
     public function index(Request $request)
     {
-        // dd($alias);
+
         // Подключение политики
-        $this->authorize('index', GoodsCategory::class);
+        $this->authorize(getmethod(__FUNCTION__), GoodsCategory::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -60,6 +59,7 @@ class GoodsCategoryController extends Controller
         // -----------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------
+
         $goods_categories = GoodsCategory::with('goods_products')
         ->withCount('goods_products')
         ->moderatorLimit($answer)
@@ -75,7 +75,7 @@ class GoodsCategoryController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Получаем массив с вложенными элементами дял отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
+        // Получаем массив с вложенными элементами для отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
         // $goods_categories_tree = get_index_tree_with_rights($goods_categories, $user);
         // dd($goods_categories_tree);
 
@@ -95,6 +95,7 @@ class GoodsCategoryController extends Controller
 
     public function create(Request $request)
     {
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), GoodsCategory::class);
 
@@ -130,7 +131,7 @@ class GoodsCategoryController extends Controller
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer_units_categories = operator_right('units_categories', false, 'index');
 
-                // Главный запрос
+            // Главный запрос
             $units_categories_list = UnitsCategory::with(['units' => function ($query) {
                 $query->pluck('name', 'id');
             }])
@@ -142,7 +143,6 @@ class GoodsCategoryController extends Controller
             ->orderBy('sort', 'asc')
             ->get()
             ->pluck('name', 'id');
-
 
             return view('goods_categories.create-medium', compact('goods_category', 'goods_categories_list', 'type', 'goods_modes_list', 'units_categories_list', 'goods_list'));
         } else {
@@ -176,7 +176,6 @@ class GoodsCategoryController extends Controller
 
         $goods_category->display = $request->display;
 
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -202,7 +201,6 @@ class GoodsCategoryController extends Controller
             $goods_category->goods_mode_id = $category->goods_mode_id;
         }
 
-
         // Делаем заглавной первую букву
         $goods_category->name = get_first_letter($request->name);
 
@@ -212,7 +210,6 @@ class GoodsCategoryController extends Controller
 
             // Переадресовываем на index
             return redirect()->action('GoodsCategoryController@index', ['id' => $goods_category->id]);
-
         } else {
             $result = [
                 'error_status' => 1,
@@ -239,6 +236,9 @@ class GoodsCategoryController extends Controller
         ->findOrFail($id);
         // dd($goods_category);
 
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $goods_category);
+
         $goods_category_metrics = [];
         foreach ($goods_category->metrics as $metric) {
             $goods_category_metrics[] = $metric->id;
@@ -249,11 +249,7 @@ class GoodsCategoryController extends Controller
         foreach ($goods_category->compositions as $composition) {
             $goods_category_compositions[] = $composition->id;
         }
-
         // dd($goods_category_compositions);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $goods_category);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -278,9 +274,6 @@ class GoodsCategoryController extends Controller
         ->withCount('metrics')
         ->orderBy('sort', 'asc')
         ->get();
-
-
-        
 
         $properties_list = $properties->pluck('name', 'id');
 
@@ -311,54 +304,49 @@ class GoodsCategoryController extends Controller
         //     }
         // }
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_raws_categories = operator_right('raws_categories', false, 'index');
 
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_raws_categories = operator_right('raws_categories', false, 'index');
+        $answer_raws_products = operator_right('raws_products', false, 'index');
 
-            $answer_raws_products = operator_right('raws_products', false, 'index');
+        $answer_raws = operator_right('raws', false, 'index');
 
-            $answer_raws = operator_right('raws', false, 'index');
+        $raws_categories = RawsCategory::with(['raws_products' => function ($query) use ($answer_raws_products, $answer_raws) {
+            $query->with(['raws_articles' => function ($query) use ($answer_raws) {
+                $query->whereHas('raws', function ($query) {
+                   $query->whereNull('draft'); 
+               });
+            // ->moderatorLimit($answer_raws)
+            // ->companiesLimit($answer_raws)
+            // ->authors($answer_raws)
+            // ->systemItem($answer_raws) // Фильтр по системным записям 
 
-            $raws_categories = RawsCategory::with(['raws_products' => function ($query) use ($answer_raws_products, $answer_raws) {
-                $query->with(['raws_articles' => function ($query) use ($answer_raws) {
-                    $query->whereHas('raws', function ($query) {
-                       $query->whereNull('draft'); 
-                    });
-                    // ->moderatorLimit($answer_raws)
-                    // ->companiesLimit($answer_raws)
-                    // ->authors($answer_raws)
-                    // ->systemItem($answer_raws) // Фильтр по системным записям 
-                    
-                }])
-                ->withCount('raws_articles');
-                // ->moderatorLimit($answer_raws_products)
-                // ->companiesLimit($answer_raws_products)
-                // ->authors($answer_raws_products)
-                // ->systemItem($answer_raws_products); // Фильтр по системным записям 
             }])
-            ->withCount('raws_products')
-            ->moderatorLimit($answer_raws_categories)
-            ->companiesLimit($answer_raws_categories)
-            ->authors($answer_raws_categories)
-            ->systemItem($answer_raws_categories) // Фильтр по системным записям 
-            ->get()
-            ->keyBy('id')
-            ->toArray();
+            ->withCount('raws_articles');
+            // ->moderatorLimit($answer_raws_products)
+            // ->companiesLimit($answer_raws_products)
+            // ->authors($answer_raws_products)
+            // ->systemItem($answer_raws_products); // Фильтр по системным записям 
+        }])
+        ->withCount('raws_products')
+        ->moderatorLimit($answer_raws_categories)
+        ->companiesLimit($answer_raws_categories)
+        ->authors($answer_raws_categories)
+        ->systemItem($answer_raws_categories) // Фильтр по системным записям 
+        ->get()
+        ->keyBy('id')
+        ->toArray();
 
-            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $composition_categories_list = get_parents_tree($raws_categories, null, null, null);
+        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+        $composition_categories_list = get_parents_tree($raws_categories, null, null, null);
+        // dd($composition_categories_list);
 
-            // dd($composition_categories_list);
-
-            $composition_list = [
-                'name' => 'Сырье',
-                'alias' => 'raws',
-                'composition_categories' => $composition_categories_list,
-            ];
-
-            // dd($composition_list);
-
-
+        $composition_list = [
+            'name' => 'Сырье',
+            'alias' => 'raws',
+            'composition_categories' => $composition_categories_list,
+        ];
+        // dd($composition_list);
         // dd($goods_modes_list);
         // $grouped_goods_types = $goods_modes->groupBy('alias');
         // dd($grouped_goods_types);
@@ -475,16 +463,13 @@ class GoodsCategoryController extends Controller
 
                 if ($get_settings->img_max_size != null) {
                     $settings['img_max_size'] = $get_settings->img_max_size;
-
                 }
             }
-
-
 
             // Директория
             $directory = $company_id.'/media/goods_categories/'.$goods_category->id.'/img/';
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($goods_category->photo_id) {
                 $array = save_photo($request, $directory, 'avatar-'.time(), null, $goods_category->photo_id, $settings);
             } else {
@@ -512,14 +497,12 @@ class GoodsCategoryController extends Controller
 
             $goods_categories = GoodsCategory::whereCategory_id($id)
             ->update(['goods_mode_id' => $request->goods_mode_id]);
-
         }
         
         $goods_category->display = $request->display;
 
         // Делаем заглавной первую букву
         $goods_category->name = get_first_letter($request->name); 
-
         $goods_category->save();
 
         if ($goods_category) {
@@ -590,9 +573,6 @@ class GoodsCategoryController extends Controller
         }
     }
 
-
-    
-
     // Проверка наличия в базе
     public function ajax_check(Request $request)
     {
@@ -633,7 +613,6 @@ class GoodsCategoryController extends Controller
         ->get(['id','name','category_status','parent_id'])
         ->keyBy('id')
         ->toArray();
-
         // dd($goods_categories);
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
@@ -712,11 +691,9 @@ class GoodsCategoryController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-
-    
-
     public function ajax_update(Request $request, $id)
     {
+        
         // dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_name, 'update');

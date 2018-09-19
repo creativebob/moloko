@@ -74,7 +74,7 @@
     </td>
     <td class="td-case-number">
         <a href="/admin/leads/{{ $claim->lead->id }}/edit">
-            {{ $claim->lead->case_number }}
+            {{ $claim->lead->case_number or ' ' }}
         </a>
     </td>
 
