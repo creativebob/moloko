@@ -34,23 +34,24 @@ Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('ge
 // Директории
 Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');
 
+// Методы дял парсера и одноразовые
 
-Route::any('/lol', function () {
+// Route::any('/lol', function () {
     
-    dd(App\OldLead::with(['comments.user', 'claims', 'task', 'stage', 'user', 'city', 'service', 'challenges' => function ($query) {
-    	$query->with('author', 'appointed', 'finisher', 'stage', 'task');
-    }])->find(5468));
-});
+//     dd(App\OldLead::with(['comments.user', 'claims', 'task', 'stage', 'user', 'city', 'service', 'challenges' => function ($query) {
+//     	$query->with('author', 'appointed', 'finisher', 'stage', 'task');
+//     }])->find(5468));
+// });
 
-Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
+// Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
 
-Route::get('/dublicator_old', 'ParserController@dublicator_old')->middleware('auth');
+// Route::get('/dublicator_old', 'ParserController@dublicator_old')->middleware('auth');
 
-Route::get('/adder', 'ParserController@adder')->middleware('auth');
+// Route::get('/adder', 'ParserController@adder')->middleware('auth');
 
-Route::get('/parser', 'ParserController@index')->middleware('auth');
+// Route::get('/parser', 'ParserController@index')->middleware('auth');
 
-Route::get('/andrey', 'ParserController@andrey')->middleware('auth');
+// Route::get('/andrey', 'ParserController@andrey')->middleware('auth');
 
 // --------------------------------------- Настройки -----------------------------------------------
 

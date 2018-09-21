@@ -7,18 +7,17 @@ use App\Claim;
 use App\Lead;
 use App\User;
 
-
-// use App\Http\Requests\ClaimRequest;
+// Валидация
+use Illuminate\Http\Request;
+use App\Http\Requests\ClaimRequest;
 
 // Политики
-// use App\Policies\ClaimPolicy;
+use App\Policies\ClaimPolicy;
 
 use Illuminate\Support\Facades\Auth;
 
 // Телеграм
 use Telegram;
-
-use Illuminate\Http\Request;
 
 class ClaimController extends Controller
 {
@@ -30,12 +29,14 @@ class ClaimController extends Controller
     public function index(Request $request)
     {
 
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Claim::class);
+
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
-        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
-
-        // Подключение политики
-        // $this->authorize(getmethod(__FUNCTION__), Claim::class);
+        if (($filter_url != null) && ($request->filter != 'active')) {
+            return Redirect($filter_url);
+        }
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -58,7 +59,7 @@ class ClaimController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА -------------------------------------------------------------------------------
         // ------------------------------------------------------------------------------------------------------------
 
-        $filter_query = Claim::with('manager')->moderatorLimit($answer)->get();
+        $filter_query = Claim::with('lead', 'manager')->moderatorLimit($answer)->get();
 
         // Создаем контейнер фильтра
         $filter['status'] = null;
@@ -73,9 +74,7 @@ class ClaimController extends Controller
         $page_info = pageInfo($this->entity_name);
 
         return view('claims.index', compact('claims', 'page_info', 'filter', 'user'));
-
     }
-
 
     public function create()
     {
@@ -84,9 +83,9 @@ class ClaimController extends Controller
 
     public function store(Request $request)
     {
-        // Проверяем право на создание сущности
-        // $this->authorize(getmethod(__FUNCTION__), Claim::class);
 
+        // Проверяем право на создание сущности
+        $this->authorize(getmethod(__FUNCTION__), Claim::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -102,22 +101,15 @@ class ClaimController extends Controller
 
         $claim = new Claim;
         $claim->name = $request->name;
-        $claim->alias = $request->alias;
+        // $claim->alias = $request->alias;
 
         // Вносим общие данные
         $claim->author_id = $user->id;
         $claim->system_item = $request->system_item;
         $claim->moderation = $request->moderation;
 
-
-
-
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         // if($answer['automoderate'] == false){$entity->moderation = 1;};
-
-        // Пишем ID компании авторизованного пользователя
-        // if($user->company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
-        // $entity->company_id = $user->company_id;
 
         // Раскомментировать если требуется запись ID филиала авторизованного пользователя
         // if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
@@ -127,48 +119,21 @@ class ClaimController extends Controller
         return redirect('/admin/entities');
     }
 
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
@@ -178,6 +143,7 @@ class ClaimController extends Controller
 
     public function ajax_store(Request $request)
     {
+
         // Проверяем право на создание сущности
         $this->authorize('create', Claim::class);
 
@@ -280,7 +246,7 @@ class ClaimController extends Controller
     public function ajax_finish(Request $request)
     {
         // Проверяем право на создание сущности
-        // $this->authorize('update', Claim::class);
+        $this->authorize('update', Claim::class);
 
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)

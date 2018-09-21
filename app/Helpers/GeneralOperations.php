@@ -14,7 +14,7 @@ function getLeadNumbers($user) {
         ->companiesLimit($answer_all_leads)
         ->filials($answer_all_leads) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->manager($user)
-        ->whereDay('created_at', Carbon::today()->format('d'))
+        ->whereDate('created_at', Carbon::today()->format('Y-m-d'))
         ->get();
 
         $serial_number = $leads->max('serial_number');
@@ -37,25 +37,35 @@ function getClaimNumbers($user) {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
 
         $today = Carbon::now();
+        // $answer_all_claims = operator_right('claims', 'false', 'index');
+
+        // $claims = Claim::companiesLimit($answer_all_claims)
+        // ->companiesLimit($answer_all_claims)
+        // ->whereDate('created_at', Carbon::today()->format('Y-m-d'))
+        // ->get();
+
         $answer_all_claims = operator_right('claims', 'false', 'index');
-
-        $claims = Claim::companiesLimit($answer_all_claims)
+        $claims_count = Claim::companiesLimit($answer_all_claims)
         ->companiesLimit($answer_all_claims)
-        ->whereDay('created_at', Carbon::today()->format('d'))
-        ->get();
+        ->whereDate('created_at', Carbon::today()->format('Y-m-d'))
+        ->count();
 
-        $serial_number = $claims->max('serial_number');
+        $claims_count = $claims_count + 1;
 
-        if(empty($serial_number)){$serial_number = 0;};
+        // dd($claims_count);
 
-        $serial_number = $serial_number + 1;
+        // $serial_number = $claims->max('serial_number');
+        // if(empty($serial_number)){$serial_number = 0;};
+        // $serial_number = $serial_number + 1;
 
         // Контейнер для хранения номеров заказа
         $claim_numbers = [];
 
         // Создаем номера
-        $claim_numbers['case'] = $today->format('dmy') . 'сц' .  $serial_number;
-        $claim_numbers['serial']  = $serial_number;
+        $claim_numbers['case'] = $today->format('dmy') . 'сц' .  $claims_count;
+        $claim_numbers['serial']  = $claims_count;
+        // $claim_numbers['case'] = $today->format('dmy') . 'сц' .  $serial_number;
+        // $claim_numbers['serial']  = $serial_number;
 
         return $claim_numbers;
 }

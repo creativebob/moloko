@@ -38,9 +38,9 @@ class RawsCategoryController extends Controller
 
     public function index(Request $request)
     {
-        // dd($alias);
+ 
         // Подключение политики
-        $this->authorize('index', RawsCategory::class);
+        $this->authorize(getmethod(__FUNCTION__), RawsCategory::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -164,7 +164,6 @@ class RawsCategoryController extends Controller
 
         $raws_category->display = $request->display;
 
-    
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -189,7 +188,6 @@ class RawsCategoryController extends Controller
 
             $raws_category->raws_mode_id = $category->raws_mode_id;
         }
-
         
         if ($request->status == 'set') {
             $raws_category->status = $request->status;
@@ -233,16 +231,14 @@ class RawsCategoryController extends Controller
         ->findOrFail($id);
         // dd($raws_category);
 
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $raws_category);
+
         $raws_category_metrics = [];
         foreach ($raws_category->metrics as $metric) {
             $raws_category_metrics[] = $metric->id;
         }
-        // dd($product_metrics);
-
-        // dd($raws_category_compositions);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $raws_category);
+        // dd($raws_category_metrics);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -268,37 +264,13 @@ class RawsCategoryController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-
-        
-
         $properties_list = $properties->pluck('name', 'id');
 
          // Отдаем Ajax
         if ($request->ajax()) {
             return view('raws_categories.metrics.properties-list', compact('properties', 'properties_list', 'raws_category_metrics'));
         }
-
         // dd($properties_list);
-
-        // if ($raws_category->type == 'raws') {
-        //     if ($raws_category->status == 'one') {
-        //         $type = ['raws'];
-        //     } else {
-        //         $type = ['raws'];
-        //     }
-        // }
-
-        // if ($raws_category->type == 'raws') {
-        //     $type = [];
-        // }
-
-        // if ($raws_category->type == 'raws') {
-        //     if ($raws_category->status == 'one') {
-        //         $type = ['staff'];
-        //     } else {
-        //         $type = ['raws'];
-        //     }
-        // }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_raws_modes = operator_right('raws_modes', false, 'index');
@@ -319,7 +291,6 @@ class RawsCategoryController extends Controller
         ->orderBy('sort', 'asc')
         ->get()
         ->toArray();
-
         // dd($raws_modes);
         
         $raws_modes_list = [];
@@ -338,9 +309,6 @@ class RawsCategoryController extends Controller
                 'raws_categories' => $raws_categories_list,
             ];
         }
-
-
-        
         // dd($raws_modes_list);
         // $grouped_raws_types = $raws_modes->groupBy('alias');
         // dd($grouped_raws_types);
@@ -461,8 +429,6 @@ class RawsCategoryController extends Controller
                 }
             }
 
-
-
             // Директория
             $directory = $company_id.'/media/raws_categories/'.$raws_category->id.'/img/';
 
@@ -494,7 +460,6 @@ class RawsCategoryController extends Controller
 
             $raws_categories = RawsCategory::whereCategory_id($id)
             ->update(['raws_mode_id' => $request->raws_mode_id]);
-
         }
         
         $raws_category->display = $request->display;
@@ -571,9 +536,6 @@ class RawsCategoryController extends Controller
             }
         }
     }
-
-
-    
 
     // Проверка наличия в базе
     public function ajax_check(Request $request)
@@ -695,8 +657,6 @@ class RawsCategoryController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-
-
     public function ajax_update(Request $request, $id)
     {
         // dd($request);
@@ -768,7 +728,6 @@ class RawsCategoryController extends Controller
 
                 if ($get_settings->img_max_size != null) {
                     $settings['img_max_size'] = $get_settings->img_max_size;
-
                 }
             }
 
@@ -802,7 +761,6 @@ class RawsCategoryController extends Controller
 
             $raws_categories = RawsCategory::whereCategory_id($id)
             ->update(['raws_type_id' => $request->raws_type_id]);
-
         }
         
         $raws_category->display = $request->display;

@@ -41,6 +41,9 @@ class RawController extends Controller
     public function index(Request $request)
     {
 
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Raw::class);
+
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
         if (($filter_url != null)&&($request->filter != 'active')) {
@@ -48,9 +51,6 @@ class RawController extends Controller
             return Redirect($filter_url);
         }
         
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Raw::class);
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
@@ -178,9 +178,10 @@ class RawController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request);
+        
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Raw::class);
+        // dd($request);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -678,7 +679,7 @@ class RawController extends Controller
         };
 
         // -------------------------------------------------------------------------------------------------
-        // ПЕРЕНОС ТОВАРА В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
+        // ПЕРЕНОС СЫРЬЯ В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
         // Важно! Важно проверить, соответствеут ли группа в которую переноситься товар, метрикам самого товара
         // Если не соответствует - дать отказ. Если соответствует - осуществить перенос
 
@@ -769,7 +770,7 @@ class RawController extends Controller
         $raw = Raw::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('delete', $raw);
+        $this->authorize(getmethod(__FUNCTION__), $raw);
 
         if ($raw) {
 
