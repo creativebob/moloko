@@ -136,7 +136,29 @@ class ClaimController extends Controller
 
     public function destroy($id)
     {
-        //
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $user = $request->user();
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $claim = Claim::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->manager($user)
+        // ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям 
+        ->moderatorLimit($answer)
+        ->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $claim);
+
+        // Удаляем пользователя с обновлением
+        $claim = Claim::moderatorLimit($answer)->where('id', $id)->delete();
+
+        if($claim) {return redirect('/admin/claims');} else {abort(403,'Что-то пошло не так!');};
     }
 
     // ----------------------------------------------- Ajax -----------------------------------------------------------------
