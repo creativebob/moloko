@@ -10,6 +10,13 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($claims))
+    {{ num_format($claims->total(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Claim::class, 'type' => 'table'])
@@ -25,7 +32,8 @@
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-date">Дата</th>
-          <th class="td-case-number">Номер</th>
+          <th class="td-lead-case-number">Обращение</th>
+          <th class="td-serial-number">Номер</th>
           <th class="td-body">Описание проблемы</th>
           <th class="td-status">Статус</th>
           <th class="td-lead-number-case">№ заказа</th>
@@ -54,15 +62,14 @@
       <span>{{ $claim->created_at->format('d.m.Y') }}</span><br>
       <span class="tiny-text">{{ $claim->created_at->format('H:i') }}</span>        
     </td>
+    <td class="td-lead-case-number">{{ $claim->lead_case_number or '' }}</td>
+    <td class="td-serial-number">
 
-    <td class="td-case-number">
-
-    @if(empty($claim->case_number))
-      {{ $claim->old_claim_id or ''}}
+    @if(empty($claim->serial_number))
+      {{ $claim->old_claim_id or '' }}
     @else
-      {{ $claim->case_number or 'Нет номера!' }}
+      {{ $claim->serial_number or 'Нет номера!' }}
     @endif
-
     </td>
     <td class="td-body">{{ $claim->body }}</td>
     <td class="td-status">

@@ -128,17 +128,15 @@ class LeadController extends Controller
 
         // Перечень подключаемых фильтров:
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
-
         
         $filter = addFilter($filter, $filter_query, $request, 'Выберите этап:', 'stage', 'stage_id', null, 'internal-id-one');
-         //dd($filter);
         
         $filter = addFilter($filter, $filter_query, $request, 'Менеджер:', 'manager', 'manager_id', null, 'internal-id-one');
 
+        $filter = addFilterInterval($filter, $this->entity_name, $request, 'date_start', 'date_end');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -331,7 +329,7 @@ class LeadController extends Controller
     public function create(Request $request)
     {
 
-        $user = $request->user();
+            $user = $request->user();
 
             // Подключение политики
             $this->authorize(__FUNCTION__, Lead::class); // Проверка на create
@@ -372,11 +370,21 @@ class LeadController extends Controller
             $lead->display = 1;
 
             // Формируем номера обращения
+            
+            if($user->staff->first() !== NULL){
 
-            if ($user->id == 9) {
-                $lead_number = getClaimNumbers($user); 
+                if(($user->staff->first()->position->id == 14)||($user->staff->first()->position->id == 15)) {
+
+                    $lead_number = getLeadServiceCenterNumbers($user);
+
+                } else {
+
+                    $lead_number = getLeadNumbers($user);
+                }
+
             } else {
-                $lead_number = getLeadNumbers($user); 
+
+                $lead_number = getLeadNumbers($user);
             }
 
             $lead->case_number = $lead_number['case'];
@@ -393,23 +401,23 @@ class LeadController extends Controller
         public function store(LeadRequest $request)
         {
 
-        // Подключение политики
+            // Подключение политики
             $this->authorize(getmethod(__FUNCTION__), Lead::class);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // Получаем данные для авторизованного пользователя
+            // Получаем данные для авторизованного пользователя
             $user = $request->user();
 
-        // Скрываем бога
+            // Скрываем бога
             $user_id = hideGod($user);
 
             $company_id = $user->company_id;
             $filial_id = $request->user()->filial_id;
 
 
-        // Пишем локацию
+            // Пишем локацию
             $location = new Location;
             $location->country_id = $request->country_id;
             $location->city_id = $request->city_id;
@@ -476,7 +484,12 @@ class LeadController extends Controller
 
 
         // Формируем номера обращения
-        $lead_number = getLeadNumbers($user);
+        if(($user->staff->first()->position->id == 14)||($user->staff->first()->position->id == 15)) {
+            $lead_number = getLeadServiceCenterNumbers($user);
+        } else {
+            $lead_number = getLeadNumbers($user);
+        }
+
         $lead->case_number = $lead_number['case'];
         $lead->serial_number = $lead_number['serial'];
 

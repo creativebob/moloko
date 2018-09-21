@@ -8,7 +8,7 @@ use App\Note;
 use App\Choice;
 use App\City;
 use App\Challenge;
-
+use App\Claim;
 
 use App\Location;
 
@@ -737,4 +737,16 @@ class ParserController extends Controller
 
         // dd(count($leads) . ' ' . count($challenges));
     }
+
+    public function old_claims(Request $request)
+    {
+
+        $claims = Claim::whereNull('old_claim_id')->get();
+        foreach ($claims as $claim) {
+            $claim->serial_number = $claim->old_claim_id;
+            $claim->save();
+        }
+        dd('Удача, ебана!');
+    }
+
 }

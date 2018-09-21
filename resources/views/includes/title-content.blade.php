@@ -3,7 +3,11 @@
 	<div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
 		<div class="top-bar head-content">
 			<div class="top-bar-left">
-				<h2 class="header-content">{{ $page_info->title }}</h2>
+				<h2 class="header-content">{{ $page_info->title }}
+					<span class="content-count" title="Общее количество">
+						@yield('content-count')
+					</span>
+				</h2>
 				
 				@can('create', $class)
 				@switch($type)

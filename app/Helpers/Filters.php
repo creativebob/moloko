@@ -357,7 +357,6 @@
         $filter_entity_name = $filter['entity_name'];
 
         // Если работаем в режиме фильтра - будем записывать куки
-        // 
         if($checkboxer_mode == 'filter'){
 
             if($filter['count'] > 0) {
@@ -396,5 +395,41 @@
         };
 
     }
+
+
+    function addFilterInterval($filter, $filter_entity_name, $request, $column_begin, $column_end){
+
+        if(!isset($filter['count'])){$filter['count'] = 0;};
+
+            if((isset($request->$column_begin))||(isset($request->$column_end))){
+                $filter['count'] = $filter['count'] + 1;
+            }
+
+            if($filter['count'] > 0) {
+                
+                // Пишем в куку
+                $filter_url = $request->fullUrl();
+                Cookie::queue('filter_' . $filter_entity_name, $filter_url, 1440);
+
+                $filter['status'] = 'active';
+            } else {
+
+                $filter['status'] = 'disable';
+                // Удаляем куку
+                Cookie::queue(Cookie::forget('filter_' . $filter_entity_name)); 
+            };
+
+        return $filter;
+
+    }
+
+
+
+
+
+
+
+
+
 
 ?>

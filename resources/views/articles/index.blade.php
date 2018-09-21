@@ -28,6 +28,13 @@
 </div>
 @endsection
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($articles))
+    {{ num_format($articles->total(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Заголовок и фильтры --}}
 <div data-sticky-container id="head-content">
