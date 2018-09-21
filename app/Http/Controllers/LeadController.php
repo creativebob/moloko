@@ -329,7 +329,7 @@ class LeadController extends Controller
     public function create(Request $request)
     {
 
-        $user = $request->user();
+            $user = $request->user();
 
             // Подключение политики
             $this->authorize(__FUNCTION__, Lead::class); // Проверка на create
@@ -370,11 +370,21 @@ class LeadController extends Controller
             $lead->display = 1;
 
             // Формируем номера обращения
+            
+            if($user->staff->first() !== NULL){
 
-            if ($user->id == 9) {
-                $lead_number = getClaimNumbers($user); 
+                if(($user->staff->first()->position->id == 14)||($user->staff->first()->position->id == 15)) {
+
+                    $lead_number = getLeadServiceCenterNumbers($user);
+
+                } else {
+
+                    $lead_number = getLeadNumbers($user);
+                }
+
             } else {
-                $lead_number = getLeadNumbers($user); 
+
+                $lead_number = getLeadNumbers($user);
             }
 
             $lead->case_number = $lead_number['case'];
@@ -474,7 +484,12 @@ class LeadController extends Controller
 
 
         // Формируем номера обращения
-        $lead_number = getLeadNumbers($user);
+        if(($user->staff->first()->position->id == 14)||($user->staff->first()->position->id == 15)) {
+            $lead_number = getLeadServiceCenterNumbers($user);
+        } else {
+            $lead_number = getLeadNumbers($user);
+        }
+
         $lead->case_number = $lead_number['case'];
         $lead->serial_number = $lead_number['serial'];
 

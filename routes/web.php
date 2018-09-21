@@ -53,6 +53,9 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 
 // Route::get('/andrey', 'ParserController@andrey')->middleware('auth');
 
+Route::get('/old_claims', 'ParserController@old_claims')->middleware('auth');
+
+
 // --------------------------------------- Настройки -----------------------------------------------
 
 Route::any('/set_setting', 'SettingController@ajax_set_setting')->middleware('auth');
