@@ -192,12 +192,6 @@ class UserController extends Controller
 
         $user->company_id = $company_id;
 
-        $user->phone = cleanPhone($request->phone);
-
-        if(($request->extra_phone != Null)&&($request->extra_phone != "")){
-            $user->extra_phone = cleanPhone($request->extra_phone);
-        };
-
         $user->telegram_id = $request->telegram_id;
         $user->location_id = $location_id;
 
@@ -363,6 +357,10 @@ class UserController extends Controller
         }
 
         if ($user) {
+
+            // Телефон
+            $phones = add_phones($request, $user);
+
             // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
             if (isset($request->access)) {
 
@@ -438,7 +436,7 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar')->moderatorLimit($answer)->findOrFail($id);
+        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar', 'main_phone', 'extra_phones')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
@@ -522,11 +520,8 @@ class UserController extends Controller
         $user->sex = $request->sex;
         $user->birthday = $request->birthday;
 
-        $user->phone = cleanPhone($request->phone);
-
-        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            $user->extra_phone = cleanPhone($request->extra_phone);
-        } else {$user->extra_phone = NULL;};
+        // Телефон
+        $phones = add_phones($request, $user);
 
         $user->telegram_id = $request->telegram_id;
 
@@ -918,11 +913,8 @@ class UserController extends Controller
         $user->sex = $request->sex;
         $user->birthday = $request->birthday;
 
-        $user->phone = cleanPhone($request->phone);
-
-        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            $user->extra_phone = cleanPhone($request->extra_phone);
-        } else {$user->extra_phone = NULL;};
+        // Телефон
+        $phones = add_phones($request, $user);
 
         $user->telegram_id = $request->telegram_id;
 
@@ -1014,54 +1006,54 @@ class UserController extends Controller
                 $array = save_photo($request, $directory, 'avatar-'.time(), null, $user->photo_id, $settings);
 
             } else {
-                 $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
-            }
+               $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
+           }
 
-            $photo = $array['photo'];
+           $photo = $array['photo'];
 
-            $user->photo_id = $photo->id;
-        }
+           $user->photo_id = $photo->id;
+       }
 
-        $user->save();
+       $user->save();
 
 
 
         // Выполняем, только если данные пришли не из userfrofile!
-        if(!isset($request->users_edit_mode)){
+       if(!isset($request->users_edit_mode)){
 
             // Тут вписываем изменения по правам
-            if (isset($request->access)) {
+        if (isset($request->access)) {
 
-                $delete = RoleUser::whereUser_id($user->id)->delete();
-                $mass = [];
-                foreach ($request->access as $string) {
+            $delete = RoleUser::whereUser_id($user->id)->delete();
+            $mass = [];
+            foreach ($request->access as $string) {
 
-                    $item = explode(',', $string);
-                    if ($item[2] == 'null') {
-                        $position = null;
-                    } else {
-                        $position = $item[2];
-                    }
-
-                    $mass[] = [
-                        'role_id' => $item[0],
-                        'department_id' => $item[1],
-                        'user_id' => $user->id,
-                        'position_id' => $position,
-                    ];
+                $item = explode(',', $string);
+                if ($item[2] == 'null') {
+                    $position = null;
+                } else {
+                    $position = $item[2];
                 }
 
-                DB::table('role_user')->insert($mass);
-
-            } else {
-
-                // Если удалили последнюю роль для должности и пришел пустой массив
-                $delete = RoleUser::whereUser_id($user->id)->delete();
+                $mass[] = [
+                    'role_id' => $item[0],
+                    'department_id' => $item[1],
+                    'user_id' => $user->id,
+                    'position_id' => $position,
+                ];
             }
 
-        };
+            DB::table('role_user')->insert($mass);
 
-        if ($user) {
+        } else {
+
+                // Если удалили последнюю роль для должности и пришел пустой массив
+            $delete = RoleUser::whereUser_id($user->id)->delete();
+        }
+
+    };
+
+    if ($user) {
 
             // $backroute = $request->backroute;
             // if(isset($backroute)){
@@ -1069,11 +1061,11 @@ class UserController extends Controller
             //     return redirect($backroute);
             // };
 
-            return redirect('/admin/home');
+        return redirect('/admin/home');
 
-        } else {
-            abort(403, 'Ошибка при обновлении пользователя!');
-        }
-
+    } else {
+        abort(403, 'Ошибка при обновлении пользователя!');
     }
+
+}
 }

@@ -43,7 +43,7 @@
             </div>
             <div class="small-12 cell">
                 <label>Телефон отдела
-                    @include('includes.inputs.phone', ['value'=>null, 'name'=>'phone', 'required'=>''])
+                    @include('includes.inputs.phone', ['value' => isset($department->main_phone->phone) ? $department->main_phone->phone : null, 'name'=>'main_phone', 'required'=>'required'])
                 </label>
 
                 @include('includes.control.checkboxes', ['item' => $department])

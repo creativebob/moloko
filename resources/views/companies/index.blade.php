@@ -81,7 +81,7 @@
           @endif
 
           <td class="td-address">@if(!empty($company->location->address)){{ $company->location->address }}@endif </td>
-          <td class="td-phone">{{ decorPhone($company->phone) }} </td>
+          <td class="td-phone">{{ isset($company->main_phone->phone) ? decorPhone($company->main_phone->phone) : 'Нет телефона' }} </td>
           <td class="td-user_id">{{ $company->director->first_name or ' ... ' }} {{ $company->director->second_name or ' ... ' }} </td>
 
           {{-- Элементы управления --}}
