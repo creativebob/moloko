@@ -4,129 +4,127 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-  /**
-   * Run the database seeds.
-   *
-   * @return void
-   */
-  public function run()
-  {
-    // Сферы деятельности компаний и должностей
-    $this->call(SectorsTableSeeder::class);
 
-    // Графики работы
-    $this->call(SchedulesTableSeeder::class);
-    $this->call(WorktimesTableSeeder::class);
+    public function run()
+    {
+        // Сферы деятельности компаний и должностей
+        $this->call(SectorsTableSeeder::class);
 
-     // Наполнение локализаций
-    $this->call(CountriesTableSeeder::class);
-    $this->call(RegionsTableSeeder::class);
-    $this->call(AreasTableSeeder::class);
-    $this->call(CitiesTableSeeder::class);
+        // Графики работы
+        $this->call(SchedulesTableSeeder::class);
+        $this->call(WorktimesTableSeeder::class);
 
-    // Локации
-    $this->call(LocationsTableSeeder::class);
+        // Наполнение локализаций
+        $this->call(CountriesTableSeeder::class);
+        $this->call(RegionsTableSeeder::class);
+        $this->call(AreasTableSeeder::class);
+        $this->call(CitiesTableSeeder::class);
 
-    // Пользователи и компании
-    $this->call(CompaniesTableSeeder::class);
+        // Локации
+        $this->call(LocationsTableSeeder::class);
 
-    // Филиалы / отделы
-    $this->call(DepartmentsTableSeeder::class);
-    $this->call(UsersTableSeeder::class);
+        // Пользователи и компании
+        $this->call(CompaniesTableSeeder::class);
 
-    // Единицы измерения
-    $this->call(UnitsCategoriesTableSeeder::class);
-    $this->call(UnitsTableSeeder::class);
+        // Филиалы / отделы
+        $this->call(DepartmentsTableSeeder::class);
+        $this->call(UsersTableSeeder::class);
 
-    // Сайты, страницы
-    $this->call(SitesTableSeeder::class);
-    $this->call(PagesTableSeeder::class);
+        // Единицы измерения
+        $this->call(UnitsCategoriesTableSeeder::class);
+        $this->call(UnitsTableSeeder::class);
 
-    $this->call(DepartmentSiteTableSeeder::class);
+        // Сайты, страницы
+        $this->call(SitesTableSeeder::class);
+        $this->call(PagesTableSeeder::class);
 
-    // Должности
-    $this->call(PositionsTableSeeder::class);
+        $this->call(DepartmentSiteTableSeeder::class);
 
-    // Сущности
-    $this->call(EntitiesTableSeeder::class);
+        // Должности
+        $this->call(PositionsTableSeeder::class);
 
-    // Действия над сущностями
-    $this->call(ActionsTableSeeder::class);
+        // Сущности
+        $this->call(EntitiesTableSeeder::class);
 
-    // Создаем связи между действиями и сущностями
-    $this->call(ActionEntityTableSeeder::class);
-    $this->call(EntityPageTableSeeder::class);
-    
-    // Наполнение таблиц с правами
-    $this->call(CategoryRightsTableSeeder::class);
-    $this->call(RightsTableSeeder::class);
-    $this->call(RolesTableSeeder::class);
-    $this->call(RightRoleTableSeeder::class);
-    $this->call(RoleUserTableSeeder::class);
-    $this->call(PositionRoleTableSeeder::class);
+        // Действия над сущностями
+        $this->call(ActionsTableSeeder::class);
 
-    // Вакансии и сотрудники
-    $this->call(StaffTableSeeder::class);
-    $this->call(EmployeesTableSeeder::class);
+        // Создаем связи между действиями и сущностями
+        $this->call(ActionEntityTableSeeder::class);
+        $this->call(EntityPageTableSeeder::class);
 
-    // Меню
-    $this->call(NavigationsCategoriesTableSeeder::class);
-    $this->call(NavigationsTableSeeder::class);
-    $this->call(MenusTableSeeder::class);
-    $this->call(MenuSiteTableSeeder::class);
+        // Наполнение таблиц с правами
+        $this->call(CategoryRightsTableSeeder::class);
+        $this->call(RightsTableSeeder::class);
+        $this->call(RolesTableSeeder::class);
+        $this->call(RightRoleTableSeeder::class);
+        $this->call(RoleUserTableSeeder::class);
+        $this->call(PositionRoleTableSeeder::class);
 
-    // Списки
-    $this->call(BooklistsTableSeeder::class);
-    $this->call(BooklistUserTableSeeder::class);
-    $this->call(ListItemsTableSeeder::class);
+        // Вакансии и сотрудники
+        $this->call(StaffTableSeeder::class);
+        $this->call(EmployeesTableSeeder::class);
 
-    // Папки
-    $this->call(FolderTableSeeder::class);
+        // Меню
+        $this->call(NavigationsCategoriesTableSeeder::class);
+        $this->call(NavigationsTableSeeder::class);
+        $this->call(MenusTableSeeder::class);
+        $this->call(MenuSiteTableSeeder::class);
 
-    // Новости
-    $this->call(NewsTableSeeder::class);
-    $this->call(CityEntityTableSeeder::class);
+        // Списки
+        $this->call(BooklistsTableSeeder::class);
+        $this->call(BooklistUserTableSeeder::class);
+        $this->call(ListItemsTableSeeder::class);
 
-    // Альбомы
-    $this->call(AlbumsCategoriesTableSeeder::class);
-    $this->call(AlbumsTableSeeder::class);
-    $this->call(EntitySettingsTableSeeder::class);
+        // Папки
+        $this->call(FolderTableSeeder::class);
 
-    // Услуги
-    $this->call(ServicesModesTableSeeder::class);
-    $this->call(ServicesCategoriesTableSeeder::class);
-    $this->call(ServicesProductsTableSeeder::class);
-    $this->call(ServicesTableSeeder::class);
+        // Новости
+        $this->call(NewsTableSeeder::class);
+        $this->call(CityEntityTableSeeder::class);
+
+        // Альбомы
+        $this->call(AlbumsCategoriesTableSeeder::class);
+        $this->call(AlbumsTableSeeder::class);
+        $this->call(EntitySettingsTableSeeder::class);
+
+        // Услуги
+        $this->call(ServicesModesTableSeeder::class);
+        $this->call(ServicesCategoriesTableSeeder::class);
+        $this->call(ServicesProductsTableSeeder::class);
+        $this->call(ServicesTableSeeder::class);
 
 
-    // Связь: Расписания с сущностями
-    $this->call(ScheduleEntityTableSeeder::class);
+        // Связь: Расписания с сущностями
+        $this->call(ScheduleEntityTableSeeder::class);
 
-    // Связь: Клиенты - поставщики
-    $this->call(ContragentsTableSeeder::class);
+        // Связь: Клиенты - поставщики
+        $this->call(ContragentsTableSeeder::class);
 
-    $this->call(PropertiesTableSeeder::class);
-    $this->call(MetricsTableSeeder::class);
-    $this->call(MetricEntityTableSeeder::class);
+        $this->call(PropertiesTableSeeder::class);
+        $this->call(MetricsTableSeeder::class);
+        $this->call(MetricEntityTableSeeder::class);
 
-    // Сиды к новым миграциям
-    $this->call(ServicesTypesTableSeeder::class);
-    $this->call(GoodsModesTableSeeder::class);
+        // Сиды к новым миграциям
+        $this->call(ServicesTypesTableSeeder::class);
+        $this->call(GoodsModesTableSeeder::class);
 
-    $this->call(RawsModesTableSeeder::class);
-    
-    // Помещения
-    $this->call(PlacesTypesTableSeeder::class);
+        $this->call(RawsModesTableSeeder::class);
 
-    // Маркетинг
-    $this->call(MediumsTableSeeder::class);
-    $this->call(SourcesTableSeeder::class);
-    $this->call(LeadTypesTableSeeder::class);
+        // Помещения
+        $this->call(PlacesTypesTableSeeder::class);
 
-    $this->call(ChallengesTypesTableSeeder::class);
+        // Маркетинг
+        $this->call(MediumsTableSeeder::class);
+        $this->call(SourcesTableSeeder::class);
+        $this->call(LeadTypesTableSeeder::class);
 
-    $this->call(StagesTableSeeder::class);
-    
+        $this->call(ChallengesTypesTableSeeder::class);
 
-  }
+        $this->call(StagesTableSeeder::class);
+
+        $this->call(MessengersTableSeeder::class);
+
+
+    }
 }

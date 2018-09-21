@@ -18,6 +18,7 @@ use App\Supplier;
 use App\Manufacturer;
 use App\Country;
 use App\ServicesType;
+use App\Phone;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -159,7 +160,10 @@ class CompanyController extends Controller
         $worktime = [];
         for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
 
-            return view('companies.create', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
+        // Сущность
+            $entity = $this->entity_name;
+
+        return view('companies.create', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer', 'entity'));
     }
 
     public function store(CompanyRequest $request)
@@ -212,12 +216,11 @@ class CompanyController extends Controller
         $company->name = $request->name;
         $company->alias = $request->alias;
 
-        $company->phone = cleanPhone($request->phone);
         $company->email = $request->email;
 
-        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            $company->extra_phone = cleanPhone($request->extra_phone);
-        } else {$company->extra_phone = NULL;};
+        // if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
+        //     $company->extra_phone = cleanPhone($request->extra_phone);
+        // } else {$company->extra_phone = NULL;};
 
         $company->location_id = $location_id;
 
@@ -231,13 +234,16 @@ class CompanyController extends Controller
         $company->schedule_id = $schedule->id;
 
         // $company->director_user_id = $user->company_id;
-        $company->author_id = $user->id;
+        $company->author_id = $user_id;
 
         $company->save();
 
         // Если запись удачна - будем записывать связи
         if($company){
 
+            // Телефон
+            $phones = add_phones($request, $company);
+            
             // Записываем связи: id-шники в таблицу Rooms
             if(isset($request->services_types_id)){
 
@@ -271,7 +277,6 @@ class CompanyController extends Controller
         // return redirect('admin/companies');
     }
 
-
     public function show($id)
     {
 
@@ -286,16 +291,17 @@ class CompanyController extends Controller
         return view('companies.show', compact('company'));
     }
 
-
     public function edit(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
+        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types', 'main_phone', 'extra_phones')
         ->moderatorLimit($answer)
         ->findOrFail($id);
+
+        // dd($company->main_phone);
 
         $this->authorize(getmethod(__FUNCTION__), $company);
 
@@ -384,11 +390,14 @@ class CompanyController extends Controller
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
 
+        // Сущность
+        $entity = $this->entity_name;
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-        return view('companies.edit', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
-    }
 
+        return view('companies.edit', compact('company', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer', 'entity'));
+    }
 
     public function update(CompanyRequest $request, $id)
     {
@@ -427,27 +436,29 @@ class CompanyController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $company);
 
         $company->name = $request->name;
-        $company->alias = $request->alias;
 
+        if ($company->alias != $request->alias) {
+            $company->alias = $request->alias;
+        }
+        
         // $old_link_for_folder = $company->company_alias;
         // $new_link_for_folder = 'public/companies/' . $request->company_alias;
         // Переименовываем папку в файловой системе
         // Storage::move($old_link_for_folder, $new_link_for_folder);
 
-        $company->phone = cleanPhone($request->phone);
-        $company->email = $request->email;
+        // Телефон
+        $phones = add_phones($request, $company);
+        
 
-        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            $company->extra_phone = cleanPhone($request->extra_phone);
-        } else {$company->extra_phone = NULL;};
+        $company->email = $request->email;
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
         $company->bank = $request->bank;
-        
+
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
-        
+
 
         if ($company->sector_id != $request->sector_id) {
             $company->sector_id = $request->sector_id;
@@ -536,13 +547,13 @@ class CompanyController extends Controller
     }
 
     // ------------------------------------------- Ajax ---------------------------------------------
-    
+
     // Сортировка
     public function ajax_sort(Request $request)
     {
 
         $i = 1;
-        
+
         foreach ($request->companies as $item) {
             Company::where('id', $item)->update(['sort' => $i]);
             $i++;

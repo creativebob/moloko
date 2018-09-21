@@ -185,4 +185,31 @@ class Company extends Model
         return $this->belongsToMany('App\ServicesType', 'companies_services_types', 'company_id', 'services_type_id');
     }
 
+    // Телефоны
+
+    // Основной
+    public function main_phone()
+    {
+        return $this->morphToMany('App\Phone', 'phone_entity')->wherePivot('main', '=', 1)->whereNull('archive')->withPivot('archive');
+    }
+
+    public function getMainPhoneAttribute()
+    {
+        return $this->main_phone()->first();
+    }
+
+    // Дополнительные
+    public function extra_phones()
+    {
+        return $this->morphToMany('App\Phone', 'phone_entity')->whereNull('archive')->whereNull('main')->withPivot('archive');
+    }
+
+    // Все
+    public function phones()
+    {
+        return $this->morphToMany('App\Phone', 'phone_entity');
+    }
+
+    
+
 }

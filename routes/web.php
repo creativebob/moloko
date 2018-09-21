@@ -53,11 +53,16 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 
 // Route::get('/andrey', 'ParserController@andrey')->middleware('auth');
 
-// --------------------------------------- Настройки -----------------------------------------------
+// --------------------------------------- Настройки -------------------------------------------------
 
 Route::any('/set_setting', 'SettingController@ajax_set_setting')->middleware('auth');
 
 Route::resource('/settings', 'SettingController')->middleware('auth');
+
+// ---------------------------------------- Телефоны --------------------------------------------------
+
+Route::post('/add_extra_phone', 'PhoneController@ajax_add_extra_phone')->middleware('auth');
+
 
 // -------------------------------------- Пользователи ------------------------------------------------
 
