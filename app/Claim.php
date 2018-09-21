@@ -61,6 +61,11 @@ class Claim extends Model
         return $this->belongsTo('App\Lead');
     }
 
+    // Получаем лида источника рекламации
+    public function source_lead()
+    {
+        return $this->belongsTo('App\Lead', 'source_lead_id');
+    }
 
     // Получаем менеджера
     public function manager()

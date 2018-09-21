@@ -13,9 +13,9 @@
 			@endif
 		</span>
 	</td>
-	<td class="lead-case-number-claim">
+	<td class="source_lead-claim">
 		<span>
-			@if(!empty($claim->lead_case_number)){{ $claim->lead_case_number or '' }}@endif
+			@if(!empty($claim->source_lead_id)){{ $claim->source_lead->case_number or '' }}@endif
 		</span>
 	</td>
 	<td class="description">

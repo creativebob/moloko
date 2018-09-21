@@ -219,7 +219,7 @@ class ClaimController extends Controller
         $claim_number = getClaimNumbers($user);
         $claim->case_number = $claim_number['case'];
         $claim->serial_number = $claim_number['serial'];
-        $claim->lead_case_number = $lead_number['case'];
+        $claim->source_lead_id = $new_lead->id;
         $claim->manager_id = $user->id;
 
         // Вносим общие данные

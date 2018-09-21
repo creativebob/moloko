@@ -62,7 +62,7 @@
       <span>{{ $claim->created_at->format('d.m.Y') }}</span><br>
       <span class="tiny-text">{{ $claim->created_at->format('H:i') }}</span>        
     </td>
-    <td class="td-lead-case-number">{{ $claim->lead_case_number or '' }}</td>
+    <td class="td-lead-case-number">{{ $claim->source_lead->case_number or '' }}</td>
     <td class="td-serial-number">
 
     @if(empty($claim->serial_number))
@@ -80,7 +80,7 @@
       @endif
     </td>
     <td class="td-case-number">
-        <a href="/admin/leads/{{ $claim->lead->id }}/edit">
+        <a href="/admin/leads/{{ $claim->lead_id }}/edit">
             {{ $claim->lead->case_number or ' ' }}
         </a>
     </td>
