@@ -14,6 +14,13 @@
 @include('includes.title-exel', ['entity' => $page_info->alias])
 @endsection
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($raws))
+    {{ num_format($raws->total(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Raw::class, 'type' => 'menu'])

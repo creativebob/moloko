@@ -14,6 +14,13 @@
 <!-- <a href="/admin/leads?calls=yes" class="button tiny">Перезвоны</a> -->
 @endsection
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($leads))
+    {{ num_format($leads->total(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Lead::class, 'type' => 'table'])

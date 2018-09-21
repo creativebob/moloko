@@ -15,11 +15,20 @@ trait ManagerTraitScopes
         // 	abort(403, 'Нет сессии!');
         // };
 
-    	if($user->staff->first()->position->id == 4){
-        	return $query;
-    	} else {
-        	return $query->WhereIn('manager_id', [$user->id, 1]);
-    	}
+        if($user->staff->first() != null){
+
+            if($user->staff->first()->position->id == 4){
+                return $query;
+            } else {
+                return $query->WhereIn('manager_id', [$user->id, 1]);
+            }
+
+        } else {
+
+            return $query;
+        }
+
+
 
     }
 }

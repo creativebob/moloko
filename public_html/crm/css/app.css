@@ -162,6 +162,14 @@ fieldset legend {
   border-bottom: 1px dashed #333;
 }
 
+.content-count {
+  background-color: #333333;
+  color: #fff;
+  width: auto;
+  padding: 4px 10px;
+  border-radius: 3px;
+}
+
 .compact {
   margin-bottom: 0.25rem !important;
 }

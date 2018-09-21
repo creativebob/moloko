@@ -10,6 +10,13 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($places))
+    {{ num_format($places->total(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Place::class, 'type' => 'table'])

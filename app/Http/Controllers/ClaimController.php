@@ -214,8 +214,6 @@ class ClaimController extends Controller
 
         if ($claim) {
 
-
-
                 // Если рекламация записалась - пишем обращение (Лида)
 
                 // ГЛАВНЫЙ ЗАПРОС:

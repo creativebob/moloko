@@ -105,6 +105,7 @@ $calibri: "calibri";
 
 // Цвета
 $mars-red: #ff0000;
+$mars-black: #333333;
 $white: #ffffff;
 $black: #000000;
 $body-bg-color: #eeeeee;
@@ -251,6 +252,14 @@ fieldset {
     &:hover{
         border-bottom: 1px dashed #333;
     }
+}
+
+.content-count{
+    background-color: $mars-black;
+    color: #fff;
+    width: auto;
+    padding: 4px 10px;
+    border-radius: 3px;
 }
 
 // Конец базовых корректировок
