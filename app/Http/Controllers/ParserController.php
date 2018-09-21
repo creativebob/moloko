@@ -10,6 +10,11 @@ use App\City;
 use App\Challenge;
 use App\Claim;
 
+use App\Company;
+use App\Department;
+use App\User;
+use App\Phone;
+
 use App\Location;
 
 use Carbon\Carbon;
@@ -344,8 +349,8 @@ class ParserController extends Controller
 
             if ($count == 200) {
                     // break;
-                    return redirect('/admin/cities');
-                }
+                return redirect('/admin/cities');
+            }
 
         } 
 
@@ -747,6 +752,52 @@ class ParserController extends Controller
             $claim->save();
         }
         dd('Удача, ебана!');
+    }
+
+    public function phone_parser(Request $request)
+    {
+
+        $companies = Company::get();
+        foreach ($companies as $comapny) {
+            if (isset($company->phone)) {
+                // Пишем или ищем новый и создаем связь
+                $phone = Phone::firstOrCreate(['phone' => $company->phone]);
+                $company->phones()->attach($phone->id, ['main' => 1]);
+            }
+            if (isset($company->extra_phone)) {
+                // Пишем или ищем новый и создаем связь
+                $phone = Phone::firstOrCreate(['phone' => $company->extra_phone]);
+                $company->phones()->attach($phone->id);
+            }
+        }
+
+        $users = User::get();
+        foreach ($users as $user) {
+            if (isset($user->phone)) {
+                // Пишем или ищем новый и создаем связь
+                $phone = Phone::firstOrCreate(['phone' => $user->phone]);
+                $user->phones()->attach($phone->id, ['main' => 1]);
+            }
+            if (isset($company->extra_phone)) {
+                // Пишем или ищем новый и создаем связь
+                $phone = Phone::firstOrCreate(['phone' => $user->extra_phone]);
+                $user->phones()->attach($phone->id);
+            }
+        }
+
+        $departments = Department::get();
+        foreach ($departments as $department) {
+            if (isset($department->phone)) {
+                // Пишем или ищем новый и создаем связь
+                $phone = Phone::firstOrCreate(['phone' => $department->phone]);
+                $department->phones()->attach($phone->id, ['main' => 1]);
+            }
+        }
+
+        dd('Норм');
+
+
+
     }
 
 }
