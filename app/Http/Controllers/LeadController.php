@@ -22,6 +22,7 @@ use App\Campaign;
 use App\Note;
 use App\Challenge;
 use App\Staff;
+use App\Phone;
 
 // use App\Challenge_type;
 
@@ -52,7 +53,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 
-
 class LeadController extends Controller
 {
 
@@ -63,7 +63,7 @@ class LeadController extends Controller
     public function index(Request $request)
     {
 
-        Carbon::setLocale('en');
+        // Carbon::setLocale('en');
         // dd(Carbon::getLocale());
 
         // Включение контроля активного фильтра 
@@ -90,7 +90,8 @@ class LeadController extends Controller
             'choices_raws_categories', 
             'manager',
             'stage',
-            'challenges.challenge_type'
+            'challenges.challenge_type',
+            'main_phone'
         )
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -329,7 +330,7 @@ class LeadController extends Controller
     public function create(Request $request)
     {
 
-            $user = $request->user();
+        $user = $request->user();
 
             // Подключение политики
             $this->authorize(__FUNCTION__, Lead::class); // Проверка на create
@@ -444,7 +445,7 @@ class LeadController extends Controller
         $lead->display = 1; // Включаем видимость
         $lead->company_id = $company_id;
 
-        $lead->phone = cleanPhone($request->phone);
+        // $lead->phone = cleanPhone($request->phone);
 
         if(($request->extra_phone != Null)&&($request->extra_phone != "")){
             $lead->extra_phone = cleanPhone($request->extra_phone);
@@ -496,6 +497,9 @@ class LeadController extends Controller
         // Конец формирования номера обращения ----------------------------------
 
         $lead->save();
+
+        // Телефон
+        $phones = add_phones($request, $lead);
 
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
@@ -736,7 +740,8 @@ class LeadController extends Controller
         // $lead->sex = $request->sex;
         // $lead->birthday = $request->birthday;
 
-        $lead->phone = cleanPhone($request->phone);
+        // Телефон
+        $phones = add_phones($request, $lead);
 
         if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
             $lead->extra_phone = cleanPhone($request->extra_phone);

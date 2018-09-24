@@ -97,7 +97,7 @@
           </td>
 
           <td class="td-phone">
-            {{ decorPhone($lead->phone) }}
+            {{ isset($lead->main_phone->phone) ? decorPhone($lead->main_phone->phone) : 'Номер не указан' }}
             @if($lead->email)<br><span class="tiny-text">{{ $lead->email or '' }}</span>@endif
           </td>
           <td class="td-choice">

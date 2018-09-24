@@ -794,6 +794,15 @@ class ParserController extends Controller
             }
         }
 
+        $leads = Lead::get();
+        foreach ($leads as $lead) {
+            if (isset($lead->phone)) {
+                // Пишем или ищем новый и создаем связь
+                $phone = Phone::firstOrCreate(['phone' => $lead->phone]);
+                $lead->phones()->attach($phone->id, ['main' => 1]);
+            }
+        }
+
         dd('Норм');
 
 

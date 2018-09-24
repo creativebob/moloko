@@ -27,8 +27,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-6 medium-6 cell">
                         <label>Телефон
-
-                            {{ Form::text('main_phone', $lead->phone, ['class'=>'phone-field', 'maxlength'=>'17', 'autocomplete'=>'off', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'id'=>'phone', $autofocus, $readonly]) }}
+                            {{ Form::text('main_phone', isset($lead->main_phone->phone) ? $lead->main_phone->phone : null, ['class'=>'phone-field', 'maxlength'=>'17', 'autocomplete'=>'off', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'id'=>'phone', $autofocus, $readonly]) }}
                             <span class="form-error">Укажите номер</span>
 
                         </label>
