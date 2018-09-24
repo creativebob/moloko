@@ -29,43 +29,44 @@ function add_phones($request, $item) {
 		}
 
         // Если пришли дополнительные номера
-		if (count($request->extra_phones) > 0) {
+		if (isset($request->extra_phones)) {
+			if (count($request->extra_phones) > 0) {
             // dd($request->extra_phones);
 
             // Берем Id пришедших телефонов, или создаем их, если их нет в базе
-			$request_extra_phones = [];
-			foreach ($request->extra_phones as $extra_phone) {
-				if ($extra_phone != null) {
+				$request_extra_phones = [];
+				foreach ($request->extra_phones as $extra_phone) {
+					if ($extra_phone != null) {
                     // $mass_extra_phones[] = cleanPhone($extra_phone);
-					$phone = Phone::firstOrCreate(['phone' => cleanPhone($extra_phone)]);
-					$request_extra_phones[] = $phone->id;
+						$phone = Phone::firstOrCreate(['phone' => cleanPhone($extra_phone)]);
+						$request_extra_phones[] = $phone->id;
+					}
 				}
-			}
             // dd($request_extra_phones);
 
             // Берем дополнительные телефоны записи
-			$item_extra_phones = [];
-			foreach ($item->extra_phones as $extra_phone) {
-				$item_extra_phones[] = $extra_phone->id;
-			}
+				$item_extra_phones = [];
+				foreach ($item->extra_phones as $extra_phone) {
+					$item_extra_phones[] = $extra_phone->id;
+				}
             // dd($item_extra_phones);
 
             // Ставим удаленным (не пришедшим номерам) статус архива
-			$mass_diff = array_diff($item_extra_phones, $request_extra_phones);
+				$mass_diff = array_diff($item_extra_phones, $request_extra_phones);
             // dd($mass_diff);
-			if (count($mass_diff) > 0) {
-				foreach ($mass_diff as $insert) {
-					$item->phones()->updateExistingPivot($insert, ['archive' => 1]);
+				if (count($mass_diff) > 0) {
+					foreach ($mass_diff as $insert) {
+						$item->phones()->updateExistingPivot($insert, ['archive' => 1]);
+					}
 				}
-			}
 
             // Пишем новые номера
-			$mass_new = array_diff($request_extra_phones, $item_extra_phones);
+				$mass_new = array_diff($request_extra_phones, $item_extra_phones);
             // dd($mass_new);
-			if (count($mass_new) > 0) {
-				$item->extra_phones()->attach($mass_new);
+				if (count($mass_new) > 0) {
+					$item->extra_phones()->attach($mass_new);
+				}
 			}
-
 		}
 	}
 }
