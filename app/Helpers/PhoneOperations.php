@@ -29,7 +29,7 @@ function add_phones($request, $item) {
 		}
 
         // Если пришли дополнительные номера
-		if (isset($request->main_phone)) {
+		if (isset($request->extra_phones)) {
 			if (count($request->extra_phones) > 0) {
             // dd($request->extra_phones);
 
