@@ -81,8 +81,8 @@
           @endif
 
           <td class="td-address">@if(!empty($company->location->address)){{ $company->location->address }}@endif </td>
-          <td class="td-phone">{{ isset($company->main_phone->phone) ? decorPhone($company->main_phone->phone) : 'Нет телефона' }} </td>
-          <td class="td-user_id">{{ $company->director->first_name or ' ... ' }} {{ $company->director->second_name or ' ... ' }} </td>
+          <td class="td-phone">{{ isset($company->main_phone->phone) ? decorPhone($company->main_phone->phone) : 'Номер не указан' }}</td>
+          <td class="td-user_id">{{ $company->director->first_name or ' ... ' }} {{ $company->director->second_name or ' ... ' }}</td>
 
           {{-- Элементы управления --}}
           @include('includes.control.table-td', ['item' => $company])

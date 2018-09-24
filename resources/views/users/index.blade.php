@@ -97,7 +97,7 @@
           @endif
 
 
-          <td class="td-phone">{{ decorPhone($user->phone) }}</td>
+          <td class="td-phone">{{ decorPhone($user->main_phone->phone) or 'Телефон не указан' }}</td>
           <td class="td-email">{{ $user->email }}</td>
           <td class="td-contragent-status">{{ decor_user_type($user->user_type) }}</td>
           <td class="td-staffer">@if(!empty($user->staff->first()->position->name)) {{ $user->staff->first()->position->name }} @endif</td>
