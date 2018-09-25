@@ -761,12 +761,20 @@ class ParserController extends Controller
         foreach ($companies as $comapny) {
             if (isset($company->phone)) {
                 // Пишем или ищем новый и создаем связь
-                $phone = Phone::firstOrCreate(['phone' => $company->phone]);
+                $phone = Phone::firstOrCreate(
+                    ['phone' => $company->phone,
+                ], [
+                    'crop' => substr($company->phone, -4),
+                ]);
                 $company->phones()->attach($phone->id, ['main' => 1]);
             }
             if (isset($company->extra_phone)) {
                 // Пишем или ищем новый и создаем связь
-                $phone = Phone::firstOrCreate(['phone' => $company->extra_phone]);
+                $phone = Phone::firstOrCreate([
+                    'phone' => $company->extra_phone
+                ], [
+                    'crop' => substr($company->extra_phone, -4),
+                ]);
                 $company->phones()->attach($phone->id);
             }
         }
@@ -775,12 +783,20 @@ class ParserController extends Controller
         foreach ($users as $user) {
             if (isset($user->phone)) {
                 // Пишем или ищем новый и создаем связь
-                $phone = Phone::firstOrCreate(['phone' => $user->phone]);
+                $phone = Phone::firstOrCreate([
+                    'phone' => $user->phone
+                ], [
+                    'crop' => substr($user->phone, -4),
+                ]);
                 $user->phones()->attach($phone->id, ['main' => 1]);
             }
             if (isset($company->extra_phone)) {
                 // Пишем или ищем новый и создаем связь
-                $phone = Phone::firstOrCreate(['phone' => $user->extra_phone]);
+                $phone = Phone::firstOrCreate([
+                    'phone' => $user->extra_phone
+                ], [
+                    'crop' => substr($user->extra_phone, -4),
+                ]);
                 $user->phones()->attach($phone->id);
             }
         }
@@ -789,7 +805,11 @@ class ParserController extends Controller
         foreach ($departments as $department) {
             if (isset($department->phone)) {
                 // Пишем или ищем новый и создаем связь
-                $phone = Phone::firstOrCreate(['phone' => $department->phone]);
+                $phone = Phone::firstOrCreate([
+                    'phone' => $department->phone
+                ], [
+                    'crop' => substr($department->phone, -4),
+                ]);
                 $department->phones()->attach($phone->id, ['main' => 1]);
             }
         }
@@ -798,7 +818,11 @@ class ParserController extends Controller
         foreach ($leads as $lead) {
             if (isset($lead->phone)) {
                 // Пишем или ищем новый и создаем связь
-                $phone = Phone::firstOrCreate(['phone' => $lead->phone]);
+                $phone = Phone::firstOrCreate([
+                    'phone' => $lead->phone
+                ], [
+                    'crop' => substr($lead->phone, -4),
+                ]);
                 $lead->phones()->attach($phone->id, ['main' => 1]);
             }
         }

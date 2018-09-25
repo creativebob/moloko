@@ -136,10 +136,13 @@ class UserController extends Controller
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
 
+        // Сущность
+        $entity = $this->entity_name;
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list', 'page_info', 'countries_list'));
+        return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list', 'page_info', 'countries_list', 'entity'));
     }
 
     public function store(UserRequest $request)
@@ -460,11 +463,14 @@ class UserController extends Controller
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
 
+        // Сущность
+        $entity = $this->entity_name;
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
         // dd($user);
 
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list'));
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list', 'entity'));
     }
 
     public function update(UserRequest $request, $id)

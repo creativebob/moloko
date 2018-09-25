@@ -50,6 +50,7 @@ class Phone extends Model
 
 	protected $fillable = [
 		'phone',
+		'crop',
 	];
 
     // Получаем компанию

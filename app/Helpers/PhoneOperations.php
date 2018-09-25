@@ -19,7 +19,12 @@ function add_phones($request, $item) {
                     	// $mass_extra_phones[] = cleanPhone($extra_phone);
 
 						if (cleanPhone($extra_phone) != cleanPhone($request->main_phone)) {
-							$phone = Phone::firstOrCreate(['phone' => cleanPhone($extra_phone)]);
+
+							$phone = Phone::firstOrCreate([
+								'phone' => cleanPhone($extra_phone)
+							], [
+								'crop' => substr(cleanPhone($extra_phone), -4),
+							]);
 							$request_extra_phones[] = $phone->id;
 						}
 					}
@@ -63,13 +68,21 @@ function add_phones($request, $item) {
 				$item->main_phone()->updateExistingPivot($old_phone->id, ['archive' => 1]);
 
                 // Пишем или ищем новый и создаем связь
-				$phone = Phone::firstOrCreate(['phone' => cleanPhone($request->main_phone)]);
+				$phone = Phone::firstOrCreate(
+					['phone' => cleanPhone($request->main_phone)
+				], [
+					'crop' => substr(cleanPhone($request->main_phone), -4),
+				]);
 				// dd($phone);
 				$item->phones()->attach($phone->id, ['main' => 1]);
 			}
 		} else {
             // Если номера нет, пишем или ищем новый и создаем связь
-			$phone = Phone::firstOrCreate(['phone' => cleanPhone($request->main_phone)]);
+			$phone = Phone::firstOrCreate(
+				['phone' => cleanPhone($request->main_phone)
+			], [
+				'crop' => substr(cleanPhone($request->main_phone), -4),
+			]);
 			$item->phones()->attach($phone->id, ['main' => 1]); 
 		}
 	}

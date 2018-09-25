@@ -20,6 +20,7 @@ class CreatePhonesTable extends Migration
             // $table->foreign('company_id')->references('id')->on('companies');
 
             $table->bigInteger('phone')->unique()->nullable()->index()->comment('Телефон');
+            $table->string('crop')->nullable()->index()->comment('Последние 4 цифры номера');
 
             // $table->text('body')->nullable()->comment('Тело комментария');
 
