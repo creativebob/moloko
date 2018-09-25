@@ -3,6 +3,7 @@
 @section('inhead')
 {{-- Скрипты таблиц в шапке --}}
 @include('includes.scripts.tablesorter-inhead')
+@include('includes.scripts.pickmeup-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -26,14 +27,14 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="roles">
+    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="challenges">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-type">Тип задачи</th>
           <th class="td-description">Описание задачи</th>
-          <th class="td-appointed">Кому назначена</th>
+          <th class="td-appointed">Ответственный</th>
           <th class="td-deadline-date">Дата дедлайна</th>
           <th class="td-author">Автор</th>
           <th class="td-status"></th>
@@ -49,7 +50,7 @@
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="" id="check-{{ $challenge->id }}"><label class="label-check" for="check-{{ $challenge->id }}"></label>
           </td>
-          <td class="td-type">{{ $challenge->challenge_type->name }}</td>
+          <td class="td-type">{{ $challenge->challenge_type->name }} по обращению: <a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number }}</a></td>
           <td class="td-description">{{ $challenge->description }}</td>
           <td class="td-appointed">{{ $challenge->appointed->first_name . ' ' . $challenge->appointed->second_name }}</td>
           <td class="td-deadline-date">{{ isset($challenge->deadline_date) ? $challenge->deadline_date->format('d.m.Y H:i') : 'Не указана' }}</td>
@@ -99,6 +100,7 @@
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
 @include('includes.scripts.sortable-table-script')
+@include('includes.scripts.pickmeup-script')
 
 {{-- Скрипт отображения на сайте --}}
 @include('includes.scripts.ajax-display')

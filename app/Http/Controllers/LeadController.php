@@ -268,6 +268,10 @@ class LeadController extends Controller
             $fragment_phone = $text_fragment;
         }
 
+        if((strlen($text_fragment) == 4)&&(is_numeric($text_fragment))){
+            $crop_phone = $text_fragment;
+        }
+
         if(strlen($text_fragment) == 17){
             $fragment_phone = cleanPhone($text_fragment);
         }
@@ -279,7 +283,7 @@ class LeadController extends Controller
         }
 
 
-        if($len_text > 4){
+        if($len_text > 3){
 
             // ------------------------------------------------------------------------------------------------------------
             // ГЛАВНЫЙ ЗАПРОС
@@ -296,7 +300,7 @@ class LeadController extends Controller
                 'phones')
             ->companiesLimit($answer)
             ->whereNull('draft')
-            ->where(function ($query) use ($fragment_case_number, $text_fragment, $len_text, $fragment_phone) {
+            ->where(function ($query) use ($fragment_case_number, $text_fragment, $len_text, $fragment_phone, $crop_phone) {
 
                 if($len_text > 5){
                     $query->where('name', $text_fragment);
@@ -311,6 +315,13 @@ class LeadController extends Controller
                        $query->where('phone', $fragment_phone);
                     });
                 };
+
+                if(isset($crop_phone)){
+                    $query->orWhereHas('phones', function($query) use ($crop_phone){
+                       $query->where('crop', $crop_phone);
+                    });
+                };
+
             })
             ->orderBy('created_at', 'asc')
             ->get();

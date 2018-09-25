@@ -22,9 +22,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
     
 
 // Фильтры
-// use App\Scopes\Filters\Filter;
-// use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\Filter;
+use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\DateIntervalFilter;
 
 class Challenge extends Model
 {
@@ -42,9 +42,9 @@ class Challenge extends Model
     use ModeratorLimitTraitScopes;
 
     // Фильтры
-    // use Filter;
-    // use BooklistFilter;
-    // use DateIntervalFilter;
+    use Filter;
+    use BooklistFilter;
+    use DateIntervalFilter;
 
     // public $timestamps = false;
     

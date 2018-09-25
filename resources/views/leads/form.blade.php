@@ -79,6 +79,11 @@
                     {{ Form::select('stage_id', $stages_list, $lead->stage_id) }}
                 </label>
             </div>
+<!--             <div class="small-6 medium-6 large-6 cell">
+                <label>Менеджер
+                    @include('includes.inputs.string', ['name'=>'manager', 'value'=>$lead->manager->name, 'required'=>''])
+                </label>
+            </div> -->
         </div>
 
     </div>
@@ -96,6 +101,17 @@
                 {{ Form::select('country_id', $countries_list, $country_id)}}
             </label>
         </div> --}}
+
+        {{-- <div class="small-12 cell">
+            <label>Компания
+                <div class="switch tiny">
+                  <input class="switch-input" id="tinySwitch" type="checkbox" name="exampleSwitch">
+                  <label class="switch-paddle" for="tinySwitch">
+                    <span class="show-for-sr">Tiny Sandwiches Enabled</span>
+                  </label>
+                </div>
+            </label> 
+        </div> --}}
         <div class="small-12 medium-12 cell">
             <label>Почта
                 @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email', 'required'=>''])
@@ -111,9 +127,8 @@
     <div class="small-12 medium-12 large-12 cell">
         <ul class="tabs-list" data-tabs id="tabs-extra-leads">
             <li class="tabs-title is-active" id="tab-order"><a href="#content-panel-order" aria-selected="true">Заказ</a></li>
-            <li class="tabs-title" id="tab-client"><a href="#content-panel-client" aria-selected="true">Клиент</a></li>
+            {{-- <li class="tabs-title" id="tab-client"><a href="#content-panel-client" aria-selected="true">Клиент</a></li> --}}
             <li class="tabs-title" id="tab-history"><a href="#content-panel-history" aria-selected="true">История</a></li>
-            <li class="tabs-title" id="tab-attribution"><a href="#content-panel-attribution" aria-selected="true">Аттрибуция</a></li>
         </ul>
 
 
@@ -165,66 +180,19 @@
                 </div>
 
                 {{-- КЛИЕНТ --}}
-                <div class="tabs-panel" id="content-panel-client">
+                {{-- <div class="tabs-panel" id="content-panel-client">
                     <div class="grid-x grid-padding-x">
                         @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
                         <a id="lead-free" class="button">Освободить лида</a>
                         @endif
                     </div>
-                </div>
+                </div> --}}
 
                 {{-- ИСТОРИЯ --}}
                 <div class="tabs-panel" id="content-panel-history">
                     <div class="grid-x grid-padding-x">
                         <div id="port-history" class="small-12 cell">
                         </div>  
-                    </div>
-                </div>
-
-                {{-- АТТРИБУЦИЯ --}}
-                <div class="tabs-panel" id="content-panel-attribution">
-                    <div class="grid-x grid-padding-x">
-
-                        <table class="table-attributions">
-                            <tr>
-                                <tr>
-                                    <td>Тип обращения: </td><td>{{ $lead->lead_type->name or ''}}</td>
-                                </tr>
-                                <td>Интерес: </td>
-                                <td>
-                                    @if(!empty($lead->choices_goods_categories->implode('name', ',')))
-                                    {{ $lead->choices_goods_categories->implode('name', ',') }}<br>
-                                    @endif
-
-                                    @if(!empty($lead->choices_services_categories->implode('name', ',')))
-                                    {{ $lead->choices_services_categories->implode('name', ',') }}<br>
-                                    @endif
-
-                                    @if(!empty($lead->choices_raws_categories->implode('name', ',')))
-                                    {{ $lead->choices_raws_categories->implode('name', ',') }}<br>
-                                    @endif
-                                </td>     
-                            </tr>
-                            <tr>
-                                <td>Источник: </td><td>{{ $lead->source->name or ''}}</td>
-                            </tr>
-                            <tr>
-                                <td>Сайт: </td><td>{{ $lead->site->name or ''}}</td>
-                            </tr>
-                            <tr>
-                                <td>Тип трафика: </td><td>{{ $lead->medium->name or ''}}</td>
-                            </tr>
-                            <tr>
-                                <td>Рекламная кампания: </td><td>{{ $lead->campaign->name or ''}}</td>
-                            </tr>
-                            <tr>
-                                <td>Объявление: </td><td>{{ $lead->utm_content->name or ''}}</td>
-                            </tr>
-                            <tr>
-                                <td>Ключевая фраза: </td><td>{{ $lead->utm_term->name or ''}}</td>
-                            </tr>
-                        </table>
-
                     </div>
                 </div>
 
@@ -247,12 +215,12 @@
                 {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
                 <li class="tabs-title"><a href="#content-panel-claims" aria-selected="true">Рекламации</a></li>
                 {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
+                <li class="tabs-title" id="tab-attribution"><a href="#content-panel-attribution" aria-selected="true">Аттрибуция</a></li>
             </ul>
         </div>
     </div>
 
     <div class="tabs-content tabs-leads" data-tabs-content="tabs-leads">
-
         {{-- Взаимодействия: задачи и события --}}
         <div class="tabs-panel is-active" id="content-panel-notes">
             <div class="grid-x grid-padding-x">
@@ -333,8 +301,68 @@
                     </div>
                 </div> --}}
 
+            {{-- АТТРИБУЦИЯ --}}
+            <div class="tabs-panel" id="content-panel-attribution">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 cell">
+                        <table class="table-attributions">
+                            <tr>
+                                <tr>
+                                    <td>Тип обращения: </td><td>{{ $lead->lead_type->name or ''}}</td><td></td>
+                                </tr>
+                                <td>Интерес: </td>
+                                <td>
+                                    @if(!empty($lead->choices_goods_categories->implode('name', ',')))
+                                    {{ $lead->choices_goods_categories->implode('name', ',') }}<br>
+                                    @endif
+
+                                    @if(!empty($lead->choices_services_categories->implode('name', ',')))
+                                    {{ $lead->choices_services_categories->implode('name', ',') }}<br>
+                                    @endif
+
+                                    @if(!empty($lead->choices_raws_categories->implode('name', ',')))
+                                    {{ $lead->choices_raws_categories->implode('name', ',') }}<br>
+                                    @endif
+                                </td><td></td>     
+                            </tr>
+                            <tr>
+                                <td>Источник: </td><td>{{ $lead->source->name or ''}}</td><td></td>
+                            </tr>
+                            <tr>
+                                <td>Сайт: </td><td>{{ $lead->site->name or ''}}</td><td></td>
+                            </tr>
+                            <tr>
+                                <td>Тип трафика: </td><td>{{ $lead->medium->name or ''}}</td><td></td>
+                            </tr>
+                            <tr>
+                                <td>Рекламная кампания: </td><td>{{ $lead->campaign->name or ''}}</td><td></td>
+                            </tr>
+                            <tr>
+                                <td>Объявление: </td><td>{{ $lead->utm_content->name or ''}}</td><td></td>
+                            </tr>
+                            <tr>
+                                <td>Ключевая фраза: </td><td>{{ $lead->utm_term->name or ''}}</td><td></td>
+                            </tr>
+                            <tr>
+                                <td>Менеджер: </td><td>{{ $lead->manager->name }}</td>
+                                <td>
+                                    @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
+                                        <a id="lead-free" class="button tiny">Освободить</a>
+                                    @endif
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
 
             </div>
+
+
+
+            </div>
+
+
+
 
         </div>
 
