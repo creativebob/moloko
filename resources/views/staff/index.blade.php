@@ -85,7 +85,7 @@
           </td>
           <td class="td-phone">
             @if (isset($staffer->user))
-            {{ $staffer->user->phone }}
+            {{ isset($staffer->user->main_phone->phone) ? decorPhone($staffer->user->main_phone->phone) : 'Телефон не указан' }}
           @endif</td>
           <td class="td-employment-date">
             @foreach ($staffer->employees as $employee)

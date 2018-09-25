@@ -76,7 +76,7 @@
           <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
               <label>Телефон
-                @include('includes.inputs.phone', ['value' => isset($user->main_phone->phone) ? $user->main_phone->phone : null, 'name'=>'main_phone', 'required'=>'required'])
+                @include('includes.inputs.phone', ['value' => isset($user->main_phone->phone) ? $user->main_phone->phone : null, 'name'=>'main_phone', 'required'=>'required', 'id' => 'main-phone'])
               </label>
             </div>
             <div class="small-12 medium-6 cell" id="extra-phones">

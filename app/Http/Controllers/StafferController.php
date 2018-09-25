@@ -51,7 +51,7 @@ class StafferController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
 
-        $staff = Staffer::with('filial', 'department', 'user', 'position', 'employees')
+        $staff = Staffer::with('filial', 'department', 'user.main_phone', 'position', 'employees')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
