@@ -261,7 +261,9 @@ class LeadController extends Controller
 
 
         $text_fragment = $request->text_fragment;
-        $fragment_phone = 0;
+        $fragment_phone = NULL;
+        $crop_phone = NULL;
+
         $len_text = strlen($text_fragment);
 
         if((strlen($text_fragment) == 11)&&(is_numeric($text_fragment))){

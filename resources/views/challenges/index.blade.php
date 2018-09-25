@@ -57,11 +57,7 @@
           <td class="td-author">{{ isset($challenge->author->first_name) ? $challenge->author->first_name . ' ' . $challenge->author->second_name : ' ' }}</td>
 
           <td class="td-status">
-            @if ($challenge->status == 1)
-              Не выполнена
-            @else
-              Выполнена
-            @endif
+            {{ $challenge->status_result }}
           </td>
 
           {{-- Элементы управления --}}

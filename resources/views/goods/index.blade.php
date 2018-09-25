@@ -14,13 +14,6 @@
 @include('includes.title-exel', ['entity' => $page_info->alias])
 @endsection
 
-@section('content-count')
-{{-- Количество элементов --}}
-  @if(!empty($goods))
-    {{ num_format($goods->total(), 0) }}
-  @endif
-@endsection
-
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Goods::class, 'type' => 'menu'])

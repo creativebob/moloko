@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\StatusFilter;
 
 class Challenge extends Model
 {
@@ -45,6 +46,7 @@ class Challenge extends Model
     use Filter;
     use BooklistFilter;
     use DateIntervalFilter;
+    use StatusFilter;
 
     // public $timestamps = false;
     
@@ -83,9 +85,18 @@ class Challenge extends Model
         return $this->belongsTo('App\User', 'finisher_id');
     }
 
-    // Получаем лида
+    // Получаем все
     public function challenges()
     {
         return $this->morphTo();
+    }
+
+    public function getStatusResultAttribute($value) {
+
+        if($this->status == 1){
+            return 'Выполнена';
+        } else {
+            return 'Не выполнена';
+        }
     }
 }

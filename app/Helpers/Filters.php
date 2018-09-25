@@ -316,7 +316,19 @@
             };
 
 
+            // Вытаскиеваем в зависимости от режима нужную коллекцию
+            // if($filter_mode == 'internal-text'){
 
+            //     // Выбираем только уникальные ID
+            //     $filter_entity = $filter_query->unique($column);
+
+            //     if(count($filter_entity) > 0){
+            //         foreach($filter_entity as $entity){
+            //             $list_select['item_list'][$entity->$column] = $entity->$column;
+            //         }
+            //     };
+
+            // };
 
 
         };

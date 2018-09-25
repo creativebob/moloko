@@ -55,6 +55,7 @@ class ChallengeController extends Controller
         // ->filter($request, 'stage_id')
         ->filter($request, 'appointed_id')
         ->filter($request, 'author_id')
+        // ->statusFilter($request, 'status')
         ->dateIntervalFilter($request, 'deadline_date')
         // ->booklistFilter($request)
         ->orderBy('deadline_date', 'desc')
@@ -93,6 +94,8 @@ class ChallengeController extends Controller
         $filter = addFilter($filter, $filter_query, $request, 'Исполнитель:', 'appointed', 'appointed_id', null, 'internal-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Автор:', 'author', 'author_id', null, 'internal-id-one');
 
+        // $filter = addFilter($filter, $filter_query, $request, 'Статус:', 'status_result', 'status', null, 'internal-text');
+
         $filter = addFilterInterval($filter, $this->entity_name, $request, 'date_start', 'date_end');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
@@ -105,6 +108,8 @@ class ChallengeController extends Controller
 
         // Задачи пользователя
         $challenges = challenges($request);
+
+        // dd($filter);
 
         return view('challenges.index', compact('challenges_page', 'page_info', 'challenges', 'filter'));
     }
