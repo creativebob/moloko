@@ -264,7 +264,7 @@ class LeadController extends Controller
         $fragment_phone = 0;
         $len_text = strlen($text_fragment);
 
-        if(strlen($text_fragment) == 11){
+        if((strlen($text_fragment) == 11)&&(is_numeric($text_fragment))){
             $fragment_phone = $text_fragment;
         }
 
@@ -292,24 +292,25 @@ class LeadController extends Controller
                 'choices_raws_categories', 
                 'manager',
                 'stage',
-                'challenges.challenge_type')
+                'challenges.challenge_type', 
+                'phones')
             ->companiesLimit($answer)
             ->whereNull('draft')
-            ->where('phone', '!=', 0)
-            ->where(function ($query) use ($fragment_phone, $fragment_case_number, $text_fragment, $len_text) {
+            ->where(function ($query) use ($fragment_case_number, $text_fragment, $len_text, $fragment_phone) {
 
                 if($len_text > 5){
                     $query->where('name', $text_fragment);
-                };
-
-                if(isset($fragment_phone)){
-                    $query->orWhere('phone', $fragment_phone);
                 };
 
                 if(($len_text > 6)||($len_text < 14)){
                     $query->orWhere('case_number', 'LIKE', $fragment_case_number);
                 };
 
+                if(isset($fragment_phone)){
+                    $query->orWhereHas('phones', function($query) use ($fragment_phone){
+                       $query->where('phone', $fragment_phone);
+                    });
+                };
             })
             ->orderBy('created_at', 'asc')
             ->get();
@@ -580,7 +581,7 @@ class LeadController extends Controller
     {
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::moderatorLimit($answer)->findOrFail($id);
+        $user = User::findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
@@ -1030,13 +1031,16 @@ class LeadController extends Controller
             'choices_raws_categories', 
             'manager',
             'stage',
-            'challenges.challenge_type')
+            'challenges.challenge_type', 
+            'phones')
         ->companiesLimit($answer_lead)
         // ->authors($answer_lead) // Не фильтруем по авторам
         ->systemItem($answer_lead) // Фильтр по системным записям
         // ->whereNull('archive')
         ->whereNull('draft')
-        ->where('phone', $phone)
+        ->whereHas('phones', function($query) use ($phone){
+            $query->where('phone', $phone);
+          })
         ->where('id', '!=', $lead_id)
         ->orderBy('sort', 'asc')
         ->get();

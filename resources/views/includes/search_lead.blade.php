@@ -18,7 +18,7 @@
                                 <span id="lead-address">{{ $lead->location->address or '' }}</span>
                             </td>
                             <td>
-                                {{ decorPhone($lead->phone) }}
+                                {{ decorPhone($lead->main_phone->phone) }}
                             </td>
                             <td>
                                 {{ $lead->choices_goods_categories->implode('name', ',') }}
