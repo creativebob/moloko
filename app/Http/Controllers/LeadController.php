@@ -376,7 +376,7 @@ class LeadController extends Controller
             $lead->filial_id = $filial_id;
             $lead->name = NULL;
             $lead->location_id = $location_id;
-            $lead->phone = 00000000000;
+            
             $lead->draft = 1;
             $lead->author_id = $user->id;
             $lead->manager_id = $user->id;
@@ -408,6 +408,19 @@ class LeadController extends Controller
             // Конец формирования номера обращения ----------------------------------
 
             $lead->save();
+
+
+            // // Пишем или ищем новый и создаем связь
+            //     $phone = Phone::firstOrCreate(
+            //         ['phone' => 00000000000,
+            //     ], [
+            //         'crop' => 0000,
+            //     ]);
+            //     // dd($phone);
+            //     $item->phones()->attach($phone->id, ['main' => 1]);
+
+
+            // $lead->phone = ;
 
             return Redirect('/admin/leads/' . $lead->id . '/edit');
 
