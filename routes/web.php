@@ -379,6 +379,9 @@ Route::post('/companies_display', 'CompanyController@ajax_display')->middleware(
 
 // --------------------------------------- Лиды -----------------------------------------------
 
+// Поиск
+Route::any('/leads/search', 'LeadController@search');
+
 // Основные методы
 // Route::get('/lead/calls', 'LeadController@index')->middleware('auth');
 Route::resource('/leads', 'LeadController')->middleware('auth');
@@ -390,8 +393,7 @@ Route::post('/leads_system_item', 'LeadController@ajax_system_item')->middleware
 // Отображение на сайте
 Route::post('/leads_display', 'LeadController@ajax_display')->middleware('auth');
 
-// Поиск
-Route::post('/leads/search', 'LeadController@search')->middleware('auth');
+
 
 // Назначение лида
 Route::any('/lead_direction_check', 'LeadController@ajax_lead_direction_check')->middleware('auth');
