@@ -17,11 +17,10 @@ use App\Scopes\Traits\SuppliersTraitScopes;
 use App\Scopes\Traits\ManufacturersTraitScopes;
 
 // Подключаем кеш
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphedByMany;
 
 // Фильтры
 use App\Scopes\Filters\Filter;
