@@ -39,7 +39,7 @@ class LeadRequest extends FormRequest
             'birthday' => 'date|after:01.01.1940|nullable', 
 
             'main_phone' => 'string|max:17|required',
-            'extra_phones.*' => 'string|max:17|nullable',
+            'extra_phones.*' => 'string|max:17|nullable|unique',
 
             'telegram_id' => 'integer|nullable', 
             'city_id' => 'integer|nullable', 
