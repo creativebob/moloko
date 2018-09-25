@@ -91,12 +91,12 @@ class Challenge extends Model
         return $this->morphTo();
     }
 
-    public function getStatusResultAttribute($value) {
+    // public function getStatusResultAttribute($value) {
 
-        if($this->status == 1){
-            return 'Выполнена';
-        } else {
-            return 'Не выполнена';
-        }
-    }
+    //     if($this->status == 1){
+    //         return 'Выполнена';
+    //     } else {
+    //         return 'Не выполнена';
+    //     }
+    // }
 }
