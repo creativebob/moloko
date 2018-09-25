@@ -17,7 +17,7 @@ class CreateNotificationsTable extends Migration
             $table->increments('id');
 
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
-            // $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('name')->index()->comment('Название оповещения');
 
