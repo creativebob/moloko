@@ -65,7 +65,7 @@ class UserController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------
 
-        $users = User::with('roles', 'staff', 'staff.position')  
+        $users = User::with('roles', 'staff', 'staff.position', 'main_phones')  
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -439,7 +439,7 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar', 'main_phone', 'extra_phones')->moderatorLimit($answer)->findOrFail($id);
+        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar', 'main_phones', 'extra_phones')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);

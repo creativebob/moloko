@@ -66,7 +66,7 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------
 
-        $companies = Company::with('author', 'director', 'location.city', 'sector', 'suppliers', 'manufacturers')
+        $companies = Company::with('author', 'director', 'location.city', 'sector', 'suppliers', 'manufacturers', 'main_phones', 'extra_phones')
 
         // ->suppliers($user->company_id)
         // ->manufacturers($user->company_id)
@@ -297,7 +297,7 @@ class CompanyController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types', 'main_phone', 'extra_phones')
+        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types', 'main_phones', 'extra_phones')
         ->moderatorLimit($answer)
         ->findOrFail($id);
 

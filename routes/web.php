@@ -426,7 +426,7 @@ Route::post('/get_challenges_user', 'ChallengeController@ajax_get_challenges')->
 Route::resource('/claims', 'ClaimController')->middleware('auth');
 
 Route::post('/claim_add', 'ClaimController@ajax_store')->middleware('auth');
-Route::any('/claim_finish', 'ClaimController@ajax_finish')->middleware('auth');
+Route::post('/claim_finish', 'ClaimController@ajax_finish')->middleware('auth');
 
 // --------------------------------------- Этапы --------------------------------------------
 
