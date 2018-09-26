@@ -286,8 +286,8 @@ class ChallengeController extends Controller
 
     public function ajax_get_challenges()
     {
-        $challenges = challenges();
-        return view('layouts.challenges_for_me', compact('challenges'));
+        $list_challenges = challenges();
+        return view('layouts.challenges_for_me', compact('list_challenges'));
     }
 
 }

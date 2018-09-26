@@ -7,7 +7,7 @@ use Carbon\Carbon;
         $user = Auth::user();
         $answer_challenge = operator_right('challenges', false, 'index');
 
-        $challenges = Challenge::with(
+        $list_challenges = Challenge::with(
             'author',
             'appointed',
             'finisher',
@@ -28,7 +28,7 @@ use Carbon\Carbon;
         });
 
         // dd($challenges);
-        return $challenges;
+        return $list_challenges;
 
     };
 ?>

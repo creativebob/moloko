@@ -143,10 +143,10 @@ class LeadController extends Controller
         $page_info = pageInfo($this->entity_name);
 
         // Задачи пользователя
-        $challenges = challenges($request);
+        $list_challenges = challenges($request);
         // dd($challenges);
 
-        return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'challenges'));
+        return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'list_challenges'));
     }
 
     public function leads_calls(Request $request)
@@ -240,10 +240,10 @@ class LeadController extends Controller
         $page_info = pageInfo($this->entity_name);
 
         // Задачи пользователя
-        $challenges = challenges($request);
+        $list_challenges = challenges($request);
         // dd($challenges);
 
-        return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'challenges'));
+        return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'list_challenges'));
     }
 
     public function search(Request $request)
@@ -689,12 +689,12 @@ class LeadController extends Controller
         $page_info = pageInfo($this->entity_name);
 
         // Задачи пользователя
-        $challenges = challenges($request);
+        $list_challenges = challenges($request);
 
         $entity = $this->entity_name;
         // dd($lead);
 
-        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity', 'challenges'));
+        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity', 'list_challenges'));
     }
 
     public function update(LeadRequest $request, $id)

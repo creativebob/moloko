@@ -74,9 +74,9 @@
     <td class="td-body">{{ $claim->body }}</td>
     <td class="td-status">
       @if($claim->status == 1)
-      Выполнена
+        В работе
       @else
-      Не выполнена
+        Отработана
       @endif
     </td>
     <td class="td-case-number">
