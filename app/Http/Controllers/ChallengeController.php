@@ -259,7 +259,7 @@ class ChallengeController extends Controller
 
             // Оповещение в telegram, если исполнитель не является автором
             if ($challenge->finisher_id != $challenge->author_id) {
-                $telegram_message  = "ЗАДАЧА ВЫПОЛНЕНА\r\n\r\nОписание: " . $challenge->description . "\r\nДедлайн: " . $challenge->deadline_date->format('d.m.Y H:i') . "Дата выполнения: " . Carbon::now()->format('d.m.Y H:i') . "\r\nИсполнитель: " . $user->first_name . " " . $user->second_name;
+                $telegram_message  = "ЗАДАЧА ВЫПОЛНЕНА\r\n\r\nОписание: " . $challenge->description . "\r\nДедлайн: " . $challenge->deadline_date->format('d.m.Y H:i') . "\r\nДата выполнения: " . Carbon::now()->format('d.m.Y H:i') . "\r\nИсполнитель: " . $user->first_name . " " . $user->second_name;
 
                 $telegram_destinations = User::where('id', $challenge->author_id)
                 ->where('telegram_id', '!=', null)
