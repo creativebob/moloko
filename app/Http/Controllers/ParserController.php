@@ -746,9 +746,11 @@ class ParserController extends Controller
     public function old_claims(Request $request)
     {
 
-        $claims = Claim::whereNull('old_claim_id')->get();
+        $claims = Claim::get();
         foreach ($claims as $claim) {
             $claim->serial_number = $claim->old_claim_id;
+            $claim->manager_id = 9;
+            $claim->status = 1;
             $claim->save();
         }
         dd('Удача, ебана!');
