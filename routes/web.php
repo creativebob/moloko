@@ -1,5 +1,9 @@
 <?php
 
+use App\Lead;
+use App\User;
+
+use Carbon\Carbon;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,6 +47,24 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 //     }])->find(5468));
 // });
 
+Route::get('/lol', function() {
+	// $leads = App\Lead::whereMonth('created_at', Carbon\Carbon::now()->format('m'))->whereYear('created_at', Carbon\Carbon::now()->format('Y'))->whereNull('draft')->get();
+	$leads = Lead::whereDate('created_at', Carbon::now()->format('Y-m-d'))->whereNull('draft')->get();
+
+            $telegram_message = "Отчет за день (".Carbon::now()->format('d.m.Y')."): \r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\Заявок с сайта: ".count($leads->where('lead_type_id', 2));
+            
+            $telegram_destinations = User::whereHas('staff', function ($query) {
+                $query->whereHas('position', function ($query) {
+                    $query->whereHas('notifications', function ($query) {
+                        $query->where('notification_id', 3);
+                    });
+                });
+            })
+            ->where('telegram_id', '!=', null)
+            ->get(['telegram_id']);
+
+            send_message($telegram_destinations, $telegram_message);
+})->middleware('auth');
 // Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
 
 // Route::get('/dublicator_old', 'ParserController@dublicator_old')->middleware('auth');

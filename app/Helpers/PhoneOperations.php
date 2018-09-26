@@ -65,7 +65,7 @@ function add_phones($request, $item) {
 
                 // Отправляем старый номер в архив
 				$old_phone = Phone::where('phone', $item->main_phone->phone)->first();
-				$item->main_phone()->updateExistingPivot($old_phone->id, ['archive' => 1]);
+				$item->main_phones()->updateExistingPivot($old_phone->id, ['archive' => 1]);
 
                 // Пишем или ищем новый и создаем связь
 				$phone = Phone::firstOrCreate(
