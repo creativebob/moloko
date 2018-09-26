@@ -22,10 +22,14 @@ function send_message($telegram_destinations, $telegram_message){
     // Отправляем на каждый telegram
 	foreach ($telegram_destinations as $destination) {
 
-		$response = Telegram::sendMessage([
-			'chat_id' => $destination->telegram_id, 
-			'text' => $telegram_message
-		]);
+		if (isset($destination->telegram_id)) {
+			$response = Telegram::sendMessage([
+				'chat_id' => $destination->telegram_id, 
+				'text' => $telegram_message
+			]);
+		}
+
+		
 	}
 
 }

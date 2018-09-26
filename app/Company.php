@@ -188,14 +188,20 @@ class Company extends Model
     // Телефоны
 
     // Основной
-    public function main_phone()
+    public function main_phones()
     {
         return $this->morphToMany('App\Phone', 'phone_entity')->wherePivot('main', '=', 1)->whereNull('archive')->withPivot('archive');
     }
 
     public function getMainPhoneAttribute()
     {
-        return $this->main_phone()->first();
+        if(!empty($this->main_phones->first()))
+        {
+            $value = $this->main_phones->first();
+        } else {
+            $value = null;
+        }
+        return $value;
     }
 
     // Дополнительные

@@ -91,7 +91,7 @@ class LeadController extends Controller
             'manager',
             'stage',
             'challenges.challenge_type',
-            'main_phone'
+            'main_phones'
         )
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -645,7 +645,7 @@ class LeadController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
 
-        $lead = Lead::with(['location.city', 'medium', 'campaign', 'source', 'site', 'claims' => function ($query) {
+        $lead = Lead::with(['location.city', 'main_phones', 'extra_phones', 'medium', 'campaign', 'source', 'site', 'claims' => function ($query) {
             $query->orderBy('created_at', 'asc');
         }, 'notes' => function ($query) {
             $query->orderBy('created_at', 'desc');
