@@ -1,17 +1,17 @@
-<div class="tabs-panel" id="last">
+<div class="tabs-panel" id="last_from">
 <ul class="for_scroll my-task">
 
 		@php 
-			$last_challenges_count = 0;
-			$today_challenges_count = 0;
-			$tomorrow_challenges_count = 0;
+			$last_challenges_count_from = 0;
+			$today_challenges_count_from = 0;
+			$tomorrow_challenges_count_from = 0;
 		@endphp
 
 		{{-- Запускаем если пришли задачи --}}
-		@if(!empty($list_challenges['for_me']))
+		@if(!empty($list_challenges['from_me']))
 
 			{{-- Перебераем по дням  --}}
-			@foreach($list_challenges['for_me'] as $date => $challenge_date)
+			@foreach($list_challenges['from_me'] as $date => $challenge_date)
 
 				{{-- Если есть дата  --}}
 				@if(!empty($challenge_date))
@@ -43,7 +43,7 @@
 								@foreach($challenge_date as $challenge)
 
 									{{-- Считаем количество задач --}}
-									@php $last_challenges_count = $last_challenges_count + 1; @endphp
+									@php $last_challenges_count_from = $last_challenges_count_from + 1; @endphp
 
 									<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
 										{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
@@ -63,7 +63,7 @@
 
 
 								@endforeach
-								<input name="last_challenges_count" type="hidden" value="{{ $last_challenges_count }}">								
+								<input name="last_challenges_count_from" type="hidden" value="{{ $last_challenges_count_from }}">								
 							@endif
 						</li>
 
@@ -78,13 +78,13 @@
 </div>
 
 
-<div class="tabs-panel is-active" id="today">
+<div class="tabs-panel is-active" id="today_from">
 	<ul class="for_scroll my-task">
 		{{-- Запускаем если пришли задачи --}}
-		@if(!empty($list_challenges['for_me']))
+		@if(!empty($list_challenges['from_me']))
 
 			{{-- Перебераем по дням  --}}
-			@foreach($list_challenges['for_me'] as $date => $challenge_date)
+			@foreach($list_challenges['from_me'] as $date => $challenge_date)
 
 				{{-- Если есть дата  --}}
 				@if(!empty($challenge_date))
@@ -116,7 +116,7 @@
 								@foreach($challenge_date as $challenge)
 
 									{{-- Считаем количество задач --}}
-									@php $today_challenges_count = $today_challenges_count + 1; @endphp
+									@php $today_challenges_count_from = $today_challenges_count_from + 1; @endphp
 
 									<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
 										{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
@@ -135,7 +135,7 @@
 									</div>
 
 								@endforeach
-								<input name="today_challenges_count" type="hidden" value="{{ $today_challenges_count }}">								
+								<input name="today_challenges_count_from" type="hidden" value="{{ $today_challenges_count_from }}">								
 							@endif
 						</li>
 
@@ -150,13 +150,13 @@
 </div>
 
 
-<div class="tabs-panel" id="tomorrow">
+<div class="tabs-panel" id="tomorrow_from">
 <ul class="for_scroll my-task">
 		{{-- Запускаем если пришли задачи --}}
-		@if(!empty($list_challenges['for_me']))
+		@if(!empty($list_challenges['from_me']))
 
 			{{-- Перебераем по дням  --}}
-			@foreach($list_challenges['for_me'] as $date => $challenge_date)
+			@foreach($list_challenges['from_me'] as $date => $challenge_date)
 
 				{{-- Если есть дата  --}}
 				@if(!empty($challenge_date))
@@ -188,7 +188,7 @@
 								@foreach($challenge_date as $challenge)
 
 									{{-- Считаем количество задач --}}
-									@php $tomorrow_challenges_count = $tomorrow_challenges_count + 1; @endphp
+									@php $tomorrow_challenges_count_from = $tomorrow_challenges_count_from + 1; @endphp
 
 									<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
 										{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
@@ -206,7 +206,7 @@
 										{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
 									</div>
 								@endforeach
-								<input name="tomorrow_challenges_count" type="hidden" value="{{ $tomorrow_challenges_count }}">
+								<input name="tomorrow_challenges_count_from" type="hidden" value="{{ $tomorrow_challenges_count_from }}">
 
 							@endif
 						</li>
@@ -223,8 +223,8 @@
 
 <script>
 
-			$('#last-challenges-count').html({{ $last_challenges_count }});
-			$('#today-challenges-count').html({{ $today_challenges_count }});
-			$('#tomorrow-challenges-count').html({{ $tomorrow_challenges_count }});
+			$('#last-challenges-count-from').html({{ $last_challenges_count_from }});
+			$('#today-challenges-count-from').html({{ $today_challenges_count_from }});
+			$('#tomorrow-challenges-count-from').html({{ $tomorrow_challenges_count_from }});
 
 </script>

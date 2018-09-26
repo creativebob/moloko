@@ -78,12 +78,12 @@ function getClaimNumbers($user) {
         // ->get();
 
         $answer_all_claims = operator_right('claims', 'false', 'index');
-        $claims_count = Claim::companiesLimit($answer_all_claims)
+        $claims_all = Claim::companiesLimit($answer_all_claims)
         ->companiesLimit($answer_all_claims)
         // ->whereDate('created_at', Carbon::today()->format('Y-m-d'))
         ->get();
 
-        $serial_number = $claims_count->max('serial_number');
+        $serial_number = $claims_all->max('serial_number');
 
         if(empty($serial_number)){$serial_number = 0;};
         $serial_number = $serial_number + 1;
