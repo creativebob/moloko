@@ -196,6 +196,7 @@ class ClaimController extends Controller
         $new_lead->stage_id = 2; // Обращение
         $new_lead->display = 1; // Включаем видимость
         $new_lead->company_id = $company_id;
+        $new_lead->company_name = $lead->company_name;
 
         // $new_lead->phone = $lead->phone;
         $new_lead->location_id = $lead->location_id;
