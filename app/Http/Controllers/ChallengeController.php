@@ -7,6 +7,7 @@ use App\Challenge;
 use App\ChallengesType;
 use App\Staffer;
 use App\Lead;
+use App\User;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -152,6 +153,7 @@ class ChallengeController extends Controller
 
     public function store(Request $request)
     {
+
         // $body = 'sfsdf432';
         // $entity_model = 'App\Lead';
         // $id = 1;  
