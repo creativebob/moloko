@@ -30,7 +30,7 @@ class CreateClaimsTable extends Migration
             $table->integer('lead_id')->nullable()->unsigned()->comment('ID лида на котором рекламация');
             $table->foreign('lead_id')->references('id')->on('leads');
 
-            $table->integer('manager_id')->nullable()->unsigned()->comment('ID лида');
+            $table->integer('manager_id')->nullable()->unsigned()->comment('ID менеджера');
             $table->foreign('manager_id')->references('id')->on('users');
 
             $table->integer('status')->nullable()->unsigned()->comment('Статус выполнения (1 - не выполнено)');

@@ -774,9 +774,9 @@ class LeadController extends Controller
         // Телефон
         $phones = add_phones($request, $lead);
 
-        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            $lead->extra_phone = cleanPhone($request->extra_phone);
-        } else {$lead->extra_phone = NULL;};
+        // if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
+        //     $lead->extra_phone = cleanPhone($request->extra_phone);
+        // } else {$lead->extra_phone = NULL;};
 
         // $lead->telegram_id = $request->telegram_id;
         // $lead->orgform_status = $request->orgform_status;

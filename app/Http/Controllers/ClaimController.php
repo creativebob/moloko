@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Claim;
 use App\Lead;
 use App\User;
+use App\Phone;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -180,22 +181,23 @@ class ClaimController extends Controller
         $user_id = hideGod($user);
 
         // ГЛАВНЫЙ ЗАПРОС: В начале пишем oбращение
-        $lead = Lead::with('location')->findOrFail($request->lead_id);
+        $lead = Lead::with('location', 'main_phone')->findOrFail($request->lead_id);
 
-        $filial_id = $user->filial_id;
+        // $filial_id = $user->filial_id;
 
         // Пишем локацию
-        $location_id = $lead->location->id;
+        // $location_id = $lead->location->id;
 
         $new_lead = new Lead;
         $new_lead->name = $lead->name;
-        $new_lead->filial_id = $filial_id;
+        $new_lead->filial_id = $user->filial_id;
         $new_lead->stage_id = 2; // Обращение
         $new_lead->display = 1; // Включаем видимость
         $new_lead->company_id = $company_id;
+        $new_lead->company_name = $lead->company_name;
 
-        $new_lead->phone = $lead->phone;
-        $new_lead->location_id = $location_id;
+        // $new_lead->phone = $lead->phone;
+        $new_lead->location_id = $lead->location_id;
 
         $new_lead->author_id = $user->id;
         $new_lead->manager_id = $user->id;
@@ -207,6 +209,9 @@ class ClaimController extends Controller
         // Конец формирования номера обращения ----------------------------------
 
         $new_lead->save();
+
+        // Телефонный номер
+        $new_lead->phones()->attach($lead->main_phone->id, ['main' => 1]); 
 
         $claim = new Claim;
         $claim->body = $request->body;
@@ -231,7 +236,7 @@ class ClaimController extends Controller
             $lead = Lead::with(['location.city', 'stage', 'manager', 'claims' => function ($query) {
                 $query->orderBy('created_at', 'asc');
             }])->find($request->lead_id);
-            
+
             if (isset($lead->location->city->name)) {
                 $address = $lead->location->city->name . ', ' . $lead->location->address;
             } else {
@@ -249,7 +254,7 @@ class ClaimController extends Controller
             })
             ->where('telegram_id', '!=', null)
             ->get(['telegram_id']);
-        
+
             send_message($telegram_destinations, $telegram_message);
 
             $claims = $lead->claims;
@@ -260,8 +265,10 @@ class ClaimController extends Controller
 
     public function ajax_finish(Request $request)
     {
+
+        $claim = Claim::findOrFail($request->id);
         // Проверяем право на создание сущности
-        $this->authorize('update', Claim::class);
+        $this->authorize('update', $claim);
 
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
