@@ -213,7 +213,10 @@
                 <li class="tabs-title is-active"><a href="#content-panel-notes" aria-selected="true">События</a></li>
                 <li class="tabs-title"><a href="#content-panel-catalog" aria-selected="true">Каталог</a></li>
                 {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
+
+                @can ('index', App\Claim::class)
                 <li class="tabs-title"><a href="#content-panel-claims" aria-selected="true">Рекламации</a></li>
+                @endcan
                 {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
                 <li class="tabs-title" id="tab-attribution"><a href="#content-panel-attribution" aria-selected="true">Аттрибуция</a></li>
             </ul>
@@ -255,7 +258,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 cell">
 
-                        {{-- @can ('index', App\Claim::class) --}}
+                        @can ('index', App\Claim::class)
                         <fieldset class="fieldset-challenge">
                             <legend>Рекламации:</legend>
                             <div class="grid-x grid-padding-x"> 
@@ -278,15 +281,15 @@
                                     </tbody>
                                 </table>
                             </div>
-                            {{-- @can ('create', App\Claim::class) --}}
+                            @can ('create', App\Claim::class)
                             <div class="grid-x grid-padding-x align-left">
                                 <div class="small-4 cell">
                                     <a class="button green-button claim-add" data-open="add-claim">Добавить</a>
                                 </div>
                             </div>
-                            {{-- @endcan --}}
+                            @endcan
                         </fieldset>
-                        {{-- @endcan --}}
+                        @endcan
 
 
                     </div>
