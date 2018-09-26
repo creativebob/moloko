@@ -8,10 +8,10 @@
 		@endphp
 
 		{{-- Запускаем если пришли задачи --}}
-		@if(!empty($challenges))
+		@if(!empty($list_challenges))
 
 			{{-- Перебераем по дням  --}}
-			@foreach($challenges as $date => $challenge_date)
+			@foreach($list_challenges as $date => $challenge_date)
 
 				{{-- Если есть дата  --}}
 				@if(!empty($challenge_date))
@@ -81,10 +81,10 @@
 <div class="tabs-panel is-active" id="today">
 	<ul class="for_scroll my-task">
 		{{-- Запускаем если пришли задачи --}}
-		@if(!empty($challenges))
+		@if(!empty($list_challenges))
 
 			{{-- Перебераем по дням  --}}
-			@foreach($challenges as $date => $challenge_date)
+			@foreach($list_challenges as $date => $challenge_date)
 
 				{{-- Если есть дата  --}}
 				@if(!empty($challenge_date))
@@ -153,10 +153,10 @@
 <div class="tabs-panel" id="tomorrow">
 <ul class="for_scroll my-task">
 		{{-- Запускаем если пришли задачи --}}
-		@if(!empty($challenges))
+		@if(!empty($list_challenges))
 
 			{{-- Перебераем по дням  --}}
-			@foreach($challenges as $date => $challenge_date)
+			@foreach($list_challenges as $date => $challenge_date)
 
 				{{-- Если есть дата  --}}
 				@if(!empty($challenge_date))

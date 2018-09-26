@@ -39,18 +39,16 @@ class ChallengeController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------
 
-        $challenges_page = Challenge::with(
+        $challenges = Challenge::with(
             'challenge_type', 
             'author', 
             'appointed', 
             'finisher', 
             'challenges'
         )
-        ->moderatorLimit($answer)
         ->companiesLimit($answer)
         // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         // ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
         // ->filter($request, 'city_id', 'location')
         // ->filter($request, 'stage_id')
         ->filter($request, 'appointed_id')
@@ -63,7 +61,7 @@ class ChallengeController extends Controller
         // ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // dd($challenges_page);
+        // dd($challenges);
         // --------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
         // --------------------------------------------------------------------------------------------------------------------------
@@ -75,10 +73,8 @@ class ChallengeController extends Controller
             'finisher', 
             'challenges'
         )
-        ->moderatorLimit($answer)
         ->companiesLimit($answer)
         // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->systemItem($answer) // Фильтр по системным записям           
         ->get();
 
 
@@ -101,17 +97,16 @@ class ChallengeController extends Controller
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
         // dd($page_info);
 
         // Задачи пользователя
-        $challenges = challenges($request);
+        $list_challenges = challenges($request);
 
         // dd($filter);
 
-        return view('challenges.index', compact('challenges_page', 'page_info', 'challenges', 'filter'));
+        return view('challenges.index', compact('challenges', 'page_info', 'list_challenges', 'filter'));
     }
 
     public function create(Request $request)

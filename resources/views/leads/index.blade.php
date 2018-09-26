@@ -89,6 +89,10 @@
             @endcan
             @endcan
 
+            <br>
+            <span class="tiny-text">{{ $lead->company_name or '' }}</span>
+
+
           </td>
           <td class="td-action">
             @if($lead->manager->id == 1)

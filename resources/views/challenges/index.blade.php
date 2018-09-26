@@ -12,8 +12,8 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-  @if(!empty($challenges_page))
-    {{ num_format($challenges_page->total(), 0) }}
+  @if(!empty($challenges))
+    {{ num_format($challenges->total(), 0) }}
   @endif
 @endsection
 
@@ -43,8 +43,8 @@
         </tr>
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
-        @if(!empty($challenges_page))
-        @foreach($challenges_page as $challenge)
+        @if(!empty($challenges))
+        @foreach($challenges as $challenge)
         <tr class="item @if($challenge->moderation == 1)no-moderation @endif" id="challenges-{{ $challenge->id }}" data-name="{{ $challenge->body }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
@@ -85,8 +85,8 @@
 {{-- Pagination --}}
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
-    <span class="pagination-title">Кол-во записей: {{ $challenges_page->count() }}</span>
-    {{ $challenges_page->links() }}
+    <span class="pagination-title">Кол-во записей: {{ $challenges->count() }}</span>
+    {{ $challenges->links() }}
   </div>
 </div>
 @endsection

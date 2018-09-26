@@ -48,7 +48,7 @@ class LeadRequest extends FormRequest
             'orgform_status' => 'boolean|nullable', 
 
             // Обязательное поле "Имя компании" если указан статус юридического лица
-            'company_name' => 'alpha|string|max:255|required_if:orgform_status, 1|nullable', 
+            'company_name' => 'string|max:255|nullable', 
 
             'inn' => 'max:12|nullable', 
 

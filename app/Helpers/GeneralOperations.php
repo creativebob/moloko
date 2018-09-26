@@ -4,17 +4,20 @@ use App\Lead;
 use App\Claim;
 use Carbon\Carbon;
 
-function getLeadNumbers($user) {
+function getLeadNumbers($user, $lead_date = null) {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
 
-	$today = Carbon::now();
+        if(empty($lead_date)){
+            $lead_date = Carbon::now();
+        }
+
         $answer_all_leads = operator_right('leads', 'true', 'index');
 
         $leads = Lead::moderatorLimit($answer_all_leads)
         ->companiesLimit($answer_all_leads)
         ->filials($answer_all_leads) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->manager($user)
-        ->whereDate('created_at', Carbon::today()->format('Y-m-d'))
+        ->whereDate('created_at', $lead_date->format('Y-m-d'))
         ->get();
 
         $serial_number = $leads->max('serial_number');
@@ -27,23 +30,25 @@ function getLeadNumbers($user) {
         $lead_numbers = [];
 
         // Создаем номера
-        $lead_numbers['case'] = $today->format('dmy') . '/' .  $serial_number . '/' . $user->liter;
+        $lead_numbers['case'] = $lead_date->format('dmy') . '/' .  $serial_number . '/' . $user->liter;
         $lead_numbers['serial']  = $serial_number;
 
         return $lead_numbers;
 }
 
-function getLeadServiceCenterNumbers($user) {
+function getLeadServiceCenterNumbers($user, $lead_date = null) {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
 
-        $today = Carbon::now();
-        $answer_all_leads = operator_right('leads', 'true', 'index');
+        if(empty($lead_date)){
+            $lead_date = Carbon::now();
+        }
 
+        $answer_all_leads = operator_right('leads', 'true', 'index');
         $leads = Lead::moderatorLimit($answer_all_leads)
         ->companiesLimit($answer_all_leads)
         ->filials($answer_all_leads) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->manager($user)
-        ->whereDate('created_at', Carbon::today()->format('Y-m-d'))
+        ->whereDate('created_at', $lead_date->format('Y-m-d'))
         ->get();
 
         $serial_number = $leads->max('serial_number');
@@ -55,7 +60,7 @@ function getLeadServiceCenterNumbers($user) {
         $lead_numbers = [];
 
         // Создаем номера
-        $lead_numbers['case'] = $today->format('dmy') . 'сц' .  $serial_number;
+        $lead_numbers['case'] = $lead_date->format('dmy') . 'сц' .  $serial_number;
         $lead_numbers['serial']  = $serial_number;
 
         return $lead_numbers;

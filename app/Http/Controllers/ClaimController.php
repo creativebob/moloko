@@ -134,7 +134,7 @@ class ClaimController extends Controller
         //
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -145,8 +145,6 @@ class ClaimController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $claim = Claim::moderatorLimit($answer)
         ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->manager($user)
         // ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям 
         ->moderatorLimit($answer)

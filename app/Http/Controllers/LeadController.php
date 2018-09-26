@@ -375,6 +375,7 @@ class LeadController extends Controller
             $lead->company_id = $company_id;
             $lead->filial_id = $filial_id;
             $lead->name = NULL;
+            $lead->company_name = NULL;
             $lead->location_id = $location_id;
             
             $lead->draft = 1;
@@ -463,6 +464,7 @@ class LeadController extends Controller
             $lead = new Lead;
 
             $lead->name =   $request->name;
+            $lead->company_name =   $request->company_name;
         // $lead->sex = $request->sex;
         // $lead->birthday = $request->birthday;
 
@@ -755,6 +757,8 @@ class LeadController extends Controller
         $lead->email = $request->email;
 
         $lead->name = $request->name;
+        $lead->company_name = $request->company_name;
+
         $lead->stage_id = $request->stage_id;
         $lead->badget = $request->badget;
         $lead->draft = NULL;
@@ -1110,7 +1114,7 @@ class LeadController extends Controller
         if($lead->case_number == NULL){
 
             // Формируем номера обращения
-            $lead_number = getLeadNumbers($user);
+            $lead_number = getLeadNumbers($user, $lead->created_at);
             $lead->case_number = $lead_number['case'];
             $lead->serial_number = $lead_number['serial'];
         }
@@ -1148,7 +1152,7 @@ class LeadController extends Controller
         if($lead->case_number == NULL){
 
             // Формируем номера обращения
-            $lead_number = getLeadNumbers($manager);
+            $lead_number = getLeadNumbers($manager, $lead->created_at);
             $lead->case_number = $lead_number['case'];
             $lead->serial_number = $lead_number['serial'];
         }

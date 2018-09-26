@@ -117,6 +117,11 @@
                 @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email', 'required'=>''])
             </label> 
         </div>
+        <div class="small-12 cell">
+            <label>Компания
+                @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$lead->company_name, 'required'=>''])
+            </label>
+        </div>
     </div>
 </div>
 
