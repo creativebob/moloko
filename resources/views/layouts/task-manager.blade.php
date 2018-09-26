@@ -9,68 +9,10 @@
 	</div>
 	<div class="grid-x tabs-wrap period-task">
 		<div class="small-12 cell">
-			<div class="tabs-content" data-tabs-content="tabs">
+			<div class="tabs-content" data-tabs-content="tabs" id="portal-challenges-for-me">
 
-				<!-- Задачи мне -->
-				<div class="tabs-panel is-active" id="task-panel2">
-					<div class="grid-x tabs-wrap">
-						<div class="small-12 cell">
-							<ul class="tabs-period-task" data-tabs id="tabs-period-task">
-								<li class="tabs-title">
-									<span class="tab-challanges-count" id="last-challenges-count"></span>
-									<a href="#last">Прошлые</a>
-								</li>
-								<li class="tabs-title is-active">
-									<span class="tab-challanges-count" id="today-challenges-count"></span>
-									<a data-tabs-target="today" href="#today" aria-selected="true">Сегодня</a>
-								</li>
-								<li class="tabs-title">
-									<span class="tab-challanges-count" id="tomorrow-challenges-count"></span>
-									<a href="#tomorrow">Будущие</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-
-					<div class="tabs-content" data-tabs-content="tabs-period-task" id="portal-challenges-for-me">
-
-						{{-- Менеджер задач --}}
-					    @include('layouts.challenges_for_me')
-
-					</div>
-
-				</div>
-
-
-				<!-- Я поставил -->
-				<div class="tabs-panel" id="task-panel1">
-					<div class="grid-x tabs-wrap">
-						<div class="small-12 cell">
-							<ul class="tabs-period-task" data-tabs id="tabs-period-task">
-								<li class="tabs-title">
-									<span class="tab-challanges-count" id="last-challenges-count-from"></span>
-									<a href="#last_from">Прошлые</a>
-								</li>
-								<li class="tabs-title is-active">
-									<span class="tab-challanges-count" id="today-challenges-count-from"></span>
-									<a data-tabs-target="today_from" href="#today_from" aria-selected="true">Сегодня</a>
-								</li>
-								<li class="tabs-title">
-									<span class="tab-challanges-count" id="tomorrow-challenges-count-from"></span>
-									<a href="#tomorrow_from">Будущие</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-
-					<div class="tabs-content" data-tabs-content="tabs-period-task" id="portal-challenges-for-me">
-
-						{{-- Менеджер задач --}}
-					    @include('layouts.challenges_from_me')
-
-					</div>
-				</div>
-
+				{{-- Менеджер задач --}}
+				 @include('layouts.challenges_for_me')
 
 			</div>
 		</div>

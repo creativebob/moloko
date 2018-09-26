@@ -120,6 +120,10 @@
 			$('#today-challenges-count').html(today_challenges_count);
 			$('#tomorrow-challenges-count').html(tomorrow_challenges_count);
 
+			$('#last-challenges-count-from').html(last_challenges_count_from);
+			$('#today-challenges-count-from').html(today_challenges_count_from);
+			$('#tomorrow-challenges-count-from').html(tomorrow_challenges_count_from);
+
 				// var result = $.parseJSON(data);
 
     //       		if (result['error_status'] == 0) {

@@ -28,6 +28,7 @@ use Carbon\Carbon;
         ->get();
 
         $list_challenges = [];
+        
         $list_challenges['for_me'] = $challenges->where('appointed_id', $user_id)->groupBy(function($challenges) {
             return Carbon::parse($challenges->deadline_date)->format('d.m.Y'); // А это то-же поле по нему мы и будем группировать
         });
