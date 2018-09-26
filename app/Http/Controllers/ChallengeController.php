@@ -18,6 +18,9 @@ use App\Policies\ChallengePolicy;
 // Карбон
 use Carbon\Carbon;
 
+// Телеграм
+use Telegram;
+
 class ChallengeController extends Controller
 {
 
@@ -195,6 +198,18 @@ class ChallengeController extends Controller
             // Сохранение отношения
             $item->challenges()->save($challenge);
 
+            // Оповещение в telegram, если автор не является исполнителем
+            if ($challenge->appointed_id != $user_id) {
+                $telegram_message  = "ПОСТАВЛЕНА ЗАДАЧА\r\n\r\nАвтор: " . $user->first_name . " " . $user->second_name . "\r\nДедлайн: " . $challenge->deadline_date->format('d.m.Y H:i') . "\r\nОписание: " . $challenge->description;
+
+                $telegram_destinations = User::where('id', $challenge->appointed_id)
+                ->where('telegram_id', '!=', null)
+                ->get(['telegram_id']);
+
+                send_message($telegram_destinations, $telegram_message);
+            }
+            
+
             $item = $request->model::with(['challenges' => function ($query) {
                 $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
             }])->findOrFail($request->id);
@@ -239,6 +254,18 @@ class ChallengeController extends Controller
         $challenge->save();
 
         if ($challenge) {
+
+            // Оповещение в telegram, если исполнитель не является автором
+            if ($challenge->finisher_id != $challenge->author_id) {
+                $telegram_message  = "ЗАДАЧА ВЫПОЛНЕНА\r\n\r\nОписание: " . $challenge->description . "\r\nДедлайн: " . $challenge->deadline_date->format('d.m.Y H:i') . "Дата выполнения: " . Carbon::now()->format('d.m.Y H:i') . "\r\nИсполнитель: " . $user->first_name . " " . $user->second_name;
+
+                $telegram_destinations = User::where('id', $challenge->author_id)
+                ->where('telegram_id', '!=', null)
+                ->get(['telegram_id']);
+
+                send_message($telegram_destinations, $telegram_message);
+            }
+
             $result = [
                 'error_status' => 0,
             ];
