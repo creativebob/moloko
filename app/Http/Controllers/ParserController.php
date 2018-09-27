@@ -737,8 +737,8 @@ class ParserController extends Controller
 
     public function andrey(Request $request)
     {
-        $leads = Lead::where('manager_id', 9)->update(['manager_id' => 7]);
-        $challenges = Challenge::where('appointed_id', 9)->update(['appointed_id' => 7]);
+        $leads = Lead::where('manager_id', 5)->update(['manager_id' => 7]);
+        $challenges = Challenge::where('appointed_id', 5)->update(['appointed_id' => 7]);
 
         // dd(count($leads) . ' ' . count($challenges));
     }

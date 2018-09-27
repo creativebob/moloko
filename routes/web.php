@@ -73,7 +73,7 @@ Route::get('/lol', function() {
 
 // Route::get('/parser', 'ParserController@index')->middleware('auth');
 
-// Route::get('/andrey', 'ParserController@andrey')->middleware('auth');
+Route::get('/parser_andrey', 'ParserController@andrey')->middleware('auth');
 
 Route::get('/old_claims', 'ParserController@old_claims')->middleware('auth');
 
