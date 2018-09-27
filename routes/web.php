@@ -4,7 +4,6 @@ use App\Lead;
 use App\User;
 
 use Carbon\Carbon;
-use Telegram;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -71,10 +70,18 @@ Route::get('/mounth', function() {
 })->middleware('auth');
 
 
-Route::get('/webhook', function() {
-	$response = Telegram::setWebhook(['url' => 'https://vorotamars.ru/admin/'.env('TELEGRAM_BOT_TOKEN').'/webhook']);
-	dd($response);
-})->middleware('auth');
+// Route::get('/webhook', function() {
+// 	$response = Telegram::setWebhook(['url' => 'https://vorotamars.ru/admin/telegram/'.env('TELEGRAM_BOT_TOKEN')]);
+// 	dd($response);
+// })->middleware('auth');
+
+Route::post('/telegram/'.env('TELEGRAM_BOT_TOKEN'), function () {
+    $updates = Telegram::getWebhookUpdates();
+
+    return 'ok';
+});
+
+// Route::get('/telegram/'.env('TELEGRAM_BOT_TOKEN'), 'TelegramController@store');
 
 
 // Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
