@@ -289,7 +289,9 @@
                             @can ('create', App\Claim::class)
                             <div class="grid-x grid-padding-x align-left">
                                 <div class="small-4 cell">
-                                    <a class="button green-button claim-add" data-open="add-claim">Добавить</a>
+                                    @can('update', $lead)
+                                        <a class="button green-button claim-add" data-open="add-claim">Добавить</a>
+                                    @endcan
                                 </div>
                             </div>
                             @endcan
@@ -379,8 +381,13 @@
             --}}
 
             <div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-                {{ Form::submit($submitButtonText, ['class'=>'button']) }}
+                @can('update', $lead)
+                    {{ Form::submit($submitButtonText, ['class'=>'button']) }}
+                @else
+                    {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }} 
+                @endcan
             </div>
+
         </div>
 
         {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}

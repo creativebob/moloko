@@ -31,11 +31,17 @@
 	} else {
 		$readonly = '';
 		$autofocus = 'autofocus';
-}
+	}
+
+	if($lead->manager_id == 1){
+		$disabled_leadbot = 'disabled';
+	} else {
+		$disabled_leadbot = '';
+	}
 
 @endphp
 
-@include('leads.form', ['submitButtonText' => 'Редактировать лид', 'param'=>'', $readonly, $autofocus])
+@include('leads.form', ['submitButtonText' => 'Сохранить', 'param'=>'', $readonly, $autofocus])
 
 {{ Form::close() }}
 

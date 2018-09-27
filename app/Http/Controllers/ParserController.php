@@ -740,7 +740,8 @@ class ParserController extends Controller
         $leads = Lead::where('manager_id', 5)->update(['manager_id' => 7]);
         $challenges = Challenge::where('appointed_id', 5)->update(['appointed_id' => 7]);
 
-        // dd(count($leads) . ' ' . count($challenges));
+        $challenges = Challenge::where('author_id', 9)->update(['author_id' => 7]);
+        dd('Готово!');
     }
 
     public function old_claims(Request $request)

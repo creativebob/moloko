@@ -75,7 +75,7 @@
           <td class="td-name">
 
 
-            @can('edit', $lead)
+            {{-- @can('edit', $lead)
             @can('update', $lead)
             <a href="/admin/leads/{{ $lead->id }}/edit">
               @endcan
@@ -87,7 +87,18 @@
               @can('update', $lead)
             </a>
             @endcan
+            @endcan --}}
+
+            @can('view', $lead)
+            <a href="/admin/leads/{{ $lead->id }}/edit">
+              @endcan
+
+              {{ $lead->name }}
+
+              @can('update', $lead)
+            </a>
             @endcan
+
 
             <br>
             <span class="tiny-text">{{ $lead->company_name or '' }}</span>

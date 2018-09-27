@@ -654,7 +654,7 @@ class LeadController extends Controller
         }])
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->where('manager_id', '!=', 1)
+        // ->where('manager_id', '!=', 1)
         // ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям 
         ->moderatorLimit($answer)
