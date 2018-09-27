@@ -26,7 +26,7 @@
 
 @php 
 
-	if($lead->phone != null){
+	if($lead->main_phone->phone != null){
 		$readonly = 'readonly';
 		$autofocus = '';
 	} else {
