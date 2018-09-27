@@ -29,6 +29,10 @@
 			$last_challenges_count = 0;
 			$today_challenges_count = 0;
 			$tomorrow_challenges_count = 0;
+
+			$last_challenges_count_from = 0;
+			$today_challenges_count_from = 0;
+			$tomorrow_challenges_count_from = 0;
 		@endphp
 
 		{{-- Запускаем если пришли задачи --}}
@@ -245,13 +249,7 @@
 	</ul>										
 </div>
 
-<script>
 
-			$('#last-challenges-count').html({{ $last_challenges_count }});
-			$('#today-challenges-count').html({{ $today_challenges_count }});
-			$('#tomorrow-challenges-count').html({{ $tomorrow_challenges_count }});
-
-</script>
 
 
 					</div>
@@ -284,12 +282,6 @@
 
 <div class="tabs-panel" id="last_from">
 <ul class="for_scroll my-task">
-
-		@php 
-			$last_challenges_count_from = 0;
-			$today_challenges_count_from = 0;
-			$tomorrow_challenges_count_from = 0;
-		@endphp
 
 		{{-- Запускаем если пришли задачи --}}
 		@if(!empty($list_challenges['from_me']))
@@ -505,11 +497,15 @@
 	</ul>										
 </div>
 
-<script>
+<script type="text/javascript">
 
 			$('#last-challenges-count-from').html({{ $last_challenges_count_from }});
 			$('#today-challenges-count-from').html({{ $today_challenges_count_from }});
 			$('#tomorrow-challenges-count-from').html({{ $tomorrow_challenges_count_from }});
+
+			$('#last-challenges-count').html({{ $last_challenges_count }});
+			$('#today-challenges-count').html({{ $today_challenges_count }});
+			$('#tomorrow-challenges-count').html({{ $tomorrow_challenges_count }});
 
 </script>
 

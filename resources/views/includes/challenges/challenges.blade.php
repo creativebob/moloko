@@ -14,16 +14,11 @@
 
 	<td class="action">
 		@if ($challenge->appointed_id == Auth::user()->id) 
-			@can('update', $lead)
 				<a class="button finish-challenge">Выполнить</a>
-			@endcan
-
 		@endif
 
 		@if (($challenge->author_id == Auth::user()->id) && ($challenge->appointed_id != Auth::user()->id))
-			@can('update', $lead)
 				<a class="button remove-challenge">Снять</a>
-			@endcan
 		@endif
 	</td>
 </tr>
