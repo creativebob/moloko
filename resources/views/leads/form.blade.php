@@ -345,13 +345,13 @@
                                 <td>Тип трафика: </td><td>{{ $lead->medium->name or ''}}</td><td></td>
                             </tr>
                             <tr>
-                                <td>Рекламная кампания: </td><td>{{ $lead->campaign->name or ''}}</td><td></td>
+                                <td>Рекламная кампания: </td><td>{{ $lead->campaign_id or ''}}</td><td></td>
                             </tr>
                             <tr>
-                                <td>Объявление: </td><td>{{ $lead->utm_content->name or ''}}</td><td></td>
+                                <td>Объявление: </td><td>{{ $lead->utm_content or ''}}</td><td></td>
                             </tr>
                             <tr>
-                                <td>Ключевая фраза: </td><td>{{ $lead->utm_term->name or ''}}</td><td></td>
+                                <td>Ключевая фраза: </td><td>{{ $lead->utm_term or ''}}</td><td></td>
                             </tr>
                             <tr>
                                 <td>Менеджер: </td><td>{{ $lead->manager->name }}</td>
