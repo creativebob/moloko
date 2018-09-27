@@ -295,10 +295,23 @@ class ChallengeController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $challenge);
 
+        // Оповещение в telegram, если исполнитель не является автором
+        if ($challenge->appointed_id != $user->id) {
+            $telegram_message  = "ЗАДАЧА СНЯТА\r\n\r\nОписание: " . $challenge->description . "\r\nДедлайн: " . $challenge->deadline_date->format('d.m.Y H:i') . "\r\nДата снятия: " . Carbon::now()->format('d.m.Y H:i') . "\r\nИсполнитель: " . $user->first_name . " " . $user->second_name;
+
+            $telegram_destinations = User::where('id', $challenge->appointed_id)
+            ->where('telegram_id', '!=', null)
+            ->get(['telegram_id']);
+
+            send_message($telegram_destinations, $telegram_message);
+        }
+
         // Удаляем пользователя с обновлением
         $challenge->forceDelete();
 
         if ($challenge) {
+
+
 
             $result = [
                 'error_status' => 0,

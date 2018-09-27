@@ -4,6 +4,7 @@ use App\Lead;
 use App\User;
 
 use Carbon\Carbon;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -82,6 +83,7 @@ Route::post('/telegram/'.env('TELEGRAM_BOT_TOKEN'), function () {
 });
 
 // Route::get('/telegram/'.env('TELEGRAM_BOT_TOKEN'), 'TelegramController@store');
+
 
 
 // Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
