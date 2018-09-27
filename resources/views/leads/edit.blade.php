@@ -25,12 +25,12 @@
 {{ method_field('PATCH') }}
 
 @php 
-	if($lead->phone != null){
-		$readonly = 'readonly';
-		$autofocus = '';
-	} else {
-		$readonly = '';
-		$autofocus = 'autofocus';
+if($lead->phone != null){
+$readonly = 'readonly';
+$autofocus = '';
+} else {
+$readonly = '';
+$autofocus = 'autofocus';
 }
 
 @endphp
@@ -74,26 +74,85 @@
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
-			url: "/admin/lead_free",
+			url: "/admin/lead_direction_check",
 			type: "POST",
-			data: {id: lead_id},
+			success: function(data){
+
+				if (data == 1) {
+
+					$.ajax({
+						headers: {
+							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+						},
+						url: "/admin/lead_appointed",
+						type: "POST",
+						data: {id: lead_id},
+						success: function(html){
+							$('#modal').html(html);
+							$('#add-appointed').foundation();
+							$('#add-appointed').foundation('open');
+						}
+					});
+				} else {
+
+					$.ajax({
+						headers: {
+							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+						},
+						url: "/admin/lead_free",
+						type: "POST",
+						data: {id: lead_id},
+						success: function(date){
+
+							var result = $.parseJSON(date);
+							if (result.error_status == 0) {
+
+								var url = '{{ url("admin/leads") }}';
+
+								window.location.replace(url);
+
+								// $(location).attr('href', );
+							} else {
+                				// Выводим ошибку на страницу
+                				alert(result.error_message);
+                			};
+
+                		}
+                	});
+				}
+			}
+		});
+	});
+
+	$(document).on('click', '#submit-appointed', function(event) {
+		event.preventDefault();
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: "/admin/lead_distribute",
+			type: "POST",
+			data: $(this).closest('form').serialize(),
 			success: function(date){
 
-				var result = $.parseJSON(date);
-				if (result.error_status == 0) {
+				var url = '{{ url("admin/leads") }}';
 
-					var url = '{{ url("admin/leads") }}';
+				window.location.replace(url);
 
-					window.location.replace(url);
+			}
+		});
+	});
 
-					// $(location).attr('href', );
-				} else {
-                	// Выводим ошибку на страницу
-                	alert(result.error_message);
-                };
+	$(document).on('click', '.take-lead', function(event) {
+		event.preventDefault();
 
-            }
-        });
+		var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
+		var id = $(this).closest('.item').attr('id').split('-')[1];
+		var item = $(this);
+
+
+		/* Act on the event */
 	});
 
 	$(document).on('click', '#submit-add-claim', function(event) {
@@ -111,9 +170,9 @@
 				$('#claims-list').html(html);
 				$('#form-claim-add textarea[name=body]').val('');
 
-			
-            }
-        });
+
+			}
+		});
 	});
 
 	$(document).on('click', '.finish-claim', function(event) {
@@ -134,13 +193,13 @@
 			success: function(data){
 				var result = $.parseJSON(data);
 
-          		if (result['error_status'] == 0) {
-          			$('#claims-' + id + ' .action a').remove();
-          		} else {
-          			alert(result['error_message']);
-          		};
+				if (result['error_status'] == 0) {
+					$('#claims-' + id + ' .action a').remove();
+				} else {
+					alert(result['error_message']);
+				};
 			}
-        });
+		});
 	});
 
 </script>

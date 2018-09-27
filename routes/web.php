@@ -4,6 +4,7 @@ use App\Lead;
 use App\User;
 
 use Carbon\Carbon;
+use Telegram;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -68,6 +69,14 @@ Route::get('/mounth', function() {
 	$leads = Lead::whereMonth('created_at', Carbon::now()->format('m'))->whereYear('created_at', Carbon::now()->format('Y'))->whereNull('draft')->get();
 	$telegram_message = "Отчет За месяц (".Carbon::now()->format('d.m.Y')."): \r\n\r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\Заявок с сайта: ".count($leads->where('lead_type_id', 2))."\r\n\r\nВсего: ".count($leads);
 })->middleware('auth');
+
+
+Route::get('/webhook', function() {
+	$response = Telegram::setWebhook(['url' => 'https://vorotamars.ru/admin/'.env('TELEGRAM_BOT_TOKEN').'/webhook']);
+	dd($response);
+})->middleware('auth');
+
+
 // Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
 
 // Route::get('/dublicator_old', 'ParserController@dublicator_old')->middleware('auth');
