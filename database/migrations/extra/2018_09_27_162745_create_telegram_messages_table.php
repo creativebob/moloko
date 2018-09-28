@@ -17,28 +17,32 @@ class CreateTelegramMessagesTable extends Migration
             $table->increments('id');
 
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
+            // $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('message_id')->nullable()->unsigned();
             $table->integer('update_id')->nullable()->unsigned();
 
-            $table->integer('f_chat_id')->nullable()->unsigned();
-            $table->string('f_first_name')->nullable()->index();
-            $table->string('f_last_name')->nullable()->index();
-            $table->string('f_username')->nullable()->index();
+            $table->integer('from_id')->nullable();
+            $table->boolean('from_is_bot');
+            $table->string('from_first_name')->nullable();
+            $table->string('from_last_name')->nullable();
+            $table->string('from_username')->nullable();
+            $table->string('from_language_code')->nullable();
 
             $table->integer('chat_id')->nullable()->unsigned();
-            $table->string('first_name')->nullable()->index();
-            $table->string('last_name')->nullable()->index();
-            $table->string('username')->nullable()->index();
+            $table->string('chat_first_name')->nullable();
+            $table->string('chat_last_name')->nullable();
+            $table->string('chat_username')->nullable();
+            $table->string('date_message')->nullable();
 
             $table->text('message')->nullable();
+            $table->integer('date')->nullable()->unsigned();
             
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            $table->foreign('author_id')->references('id')->on('users');
+            // $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
