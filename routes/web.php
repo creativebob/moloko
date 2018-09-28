@@ -82,7 +82,16 @@ Route::get('/set_webhook', 'TelegramController@set_webhook')->middleware('auth')
 Route::get('/remove_webhook', 'TelegramController@remove_webhook')->middleware('auth');
 
 // Получаем сообщение от бота
-Route::any('/telegram_message', 'TelegramController@store');
+// Route::any('/telegram_message', 'TelegramController@store');
+Route::post('/telegram_message', function () {
+    $update = Telegram::commandsHandler(true);
+	
+	// Commands handler method returns an Update object.
+	// So you can further process $update object 
+	// to however you want.
+	
+    return 'ok';
+});
 
 // Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
 
