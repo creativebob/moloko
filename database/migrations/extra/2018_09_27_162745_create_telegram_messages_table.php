@@ -33,7 +33,7 @@ class CreateTelegramMessagesTable extends Migration
             $table->string('chat_first_name')->nullable();
             $table->string('chat_last_name')->nullable();
             $table->string('chat_username')->nullable();
-            $table->string('date_message')->nullable();
+            $table->string('chat_type')->nullable();
 
             $table->text('message')->nullable();
             $table->integer('date')->nullable()->unsigned();

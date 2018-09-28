@@ -2,33 +2,42 @@
 
 namespace App\Http\Controllers;
 
+// Модели
 use App\TelegramMessage;
 
 use Illuminate\Http\Request;
 
+// Карбон
+use Carbon\Carbon;
+
+// Телеграм
 use Telegram;
 
 class TelegramController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    
+    
+    public function get_bot()
     {
-        $updates = Telegram::getUpdates();
-        dd($updates);
+        $response = Telegram::getMe();
+        
+        dd($response);
+
+        $botId = $response->getId();
+        $firstName = $response->getFirstName();
+        $username = $response->getUsername();
+    }
+    
+    public function set_webhook()
+    {
+        $response = Telegram::setWebhook(['url' => 'https://vorotamars.ru/admin/telegram_message']);
+        dd($response);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function remove_webhook()
     {
-        //
+        $response = Telegram::removeWebhook();
+        dd($response);
     }
 
     /**
@@ -40,61 +49,93 @@ class TelegramController extends Controller
     public function store(Request $request)
     {
         
-        $updates = Telegram::getUpdates();
-        // dd($updates);
+        $message = Telegram::getWebhookUpdates();
+        // dd($item);
         
-        $messages = [];
-        foreach ($updates as $item) {
+        if (isset($message['message'])) {
             
-            $message_id = isset($item['message']['message_id']) ? $item['message']['message_id'] : null;
-            $update_id = isset($item['update_id']) ? $item['update_id'] : null;
+            $text = $message['message']['text'];
             
-            $from_id = isset($item['message']['from']['id']) ? $item['message']['from']['id'] : null;
-            $from_is_bot = isset($item['message']['from']['is_bot']) ? $item['message']['from']['is_bot'] : null;
-            $from_first_name = isset($item['message']['from']['first_name']) ? $item['message']['from']['first_name'] : null;
-            $from_last_name = isset($item['message']['from']['last_name']) ? $item['message']['from']['last_name'] : null;
-            $from_username = isset($item['message']['from']['username']) ? $item['message']['from']['username'] : null;
-            $from_language_code = isset($item['message']['from']['language_code']) ? $item['message']['from']['language_code'] : null;
             
-            $chat_id = isset($item['message']['chat']['id']) ? $item['message']['chat']['id'] : null;
-            $chat_first_name = isset($item['message']['chat']['first_name']) ? $item['message']['chat']['first_name'] : null;
-            $chat_last_name = isset($item['message']['chat']['last_name']) ? $item['message']['chat']['last_name'] : null;
-            $chat_username = isset($item['message']['chat']['username']) ? $item['message']['chat']['username'] : null;
-            $chat_type = isset($item['message']['chat']['type']) ? $item['message']['chat']['type'] : null;
-    
-            $message = isset($item['message']['text']) ? $item['message']['text'] : null;
-            $date_message = isset($item['message']['date']) ? $item['message']['date'] : null;
-    
-            $messages[] = [
-                'message_id' => $message_id,
-                'update_id' => $update_id,
-    
-                'from_id' => $from_id,
-                'from_is_bot' => $from_is_bot,
-                'from_first_name' => $from_first_name,
-                'from_last_name' => $from_last_name,
-                'from_username' => $from_username,
-                'from_language_code' => $from_language_code,
-    
-                'chat_id' => $chat_id,
-                'chat_first_name' => $chat_first_name,
-                'chat_last_name' => $chat_last_name,
-                'chat_username' => $chat_username,
-                'chat_type' => $chat_type,
-    
-                'message' => $message,
-                'date' => $date_message,
-            ];
+            switch ($text) {
+            case '/report':
+                $keyboard = [
+                    ['Маркетинговый отчет'],
+                    ['Финансовый отчет'],
+                    ['Производственный отчет'],
+                         ['Сброс']
+                ];
+                
+                $reply_markup = Telegram::replyKeyboardMarkup([
+                    'keyboard' => $keyboard, 
+                    'resize_keyboard' => true, 
+                    'one_time_keyboard' => true
+                ]);
+                
+                $response = Telegram::sendMessage([
+                    'chat_id' => $message['message']['chat']['id'], 
+                    'reply_markup' => $reply_markup
+                ]);
+                
+                // $messageId = $response->getMessageId();
+                break;
+                
+                case 'Доступ':
+                    
+                    $tel_msg = new TelegramMessage;
             
+                    $tel_msg->message_id = isset($message['message']['message_id']) ? $message['message']['message_id'] : null;
+                    $tel_msg->update_id = isset($message['update_id']) ? $message['update_id'] : null;
+                    
+                    $tel_msg->from_id = isset($message['message']['from']['id']) ? $message['message']['from']['id'] : null;
+                    $tel_msg->from_is_bot = isset($message['message']['from']['is_bot']) ? $message['message']['from']['is_bot'] : null;
+                    $tel_msg->from_first_name = isset($message['message']['from']['first_name']) ? $message['message']['from']['first_name'] : null;
+                    $tel_msg->from_last_name = isset($message['message']['from']['last_name']) ? $message['message']['from']['last_name'] : null;
+                    $tel_msg->from_username = isset($message['message']['from']['username']) ? $message['message']['from']['username'] : null;
+                    $tel_msg->from_language_code = isset($message['message']['from']['language_code']) ? $message['message']['from']['language_code'] : null;
+                    
+                    $tel_msg->chat_id = isset($message['message']['chat']['id']) ? $message['message']['chat']['id'] : null;
+                    $tel_msg->chat_first_name = isset($message['message']['chat']['first_name']) ? $message['message']['chat']['first_name'] : null;
+                    $tel_msg->chat_last_name = isset($message['message']['chat']['last_name']) ? $message['message']['chat']['last_name'] : null;
+                    $tel_msg->chat_username = isset($message['message']['chat']['username']) ? $message['message']['chat']['username'] : null;
+                    $tel_msg->chat_type = isset($message['message']['chat']['type']) ? $message['message']['chat']['type'] : null;
+            
+                    $tel_msg->message = isset($message['message']['text']) ? $message['message']['text'] : null;
+                    $tel_msg->date = isset($message['message']['date']) ? $message['message']['date'] : null;
+                    
+                    $tel_msg->save();
+            
+                    if ($tel_msg) {
+                        $response = Telegram::sendMessage([
+                            'chat_id' => $tel_msg->chat_id, 
+                            'text' => 'Ваш Telegram ID: '.$tel_msg->chat_id
+                        ]);
+                    } else {
+                        dd('не вышло');
+                    }
+                break;
+                
+                case 'Лол':
+                $response = Telegram::sendMessage([
+                    'chat_id' => $message['message']['chat']['id'], 
+                    'text' => 'Лолита: '.$message['message']['text']
+                ]);
+                break;
+            
+            default:
+
+                $response = Telegram::sendMessage([
+                    'chat_id' => $message['message']['chat']['id'], 
+                    'text' => 'Я конечно извиняюсь, но такое обращение для меня непонятно: "'.$text.'"... Лучше ознакомтесь с доступными командами - /help'
+                ]);
+                break;
         }
         
-        dd($messages);
-        
-        
-        $telegram_messages = TelegramMessage::create($messages);
-        
-        
-        
+        } else {
+            dd('ничео');
+            
+        }
+
     }
 
     /**

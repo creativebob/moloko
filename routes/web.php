@@ -70,43 +70,19 @@ Route::get('/mounth', function() {
 	$telegram_message = "Отчет За месяц (".Carbon::now()->format('d.m.Y')."): \r\n\r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\Заявок с сайта: ".count($leads->where('lead_type_id', 2))."\r\n\r\nВсего: ".count($leads);
 })->middleware('auth');
 
-// Устанавливаем вебхук для телеграма
-Route::get('/webhook', function() {
-	$response = Telegram::setWebhook(['url' => 'https://vorotamars.ru/admin/telegram/'.env('TELEGRAM_BOT_TOKEN')]);
-	dd($response);
-})->middleware('auth');
+// Telegram
 
-// Удаляем вебхук
-Route::get('/removewebhook', function() {
-	$response = Telegram::removeWebhook();
-	dd($response);
-})->middleware('auth');
+// Получаем бота
+Route::get('/get_bot', 'TelegramController@get_bot')->middleware('auth');
 
+// Устанавливаем webhook
+Route::get('/set_webhook', 'TelegramController@set_webhook')->middleware('auth');
 
-// Route::any('/telegram/'.env('TELEGRAM_BOT_TOKEN'), function () {
-	
-// 	$updates = Telegram::getWebhookUpdates();
-	
+// Удаляем webhook
+Route::get('/remove_webhook', 'TelegramController@remove_webhook')->middleware('auth');
 
-//             $telegram_destinations = User::where('id', 32)
-//             ->where('telegram_id', '!=', null)
-//             ->get(['telegram_id']);
-
-//             send_message($telegram_destinations, $updates);
-    
-
-//     dd($updates);
-// });
-Route::get('/telegram', 'TelegramController@store');
-
-// Route::any('/telegram', function () {
-// 	$updates = Telegram::getUpdates();
-// 		dd($updates);
-// });
-
-// Route::get('/telegram/'.env('TELEGRAM_BOT_TOKEN'), 'TelegramController@store');
-
-
+// Получаем сообщение от бота
+Route::any('/telegram_message', 'TelegramController@store');
 
 // Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
 
