@@ -6,7 +6,7 @@
 
 @section('title', 'Редактировать лид')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $lead->case_number))
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, isset($lead->case_number) ? $lead->case_number : 'нет номера'))
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -30,7 +30,7 @@
 	$autofocus = 'autofocus';
 
 	if(isset($lead->main_phone)){
-	
+
 		if($lead->main_phone->phone != null){
 			$readonly = 'readonly';
 			$autofocus = '';
