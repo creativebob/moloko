@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\TelegramMessage;
+
 use Illuminate\Http\Request;
+
+use Telegram;
 
 class TelegramController extends Controller
 {
@@ -13,7 +17,8 @@ class TelegramController extends Controller
      */
     public function index()
     {
-        //
+        $updates = Telegram::getUpdates();
+        dd($updates);
     }
 
     /**
@@ -35,25 +40,61 @@ class TelegramController extends Controller
     public function store(Request $request)
     {
         
-
-        $output = json_decode(file_get_contents('php://input'), TRUE);
+        $updates = Telegram::getUpdates();
+        // dd($updates);
         
-        $message_id = $output['message']['message_id']; if($message_id == ""){$message_id = "пусто";};
-        $update_id = $output['update_id']; if($update_id == ""){$update_id = "пусто";};
-
-        $f_chat_id = $output['message']['from']['id']; if($f_chat_id == ""){$f_chat_id = "пусто";};
-        $f_first_name = $output['message']['from']['first_name']; if($f_first_name == ""){$f_first_name = "пусто";};
-        $f_last_name = $output['message']['from']['last_name']; if($f_last_name == ""){$f_last_name = "пусто";};
-        $f_username = $output['message']['from']['username']; if($f_username == ""){$f_username = "пусто";};
-
-        $chat_id = $output['message']['chat']['id']; if($chat_id == ""){$chat_id = "пусто";};
-        $first_name = $output['message']['chat']['first_name']; if($first_name == ""){$first_name = "пусто";};
-        $last_name = $output['message']['chat']['last_name']; if($last_name == ""){$last_name = "пусто";};
-        $username = $output['message']['chat']['username']; if($username == ""){$username = "пусто";};
-
-
-        $message = $output['message']['text'];
-        $date_message = $output['message']['date'];
+        $messages = [];
+        foreach ($updates as $item) {
+            
+            $message_id = isset($item['message']['message_id']) ? $item['message']['message_id'] : null;
+            $update_id = isset($item['update_id']) ? $item['update_id'] : null;
+            
+            $from_id = isset($item['message']['from']['id']) ? $item['message']['from']['id'] : null;
+            $from_is_bot = isset($item['message']['from']['is_bot']) ? $item['message']['from']['is_bot'] : null;
+            $from_first_name = isset($item['message']['from']['first_name']) ? $item['message']['from']['first_name'] : null;
+            $from_last_name = isset($item['message']['from']['last_name']) ? $item['message']['from']['last_name'] : null;
+            $from_username = isset($item['message']['from']['username']) ? $item['message']['from']['username'] : null;
+            $from_language_code = isset($item['message']['from']['language_code']) ? $item['message']['from']['language_code'] : null;
+            
+            $chat_id = isset($item['message']['chat']['id']) ? $item['message']['chat']['id'] : null;
+            $chat_first_name = isset($item['message']['chat']['first_name']) ? $item['message']['chat']['first_name'] : null;
+            $chat_last_name = isset($item['message']['chat']['last_name']) ? $item['message']['chat']['last_name'] : null;
+            $chat_username = isset($item['message']['chat']['username']) ? $item['message']['chat']['username'] : null;
+            $chat_type = isset($item['message']['chat']['type']) ? $item['message']['chat']['type'] : null;
+    
+            $message = isset($item['message']['text']) ? $item['message']['text'] : null;
+            $date_message = isset($item['message']['date']) ? $item['message']['date'] : null;
+    
+            $messages[] = [
+                'message_id' => $message_id,
+                'update_id' => $update_id,
+    
+                'from_id' => $from_id,
+                'from_is_bot' => $from_is_bot,
+                'from_first_name' => $from_first_name,
+                'from_last_name' => $from_last_name,
+                'from_username' => $from_username,
+                'from_language_code' => $from_language_code,
+    
+                'chat_id' => $chat_id,
+                'chat_first_name' => $chat_first_name,
+                'chat_last_name' => $chat_last_name,
+                'chat_username' => $chat_username,
+                'chat_type' => $chat_type,
+    
+                'message' => $message,
+                'date' => $date_message,
+            ];
+            
+        }
+        
+        dd($messages);
+        
+        
+        $telegram_messages = TelegramMessage::create($messages);
+        
+        
+        
     }
 
     /**
