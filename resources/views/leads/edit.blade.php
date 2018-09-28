@@ -25,13 +25,19 @@
 {{ method_field('PATCH') }}
 
 @php 
+	
+	$readonly = '';
+	$autofocus = 'autofocus';
 
-	if($lead->main_phone->phone != null){
-		$readonly = 'readonly';
-		$autofocus = '';
-	} else {
-		$readonly = '';
-		$autofocus = 'autofocus';
+	if(isset($lead->main_phone)){
+	
+		if($lead->main_phone->phone != null){
+			$readonly = 'readonly';
+			$autofocus = '';
+		} else {
+			$readonly = '';
+			$autofocus = 'autofocus';
+		}
 	}
 
 	if($lead->manager_id == 1){

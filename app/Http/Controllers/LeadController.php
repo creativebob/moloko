@@ -144,8 +144,6 @@ class LeadController extends Controller
 
         // Задачи пользователя
         $list_challenges = challenges($request);
-        // dd($challenges);
-
         return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'list_challenges'));
     }
 

@@ -2,8 +2,8 @@
 	<div class="grid-x tabs-wrap">
 		<div class="small-12 cell">
 			<ul class="tabs-list" data-tabs id="tabs">
-				<li class="tabs-title is-active"><a data-tabs-target="task-panel2" href="#task-panel2" aria-selected="true">Задачи мне</a></li>
-				<li class="tabs-title"><a href="#task-panel1">Задачи от меня</a></li>
+				<li class="tabs-title is-active"><a data-tabs-target="task-panel2" aria-selected="true">Задачи мне</a></li>
+				<li class="tabs-title"><a data-tabs-target="task-panel1" >Задачи от меня</a></li>
 			</ul>
 		</div>
 	</div>
@@ -18,3 +18,9 @@
 		</div>
 	</div>
 </aside>
+
+@include('layouts.task-manager-script')
+
+<script>
+	put_count_challenges();
+</script>

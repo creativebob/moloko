@@ -296,7 +296,7 @@ $task = '';
             // alert('lol');
         },1);
 
-        get_challenges();
+        // get_challenges();
 
     });
     $(window).resize(function() {
