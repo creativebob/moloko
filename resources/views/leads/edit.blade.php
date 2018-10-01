@@ -150,7 +150,7 @@
 			data: $(this).closest('form').serialize(),
 			success: function(date){
 
-				var url = '{{ url("admin/leads") }}';
+				var url = '{{ url("admin/leads") }}/' + lead_id + '/edit';
 
 				window.location.replace(url);
 

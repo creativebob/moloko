@@ -312,14 +312,14 @@ class LeadController extends Controller
 
                 if(isset($fragment_phone)){
                     $query->orWhereHas('phones', function($query) use ($fragment_phone){
-                       $query->where('phone', $fragment_phone);
-                    });
+                     $query->where('phone', $fragment_phone);
+                 });
                 };
 
                 if(isset($crop_phone)){
                     $query->orWhereHas('phones', function($query) use ($crop_phone){
-                       $query->where('crop', $crop_phone);
-                    });
+                     $query->where('crop', $crop_phone);
+                 });
                 };
 
             })
@@ -1068,7 +1068,7 @@ class LeadController extends Controller
         ->whereNull('draft')
         ->whereHas('phones', function($query) use ($phone){
             $query->where('phone', $phone);
-          })
+        })
         ->where('id', '!=', $lead_id)
         ->orderBy('sort', 'asc')
         ->get();
@@ -1087,12 +1087,19 @@ class LeadController extends Controller
     {
 
         // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+        // $user = $request->user();
+
+        $user = User::with('staff.position.charges')->findOrFail($request->user()->id);
 
         foreach ($user->staff as $staffer) {
+            // $staffer = $user->staff->first();
+
             $direction = null;
-            if ($staffer->position->direction_status == 1) {
-                $direction = 1;
+
+            foreach ($staffer->position->charges as $charge) {
+                if ($charge->alias = 'lead-appointment') {
+                    $direction = 1;
+                }
             }
         }
         echo $direction;
@@ -1182,16 +1189,34 @@ class LeadController extends Controller
     public function ajax_lead_appointed(Request $request)
     {
 
-        $users_list = User::whereHas('staff', function ($query) {
-            $query->where('department_id', 3);
+        $users = User::with('staff.position')
+        ->whereHas('staff', function ($query) {
+            $query->whereNotNull('user_id')->whereHas('position', function ($query) {
+                $query->whereHas('charges', function ($query) {
+                    $query->whereIn('alias', ['lead-regular', 'lead-service', 'lead-dealer']);
+                });
+            });
         })
         ->orWhere('id', 1)
-        ->get()
-        ->pluck('name', 'id');
+        ->orderBy('second_name')
+        ->get();
+        // ->pluck('name', 'id');
+        // dd($users);
 
-            // dd($users_list);
+        $users_list = [];
+        foreach ($users as $user) {
+            if (isset($user->staff[0]->position->name)) {
+                $position = $user->staff[0]->position->name;
+            } else {
+                $position = 'Cyberdyne Systems 101 серии 800';
+            }
+
+            $users_list[$user->id] = $user->second_name . ' ' . $user->first_name . ' (' . $position . ')';
+        }
+
+        // dd($users_list);
         $lead_id = $request->id;
-            // $lead_id = 1;
+        // $lead_id = 1;
         return view('leads.modal-appointed', compact('users_list', 'lead_id'));
     }
 
