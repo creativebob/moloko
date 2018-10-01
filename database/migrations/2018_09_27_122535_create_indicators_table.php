@@ -17,19 +17,19 @@ class CreateIndicatorsTable extends Migration
             $table->increments('id');
             
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
+            // $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('name')->nullable()->index()->comment('Название категории периодов');
             $table->text('description')->nullable()->comment('Описание');
 
             $table->integer('indicators_category_id')->unsigned()->nullable()->comment('Id категории индикаторов');
-            $table->foreign('indicators_category_id')->references('id')->on('indicators_categories');
+            // $table->foreign('indicators_category_id')->references('id')->on('indicators_categories');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            $table->foreign('author_id')->references('id')->on('users');
+            // $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');

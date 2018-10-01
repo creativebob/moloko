@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateIndicatorUserTable extends Migration
+class CreateTelegramMessagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,31 @@ class CreateIndicatorUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('indicator_user', function (Blueprint $table) {
+        Schema::create('telegram_messages', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             // $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('user_id')->unsigned()->nullable()->comment('Id пользователя');
-            // $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('message_id')->nullable()->unsigned();
+            $table->integer('update_id')->nullable()->unsigned();
 
-            $table->integer('indicators_value_id')->unsigned()->nullable()->comment('Id периода');
-            // $table->foreign('indicators_value_id')->references('id')->on('indicators_values');
+            $table->integer('from_id')->nullable();
+            $table->boolean('from_is_bot');
+            $table->string('from_first_name')->nullable();
+            $table->string('from_last_name')->nullable();
+            $table->string('from_username')->nullable();
+            $table->string('from_language_code')->nullable();
 
-            $table->integer('period_id')->unsigned()->nullable()->comment('Id периода');
-            // $table->foreign('period_id')->references('id')->on('periods');
+            $table->integer('chat_id')->nullable()->unsigned();
+            $table->string('chat_first_name')->nullable();
+            $table->string('chat_last_name')->nullable();
+            $table->string('chat_username')->nullable();
+            $table->string('chat_type')->nullable();
 
+            $table->text('message')->nullable();
+            $table->integer('date')->nullable()->unsigned();
+            
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
@@ -50,6 +60,6 @@ class CreateIndicatorUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('indicator_user');
+        Schema::dropIfExists('telegram_messages');
     }
 }
