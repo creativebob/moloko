@@ -60,6 +60,7 @@ class LeadRequest extends FormRequest
             'passport_address' => 'string|max:255|nullable', 
 
             'degree' => 'string|max:200|nullable', 
+            'lead_type' => 'in:1, 2, 3',
             'specialty' => 'string|max:200|nullable', 
             'quote' => 'string|max:500|nullable', 
 

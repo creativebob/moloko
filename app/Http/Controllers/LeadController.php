@@ -112,6 +112,8 @@ class LeadController extends Controller
         // ->orderBy('sort', 'asc')
         ->paginate(30);
 
+        // dd($leads[23]);
+
         // --------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
         // --------------------------------------------------------------------------------------------------------------------------
@@ -340,7 +342,7 @@ class LeadController extends Controller
         }
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $lead_type = 1)
     {
 
         $user = $request->user();
@@ -381,7 +383,20 @@ class LeadController extends Controller
             $lead->author_id = $user->id;
             $lead->manager_id = $user->id;
             $lead->stage_id = 2;
-            $lead->lead_type_id = 1;
+
+            // Если приходит тип обращения - пишем его!
+            // На валидации не пропускает к записи ничего кроме значений 1, 2 и 3
+            if(isset($request->lead_type)){
+                $lead_type = $request->lead_type;
+            } else {
+                $lead_type = 1;
+            };
+
+
+
+            $lead->lead_type_id = $lead_type;
+
+            $lead->lead_method_id = 1;
             $lead->display = 1;
 
             // Формируем номера обращения
@@ -638,6 +653,7 @@ class LeadController extends Controller
 
     public function edit(Request $request, $id)
     {
+
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));

@@ -13,11 +13,31 @@
 				@switch($type)
 
 				@case('table')
-				@if (isset($page_alias))
-				<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
-				@else
-				<a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite"></a>
-				@endif
+
+					@if($page_info->alias == 'leads')
+
+							<div class="button-group">
+								@if(!empty(Auth::user()->staff[0]->charges->where('alias', 'lead-regular')))
+                            	{{ link_to_route('leads.create', '+ Обычное', ['lead_type' => 1], ['class' => 'button tiny']) }} 
+                            	@endif
+
+                            	{{ link_to_route('leads.create', '+ Сервис', ['lead_type' => 3], ['class' => 'button tiny']) }} 
+                            	{{ link_to_route('leads.create', '+ Дилер', ['lead_type' => 2], ['class' => 'button tiny']) }} 
+
+							</div>
+
+					@else
+
+						@if (isset($page_alias))
+						<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
+						@else
+						<a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite"></a>
+						@endif
+
+					@endif
+
+
+
 				@break
 
 				@case('section-table')

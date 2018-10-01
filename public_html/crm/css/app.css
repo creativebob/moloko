@@ -168,6 +168,11 @@ fieldset legend {
   width: auto;
   padding: 4px 10px;
   border-radius: 3px;
+  margin-right: 15px;
+}
+
+.head-content .button-group {
+  margin-top: -6px;
 }
 
 .compact {

@@ -94,7 +94,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ServicesProductsTableSeeder::class);
         $this->call(ServicesTableSeeder::class);
 
-
         // Связь: Расписания с сущностями
         $this->call(ScheduleEntityTableSeeder::class);
 
@@ -118,6 +117,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MediumsTableSeeder::class);
         $this->call(SourcesTableSeeder::class);
         $this->call(LeadTypesTableSeeder::class);
+        $this->call(LeadMethodsTableSeeder::class);
 
         $this->call(ChallengesTypesTableSeeder::class);
 
