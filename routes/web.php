@@ -71,7 +71,7 @@ Route::get('/mounth', function() {
 	$end = new Carbon('last day of last month');
 	$end->endOfMonth();
 
-	// dd($start);
+	// dd($end);
 
 	$leads = Lead::where('created_at', '>=', $start)->where('created_at', '<=', $end)->whereNull('draft')->get();
 	// dd($leads);

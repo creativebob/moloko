@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateIndicatorUserTable extends Migration
+class CreateChargesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,17 @@ class CreateIndicatorUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('indicator_user', function (Blueprint $table) {
+        Schema::create('charges', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             // $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('user_id')->unsigned()->nullable()->comment('Id пользователя');
-            // $table->foreign('user_id')->references('id')->on('users');
+            $table->string('name')->nullable()->index()->comment('Название обязанности');
+            $table->text('description')->nullable()->comment('Описание');
 
-            $table->integer('indicators_value_id')->unsigned()->nullable()->comment('Id периода');
-            // $table->foreign('indicators_value_id')->references('id')->on('indicators_values');
-
-            $table->integer('period_id')->unsigned()->nullable()->comment('Id периода');
-            // $table->foreign('period_id')->references('id')->on('periods');
+            $table->string('alias')->nullable()->index()->comment('Алиас обязанности');
+            // $table->foreign('indicators_category_id')->references('id')->on('indicators_categories');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -50,6 +47,6 @@ class CreateIndicatorUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('indicator_user');
+        Schema::dropIfExists('charges');
     }
 }

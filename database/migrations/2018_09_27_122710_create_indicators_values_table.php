@@ -17,13 +17,13 @@ class CreateIndicatorsValuesTable extends Migration
             $table->increments('id');
 
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
+            // $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('indicator_id')->unsigned()->nullable()->comment('Id индикатора');
-            $table->foreign('indicator_id')->references('id')->on('indicators');
+            // $table->foreign('indicator_id')->references('id')->on('indicators');
 
             $table->integer('period_id')->unsigned()->nullable()->comment('Id периода');
-            $table->foreign('period_id')->references('id')->on('periods');
+            // $table->foreign('period_id')->references('id')->on('periods');
 
             $table->string('value')->nullable()->index()->comment('Значение');
 
@@ -31,7 +31,7 @@ class CreateIndicatorsValuesTable extends Migration
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            $table->foreign('author_id')->references('id')->on('users');
+            // $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
