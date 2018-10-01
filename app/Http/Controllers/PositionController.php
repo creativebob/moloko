@@ -11,6 +11,7 @@ use App\Staffer;
 use App\PositionRole;
 use App\Sector;
 use App\Notification;
+use App\Charge;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -123,6 +124,9 @@ class PositionController extends Controller
         // Список оповещений для должности
         $notifications = Notification::get();
 
+        // Список обязанностей для должности
+        $charges = Charge::get();
+
         $position = new Position;
 
         // Получаем список секторов
@@ -151,7 +155,7 @@ class PositionController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('positions.create', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications'));  
+        return view('positions.create', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications', 'charges'));  
     }
 
     public function store(PositionRequest $request)
@@ -213,6 +217,11 @@ class PositionController extends Controller
                 $position->notifications()->attach($request->notifications);
             }
 
+            // Смотрим обязанности
+            if (isset($request->charges)) {
+                $position->charges()->attach($request->charges);
+            }
+
             return redirect('/admin/positions');
         } else {
             abort(403, 'Ошибка записи должности');
@@ -259,6 +268,9 @@ class PositionController extends Controller
         // Список оповещений для должности
         $notifications = Notification::get();
 
+        // Список обязанностей для должности
+        $charges = Charge::get();
+
         // Получаем список секторов
         $sectors = Sector::get()->keyBy('id')->toArray();
         $sectors_cat = [];
@@ -286,7 +298,7 @@ class PositionController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('positions.edit', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications'));
+        return view('positions.edit', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications', 'charges'));
     }
 
     public function update(PositionRequest $request, $id)
@@ -344,9 +356,19 @@ class PositionController extends Controller
                 $position->notifications()->sync($request->notifications);
             } else {
 
-                // Если удалили последнюю роль для должности и пришел пустой массив
+                // Если удалили последнее оповещение для должности и пришел пустой массив
                 $position->notifications()->detach();
             }
+
+            // Смотрим обязанности
+            if (isset($request->charges)) {
+                $position->charges()->sync($request->charges);
+            } else {
+
+                // Если удалили последнюю обязанность для должности и пришел пустой массив
+                $position->charges()->detach();
+            }
+
             return redirect('/admin/positions');
         } else {
             abort(403, 'Ошибка записи должности');

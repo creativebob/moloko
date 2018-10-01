@@ -21,8 +21,6 @@ class CreateChargePositionTable extends Migration
 
             $table->integer('position_id')->unsigned()->comment('ID должности');
             // $table->foreign('position_id')->references('id')->on('positions');
-
-            $table->timestamps();
         });
     }
 

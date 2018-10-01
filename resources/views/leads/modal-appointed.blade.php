@@ -1,7 +1,7 @@
 <div class="reveal" id="add-appointed" data-reveal data-close-on-click="false">
     <div class="grid-x">
         <div class="small-12 cell modal-title">
-            <h5>Назначение менеджера</h5>
+            <h5>Назначение сотрудника</h5>
         </div>
     </div>
     {{ Form::open(['id'=>'form-appointed', 'data-abide', 'novalidate']) }}
