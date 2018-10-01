@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLeadTypesTable extends Migration
+class CreateLeadMethodsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateLeadTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('lead_types', function (Blueprint $table) {
+        Schema::create('lead_methods', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->index()->comment('Тип обращения');
+            $table->string('name')->index()->comment('Тип установления связи (обращения)');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -35,6 +35,6 @@ class CreateLeadTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lead_types');
+        Schema::dropIfExists('lead_methods');
     }
 }

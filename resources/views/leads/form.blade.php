@@ -320,6 +320,9 @@
                                 <tr>
                                     <td>Тип обращения: </td><td>{{ $lead->lead_type->name or ''}}</td><td></td>
                                 </tr>
+                                <tr>
+                                    <td>Способ обращения: </td><td>{{ $lead->lead_method->name or ''}}</td><td></td>
+                                </tr>
                                 <td>Интерес: </td>
                                 <td>
                                     @if(!empty($lead->choices_goods_categories->implode('name', ',')))

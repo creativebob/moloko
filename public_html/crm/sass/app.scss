@@ -156,11 +156,13 @@ $breadcrumbs-a-color: #5190ff;
 $breadcrumbs-border-color: #dcdcdc;
 
 // Подсветка лидов по этапам
-.stage-4 td:first-child{
+// Готов
+.stage-12 td:first-child{
     border-left: 8px solid #afefb9;
 }
 
-.stage-7 td:first-child
+// Отказ
+.stage-13 td:first-child
 {
     border-left: 8px solid #ffc2c2;
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 // Модели
 use App\User;
 use App\Lead;
+use App\LeadMethod;
 use App\Stage;
 use App\Choice;
 use App\Position;

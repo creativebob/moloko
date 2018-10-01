@@ -123,6 +123,12 @@ class Lead extends Model
         return $this->belongsTo('App\LeadType');
     }
 
+    // Получаем метод обращения
+    public function lead_method()
+    {
+        return $this->belongsTo('App\LeadMethod');
+    }
+
     // Получаем тип обращения
     public function choices_goods_categories()
     {
