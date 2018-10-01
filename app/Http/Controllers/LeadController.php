@@ -1183,10 +1183,11 @@ class LeadController extends Controller
     {
 
         $users_list = User::whereHas('staff', function ($query) {
-            $query->whereHas('position', function ($query) {
-                $query->whereIn('id', [2, 4]);
-            });
-        })->get()->pluck('name', 'id');
+            $query->where('department_id', 3);
+        })
+        ->orWhere('id', 1)
+        ->get()
+        ->pluck('name', 'id');
 
             // dd($users_list);
         $lead_id = $request->id;
