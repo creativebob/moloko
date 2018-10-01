@@ -39,10 +39,10 @@ Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('ge
 // Директории
 Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');
 
-// Методы дял парсера и одноразовые
+// Методы для парсера и одноразовые
 
 // Route::any('/lol', function () {
-    
+
 //     dd(App\OldLead::with(['comments.user', 'claims', 'task', 'stage', 'user', 'city', 'service', 'challenges' => function ($query) {
 //     	$query->with('author', 'appointed', 'finisher', 'stage', 'task');
 //     }])->find(5468));
@@ -53,7 +53,7 @@ Route::get('/mounth', function() {
 	// $leads = Lead::whereDate('created_at', Carbon::now()->format('Y-m-d'))->whereNull('draft')->get();
 
  //            $telegram_message = "Отчет за день (".Carbon::now()->format('d.m.Y')."): \r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\Заявок с сайта: ".count($leads->where('lead_type_id', 2));
-            
+
  //            $telegram_destinations = User::whereHas('staff', function ($query) {
  //                $query->whereHas('position', function ($query) {
  //                    $query->whereHas('notifications', function ($query) {
@@ -66,8 +66,18 @@ Route::get('/mounth', function() {
 
  //            send_message($telegram_destinations, $telegram_message);
 
-	$leads = Lead::whereMonth('created_at', Carbon::now()->format('m'))->whereYear('created_at', Carbon::now()->format('Y'))->whereNull('draft')->get();
-	$telegram_message = "Отчет За месяц (".Carbon::now()->format('d.m.Y')."): \r\n\r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\Заявок с сайта: ".count($leads->where('lead_type_id', 2))."\r\n\r\nВсего: ".count($leads);
+	$start = new Carbon('first day of last month');
+	$start->startOfMonth();
+	$end = new Carbon('last day of last month');
+	$end->endOfMonth();
+
+	// dd($start);
+
+	$leads = Lead::where('created_at', '>=', $start)->where('created_at', '<=', $end)->whereNull('draft')->get();
+	// dd($leads);
+	$telegram_message = "Отчет за сентябрь: \r\n\r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\Заявок с сайта: ".count($leads->where('lead_type_id', 2))."\r\n\r\nВсего: ".count($leads);
+
+	dd($telegram_message);
 })->middleware('auth');
 
 // Telegram
@@ -83,13 +93,15 @@ Route::get('/remove_webhook', 'TelegramController@remove_webhook')->middleware('
 
 // Получаем сообщение от бота
 Route::any('/telegram_message', 'TelegramController@store');
+
+Route::any('/check_class', 'ClassController@check_class');
 // Route::post('/telegram_message', function () {
 //     $update = Telegram::commandsHandler(true);
-	
+
 // 	// Commands handler method returns an Update object.
 // 	// So you can further process $update object 
 // 	// to however you want.
-	
+
 //     return 'ok';
 // });
 
@@ -508,7 +520,7 @@ Route::post('/posts_display', 'PostController@ajax_display')->middleware('auth')
 Route::resource('/accounts', 'AccountController')->middleware('auth');
 	// Проверка на существование аккаунта
 Route::post('/accounts_check', 'AccountController@ajax_check')->middleware('auth');
-	
+
 
 // --------------------------------------- Рекламные кампании -----------------------------------------------
 
