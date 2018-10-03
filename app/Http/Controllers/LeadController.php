@@ -1111,7 +1111,7 @@ class LeadController extends Controller
         if($lead->case_number == NULL){
 
             // Формируем номера обращения
-            $lead_number = getLeadNumbers($user, $lead->created_at);
+            $lead_number = getLeadNumbers($user, $lead);
             $lead->case_number = $lead_number['case'];
             $lead->serial_number = $lead_number['serial'];
         }
