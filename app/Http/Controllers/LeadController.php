@@ -1089,7 +1089,7 @@ class LeadController extends Controller
             $direction = null;
 
             foreach ($staffer->position->charges as $charge) {
-                if ($charge->alias = 'lead-appointment') {
+                if ($charge->alias == 'lead-appointment') {
                     $direction = 1;
                 }
             }
