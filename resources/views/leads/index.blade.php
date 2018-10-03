@@ -107,7 +107,19 @@
           </td>
           <td class="td-action">
             @if($lead->manager->id == 1)
-            <a href="#" class="button tiny take-lead">Принять</a>
+
+              @if(($lead->lead_type_id == 1)&&(extra_right('lead-regular')))
+                <a href="#" class="button tiny take-lead">Принять</a>
+              @endif
+
+              @if(($lead->lead_type_id == 2)&&(extra_right('lead-dealer')))
+                <a href="#" class="button tiny take-lead">Принять</a>
+              @endif
+
+              @if(($lead->lead_type_id == 3)&&(extra_right('lead-service')))
+                <a href="#" class="button tiny take-lead">Принять</a>
+              @endif
+
             @endif
           </td>
 

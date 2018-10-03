@@ -318,7 +318,15 @@
                         <table class="table-attributions">
                             <tr>
                                 <tr>
-                                    <td>Тип обращения: </td><td>{{ $lead->lead_type->name or ''}}</td><td></td>
+                                    <td>Тип обращения: </td>
+                                    <td id="lead-type-name">{{ $lead->lead_type->name or ''}}</td>
+                                    <td>
+                                        
+                                        @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
+                                            <a id="change-lead-type" class="button tiny">Изменить</a>
+                                        @endif
+
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Способ обращения: </td><td>{{ $lead->lead_method->name or ''}}</td><td></td>

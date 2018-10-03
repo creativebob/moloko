@@ -25,6 +25,14 @@
       </div>
     </div>
 
+    <div class="small-12 cell">
+      <div class="grid-x">
+        <div class="small-12 medium-6 cell checkbox checkboxer">
+          @include('includes.inputs.checkboxer', ['name'=>'lead_method', 'value' => $filter])      
+        </div>
+      </div>
+    </div>
+
       <div class="grid-x">
         <div class="small-5 medium-5 cell">
           <label>Начало периода:

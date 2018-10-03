@@ -10,50 +10,59 @@
 				</h2>
 				
 				@can('create', $class)
-				@switch($type)
+					@switch($type)
 
-				@case('table')
+					@case('table')
 
-					@if($page_info->alias == 'leads')
+						{{-- Кнопки добавления для страницы ЛИДЫ --}}
+						@if($page_info->alias == 'leads')
 
-							<div class="button-group">
-								@if(!empty(Auth::user()->staff[0]->charges->where('alias', 'lead-regular')))
-                            	{{ link_to_route('leads.create', '+ Обычное', ['lead_type' => 1], ['class' => 'button tiny']) }} 
-                            	@endif
+							@if(!empty(Auth::user()->staff[0]))
+								<div class="button-group">
+									@if(extra_right('lead-regular'))
+	                            		{{ link_to_route('leads.create', '+ Обычное', ['lead_type' => 1], ['class' => 'button tiny']) }}
+	                            	@endif
 
-                            	{{ link_to_route('leads.create', '+ Сервис', ['lead_type' => 3], ['class' => 'button tiny']) }} 
-                            	{{ link_to_route('leads.create', '+ Дилер', ['lead_type' => 2], ['class' => 'button tiny']) }} 
+									@if(extra_right('lead-service'))
+	                            		{{ link_to_route('leads.create', '+ Сервис', ['lead_type' => 3], ['class' => 'button tiny']) }}
+	                            	@endif
 
-							</div>
+									@if(extra_right('lead-dealer'))
+	                            		{{ link_to_route('leads.create', '+ Дилер', ['lead_type' => 2], ['class' => 'button tiny']) }} 
+									@endif
 
-					@else
+								</div>
 
-						@if (isset($page_alias))
-						<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
+							@endif
+
+						{{-- Кнопки добавления для остальных страниц --}}
 						@else
-						<a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite"></a>
+
+							@if (isset($page_alias))
+								<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
+							@else
+								<a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite"></a>
+							@endif
+
 						@endif
 
-					@endif
 
+					@break
 
+					@case('section-table')
+					<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
+					@break
 
-				@break
+					@case('menu')
+					<a class="icon-add sprite" data-open="first-add"></a>
+					@break
 
-				@case('section-table')
-				<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
-				@break
+					@case('sections-menu')
+					{{-- <h2 class="header-content">{{ $page_info->title .' &laquo;'. $name .'&raquo;' }}</h2> --}}
+					<a class="icon-add sprite" data-open="first-add"></a>
+					@break
 
-				@case('menu')
-				<a class="icon-add sprite" data-open="first-add"></a>
-				@break
-
-				@case('sections-menu')
-				{{-- <h2 class="header-content">{{ $page_info->title .' &laquo;'. $name .'&raquo;' }}</h2> --}}
-				<a class="icon-add sprite" data-open="first-add"></a>
-				@break
-
-				@endswitch
+					@endswitch
 				@endcan
 			</div>
 			<div class="top-bar-right">

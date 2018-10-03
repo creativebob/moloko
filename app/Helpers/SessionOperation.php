@@ -252,4 +252,20 @@
             };
 
 
+        // Проверка наличия дополнительного (функционального) права
+        function extra_right($alias) {
+
+            // Получаем сессию
+            $session  = session('access');
+            if(!isset($session)){abort(403, 'Нет сессии!');};
+
+            if(empty($session['user_info']['extra_rights'])){
+                $result = false;
+            } else {
+                $result = $session['user_info']['extra_rights']->where('alias', $alias)->isNotEmpty();
+            }
+            return $result;
+        }
+
+
 ?>

@@ -11,7 +11,7 @@
 @section('title-content')
 <div class="top-bar head-content">
 	<div class="top-bar-left">
-		<h2 class="header-content">ЛИД №: <input name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"> </h2>
+		<h2 class="header-content">ЛИД №: <input id="show-case-number" name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"> </h2>
 	</div>
 	<div class="top-bar-right">
 	</div>
@@ -73,6 +73,7 @@
 <script>
 
 	var lead_id = '{{ $lead->id }}';
+	var lead_type_id = '{{ $lead->lead_type_id }}';
 
 	$(document).on('dblclick', '#phone', function() {
 		
@@ -215,6 +216,45 @@
 			}
 		});
 	});
+
+
+	$(document).on('click', '#change-lead-type', function(event) {
+		event.preventDefault();
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: "/admin/open_change_lead_type",
+			type: "POST",
+			data: {lead_type_id: lead_type_id, lead_id: lead_id},
+			success: function(html){
+				$('#modal').html(html);
+				$('#modal-change-lead-type').foundation();
+				$('#modal-change-lead-type').foundation('open');
+			}
+		});
+	});
+
+	$(document).on('click', '#submit-change-lead-type', function(event) {
+		event.preventDefault();
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: "/admin/change_lead_type",
+			type: "POST",
+			data: $(this).closest('form').serialize(),
+			success: function(data){
+				$('#modal-change-lead-type').foundation('close');
+				$('#lead-type-name').html(data['lead_type_name']);
+				$('#show-case-number').val(data['case_number']);		
+			}
+		});
+	});
+
+
 
 </script>
 

@@ -744,6 +744,13 @@ class ParserController extends Controller
         dd('Готово!');
     }
 
+    public function lead_type(Request $request)
+    {
+        $leads = Lead::whereNull('lead_type_id')->update(['lead_type_id' => 1]);
+        dd('Заебца!');
+    }
+
+
     public function old_claims(Request $request)
     {
 

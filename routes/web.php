@@ -113,7 +113,7 @@ Route::any('/check_class', 'ClassController@check_class');
 
 // Route::get('/parser', 'ParserController@index')->middleware('auth');
 
-// Route::get('/parser_andrey', 'ParserController@andrey')->middleware('auth');
+Route::get('/lead_type', 'ParserController@lead_type')->middleware('auth');
 
 // Route::get('/old_claims', 'ParserController@old_claims')->middleware('auth');
 
@@ -460,6 +460,9 @@ Route::any('/lead_direction_check', 'LeadController@ajax_lead_direction_check')-
 Route::any('/lead_appointed', 'LeadController@ajax_lead_appointed')->middleware('auth');
 Route::any('/lead_distribute', 'LeadController@ajax_distribute')->middleware('auth');
 Route::any('/lead_take', 'LeadController@ajax_lead_take')->middleware('auth');
+
+Route::post('/open_change_lead_type', 'LeadController@ajax_open_change_lead_type')->middleware('auth');
+Route::post('/change_lead_type', 'LeadController@ajax_change_lead_type')->middleware('auth');
 
 // Освобождаем лида
 Route::post('/lead_free', 'LeadController@ajax_lead_free')->middleware('auth');

@@ -131,6 +131,10 @@ class GetAccessController extends Controller
                 $user_redirect = '/admin/' . $user->staff->first()->position->page->alias;
                 $user_position_id = $user->staff->first()->position->id;
 
+
+                // Получаем массив дополнительных прав
+                $extra_rights = $user->staff[0]->position->charges;
+
                 if($user_department != null){
                     $user_filial_id = $user_department->filial_id;
                     $user_department_id = $user_department->department_id;             
@@ -203,6 +207,7 @@ class GetAccessController extends Controller
             $access['user_info']['department_id'] = $user_department_id;
             if(isset($user_position_id)){
                 $access['user_info']['position_id'] = $user_position_id;
+                $access['user_info']['extra_rights'] = $extra_rights;
             }
 
             $challenges = Challenge::with(
