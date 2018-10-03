@@ -96,6 +96,7 @@ class UserController extends Controller
 
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
+        $filter['inputs'] = $request->input();
 
         // Перечень подключаемых фильтров:
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');

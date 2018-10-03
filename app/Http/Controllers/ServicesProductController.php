@@ -89,6 +89,7 @@ class ServicesProductController extends Controller
 
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
+        $filter['inputs'] = $request->input();
         
         $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', null, 'internal-id-one');

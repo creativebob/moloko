@@ -78,6 +78,7 @@ class StafferController extends Controller
 
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
+        $filter['inputs'] = $request->input();
 
         $filter = addFilter($filter, $filter_query, $request, 'Выберите должность:', 'position', 'position_id');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите отдел:', 'department', 'department_id');

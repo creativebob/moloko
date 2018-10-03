@@ -67,10 +67,6 @@ class LeadController extends Controller
 
         $result = extra_right('lead-service');
 
-        // Carbon::setLocale('en');
-        // dd(Carbon::getLocale());
-
-       
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
@@ -107,13 +103,13 @@ class LeadController extends Controller
         ->manager($user)
         ->whereNull('draft')
         ->systemItem($answer) // Фильтр по системным записям
-        // ->filter($request, 'city_id', 'location')
-        // ->filter($request, 'stage_id')
-        // ->filter($request, 'manager_id')
-        // // ->filter($request, 'lead_type_id')
-        // ->filter($request, 'lead_method_id')
-        // ->dateIntervalFilter($request, 'created_at')
-        // ->booklistFilter($request)
+        ->filter($request, 'city_id', 'location')
+        ->filter($request, 'stage_id')
+        ->filter($request, 'manager_id')
+        // ->filter($request, 'lead_type_id')
+        ->filter($request, 'lead_method_id')
+        ->dateIntervalFilter($request, 'created_at')
+        ->booklistFilter($request)
         ->orderBy('created_at', 'desc')
         ->orderBy('moderation', 'desc')
         ->orderBy('manager_id', 'asc')
@@ -237,6 +233,7 @@ class LeadController extends Controller
 
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
+        $filter['inputs'] = $request->input();
 
         // Перечень подключаемых фильтров:
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');

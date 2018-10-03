@@ -90,6 +90,7 @@ class RawController extends Controller
         // Создаем контейнер фильтра
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
+        $filter['inputs'] = $request->input();
 
         $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
         $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'raws_category', 'raws_category_id', 'raws_article.raws_product', 'external-id-one-one');

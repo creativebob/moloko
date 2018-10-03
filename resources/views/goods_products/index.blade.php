@@ -96,7 +96,7 @@
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
     <span class="pagination-title">Кол-во записей: {{ $goods_products->count() }}</span>
-    {{ $goods_products->links() }}
+    {{ $goods_products->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
   </div>
 </div>
 @endsection

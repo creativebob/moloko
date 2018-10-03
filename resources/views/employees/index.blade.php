@@ -123,7 +123,7 @@
     <div class="grid-x" id="pagination">
       <div class="small-6 cell pagination-head">
         <span class="pagination-title">Кол-во записей: {{ $employees->count() }}</span>
-        {{ $employees->links() }}
+        {{ $employees->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
       </div>
     </div>
     @endsection
