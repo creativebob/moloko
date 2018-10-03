@@ -113,11 +113,11 @@
               @endif
 
               @if(($lead->lead_type_id == 2)&&(extra_right('lead-dealer')))
-                <a href="#" class="button tiny take-lead">Принять</a>
+                <a href="#" class="button tiny take-lead">Принять (Дилер)</a>
               @endif
 
               @if(($lead->lead_type_id == 3)&&(extra_right('lead-service')))
-                <a href="#" class="button tiny take-lead">Принять</a>
+                <a href="#" class="button tiny take-lead">Принять (Сервисный центр)</a>
               @endif
 
             @endif
