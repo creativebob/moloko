@@ -181,7 +181,7 @@ class ClaimController extends Controller
         $user_id = hideGod($user);
 
         // ГЛАВНЫЙ ЗАПРОС: В начале пишем oбращение
-        $lead = Lead::with('location', 'main_phone')->findOrFail($request->lead_id);
+        $lead = Lead::with('location', 'main_phones')->findOrFail($request->lead_id);
 
         // $filial_id = $user->filial_id;
 
@@ -233,7 +233,7 @@ class ClaimController extends Controller
 
         if ($claim) {
 
-            $lead = Lead::with(['main_phone', 'location.city', 'stage', 'manager', 'claims' => function ($query) {
+            $lead = Lead::with(['main_phones', 'location.city', 'stage', 'manager', 'claims' => function ($query) {
                 $query->orderBy('created_at', 'asc');
             }])->find($request->lead_id);
 
@@ -243,7 +243,7 @@ class ClaimController extends Controller
                 $address = $lead->location->address;
             }
 
-            $telegram_message  = "РЕКЛАМАЦИЯ №" . $claim->case_number . "\r\n\r\nОписание: " . $claim->body . "\r\n\r\nНомер заказа: " . $lead->case_number . "\r\nКлиент: " . $lead->name . "\r\nТелефон: " . $lead->main_phone->phone . "\r\nАдрес: " . $address . "\r\nЭтап: " . $lead->stage->name. "\r\nМенеджер: " . $lead->manager->first_name . " " . $lead->manager->second_name;
+            $telegram_message  = "РЕКЛАМАЦИЯ №" . $claim->source_lead->case_number . "\r\n\r\nСерийный номер: " . $claim->serial_number . "\r\nОписание: " . $claim->body . "\r\n\r\nНомер заказа: " . $lead->case_number . "\r\nКлиент: " . $lead->name . "\r\nТелефон: " . $lead->main_phone->phone . "\r\nАдрес: " . $address . "\r\nЭтап: " . $lead->stage->name. "\r\nМенеджер: " . $lead->manager->first_name . " " . $lead->manager->second_name;
             
             $telegram_destinations = User::whereHas('staff', function ($query) {
                 $query->whereHas('position', function ($query) {

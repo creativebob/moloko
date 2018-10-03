@@ -51,8 +51,8 @@ class CityController extends Controller
             ->orderBy('sort', 'asc');
         }, 'cities' => function ($query) use ($answer_cities) {
             $query->moderatorLimit($answer_cities)
-            ->authors($answer_cities)
-            ->systemItem($answer_cities) // Фильтр по системным записям
+            // ->authors($answer_cities)
+            // ->systemItem($answer_cities) // Фильтр по системным записям
             ->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
         }])
