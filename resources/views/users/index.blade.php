@@ -96,7 +96,6 @@
           <td class="td-getauth">@if((Auth::user()->id != $user->id)&&!empty($user->company_id)) {{ link_to_route('users.getauthuser', $but_text, ['user_id'=>$user->id], ['class' => $but_class]) }} @endif</td>
           @endif
 
-
           <td class="td-phone">{{ isset($user->main_phone->phone) ? decorPhone($user->main_phone->phone) : 'Телефон не указан' }}</td>
           <td class="td-email">{{ $user->email }}</td>
           <td class="td-contragent-status">{{ decor_user_type($user->user_type) }}</td>

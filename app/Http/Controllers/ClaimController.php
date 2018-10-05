@@ -202,14 +202,17 @@ class ClaimController extends Controller
 
         $new_lead->author_id = $user->id;
         $new_lead->manager_id = $user->id;
+        $new_lead->save();
 
         // Формируем номера обращения
-        $lead_number = getLeadServiceCenterNumbers($user);
+        $lead_number = getLeadNumbers($user, $new_lead);
+
         $new_lead->case_number = $lead_number['case'];
         $new_lead->serial_number = $lead_number['serial'];
+        $new_lead->save();
+
         // Конец формирования номера обращения ----------------------------------
 
-        $new_lead->save();
 
         // Телефонный номер
         $new_lead->phones()->attach($lead->main_phone->id, ['main' => 1]); 

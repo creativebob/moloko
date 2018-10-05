@@ -60,7 +60,7 @@ function getLeadNumbers($user, $lead = null) {
             ->filials($answer_all_leads)
             ->where('lead_type_id', 3)
             ->whereDate('created_at', $lead_date->format('Y-m-d'))
-            ->get();     
+            ->get();
 
         }
 
