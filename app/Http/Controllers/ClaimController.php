@@ -193,6 +193,10 @@ class ClaimController extends Controller
         $new_lead->name = $lead->name;
         $new_lead->filial_id = $user->filial_id;
         $new_lead->stage_id = 2; // Обращение
+
+        $new_lead->lead_type_id = 3; // Сервисное обращение
+        $new_lead->lead_method_id = 1; // Звонок
+
         $new_lead->display = 1; // Включаем видимость
         $new_lead->company_id = $company_id;
         $new_lead->company_name = $lead->company_name;
