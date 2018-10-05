@@ -910,12 +910,12 @@ class LeadController extends Controller
 
         $lead = Lead::findOrFail($request->id);
 
-        if ($user->sex == 1) {
-            $sex = 'освободил';
+        if ($user->phrase_sex == 1) {
+            $phrase_sex = 'освободил';
         } else {
-            $sex = 'освободила';
+            $phrase_sex = 'освободила';
         }
-        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$sex.' лида.');
+        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
 
         $lead->manager_id = 1;
         $lead->save();
@@ -1119,12 +1119,12 @@ class LeadController extends Controller
         $lead->editor_id = $user->id;
         $lead->save();
 
-        if ($user->sex == 1) {
-            $sex = 'принял';
+        if ($user->phrase_sex == 1) {
+            $phrase_sex = 'принял';
         } else {
-            $sex = 'приняла';
+            $phrase_sex = 'приняла';
         }
-        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$sex.' лида.');
+        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
 
         $result = [
             'id' => $lead->id,
@@ -1146,7 +1146,8 @@ class LeadController extends Controller
         $manager = User::find($request->appointed_id);
         $lead->manager_id = $manager->id;       
 
-        if($lead->case_number == NULL){
+        // Если номер пуст и планируеться назначение на сотрудника, а не бота - то генерируем номер!
+        if(($lead->case_number == NULL)&&($request->appointed_id != 1)){
 
             // Формируем номера обращения
             $lead_number = getLeadNumbers($manager, $lead);
@@ -1157,12 +1158,13 @@ class LeadController extends Controller
         $lead->editor_id = $user->id;
         $lead->save();
 
-        if ($user->sex == 1) {
-            $sex = 'назначил';
+        if ($user->$phrase_sex == 1) {
+            $phrase_sex = 'назначил';
         } else {
-            $sex = 'назначила';
+            $phrase_sex = 'назначила';
         }
-        $note = add_note($lead, 'Руководитель: '. $user->first_name.' '.$user->second_name. ' '.$sex.' лида менеджеру: '. $manager->first_name.' '.$manager->second_name);
+
+        $note = add_note($lead, 'Руководитель: '. $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' лида менеджеру: '. $manager->first_name.' '.$manager->second_name);
 
         $result = [
             'id' => $lead->id,
