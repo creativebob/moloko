@@ -324,14 +324,14 @@ class LeadController extends Controller
 
                 if(isset($fragment_phone)){
                     $query->orWhereHas('phones', function($query) use ($fragment_phone){
-                       $query->where('phone', $fragment_phone);
-                   });
+                     $query->where('phone', $fragment_phone);
+                 });
                 };
 
                 if(isset($crop_phone)){
                     $query->orWhereHas('phones', function($query) use ($crop_phone){
-                       $query->where('crop', $crop_phone);
-                   });
+                     $query->where('crop', $crop_phone);
+                 });
                 };
 
             })
@@ -674,7 +674,8 @@ class LeadController extends Controller
         // ->systemItem($answer_stages) // Фильтр по системным записям
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
-        ->get()->pluck('name', 'id');
+        ->get()
+        ->pluck('name', 'id');
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -1106,9 +1107,8 @@ class LeadController extends Controller
         $lead = Lead::findOrFail($request->id);
 
         if ($lead->manager_id == 1) {
-            # code...
 
-        // dd($direction);
+            // dd($direction);
             $lead->manager_id = $user->id;
 
             if($lead->case_number == NULL){
@@ -1122,21 +1122,21 @@ class LeadController extends Controller
             $lead->editor_id = $user->id;
             $lead->save();
 
-        if ($user->sex == 1) {
-            $phrase_sex = 'принял';
-        } else {
-            $phrase_sex = 'приняла';
+            if ($user->sex == 1) {
+                $phrase_sex = 'принял';
+            } else {
+                $phrase_sex = 'приняла';
+            }
+            $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
+
+            $result = [
+                'id' => $lead->id,
+                'name' => $lead->name,
+                'case_number' => $lead->case_number,
+                'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
+            ];
+            echo json_encode($result, JSON_UNESCAPED_UNICODE);
         }
-        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
-
-        $result = [
-            'id' => $lead->id,
-            'name' => $lead->name,
-            'case_number' => $lead->case_number,
-            'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
-        ];
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-
     }
 
     // Назначение лида
