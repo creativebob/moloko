@@ -66,6 +66,7 @@ class LeadController extends Controller
     public function index(Request $request)
     {
 
+
         $result = extra_right('lead-service');
 
         // Включение контроля активного фильтра 
