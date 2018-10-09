@@ -902,41 +902,6 @@ class LeadController extends Controller
         if($lead) {return redirect('/admin/leads');} else {abort(403,'Что-то пошло не так!');};
     }
 
-
-
-    public function ajax_lead_free(Request $request)
-    {
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        $lead = Lead::findOrFail($request->id);
-
-        if ($user->phrase_sex == 1) {
-            $phrase_sex = 'освободил';
-        } else {
-            $phrase_sex = 'освободила';
-        }
-        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
-
-        $lead->manager_id = 1;
-        $lead->save();
-
-        if ($lead) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении освобождении лида!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
     // Сортировка
     public function ajax_sort(Request $request)
     {
@@ -1085,11 +1050,11 @@ class LeadController extends Controller
         $lead = Lead::findOrFail($request->id);
 
         if ($user->sex == 1) {
-            $sex = 'освободил';
+            $phrase_sex = 'освободил';
         } else {
-            $sex = 'освободила';
+            $phrase_sex = 'освободила';
         }
-        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$sex.' лида.');
+        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
 
         $lead->manager_id = 1;
         $lead->save();
@@ -1103,7 +1068,7 @@ class LeadController extends Controller
 
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении освобождении лида!'
+                'error_message' => 'Ошибка при освобождении лида!'
             ];
         }
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -1157,7 +1122,7 @@ class LeadController extends Controller
             $lead->editor_id = $user->id;
             $lead->save();
 
-        if ($user->phrase_sex == 1) {
+        if ($user->sex == 1) {
             $phrase_sex = 'принял';
         } else {
             $phrase_sex = 'приняла';
@@ -1197,7 +1162,7 @@ class LeadController extends Controller
         $lead->editor_id = $user->id;
         $lead->save();
 
-        if ($user->$phrase_sex == 1) {
+        if ($user->sex == 1) {
             $phrase_sex = 'назначил';
         } else {
             $phrase_sex = 'назначила';
