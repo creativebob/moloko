@@ -33,6 +33,7 @@ use App\EntitySetting;
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\LeadRequest;
+use App\Http\Requests\MyRequest;
 
 // Политики
 use App\Policies\LeadPolicy;
@@ -687,7 +688,7 @@ class LeadController extends Controller
         return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity', 'list_challenges'));
     }
 
-    public function update(LeadRequest $request, $id)
+    public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
     {
 
         // Получаем авторизованного пользователя

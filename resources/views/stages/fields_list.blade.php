@@ -1,0 +1,1 @@
+{{ Form::select('field', $fields_list, null, ['id' => 'fields-list']) }}

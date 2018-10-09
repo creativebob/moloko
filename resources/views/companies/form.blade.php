@@ -14,20 +14,6 @@
     <div class="small-12 medium-7 large-5 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            @if ($errors->any())
-            <div class="alert callout" data-closable>
-                <h5>Неправильный формат данных:</h5>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
-
             <!-- Общая информация -->
             <div class="tabs-panel is-active" id="content-panel-1">
                 <div class="grid-x grid-padding-x"> 

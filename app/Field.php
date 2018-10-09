@@ -25,12 +25,12 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class Stage extends Model
+class Field extends Model
 {
     // Включаем кеш
     use Cachable;
 
-    use SoftDeletes;
+    // use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -45,7 +45,14 @@ class Stage extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $fillable = [
+        'company_id', 
+        'name', 
+        'stage_id', 
+        'entity_id', 
+        'author_id', 
+    ];
+    // protected $dates = ['deleted_at'];
 
     // Получаем компанию
     public function company()
@@ -59,16 +66,15 @@ class Stage extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
-
-    // Поля
-    public function fields()
+    // Сущность
+    public function entity()
     {
-        return $this->hasMany('App\Field');
+        return $this->belongsTo('App\Entity');
     }
 
     // Правила
     public function rules()
     {
-        return $this->hasManyThrough('App\Rule', 'App\Field');
+        return $this->hasMany('App\Rule');
     }
 }
