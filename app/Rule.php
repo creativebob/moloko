@@ -25,12 +25,12 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class Stage extends Model
+class Rule extends Model
 {
-    // Включаем кеш
+     // Включаем кеш
     use Cachable;
 
-    use SoftDeletes;
+    // use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -45,7 +45,7 @@ class Stage extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    // protected $dates = ['deleted_at'];
 
     // Получаем компанию
     public function company()
@@ -59,16 +59,10 @@ class Stage extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
-
-    // Поля
-    public function fields()
+    // Поле
+    public function field()
     {
-        return $this->hasMany('App\Field');
+        return $this->belongsTo('App\Field');
     }
 
-    // Правила
-    public function rules()
-    {
-        return $this->hasManyThrough('App\Rule', 'App\Field');
-    }
 }

@@ -63,6 +63,8 @@ use App\Challenge;
 use App\Claim;
 
 use App\Stage;
+use App\Field;
+use App\Rule;
 
 use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
@@ -125,6 +127,8 @@ use App\Policies\ChallengePolicy;
 use App\Policies\ClaimPolicy;
 
 use App\Policies\StagePolicy;
+// use App\Policies\FieldPolicy;
+// use App\Policies\RulePolicy;
 
 
 use Illuminate\Support\Facades\Gate as GateContract;

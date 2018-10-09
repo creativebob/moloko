@@ -33,6 +33,7 @@ use App\EntitySetting;
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\LeadRequest;
+use App\Http\Requests\MyRequest;
 
 // Политики
 use App\Policies\LeadPolicy;
@@ -323,14 +324,14 @@ class LeadController extends Controller
 
                 if(isset($fragment_phone)){
                     $query->orWhereHas('phones', function($query) use ($fragment_phone){
-                     $query->where('phone', $fragment_phone);
-                 });
+                       $query->where('phone', $fragment_phone);
+                   });
                 };
 
                 if(isset($crop_phone)){
                     $query->orWhereHas('phones', function($query) use ($crop_phone){
-                     $query->where('crop', $crop_phone);
-                 });
+                       $query->where('crop', $crop_phone);
+                   });
                 };
 
             })
@@ -353,7 +354,7 @@ class LeadController extends Controller
     public function create(Request $request, $lead_type = 1)
     {
 
-            $user = $request->user();
+        $user = $request->user();
 
             // Подключение политики
             $this->authorize(__FUNCTION__, Lead::class); // Проверка на create
@@ -687,7 +688,7 @@ class LeadController extends Controller
         return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity', 'list_challenges', 'lead_methods_list'));
     }
 
-    public function update(LeadRequest $request, $id)
+    public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
     {
 
         // Получаем авторизованного пользователя
@@ -901,40 +902,6 @@ class LeadController extends Controller
         if($lead) {return redirect('/admin/leads');} else {abort(403,'Что-то пошло не так!');};
     }
 
-
-    public function ajax_lead_free(Request $request)
-    {
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        $lead = Lead::findOrFail($request->id);
-
-        if ($user->phrase_sex == 1) {
-            $phrase_sex = 'освободил';
-        } else {
-            $phrase_sex = 'освободила';
-        }
-        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
-
-        $lead->manager_id = 1;
-        $lead->save();
-
-        if ($lead) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении освобождении лида!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
     // Сортировка
     public function ajax_sort(Request $request)
     {
@@ -1074,6 +1041,39 @@ class LeadController extends Controller
         }
     }
 
+    public function ajax_lead_free(Request $request)
+    {
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        $lead = Lead::findOrFail($request->id);
+
+        if ($user->sex == 1) {
+            $phrase_sex = 'освободил';
+        } else {
+            $phrase_sex = 'освободила';
+        }
+        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
+
+        $lead->manager_id = 1;
+        $lead->save();
+
+        if ($lead) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при освобождении лида!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
     // Назначение лида
     public function ajax_lead_direction_check(Request $request)
     {
@@ -1105,21 +1105,24 @@ class LeadController extends Controller
         $user = $request->user();
         $lead = Lead::findOrFail($request->id);
 
-             // dd($direction);
-        $lead->manager_id = $user->id;
+        if ($lead->manager_id == 1) {
+            # code...
 
-        if($lead->case_number == NULL){
+        // dd($direction);
+            $lead->manager_id = $user->id;
+
+            if($lead->case_number == NULL){
 
             // Формируем номера обращения
-            $lead_number = getLeadNumbers($user, $lead);
-            $lead->case_number = $lead_number['case'];
-            $lead->serial_number = $lead_number['serial'];
-        }
+                $lead_number = getLeadNumbers($user, $lead);
+                $lead->case_number = $lead_number['case'];
+                $lead->serial_number = $lead_number['serial'];
+            }
 
-        $lead->editor_id = $user->id;
-        $lead->save();
+            $lead->editor_id = $user->id;
+            $lead->save();
 
-        if ($user->phrase_sex == 1) {
+        if ($user->sex == 1) {
             $phrase_sex = 'принял';
         } else {
             $phrase_sex = 'приняла';
@@ -1133,6 +1136,7 @@ class LeadController extends Controller
             'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
         ];
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
+
     }
 
     // Назначение лида
@@ -1158,7 +1162,7 @@ class LeadController extends Controller
         $lead->editor_id = $user->id;
         $lead->save();
 
-        if ($user->$phrase_sex == 1) {
+        if ($user->sex == 1) {
             $phrase_sex = 'назначил';
         } else {
             $phrase_sex = 'назначила';

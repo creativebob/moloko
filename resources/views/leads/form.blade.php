@@ -3,23 +3,6 @@
 <div class="grid-x tabs-wrap inputs">
     <div class="small-12 medium-5 large-6 cell">
 
-
-        @if ($errors->any())
-
-        <div class="alert callout" data-closable>
-            <h5>Неправильный формат данных:</h5>
-            <ul>
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-            <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-
-        @endif
-
         <!-- Персональная информация -->
         <div class="grid-x">
             <div class="small-12 medium-12 large-8 cell">
@@ -35,7 +18,7 @@
                     </div>
                     <div class="small-6 medium-6 large-6 cell">
                         <label>Контактное лицо
-                            @include('includes.inputs.name', ['name'=>'name', 'value'=>$lead->name, 'required'=>'required'])
+                            @include('includes.inputs.name', ['name'=>'name', 'value'=>$lead->name, 'required'=>''])
                             <input type="hidden" id="lead_id" data-lead-id="{{$lead->id }}">
                         </label>
                     </div>

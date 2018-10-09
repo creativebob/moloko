@@ -95,15 +95,18 @@ Route::get('/remove_webhook', 'TelegramController@remove_webhook')->middleware('
 Route::any('/telegram_message', 'TelegramController@store');
 
 Route::any('/check_class', 'ClassController@check_class');
-// Route::post('/telegram_message', function () {
-//     $update = Telegram::commandsHandler(true);
 
-// 	// Commands handler method returns an Update object.
-// 	// So you can further process $update object 
-// 	// to however you want.
 
-//     return 'ok';
-// });
+Route::get('/columns', function () {
+    $columns = Schema::getColumnListing('leads');
+    // dd($columns);
+    $text = "<select>";
+    foreach ($columns as $column) {
+    	$text .= "<option>" . $column . "</option>";
+    }
+    $text .= "</select>";
+   echo $text;
+});
 
 // Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
 
@@ -505,10 +508,23 @@ Route::post('/stages_system_item', 'StageController@ajax_system_item')->middlewa
 Route::post('/stages_display', 'StageController@ajax_display')->middleware('auth');
 
 
+// --------------------------------------- Поля --------------------------------------------
 
-	// ---------------------------------------- Посты --------------------------------------------
+// Список полей
+Route::post('/fields_list', 'FieldController@ajax_fields_list')->middleware('auth');
 
-	// Основные методы
+
+// -------------------------------------- Правила -------------------------------------------
+
+// Список полей
+Route::resource('/rules', 'RuleController')->middleware('auth');
+
+Route::post('/rule_add', 'RuleController@ajax_store')->middleware('auth');
+Route::post('/rule_delete', 'RuleController@ajax_destroy')->middleware('auth');
+
+// ---------------------------------------- Посты --------------------------------------------
+
+// Основные методы
 Route::resource('/posts', 'PostController')->middleware('auth');
 // Сортировка
 Route::post('/posts_sort', 'PostController@ajax_sort')->middleware('auth');

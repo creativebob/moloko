@@ -190,7 +190,7 @@ $task = '';
             {{-- Блок ошибок --}}
             @if ($errors->any())
             <div class="alert callout" data-closable>
-                <h5>Неправильный формат данных:</h5>
+                <h5>Ошибки ввода данных:</h5>
                 <ul>
                     @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
