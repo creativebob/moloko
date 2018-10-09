@@ -33,7 +33,7 @@ use App\EntitySetting;
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\LeadRequest;
-use App\Http\Requests\MyRequest;
+use App\Http\Requests\MyStageRequest;
 
 // Политики
 use App\Policies\LeadPolicy;
