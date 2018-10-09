@@ -329,7 +329,20 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Способ обращения: </td><td>{{ $lead->lead_method->name or ''}}</td><td></td>
+                                    <td>Способ обращения: </td>
+                                    <td>
+
+                                        {{-- Будем мутить селект в ручную --}}
+
+                                        @php 
+                                            if($lead->lead_method->mode != 1){
+                                            $disabled_method_list = 'disabled';} else {
+                                            $disabled_method_list = '';};
+                                        @endphp
+
+                                        {{ Form::select('lead_method', $lead_methods_list, $lead->lead_method_id, [$disabled_method_list]) }}
+
+                                    </td><td></td>
                                 </tr>
                                 <td>Интерес: </td>
                                 <td>

@@ -106,7 +106,7 @@ class LeadController extends Controller
         ->filter($request, 'city_id', 'location')
         ->filter($request, 'stage_id')
         ->filter($request, 'manager_id')
-        // ->filter($request, 'lead_type_id')
+        ->filter($request, 'lead_type_id')
         ->filter($request, 'lead_method_id')
         ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
@@ -135,14 +135,14 @@ class LeadController extends Controller
 
         // Перечень подключаемых фильтров:
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
-        
+
         $filter = addFilter($filter, $filter_query, $request, 'Выберите этап:', 'stage', 'stage_id', null, 'internal-id-one');
         
         $filter = addFilter($filter, $filter_query, $request, 'Менеджер:', 'manager', 'manager_id', null, 'internal-id-one');
 
         $filter = addFilter($filter, $filter_query, $request, 'Способ обращения:', 'lead_method', 'lead_method_id', null, 'internal-id-one');
 
-        // $filter = addFilter($filter, $filter_query, $request, 'Тип обращения:', 'lead_type', 'lead_type_id', null, 'internal-id-one');
+        $filter = addFilter($filter, $filter_query, $request, 'Тип обращения:', 'lead_type', 'lead_type_id', null, 'internal-id-one');
 
         $filter = addFilterInterval($filter, $this->entity_name, $request, 'date_start', 'date_end');
 
@@ -659,13 +659,13 @@ class LeadController extends Controller
         // Подключение политики
         // $this->authorize(getmethod(__FUNCTION__), $lead);
 
+        $lead_methods_list = LeadMethod::whereIn('mode', [1, 2, 3])->get()->pluck('name', 'id');
+
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
 
         // Получаем список этапов
-
-        $answer_stages = operator_right('stages', false, 'index'); 
-
+        $answer_stages = operator_right('stages', false, 'index');
         $stages_list = Stage::moderatorLimit($answer_stages)
         // ->companiesLimit($answer_stages)
         // ->authors($answer_stages)
@@ -682,9 +682,9 @@ class LeadController extends Controller
         $list_challenges = challenges($request);
 
         $entity = $this->entity_name;
-        // dd($lead);
+        // dd($lead->lead_method->mode);
 
-        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity', 'list_challenges'));
+        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity', 'list_challenges', 'lead_methods_list'));
     }
 
     public function update(LeadRequest $request, $id)

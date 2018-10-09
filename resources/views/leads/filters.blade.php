@@ -1,39 +1,36 @@
 <div class="small-12 medium-6 large-6 cell">
   <legend>Фильтры:</legend>
-  <div class="grid-x">
-    <div class="small-12 cell">
-      <div class="grid-x">
-        <div class="small-12 medium-6 cell checkbox checkboxer">
-          @include('includes.inputs.checkboxer', ['name'=>'city', 'value' => $filter])      
-        </div>
-      </div>
-    </div>
+  <div class="grid-x grid-padding-x">
 
-    <div class="small-12 cell">
+    <div class="small-12 medium-6 cell">
       <div class="grid-x">
-        <div class="small-12 medium-6 cell checkbox checkboxer">
-          @include('includes.inputs.checkboxer', ['name'=>'stage', 'value' => $filter])      
-        </div>
-      </div>
-    </div>
 
-    <div class="small-12 cell">
-      <div class="grid-x">
-        <div class="small-12 medium-6 cell checkbox checkboxer">
-          @include('includes.inputs.checkboxer', ['name'=>'manager', 'value' => $filter])      
-        </div>
-      </div>
-    </div>
 
-    <div class="small-12 cell">
-      <div class="grid-x">
-        <div class="small-12 medium-6 cell checkbox checkboxer">
-          @include('includes.inputs.checkboxer', ['name'=>'lead_method', 'value' => $filter])      
+        <div class="small-12 cell">
+          <div class="grid-x">
+            <div class="small-12 cell checkbox checkboxer">
+              @include('includes.inputs.checkboxer', ['name'=>'city', 'value' => $filter])      
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
-      <div class="grid-x">
+        <div class="small-12 cell">
+          <div class="grid-x">
+            <div class="small-12 cell checkbox checkboxer">
+              @include('includes.inputs.checkboxer', ['name'=>'stage', 'value' => $filter])      
+            </div>
+          </div>
+        </div>
+
+        <div class="small-12 cell">
+          <div class="grid-x">
+            <div class="small-12 cell checkbox checkboxer">
+              @include('includes.inputs.checkboxer', ['name'=>'manager', 'value' => $filter])      
+            </div>
+          </div>
+        </div>
+
+
         <div class="small-5 medium-5 cell">
           <label>Начало периода:
             @include('includes.inputs.date', ['name'=>'date_start', 'value' => '', 'required' => ''])
@@ -46,12 +43,33 @@
             @include('includes.inputs.date', ['name'=>'date_end', 'value' => '', 'required' => ''])
           </label>
         </div>
+
+
       </div>
+    </div>
 
-    <div class="small-12 medium-6 large-6 cell date-interval-block">
+    <div class="small-12 medium-6 cell">
+      <div class="grid-x">
 
+        <div class="small-12 cell">
+          <div class="grid-x">
+            <div class="small-12 cell checkbox checkboxer">
+              @include('includes.inputs.checkboxer', ['name'=>'lead_method', 'value' => $filter])      
+            </div>
+          </div>
+        </div>
 
-    </div> 
+        <div class="small-12 cell">
+          <div class="grid-x">
+            <div class="small-12 cell checkbox checkboxer">
+              @include('includes.inputs.checkboxer', ['name'=>'lead_type', 'value' => $filter])      
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </div>
 

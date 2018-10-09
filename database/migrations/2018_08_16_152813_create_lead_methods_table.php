@@ -16,6 +16,7 @@ class CreateLeadMethodsTable extends Migration
         Schema::create('lead_methods', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->index()->comment('Тип установления связи (обращения)');
+            $table->integer('mode')->nullable()->unsigned()->comment('Режим: 1 - Ручной, 2 - Автоматический, 3 - Смешанный');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
