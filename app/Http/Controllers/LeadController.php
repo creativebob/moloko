@@ -903,7 +903,39 @@ class LeadController extends Controller
     }
 
 
-    
+
+    public function ajax_lead_free(Request $request)
+    {
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        $lead = Lead::findOrFail($request->id);
+
+        if ($user->phrase_sex == 1) {
+            $phrase_sex = 'освободил';
+        } else {
+            $phrase_sex = 'освободила';
+        }
+        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
+
+        $lead->manager_id = 1;
+        $lead->save();
+
+        if ($lead) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении освобождении лида!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
 
     // Сортировка
     public function ajax_sort(Request $request)
@@ -1125,15 +1157,12 @@ class LeadController extends Controller
             $lead->editor_id = $user->id;
             $lead->save();
 
-
-
-            if ($user->sex == 1) {
-                $sex = 'принял';
-            } else {
-                $sex = 'приняла';
-            }
-            $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$sex.' лида.');
-        } 
+        if ($user->phrase_sex == 1) {
+            $phrase_sex = 'принял';
+        } else {
+            $phrase_sex = 'приняла';
+        }
+        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
 
         $result = [
             'id' => $lead->id,
@@ -1156,7 +1185,8 @@ class LeadController extends Controller
         $manager = User::find($request->appointed_id);
         $lead->manager_id = $manager->id;       
 
-        if($lead->case_number == NULL){
+        // Если номер пуст и планируеться назначение на сотрудника, а не бота - то генерируем номер!
+        if(($lead->case_number == NULL)&&($request->appointed_id != 1)){
 
             // Формируем номера обращения
             $lead_number = getLeadNumbers($manager, $lead);
@@ -1167,12 +1197,13 @@ class LeadController extends Controller
         $lead->editor_id = $user->id;
         $lead->save();
 
-        if ($user->sex == 1) {
-            $sex = 'назначил';
+        if ($user->$phrase_sex == 1) {
+            $phrase_sex = 'назначил';
         } else {
-            $sex = 'назначила';
+            $phrase_sex = 'назначила';
         }
-        $note = add_note($lead, 'Руководитель: '. $user->first_name.' '.$user->second_name. ' '.$sex.' лида менеджеру: '. $manager->first_name.' '.$manager->second_name);
+
+        $note = add_note($lead, 'Руководитель: '. $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' лида менеджеру: '. $manager->first_name.' '.$manager->second_name);
 
         $result = [
             'id' => $lead->id,
