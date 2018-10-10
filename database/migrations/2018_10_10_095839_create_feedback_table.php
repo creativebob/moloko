@@ -30,7 +30,7 @@ class CreateFeedbackTable extends Migration
             $table->string('person')->nullable()->comment('Имя автора отзыва');
             $table->string('job')->nullable()->comment('Статус автора отзыва');
 
-            $table->date('call_date')->index()->comment('Дата обращения');
+            $table->date('call_date')->nullable()->comment('Дата обращения');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
