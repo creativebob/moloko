@@ -595,6 +595,16 @@ class EntitiesTableSeeder extends Seeder
       'author_id' => 1,
     ],
 
+    // 70
+    [
+      'name' => 'Отзывы',
+      'alias' => 'feedback',
+      'model' => 'Feedback',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
   ]);
 
   }

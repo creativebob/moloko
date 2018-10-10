@@ -216,6 +216,12 @@ class Company extends Model
         return $this->morphToMany('App\Phone', 'phone_entity');
     }
 
+    // Отзывы
+    public function feedback()
+    {
+        return $this->morphMany('App\Feedback', 'feedback');
+    }
+
     
 
 }

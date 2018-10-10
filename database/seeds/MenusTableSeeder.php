@@ -800,7 +800,23 @@ class MenusTableSeeder extends Seeder
             'author_id' => 1,
             'display' => 1,
             'sort' => null,
-        ]
+        ],
+
+        // 54
+        [
+            'name' => 'Отзывы',
+            'icon' => null,
+            'alias' => 'admin/feedback',
+            'tag' => 'feedback',
+            'parent_id' => 11,
+            'page_id' => 46,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
 
 
     ]);
