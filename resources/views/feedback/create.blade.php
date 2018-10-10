@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('inhead')
+  @include('includes.scripts.pickmeup-inhead')
+@endsection
+
 @section('title', 'Новый отзыв')
 
 @section('breadcrumbs', Breadcrumbs::render('create', $page_info))
@@ -25,7 +29,8 @@
 @section('scripts')
   @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
-  
+  @include('includes.scripts.pickmeup-script')
+  @include('feedback.scripts')
 @endsection
 
 

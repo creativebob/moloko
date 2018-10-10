@@ -533,11 +533,12 @@ Route::post('/posts_system_item', 'PostController@ajax_system_item')->middleware
 // Отображение на сайте
 Route::post('/posts_display', 'PostController@ajax_display')->middleware('auth');
 
-	// ---------------------------------------- Аккаунты --------------------------------------------
 
-	// Основные методы
+// ---------------------------------------- Аккаунты --------------------------------------------
+
+// Основные методы
 Route::resource('/accounts', 'AccountController')->middleware('auth');
-	// Проверка на существование аккаунта
+// Проверка на существование аккаунта
 Route::post('/accounts_check', 'AccountController@ajax_check')->middleware('auth');
 
 
@@ -551,6 +552,18 @@ Route::post('/campaigns_sort', 'CampaignController@ajax_sort')->middleware('auth
 Route::post('/campaigns_system_item', 'CampaignController@ajax_system_item')->middleware('auth');
 // Отображение на сайте
 Route::post('/campaigns_display', 'CampaignController@ajax_display')->middleware('auth');
+
+
+// --------------------------------------- Отзывы -----------------------------------------------
+
+// Основные методы
+Route::resource('/feedback', 'FeedbackController')->middleware('auth');
+// Сортировка
+Route::post('/feedback_sort', 'FeedbackController@ajax_sort')->middleware('auth');
+// Системная запись
+Route::post('/feedback_system_item', 'FeedbackController@ajax_system_item')->middleware('auth');
+// Отображение на сайте
+Route::post('/feedback_display', 'FeedbackController@ajax_display')->middleware('auth');
 
 
 // --------------------------------------- Расходы -----------------------------------------------

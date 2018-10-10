@@ -38,9 +38,9 @@ class CreateEntitiesTable extends Migration
         });
     }
 
-
     public function down()
     {
         Schema::dropIfExists('entities');
     }
+    
 }

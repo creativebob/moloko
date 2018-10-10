@@ -47,7 +47,7 @@ class Feedback extends Model
     use DateIntervalFilter;
 
     protected $table = 'feedback';
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at', 'call_date'];
     protected $fillable = [
         'body',
         'author_id',

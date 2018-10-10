@@ -56,7 +56,7 @@
         @endif
         ><label class="label-check" for="check-{{ $cur_feedback->id }}"></label>
     </td>
-    <td class="td-name">
+    <td class="td-call-date">
         @php
         $edit = 0;
         @endphp
@@ -68,11 +68,11 @@
         @if($edit == 1)
         <a href="/admin/feedback/{{ $cur_feedback->id }}/edit">
           @endif
-          {{ $cur_feedback->name }}
+          {{ $cur_feedback->call_date->format('d.m.Y') }}
           @if($edit == 1)
-      </a> 
+        </a>
       @endif
-  </td>
+    </td>
   <td class="td-body">{{ $cur_feedback->body }} </td>
   <td class="td-person">{{ $cur_feedback->person }} </td>
   <td class="td-job">{{ $cur_feedback->job }} </td>
@@ -115,9 +115,11 @@
 @endsection
 
 @section('scripts')
-{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+
+{{-- Скрипт сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
 @include('includes.scripts.sortable-table-script')
+@include('includes.scripts.pickmeup-script')
 
 {{-- Скрипт отображения на сайте --}}
 @include('includes.scripts.ajax-display')
@@ -131,4 +133,5 @@
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
 @include('includes.scripts.delete-ajax-script')
+
 @endsection
