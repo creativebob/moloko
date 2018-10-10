@@ -66,6 +66,8 @@ use App\Stage;
 use App\Field;
 use App\Rule;
 
+use App\Feedback;
+
 use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
 use App\Policies\CompanyPolicy;
@@ -129,6 +131,8 @@ use App\Policies\ClaimPolicy;
 use App\Policies\StagePolicy;
 // use App\Policies\FieldPolicy;
 // use App\Policies\RulePolicy;
+
+use App\Policies\FeedbackPolicy;
 
 
 use Illuminate\Support\Facades\Gate as GateContract;
@@ -195,6 +199,7 @@ class AuthServiceProvider extends ServiceProvider
         Challenge::class => ChallengePolicy::class,
         Claim::class => ClaimPolicy::class,
         Stage::class => StagePolicy::class,
+        Feedback::class => FeedbackPolicy::class,
     ];
 
     public function boot()
