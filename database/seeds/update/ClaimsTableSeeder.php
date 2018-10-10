@@ -89,10 +89,7 @@ class ClaimsTableSeeder extends Seeder
     		$entity_id = $entity->id;
     	}
 
-    	$entity_page = EntityPage::firstOrCreate(
-    		['entity_id' => $entity_id],
-    		['page_id' => $page_id]
-    	);
+    	$entity_page = EntityPage::firstOrCreate(['entity_id' => $entity_id, 'page_id' => $page_id]);
 
     	$navigation = Navigation::where(['alias' => 'left-sidebar', 'site_id' => 1])->first();
 
