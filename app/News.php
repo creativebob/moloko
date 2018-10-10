@@ -128,7 +128,7 @@ class News extends Model
     
     public function cities()
     {
-        return $this->morphToMany('App\CityEntity', 'city_entity');
+        return $this->morphToMany('App\City', 'city_entities');
     }
 
 }
