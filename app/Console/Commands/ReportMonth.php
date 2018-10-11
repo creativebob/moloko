@@ -10,21 +10,21 @@ use Carbon\Carbon;
 
 use Illuminate\Console\Command;
 
-class ReportDay extends Command
+class ReportMonth extends Command
 {
     /**
    * The name and signature of the console command.
    *
    * @var string
    */
-    protected $signature = 'report:day';
+    protected $signature = 'report:month';
 
     /**
    * The console command description.
    *
    * @var string
    */
-    protected $description = 'Ежедневный отчет';
+    protected $description = 'Ежемесячный отчет';
 
     /**
    * Create a new command instance.
@@ -46,11 +46,12 @@ class ReportDay extends Command
 
         // Получаем лидов
         $leads = Lead::with('lead_method', 'lead_type', 'source_claim')
-        ->whereDate('created_at', Carbon::now()->format('Y-m-d'))
+        ->whereMonth('created_at', Carbon::now()->format('m'))
+        ->whereYear('created_at', Carbon::now()->format('Y'))
         ->whereNull('draft')
         ->get();
 
-        $telegram_message = "Отчет за день (" . Carbon::now()->format('d.m.Y') . "):\r\n\r\n";
+        $telegram_message = "Отчет за месяц (" . Carbon::now()->format('d.m.Y') . "):\r\n\r\n";
 
         if (count($leads) > 0) {
             $telegram_message .= "Обращения:\r\n\r\n";
