@@ -118,7 +118,7 @@ class TelegramController extends Controller
                 case 'Лол':
                 $response = Telegram::sendMessage([
                     'chat_id' => $message['message']['chat']['id'], 
-                    'text' => 'Лолита: '.$message['message']['text']
+                    'text' => 'Ты как кек: '.$message['message']['text']
                 ]);
                 break;
             
