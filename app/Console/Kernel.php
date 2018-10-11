@@ -29,11 +29,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
 
+        // Ежедневный отчет
         $schedule->command('report:day')
-        ->dailyAt('11:01')
+        ->dailyAt('18:30')
         ->timezone('Asia/Irkutsk');
     }
 
