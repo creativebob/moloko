@@ -63,7 +63,7 @@ class TelegramController extends Controller
                     ['Маркетинговый отчет'],
                     ['Финансовый отчет'],
                     ['Производственный отчет'],
-                         ['Сброс']
+                    ['Сброс']
                 ];
                 
                 $reply_markup = Telegram::replyKeyboardMarkup([
