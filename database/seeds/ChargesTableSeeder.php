@@ -36,6 +36,12 @@ class ChargesTableSeeder extends Seeder
                 'alias' => 'lead-dealer',
                 'author_id' => 1,
             ],
+            [
+                'name' => 'Работа с потенциальным лидом',
+                'description' => null,
+                'alias' => 'stage-potential',
+                'author_id' => 1,
+            ],
 
         ]);
     }

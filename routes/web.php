@@ -48,6 +48,158 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 //     }])->find(5468));
 // });
 
+Route::any('/report', function () {
+
+    $mytime = Carbon::now();
+    dd($mytime);
+
+	// Получаем лидов, сгруппированных по типу, и затем по методу
+	// $grouped_leads = Lead::with('lead_method', 'lead_type', 'source_claim')
+	// ->whereDate('created_at', Carbon::now()->format('Y-m-d'))
+	// ->whereNull('draft')
+	// ->get()
+	// ->groupBy(['lead_type.name', 'lead_method.name']);
+	// dd($grouped_leads);
+
+    // if (count($grouped_leads) > 0) {
+    //  $telegram_message .= "Обращения:\r\n\r\n";
+
+    //  // Перебираем методы лидов (звонок, сайт..)
+    //  foreach ($grouped_leads as $type => $types_leads) {
+
+    //      // Если есть вложенность
+    //      if (count($types_leads) > 0) {
+    //          $telegram_message .= " " . $type . ": " . $types_leads->flatten()->count()  . "\r\n";
+
+    //          // Перебираем методы обращения
+
+ //                foreach ($types_leads as $method => $values) {
+
+ //                    $claims_count = 0;
+ //                    // $services_count = 0;
+    //              // dd($values);
+
+ //                    $telegram_message .= "  " . $method . ": " . count($values) . "\r\n";
+
+ //                    // Проверяем лидов на рекламации
+ //                    foreach ($values as $value) {
+ //                        if (isset($value->source_claim)) {
+ //                            $claims_count++;
+ //                        }
+ //                    }
+ //                    if ($claims_count > 0) {
+ //                        if ($claims_count != 0) {
+ //                            $telegram_message .= "   Рекламации: " . $claims_count . "\r\n";
+ //                        }
+
+ //                        if ($claims_count == 0 || (count($values) - $claims_count) > 0) {
+ //                            $telegram_message .= "   Коммерческие обращения: " . (count($values) - $claims_count) . "\r\n";
+ //                        }
+ //                    }
+ //                }
+ //            }
+ //            $telegram_message .= "\r\n";
+ //        }
+ //    }
+
+    // Получаем лидов
+    $leads = Lead::with('lead_method', 'lead_type', 'source_claim')
+    ->whereDate('created_at', Carbon::now()->format('Y-m-d'))
+    ->whereNull('draft')
+    ->get();
+
+    $telegram_message = "Отчет за день (" . Carbon::now()->format('d.m.Y') . "):\r\n\r\n";
+
+    if (count($leads) > 0) {
+        $telegram_message .= "Обращения:\r\n\r\n";
+
+        // Обычное
+        $leads_regular = $leads->where('lead_type_id', 1);
+        if (count($leads_regular) > 0) {
+            $telegram_message .= " Обычное обращение: " . count($leads_regular) . "\r\n";
+
+            // Групируем по методам и перебираем
+            $grouped_leads_regular = $leads_regular->groupBy('lead_method.name');
+            // dd($grouped_leads_regular);
+            foreach ($grouped_leads_regular as $key => $value) {
+                $telegram_message .= "  " . $key . ": " . count($value) . "\r\n";
+            }
+            $telegram_message .= "\r\n";
+        }
+
+        // Сервисное
+        $leads_service = $leads->where('lead_type_id', 3);
+        if (count($leads_service) > 0) {
+            $telegram_message .= " Сервисное обращение: " . count($leads_service) . "\r\n";
+
+            // Считаем рекламации и обращения
+            $claims_count = 0;
+            $commercial_count = 0;
+
+            // Групируем по методам и перебираем
+            $grouped_leads_service = $leads_service->groupBy('lead_method.name');
+            // dd($grouped_leads_regular);
+            foreach ($grouped_leads_service as $key => $values) {
+                $telegram_message .= "  " . $key . ": " . count($values) . "\r\n";
+
+                foreach ($values as $value) {
+                    if (isset($value->source_claim)) {
+                        $claims_count++;
+                    } else {
+                        $commercial_count++;
+                    }
+                }
+            }
+
+            // Выносим рекламации и коммерческие обращения
+            if (($claims_count != 0) || ($commercial_count != 0)) {
+                $telegram_message .= "  ---\r\n";
+
+                if ($claims_count != 0) {
+                    $telegram_message .= "   Рекламации: " . $claims_count . "\r\n";
+                }
+
+                if ($commercial_count != 0) {
+                    $telegram_message .= "   Коммерческие обращения: " . $commercial_count . "\r\n";
+                }
+            }
+            $telegram_message .= "\r\n";
+        }
+
+        // Дилерское
+        $leads_dealer = $leads->where('lead_type_id', 2);
+        if (count($leads_dealer) > 0) {
+            $telegram_message .= " Дилерское обращение: " . count($leads_dealer) . "\r\n";
+
+            // Групируем по методам и перебираем
+            $grouped_leads_dealer = $leads_dealer->groupBy('lead_method.name');
+            // dd($grouped_leads_regular);
+            foreach ($grouped_leads_dealer as $key => $value) {
+                $telegram_message .= "  " . $key . ": " . count($value) . "\r\n";
+            }
+            $telegram_message .= "\r\n";
+        }
+
+    } else {
+        // Если обращений не было
+        $telegram_message .= "Обращений не было ...";
+        $telegram_message .= "\r\n";
+    }
+
+    $telegram_destinations = User::whereHas('staff', function ($query) {
+        $query->whereHas('position', function ($query) {
+            $query->whereHas('notifications', function ($query) {
+                $query->where('notification_id', 3);
+            });
+        });
+    })
+    ->where('telegram_id', '!=', null)
+    ->get(['telegram_id']);
+
+    send_message($telegram_destinations, $telegram_message);
+    // dd($telegram_message);
+});
+
 Route::get('/mounth', function() {
 	// $leads = App\Lead::whereMonth('created_at', Carbon\Carbon::now()->format('m'))->whereYear('created_at', Carbon\Carbon::now()->format('Y'))->whereNull('draft')->get();
 	// $leads = Lead::whereDate('created_at', Carbon::now()->format('Y-m-d'))->whereNull('draft')->get();
@@ -80,7 +232,7 @@ Route::get('/mounth', function() {
 	dd($telegram_message);
 })->middleware('auth');
 
-// Telegram
+// ------------------------------------ Telegram ----------------------------------------
 
 // Получаем бота
 Route::get('/get_bot', 'TelegramController@get_bot')->middleware('auth');
@@ -97,16 +249,16 @@ Route::any('/telegram_message', 'TelegramController@store');
 Route::any('/check_class', 'ClassController@check_class');
 
 
-Route::get('/columns', function () {
-    $columns = Schema::getColumnListing('leads');
-    // dd($columns);
-    $text = "<select>";
-    foreach ($columns as $column) {
-    	$text .= "<option>" . $column . "</option>";
-    }
-    $text .= "</select>";
-   echo $text;
-});
+// Route::get('/columns', function () {
+//     $columns = Schema::getColumnListing('leads');
+//     // dd($columns);
+//     $text = "<select>";
+//     foreach ($columns as $column) {
+//     	$text .= "<option>" . $column . "</option>";
+//     }
+//     $text .= "</select>";
+//    echo $text;
+// });
 
 // Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
 
@@ -116,7 +268,7 @@ Route::get('/columns', function () {
 
 // Route::get('/parser', 'ParserController@index')->middleware('auth');
 
-Route::get('/lead_type', 'ParserController@lead_type')->middleware('auth');
+// Route::get('/lead_type', 'ParserController@lead_type')->middleware('auth');
 
 // Route::get('/old_claims', 'ParserController@old_claims')->middleware('auth');
 

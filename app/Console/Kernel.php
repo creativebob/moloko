@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        'App\Console\Commands\ReportDay',
     ];
 
     /**
@@ -32,25 +32,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
 
-        $schedule->call(function () {
-            $leads = Lead::whereDate('created_at', Carbon::now()->format('Y-m-d'))->whereNull('draft')->get();
-
-            $telegram_message = "Отчет за день (".Carbon::now()->format('d.m.Y')."): \r\n\r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\nЗаявок с сайта: ".count($leads->where('lead_type_id', 2))."\r\n\r\nВсего за день: ".count($leads);
-            
-            $telegram_destinations = User::whereHas('staff', function ($query) {
-                $query->whereHas('position', function ($query) {
-                    $query->whereHas('notifications', function ($query) {
-                        $query->where('notification_id', 3);
-                    });
-                });
-            })
-            ->where('telegram_id', '!=', null)
-            ->get(['telegram_id']);
-
-            send_message($telegram_destinations, $telegram_message);
-
-        })
-        ->dailyAt('14:50')
+        $schedule->command('report:day')
+        ->dailyAt('11:01')
         ->timezone('Asia/Irkutsk');
     }
 
