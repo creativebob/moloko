@@ -5,6 +5,9 @@ namespace App\Telegram;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Commands\Command;
 
+// Телеграм
+use Telegram;
+
 class ReportCommand extends Command
 {
     /**
@@ -34,11 +37,13 @@ class ReportCommand extends Command
             ['Сброс']
         ];
 
-        $reply_markup = Telegram::replyKeyboardMarkup([
-            'keyboard' => $keyboard, 
-            'resize_keyboard' => true, 
-            'one_time_keyboard' => true
+        $reply_markup = $this->telegram->replyKeyboardMarkup([
+          'keyboard' => $keyboard,
+          'resize_keyboard' => true,
+          'one_time_keyboard' => true,
+          'selective' => false
         ]);
+
 
         // $response = Telegram::sendMessage([
         //     'chat_id' => $message['message']['chat']['id'], 

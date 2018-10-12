@@ -52,7 +52,7 @@ class TelegramController extends Controller
         //     dd('нету');
         // }
         
-        // $message = Telegram::commandsHandler(true);
+        $message = Telegram::commandsHandler(true);
         
         
         // $message = Telegram::getWebhookUpdates();
