@@ -89,7 +89,7 @@
     <a class="icon-delete sprite" data-open="item-delete"></a>  
     @endcan
     @endif
-</td> 
+  </td> 
 </tr>
 @endforeach
 @endif

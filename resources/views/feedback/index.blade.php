@@ -73,7 +73,7 @@
         </a>
       @endif
     </td>
-  <td class="td-body">{{ $cur_feedback->body }} </td>
+  <td class="td-body">{!! $cur_feedback->body !!} </td>
   <td class="td-person">{{ $cur_feedback->person }} </td>
   <td class="td-job">{{ $cur_feedback->job }} </td>
   <td class="td-site">{{ $cur_feedback->site->name or '' }} </td>

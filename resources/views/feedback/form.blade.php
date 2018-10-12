@@ -41,7 +41,7 @@
 
                         <div class="small-12 medium-6 cell">
                             <label>Дата отзыва
-                              @include('includes.inputs.date', ['name'=>'call_date', 'value'=>$feedback->call_date, 'required'=>'required'])
+                              @include('includes.inputs.date', ['name'=>'call_date', 'value'=>inPickMeUp($feedback->call_date), 'required'=>'required'])
                             </label>
                         </div>
 

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Feedback;
 use Illuminate\Http\Request;
+use App\Http\Requests\FeedbackRequest;
+use Carbon\Carbon;
 
 class FeedbackController extends Controller
 {
@@ -75,7 +77,7 @@ class FeedbackController extends Controller
         return view('feedback.create', compact('feedback', 'page_info'));
     }
 
-    public function store(Request $request)
+    public function store(FeedbackRequest $request)
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Feedback::class);
@@ -91,7 +93,7 @@ class FeedbackController extends Controller
         $feedback->person = $request->person;
         $feedback->job = $request->job;
         $feedback->body = $request->body;
-        $feedback->call_date = $request->call_date;
+        $feedback->call_date = outPickMeUp($request->call_date);
 
         if($user->company_id != null){
             $feedback->company_id = $user->company_id;
@@ -138,60 +140,24 @@ class FeedbackController extends Controller
 
     public function edit(Request $request, $id)
     {
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $place = Place::with('places_types')->moderatorLimit($answer)->findOrFail($id);
-        // dd($place->places_types);
-
-        // Список типов помещений
-        $places_types_query = PlacesType::get();
-
-        $places_types = [];
-
-        foreach ($place->places_types as $place_type){
-            $places_types[] = $place_type->id;
-        }
-
-        // Имя столбца
-        $column = 'places_types_id';
-        $request[$column] = $places_types;
-
-        // Контейнер для checkbox'а - инициируем
-        $checkboxer['status'] = null;
-        $checkboxer['entity_name'] = $this->entity_name;
-
-
-        // Настраиваем checkboxer
-        $places_types_checkboxer = addFilter(
-
-            $checkboxer,                // Контейнер для checkbox'а
-            $places_types_query,        // Коллекция которая будет взята
-            $request,
-            'Тип помещения',            // Название чекбокса для пользователя в форме
-            'places_types',             // Имя checkboxa для системы
-            'id',                       // Поле записи которую ищем
-            'places_types', 
-            'internal-self-one',        // Режим выборки через связи
-            'checkboxer'                // Режим: checkboxer или filter
-
-        );
-
-        // Получаем список стран
-        $countries_list = Country::get()->pluck('name', 'id');
+        $feedback = Feedback::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $place);
+        $this->authorize(getmethod(__FUNCTION__), $feedback);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('places.edit', compact('place', 'page_info', 'places_types_checkboxer', 'countries_list'));
+        return view('feedback.edit', compact('feedback', 'page_info'));
     }
 
 
-    public function update(PlaceRequest $request, $id)
+    public function update(FeedbackRequest $request, $id)
     {
 
         // Получаем авторизованного пользователя
@@ -202,48 +168,32 @@ class FeedbackController extends Controller
 
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $place = Place::with('location')->moderatorLimit($answer)->findOrFail($id);
-
-        // dd($place);
+        $feedback = Feedback::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('update', $place);
+        $this->authorize('update', $feedback);
 
-        // Пишем локацию
-        $location = $place->location;
-        if($location->city_id != $request->city_id) {
-            $location->city_id = $request->city_id;
-            $location->editor_id = $user_id;
-            $location->save();
-        }
-        if($location->address != $request->address) {
-            $location->address = $request->address;
-            $location->editor_id = $user_id;
-            $location->save();
-        }
-        if($location->country_id != $request->country_id) {
-            $location->country_id = $request->country_id;
-            $location->editor_id = $user_id;
-            $location->save();
-        }
+        $feedback->person = $request->person;
+        $feedback->job = $request->job;
+        $feedback->body = $request->body;
 
-        $place->name = $request->name;
-        $place->description = $request->description;
-        $place->square = $request->square;
+        $feedback->display = $request->display;
 
-        $place->save();
+        $feedback->call_date = outPickMeUp($request->call_date);
+
+        // Модерируем
+        if($answer['automoderate']){$feedback->moderation = null;};
+
+        $feedback->save();
 
         // Если запись удачна - будем записывать связи
-        if($place){
-
-            // Записываем связи: id-шники в таблицу Rooms
-            $result = $place->places_types()->sync($request->places_types_id);
+        if($feedback){
 
         } else {
-            abort(403, 'Ошибка записи помещения');
+            abort(403, 'Ошибка записи отзыва!');
         };
 
-        return redirect('/admin/places');
+        return redirect('/admin/feedback');
 
     }
 
