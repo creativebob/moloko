@@ -5,9 +5,6 @@ namespace App\Telegram;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Commands\Command;
 
-// Телеграм
-use Telegram;
-
 class ReportCommand extends Command
 {
     /**
@@ -25,53 +22,26 @@ class ReportCommand extends Command
      */
     public function handle($arguments)
     {
-        // This will send a message using `sendMessage` method behind the scenes to
-        // the user/chat id who triggered this command.
-        // `replyWith<Message|Photo|Audio|Video|Voice|Document|Sticker|Location|ChatAction>()` all the available methods are dynamically
-        // handled when you replace `send<Method>` with `replyWith` and use the same parameters - except chat_id does NOT need to be included in the array.
+        
+        $params['text'] = 'Выберите тип отчета:';
+        $params['disable_notification'] = TRUE;
+        $params['parse_mode'] = 'HTML';
 
-        $keyboard = [
-            ['Маркетинговый отчет'],
-            ['Финансовый отчет'],
-            ['Производственный отчет'],
-            ['Сброс']
+        $day = ['text' => 'Текущий день', 'callback_data' => 'report_day'];
+        $month = ['text' => 'Текущий месяц', 'callback_data' => 'report_month'];
+        $year = ['text' => 'Текущий год', 'callback_data' => 'report_year'];
+        
+        $keyboard = ['inline_keyboard' => [
+                [$day],
+                [$month],
+                [$year]
+            ]
         ];
+        $params['reply_markup'] = json_encode($keyboard, TRUE);
 
-        $reply_markup = $this->telegram->replyKeyboardMarkup([
-          'keyboard' => $keyboard,
-          'resize_keyboard' => true,
-          'one_time_keyboard' => true,
-          'selective' => false
-        ]);
-
-
-        // $response = Telegram::sendMessage([
-        //     'chat_id' => $message['message']['chat']['id'], 
-        //     'reply_markup' => $reply_markup
-        // ]);
-        $this->replyWithMessage(compact('reply_markup'));
-
-        // This will update the chat status to typing...
-        // $this->replyWithChatAction(['action' => Actions::TYPING]);
-
-        // // This will prepare a list of available commands and send the user.
-        // // First, Get an array of all registered commands
-        // // They'll be in 'command-name' => 'Command Handler Class' format.
-        // $commands = $this->getTelegram()->getCommands();
-
-        // // Build the list
-        // $response = '';
-        // foreach ($commands as $name => $command) {
-        //     $response .= sprintf('/%s - %s' . PHP_EOL, $name, $command->getDescription());
-        // }
-
-        // // Reply with the commands list
-        // $this->replyWithMessage(['text' => $response]);
-
-        // // Trigger another command dynamically from within this command
-        // // When you want to chain multiple commands within one or process the request further.
-        // // The method supports second parameter arguments which you can optionally pass, By default
-        // // it'll pass the same arguments that are received for this command originally.
-        // $this->triggerCommand('subscribe');
+        $this->replyWithMessage($params);
+        
+        return 'ok';
+        
     }
 }

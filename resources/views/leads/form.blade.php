@@ -18,7 +18,7 @@
                     </div>
                     <div class="small-6 medium-6 large-6 cell">
                         <label>Контактное лицо
-                            @include('includes.inputs.name', ['name'=>'name', 'value'=>$lead->name, 'required'=>''])
+                            @include('includes.inputs.name', ['name'=>'name', 'value'=>$lead->name, 'required'=>'required'])
                             <input type="hidden" id="lead_id" data-lead-id="{{$lead->id }}">
                         </label>
                     </div>

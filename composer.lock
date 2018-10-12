@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "29948572c04de8df8373f3224d99bfff",
+    "content-hash": "f113f4ac486a1bb2c27827421f03e5fb",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -1077,21 +1077,22 @@
         },
         {
             "name": "irazasyed/telegram-bot-sdk",
-            "version": "v2.2.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/irazasyed/telegram-bot-sdk.git",
-                "reference": "2824278370b231dfc9172104db8acc23fc5ade94"
+                "reference": "705e7d9bb0951ade14d608b663e4fa91d96561af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/irazasyed/telegram-bot-sdk/zipball/2824278370b231dfc9172104db8acc23fc5ade94",
-                "reference": "2824278370b231dfc9172104db8acc23fc5ade94",
+                "url": "https://api.github.com/repos/irazasyed/telegram-bot-sdk/zipball/705e7d9bb0951ade14d608b663e4fa91d96561af",
+                "reference": "705e7d9bb0951ade14d608b663e4fa91d96561af",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.0",
                 "illuminate/support": "~5.0",
+                "league/event": "^2.1",
                 "php": ">=5.5.0"
             },
             "require-dev": {
@@ -1105,7 +1106,15 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "3.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Telegram\\Bot\\Laravel\\TelegramServiceProvider"
+                    ],
+                    "aliases": {
+                        "Telegram": "Telegram\\Bot\\Laravel\\Facades\\Telegram"
+                    }
                 }
             },
             "autoload": {
@@ -1135,7 +1144,7 @@
                 "telegram php",
                 "telegram sdk"
             ],
-            "time": "2017-01-05T09:01:54+00:00"
+            "time": "2018-10-10T22:01:48+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",
@@ -1545,6 +1554,56 @@
             "description": "HTML and Form Builders for the Laravel Framework",
             "homepage": "https://laravelcollective.com",
             "time": "2018-03-24T00:39:21+00:00"
+        },
+        {
+            "name": "league/event",
+            "version": "2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/event.git",
+                "reference": "e4bfc88dbcb60c8d8a2939a71f9813e141bbe4cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/event/zipball/e4bfc88dbcb60c8d8a2939a71f9813e141bbe4cd",
+                "reference": "e4bfc88dbcb60c8d8a2939a71f9813e141bbe4cd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "henrikbjorn/phpspec-code-coverage": "~1.0.1",
+                "phpspec/phpspec": "~2.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Event\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Event package",
+            "keywords": [
+                "emitter",
+                "event",
+                "listener"
+            ],
+            "time": "2015-05-21T12:24:47+00:00"
         },
         {
             "name": "league/flysystem",
@@ -5596,7 +5655,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "intervention/image": 20
+        "intervention/image": 20,
+        "irazasyed/telegram-bot-sdk": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

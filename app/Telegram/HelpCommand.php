@@ -5,7 +5,7 @@ namespace Telegram\Bot\Commands;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Commands\Command;
 
-class HelpCommand extends Command
+class Help1Command extends Command
 {
     /**
      * @var string Command Name

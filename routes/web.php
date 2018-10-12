@@ -61,6 +61,7 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 //  // ->groupBy(['lead_type.name', 'lead_method.name']);
 //  // dd($grouped_leads);
 
+
 //     // if (count($grouped_leads) > 0) {
 //     //  $telegram_message .= "Обращения:\r\n\r\n";
 
@@ -244,7 +245,8 @@ Route::get('/set_webhook', 'TelegramController@set_webhook')->middleware('auth')
 Route::get('/remove_webhook', 'TelegramController@remove_webhook')->middleware('auth');
 
 // Получаем сообщение от бота
-Route::any('/telegram_message', 'TelegramController@store');
+Route::post('/telegram_message', 'TelegramController@get_message');
+Route::get('/telegram_updates', 'TelegramController@get_updates');
 
 Route::any('/check_class', 'ClassController@check_class');
 

@@ -25,9 +25,8 @@ class AccessCommand extends Command
      */
     public function handle($arguments)
     {
-
-
-        $message = $this->getWebhookUpdates();
+        // Пишем в базу сообщение пользователя и выводим его id
+        $message = $this->getUpdate();
         
         $tel_msg = new TelegramMessage;
 
@@ -54,12 +53,10 @@ class AccessCommand extends Command
 
         if ($tel_msg) {
             $text = 'Ваш Telegram ID: '.$tel_msg->chat_id;
-
-
         } else {
-            $text = 'Произошла ошибка, попробуйте снова ерез некоторое время иил обратитесь к администратору.';
+            $text = 'Произошла ошибка, попробуйте снова через некоторое время иил обратитесь к администратору.';
         }
-
+        
         $this->replyWithMessage(compact('text'));
 
     }
