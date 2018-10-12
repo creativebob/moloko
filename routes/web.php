@@ -24,14 +24,14 @@ Route::get('/medcosm', 'ApiController@medcosm');
 Route::get('/dashboard', 'HomeController@index')->name('home');
 Route::get('/img/{path}', 'ImageController@show')->where('path', '.*');
 // Route::get('/lol', function () {
-// 	return view('demo');
+//  return view('demo');
 // });
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 // Вход в панель управления
 Route::get('/', function () {
-	return view('layouts.enter');
+    return view('layouts.enter');
 });
 
 Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
@@ -44,165 +44,165 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 // Route::any('/lol', function () {
 
 //     dd(App\OldLead::with(['comments.user', 'claims', 'task', 'stage', 'user', 'city', 'service', 'challenges' => function ($query) {
-//     	$query->with('author', 'appointed', 'finisher', 'stage', 'task');
+//      $query->with('author', 'appointed', 'finisher', 'stage', 'task');
 //     }])->find(5468));
 // });
 
-Route::any('/report', function () {
+// Route::any('/report', function () {
 
-    $mytime = Carbon::now();
-    dd($mytime);
+//     // $mytime = Carbon::now();
+//     // dd($mytime);
 
-	// Получаем лидов, сгруппированных по типу, и затем по методу
-	// $grouped_leads = Lead::with('lead_method', 'lead_type', 'source_claim')
-	// ->whereDate('created_at', Carbon::now()->format('Y-m-d'))
-	// ->whereNull('draft')
-	// ->get()
-	// ->groupBy(['lead_type.name', 'lead_method.name']);
-	// dd($grouped_leads);
+//  // Получаем лидов, сгруппированных по типу, и затем по методу
+//  // $grouped_leads = Lead::with('lead_method', 'lead_type', 'source_claim')
+//  // ->whereDate('created_at', Carbon::now()->format('Y-m-d'))
+//  // ->whereNull('draft')
+//  // ->get()
+//  // ->groupBy(['lead_type.name', 'lead_method.name']);
+//  // dd($grouped_leads);
 
-    // if (count($grouped_leads) > 0) {
-    //  $telegram_message .= "Обращения:\r\n\r\n";
+//     // if (count($grouped_leads) > 0) {
+//     //  $telegram_message .= "Обращения:\r\n\r\n";
 
-    //  // Перебираем методы лидов (звонок, сайт..)
-    //  foreach ($grouped_leads as $type => $types_leads) {
+//     //  // Перебираем методы лидов (звонок, сайт..)
+//     //  foreach ($grouped_leads as $type => $types_leads) {
 
-    //      // Если есть вложенность
-    //      if (count($types_leads) > 0) {
-    //          $telegram_message .= " " . $type . ": " . $types_leads->flatten()->count()  . "\r\n";
+//     //      // Если есть вложенность
+//     //      if (count($types_leads) > 0) {
+//     //          $telegram_message .= " " . $type . ": " . $types_leads->flatten()->count()  . "\r\n";
 
-    //          // Перебираем методы обращения
+//     //          // Перебираем методы обращения
 
- //                foreach ($types_leads as $method => $values) {
+//  //                foreach ($types_leads as $method => $values) {
 
- //                    $claims_count = 0;
- //                    // $services_count = 0;
-    //              // dd($values);
+//  //                    $claims_count = 0;
+//  //                    // $services_count = 0;
+//     //              // dd($values);
 
- //                    $telegram_message .= "  " . $method . ": " . count($values) . "\r\n";
+//  //                    $telegram_message .= "  " . $method . ": " . count($values) . "\r\n";
 
- //                    // Проверяем лидов на рекламации
- //                    foreach ($values as $value) {
- //                        if (isset($value->source_claim)) {
- //                            $claims_count++;
- //                        }
- //                    }
- //                    if ($claims_count > 0) {
- //                        if ($claims_count != 0) {
- //                            $telegram_message .= "   Рекламации: " . $claims_count . "\r\n";
- //                        }
+//  //                    // Проверяем лидов на рекламации
+//  //                    foreach ($values as $value) {
+//  //                        if (isset($value->source_claim)) {
+//  //                            $claims_count++;
+//  //                        }
+//  //                    }
+//  //                    if ($claims_count > 0) {
+//  //                        if ($claims_count != 0) {
+//  //                            $telegram_message .= "   Рекламации: " . $claims_count . "\r\n";
+//  //                        }
 
- //                        if ($claims_count == 0 || (count($values) - $claims_count) > 0) {
- //                            $telegram_message .= "   Коммерческие обращения: " . (count($values) - $claims_count) . "\r\n";
- //                        }
- //                    }
- //                }
- //            }
- //            $telegram_message .= "\r\n";
- //        }
- //    }
+//  //                        if ($claims_count == 0 || (count($values) - $claims_count) > 0) {
+//  //                            $telegram_message .= "   Коммерческие обращения: " . (count($values) - $claims_count) . "\r\n";
+//  //                        }
+//  //                    }
+//  //                }
+//  //            }
+//  //            $telegram_message .= "\r\n";
+//  //        }
+//  //    }
 
-    // Получаем лидов
-    $leads = Lead::with('lead_method', 'lead_type', 'source_claim')
-    ->whereDate('created_at', Carbon::now()->format('Y-m-d'))
-    ->whereNull('draft')
-    ->get();
+//     // Получаем лидов
+//     $leads = Lead::with('lead_method', 'lead_type', 'source_claim')
+//     ->whereDate('created_at', Carbon::now()->format('Y-m-d'))
+//     ->whereNull('draft')
+//     ->get();
 
-    $telegram_message = "Отчет за день (" . Carbon::now()->format('d.m.Y') . "):\r\n\r\n";
+//     $telegram_message = "Отчет за день (" . Carbon::now()->format('d.m.Y') . "):\r\n\r\n";
 
-    if (count($leads) > 0) {
-        $telegram_message .= "Обращения:\r\n\r\n";
+//     if (count($leads) > 0) {
+//         $telegram_message .= "Обращения:\r\n\r\n";
 
-        // Обычное
-        $leads_regular = $leads->where('lead_type_id', 1);
-        if (count($leads_regular) > 0) {
-            $telegram_message .= " Обычное обращение: " . count($leads_regular) . "\r\n";
+//         // Обычное
+//         $leads_regular = $leads->where('lead_type_id', 1);
+//         if (count($leads_regular) > 0) {
+//             $telegram_message .= " Обычное обращение: " . count($leads_regular) . "\r\n";
 
-            // Групируем по методам и перебираем
-            $grouped_leads_regular = $leads_regular->groupBy('lead_method.name');
-            // dd($grouped_leads_regular);
-            foreach ($grouped_leads_regular as $key => $value) {
-                $telegram_message .= "  " . $key . ": " . count($value) . "\r\n";
-            }
-            $telegram_message .= "\r\n";
-        }
+//             // Групируем по методам и перебираем
+//             $grouped_leads_regular = $leads_regular->groupBy('lead_method.name');
+//             // dd($grouped_leads_regular);
+//             foreach ($grouped_leads_regular as $key => $value) {
+//                 $telegram_message .= "  " . $key . ": " . count($value) . "\r\n";
+//             }
+//             $telegram_message .= "\r\n";
+//         }
 
-        // Сервисное
-        $leads_service = $leads->where('lead_type_id', 3);
-        if (count($leads_service) > 0) {
-            $telegram_message .= " Сервисное обращение: " . count($leads_service) . "\r\n";
+//         // Сервисное
+//         $leads_service = $leads->where('lead_type_id', 3);
+//         if (count($leads_service) > 0) {
+//             $telegram_message .= " Сервисное обращение: " . count($leads_service) . "\r\n";
 
-            // Считаем рекламации и обращения
-            $claims_count = 0;
-            $commercial_count = 0;
+//             // Считаем рекламации и обращения
+//             $claims_count = 0;
+//             $commercial_count = 0;
 
-            // Групируем по методам и перебираем
-            $grouped_leads_service = $leads_service->groupBy('lead_method.name');
-            // dd($grouped_leads_regular);
-            foreach ($grouped_leads_service as $key => $values) {
-                $telegram_message .= "  " . $key . ": " . count($values) . "\r\n";
+//             // Групируем по методам и перебираем
+//             $grouped_leads_service = $leads_service->groupBy('lead_method.name');
+//             // dd($grouped_leads_regular);
+//             foreach ($grouped_leads_service as $key => $values) {
+//                 $telegram_message .= "  " . $key . ": " . count($values) . "\r\n";
 
-                foreach ($values as $value) {
-                    if (isset($value->source_claim)) {
-                        $claims_count++;
-                    } else {
-                        $commercial_count++;
-                    }
-                }
-            }
+//                 foreach ($values as $value) {
+//                     if (isset($value->source_claim)) {
+//                         $claims_count++;
+//                     } else {
+//                         $commercial_count++;
+//                     }
+//                 }
+//             }
 
-            // Выносим рекламации и коммерческие обращения
-            if (($claims_count != 0) || ($commercial_count != 0)) {
-                $telegram_message .= "  ---\r\n";
+//             // Выносим рекламации и коммерческие обращения
+//             if (($claims_count != 0) || ($commercial_count != 0)) {
+//                 $telegram_message .= "  ---\r\n";
 
-                if ($claims_count != 0) {
-                    $telegram_message .= "   Рекламации: " . $claims_count . "\r\n";
-                }
+//                 if ($claims_count != 0) {
+//                     $telegram_message .= "   Рекламации: " . $claims_count . "\r\n";
+//                 }
 
-                if ($commercial_count != 0) {
-                    $telegram_message .= "   Коммерческие обращения: " . $commercial_count . "\r\n";
-                }
-            }
-            $telegram_message .= "\r\n";
-        }
+//                 if ($commercial_count != 0) {
+//                     $telegram_message .= "   Коммерческие обращения: " . $commercial_count . "\r\n";
+//                 }
+//             }
+//             $telegram_message .= "\r\n";
+//         }
 
-        // Дилерское
-        $leads_dealer = $leads->where('lead_type_id', 2);
-        if (count($leads_dealer) > 0) {
-            $telegram_message .= " Дилерское обращение: " . count($leads_dealer) . "\r\n";
+//         // Дилерское
+//         $leads_dealer = $leads->where('lead_type_id', 2);
+//         if (count($leads_dealer) > 0) {
+//             $telegram_message .= " Дилерское обращение: " . count($leads_dealer) . "\r\n";
 
-            // Групируем по методам и перебираем
-            $grouped_leads_dealer = $leads_dealer->groupBy('lead_method.name');
-            // dd($grouped_leads_regular);
-            foreach ($grouped_leads_dealer as $key => $value) {
-                $telegram_message .= "  " . $key . ": " . count($value) . "\r\n";
-            }
-            $telegram_message .= "\r\n";
-        }
+//             // Групируем по методам и перебираем
+//             $grouped_leads_dealer = $leads_dealer->groupBy('lead_method.name');
+//             // dd($grouped_leads_regular);
+//             foreach ($grouped_leads_dealer as $key => $value) {
+//                 $telegram_message .= "  " . $key . ": " . count($value) . "\r\n";
+//             }
+//             $telegram_message .= "\r\n";
+//         }
 
-    } else {
-        // Если обращений не было
-        $telegram_message .= "Обращений не было ...";
-        $telegram_message .= "\r\n";
-    }
+//     } else {
+//         // Если обращений не было
+//         $telegram_message .= "Обращений не было ...";
+//         $telegram_message .= "\r\n";
+//     }
 
-    $telegram_destinations = User::whereHas('staff', function ($query) {
-        $query->whereHas('position', function ($query) {
-            $query->whereHas('notifications', function ($query) {
-                $query->where('notification_id', 3);
-            });
-        });
-    })
-    ->where('telegram_id', '!=', null)
-    ->get(['telegram_id']);
+//     $telegram_destinations = User::whereHas('staff', function ($query) {
+//         $query->whereHas('position', function ($query) {
+//             $query->whereHas('notifications', function ($query) {
+//                 $query->where('notification_id', 3);
+//             });
+//         });
+//     })
+//     ->where('telegram_id', '!=', null)
+//     ->get(['telegram_id']);
 
-    send_message($telegram_destinations, $telegram_message);
-    // dd($telegram_message);
-});
+//     send_message($telegram_destinations, $telegram_message);
+//     // dd($telegram_message);
+// });
 
 Route::get('/mounth', function() {
-	// $leads = App\Lead::whereMonth('created_at', Carbon\Carbon::now()->format('m'))->whereYear('created_at', Carbon\Carbon::now()->format('Y'))->whereNull('draft')->get();
-	// $leads = Lead::whereDate('created_at', Carbon::now()->format('Y-m-d'))->whereNull('draft')->get();
+    // $leads = App\Lead::whereMonth('created_at', Carbon\Carbon::now()->format('m'))->whereYear('created_at', Carbon\Carbon::now()->format('Y'))->whereNull('draft')->get();
+    // $leads = Lead::whereDate('created_at', Carbon::now()->format('Y-m-d'))->whereNull('draft')->get();
 
  //            $telegram_message = "Отчет за день (".Carbon::now()->format('d.m.Y')."): \r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\Заявок с сайта: ".count($leads->where('lead_type_id', 2));
 
@@ -218,18 +218,18 @@ Route::get('/mounth', function() {
 
  //            send_message($telegram_destinations, $telegram_message);
 
-	$start = new Carbon('first day of last month');
-	$start->startOfMonth();
-	$end = new Carbon('last day of last month');
-	$end->endOfMonth();
+    $start = new Carbon('first day of last month');
+    $start->startOfMonth();
+    $end = new Carbon('last day of last month');
+    $end->endOfMonth();
 
-	// dd($end);
+    // dd($end);
 
-	$leads = Lead::where('created_at', '>=', $start)->where('created_at', '<=', $end)->whereNull('draft')->get();
-	// dd($leads);
-	$telegram_message = "Отчет за сентябрь: \r\n\r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\Заявок с сайта: ".count($leads->where('lead_type_id', 2))."\r\n\r\nВсего: ".count($leads);
+    $leads = Lead::where('created_at', '>=', $start)->where('created_at', '<=', $end)->whereNull('draft')->get();
+    // dd($leads);
+    $telegram_message = "Отчет за сентябрь: \r\n\r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\Заявок с сайта: ".count($leads->where('lead_type_id', 2))."\r\n\r\nВсего: ".count($leads);
 
-	dd($telegram_message);
+    dd($telegram_message);
 })->middleware('auth');
 
 // ------------------------------------ Telegram ----------------------------------------
@@ -246,16 +246,6 @@ Route::get('/remove_webhook', 'TelegramController@remove_webhook')->middleware('
 // Получаем сообщение от бота
 Route::any('/telegram_message', 'TelegramController@store');
 
-// Route::any('/telegram_message', function () {
-//     $update = Telegram::commandsHandler(true);
-    
-//     // Commands handler method returns an Update object.
-//     // So you can further process $update object 
-//     // to however you want.
-    
-//     return 'ok';
-// });
-
 Route::any('/check_class', 'ClassController@check_class');
 
 
@@ -264,7 +254,7 @@ Route::any('/check_class', 'ClassController@check_class');
 //     // dd($columns);
 //     $text = "<select>";
 //     foreach ($columns as $column) {
-//     	$text .= "<option>" . $column . "</option>";
+//      $text .= "<option>" . $column . "</option>";
 //     }
 //     $text .= "</select>";
 //    echo $text;
@@ -362,7 +352,7 @@ Route::prefix('/albums/{alias}')->group(function () {
 
   // ----------------------------------- Фотографии -----------------------------------------------
 
-	Route::resource('/photos', 'PhotoController')->middleware('auth');
+    Route::resource('/photos', 'PhotoController')->middleware('auth');
   // Загрузка фоток через ajax через dropzone.js
 });
 
@@ -970,55 +960,55 @@ Route::post('/sites_display', 'SiteController@ajax_display')->middleware('auth')
 Route::prefix('/sites/{alias}')->group(function () {
 
 
-	// --------------------------------------- Страницы ---------------------------------------------
+    // --------------------------------------- Страницы ---------------------------------------------
 
-	// Основные методы
-	Route::resource('/pages', 'PageController')->middleware('auth');
+    // Основные методы
+    Route::resource('/pages', 'PageController')->middleware('auth');
 
-  	// Проверка на существование страницы
-	Route::post('/page_check', 'PageController@ajax_check')->middleware('auth');
-
-
-  	// --------------------------------------- Навигации --------------------------------------------
-
-  	// Текущая добавленная/удаленная навигация
-	Route::any('/navigations', 'NavigationController@index')->middleware('auth');
-  	// Основные методы
-	Route::resource('/navigations', 'NavigationController')->middleware('auth');
-	// Проверка на существование навигации
-	Route::post('/navigation_check', 'NavigationController@ajax_check')->middleware('auth');
+    // Проверка на существование страницы
+    Route::post('/page_check', 'PageController@ajax_check')->middleware('auth');
 
 
-  	// -------------------------------------------Меню ---------------------------------------------
+    // --------------------------------------- Навигации --------------------------------------------
 
-	// Основные методы
-	Route::resource('/menus', 'MenuController')->middleware('auth');
-
-
-  	// ---------------------------------------- Новости --------------------------------------------
-
-  	// Основные методы
-	Route::resource('/news', 'NewsController')->middleware('auth');
-  	// Проверка на существование новости
-	Route::post('/news_check', 'NewsController@ajax_check')->middleware('auth');
-
-	// ----------------------------------------- Каталог ------------------------------------------
-
-	// Текущий добавленный/удаленный каталог
-	Route::any('/catalogs', 'CatalogController@index')->middleware('auth');
-	// Основные методы
-	Route::resource('/catalogs', 'CatalogController')->middleware('auth');
-  	// Проверка на существование каталога
-	Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
-	// Проверка на существование алиаса каталога
-	Route::post('/catalog_check_alias', 'CatalogController@ajax_check_alias')->middleware('auth');
+    // Текущая добавленная/удаленная навигация
+    Route::any('/navigations', 'NavigationController@index')->middleware('auth');
+    // Основные методы
+    Route::resource('/navigations', 'NavigationController')->middleware('auth');
+    // Проверка на существование навигации
+    Route::post('/navigation_check', 'NavigationController@ajax_check')->middleware('auth');
 
 
-	// -------------------------------- Продукция для каталогов сайта -------------------------------------
-	// Основные методы
-	Route::get('/catalog_products/{id?}', 'CatalogProductController@show')->middleware('auth');
-	// Основные методы
-	Route::resource('/catalog_products', 'CatalogProductController')->middleware('auth');
+    // -------------------------------------------Меню ---------------------------------------------
+
+    // Основные методы
+    Route::resource('/menus', 'MenuController')->middleware('auth');
+
+
+    // ---------------------------------------- Новости --------------------------------------------
+
+    // Основные методы
+    Route::resource('/news', 'NewsController')->middleware('auth');
+    // Проверка на существование новости
+    Route::post('/news_check', 'NewsController@ajax_check')->middleware('auth');
+
+    // ----------------------------------------- Каталог ------------------------------------------
+
+    // Текущий добавленный/удаленный каталог
+    Route::any('/catalogs', 'CatalogController@index')->middleware('auth');
+    // Основные методы
+    Route::resource('/catalogs', 'CatalogController')->middleware('auth');
+    // Проверка на существование каталога
+    Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
+    // Проверка на существование алиаса каталога
+    Route::post('/catalog_check_alias', 'CatalogController@ajax_check_alias')->middleware('auth');
+
+
+    // -------------------------------- Продукция для каталогов сайта -------------------------------------
+    // Основные методы
+    Route::get('/catalog_products/{id?}', 'CatalogProductController@show')->middleware('auth');
+    // Основные методы
+    Route::resource('/catalog_products', 'CatalogProductController')->middleware('auth');
 
 });
 
