@@ -83,7 +83,7 @@ class TelegramController extends Controller
                 ->whereNull('draft')
                 ->get();
 
-                $telegram_message = "Отчет за месяц (" . getWeekDay(Carbon::now()) . "):\r\n\r\n";
+                $telegram_message = "Отчет за месяц (" . getMonth(Carbon::now()) . "):\r\n\r\n";
                 break;
                 
                 case 'report_year':
