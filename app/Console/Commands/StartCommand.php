@@ -1,9 +1,11 @@
 <?php
 
-namespace TelegramCommands;
+namespace App\Console\Commands;
 
 use Telegram\Bot\Actions;
 use Telegram\Bot\Commands\Command;
+
+use Illuminate\Console\Command;
 
 class StartCommand extends Command
 {

@@ -57,6 +57,8 @@ return [
     */
     'commands' => [
         Telegram\Bot\Commands\HelpCommand::class,
-        Bootstrap\Telegram\Commands\StartCommand::class,
+        App\Telegram\StartCommand::class,
+        App\Telegram\ReportCommand::class,
+        App\Telegram\AccessCommand::class,
     ],
 ];

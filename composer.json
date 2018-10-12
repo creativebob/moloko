@@ -13,6 +13,7 @@
     "fideloper/proxy": "~3.3",
     "genealabs/laravel-model-caching": "^0.2.63",
     "intervention/image": "dev-master",
+    "irazasyed/telegram-bot-sdk": "dev-master",
     "laravel/framework": "5.5.*",
     "laravel/tinker": "~1.0",
     "laravelcollective/html": "^5.4.0",
@@ -21,7 +22,6 @@
     "maatwebsite/excel": "2.*",
     "nesbot/carbon": "1.24.1",
     "predis/predis": "^1.1",
-    "irazasyed/telegram-bot-sdk": "^2.2",
     "unisharp/laravel-ckeditor": "^4.7",
     "unisharp/laravel-filemanager": "^1.8"
   },

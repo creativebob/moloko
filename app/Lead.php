@@ -238,4 +238,10 @@ class Lead extends Model
         return $this->morphToMany('App\Phone', 'phone_entity');
     }
 
+    // Проверка на рекламацию
+    public function source_claim()
+    {
+        return $this->hasOne('App\Claim', 'source_lead_id');
+    }
+
 }

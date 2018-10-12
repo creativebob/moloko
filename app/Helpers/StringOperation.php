@@ -286,6 +286,52 @@ function getWeekDay($date, $type = 0){
     return $weekday;
 }
 
+function getMonth($date, $type = 0){
+
+// Получаем дату и необходимый формат вывоода
+    $date = Carbon::parse($date);
+    $month = $date->month;
+
+    if($type == 0){
+
+        switch ($month) {
+            case 1: $month = 'Январь'; break;
+            case 2: $month = 'Февраль'; break;
+            case 3: $month = 'Март'; break;
+            case 4: $month = 'Апрель'; break;
+            case 5: $month = 'Май'; break;
+            case 6: $month = 'Июнь'; break;
+            case 7: $month = 'Июль'; break; 
+            case 8: $month = 'Август'; break; 
+            case 9: $month = 'Сентябрь'; break; 
+            case 10: $month = 'Октябрь'; break; 
+            case 11: $month = 'Ноябрь'; break; 
+            case 12: $month = 'Декабрь'; break; 
+        }
+
+    } else {
+
+        switch ($month) {
+            case 1: $month = 'Янв'; break;
+            case 2: $month = 'Фев'; break;
+            case 3: $month = 'Мар'; break;
+            case 4: $month = 'Апр'; break;
+            case 5: $month = 'Май'; break;
+            case 6: $month = 'Июн'; break;
+            case 7: $month = 'Июл'; break; 
+            case 8: $month = 'Авг'; break; 
+            case 9: $month = 'Сен'; break; 
+            case 10: $month = 'Окт'; break; 
+            case 11: $month = 'Ноя'; break; 
+            case 12: $month = 'Дек'; break; 
+        }
+
+    }
+
+    // Отдаем день недели
+    return $month;
+}
+
 // Делаем заглавной первую букву
 function get_first_letter($name){
 

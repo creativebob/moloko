@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 // Модели
 use App\TelegramMessage;
 
+use App\Lead;
+
 use Illuminate\Http\Request;
 
 // Карбон
@@ -13,10 +15,12 @@ use Carbon\Carbon;
 // Телеграм
 use Telegram;
 
+use Telegram\Bot\Commands\Command;
+use Telegram\Bot\Keyboard\Keyboard;
+
 class TelegramController extends Controller
 {
-    
-    
+
     public function get_bot()
     {
         $response = Telegram::getMe();
@@ -39,6 +43,12 @@ class TelegramController extends Controller
         $response = Telegram::removeWebhook();
         dd($response);
     }
+    
+    public function get_updates()
+    {
+        $response = Telegram::getUpdates();
+        dd($response);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -46,96 +56,155 @@ class TelegramController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function get_message(Request $request)
     {
+
+        $update = Telegram::commandsHandler(true);
+
+        // if ($update['message']['text'] == 'го') {
+        // }
         
-        $message = Telegram::getWebhookUpdates();
-        // dd($item);
-        
-        if (isset($message['message'])) {
-            
-            $text = $message['message']['text'];
-            
-            
-            switch ($text) {
-            case '/report':
-                $keyboard = [
-                    ['Маркетинговый отчет'],
-                    ['Финансовый отчет'],
-                    ['Производственный отчет'],
-                         ['Сброс']
-                ];
+        // Если нажали inline-нопку:
+        if (isset($update['callback_query'])) {
+
+            switch ($update['callback_query']['data']) {
+                case 'report_day':
+                $leads = Lead::with('lead_method', 'lead_type', 'source_claim')
+                ->whereDate('created_at', Carbon::now()->format('Y-m-d'))
+                ->whereNull('draft')
+                ->get();
                 
-                $reply_markup = Telegram::replyKeyboardMarkup([
-                    'keyboard' => $keyboard, 
-                    'resize_keyboard' => true, 
-                    'one_time_keyboard' => true
-                ]);
-                
-                $response = Telegram::sendMessage([
-                    'chat_id' => $message['message']['chat']['id'], 
-                    'reply_markup' => $reply_markup
-                ]);
-                
-                // $messageId = $response->getMessageId();
+                $telegram_message = "Отчет за день (" . getWeekDay(Carbon::now()) . ' ' . Carbon::now()->format('d.m.Y') . "):\r\n\r\n";
                 break;
                 
-                case 'Доступ':
-                    
-                    $tel_msg = new TelegramMessage;
-            
-                    $tel_msg->message_id = isset($message['message']['message_id']) ? $message['message']['message_id'] : null;
-                    $tel_msg->update_id = isset($message['update_id']) ? $message['update_id'] : null;
-                    
-                    $tel_msg->from_id = isset($message['message']['from']['id']) ? $message['message']['from']['id'] : null;
-                    $tel_msg->from_is_bot = isset($message['message']['from']['is_bot']) ? $message['message']['from']['is_bot'] : null;
-                    $tel_msg->from_first_name = isset($message['message']['from']['first_name']) ? $message['message']['from']['first_name'] : null;
-                    $tel_msg->from_last_name = isset($message['message']['from']['last_name']) ? $message['message']['from']['last_name'] : null;
-                    $tel_msg->from_username = isset($message['message']['from']['username']) ? $message['message']['from']['username'] : null;
-                    $tel_msg->from_language_code = isset($message['message']['from']['language_code']) ? $message['message']['from']['language_code'] : null;
-                    
-                    $tel_msg->chat_id = isset($message['message']['chat']['id']) ? $message['message']['chat']['id'] : null;
-                    $tel_msg->chat_first_name = isset($message['message']['chat']['first_name']) ? $message['message']['chat']['first_name'] : null;
-                    $tel_msg->chat_last_name = isset($message['message']['chat']['last_name']) ? $message['message']['chat']['last_name'] : null;
-                    $tel_msg->chat_username = isset($message['message']['chat']['username']) ? $message['message']['chat']['username'] : null;
-                    $tel_msg->chat_type = isset($message['message']['chat']['type']) ? $message['message']['chat']['type'] : null;
-            
-                    $tel_msg->message = isset($message['message']['text']) ? $message['message']['text'] : null;
-                    $tel_msg->date = isset($message['message']['date']) ? $message['message']['date'] : null;
-                    
-                    $tel_msg->save();
-            
-                    if ($tel_msg) {
-                        $response = Telegram::sendMessage([
-                            'chat_id' => $tel_msg->chat_id, 
-                            'text' => 'Ваш Telegram ID: '.$tel_msg->chat_id
-                        ]);
-                    } else {
-                        dd('не вышло');
+                case 'report_month':
+                $leads = Lead::with('lead_method', 'lead_type', 'source_claim')
+                ->where('created_at', '>=', Carbon::now()->startOfMonth())
+                ->whereNull('draft')
+                ->get();
+
+                $telegram_message = "Отчет за месяц (" . getMonth(Carbon::now()) . "):\r\n\r\n";
+                break;
+                
+                case 'report_year':
+                $leads = Lead::with('lead_method', 'lead_type', 'source_claim')
+                ->whereYear('created_at', Carbon::now()->format('Y'))
+                ->whereNull('draft')
+                ->get();
+
+                $telegram_message = "Отчет за год (" . Carbon::now()->format('Y') . "):\r\n\r\n";
+                break;
+
+                default:
+                Telegram::sendMessage([
+                    'chat_id' => $update['callback_query']['message']['chat']['id'],
+                    // именно в $update[message]['data'] - будет то что прописано у нажатой кнопки в качестве callback_data
+                    'text' => "Вы нажали на кнопку с кодом: " . $update['callback_query']['data'], 
+                ]);
+                break;
+            }
+
+            if ($leads) {
+
+                if (count($leads) > 0) {
+                    $telegram_message .= "Обращения:\r\n\r\n";
+
+                    // Обычное
+                    $leads_regular = $leads->where('lead_type_id', 1);
+                    if (count($leads_regular) > 0) {
+                        $telegram_message .= "Обычное обращение: " . count($leads_regular) . "\r\n";
+
+                        // Групируем по методам и перебираем
+                        $grouped_leads_regular = $leads_regular->groupBy('lead_method.name');
+                        // dd($grouped_leads_regular);
+                        foreach ($grouped_leads_regular as $key => $value) {
+                            $telegram_message .= "      " . $key . ": " . count($value) . "\r\n";
+                        }
+                        $telegram_message .= "\r\n";
                     }
-                break;
-                
-                case 'Лол':
-                $response = Telegram::sendMessage([
-                    'chat_id' => $message['message']['chat']['id'], 
-                    'text' => 'Лолита: '.$message['message']['text']
-                ]);
-                break;
-            
-            default:
 
-                $response = Telegram::sendMessage([
-                    'chat_id' => $message['message']['chat']['id'], 
-                    'text' => 'Я конечно извиняюсь, но такое обращение для меня непонятно: "'.$text.'"... Лучше ознакомтесь с доступными командами - /help'
+                    // Сервисное
+                    $leads_service = $leads->where('lead_type_id', 3);
+                    if (count($leads_service) > 0) {
+                        $telegram_message .= "Сервисное обращение: " . count($leads_service) . "\r\n";
+
+                        // Считаем рекламации и обращения
+                        $claims_count = 0;
+                        $commercial_count = 0;
+
+                        // Групируем по методам и перебираем
+                        $grouped_leads_service = $leads_service->groupBy('lead_method.name');
+                        // dd($grouped_leads_regular);
+                        foreach ($grouped_leads_service as $key => $values) {
+                            $telegram_message .= "      " . $key . ": " . count($values) . "\r\n";
+
+                            foreach ($values as $value) {
+                                if (isset($value->source_claim)) {
+                                    $claims_count++;
+                                } else {
+                                    $commercial_count++;
+                                }
+                            }
+                        }
+
+                        // Выносим рекламации и коммерческие обращения
+                        if (($claims_count != 0) || ($commercial_count != 0)) {
+                            $telegram_message .= "      ---\r\n";
+
+                            if ($claims_count != 0) {
+                                $telegram_message .= "         Рекламации: " . $claims_count . "\r\n";
+                            }
+
+                            if ($commercial_count != 0) {
+                                $telegram_message .= "         Платный ремонт: " . $commercial_count . "\r\n";
+                            }
+                        }
+                        $telegram_message .= "\r\n";
+
+
+                    }
+
+                    // Дилерское
+                    $leads_dealer = $leads->where('lead_type_id', 2);
+                    if (count($leads_dealer) > 0) {
+                        $telegram_message .= "Дилерское обращение: " . count($leads_dealer) . "\r\n";
+
+                        // Групируем по методам и перебираем
+                        $grouped_leads_dealer = $leads_dealer->groupBy('lead_method.name');
+                        // dd($grouped_leads_regular);
+                        foreach ($grouped_leads_dealer as $key => $value) {
+                            $telegram_message .= "      " . $key . ": " . count($value) . "\r\n";
+                        }
+                        $telegram_message .= "\r\n";
+                    }
+
+                } else {
+                    // Если обращений не было
+                    $telegram_message .= "Обращений не было ...";
+                    $telegram_message .= "\r\n";
+                }
+
+                Telegram::sendMessage([
+                    'chat_id' => $update['callback_query']['message']['chat']['id'],
+                    // именно в [message]['data'] - будет то что прописано у нажатой кнопки в качестве callback_data
+                    'text' => $telegram_message, 
                 ]);
-                break;
+
+            }
+           
+            Telegram::answerCallbackQuery([
+                'callback_query_id' => $update['callback_query']['id']
+            ]);
+
         }
         
-        } else {
-            dd('ничео');
-            
-        }
-
+        // если пришло неизвестное сообщение:
+        // if (isset($update['message'])) {
+        //  $response = Telegram::sendMessage([
+        //                     'chat_id' => $update['message']['chat']['id'], 
+        //                     'text' => 'Я конечно извиняюсь, но такое обращение для меня непонятно: "'.$update['message']['text'].'"... Лучше ознакомтесь с доступными командами - /help'
+        //                 ]);
+        // }
     }
 
     /**
