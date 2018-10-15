@@ -42,10 +42,7 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 // Методы для парсера и одноразовые
 
 // Route::any('/lol', function () {
-
-//     dd(App\OldLead::with(['comments.user', 'claims', 'task', 'stage', 'user', 'city', 'service', 'challenges' => function ($query) {
-//      $query->with('author', 'appointed', 'finisher', 'stage', 'task');
-//     }])->find(5468));
+//     dd($leads_potencial_count = Lead::where(['manager_id' => 1, 'stage_id' => 1])->count());
 // });
 
 // Route::any('/report', function () {

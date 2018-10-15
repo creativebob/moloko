@@ -184,6 +184,22 @@ class TelegramController extends Controller
                     $telegram_message .= "\r\n";
                 }
 
+                $leads_unaccepted_count = Lead::whereManager_id(1)->where('stage_id', '!=', 1)->count();
+
+                if ($leads_unaccepted_count > 0) {
+                    $telegram_message .= "Непринятые обращения: " . $leads_unaccepted_count;
+                    $telegram_message .= "\r\n";  
+                }
+                
+                $leads_potencial_count = Lead::where(['manager_id' => 1, 'stage_id' => 1])->count();
+
+                
+
+                if ($leads_potencial_count > 0) {
+                    $telegram_message .= "Задачи по активным звонкам: " . $leads_potencial_count;
+                    $telegram_message .= "\r\n";
+                }
+
                 Telegram::sendMessage([
                     'chat_id' => $update['callback_query']['message']['chat']['id'],
                     // именно в [message]['data'] - будет то что прописано у нажатой кнопки в качестве callback_data
