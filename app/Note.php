@@ -32,7 +32,7 @@ class Note extends Model
     use Cachable;
 
     use Notifiable;
-    // use SoftDeletes;
+    use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
