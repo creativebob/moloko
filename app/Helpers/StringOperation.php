@@ -259,25 +259,25 @@ function getWeekDay($date, $type = 0){
     if($type == 0){
 
         switch ($weekday) {
+            case 0: $weekday = 'Воскресенье'; break; 
             case 1: $weekday = 'Понедельник'; break;
             case 2: $weekday = 'Вторник'; break;
             case 3: $weekday = 'Среда'; break;
             case 4: $weekday = 'Четверг'; break;
             case 5: $weekday = 'Пятница'; break;
             case 6: $weekday = 'Суббота'; break;
-            case 7: $weekday = 'Воскресенье'; break; 
         }
 
     } else {
 
         switch ($weekday) {
+            case 0: $weekday = 'Вс'; break; 
             case 1: $weekday = 'Пн'; break;
             case 2: $weekday = 'Вт'; break;
             case 3: $weekday = 'Ср'; break;
             case 4: $weekday = 'Чт'; break;
             case 5: $weekday = 'Пт'; break;
             case 6: $weekday = 'Сб'; break;
-            case 7: $weekday = 'Вс'; break; 
         }
 
     }
