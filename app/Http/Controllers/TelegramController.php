@@ -197,12 +197,12 @@ class TelegramController extends Controller
 
             }
 
-            if ($claims) {
+            if (count($claims) > 0) {
                 $telegram_message .= "Рекламации: " . count($claims);
                 $telegram_message .= "\r\n";
 
                 $claims_in_work_count = $claims->where('status', 1)->count();
-                $claims_done_count = $claims->whereNull('status')->count();
+                $claims_done_count = $claims->where('status', null)->count();
 
                 // Выносим рекламации и коммерческие обращения
                 if (($claims_in_work_count != 0) || ($claims_done_count != 0)) {
@@ -211,13 +211,11 @@ class TelegramController extends Controller
                         $telegram_message .= "         В работе: " . $claims_in_work_count . "\r\n";
                     }
 
-                    if ($commercial_count != 0) {
-                        $claims_done_count .= "         Отработанные: " . $claims_done_count . "\r\n";
+                    if ($claims_done_count != 0) {
+                        $telegram_message .= "         Отработанные: " . $claims_done_count . "\r\n";
                     }
-
-                }
-
-                
+                    $telegram_message .= "\r\n";
+                } 
             }
 
             $leads_unaccepted_count = Lead::whereManager_id(1)->where('stage_id', '!=', 1)->count();
