@@ -1061,6 +1061,7 @@ class LeadController extends Controller
         }
     }
 
+    // Освобождение лида
     public function ajax_lead_free(Request $request)
     {
 
@@ -1194,6 +1195,7 @@ class LeadController extends Controller
         if (isset($manager->telegram_id)) {
             $telegram_message = $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' назначил вам лида: ' . $lead->case_number;
             $telegram_destinations[] = $manager;
+            
             send_message($telegram_destinations, $telegram_message);
 
         } else {

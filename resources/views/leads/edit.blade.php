@@ -25,26 +25,26 @@
 {{ method_field('PATCH') }}
 
 @php 
-	
-	$readonly = '';
-	$autofocus = 'autofocus';
 
-	if(isset($lead->main_phone)){
+$readonly = '';
+$autofocus = 'autofocus';
 
-		if($lead->main_phone->phone != null){
-			$readonly = 'readonly';
-			$autofocus = '';
-		} else {
-			$readonly = '';
-			$autofocus = 'autofocus';
-		}
-	}
+if(isset($lead->main_phone)){
 
-	if($lead->manager_id == 1){
-		$disabled_leadbot = 'disabled';
-	} else {
-		$disabled_leadbot = '';
-	}
+if($lead->main_phone->phone != null){
+$readonly = 'readonly';
+$autofocus = '';
+} else {
+$readonly = '';
+$autofocus = 'autofocus';
+}
+}
+
+if($lead->manager_id == 1){
+$disabled_leadbot = 'disabled';
+} else {
+$disabled_leadbot = '';
+}
 
 
 @endphp
@@ -77,10 +77,10 @@
 
 	$(document).on('dblclick', '#phone', function() {
 		
-    // Снятие блокировки с поля номер телефона
-    $('#phone').attr('readonly', false);
+    	// Снятие блокировки с поля номер телефона
+    	$('#phone').attr('readonly', false);
 
-});
+    });
 
 	$(document).on('click', '#lead-free', function(event) {
 		event.preventDefault();

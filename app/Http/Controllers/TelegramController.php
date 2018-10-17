@@ -36,7 +36,7 @@ class TelegramController extends Controller
     
     public function set_webhook()
     {
-        $response = Telegram::setWebhook(['url' => 'https://vorotamars.ru/admin/telegram_message']);
+        $response = Telegram::setWebhook(['url' => env('SITE_DOMAIN').'/admin/telegram_message']);       
         dd($response);
     }
 
@@ -223,18 +223,21 @@ class TelegramController extends Controller
                     } 
                 }
 
-                $leads_unaccepted_count = Lead::whereManager_id(1)->where('stage_id', '!=', 1)->count();
+                $leads_unaccepted_count = Lead::whereManager_id(1)
+                ->where('stage_id', '!=', 1)
+                ->whereNull('draft')
+                ->count();
 
                 if ($leads_unaccepted_count > 0) {
-                    $telegram_message .= "Непринятые обращения: " . $leads_unaccepted_count;
-                    $telegram_message .= "\r\n";  
+                    $telegram_message .= "Непринятые обращения: " . $leads_unaccepted_count . "\r\n";
                 }
 
-                $leads_potencial_count = Lead::where(['manager_id' => 1, 'stage_id' => 1])->count();
+                $leads_potencial_count = Lead::where(['manager_id' => 1, 'stage_id' => 1])
+                ->whereNull('draft')
+                ->count();
 
                 if ($leads_potencial_count > 0) {
-                    $telegram_message .= "Задачи по активным звонкам: " . $leads_potencial_count;
-                    $telegram_message .= "\r\n";
+                    $telegram_message .= "Задачи по активным звонкам: " . $leads_potencial_count . "\r\n";
                 }
 
                 Telegram::sendMessage([
