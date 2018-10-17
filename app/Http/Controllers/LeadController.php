@@ -1205,7 +1205,7 @@ class LeadController extends Controller
                 $telegram_destinations[] = $user;
                 send_message($telegram_destinations, $telegram_message);
             } else {
-                $note = add_note($lead, 'Оповещение никому не выслано, так как ни у кого нет telegram Id. Это просто комон какой-то!'];
+                $note = add_note($lead, 'Оповещение никому не выслано, так как ни у кого нет telegram Id. Это просто комон какой-то!');
             }
         }
 
