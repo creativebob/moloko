@@ -67,13 +67,8 @@ class AccessCommand extends Command
             'date' => $date
         ]);
         
-        // $tel_msg = new TelegramMessage;
-        // if ($tel_msg) {
-            $text = 'Ваш Telegram ID: '. $tel_msg->chat_id;
-        // } else {
-        //     $text = 'Произошла ошибка, попробуйте снова через некоторое время или обратитесь к администратору.';
-        // }
-        
+        $text = 'Ваш Telegram ID: '. $tel_msg->chat_id;
+
         $this->replyWithMessage(compact('text'));
 
     }
