@@ -205,7 +205,7 @@ class ChallengeController extends Controller
             if ($challenge->appointed_id != $user_id) {
                 $telegram_message  = "ПОСТАВЛЕНА ЗАДАЧА\r\n\r\n";
                 $telegram_message .= "Автор: " . $user->first_name . " " . $user->second_name . "\r\n";
-                $telegram_message .= "Дедлайн: " . $challenge->deadline_date->format('d.m.Y H:i') . "\r\n";
+                $telegram_message .= "Дедлайн: " . $challenge->deadline_date->format('d.m.Y - H:i') . "\r\n";
                 if (isset($challenge->description)) {
                     $telegram_message .= "Описание: " . $challenge->description. "\r\n";  
                 }
@@ -217,7 +217,7 @@ class ChallengeController extends Controller
                     $telegram_message .= "Информация по лиду:\r\n";
                     $telegram_message .= "Номер: " . $item->case_number . "\r\n";
                     $telegram_message .= "Имя: " . $item->name . "\r\n";
-                    $telegram_message .= "Телефон: " . isset($item->main_phone->phone) ? decorPhone($item->main_phone->phone) : 'Номер не указан' . "\r\n";
+                    $telegram_message .= "Телефон: " . (isset($item->main_phone->phone) ? decorPhone($item->main_phone->phone) : 'Номер не указан') . "\r\n";
                 }
 
 
@@ -276,7 +276,7 @@ class ChallengeController extends Controller
 
             // Оповещение в telegram, если исполнитель не является автором
             if ($challenge->finisher_id != $challenge->author_id) {
-                $telegram_message  = "ЗАДАЧА ВЫПОЛНЕНА\r\n\r\nОписание: " . $challenge->description . "\r\nДедлайн: " . $challenge->deadline_date->format('d.m.Y H:i') . "\r\nДата выполнения: " . Carbon::now()->format('d.m.Y H:i') . "\r\nИсполнитель: " . $user->first_name . " " . $user->second_name;
+                $telegram_message  = "ЗАДАЧА ВЫПОЛНЕНА\r\n\r\nОписание: " . $challenge->description . "\r\nДедлайн: " . $challenge->deadline_date->format('d.m.Y H:i') . "\r\nДата выполнения: " . Carbon::now()->format('d.m.Y - H:i') . "\r\nИсполнитель: " . $user->first_name . " " . $user->second_name;
 
                 $telegram_destinations = User::where('id', $challenge->author_id)
                 ->where('telegram_id', '!=', null)
@@ -318,7 +318,7 @@ class ChallengeController extends Controller
             $telegram_message .= "Описание: " . $challenge->description . "\r\n";
             $telegram_message .= "Дедлайн: " . $challenge->deadline_date->format('d.m.Y H:i') . "\r\n";
             $telegram_message .= "Дата снятия: " . Carbon::now()->format('d.m.Y H:i') . "\r\n";
-            $telegram_message .= "Исполнитель: " . $user->first_name . " " . $user->second_name . "\r\n";
+            $telegram_message .= "Снял: " . $user->first_name . " " . $user->second_name . "\r\n";
 
             if (isset($challenge->description)) {
                     $telegram_message .= "Описание: " . $challenge->description. "\r\n";  
@@ -331,7 +331,7 @@ class ChallengeController extends Controller
                     $telegram_message .= "Информация по лиду:\r\n";
                     $telegram_message .= "Номер: " . $challenge->challenges->case_number . "\r\n";
                     $telegram_message .= "Имя: " . $challenge->challenges->name . "\r\n";
-                    $telegram_message .= "Телефон: " . isset($challenge->challenges->main_phone->phone) ? decorPhone($challenge->challenges->main_phone->phone) : 'Номер не указан' . "\r\n";
+                    $telegram_message .= "Телефон: " . (isset($challenge->challenges->main_phone->phone) ? decorPhone($challenge->challenges->main_phone->phone) : 'Номер не указан') . "\r\n";
                 }
 
             $telegram_destinations = User::where('id', $challenge->appointed_id)
