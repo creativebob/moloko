@@ -680,24 +680,23 @@ class LeadController extends Controller
         ->pluck('name', 'id');
 
 
+        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer_goods_categories = operator_right('goods_categories', false, getmethod('index'));
 
-        // Получаем каталог товаров
+        // // Получаем каталог товаров
+        // $goods_categories = GoodsCategory::with('goods_products')
+        // ->withCount('goods_products')
+        // ->moderatorLimit($answer_goods_categories)
+        // ->companiesLimit($answer_goods_categories)
+        // ->authors($answer_goods_categories)
+        // ->systemItem($answer_goods_categories) // Фильтр по системным записям
+        // ->orderBy('moderation', 'desc')
+        // ->orderBy('sort', 'asc')
+        // ->get()
+        // ->groupBy('parent_id');
         
-        $goods_categories = GoodsCategory::with('goods_products')
-        ->withCount('goods_products')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get()
-        ->groupBy('parent_id');
         // dd($goods_categories);
         
-
-
-
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
