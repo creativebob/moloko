@@ -326,14 +326,14 @@ class LeadController extends Controller
 
                 if(isset($fragment_phone)){
                     $query->orWhereHas('phones', function($query) use ($fragment_phone){
-                       $query->where('phone', $fragment_phone);
-                   });
+                     $query->where('phone', $fragment_phone);
+                 });
                 };
 
                 if(isset($crop_phone)){
                     $query->orWhereHas('phones', function($query) use ($crop_phone){
-                       $query->where('crop', $crop_phone);
-                   });
+                     $query->where('crop', $crop_phone);
+                 });
                 };
 
             })
@@ -1195,14 +1195,19 @@ class LeadController extends Controller
         if (isset($manager->telegram_id)) {
             $telegram_message = $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' назначил вам лида: ' . $lead->case_number;
             $telegram_destinations[] = $manager;
+            send_message($telegram_destinations, $telegram_message);
 
         } else {
-            // Если у менеджера нет телеграмма, оповещаем руководителя
-            $telegram_message = 'У менеджера' . $manager->first_name.' '.$manager->second_name . ' отсутствуев Telegram ID, оповестите его другим способом!';
-            $telegram_destinations[] = $user;
-        }
 
-        send_message($telegram_destinations, $telegram_message);
+            if (isset($user->telegram_id)) {
+                // Если у менеджера нет телеграмма, оповещаем руководителя
+                $telegram_message = 'У менеджера' . $manager->first_name.' '.$manager->second_name . ' отсутствует Telegram ID, оповестите его другим способом!';
+                $telegram_destinations[] = $user;
+                send_message($telegram_destinations, $telegram_message);
+            } else {
+                $note = add_note($lead, 'Оповещение никому не выслано, так как ни у кого нет telegram Id. Это просто комон какой-то!'];
+            }
+        }
 
         $result = [
             'id' => $lead->id,
@@ -1212,10 +1217,6 @@ class LeadController extends Controller
         ];
         
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
-
-
-        
-        // }
     }
 
     public function ajax_lead_appointed(Request $request)
