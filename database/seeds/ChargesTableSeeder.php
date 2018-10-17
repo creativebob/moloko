@@ -48,6 +48,19 @@ class ChargesTableSeeder extends Seeder
                 'alias' => 'lead-free',
                 'author_id' => 1,
             ],
+            [
+                'name' => 'Просмотр лидов без ограничений по менеджерам',
+                'description' => null,
+                'alias' => 'lead-all-managers',
+                'author_id' => 1,
+            ],
+            [
+                'name' => 'Переназначение своего лида',
+                'description' => null,
+                'alias' => 'lead-appointment-self',
+                'author_id' => 1,
+            ],
+
 
 
         ]);

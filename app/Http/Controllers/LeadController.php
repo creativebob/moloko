@@ -114,8 +114,7 @@ class LeadController extends Controller
         ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
         ->orderBy('created_at', 'desc')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('manager_id', 'asc')
+        // ->orderBy('moderation', 'desc')
         // ->orderBy('sort', 'asc')
         ->paginate(30);
 
