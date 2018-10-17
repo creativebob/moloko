@@ -138,7 +138,8 @@
           <td class="td-badget">{{ num_format($lead->badget, 0) }}</td>
           <td class="td-stage">{{ $lead->stage->name }}</td>
           <td class="td-challenge">
-            {{ $lead->first_challenge->challenge_type->name or '' }}
+            {{ $lead->first_challenge->challenge_type->name or '' }}<br>
+            <span class="tiny-text">{{ $lead->first_challenge->appointed->second_name or ''}}</span>
           </td>
           <td>
             @if(!empty($lead->first_challenge->deadline_date))

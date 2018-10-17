@@ -27,6 +27,15 @@ use Carbon\Carbon;
         ->orderBy('deadline_date', 'asc')
         ->get();
 
+        // $challenges->transform(function ($item, $key) {
+        //     return $item->challenges->name . ' Добавка';
+        // });
+
+
+        // dd($challenges);
+
+        // dd($list_challenges);
+        // 
         $list_challenges = [];
         
         $list_challenges['for_me'] = $challenges->where('appointed_id', $user_id)->groupBy(function($challenges) {
