@@ -206,7 +206,7 @@ class TelegramController extends Controller
 
                 // Выносим рекламации и коммерческие обращения
                 if (($claims_in_work_count != 0) || ($claims_done_count != 0)) {
-                    $telegram_message .= "         ---\r\n";
+
                     if ($claims_in_work_count != 0) {
                         $telegram_message .= "         В работе: " . $claims_in_work_count . "\r\n";
                     }

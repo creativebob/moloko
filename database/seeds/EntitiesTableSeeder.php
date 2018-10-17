@@ -605,6 +605,16 @@ class EntitiesTableSeeder extends Seeder
       'author_id' => 1,
     ],
 
+    // 71
+    [
+      'name' => 'Заказы',
+      'alias' => 'orders',
+      'model' => 'Order',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
   ]);
 
   }

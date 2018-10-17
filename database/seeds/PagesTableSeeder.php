@@ -555,7 +555,20 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'display' => null,
-            ],       
+            ],   
+
+            // 47
+            [
+                'name' => 'Заказы',
+                'site_id' => 1,
+                'title' => 'Заказы',
+                'description' => 'Заказы',
+                'alias' => 'orders',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],      
 
 
             // [
