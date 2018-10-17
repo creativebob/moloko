@@ -236,20 +236,19 @@ class TelegramController extends Controller
                     $telegram_message .= "Задачи по активным звонкам: " . $leads_potencial_count;
                     $telegram_message .= "\r\n";
                 }
+
+                Telegram::sendMessage([
+                    'chat_id' => $update['callback_query']['message']['chat']['id'],
+                    'text' => $telegram_message, 
+                ]);
+
+                // Отправляем телеграму отчет о получении, чтоб не дублировал ответы
+                Telegram::answerCallbackQuery([
+                    'callback_query_id' => $update['callback_query']['id']
+                ]);
             } else {
-                $telegram_message = 'Отчеты охота? Давай ДОСВИДАНИЯ!';
+                // $telegram_message = 'Отчеты охота? Давай ДОСВИДАНИЯ!';
             }
-
-            Telegram::sendMessage([
-                'chat_id' => $update['callback_query']['message']['chat']['id'],
-                'text' => $telegram_message, 
-            ]);
-
-            // Отправляем телеграму отчет о получении, чтоб не дублировал ответы
-            Telegram::answerCallbackQuery([
-                'callback_query_id' => $update['callback_query']['id']
-            ]);
-
         }
     }
 

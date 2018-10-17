@@ -16,14 +16,14 @@ class EntityPageTableSeeder extends Seeder
     {
 
         $entities = Entity::get(['id', 'alias']);
-        $pages = Page::get(['id', 'alias']);
+        $pages = Page::where('site_id', 1)->get(['id', 'alias']);
 
         $mass = [];
         foreach ($entities as $entity) {
             foreach ($pages as $page) {
                 if ($entity->alias == $page->alias) {
                     $mass[] = ['entity_id' => $entity->id, 'page_id' => $page->id];
-                    break;
+                    // break;
                 }
             }
         }
