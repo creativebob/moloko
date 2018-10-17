@@ -325,14 +325,14 @@ class LeadController extends Controller
 
                 if(isset($fragment_phone)){
                     $query->orWhereHas('phones', function($query) use ($fragment_phone){
-                     $query->where('phone', $fragment_phone);
-                 });
+                       $query->where('phone', $fragment_phone);
+                   });
                 };
 
                 if(isset($crop_phone)){
                     $query->orWhereHas('phones', function($query) use ($crop_phone){
-                     $query->where('crop', $crop_phone);
-                 });
+                       $query->where('crop', $crop_phone);
+                   });
                 };
 
             })
@@ -1099,7 +1099,7 @@ class LeadController extends Controller
         echo $direction;
     }
 
-    // Назначение лида
+    // Прием лида менеджером
     public function ajax_lead_take(Request $request)
     {
 
@@ -1169,7 +1169,21 @@ class LeadController extends Controller
             $phrase_sex = 'назначила';
         }
 
+        // Пишем комментарий
         $note = add_note($lead, 'Руководитель: '. $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' лида менеджеру: '. $manager->first_name.' '.$manager->second_name);
+
+        // Оповещаем менеджера о назначении
+        if (isset($manager->telegram_id)) {
+            $telegram_message = $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' назначил вам лида: ' . $lead->case_number;
+            $telegram_destinations[] = $manager;
+
+        } else {
+            // Если у менеджера нет телеграмма, оповещаем руководителя
+            $telegram_message = 'У менеджера' . $manager->first_name.' '.$manager->second_name . ' отсутствуев Telegram ID, оповестите его другим способом!';
+            $telegram_destinations[] = $user;
+        }
+
+        send_message($telegram_destinations, $telegram_message);
 
         $result = [
             'id' => $lead->id,
