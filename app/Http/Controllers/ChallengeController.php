@@ -204,10 +204,12 @@ class ChallengeController extends Controller
             // Оповещение в telegram, если автор не является исполнителем
             if ($challenge->appointed_id != $user_id) {
                 $telegram_message  = "ПОСТАВЛЕНА ЗАДАЧА\r\n\r\n";
+
+                $telegram_message .= "Действие: " . $challenge->challenge_type->name . "\r\n";
                 $telegram_message .= "Автор: " . $user->first_name . " " . $user->second_name . "\r\n";
                 $telegram_message .= "Дедлайн: " . $challenge->deadline_date->format('d.m.Y - H:i') . "\r\n";
                 if (isset($challenge->description)) {
-                    $telegram_message .= "Описание: " . $challenge->description. "\r\n";  
+                    $telegram_message .= "Описание: " . $challenge->description . "\r\n";  
                 }
 
                 $telegram_message .= "\r\n";
@@ -315,10 +317,12 @@ class ChallengeController extends Controller
         // Оповещение в telegram, если исполнитель не является автором
         if ($challenge->appointed_id != $user->id) {
             $telegram_message  = "ЗАДАЧА СНЯТА\r\n\r\n"; 
-            $telegram_message .= "Описание: " . $challenge->description . "\r\n";
-            $telegram_message .= "Дедлайн: " . $challenge->deadline_date->format('d.m.Y H:i') . "\r\n";
-            $telegram_message .= "Дата снятия: " . Carbon::now()->format('d.m.Y H:i') . "\r\n";
+
+            $telegram_message .= "Действие: " . $challenge->challenge_type->name . "\r\n";
+            $telegram_message .= "Дедлайн: " . $challenge->deadline_date->format('d.m.Y - H:i') . "\r\n";
+            $telegram_message .= "Дата снятия: " . Carbon::now()->format('d.m.Y - H:i') . "\r\n";
             $telegram_message .= "Снял: " . $user->first_name . " " . $user->second_name . "\r\n";
+            $telegram_message .= "Описание: " . $challenge->description . "\r\n";
 
             if (isset($challenge->description)) {
                     $telegram_message .= "Описание: " . $challenge->description. "\r\n";  
