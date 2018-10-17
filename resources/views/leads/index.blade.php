@@ -209,7 +209,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/admin/lead_direction_check",
+      url: "/admin/lead_appointed_check",
       type: "POST",
       success: function(data){
 
