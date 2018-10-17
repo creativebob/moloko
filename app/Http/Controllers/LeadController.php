@@ -1096,7 +1096,7 @@ class LeadController extends Controller
     }
 
     // Назначение лида
-    public function ajax_lead_direction_check(Request $request)
+    public function ajax_appointed_check(Request $request)
     {
 
         // Получаем данные для авторизованного пользователя
@@ -1112,6 +1112,12 @@ class LeadController extends Controller
             foreach ($staffer->position->charges as $charge) {
                 if ($charge->alias == 'lead-appointment') {
                     $direction = 1;
+                    // break;
+                }
+
+                if ($charge->alias == 'lead-appointment-self') {
+                    $direction = 1;
+                    // break;
                 }
             }
         }
@@ -1189,7 +1195,7 @@ class LeadController extends Controller
         }
 
         // Пишем комментарий
-        $note = add_note($lead, 'Руководитель '. $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' лида менеджеру: '. $manager->first_name.' '.$manager->second_name);
+        $note = add_note($lead, $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' лида менеджеру '. $manager->first_name.' '.$manager->second_name);
 
         // Оповещаем менеджера о назначении
         if (isset($manager->telegram_id)) {
@@ -1202,7 +1208,7 @@ class LeadController extends Controller
 
             if (isset($user->telegram_id)) {
                 // Если у менеджера нет телеграмма, оповещаем руководителя
-                $telegram_message = 'У менеджера ' . $manager->first_name.' '.$manager->second_name . ' отсутствует Telegram ID, оповестите его другим способом!';
+                $telegram_message = 'У ' . $manager->first_name.' '.$manager->second_name . ' отсутствует Telegram ID, оповестите его другим способом!';
                 $telegram_destinations[] = $user;
                 send_message($telegram_destinations, $telegram_message);
             } else {

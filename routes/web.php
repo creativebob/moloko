@@ -627,7 +627,7 @@ Route::post('/leads_display', 'LeadController@ajax_display')->middleware('auth')
 Route::post('/leads/search', 'LeadController@search')->middleware('auth');
 
 // Назначение лида
-Route::any('/lead_direction_check', 'LeadController@ajax_lead_direction_check')->middleware('auth');
+Route::any('/lead_appointed_check', 'LeadController@ajax_appointed_check')->middleware('auth');
 Route::any('/lead_appointed', 'LeadController@ajax_lead_appointed')->middleware('auth');
 Route::any('/lead_distribute', 'LeadController@ajax_distribute')->middleware('auth');
 Route::any('/lead_take', 'LeadController@ajax_lead_take')->middleware('auth');

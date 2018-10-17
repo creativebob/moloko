@@ -68,8 +68,8 @@ class Order extends Model
         return $this->belongsTo('App\Lead');
     }
 
-    // Лид
-    public function lead()
+    // Пользователь
+    public function user()
     {
         return $this->belongsTo('App\User');
     }
