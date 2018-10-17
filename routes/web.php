@@ -47,17 +47,19 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 
 // Route::any('/lol', function () {
 
-//     $telegram_destinations = User::whereHas('staff', function ($query) {
-//                 $query->whereHas('position', function ($query) {
-//                     $query->whereHas('notifications', function ($query) {
-//                         $query->where('notification_id', 1);
-//                     });
-//                 });
-//             })
-//             ->where('telegram_id', '!=', null)
-//             ->get(['telegram_id']);
+//     $user = User::find(11);
+//     // Оповещаем менеджера о назначении
+//     if (isset($user->telegram_id)) {
+//         $telegram_message = $user->first_name.' '.$user->second_name;
+//         $telegram_destinations[] = $user;
 
-//             dd($telegram_destinations);
+//     } else {
+//             // Если у менеджера нет телеграмма, оповещаем руководителя
+//         $telegram_message = 'У менеджера' . $user->first_name.' '.$user->second_name . ' отсутствует Telegram ID, оповестите его другим способом!';
+//         $telegram_destinations[] = $user;
+//     }
+
+//     dd($telegram_message);
 
 // });
 

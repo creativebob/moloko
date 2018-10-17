@@ -27,36 +27,48 @@ class AccessCommand extends Command
     {
         // Пишем в базу сообщение пользователя и выводим его id
         $message = $this->getUpdate();
+
+        $message_id = isset($message['message']['message_id']) ? $message['message']['message_id'] : null;
+        $update_id = isset($message['update_id']) ? $message['update_id'] : null;
+
+        $from_id = isset($message['message']['from']['id']) ? $message['message']['from']['id'] : null;
+        $from_is_bot = isset($message['message']['from']['is_bot']) ? $message['message']['from']['is_bot'] : null;
+        $from_first_name = isset($message['message']['from']['first_name']) ? $message['message']['from']['first_name'] : null;
+        $from_last_name = isset($message['message']['from']['last_name']) ? $message['message']['from']['last_name'] : null;
+        $from_username = isset($message['message']['from']['username']) ? $message['message']['from']['username'] : null;
+        $from_language_code = isset($message['message']['from']['language_code']) ? $message['message']['from']['language_code'] : null;
+
+        $chat_id = isset($message['message']['chat']['id']) ? $message['message']['chat']['id'] : null;
+        $chat_first_name = isset($message['message']['chat']['first_name']) ? $message['message']['chat']['first_name'] : null;
+        $chat_last_name = isset($message['message']['chat']['last_name']) ? $message['message']['chat']['last_name'] : null;
+        $chat_username = isset($message['message']['chat']['username']) ? $message['message']['chat']['username'] : null;
+        $chat_type = isset($message['message']['chat']['type']) ? $message['message']['chat']['type'] : null;
+
+        $message = isset($message['message']['text']) ? $message['message']['text'] : null;
+        $date = isset($message['message']['date']) ? $message['message']['date'] : null;
+
+        $tel_msg = TelegramMessage::firstOrCreate([
+            'chat_id' => $chat_id,
+            'message' => $message
+        ],
+        [
+            'message_id' => $message_id,
+            'update_id' => $update_id,
+            'from_id' => $from_id,
+            'from_is_bot' => $from_is_bot,
+            'from_first_name' => $from_first_name,
+            'from_last_name' => $from_last_name,
+            'from_username' => $from_username,
+            'from_language_code' => $from_language_code,
+            'chat_first_name' => $chat_first_name,
+            'chat_last_name' => $chat_last_name,
+            'chat_username' => $chat_username,
+            'chat_type' => $chat_type,
+            'date' => $date
+        ]);
         
-        $tel_msg = new TelegramMessage;
+        $text = 'Ваш Telegram ID: '. $tel_msg->chat_id;
 
-        $tel_msg->message_id = isset($message['message']['message_id']) ? $message['message']['message_id'] : null;
-        $tel_msg->update_id = isset($message['update_id']) ? $message['update_id'] : null;
-
-        $tel_msg->from_id = isset($message['message']['from']['id']) ? $message['message']['from']['id'] : null;
-        $tel_msg->from_is_bot = isset($message['message']['from']['is_bot']) ? $message['message']['from']['is_bot'] : null;
-        $tel_msg->from_first_name = isset($message['message']['from']['first_name']) ? $message['message']['from']['first_name'] : null;
-        $tel_msg->from_last_name = isset($message['message']['from']['last_name']) ? $message['message']['from']['last_name'] : null;
-        $tel_msg->from_username = isset($message['message']['from']['username']) ? $message['message']['from']['username'] : null;
-        $tel_msg->from_language_code = isset($message['message']['from']['language_code']) ? $message['message']['from']['language_code'] : null;
-
-        $tel_msg->chat_id = isset($message['message']['chat']['id']) ? $message['message']['chat']['id'] : null;
-        $tel_msg->chat_first_name = isset($message['message']['chat']['first_name']) ? $message['message']['chat']['first_name'] : null;
-        $tel_msg->chat_last_name = isset($message['message']['chat']['last_name']) ? $message['message']['chat']['last_name'] : null;
-        $tel_msg->chat_username = isset($message['message']['chat']['username']) ? $message['message']['chat']['username'] : null;
-        $tel_msg->chat_type = isset($message['message']['chat']['type']) ? $message['message']['chat']['type'] : null;
-
-        $tel_msg->message = isset($message['message']['text']) ? $message['message']['text'] : null;
-        $tel_msg->date = isset($message['message']['date']) ? $message['message']['date'] : null;
-
-        $tel_msg->save();
-
-        if ($tel_msg) {
-            $text = 'Ваш Telegram ID: '.$tel_msg->chat_id;
-        } else {
-            $text = 'Произошла ошибка, попробуйте снова через некоторое время иил обратитесь к администратору.';
-        }
-        
         $this->replyWithMessage(compact('text'));
 
     }

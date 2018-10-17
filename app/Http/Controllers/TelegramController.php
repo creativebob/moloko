@@ -7,6 +7,7 @@ use App\TelegramMessage;
 
 use App\Lead;
 use App\Claim;
+use App\User;
 
 use Illuminate\Http\Request;
 
@@ -68,170 +69,175 @@ class TelegramController extends Controller
         // Если нажали inline-нопку:
         if (isset($update['callback_query'])) {
 
-            switch ($update['callback_query']['data']) {
-                case 'report_day':
-                $leads = Lead::with('lead_method', 'lead_type', 'source_claim')
-                ->whereDate('created_at', Carbon::now()->format('Y-m-d'))
-                ->whereNull('draft')
-                ->get();
-                
-                $telegram_message = "Отчет за день (" . getWeekDay(Carbon::now()) . ' ' . Carbon::now()->format('d.m.Y') . "):\r\n\r\n";
+            $access = User::has('staff')->where('telegram_id', $update['callback_query']['message']['chat']['id'])->first();
 
-                $claims = Claim::whereDate('created_at', Carbon::now()->format('Y-m-d'))
-                ->get();
+            if ($access) {
 
-                break;
-                
-                case 'report_month':
-                $leads = Lead::with('lead_method', 'lead_type', 'source_claim')
-                ->where('created_at', '>=', Carbon::now()->startOfMonth())
-                ->whereNull('draft')
-                ->get();
+                switch ($update['callback_query']['data']) {
+                    case 'report_day':
+                    $leads = Lead::with('lead_method', 'lead_type', 'source_claim')
+                    ->whereDate('created_at', Carbon::now()->format('Y-m-d'))
+                    ->whereNull('draft')
+                    ->get();
 
-                $telegram_message = "Отчет за месяц (" . getMonth(Carbon::now()) . "):\r\n\r\n";
+                    $telegram_message = "Отчет за день (" . getWeekDay(Carbon::now()) . ' ' . Carbon::now()->format('d.m.Y') . "):\r\n\r\n";
 
-                $claims = Claim::where('created_at', '>=', Carbon::now()->startOfMonth())
-                ->get();
-                break;
-                
-                case 'report_year':
-                $leads = Lead::with('lead_method', 'lead_type', 'source_claim')
-                ->whereYear('created_at', Carbon::now()->format('Y'))
-                ->whereNull('draft')
-                ->get();
+                    $claims = Claim::whereDate('created_at', Carbon::now()->format('Y-m-d'))
+                    ->get();
 
-                $telegram_message = "Отчет за год (" . Carbon::now()->format('Y') . "):\r\n\r\n";
+                    break;
 
-                $claims = Claim::whereYear('created_at', Carbon::now()->format('Y'))
-                ->get();
-                break;
+                    case 'report_month':
+                    $leads = Lead::with('lead_method', 'lead_type', 'source_claim')
+                    ->where('created_at', '>=', Carbon::now()->startOfMonth())
+                    ->whereNull('draft')
+                    ->get();
 
-                default:
-                Telegram::sendMessage([
-                    'chat_id' => $update['callback_query']['message']['chat']['id'],
-                    // именно в $update[message]['data'] - будет то что прописано у нажатой кнопки в качестве callback_data
-                    'text' => "Вы нажали на кнопку с кодом: " . $update['callback_query']['data'], 
-                ]);
-                break;
-            }
+                    $telegram_message = "Отчет за месяц (" . getMonth(Carbon::now()) . "):\r\n\r\n";
 
-            if ($leads) {
+                    $claims = Claim::where('created_at', '>=', Carbon::now()->startOfMonth())
+                    ->get();
+                    break;
 
-                if (count($leads) > 0) {
-                    $telegram_message .= "Обращения:\r\n\r\n";
+                    case 'report_year':
+                    $leads = Lead::with('lead_method', 'lead_type', 'source_claim')
+                    ->whereYear('created_at', Carbon::now()->format('Y'))
+                    ->whereNull('draft')
+                    ->get();
 
-                    // Обычное
-                    $leads_regular = $leads->where('lead_type_id', 1);
-                    if (count($leads_regular) > 0) {
-                        $telegram_message .= "Обычное: " . count($leads_regular) . "\r\n";
+                    $telegram_message = "Отчет за год (" . Carbon::now()->format('Y') . "):\r\n\r\n";
 
-                        // Групируем по методам и перебираем
-                        $grouped_leads_regular = $leads_regular->groupBy('lead_method.name');
-                        // dd($grouped_leads_regular);
-                        foreach ($grouped_leads_regular as $key => $value) {
-                            $telegram_message .= "      " . $key . ": " . count($value) . "\r\n";
-                        }
-                        $telegram_message .= "\r\n";
-                    }
+                    $claims = Claim::whereYear('created_at', Carbon::now()->format('Y'))
+                    ->get();
+                    break;
 
-                    // Сервисное
-                    $leads_service = $leads->where('lead_type_id', 3);
-                    if (count($leads_service) > 0) {
-                        $telegram_message .= "Сервисное: " . count($leads_service) . "\r\n";
-
-                        // Считаем рекламации и обращения
-                        $claims_count = 0;
-                        $commercial_count = 0;
-
-                        // Групируем по методам и перебираем
-                        $grouped_leads_service = $leads_service->groupBy('lead_method.name');
-                        // dd($grouped_leads_regular);
-                        foreach ($grouped_leads_service as $key => $values) {
-                            $telegram_message .= "      " . $key . ": " . count($values) . "\r\n";
-
-                            foreach ($values as $value) {
-                                if (isset($value->source_claim)) {
-                                    $claims_count++;
-                                } else {
-                                    $commercial_count++;
-                                }
-                            }
-                        }
-
-                        // Выносим рекламации и коммерческие обращения
-                        if (($claims_count != 0) || ($commercial_count != 0)) {
-                            $telegram_message .= "         ---\r\n";
-
-                            if ($claims_count != 0) {
-                                $telegram_message .= "         Внутренние: " . $claims_count . "\r\n";
-                            }
-
-                            if ($commercial_count != 0) {
-                                $telegram_message .= "         Внешние: " . $commercial_count . "\r\n";
-                            }
-                        }
-                        $telegram_message .= "\r\n";
-
-
-                    }
-
-                    // Дилерское
-                    $leads_dealer = $leads->where('lead_type_id', 2);
-                    if (count($leads_dealer) > 0) {
-                        $telegram_message .= "Дилерское: " . count($leads_dealer) . "\r\n";
-
-                        // Групируем по методам и перебираем
-                        $grouped_leads_dealer = $leads_dealer->groupBy('lead_method.name');
-                        // dd($grouped_leads_regular);
-                        foreach ($grouped_leads_dealer as $key => $value) {
-                            $telegram_message .= "      " . $key . ": " . count($value) . "\r\n";
-                        }
-                        $telegram_message .= "\r\n";
-                    }
-
-                } else {
-                    // Если обращений не было
-                    $telegram_message .= "Обращений не было ...";
-                    $telegram_message .= "\r\n";
+                    default:
+                    Telegram::sendMessage([
+                        'chat_id' => $update['callback_query']['message']['chat']['id'],
+                        // именно в $update[message]['data'] - будет то что прописано у нажатой кнопки в качестве callback_data
+                        'text' => "Вы нажали на кнопку с кодом: " . $update['callback_query']['data'], 
+                    ]);
+                    break;
                 }
 
-            }
+                if ($leads) {
 
-            if (count($claims) > 0) {
-                $telegram_message .= "Рекламации: " . count($claims);
-                $telegram_message .= "\r\n";
+                    if (count($leads) > 0) {
+                        $telegram_message .= "Обращения:\r\n\r\n";
 
-                $claims_in_work_count = $claims->where('status', 1)->count();
-                $claims_done_count = $claims->where('status', null)->count();
+                        // Обычное
+                        $leads_regular = $leads->where('lead_type_id', 1);
+                        if (count($leads_regular) > 0) {
+                            $telegram_message .= "Обычное: " . count($leads_regular) . "\r\n";
 
-                // Выносим рекламации и коммерческие обращения
-                if (($claims_in_work_count != 0) || ($claims_done_count != 0)) {
+                            // Групируем по методам и перебираем
+                            $grouped_leads_regular = $leads_regular->groupBy('lead_method.name');
+                            // dd($grouped_leads_regular);
+                            foreach ($grouped_leads_regular as $key => $value) {
+                                $telegram_message .= "      " . $key . ": " . count($value) . "\r\n";
+                            }
+                            $telegram_message .= "\r\n";
+                        }
 
-                    if ($claims_in_work_count != 0) {
-                        $telegram_message .= "         В работе: " . $claims_in_work_count . "\r\n";
+                        // Сервисное
+                        $leads_service = $leads->where('lead_type_id', 3);
+                        if (count($leads_service) > 0) {
+                            $telegram_message .= "Сервисное: " . count($leads_service) . "\r\n";
+
+                            // Считаем рекламации и обращения
+                            $claims_count = 0;
+                            $commercial_count = 0;
+
+                            // Групируем по методам и перебираем
+                            $grouped_leads_service = $leads_service->groupBy('lead_method.name');
+                            // dd($grouped_leads_regular);
+                            foreach ($grouped_leads_service as $key => $values) {
+                                $telegram_message .= "      " . $key . ": " . count($values) . "\r\n";
+
+                                foreach ($values as $value) {
+                                    if (isset($value->source_claim)) {
+                                        $claims_count++;
+                                    } else {
+                                        $commercial_count++;
+                                    }
+                                }
+                            }
+
+                            // Выносим рекламации и коммерческие обращения
+                            if (($claims_count != 0) || ($commercial_count != 0)) {
+                                $telegram_message .= "         ---\r\n";
+
+                                if ($claims_count != 0) {
+                                    $telegram_message .= "         Внутренние: " . $claims_count . "\r\n";
+                                }
+
+                                if ($commercial_count != 0) {
+                                    $telegram_message .= "         Внешние: " . $commercial_count . "\r\n";
+                                }
+                            }
+                            $telegram_message .= "\r\n";
+
+
+                        }
+
+                        // Дилерское
+                        $leads_dealer = $leads->where('lead_type_id', 2);
+                        if (count($leads_dealer) > 0) {
+                            $telegram_message .= "Дилерское: " . count($leads_dealer) . "\r\n";
+
+                            // Групируем по методам и перебираем
+                            $grouped_leads_dealer = $leads_dealer->groupBy('lead_method.name');
+                            // dd($grouped_leads_regular);
+                            foreach ($grouped_leads_dealer as $key => $value) {
+                                $telegram_message .= "      " . $key . ": " . count($value) . "\r\n";
+                            }
+                            $telegram_message .= "\r\n";
+                        }
+
+                    } else {
+                        // Если обращений не было
+                        $telegram_message .= "Обращений не было ...";
+                        $telegram_message .= "\r\n";
                     }
 
-                    if ($claims_done_count != 0) {
-                        $telegram_message .= "         Отработанные: " . $claims_done_count . "\r\n";
-                    }
+                }
+
+                if (count($claims) > 0) {
+                    $telegram_message .= "Рекламации: " . count($claims);
                     $telegram_message .= "\r\n";
-                } 
-            }
 
-            $leads_unaccepted_count = Lead::whereManager_id(1)->where('stage_id', '!=', 1)->count();
+                    $claims_in_work_count = $claims->where('status', 1)->count();
+                    $claims_done_count = $claims->where('status', null)->count();
 
-            if ($leads_unaccepted_count > 0) {
-                $telegram_message .= "Непринятые обращения: " . $leads_unaccepted_count;
-                $telegram_message .= "\r\n";  
-            }
+                    // Выносим рекламации и коммерческие обращения
+                    if (($claims_in_work_count != 0) || ($claims_done_count != 0)) {
 
-            $leads_potencial_count = Lead::where(['manager_id' => 1, 'stage_id' => 1])->count();
+                        if ($claims_in_work_count != 0) {
+                            $telegram_message .= "         В работе: " . $claims_in_work_count . "\r\n";
+                        }
 
+                        if ($claims_done_count != 0) {
+                            $telegram_message .= "         Отработанные: " . $claims_done_count . "\r\n";
+                        }
+                        $telegram_message .= "\r\n";
+                    } 
+                }
 
+                $leads_unaccepted_count = Lead::whereManager_id(1)->where('stage_id', '!=', 1)->count();
 
-            if ($leads_potencial_count > 0) {
-                $telegram_message .= "Задачи по активным звонкам: " . $leads_potencial_count;
-                $telegram_message .= "\r\n";
+                if ($leads_unaccepted_count > 0) {
+                    $telegram_message .= "Непринятые обращения: " . $leads_unaccepted_count;
+                    $telegram_message .= "\r\n";  
+                }
+
+                $leads_potencial_count = Lead::where(['manager_id' => 1, 'stage_id' => 1])->count();
+
+                if ($leads_potencial_count > 0) {
+                    $telegram_message .= "Задачи по активным звонкам: " . $leads_potencial_count;
+                    $telegram_message .= "\r\n";
+                }
+            } else {
+                $telegram_message = 'Отчеты охота? Давай ДОСВИДАНИЯ!';
             }
 
             Telegram::sendMessage([
@@ -245,14 +251,6 @@ class TelegramController extends Controller
             ]);
 
         }
-        
-        // если пришло неизвестное сообщение:
-        // if (isset($update['message'])) {
-        //  $response = Telegram::sendMessage([
-        //                     'chat_id' => $update['message']['chat']['id'], 
-        //                     'text' => 'Я конечно извиняюсь, но такое обращение для меня непонятно: "'.$update['message']['text'].'"... Лучше ознакомтесь с доступными командами - /help'
-        //                 ]);
-        // }
     }
 
     /**
