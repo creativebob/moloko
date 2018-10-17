@@ -82,7 +82,10 @@
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
 													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
-													<li><span class="task-data">Товар: </span>Откатные ворота</li>
+													<li><span class="task-data">Товар: </span>
+													{{ $challenge->challenges->choices_goods_categories->implode('name', ', ') }}
+													{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
+													{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
 													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
 												</ul>
 
@@ -151,7 +154,10 @@
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
 													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
-													<li><span class="task-data">Товар: </span>Откатные ворота</li>
+													<li><span class="task-data">Товар: </span>
+													{{ $challenge->challenges->choices_goods_categories->implode('name', ', ') }}
+													{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
+													{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
 													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
 												</ul>
 
@@ -220,7 +226,10 @@
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
 													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
-													<li><span class="task-data">Товар: </span>Откатные ворота</li>
+													<li><span class="task-data">Товар: </span>
+													{{ $challenge->challenges->choices_goods_categories->implode('name', ', ') }}
+													{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
+													{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
 													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
 												</ul>
 
@@ -316,7 +325,10 @@
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
 													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
-													<li><span class="task-data">Товар: </span>Откатные ворота</li>
+													<li><span class="task-data">Товар: </span>
+													{{ $challenge->challenges->choices_goods_categories->implode('name', ', ') }}
+													{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
+													{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
 													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
 												</ul>
 
@@ -388,7 +400,10 @@
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
 													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
-													<li><span class="task-data">Товар: </span>Откатные ворота</li>
+													<li><span class="task-data">Товар: </span>
+													{{ $challenge->challenges->choices_goods_categories->implode('name', ', ') }}
+													{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
+													{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
 													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
 												</ul>
 
@@ -460,7 +475,10 @@
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
 													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
-													<li><span class="task-data">Товар: </span>Откатные ворота</li>
+													<li><span class="task-data">Товар: </span>
+													{{ $challenge->challenges->choices_goods_categories->implode('name', ', ') }}
+													{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
+													{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
 													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
 												</ul>
 

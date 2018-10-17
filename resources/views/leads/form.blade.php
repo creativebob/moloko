@@ -226,10 +226,99 @@
         </div>
 
         {{-- Каталог продукции --}}
+
         <div class="tabs-panel" id="content-panel-catalog">
             <div class="grid-x grid-padding-x">
-                <div class="small-12 large-6 cell">
+                <div class="small-12 large-4 cell">
+
+
+
+<ul class="vertical menu drilldown" data-drilldown>
+  <li><a href="#">Гаражные ворота</a></li>
+  <li>
+    <a href="#">Уличные ворота</a>
+    <ul class="menu vertical nested">
+      <li><a href="#">Откатные ворота</a></li>
+      <li><a href="#">Распашные ворота</a></li>
+      <li><a href="#">Аэроворота</a></li>
+      <li><a href="#">Футбольные ворота</a></li>
+    </ul>
+  </li>
+  <li><a href="#">Автоматика</a></li>
+  <li><a href="#">Заборы</a></li>
+  <li><a href="#">Профильные системы</a></li>
+  <li><a href="#">Рольставни</a></li>
+</ul>
+
+
+                    {{-- <ul class="multilevel-accordion-menu vertical menu" data-accordion-menu>
+                      <li>
+                        <a href="#">Уличные ворота</a>
+                        <ul class="menu vertical sublevel-1">
+                          <li>
+                            <a href="#">Откатные ворота</a>
+                            <ul class="menu vertical sublevel-2">
+                              <li><a class="subitem" href="#">Thing 1</a></li>
+                              <li><a class="subitem" href="#">Thing 2</a></li>
+                              <li><a class="subitem" href="#">Thing 3</a></li>
+                            </ul>
+                          </li>
+                          <li>
+                            <a href="#">Распашные ворота</a>
+                            <ul class="menu vertical sublevel-2">
+                              <li>
+                                <a href="#">Super-sub-item 1</a>
+                                <ul class="menu vertical sublevel-3">
+                                  <li><a class="subitem" href="#">Thing 1</a></li>
+                                  <li><a class="subitem" href="#">Thing 2</a></li>
+                                </ul>
+                              </li>
+                              <li><a class="subitem" href="#">Thing 2</a></li>
+                            </ul>
+                          </li>
+                          <li><a class="subitem" href="#">Thing 1</a></li>
+                          <li><a class="subitem" href="#">Thing 2</a></li>
+                        </ul>
+                      </li>
+                      <li>
+                        <a href="#">Гаражные ворота</a>
+                        <ul class="menu vertical sublevel-1">
+                          <li><a class="subitem" href="#">Thing 1</a></li>
+                          <li><a class="subitem" href="#">Thing 2</a></li>
+                        </ul>
+                      </li>
+                      <li>
+                        <a href="#">Промышленные</a>
+                        <ul class="menu vertical sublevel-1">
+                          <li><a class="subitem" href="#">Thing 1</a></li>
+                          <li><a class="subitem" href="#">Thing 2</a></li>
+                        </ul>
+                      </li>
+                      <li>
+                        <a href="#">Обычные секционные ворота</a>
+                        <ul class="menu vertical sublevel-1">
+                          <li>
+                            <a href="#">Sub-item 3</a>
+                            <ul class="menu vertical sublevel-2">
+                              <li><a class="subitem" href="#">Ворота 2000 на 3000</a></li>
+                              <li><a class="subitem" href="#">Ворота 3000 на 3000/a></li>
+                            </ul>
+                          </li>
+                          <li><a class="subitem" href="#">Thing 1</a></li>
+                          <li><a class="subitem" href="#">Thing 2</a></li>
+                        </ul>
+                      </li>
+                    </ul> --}}
+
                 </div>
+                <div class="small-12 large-8 cell">
+                    <ul>
+                        <li>
+                            <span>Гаражные ворота RS-560 (2000 - 2300)</span>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
         </div>
 

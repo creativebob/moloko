@@ -17,23 +17,20 @@ trait ManagerTraitScopes
 
         if($user->staff->first() != null){
 
-            if($user->staff->first()->position->id == 4){
-                return $query;
-            } else {
-
                 $mass_lead_types = [];
                 if(extra_right('lead-regular')){$mass_lead_types[] = 1;};
                 if(extra_right('lead-service')){$mass_lead_types[] = 3;};
                 if(extra_right('lead-dealer')){$mass_lead_types[] = 2;};
+                if(extra_right('lead-free')){$robot = 1;} else {$robot = null;};
 
                 return $query
                 ->where('manager_id', $user->id)
-                ->orWhere(function($query) use ($mass_lead_types) {
+                ->orWhere(function($query) use ($mass_lead_types, $robot) {
                     $query
-                    ->where('manager_id', 1)
+                    ->where('manager_id', $robot)
                     ->whereIn('lead_type_id', $mass_lead_types);
                 });
-            }
+
 
         } else {
 

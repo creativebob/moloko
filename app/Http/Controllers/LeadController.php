@@ -25,6 +25,7 @@ use App\Note;
 use App\Challenge;
 use App\Staff;
 use App\Phone;
+use App\GoodsCategory;
 
 // use App\Challenge_type;
 
@@ -678,16 +679,35 @@ class LeadController extends Controller
         ->get()
         ->pluck('name', 'id');
 
+
+
+        // Получаем каталог товаров
+        
+        $goods_categories = GoodsCategory::with('goods_products')
+        ->withCount('goods_products')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get()
+        ->groupBy('parent_id');
+        // dd($goods_categories);
+        
+
+
+
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
         // Задачи пользователя
         $list_challenges = challenges($request);
 
-        $entity = $this->entity_name;
-        // dd($lead->lead_method->mode);
+        $entity = 'goods_categories';
 
-        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity', 'list_challenges', 'lead_methods_list'));
+        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity', 'list_challenges', 'lead_methods_list', 'goods_categories', 'entity'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)

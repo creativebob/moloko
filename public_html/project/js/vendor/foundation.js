@@ -2681,7 +2681,7 @@ Drilldown.defaults = {
    * @type {string}
    * @default '<li class="js-drilldown-back"><a tabindex="0">Back</a></li>'
    */
-  backButton: '<li class="js-drilldown-back"><a tabindex="0">Back</a></li>',
+  backButton: '<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>',
   /**
    * Position the back button either at the top or bottom of drilldown submenus. Can be `'left'` or `'bottom'`.
    * @option

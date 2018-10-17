@@ -42,6 +42,13 @@ class ChargesTableSeeder extends Seeder
                 'alias' => 'stage-potential',
                 'author_id' => 1,
             ],
+            [
+                'name' => 'Просмотр свободных заявок',
+                'description' => null,
+                'alias' => 'lead-free',
+                'author_id' => 1,
+            ],
+
 
         ]);
     }
