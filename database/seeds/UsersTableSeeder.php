@@ -2,13 +2,12 @@
 
 use Illuminate\Database\Seeder;
 
+use App\User;
+use App\Phone;
+
 class UsersTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+
     public function run()
     {
 
@@ -20,7 +19,7 @@ class UsersTableSeeder extends Seeder
                 'nickname' => 'robot', 
                 'first_name' => 'Super',
                 'second_name' => 'User',
-                'phone' => 89000000000, 
+                // 'phone' => 89000000000, 
                 'location_id' => 1,
                 'user_type' => 1, 
                 'access_block' => 0, 
@@ -39,7 +38,7 @@ class UsersTableSeeder extends Seeder
                 'nickname' => 'creativebob', 
                 'first_name' => 'Nestor',
                 'second_name' => 'Господин',
-                'phone' => 89041248598, 
+                // 'phone' => 89041248598, 
                 'location_id' => 1,
                 'user_type' => 1, 
                 'access_block' => 0, 
@@ -52,25 +51,37 @@ class UsersTableSeeder extends Seeder
                 'sex' => 1, 
             ],
             [
-               'login' => 'makc_berluskone', 
-               'email' => 'makc_berluskone@mail.ru', 
-               'password' => bcrypt('123456'), 
-               'nickname' => 'Makc_Berluskone', 
-               'first_name' => 'Максон',
-               'second_name' => 'Великий',
-               'phone' => 88888888888, 
-               'location_id' => 1,
-               'user_type' => 1, 
-               'access_block' => 0, 
-               'company_id' => null,
-               'filial_id' => null, 
-               'god' => 1, 
-               'system_item' => null, 
-               'author_id' => 1, 
-               'moderation' => null, 
-               'sex' => 1, 
-           ],
+                'login' => 'makc_berluskone', 
+                'email' => 'makc_berluskone@mail.ru', 
+                'password' => bcrypt('123456'), 
+                'nickname' => 'Makc_Berluskone', 
+                'first_name' => 'Максон',
+                'second_name' => 'Великий',
+                // 'phone' => 88888888888, 
+                'location_id' => 1,
+                'user_type' => 1, 
+                'access_block' => 0, 
+                'company_id' => null,
+                'filial_id' => null, 
+                'god' => 1, 
+                'system_item' => null, 
+                'author_id' => 1, 
+                'moderation' => null, 
+                'sex' => 1, 
+            ],
+        ]);
 
-       ]);
+        $users = User::get();
+
+        // Пишем или ищем новый и создаем связь
+        $phone = Phone::firstOrCreate(
+            ['phone' => 88888888888], 
+            ['crop' => substr(88888888888, -4)]
+        );
+        // dd($phone);
+
+        foreach ($users as $user) {
+            $user->phones()->attach($phone->id, ['main' => 1]);
+        }
     }
 }

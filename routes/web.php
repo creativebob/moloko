@@ -2,6 +2,10 @@
 
 use App\Lead;
 use App\User;
+use App\Claim;
+
+use App\Entity;
+use App\Page;
 
 use Carbon\Carbon;
 
@@ -18,7 +22,7 @@ use Carbon\Carbon;
 
 Auth::routes();
 
-// Всякая хрень дял проверки
+// Всякая хрень для проверки
 Route::resource('/site_api', 'ApiController');
 Route::get('/medcosm', 'ApiController@medcosm');
 Route::get('/dashboard', 'HomeController@index')->name('home');
@@ -41,12 +45,23 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 
 // Методы для парсера и одноразовые
 
-// Route::any('/lol', function () {
+Route::any('/lol', function () {
 
-//     dd(App\OldLead::with(['comments.user', 'claims', 'task', 'stage', 'user', 'city', 'service', 'challenges' => function ($query) {
-//      $query->with('author', 'appointed', 'finisher', 'stage', 'task');
-//     }])->find(5468));
-// });
+    $entities = Entity::get(['id', 'alias']);
+    $pages = Page::get(['id', 'alias']);
+
+    $mass = [];
+    foreach ($entities as $entity) {
+        foreach ($pages as $page) {
+            if ($entity->alias == $page->alias) {
+                $mass[] = ['entity_id' => $entity->id, 'page_id' => $page->id];
+            }
+        }
+    }
+
+    dd($mass);
+
+});
 
 // Route::any('/report', function () {
 

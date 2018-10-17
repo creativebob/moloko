@@ -818,6 +818,22 @@ class MenusTableSeeder extends Seeder
             'sort' => null,
         ],
 
+        // 55
+        [
+            'name' => 'Заказы',
+            'icon' => null,
+            'alias' => 'admin/orders',
+            'tag' => 'orders',
+            'parent_id' => 28,
+            'page_id' => 47,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
 
     ]);
 }
