@@ -7,6 +7,7 @@ use App\TelegramMessage;
 
 use App\Lead;
 use App\Claim;
+use App\User;
 
 use Illuminate\Http\Request;
 
