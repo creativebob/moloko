@@ -298,6 +298,7 @@ Route::any('/set_setting', 'SettingController@ajax_set_setting')->middleware('au
 
 Route::resource('/settings', 'SettingController')->middleware('auth');
 
+
 // ---------------------------------------- Телефоны --------------------------------------------------
 
 Route::post('/add_extra_phone', 'PhoneController@ajax_add_extra_phone')->middleware('auth');
@@ -315,8 +316,6 @@ Route::post('/users_sort', 'UserController@ajax_sort')->middleware('auth');
 Route::post('/users_system_item', 'UserController@ajax_system_item')->middleware('auth');
 // Отображение на сайте
 Route::post('/users_display', 'UserController@ajax_display')->middleware('auth');
-
-
 
 // Поиск продукции для добавления на сайт
 Route::any('/catalog_products/add_product', 'CatalogProductController@add_product')->middleware('auth');
