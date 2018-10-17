@@ -45,23 +45,21 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 
 // Методы для парсера и одноразовые
 
-Route::any('/lol', function () {
+// Route::any('/lol', function () {
 
-    $entities = Entity::get(['id', 'alias']);
-    $pages = Page::get(['id', 'alias']);
+//     $telegram_destinations = User::whereHas('staff', function ($query) {
+//                 $query->whereHas('position', function ($query) {
+//                     $query->whereHas('notifications', function ($query) {
+//                         $query->where('notification_id', 1);
+//                     });
+//                 });
+//             })
+//             ->where('telegram_id', '!=', null)
+//             ->get(['telegram_id']);
 
-    $mass = [];
-    foreach ($entities as $entity) {
-        foreach ($pages as $page) {
-            if ($entity->alias == $page->alias) {
-                $mass[] = ['entity_id' => $entity->id, 'page_id' => $page->id];
-            }
-        }
-    }
+//             dd($telegram_destinations);
 
-    dd($mass);
-
-});
+// });
 
 // Route::any('/report', function () {
 
