@@ -5,7 +5,6 @@
     <div class="small-12 medium-6 cell">
       <div class="grid-x">
 
-
         <div class="small-12 cell">
           <div class="grid-x">
             <div class="small-12 cell checkbox checkboxer">

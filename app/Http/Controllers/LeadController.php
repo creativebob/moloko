@@ -136,6 +136,8 @@ class LeadController extends Controller
         $filter['entity_name'] = $this->entity_name;
         $filter['inputs'] = $request->input();
 
+        // $filter['city'] = getFilterCityList();
+        // dd($filter['city']);
 
         // $filter['city'] = $filter_query->pluck('location.city.name', 'location.city.id');
         // $filter['city']['title'] = 'Выберите город:';
@@ -162,8 +164,8 @@ class LeadController extends Controller
         $page_info = pageInfo($this->entity_name);
 
         // Задачи пользователя
-        // $list_challenges = challenges($request);
-        return view('leads.index', compact('leads', 'page_info', 'user', 'filter'));
+        $list_challenges = challenges($request);
+        return view('leads.index', compact('leads', 'page_info', 'user', 'filter', 'list_challenges'));
     }
 
     public function leads_calls(Request $request)

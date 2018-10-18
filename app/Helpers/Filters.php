@@ -2,6 +2,7 @@
 
     use App\Booklist;
     use App\List_item;
+    use App\City;
 
     // Куки
     use Illuminate\Support\Facades\Cookie;
@@ -433,6 +434,15 @@
 
         return $filter;
 
+    }
+
+
+
+    function getFilterCityList(){
+
+        $cities = City::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id');
+        return $cities;
     }
 
 
