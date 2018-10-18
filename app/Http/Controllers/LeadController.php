@@ -1209,7 +1209,7 @@ class LeadController extends Controller
         // Оповещаем менеджера о назначении
         if (isset($manager->telegram_id)) {
             $message = $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' назначил вам лида: ' . $lead->case_number . "\r\n\r\n";
-            $message .= lead_info($message, $lead);
+            $message = lead_info($message, $lead);
             $telegram_destinations[] = $manager;
             
             send_message($telegram_destinations, $message);
@@ -1220,7 +1220,7 @@ class LeadController extends Controller
 
                 // Если у менеджера нет телеграмма, оповещаем руководителя
                 $message = 'У ' . $manager->first_name.' '.$manager->second_name . " отсутствует Telegram ID, оповестите его другим способом!\r\n\r\n";
-                $message .= lead_info($message, $lead);
+                $message = lead_info($message, $lead);
                 
                 $telegram_destinations[] = $user;
                 send_message($telegram_destinations, $message);

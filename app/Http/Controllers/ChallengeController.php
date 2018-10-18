@@ -217,7 +217,7 @@ class ChallengeController extends Controller
                 // Если задача для лида
                 if ($request->model = 'App\Lead') {
 
-                    $message .= lead_info($message, $item);
+                    $message = lead_info($message, $item);
                 }
 
 
@@ -293,7 +293,7 @@ class ChallengeController extends Controller
                 if (isset($challenge->challenges->lead_method_id)) {
 
                     $lead = Lead::findOrFail($challenge->challenges->id);
-                    $message .= lead_info($message, $lead);
+                    $message = lead_info($message, $lead);
                 }
 
                 $telegram_destinations = User::where('id', $challenge->author_id)
@@ -340,7 +340,7 @@ class ChallengeController extends Controller
             $message .= "Снял: " . $user->first_name . " " . $user->second_name . "\r\n";
 
             if (isset($challenge->description)) {
-                $message .= "Описание: " . $challenge->description. "\r\n";  
+                $message = "Описание: " . $challenge->description. "\r\n";  
             }
 
             $message .= "\r\n";
