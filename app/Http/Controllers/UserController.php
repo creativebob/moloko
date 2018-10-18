@@ -77,31 +77,14 @@ class UserController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // dd($users->first());
-
         // --------------------------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
         // --------------------------------------------------------------------------------------------------------------------------
 
-        $filter_query = User::with('location.city')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям              
-        ->orWhere('id', $request->user()->id) // Только для сущности USERS
-        ->get();
-
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        $filter['inputs'] = $request->input();
-
-        // Перечень подключаемых фильтров:
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
+        $filter = setFilter($this->entity_name, $request, [
+            'city',
+            'booklist'
+        ]);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

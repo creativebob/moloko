@@ -123,53 +123,16 @@ class LeadController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
         // --------------------------------------------------------------------------------------------------------------------------
 
-        $filter_query = Lead::with('location.city', 'manager', 'stage', 'lead_type', 'lead_method')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->manager($user)
-        // ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям           
-        ->get();
+        $filter = setFilter($this->entity_name, $request, [
+            'city', 
+            'stage', 
+            'lead_method', 
+            'lead_type', 
+            'manager',
+            'date_interval'
+        ]);
 
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        $filter['inputs'] = $request->input();
-
-        // $filter['city'] = getFilterCityList();
-        // dd($filter['city']);
-
-        // $filter['city'] = $filter_query->pluck('location.city.name', 'location.city.id');
-        // $filter['city']['title'] = 'Выберите город:';
-        // $filter['city']['count_mass'] = 92;
-        // dd($filter['city']);
-
-        $filter = addMyFilter($filter, $request, 'city');
-        $filter = addMyFilter($filter, $request, 'stage');
-        $filter = addMyFilter($filter, $request, 'lead_method');
-        $filter = addMyFilter($filter, $request, 'lead_type');
-        $filter = addMyFilter($filter, $request, 'manager');
-        // $filter = addMyFilter($filter, $request, 'lead_method');
-        // $filter = addMyFilter($filter, $request, 'lead_method');
-
-
-        // dd($filter);
-
-        // Перечень подключаемых фильтров:
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
-        // dd($filter);
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите этап:', 'stage', 'stage_id', null, 'internal-id-one');
-        
-        // $filter = addFilter($filter, $filter_query, $request, 'Менеджер:', 'manager', 'manager_id', null, 'internal-id-one');
-
-        // $filter = addFilter($filter, $filter_query, $request, 'Способ обращения:', 'lead_method', 'lead_method_id', null, 'internal-id-one');
-
-        // $filter = addFilter($filter, $filter_query, $request, 'Тип обращения:', 'lead_type', 'lead_type_id', null, 'internal-id-one');
-
-        $filter = addFilterInterval($filter, $this->entity_name, $request, 'date_start', 'date_end');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        $filter = addBooklist($filter, $request, $this->entity_name);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

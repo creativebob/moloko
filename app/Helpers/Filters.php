@@ -54,7 +54,7 @@
     }
 
 
-    function addBooklist($filter, $filter_query, $request, $entity_name = 'none'){
+    function addBooklist($filter, $request, $entity_name = 'none'){
 
         $title = 'Мои списки:';
         $name = 'booklist';
@@ -142,6 +142,7 @@
             if(is_array($request->$column)){
                 $filter[$filter_name]['count_mass'] = count($request->$column);
                 $filter['status'] = 'active';
+                $filter['count'] = $filter['count'] + 1;
 
             } else {
                 $filter[$filter_name]['count_mass'] = 0;
@@ -320,22 +321,6 @@
 
             };
 
-
-            // Вытаскиеваем в зависимости от режима нужную коллекцию
-            // if($filter_mode == 'internal-text'){
-
-            //     // Выбираем только уникальные ID
-            //     $filter_entity = $filter_query->unique($column);
-
-            //     if(count($filter_entity) > 0){
-            //         foreach($filter_entity as $entity){
-            //             $list_select['item_list'][$entity->$column] = $entity->$column;
-            //         }
-            //     };
-
-            // };
-
-
         };
 
         $filter[$filter_name]['collection'] = $filter_entity;
@@ -422,34 +407,55 @@
                 $filter['count'] = $filter['count'] + 1;
             }
 
-            if($filter['count'] > 0) {
-                
-                // Пишем в куку
-                $filter_url = $request->fullUrl();
-                Cookie::queue('filter_' . $filter_entity_name, $filter_url, 1440);
-
-                $filter['status'] = 'active';
-            } else {
-
-                $filter['status'] = 'disable';
-                // Удаляем куку
-                Cookie::queue(Cookie::forget('filter_' . $filter_entity_name)); 
-            };
-
         return $filter;
 
     }
 
 
+    function setFilter($entity_name, $request, $filters){
+
+        $filter['status'] = null;
+        $filter['entity_name'] = $entity_name;
+        $filter['inputs'] = $request->input();
+        $filter['count'] = 0;
+
+        foreach ($filters as $filter_name) {
+
+            if(($filter_name != 'date_interval')&&($filter_name != 'booklist')){
+                $filter = addMyFilter($filter, $request, $filter_name);
+            }
+
+            if($filter_name == 'date_interval'){
+                $filter = addFilterInterval($filter, $entity_name, $request, 'date_start', 'date_end');
+            }
+
+            if($filter_name == 'booklist'){
+                $filter = addBooklist($filter, $request, $entity_name);
+            }
+
+        }
+
+
+        // Запоминание фильтра
+        if($filter['count'] > 0) {
+            
+            // Пишем в куку
+            $filter_url = $request->fullUrl();
+            Cookie::queue('filter_' . $filter['entity_name'], $filter_url, 1440);
+            $filter['status'] = 'active';
+
+        } else {
+
+            $filter['status'] = 'disable';
+            // Удаляем куку
+            Cookie::queue(Cookie::forget('filter_' . $filter['entity_name'])); 
+        }
+
+        return $filter;
+    }
+
+
     function addMyFilter($filter, $request, $name_filter){
-
-        if(!isset($filter['count'])){$filter['count'] = 0;};
-
-        // // Пишем режим в фильтр
-        // $filter[$filter_name]['mode'] = $filter_mode;
-        // $filter[$filter_name]['column'] = $column;
-
-
 
 
         // ФИЛЬТР ПО ГОРОДУ ------------------------------------------------------------
@@ -502,7 +508,6 @@
         // ----------------------------------------------------------------------------
 
 
-
         // ОБЩИЕ ДЛЯ ФИЛЬТРА НАСТРОЙКИ ====================================================
 
         // Проверка на пустоту данных которые пришли из URL по текущему фильтру
@@ -526,21 +531,6 @@
 
         // Сохраняем имя поля фильтра в контейнер фильтра
         $filter[$name_filter]['column'] = $column;
-
-        // Запоминание фильтра
-        if($filter['count'] > 0) {
-            
-            // Пишем в куку
-            $filter_url = $request->fullUrl();
-            Cookie::queue('filter_' . $filter['entity_name'], $filter_url, 1440);
-            $filter['status'] = 'active';
-
-        } else {
-
-            $filter['status'] = 'disable';
-            // Удаляем куку
-            Cookie::queue(Cookie::forget('filter_' . $filter['entity_name'])); 
-        }
 
         return $filter;
     }
@@ -581,5 +571,6 @@
         return $lead_types;
 
     }
+
 
 ?>
