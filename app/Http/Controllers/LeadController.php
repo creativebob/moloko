@@ -123,14 +123,14 @@ class LeadController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
         // --------------------------------------------------------------------------------------------------------------------------
 
-        // $filter_query = Lead::with('location.city', 'manager', 'stage', 'lead_type', 'lead_method')
-        // ->moderatorLimit($answer)
-        // ->companiesLimit($answer)
-        // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        // ->manager($user)
-        // // ->authors($answer)
-        // ->systemItem($answer) // Фильтр по системным записям           
-        // ->get();
+        $filter_query = Lead::with('location.city', 'manager', 'stage', 'lead_type', 'lead_method')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->manager($user)
+        // ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям           
+        ->get();
 
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
@@ -169,7 +169,7 @@ class LeadController extends Controller
         $filter = addFilterInterval($filter, $this->entity_name, $request, 'date_start', 'date_end');
 
         // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $request, $this->entity_name);
+        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

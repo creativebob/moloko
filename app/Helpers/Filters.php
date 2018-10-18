@@ -54,7 +54,7 @@
     }
 
 
-    function addBooklist($filter, $request, $entity_name = 'none'){
+    function addBooklist($filter, $filter_query, $request, $entity_name = 'none'){
 
         $title = 'Мои списки:';
         $name = 'booklist';
@@ -369,7 +369,7 @@
 
         if(count($filter[$filter_name]['list_select']) == 0){
             $filter[$filter_name] = null;
-        };
+        }
 
         $filter_entity_name = $filter['entity_name'];
 
@@ -503,9 +503,6 @@
 
 
 
-
-
-
         // ОБЩИЕ ДЛЯ ФИЛЬТРА НАСТРОЙКИ ====================================================
 
         // Проверка на пустоту данных которые пришли из URL по текущему фильтру
@@ -537,12 +534,13 @@
             $filter_url = $request->fullUrl();
             Cookie::queue('filter_' . $filter['entity_name'], $filter_url, 1440);
             $filter['status'] = 'active';
+
         } else {
 
             $filter['status'] = 'disable';
             // Удаляем куку
             Cookie::queue(Cookie::forget('filter_' . $filter['entity_name'])); 
-        };
+        }
 
         return $filter;
     }
