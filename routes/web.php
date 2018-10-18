@@ -45,23 +45,15 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 
 // Методы для парсера и одноразовые
 
-// Route::any('/lol', function () {
+Route::any('/lol', function () {
 
-//     $user = User::find(11);
-//     // Оповещаем менеджера о назначении
-//     if (isset($user->telegram_id)) {
-//         $telegram_message = $user->first_name.' '.$user->second_name;
-//         $telegram_destinations[] = $user;
+    $date = Carbon::now();
+    dd($date);
+    // And the same goes for months
+    // $date->locale('ru');
+    // echo $date->getTranslatedMonthName('MMMM YYYY'); // март
 
-//     } else {
-//             // Если у менеджера нет телеграмма, оповещаем руководителя
-//         $telegram_message = 'У менеджера' . $user->first_name.' '.$user->second_name . ' отсутствует Telegram ID, оповестите его другим способом!';
-//         $telegram_destinations[] = $user;
-//     }
-
-//     dd($telegram_message);
-
-// });
+});
 
 // Route::any('/report', function () {
 

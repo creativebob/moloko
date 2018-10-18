@@ -276,15 +276,25 @@ class ChallengeController extends Controller
 
             // Оповещение в telegram, если исполнитель не является автором
             if ($challenge->finisher_id != $challenge->author_id) {
-                $message = "ЗАДАЧА ВЫПОЛНЕНА\r\n\r\n";
+
+                if (Carbon::now() > $challenge->deadline_date) {
+                    $message = "ЗАДАЧА ВЫПОЛНЕНА C НАРУШЕНИЕМ СРОКА\r\n\r\n";
+                    $diff = $challenge->deadline_date->diffInHours(Carbon::now());
+                } else {
+                    $message = "ЗАДАЧА ВЫПОЛНЕНА\r\n\r\n";
+                }
 
                 $message .= "Действие: " . $challenge->challenge_type->name . "\r\n";
                 $message .= "Дедлайн: " . $challenge->deadline_date->format('d.m.Y - H:i') . "\r\n";
                 $message .= "Дата выполнения: " . Carbon::now()->format('d.m.Y - H:i') . "\r\n";
-                $message .= "Исполнитель: " . $user->first_name . " " . $user->second_name;
+                $message .= "Исполнитель: " . $user->first_name . " " . $user->second_name . "\r\n";
 
                 if (isset($challenge->description)) {
                     $message .= "Описание: " . $challenge->description. "\r\n";  
+                }
+
+                if (isset($diff)) {
+                    $message .= "Опоздание (в часах): " . $diff . "\r\n";  
                 }
 
                 $message .= "\r\n";
