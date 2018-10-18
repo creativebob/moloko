@@ -627,7 +627,7 @@ Route::post('/leads_display', 'LeadController@ajax_display')->middleware('auth')
 Route::post('/leads/search', 'LeadController@search')->middleware('auth');
 
 // Назначение лида
-Route::any('/lead_direction_check', 'LeadController@ajax_lead_direction_check')->middleware('auth');
+Route::any('/lead_appointed_check', 'LeadController@ajax_appointed_check')->middleware('auth');
 Route::any('/lead_appointed', 'LeadController@ajax_lead_appointed')->middleware('auth');
 Route::any('/lead_distribute', 'LeadController@ajax_distribute')->middleware('auth');
 Route::any('/lead_take', 'LeadController@ajax_lead_take')->middleware('auth');
@@ -642,6 +642,19 @@ Route::post('/lead_free', 'LeadController@ajax_lead_free')->middleware('auth');
 Route::post('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth');
 // Поиск лида по номеру телефона
 Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->middleware('auth');
+
+
+// --------------------------------------- Заказы -----------------------------------------------
+
+// Основные методы
+Route::resource('orders', 'OrderController')->middleware('auth');
+// Сортировка
+Route::post('/orders_sort', 'OrderController@ajax_sort')->middleware('auth');
+// Системная запись
+Route::post('/orders_system_item', 'OrderController@ajax_system_item')->middleware('auth');
+// Отображение на сайте
+Route::post('/orders_display', 'OrderController@ajax_display')->middleware('auth');
+
 
 // ------------------------------ Внутренние комментарии -----------------------------------------------
 

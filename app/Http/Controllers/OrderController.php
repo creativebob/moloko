@@ -2,19 +2,48 @@
 
 namespace App\Http\Controllers;
 
+// Модели
 use App\Order;
+
 use Illuminate\Http\Request;
+
+// Политика
+use App\Policies\NotePolicy;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    // Сущность над которой производит операции контроллер
+    protected $entity_name = 'orders';
+    protected $entity_dependence = false;
+
+    public function index(Request $request)
     {
-        //
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Order::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // -------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -------------------------------------------------------------------------------------------
+
+        $orders = Order::with('site', 'author')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->paginate(30);
+        // dd($orders);
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('orders.index', compact('orders', 'page_info'));
     }
 
     /**
