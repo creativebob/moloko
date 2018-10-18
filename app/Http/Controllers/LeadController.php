@@ -1208,18 +1208,22 @@ class LeadController extends Controller
 
         // Оповещаем менеджера о назначении
         if (isset($manager->telegram_id)) {
-            $telegram_message = $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' назначил вам лида: ' . $lead->case_number;
+            $message = $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' назначил вам лида: ' . $lead->case_number . "\r\n\r\n";
+            $message .= lead_info($message, $lead);
             $telegram_destinations[] = $manager;
             
-            send_message($telegram_destinations, $telegram_message);
+            send_message($telegram_destinations, $message);
 
         } else {
 
             if (isset($user->telegram_id)) {
+
                 // Если у менеджера нет телеграмма, оповещаем руководителя
-                $telegram_message = 'У ' . $manager->first_name.' '.$manager->second_name . ' отсутствует Telegram ID, оповестите его другим способом!';
+                $message = 'У ' . $manager->first_name.' '.$manager->second_name . " отсутствует Telegram ID, оповестите его другим способом!\r\n\r\n";
+                $message .= lead_info($message, $lead);
+                
                 $telegram_destinations[] = $user;
-                send_message($telegram_destinations, $telegram_message);
+                send_message($telegram_destinations, $message);
             } else {
                 $note = add_note($lead, 'Оповещение никому не выслано, так как ни у кого нет telegram Id. Это просто комон какой-то!');
             }
