@@ -97,6 +97,7 @@ class LeadController extends Controller
             'lead_method',
             'stage',
             'challenges.challenge_type',
+            'challenges.appointed',
             'main_phones'
         )
         ->moderatorLimit($answer)
@@ -135,6 +136,12 @@ class LeadController extends Controller
         $filter['entity_name'] = $this->entity_name;
         $filter['inputs'] = $request->input();
 
+
+        // $filter['city'] = $filter_query->pluck('location.city.name', 'location.city.id');
+        // $filter['city']['title'] = 'Выберите город:';
+        // $filter['city']['count_mass'] = 92;
+        // dd($filter['city']);
+
         // Перечень подключаемых фильтров:
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
 
@@ -155,8 +162,8 @@ class LeadController extends Controller
         $page_info = pageInfo($this->entity_name);
 
         // Задачи пользователя
-        $list_challenges = challenges($request);
-        return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'list_challenges'));
+        // $list_challenges = challenges($request);
+        return view('leads.index', compact('leads', 'page_info', 'user', 'filter'));
     }
 
     public function leads_calls(Request $request)

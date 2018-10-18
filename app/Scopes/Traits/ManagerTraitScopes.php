@@ -9,16 +9,6 @@ trait ManagerTraitScopes
     public function scopeManager($query, $user)
     {
 
-        // Получаем сессию
-        // $session  = session('access');
-        // if(!isset($session)){
-        // 	abort(403, 'Нет сессии!');
-        // };
-
-        if($user->staff->first() != null){
-
-
-
                 $mass_lead_types = [];
                 if(extra_right('lead-regular')){$mass_lead_types[] = 1;};
                 if(extra_right('lead-service')){$mass_lead_types[] = 3;};
@@ -51,15 +41,6 @@ trait ManagerTraitScopes
                     $query
                     ->whereIn('lead_type_id', $mass_lead_types);
                 });
-
-
-
-
-        } else {
-
-            return $query;
-        }
-
 
     }
 }
