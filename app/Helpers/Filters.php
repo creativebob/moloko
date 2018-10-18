@@ -3,6 +3,10 @@
     use App\Booklist;
     use App\List_item;
     use App\City;
+    use App\Stage;
+    use App\Lead;    
+    use App\LeadMethod;   
+    use App\LeadType;
 
     // Куки
     use Illuminate\Support\Facades\Cookie;
@@ -50,7 +54,7 @@
     }
 
 
-    function addBooklist($filter, $filter_query, $request, $entity_name = 'none'){
+    function addBooklist($filter, $request, $entity_name = 'none'){
 
         $title = 'Мои списки:';
         $name = 'booklist';
@@ -437,21 +441,147 @@
     }
 
 
+    function addMyFilter($filter, $request, $name_filter){
+
+        if(!isset($filter['count'])){$filter['count'] = 0;};
+
+        // // Пишем режим в фильтр
+        // $filter[$filter_name]['mode'] = $filter_mode;
+        // $filter[$filter_name]['column'] = $column;
+
+
+
+
+        // ФИЛЬТР ПО ГОРОДУ ------------------------------------------------------------
+        if($name_filter == 'city'){
+
+            $filter[$name_filter]['title'] = 'Выберите город:';                         // Назавние фильтра
+            $column = 'city_id';                                                        // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterCityList();    // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО ЭТАПУ ------------------------------------------------------------
+        if($name_filter == 'stage'){
+
+            $filter[$name_filter]['title'] = 'Выберите этап:';                           // Назавние фильтра
+            $column = 'stage_id';                                                        // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterStageList();    // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО МЕТОДУ ОБРАЩЕНИЯ -------------------------------------------------
+        if($name_filter == 'lead_method'){
+
+            $filter[$name_filter]['title'] = 'Способ обращения:';                           // Назавние фильтра
+            $column = 'lead_method_id';                                                     // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterLeadMethodList();  // Функция с запросом
+        }
+        // -----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО ТИПУ ОБРАЩЕНИЯ  ---------------------------------------------------
+        if($name_filter == 'lead_type'){
+
+            $filter[$name_filter]['title'] = 'Тип обращения:';                              // Назавние фильтра
+            $column = 'lead_type_id';                                                       // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterLeadTypeList();    // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО МЕНЕДЖЕРУ ------------------------------------------------------------
+        if($name_filter == 'manager'){
+
+            $filter[$name_filter]['title'] = 'Менеджер:';                                   // Назавние фильтра
+            $column = 'manager_id';                                                         // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterManagerList();     // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+
+
+
+
+        // ОБЩИЕ ДЛЯ ФИЛЬТРА НАСТРОЙКИ ====================================================
+
+        // Проверка на пустоту данных которые пришли из URL по текущему фильтру
+        if($request->$column != null){
+
+            // Если ЕСТЬ фильтующая переменная в url
+            // Подсчитываем количество элементов в массиве
+            $filter[$name_filter]['count_mass'] = count($request->$column);
+
+            // Общий счетчик фильтров увеличиваем
+            $filter['count'] = $filter['count'] + 1;
+
+        } else {
+
+            // Если НЕТ фильтующей переменной в url
+            $filter[$name_filter]['count_mass'] = 0;
+        }
+
+        // Собираем массив с фильтрующими данными
+        $filter[$name_filter]['mass_id'] = $request->$column;
+
+        // Сохраняем имя поля фильтра в контейнер фильтра
+        $filter[$name_filter]['column'] = $column;
+
+        // Запоминание фильтра
+        if($filter['count'] > 0) {
+            
+            // Пишем в куку
+            $filter_url = $request->fullUrl();
+            Cookie::queue('filter_' . $filter['entity_name'], $filter_url, 1440);
+            $filter['status'] = 'active';
+        } else {
+
+            $filter['status'] = 'disable';
+            // Удаляем куку
+            Cookie::queue(Cookie::forget('filter_' . $filter['entity_name'])); 
+        };
+
+        return $filter;
+    }
+
 
     function getFilterCityList(){
 
         $cities = City::orderBy('name', 'asc')
-        ->get()->pluck('name', 'id');
+        ->get()->pluck('name', 'id')->toArray();
         return $cities;
     }
 
+    function getFilterStageList(){
 
+        $stages = Stage::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id')->toArray();
+        return $stages;
+    }
 
+    function getFilterLeadMethodList(){
 
+        $lead_methods = LeadMethod::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id')->toArray();
+        return $lead_methods;
+    }
 
+    function getFilterManagerList(){
 
+        $managers = Lead::with('manager')->orderBy('name', 'asc')->get()->pluck('manager.name', 'manager.id');
+        return $managers;
 
+    }
 
+    function getFilterLeadTypeList(){
 
+        $lead_types = LeadType::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id')->toArray();
+        return $lead_types;
+
+    }
 
 ?>
