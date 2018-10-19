@@ -78,20 +78,19 @@ class CompanyController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        $filter_query = Company::with('location.city', 'sector')
-        // ->suppliers($user->company_id, 'client')
-        ->moderatorLimit($answer)
-        ->get();
 
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        $filter['inputs'] = $request->input();
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id', null, 'internal-id-one');
+        $filter = setFilter($this->entity_name, $request, [
+            'author',               // Автор записи
+            'sector',               // Направление деятельности
+            'booklist'              // Списки пользователя
+        ]);
 
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        // Окончание фильтра -----------------------------------------------------------------------------------------
+
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

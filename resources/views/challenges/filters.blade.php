@@ -28,7 +28,7 @@
     <div class="small-12 cell">
       <div class="grid-x">
         <div class="small-12 medium-6 cell checkbox checkboxer">
-          @include('includes.inputs.checkboxer', ['name'=>'status_result', 'value' => $filter])      
+          @include('includes.inputs.checkboxer', ['name'=>'challenge_status', 'value' => $filter])      
         </div>
       </div>
     </div>

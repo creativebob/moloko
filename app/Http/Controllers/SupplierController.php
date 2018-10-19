@@ -62,6 +62,8 @@ class SupplierController extends Controller
         $suppliers = Supplier::with('author', 'company')
         ->where('company_id', '!=', null)
         ->moderatorLimit($answer)
+        ->filter($request, 'city_id', 'location')
+        ->filter($request, 'sector_id')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
@@ -73,6 +75,8 @@ class SupplierController extends Controller
         // -----------------------------------------------------------------------------------------------------------
 
         $filter = setFilter($this->entity_name, $request, [
+            'city',                 // Город
+            'sector',               // Направление деятельности
             'booklist'              // Списки пользователя
         ]);
 

@@ -86,6 +86,7 @@ class ServiceController extends Controller
         ]);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
+
         $page_info = pageInfo($this->entity_name);
 
         return view('services.index', compact('services', 'page_info', 'filter'));

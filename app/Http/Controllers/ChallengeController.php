@@ -32,6 +32,10 @@ class ChallengeController extends Controller
     public function index(Request $request)
     {
 
+        // Включение контроля активного фильтра 
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Lead::class);
 
@@ -59,7 +63,7 @@ class ChallengeController extends Controller
         // ->authors($answer)
         ->filter($request, 'appointed_id')
         ->filter($request, 'author_id')
-        // ->statusFilter($request, 'status')
+        ->filter($request, 'status')
         ->dateIntervalFilter($request, 'deadline_date')
         // ->booklistFilter($request)
         ->orderBy('deadline_date', 'desc')
@@ -76,6 +80,7 @@ class ChallengeController extends Controller
             'author',               // Автор
             'appointed',            // Исполнитель
             'date_interval',        // Дата обращения
+            'challenge_status',     // Статус задачи
             'booklist'              // Списки пользователя
         ]);
 
