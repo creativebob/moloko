@@ -58,36 +58,24 @@ class PositionController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->template($answer) // Выводим шаблоны в список
         ->booklistFilter($request)
-        ->filter($request, 'author_id')
+        // ->filter($request, 'author_id')
         ->filter($request, 'company_id')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // --------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
-        // --------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        $filter_query = Position::with('author', 'company')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->template($answer) // Выводим шаблоны в список
-        ->get();
+        $filter = setFilter($this->entity_name, $request, [
+            'company',                 // Компания
+            // 'author',                  // Автор
+            // 'city',                 // Город
+            'booklist'              // Списки пользователя
+        ]);
 
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        $filter['inputs'] = $request->input();
-
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите компанию:', 'company', 'company_id');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
-        // ------------------------------------------------------------------------------------------------------------------------------
+        // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

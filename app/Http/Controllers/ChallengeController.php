@@ -53,8 +53,6 @@ class ChallengeController extends Controller
         ->companiesLimit($answer)
         // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         // ->authors($answer)
-        // ->filter($request, 'city_id', 'location')
-        // ->filter($request, 'stage_id')
         ->filter($request, 'appointed_id')
         ->filter($request, 'author_id')
         // ->statusFilter($request, 'status')
@@ -65,42 +63,18 @@ class ChallengeController extends Controller
         // ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // dd($challenges);
-        // --------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
-        // --------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        $filter_query = Challenge::with(
-            'challenge_type', 
-            'author', 
-            'appointed', 
-            'finisher', 
-            'challenges'
-        )
-        ->companiesLimit($answer)
-        // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->get();
+        $filter = setFilter($this->entity_name, $request, [
+            'author',               // Автор
+            'appointed',            // Исполнитель
+            'date_interval',        // Дата обращения
+            'booklist'              // Списки пользователя
+        ]);
 
-
-
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        $filter['inputs'] = $request->input();
-
-        // Перечень подключаемых фильтров:
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
-        
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите этап:', 'stage', 'stage_id', null, 'internal-id-one');
-        
-        $filter = addFilter($filter, $filter_query, $request, 'Исполнитель:', 'appointed', 'appointed_id', null, 'internal-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Автор:', 'author', 'author_id', null, 'internal-id-one');
-
-        // $filter = addFilter($filter, $filter_query, $request, 'Статус:', 'status_result', 'status', null, 'internal-text');
-
-        $filter = addFilterInterval($filter, $this->entity_name, $request, 'date_start', 'date_end');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

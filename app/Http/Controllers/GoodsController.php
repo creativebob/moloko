@@ -72,33 +72,19 @@ class GoodsController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // ----------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter_query = Goods::with('author', 'company', 'goods_article.goods_product.goods_category')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->whereNull('archive')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
-        // dd($filter_query);
+        $filter = setFilter($this->entity_name, $request, [
+            'author',               // Автор записи
+            'goods_category',       // Категория товара
+            'goods_product',     // Группа продукта
+            // 'date_interval',     // Дата обращения
+            'booklist'              // Списки пользователя
+        ]);
 
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        $filter['inputs'] = $request->input();
-
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'goods_category', 'goods_category_id', 'goods_article.goods_product', 'external-id-one-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'goods_product', 'goods_product_id', 'goods_article', 'external-id-one');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
-        // ----------------------------------------------------------------------------------------------------------------------
+        // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

@@ -68,13 +68,16 @@ class SupplierController extends Controller
         ->paginate(30);
 
 
-        $filter_query = Supplier::moderatorLimit($answer)->get();
-        $filter['status'] = null;
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
+        $filter = setFilter($this->entity_name, $request, [
+            'booklist'              // Списки пользователя
+        ]);
 
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        // Окончание фильтра -----------------------------------------------------------------------------------------
+
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

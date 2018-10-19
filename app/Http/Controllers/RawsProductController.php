@@ -74,30 +74,18 @@ class RawsProductController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // ----------------------------------------------------------------------------------------------------------
+
+        // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter_query = RawsProduct::with('author', 'raws_category')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
+        $filter = setFilter($this->entity_name, $request, [
+            'author',                   // Автор записи
+            'raws_category',            // Категория сырья
+            'booklist'                  // Списки пользователя
+        ]);
 
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        $filter['inputs'] = $request->input();
-        
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'raws_category', 'raws_category_id', null, 'internal-id-one');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
-        // ----------------------------------------------------------------------------------------------------------------------
+        // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

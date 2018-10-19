@@ -2,11 +2,6 @@
 
     use App\Booklist;
     use App\List_item;
-    use App\City;
-    use App\Stage;
-    use App\Lead;    
-    use App\LeadMethod;   
-    use App\LeadType;
 
     // Куки
     use Illuminate\Support\Facades\Cookie;
@@ -15,7 +10,6 @@
     // --------------------------------------------------------------------------------------------------------------------
     // КОМПАНИЯ -----------------------------------------------------------------------------------------------------------
     // --------------------------------------------------------------------------------------------------------------------
-
 
     function getListFilterAuthor($filter_query){
 
@@ -457,6 +451,14 @@
 
     function addMyFilter($filter, $request, $name_filter){
 
+        // ФИЛЬТР ПО КОМПАНИИ ---------------------------------------------------------
+        if($name_filter == 'company'){
+
+            $filter[$name_filter]['title'] = 'Компания:';                               // Назавние фильтра
+            $column = 'company_id';                                                     // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterCompanyList(); // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
 
         // ФИЛЬТР ПО ГОРОДУ ------------------------------------------------------------
         if($name_filter == 'city'){
@@ -498,7 +500,7 @@
         // ----------------------------------------------------------------------------
 
 
-        // ФИЛЬТР ПО МЕНЕДЖЕРУ ------------------------------------------------------------
+        // ФИЛЬТР ПО МЕНЕДЖЕРУ --------------------------------------------------------
         if($name_filter == 'manager'){
 
             $filter[$name_filter]['title'] = 'Менеджер:';                                   // Назавние фильтра
@@ -506,6 +508,117 @@
             $filter[$name_filter]['list_select']['item_list'] = getFilterManagerList();     // Функция с запросом
         }
         // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО АВТОРУ -----------------------------------------------------------
+        if($name_filter == 'author'){
+
+            $filter[$name_filter]['title'] = 'Автор:';                                      // Назавние фильтра
+            $column = 'author_id';                                                          // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterAuthorList();      // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО КАТЕГОРИИ ТОВАРА -------------------------------------------------
+        if($name_filter == 'goods_category'){
+
+            $filter[$name_filter]['title'] = 'Категория:';                                  // Назавние фильтра
+            $column = 'goods_category_id';                                                  // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterGoodsCategoryList(); // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО ГРУППЕ ТОВАРА ----------------------------------------------------
+        if($name_filter == 'goods_product'){
+
+            $filter[$name_filter]['title'] = 'Группа товара:';                               // Назавние фильтра
+            $column = 'goods_product_id';                                                    // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterGoodsProductList(); // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО КАТЕГОРИИ УСЛУГИ -------------------------------------------------
+        if($name_filter == 'services_category'){
+
+            $filter[$name_filter]['title'] = 'Категория:';                                       // Назавние фильтра
+            $column = 'services_category_id';                                                    // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterServicesCategoryList(); // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО ГРУППЕ УСЛУГИ ----------------------------------------------------
+        if($name_filter == 'services_product'){
+
+            $filter[$name_filter]['title'] = 'Группа услуги:';                                  // Назавние фильтра
+            $column = 'services_product_id';                                                    // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterServicesProductList(); // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО КАТЕГОРИИ СЫРЬЯ --------------------------------------------------
+        if($name_filter == 'raws_category'){
+
+            $filter[$name_filter]['title'] = 'Категория:';                                       // Назавние фильтра
+            $column = 'raws_category_id';                                                        // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterRawsCategoryList();     // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО ГРУППЕ СЫРЬЯ -----------------------------------------------------
+        if($name_filter == 'raws_product'){
+
+            $filter[$name_filter]['title'] = 'Группа сырья:';                                  // Назавние фильтра
+            $column = 'raws_product_id';                                                       // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterRawsProductList();    // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО ОТВЕТСТВЕННОМУ ПО ЗАДАЧИ -----------------------------------------
+        if($name_filter == 'appointed'){
+
+            $filter[$name_filter]['title'] = 'Исполнитель:';                                 // Назавние фильтра
+            $column = 'appointed_id';                                                        // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterAppointedList();    // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО ДОЛЖНОСТИ --------------------------------------------------------
+        if($name_filter == 'position'){
+
+            $filter[$name_filter]['title'] = 'Должность:';                                     // Назавние фильтра
+            $column = 'position_id';                                                           // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterPositionList();       // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО ОТДЕЛУ -----------------------------------------------------------
+        if($name_filter == 'department'){
+
+            $filter[$name_filter]['title'] = 'Отделы:';                                     // Назавние фильтра
+            $column = 'department_id';                                                      // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterDepartmentList();  // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО ТИПУ ПОМЕЩЕНИЯ  ---------------------------------------------------
+        if($name_filter == 'places_type'){
+
+            $filter[$name_filter]['title'] = 'Тип помещения:';                              // Назавние фильтра
+            $column = 'places_type_id';                                                     // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterPlacesTypeList();   // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
 
 
         // ОБЩИЕ ДЛЯ ФИЛЬТРА НАСТРОЙКИ ====================================================
@@ -536,41 +649,125 @@
     }
 
 
+    function getFilterCompanyList(){
+
+        $companies = App\Company::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id')->toArray();
+        return $companies;
+    }
+
     function getFilterCityList(){
 
-        $cities = City::orderBy('name', 'asc')
+        $cities = App\City::orderBy('name', 'asc')
         ->get()->pluck('name', 'id')->toArray();
         return $cities;
     }
 
     function getFilterStageList(){
 
-        $stages = Stage::orderBy('name', 'asc')
+        $stages = App\Stage::orderBy('name', 'asc')
         ->get()->pluck('name', 'id')->toArray();
         return $stages;
     }
 
     function getFilterLeadMethodList(){
 
-        $lead_methods = LeadMethod::orderBy('name', 'asc')
+        $lead_methods = App\LeadMethod::orderBy('name', 'asc')
         ->get()->pluck('name', 'id')->toArray();
         return $lead_methods;
     }
 
     function getFilterManagerList(){
 
-        $managers = Lead::with('manager')->orderBy('name', 'asc')->get()->pluck('manager.name', 'manager.id');
+        $managers = App\Lead::with('manager')->orderBy('name', 'asc')->get()->pluck('manager.nameReverse', 'manager.id')->toArray();
+        if(isset($managers)){asort($managers);}
         return $managers;
+
+    }
+
+    function getFilterAuthorList(){
+
+        $employees = App\Employee::with('user')->get()->pluck('user.name', 'user.id')->toArray();
+        if(isset($employees)){asort($employees);}
+        return $employees;
 
     }
 
     function getFilterLeadTypeList(){
 
-        $lead_types = LeadType::orderBy('name', 'asc')
+        $lead_types = App\LeadType::orderBy('name', 'asc')
         ->get()->pluck('name', 'id')->toArray();
         return $lead_types;
 
     }
 
+    function getFilterGoodsCategoryList(){
+
+        $goods_categories = App\GoodsCategory::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id')->toArray();
+        return $goods_categories;
+    }
+
+    function getFilterGoodsProductList(){
+
+        $goods_products = App\GoodsProduct::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id')->toArray();
+        return $goods_products;
+    }
+
+    function getFilterServicesCategoryList(){
+
+        $services_categories = App\ServicesCategory::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id')->toArray();
+        return $services_categories;
+    }
+
+    function getFilterServicesProductList(){
+
+        $services_products = App\ServicesProduct::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id')->toArray();
+        return $services_products;
+    }
+
+    function getFilterRawsCategoryList(){
+
+        $raws_categories = App\RawsCategory::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id')->toArray();
+        return $raws_categories;
+    }
+
+    function getFilterRawsProductList(){
+
+        $raws_products = App\RawsProduct::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id')->toArray();
+        return $raws_products;
+    }
+
+    function getFilterAppointedList(){
+
+        $appointeds = App\Challenge::with('appointed')->get()->pluck('appointed.nameReverse', 'appointed.id')->toArray();
+        if(isset($appointeds)){asort($appointeds);}
+        return $appointeds;
+    }
+
+    function getFilterPositionList(){
+
+        $positions = App\Position::orderBy('name', 'asc')->get()->pluck('name', 'id')->toArray();
+        return $positions;
+    }
+
+    function getFilterDepartmentList(){
+
+        $departments = App\Department::orderBy('name', 'asc')->get()->pluck('name', 'id')->toArray();
+        return $departments;
+    }
+
+    function getFilterPlacesTypeList(){
+
+        $places_types = App\PlacesType::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id')->toArray();
+        return $places_types;
+
+    }
 
 ?>

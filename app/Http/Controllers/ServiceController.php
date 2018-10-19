@@ -72,37 +72,20 @@ class ServiceController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
-        // dd($services);
 
-        // --------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА
-        // --------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        $filter_query = Service::with('author', 'company', 'services_article.services_product.services_category')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->whereNull('archive')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
+        $filter = setFilter($this->entity_name, $request, [
+            'author',               // Автор записи
+            'services_category',    // Категория услуги
+            'services_product',     // Группа услуги
+            // 'date_interval',     // Дата обращения
+            'booklist'              // Списки пользователя
+        ]);
 
-        // Создаем контейнер фильтра
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        $filter['inputs'] = $request->input();
-
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', 'services_article.services_product', 'external-id-one-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'services_product', 'services_product_id', 'services_article', 'external-id-one');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // dd($filter);
-        // Инфо о странице
+        // Окончание фильтра -----------------------------------------------------------------------------------------
         $page_info = pageInfo($this->entity_name);
 
         return view('services.index', compact('services', 'page_info', 'filter'));

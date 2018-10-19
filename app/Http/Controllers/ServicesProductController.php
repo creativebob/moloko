@@ -74,31 +74,17 @@ class ServicesProductController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // ----------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter_query = ServicesProduct::with('author', 'services_category')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
+        $filter = setFilter($this->entity_name, $request, [
+            'author',                   // Автор записи
+            'services_category',        // Категория услуги
+            'booklist'                  // Списки пользователя
+        ]);
 
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        $filter['inputs'] = $request->input();
-        
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', null, 'internal-id-one');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
-        // ----------------------------------------------------------------------------------------------------------------------
-
+        // Окончание фильтра -----------------------------------------------------------------------------------------
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
