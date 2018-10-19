@@ -109,15 +109,15 @@
             @if($lead->manager->id == 1)
 
               @if(($lead->lead_type_id == 1)&&(extra_right('lead-regular')))
-                <a href="#" class="button tiny take-lead">Принять</a>
+                <button class="button tiny take-lead">Принять</button>
               @endif
 
               @if(($lead->lead_type_id == 2)&&(extra_right('lead-dealer')))
-                <a href="#" class="button tiny take-lead">Принять (Дилер)</a>
+                <button class="button tiny take-lead">Принять (Дилер)</button>
               @endif
 
               @if(($lead->lead_type_id == 3)&&(extra_right('lead-service')))
-                <a href="#" class="button tiny take-lead">Принять (Сервисный центр)</a>
+                <button class="button tiny take-lead">Принять (Сервисный центр)</button>
               @endif
 
             @endif
@@ -201,6 +201,8 @@
   $(document).on('click', '.take-lead', function(event) {
     event.preventDefault();
 
+    $(this).prop('disabled', true);
+
     var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
     var id = $(this).closest('.item').attr('id').split('-')[1];
     var item = $(this);
@@ -254,6 +256,8 @@
 
   $(document).on('click', '#submit-appointed', function(event) {
     event.preventDefault();
+
+    $(this).prop('disabled', true);
 
     $.ajax({
       headers: {

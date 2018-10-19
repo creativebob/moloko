@@ -255,6 +255,52 @@ $disabled_leadbot = '';
 	});
 
 
+	$(document).on('click', '.get-products', function(event) {
+		event.preventDefault();
+
+		var entity = $(this).attr('id').split('-')[0];
+		var id = $(this).attr('id').split('-')[1];
+
+		// alert(entity + ' ' + id);
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: "/admin/" + entity + "_get_products",
+			type: "POST",
+			data: {id: id},
+			success: function(html){
+				$('#items-list').html(html);	
+			}
+		});
+	});
+
+
+	$(document).on('click', '.add-to-order', function(event) {
+		event.preventDefault();
+
+		var entity = $(this).attr('id').split('-')[0];
+		var id = $(this).attr('id').split('-')[1];
+
+		// alert(entity + ' ' + id);
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: "/admin/orders_check",
+			type: "POST",
+			data: {lead_id: lead_id, item_id: id, entity: entity},
+			success: function(html){
+				$('#goods-section').append(html);
+
+				$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
+			}
+		});
+	});
+
+
 
 </script>
 

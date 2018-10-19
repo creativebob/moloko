@@ -18,7 +18,7 @@ use App\Scopes\Traits\ManufacturersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -102,7 +102,8 @@ class GoodsArticle extends Model
     {
         return $this->hasMany('App\Goods');
     }
-public function company()
+    
+    public function company()
     {
         return $this->belongsTo('App\Company');
     }

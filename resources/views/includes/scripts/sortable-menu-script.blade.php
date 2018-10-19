@@ -9,7 +9,7 @@ $(function() {
     placeholder: "menu-drop-color", // высота и фон вырванного элемента
     update: function( event, ui ) {
       var data = $(this).sortable('serialize');
-      var entity = $(this).children('.item').attr('id').split('-')[0];
+      var entity_alias = $(this).children('.item').attr('id').split('-')[0];
 
       // alert(entity);
       // alert(data);
@@ -21,7 +21,7 @@ $(function() {
         },
         data: data,
         type: 'POST',
-        url: '/admin/' + entity + '_sort',
+        url: '/admin/sort/' + entity_alias,
         // success: function(date){
         //   var result = $.parseJSON(date);
         //   if (result.error_status == 1) {

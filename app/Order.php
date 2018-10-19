@@ -47,7 +47,11 @@ class Order extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-
+        'lead_id',
+        'user_id',
+        'company_id',
+        'author_id',
+        'draft'
     ];
 
     // Автор
@@ -77,7 +81,7 @@ class Order extends Model
     // Состав
     public function compositions()
     {
-        return $this->morphMany('App\OrderComposition', 'order_compositions');
+        return $this->hasMany('App\OrderComposition');
     }
 
 }
