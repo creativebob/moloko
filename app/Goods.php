@@ -19,7 +19,7 @@ use App\Scopes\Traits\SuppliersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -108,5 +108,12 @@ class Goods extends Model
     // {
     //     return $this->belongsToMany('App\Product', 'compositions', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
     // }
+
+
+    // Получаем составы заказов
+    public function order_compositions()
+    {
+        return $this->morphMany('App\OrderComposition', 'order_compositions');
+    }
 
 }

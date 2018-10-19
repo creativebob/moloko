@@ -628,7 +628,7 @@ class LeadController extends Controller
             $query->orderBy('created_at', 'desc');
         }, 'challenges' => function ($query) {
             $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
-        }])
+        }, 'orders.compositions.product'])
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         // ->where('manager_id', '!=', 1)
@@ -648,9 +648,6 @@ class LeadController extends Controller
 
         $lead_methods_list = LeadMethod::whereIn('mode', [1, 2, 3])->get()->pluck('name', 'id');
 
-        // Получаем список стран
-        $countries_list = Country::get()->pluck('name', 'id');
-
         // Получаем список этапов
         $answer_stages = operator_right('stages', false, 'index');
         $stages_list = Stage::moderatorLimit($answer_stages)
@@ -664,24 +661,22 @@ class LeadController extends Controller
         ->pluck('name', 'id');
 
 
-        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer_goods_categories = operator_right('goods_categories', false, getmethod('index'));
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_goods_categories = operator_right('goods_categories', false, getmethod('index'));
 
-        // // Получаем каталог товаров
-        // $goods_categories = GoodsCategory::with('goods_products')
-        // ->withCount('goods_products')
-        // ->moderatorLimit($answer_goods_categories)
-        // ->companiesLimit($answer_goods_categories)
-        // ->authors($answer_goods_categories)
-        // ->systemItem($answer_goods_categories) // Фильтр по системным записям
-        // ->orderBy('moderation', 'desc')
-        // ->orderBy('sort', 'asc')
-        // ->get()
-        // ->groupBy('parent_id');
+        // Получаем каталог товаров
+        $group_goods_categories = GoodsCategory::with('goods_products')
+        ->withCount('goods_products')
+        ->moderatorLimit($answer_goods_categories)
+        ->companiesLimit($answer_goods_categories)
+        ->authors($answer_goods_categories)
+        ->systemItem($answer_goods_categories) // Фильтр по системным записям
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get()
+        ->groupBy('parent_id');
+        // dd($group_goods_categories);
         
-        // dd($goods_categories);
-        
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
@@ -690,7 +685,7 @@ class LeadController extends Controller
 
         $entity = 'goods_categories';
 
-        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity', 'list_challenges', 'lead_methods_list', 'goods_categories', 'entity'));
+        return view('leads.edit', compact('lead', 'page_info', 'stages_list', 'entity', 'list_challenges', 'lead_methods_list', 'group_goods_categories', 'entity'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
@@ -907,72 +902,6 @@ class LeadController extends Controller
         if($lead) {return redirect('/admin/leads');} else {abort(403,'Что-то пошло не так!');};
     }
 
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->leads as $item) {
-            Lead::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Lead::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Lead::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
     // Добавление комментария
     public function ajax_add_note(Request $request)
     {
@@ -1161,7 +1090,7 @@ class LeadController extends Controller
         $manager = User::find($request->appointed_id);
         $lead->manager_id = $manager->id;       
 
-        // Если номер пуст и планируеться назначение на сотрудника, а не бота - то генерируем номер!
+        // Если номер пуст и планируется назначение на сотрудника, а не бота - то генерируем номер!
         if(($lead->case_number == NULL)&&($request->appointed_id != 1)){
 
             // Формируем номера обращения

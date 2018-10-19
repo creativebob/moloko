@@ -91,21 +91,21 @@
                   <input class="switch-input" id="tinySwitch" type="checkbox" name="exampleSwitch">
                   <label class="switch-paddle" for="tinySwitch">
                     <span class="show-for-sr">Tiny Sandwiches Enabled</span>
-                  </label>
-                </div>
-            </label> 
-        </div> --}}
-        <div class="small-12 medium-12 cell">
-            <label>Почта
-                @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email', 'required'=>''])
-            </label> 
-        </div>
-        <div class="small-12 cell">
-            <label>Компания
-                @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$lead->company_name, 'required'=>''])
-            </label>
-        </div>
+                </label>
+            </div>
+        </label> 
+    </div> --}}
+    <div class="small-12 medium-12 cell">
+        <label>Почта
+            @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email', 'required'=>''])
+        </label> 
     </div>
+    <div class="small-12 cell">
+        <label>Компания
+            @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$lead->company_name, 'required'=>''])
+        </label>
+    </div>
+</div>
 </div>
 
 </div>
@@ -130,66 +130,58 @@
                 <div class="grid-x">
                     <div class="small-12 medium-12 large-12 cell">
 
-                        {{--
-                            <table class="table-order" id="table-order">
-                                <thead>
-                                    <tr>
-                                        <th>Наименование</th>
-                                        <th>Кол-во</th>
-                                        <th>Закуп</th>
-                                        <th>ДопРасх</th>
-                                        <th>Наценка</th>
-                                        <th>Цена</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Откатные ворота ЭКО</td>
-                                        <td>1</td>
-                                        <td>35 000</td>
-                                        <td>1 200</td>
-                                        <td>15 000</td>
-                                        <td>50 000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Привод для ворот</td>
-                                        <td>1</td>
-                                        <td>7 8000</td>
-                                        <td>0</td>
-                                        <td>5 000</td>
-                                        <td>13 800</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            --}}
-                        </div>
-                    </div>
 
-                </div>
+                        <table class="table-order" id="table-order">
+                            <thead>
+                                <tr>
+                                    <th>Наименование</th>
+                                    <th>Кол-во</th>
+                                    <th>Закуп</th>
+                                    <th>ДопРасх</th>
+                                    <th>Наценка</th>
+                                    <th>Цена</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="goods-section">
 
-                {{-- КЛИЕНТ --}}
-                {{-- <div class="tabs-panel" id="content-panel-client">
-                    <div class="grid-x grid-padding-x">
-                        @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
-                        <a id="lead-free" class="button">Освободить лида</a>
-                        @endif
-                    </div>
-                </div> --}}
+                                @if (isset($lead->order->compositions))
+                                @foreach ($lead->order->compositions as $composition)
+                                @include('leads.goods', ['composition' => $composition])
+                                @endforeach
+                                @endif
 
-                {{-- ИСТОРИЯ --}}
-                <div class="tabs-panel" id="content-panel-history">
-                    <div class="grid-x grid-padding-x">
-                        <div id="port-history" class="small-12 cell">
-                        </div>  
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
 
-
-                {{-- Конец контента доп таба --}}
             </div>
 
+            {{-- КЛИЕНТ --}}
+            {{-- <div class="tabs-panel" id="content-panel-client">
+                <div class="grid-x grid-padding-x">
+                    @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
+                    <a id="lead-free" class="button">Освободить лида</a>
+                    @endif
+                </div>
+            </div> --}}
+
+            {{-- ИСТОРИЯ --}}
+            <div class="tabs-panel" id="content-panel-history">
+                <div class="grid-x grid-padding-x">
+                    <div id="port-history" class="small-12 cell">
+                    </div>  
+                </div>
+            </div>
+
+
+            {{-- Конец контента доп таба --}}
         </div>
+
     </div>
+</div>
 
 </div>
 
@@ -232,26 +224,49 @@
                 <div class="small-12 large-4 cell">
 
 
-
-<ul class="vertical menu drilldown" data-drilldown>
-  <li><a href="#">Гаражные ворота</a></li>
-  <li>
-    <a href="#">Уличные ворота</a>
-    <ul class="menu vertical nested">
-      <li><a href="#">Откатные ворота</a></li>
-      <li><a href="#">Распашные ворота</a></li>
-      <li><a href="#">Аэроворота</a></li>
-      <li><a href="#">Футбольные ворота</a></li>
-    </ul>
-  </li>
-  <li><a href="#">Автоматика</a></li>
-  <li><a href="#">Заборы</a></li>
-  <li><a href="#">Профильные системы</a></li>
-  <li><a href="#">Рольставни</a></li>
-</ul>
+                    <!-- <li><a href="#">Гаражные ворота</a></li>
+                    <li>
+                        <a href="#">Уличные ворота</a>
+                        <ul class="menu vertical nested">
+                            <li><a href="#">Откатные ворота</a></li>
+                            <li><a href="#">Распашные ворота</a></li>
+                            <li><a href="#">Аэроворота</a></li>
+                            <li><a href="#">Футбольные ворота</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Автоматика</a></li>
+                    <li><a href="#">Заборы</a></li>
+                    <li><a href="#">Профильные системы</a></li>
+                    <li><a href="#">Рольставни</a></li> -->
 
 
-                    {{-- <ul class="multilevel-accordion-menu vertical menu" data-accordion-menu>
+                    @if (isset($group_goods_categories))
+
+                    @include('includes.drilldown_views.categories_drilldown', ['grouped_items' => $group_goods_categories, 'entity' => 'goods_categories'])
+
+                    @endif
+
+
+
+                    {{-- <ul class="vertical menu drilldown" data-drilldown>
+                        <li><a href="#">Гаражные ворота</a></li>
+                        <li>
+                            <a href="#">Уличные ворота</a>
+                            <ul class="menu vertical nested">
+                              <li><a href="#">Откатные ворота</a></li>
+                              <li><a href="#">Распашные ворота</a></li>
+                              <li><a href="#">Аэроворота</a></li>
+                              <li><a href="#">Футбольные ворота</a></li>
+                          </ul>
+                      </li>
+                      <li><a href="#">Автоматика</a></li>
+                      <li><a href="#">Заборы</a></li>
+                      <li><a href="#">Профильные системы</a></li>
+                      <li><a href="#">Рольставни</a></li>
+                  </ul> --}}
+
+
+                  {{-- <ul class="multilevel-accordion-menu vertical menu" data-accordion-menu>
                       <li>
                         <a href="#">Уличные ворота</a>
                         <ul class="menu vertical sublevel-1">
@@ -261,233 +276,231 @@
                               <li><a class="subitem" href="#">Thing 1</a></li>
                               <li><a class="subitem" href="#">Thing 2</a></li>
                               <li><a class="subitem" href="#">Thing 3</a></li>
-                            </ul>
-                          </li>
+                          </ul>
+                      </li>
+                      <li>
+                        <a href="#">Распашные ворота</a>
+                        <ul class="menu vertical sublevel-2">
                           <li>
-                            <a href="#">Распашные ворота</a>
-                            <ul class="menu vertical sublevel-2">
-                              <li>
-                                <a href="#">Super-sub-item 1</a>
-                                <ul class="menu vertical sublevel-3">
-                                  <li><a class="subitem" href="#">Thing 1</a></li>
-                                  <li><a class="subitem" href="#">Thing 2</a></li>
-                                </ul>
-                              </li>
+                            <a href="#">Super-sub-item 1</a>
+                            <ul class="menu vertical sublevel-3">
+                              <li><a class="subitem" href="#">Thing 1</a></li>
                               <li><a class="subitem" href="#">Thing 2</a></li>
-                            </ul>
-                          </li>
-                          <li><a class="subitem" href="#">Thing 1</a></li>
-                          <li><a class="subitem" href="#">Thing 2</a></li>
-                        </ul>
+                          </ul>
                       </li>
-                      <li>
-                        <a href="#">Гаражные ворота</a>
-                        <ul class="menu vertical sublevel-1">
-                          <li><a class="subitem" href="#">Thing 1</a></li>
-                          <li><a class="subitem" href="#">Thing 2</a></li>
-                        </ul>
-                      </li>
-                      <li>
-                        <a href="#">Промышленные</a>
-                        <ul class="menu vertical sublevel-1">
-                          <li><a class="subitem" href="#">Thing 1</a></li>
-                          <li><a class="subitem" href="#">Thing 2</a></li>
-                        </ul>
-                      </li>
-                      <li>
-                        <a href="#">Обычные секционные ворота</a>
-                        <ul class="menu vertical sublevel-1">
-                          <li>
-                            <a href="#">Sub-item 3</a>
-                            <ul class="menu vertical sublevel-2">
-                              <li><a class="subitem" href="#">Ворота 2000 на 3000</a></li>
-                              <li><a class="subitem" href="#">Ворота 3000 на 3000/a></li>
-                            </ul>
-                          </li>
-                          <li><a class="subitem" href="#">Thing 1</a></li>
-                          <li><a class="subitem" href="#">Thing 2</a></li>
-                        </ul>
-                      </li>
-                    </ul> --}}
+                      <li><a class="subitem" href="#">Thing 2</a></li>
+                  </ul>
+              </li>
+              <li><a class="subitem" href="#">Thing 1</a></li>
+              <li><a class="subitem" href="#">Thing 2</a></li>
+          </ul>
+      </li>
+      <li>
+        <a href="#">Гаражные ворота</a>
+        <ul class="menu vertical sublevel-1">
+          <li><a class="subitem" href="#">Thing 1</a></li>
+          <li><a class="subitem" href="#">Thing 2</a></li>
+      </ul>
+  </li>
+  <li>
+    <a href="#">Промышленные</a>
+    <ul class="menu vertical sublevel-1">
+      <li><a class="subitem" href="#">Thing 1</a></li>
+      <li><a class="subitem" href="#">Thing 2</a></li>
+  </ul>
+</li>
+<li>
+    <a href="#">Обычные секционные ворота</a>
+    <ul class="menu vertical sublevel-1">
+      <li>
+        <a href="#">Sub-item 3</a>
+        <ul class="menu vertical sublevel-2">
+          <li><a class="subitem" href="#">Ворота 2000 на 3000</a></li>
+          <li><a class="subitem" href="#">Ворота 3000 на 3000/a></li>
+          </ul>
+      </li>
+      <li><a class="subitem" href="#">Thing 1</a></li>
+      <li><a class="subitem" href="#">Thing 2</a></li>
+  </ul>
+</li>
+</ul> --}}
 
-                </div>
-                <div class="small-12 large-8 cell">
-                    <ul>
-                        <li>
-                            <span>Гаражные ворота RS-560 (2000 - 2300)</span>
-                        </li>
-                    </ul>
-                </div>
+</div>
+<div class="small-12 large-8 cell">
+    <ul id="items-list">
 
+    </ul>
+</div>
+
+</div>
+</div>
+
+{{-- Документы 
+    <div class="tabs-panel" id="content-panel-documents">
+        <div class="grid-x grid-padding-x">
+            <div class="small-12 large-6 cell">
             </div>
         </div>
+    </div> --}}
 
-        {{-- Документы 
-            <div class="tabs-panel" id="content-panel-documents">
-                <div class="grid-x grid-padding-x">
-                    <div class="small-12 large-6 cell">
-                    </div>
-                </div>
-            </div> --}}
+    {{-- Рекламации --}}
+    <div class="tabs-panel" id="content-panel-claims">
+        <div class="grid-x grid-padding-x">
+            <div class="small-12 cell">
 
-            {{-- Рекламации --}}
-            <div class="tabs-panel" id="content-panel-claims">
-                <div class="grid-x grid-padding-x">
-                    <div class="small-12 cell">
-
-                        @can ('index', App\Claim::class)
-                        <fieldset class="fieldset-challenge">
-                            <legend>Рекламации:</legend>
-                            <div class="grid-x grid-padding-x"> 
-                                <table class="table-challenges" id="table-challenges">
-                                    <thead>
-                                        <tr>
-                                            <th>Дата</th>
-                                            <th>Номер</th>
-                                            <th>Обращение</th>
-                                            <th>Описание проблемы</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="claims-list">
-
-                                        @if (count($lead->claims) > 0)
-                                        @include('leads.claim', ['claims' => $lead->claims])
-                                        @endif
-
-                                    </tbody>
-                                </table>
-                            </div>
-                            @can ('create', App\Claim::class)
-                            <div class="grid-x grid-padding-x align-left">
-                                <div class="small-4 cell">
-                                    @can('update', $lead)
-                                        <a class="button green-button claim-add" data-open="add-claim">Добавить</a>
-                                    @endcan
-                                </div>
-                            </div>
-                            @endcan
-                        </fieldset>
-                        @endcan
-
-
-                    </div>
-                </div>
-            </div>
-
-            {{-- Замеры 
-                <div class="tabs-panel" id="content-panel-measurements">
-                    <div class="grid-x grid-padding-x">
-                        <div class="small-12 large-6 cell">
-                        </div>
-                    </div>
-                </div> --}}
-
-            {{-- АТТРИБУЦИЯ --}}
-            <div class="tabs-panel" id="content-panel-attribution">
-                <div class="grid-x grid-padding-x">
-                    <div class="small-12 cell">
-                        <table class="table-attributions">
-                            <tr>
+                @can ('index', App\Claim::class)
+                <fieldset class="fieldset-challenge">
+                    <legend>Рекламации:</legend>
+                    <div class="grid-x grid-padding-x"> 
+                        <table class="table-challenges" id="table-challenges">
+                            <thead>
                                 <tr>
-                                    <td>Тип обращения: </td>
-                                    <td id="lead-type-name">{{ $lead->lead_type->name or ''}}</td>
-                                    <td>
-                                        
-                                        @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
-                                            <a id="change-lead-type" class="button tiny">Изменить</a>
-                                        @endif
-
-                                    </td>
+                                    <th>Дата</th>
+                                    <th>Номер</th>
+                                    <th>Обращение</th>
+                                    <th>Описание проблемы</th>
+                                    <th></th>
                                 </tr>
-                                <tr>
-                                    <td>Способ обращения: </td>
-                                    <td>
+                            </thead>
+                            <tbody id="claims-list">
 
-                                        {{-- Будем мутить селект в ручную --}}
+                                @if (count($lead->claims) > 0)
+                                @include('leads.claim', ['claims' => $lead->claims])
+                                @endif
 
-                                        @php 
-                                            if($lead->lead_method->mode != 1){
-                                            $disabled_method_list = 'disabled';} else {
-                                            $disabled_method_list = '';};
-                                        @endphp
-
-                                        {{ Form::select('lead_method', $lead_methods_list, $lead->lead_method_id, [$disabled_method_list]) }}
-
-                                    </td><td></td>
-                                </tr>
-                                <td>Интерес: </td>
-                                <td>
-                                    @if(!empty($lead->choices_goods_categories->implode('name', ',')))
-                                    {{ $lead->choices_goods_categories->implode('name', ',') }}<br>
-                                    @endif
-
-                                    @if(!empty($lead->choices_services_categories->implode('name', ',')))
-                                    {{ $lead->choices_services_categories->implode('name', ',') }}<br>
-                                    @endif
-
-                                    @if(!empty($lead->choices_raws_categories->implode('name', ',')))
-                                    {{ $lead->choices_raws_categories->implode('name', ',') }}<br>
-                                    @endif
-                                </td><td></td>     
-                            </tr>
-                            <tr>
-                                <td>Источник: </td><td>{{ $lead->source->name or ''}}</td><td></td>
-                            </tr>
-                            <tr>
-                                <td>Сайт: </td><td>{{ $lead->site->name or ''}}</td><td></td>
-                            </tr>
-                            <tr>
-                                <td>Тип трафика: </td><td>{{ $lead->medium->name or ''}}</td><td></td>
-                            </tr>
-                            <tr>
-                                <td>Рекламная кампания: </td><td>{{ $lead->campaign_id or ''}}</td><td></td>
-                            </tr>
-                            <tr>
-                                <td>Объявление: </td><td>{{ $lead->utm_content or ''}}</td><td></td>
-                            </tr>
-                            <tr>
-                                <td>Ключевая фраза: </td><td>{{ $lead->utm_term or ''}}</td><td></td>
-                            </tr>
-                            <tr>
-                                <td>Менеджер: </td><td>{{ $lead->manager->name }}</td>
-                                <td>
-                                    @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
-                                        <a id="lead-free" class="button tiny">Освободить</a>
-                                    @endif
-                                </td>
-                            </tr>
+                            </tbody>
                         </table>
                     </div>
-                </div>
-
-            </div>
-
-
-
-            </div>
-
-
-
-
-        </div>
-
-        {{-- Чекбоксы управления 
-            @include('includes.control.checkboxes', ['item' => $lead])  
-            --}}
-
-            <div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-                @can('update', $lead)
-                    {{ Form::submit($submitButtonText, ['class'=>'button']) }}
-                @else
-                    {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }} 
+                    @can ('create', App\Claim::class)
+                    <div class="grid-x grid-padding-x align-left">
+                        <div class="small-4 cell">
+                            @can('update', $lead)
+                            <a class="button green-button claim-add" data-open="add-claim">Добавить</a>
+                            @endcan
+                        </div>
+                    </div>
+                    @endcan
+                </fieldset>
                 @endcan
+
+
+            </div>
+        </div>
+    </div>
+
+    {{-- Замеры 
+        <div class="tabs-panel" id="content-panel-measurements">
+            <div class="grid-x grid-padding-x">
+                <div class="small-12 large-6 cell">
+                </div>
+            </div>
+        </div> --}}
+
+        {{-- АТТРИБУЦИЯ --}}
+        <div class="tabs-panel" id="content-panel-attribution">
+            <div class="grid-x grid-padding-x">
+                <div class="small-12 cell">
+                    <table class="table-attributions">
+                        <tr>
+                            <tr>
+                                <td>Тип обращения: </td>
+                                <td id="lead-type-name">{{ $lead->lead_type->name or ''}}</td>
+                                <td>
+
+                                    @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
+                                    <a id="change-lead-type" class="button tiny">Изменить</a>
+                                    @endif
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Способ обращения: </td>
+                                <td>
+
+                                    {{-- Будем мутить селект в ручную --}}
+
+                                    @php 
+                                    if($lead->lead_method->mode != 1){
+                                    $disabled_method_list = 'disabled';} else {
+                                    $disabled_method_list = '';};
+                                    @endphp
+
+                                    {{ Form::select('lead_method', $lead_methods_list, $lead->lead_method_id, [$disabled_method_list]) }}
+
+                                </td><td></td>
+                            </tr>
+                            <td>Интерес: </td>
+                            <td>
+                                @if(!empty($lead->choices_goods_categories->implode('name', ',')))
+                                {{ $lead->choices_goods_categories->implode('name', ',') }}<br>
+                                @endif
+
+                                @if(!empty($lead->choices_services_categories->implode('name', ',')))
+                                {{ $lead->choices_services_categories->implode('name', ',') }}<br>
+                                @endif
+
+                                @if(!empty($lead->choices_raws_categories->implode('name', ',')))
+                                {{ $lead->choices_raws_categories->implode('name', ',') }}<br>
+                                @endif
+                            </td><td></td>     
+                        </tr>
+                        <tr>
+                            <td>Источник: </td><td>{{ $lead->source->name or ''}}</td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Сайт: </td><td>{{ $lead->site->name or ''}}</td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Тип трафика: </td><td>{{ $lead->medium->name or ''}}</td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Рекламная кампания: </td><td>{{ $lead->campaign_id or ''}}</td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Объявление: </td><td>{{ $lead->utm_content or ''}}</td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Ключевая фраза: </td><td>{{ $lead->utm_term or ''}}</td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Менеджер: </td><td>{{ $lead->manager->name }}</td>
+                            <td>
+                                @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
+                                <a id="lead-free" class="button tiny">Освободить</a>
+                                @endif
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
 
         </div>
 
-        {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
-        @include('leads.autofind-lead-script')
+
+
+    </div>
+
+
+
+
+</div>
+
+{{-- Чекбоксы управления 
+    @include('includes.control.checkboxes', ['item' => $lead])  
+    --}}
+
+    <div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
+        @can('update', $lead)
+        {{ Form::submit($submitButtonText, ['class'=>'button']) }}
+        @else
+        {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }} 
+        @endcan
+    </div>
+
+</div>
+
+{{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
+@include('leads.autofind-lead-script')
 
 
 

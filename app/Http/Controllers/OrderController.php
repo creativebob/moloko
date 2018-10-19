@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Order;
+use App\OrderComposition;
+use App\Entity;
 
 use Illuminate\Http\Request;
 
 // Политика
-use App\Policies\NotePolicy;
+// use App\Policies\NotePolicy;
 
 class OrderController extends Controller
 {
@@ -73,7 +75,7 @@ class OrderController extends Controller
      * @param  \App\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $order)
+    public function show(Request $request, $id)
     {
         //
     }
@@ -84,7 +86,7 @@ class OrderController extends Controller
      * @param  \App\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function edit(Order $order)
+    public function edit(Request $request, $id)
     {
         //
     }
@@ -96,7 +98,7 @@ class OrderController extends Controller
      * @param  \App\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Order $order)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -107,8 +109,84 @@ class OrderController extends Controller
      * @param  \App\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Order $order)
+    public function destroy(Request $request, $id)
     {
         //
+    }
+
+    public function ajax_check(Request $request)
+    {
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        $company_id = $user->company_id;
+
+        // Находим или создаем заказ для лида
+        $order = Order::firstOrCreate(['lead_id' => $request->lead_id, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
+        // $order = Order::firstOrCreate(['lead_id' =>  9236, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
+
+        // Находим сущность, чтоб опрелделить модель
+        $entity = Entity::where('alias', $request->entity)->first();
+        // $entity = Entity::where('alias', 'goods')->first();
+
+        $type = $request->entity;
+        // $type = 'goods';
+
+        // Формируем позицию заказа
+        $composition = new OrderComposition;
+
+        // $composition->order_compositions_id = $request->id;
+        $composition->product_id = 1;
+        $composition->product_type = 'App\\' . $entity->model;
+
+        $composition->order_id = $order->id;
+        $composition->company_id = $company_id;
+        $composition->author_id = $user_id;
+        $composition->count = 1;
+        $composition->save();
+
+        // $composition->notes()->save($note);
+
+        // $order->compositions()->associate($composition)->save();
+
+        return view('leads.' . $type, compact('composition'));
+
+    }
+
+    public function ajax_destroy_composition(Request $request, $id)
+    {
+        
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        // $note = Note::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        // $this->authorize(getmethod(__FUNCTION__), $note);
+
+        $order_composition = OrderComposition::findOrFail($id);
+
+        // Удаляем ajax
+        $order_composition->delete();
+
+        if ($order_composition) {
+            $result = [
+                'error_status' => 0,
+            ];
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при удалении состава заказа!',
+            ];
+        }   
+
+        return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 }

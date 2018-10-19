@@ -244,4 +244,28 @@ class Lead extends Model
         return $this->hasOne('App\Claim', 'source_lead_id');
     }
 
+    // Заказы
+    public function orders()
+    {
+        return $this->hasMany('App\Order');
+    }
+
+    // Основной заказ
+    public function main_orders()
+    {
+        return $this->hasMany('App\Order')->whereNull('draft');
+    }
+
+    // Текущий заказ
+    public function getOrderAttribute()
+    {
+        if(!empty($this->main_orders->first()))
+        {
+            $value = $this->main_orders->first();
+        } else {
+            $value = null;
+        }
+        return $value;
+    }
+
 }
