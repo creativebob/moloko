@@ -46,12 +46,16 @@ class ChallengeController extends Controller
         $challenges = Challenge::with(
             'challenge_type', 
             'author', 
-            'appointed', 
+            'appointed.staff', 
             'finisher', 
             'challenges'
         )
         ->companiesLimit($answer)
-        // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        // ->whereNull('status')
+        // ->whereHas('appointed.staff', function($query){
+        //     $query->whereNotNull('id');
+        // })
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         // ->authors($answer)
         ->filter($request, 'appointed_id')
         ->filter($request, 'author_id')
@@ -63,6 +67,7 @@ class ChallengeController extends Controller
         // ->orderBy('sort', 'asc')
         ->paginate(30);
 
+        // dd($challenges);
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------

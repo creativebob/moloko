@@ -745,8 +745,14 @@
 
     function getFilterAppointedList(){
 
-        $appointeds = App\Challenge::with('appointed')->get()->pluck('appointed.nameReverse', 'appointed.id')->toArray();
+        // $appointeds = App\Challenge::with('appointed')->get()->pluck('appointed.nameReverse', 'appointed.id')->toArray();
+        // if(isset($appointeds)){asort($appointeds);}
+
+        $appointeds = App\Employee::with('user')->get()->pluck('user.name', 'user.id')->toArray();
         if(isset($appointeds)){asort($appointeds);}
+        return $appointeds;
+
+        
         return $appointeds;
     }
 
