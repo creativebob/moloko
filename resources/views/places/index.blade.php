@@ -10,6 +10,13 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($places))
+    {{ num_format($places->total(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Place::class, 'type' => 'table'])
@@ -82,7 +89,7 @@
     <a class="icon-delete sprite" data-open="item-delete"></a>  
     @endcan
     @endif
-</td> 
+  </td> 
 </tr>
 @endforeach
 @endif
@@ -95,7 +102,7 @@
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
     <span class="pagination-title">Кол-во записей: {{ $places->count() }}</span>
-    {{ $places->links() }}
+    {{ $places->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
 </div>
 </div>
 @endsection

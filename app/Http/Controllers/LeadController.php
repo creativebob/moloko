@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 // Модели
 use App\User;
 use App\Lead;
+use App\LeadMethod;
+use App\LeadType;
 use App\Stage;
 use App\Choice;
 use App\Position;
@@ -22,6 +24,8 @@ use App\Campaign;
 use App\Note;
 use App\Challenge;
 use App\Staff;
+use App\Phone;
+use App\GoodsCategory;
 
 // use App\Challenge_type;
 
@@ -30,6 +34,7 @@ use App\EntitySetting;
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\LeadRequest;
+use App\Http\Requests\MyStageRequest;
 
 // Политики
 use App\Policies\LeadPolicy;
@@ -43,11 +48,13 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 use Carbon\Carbon;
 
+use App\Events\onAddLeadEvent;
+use Event;
+
 // На удаление
 use App\Http\Controllers\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
 
 
 class LeadController extends Controller
@@ -57,11 +64,11 @@ class LeadController extends Controller
     protected $entity_name = 'leads';
     protected $entity_dependence = true;
 
-    public function index(Request $request )
+    public function index(Request $request)
     {
 
-        Carbon::setLocale('en');
-        // dd(Carbon::getLocale());
+
+        $result = extra_right('lead-service');
 
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
@@ -86,8 +93,12 @@ class LeadController extends Controller
             'choices_services_categories', 
             'choices_raws_categories', 
             'manager',
+            'lead_type',
+            'lead_method',
             'stage',
-            'challenges.challenge_type'
+            'challenges.challenge_type',
+            'challenges.appointed',
+            'main_phones'
         )
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -99,52 +110,38 @@ class LeadController extends Controller
         ->filter($request, 'city_id', 'location')
         ->filter($request, 'stage_id')
         ->filter($request, 'manager_id')
+        ->filter($request, 'lead_type_id')
+        ->filter($request, 'lead_method_id')
         ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
         ->orderBy('created_at', 'desc')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('manager_id', 'asc')
+        // ->orderBy('moderation', 'desc')
         // ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // --------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
-        // --------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        $filter_query = Lead::with('location.city', 'manager', 'stage')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->manager($user)
-        // ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям           
-        ->get();
+        $filter = setFilter($this->entity_name, $request, [
+            'city',                 // Город
+            'stage',                // Этап
+            'lead_method',          // Способ обращения
+            'lead_type',            // Тип обращения
+            'manager',              // Менеджер
+            'date_interval',        // Дата обращения
+            'booklist'              // Списки пользователя
+        ]);
 
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-
-        // Перечень подключаемых фильтров:
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
-
-        
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите этап:', 'stage', 'stage_id', null, 'internal-id-one');
-         //dd($filter);
-        
-        $filter = addFilter($filter, $filter_query, $request, 'Менеджер:', 'manager', 'manager_id', null, 'internal-id-one');
-
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        // Окончание фильтра -----------------------------------------------------------------------------------------
 
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
         // Задачи пользователя
-        $challenges = challenges($request);
-        // dd($challenges);
-
-        return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'challenges'));
+        $list_challenges = challenges($request);
+        return view('leads.index', compact('leads', 'page_info', 'user', 'filter', 'list_challenges'));
     }
 
     public function leads_calls(Request $request)
@@ -223,6 +220,7 @@ class LeadController extends Controller
 
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
+        $filter['inputs'] = $request->input();
 
         // Перечень подключаемых фильтров:
         $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
@@ -238,10 +236,10 @@ class LeadController extends Controller
         $page_info = pageInfo($this->entity_name);
 
         // Задачи пользователя
-        $challenges = challenges($request);
+        $list_challenges = challenges($request);
         // dd($challenges);
 
-        return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'challenges'));
+        return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'list_challenges'));
     }
 
     public function search(Request $request)
@@ -259,11 +257,17 @@ class LeadController extends Controller
 
 
         $text_fragment = $request->text_fragment;
-        $fragment_phone = 0;
+        $fragment_phone = NULL;
+        $crop_phone = NULL;
+
         $len_text = strlen($text_fragment);
 
-        if(strlen($text_fragment) == 11){
+        if((strlen($text_fragment) == 11)&&(is_numeric($text_fragment))){
             $fragment_phone = $text_fragment;
+        }
+
+        if((strlen($text_fragment) == 4)&&(is_numeric($text_fragment))){
+            $crop_phone = $text_fragment;
         }
 
         if(strlen($text_fragment) == 17){
@@ -277,7 +281,7 @@ class LeadController extends Controller
         }
 
 
-        if($len_text > 4){
+        if($len_text > 3){
 
             // ------------------------------------------------------------------------------------------------------------
             // ГЛАВНЫЙ ЗАПРОС
@@ -290,22 +294,30 @@ class LeadController extends Controller
                 'choices_raws_categories', 
                 'manager',
                 'stage',
-                'challenges.challenge_type')
+                'challenges.challenge_type', 
+                'phones')
             ->companiesLimit($answer)
             ->whereNull('draft')
-            ->where('phone', '!=', 0)
-            ->where(function ($query) use ($fragment_phone, $fragment_case_number, $text_fragment, $len_text) {
+            ->where(function ($query) use ($fragment_case_number, $text_fragment, $len_text, $fragment_phone, $crop_phone) {
 
                 if($len_text > 5){
                     $query->where('name', $text_fragment);
                 };
 
-                if(isset($fragment_phone)){
-                    $query->orWhere('phone', $fragment_phone);
-                };
-
                 if(($len_text > 6)||($len_text < 14)){
                     $query->orWhere('case_number', 'LIKE', $fragment_case_number);
+                };
+
+                if(isset($fragment_phone)){
+                    $query->orWhereHas('phones', function($query) use ($fragment_phone){
+                     $query->where('phone', $fragment_phone);
+                 });
+                };
+
+                if(isset($crop_phone)){
+                    $query->orWhereHas('phones', function($query) use ($crop_phone){
+                     $query->where('crop', $crop_phone);
+                 });
                 };
 
             })
@@ -325,7 +337,7 @@ class LeadController extends Controller
         }
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $lead_type = 1)
     {
 
         $user = $request->user();
@@ -359,23 +371,33 @@ class LeadController extends Controller
             $lead->company_id = $company_id;
             $lead->filial_id = $filial_id;
             $lead->name = NULL;
+            $lead->company_name = NULL;
             $lead->location_id = $location_id;
-            $lead->phone = 00000000000;
+            
             $lead->draft = 1;
             $lead->author_id = $user->id;
             $lead->manager_id = $user->id;
             $lead->stage_id = 2;
-            $lead->lead_type_id = 1;
-            $lead->display = 1;
 
-            // Формируем номера обращения
-            $lead_number = getLeadNumbers($user);
+            // Если приходит тип обращения - пишем его!
+            // На валидации не пропускает к записи ничего кроме значений 1, 2 и 3
+            if(isset($request->lead_type)){
+                $lead_type = $request->lead_type;
+            } else {
+                $lead_type = 1;
+            };
+
+            $lead->lead_type_id = $lead_type;
+
+            $lead->lead_method_id = 1;
+            $lead->display = 1;
+            $lead->save();
+
+            $lead_number = getLeadNumbers($user, $lead);
             $lead->case_number = $lead_number['case'];
             $lead->serial_number = $lead_number['serial'];
-
-            // Конец формирования номера обращения ----------------------------------
-
             $lead->save();
+
 
             return Redirect('/admin/leads/' . $lead->id . '/edit');
 
@@ -384,23 +406,23 @@ class LeadController extends Controller
         public function store(LeadRequest $request)
         {
 
-        // Подключение политики
+            // Подключение политики
             $this->authorize(getmethod(__FUNCTION__), Lead::class);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // Получаем данные для авторизованного пользователя
+            // Получаем данные для авторизованного пользователя
             $user = $request->user();
 
-        // Скрываем бога
+            // Скрываем бога
             $user_id = hideGod($user);
 
             $company_id = $user->company_id;
             $filial_id = $request->user()->filial_id;
 
 
-        // Пишем локацию
+            // Пишем локацию
             $location = new Location;
             $location->country_id = $request->country_id;
             $location->city_id = $request->city_id;
@@ -418,6 +440,7 @@ class LeadController extends Controller
             $lead = new Lead;
 
             $lead->name =   $request->name;
+            $lead->company_name =   $request->company_name;
         // $lead->sex = $request->sex;
         // $lead->birthday = $request->birthday;
 
@@ -427,7 +450,7 @@ class LeadController extends Controller
         $lead->display = 1; // Включаем видимость
         $lead->company_id = $company_id;
 
-        $lead->phone = cleanPhone($request->phone);
+        // $lead->phone = cleanPhone($request->phone);
 
         if(($request->extra_phone != Null)&&($request->extra_phone != "")){
             $lead->extra_phone = cleanPhone($request->extra_phone);
@@ -467,13 +490,21 @@ class LeadController extends Controller
 
 
         // Формируем номера обращения
-        $lead_number = getLeadNumbers($user);
+        if(($user->staff->first()->position->id == 14)||($user->staff->first()->position->id == 15)) {
+            $lead_number = getLeadServiceCenterNumbers($user);
+        } else {
+            $lead_number = getLeadNumbers($user);
+        }
+
         $lead->case_number = $lead_number['case'];
         $lead->serial_number = $lead_number['serial'];
 
         // Конец формирования номера обращения ----------------------------------
 
         $lead->save();
+
+        // Телефон
+        $phones = add_phones($request, $lead);
 
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
@@ -554,7 +585,7 @@ class LeadController extends Controller
     {
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::moderatorLimit($answer)->findOrFail($id);
+        $user = User::findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
@@ -585,21 +616,22 @@ class LeadController extends Controller
     public function edit(Request $request, $id)
     {
 
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
 
-        $lead = Lead::with(['location.city', 'medium', 'campaign', 'source', 'site', 'claims' => function ($query) {
+        $lead = Lead::with(['location.city', 'main_phones', 'extra_phones', 'medium', 'campaign', 'source', 'site', 'claims' => function ($query) {
             $query->orderBy('created_at', 'asc');
         }, 'notes' => function ($query) {
             $query->orderBy('created_at', 'desc');
         }, 'challenges' => function ($query) {
             $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
-        }])
+        }, 'orders.compositions.product'])
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->where('manager_id', '!=', 1)
+        // ->where('manager_id', '!=', 1)
         // ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям 
         ->moderatorLimit($answer)
@@ -614,13 +646,10 @@ class LeadController extends Controller
         // Подключение политики
         // $this->authorize(getmethod(__FUNCTION__), $lead);
 
-        // Получаем список стран
-        $countries_list = Country::get()->pluck('name', 'id');
+        $lead_methods_list = LeadMethod::whereIn('mode', [1, 2, 3])->get()->pluck('name', 'id');
 
         // Получаем список этапов
-
-        $answer_stages = operator_right('stages', false, 'index'); 
-
+        $answer_stages = operator_right('stages', false, 'index');
         $stages_list = Stage::moderatorLimit($answer_stages)
         // ->companiesLimit($answer_stages)
         // ->authors($answer_stages)
@@ -628,21 +657,38 @@ class LeadController extends Controller
         // ->systemItem($answer_stages) // Фильтр по системным записям
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
-        ->get()->pluck('name', 'id');
+        ->get()
+        ->pluck('name', 'id');
 
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_goods_categories = operator_right('goods_categories', false, getmethod('index'));
+
+        // Получаем каталог товаров
+        $group_goods_categories = GoodsCategory::with('goods_products')
+        ->withCount('goods_products')
+        ->moderatorLimit($answer_goods_categories)
+        ->companiesLimit($answer_goods_categories)
+        ->authors($answer_goods_categories)
+        ->systemItem($answer_goods_categories) // Фильтр по системным записям
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get()
+        ->groupBy('parent_id');
+        // dd($group_goods_categories);
+        
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
         // Задачи пользователя
-        $challenges = challenges($request);
+        $list_challenges = challenges($request);
 
-        $entity = $this->entity_name;
-        // dd($lead);
+        $entity = 'goods_categories';
 
-        return view('leads.edit', compact('lead', 'page_info', 'countries_list', 'stages_list', 'entity', 'challenges'));
+        return view('leads.edit', compact('lead', 'page_info', 'stages_list', 'entity', 'list_challenges', 'lead_methods_list', 'group_goods_categories', 'entity'));
     }
 
-    public function update(LeadRequest $request, $id)
+    public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
     {
 
         // Получаем авторизованного пользователя
@@ -702,6 +748,8 @@ class LeadController extends Controller
         $lead->email = $request->email;
 
         $lead->name = $request->name;
+        $lead->company_name = $request->company_name;
+
         $lead->stage_id = $request->stage_id;
         $lead->badget = $request->badget;
         $lead->draft = NULL;
@@ -714,11 +762,12 @@ class LeadController extends Controller
         // $lead->sex = $request->sex;
         // $lead->birthday = $request->birthday;
 
-        $lead->phone = cleanPhone($request->phone);
+        // Телефон
+        $phones = add_phones($request, $lead);
 
-        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            $lead->extra_phone = cleanPhone($request->extra_phone);
-        } else {$lead->extra_phone = NULL;};
+        // if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
+        //     $lead->extra_phone = cleanPhone($request->extra_phone);
+        // } else {$lead->extra_phone = NULL;};
 
         // $lead->telegram_id = $request->telegram_id;
         // $lead->orgform_status = $request->orgform_status;
@@ -806,6 +855,9 @@ class LeadController extends Controller
 
         $lead->save();
 
+        Event::fire(new onAddLeadEvent($lead, $user));
+
+
         if ($lead) {
 
         } else {
@@ -848,106 +900,6 @@ class LeadController extends Controller
         $lead = Lead::moderatorLimit($answer)->where('id', $id)->delete();
 
         if($lead) {return redirect('/admin/leads');} else {abort(403,'Что-то пошло не так!');};
-    }
-
-
-    public function ajax_lead_free(Request $request)
-    {
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        $lead = Lead::findOrFail($request->id);
-
-        if ($user->sex == 1) {
-            $sex = 'освободил';
-        } else {
-            $sex = 'освободила';
-        }
-        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$sex.' лида.');
-
-        $lead->manager_id = 1;
-        $lead->save();
-
-        if ($lead) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении освобождении лида!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->leads as $item) {
-            Lead::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Lead::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Lead::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     // Добавление комментария
@@ -1000,13 +952,16 @@ class LeadController extends Controller
             'choices_raws_categories', 
             'manager',
             'stage',
-            'challenges.challenge_type')
+            'challenges.challenge_type', 
+            'phones')
         ->companiesLimit($answer_lead)
         // ->authors($answer_lead) // Не фильтруем по авторам
         ->systemItem($answer_lead) // Фильтр по системным записям
         // ->whereNull('archive')
         ->whereNull('draft')
-        ->where('phone', $phone)
+        ->whereHas('phones', function($query) use ($phone){
+            $query->where('phone', $phone);
+        })
         ->where('id', '!=', $lead_id)
         ->orderBy('sort', 'asc')
         ->get();
@@ -1020,23 +975,70 @@ class LeadController extends Controller
         }
     }
 
-    // Назначение лида
-    public function ajax_lead_direction_check(Request $request)
+    // Освобождение лида
+    public function ajax_lead_free(Request $request)
     {
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
+        $lead = Lead::findOrFail($request->id);
+
+        if ($user->sex == 1) {
+            $phrase_sex = 'освободил';
+        } else {
+            $phrase_sex = 'освободила';
+        }
+        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
+
+        $lead->manager_id = 1;
+        $lead->save();
+
+        if ($lead) {
+
+            $result = [
+                'error_status' => 0,
+            ];  
+        } else {
+
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при освобождении лида!'
+            ];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+    // Назначение лида
+    public function ajax_appointed_check(Request $request)
+    {
+
+        // Получаем данные для авторизованного пользователя
+        // $user = $request->user();
+
+        $user = User::with('staff.position.charges')->findOrFail($request->user()->id);
+
         foreach ($user->staff as $staffer) {
+            // $staffer = $user->staff->first();
+
             $direction = null;
-            if ($staffer->position->direction_status == 1) {
-                $direction = 1;
+
+            foreach ($staffer->position->charges as $charge) {
+                if ($charge->alias == 'lead-appointment') {
+                    $direction = 1;
+                    // break;
+                }
+
+                if ($charge->alias == 'lead-appointment-self') {
+                    $direction = 1;
+                    // break;
+                }
             }
         }
         echo $direction;
     }
 
-    // Назначение лида
+    // Прием лида менеджером
     public function ajax_lead_take(Request $request)
     {
 
@@ -1044,30 +1046,37 @@ class LeadController extends Controller
         $user = $request->user();
         $lead = Lead::findOrFail($request->id);
 
-             // dd($direction);
-        $lead->manager_id = $user->id;
+        if ($lead->manager_id == 1) {
 
-                // Формируем номера обращения
-        $lead_number = getLeadNumbers($user);
-        $lead->case_number = $lead_number['case'];
-        $lead->serial_number = $lead_number['serial'];
-        $lead->editor_id = $user->id;
-        $lead->save();
+            // dd($direction);
+            $lead->manager_id = $user->id;
 
-        if ($user->sex == 1) {
-            $sex = 'принял';
-        } else {
-            $sex = 'приняла';
+            if($lead->case_number == NULL){
+
+            // Формируем номера обращения
+                $lead_number = getLeadNumbers($user, $lead);
+                $lead->case_number = $lead_number['case'];
+                $lead->serial_number = $lead_number['serial'];
+            }
+
+            $lead->editor_id = $user->id;
+            $lead->save();
+
+            if ($user->sex == 1) {
+                $phrase_sex = 'принял';
+            } else {
+                $phrase_sex = 'приняла';
+            }
+            $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
+
+            $result = [
+                'id' => $lead->id,
+                'name' => $lead->name,
+                'case_number' => $lead->case_number,
+                'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
+            ];
+            echo json_encode($result, JSON_UNESCAPED_UNICODE);
         }
-        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$sex.' лида.');
-
-        $result = [
-            'id' => $lead->id,
-            'name' => $lead->name,
-            'case_number' => $lead->case_number,
-            'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
-        ];
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     // Назначение лида
@@ -1078,25 +1087,52 @@ class LeadController extends Controller
         $user = $request->user();
         $lead = Lead::findOrFail($request->lead_id);
 
-        
-             // dd($direction);
-        $lead->manager_id = $request->appointed_id;
-
         $manager = User::find($request->appointed_id);
+        $lead->manager_id = $manager->id;       
 
-                // Формируем номера обращения
-        $lead_number = getLeadNumbers($manager);
-        $lead->case_number = $lead_number['case'];
-        $lead->serial_number = $lead_number['serial'];
+        // Если номер пуст и планируется назначение на сотрудника, а не бота - то генерируем номер!
+        if(($lead->case_number == NULL)&&($request->appointed_id != 1)){
+
+            // Формируем номера обращения
+            $lead_number = getLeadNumbers($manager, $lead);
+            $lead->case_number = $lead_number['case'];
+            $lead->serial_number = $lead_number['serial'];
+        }
+
         $lead->editor_id = $user->id;
         $lead->save();
 
         if ($user->sex == 1) {
-            $sex = 'назначил';
+            $phrase_sex = 'назначил';
         } else {
-            $sex = 'назначила';
+            $phrase_sex = 'назначила';
         }
-        $note = add_note($lead, 'Руководитель: '. $user->first_name.' '.$user->second_name. ' '.$sex.' лида менеджеру: '. $manager->first_name.' '.$manager->second_name);
+
+        // Пишем комментарий
+        $note = add_note($lead, $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' лида менеджеру '. $manager->first_name.' '.$manager->second_name);
+
+        // Оповещаем менеджера о назначении
+        if (isset($manager->telegram_id)) {
+            $message = $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' вам лида: ' . $lead->case_number . "\r\n\r\n";
+            $message = lead_info($message, $lead);
+            $telegram_destinations[] = $manager;
+            
+            send_message($telegram_destinations, $message);
+
+        } else {
+
+            if (isset($user->telegram_id)) {
+
+                // Если у менеджера нет телеграмма, оповещаем руководителя
+                $message = 'У ' . $manager->first_name.' '.$manager->second_name . " отсутствует Telegram ID, оповестите его другим способом!\r\n\r\n";
+                $message = lead_info($message, $lead);
+                
+                $telegram_destinations[] = $user;
+                send_message($telegram_destinations, $message);
+            } else {
+                $note = add_note($lead, 'Оповещение никому не выслано, так как ни у кого нет telegram Id. Это просто комон какой-то!');
+            }
+        }
 
         $result = [
             'id' => $lead->id,
@@ -1106,25 +1142,96 @@ class LeadController extends Controller
         ];
         
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
-
-
-        
-        // }
     }
 
     public function ajax_lead_appointed(Request $request)
     {
 
-        $users_list = User::whereHas('staff', function ($query) {
-            $query->whereHas('position', function ($query) {
-                $query->whereIn('id', [2, 4]);
+        $users = User::with('staff.position')
+        ->whereHas('staff', function ($query) {
+            $query->whereNotNull('user_id')->whereHas('position', function ($query) {
+                $query->whereHas('charges', function ($query) {
+                    $query->whereIn('alias', ['lead-regular', 'lead-service', 'lead-dealer']);
+                });
             });
-        })->get()->pluck('name', 'id');
+        })
+        ->orWhere('id', 1)
+        ->orderBy('second_name')
+        ->get();
+        // ->pluck('name', 'id');
+        // dd($users);
 
-            // dd($users_list);
+        $users_list = [];
+        foreach ($users as $user) {
+            if (isset($user->staff[0]->position->name)) {
+                $position = $user->staff[0]->position->name;
+            } else {
+                $position = 'Cyberdyne Systems 101 серии 800';
+            }
+
+            $users_list[$user->id] = $user->second_name . ' ' . $user->first_name . ' (' . $position . ')';
+        }
+
+        // dd($users_list);
         $lead_id = $request->id;
-            // $lead_id = 1;
+        // $lead_id = 1;
         return view('leads.modal-appointed', compact('users_list', 'lead_id'));
+    }
+
+    public function ajax_open_change_lead_type(Request $request)
+    {
+        $lead_type_list = LeadType::pluck('name', 'id');
+        $lead_type_id = $request->lead_type_id;
+        $lead_id = $request->lead_id;
+
+        return view('leads.modal-change-lead-type', compact('lead_type_list', 'lead_type_id', 'lead_id'));
+    }
+
+    public function ajax_change_lead_type(Request $request)
+    {
+        $user = $request->user();
+        $lead_id = $request->lead_id;
+        $new_lead_type_id = $request->lead_type_id;
+
+        $lead = Lead::findOrFail($lead_id);
+        $lead_type_id = $lead->lead_type_id;
+        $old_lead_type_name = $lead->lead_type->name;
+
+        $manager_id = $lead->manager_id;
+        $manager = User::findOrFail($manager_id);
+
+
+        if($new_lead_type_id !== $lead_type_id){
+
+            $lead->lead_type_id = $new_lead_type_id;
+
+            // Получаем старый номер, если он существовал
+            if(isset($lead->case_number)){$old_case_number = $lead->case_number;};
+            if(isset($lead->serial_number)){$old_serial_number = $lead->case_number;};
+
+            // Создаем пустой контейнер для нового номера
+            $lead_number = [];
+            $lead_number['case'] = null;
+            $lead_number['serial'] = null;
+
+            $lead_number = getLeadNumbers($manager, $lead);
+
+            $lead->case_number = $lead_number['case'];
+            $lead->serial_number = $lead_number['serial'];
+
+            $lead->save();
+            $lead = Lead::findOrFail($lead_id);
+            $new_lead_type_name = $lead->lead_type->name;
+
+            $note = add_note($lead, 'Сотрудник '. $user->first_name.' '.$user->second_name.' изменил тип обращения c "' . $old_lead_type_name . '" на "' . $new_lead_type_name . '", в связи с чем был изменен номер с '. $old_case_number . ' на ' . $lead_number['case']);
+
+        }
+
+        $data = [];
+        $data['case_number'] = $lead->case_number;
+        $data['lead_type_name'] = $lead->lead_type->name;
+
+        return $data;
     }
 
 }

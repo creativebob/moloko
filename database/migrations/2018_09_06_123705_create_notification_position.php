@@ -17,10 +17,10 @@ class CreateNotificationPosition extends Migration
             $table->increments('id');
 
             $table->integer('notification_id')->nullable()->unsigned()->comment('ID оповещения');
-            // $table->foreign('notification_id')->references('id')->on('notifications');
+            $table->foreign('notification_id')->references('id')->on('notifications');
 
             $table->integer('position_id')->nullable()->unsigned()->comment('ID должности');
-            // $table->foreign('position_id')->references('id')->on('positions');
+            $table->foreign('position_id')->references('id')->on('positions');
 
             $table->timestamps();
         });

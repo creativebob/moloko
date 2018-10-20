@@ -3,33 +3,66 @@
 	<div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
 		<div class="top-bar head-content">
 			<div class="top-bar-left">
-				<h2 class="header-content">{{ $page_info->title }}</h2>
+				<h2 class="header-content">{{ $page_info->title }}
+					<span class="content-count" title="Общее количество">
+						@yield('content-count')
+					</span>
+				</h2>
 				
 				@can('create', $class)
-				@switch($type)
+					@switch($type)
 
-				@case('table')
-				@if (isset($page_alias))
-				<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
-				@else
-				<a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite"></a>
-				@endif
-				@break
+					@case('table')
 
-				@case('section-table')
-				<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
-				@break
+						{{-- Кнопки добавления для страницы ЛИДЫ --}}
+						@if($page_info->alias == 'leads')
 
-				@case('menu')
-				<a class="icon-add sprite" data-open="first-add"></a>
-				@break
+							@if(!empty(Auth::user()->staff[0]))
+								<div class="button-group">
+									@if(extra_right('lead-regular'))
+	                            		{{ link_to_route('leads.create', '+ Обычное', ['lead_type' => 1], ['class' => 'button tiny']) }}
+	                            	@endif
 
-				@case('sections-menu')
-				{{-- <h2 class="header-content">{{ $page_info->title .' &laquo;'. $name .'&raquo;' }}</h2> --}}
-				<a class="icon-add sprite" data-open="first-add"></a>
-				@break
+									@if(extra_right('lead-service'))
+	                            		{{ link_to_route('leads.create', '+ Сервис', ['lead_type' => 3], ['class' => 'button tiny']) }}
+	                            	@endif
 
-				@endswitch
+									@if(extra_right('lead-dealer'))
+	                            		{{ link_to_route('leads.create', '+ Дилер', ['lead_type' => 2], ['class' => 'button tiny']) }} 
+									@endif
+
+								</div>
+
+							@endif
+
+						{{-- Кнопки добавления для остальных страниц --}}
+						@else
+
+							@if (isset($page_alias))
+								<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
+							@else
+								<a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite"></a>
+							@endif
+
+						@endif
+
+
+					@break
+
+					@case('section-table')
+					<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
+					@break
+
+					@case('menu')
+					<a class="icon-add sprite" data-open="first-add"></a>
+					@break
+
+					@case('sections-menu')
+					{{-- <h2 class="header-content">{{ $page_info->title .' &laquo;'. $name .'&raquo;' }}</h2> --}}
+					<a class="icon-add sprite" data-open="first-add"></a>
+					@break
+
+					@endswitch
 				@endcan
 			</div>
 			<div class="top-bar-right">

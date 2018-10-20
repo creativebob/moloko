@@ -79,8 +79,8 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 
                         <li>
                             <a id="task-toggle"><img src="/crm/img/header/alert.png">
-                            @if(!empty($challenges))
-                                <span class="challenges_count" id="challenges-count">{{ $challenges->flatten()->count() }}</span>
+                            @if(!empty($list_challenges['for_me']))
+                                <span class="challenges_count" id="challenges-count">{{ $list_challenges['for_me']->flatten()->count() }}</span>
                             @endif
                             </a></li>
                         <li>
@@ -190,7 +190,7 @@ $task = '';
             {{-- Блок ошибок --}}
             @if ($errors->any())
             <div class="alert callout" data-closable>
-                <h5>Неправильный формат данных:</h5>
+                <h5>Ошибки ввода данных:</h5>
                 <ul>
                     @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -296,7 +296,7 @@ $task = '';
             // alert('lol');
         },1);
 
-        get_challenges();
+        // get_challenges();
 
     });
     $(window).resize(function() {

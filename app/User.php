@@ -121,6 +121,12 @@ class User extends Authenticatable
         return $value;
     }
 
+    // Склеиваем имя и фамилию для юзера и выводим при обращении через name
+    public function getNameReverseAttribute($value) {
+        $value = $this->second_name . ' ' . $this->first_name;
+        return $value;
+    }
+
     // public function getPhoneAttribute($value) {
 
     //     if(strlen($value) == 11 ){
@@ -292,6 +298,38 @@ class User extends Authenticatable
     {
         $result = $this->hasMany('App\Setting');
         return $result;
+    }
+
+
+    // Телефоны
+
+    // Основной
+    public function main_phones()
+    {
+        return $this->morphToMany('App\Phone', 'phone_entity')->wherePivot('main', '=', 1)->whereNull('archive')->withPivot('archive');
+    }
+
+    public function getMainPhoneAttribute()
+    {
+        if(!empty($this->main_phones->first()))
+        {
+            $value = $this->main_phones->first();
+        } else {
+            $value = null;
+        }
+        return $value;
+    }
+
+    // Дополнительные
+    public function extra_phones()
+    {
+        return $this->morphToMany('App\Phone', 'phone_entity')->whereNull('archive')->whereNull('main')->withPivot('archive');
+    }
+
+    // Все
+    public function phones()
+    {
+        return $this->morphToMany('App\Phone', 'phone_entity');
     }
 
 }

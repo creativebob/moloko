@@ -123,6 +123,12 @@ class Lead extends Model
         return $this->belongsTo('App\LeadType');
     }
 
+    // Получаем метод обращения
+    public function lead_method()
+    {
+        return $this->belongsTo('App\LeadMethod');
+    }
+
     // Получаем тип обращения
     public function choices_goods_categories()
     {
@@ -141,7 +147,7 @@ class Lead extends Model
         return $this->morphedByMany('App\RawsCategory', 'choices');
     }
 
-    // Получаем автора
+    // Получаем менеджера
     public function manager()
     {
         return $this->belongsTo('App\User', 'manager_id');
@@ -198,6 +204,68 @@ class Lead extends Model
         // return $this->morphMany('App\Challenge', 'challenges')->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'));
 
         return $this->morphOne('App\Challenge', 'challenges')->where('challenges_type_id', 2)->whereNull('status')->oldest('deadline_date');
+    }
+
+
+    // Телефоны
+
+    // Основной
+    public function main_phones()
+    {
+        return $this->morphToMany('App\Phone', 'phone_entity')->wherePivot('main', '=', 1)->whereNull('archive')->withPivot('archive');
+    }
+
+    public function getMainPhoneAttribute()
+    {
+        if(!empty($this->main_phones->first()))
+        {
+            $value = $this->main_phones->first();
+        } else {
+            $value = null;
+        }
+        return $value;
+    }
+
+    // Дополнительные
+    public function extra_phones()
+    {
+        return $this->morphToMany('App\Phone', 'phone_entity')->whereNull('archive')->whereNull('main')->withPivot('archive');
+    }
+
+    // Все
+    public function phones()
+    {
+        return $this->morphToMany('App\Phone', 'phone_entity');
+    }
+
+    // Проверка на рекламацию
+    public function source_claim()
+    {
+        return $this->hasOne('App\Claim', 'source_lead_id');
+    }
+
+    // Заказы
+    public function orders()
+    {
+        return $this->hasMany('App\Order');
+    }
+
+    // Основной заказ
+    public function main_orders()
+    {
+        return $this->hasMany('App\Order')->whereNull('draft');
+    }
+
+    // Текущий заказ
+    public function getOrderAttribute()
+    {
+        if(!empty($this->main_orders->first()))
+        {
+            $value = $this->main_orders->first();
+        } else {
+            $value = null;
+        }
+        return $value;
     }
 
 }

@@ -10,6 +10,13 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($departments))
+    {{ num_format($departments->count(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Меню --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Department::class, 'type' => 'menu'])

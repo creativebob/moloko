@@ -87,25 +87,16 @@ class DepartmentController extends Controller
         ->get()
         ->groupBy('parent_id');
 
-        // dd($departments);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        $filter_query = Department::moderatorLimit($answer_departments)
-        ->companiesLimit($answer_departments)
-        ->filials($answer_departments) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_departments)
-        ->systemItem($answer_departments) // Фильтр по системным записям
-        ->get();
+        $filter = setFilter($this->entity_name, $request, [
+            'booklist'              // Списки пользователя
+        ]);
 
-        $filter['status'] = null;
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
-        // --------------------------------------------------------------------------------------------------------------------------------------
+        // Окончание фильтра -----------------------------------------------------------------------------------------
         
         // Создаем масив где ключ массива является ID меню
         // $departments_rights = [];
@@ -329,12 +320,12 @@ class DepartmentController extends Controller
             return view('departments.create-medium', compact('departments_list', 'positions_list', 'department', 'staffer'));
         } else {
 
-            
+
             // Формируем пуcтой массив
             $worktime = [];
             for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
 
-            return view('departments.create-first', compact('department', 'worktime'));
+                return view('departments.create-first', compact('department', 'worktime'));
         }
     }
 
@@ -378,10 +369,6 @@ class DepartmentController extends Controller
         $last = mb_substr($request->name,1); //все кроме первой буквы
         $first = mb_strtoupper($first, 'UTF-8');
         $department->name = $first.$last;
-
-        if (isset($request->phone)) {
-            $department->phone = cleanPhone($request->phone);
-        }
 
         $department->author_id = $user_id;
 
@@ -429,6 +416,9 @@ class DepartmentController extends Controller
 
         if ($department) {
 
+            // Телефон
+            $phones = add_phones($request, $department);
+
             // Перезаписываем сессию: меняем список филиалов и отделов на новый
             $this->RSDepartments($user);
 
@@ -456,7 +446,7 @@ class DepartmentController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $department = Department::with('location', 'schedules.worktimes')->moderatorLimit($answer)->findOrFail($id);
+        $department = Department::with('location', 'schedules.worktimes', 'main_phone')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $department);
@@ -627,9 +617,8 @@ class DepartmentController extends Controller
         $first = mb_strtoupper($first, 'UTF-8');
         $department->name = $first.$last;
 
-        if (isset($request->phone)) {
-            $department->phone = cleanPhone($request->phone);
-        }
+        // Телефон
+        $phones = add_phones($request, $department);
 
         $department->editor_id = $user_id;
 

@@ -100,4 +100,10 @@ class Position extends Model
     {
         return $this->belongsToMany('App\Notification');
     }
+
+    // Обязанности
+    public function charges()
+    {
+        return $this->belongsToMany('App\Charge');
+    }
 }

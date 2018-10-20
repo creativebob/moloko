@@ -74,268 +74,274 @@
               {{ Form::file('photo') }}
             </label>
 
-  <div class="text-center">
-    <img id="photo" @if (isset($user->photo_id)) src="/storage/{{ $user->company->id }}/media/albums/{{ $user->login }}/img/original-{{ $user->avatar->name }}" @endif>
+            <div class="text-center">
+              <img id="photo" @if (isset($user->photo_id)) src="/storage/{{ $user->company->id }}/media/albums/{{ $user->login }}/img/original-{{ $user->avatar->name }}" @endif>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-x grid-padding-x tabs-margin-top">
+          <div class="small-12 medium-6 cell">
+            <label>Телефон
+              @include('includes.inputs.phone', ['value' => isset($user->main_phone->phone) ? $user->main_phone->phone : null, 'name'=>'main_phone', 'required'=>'required'])
+            </label>
+          </div>
+          <div class="small-12 medium-6 cell" id="extra-phones">
+            @if (count($user->extra_phones) > 0)
+            @foreach ($user->extra_phones as $extra_phone)
+            @include('includes.extra-phone', ['extra_phone' => $extra_phone])
+            @endforeach
+            @else
+            @include('includes.extra-phone')
+            @endif
+
+            <!-- <span id="add-extra-phone">Добавить номер</span> -->
+          </div>
+        </div>
+
+        <div class="grid-x grid-padding-x tabs-margin-top">
+          <div class="small-12 medium-6 cell">
+            <label>Страна
+              @php
+              $country_id = null;
+              if (isset($user->location->country_id)) {
+              $country_id = $user->location->country_id;
+            }
+            @endphp
+            {{ Form::select('country_id', $countries_list, $country_id)}}
+          </label>
+        </div>
+        <div class="small-12 medium-6 cell">
+          <label class="input-icon">Введите город
+            @php
+            $city_name = null;
+            $city_id = null;
+            if(isset($user->location->city->name)) {
+            $city_name = $user->location->city->name;
+            $city_id = $user->location->city->id;
+          }
+          @endphp
+          @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
+        </label>
+      </div>
+
+
+      <div class="small-12 medium-6 cell">
+        <label>Адрес
+          @php
+          $address = null;
+          if (isset($user->location->address)) {
+          $address = $user->location->address;
+        }
+        @endphp
+        @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+      </label>
+    </div>
+
+    <div class="small-12 medium-6 cell">
+      <label>Почта
+        @include('includes.inputs.email', ['value'=>$user->email, 'name'=>'email', 'required'=>'required'])
+      </label> 
+    </div>
+
+    <div class="small-12 medium-6 cell">
+      <label>Телеграм ID
+        {{ Form::text('telegram_id', $user->telegram_id, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
+        <span class="form-error">Укажите номер Telegram</span>
+      </label>
+    </div>
   </div>
+
 </div>
-</div>
-
-          <div class="grid-x grid-padding-x tabs-margin-top">
-            <div class="small-12 medium-6 cell">
-              <label>Телефон
-                @include('includes.inputs.phone', ['value'=>$user->phone, 'name'=>'phone', 'required'=>'required'])
-              </label>
-            </div>
-            <div class="small-12 medium-6 cell">
-              <label>Телефон
-                @include('includes.inputs.phone', ['value'=>$user->extra_phone, 'name'=>'extra_phone', 'required'=>''])
-              </label>
-            </div>
-          </div>
-
-          <div class="grid-x grid-padding-x tabs-margin-top">
-            <div class="small-12 medium-6 cell">
-              <label>Страна
-                @php
-                $country_id = null;
-                if (isset($user->location->country_id)) {
-                  $country_id = $user->location->country_id;
-                }
-                @endphp
-                {{ Form::select('country_id', $countries_list, $country_id)}}
-              </label>
-            </div>
-            <div class="small-12 medium-6 cell">
-                <label class="input-icon">Введите город
-                  @php
-                $city_name = null;
-                $city_id = null;
-                if(isset($user->location->city->name)) {
-                $city_name = $user->location->city->name;
-                $city_id = $user->location->city->id;
-                }
-                @endphp
-                @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
-              </label>
-            </div>
 
 
-            <div class="small-12 medium-6 cell">
-              <label>Адрес
-                @php
-                $address = null;
-                if (isset($user->location->address)) {
-                  $address = $user->location->address;
-                }
-                @endphp
-                @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
-              </label>
-            </div>
+<!-- Персональные данные -->
+<div class="tabs-panel" id="content-panel-2">
+  <div class="grid-x grid-padding-x">
+    <div class="small-5 medium-4 cell">
+      <label>Дата рождения
+        @include('includes.inputs.date', ['name'=>'birthday', 'value'=>$user->birthday, 'required'=>''])
+      </label>
+    </div>
+    <div class="small-6 small-offset-1 medium-6 medium-offset-2 cell radiobutton">Пол<br>
 
-            <div class="small-12 medium-6 cell">
-              <label>Почта
-                @include('includes.inputs.email', ['value'=>$user->email, 'name'=>'email', 'required'=>'required'])
-              </label> 
-            </div>
+      {{ Form::radio('sex', 1, true, ['id'=>'man']) }}
+      <label for="man"><span>Мужской</span></label>
 
-            <div class="small-12 medium-6 cell">
-              <label>Телеграм ID
-                {{ Form::text('telegram_id', $user->telegram_id, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
-                <span class="form-error">Укажите номер Telegram</span>
-              </label>
-            </div>
-        </div>
-
-      </div>
-
-
-      <!-- Персональные данные -->
-      <div class="tabs-panel" id="content-panel-2">
-        <div class="grid-x grid-padding-x">
-          <div class="small-5 medium-4 cell">
-            <label>Дата рождения
-              @include('includes.inputs.date', ['name'=>'birthday', 'value'=>$user->birthday, 'required'=>''])
-            </label>
-          </div>
-          <div class="small-6 small-offset-1 medium-6 medium-offset-2 cell radiobutton">Пол<br>
-
-            {{ Form::radio('sex', 1, true, ['id'=>'man']) }}
-            <label for="man"><span>Мужской</span></label>
-
-            {{ Form::radio('sex', 0, false, ['id'=>'woman']) }}
-            <label for="woman"><span>Женский</span></label>
-
-          </div>
-        </div>
-
-      {{--
-        <div class="grid-x grid-padding-x">
-          <div class="small-12 medium-6 cell">
-            <label>Паспорт (серия, номер)
-              {{ Form::text('passport_number', $user->passport_number, ['class'=>'passport-number-field', 'pattern'=>'[0-9]{2} [0-9]{2} №[0-9]{6}', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
-            </label>
-          </div>
-          <div class="small-5 medium-6 cell">
-            <label>Когда выдан
-              @include('includes.inputs.date', ['name'=>'passport_date', 'value'=>$user->passport_date, 'required'=>''])
-            </label>
-          </div>
-        </div>
-        <div class="grid-x grid-padding-x">
-          <div class="small-12 medium-12 cell">
-            <label>Кем выдан
-              {{ Form::text('passport_released', $user->passport_released, ['class'=>'varchar-field passport-released-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё -\.]{60}']) }}
-            </label>
-          </div>
-        </div>
-        <div class="grid-x grid-padding-x">
-          <div class="small-12 medium-6 cell">
-            <label>Адрес прописки
-              @include('includes.inputs.address', ['value'=>$user->passport_address, 'name'=>'passport_address', 'required'=>''])
-            </label>
-          </div>
-        </div>
-      --}}
-
-
-
-      </div>
-
-
-      {{--
-      <!-- Представитель компании -->
-      <div class="tabs-panel" id="content-panel-3">
-        <div class="grid-x grid-padding-x">
-          <div class="small-12 cell checkbox">
-            {{ Form::checkbox('orgform_status', 1, $user->orgform_status==1, ['id'=>'orgform-status-checkbox']) }}
-            <label for="orgform-status-checkbox"><span>Директор компании (Юридическое лицо)</span></label>
-          </div>
-        </div>
-        <div class="grid-x grid-padding-x tabs-margin-top"> 
-          <div class="small-12 medium-6 cell">
-            <label>Название компании
-              {{ Form::text('company_name', $user->company_name, ['class'=>'varchar-field company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9.,_-/\s()]{3,40}']) }}
-            </label>
-          </div>
-        </div>
-        <div class="grid-x grid-padding-x"> 
-          <div class="small-12 medium-6 cell">
-            <label>ИНН
-              @include('includes.inputs.inn', ['value'=>$user->inn, 'name'=>'inn', 'required'=>''])
-            </label>
-          </div>
-          <div class="small-12 medium-6 cell">
-            <label>КПП
-              @include('includes.inputs.kpp', ['value'=>$user->kpp, 'name'=>'kpp', 'required'=>''])
-            </label>
-          </div>
-        </div>
-        <div class="grid-x grid-padding-x"> 
-          <div class="small-12 medium-12 cell">
-            <label>Банк
-              @include('includes.inputs.bank', ['value'=>$user->bank, 'name'=>'bank', 'required'=>''])
-            </label>
-          </div>
-        </div>
-        <div class="grid-x grid-padding-x"> 
-          <div class="small-12 medium-6 cell">
-            <label>Р/С
-              @include('includes.inputs.account', ['value'=>$user->account_settlement, 'name'=>'account_settlement', 'required'=>''])
-            </label>
-          </div>
-          <div class="small-12 medium-6 cell">
-            <label>К/С
-              @include('includes.inputs.account', ['value'=>$user->account_correspondent, 'name'=>'account_correspondent', 'required'=>''])
-            </label>
-          </div>
-        </div>
-      </div> --}}
-
-      <!-- Образование и опыт -->
-      <div class="tabs-panel" id="content-panel-4">
-        <div class="grid-x grid-padding-x">
-          <div class="small-12 medium-6 cell">
-            <label>Специальность
-              @include('includes.inputs.string', ['name'=>'specialty', 'value'=>$user->specialty, 'required'=>''])
-            </label>
-          </div>
-          <div class="small-12 medium-6 cell">
-            <label>Ученая степень, звание
-              @include('includes.inputs.string', ['name'=>'degree', 'value'=>$user->degree, 'required'=>''])
-            </label>
-          </div>
-        </div>
-        <div class="grid-x grid-padding-x">
-          <div class="small-12 medium-12 cell">
-            <label>Информация о человеке (Для сайта):
-              {{ Form::textarea('about', $user->about, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
-            </label><br>
-          </div>
-        </div>
-
-        <div class="grid-x grid-padding-x">        
-          <div class="small-12 medium-12 cell">
-            <label>Фраза
-              @include('includes.inputs.string', ['name'=>'quote', 'value'=>$user->quote, 'required'=>''])
-            </label>
-          </div>
-
-        </div>
-
-
-      </div>
+      {{ Form::radio('sex', 0, false, ['id'=>'woman']) }}
+      <label for="woman"><span>Женский</span></label>
 
     </div>
   </div>
-  <div class="small-12 medium-5 medium-offset-1 large-5 large-offset-2 cell">
-    <fieldset class="fieldset-access">
-      <legend>Настройка доступа</legend>
+
+  {{--
+    <div class="grid-x grid-padding-x">
+      <div class="small-12 medium-6 cell">
+        <label>Паспорт (серия, номер)
+          {{ Form::text('passport_number', $user->passport_number, ['class'=>'passport-number-field', 'pattern'=>'[0-9]{2} [0-9]{2} №[0-9]{6}', 'maxlength'=>'20', 'autocomplete'=>'off']) }}
+        </label>
+      </div>
+      <div class="small-5 medium-6 cell">
+        <label>Когда выдан
+          @include('includes.inputs.date', ['name'=>'passport_date', 'value'=>$user->passport_date, 'required'=>''])
+        </label>
+      </div>
+    </div>
+    <div class="grid-x grid-padding-x">
+      <div class="small-12 medium-12 cell">
+        <label>Кем выдан
+          {{ Form::text('passport_released', $user->passport_released, ['class'=>'varchar-field passport-released-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё -\.]{60}']) }}
+        </label>
+      </div>
+    </div>
+    <div class="grid-x grid-padding-x">
+      <div class="small-12 medium-6 cell">
+        <label>Адрес прописки
+          @include('includes.inputs.address', ['value'=>$user->passport_address, 'name'=>'passport_address', 'required'=>''])
+        </label>
+      </div>
+    </div>
+    --}}
+
+
+
+  </div>
+
+
+  {{--
+    <!-- Представитель компании -->
+    <div class="tabs-panel" id="content-panel-3">
+      <div class="grid-x grid-padding-x">
+        <div class="small-12 cell checkbox">
+          {{ Form::checkbox('orgform_status', 1, $user->orgform_status==1, ['id'=>'orgform-status-checkbox']) }}
+          <label for="orgform-status-checkbox"><span>Директор компании (Юридическое лицо)</span></label>
+        </div>
+      </div>
+      <div class="grid-x grid-padding-x tabs-margin-top"> 
+        <div class="small-12 medium-6 cell">
+          <label>Название компании
+            {{ Form::text('company_name', $user->company_name, ['class'=>'varchar-field company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9.,_-/\s()]{3,40}']) }}
+          </label>
+        </div>
+      </div>
       <div class="grid-x grid-padding-x"> 
-        <div class="small-12 cell tabs-margin-top">
-
-          <input type="hidden" value='1' name="user_type">
-          <input type="hidden" value='true' name="users_edit_mode">
-
-          <label>Логин
-            {{ Form::text('login', $user->login, ['class'=>'login-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'required', 'pattern'=>'[A-Za-z0-9._-]{6,30}']) }}
-            <span class="form-error">Обязательно нужно логиниться!</span>
+        <div class="small-12 medium-6 cell">
+          <label>ИНН
+            @include('includes.inputs.inn', ['value'=>$user->inn, 'name'=>'inn', 'required'=>''])
           </label>
-          <label>Пароль
-            {{ Form::password('password', ['class' => 'password password-field', 'maxlength' => '20', 'id' => 'password', 'pattern'=>'[A-Za-z0-9]{6,20}', 'autocomplete'=>'off']) }}
-            <span class="form-error">Введите пароль и повторите его, ну а что поделать, меняем ведь данные!</span>
+        </div>
+        <div class="small-12 medium-6 cell">
+          <label>КПП
+            @include('includes.inputs.kpp', ['value'=>$user->kpp, 'name'=>'kpp', 'required'=>''])
           </label>
-          <label>Пароль повторно
-            {{ Form::password('password', ['class' => 'password password-field', 'maxlength' => '30', 'id' => 'password-repeat', 'data-equalto' => 'password', 'pattern'=>'[A-Za-z0-9]{6,20}', 'autocomplete'=>'off']) }}
-            <span class="form-error">Пароли не совпадают!</span>
+        </div>
+      </div>
+      <div class="grid-x grid-padding-x"> 
+        <div class="small-12 medium-12 cell">
+          <label>Банк
+            @include('includes.inputs.bank', ['value'=>$user->bank, 'name'=>'bank', 'required'=>''])
+          </label>
+        </div>
+      </div>
+      <div class="grid-x grid-padding-x"> 
+        <div class="small-12 medium-6 cell">
+          <label>Р/С
+            @include('includes.inputs.account', ['value'=>$user->account_settlement, 'name'=>'account_settlement', 'required'=>''])
+          </label>
+        </div>
+        <div class="small-12 medium-6 cell">
+          <label>К/С
+            @include('includes.inputs.account', ['value'=>$user->account_correspondent, 'name'=>'account_correspondent', 'required'=>''])
+          </label>
+        </div>
+      </div>
+    </div> --}}
+
+    <!-- Образование и опыт -->
+    <div class="tabs-panel" id="content-panel-4">
+      <div class="grid-x grid-padding-x">
+        <div class="small-12 medium-6 cell">
+          <label>Специальность
+            @include('includes.inputs.string', ['name'=>'specialty', 'value'=>$user->specialty, 'required'=>''])
+          </label>
+        </div>
+        <div class="small-12 medium-6 cell">
+          <label>Ученая степень, звание
+            @include('includes.inputs.string', ['name'=>'degree', 'value'=>$user->degree, 'required'=>''])
           </label>
         </div>
       </div>
       <div class="grid-x grid-padding-x">
+        <div class="small-12 medium-12 cell">
+          <label>Информация о человеке (Для сайта):
+            {{ Form::textarea('about', $user->about, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+          </label><br>
+        </div>
       </div>
-    </fieldset> 
-  </div>
 
-  <input type="hidden" name='backroute' value="companies">
+      <div class="grid-x grid-padding-x">        
+        <div class="small-12 medium-12 cell">
+          <label>Фраза
+            @include('includes.inputs.string', ['name'=>'quote', 'value'=>$user->quote, 'required'=>''])
+          </label>
+        </div>
 
-  {{-- Чекбокс модерации --}}
-  @can ('moderator', $user)
-  @if ($user->moderation == 1)
-  <div class="small-12 small-text-center cell checkbox">
-    @include('includes.inputs.moderation', ['value'=>$user->moderation, 'name'=>'moderation'])
-  </div>
-  @endif
-  @endcan
+      </div>
 
-  {{-- Чекбокс системной записи --}}
-  @can ('god', $user)
-  <div class="small-12 cell checkbox">
-    @include('includes.inputs.system', ['value'=>$user->system_item, 'name'=>'system_item'])
-  </div>
-  @endcan    
 
-  <div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-    {{ Form::submit('Редактировать', ['class'=>'button']) }}
+    </div>
+
   </div>
+</div>
+<div class="small-12 medium-5 medium-offset-1 large-5 large-offset-2 cell">
+  <fieldset class="fieldset-access">
+    <legend>Настройка доступа</legend>
+    <div class="grid-x grid-padding-x"> 
+      <div class="small-12 cell tabs-margin-top">
+
+        <input type="hidden" value='1' name="user_type">
+        <input type="hidden" value='true' name="users_edit_mode">
+
+        <label>Логин
+          {{ Form::text('login', $user->login, ['class'=>'login-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'required', 'pattern'=>'[A-Za-z0-9._-]{6,30}']) }}
+          <span class="form-error">Обязательно нужно логиниться!</span>
+        </label>
+        <label>Пароль
+          {{ Form::password('password', ['class' => 'password password-field', 'maxlength' => '20', 'id' => 'password', 'pattern'=>'[A-Za-z0-9]{6,20}', 'autocomplete'=>'off']) }}
+          <span class="form-error">Введите пароль и повторите его, ну а что поделать, меняем ведь данные!</span>
+        </label>
+        <label>Пароль повторно
+          {{ Form::password('password', ['class' => 'password password-field', 'maxlength' => '30', 'id' => 'password-repeat', 'data-equalto' => 'password', 'pattern'=>'[A-Za-z0-9]{6,20}', 'autocomplete'=>'off']) }}
+          <span class="form-error">Пароли не совпадают!</span>
+        </label>
+      </div>
+    </div>
+    <div class="grid-x grid-padding-x">
+    </div>
+  </fieldset> 
+</div>
+
+<input type="hidden" name='backroute' value="companies">
+
+{{-- Чекбокс модерации --}}
+@can ('moderator', $user)
+@if ($user->moderation == 1)
+<div class="small-12 small-text-center cell checkbox">
+  @include('includes.inputs.moderation', ['value'=>$user->moderation, 'name'=>'moderation'])
+</div>
+@endif
+@endcan
+
+{{-- Чекбокс системной записи --}}
+@can ('god', $user)
+<div class="small-12 cell checkbox">
+  @include('includes.inputs.system', ['value'=>$user->system_item, 'name'=>'system_item'])
+</div>
+@endcan    
+
+<div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
+  {{ Form::submit('Редактировать', ['class'=>'button']) }}
+</div>
 </div>
 
 {{ Form::close() }}

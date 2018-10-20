@@ -16,6 +16,9 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 
 // Фильтры
@@ -27,7 +30,7 @@ class News extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
     
     use SoftDeletes;
 
@@ -125,7 +128,7 @@ class News extends Model
     
     public function cities()
     {
-        return $this->morphToMany('App\CityEntity', 'city_entity');
+        return $this->morphToMany('App\City', 'city_entities');
     }
 
 }

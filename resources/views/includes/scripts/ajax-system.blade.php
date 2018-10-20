@@ -20,9 +20,9 @@ $(document).on('click', '[data-open="item-system"]', function(event) {
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: '/admin/' + entity_alias + '_system_item',
+        url: '/admin/system_item',
         type: "POST",
-        data: {id: id, action: action},
+        data: {id: id, action: action, entity_alias: entity_alias},
         success: function (date) {
             var result = $.parseJSON(date);
 

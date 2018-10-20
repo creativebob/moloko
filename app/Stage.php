@@ -58,4 +58,17 @@ class Stage extends Model
     {
         return $this->belongsTo('App\User', 'author_id');
     }
+
+
+    // Поля
+    public function fields()
+    {
+        return $this->hasMany('App\Field');
+    }
+
+    // Правила
+    public function rules()
+    {
+        return $this->hasManyThrough('App\Rule', 'App\Field');
+    }
 }

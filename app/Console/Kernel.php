@@ -2,6 +2,11 @@
 
 namespace App\Console;
 
+use App\Lead;
+use App\User;
+
+use Carbon\Carbon;
+
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +18,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        'App\Console\Commands\ReportDay',
     ];
 
     /**
@@ -24,8 +29,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+
+        // Ежедневный отчет
+        $schedule->command('report:day')
+        ->dailyAt('18:30')
+        ->timezone('Asia/Irkutsk');
     }
 
     /**

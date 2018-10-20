@@ -3,7 +3,6 @@
 // Меняем режим отображения
 $(document).on('click', '[data-open="item-sync"]', function(event) {
 
-    alert('Тут');
     // Блочим отправку формы
     event.preventDefault();
     var entity_alias = $(this).closest('.item').attr('id').split('-')[0];

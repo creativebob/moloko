@@ -43,6 +43,9 @@ class ServicesProductController extends Controller
     public function index(Request $request)
     {
 
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), ServicesProduct::class);
+
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){
@@ -50,9 +53,6 @@ class ServicesProductController extends Controller
             Cookie::queue(Cookie::forget('filter_' . $this->entity_name));
             return Redirect($filter_url);
         };
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), ServicesProduct::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -74,32 +74,17 @@ class ServicesProductController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        
-        // ----------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter_query = ServicesProduct::with('author', 'services_category')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
+        $filter = setFilter($this->entity_name, $request, [
+            'author',                   // Автор записи
+            'services_category',        // Категория услуги
+            'booklist'                  // Списки пользователя
+        ]);
 
-
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', null, 'internal-id-one');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
-        // ----------------------------------------------------------------------------------------------------------------------
-
+        // Окончание фильтра -----------------------------------------------------------------------------------------
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
@@ -109,13 +94,13 @@ class ServicesProductController extends Controller
     public function create(Request $request)
     {
 
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), ServicesProduct::class);
+
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_services_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $services_product = new ServicesProduct;
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_services_categories = operator_right('services_categories', false, 'index');
@@ -189,12 +174,11 @@ class ServicesProductController extends Controller
         $answer_services_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $services_product = ServicesProduct::with(['services_category'])
-
         ->moderatorLimit($answer_services_products)
         ->findOrFail($id);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $services_product);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_services_categories = operator_right('services_categories', false, 'index');
@@ -217,16 +201,6 @@ class ServicesProductController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-
-
-        // Вот это вообще надо? Или это уже упразднили?
-        // --------------------------------------------------------------------------------------
-        if ($request->ajax()) {
-            // echo json_encode($properties);
-            return view('products.properties-list', ['properties' => $properties, 'product_metrics' => $product_metrics, 'properties_list' => $properties_list]);
-        }
-        // --------------------------------------------------------------------------------------
-
         return view('services_products.edit', compact('services_product', 'page_info', 'services_categories_list'));
     }
 
@@ -240,11 +214,10 @@ class ServicesProductController extends Controller
         $services_product = ServicesProduct::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('update', $services_product);
+        $this->authorize(getmethod(__FUNCTION__), $services_product);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
-        $company_id = $user->company_id;
 
         // Скрываем бога
         $user_id = hideGod($user);

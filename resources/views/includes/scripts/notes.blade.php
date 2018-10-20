@@ -136,11 +136,13 @@
 
   		// Находим описание сущности, id и название удаляемого элемента в родителе
   		var parent = $(this).closest('.item');
+  		var entity_alias = parent.attr('id').split('-')[0];
   		var id = parent.attr('id').split('-')[1];
+
   		var name = parent.data('name');
 
   		$('.title-delete').text(name);
-  		$('.delete-button-ajax').attr('id', 'notes-' + id);
+  		$('.delete-button-ajax').attr('id', entity_alias + '-' + id);
   	});
 
 	// Подтверждение удаления и само удаление
@@ -149,20 +151,21 @@
   		// Блочим отправку формы
   		event.preventDefault();
 
+  		var entity_alias = $(this).attr('id').split('-')[0];
   		var id = $(this).attr('id').split('-')[1];
 
   		$.ajax({
   			headers: {
   				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
   			},
-  			url: '/admin/notes/' + id,
+  			url: '/admin/' + entity_alias +'/' + id,
   			type: "DELETE",
   			success: function (data) {
   				var result = $.parseJSON(data);
           		// alert(result);
 
           		if (result['error_status'] == 0) {
-          			$('#notes-' + id).remove();
+          			$('#' + entity_alias + '-' + id).remove();
           		} else {
           			alert(result['error_message']);
           		};

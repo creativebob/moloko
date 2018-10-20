@@ -20,7 +20,13 @@
 					<td class="body">
 						@include('includes.inputs.textarea', ['name'=>'add_body', 'value'=>null, 'required'=>''])
 					</td>
-					<td class="actions"><a class="button" id="add-note">Добавить</a></td>
+
+						<td class="actions">
+					@can('update', $lead)
+							<a class="button" id="add-note">Добавить</a>
+					@endcan
+						</td>
+
 				</tr>
 				@endcan
 

@@ -51,7 +51,7 @@ class StafferController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
 
-        $staff = Staffer::with('filial', 'department', 'user', 'position', 'employees')
+        $staff = Staffer::with('filial', 'department', 'user.main_phones', 'position', 'employees')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -65,28 +65,20 @@ class StafferController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // -------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА --------------------------------------------------------------------------------
-        // -------------------------------------------------------------------------------------------------------------
 
-        $filter_query = Staffer::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->get();
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
+        $filter = setFilter($this->entity_name, $request, [
+            'position',             // Должность
+            'department',           // Отдел
+            'date_interval',        // Дата
+            'booklist'              // Списки пользователя
+        ]);
 
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите должность:', 'position', 'position_id');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите отдел:', 'department', 'department_id');
+        // Окончание фильтра -----------------------------------------------------------------------------------------
 
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-        // dd($filter);
-
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
         $user = $request->user();
 
         // Смотрим сколько филиалов в компании

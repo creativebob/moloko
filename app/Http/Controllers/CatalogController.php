@@ -33,7 +33,7 @@ class CatalogController extends Controller
 
     public function index(Request $request, $alias)
     {
-        // dd($alias);
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Catalog::class);
 
@@ -42,10 +42,10 @@ class CatalogController extends Controller
 
         $answer_sites = operator_right('sites', false,  getmethod(__FUNCTION__));
 
-        
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
+        
         $site = Site::with(['catalogs' => function ($query) use ($answer_catalogs) {
             $query->moderatorLimit($answer_catalogs)
             ->companiesLimit($answer_catalogs)
@@ -68,7 +68,7 @@ class CatalogController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Получаем массив с вложенными элементами дял отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
+        // Получаем массив с вложенными элементами для отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
         // $catalogs_tree = get_index_tree_with_rights($catalogs, $user);
         // dd($catalogs_tree);
 
@@ -146,12 +146,10 @@ class CatalogController extends Controller
         $catalog = new Catalog;
         $catalog->company_id = $company_id;
         $catalog->author_id = $user_id;
+        $catalog->site_id = $request->site_id;
 
         // Системная запись
         $catalog->system_item = $request->system_item;
-
-        $catalog->site_id = $request->site_id;
-
         $catalog->display = $request->display;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -199,7 +197,6 @@ class CatalogController extends Controller
 
         $answer_sites = operator_right('sites', false,  getmethod(__FUNCTION__));
 
-        
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
@@ -248,7 +245,6 @@ class CatalogController extends Controller
 
         if ($catalog->category_status == 1) {
 
-
             $catalogs_list = Catalog::whereHas('site', function ($query) use ($alias) {
                 $query->whereAlias($alias);
             })
@@ -281,11 +277,10 @@ class CatalogController extends Controller
             ->get(['id','name','category_status','parent_id'])
             ->keyBy('id')
             ->toArray();
+            // dd($catalog);
 
             // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
             $catalogs_list = get_select_tree($catalogs, $catalog->parent_id, null, $catalog->id);
-
-            // dd($catalog);
 
             return view('catalogs.edit', compact('catalog', 'catalogs_list', 'page_info', 'parent_page_info', 'site'));
         }
@@ -364,11 +359,8 @@ class CatalogController extends Controller
 
                 if ($get_settings->img_max_size != null) {
                     $settings['img_max_size'] = $get_settings->img_max_size;
-
                 }
             }
-
-
 
             // Директория
             $directory = $company_id.'/media/catalogs/'.$catalog->id.'/img/';
@@ -403,7 +395,6 @@ class CatalogController extends Controller
 
         // $catalog->parent_id = $request->parent_id;
         $catalog->editor_id = $user_id;
-        
         $catalog->display = $request->display;
 
         // Делаем заглавной первую букву
@@ -472,8 +463,8 @@ class CatalogController extends Controller
 
                 // Переадресовываем на index
                 return redirect()->action('CatalogController@index', ['id' => $parent, 'alias' => $alias]);
-
                 // return redirect('/admin/sites/'.$alias.'/catalogs')->with('id', $catalog->id);
+
             } else {
                 $result = [
                     'error_status' => 1,
@@ -554,6 +545,7 @@ class CatalogController extends Controller
     // Проверка наличия в базе
     public function ajax_check (Request $request, $alias)
     {
+
         // Получаем авторизованного пользователя
         $user = $request->user();
 
@@ -583,6 +575,7 @@ class CatalogController extends Controller
     // Проверка наличия в базе
     public function ajax_check_alias (Request $request, $alias)
     {
+
         // Получаем авторизованного пользователя
         $user = $request->user();
 
@@ -605,7 +598,6 @@ class CatalogController extends Controller
                 'error_status' => 0,
             ];
         }
-
         return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
     

@@ -31,6 +31,7 @@ class CatalogProductController extends Controller
 
     public function index(Request $request, $alias)
     {
+
         // dd($alias);
         // Подключение политики
         $this->authorize('index', CatalogProduct::class);
@@ -48,6 +49,7 @@ class CatalogProductController extends Controller
         ->paginate(30);
         // dd($catalogs);
 
+        // Сущность
         $entity = $this->entity_name;
 
         // Инфо о странице
@@ -74,7 +76,6 @@ class CatalogProductController extends Controller
         // --------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------
-
         $catalog = Catalog::with('goods', 'services', 'raws')->findOrFail($catalog_id);
         // dd($catalog->goods->keyBy('id')->toArray());
 
@@ -143,12 +144,6 @@ class CatalogProductController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request, $alias)
     {
         //
@@ -169,9 +164,7 @@ class CatalogProductController extends Controller
 
             if ($catalog) {
                 $id = $catalog->id;
-
             } else {
-
                 return redirect("/admin/sites/".$alias."/catalogs");
             }
         }
@@ -199,6 +192,7 @@ class CatalogProductController extends Controller
         $catalogs_list = get_select_tree($site->catalogs->keyBy('id')->toArray(), $catalog->id, null, null);
         // dd($catalogs_list);
 
+        // Сущность
         $entity = $this->entity_name;
 
         // Инфо о странице

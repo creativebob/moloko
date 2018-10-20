@@ -19,8 +19,8 @@ class CreateCityEntityTable extends Migration
             $table->integer('city_id')->nullable()->unsigned()->comment('Id альбома');
             $table->foreign('city_id')->references('id')->on('cities');
             
-            $table->integer('entity_id')->nullable()->unsigned()->comment('Id сущности связанной с альбомом');
-            $table->string('entity')->index()->comment('Сущность обьекта');
+            $table->integer('city_entity_id')->unsigned()->comment('Id сущности');
+            $table->string('city_entity_type')->comment('Сущность');
 
             $table->timestamps();
         });

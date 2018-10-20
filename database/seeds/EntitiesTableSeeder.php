@@ -573,7 +573,47 @@ class EntitiesTableSeeder extends Seeder
       'rights_minus' => null,
       'system_item' => 1,
       'author_id' => 1,
-    ]
+    ],
+
+    // 68
+    [
+      'name' => 'Поля',
+      'alias' => 'fields',
+      'model' => 'Field',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
+    // 69
+    [
+      'name' => 'Правила',
+      'alias' => 'rules',
+      'model' => 'Rule',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
+    // 70
+    [
+      'name' => 'Отзывы',
+      'alias' => 'feedback',
+      'model' => 'Feedback',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
+    // 71
+    [
+      'name' => 'Заказы',
+      'alias' => 'orders',
+      'model' => 'Order',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
 
   ]);
 

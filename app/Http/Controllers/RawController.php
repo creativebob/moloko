@@ -41,6 +41,9 @@ class RawController extends Controller
     public function index(Request $request)
     {
 
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Raw::class);
+
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
         if (($filter_url != null)&&($request->filter != 'active')) {
@@ -48,9 +51,6 @@ class RawController extends Controller
             return Redirect($filter_url);
         }
         
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Raw::class);
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
@@ -73,32 +73,19 @@ class RawController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // --------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА
-        // --------------------------------------------------------------------------------------------------------
 
-        $filter_query = Raw::with('author', 'company', 'raws_article.raws_product.raws_category')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->whereNull('archive')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        // Создаем контейнер фильтра
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
+        $filter = setFilter($this->entity_name, $request, [
+            'author',               // Автор записи
+            'raws_category',    // Категория услуги
+            'raws_product',     // Группа услуги
+            // 'date_interval',     // Дата обращения
+            'booklist'              // Списки пользователя
+        ]);
 
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'raws_category', 'raws_category_id', 'raws_article.raws_product', 'external-id-one-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'raws_product', 'raws_product_id', 'raws_article', 'external-id-one');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
-        // -------------------------------------------------------------------------------------------------------------
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -178,9 +165,10 @@ class RawController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request);
+        
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Raw::class);
+        // dd($request);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -678,7 +666,7 @@ class RawController extends Controller
         };
 
         // -------------------------------------------------------------------------------------------------
-        // ПЕРЕНОС ТОВАРА В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
+        // ПЕРЕНОС СЫРЬЯ В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
         // Важно! Важно проверить, соответствеут ли группа в которую переноситься товар, метрикам самого товара
         // Если не соответствует - дать отказ. Если соответствует - осуществить перенос
 
@@ -769,7 +757,7 @@ class RawController extends Controller
         $raw = Raw::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('delete', $raw);
+        $this->authorize(getmethod(__FUNCTION__), $raw);
 
         if ($raw) {
 

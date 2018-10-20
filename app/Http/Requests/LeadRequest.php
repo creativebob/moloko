@@ -38,8 +38,9 @@ class LeadRequest extends FormRequest
             'sex' => 'nullable', 
             'birthday' => 'date|after:01.01.1940|nullable', 
 
-            'phone' => 'string|max:17|required', 
-            'extra_phone' => 'string|max:17|nullable', 
+            'main_phone' => 'string|max:17|required',
+            'extra_phones.*' => 'string|max:17|nullable|unique',
+
             'telegram_id' => 'integer|nullable', 
             'city_id' => 'integer|nullable', 
             'address' => 'string|max:255|nullable', 
@@ -47,7 +48,7 @@ class LeadRequest extends FormRequest
             'orgform_status' => 'boolean|nullable', 
 
             // Обязательное поле "Имя компании" если указан статус юридического лица
-            'company_name' => 'alpha|string|max:255|required_if:orgform_status, 1|nullable', 
+            'company_name' => 'string|max:255|nullable', 
 
             'inn' => 'max:12|nullable', 
 
@@ -59,6 +60,7 @@ class LeadRequest extends FormRequest
             'passport_address' => 'string|max:255|nullable', 
 
             'degree' => 'string|max:200|nullable', 
+            'lead_type' => 'in:1, 2, 3',
             'specialty' => 'string|max:200|nullable', 
             'quote' => 'string|max:500|nullable', 
 

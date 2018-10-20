@@ -40,6 +40,9 @@ class GoodsController extends Controller
     public function index(Request $request)
     {
 
+        // Подключение политики
+        $this->authorize('index', Goods::class);
+
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
 
@@ -47,9 +50,6 @@ class GoodsController extends Controller
             Cookie::queue(Cookie::forget('filter_' . $this->entity_name));
             return Redirect($filter_url);
         }
-        
-        // Подключение политики
-        $this->authorize('index', Goods::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -72,33 +72,19 @@ class GoodsController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // ----------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter_query = Goods::with('author', 'company', 'goods_article.goods_product.goods_category')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->whereNull('archive')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
+        $filter = setFilter($this->entity_name, $request, [
+            'author',               // Автор записи
+            'goods_category',       // Категория товара
+            'goods_product',     // Группа продукта
+            // 'date_interval',     // Дата обращения
+            'booklist'              // Списки пользователя
+        ]);
 
-        // dd($filter_query);
-
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'goods_category', 'goods_category_id', 'goods_article.goods_product', 'external-id-one-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'goods_product', 'goods_product_id', 'goods_article', 'external-id-one');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
-        // ----------------------------------------------------------------------------------------------------------------------
+        // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -233,9 +219,10 @@ class GoodsController extends Controller
     public function store(Request $request)
     {
 
-        // dd($request);
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Goods::class);
+
+        // dd($request);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -388,8 +375,10 @@ class GoodsController extends Controller
         ->withCount(['metrics_values', 'raws_compositions_values'])
         ->moderatorLimit($answer_goods)
         ->findOrFail($id);
-
         // dd($cur_goods);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
         if ($cur_goods->draft == 1) {
 
@@ -411,9 +400,6 @@ class GoodsController extends Controller
                 $cur_goods_compositions[] = $composition->id;
             }
         }
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
         $manufacturers_list = $cur_goods->company->manufacturers->pluck('name', 'id');
         // dd($manufacturers_list);
@@ -556,7 +542,6 @@ class GoodsController extends Controller
                 'goods_categories' => $goods_cat_list,
             ];
         }
-
         // dd($goods_modes_list);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -612,7 +597,6 @@ class GoodsController extends Controller
         } else {
             $metrics_values = null;
         }
-
 
         $raws_compositions_values = $cur_goods->raws_compositions_values->keyBy('id');
         // dd($raws_compositions_values[2]->pivot->value);
@@ -720,7 +704,6 @@ class GoodsController extends Controller
                 $settings_album['img_max_size'] = $get_settings->img_max_size;
             }
         }
-
         // dd($settings_album);
 
         // Инфо о странице
@@ -820,15 +803,6 @@ class GoodsController extends Controller
 
         // Если что то не совпало, пишем новый артикул
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -837,6 +811,15 @@ class GoodsController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        // Смотрим компанию пользователя
+        $company_id = $user->company_id;
+
+        // Скрываем бога
+        $user_id = hideGod($user);
 
         if ($request->hasFile('photo')) {
 
@@ -1007,8 +990,6 @@ class GoodsController extends Controller
                 //     }
             }
 
-
-
             // dd($request->metrics);
             if (isset($request->metrics)) {
 
@@ -1026,8 +1007,6 @@ class GoodsController extends Controller
                         ]);
                     }
                 }
-
-
                 // dd($metrics_insert);
 
                 // Пишем метрики
@@ -1172,151 +1151,145 @@ class GoodsController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-
-        // Отображение на сайте
+    // Отображение на сайте
     public function ajax_sync(Request $request)
     {
 
-            // Описание ошибки
+        // Описание ошибки
         $ajax_error = [];
-            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
-            $ajax_error['text'] = "Для начала необходимо создать категории товаров. А уже потом будем добавлять товары. Ок?";
-            $ajax_error['link'] = "/admin/goods_categories"; // Ссылка на кнопке
-            $ajax_error['title_link'] = "Идем в раздел категорий"; // Текст на кнопке
+        $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+        $ajax_error['text'] = "Для начала необходимо создать категории товаров. А уже потом будем добавлять товары. Ок?";
+        $ajax_error['link'] = "/admin/goods_categories"; // Ссылка на кнопке
+        $ajax_error['title_link'] = "Идем в раздел категорий"; // Текст на кнопке
 
-            return view('ajax_error', compact('ajax_error'));
+        return view('ajax_error', compact('ajax_error'));
 
-        }
+    }
 
+    public function get_inputs(Request $request)
+    {
 
-
-
-
-        public function get_inputs(Request $request)
-        {
-
-            $product = Product::with('metrics.property', 'compositions.unit')->withCount('metrics', 'compositions')->findOrFail($request->product_id);
-            return view('products.cur_goods-form', compact('product'));
-
+        $product = Product::with('metrics.property', 'compositions.unit')->withCount('metrics', 'compositions')->findOrFail($request->product_id);
+        return view('products.cur_goods-form', compact('product'));
         // $product = Product::with('metrics.property', 'compositions.unit')->findOrFail(1);
         // dd($product);
 
-        }
+    }
 
-        public function add_photo(Request $request)
-        {
+    public function add_photo(Request $request)
+    {
 
         // Подключение политики
-            $this->authorize(getmethod('store'), Photo::class);
+        $this->authorize(getmethod('store'), Photo::class);
 
-            if ($request->hasFile('photo')) {
+        if ($request->hasFile('photo')) {
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
 
             // Получаем авторизованного пользователя
-                $user = $request->user();
+            $user = $request->user();
 
             // Смотрим компанию пользователя
-                $company_id = $user->company_id;
+            $company_id = $user->company_id;
 
             // Скрываем бога
-                $user_id = hideGod($user);
+            $user_id = hideGod($user);
 
            // Иначе переводим заголовок в транслитерацию
-                $alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
+            $alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
 
-                $album = Album::where(['company_id' => $company_id, 'name' => $request->name, 'albums_category_id' => 1])->first();
+            $album = Album::where(['company_id' => $company_id, 'name' => $request->name, 'albums_category_id' => 1])->first();
 
-                if ($album) {
-                    $album_id = $album->id;
-                } else {
-                    $album = new Album;
-                    $album->company_id = $company_id;
-                    $album->name = $request->name;
-                    $album->alias = $alias;
-                    $album->albums_category_id = 1;
-                    $album->description = $request->name;
-                    $album->author_id = $user_id;
-                    $album->save();
+            if ($album) {
+                $album_id = $album->id;
+            } else {
+                $album = new Album;
+                $album->company_id = $company_id;
+                $album->name = $request->name;
+                $album->alias = $alias;
+                $album->albums_category_id = 1;
+                $album->description = $request->name;
+                $album->author_id = $user_id;
+                $album->save();
 
-                    $album_id = $album->id;
+                $album_id = $album->id;
+            }
+
+            $cur_goods = Goods::findOrFail($request->id);
+
+            if ($cur_goods->album_id == null) {
+                $cur_goods->album_id = $album_id;
+                $cur_goods->save();
+
+                if (!$cur_goods) {
+                    abort(403, 'Ошибка записи альбома в продукцию');
                 }
-
-                $cur_goods = Goods::findOrFail($request->id);
-
-                if ($cur_goods->album_id == null) {
-                    $cur_goods->album_id = $album_id;
-                    $cur_goods->save();
-
-                    if (!$cur_goods) {
-                        abort(403, 'Ошибка записи альбома в продукцию');
-                    }
-                }
+            }
 
             // Вытаскиваем настройки
             // Вытаскиваем базовые настройки сохранения фото
-                $settings = config()->get('settings');
+            $settings = config()->get('settings');
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-                $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id'=> 1])->first();
+            $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id'=> 1])->first();
 
-                if ($get_settings) {
+            if ($get_settings) {
 
-                    if ($get_settings->img_small_width != null) {
-                        $settings['img_small_width'] = $get_settings->img_small_width;
-                    }
-
-                    if ($get_settings->img_small_height != null) {
-                        $settings['img_small_height'] = $get_settings->img_small_height;
-                    }
-
-                    if ($get_settings->img_medium_width != null) {
-                        $settings['img_medium_width'] = $get_settings->img_medium_width;
-                    }
-
-                    if ($get_settings->img_medium_height != null) {
-                        $settings['img_medium_height'] = $get_settings->img_medium_height;
-                    }
-
-                    if ($get_settings->img_large_width != null) {
-                        $settings['img_large_width'] = $get_settings->img_large_width;
-                    }
-
-                    if ($get_settings->img_large_height != null) {
-                        $settings['img_large_height'] = $get_settings->img_large_height;  
-                    }
-
-                    if ($get_settings->img_formats != null) {
-                        $settings['img_formats'] = $get_settings->img_formats;
-                    }
-
-                    if ($get_settings->img_min_width != null) {
-                        $settings['img_min_width'] = $get_settings->img_min_width;
-                    }
-
-                    if ($get_settings->img_min_height != null) {
-                        $settings['img_min_height'] = $get_settings->img_min_height;   
-                    }
-
-                    if ($get_settings->img_max_size != null) {
-                        $settings['img_max_size'] = $get_settings->img_max_size;
-                    }
+                if ($get_settings->img_small_width != null) {
+                    $settings['img_small_width'] = $get_settings->img_small_width;
                 }
 
-                $directory = $company_id.'/media/albums/'.$album_id.'/img/';
+                if ($get_settings->img_small_height != null) {
+                    $settings['img_small_height'] = $get_settings->img_small_height;
+                }
+
+                if ($get_settings->img_medium_width != null) {
+                    $settings['img_medium_width'] = $get_settings->img_medium_width;
+                }
+
+                if ($get_settings->img_medium_height != null) {
+                    $settings['img_medium_height'] = $get_settings->img_medium_height;
+                }
+
+                if ($get_settings->img_large_width != null) {
+                    $settings['img_large_width'] = $get_settings->img_large_width;
+                }
+
+                if ($get_settings->img_large_height != null) {
+                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                }
+
+                if ($get_settings->img_formats != null) {
+                    $settings['img_formats'] = $get_settings->img_formats;
+                }
+
+                if ($get_settings->img_min_width != null) {
+                    $settings['img_min_width'] = $get_settings->img_min_width;
+                }
+
+                if ($get_settings->img_min_height != null) {
+                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                }
+
+                if ($get_settings->img_max_size != null) {
+                    $settings['img_max_size'] = $get_settings->img_max_size;
+                }
+            }
+
+            $directory = $company_id.'/media/albums/'.$album_id.'/img/';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-                $array = save_photo($request, $directory,  $alias.'-'.time(), $album_id, null, $settings);
+            $array = save_photo($request, $directory,  $alias.'-'.time(), $album_id, null, $settings);
 
-                $photo = $array['photo'];
-                $upload_success = $array['upload_success'];
+            $photo = $array['photo'];
+            $upload_success = $array['upload_success'];
 
-                $media = new AlbumEntity;
-                $media->album_id = $album_id;
-                $media->entity_id = $photo->id;
-                $media->entity = 'photos';
-                $media->save();
+            $media = new AlbumEntity;
+            $media->album_id = $album_id;
+            $media->entity_id = $photo->id;
+            $media->entity = 'photos';
+            $media->save();
 
             // $check_media = AlbumEntity::where(['album_id' => $album_id, 'entity_id' => $request->id, 'entity' => 'product'])->first();
 
@@ -1328,37 +1301,37 @@ class GoodsController extends Controller
             //     $media->save();
             // }
 
-                if ($upload_success) {
+            if ($upload_success) {
 
                 // Переадресовываем на index
                 // return redirect()->route('/products/'.$product->id.'/edit', ['photo' => $photo, 'upload_success' => $upload_success]);
 
-                    return response()->json($upload_success, 200);
-                } else {
-                    return response()->json('error', 400);
-                } 
-
+                return response()->json($upload_success, 200);
             } else {
                 return response()->json('error', 400);
             } 
-        }
 
-        public function photos(Request $request)
-        {
+        } else {
+            return response()->json('error', 400);
+        } 
+    }
+
+    public function photos(Request $request)
+    {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
 
         // ГЛАВНЫЙ ЗАПРОС:
-            $cur_goods = Goods::with('album.photos')->moderatorLimit($answer)->findOrFail($request->cur_goods_id);
+        $cur_goods = Goods::with('album.photos')->moderatorLimit($answer)->findOrFail($request->cur_goods_id);
         // dd($product);
 
         // Подключение политики
-            $this->authorize(getmethod('edit'), $cur_goods);
+        $this->authorize(getmethod('edit'), $cur_goods);
 
-            return view('goods.photos', compact('cur_goods'));
-
-        }
-
+        return view('goods.photos', compact('cur_goods'));
 
     }
+
+
+}

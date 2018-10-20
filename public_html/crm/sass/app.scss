@@ -105,6 +105,7 @@ $calibri: "calibri";
 
 // Цвета
 $mars-red: #ff0000;
+$mars-black: #333333;
 $white: #ffffff;
 $black: #000000;
 $body-bg-color: #eeeeee;
@@ -155,11 +156,13 @@ $breadcrumbs-a-color: #5190ff;
 $breadcrumbs-border-color: #dcdcdc;
 
 // Подсветка лидов по этапам
-.stage-4 td:first-child{
+// Готов
+.stage-12 td:first-child{
     border-left: 8px solid #afefb9;
 }
 
-.stage-7 td:first-child
+// Отказ
+.stage-13 td:first-child
 {
     border-left: 8px solid #ffc2c2;
 }
@@ -251,6 +254,19 @@ fieldset {
     &:hover{
         border-bottom: 1px dashed #333;
     }
+}
+
+.content-count{
+    background-color: $mars-black;
+    color: #fff;
+    width: auto;
+    padding: 4px 10px;
+    border-radius: 3px;
+    margin-right: 15px;
+}
+
+.head-content .button-group {
+    margin-top: -6px;
 }
 
 // Конец базовых корректировок
@@ -894,10 +910,6 @@ tr:hover {
         }
 
 
-
-
-
-
         .icon-sync {
             background-position: 0px -1088px;
             float: left;
@@ -910,17 +922,6 @@ tr:hover {
             }
         }
 
-        .icon-project {
-    background-position: 0px -1110px;
-    float: left;
-    margin-right: 0.6rem;
-    opacity: 0.4;
-    transition: opacity 0.5s ease;
-
-    &:hover {
-        opacity: 1;
-    }
-}
 
         .active-filter {
             background-position: -32px -352px !important;
@@ -1680,6 +1681,10 @@ a:hover {
     background-position: -96px -1056px;
 }
 
+.icon-process {
+    background-position:  -96px -1120px;
+}
+
 .icon-arrow-forward {
     background-position: -160px -288px;
 }
@@ -1721,7 +1726,9 @@ a:hover {
   .icon-personals {
       background-position: -160px -1056px;
   }
-
+  .icon-process {
+      background-position: -160px -1120px;
+  }
 
 }
 // Скролл в сайбаре по умолчанию
@@ -1762,6 +1769,76 @@ thumb[orient="vertical"] {
 // СТРАНИЦА ЛИДЫ ======================================================================
 
 
+
+// variables
+$multilevel-accordion-bg: #4d5158;
+$multilevel-accordion-sub-bg: #35383d;
+$multilevel-accordion-separator: #41444a;
+
+.multilevel-accordion-menu {
+  // background for main accordion items
+  .is-accordion-submenu-parent a {
+    background: $multilevel-accordion-bg;
+  }
+
+  // background for sub accordion items
+  .is-accordion-submenu a {
+    background: $multilevel-accordion-sub-bg;
+  }
+
+  // creates classes for nested elements, sub-item-*
+  @for $i from 1 through 6 {
+    .sublevel-#{$i} {
+      text-indent: 0rem + $i;
+    }
+  }
+
+  a {
+    color: $white;
+    // sets accodion item separator color
+    box-shadow: inset 0 -1px $multilevel-accordion-separator;
+
+    &::after {
+      // sets accodion arrow color and direction
+      border-color: $white transparent transparent;
+    }
+  }
+
+  // padding for each list item
+  .menu > li:not(.menu-text) > a {
+    padding: 1.2rem 1rem;
+  }
+}
+
+// // style for folder icon on subitem anchors without a submenu
+// .multilevel-accordion-menu .is-accordion-submenu-parent[aria-expanded="true"] a.subitem::before {
+//   content: "\f016";
+//   font-family: FontAwesome;
+//   margin-right: 1rem;
+// }
+
+// // changes folder icon to open then accordion is open
+// .multilevel-accordion-menu .is-accordion-submenu-parent[aria-expanded="true"] a {
+//   &::before {
+//     content: "\f07c";
+//     font-family: FontAwesome;
+//     margin-right: 1rem;
+//   }
+// }
+
+// // changes folder icon to closed then accordion is closed
+// .multilevel-accordion-menu .is-accordion-submenu-parent[aria-expanded="false"] a {
+//   &::before {
+//     content: "\f07b";
+//     font-family: FontAwesome;
+//     margin-right: 1rem;
+//   }
+// }
+
+
+
+
+
 // Вкладка задачи - НАЧАЛО =======================
 
 .green-button {
@@ -1777,6 +1854,7 @@ thumb[orient="vertical"] {
 
 
 // Вкладка задачи - КОНЕЦ =======================
+
 
 
 .tabs-leads{
@@ -2089,6 +2167,21 @@ td.body{
 
 // ОКОНЧАНИЕ СТРАНИЦЫ ЛИДЫ ============================================================
 
+
+
+// РЕКЛАМАЦИИ  ============================================================
+
+.claims .td-body{
+    max-width: 400px;
+
+}
+
+.claims td{
+    
+}
+
+
+// РЕКЛАМАЦИИ ОКОНЧАНИЕ ============================================================ 
 
 
 // ----------------------------------------- Редактирование режима работы ---------------------

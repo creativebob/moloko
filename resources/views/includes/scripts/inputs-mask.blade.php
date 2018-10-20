@@ -24,6 +24,8 @@
     // Ссылка
     $('.link-field').mask('llllll?lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll');
 
+    // Обычное текстовое поле
+    $('.simple-field').mask('pp?pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp');
     // -------------------------- Числа --------------------------------
     // Дробное число
     $('.digit-field').mask('1?999999');

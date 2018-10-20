@@ -43,6 +43,7 @@
 @include('includes.scripts.pickmeup-script')
 @include('includes.scripts.delete-from-page-script')
 @include('includes.scripts.upload-file')
+@include('includes.scripts.extra-phone')
 @endsection
 
 

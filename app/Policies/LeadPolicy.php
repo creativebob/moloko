@@ -45,15 +45,19 @@ class LeadPolicy
 
     public function update(User $user, Lead $model)
     { 
-        $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
+        if($model->manager_id == 1){
+            $result = false;
+        } else {
+            $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
+        };
         return $result;
     }
 
-    public function edit(User $user, Lead $model)
-    { 
-        if($model->manager_id == 1){$result = false;} else {$result = true;};
-        return $result;
-    }
+    // public function edit(User $user, Lead $model)
+    // { 
+    //     $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
+    //     return $result;
+    // }
 
     public function delete(User $user, Lead $model)
     {

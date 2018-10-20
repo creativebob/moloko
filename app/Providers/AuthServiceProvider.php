@@ -60,8 +60,15 @@ use App\RawsProduct;
 use App\Lead;
 use App\Note;
 use App\Challenge;
+use App\Claim;
 
 use App\Stage;
+use App\Field;
+use App\Rule;
+
+use App\Feedback;
+
+use App\Order;
 
 use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
@@ -121,8 +128,15 @@ use App\Policies\RawsProductPolicy;
 use App\Policies\LeadPolicy;
 use App\Policies\NotePolicy;
 use App\Policies\ChallengePolicy;
+use App\Policies\ClaimPolicy;
 
 use App\Policies\StagePolicy;
+// use App\Policies\FieldPolicy;
+// use App\Policies\RulePolicy;
+
+use App\Policies\FeedbackPolicy;
+
+use App\Policies\OrderPolicy;
 
 
 use Illuminate\Support\Facades\Gate as GateContract;
@@ -187,7 +201,10 @@ class AuthServiceProvider extends ServiceProvider
         Lead::class => LeadPolicy::class,
         Note::class => NotePolicy::class,
         Challenge::class => ChallengePolicy::class,
+        Claim::class => ClaimPolicy::class,
         Stage::class => StagePolicy::class,
+        Feedback::class => FeedbackPolicy::class,
+        Order::class => OrderPolicy::class,
     ];
 
     public function boot()

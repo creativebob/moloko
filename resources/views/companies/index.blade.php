@@ -10,6 +10,13 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($companies))
+    {{ num_format($companies->total(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Company::class, 'type' => 'table'])
@@ -74,8 +81,8 @@
           @endif
 
           <td class="td-address">@if(!empty($company->location->address)){{ $company->location->address }}@endif </td>
-          <td class="td-phone">{{ decorPhone($company->phone) }} </td>
-          <td class="td-user_id">{{ $company->director->first_name or ' ... ' }} {{ $company->director->second_name or ' ... ' }} </td>
+          <td class="td-phone">{{ isset($company->main_phone->phone) ? decorPhone($company->main_phone->phone) : 'Номер не указан' }}</td>
+          <td class="td-user_id">{{ $company->director->first_name or ' ... ' }} {{ $company->director->second_name or ' ... ' }}</td>
 
           {{-- Элементы управления --}}
           @include('includes.control.table-td', ['item' => $company])
@@ -99,7 +106,7 @@
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
     <span class="pagination-title">Кол-во записей: {{ $companies->count() }}</span>
-    {{ $companies->links() }}
+    {{ $companies->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
   </div>
 </div>
 @endsection

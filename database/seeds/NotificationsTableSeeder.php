@@ -15,6 +15,9 @@ class NotificationsTableSeeder extends Seeder
     		[
     			'name' => 'Лид с сайта',
     		],
+            [
+                'name' => 'Рекламация',
+            ],
     	]);
     }
 }

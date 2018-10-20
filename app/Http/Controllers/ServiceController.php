@@ -39,15 +39,15 @@ class ServiceController extends Controller
     public function index(Request $request)
     {
 
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Service::class);
+
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
         if (($filter_url != null) && ($request->filter != 'active')) {
             Cookie::queue(Cookie::forget('filter_' . $this->entity_name));
             return Redirect($filter_url);
         }
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Service::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -72,36 +72,20 @@ class ServiceController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
-        // dd($services);
 
-        // --------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА
-        // --------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        $filter_query = Service::with('author', 'company', 'services_article.services_product.services_category')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->whereNull('archive')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
+        $filter = setFilter($this->entity_name, $request, [
+            'author',               // Автор записи
+            'services_category',    // Категория услуги
+            'services_product',     // Группа услуги
+            // 'date_interval',     // Дата обращения
+            'booklist'              // Списки пользователя
+        ]);
 
-        // Создаем контейнер фильтра
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите категорию:', 'services_category', 'services_category_id', 'services_article.services_product', 'external-id-one-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите группу:', 'services_product', 'services_product_id', 'services_article', 'external-id-one');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // dd($filter);
-        // Инфо о странице
+        // Окончание фильтра -----------------------------------------------------------------------------------------
         $page_info = pageInfo($this->entity_name);
 
         return view('services.index', compact('services', 'page_info', 'filter'));
@@ -147,8 +131,6 @@ class ServiceController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Service::class);
-
-        // $service = new Service;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_services_categories = operator_right('services_categories', false, 'index');
@@ -202,9 +184,9 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
 
-        // dd($request);
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Raw::class);
+        $this->authorize(getmethod(__FUNCTION__), Service::class);
+        // dd($request);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -334,9 +316,6 @@ class ServiceController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_services = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
         $service = Service::with(['services_article.services_product.services_category', 'album.photos', 'company.manufacturers', 'photo', 'catalogs'])
         ->moderatorLimit($answer_services)
         ->findOrFail($id);
@@ -344,6 +323,9 @@ class ServiceController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $service);
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
 
         $manufacturers_list = $service->company->manufacturers->pluck('name', 'id');
         // dd($manufacturers_list);
@@ -452,7 +434,6 @@ class ServiceController extends Controller
     public function update(Request $request, $id)
     {
 
-        // dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -461,6 +442,7 @@ class ServiceController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $service);
+        // dd($request);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();

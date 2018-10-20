@@ -40,9 +40,9 @@ class BooklistController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------
 
         // if($request->new_booklist){
 
@@ -190,8 +190,7 @@ class BooklistController extends Controller
                 $items_booklists = List_item::where('booklist_id', $id)->delete();
 
                 $value = [];
-                $filter_query = null;
-                $value = addBooklist($value, $filter_query, $request, $request->entity_alias);
+                $value = addBooklist($value, $request, $request->entity_alias);
                 $name = 'booklist';
 
                 return view('includes.inputs.booklister', ['name'=>$name, 'value'=>$value]);
@@ -299,8 +298,7 @@ class BooklistController extends Controller
         };
 
         $value = []; 
-        $filter_query = null;
-        $value = addBooklist($value, $filter_query, $request, $request->entity_alias);
+        $value = addBooklist($value, $request, $request->entity_alias);
         $name = 'booklist';
 
         return view('includes.inputs.booklister', ['name'=>$name, 'value'=>$value]);
@@ -311,8 +309,7 @@ class BooklistController extends Controller
     {
 
         $value = []; 
-        $filter_query = null;
-        $value = addBooklist($value, $filter_query, $request, $request->entity_alias);
+        $value = addBooklist($value, $request, $request->entity_alias);
         $name = 'booklist';
 
         return view('includes.inputs.booklister', ['name'=>$name, 'value'=>$value]);

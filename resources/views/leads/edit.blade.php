@@ -6,12 +6,12 @@
 
 @section('title', 'Редактировать лид')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $lead->case_number))
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, isset($lead->case_number) ? $lead->case_number : 'нет номера'))
 
 @section('title-content')
 <div class="top-bar head-content">
 	<div class="top-bar-left">
-		<h2 class="header-content">ЛИД №: <input name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"> </h2>
+		<h2 class="header-content">ЛИД №: <input id="show-case-number" name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"> </h2>
 	</div>
 	<div class="top-bar-right">
 	</div>
@@ -25,17 +25,31 @@
 {{ method_field('PATCH') }}
 
 @php 
-	if($lead->phone != null){
-		$readonly = 'readonly';
-		$autofocus = '';
-	} else {
-		$readonly = '';
-		$autofocus = 'autofocus';
+
+$readonly = '';
+$autofocus = 'autofocus';
+
+if(isset($lead->main_phone)){
+
+if($lead->main_phone->phone != null){
+$readonly = 'readonly';
+$autofocus = '';
+} else {
+$readonly = '';
+$autofocus = 'autofocus';
 }
+}
+
+if($lead->manager_id == 1){
+$disabled_leadbot = 'disabled';
+} else {
+$disabled_leadbot = '';
+}
+
 
 @endphp
 
-@include('leads.form', ['submitButtonText' => 'Редактировать лид', 'param'=>'', $readonly, $autofocus])
+@include('leads.form', ['submitButtonText' => 'Сохранить', 'param'=>'', $readonly, $autofocus])
 
 {{ Form::close() }}
 
@@ -59,13 +73,14 @@
 <script>
 
 	var lead_id = '{{ $lead->id }}';
+	var lead_type_id = '{{ $lead->lead_type_id }}';
 
 	$(document).on('dblclick', '#phone', function() {
 		
-    // Снятие блокировки с поля номер телефона
-    $('#phone').attr('readonly', false);
+    	// Снятие блокировки с поля номер телефона
+    	$('#phone').attr('readonly', false);
 
-});
+    });
 
 	$(document).on('click', '#lead-free', function(event) {
 		event.preventDefault();
@@ -74,26 +89,85 @@
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
-			url: "/admin/lead_free",
+			url: "/admin/lead_appointed_check",
 			type: "POST",
-			data: {id: lead_id},
+			success: function(data){
+
+				if (data == 1) {
+
+					$.ajax({
+						headers: {
+							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+						},
+						url: "/admin/lead_appointed",
+						type: "POST",
+						data: {id: lead_id},
+						success: function(html){
+							$('#modal').html(html);
+							$('#add-appointed').foundation();
+							$('#add-appointed').foundation('open');
+						}
+					});
+				} else {
+
+					$.ajax({
+						headers: {
+							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+						},
+						url: "/admin/lead_free",
+						type: "POST",
+						data: {id: lead_id},
+						success: function(date){
+
+							var result = $.parseJSON(date);
+							if (result.error_status == 0) {
+
+								var url = '{{ url("admin/leads") }}';
+
+								window.location.replace(url);
+
+								// $(location).attr('href', );
+							} else {
+                				// Выводим ошибку на страницу
+                				alert(result.error_message);
+                			};
+
+                		}
+                	});
+				}
+			}
+		});
+	});
+
+	$(document).on('click', '#submit-appointed', function(event) {
+		event.preventDefault();
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: "/admin/lead_distribute",
+			type: "POST",
+			data: $(this).closest('form').serialize(),
 			success: function(date){
 
-				var result = $.parseJSON(date);
-				if (result.error_status == 0) {
+				var url = '{{ url("admin/leads") }}/' + lead_id + '/edit';
 
-					var url = '{{ url("admin/leads") }}';
+				window.location.replace(url);
 
-					window.location.replace(url);
+			}
+		});
+	});
 
-					// $(location).attr('href', );
-				} else {
-                	// Выводим ошибку на страницу
-                	alert(result.error_message);
-                };
+	$(document).on('click', '.take-lead', function(event) {
+		event.preventDefault();
 
-            }
-        });
+		var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
+		var id = $(this).closest('.item').attr('id').split('-')[1];
+		var item = $(this);
+
+
+		/* Act on the event */
 	});
 
 	$(document).on('click', '#submit-add-claim', function(event) {
@@ -111,9 +185,9 @@
 				$('#claims-list').html(html);
 				$('#form-claim-add textarea[name=body]').val('');
 
-			
-            }
-        });
+
+			}
+		});
 	});
 
 	$(document).on('click', '.finish-claim', function(event) {
@@ -134,14 +208,99 @@
 			success: function(data){
 				var result = $.parseJSON(data);
 
-          		if (result['error_status'] == 0) {
-          			$('#claims-' + id + ' .action a').remove();
-          		} else {
-          			alert(result['error_message']);
-          		};
+				if (result['error_status'] == 0) {
+					$('#claims-' + id + ' .action a').remove();
+				} else {
+					alert(result['error_message']);
+				};
 			}
-        });
+		});
 	});
+
+
+	$(document).on('click', '#change-lead-type', function(event) {
+		event.preventDefault();
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: "/admin/open_change_lead_type",
+			type: "POST",
+			data: {lead_type_id: lead_type_id, lead_id: lead_id},
+			success: function(html){
+				$('#modal').html(html);
+				$('#modal-change-lead-type').foundation();
+				$('#modal-change-lead-type').foundation('open');
+			}
+		});
+	});
+
+	$(document).on('click', '#submit-change-lead-type', function(event) {
+		event.preventDefault();
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: "/admin/change_lead_type",
+			type: "POST",
+			data: $(this).closest('form').serialize(),
+			success: function(data){
+				$('#modal-change-lead-type').foundation('close');
+				$('#lead-type-name').html(data['lead_type_name']);
+				$('#show-case-number').val(data['case_number']);		
+			}
+		});
+	});
+
+
+	$(document).on('click', '.get-products', function(event) {
+		event.preventDefault();
+
+		var entity = $(this).attr('id').split('-')[0];
+		var id = $(this).attr('id').split('-')[1];
+
+		// alert(entity + ' ' + id);
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: "/admin/" + entity + "_get_products",
+			type: "POST",
+			data: {id: id},
+			success: function(html){
+				$('#items-list').html(html);	
+			}
+		});
+	});
+
+
+	$(document).on('click', '.add-to-order', function(event) {
+		event.preventDefault();
+
+		var entity = $(this).attr('id').split('-')[0];
+		var id = $(this).attr('id').split('-')[1];
+
+		// alert(entity + ' ' + id);
+
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: "/admin/orders_check",
+			type: "POST",
+			data: {lead_id: lead_id, item_id: id, entity: entity},
+			success: function(html){
+				$('#goods-section').append(html);
+
+				$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
+			}
+		});
+	});
+
+
 
 </script>
 

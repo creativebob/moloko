@@ -23,9 +23,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Carbon\Carbon;
 
 // Фильтры
-// use App\Scopes\Filters\Filter;
-// use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\Filter;
+use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\DateIntervalFilter;
 
 class Claim extends Model
 {
@@ -43,9 +43,9 @@ class Claim extends Model
     use ModeratorLimitTraitScopes;
 
     // Фильтры
-    // use Filter;
-    // use BooklistFilter;
-    // use DateIntervalFilter;
+    use Filter;
+    use BooklistFilter;
+    use DateIntervalFilter;
 
     // public $timestamps = false;
 
@@ -59,5 +59,17 @@ class Claim extends Model
     public function lead()
     {
         return $this->belongsTo('App\Lead');
+    }
+
+    // Получаем лида источника рекламации
+    public function source_lead()
+    {
+        return $this->belongsTo('App\Lead', 'source_lead_id');
+    }
+
+    // Получаем менеджера
+    public function manager()
+    {
+        return $this->belongsTo('App\User', 'manager_id');
     }
 }

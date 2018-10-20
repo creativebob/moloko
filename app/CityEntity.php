@@ -43,7 +43,7 @@ class CityEntity extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $table = 'city_entity'; 
+    protected $table = 'city_entities'; 
 
     public function city()
     {

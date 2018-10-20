@@ -28,6 +28,13 @@
 </div>
 @endsection
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($articles))
+    {{ num_format($articles->total(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Заголовок и фильтры --}}
 <div data-sticky-container id="head-content">
@@ -157,7 +164,7 @@
   <div class="grid-x" id="pagination">
     <div class="small-6 cell pagination-head">
       <span class="pagination-title">Кол-во записей: {{ $articles->count() }}</span>
-      {{ $articles->links() }}
+      {{ $articles->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
     </div>
   </div>
   @endsection

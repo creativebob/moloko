@@ -23,17 +23,19 @@ class CreateClaimsTable extends Migration
             $table->text('body')->nullable()->comment('Описание рекламации');
 
             $table->string('case_number')->nullable()->index()->comment('Номер рекламации');
+            $table->string('source_lead_id')->nullable()->index()->comment('Номер обращения по которму была заведена рекламация');
 
-            $table->integer('lead_id')->nullable()->unsigned()->comment('ID лида');
+            $table->integer('serial_number')->unsigned()->nullable()->comment('Дневной серийный номер рекламации на компанию');
+
+            $table->integer('lead_id')->nullable()->unsigned()->comment('ID лида на котором рекламация');
             $table->foreign('lead_id')->references('id')->on('leads');
 
-            $table->integer('manager_id')->nullable()->unsigned()->comment('ID лида');
+            $table->integer('manager_id')->nullable()->unsigned()->comment('ID менеджера');
             $table->foreign('manager_id')->references('id')->on('users');
 
             $table->integer('status')->nullable()->unsigned()->comment('Статус выполнения (1 - не выполнено)');
 
             $table->integer('old_claim_id')->nullable()->unsigned()->comment('ID рекламации из старой базы');
-
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');

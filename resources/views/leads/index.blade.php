@@ -14,6 +14,13 @@
 <!-- <a href="/admin/leads?calls=yes" class="button tiny">Перезвоны</a> -->
 @endsection
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($leads))
+    {{ num_format($leads->total(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Lead::class, 'type' => 'table'])
@@ -68,7 +75,7 @@
           <td class="td-name">
 
 
-            @can('edit', $lead)
+            {{-- @can('edit', $lead)
             @can('update', $lead)
             <a href="/admin/leads/{{ $lead->id }}/edit">
               @endcan
@@ -80,17 +87,44 @@
               @can('update', $lead)
             </a>
             @endcan
+            @endcan --}}
+
+            @can('view', $lead)
+            <a href="/admin/leads/{{ $lead->id }}/edit">
+              @endcan
+
+              {{ $lead->name }}
+
+              @can('update', $lead)
+            </a>
             @endcan
+
+
+            <br>
+            <span class="tiny-text">{{ $lead->company_name or '' }}</span>
+
 
           </td>
           <td class="td-action">
             @if($lead->manager->id == 1)
-            <a href="#" class="button tiny take-lead">Принять</a>
+
+              @if(($lead->lead_type_id == 1)&&(extra_right('lead-regular')))
+                <button class="button tiny take-lead">Принять</button>
+              @endif
+
+              @if(($lead->lead_type_id == 2)&&(extra_right('lead-dealer')))
+                <button class="button tiny take-lead">Принять (Дилер)</button>
+              @endif
+
+              @if(($lead->lead_type_id == 3)&&(extra_right('lead-service')))
+                <button class="button tiny take-lead">Принять (Сервисный центр)</button>
+              @endif
+
             @endif
           </td>
 
           <td class="td-phone">
-            {{ decorPhone($lead->phone) }}
+            {{ isset($lead->main_phone->phone) ? decorPhone($lead->main_phone->phone) : 'Номер не указан' }}
             @if($lead->email)<br><span class="tiny-text">{{ $lead->email or '' }}</span>@endif
           </td>
           <td class="td-choice">
@@ -104,7 +138,8 @@
           <td class="td-badget">{{ num_format($lead->badget, 0) }}</td>
           <td class="td-stage">{{ $lead->stage->name }}</td>
           <td class="td-challenge">
-            {{ $lead->first_challenge->challenge_type->name or '' }}
+            {{ $lead->first_challenge->challenge_type->name or '' }}<br>
+            <span class="tiny-text">{{ $lead->first_challenge->appointed->second_name or ''}}</span>
           </td>
           <td>
             @if(!empty($lead->first_challenge->deadline_date))
@@ -143,7 +178,7 @@
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
     <span class="pagination-title">Кол-во записей: {{ $leads->count() }}</span>
-    {{ $leads->links() }}
+    {{ $leads->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
   </div>
 </div>
 @endsection
@@ -166,6 +201,8 @@
   $(document).on('click', '.take-lead', function(event) {
     event.preventDefault();
 
+    $(this).prop('disabled', true);
+
     var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
     var id = $(this).closest('.item').attr('id').split('-')[1];
     var item = $(this);
@@ -174,7 +211,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/admin/lead_direction_check",
+      url: "/admin/lead_appointed_check",
       type: "POST",
       success: function(data){
 
@@ -219,6 +256,8 @@
 
   $(document).on('click', '#submit-appointed', function(event) {
     event.preventDefault();
+
+    $(this).prop('disabled', true);
 
     $.ajax({
       headers: {

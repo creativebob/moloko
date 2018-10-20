@@ -7,6 +7,13 @@ use App\Lead;
 use App\Note;
 use App\Choice;
 use App\City;
+use App\Challenge;
+use App\Claim;
+
+use App\Company;
+use App\Department;
+use App\User;
+use App\Phone;
 
 use App\Location;
 
@@ -342,8 +349,8 @@ class ParserController extends Controller
 
             if ($count == 200) {
                     // break;
-                    return redirect('/admin/cities');
-                }
+                return redirect('/admin/cities');
+            }
 
         } 
 
@@ -726,4 +733,114 @@ class ParserController extends Controller
     {
         //
     }
+
+
+    public function andrey(Request $request)
+    {
+        $leads = Lead::where('manager_id', 5)->update(['manager_id' => 7]);
+        $challenges = Challenge::where('appointed_id', 5)->update(['appointed_id' => 7]);
+
+        $challenges = Challenge::where('author_id', 9)->update(['author_id' => 7]);
+        dd('Готово!');
+    }
+
+    public function lead_type(Request $request)
+    {
+        $leads = Lead::whereNull('lead_type_id')->update(['lead_type_id' => 1]);
+        dd('Заебца!');
+    }
+
+
+    public function old_claims(Request $request)
+    {
+
+        $claims = Claim::get();
+        foreach ($claims as $claim) {
+            $claim->serial_number = $claim->old_claim_id;
+            $claim->manager_id = 9;
+            $claim->status = 1;
+            $claim->save();
+        }
+        dd('Удача, ебана!');
+    }
+
+    public function phone_parser(Request $request)
+    {
+
+        $companies = Company::get();
+        foreach ($companies as $comapny) {
+            if (isset($company->phone)) {
+                // Пишем или ищем новый и создаем связь
+                $phone = Phone::firstOrCreate(
+                    ['phone' => $company->phone,
+                ], [
+                    'crop' => substr($company->phone, -4),
+                ]);
+                $company->phones()->attach($phone->id, ['main' => 1]);
+            }
+            if (isset($company->extra_phone)) {
+                // Пишем или ищем новый и создаем связь
+                $phone = Phone::firstOrCreate([
+                    'phone' => $company->extra_phone
+                ], [
+                    'crop' => substr($company->extra_phone, -4),
+                ]);
+                $company->phones()->attach($phone->id);
+            }
+        }
+
+        $users = User::get();
+        foreach ($users as $user) {
+            if (isset($user->phone)) {
+                // Пишем или ищем новый и создаем связь
+                $phone = Phone::firstOrCreate([
+                    'phone' => $user->phone
+                ], [
+                    'crop' => substr($user->phone, -4),
+                ]);
+                $user->phones()->attach($phone->id, ['main' => 1]);
+            }
+            if (isset($company->extra_phone)) {
+                // Пишем или ищем новый и создаем связь
+                $phone = Phone::firstOrCreate([
+                    'phone' => $user->extra_phone
+                ], [
+                    'crop' => substr($user->extra_phone, -4),
+                ]);
+                $user->phones()->attach($phone->id);
+            }
+        }
+
+        $departments = Department::get();
+        foreach ($departments as $department) {
+            if (isset($department->phone)) {
+                // Пишем или ищем новый и создаем связь
+                $phone = Phone::firstOrCreate([
+                    'phone' => $department->phone
+                ], [
+                    'crop' => substr($department->phone, -4),
+                ]);
+                $department->phones()->attach($phone->id, ['main' => 1]);
+            }
+        }
+
+        $leads = Lead::get();
+        foreach ($leads as $lead) {
+            if (isset($lead->phone)) {
+                // Пишем или ищем новый и создаем связь
+                $phone = Phone::firstOrCreate([
+                    'phone' => $lead->phone
+                ], [
+                    'crop' => substr($lead->phone, -4),
+                ]);
+                $lead->phones()->attach($phone->id, ['main' => 1]);
+            }
+        }
+
+        dd('Норм');
+
+
+
+    }
+
 }

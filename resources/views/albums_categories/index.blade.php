@@ -10,6 +10,13 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($albums_categories))
+    {{ num_format($albums_categories->count(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Меню --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\AlbumsCategory::class, 'type' => 'menu'])

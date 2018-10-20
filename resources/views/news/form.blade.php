@@ -25,7 +25,7 @@
       </div>
       <div class="small-6 cell">
         <label>Окончание публикации
-          @include('includes.inputs.date', ['name'=>'publish_end_date', 'value'=>$cur_news->publish_end_date, 'required'=>'required'])
+          @include('includes.inputs.date', ['name'=>'publish_end_date', 'value'=>$cur_news->publish_end_date, 'required'=>''])
         </label>
       </div>
     </div>

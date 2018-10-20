@@ -13,7 +13,7 @@ class DepartmentRequest extends FormRequest
    */
   public function authorize()
   {
-      return true;
+    return true;
   }
 
   /**
@@ -26,7 +26,10 @@ class DepartmentRequest extends FormRequest
     return [
       'name' => 'string|max:255',
       'address' => 'string|nullable',
-      'phone' => 'string|max:17|nullable',  
+      
+      'main_phone' => 'string|max:17|required',
+      'extra_phones.*' => 'string|max:17|nullable',
+      
       'filial_id' => 'integer|nullable',
       'department_id' => 'integer|nullable',
       'parent_id' => 'integer|nullable',

@@ -10,6 +10,13 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($staff))
+    {{ num_format($staff->total(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Department::class, 'type' => 'table'])
@@ -78,7 +85,7 @@
           </td>
           <td class="td-phone">
             @if (isset($staffer->user))
-            {{ $staffer->user->phone }}
+            {{ isset($staffer->user->main_phone->phone) ? decorPhone($staffer->user->main_phone->phone) : 'Телефон не указан' }}
           @endif</td>
           <td class="td-employment-date">
             @foreach ($staffer->employees as $employee)
@@ -108,7 +115,7 @@
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
     <span class="pagination-title">Кол-во записей: {{ $staff->count() }}</span>
-    {{ $staff->links() }}
+    {{ $staff->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
   </div>
 </div>
 @endsection

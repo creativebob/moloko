@@ -22,9 +22,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
     
 
 // Фильтры
-// use App\Scopes\Filters\Filter;
-// use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\Filter;
+use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\DateIntervalFilter;
 
 class Challenge extends Model
 {
@@ -42,9 +42,9 @@ class Challenge extends Model
     use ModeratorLimitTraitScopes;
 
     // Фильтры
-    // use Filter;
-    // use BooklistFilter;
-    // use DateIntervalFilter;
+    use Filter;
+    use BooklistFilter;
+    use DateIntervalFilter;
 
     // public $timestamps = false;
     
@@ -83,9 +83,18 @@ class Challenge extends Model
         return $this->belongsTo('App\User', 'finisher_id');
     }
 
-    // Получаем лида
+    // Получаем все
     public function challenges()
     {
         return $this->morphTo();
     }
+
+    // public function getStatusResultAttribute($value) {
+
+    //     if($this->status == 1){
+    //         return 'Выполнена';
+    //     } else {
+    //         return 'Не выполнена';
+    //     }
+    // }
 }

@@ -36,8 +36,6 @@ use App\Http\Controllers\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-
-
 class UserController extends Controller
 {
 
@@ -65,7 +63,7 @@ class UserController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------
 
-        $users = User::with('roles', 'staff', 'staff.position')  
+        $users = User::with('roles', 'staff', 'staff.position', 'main_phones')  
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -79,30 +77,16 @@ class UserController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // dd($users->first());
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        // --------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
-        // --------------------------------------------------------------------------------------------------------------------------
+        $filter = setFilter($this->entity_name, $request, [
+            'city',                 // Город
+            'booklist'              // Списки пользователя
+        ]);
 
-        $filter_query = User::with('location.city')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям              
-        ->orWhere('id', $request->user()->id) // Только для сущности USERS
-        ->get();
-
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-
-        // Перечень подключаемых фильтров:
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
-
+        // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -136,10 +120,13 @@ class UserController extends Controller
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
 
+        // Сущность
+        $entity = $this->entity_name;
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list', 'page_info', 'countries_list'));
+        return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list', 'page_info', 'countries_list', 'entity'));
     }
 
     public function store(UserRequest $request)
@@ -191,12 +178,6 @@ class UserController extends Controller
         $user->birthday = $request->birthday;
 
         $user->company_id = $company_id;
-
-        $user->phone = cleanPhone($request->phone);
-
-        if(($request->extra_phone != Null)&&($request->extra_phone != "")){
-            $user->extra_phone = cleanPhone($request->extra_phone);
-        };
 
         $user->telegram_id = $request->telegram_id;
         $user->location_id = $location_id;
@@ -363,6 +344,10 @@ class UserController extends Controller
         }
 
         if ($user) {
+
+            // Телефон
+            $phones = add_phones($request, $user);
+
             // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
             if (isset($request->access)) {
 
@@ -438,7 +423,7 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar')->moderatorLimit($answer)->findOrFail($id);
+        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar', 'main_phones', 'extra_phones')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
@@ -462,11 +447,14 @@ class UserController extends Controller
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
 
+        // Сущность
+        $entity = $this->entity_name;
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
         // dd($user);
 
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list'));
+        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list', 'entity'));
     }
 
     public function update(UserRequest $request, $id)
@@ -522,11 +510,8 @@ class UserController extends Controller
         $user->sex = $request->sex;
         $user->birthday = $request->birthday;
 
-        $user->phone = cleanPhone($request->phone);
-
-        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            $user->extra_phone = cleanPhone($request->extra_phone);
-        } else {$user->extra_phone = NULL;};
+        // Телефон
+        $phones = add_phones($request, $user);
 
         $user->telegram_id = $request->telegram_id;
 
@@ -918,11 +903,8 @@ class UserController extends Controller
         $user->sex = $request->sex;
         $user->birthday = $request->birthday;
 
-        $user->phone = cleanPhone($request->phone);
-
-        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            $user->extra_phone = cleanPhone($request->extra_phone);
-        } else {$user->extra_phone = NULL;};
+        // Телефон
+        $phones = add_phones($request, $user);
 
         $user->telegram_id = $request->telegram_id;
 
@@ -1014,54 +996,54 @@ class UserController extends Controller
                 $array = save_photo($request, $directory, 'avatar-'.time(), null, $user->photo_id, $settings);
 
             } else {
-                 $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
-            }
+               $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
+           }
 
-            $photo = $array['photo'];
+           $photo = $array['photo'];
 
-            $user->photo_id = $photo->id;
-        }
+           $user->photo_id = $photo->id;
+       }
 
-        $user->save();
+       $user->save();
 
 
 
         // Выполняем, только если данные пришли не из userfrofile!
-        if(!isset($request->users_edit_mode)){
+       if(!isset($request->users_edit_mode)){
 
             // Тут вписываем изменения по правам
-            if (isset($request->access)) {
+        if (isset($request->access)) {
 
-                $delete = RoleUser::whereUser_id($user->id)->delete();
-                $mass = [];
-                foreach ($request->access as $string) {
+            $delete = RoleUser::whereUser_id($user->id)->delete();
+            $mass = [];
+            foreach ($request->access as $string) {
 
-                    $item = explode(',', $string);
-                    if ($item[2] == 'null') {
-                        $position = null;
-                    } else {
-                        $position = $item[2];
-                    }
-
-                    $mass[] = [
-                        'role_id' => $item[0],
-                        'department_id' => $item[1],
-                        'user_id' => $user->id,
-                        'position_id' => $position,
-                    ];
+                $item = explode(',', $string);
+                if ($item[2] == 'null') {
+                    $position = null;
+                } else {
+                    $position = $item[2];
                 }
 
-                DB::table('role_user')->insert($mass);
-
-            } else {
-
-                // Если удалили последнюю роль для должности и пришел пустой массив
-                $delete = RoleUser::whereUser_id($user->id)->delete();
+                $mass[] = [
+                    'role_id' => $item[0],
+                    'department_id' => $item[1],
+                    'user_id' => $user->id,
+                    'position_id' => $position,
+                ];
             }
 
-        };
+            DB::table('role_user')->insert($mass);
 
-        if ($user) {
+        } else {
+
+                // Если удалили последнюю роль для должности и пришел пустой массив
+            $delete = RoleUser::whereUser_id($user->id)->delete();
+        }
+
+    };
+
+    if ($user) {
 
             // $backroute = $request->backroute;
             // if(isset($backroute)){
@@ -1069,11 +1051,11 @@ class UserController extends Controller
             //     return redirect($backroute);
             // };
 
-            return redirect('/admin/home');
+        return redirect('/admin/home');
 
-        } else {
-            abort(403, 'Ошибка при обновлении пользователя!');
-        }
-
+    } else {
+        abort(403, 'Ошибка при обновлении пользователя!');
     }
+
+}
 }

@@ -10,6 +10,13 @@
 
 @section('breadcrumbs', Breadcrumbs::render('section', $parent_page_info, $site, $page_info))
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($news))
+    {{ num_format($news->total(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'page_alias' => 'sites/'.$site->alias.'/'.$page_info->alias, 'class' => App\News::class, 'type' => 'section-table', 'name' => $site->name])
@@ -119,7 +126,7 @@
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
     <span class="pagination-title">Кол-во записей: {{ $news->count() }}</span>
-    {{ $news->links() }}
+    {{ $news->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
   </div>
 </div>
 @endsection

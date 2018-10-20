@@ -15,7 +15,7 @@ class CreateLeadTypesTable extends Migration
     {
         Schema::create('lead_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->index()->comment('Тип установления связи (обращения)');
+            $table->string('name')->index()->comment('Тип обращения');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');

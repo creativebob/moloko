@@ -50,6 +50,40 @@ function timeToSec($time) {
     return $sec;
 }
 
+
+
+// ====================================================================
+// Преобразует данные (Полученную на шаблоне дату) 
+// из плагина PickMeUp в формат базы данных
+// ====================================================================
+
+function outPickMeUp($date) {
+
+    $date_for_mysql = Carbon::createFromFormat('d.m.Y', $date)->format('Y-m-d');
+    return $date_for_mysql;
+}
+
+
+
+// ====================================================================
+// Преобразует дату (Формат: date) для вывода 
+// на шаблон через плагин PickMeUp
+// Если date равна Null, то отдает текущую дату
+// ====================================================================
+
+function inPickMeUp($date) {
+
+    if(empty($date)){
+        $date = Carbon::today()->format('d.m.Y');
+    } else {
+        $date = $date->format('d.m.Y');
+    };
+
+    return $date;
+}
+
+
+
 // Принимает 11 значное число: номер телефона Возвращает строку: Удобочитаемый номер телефона со скобочками и дефисом
 function decorPhone($value) {
 
@@ -225,31 +259,77 @@ function getWeekDay($date, $type = 0){
     if($type == 0){
 
         switch ($weekday) {
+            case 0: $weekday = 'Воскресенье'; break; 
             case 1: $weekday = 'Понедельник'; break;
             case 2: $weekday = 'Вторник'; break;
             case 3: $weekday = 'Среда'; break;
             case 4: $weekday = 'Четверг'; break;
             case 5: $weekday = 'Пятница'; break;
             case 6: $weekday = 'Суббота'; break;
-            case 7: $weekday = 'Воскресенье'; break; 
         }
 
     } else {
 
         switch ($weekday) {
+            case 0: $weekday = 'Вс'; break; 
             case 1: $weekday = 'Пн'; break;
             case 2: $weekday = 'Вт'; break;
             case 3: $weekday = 'Ср'; break;
             case 4: $weekday = 'Чт'; break;
             case 5: $weekday = 'Пт'; break;
             case 6: $weekday = 'Сб'; break;
-            case 7: $weekday = 'Вс'; break; 
         }
 
     }
 
     // Отдаем день недели
     return $weekday;
+}
+
+function getMonth($date, $type = 0){
+
+// Получаем дату и необходимый формат вывоода
+    $date = Carbon::parse($date);
+    $month = $date->month;
+
+    if($type == 0){
+
+        switch ($month) {
+            case 1: $month = 'Январь'; break;
+            case 2: $month = 'Февраль'; break;
+            case 3: $month = 'Март'; break;
+            case 4: $month = 'Апрель'; break;
+            case 5: $month = 'Май'; break;
+            case 6: $month = 'Июнь'; break;
+            case 7: $month = 'Июль'; break; 
+            case 8: $month = 'Август'; break; 
+            case 9: $month = 'Сентябрь'; break; 
+            case 10: $month = 'Октябрь'; break; 
+            case 11: $month = 'Ноябрь'; break; 
+            case 12: $month = 'Декабрь'; break; 
+        }
+
+    } else {
+
+        switch ($month) {
+            case 1: $month = 'Янв'; break;
+            case 2: $month = 'Фев'; break;
+            case 3: $month = 'Мар'; break;
+            case 4: $month = 'Апр'; break;
+            case 5: $month = 'Май'; break;
+            case 6: $month = 'Июн'; break;
+            case 7: $month = 'Июл'; break; 
+            case 8: $month = 'Авг'; break; 
+            case 9: $month = 'Сен'; break; 
+            case 10: $month = 'Окт'; break; 
+            case 11: $month = 'Ноя'; break; 
+            case 12: $month = 'Дек'; break; 
+        }
+
+    }
+
+    // Отдаем день недели
+    return $month;
 }
 
 // Делаем заглавной первую букву

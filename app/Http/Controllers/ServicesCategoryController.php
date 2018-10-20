@@ -50,7 +50,7 @@ class ServicesCategoryController extends Controller
 
     public function index(Request $request)
     {
-        // dd($alias);
+
         // Подключение политики
         $this->authorize('index', ServicesCategory::class);
 
@@ -96,13 +96,13 @@ class ServicesCategoryController extends Controller
     public function create(Request $request)
     {
 
-
-        $user = $request->user();
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), ServicesCategory::class);
 
         $services_category = new ServicesCategory;
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
 
         // $services_modes_list = ServicesMode::where('type', 'services')->get()->pluck('name', 'id');
         $services_types_list = Company::with('services_types')
@@ -142,7 +142,7 @@ class ServicesCategoryController extends Controller
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer_units_categories = operator_right('units_categories', false, 'index');
 
-                // Главный запрос
+            // Главный запрос
             $units_categories_list = UnitsCategory::with(['units' => function ($query) {
                 $query->pluck('name', 'id');
             }])
@@ -154,7 +154,6 @@ class ServicesCategoryController extends Controller
             ->orderBy('sort', 'asc')
             ->get()
             ->pluck('name', 'id');
-
 
             return view('services_categories.create-medium', compact('services_category', 'services_categories_list', 'type', 'services_types_list', 'units_categories_list', 'services_list'));
         } else {
@@ -188,8 +187,6 @@ class ServicesCategoryController extends Controller
 
         $services_category->display = $request->display;
 
-        
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -215,7 +212,6 @@ class ServicesCategoryController extends Controller
             $services_category->services_mode_id = $category->services_mode_id;
         }
 
-        
         if ($request->status == 'set') {
             $services_category->status = $request->status;
         } else {
@@ -258,21 +254,20 @@ class ServicesCategoryController extends Controller
         ->findOrFail($id);
         // dd($services_category);
 
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $services_category);
+
         $services_category_metrics = [];
         foreach ($services_category->metrics as $metric) {
             $services_category_metrics[] = $metric->id;
         }
-        // dd($product_metrics);
+        // dd($services_category_metrics);
 
         // $services_category_compositions = [];
         // foreach ($services_category->compositions as $composition) {
         //     $services_category_compositions[] = $composition->id;
         // }
-
         // dd($services_category_compositions);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $services_category);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -297,9 +292,6 @@ class ServicesCategoryController extends Controller
         ->withCount('metrics')
         ->orderBy('sort', 'asc')
         ->get();
-
-
-        
 
         $properties_list = $properties->pluck('name', 'id');
 
@@ -367,9 +359,6 @@ class ServicesCategoryController extends Controller
                 'services_categories' => $services_categories_list,
             ];
         }
-
-
-        
         // dd($services_modes_list);
         // $grouped_services_types = $services_modes->groupBy('alias');
         // dd($grouped_services_types);
@@ -490,8 +479,6 @@ class ServicesCategoryController extends Controller
                 }
             }
 
-            
-
             // Директория
             $directory = $company_id.'/media/services_categories/'.$services_category->id.'/img/';
 
@@ -602,9 +589,6 @@ class ServicesCategoryController extends Controller
             }
         }
     }
-
-
-    
 
     // Проверка наличия в базе
     public function ajax_check(Request $request)
@@ -861,7 +845,7 @@ class ServicesCategoryController extends Controller
     public function api_show(Request $request, $id)
     {
 
-// dd('lol');
+        // dd('lol');
         $site = Site::where('api_token', $request->token)->first();
         if ($site) {
             // return Cache::remember('staff', 1, function() use ($domen) {

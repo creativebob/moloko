@@ -10,6 +10,7 @@ use App\Role;
 use App\Staffer;
 use App\StageRole;
 use App\Sector;
+use App\Entity;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ use App\Policies\StagePolicy;
 // Общие классы
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Schema;
 
 // На удаление
 use Illuminate\Support\Facades\Auth;
@@ -78,6 +80,7 @@ class StageController extends Controller
 
         $filter['status'] = null;
         $filter['entity_name'] = $this->entity_name;
+        $filter['inputs'] = $request->input();
 
         $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id', null, 'internal-id-one');
 
@@ -102,10 +105,15 @@ class StageController extends Controller
 
         $stage = new Stage;
 
+        $entities = Entity::get();
+        $entities_list = $entities->pluck('name', 'id');
+
+        $fields_list = Schema::getColumnListing($entities->first()->alias);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('stages.create', compact('stage', 'page_info'));  
+        return view('stages.create', compact('stage', 'page_info', 'entities_list', 'fields_list'));  
     }
 
     public function store(StageRequest $request)
@@ -165,15 +173,28 @@ class StageController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $stage = Stage::moderatorLimit($answer)->findOrFail($id);
+        $stage = Stage::with('rules.field.entity')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $stage);
 
+        $entities = Entity::get();
+        $entities_list = $entities->pluck('name', 'id');
+
+        // dd($entities_list);
+
+        $fields = Schema::getColumnListing($entities->first()->alias);
+        $fields_list = [];
+        foreach ($fields as $field) {
+            $fields_list[$field] = $field;
+        }
+
+        // dd($fields_list);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('stages.edit', compact('stage', 'page_info'));
+        return view('stages.edit', compact('stage', 'page_info', 'entities_list', 'fields_list'));
     }
 
     public function update(StageRequest $request, $id)
@@ -248,7 +269,7 @@ class StageController extends Controller
                 return redirect('/admin/stages');
             } else {
                 abort(403, 'Ошибка при удалении этапа');
-            }; 
+            } 
         } else {
 
             abort(403, 'Этап не найден');
