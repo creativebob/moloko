@@ -350,7 +350,6 @@ class ChallengeController extends Controller
             ->where('telegram_id', '!=', null)
             ->get(['telegram_id']);
 
-            dd($telegram_destinations);
             send_message($telegram_destinations, $message);
         }
 
