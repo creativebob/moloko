@@ -8,18 +8,25 @@
 
 	<td class="description">
 		@php
-			echo str_replace("\n", '<br>', $challenge->description);
+		echo str_replace("\n", '<br>', $challenge->description);
 		@endphp
 	</td>
 
 	<td class="action">
 		@if ($challenge->appointed_id == Auth::user()->id) 
-				<a class="button finish-challenge">Выполнить</a>
+		<a class="button finish-challenge">Выполнить</a>
 		@endif
 
 		@if (($challenge->author_id == Auth::user()->id) && ($challenge->appointed_id != Auth::user()->id))
-				<a class="button remove-challenge">Снять</a>
+		<a class="button remove-challenge">Снять</a>
 		@endif
+
+		@if(!empty(Auth::user()->staff[0]))
+			@if(extra_right('lead-challenge-remove'))
+			<a class="button remove-challenge">Снять</a>
+			@endif
+		@endif
+
 	</td>
 </tr>
 @endforeach
