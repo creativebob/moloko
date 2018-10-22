@@ -85,6 +85,7 @@ class ServicesProductController extends Controller
         ]);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 

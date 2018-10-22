@@ -78,10 +78,10 @@
 												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
 												<p class="task-target">{{ $challenge->description or ''}}</p>
 												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id  or ''}}/edit">{{ $challenge->challenges->case_number or ''}}</a></li>
-													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name or ''}}</li>
-													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) or ''}}</li>
-													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) or ''}}</li>
+													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
+													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
+													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
+													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
 													<li><span class="task-data">Товар: </span>
 													{{-- 
 														{{ $challenge->challenges->choices_goods_categories->implode('name', ', ') or ''}}
@@ -152,7 +152,7 @@
 												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
 												<p class="task-target">{{ $challenge->description or ''}}</p>
 												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number }}</a></li>
+													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
 													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
@@ -226,7 +226,7 @@
 												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
 												<p class="task-target">{{ $challenge->description or ''}}</p>
 												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number }}</a></li>
+													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
 													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
@@ -327,7 +327,7 @@
 												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
 												<p class="task-target">{{ $challenge->description or ''}}</p>
 												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number }}</a></li>
+													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
 													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
@@ -404,7 +404,7 @@
 												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
 												<p class="task-target">{{ $challenge->description or ''}}</p>
 												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number }}</a></li>
+													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
 													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
@@ -481,7 +481,7 @@
 												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
 												<p class="task-target">{{ $challenge->description or ''}}</p>
 												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number }}</a></li>
+													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
 													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
