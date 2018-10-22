@@ -326,7 +326,7 @@ class ChallengeController extends Controller
 
         // Оповещение в telegram, если исполнитель не является автором
         if ($challenge->appointed_id != $user->id) {
-            $message  = "ЗАДАЧА СНЯТА\r\n\r\n"; 
+            $message  = "ЗАДАЧА СНЯТА\r\n\r\n";
 
             $message .= "Действие: " . $challenge->challenge_type->name . "\r\n";
             $message .= "Дедлайн: " . $challenge->deadline_date->format('d.m.Y - H:i') . "\r\n";
@@ -350,15 +350,15 @@ class ChallengeController extends Controller
             ->where('telegram_id', '!=', null)
             ->get(['telegram_id']);
 
+            dd($telegram_destinations);
             send_message($telegram_destinations, $message);
         }
 
         // Удаляем пользователя с обновлением
-        $challenge->forceDelete();
+        // $challenge->forceDelete();
+        $challenge->delete();
 
         if ($challenge) {
-
-
 
             $result = [
                 'error_status' => 0,
