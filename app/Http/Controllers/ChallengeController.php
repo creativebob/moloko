@@ -204,8 +204,7 @@ class ChallengeController extends Controller
                     $message = lead_info($message, $item);
                 }
 
-
-                $telegram_destinations = User::where('id', $challenge->appointed_id)
+                $telegram_destinations = User::has('staff')->where('id', $challenge->appointed_id)
                 ->where('telegram_id', '!=', null)
                 ->get(['telegram_id']);
 
@@ -290,7 +289,7 @@ class ChallengeController extends Controller
                     $message = lead_info($message, $lead);
                 }
 
-                $telegram_destinations = User::where('id', $challenge->author_id)
+                $telegram_destinations = User::has('staff')->where('id', $challenge->author_id)
                 ->where('telegram_id', '!=', null)
                 ->get(['telegram_id']);
 
@@ -346,7 +345,7 @@ class ChallengeController extends Controller
                 $message = lead_info($message, $lead);
             }
 
-            $telegram_destinations = User::where('id', $challenge->appointed_id)
+            $telegram_destinations = User::has('staff')->where('id', $challenge->appointed_id)
             ->where('telegram_id', '!=', null)
             ->get(['telegram_id']);
 
