@@ -180,9 +180,10 @@ Route::patch('/ajax_update_photo/{id}', 'PhotoController@update_photo')->middlew
 
 
 // --------------------------------------- Помещения -----------------------------------------------
-
 Route::resource('/places', 'PlaceController')->middleware('auth');
 
+// --------------------------------------- Склады -----------------------------------------------
+Route::resource('stocks', 'StockController')->middleware('auth');
 
 // --------------------------------------- Свойства -----------------------------------------------
 Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware('auth');

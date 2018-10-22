@@ -10,6 +10,7 @@ use App\Manufacturer;
 
 use App\Role;
 use App\Place;
+use App\Stock;
 use App\PlacesType;
 
 use App\Right;
@@ -78,6 +79,7 @@ use App\Policies\ManufacturerPolicy;
 
 use App\Policies\RolePolicy;
 use App\Policies\PlacePolicy;
+use App\Policies\StockPolicy;
 use App\Policies\PlacesTypePolicy;
 
 use App\Policies\RightPolicy;
@@ -162,6 +164,7 @@ class AuthServiceProvider extends ServiceProvider
         Entity::class => EntityPolicy::class, 
         Role::class => RolePolicy::class,
         Place::class => PlacePolicy::class,
+        Stock::class => StockPolicy::class,
         PlacesType::class => PlacesTypePolicy::class,
 
         Account::class => AccountPolicy::class,

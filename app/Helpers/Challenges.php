@@ -27,6 +27,8 @@ use Carbon\Carbon;
         ->orderBy('deadline_date', 'asc')
         ->get();
 
+        // dd($challenges);
+
         // $challenges->transform(function ($item, $key) {
         //     return $item->challenges->name . ' Добавка';
         // });
