@@ -100,6 +100,10 @@ class LeadController extends Controller
             'challenges.appointed',
             'main_phones'
         )
+        ->withCount(['challenges' => function ($query) {
+            $query->whereNull('status');
+        }])
+        ->withCount('claims')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -118,6 +122,8 @@ class LeadController extends Controller
         // ->orderBy('moderation', 'desc')
         // ->orderBy('sort', 'asc')
         ->paginate(30);
+
+        // dd($leads->first());
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -310,14 +316,14 @@ class LeadController extends Controller
 
                 if(isset($fragment_phone)){
                     $query->orWhereHas('phones', function($query) use ($fragment_phone){
-                     $query->where('phone', $fragment_phone);
-                 });
+                       $query->where('phone', $fragment_phone);
+                   });
                 };
 
                 if(isset($crop_phone)){
                     $query->orWhereHas('phones', function($query) use ($crop_phone){
-                     $query->where('crop', $crop_phone);
-                 });
+                       $query->where('crop', $crop_phone);
+                   });
                 };
 
             })
@@ -884,7 +890,11 @@ class LeadController extends Controller
         $user = $request->user();
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $lead = Lead::moderatorLimit($answer)
+        $lead = Lead::withCount(['challenges' => function ($query) {
+            $query->whereNull('status');
+        }])
+        ->withCount('claims')
+        ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->manager($user)
@@ -896,10 +906,18 @@ class LeadController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
 
-        // Удаляем пользователя с обновлением
-        $lead = Lead::moderatorLimit($answer)->where('id', $id)->delete();
+        // Удаляем комментарии
+        $lead->notes()->delete();
+        $lead->challenges()->delete();
 
-        if($lead) {return redirect('/admin/leads');} else {abort(403,'Что-то пошло не так!');};
+        // Удаляем пользователя с обновлением
+        $lead->destroy($id);
+
+        if($lead) {
+            return redirect('/admin/leads');
+        } else {
+            abort(403,'Что-то пошло не так!');
+        };
     }
 
     // Добавление комментария

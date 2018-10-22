@@ -32,7 +32,7 @@ class Note extends Model
     use Cachable;
 
     use Notifiable;
-    use SoftDeletes;
+    // use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -51,7 +51,10 @@ class Note extends Model
     
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = [
-        'body', 'author_id', 'created_at'
+        'body',
+        'author_id',
+        'created_at',
+        'company_id'
     ];
 
     // Фильтрация по городу

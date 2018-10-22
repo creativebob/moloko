@@ -204,8 +204,7 @@ class ChallengeController extends Controller
                     $message = lead_info($message, $item);
                 }
 
-
-                $telegram_destinations = User::where('id', $challenge->appointed_id)
+                $telegram_destinations = User::has('staff')->where('id', $challenge->appointed_id)
                 ->where('telegram_id', '!=', null)
                 ->get(['telegram_id']);
 
@@ -290,7 +289,7 @@ class ChallengeController extends Controller
                     $message = lead_info($message, $lead);
                 }
 
-                $telegram_destinations = User::where('id', $challenge->author_id)
+                $telegram_destinations = User::has('staff')->where('id', $challenge->author_id)
                 ->where('telegram_id', '!=', null)
                 ->get(['telegram_id']);
 
@@ -326,7 +325,7 @@ class ChallengeController extends Controller
 
         // Оповещение в telegram, если исполнитель не является автором
         if ($challenge->appointed_id != $user->id) {
-            $message  = "ЗАДАЧА СНЯТА\r\n\r\n"; 
+            $message  = "ЗАДАЧА СНЯТА\r\n\r\n";
 
             $message .= "Действие: " . $challenge->challenge_type->name . "\r\n";
             $message .= "Дедлайн: " . $challenge->deadline_date->format('d.m.Y - H:i') . "\r\n";
@@ -346,7 +345,7 @@ class ChallengeController extends Controller
                 $message = lead_info($message, $lead);
             }
 
-            $telegram_destinations = User::where('id', $challenge->appointed_id)
+            $telegram_destinations = User::has('staff')->where('id', $challenge->appointed_id)
             ->where('telegram_id', '!=', null)
             ->get(['telegram_id']);
 
@@ -354,11 +353,10 @@ class ChallengeController extends Controller
         }
 
         // Удаляем пользователя с обновлением
-        $challenge->forceDelete();
+        // $challenge->forceDelete();
+        $challenge->delete();
 
         if ($challenge) {
-
-
 
             $result = [
                 'error_status' => 0,

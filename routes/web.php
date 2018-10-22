@@ -385,7 +385,7 @@ Route::resource('/notes', 'NoteController')->middleware('auth');
 
 // --------------------------------------- Задачи -----------------------------------------------
 
-// Route::any('/challenges/{id}', 'ChallengeController@update')->middleware('auth');
+// Route::any('/challenges/{id}', 'ChallengeController@destroy')->middleware('auth');
 // Основные методы
 Route::resource('/challenges', 'ChallengeController')->middleware('auth');
 Route::post('/get_challenges_user', 'ChallengeController@ajax_get_challenges')->middleware('auth');

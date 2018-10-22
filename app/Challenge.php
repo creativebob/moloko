@@ -31,7 +31,7 @@ class Challenge extends Model
     // Включаем кеш
     use Cachable;
 
-    use SoftDeletes;
+    // use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
