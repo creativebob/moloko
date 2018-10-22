@@ -17,14 +17,8 @@
 		<a class="button finish-challenge">Выполнить</a>
 		@endif
 
-		@if (($challenge->author_id == Auth::user()->id) && ($challenge->appointed_id != Auth::user()->id))
+		@if (($challenge->author_id == Auth::user()->id) && ($challenge->appointed_id != Auth::user()->id) || extra_right('lead-challenge-remove'))
 		<a class="button remove-challenge">Снять</a>
-		@endif
-
-		@if(!empty(Auth::user()->staff[0]))
-			@if(extra_right('lead-challenge-remove'))
-			<a class="button remove-challenge">Снять</a>
-			@endif
 		@endif
 
 	</td>
