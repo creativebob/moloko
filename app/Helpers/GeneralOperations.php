@@ -159,8 +159,13 @@ function update_location($request, $item) {
 
     // Обновляем локацию
     $item_location = $item->location;
-    
-    $country_id = ($item_location->country_id != $request->country_id) ? $request->country_id : $item_location->country_id;
+
+    if (isset($request->country_id)) {
+        $country_id = ($item_location->country_id != $request->country_id) ? $request->country_id : $item_location->country_id;
+    } else {
+        $country_id = $item_location->country_id;
+    }
+
     $city_id = ($item_location->city_id != $request->city_id) ? $city_id = $request->city_id : $item_location->city_id;
     $address = ($item_location->address != $request->address) ? $address = $request->address : $item_location->address;
 
