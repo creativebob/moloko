@@ -88,11 +88,25 @@ class ParserController extends Controller
 
     public function city(Request $request)
     {
+        $leads = Lead::whereHas('location', function ($q) {
+            $q->whereNull('address');
+        })
+        ->get();
 
-        $locations = Location::whereNull('city_id')->update(['city_id' => 1]);
+        foreach ($leads as $lead) {
+            $location = Location::firstOrCreate(['address' => $lead->location->address, 'city_id' => $lead->location->city_id, 'country_id' => 1], ['author_id' => 1]);
+
+            if ($location->id != $lead->location_id) {
+                $lead->location()->forceDelete();
+
+                $lead->location_id = $location->id;
+                $lead->save();
+            }
+        }
         dd('Гатова');
 
     }
+
     public function index(Request $request)
     {
 
