@@ -86,7 +86,7 @@ class ParserController extends Controller
 
     }
 
-    public function locations(Request $request)
+    public function city(Request $request)
     {
 
         $locations = Location::whereNull('city_id')->update(['city_id' => 1]);
