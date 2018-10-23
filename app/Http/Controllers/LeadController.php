@@ -316,14 +316,14 @@ class LeadController extends Controller
 
                 if(isset($fragment_phone)){
                     $query->orWhereHas('phones', function($query) use ($fragment_phone){
-                       $query->where('phone', $fragment_phone);
-                   });
+                     $query->where('phone', $fragment_phone);
+                 });
                 };
 
                 if(isset($crop_phone)){
                     $query->orWhereHas('phones', function($query) use ($crop_phone){
-                       $query->where('crop', $crop_phone);
-                   });
+                     $query->where('crop', $crop_phone);
+                 });
                 };
 
             })
@@ -360,25 +360,14 @@ class LeadController extends Controller
             $company_id = $user->company_id;
             $filial_id = $user->filial_id;
 
-            // Пишем локацию
-            $location = new Location;
-            $location->country_id = 1; // TODO: сюда умолчания из settings!
-            $location->city_id = 1; // TODO: сюда умолчания из settings!
-            $location->address = '';
-            $location->author_id = $user->id;
-            $location->save();
-
-            if ($location) {
-                $location_id = $location->id;
-            } else {
-                abort(403, 'Ошибка записи адреса');
-            }
+            // Добавляем локацию
+            $lead->location_id = create_location($request);
 
             $lead->company_id = $company_id;
             $lead->filial_id = $filial_id;
             $lead->name = NULL;
             $lead->company_name = NULL;
-            $lead->location_id = $location_id;
+            
             
             $lead->draft = 1;
             $lead->author_id = $user->id;
@@ -721,36 +710,30 @@ class LeadController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
 
-        // Пишем локацию
-        $location = $lead->location;
+        // // Пишем локацию
+        // $location = $lead->location;
 
+        // if((!isset($location->city_id))||($location->city_id != $request->city_id)) {
 
-        if((!isset($location->city_id))||($location->city_id != $request->city_id)) {
+        //     // Пишем локацию
+        //     $location = new Location;
+        //     $location->country_id = $request->country_id;
+        //     $location->city_id = $request->city_id;
+        //     $location->address = $request->address;
+        //     $location->author_id = $user->id;
+        //     $location->save();
 
-            // Пишем локацию
-            $location = new Location;
-            $location->country_id = $request->country_id;
-            $location->city_id = $request->city_id;
-            $location->address = $request->address;
-            $location->author_id = $user->id;
-            $location->save();
+        //     if ($location) {
+        //         $location_id = $location->id;
+        //     } else {
+        //         abort(403, 'Ошибка записи адреса');
+        //     }
+        // }
 
-            if ($location) {
-                $location_id = $location->id;
-            } else {
-                abort(403, 'Ошибка записи адреса');
-            }
-
-        }
-
-        if($location->address != $request->address) {
-            $location->address = $request->address;
-            $location->editor_id = $user->id;
-            $location->save();
-        }
+        // Обновляем локацию
+        $lead = update_location($request, $lead);
 
         $lead->filial_id = $filial_id;
-        $lead->location_id = $location->id;
         $lead->email = $request->email;
 
         $lead->name = $request->name;
@@ -910,6 +893,8 @@ class LeadController extends Controller
         $lead->notes()->delete();
         $lead->challenges()->delete();
 
+        // $lead->challenges()->delete();
+
         // Удаляем пользователя с обновлением
         $lead->destroy($id);
 
@@ -919,6 +904,9 @@ class LeadController extends Controller
             abort(403,'Что-то пошло не так!');
         };
     }
+
+
+    // --------------------------------------- Ajax ----------------------------------------------------------
 
     // Добавление комментария
     public function ajax_add_note(Request $request)

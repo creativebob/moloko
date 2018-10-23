@@ -96,6 +96,8 @@ Route::any('/check_class', 'ClassController@check_class');
 //    echo $text;
 // });
 
+Route::get('/locations', 'ParserController@locations')->middleware('auth');
+Route::get('/city', 'ParserController@city')->middleware('auth');
 // Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
 // Route::get('/dublicator_old', 'ParserController@dublicator_old')->middleware('auth');
 // Route::get('/adder', 'ParserController@adder')->middleware('auth');

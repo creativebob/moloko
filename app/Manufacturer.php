@@ -64,4 +64,5 @@ class Manufacturer extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
+
 }

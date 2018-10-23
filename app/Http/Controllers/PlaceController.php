@@ -144,26 +144,14 @@ class PlaceController extends Controller
         $user = $request->user();
         $user_id = $user->id;
 
-        // Пишем локацию
-        $location = new Location;
-        $location->country_id = $request->country_id;
-        $location->city_id = $request->city_id;
-        $location->address = $request->address;
-        $location->author_id = $user_id;
-        $location->save();
-
-        if ($location) {
-            $location_id = $location->id;
-        } else {
-
-            abort(403, 'Ошибка записи адреса');
-        }
-
         $place = new Place;
         $place->name = $request->name;
         $place->description = $request->description;
         $place->square = $request->square;
-        $place->location_id = $location_id;
+        
+        // Добавляем локацию
+        $location = create_location($request);
+        $company->location_id = $location->id;
 
         if($user->company_id != null){
             $place->company_id = $user->company_id;
@@ -297,22 +285,11 @@ class PlaceController extends Controller
         // Подключение политики
         $this->authorize('update', $place);
 
-        // Пишем локацию
-        $location = $place->location;
-        if($location->city_id != $request->city_id) {
-            $location->city_id = $request->city_id;
-            $location->editor_id = $user_id;
-            $location->save();
-        }
-        if($location->address != $request->address) {
-            $location->address = $request->address;
-            $location->editor_id = $user_id;
-            $location->save();
-        }
-        if($location->country_id != $request->country_id) {
-            $location->country_id = $request->country_id;
-            $location->editor_id = $user_id;
-            $location->save();
+        // Обновляем локацию
+        $location = update_location($request, $place);
+        // Если пришла другая локация, то переписываем
+        if ($place->location_id != $location->id) {
+            $place->location_id = $location->id;
         }
 
         $place->name = $request->name;
@@ -348,74 +325,9 @@ class PlaceController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $place);
 
         // Удаляем пользователя с обновлением
-        $place = Place::moderatorLimit($answer)->where('id', $id)->delete();
+        $place = Place::destroy($id);
 
         if($place) {return redirect('/admin/places');} else {abort(403,'Что-то пошло не так!');};
     }
 
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->places as $item) {
-            Place::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Place::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Place::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
 }

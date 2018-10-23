@@ -346,6 +346,8 @@ class GoodsController extends Controller
                 if ($request->quickly == 1) {
                     return redirect('/admin/goods');
                 } else {
+
+                    // dd($cur_goods);
                     return redirect('/admin/goods/'.$cur_goods->id.'/edit'); 
                 }
 
