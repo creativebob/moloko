@@ -194,8 +194,7 @@ class SupplierController extends Controller
         $company->email = $request->email;
 
         // Добавляем локацию
-        $location = create_location($request);
-        $company->location_id = $location->id;
+        $company->location_id = create_location($request);
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
@@ -413,11 +412,7 @@ class SupplierController extends Controller
         $user_id = hideGod($user);
 
         // Обновляем локацию
-        $location = update_location($request, $company);
-        // Если пришла другая локация, то переписываем
-        if ($company->location_id != $location->id) {
-            $company->location_id = $location->id;
-        }
+        $company = update_location($request, $company);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $company);

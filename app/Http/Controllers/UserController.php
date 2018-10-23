@@ -168,8 +168,7 @@ class UserController extends Controller
         $user->telegram_id = $request->telegram_id;
         
         // Добавляем локацию
-        $location = create_location($request);
-        $user->location_id = $location->id;
+        $user->location_id = create_location($request);
 
         $user->orgform_status = $request->orgform_status;
         $user->user_inn = $request->inn;
@@ -469,11 +468,7 @@ class UserController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $user);
 
         // Обновляем локацию
-        $location = update_location($request, $user);
-        // Если пришла другая локация, то переписываем
-        if ($user->location_id != $location->id) {
-            $user->location_id = $location->id;
-        }
+        $user = update_location($request, $user);
 
         $user->login = $request->login;
         $user->email = $request->email;
@@ -790,11 +785,7 @@ class UserController extends Controller
         // $this->authorize(getmethod(__FUNCTION__), $user);
 
         // Обновляем локацию
-        $location = update_location($request, $user);
-            // Если пришла другая локация, то переписываем
-        if ($user->location_id != $location->id) {
-            $user->location_id = $location->id;
-        }
+        $user = update_location($request, $user);
         
         $user->nickname = $request->nickname;
 

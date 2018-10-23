@@ -137,6 +137,7 @@ function getClaimNumbers($user) {
 
 // ---------------------------------------- Локации --------------------------------------------
 
+// Добавление
 function create_location($request) {
 
     // TODO: сюда умолчания из settings!
@@ -151,15 +152,17 @@ function create_location($request) {
     // Ищем или создаем локацию
     $location = Location::firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
 
-    return $location;
+    return $location->id;
 
 }
 
+// Обновление
 function update_location($request, $item) {
 
     // Обновляем локацию
     $item_location = $item->location;
 
+    // Проверяем страну, так как ее мы пока не выбираем
     if (isset($request->country_id)) {
         $country_id = ($item_location->country_id != $request->country_id) ? $request->country_id : $item_location->country_id;
     } else {
@@ -175,7 +178,12 @@ function update_location($request, $item) {
     // Ищем или создаем локацию
     $location = Location::firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
 
-    return $location;
+    // Если пришла другая локация, то переписываем
+    if ($item->location_id != $location->id) {
+        $item->location_id = $location->id;
+    }
+
+    return $item;
 
 }
 

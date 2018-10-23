@@ -207,8 +207,8 @@ class CompanyController extends Controller
         // } else {$company->extra_phone = NULL;};
 
         // Добавляем локацию
-        $location = create_location($request);
-        $company->location_id = $location->id;
+        $company->location_id = create_location($request);
+        // $company->location_id = $location->id;
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
@@ -401,11 +401,7 @@ class CompanyController extends Controller
         $user_id = hideGod($user);
 
         // Обновляем локацию
-        $location = update_location($request, $company);
-        // Если пришла другая локация, то переписываем
-        if ($company->location_id != $location->id) {
-            $company->location_id = $location->id;
-        }
+        $company = update_location($request, $company);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $company);

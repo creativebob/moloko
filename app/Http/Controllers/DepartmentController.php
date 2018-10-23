@@ -348,8 +348,7 @@ class DepartmentController extends Controller
         if (isset($request->city_name)) {
 
             // Добавляем локацию
-            $location = create_location($request);
-            $department->location_id = $location->id;
+            $department->location_id = create_location($request);
         }
 
         $department->company_id = $user->company_id;
@@ -587,11 +586,7 @@ class DepartmentController extends Controller
         if (isset($department->location_id)) {
 
             // Обновляем локацию
-            $location = update_location($request, $department);
-            // Если пришла другая локация, то переписываем
-            if ($department->location_id != $location->id) {
-                $department->location_id = $location->id;
-            }
+            $department = update_location($request, $department);
         }
 
         // Имя филиала / отдела

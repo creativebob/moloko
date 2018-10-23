@@ -361,8 +361,7 @@ class LeadController extends Controller
             $filial_id = $user->filial_id;
 
             // Добавляем локацию
-            $location = create_location($request);
-            $lead->location_id = $location->id;
+            $lead->location_id = create_location($request);
 
             $lead->company_id = $company_id;
             $lead->filial_id = $filial_id;
@@ -732,11 +731,7 @@ class LeadController extends Controller
         // }
 
         // Обновляем локацию
-        $location = update_location($request, $lead);
-        // Если пришла другая локация, то переписываем
-        if ($lead->location_id != $location->id) {
-            $lead->location_id = $location->id;
-        }
+        $lead = update_location($request, $lead);
 
         $lead->filial_id = $filial_id;
         $lead->email = $request->email;
