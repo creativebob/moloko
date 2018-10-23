@@ -555,11 +555,12 @@ class EntitiesTableSeeder extends Seeder
       'author_id' => 1,
     ],
 
+
     // 66
     [
-      'name' => 'Посты',
-      'alias' => 'posts',
-      'model' => 'Post',
+      'name' => 'Рекламации',
+      'alias' => 'claims',
+      'model' => 'Claim',
       'rights_minus' => null,
       'system_item' => 1,
       'author_id' => 1,
@@ -567,35 +568,15 @@ class EntitiesTableSeeder extends Seeder
 
     // 67
     [
-      'name' => 'Аккаунты',
-      'alias' => 'accounts',
-      'model' => 'Account',
+      'name' => 'Заказы',
+      'alias' => 'orders',
+      'model' => 'Order',
       'rights_minus' => null,
       'system_item' => 1,
       'author_id' => 1,
     ],
 
     // 68
-    [
-      'name' => 'Поля',
-      'alias' => 'fields',
-      'model' => 'Field',
-      'rights_minus' => null,
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-
-    // 69
-    [
-      'name' => 'Правила',
-      'alias' => 'rules',
-      'model' => 'Rule',
-      'rights_minus' => null,
-      'system_item' => 1,
-      'author_id' => 1,
-    ],
-
-    // 70
     [
       'name' => 'Отзывы',
       'alias' => 'feedback',
@@ -605,15 +586,56 @@ class EntitiesTableSeeder extends Seeder
       'author_id' => 1,
     ],
 
-    // 71
+    // 69
     [
-      'name' => 'Заказы',
-      'alias' => 'orders',
-      'model' => 'Order',
+      'name' => 'Посты',
+      'alias' => 'posts',
+      'model' => 'Post',
       'rights_minus' => null,
       'system_item' => 1,
       'author_id' => 1,
     ],
+
+    // 70
+    [
+      'name' => 'Аккаунты',
+      'alias' => 'accounts',
+      'model' => 'Account',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
+    // 71
+    [
+      'name' => 'Поля',
+      'alias' => 'fields',
+      'model' => 'Field',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
+    // 72
+    [
+      'name' => 'Правила',
+      'alias' => 'rules',
+      'model' => 'Rule',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
+    // 73
+    [
+      'name' => 'Склад (Запасы продукции)',
+      'alias' => 'stocks',
+      'model' => 'Stock',
+      'rights_minus' => null,
+      'system_item' => 1,
+      'author_id' => 1,
+    ],
+
 
   ]);
 

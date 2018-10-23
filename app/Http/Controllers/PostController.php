@@ -47,7 +47,6 @@ class PostController extends Controller
     public function index(Request $request)
     { 
 
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Post::class);
 
@@ -57,8 +56,6 @@ class PostController extends Controller
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
-        // dd($answer);
-
 
         $posts = Post::with('author', 'albums', 'company.location.city')
         ->moderatorLimit($answer)
@@ -76,29 +73,18 @@ class PostController extends Controller
         ->orderBy('publish_begin_date', 'desc')
         ->paginate(30);
 
-        // dd($posts);
 
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------------------------------------------------
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        $filter_query = Post::with('author')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->get();
-        // dd($filter_query);
+        $filter = setFilter($this->entity_name, $request, [
+            'date_interval',        // Дата
+            'booklist'              // Списки пользователя
+        ]);
 
-        // Создаем контейнер фильтра
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        $filter['inputs'] = $request->input();
-
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите автора:', 'author', 'author_id');
-
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        // Окончание фильтра -----------------------------------------------------------------------------------------
+       
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

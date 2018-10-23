@@ -80,7 +80,7 @@
 												<ul class="task-list">
 													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
-													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
+													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li> --}}
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
 													<li><span class="task-data">Товар: </span>
 													{{-- 
@@ -88,7 +88,7 @@
 														{{ $challenge->challenges->choices_services_categories->implode('name', ', ') or ''}}
 														{{ $challenge->challenges->choices_raws_categories->implode('name', ', ')  or ''}}</li>
 													--}}
-													<li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address or ''}}</li>
+													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address or ''}}</li> --}}
 												</ul>
 
 												{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
@@ -154,7 +154,7 @@
 												<ul class="task-list">
 													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
-													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
+													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li> --}}
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
 													<li><span class="task-data">Товар: </span>
 													{{-- 
@@ -162,7 +162,7 @@
 														{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
 														{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
 													--}}
-													<li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li>
+													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
 												</ul>
 
 												{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
@@ -228,7 +228,7 @@
 												<ul class="task-list">
 													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
-													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
+													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li> --}}
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
 													<li><span class="task-data">Товар: </span>
 													{{-- 
@@ -236,7 +236,7 @@
 														{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
 														{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
 													--}}
-													<li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li>
+													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
 												</ul>
 
 												{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
@@ -324,12 +324,12 @@
 
 											<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
 												{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
-												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
+												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span> <span class="task-appointed">({{ $challenge->appointed->name or ''}})</span>
 												<p class="task-target">{{ $challenge->description or ''}}</p>
 												<ul class="task-list">
 													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
-													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
+													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li> --}}
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
 													<li><span class="task-data">Товар: </span>
 													{{-- 
@@ -337,7 +337,7 @@
 														{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
 														{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
 													--}}
-													<li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li>
+													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
 												</ul>
 
 												{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
@@ -401,12 +401,12 @@
 
 											<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
 												{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
-												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
+												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span> <span class="task-appointed">({{ $challenge->appointed->name or ''}})</span>
 												<p class="task-target">{{ $challenge->description or ''}}</p>
 												<ul class="task-list">
 													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
-													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
+													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li> --}}
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
 													<li><span class="task-data">Товар: </span>
 													{{-- 
@@ -414,7 +414,7 @@
 														{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
 														{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
 													--}}
-													<li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li>
+													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
 												</ul>
 
 												{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
@@ -478,12 +478,12 @@
 
 											<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
 												{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
-												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
+												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span><span class="task-set">{{ $challenge->challenge_type->name or ''}}</span> <span class="task-appointed">({{ $challenge->appointed->name or ''}})</span>
 												<p class="task-target">{{ $challenge->description or ''}}</p>
 												<ul class="task-list">
 													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
 													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
-													<li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li>
+													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li> --}}
 													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
 													<li><span class="task-data">Товар: </span>
 													{{-- 
@@ -491,8 +491,8 @@
 														{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
 														{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
 													--}}
-													<li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li>
-												</ul>
+													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li>
+												</ul> --}}
 
 												{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
 											</div>

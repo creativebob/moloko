@@ -479,7 +479,6 @@ class PagesTableSeeder extends Seeder
             ],
 
             // 41
-
             [
                 'name' => 'Каталог продукции для сайта',
                 'site_id' => 1,
@@ -568,8 +567,46 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'display' => null,
-            ],      
+            ],
 
+            // 48
+            [
+                'name' => 'Рекламации',
+                'site_id' => 1,
+                'title' => 'Рекламации',
+                'description' => 'Рекламации',
+                'alias' => 'claims',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],   
+
+            // 49
+            [
+                'name' => 'Задачи',
+                'site_id' => 1,
+                'title' => 'Задачи',
+                'description' => 'Задачи',
+                'alias' => 'challenges',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],  
+
+            // 50
+            [
+                'name' => 'Склад (Запасы продукции)',
+                'site_id' => 1,
+                'title' => 'Склад (Запасы продукции)',
+                'description' => 'Склад (Запасы продукции)',
+                'alias' => 'stocks',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],   
 
             // [
             //     'name' => 'Категории продукции',
@@ -582,6 +619,7 @@ class PagesTableSeeder extends Seeder
             //     'author_id' => 1,
             //     'display' => 1,
             // ],
+
             // [
             //     'name' => 'Продукция',
             //     'site_id' => 1,
@@ -593,6 +631,7 @@ class PagesTableSeeder extends Seeder
             //     'author_id' => 1,
             //     'display' => 1,
             // ],
+
             // [
             //     'name' => 'Типы помещений',
             //     'site_id' => 1,

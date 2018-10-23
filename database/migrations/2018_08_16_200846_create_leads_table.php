@@ -26,6 +26,9 @@ class CreateLeadsTable extends Migration
             $table->text('description')->nullable()->comment('Описание для лида');
 
             $table->integer('badget')->nullable()->unsigned()->comment('Предполагаемая сумма сделки');
+
+            $table->string('company_name', 80)->nullable()->index()->comment('Имя компании лида');
+
             $table->string('case_number', 20)->nullable()->index()->comment('Номер обращения по правилам компании');
             $table->integer('serial_number')->unsigned()->nullable()->comment('Дневной серийный номер лида по менеджеру');
 
@@ -56,6 +59,9 @@ class CreateLeadsTable extends Migration
 
             $table->integer('lead_type_id')->nullable()->unsigned()->default(1)->comment('Тип обращения');
             $table->foreign('lead_type_id')->references('id')->on('lead_types');
+
+            $table->integer('lead_method_id')->nullable()->unsigned()->default(1)->comment('Способ обращения');
+            $table->foreign('lead_method_id')->references('id')->on('lead_methods');
 
             $table->integer('manager_id')->nullable()->unsigned()->default(1)->comment('ID пользователя');
             $table->foreign('manager_id')->references('id')->on('users');
