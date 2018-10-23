@@ -85,6 +85,14 @@ class ParserController extends Controller
         dd('Гатова');
 
     }
+
+    public function locations(Request $request)
+    {
+
+        $locations = Location::whereNull('city_id')->update(['city_id' => 1]);
+        dd('Гатова');
+
+    }
     public function index(Request $request)
     {
 
