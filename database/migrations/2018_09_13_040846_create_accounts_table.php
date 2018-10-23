@@ -16,15 +16,16 @@ class CreateAccountsTable extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->string('name')->index()->comment('Рабочее имя аккаунта');
             $table->text('description')->comment('Комментарий к аккаунту');
 
             $table->string('login')->nullable()->comment('Логин');
             $table->string('password')->nullable()->comment('Пароль');
-            $table->string('api_token', 60)->nullable()->comment('Токен');
+            $table->string('api_token', 200)->nullable()->comment('Токен');
             $table->string('alias')->nullable()->index()->comment('Алиас аккаунта');
 
             $table->integer('source_id')->unsigned()->nullable()->comment('Id источника - внешний сервис');
-            // $table->foreign('source_id')->references('id')->on('sources');
+            $table->foreign('source_id')->references('id')->on('sources');
 
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
