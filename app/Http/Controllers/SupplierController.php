@@ -17,6 +17,7 @@ use App\Location;
 use App\ScheduleEntity;
 use App\Country;
 use App\ServicesType;
+use App\Phone;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -59,7 +60,7 @@ class SupplierController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $suppliers = Supplier::with('author', 'company')
+        $suppliers = Supplier::with('author', 'company.main_phones')
         ->where('company_id', '!=', null)
         ->moderatorLimit($answer)
         ->filter($request, 'city_id', 'location')
@@ -68,7 +69,6 @@ class SupplierController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
-
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ class SupplierController extends Controller
     }
 
     public function create(Request $request)
-        {
+    {
 
         //Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Supplier::class);
@@ -187,32 +187,15 @@ class SupplierController extends Controller
         // Записываем в базу все расписание.
         DB::table('worktimes')->insert($mass_time);
 
-        // Пишем локацию
-        $location = new Location;
-        $location->country_id = $request->country_id;
-        $location->city_id = $request->city_id;
-        $location->address = $request->address;
-        $location->author_id = $user_id;
-        $location->save();
-
-        if ($location) {
-            $location_id = $location->id;
-        } else {
-            abort(403, 'Ошибка записи адреса');
-        }
-
         $company = new Company;
         $company->name = $request->name;
         $company->alias = $request->alias;
 
-        $company->phone = cleanPhone($request->phone);
         $company->email = $request->email;
 
-        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            $company->extra_phone = cleanPhone($request->extra_phone);
-        } else {$company->extra_phone = NULL;};
-
-        $company->location_id = $location_id;
+        // Добавляем локацию
+        $location = create_location($request);
+        $company->location_id = $location->id;
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
@@ -229,6 +212,9 @@ class SupplierController extends Controller
 
         // Если запись удачна - будем записывать связи
         if($company){
+
+            // Телефон
+            $phones = add_phones($request, $company);
 
             // Записываем связи: id-шники в таблицу Rooms
             if(isset($request->services_types_id)){
@@ -426,22 +412,11 @@ class SupplierController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-        // Пишем локацию
-        $location = $company->location;
-        if($location->city_id != $request->city_id) {
-            $location->city_id = $request->city_id;
-            $location->editor_id = $user_id;
-            $location->save();
-        }
-        if($location->address != $request->address) {
-            $location->address = $request->address;
-            $location->editor_id = $user_id;
-            $location->save();
-        }
-        if($location->country_id != $request->country_id) {
-            $location->country_id = $request->country_id;
-            $location->editor_id = $user_id;
-            $location->save();
+        // Обновляем локацию
+        $location = update_location($request, $company);
+        // Если пришла другая локация, то переписываем
+        if ($company->location_id != $location->id) {
+            $company->location_id = $location->id;
         }
 
         // Подключение политики
@@ -455,12 +430,10 @@ class SupplierController extends Controller
         // Переименовываем папку в файловой системе
         // Storage::move($old_link_for_folder, $new_link_for_folder);
 
-        $company->phone = cleanPhone($request->phone);
-        $company->email = $request->email;
+        // Телефон
+        $phones = add_phones($request, $company);
 
-        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            $company->extra_phone = cleanPhone($request->extra_phone);
-        } else {$company->extra_phone = NULL;};
+        $company->email = $request->email;
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
@@ -547,72 +520,6 @@ class SupplierController extends Controller
         } else {
             abort(403, 'Поставщик не найдена');
         }
-    }
-
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->suppliers as $item) {
-            Supplier::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Supplier::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Supplier::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     public function checkcompany(Request $request)

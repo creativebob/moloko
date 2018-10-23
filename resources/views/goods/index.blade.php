@@ -272,6 +272,10 @@
         // alert('lol');
         $('.reveal-overlay').remove();
     });
+
+    $(document).on('click', '.submit-product-add', function() {
+        $(this).prop('disabled', true);
+    });
 </script>
 
 @endsection

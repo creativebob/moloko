@@ -28,6 +28,63 @@ class ParserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+    public function locations(Request $request)
+    {
+
+        $old_leads = OldLead::where('address_company', '')->update(['address_company' => null]);
+
+        $locations = Location::where('address', '')->update(['address' => null]);
+
+        $users = User::with('location')->get();
+
+        foreach ($users as $user) {
+
+            $location_old = $user->location;
+            // dd($location_old);
+
+            $location = Location::firstOrCreate(['address' => $location_old->address, 'city_id' => $location_old->city_id, 'country_id' => $location_old->country_id, 'author_id' => $location_old->author_id]);
+                // dd($location);
+
+            if ($location->id != $user->location_id) {
+                $user->location()->forceDelete();
+
+                $user->location_id = $location->id;
+                $user->save();
+            }
+        }
+
+
+        $leads = Lead::with('location')->whereNotNull('old_lead_id')->get();
+        // dd($leads);
+
+        foreach ($leads as $lead) {
+
+            $old_lead = OldLead::with('city')->findOrFail($lead->old_lead_id);
+
+            // dd($lead->location);
+            if (isset($lead->location->address)) {
+                $address = ($lead->location->address != $old_lead->address_company) ? $lead->location->address : $old_lead->address_company;
+            } else {
+                $address = $old_lead->address_company;
+            }
+            
+            $location = Location::firstOrCreate(['address' => $address, 'city_id' => $old_lead->city->new_city_id], ['country_id' => 1, 'author_id' => 1]);
+
+            if ($location->id != $lead->location_id) {
+                $lead->location()->forceDelete();
+
+                $lead->location_id = $location->id;
+                $lead->save();
+            }
+        }
+
+        $locations = Location::whereNull('country_id')->update(['country_id' => 1]);
+
+        dd('Гатова');
+
+    }
     public function index(Request $request)
     {
 
