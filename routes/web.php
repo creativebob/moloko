@@ -110,8 +110,10 @@ Route::get('/city', 'ParserController@city')->middleware('auth');
 Route::get('/vk', 'VkController@market')->middleware('auth');
 
 // Ответ для VK
-Route::get('/vk_response', function() {
-    echo '569cecce';
+Route::post('/vk_response', function() {
+
+    return '569cecce';
+
 });
 
 
