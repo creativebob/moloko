@@ -1,7 +1,7 @@
 
 
 <div class="grid-x tabs-wrap inputs">
-    <div class="small-12 medium-6 large-6 cell tabs-margin-top">
+    <div class="small-12 medium-12 large-6 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
             @if ($errors->any())
@@ -22,8 +22,9 @@
 
             <div class="grid-x grid-padding-x">
 
-                <div class="small-12 medium-6 cell">
+                <div class="small-12 medium-12 cell">
                     <div class="grid-x grid-padding-x">
+
 
                         <div class="small-12 medium-12 cell">
                             <label>Рабочее название аккаунта
@@ -31,22 +32,29 @@
                             </label>
                         </div>
                         <div class="small-12 medium-12 cell">
-                            <label>Описание
-                                @include('includes.inputs.varchar', ['name'=>'description', 'value'=>$account->description, 'required'=>''])
-                            </label>
-                        </div>
 
+                            <label>Описание
+                              @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$account->description, 'required'=>''])
+                            </label>
+
+                        </div>
 
                         <div class="small-12 medium-6 cell">
                             <label>Сервис
-                                    {{ Form::select('source', $source, $account->source_id) }}
+                                    {{ Form::select('source', $sources_list, $account->source_id) }}
                             </label>
                         </div>
                         <div class="small-12 medium-6 cell">
                           <label>Алиас
-                            @include('includes.inputs.alias', ['value'=>$account->alias, 'name'=>'alias', 'required'=>''])
+                            @include('includes.inputs.alias', ['name'=>'alias', 'value'=>$account->alias, 'required'=>''])
                             </label>
                         </div>
+
+
+                    </div>
+                </div>
+                <div class="small-12 medium-12 cell">
+                    <div class="grid-x grid-padding-x">
 
 
                           <div class="small-12 medium-6 cell">
@@ -72,6 +80,8 @@
 
                     </div>
                 </div>
+
+
 
             </div>
 

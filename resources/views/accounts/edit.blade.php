@@ -7,7 +7,7 @@
 @section('title-content')
 	<div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">РЕДАКТИРОВАТЬ ПОМЕЩЕНИЕ</h2>
+       <h2 class="header-content">РЕДАКТИРОВАТЬ ДАННЫЕ АККАУНТА</h2>
     </div>
     <div class="top-bar-right">
     </div>

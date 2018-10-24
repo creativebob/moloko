@@ -13,7 +13,7 @@ class AccountPolicy
     use HandlesAuthorization;
     use PoliticTrait;
 
-    protected $entity_name = 'accouts';
+    protected $entity_name = 'accounts';
     protected $entity_dependence = false;
 
     public function index(User $user)

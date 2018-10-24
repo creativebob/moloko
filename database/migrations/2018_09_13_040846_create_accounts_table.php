@@ -17,9 +17,9 @@ class CreateAccountsTable extends Migration
             $table->increments('id');
 
             $table->string('name')->index()->comment('Рабочее имя аккаунта');
-            $table->text('description')->comment('Комментарий к аккаунту');
+            $table->text('description')->nullable()->comment('Комментарий к аккаунту');
 
-            $table->string('login')->nullable()->comment('Логин');
+            $table->string('login')->comment('Логин');
             $table->string('password')->nullable()->comment('Пароль');
             $table->string('api_token', 200)->nullable()->comment('Токен');
             $table->string('alias')->nullable()->index()->comment('Алиас аккаунта');

@@ -789,8 +789,8 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Аккаунты',
             'icon' => null,
-            'alias' => 'admin/accouts',
-            'tag' => 'accouts',
+            'alias' => 'admin/accounts',
+            'tag' => 'accounts',
             'parent_id' => 48,
             'page_id' => 45,
             'navigation_id' => 2,

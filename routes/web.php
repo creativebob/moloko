@@ -107,6 +107,14 @@ Route::get('/city', 'ParserController@city')->middleware('auth');
 // Route::get('/phone_parser', 'ParserController@phone_parser')->middleware('auth');
 
 
+Route::get('/vk', 'VkController@market')->middleware('auth');
+
+// Ответ для VK
+Route::get('/vk_response', function() {
+    echo '569cecce';
+});
+
+
 // -------------------------------------- Основные операции ------------------------------------------
 // Сортировка
 Route::post('/sort/{entity_alias}', 'AppController@ajax_sort')->middleware('auth');
@@ -430,6 +438,7 @@ Route::resource('/posts', 'PostController')->middleware('auth');
 
 // Основные методы
 Route::resource('/accounts', 'AccountController')->middleware('auth');
+
 // Проверка на существование аккаунта
 Route::post('/accounts_check', 'AccountController@ajax_check')->middleware('auth');
 

@@ -8,7 +8,7 @@
     // C дефисом en
     $('.text-en-field').mask('zz?zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
     // Логин
-    $('.login-field').mask('llllll?llllllllllllllllllllllllllllll');
+    $('.login-field').mask('uuuuuu?uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu');
     // Алиас
     $('.alias-field').mask('ss?ssssssssssssssss');
     // Должность
