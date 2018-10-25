@@ -5,7 +5,7 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
-    <div id="map" style="width: 1024; height: 840px"></div>
+    <div id="map" style="width: 1024px; height: 840px"></div>
 
 
     <script type="text/javascript">
@@ -41,8 +41,7 @@
             // Создаем и центрируем карту
             var myMap = new ymaps.Map("map", {
                 center: [latitude, longitude],
-                zoom: 10,
-                controls: []
+                zoom: 10
             });
 
             var myGeoObjects = [];
