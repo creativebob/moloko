@@ -52,7 +52,7 @@ class Location extends Model
         'city_id',
         'address',
         'author_id',
-        'width',
+        'latitude',
         'longitude',
     ];
 

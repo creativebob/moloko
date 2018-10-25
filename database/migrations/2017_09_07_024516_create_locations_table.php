@@ -24,8 +24,11 @@ class CreateLocationsTable extends Migration
 
             $table->string('address')->nullable()->index()->comment('Адрес');
 
-            $table->integer('latitude')->nullable()->comment('Широта');
-            $table->integer('longitude')->nullable()->comment('Долгота');
+            $table->decimal('latitude', 11, 6)->nullable()->comment('Широта');
+            $table->decimal('longitude', 11, 6)->nullable()->comment('Долгота');
+
+            $table->integer('parse_count')->nullable()->unsigned()->comment('Количество прохождения записи парсером')->default('0');
+            $table->integer('answer_count')->nullable()->unsigned()->comment('Количество пришедших ответов');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

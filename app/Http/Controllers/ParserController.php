@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\OldLead;
+use App\OldLocation;
 use App\Lead;
 use App\Note;
 use App\Choice;
@@ -86,23 +87,75 @@ class ParserController extends Controller
 
     }
 
-    public function city(Request $request)
+    // public function city(Request $request)
+    // {
+    //     $leads = Lead::whereHas('location', function ($q) {
+    //         $q->whereNull('address');
+    //     })
+    //     ->get();
+
+    //     foreach ($leads as $lead) {
+    //         $location = Location::firstOrCreate(['address' => $lead->location->address, 'city_id' => $lead->location->city_id, 'country_id' => 1], ['author_id' => 1]);
+
+    //         if ($location->id != $lead->location_id) {
+    //             $lead->location()->forceDelete();
+
+    //             $lead->location_id = $location->id;
+    //             $lead->save();
+    //         }
+    //     }
+    //     dd('Гатова');
+
+    // }
+
+    public function geoposition_locations(Request $request)
     {
-        $leads = Lead::whereHas('location', function ($q) {
-            $q->whereNull('address');
-        })
-        ->get();
+        $locations = Location::with('city')->whereNull('answer_count')->get();
 
-        foreach ($leads as $lead) {
-            $location = Location::firstOrCreate(['address' => $lead->location->address, 'city_id' => $lead->location->city_id, 'country_id' => 1], ['author_id' => 1]);
+        $count = 0;
 
-            if ($location->id != $lead->location_id) {
-                $lead->location()->forceDelete();
+        foreach ($locations as $location) {
 
-                $lead->location_id = $location->id;
-                $lead->save();
+            // Формируем запрос в Яндекс Карты
+            $request_params = [
+                'geocode' => $location->city->name . ', ' .$location->address,
+                'format' => 'json',
+            ];
+            // Преобразуем его в GET строку
+            $params = http_build_query($request_params);
+            // dd($get_params);
+            // Отправляем
+            $result = (file_get_contents('https://geocode-maps.yandex.ru/1.x/?' . $params));
+            // dd($get_params);
+
+            $res = json_decode($result);
+            if (count($res->response->GeoObjectCollection->featureMember) == 1) {
+
+                $string = $res->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
+                $coords = explode(' ', $string);
+                $update_location = Location::whereId($location->id)->update(['longitude' => $coords[0], 'latitude' => $coords[1], 'parse_count' => 1, 'answer_count' => 1]);
+            } else {
+                $update_location = Location::whereId($location->id)->update(['answer_count' => count($res->response->GeoObjectCollection->featureMember)]);
             }
+
+            $count++;
+            echo 'Есть - ' . $count . "\r\n";
         }
+
+        dd('Гатова - ' . $count);
+
+    }
+
+    public function geoposition_locations_parse(Request $request)
+    {
+
+        $locations = OldLocation::get();
+
+        foreach ($locations as $location) {
+            
+            $update = Location::where('id', $location->id)->update(['latitude' => $location->latitude, 'longitude' => $location->longitude, 'parse_count' => $location->parse_count, 'answer_count' => $location->answer_count]);
+        }
+
         dd('Гатова');
 
     }
