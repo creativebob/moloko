@@ -44,47 +44,20 @@
                 zoom: 10
             });
 
-            var myGeoObjects = [];
-
-            for (var i = 0; i < coords.length; i++) {
-
-                var claim = '';
-
-                if (coords[i]['info']['claims_count'] > 0) {
-                    var color = 'islands#redIcon';
-                    claim = '<br>(Рекламация)'
-                } else {
-                    if (coords[i]['info']['stage']['id'] === 12) {
-                        var color = 'islands#greenIcon';
-                    } else {
-                        var color = 'islands#blueIcon';
-                    }
-                }
-
-                myGeoObjects[i] = new ymaps.Placemark(
-                    coords[i]['coords'], 
-                    {
-                        // clusterCaption: '№: ' + coords[i]['info']['order'] + claim,
-                        balloonContentHeader: '№: ' + coords[i]['info']['order'] + claim,
-                        balloonContentBody: 'Имя: ' + coords[i]['info']['name'] + "<br>Телефон: " + coords[i]['info']['phone'] + "<br>Адрес: " + coords[i]['info']['address'] + "<br>Этап: " + coords[i]['info']['stage']['name'],
-                    }, {
-                        preset: color
-                    }
-                    );
-            }
-
-            var myClusterer = new ymaps.Clusterer({
-                clusterDisableClickZoom: true,
-                clusterIconLayout: 'default#pieChart'
+            // Создание экземпляра маршрута.
+            var multiRoute = new ymaps.multiRouter.MultiRoute({   
+                referencePoints: [
+                    [latitude, longitude],
+                    coords['coords'],
+                ]
+            }, {
+                reverseGeocoding: true,
+                boundsAutoApply: true
             });
-            myClusterer.add(myGeoObjects);
-            myMap.geoObjects.add(myClusterer);
 
-
-
+            // Добавление маршрута на карту.
+            myMap.geoObjects.add(multiRoute);
         }
-
-
     </script>
 </body>
 </html>

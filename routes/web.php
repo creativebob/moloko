@@ -47,7 +47,7 @@ Route::any('/check_class', 'ClassController@check_class');
 
 
 Route::get('/lol', function () {
- dd(asset(''));
+   dd(asset(''));
 });
 // Route::get('/columns', function () {
 //     $columns = Schema::getColumnListing('leads');
@@ -194,6 +194,27 @@ Route::get('/map', function() {
     return view('leads.map', compact('lead', 'coords'));
 })->middleware('auth');
 
+Route::get('/route', function() {
+
+    $lead = Lead::with(['location'])
+    ->whereHas('location', function ($q) {
+        $q->whereNotNull('longitude')->whereNotNull('latitude');
+    })
+    ->where('stage_id', '!=', 13)
+    ->where('lead_type_id', '!=', 3)
+    ->inRandomOrder()
+    ->first();
+
+
+    $mass = [
+        'coords' => [(float)$lead->location->latitude, (float)$lead->location->longitude],
+    ];
+
+    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE); 
+
+    return view('leads.route', compact('coords'));
+})->middleware('auth');
+
 Route::get('/mounth', function() {
 
 
@@ -222,9 +243,13 @@ Route::get('/set_webhook', 'TelegramController@set_webhook')->middleware('auth')
 // Удаляем webhook
 Route::get('/remove_webhook', 'TelegramController@remove_webhook')->middleware('auth');
 
+// Ручное получение сообщений, для тестов
+Route::get('/telegram_updates', 'TelegramController@get_updates');
+
 // Получаем сообщение от бота
 Route::post('/telegram_message', 'TelegramController@get_message');
-Route::get('/telegram_updates', 'TelegramController@get_updates');
+
+
 
 
 

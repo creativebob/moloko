@@ -106,4 +106,10 @@ class Position extends Model
     {
         return $this->belongsToMany('App\Charge');
     }
+
+    // Виджеты
+    public function widgets()
+    {
+        return $this->belongsToMany('App\Widget', 'widget_position');
+    }
 }

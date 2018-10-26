@@ -332,4 +332,10 @@ class User extends Authenticatable
         return $this->morphToMany('App\Phone', 'phone_entity');
     }
 
+    // Оповещения
+    public function notifications()
+    {
+        return $this->belongsToMany('App\Notification');
+    }
+
 }

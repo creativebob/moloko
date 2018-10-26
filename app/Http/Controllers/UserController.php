@@ -730,7 +730,8 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar')->findOrFail($id);
+        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar', 'staff.position.notifications')->findOrFail($id);
+        // dd($user-Ю);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
@@ -897,6 +898,17 @@ class UserController extends Controller
        }
 
        $user->save();
+
+       if ($user) {
+           // Смотрим обязанности
+            if (isset($request->notifications)) {
+                $user->notifications()->sync($request->notifications);
+            } else {
+
+                // Если удалили последнюю обязанность для должности и пришел пустой массив
+                $user->notifications()->detach();
+            }
+       }
 
 
 
