@@ -30,7 +30,7 @@ class VkController extends Controller
 
 		$get_params = http_build_query($request_params);
 
-		$result = json_decode(file_get_contents('https://api.vk.com/method/market.add?'. $get_params));
+
 
 
 

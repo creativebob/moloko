@@ -4000,3 +4000,103 @@ a:hover {
                                                 //     opacity: 0;
                                                 //     cursor: pointer
                         // }
+
+.widget-table{
+    th{
+        font-size: 0.8rem;      
+    }
+
+    th.common-th{
+        text-align: center; 
+    }   
+
+    td{
+        font-size: 0.8rem;
+    }
+
+    .right-border{
+        border-right: 1px dotted #ccc;
+    }
+
+    @media screen and (min-width: 640px) {
+        tbody tr:first-child td{
+            border-top: 1px solid #000;
+        }
+    }
+
+
+}
+
+.widget-h3{
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+$responsive-card-table-bottom-gap: 1.5rem;
+$responsive-card-table-stack-point: 640px;
+$responsive-card-table-label-bg: #ffffff;
+
+.responsive-card-table {
+  border-collapse: collapse;
+
+  &.unstriped tbody {
+    background-color: transparent;
+  }
+
+  th {
+    background-color: $responsive-card-table-label-bg;
+  }
+
+  tr,
+  th,
+  td {
+  }
+
+  @media screen and (max-width: $responsive-card-table-stack-point) {
+    thead tr {
+      position: absolute;
+      top: -9999em;
+      left: -9999em;
+    }
+
+    tr {
+      display: block;
+    }
+
+    tr + tr {
+      margin-top: $responsive-card-table-bottom-gap;
+    }
+    /* Get table cells to act like rows */
+
+    td {
+      border: none;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding-left: 50%;
+      position: relative;
+
+      &:before {
+        content: attr(data-label);
+        display: inline-block;
+        font-weight: bold;
+        line-height: 1.5;
+        margin-left: -100%;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        background: $responsive-card-table-label-bg;
+        width: 45%;
+        height: 95%;
+        left: 1px;
+        top: 1px;
+        z-index: 0;
+      }
+    }
+  }
+}

@@ -29,7 +29,7 @@ Route::get('/', function () {
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
-Route::get('/dashboard', 'HomeController@index')->name('home');
+Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 Route::get('/img/{path}', 'ImageController@show')->where('path', '.*');
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -107,14 +107,15 @@ Route::get('/city', 'ParserController@city')->middleware('auth');
 // Route::get('/phone_parser', 'ParserController@phone_parser')->middleware('auth');
 
 
+
 Route::get('/vk', 'VkController@market')->middleware('auth');
 
-// Ответ для VK
-Route::post('/vk_response', function() {
+// // Ответ для VK
+// Route::post('/vk_response', function() {
+//     $resp = '569cecce'
+//     echo $resp;
 
-    return '569cecce';
-
-});
+// });
 
 
 // -------------------------------------- Основные операции ------------------------------------------
