@@ -45,6 +45,10 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 // ---------------------------- Методы для парсера и одноразовые ----------------------------------------
 Route::any('/check_class', 'ClassController@check_class');
 
+
+Route::get('/lol', function () {
+ dd(asset(''));
+});
 // Route::get('/columns', function () {
 //     $columns = Schema::getColumnListing('leads');
 //     // dd($columns);

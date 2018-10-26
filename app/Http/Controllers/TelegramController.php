@@ -257,9 +257,9 @@ class TelegramController extends Controller
         // Если пришли координаты
         if (isset($update['message']['location'])) {
 
-            $access = User::has('staff')->where('telegram_id', $update['message']['from']['id'])->first();
+            $user = User::has('staff')->where('telegram_id', $update['message']['from']['id'])->first();
 
-            if ($access) {
+            if ($user) {
 
                 $message = "Тебя вычислили:\r\n";
                 $message .= "Широта: " . $update['message']['location']['latitude'] . "\r\n";
@@ -270,10 +270,34 @@ class TelegramController extends Controller
                     'chat_id' => $update['message']['from']['id'],
                     'text' => $message, 
                 ]);
-            }
-
-            
+            }  
         }
+
+        // Запрос фотки
+        if ($update['message']['text'] == 'Фото') {
+
+            $user = User::with('avatar')->has('staff')->where('telegram_id', $update['message']['from']['id'])->first();
+
+            if ($user) {
+
+                if (isset($user->photo_id)) {
+                    $response = Telegram::sendPhoto([
+                        'chat_id' => $update['message']['from']['id'], 
+                        'photo' => asset('storage/'. $user->company_id .'/media/users/'. $user->id .'/img/medium/'. $user->avatar->name), 
+                        'caption' => 'Приветствую, ' . $user->first_name . ' ' . $user->second_name
+                    ]);
+                } else {
+                    Telegram::sendMessage([
+                        'chat_id' => $update['message']['from']['id'],
+                        'text' => 'Сожалею, ' . $user->first_name . ' ' . $user->second_name . ', но у вас нет аватарки...' 
+                    ]);
+                }
+
+                
+            }
+        }
+
+        return 'ok';
     }
 
     /**
