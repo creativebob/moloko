@@ -253,6 +253,27 @@ class TelegramController extends Controller
                 // $message = 'Отчеты охота? Давай ДОСВИДАНИЯ!';
             }
         }
+
+        // Если пришли координаты
+        if (isset($update['message']['location'])) {
+
+            $access = User::has('staff')->where('telegram_id', $update['message']['from']['id'])->first();
+
+            if ($access) {
+                
+                $message = "Тебя вычислили:\r\n";
+                $message = "Широта: " . $update['message']['location']['latitude'] . "\r\n";
+                $message = "Долгота: " . $update['message']['location']['longitude'] . "\r\n";
+                $message = "\r\nP.S. - Воронок уже выехал...\r\n";
+
+                Telegram::sendMessage([
+                    'chat_id' => $update['message']['from']['id'],
+                    'text' => $message, 
+                ]);
+            }
+
+            
+        }
     }
 
     /**
