@@ -15,7 +15,24 @@
 
                         @if(!empty($widgets))
                             @foreach($widgets as $name_widget => $widget)
-                                @include('includes.widgets.'.$name_widget)
+
+                            <div class="small-12 medium-12 cell">
+                                <div class="card">
+                                    <div class="card-section">
+                                        <div class="grid-x grid-padding-x">
+                                            <div class="auto cell"><h3 class="widget-h3">{{ $widget['widget_info']->name }}</h3></div>
+                                            <div class="shrink cell">
+                                                <div class="sprite icon-drop"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @include('includes.widgets.'.$name_widget, ['widget'=>$widget['data']])
+
+                                </div>
+                            </div>
+
+
                             @endforeach
                         @endif
 

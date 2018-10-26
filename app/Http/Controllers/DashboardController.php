@@ -1,9 +1,23 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\User;
-use Illuminate\Http\Request;
+
 use App\Http\Controllers\Traits\Widgets\WidgetsTrait;
+
+use App\Http\Controllers\Session;
+use App\Scopes\ModerationScope;
+
+// Модели которые отвечают за работу с правами + политики
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
+
+// Запросы и их валидация
+use Illuminate\Http\Request;
+
+// Прочие необходимые классы
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -16,12 +30,22 @@ class DashboardController extends Controller
 
     // Инициируем контейнер виджета
     protected $widgets_total = [];
+    protected $all_widgets = null;
+    protected $request = null;
 
-    public function index()
+    public function index(Request $request)
     {
 
+        $this->request = $request;
+
+        // Формируем информацию о виджете
+        $user = User::with('staff.position.widgets')->findOrFail($request->user()->id);
+        $this->all_widgets = $user->staff->first()->position->widgets->keyBy('tag');
+        $widgets_list = $this->all_widgets->pluck('tag', 'id')->toArray();
+
+
         // Генерируем виджеты
-        $this->addWidgets(['sales-department-burden', 'map-leads']);
+        $this->addWidgets($widgets_list);
 
         $widgets = $this->widgets_total;
 

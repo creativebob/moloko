@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Traits\Widgets;
-use App\User;
-use App\Department;
+use App\Lead;
 
 trait WidgetsTrait
 {
@@ -44,8 +43,40 @@ trait WidgetsTrait
 	public function salesDepartmentBurden(){
 
 		// Формируем информацию о виджете
-		$result['widget'] = null;
+		$result['widget_info'] = $this->all_widgets['sales-department-burden'];
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('leads', true, 'index');
+
+        $leads = Lead::with([
+            'manager',
+            'stage',
+            'challenges.challenge_type',
+            'challenges.appointed'
+        ])
+        // ->withCount(['challenges' => function ($query) {
+        //     $query->whereNull('status');
+        // }])
+        ->whereNotIn('stage_id', [13, 14, 1, 12])
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer) 
+        ->manager($this->request->user)
+        ->whereNull('draft')
+        ->systemItem($answer) // Фильтр по системным записям
+        ->orderBy('created_at', 'desc')
+        ->get()
+        ->groupBy('manager.name');
+
+
+		// $leads_ready = $leads->where('stage')
+
+
+        // dd($leads);
+
+		// $result['data'] = 
+
+		// dd($result['data']);
 		// Формируем данные для виджета
 		$result['data'] = null;
 
