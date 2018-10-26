@@ -362,7 +362,7 @@ class PositionController extends Controller
                     $users = User::whereHas('staff.position', function ($q) use ($position) {
                         $q->whereId($position->id);
                     })->get();
-                    
+
                     $notifications_message = "Изменения в оповещениях:\r\n\r\n";
 
                     if (count($notifications_sync['attached']) > 0) {
@@ -387,7 +387,7 @@ class PositionController extends Controller
                         }
                         // dd($users->where('telegram_id', '!=', null));
                     }
-                    $notifications_message .= "\r\nОзнакомитсья с изменениями можно на вкладке \"Мой профиль\"\r\n";
+                    $notifications_message .= "\r\nОзнакомиться с изменениями можно на вкладке \"Мой профиль\"\r\n";
 
                     // dd($notifications_message);
                 }
