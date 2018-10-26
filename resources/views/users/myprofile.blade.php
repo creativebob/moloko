@@ -30,6 +30,7 @@
       <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Персональные данные</a></li>
       {{-- <li class="tabs-title"><a data-tabs-target="content-panel-3" href="#content-panel-3">Представитель компании</a></li> --}}
       <li class="tabs-title"><a data-tabs-target="content-panel-4" href="#content-panel-4">Образование и опыт</a></li>
+      <li class="tabs-title"><a data-tabs-target="settings" href="#settings">Настройки</a></li>
     </ul>
   </div>
 </div>
@@ -289,6 +290,29 @@
       </div>
 
 
+    </div>
+
+    <!-- Оповещения -->
+    <div class="tabs-panel" id="settings">
+      <fieldset class="fieldset-access">
+        <legend>Настройка оповещений</legend>
+        <div class="grid-x grid-padding-x"> 
+          <div class="small-12 cell">
+
+            <ul>
+              @foreach ($user->staff->first()->position->notifications as $notification)
+              <li>
+                <div class="small-12 cell checkbox">
+                  {{ Form::checkbox('notifications[]', $notification->id, null, ['id'=>'notification-'.$notification->id, 'class'=>'access-checkbox']) }}
+                  <label for="notification-{{ $notification->id }}"><span>{{ $notification->name }}</span></label>
+                </div>
+              </li>
+              @endforeach
+            </ul>
+
+          </div>
+        </div>
+      </fieldset> 
     </div>
 
   </div>

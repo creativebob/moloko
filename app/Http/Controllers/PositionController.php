@@ -12,6 +12,7 @@ use App\PositionRole;
 use App\Sector;
 use App\Notification;
 use App\Charge;
+use App\Widget;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -116,6 +117,9 @@ class PositionController extends Controller
         // Список обязанностей для должности
         $charges = Charge::get();
 
+        // Список обязанностей для должности
+        $widgets = Widget::get();
+
         $position = new Position;
 
         // Получаем список секторов
@@ -144,7 +148,7 @@ class PositionController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('positions.create', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications', 'charges'));  
+        return view('positions.create', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications', 'charges', 'widgets'));  
     }
 
     public function store(PositionRequest $request)
@@ -195,7 +199,7 @@ class PositionController extends Controller
                 $roles = [];
                 foreach ($request->roles as $role) {
                     $roles[$role] = [
-                    'author_id' => $user_id,
+                        'author_id' => $user_id,
                     ];
                 }
                 $position->roles()->attach($roles);
@@ -209,6 +213,11 @@ class PositionController extends Controller
             // Смотрим обязанности
             if (isset($request->charges)) {
                 $position->charges()->attach($request->charges);
+            }
+
+            // Смотрим виджеты
+            if (isset($request->widgets)) {
+                $position->widgets()->attach($request->widgets);
             }
 
             return redirect('/admin/positions');
@@ -229,7 +238,7 @@ class PositionController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $position = Position::with('roles')->moderatorLimit($answer)->findOrFail($id);
+        $position = Position::with('roles', 'charges', 'widgets')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $position);
@@ -260,6 +269,10 @@ class PositionController extends Controller
         // Список обязанностей для должности
         $charges = Charge::get();
 
+        // Список обязанностей для должности
+        $widgets = Widget::get();
+        // dd($widgets);
+
         // Получаем список секторов
         $sectors = Sector::get()->keyBy('id')->toArray();
         $sectors_cat = [];
@@ -287,7 +300,7 @@ class PositionController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('positions.edit', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications', 'charges'));
+        return view('positions.edit', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications', 'charges', 'widgets'));
     }
 
     public function update(PositionRequest $request, $id)
@@ -342,12 +355,66 @@ class PositionController extends Controller
 
             // Смотрим оповещения
             if (isset($request->notifications)) {
-                $position->notifications()->sync($request->notifications);
+                $notifications_sync = $position->notifications()->sync($request->notifications);
+                // dd($notifications_sync);
+
+                if ((count($notifications_sync['attached']) > 0) || (count($notifications_sync['detached']) > 0)) {
+                    $notifications_message = "Изменения в оповещениях:\r\n\r\n";
+
+                    if (count($notifications_sync['attached']) > 0) {
+                        $notifications_message .= "Вам стали доступны оповещения:\r\n";
+                        $notifications = Notification::findOrFail($notifications_sync['attached']);
+                        foreach ($notifications as $notification) {
+                            $notifications_message .= "   ".$notification->name."\r\n";
+                        }
+                    }
+
+                    if (count($notifications_sync['detached']) > 0) {
+                        $notifications_message .= "Вам больше недоступны оповещения:\r\n";
+                        $notifications = Notification::findOrFail($notifications_sync['detached']);
+                        foreach ($notifications as $notification) {
+                            $notifications_message .= "   ".$notification->name."\r\n";
+                        }
+                        $users = User::whereHas('staff.position', function ($q) use ($position) {
+                            $q->whereId($position->id);
+                        })->get();
+                        // $delete = $position->staff();
+                        // Удаляем отключенные оповещения у пользователей
+                        foreach ($users as $user) {
+                            $user->notifications()->detach($notifications_sync['detached']);
+                        }
+                        // dd($users->where('telegram_id', '!=', null));
+                    }
+                    $notifications_message .= "\r\nОзнакомитсья с изменениями можно на вкладке \"Мой профиль\"\r\n";
+
+                    // dd($notifications_message);
+                }
+
             } else {
 
                 // Если удалили последнее оповещение для должности и пришел пустой массив
-                $position->notifications()->detach();
+                $res = $position->notifications()->detach();
+                if ($res > 0) {
+                    $notifications_message = "Изменения в оповещениях:\r\n\r\n";
+                    $notifications_message .= "Вы больше не имеете доступ ни к одному из оповещений.\r\n";
+
+                    $users = User::whereHas('staff.position', function ($q) use ($position) {
+                        $q->whereId($position->id);
+                    })->get();
+                        // $delete = $position->staff();
+                        // Удаляем отключенные оповещения у пользователей
+                    foreach ($users as $user) {
+                        $user->notifications()->detach();
+                    }
+
+                }
+                // dd($notifications_message);
+
             }
+            if (isset($notifications_message)) {
+                send_message($users->where('telegram_id', '!=', null), $notifications_message);
+            }
+
 
             // Смотрим обязанности
             if (isset($request->charges)) {
@@ -357,6 +424,21 @@ class PositionController extends Controller
                 // Если удалили последнюю обязанность для должности и пришел пустой массив
                 $position->charges()->detach();
             }
+
+            // Смотрим виджеты
+            if (isset($request->widgets)) {
+                $position->widgets()->sync($request->widgets);
+            } else {
+
+                // Если удалили последний виджет для должности и пришел пустой массив
+                $position->widgets()->detach();
+            }
+
+            // $users = User::whereHas('staff', function ($q) {
+            //     $q->whereHas('position', function ($q) {
+            //         $q->with('notifications')->where('id', $position->id);
+            //     });
+            // })->get();
 
             return redirect('/admin/positions');
         } else {

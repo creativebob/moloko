@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNotificationPosition extends Migration
+class CreateNotificationUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreateNotificationPosition extends Migration
      */
     public function up()
     {
-        Schema::create('notification_position', function (Blueprint $table) {
+        Schema::create('notification_user', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('notification_id')->nullable()->unsigned()->comment('ID оповещения');
-            $table->foreign('notification_id')->references('id')->on('notifications');
+            // $table->foreign('notification_id')->references('id')->on('notifications');
 
-            $table->integer('position_id')->nullable()->unsigned()->comment('ID должности');
-            $table->foreign('position_id')->references('id')->on('positions');
+            $table->integer('user_id')->nullable()->unsigned()->comment('ID пользователя');
+            // $table->foreign('user_id')->references('id')->on('users');
+
         });
     }
 
@@ -31,6 +32,6 @@ class CreateNotificationPosition extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('notification_user');
     }
 }
