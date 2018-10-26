@@ -47,7 +47,8 @@ Route::any('/check_class', 'ClassController@check_class');
 
 
 Route::get('/lol', function () {
-   dd(asset(''));
+   $leads = Lead::doesntHave('challenges', 'OR')->count();
+        dd($leads);
 });
 // Route::get('/columns', function () {
 //     $columns = Schema::getColumnListing('leads');

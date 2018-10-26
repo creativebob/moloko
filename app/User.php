@@ -285,11 +285,54 @@ class User extends Authenticatable
     }
 
     // Получаем задачи
+    public function challenges_work()
+    {
+        return $this->hasMany('App\Challenge', 'appointed_id')->whereNull('status');
+    }
+
+    // Получаем задачи
     public function challenges_active()
     {
         $result = $this->hasMany('App\Challenge', 'appointed_id')
         ->where('status', null)
         ->orderBy('deadline_date', 'desc');
+        return $result;
+    }
+
+    // Получаем задачи на сегодня
+    public function challenges_today()
+    {
+        return $this->hasMany('App\Challenge', 'appointed_id')->where('status', null)->whereDate('deadline_date', Carbon::today());
+    }
+
+    // Получаем задачи на завтра
+    public function challenges_tomorrow()
+    {
+        return $this->hasMany('App\Challenge', 'appointed_id')->where('status', null)->whereDate('deadline_date', Carbon::tomorrow());
+    }
+
+    // Получаем задачи На неделю
+    public function challenges_week()
+    {
+        return $this->hasMany('App\Challenge', 'appointed_id')->where('status', null)->whereDate('deadline_date', '>=', Carbon::today())->whereDate('deadline_date', '<=', Carbon::today()->addDays(7));
+    }
+
+    // Получаем задачи будущие
+    public function challenges_future()
+    {
+        return $this->hasMany('App\Challenge', 'appointed_id')->where('status', null)->whereDate('deadline_date', '>', Carbon::today()->addDays(7));
+    }
+
+    // Получаем задачи просроченные
+    public function challenges_last()
+    {
+        return $this->hasMany('App\Challenge', 'appointed_id')->where('status', null)->whereDate('deadline_date', '<', Carbon::today());
+    }
+
+    // Получаем дидов без задач
+    public function leads_without_challenges()
+    {
+        $result = $this->hasMany('App\Lead', 'manager_id')->has('challenges');
         return $result;
     }
 
@@ -337,5 +380,20 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Notification');
     }
+
+    // Лиды
+    public function leads()
+    {
+        return $this->hasMany('App\Lead', 'manager_id');
+    }
+
+    // Бюджет
+    public function badget()
+    {
+        return $this->hasMany('App\Lead', 'manager_id')->whereNotIn('stage_id', [13, 14, 1, 12]);
+    }
+
+
+
 
 }

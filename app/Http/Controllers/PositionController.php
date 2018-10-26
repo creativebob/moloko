@@ -414,7 +414,10 @@ class PositionController extends Controller
 
             }
             if (isset($notifications_message)) {
-                send_message($users->where('telegram_id', '!=', null), $notifications_message);
+                $destinations = $users->where('telegram_id', '!=', null);
+                if (isset($destinations)) {
+                    send_message($destinations, $notifications_message);
+                }
             }
 
 

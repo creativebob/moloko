@@ -43,7 +43,6 @@ class DashboardController extends Controller
         $this->all_widgets = $user->staff->first()->position->widgets->keyBy('tag');
         $widgets_list = $this->all_widgets->pluck('tag', 'id')->toArray();
 
-
         // Генерируем виджеты
         $this->addWidgets($widgets_list);
 
