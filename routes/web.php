@@ -6,8 +6,11 @@ use App\Claim;
 
 use App\Entity;
 use App\Page;
+use App\Location;
 
 use Carbon\Carbon;
+
+// use GuzzleHttp\Client;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,16 +42,157 @@ Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('ge
 // -------------------------------------- Директории ---------------------------------------------------
 Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');
 
-// Методы для парсера и одноразовые
-Route::any('/lol', function () {
+// ---------------------------- Методы для парсера и одноразовые ----------------------------------------
+Route::any('/check_class', 'ClassController@check_class');
 
-    $date = Carbon::now();
-    dd($date);
-    // And the same goes for months
-    // $date->locale('ru');
-    // echo $date->getTranslatedMonthName('MMMM YYYY'); // март
 
+Route::get('/lol', function () {
+ dd(asset(''));
 });
+// Route::get('/columns', function () {
+//     $columns = Schema::getColumnListing('leads');
+//     // dd($columns);
+//     $text = "<select>";
+//     foreach ($columns as $column) {
+//      $text .= "<option>" . $column . "</option>";
+//     }
+//     $text .= "</select>";
+//    echo $text;
+// });
+
+// Route::any('/lol', function () {
+
+//     $leads = Lead::with('location.city')
+//     ->whereHas('location', function ($q) {
+//         $q->whereNotNull('address')->whereNull('longitude')->whereNull('latitude');
+//     })
+//     // ->inRandomOrder()
+//     // ->first();
+//     ->get();
+//     // dd($lead);
+
+//     $count = 0;
+
+//     foreach ($leads as $lead) {
+
+//         // $client = new Client('https://geocode-maps.yandex.ru/1.x/?');
+//         // $request = $client->createRequest();
+//         // $request->getQuery()
+//         // ->set('geocode', $lead->location->city->name . ', ' .$lead->location->address)
+//         // ->set('format', 'json');
+
+//         $request_params = [
+//             'geocode' => $lead->location->city->name . ', ' .$lead->location->address,
+//             'format' => 'json',
+
+//         ];
+//         $params = http_build_query($request_params);
+
+//     // dd($get_params);
+
+//         $result = (file_get_contents('https://geocode-maps.yandex.ru/1.x/?' . $params));
+//     // dd($get_params);
+
+//          /** @var $response Response */
+//  $result = $request->send();
+
+//         $res = json_decode($result);
+//         if (count($res->response->GeoObjectCollection->featureMember) == 1) {
+
+//             // echo $request_params['geocode']. "\r\n";
+//             $string = $res->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
+//             $position = explode(' ', $string);
+
+//             $location = Location::whereId($lead->location_id)->update(['longitude' => $position[0], 'latitude' => $position[1]]);
+//             // dd($lead->id);
+//         // $date = $
+
+//             $count++;
+//         }
+//     }
+
+//     dd('Гатова - ' . $count);
+
+
+
+
+
+//     // $result = (file_get_contents('http://search.maps.sputnik.ru/search?'.$get_params));
+
+//     // echo $request_params['q']. "\r\n";
+
+//     // $res = json_decode($result);
+//     // dd($res->result);
+// });
+
+// Route::get('/geoposition_locations', 'ParserController@geoposition_locations')->middleware('auth');
+// Route::get('/geoposition_locations_parse', 'ParserController@geoposition_locations_parse')->middleware('auth');
+// Route::get('/city', 'ParserController@city')->middleware('auth');
+// Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
+// Route::get('/dublicator_old', 'ParserController@dublicator_old')->middleware('auth');
+// Route::get('/adder', 'ParserController@adder')->middleware('auth');
+// Route::get('/parser', 'ParserController@index')->middleware('auth');
+// Route::get('/lead_type', 'ParserController@lead_type')->middleware('auth');
+// Route::get('/old_claims', 'ParserController@old_claims')->middleware('auth');
+// Route::get('/phone_parser', 'ParserController@phone_parser')->middleware('auth');
+
+Route::get('/map', function() {
+
+    // $lead = Lead::with('location')
+    // ->whereHas('location', function ($q) {
+    //     $q->whereNotNull('latitude');
+    // })
+    // // ->inRandomOrder()
+    // // ->first();
+
+    $leads = Lead::with(['location.city', 'main_phones', 'stage', 'claims' => function ($q) {
+        $q->whereStatus(1);
+    }])
+    ->whereHas('location', function ($q) {
+        $q->whereNotNull('longitude')->whereNotNull('latitude');
+    })
+    ->where('stage_id', '!=', 13)
+    ->where('lead_type_id', '!=', 3)
+    ->get();
+    // dd($leads);
+
+    $lead = $leads->first();
+    // dd($lead);
+
+    $mass = [];
+    foreach ($leads as $lead) {
+
+        $claims_count = count($lead->claims) > 0 ? count($lead->claims) : 0;
+
+        $mass[] = [
+            'coords' => [(float)$lead->location->latitude, (float)$lead->location->longitude],
+            'info' => [
+                'name' => "<a href=" . asset('admin/leads/' . $lead->id .'/edit') . " target=_blank>" . $lead->name . "</a>",
+                'order' => $lead->case_number,
+                'phone' => decorPhone($lead->main_phone->phone),
+                'address' => 'г. ' . $lead->location->city->name . ', ' . $lead->location->address,
+                'stage' => [
+                    'id' => $lead->stage_id,
+                    'name' => $lead->stage->name,
+                ],
+                'claims_count' => $claims_count,
+            ]
+        ];
+    };
+
+    // $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
+
+    // dd($mass);
+    // $coords = $mass;
+
+    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE); 
+
+    // dd($coords);
+
+    // dd($lead);
+
+    return view('leads.map', compact('lead', 'coords'));
+})->middleware('auth');
 
 Route::get('/mounth', function() {
 
@@ -81,30 +225,6 @@ Route::get('/remove_webhook', 'TelegramController@remove_webhook')->middleware('
 // Получаем сообщение от бота
 Route::post('/telegram_message', 'TelegramController@get_message');
 Route::get('/telegram_updates', 'TelegramController@get_updates');
-
-Route::any('/check_class', 'ClassController@check_class');
-
-
-// Route::get('/columns', function () {
-//     $columns = Schema::getColumnListing('leads');
-//     // dd($columns);
-//     $text = "<select>";
-//     foreach ($columns as $column) {
-//      $text .= "<option>" . $column . "</option>";
-//     }
-//     $text .= "</select>";
-//    echo $text;
-// });
-
-Route::get('/locations', 'ParserController@locations')->middleware('auth');
-Route::get('/city', 'ParserController@city')->middleware('auth');
-// Route::get('/dublicator', 'ParserController@dublicator')->middleware('auth');
-// Route::get('/dublicator_old', 'ParserController@dublicator_old')->middleware('auth');
-// Route::get('/adder', 'ParserController@adder')->middleware('auth');
-// Route::get('/parser', 'ParserController@index')->middleware('auth');
-// Route::get('/lead_type', 'ParserController@lead_type')->middleware('auth');
-// Route::get('/old_claims', 'ParserController@old_claims')->middleware('auth');
-// Route::get('/phone_parser', 'ParserController@phone_parser')->middleware('auth');
 
 
 

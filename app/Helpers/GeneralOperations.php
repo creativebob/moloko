@@ -6,6 +6,9 @@ use Carbon\Carbon;
 
 use App\Location;
 
+use GuzzleHttp\Client;
+
+
 // Если в функцию не передать ЛИДА, то будет сформирован номер
 // для первого типа обращения на текущую дату
 function getLeadNumbers($user, $lead = null) {
@@ -137,6 +140,49 @@ function getClaimNumbers($user) {
 
 // ---------------------------------------- Локации --------------------------------------------
 
+
+// Функция получения широты и долготы в Яндекс Картах
+function yandex_geocoder ($location) {
+
+    // Если у локация не определялась, т.е. у нее не вписано количество ответов
+    if ($location->answer_count == null) {
+
+        // Формируем запрос в Яндекс Карты
+        $request_params = [
+            'geocode' => $location->city->name . ', ' .$location->address,
+            'format' => 'json',
+        ];
+        // Преобразуем его в GET строку
+        $params = http_build_query($request_params);
+        // dd($get_params);
+        // Отправляем
+        $result = (file_get_contents('https://geocode-maps.yandex.ru/1.x/?' . $params));
+        // dd($get_params);
+
+        //     $client = new \GuzzleHttp\Client();
+        // $res = $client->request('GET', 'https://geocode-maps.yandex.ru/1.x/?');
+        // echo $res->getStatusCode();
+
+        // $client = new Client(['base_uri' => 'https://geocode-maps.yandex.ru/1.x/']);
+        // $request = $client->createRequest();
+        // $request->getQuery()
+        // ->set('geocode', $location->city->name . ', ' .$location->address)
+        // ->set('format', 'json');
+
+        // $result = $request->send();
+
+        $res = json_decode($result);
+        if (count($res->response->GeoObjectCollection->featureMember) == 1) {
+
+            $string = $res->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
+            $coords = explode(' ', $string);
+            $update_location = Location::whereId($location->id)->update(['longitude' => $coords[0], 'latitude' => $coords[1], 'parse_count' => 1, 'answer_count' => 1]);
+        } else {
+            $update_location = Location::whereId($location->id)->update(['answer_count' => count($res->response->GeoObjectCollection->featureMember)]);
+        }
+    }
+}
+
 // Добавление
 function create_location($request) {
 
@@ -150,7 +196,9 @@ function create_location($request) {
     $user_id = hideGod($request->user());
 
     // Ищем или создаем локацию
-    $location = Location::firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
+    $location = Location::with('city')->firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
+
+    yandex_geocoder($location);
 
     return $location->id;
 
@@ -176,11 +224,13 @@ function update_location($request, $item) {
     $user_id = hideGod($request->user());
 
     // Ищем или создаем локацию
-    $location = Location::firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
+    $location = Location::with('city')->firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
 
     // Если пришла другая локация, то переписываем
     if ($item->location_id != $location->id) {
         $item->location_id = $location->id;
+
+        yandex_geocoder($location);
     }
 
     return $item;
