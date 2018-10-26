@@ -36,7 +36,7 @@ class TelegramController extends Controller
     
     public function set_webhook()
     {
-        $response = Telegram::setWebhook(['url' => env('SITE_DOMAIN').'/admin/telegram_message']);       
+        $response = Telegram::setWebhook(['url' => env('SITE_DOMAIN').'/admin/'.env('TELEGRAM_BOT_TOKEN')]);
         dd($response);
     }
 
