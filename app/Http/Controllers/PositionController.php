@@ -359,6 +359,10 @@ class PositionController extends Controller
                 // dd($notifications_sync);
 
                 if ((count($notifications_sync['attached']) > 0) || (count($notifications_sync['detached']) > 0)) {
+                    $users = User::whereHas('staff.position', function ($q) use ($position) {
+                        $q->whereId($position->id);
+                    })->get();
+                    
                     $notifications_message = "Изменения в оповещениях:\r\n\r\n";
 
                     if (count($notifications_sync['attached']) > 0) {
@@ -375,9 +379,7 @@ class PositionController extends Controller
                         foreach ($notifications as $notification) {
                             $notifications_message .= "   ".$notification->name."\r\n";
                         }
-                        $users = User::whereHas('staff.position', function ($q) use ($position) {
-                            $q->whereId($position->id);
-                        })->get();
+                        
                         // $delete = $position->staff();
                         // Удаляем отключенные оповещения у пользователей
                         foreach ($users as $user) {
