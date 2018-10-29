@@ -65,13 +65,14 @@ class TelegramController extends Controller
 
         // if ($update['message']['text'] == 'го') {
         // }
-        
-        // Если нажали inline-нопку:
-        if (isset($update['callback_query'])) {
 
-            $access = User::has('staff')->where('telegram_id', $update['callback_query']['message']['chat']['id'])->first();
+        $user = User::has('staff')->where('telegram_id', $update['callback_query']['message']['chat']['id'])->first();
 
-            if ($access) {
+        if ($user) {
+
+            // Если нажали inline-нопку:
+            if (isset($update['callback_query'])) {
+
 
                 switch ($update['callback_query']['data']) {
                     case 'report_day':
@@ -249,17 +250,10 @@ class TelegramController extends Controller
                 Telegram::answerCallbackQuery([
                     'callback_query_id' => $update['callback_query']['id']
                 ]);
-            } else {
-                // $message = 'Отчеты охота? Давай ДОСВИДАНИЯ!';
             }
-        }
 
-        // Если пришли координаты
-        if (isset($update['message']['location'])) {
-
-            $user = User::has('staff')->where('telegram_id', $update['message']['from']['id'])->first();
-
-            if ($user) {
+            // Если пришли координаты
+            if (isset($update['message']['location'])) {
 
                 $message = "Тебя вычислили:\r\n";
                 $message .= "Широта: " . $update['message']['location']['latitude'] . "\r\n";
@@ -270,15 +264,10 @@ class TelegramController extends Controller
                     'chat_id' => $update['message']['from']['id'],
                     'text' => $message, 
                 ]);
-            }  
-        }
+            }
 
-        // Запрос фотки
-        if ($update['message']['text'] == 'Фото') {
-
-            $user = User::with('avatar')->has('staff')->where('telegram_id', $update['message']['from']['id'])->first();
-
-            if ($user) {
+            // Запрос фотки
+            if ($update['message']['text'] == 'Фото') {
 
                 if (isset($user->photo_id)) {
                     $response = Telegram::sendPhoto([
@@ -292,11 +281,9 @@ class TelegramController extends Controller
                         'text' => 'Сожалею, ' . $user->first_name . ' ' . $user->second_name . ', но у вас нет аватарки...' 
                     ]);
                 }
-
-                
             }
         }
-
+        
         return 'ok';
     }
 
