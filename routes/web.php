@@ -252,16 +252,12 @@ Route::post('/telegram_message', 'TelegramController@get_message');
 // Route::post('/'.env('TELEGRAM_BOT_TOKEN'), 'TelegramController@get_message');
 
 
-
-
-
 Route::get('/vk', 'VkController@market')->middleware('auth');
 
 // // Ответ для VK
 // Route::post('/vk_response', function() {
 //     $resp = '569cecce'
 //     echo $resp;
-
 // });
 
 
