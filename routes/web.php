@@ -47,8 +47,8 @@ Route::any('/check_class', 'ClassController@check_class');
 
 
 Route::get('/lol', function () {
-   $leads = Lead::doesntHave('challenges', 'OR')->count();
-        dd($leads);
+
+    dd(asset('/admin/telegram_message'));
 });
 // Route::get('/columns', function () {
 //     $columns = Schema::getColumnListing('leads');
@@ -249,6 +249,7 @@ Route::get('/telegram_updates', 'TelegramController@get_updates');
 
 // Получаем сообщение от бота
 Route::post('/telegram_message', 'TelegramController@get_message');
+// Route::post('/'.env('TELEGRAM_BOT_TOKEN'), 'TelegramController@get_message');
 
 
 

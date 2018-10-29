@@ -36,7 +36,8 @@ class TelegramController extends Controller
     
     public function set_webhook()
     {
-        $response = Telegram::setWebhook(['url' => env('SITE_DOMAIN').'/admin/'.env('TELEGRAM_BOT_TOKEN')]);
+        $response = Telegram::setWebhook(['url' => asset('/admin/telegram_message')]);
+        // $response = Telegram::setWebhook(['url' => env('SITE_DOMAIN').'/admin/'.env('TELEGRAM_BOT_TOKEN')]);
         dd($response);
     }
 
@@ -241,13 +242,13 @@ class TelegramController extends Controller
                     $message .= "Задачи по активным звонкам: " . $leads_potencial_count . "\r\n";
                 }
 
-                Telegram::sendMessage([
+                $response = Telegram::sendMessage([
                     'chat_id' => $update['callback_query']['message']['chat']['id'],
                     'text' => $message, 
                 ]);
 
                 // Отправляем телеграму отчет о получении, чтоб не дублировал ответы
-                Telegram::answerCallbackQuery([
+                $response = Telegram::answerCallbackQuery([
                     'callback_query_id' => $update['callback_query']['id']
                 ]);
             }
@@ -260,7 +261,7 @@ class TelegramController extends Controller
                 $message .= "Долгота: " . $update['message']['location']['longitude'] . "\r\n";
                 $message .= "\r\nP.S. - Воронок уже выехал...\r\n";
 
-                Telegram::sendMessage([
+                $response = Telegram::sendMessage([
                     'chat_id' => $update['message']['from']['id'],
                     'text' => $message, 
                 ]);
@@ -276,15 +277,20 @@ class TelegramController extends Controller
                         'caption' => 'Приветствую, ' . $user->first_name . ' ' . $user->second_name
                     ]);
                 } else {
-                    Telegram::sendMessage([
+                    $response = Telegram::sendMessage([
                         'chat_id' => $update['message']['from']['id'],
                         'text' => 'Сожалею, ' . $user->first_name . ' ' . $user->second_name . ', но у вас нет аватарки...' 
                     ]);
                 }
             }
         }
+
+        if ($update->getMessageId()) {
+            return response('', 200);
+        }
+
         
-        return 'ok';
+        // return 'ok';
     }
 
     /**
