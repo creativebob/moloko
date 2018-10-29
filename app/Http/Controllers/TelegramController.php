@@ -284,8 +284,8 @@ class TelegramController extends Controller
                 }
             }
 
-            return 'ok';
-            // return response('ok', 200);
+            // return 'ok';
+            return response('ok', 200);
         }
 
 
