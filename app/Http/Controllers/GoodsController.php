@@ -177,8 +177,8 @@ class GoodsController extends Controller
         }
 
         // Пишем в куку страницу на которой находимся
-        $backlink = url()->previous();
-        Cookie::queue('backlink', $backlink, 1440);
+        // $backlink = url()->previous();
+        // Cookie::queue('backlink', $backlink, 1440);
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         $goods_categories_list = get_select_tree($goods_categories->keyBy('id')->toArray(), $parent_id, null, null);
@@ -335,12 +335,12 @@ class GoodsController extends Controller
 
             if ($cur_goods) {
 
-                // Пишем сессию
-                $mass = [
-                    'goods_category' => $goods_category_id,
-                ];
+                // Пишем куки
+                // $mass = [
+                //     'goods_category' => $goods_category_id,
+                // ];
 
-                Cookie::queue('conditions', $mass, 1440);
+                Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
 
                 // dd($request->quickly);
                 if ($request->quickly == 1) {
