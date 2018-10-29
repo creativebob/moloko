@@ -67,13 +67,14 @@ class TelegramController extends Controller
         // if ($update['message']['text'] == 'го') {
         // }
 
-        $user = User::has('staff')->where('telegram_id', $update['callback_query']['message']['chat']['id'])->first();
 
-        if ($user) {
 
             // Если нажали inline-нопку:
-            if (isset($update['callback_query'])) {
+        if (isset($update['callback_query'])) {
 
+            $user = User::has('staff')->where('telegram_id', $update['callback_query']['message']['chat']['id'])->first();
+
+            if ($user) {
 
                 switch ($update['callback_query']['data']) {
                     case 'report_day':
@@ -178,8 +179,6 @@ class TelegramController extends Controller
                                 }
                             }
                             $message .= "\r\n";
-
-
                         }
 
                         // Дилерское
@@ -201,7 +200,6 @@ class TelegramController extends Controller
                         $message .= "Обращений не было ...";
                         $message .= "\r\n";
                     }
-
                 }
 
                 if (count($claims) > 0) {
@@ -252,10 +250,14 @@ class TelegramController extends Controller
                     'callback_query_id' => $update['callback_query']['id']
                 ]);
             }
+        }
 
             // Если пришли координаты
-            if (isset($update['message']['location'])) {
+        if (isset($update['message']['location'])) {
 
+            $user = User::has('staff')->where('telegram_id', $update['message']['chat']['id'])->first();
+
+            if ($user) {
                 $message = "Тебя вычислили:\r\n";
                 $message .= "Широта: " . $update['message']['location']['latitude'] . "\r\n";
                 $message .= "Долгота: " . $update['message']['location']['longitude'] . "\r\n";
@@ -265,30 +267,42 @@ class TelegramController extends Controller
                     'chat_id' => $update['message']['from']['id'],
                     'text' => $message, 
                 ]);
+
+                $response = Telegram::sendLocation([
+                    'chat_id' => $update['message']['from']['id'], 
+                    'latitude' => $update['message']['location']['latitude'],
+                    'longitude' => $update['message']['location']['longitude'],
+                ]);
             }
 
+            
+        }
+
             // Запрос фотки
-            if ($update['message']['text'] == 'Фото') {
+        if ($update['message']['text'] == 'Фото') {
+
+            $user = User::has('staff')->where('telegram_id', $update['message']['chat']['id'])->first();
+
+            if ($user) {
 
                 if (isset($user->photo_id)) {
                     $response = Telegram::sendPhoto([
                         'chat_id' => $update['message']['from']['id'], 
                         'photo' => asset('storage/'. $user->company_id .'/media/users/'. $user->id .'/img/medium/'. $user->avatar->name), 
-                        'caption' => 'Приветствую, ' . $user->first_name . ' ' . $user->second_name
+                        'caption' => 'Приветствую, ' . $user->first_name . ' ' . $user->second_name,
                     ]);
                 } else {
                     $response = Telegram::sendMessage([
                         'chat_id' => $update['message']['from']['id'],
-                        'text' => 'Сожалею, ' . $user->first_name . ' ' . $user->second_name . ', но у вас нет аватарки...' 
+                        'text' => 'Сожалею, ' . $user->first_name . ' ' . $user->second_name . ', но у вас нет аватарки...',
                     ]);
                 }
             }
-
-            // return 'ok';
-            return response('ok', 200);
         }
+        
 
-
+        return 'ok';
+        // return response('ok', 200);
 
         
     }
