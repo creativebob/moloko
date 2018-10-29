@@ -30,5 +30,7 @@ class Help1Command extends Command
         }
 
         $this->replyWithMessage(compact('text'));
+
+        return 'ok';
     }
 }
