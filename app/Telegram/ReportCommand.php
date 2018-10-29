@@ -41,7 +41,7 @@ class ReportCommand extends Command
 
         $this->replyWithMessage($params);
         
-        return 'ok';
+        // return 'ok';
         
     }
 }

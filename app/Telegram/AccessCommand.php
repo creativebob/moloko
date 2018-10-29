@@ -71,7 +71,7 @@ class AccessCommand extends Command
 
         $this->replyWithMessage(compact('text'));
 
-        return 'ok';
+        // return 'ok';
 
     }
 }

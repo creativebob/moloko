@@ -284,13 +284,8 @@ class TelegramController extends Controller
                 }
             }
         }
-
-        if ($update->getMessageId()) {
-            return response('', 200);
-        }
-
         
-        // return 'ok';
+        return response('ok', 200);
     }
 
     /**
