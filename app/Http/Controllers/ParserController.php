@@ -160,6 +160,26 @@ class ParserController extends Controller
 
     }
 
+
+    public function challenges_active_count()
+    {
+
+
+    $leads = Lead::with('challenges_active')->get();
+
+        foreach ($leads as $lead) {
+            
+            if($lead->challenges_active->count() > 0){
+                $leads = Lead::where('id', $lead->id)->update(['challenges_active_count' => $lead->challenges_active->count()]);
+            }
+        }
+
+        dd('Готово!!!');
+
+    }
+
+
+
     public function index(Request $request)
     {
 

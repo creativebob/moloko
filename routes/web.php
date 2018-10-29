@@ -136,6 +136,7 @@ Route::get('/lol', function () {
 // Route::get('/lead_type', 'ParserController@lead_type')->middleware('auth');
 // Route::get('/old_claims', 'ParserController@old_claims')->middleware('auth');
 // Route::get('/phone_parser', 'ParserController@phone_parser')->middleware('auth');
+Route::get('/cac_parser', 'ParserController@challenges_active_count')->middleware('auth');
 
 Route::get('/map', function() {
 

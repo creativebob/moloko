@@ -177,6 +177,12 @@ class Lead extends Model
         return $this->morphMany('App\Challenge', 'challenges');
     }
 
+    // Получаем активные задачи
+    public function challenges_active()
+    {
+        return $this->morphMany('App\Challenge', 'challenges')->whereNull('status');
+    }
+
     public function getFirstChallengeAttribute() {
         if(!empty($this->challenges->where('status', null)->sortByDesc('deadline_date')->first()))
         {

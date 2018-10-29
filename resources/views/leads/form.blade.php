@@ -470,6 +470,9 @@
                                 @endif
                             </td>
                         </tr>
+                        <tr>
+                            <td>Активных задач: </td><td>{{ $lead->challenges_active_count or ''}}</td><td></td>
+                        </tr>
                     </table>
                 </div>
             </div>
