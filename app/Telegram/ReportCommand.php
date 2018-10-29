@@ -22,21 +22,18 @@ class ReportCommand extends Command
      */
     public function handle($arguments)
     {
-        
+
         $params['text'] = 'Выберите тип отчета:';
         $params['disable_notification'] = TRUE;
         $params['parse_mode'] = 'HTML';
-
-        $day = ['text' => 'Текущий день', 'callback_data' => 'report_day'];
-        $month = ['text' => 'Текущий месяц', 'callback_data' => 'report_month'];
-        $year = ['text' => 'Текущий год', 'callback_data' => 'report_year'];
         
         $keyboard = ['inline_keyboard' => [
-                [$day],
-                [$month],
-                [$year]
+                [['text' => 'Текущий день', 'callback_data' => 'report_day']],
+                [['text' => 'Текущий месяц', 'callback_data' => 'report_month']],
+                [['text' => 'Текущий год', 'callback_data' => 'report_year']]
             ]
         ];
+        
         $params['reply_markup'] = json_encode($keyboard, TRUE);
 
         $this->replyWithMessage($params);
