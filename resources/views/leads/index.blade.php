@@ -44,16 +44,19 @@
           <th class="td-choice">Спрос</th>
           <th class="td-badget">Сумма сделки</th>
           <th class="td-stage">Этап</th>
-          <th class="td-challenge">Задача</th>
-          <th class="td-deadline_date">Дедлайн</th>
-          <th class="td-manager">Менеджер</th>
+          <th class="td-challenge">Задачи</th>
+          {{-- <th class="td-deadline_date">Дедлайн</th> --}}
+
+          @if($lead_all_managers)
+            <th class="td-manager">Менеджер</th>
+          @endif
+
           <th class="td-control"></th>
           <th class="td-delete"></th>
         </tr>
       </thead>
       <tbody data-tbodyId="1" class="tbody-width">
         @if(!empty($leads))
-
         @foreach($leads as $lead)
         <tr class="item @if($lead->moderation == 1)no-moderation @endif stage-{{$lead->stage->id }}" id="leads-{{ $lead->id }}" data-name="{{ $lead->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
@@ -61,9 +64,9 @@
 
             <input type="checkbox" class="table-check" name="lead_id" id="check-{{ $lead->id }}"
             @if(!empty($filter['booklist']['booklists']['default']))
-            @if (in_array($lead->id, $filter['booklist']['booklists']['default'])) checked 
+              @if (in_array($lead->id, $filter['booklist']['booklists']['default'])) checked 
+              @endif
             @endif
-            @endif 
             ><label class="label-check" for="check-{{ $lead->id }}"></label>
           </td>
           <td class="td-date">
@@ -74,39 +77,18 @@
           <td class="td-case-number">{{ $lead->case_number }}</td>
           <td class="td-name">
 
-
-            {{-- @can('edit', $lead)
-            @can('update', $lead)
-            <a href="/admin/leads/{{ $lead->id }}/edit">
-              @endcan
-              @endcan
-
-              {{ $lead->name }}
-
-              @can('edit', $lead)
-              @can('update', $lead)
-            </a>
-            @endcan
-            @endcan --}}
-
             @can('view', $lead)
-            <a href="/admin/leads/{{ $lead->id }}/edit">
-              @endcan
-
+              <a href="/admin/leads/{{ $lead->id }}/edit">{{ $lead->name }}</a>
+            @else
               {{ $lead->name }}
-
-              @can('update', $lead)
-            </a>
             @endcan
-
 
             <br>
             <span class="tiny-text">{{ $lead->company_name or '' }}</span>
 
-
           </td>
           <td class="td-action">
-            @if($lead->manager->id == 1)
+            @if($lead->manager_id == 1)
 
               @if(($lead->lead_type_id == 1)&&(extra_right('lead-regular')))
                 <button class="button tiny take-lead">Принять</button>
@@ -128,33 +110,39 @@
             @if($lead->email)<br><span class="tiny-text">{{ $lead->email or '' }}</span>@endif
           </td>
           <td class="td-choice">
-            {{ $lead->choices_goods_categories->implode('name', ',') }}
+            {{-- $lead->choices_goods_categories->implode('name', ',') }}
             <br>
             {{ $lead->choices_services_categories->implode('name', ',') }}
             <br>
-            {{ $lead->choices_raws_categories->implode('name', ',') }}
+            {{ $lead->choices_raws_categories->implode('name', ',') --}}
           </td>
 
           <td class="td-badget">{{ num_format($lead->badget, 0) }}</td>
           <td class="td-stage">{{ $lead->stage->name }}</td>
           <td class="td-challenge">
-            {{ $lead->first_challenge->challenge_type->name or '' }}<br>
-            <span class="tiny-text">{{ $lead->first_challenge->appointed->second_name or ''}}</span>
+            {{-- $lead->first_challenge->challenge_type->name or '' }}<br>
+            <span class="tiny-text">{{ $lead->first_challenge->appointed->second_name or ''}}</span> --}}
+            <span class="tiny-text">{{ $lead->challenges_active_count or ''}}</span>
+
           </td>
-          <td>
+          {{-- <td>
             @if(!empty($lead->first_challenge->deadline_date))
             <span class="">{{ $lead->first_challenge->deadline_date->format('d.m.Y') }}</span><br>
             <span class="tiny-text">{{ $lead->first_challenge->deadline_date->format('H:i') }}</span> 
-            @endif
-          </td>
-          <td class="td-manager">
-            @if(!empty($lead->manager->first_name))
-            {{ $lead->manager->first_name . ' ' . $lead->manager->second_name }}
+            @endif 
+          </td> --}}
 
-            @else
-            Не назначен
-            @endif
-          </td>
+          @if($lead_all_managers)
+            <td class="td-manager">
+              @if(!empty($lead->manager->first_name))
+              {{ $lead->manager->first_name . ' ' . $lead->manager->second_name }}
+
+              @else
+              Не назначен
+              @endif
+            </td>
+          @endif
+
 
           {{-- Элементы управления --}}
           @include('includes.control.table-td', ['item' => $lead])

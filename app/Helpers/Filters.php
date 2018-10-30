@@ -698,7 +698,11 @@
 
     function getFilterManagerList(){
 
-        $managers = App\Lead::with('manager')->orderBy('name', 'asc')->get()->pluck('manager.nameReverse', 'manager.id')->toArray();
+        $leads = App\Lead::whereNull('draft')->pluck('manager_id');
+        $managers_id = $leads->unique()->toArray();
+
+        $managers = App\User::whereIn('id', $managers_id)->get()->sortByDesc('name_reverse')->pluck('nameReverse', 'id')->toArray();
+
         if(isset($managers)){asort($managers);}
         return $managers;
 

@@ -180,10 +180,13 @@ class ChallengeController extends Controller
 
         if ($challenge) {
 
+
+
             $item = $request->model::findOrFail($request->id);
 
             // Сохранение отношения
             $item->challenges()->save($challenge);
+            $item->increment('challenges_active_count');
 
             // Оповещение в telegram, если автор не является исполнителем
             if ($challenge->appointed_id != $user_id) {
@@ -210,6 +213,8 @@ class ChallengeController extends Controller
 
                 send_message($telegram_destinations, $message);
             }
+
+
 
 
             $item = $request->model::with(['challenges' => function ($query) {
@@ -256,6 +261,11 @@ class ChallengeController extends Controller
         $challenge->save();
 
         if ($challenge) {
+
+            if($challenge->challenges_type == 'App\Lead') {
+                $lead = Lead::findOrFail($challenge->challenges_id);
+                $lead->decrement('challenges_active_count');
+            }
 
             // Оповещение в telegram, если исполнитель не является автором
             if ($challenge->finisher_id != $challenge->author_id) {
@@ -320,6 +330,10 @@ class ChallengeController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $challenge = Challenge::findOrFail($id);
 
+        if($challenge->challenges_type == 'App\Lead') {
+            $lead = Lead::findOrFail($challenge->challenges_id);
+        }
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $challenge);
 
@@ -357,6 +371,8 @@ class ChallengeController extends Controller
         $challenge->delete();
 
         if ($challenge) {
+
+            $lead->decrement('challenges_active_count');
 
             $result = [
                 'error_status' => 0,

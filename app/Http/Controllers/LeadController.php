@@ -67,8 +67,8 @@ class LeadController extends Controller
     public function index(Request $request)
     {
 
-
         $result = extra_right('lead-service');
+        $lead_all_managers = extra_right('lead-all-managers');
 
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
@@ -88,27 +88,33 @@ class LeadController extends Controller
         // --------------------------------------------------------------------------------------------------------
 
         $leads = Lead::with(
-            'location.city', 
-            'choices_goods_categories', 
-            'choices_services_categories', 
-            'choices_raws_categories', 
-            'manager',
+            // 'location.city', 
+            // 'choices_goods_categories', 
+            // 'choices_services_categories', 
+            // 'choices_raws_categories', 
             'lead_type',
             'lead_method',
             'stage',
-            'challenges.challenge_type',
-            'challenges.appointed',
+            // 'challenges.challenge_type',
+            // 'challenges.appointed',
             'main_phones'
         )
+
+        ->when($lead_all_managers, function($q){
+            return $q->with(['manager' => function($query){
+                $query->select('id', 'first_name', 'second_name');
+            }]);
+        })
+            
         ->withCount(['challenges' => function ($query) {
             $query->whereNull('status');
         }])
-        ->withCount('claims')
+        // ->withCount('claims')
+        ->manager($user)
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         // ->authors($answer)
-        ->manager($user)
         ->whereNull('draft')
         ->systemItem($answer) // Фильтр по системным записям
         ->filter($request, 'city_id', 'location')
@@ -147,7 +153,7 @@ class LeadController extends Controller
 
         // Задачи пользователя
         $list_challenges = challenges($request);
-        return view('leads.index', compact('leads', 'page_info', 'user', 'filter', 'list_challenges'));
+        return view('leads.index', compact('leads', 'page_info', 'user', 'filter', 'list_challenges', 'lead_all_managers'));
     }
 
     public function leads_calls(Request $request)
