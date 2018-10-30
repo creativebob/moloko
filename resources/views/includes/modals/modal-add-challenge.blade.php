@@ -13,28 +13,32 @@
                     <label>Иcполнитель
                         {{ Form::select('appointed_id', $staff_list, $user_id) }}
                     </label>
+                    <div class="grid-x grid-margin-x">
+                        <div class="small-12 medium-6 cell">
+                            <label>Дата
+                                @include('includes.inputs.date', ['name'=>'deadline_date', 'value'=>null, 'required'=>''])
+                            </label>
+                        </div>
+
+                        <div class="small-12 medium-6 cell">
+                            <label>Время
+                                @include('includes.inputs.time', ['name'=>'deadline_time', 'value'=>null, 'required'=>'', 'default' => '10:00'])
+                            </label>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="small-12 medium-6 cell">
                     <label>Задача
                         {{ Form::select('challenges_type_id', $challenges_types_list, 2) }}
                     </label>
-
-                </div>
-            </div>
-
-            <div class="grid-x grid-margin-x">
-                <div class="small-6 medium-3 cell">
-                    <label>Дата
-                        @include('includes.inputs.date', ['name'=>'deadline_date', 'value'=>null, 'required'=>''])
-                    </label>
-                </div>
-
-                <div class="small-6 medium-2 cell">
-                    <label>Время
-                        @include('includes.inputs.time', ['name'=>'deadline_time', 'value'=>null, 'required'=>'', 'default' => '10:00'])
+                    <label>Приоритет
+                        {{ Form::select('priority_id', $priority_list, 1) }}
                     </label>
                 </div>
             </div>
+
+
             <div class="grid-x grid-margin-x">
 
                 <div class="small-12 cell">

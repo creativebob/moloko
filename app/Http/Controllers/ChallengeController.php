@@ -8,6 +8,7 @@ use App\ChallengesType;
 use App\Staffer;
 use App\Lead;
 use App\User;
+use App\Priority;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -112,6 +113,9 @@ class ChallengeController extends Controller
         $answer_staff = operator_right('staff', false, 'index');
 
         // Главный запрос
+        
+        $priority_list = Priority::pluck('name', 'id');
+
         $staff = Staffer::with('user')
         ->moderatorLimit($answer_staff)
         ->companiesLimit($answer_staff)
@@ -133,7 +137,7 @@ class ChallengeController extends Controller
         $user = $request->user();
         $user_id = $user->id;
 
-        return view('includes.modals.modal-add-challenge', compact('challenge', 'challenges_types_list', 'staff_list', 'user_id'));
+        return view('includes.modals.modal-add-challenge', compact('challenge', 'challenges_types_list', 'staff_list', 'priority_list', 'user_id'));
     }
 
     public function store(Request $request)
@@ -173,14 +177,13 @@ class ChallengeController extends Controller
         $challenge->challenges_type_id = $request->challenges_type_id;
         $challenge->appointed_id = $request->appointed_id;
         $challenge->description = $request->description;
+        $challenge->priority_id = $request->priority_id;
 
         $challenge->company_id = $company_id;
         $challenge->author_id = $user_id;
         $challenge->save();
 
         if ($challenge) {
-
-
 
             $item = $request->model::findOrFail($request->id);
 
@@ -213,9 +216,6 @@ class ChallengeController extends Controller
 
                 send_message($telegram_destinations, $message);
             }
-
-
-
 
             $item = $request->model::with(['challenges' => function ($query) {
                 $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');

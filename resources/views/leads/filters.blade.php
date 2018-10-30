@@ -73,6 +73,8 @@
                 <option value="0">Нет активных задач</option>
                 <option value="1">Одна задача</option>
                 <option value="2">Две задачи</option>
+                <option value="3">Три задачи</option>
+                <option value="4">Четыре задачи</option>
               </select>    
             </div>
           </div>

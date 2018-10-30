@@ -115,9 +115,6 @@ Route::get('/lol', function () {
 //     dd('Гатова - ' . $count);
 
 
-
-
-
 //     // $result = (file_get_contents('http://search.maps.sputnik.ru/search?'.$get_params));
 
 //     // echo $request_params['q']. "\r\n";

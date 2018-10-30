@@ -121,6 +121,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LeadMethodsTableSeeder::class);
 
         $this->call(ChallengesTypesTableSeeder::class);
+        $this->call(PrioritiesTableSeeder::class);
 
         $this->call(StagesTableSeeder::class);
 

@@ -1771,6 +1771,14 @@ a#task-toggle {
   border-left: 6px solid #f00;
 }
 
+.priority_2 {
+  padding: 0px 8px 2px 8px;
+  color: #000;
+  background-color: #cab00a;
+  margin: 0px 5px;
+  border-radius: 2px;
+}
+
 .task-manager {
   position: fixed;
   height: 100%;

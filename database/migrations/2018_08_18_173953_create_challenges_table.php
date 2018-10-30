@@ -36,6 +36,10 @@ class CreateChallengesTable extends Migration
             $table->foreign('challenges_type_id')->references('id')->on('challenges_types');
 
             $table->integer('status')->nullable()->unsigned()->comment('Статус');
+
+            $table->integer('priority_id')->nullable()->unsigned()->comment('Приоритет');
+            $table->foreign('priority_id')->references('id')->on('priorities');
+
             $table->integer('delegate_status')->nullable()->unsigned()->comment('Статус делигирования');
 
             $table->datetime('deadline_date')->nullable()->comment('Дата дедлайна');

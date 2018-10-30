@@ -170,8 +170,12 @@ class ParserController extends Controller
         foreach ($leads as $lead) {
             
             if($lead->challenges_active->count() > 0){
-                $leads = Lead::where('id', $lead->id)->update(['challenges_active_count' => $lead->challenges_active->count()]);
-            }
+                $leads = Lead::where('id', $lead->id)
+                ->update(['challenges_active_count' => $lead->challenges_active->count()]);
+            } else {
+                $leads = Lead::where('id', $lead->id)
+                ->update(['challenges_active_count' => 0]);
+            };
         }
 
         dd('Готово!!!');

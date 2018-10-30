@@ -24,7 +24,9 @@ use Carbon\Carbon;
         ->systemItem($answer_challenge) // Фильтр по системным записям
         ->where('status', null)
         // ->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'))
+        ->orderBy('priority_id', 'desc')
         ->orderBy('deadline_date', 'asc')
+
         ->get();
 
         // dd($challenges);
