@@ -66,6 +66,18 @@
           </div>
         </div>
 
+        <div class="small-12 cell">
+          <div class="grid-x">
+            <div class="small-12 cell checkbox checkboxer">
+              <select name="challenges_active_count">
+                <option value="0">Нет активных задач</option>
+                <option value="1">Одна задача</option>
+                <option value="2">Две задачи</option>
+              </select>    
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 

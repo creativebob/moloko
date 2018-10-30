@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\ValueFilter;
 
 class Lead extends Model
 {
@@ -56,6 +57,7 @@ class Lead extends Model
     use Filter;
     use BooklistFilter;
     use DateIntervalFilter;
+    use ValueFilter;
 
     // public $timestamps = false;
 

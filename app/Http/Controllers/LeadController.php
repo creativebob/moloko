@@ -122,6 +122,7 @@ class LeadController extends Controller
         ->filter($request, 'manager_id')
         ->filter($request, 'lead_type_id')
         ->filter($request, 'lead_method_id')
+        ->valueFilter($request, 'challenges_active_count')
         ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
         ->orderBy('created_at', 'desc')
