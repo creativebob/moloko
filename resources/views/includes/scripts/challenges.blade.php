@@ -91,11 +91,9 @@
 			type: "DELETE",
 			success: function(data){
 				var result = $.parseJSON(data);
-
-				get_challenges();
-
           		if (result['error_status'] == 0) {
           			$('#challenges-' + id).remove();
+          			get_challenges();
           		} else {
           			alert(result['error_message']);
           		};

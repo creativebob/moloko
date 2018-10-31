@@ -1,5 +1,6 @@
 <?php
 use App\Challenge;
+use App\Lead;
 use Carbon\Carbon;
 
     function challenges() {
@@ -8,7 +9,7 @@ use Carbon\Carbon;
         $user_id = $user->id;
         $answer_challenge = operator_right('challenges', false, 'index');
 
-        $challenges = Challenge::with(
+        $list_challenges = Challenge::with(
             'author',
             'appointed',
             'finisher',
@@ -23,32 +24,41 @@ use Carbon\Carbon;
         ->authors($answer_challenge)
         ->systemItem($answer_challenge) // Фильтр по системным записям
         ->where('status', null)
-        // ->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'))
         ->orderBy('priority_id', 'desc')
         ->orderBy('deadline_date', 'asc')
+        ->get()
+        ->groupBy([
+            function($challenges) use ($user_id) {
 
-        ->get();
+                if($challenges->appointed_id == $user_id){
+                    return 'for_me';
+                }
 
-        // dd($challenges);
+                if(($challenges->author_id == $user_id) && ($challenges->appointed_id != $user_id)){
+                    return 'from_me';
+                }
 
-        // $challenges->transform(function ($item, $key) {
-        //     return $item->challenges->name . ' Добавка';
-        // });
+            }, 
+            function($challenges) {
 
+                if($challenges->deadline_date < Carbon::today()){
+                    return 'last'; // А это то-же поле по нему мы и будем группировать    
+                }
+                
+                if($challenges->deadline_date->format('d.m.Y') == Carbon::today()->format('d.m.Y')){
+                    return 'today'; // А это то-же поле по нему мы и будем группировать    
+                }
 
-        // dd($challenges);
+                if($challenges->deadline_date > Carbon::today()){
+                    return 'future'; // А это то-же поле по нему мы и будем группировать    
+                }
 
-        // dd($list_challenges);
-        // 
-        $list_challenges = [];
-        
-        $list_challenges['for_me'] = $challenges->where('appointed_id', $user_id)->groupBy(function($challenges) {
-            return Carbon::parse($challenges->deadline_date)->format('d.m.Y'); // А это то-же поле по нему мы и будем группировать
-        });
+            }, 
+            function($challenges) {
+                return Carbon::parse($challenges->deadline_date)->format('d.m.Y'); 
+            }
+        ]);
 
-        $list_challenges['from_me'] = $challenges->where('author_id', $user_id)->where('appointed_id','!=', $user_id)->groupBy(function($challenges) {
-            return Carbon::parse($challenges->deadline_date)->format('d.m.Y'); // А это то-же поле по нему мы и будем группировать
-        });
 
         // dd($list_challenges);
         return $list_challenges;

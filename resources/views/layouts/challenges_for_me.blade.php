@@ -1,541 +1,138 @@
-@php 
-	$last_challenges_count = 0;
-	$today_challenges_count = 0;
-	$tomorrow_challenges_count = 0;
 
-	$last_challenges_count_from = 0;
-	$today_challenges_count_from = 0;
-	$tomorrow_challenges_count_from = 0;
-@endphp
-
+@if(!empty($list_challenges))
 
 <!-- Задачи мне -->
-<div class="tabs-panel is-active" id="task-panel2">
+<div class="tabs-panel is-active" id="tasks-for-me">
 
 	<div class="grid-x tabs-wrap">
 		<div class="small-12 cell">
-			<ul class="tabs-period-task" data-tabs id="tabs-period-forme">
+			<ul class="tabs-period-task" data-tabs id="tabs-period-for-me">
 				<li class="tabs-title">
-					<span class="tab-challanges-count" id="last-challenges-count"></span>
-					<a href="#last" id="link_last">Прошлые</a>
+					<span class="tab-challanges-count" id="last-challenges-count">
+						@if(isset($list_challenges['for_me']['last']))
+							{{ $list_challenges['for_me']['last']->flatten(1)->count() }}
+						@else 0 @endif
+					</span>
+					<a data-tabs-target="last">Прошлые</a>
 				</li>
 				<li class="tabs-title is-active">
-					<span class="tab-challanges-count" id="today-challenges-count"></span>
-					<a href="#today" id="link_today" aria-selected="true">Сегодня</a>
+					<span class="tab-challanges-count" id="today-challenges-count">
+						@if(isset($list_challenges['for_me']['today']))
+							{{ $list_challenges['for_me']['today']->flatten(1)->count() }}
+						@else 0 @endif
+					</span>
+					<a data-tabs-target="today" aria-selected="true">Сегодня</a>
 				</li>
 				<li class="tabs-title">
-					<span class="tab-challanges-count" id="tomorrow-challenges-count"></span>
-					<a href="#tomorrow" id="link_tomorrow">Будущие</a>
+					<span class="tab-challanges-count" id="tomorrow-challenges-count">
+						@if(isset($list_challenges['for_me']['future']))
+							{{ $list_challenges['for_me']['future']->flatten(1)->count() }}
+						@else 0 @endif
+					</span>
+					<a data-tabs-target="tomorrow">Будущие</a>
 				</li>
 			</ul>
 		</div>
 	</div>
 
-	<div class="tabs-content" data-tabs-content="tabs-period-forme">
+	<div class="tabs-content" data-tabs-content="tabs-period-for-me">
 
 		<div class="tabs-panel" id="last">
 			<ul class="for_scroll my-task">
-
-				{{-- Запускаем если пришли задачи --}}
-				@if(!empty($list_challenges['for_me']))
-
-					{{-- Перебераем по дням  --}}
-					@foreach($list_challenges['for_me'] as $date => $challenge_date)
-
-						{{-- Если есть дата  --}}
-						@if(!empty($challenge_date))
-
-							{{-- Если дата прошедших дней --}}
-							@if(Carbon\Carbon::createFromFormat('d.m.Y', $date) < Carbon\Carbon::today())
-
-								<li class="challenge_date">
-									<div class="task-head">
-										<div class="sprite-16 icon-task"></div>
-										<div class="task-date">
-											@if($date == Carbon\Carbon::now()->format('d.m.Y'))
-												Сегодня: {{ $date }}
-											@elseif($date == Carbon\Carbon::now()->addDays(1)->format('d.m.Y'))
-												Завтра: {{ $date }}
-											@elseif($date == Carbon\Carbon::now()->addDays(-1)->format('d.m.Y'))
-												Вчерашние: {{ $date }}
-											@else
-												{{ $date }}
-											@endif
-										</div>
-										<div class="task-count">{{ $challenge_date->count() }}</div>
-										<hr/>
-									</div>
-
-									{{-- Если есть задача в этой дате  --}}
-									@if(!empty($challenge_date))
-										@foreach($challenge_date as $challenge)
-
-											{{-- Считаем количество задач --}}
-											@php $last_challenges_count = $last_challenges_count + 1; @endphp
-
-											<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
-												{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
-												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span>
-												<span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
-
-												@if($challenge->priority_id == 2)<span class="priority_2">Молния</span>@endif
-
-												<p class="task-target">{{ $challenge->description or ''}}</p>
-												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
-													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
-													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li> --}}
-													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
-													<li><span class="task-data">Товар: </span>
-													{{-- 
-														{{ $challenge->challenges->choices_goods_categories->implode('name', ', ') or ''}}
-														{{ $challenge->challenges->choices_services_categories->implode('name', ', ') or ''}}
-														{{ $challenge->challenges->choices_raws_categories->implode('name', ', ')  or ''}}</li>
-													--}}
-													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address or ''}}</li> --}}
-												</ul>
-
-												{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
-											</div>
-
-										@endforeach								
-									@endif
-								</li>
-
-							@endif
-
-						@endif
-					@endforeach
+				{{-- Мои просроченные задачи --}}
+				@if(isset($list_challenges['for_me']['last']))
+					@include('layouts.list_challenges', ['list_challenges' => $list_challenges['for_me']['last']])
 				@endif
-			</ul>
-			<input name="last_challenges_count" type="hidden" value="{{ $last_challenges_count }}">								
+			</ul>							
 		</div>
 
 		<div class="tabs-panel is-active" id="today">
 			<ul class="for_scroll my-task">
-				{{-- Запускаем если пришли задачи --}}
-				@if(!empty($list_challenges['for_me']))
-
-					{{-- Перебераем по дням  --}}
-					@foreach($list_challenges['for_me'] as $date => $challenge_date)
-
-						{{-- Если есть дата  --}}
-						@if(!empty($challenge_date))
-
-							{{-- Если дата сегодняшняя --}}
-							@if($date == Carbon\Carbon::now()->format('d.m.Y'))
-
-								<li class="challenge_date">
-									<div class="task-head">
-										<div class="sprite-16 icon-task"></div>
-										<div class="task-date">
-										@if($date == Carbon\Carbon::now()->format('d.m.Y'))
-											Сегодня: {{ $date }}
-										@elseif($date == Carbon\Carbon::now()->addDays(1)->format('d.m.Y'))
-											Завтра: {{ $date }}
-										@elseif($date == Carbon\Carbon::now()->addDays(-1)->format('d.m.Y'))
-											Вчерашние: {{ $date }}
-										@else
-											{{ $date }}
-										@endif
-
-										</div>
-										<div class="task-count">{{ $challenge_date->count() }}</div>
-										<hr />
-									</div>
-
-									{{-- Если есть задача в этой дате  --}}
-									@if(!empty($challenge_date))
-										@foreach($challenge_date as $challenge)
-
-											{{-- Считаем количество задач --}}
-											@php $today_challenges_count = $today_challenges_count + 1; @endphp
-
-											<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
-												{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
-												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span>
-												<span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
-												@if($challenge->priority_id == 2)<span class="priority_2">Молния</span>@endif
-
-												<p class="task-target">{{ $challenge->description or ''}}</p>
-												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
-													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
-													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li> --}}
-													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
-													<li><span class="task-data">Товар: </span>
-													{{-- 
-														{{ $challenge->challenges->choices_goods_categories->implode('name', ', ') }}
-														{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
-														{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
-													--}}
-													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
-												</ul>
-
-												{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
-											</div>
-
-										@endforeach
-									@endif
-								</li>
-
-							@endif
-
-						@endif
-					@endforeach
+				{{-- Мои задачи на сегодня --}}
+				@if(isset($list_challenges['for_me']['today']))
+					@include('layouts.list_challenges', ['list_challenges' => $list_challenges['for_me']['today']])
 				@endif
-			</ul>
-			<input name="today_challenges_count" type="hidden" value="{{ $today_challenges_count }}">				
+			</ul>				
 		</div>
 
 		<div class="tabs-panel" id="tomorrow">
 			<ul class="for_scroll my-task">
-				{{-- Запускаем если пришли задачи --}}
-				@if(!empty($list_challenges['for_me']))
-
-					{{-- Перебераем по дням  --}}
-					@foreach($list_challenges['for_me'] as $date => $challenge_date)
-
-						{{-- Если есть дата  --}}
-						@if(!empty($challenge_date))
-
-							{{-- Если дата будущая --}}
-							@if(Carbon\Carbon::createFromFormat('d.m.Y', $date) > Carbon\Carbon::tomorrow())
-
-								<li class="challenge_date">
-									<div class="task-head">
-										<div class="sprite-16 icon-task"></div>
-										<div class="task-date">
-										@if($date == Carbon\Carbon::now()->format('d.m.Y'))
-											Сегодня: {{ $date }}
-										@elseif($date == Carbon\Carbon::now()->addDays(1)->format('d.m.Y'))
-											Завтра: {{ $date }}
-										@elseif($date == Carbon\Carbon::now()->addDays(-1)->format('d.m.Y'))
-											Вчерашние: {{ $date }}
-										@else
-											{{ $date }}
-										@endif
-
-										</div>
-										<div class="task-count">{{ $challenge_date->count() }}</div>
-										<hr />
-									</div>
-
-									{{-- Если есть задача в этой дате  --}}
-									@if(!empty($challenge_date))
-										@foreach($challenge_date as $challenge)
-
-											{{-- Считаем количество задач --}}
-											@php $tomorrow_challenges_count = $tomorrow_challenges_count + 1; @endphp
-
-											<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
-												{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
-												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span>
-												<span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
-												@if($challenge->priority_id == 2)<span class="priority_2">Молния</span>@endif
-
-												<p class="task-target">{{ $challenge->description or ''}}</p>
-												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
-													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
-													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li> --}}
-													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
-													<li><span class="task-data">Товар: </span>
-													{{-- 
-														{{ $challenge->challenges->choices_goods_categories->implode('name', ', ') }}
-														{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
-														{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
-													--}}
-													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
-												</ul>
-
-												{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
-											</div>
-										@endforeach
-									@endif
-								</li>
-
-							@endif
-
-						@endif
-					@endforeach
+				{{-- Мои задачи на завтра --}}
+				@if(isset($list_challenges['for_me']['future']))
+					@include('layouts.list_challenges', ['list_challenges' => $list_challenges['for_me']['future']])
 				@endif
-			</ul>
-			<input name="tomorrow_challenges_count" type="hidden" value="{{ $tomorrow_challenges_count }}">										
+			</ul>									
 		</div>
 
 	</div>
 </div>
 
+
+
 <!-- Я поставил -->
-<div class="tabs-panel" id="task-panel1">
+<div class="tabs-panel" id="tasks-from-me">
 
 	<div class="grid-x tabs-wrap">
 		<div class="small-12 cell">
-			<ul class="tabs-period-task" data-tabs id="tabs-period-fromme">
+			<ul class="tabs-period-task" data-tabs id="tabs-period-from-me">
 				<li class="tabs-title">
-					<span class="tab-challanges-count" id="last-challenges-count-from"></span>
-					<a href="#last_from">Прошлые</a>
+					<span class="tab-challanges-count" id="last-challenges-count-from">
+						@if(isset($list_challenges['from_me']['last']))
+							{{ $list_challenges['from_me']['last']->flatten(1)->count() }}
+						@else 0 @endif
+					</span>
+					<a data-tabs-target="last_from">Прошлые</a>
 				</li>
 				<li class="tabs-title is-active">
-					<span class="tab-challanges-count" id="today-challenges-count-from"></span>
-					<a href="#today_from" aria-selected="true">Сегодня</a>
+					<span class="tab-challanges-count" id="today-challenges-count-from">
+						@if(isset($list_challenges['from_me']['today']))
+							{{ $list_challenges['from_me']['today']->flatten(1)->count() }}
+						@else 0 @endif
+					</span>
+					<a data-tabs-target="today_from" aria-selected="true">Сегодня</a>
 				</li>
 				<li class="tabs-title">
-					<span class="tab-challanges-count" id="tomorrow-challenges-count-from"></span>
-					<a href="#tomorrow_from">Будущие</a>
+					<span class="tab-challanges-count" id="tomorrow-challenges-count-from">
+						@if(isset($list_challenges['from_me']['future']))
+							{{ $list_challenges['from_me']['future']->flatten(1)->count() }}
+						@else 0 @endif
+					</span>
+					<a data-tabs-target="tomorrow_from">Будущие</a>
 				</li>
 			</ul>
 		</div>
 	</div>
 
-	<div class="tabs-content" data-tabs-content="tabs-period-fromme">
+	<div class="tabs-content" data-tabs-content="tabs-period-from-me">
 
 		<div class="tabs-panel" id="last_from">
 			<ul class="for_scroll my-task">
-
-				{{-- Запускаем если пришли задачи --}}
-				@if(!empty($list_challenges['from_me']))
-
-					{{-- Перебераем по дням  --}}
-					@foreach($list_challenges['from_me'] as $date => $challenge_date)
-
-						{{-- Если есть дата  --}}
-						@if(!empty($challenge_date))
-
-							{{-- Если дата прошедших дней --}}
-							@if(Carbon\Carbon::createFromFormat('d.m.Y', $date) < Carbon\Carbon::today())
-
-								<li class="challenge_date">
-									<div class="task-head">
-										<div class="sprite-16 icon-task"></div>
-										<div class="task-date">
-										@if($date == Carbon\Carbon::now()->format('d.m.Y'))
-											Сегодня: {{ $date }}
-										@elseif($date == Carbon\Carbon::now()->addDays(1)->format('d.m.Y'))
-											Завтра: {{ $date }}
-										@elseif($date == Carbon\Carbon::now()->addDays(-1)->format('d.m.Y'))
-											Вчерашние: {{ $date }}
-										@else
-											{{ $date }}
-										@endif
-
-										</div>
-										<div class="task-count">{{ $challenge_date->count() }}</div>
-										<hr />
-									</div>
-
-									{{-- Если есть задача в этой дате  --}}
-									@if(!empty($challenge_date))
-										@foreach($challenge_date as $challenge)
-
-											{{-- Считаем количество задач --}}
-											@php $last_challenges_count_from = $last_challenges_count_from + 1; @endphp
-
-											<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
-												{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
-												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span>
-												<span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
-												@if($challenge->priority_id == 2)<span class="priority_2">Молния</span>@endif
-
-												<span class="task-appointed">({{ $challenge->appointed->name or ''}})</span>
-												<p class="task-target">{{ $challenge->description or ''}}</p>
-												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
-													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
-													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li> --}}
-													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
-													<li><span class="task-data">Товар: </span>
-													{{-- 
-														{{ $challenge->challenges->choices_goods_categories->implode('name', ', ') }}
-														{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
-														{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
-													--}}
-													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
-												</ul>
-
-												{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
-											</div>
-
-
-										@endforeach
-									@endif
-
-								</li>
-
-							@endif
-
-						@endif
-					@endforeach
+				{{-- Задачи которые ставил я просрочили --}}
+				@if(isset($list_challenges['from_me']['last']))
+					@include('layouts.list_challenges', ['list_challenges' => $list_challenges['from_me']['last']])
 				@endif
-			</ul>
-			<input name="last_challenges_count_from" type="hidden" value="{{ $last_challenges_count_from }}">										
+			</ul>										
 		</div>
 
 
 		<div class="tabs-panel is-active" id="today_from">
 			<ul class="for_scroll my-task">
-				{{-- Запускаем если пришли задачи --}}
-				@if(!empty($list_challenges['from_me']))
-
-					{{-- Перебераем по дням  --}}
-					@foreach($list_challenges['from_me'] as $date => $challenge_date)
-
-						{{-- Если есть дата  --}}
-						@if(!empty($challenge_date))
-
-							{{-- Если дата сегодняшняя --}}
-							@if($date == Carbon\Carbon::now()->format('d.m.Y'))
-
-								<li class="challenge_date">
-									<div class="task-head">
-										<div class="sprite-16 icon-task"></div>
-										<div class="task-date">
-										@if($date == Carbon\Carbon::now()->format('d.m.Y'))
-											Сегодня: {{ $date }}
-										@elseif($date == Carbon\Carbon::now()->addDays(1)->format('d.m.Y'))
-											Завтра: {{ $date }}
-										@elseif($date == Carbon\Carbon::now()->addDays(-1)->format('d.m.Y'))
-											Вчерашние: {{ $date }}
-										@else
-											{{ $date }}
-										@endif
-
-										</div>
-										<div class="task-count">{{ $challenge_date->count() }}</div>
-										<hr />
-									</div>
-
-									{{-- Если есть задача в этой дате  --}}
-									@if(!empty($challenge_date))
-										@foreach($challenge_date as $challenge)
-
-											{{-- Считаем количество задач --}}
-											@php $today_challenges_count_from = $today_challenges_count_from + 1; @endphp
-
-											<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
-												{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
-												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span>
-												<span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
-												@if($challenge->priority_id == 2)<span class="priority_2">Молния</span>@endif
-
-												<span class="task-appointed">({{ $challenge->appointed->name or ''}})</span>
-												<p class="task-target">{{ $challenge->description or ''}}</p>
-												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
-													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
-													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li> --}}
-													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
-													<li><span class="task-data">Товар: </span>
-													{{-- 
-														{{ $challenge->challenges->choices_goods_categories->implode('name', ', ') }}
-														{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
-														{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
-													--}}
-													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li> --}}
-												</ul>
-
-												{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
-											</div>
-
-										@endforeach
-									@endif
-								</li>
-
-
-							@endif
-
-
-						@endif
-					@endforeach
+				{{-- Задачи которые ставил на сегодня --}}
+				@if(isset($list_challenges['from_me']['today']))
+					@include('layouts.list_challenges', ['list_challenges' => $list_challenges['from_me']['today']])
 				@endif
-			</ul>
-			<input name="today_challenges_count_from" type="hidden" value="{{ $today_challenges_count_from }}">				
+			</ul>			
 		</div>
 
 
 		<div class="tabs-panel" id="tomorrow_from">
 			<ul class="for_scroll my-task">
-				{{-- Запускаем если пришли задачи --}}
-				@if(!empty($list_challenges['from_me']))
-
-					{{-- Перебераем по дням  --}}
-					@foreach($list_challenges['from_me'] as $date => $challenge_date)
-
-						{{-- Если есть дата  --}}
-						@if(!empty($challenge_date))
-
-							{{-- Если дата будущая --}}
-							@if(Carbon\Carbon::createFromFormat('d.m.Y', $date) > Carbon\Carbon::tomorrow())
-
-								<li class="challenge_date">
-									<div class="task-head">
-										<div class="sprite-16 icon-task"></div>
-										<div class="task-date">
-										@if($date == Carbon\Carbon::now()->format('d.m.Y'))
-											Сегодня: {{ $date }}
-										@elseif($date == Carbon\Carbon::now()->addDays(1)->format('d.m.Y'))
-											Завтра: {{ $date }}
-										@elseif($date == Carbon\Carbon::now()->addDays(-1)->format('d.m.Y'))
-											Вчерашние: {{ $date }}
-										@else
-											{{ $date }}
-										@endif
-
-										</div>
-										<div class="task-count">{{ $challenge_date->count() }}</div>
-										<hr />
-									</div>
-
-									{{-- Если есть задача в этой дате  --}}
-									@if(!empty($challenge_date))
-										@foreach($challenge_date as $challenge)
-
-											{{-- Считаем количество задач --}}
-											@php $tomorrow_challenges_count_from = $tomorrow_challenges_count_from + 1; @endphp
-
-											<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
-												{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
-												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span>
-												<span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
-												@if($challenge->priority_id == 2)<span class="priority_2">Молния</span>@endif
-
-
-												<span class="task-appointed">({{ $challenge->appointed->name or ''}})</span>
-												<p class="task-target">{{ $challenge->description or ''}}</p>
-												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number or '' }}</a></li>
-													<li><span class="task-data">Клиент: </span>{{ $challenge->challenges->name }}</li>
-													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->challenges->phone) }}</li> --}}
-													<li><span class="task-data">Чек: </span>{{ num_format($challenge->challenges->badget, 0) }}</li>
-													<li><span class="task-data">Товар: </span>
-													{{-- 
-														{{ $challenge->challenges->choices_goods_categories->implode('name', ', ') }}
-														{{ $challenge->challenges->choices_services_categories->implode('name', ', ') }}
-														{{ $challenge->challenges->choices_raws_categories->implode('name', ', ') }}</li>
-													--}}
-													{{-- <li><span class="task-data">Адрес: </span>{{ $challenge->challenges->address }}</li>
-												</ul> --}}
-
-												{{--<a href="#" class="task-button button">ГОТОВО</a>--}}
-											</div>
-										@endforeach
-									@endif
-
-						
-								</li>
-
-
-							@endif
-
-
-						@endif
-					@endforeach
+				{{-- Задачи которые ставил на будущее --}}
+				@if(isset($list_challenges['from_me']['future']))
+					@include('layouts.list_challenges', ['list_challenges' => $list_challenges['from_me']['future']])
 				@endif
-
-
-			</ul>
-			<input name="tomorrow_challenges_count_from" type="hidden" value="{{ $tomorrow_challenges_count_from }}">								
+			</ul>							
 		</div>
 	</div>
 </div>
+@endif
