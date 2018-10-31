@@ -94,7 +94,8 @@ class Goods extends Model
     //     return $this->belongsToMany('App\Article', 'article_values', 'article_id', 'entity_id')->where('entity', 'articles')->withPivot('entity', 'value');
     // }
 
-    public function raws_compositions_values()
+    // Состав (сырье)
+    public function compositions()
     {
         return $this->morphedByMany('App\RawsArticle', 'goods_values')->withPivot('value');
     }

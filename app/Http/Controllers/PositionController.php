@@ -238,7 +238,7 @@ class PositionController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $position = Position::with('roles', 'charges', 'widgets')->moderatorLimit($answer)->findOrFail($id);
+        $position = Position::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $position);

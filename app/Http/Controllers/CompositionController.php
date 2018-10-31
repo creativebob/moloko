@@ -95,9 +95,10 @@ class CompositionController extends Controller
 
         $composition = RawsArticle::with(['raws_product.unit'])->findOrFail($request->id);
 
-        return view($request->entity.'.compositions.composition-input', compact('composition'));
+        return view($request->entity.'.compositions.raws.composition_input', compact('composition'));
     }
     
+    // Добавляем состав
     public function ajax_add_relation(Request $request)
     {
 
@@ -106,9 +107,10 @@ class CompositionController extends Controller
 
         $composition = RawsArticle::findOrFail($request->id);
 
-        return view($request->entity.'.compositions.composition-input', compact('composition'));
+        return view($request->entity.'.compositions.composition_tr', compact('composition'));
     }
 
+    // Удаляем состав
     public function ajax_delete_relation(Request $request)
     {
 

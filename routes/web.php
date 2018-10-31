@@ -48,7 +48,7 @@ Route::any('/check_class', 'ClassController@check_class');
 
 Route::get('/lol', function () {
 
-    dd(asset('/admin/telegram_message'));
+    dd(str_slug('кек лол чебурек'));
 });
 // Route::get('/columns', function () {
 //     $columns = Schema::getColumnListing('leads');
@@ -123,6 +123,7 @@ Route::get('/lol', function () {
 //     // dd($res->result);
 // });
 
+Route::get('/entity_page', 'ParserController@entity_page')->middleware('auth');
 // Route::get('/geoposition_locations', 'ParserController@geoposition_locations')->middleware('auth');
 // Route::get('/geoposition_locations_parse', 'ParserController@geoposition_locations_parse')->middleware('auth');
 // Route::get('/city', 'ParserController@city')->middleware('auth');

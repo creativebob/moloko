@@ -61,6 +61,12 @@ class RawsProduct extends Model
         return $this->hasMany('App\RawsArticle');
     }
 
+    // Сырье
+    public function raws()
+    {
+        return $this->hasManyThrough('App\Raw', 'App\RawsArticle');
+    }
+
     public function photo()
     {
         return $this->belongsTo('App\Photo');

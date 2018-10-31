@@ -14,7 +14,8 @@ use App\Photo;
 use App\UnitsCategory;
 use App\Unit;
 use App\Catalog;
-use App\RawsCategory;
+
+use App\RawsArticle;
 use App\EntitySetting;
 use App\ArticleValue;
 
@@ -370,38 +371,34 @@ class GoodsController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_goods = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $cur_goods = Goods::with(['goods_article.goods_product.goods_category' => function ($query) {
-            $query->with(['metrics.property', 'compositions.raws_product.unit'])
-            ->withCount('metrics', 'compositions');
-        }, 'album.photos', 'company.manufacturers', 'metrics_values', 'raws_compositions_values.raws_product.unit'])
-        ->withCount(['metrics_values', 'raws_compositions_values'])
+        $cur_goods = Goods::with([
+            'goods_article.goods_product.goods_category' => function ($query) {
+                $query->with([
+                    'metrics.property',
+                    'compositions.raws_product.unit'
+                ])
+                ->withCount('metrics', 'compositions');
+            },
+            'album.photos',
+            'company.manufacturers',
+            'metrics_values',
+            'compositions.raws_product.unit'
+        ])
+        ->where(function ($q) {
+            $q->when(request('filter_by') == 'likes', function ($q) {
+                return $q->where('likes', '>', request('likes_amount', 0));
+            });
+            $q->when(request('filter_by') == 'date', function ($q) {
+                return $q->orderBy('created_at', request('ordering_rule', 'desc'));
+            });
+        })
+        ->withCount(['metrics_values', 'compositions'])
         ->moderatorLimit($answer_goods)
         ->findOrFail($id);
         // dd($cur_goods);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
-
-        if ($cur_goods->draft == 1) {
-
-            $cur_goods_compositions = [];
-            foreach ($cur_goods->raws_compositions_values as $composition) {
-                $cur_goods_compositions[] = $composition->id;
-            }
-        } else {
-
-            $answer_goods_categories = operator_right('goods_categories', false, 'index');
-
-            $goods_category = GoodsCategory::with(['goods_mode', 'metrics.unit', 'metrics.values', 'compositions.raws_product.unit'])
-            ->withCount('metrics', 'compositions')
-            ->moderatorLimit($answer_goods_categories)
-            ->findOrFail($cur_goods->goods_article->goods_product->goods_category_id);
-
-            $cur_goods_compositions = [];
-            foreach ($goods_category->compositions as $composition) {
-                $cur_goods_compositions[] = $composition->id;
-            }
-        }
 
         $manufacturers_list = $cur_goods->company->manufacturers->pluck('name', 'id');
         // dd($manufacturers_list);
@@ -422,6 +419,7 @@ class GoodsController extends Controller
         ->get(['id','name','category_status','parent_id'])
         ->keyBy('id')
         ->toArray();
+        // dd($goods_categories);
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
         $goods_categories_list = get_select_tree($goods_categories, $cur_goods->goods_article->goods_product->goods_category_id, null, null);
@@ -553,38 +551,29 @@ class GoodsController extends Controller
 
         $answer_raws = operator_right('raws', false, 'index');
 
-        $raws_categories = RawsCategory::with(['raws_products' => function ($query) use ($answer_raws_products, $answer_raws) {
-            $query->with(['raws_articles.raws' => function ($query) use ($answer_raws) {
-                $query
-                    // ->moderatorLimit($answer_raws)
-                    // ->companiesLimit($answer_raws)
-                    // ->authors($answer_raws)
-                    // ->systemItem($answer_raws) // Фильтр по системным записям 
-                ->whereNull('draft');
-            }])
-            ->withCount('raws_articles');
-                // ->moderatorLimit($answer_raws_products)
-                // ->companiesLimit($answer_raws_products)
-                // ->authors($answer_raws_products)
-                // ->systemItem($answer_raws_products); // Фильтр по системным записям 
+        $raws_articles = RawsArticle::with(['raws_product' => function ($q) {
+            $q->with(['raws_category' => function ($q) {
+                $q->select('id', 'name');
+            }])->select('id', 'name', 'raws_category_id');
         }])
-        ->withCount('raws_products')
-        ->moderatorLimit($answer_raws_categories)
-        ->companiesLimit($answer_raws_categories)
-        ->authors($answer_raws_categories)
-        ->systemItem($answer_raws_categories) // Фильтр по системным записям 
+        ->select('id', 'name', 'raws_product_id')
+        ->whereHas('raws', function ($query) {
+            $query->whereNull('draft'); 
+        })
+        
+        // ->withCount('raws_products')
+        // ->moderatorLimit($answer_raws_categories)
+        // ->companiesLimit($answer_raws_categories)
+        // ->authors($answer_raws_categories)
+        // ->systemItem($answer_raws_categories) // Фильтр по системным записям 
         ->get()
         ->keyBy('id')
-        ->toArray();
-
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $composition_categories_list = get_parents_tree($raws_categories, null, null, null);
-        // dd($composition_categories_list);
+        ->groupBy('raws_product.raws_category.name');
 
         $composition_list = [
             'name' => 'Сырье',
             'alias' => 'raws',
-            'composition_categories' => $composition_categories_list,
+            'composition_categories' => $raws_articles,
         ];
 
         // dd($composition_list);
@@ -600,7 +589,7 @@ class GoodsController extends Controller
             $metrics_values = null;
         }
 
-        $raws_compositions_values = $cur_goods->raws_compositions_values->keyBy('id');
+        $raws_compositions_values = $cur_goods->compositions->keyBy('id');
         // dd($raws_compositions_values[2]->pivot->value);
         // // dd($compositions_values->where('product_id', 4));
         // $type = $cur_goods->goods_product->goods_category->type;
@@ -712,13 +701,21 @@ class GoodsController extends Controller
         $page_info = pageInfo($this->entity_name);
         // dd($page_info);
 
-        return view('goods.edit', compact('cur_goods', 'page_info', 'goods_categories_list', 'goods_products_list', 'manufacturers_list', 'goods_modes_list', 'cur_goods_compositions', 'metrics_values', 'raws_compositions_values', 'settings', 'settings_album', 'composition_list', 'catalogs_list'));
+        if ($cur_goods->draft == 1) {
+            $path = 'edit_draft';
+        } else {
+            $path = 'edit';
+        }
+
+        return view('goods.' .$path, compact('cur_goods', 'page_info', 'goods_categories_list', 'goods_products_list', 'manufacturers_list', 'goods_modes_list', 'cur_goods_compositions', 'metrics_values', 'raws_compositions_values', 'settings', 'settings_album', 'composition_list', 'catalogs_list'));
     }
 
     public function update(Request $request, $id)
     {
 
         // dd($request);
+
+        // Определяем количество метрик и составов
         if (isset($request->metrics)) {
             $metrics_count = count($request->metrics);
         } else {
@@ -726,13 +723,14 @@ class GoodsController extends Controller
         }
         // dd($metrics_count);
 
-        if (isset($request->compositions)) {
-            $compositions_count = count($request->compositions);
+        if (isset($request->compositions_values)) {
+            $compositions_count = count($request->compositions_values);
         } else {
             $compositions_count = 0;
         }
+        // dd($compositions_count);
 
-        // Если снят флаг черновика
+        // Если снят флаг черновика, проверяем на совпадение артикула
         if (empty($request->draft)) {
 
             // Проверка на наличие артикула
@@ -805,11 +803,11 @@ class GoodsController extends Controller
 
         // Если что то не совпало, пишем новый артикул
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $cur_goods = Goods::with('goods_article')->moderatorLimit($answer)->findOrFail($id);
+        $cur_goods = Goods::with('goods_article.goods_product')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
@@ -823,6 +821,7 @@ class GoodsController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
+        // Если пришла фотография
         if ($request->hasFile('photo')) {
 
             // Вытаскиваем настройки
@@ -894,11 +893,6 @@ class GoodsController extends Controller
 
         // $cur_goods->name = $request->name;
 
-        // $cur_goods->manually = $request->manually;
-        // // $cur_goods->external = $request->external;
-        // $cur_goods->cost = $request->cost;
-        // $cur_goods->price = $request->price;
-
         // -------------------------------------------------------------------------------------------------
         // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
 
@@ -910,7 +904,7 @@ class GoodsController extends Controller
 
             // Была изменена! Переназначаем категорию группе:
             $item = GoodsProduct::where('id', $cur_goods->goods_article->goods_product_id)->update(['goods_category_id' => $goods_category_id]);
-        };
+        }
 
         // -------------------------------------------------------------------------------------------------
         // ПЕРЕНОС ТОВАРА В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
@@ -937,22 +931,26 @@ class GoodsController extends Controller
             $cur_goods->portion_name = $request->portion_name;
             $cur_goods->portion_abbreviation = $request->portion_abbreviation;
             $cur_goods->portion_count = $request->portion_count;
-        } else {
-            $cur_goods->portion_status = null;
         }
 
-        $cur_goods->system_item = $request->system_item;
+        
 
         $cur_goods->description = $request->description;
         $cur_goods->display = $request->display;
         $cur_goods->draft = $request->draft;
 
+        // Названия артикулов
         $cur_goods->manually = $request->manually;
+        $cur_goods->external = $request->external;
+
+        // Цены
         $cur_goods->cost = $request->cost;
         $cur_goods->price = $request->price;
 
+        // Общие данные
+        $cur_goods->system_item = $request->system_item;
         $cur_goods->company_id = $company_id;
-        $cur_goods->author_id = $user_id;
+        $cur_goods->editor_id = $user_id;
         $cur_goods->save();
 
         if ($cur_goods) {
@@ -1018,18 +1016,18 @@ class GoodsController extends Controller
             }
 
             // dd($request->compositions);
-            if (isset($request->compositions)) {
-                $cur_goods->raws_compositions_values()->detach();
+            if (isset($request->compositions_values)) {
+                $cur_goods->compositions()->detach();
                 $compositions_insert = [];
-                foreach ($request->compositions as $composition_id => $value) {
+                foreach ($request->compositions_values as $composition_id => $value) {
                     $compositions_insert[$composition_id] = [
                         'value' => $value,
                     ];
                 }
                 // dd($compositions_insert);
-                $cur_goods->raws_compositions_values()->attach($compositions_insert);
+                $cur_goods->compositions()->attach($compositions_insert);
             } else {
-                $cur_goods->raws_compositions_values()->detach();
+                $cur_goods->compositions()->detach();
             }
 
             $goods_article = GoodsArticle::where('id', $cur_goods->goods_article_id)->update(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count]);

@@ -8,18 +8,21 @@
 
             @foreach ($sidebar_tree as $sidebar)
 
-            @if(($sidebar->parent_id == null) && isset($sidebar->childrens))
+            @if($sidebar['parent_id'] == null)
 
             {{-- Если родитель --}}
-            <li><a data-link="{{ $sidebar->id }}"><div class="{{ $sidebar->icon }} sprite"></div><span>{{ $sidebar->name }}</span></a>
+            <li><a data-link="{{ $sidebar['id'] }}"><div class="{{ $sidebar['icon'] }} sprite"></div><span>{{ $sidebar['name'] }}</span></a>
 
+                @if (isset($sidebar['children']))
                 <ul class="menu vertical">
 
-                    @foreach($sidebar->childrens as $children)
-                    @include('layouts.sidebar_list', ['item' => $children])
+                    @foreach($sidebar['children'] as $sidebar)
+                    @include('layouts.sidebar-list', $sidebar)
                     @endforeach
 
+                    
                 </ul>
+                @endif
                 
             </li>
             

@@ -344,7 +344,7 @@ class ChallengeController extends Controller
             $message .= "Действие: " . $challenge->challenge_type->name . "\r\n";
             $message .= "Дедлайн: " . $challenge->deadline_date->format('d.m.Y - H:i') . "\r\n";
             $message .= "Дата снятия: " . Carbon::now()->format('d.m.Y - H:i') . "\r\n";
-            $message .= "Снял: " . $user->first_name . " " . $user->second_name . "\r\n";
+            $message .= "Снял: " . $user->first_name . " " . $user->second_name . "\r\n"; 
 
             if (isset($challenge->description)) {
                 $message .= "Описание: " . $challenge->description. "\r\n";  

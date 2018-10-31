@@ -64,7 +64,7 @@ class GoodsProduct extends Model
     // Получаем категорию
     public function goods()
     {
-        return $this->hasMany('App\Goods');
+        return $this->hasManyThrough('App\Goods', 'App\GoodsArticle');
     }
 
     public function photo()

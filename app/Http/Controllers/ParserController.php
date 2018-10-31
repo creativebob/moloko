@@ -16,6 +16,11 @@ use App\Department;
 use App\User;
 use App\Phone;
 
+use App\Page;
+use App\Entity;
+use App\EntityPage;
+
+
 use App\Location;
 
 use Carbon\Carbon;
@@ -30,6 +35,27 @@ class ParserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+
+    public function entity_page(Request $request)
+    {
+
+        $entities = Entity::get(['id', 'alias']);
+        $pages = Page::where('site_id', 1)->get(['id', 'alias']);
+
+        $count = 0;
+        foreach ($entities as $entity) {
+            foreach ($pages as $page) {
+                if($entity->alias == $page->alias) {
+                    $entity_page = Entitypage::firstOrCreate(['entity_id' => $entity->id, 'page_id' => $page->id]);
+                    $count++;
+                }
+            }
+        }
+
+
+        dd('Гатова, всего: '.$count);
+
+    }
 
     public function locations(Request $request)
     {
