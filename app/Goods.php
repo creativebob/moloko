@@ -100,6 +100,12 @@ class Goods extends Model
         return $this->morphedByMany('App\RawsArticle', 'goods_values')->withPivot('value');
     }
 
+    // Состав (набор)
+    public function set_compositions()
+    {
+        return $this->morphedByMany('App\GoodsArticle', 'goods_values')->withPivot('value');
+    }
+
     // public function compositions_values()
     // {
     //     return $this->belongsToMany('App\Product', 'article_values', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');

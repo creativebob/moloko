@@ -154,14 +154,14 @@
                     @else
 
                     @foreach ($cur_goods->metrics_values as $metric)
-                    @include('goods.metrics.metric-value', $metric)
+                    @include('goods.metrics.metric_value', $metric)
                     @endforeach
 
                     @endif
 
                     {{-- @if ($cur_goods->metrics_values_count > 0)
                      @each('goods.metrics.metric-input', $cur_goods->goods_article->goods_product->goods_category->metrics, 'metric')
-                     @each('goods.metrics.metric-value', $cur_goods->metrics_values, 'metric')
+                     @each('goods.metrics.metric_value', $cur_goods->metrics_values, 'metric')
                      @endif --}}
 
                  </fieldset>
@@ -299,7 +299,7 @@
                         @if ($cur_goods->draft == 1)
                         @include ('goods.compositions.composition-input', $composition)
                         @else
-                        @include ('goods.compositions.composition-value', $composition)
+                        @include ('goods.compositions.composition_value', $composition)
                         @endif
                         @endforeach
 
@@ -307,9 +307,9 @@
 
                         @foreach ($cur_goods->goods_article->goods_product->goods_category->compositions as $composition)
                         @if ($cur_goods->draft == 1)
-                        @include ('goods.compositions.composition-input', $composition)
+                        @include ('goods.compositions.composition_input', $composition)
                         @else
-                        @include ('goods.compositions.composition-value', $composition)
+                        @include ('goods.compositions.composition_value', $composition)
                         @endif
                         @endforeach
 

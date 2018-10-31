@@ -276,10 +276,13 @@
                             </thead>
                             <tbody id="composition-table">
 
+                                @if ($cur_goods->goods_article->goods_product->status == 'one')
+
                                 @if (count($cur_goods->goods_article->goods_product->goods_category->compositions) || count($cur_goods->compositions))
 
                                 {{-- Таблица состава товара --}}
                                 @if (count($cur_goods->compositions))
+
                                 @foreach ($cur_goods->compositions as $composition)
                                 @include ('goods.compositions.raws.composition_input_with_values', $composition)
                                 @endforeach
@@ -293,6 +296,22 @@
                                 @endif
 
                                 @endif
+
+                                @else
+
+
+                                @if (count($cur_goods->set_compositions))
+
+
+                                {{-- Таблица состава товара --}}
+                                @foreach ($cur_goods->set_compositions as $composition)
+                                @include ('goods.compositions.goods.composition_input_with_values', $composition)
+                                @endforeach
+
+                                @endif
+
+
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -301,10 +320,17 @@
                     <div class="small-12 medium-3 cell">
 
                         @if (isset($composition_list))
+
+                        @if ($cur_goods->goods_article->goods_product->status == 'one')
+
                         @if (count($cur_goods->compositions))
+
                         {{ Form::model($cur_goods, []) }}
+
                         @else
+
                         {{ Form::model($cur_goods->goods_article->goods_product->goods_category, []) }}
+
                         @endif    
 
                         <ul class="menu vertical">
@@ -317,17 +343,48 @@
                                     <ul class="checker" id="products-categories-list">
 
                                         @foreach ($composition_list['composition_categories'] as $category_name => $composition_articles)
-                                        @include('goods.compositions.raws-category', ['composition_articles' => $composition_articles, 'category_name' => $category_name])
+                                        @include('goods.compositions.raws.raws_category', ['composition_articles' => $composition_articles, 'category_name' => $category_name])
                                         @endforeach
+
                                     </ul>
 
                                 </div>
                             </li>
                             @endif
+                        </ul>
+                        {{ Form::close() }}
+
+                        @else
+
+                        {{ Form::model($cur_goods, []) }}
+                        <ul class="menu vertical">
+
+                            @if (isset($composition_list['composition_categories']))
+
+                            <li>
+                                <a class="button" data-toggle="{{ $composition_list['alias'] }}-dropdown">{{ $composition_list['name'] }}</a>
+                                <div class="dropdown-pane" id="{{ $composition_list['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
+
+                                    <ul class="checker" id="products-categories-list">
+
+                                        @foreach ($composition_list['composition_categories'] as $category_name => $composition_articles)
+                                        @include('goods.compositions.goods.goods_category', ['composition_articles' => $composition_articles, 'category_name' => $category_name])
+                                        @endforeach
+                                    </ul>
+
+                                </div>
+                            </li>
+
+                            @endif
 
                         </ul>
                         {{ Form::close() }}
+
                         @endif
+
+                        @endif
+
+                        
 
                     </div>
 
@@ -386,6 +443,7 @@
 
     // Основные настройки
     var cur_goods_id = '{{ $cur_goods->id }}';
+    var set_status = '{{ $cur_goods->goods_article->goods_product->status }}'
 
     // Мульти Select
     $(".chosen-select").chosen({width: "95%"});
@@ -751,6 +809,7 @@
     // При клике на чекбокс метрики отображаем ее на странице
     $(document).on('click', '.add-composition', function() {
 
+        // alert(set_status);
         // alert($(this).val());
         var id = $(this).val();
 
@@ -762,7 +821,7 @@
                 },
                 url: '/admin/ajax_add_page_composition',
                 type: 'POST',
-                data: {id: $(this).val(), entity: 'goods', cur_goods_id: cur_goods_id},
+                data: {id: $(this).val(), entity: 'goods', cur_goods_id: cur_goods_id, set_status: set_status},
                 success: function(html){
 
                     // alert(html);
