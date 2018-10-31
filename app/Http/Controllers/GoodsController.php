@@ -384,14 +384,14 @@ class GoodsController extends Controller
             'metrics_values',
             'compositions.raws_product.unit'
         ])
-        ->where(function ($q) {
-            $q->when(request('filter_by') == 'likes', function ($q) {
-                return $q->where('likes', '>', request('likes_amount', 0));
-            });
-            $q->when(request('filter_by') == 'date', function ($q) {
-                return $q->orderBy('created_at', request('ordering_rule', 'desc'));
-            });
-        })
+        // ->where(function ($q) {
+        //     $query->when(request('filter_by') == 'likes', function ($q) {
+        //         return $q->where('likes', '>', request('likes_amount', 0));
+        //     });
+
+        // })
+
+        
         ->withCount(['metrics_values', 'compositions'])
         ->moderatorLimit($answer_goods)
         ->findOrFail($id);

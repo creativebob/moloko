@@ -45,8 +45,12 @@ class ParserController extends Controller
         $count = 0;
         foreach ($entities as $entity) {
             foreach ($pages as $page) {
-                if($entity->alias == $page->alias) {
-                    $entity_page = Entitypage::firstOrCreate(['entity_id' => $entity->id, 'page_id' => $page->id]);
+                if ($entity->alias == $page->alias) {
+
+                    $entity_page = EntityPage::firstOrCreate(['entity_id' => $entity->id, 'page_id' => $page->id]);
+
+                    $delete = EntityPage::where('id', '!=', $entity_page->id)->where('entity_id', $entity->id)->delete();
+
                     $count++;
                 }
             }
