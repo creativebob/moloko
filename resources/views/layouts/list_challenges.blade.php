@@ -35,7 +35,7 @@
 											<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
 												{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
 												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span>
-												<span class="task-set">{{ $challenge->challenge_type->name or ''}}</span>
+												<span class="task-set">{{ $challenge->challenge_type->name or ''}} ({{ $challenge->appointed->name or ''}})</span>
 
 												@if($challenge->priority_id == 2)<span class="priority_2">Молния</span>@endif
 
