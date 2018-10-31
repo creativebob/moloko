@@ -265,11 +265,11 @@ class RawController extends Controller
             if ($raw) {
 
                 // Пишем сессию
-                $mass = [
-                    'raws_category' => $raws_category_id,
-                ];
+                // $mass = [
+                //     'raws_category' => $raws_category_id,
+                // ];
 
-                Cookie::queue('conditions', $mass, 1440);
+                // Cookie::queue('conditions', $mass, 1440);
 
                 if ($request->quickly == 1) {
                     return redirect('/admin/raws');

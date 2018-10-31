@@ -83,7 +83,7 @@ class GoodsCategory extends Model
         return $this->morphToMany('App\Metric', 'metric_entity');
     }
 
-    // Получаем состав
+    // Состав (только сырье)
     public function compositions()
     {
         return $this->morphedByMany('App\RawsArticle', 'compositions');

@@ -4,13 +4,13 @@
 <label>Введите название новой группы
   @include('includes.inputs.string', ['value'=>null, 'name'=>'goods_product_name', 'required'=>'required'])
 </label>
-<label>Название услуги
+<label>Название товара
   @include('includes.inputs.string', ['value'=>null, 'name'=>'name', 'required'=>'required'])
-  <div class="item-error">Названия услуги и группы услуг не должны совпадать!</div>
+  <div class="item-error">Названия товара и группы товаров не должны совпадать!</div>
 </label>
-{{-- <div class="checkbox">
+<div class="checkbox">
 	{{ Form::checkbox('status', 'set', null, ['id' => 'status']) }}
 	<label for="status"><span>Набор</span></label>
-</div> --}}
+</div>
 
 {{ Form::hidden('mode', 'mode-add') }}

@@ -288,10 +288,10 @@ class ServiceController extends Controller
                 event(new TestEvent($service));
 
                 // Пишем сессию
-                $mass = [
-                    'services_category' => $services_category_id,
-                ];
-                Cookie::queue('conditions', $mass, 1440);
+                // $mass = [
+                //     'services_category' => $services_category_id,
+                // ];
+                // Cookie::queue('conditions', $mass, 1440);
 
                 if ($request->quickly == 1) {
                     return redirect('/admin/services');
