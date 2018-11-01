@@ -48,6 +48,27 @@ class Goods extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
+    protected $fillable = [
+        'company_id',
+        'goods_article_id',
+        'description',
+        'manually',
+        'external',
+        'manufacturer_id',
+        'cost',
+        'price',
+        'album_id',
+        'photo_id',
+
+        'portion_status',
+        'portion_name',
+        'portion_abbreviation',
+        'portion_count',
+
+        'author_id',
+        'editor_id',
+    ];
+
     public function goods_article()
     {
         return $this->belongsTo('App\GoodsArticle');
@@ -83,7 +104,7 @@ class Goods extends Model
     }
 
     // Метрики
-    public function metrics_values()
+    public function metrics()
     {
         return $this->morphedByMany('App\Metric', 'goods_values')->withPivot('value');
     }

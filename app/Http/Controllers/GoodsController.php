@@ -234,86 +234,43 @@ class GoodsController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-        $name = $request->name;
         $goods_category_id = $request->goods_category_id;
 
+        // Смотрим пришедший режим группы товаров
         switch ($request->mode) {
+
             case 'mode-default':
+            $goods_product = GoodsProduct::firstOrCreate([
+                'name' => $request->name,
+                'goods_category_id' => $goods_category_id,
+                'status' => $request->status ? 'set' : 'one',
+            ], [
+                'unit_id' => $request->unit_id,
+                'system_item' => $request->system_item ? $request->system_item : null,
+                'display' => 1,
+                'company_id' => $company_id,
+                'author_id' => $user_id
+            ]);
 
-            $goods_product = GoodsProduct::where(['name' => $name, 'goods_category_id' => $goods_category_id])->first();
-
-            if ($goods_product) {
-                $goods_product_id = $goods_product->id;
-            } else {
-
-                $goods_product = new GoodsProduct;
-                $goods_product->name = $name;
-                $goods_product->goods_category_id = $goods_category_id;
-                $goods_product->unit_id = $request->unit_id;
-
-                if (isset($request->status)) {
-                    $goods_product->status = 'set';
-                } else {
-                    $goods_product->status = 'one';
-                }
-                
-                // Модерация и системная запись
-                $goods_product->system_item = $request->system_item;
-                $goods_product->display = 1;
-                $goods_product->company_id = $company_id;
-                $goods_product->author_id = $user_id;
-                $goods_product->save();
-
-                if ($goods_product) {
-                    $goods_product_id = $goods_product->id;
-                } else {
-                    abort(403, 'Ошибка записи группы товаров');
-                }
-            }
+            $goods_product_id = $goods_product->id;
             break;
             
             case 'mode-add':
-            $goods_product_name = $request->goods_product_name;
-            $goods_product = GoodsProduct::where(['name' => $goods_product_name, 'goods_category_id' => $goods_category_id])->first();
-
-            if ($goods_product) {
-                $goods_product_id = $goods_product->id;
-            } else {
-
-                // Наполняем сущность данными
-                $goods_product = new GoodsProduct;
-
-                $goods_product->name = $request->goods_product_name;
-                $goods_product->unit_id = $request->unit_id;
-
-                if (isset($request->status)) {
-                    $goods_product->status = 'set';
-                } else {
-                    $goods_product->status = 'one';
-                }
-
-                $goods_product->goods_category_id = $goods_category_id;
-
-                // Модерация и системная запись
-                $goods_product->system_item = $request->system_item;
-                $goods_product->display = 1;
-                $goods_product->company_id = $company_id;
-                $goods_product->author_id = $user_id;
-                $goods_product->save();
-
-                if ($goods_product) {
-                    $goods_product_id = $goods_product->id;
-                } else {
-                    abort(403, 'Ошибка записи группы услуг');
-                }
-            }
+            $goods_product = GoodsProduct::firstOrCreate([
+                'name' => $request->goods_product_name,
+                'goods_category_id' => $goods_category_id,
+                'status' => $request->status ? 'set' : 'one',
+            ], [
+                'unit_id' => $request->unit_id,
+                'system_item' => $request->system_item ? $request->system_item : null,
+                'display' => 1,
+                'company_id' => $company_id,
+                'author_id' => $user_id
+            ]);
             break;
 
             case 'mode-select':
-            $goods_product = GoodsProduct::findOrFail($request->goods_product_id);
-
-            $service_product_name = $goods_product->name;
-            $goods_product_id = $goods_product->id;
+            $goods_product_id = $request->goods_product_id;
             break;
         }
 
@@ -321,7 +278,7 @@ class GoodsController extends Controller
         $goods_article->goods_product_id = $goods_product_id;
         $goods_article->company_id = $company_id;
         $goods_article->author_id = $user_id;
-        $goods_article->name = $name;
+        $goods_article->name = $request->name;
         $goods_article->save();
 
         if ($goods_article) {
@@ -336,28 +293,24 @@ class GoodsController extends Controller
 
             if ($cur_goods) {
 
-                // Пишем куки
+                // Пишем куки состояния
                 // $mass = [
                 //     'goods_category' => $goods_category_id,
                 // ];
-
-                Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
+                // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
 
                 // dd($request->quickly);
                 if ($request->quickly == 1) {
                     return redirect('/admin/goods');
                 } else {
-
-                    // dd($cur_goods);
                     return redirect('/admin/goods/'.$cur_goods->id.'/edit'); 
                 }
-
             } else {
                 abort(403, 'Ошибка записи товара');
             }
         } else {
-            abort(403, 'Ошибка записи информации услуги');
-        } 
+            abort(403, 'Ошибка записи информации товара');
+        }
     }
 
     public function show($id)
@@ -374,14 +327,16 @@ class GoodsController extends Controller
         $cur_goods = Goods::with([
             'goods_article.goods_product.goods_category' => function ($query) {
                 $query->with([
-                    'metrics.property',
+                    'metrics' => function ($q) {
+                        $q->with(['property', 'values']);
+                    },
                     'compositions.raws_product.unit'
                 ])
                 ->withCount('metrics', 'compositions');
             },
             'album.photos',
             'company.manufacturers',
-            'metrics_values',
+            'metrics',
             'compositions.raws_product.unit',
             'set_compositions.goods_product.unit'
         ])
@@ -389,12 +344,10 @@ class GoodsController extends Controller
         //     $query->when(request('filter_by') == 'likes', function ($q) {
         //         return $q->where('likes', '>', request('likes_amount', 0));
         //     });
-
         // })
-        ->withCount(['metrics_values', 'compositions', 'set_compositions'])
+        ->withCount(['metrics', 'compositions', 'set_compositions'])
         ->moderatorLimit($answer_goods)
         ->findOrFail($id);
-        // dd($cur_goods);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
@@ -547,9 +500,7 @@ class GoodsController extends Controller
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer_raws_categories = operator_right('raws_categories', false, 'index');
-
             $answer_raws_products = operator_right('raws_products', false, 'index');
-
             $answer_raws = operator_right('raws', false, 'index');
 
             $raws_articles = RawsArticle::with(['raws_product' => function ($q) {
@@ -611,21 +562,26 @@ class GoodsController extends Controller
             ];
              // dd($composition_list);
         }
-
-
-
         // dd($composition_list);
-        // dd($goods_modes_list);
 
-        // dd($product->goods_group->goods_category->type);
-        if ($cur_goods->metrics_values_count > 0) {
+        // Массив со значениями метрик товара
+        if (count($cur_goods->metrics)) {
+            // dd($cur_goods->metrics);
             $metrics_values = [];
-            foreach ($cur_goods->metrics_values as $metric) {
-                $metrics_values[$metric->id][] = $metric->pivot->value;
+            foreach ($cur_goods->metrics->groupBy('id') as $metric) {
+                // dd($metric);
+                if ((count($metric) == 1) && ($metric->first()->list_type != 'list')) {
+                    $metrics_values[$metric->first()->id] = $metric->first()->pivot->value;
+                } else {
+                    foreach ($metric as $value) {
+                        $metrics_values[$metric->first()->id][] = $value->pivot->value;
+                    }
+                }
             }
         } else {
             $metrics_values = null;
         }
+        // dd($metrics_values);
 
         $raws_compositions_values = $cur_goods->compositions->keyBy('id');
         // dd($raws_compositions_values[2]->pivot->value);
@@ -1031,14 +987,14 @@ class GoodsController extends Controller
             // dd($request->metrics);
             if (isset($request->metrics)) {
 
-                $cur_goods->metrics_values()->detach();
+                $cur_goods->metrics()->detach();
 
                 $metrics_insert = [];
 
                 foreach ($request->metrics as $metric_id => $values) {
                     foreach ($values as $value) {
                         // dd($value);
-                        $cur_goods->metrics_values()->attach([
+                        $cur_goods->metrics()->attach([
                             $metric_id => [
                                 'value' => $value,
                             ]
@@ -1050,12 +1006,11 @@ class GoodsController extends Controller
                 // Пишем метрики
                 // $cur_goods->metrics_values()->attach($metrics_insert);
             } else {
-                $cur_goods->metrics_values()->detach();
+                $cur_goods->metrics()->detach();
             }
 
-                // dd($request->compositions);
             if ($cur_goods->goods_article->goods_product->status == 'one') {
-            
+
                 if (isset($request->compositions_values)) {
                     $cur_goods->compositions()->detach();
                     $compositions_insert = [];
@@ -1064,7 +1019,7 @@ class GoodsController extends Controller
                             'value' => $value,
                         ];
                     }
-                // dd($compositions_insert);
+                    // dd($compositions_insert);
                     $cur_goods->compositions()->attach($compositions_insert);
                 } else {
                     $cur_goods->compositions()->detach();

@@ -95,14 +95,10 @@ class CompositionController extends Controller
     {
         if ($request->set_status == 'one') {
             $composition = RawsArticle::with(['raws_product.unit'])->findOrFail($request->id);  
-            return view($request->entity.'.compositions.raws.composition_input', compact('composition'));
         } else {
             $composition = GoodsArticle::with(['goods_product.unit'])->findOrFail($request->id);  
-            return view($request->entity.'.compositions.goods.composition_input', compact('composition'));
         }
-        
-
-        
+        return view($request->entity.'.compositions.composition_input', compact('composition'));
     }
     
     // Добавляем состав

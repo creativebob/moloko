@@ -8,6 +8,8 @@ use App\Entity;
 use App\Page;
 use App\Location;
 
+use App\RawsArticle;
+
 use Carbon\Carbon;
 
 // use GuzzleHttp\Client;
@@ -48,7 +50,10 @@ Route::any('/check_class', 'ClassController@check_class');
 
 Route::get('/lol', function () {
 
-    dd(str_slug('кек лол чебурек'));
+    $composition = RawsArticle::with(['raws_product.unit'])->findOrFail(2);  
+
+        
+        return view('goods.compositions.composition_input', compact('composition'));
 });
 // Route::get('/columns', function () {
 //     $columns = Schema::getColumnListing('leads');

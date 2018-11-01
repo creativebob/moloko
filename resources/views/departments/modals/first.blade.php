@@ -37,7 +37,7 @@
         @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
       </label>
       <label>Телефон филиала
-        @include('includes.inputs.phone', ['value'=>isset($department->main_phone->phone) ? $department->main_phone->phone : null, 'name'=>'main_phone', 'required'=>'required'])
+        @include('includes.inputs.phone', ['value'=>isset($department->main_phone->phone) ? $department->main_phone->phone : null, 'name'=>'main_phone', 'required'=>''])
       </label>
       {{ Form::hidden('department_id', $department->id, ['id' => 'department-id']) }}
       {{ Form::hidden('first_item', 0, ['class' => 'first-item']) }}

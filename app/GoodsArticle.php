@@ -47,6 +47,18 @@ class GoodsArticle extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
+    protected $fillable = [
+        'company_id',
+        'goods_product_id',
+        'name',
+        'description',
+        'internal',
+        'metrics_count',
+        'compositions_count',
+        'author_id',
+        'editor_id',
+    ];
+
     // Метрики
     // public function metrics_values()
     // {

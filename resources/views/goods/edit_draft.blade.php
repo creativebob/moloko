@@ -130,23 +130,15 @@
                                 </label>
                             </div>
                         </div>
-                        @if (($cur_goods->goods_article->goods_product->goods_category->metrics_count > 0) || count($cur_goods->metrics_values))
+                        @if (count($cur_goods->goods_article->goods_product->goods_category->metrics))
+                        {{-- Выводим метрики из пресета категории товара --}}
+
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
-
-                            @if (count($cur_goods->metrics_values))
-
-                            @foreach ($cur_goods->metrics_values as $metric)
-                            @include('goods.metrics.metric_input_with_value', $metric)
-                            @endforeach
-
-                            @else    
 
                             @foreach ($cur_goods->goods_article->goods_product->goods_category->metrics as $metric)
                             @include('goods.metrics.metric_input', $metric)
                             @endforeach
-
-                            @endif
 
                         </fieldset>
                         @endif
@@ -277,20 +269,22 @@
                             <tbody id="composition-table">
 
                                 @if ($cur_goods->goods_article->goods_product->status == 'one')
-
-                                @if (count($cur_goods->goods_article->goods_product->goods_category->compositions) || count($cur_goods->compositions))
-
-                                {{-- Таблица состава товара --}}
+                                {{-- Статус товара "один" --}}
+                                
                                 @if (count($cur_goods->compositions))
+                                {{-- У товара есть значения состава, берем их --}}
 
                                 @foreach ($cur_goods->compositions as $composition)
-                                @include ('goods.compositions.raws.composition_input_with_values', $composition)
+                                @include ('goods.compositions.composition_input', $composition)
                                 @endforeach
 
                                 @else
+                                {{-- У товара нет значений товара, берем пресеты из категории --}}
+
+                                @if (count($cur_goods->goods_article->goods_product->goods_category->compositions))
 
                                 @foreach ($cur_goods->goods_article->goods_product->goods_category->compositions as $composition)
-                                @include ('goods.compositions.raws.composition_input', $composition)
+                                @include ('goods.compositions.composition_input', $composition)
                                 @endforeach
 
                                 @endif
@@ -298,18 +292,16 @@
                                 @endif
 
                                 @else
-
+                                {{-- Статус товара "набор" --}}
 
                                 @if (count($cur_goods->set_compositions))
+                                {{-- В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются --}}
 
-
-                                {{-- Таблица состава товара --}}
                                 @foreach ($cur_goods->set_compositions as $composition)
-                                @include ('goods.compositions.goods.composition_input_with_values', $composition)
+                                @include ('goods.compositions.composition_input', $composition)
                                 @endforeach
 
                                 @endif
-
 
                                 @endif
                             </tbody>
@@ -331,6 +323,12 @@
 
                         {{ Form::model($cur_goods->goods_article->goods_product->goods_category, []) }}
 
+                        @endif
+                        
+                        @else 
+
+                        {{ Form::model($cur_goods, []) }}
+
                         @endif    
 
                         <ul class="menu vertical">
@@ -343,7 +341,7 @@
                                     <ul class="checker" id="products-categories-list">
 
                                         @foreach ($composition_list['composition_categories'] as $category_name => $composition_articles)
-                                        @include('goods.compositions.raws.raws_category', ['composition_articles' => $composition_articles, 'category_name' => $category_name])
+                                        @include('goods.compositions.category', ['composition_articles' => $composition_articles, 'category_name' => $category_name])
                                         @endforeach
 
                                     </ul>
@@ -352,35 +350,7 @@
                             </li>
                             @endif
                         </ul>
-                        {{ Form::close() }}
-
-                        @else
-
-                        {{ Form::model($cur_goods, []) }}
-                        <ul class="menu vertical">
-
-                            @if (isset($composition_list['composition_categories']))
-
-                            <li>
-                                <a class="button" data-toggle="{{ $composition_list['alias'] }}-dropdown">{{ $composition_list['name'] }}</a>
-                                <div class="dropdown-pane" id="{{ $composition_list['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
-
-                                    <ul class="checker" id="products-categories-list">
-
-                                        @foreach ($composition_list['composition_categories'] as $category_name => $composition_articles)
-                                        @include('goods.compositions.goods.goods_category', ['composition_articles' => $composition_articles, 'category_name' => $category_name])
-                                        @endforeach
-                                    </ul>
-
-                                </div>
-                            </li>
-
-                            @endif
-
-                        </ul>
-                        {{ Form::close() }}
-
-                        @endif
+                        
 
                         @endif
 
