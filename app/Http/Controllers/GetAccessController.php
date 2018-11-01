@@ -232,11 +232,6 @@ class GetAccessController extends Controller
             // $user_challenges = $challenges;
             // $access['user_info']['challenges'] = $user_challenges;
 
-
-
-            
-
-
             if($user->company != null){
                 $access['company_info']['company_id'] = $user->company_id;
                 $access['company_info']['company_name'] = $user->company->name;
