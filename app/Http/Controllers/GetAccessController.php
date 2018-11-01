@@ -210,27 +210,27 @@ class GetAccessController extends Controller
                 $access['user_info']['extra_rights'] = $extra_rights;
             }
 
-            $challenges = Challenge::with(
-                'author',
-                'appointed',
-                'finisher',
-                'challenges'
-            )
-            ->where('appointed_id', $user->id)
-            ->companiesLimit($user->company_id)
-            ->where('status', null)
-            ->whereDay('deadline_date', Carbon::now()->format('d'))
-            ->orderBy('deadline_date', 'asc')
-            ->orderBy('moderation', 'desc')
-            ->get()
-            ->groupBy(function($challenges) {
-                return Carbon::parse($challenges->deadline_date)->format('d.m.Y'); // А это то-же поле по нему мы и будем группировать
-            });
+            // $challenges = Challenge::with(
+            //     'author',
+            //     'appointed',
+            //     'finisher',
+            //     'challenges'
+            // )
+            // ->where('appointed_id', $user->id)
+            // ->companiesLimit($user->company_id)
+            // ->where('status', null)
+            // ->whereDay('deadline_date', Carbon::now()->format('d'))
+            // ->orderBy('deadline_date', 'asc')
+            // ->orderBy('moderation', 'desc')
+            // ->get()
+            // ->groupBy(function($challenges) {
+            //     return Carbon::parse($challenges->deadline_date)->format('d.m.Y'); // А это то-же поле по нему мы и будем группировать
+            // });
 
-            // dd($challenges);
+            // // dd($challenges);
 
-            $user_challenges = $challenges;
-            $access['user_info']['challenges'] = $user_challenges;
+            // $user_challenges = $challenges;
+            // $access['user_info']['challenges'] = $user_challenges;
 
 
 

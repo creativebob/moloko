@@ -41,10 +41,10 @@
 
 												<p class="task-target">{{ $challenge->description or ''}}</p>
 												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->subject->id }}/edit">{{ $challenge->subject->case_number or '' }}</a></li>
-													<li><span class="task-data">Клиент: </span>{{ $challenge->subject->name }}</li>
+													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->subject_id }}/edit">{{ $challenge->subject->case_number or '' }}</a></li>
+													<li><span class="task-data">Клиент: </span>{{ $challenge->subject->name or '' }}</li>
 													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->subject->phone) }}</li> --}}
-													<li><span class="task-data">Чек: </span>{{ num_format($challenge->subject->badget, 0) }}</li>
+													<li><span class="task-data">Чек: </span>{{ $challenge->subject ? num_format($challenge->subject->badget, 0) : 0 }}</li>
 													<li><span class="task-data">Товар: </span>
 
 												</ul>
