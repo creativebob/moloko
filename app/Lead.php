@@ -176,13 +176,13 @@ class Lead extends Model
     // Получаем задачи
     public function challenges()
     {
-        return $this->morphMany('App\Challenge', 'challenges');
+        return $this->morphMany('App\Challenge', 'subject');
     }
 
     // Получаем активные задачи
     public function challenges_active()
     {
-        return $this->morphMany('App\Challenge', 'challenges')->whereNull('status');
+        return $this->morphMany('App\Challenge', 'subject')->whereNull('status');
     }
     
 
@@ -212,7 +212,7 @@ class Lead extends Model
     {
         // return $this->morphMany('App\Challenge', 'challenges')->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'));
 
-        return $this->morphOne('App\Challenge', 'challenges')->where('challenges_type_id', 2)->whereNull('status')->oldest('deadline_date');
+        return $this->morphOne('App\Challenge', 'subject')->where('challenges_type_id', 2)->whereNull('status')->oldest('deadline_date');
     }
 
 

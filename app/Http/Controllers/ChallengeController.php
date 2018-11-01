@@ -53,7 +53,7 @@ class ChallengeController extends Controller
             'author', 
             'appointed.staff', 
             'finisher', 
-            'challenges'
+            'subject'
         )
         ->companiesLimit($answer)
         // ->whereNull('status')
@@ -262,8 +262,8 @@ class ChallengeController extends Controller
 
         if ($challenge) {
 
-            if($challenge->challenges_type == 'App\Lead') {
-                $lead = Lead::findOrFail($challenge->challenges_id);
+            if($challenge->subject_type == 'App\Lead') {
+                $lead = Lead::findOrFail($challenge->subject_id);
                 $lead->decrement('challenges_active_count');
             }
 
@@ -293,9 +293,9 @@ class ChallengeController extends Controller
                 $message .= "\r\n";
 
                 // Если задача для лида
-                if (isset($challenge->challenges->lead_method_id)) {
+                if ($challenge->subject_type == 'App\Lead') {
 
-                    $lead = Lead::findOrFail($challenge->challenges->id);
+                    $lead = Lead::findOrFail($challenge->subject_id);
                     $message = lead_info($message, $lead);
                 }
 
@@ -330,8 +330,8 @@ class ChallengeController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $challenge = Challenge::findOrFail($id);
 
-        if($challenge->challenges_type == 'App\Lead') {
-            $lead = Lead::findOrFail($challenge->challenges_id);
+        if ($challenge->subject_type == 'App\Lead') {
+            $lead = Lead::findOrFail($challenge->subject_id);
         }
 
         // Подключение политики
@@ -353,9 +353,9 @@ class ChallengeController extends Controller
             $message .= "\r\n";
 
             // Если задача для лида
-            if (isset($challenge->challenges->lead_method_id)) {
+            if ($challenge->subject_type == 'App\Lead') {
 
-                $lead = Lead::findOrFail($challenge->challenges->id);
+                $lead = Lead::findOrFail($challenge->subject_id);
                 $message = lead_info($message, $lead);
             }
 

@@ -40,13 +40,17 @@ class DashboardController extends Controller
 
         // Формируем информацию о виджете
         $user = User::with('staff.position.widgets')->findOrFail($request->user()->id);
-        $this->all_widgets = $user->staff->first()->position->widgets->keyBy('tag');
-        $widgets_list = $this->all_widgets->pluck('tag', 'id')->toArray();
 
-        // Генерируем виджеты
-        $this->addWidgets($widgets_list);
+        // Если пользователь устроен на должность
+        if(isset($user->staff->first()->position)){
 
-        $widgets = $this->widgets_total;
+            $this->all_widgets = $user->staff->first()->position->widgets->keyBy('tag');
+            $widgets_list = $this->all_widgets->pluck('tag', 'id')->toArray();
+
+            // Генерируем виджеты
+            $this->addWidgets($widgets_list);
+            $widgets = $this->widgets_total;      
+        }
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

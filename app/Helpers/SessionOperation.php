@@ -15,6 +15,8 @@
             // Если выбрано "Нет ограичений" мы снимаем филиальную зависимость
 
             $mass_right = getRight('nolimit', $entity_name, $session);
+            // dd($mass_right);
+
             $nolimit = $mass_right['result'];
 
             if($nolimit == true){
@@ -238,8 +240,8 @@
 
                 if(count($departments) > 0){$result = true;} else {$result = false;};
 
-                if(($method == 'moderator')&&(count($departments)>0)){$moderator = true;} else {$moderator = false;};
-                if(($method == 'automoderate')&&(count($departments)>0)){$automoderate = true;} else {$automoderate = false;};
+                // if(($method == 'moderator')&&(count($departments)>0)){$moderator = true;} else {$moderator = false;};
+                // if(($method == 'automoderate')&&(count($departments)>0)){$automoderate = true;} else {$automoderate = false;};
 
 
                 $mass_right['result'] = $result;

@@ -84,7 +84,7 @@ class Challenge extends Model
     }
 
     // Получаем все
-    public function challenges()
+    public function subject()
     {
         return $this->morphTo();
     }

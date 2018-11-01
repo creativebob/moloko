@@ -124,8 +124,11 @@ class DatabaseSeeder extends Seeder
         $this->call(PrioritiesTableSeeder::class);
 
         $this->call(StagesTableSeeder::class);
-
         $this->call(MessengersTableSeeder::class);
+
+        // Настройки должности
+        $this->call(WidgetsTableSeeder::class);
+        $this->call(NotificationsTableSeeder::class);
 
 
     }
