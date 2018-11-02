@@ -123,18 +123,19 @@ class OrderController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
+        // Получаем компанию
         $company_id = $user->company_id;
 
         // Находим или создаем заказ для лида
-        $order = Order::firstOrCreate(['lead_id' => $request->lead_id, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
-        // $order = Order::firstOrCreate(['lead_id' =>  9236, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
+        // $order = Order::firstOrCreate(['lead_id' => $request->lead_id, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
+        $order = Order::firstOrCreate(['lead_id' => 9443, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
 
         // Находим сущность, чтоб опрелделить модель
-        $entity = Entity::where('alias', $request->entity)->first();
-        // $entity = Entity::where('alias', 'goods')->first();
+        // $entity = Entity::where('alias', $request->entity)->first();
+        $entity = Entity::where('alias', 'goods')->first();
 
-        $type = $request->entity;
-        // $type = 'goods';
+        // $type = $request->entity;
+        $type = 'goods';
 
         // Формируем позицию заказа
         $composition = new OrderComposition;

@@ -258,11 +258,10 @@ class MetricController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-     public function add_metric_value(Request $request)
+    public function add_metric_value(Request $request)
     {   
         // Переадресовываем на получение метрики
         return view($request->entity.'.metrics.value', ['value' => $request->value]);
-
     }
 
 }

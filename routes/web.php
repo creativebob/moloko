@@ -50,10 +50,15 @@ Route::any('/check_class', 'ClassController@check_class');
 
 Route::get('/lol', function () {
 
-    $composition = RawsArticle::with(['raws_product.unit'])->findOrFail(2);  
+    $leads = Lead::withCount(['choices_goods_categories', 'choices_services_categories', 'choices_raws_categories'])->get();
+    $count_goods = $leads->where('choices_goods_categories_count', '>', 1)->count();
+    dd($count_goods);
 
-        
-        return view('goods.compositions.composition_input', compact('composition'));
+    $count_services = $leads->where('choices_services_categories_count', '>', 1)->count();
+    dd($count_services);
+
+    $count_raws = $leads->where('choices_raws_categories_count', '>', 1)->count();
+    dd($count_raws);
 });
 // Route::get('/columns', function () {
 //     $columns = Schema::getColumnListing('leads');
@@ -362,6 +367,8 @@ Route::post('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relati
 Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->middleware('auth');
 
 
+
+
 // ---------------------------------------- Состав -------------------------------------------------
 
 Route::post('/ajax_add_relation_composition', 'CompositionController@ajax_add_relation')->middleware('auth');
@@ -418,6 +425,9 @@ Route::post('/goods_category_check', 'GoodsCategoryController@ajax_check')->midd
 // Отображение на сайте
 Route::any('/goods_categories_get_products', 'GoodsCategoryController@ajax_get_products')->middleware('auth');
 
+Route::any('/goods_category_metrics', 'GoodsCategoryController@ajax_get_metrics')->middleware('auth');
+Route::any('/goods_category_compositions', 'GoodsCategoryController@ajax_get_compositions')->middleware('auth');
+
 
 // --------------------------------- Группы товаров --------------------------------------------
 
@@ -426,6 +436,8 @@ Route::resource('/goods_products', 'GoodsProductController')->middleware('auth')
 
 Route::any('/ajax_goods_count', 'GoodsProductController@ajax_count')->middleware('auth');
 Route::any('/ajax_goods_modes', 'GoodsProductController@ajax_modes')->middleware('auth');
+
+Route::any('/goods_products_list', 'GoodsProductController@ajax_get_products_list')->middleware('auth');
 
 
 // ---------------------------------- Товары (Артикулы) -------------------------------------------
@@ -532,7 +544,7 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->mi
 Route::resource('orders', 'OrderController')->middleware('auth');
 
 // Отображение на сайте
-Route::post('/orders_check', 'OrderController@ajax_check')->middleware('auth');
+Route::any('/orders_check', 'OrderController@ajax_check')->middleware('auth');
 
 Route::delete('/order_compositions/{id}', 'OrderController@ajax_destroy_composition')->middleware('auth');
 

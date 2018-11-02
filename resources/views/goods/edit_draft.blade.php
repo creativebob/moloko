@@ -60,12 +60,12 @@
                                     {{ Form::text('name', $cur_goods->goods_article->name, ['required']) }}
                                 </label>
 
-                                <label>Группа
-                                    {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_article->goods_product_id) }}
+                                <label id="goods-products-select">Группа
+                                    {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_article->goods_product_id, ['id' => 'goods-products-list']) }}
                                 </label>
 
                                 <label>Категория
-                                    <select name="goods_category_id">
+                                    <select name="goods_category_id" id="goods-categories-list">
                                         @php
                                         echo $goods_categories_list;
                                         @endphp
@@ -130,18 +130,34 @@
                                 </label>
                             </div>
                         </div>
-                        @if (count($cur_goods->goods_article->goods_product->goods_category->metrics))
+                        
                         {{-- Выводим метрики из пресета категории товара --}}
 
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
-                            @foreach ($cur_goods->goods_article->goods_product->goods_category->metrics as $metric)
-                            @include('goods.metrics.metric_input', $metric)
-                            @endforeach
+                            <div id="metrics-list">
+                                @if (count($cur_goods->goods_article->goods_product->goods_category->metrics))
+
+                                {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
+                                @if (count($cur_goods->metrics))
+
+                                @foreach ($cur_goods->metrics->unique() as $metric)
+                                @include('goods.metrics.metric_input', $metric)
+                                @endforeach
+
+                                @else
+
+                                @foreach ($cur_goods->goods_article->goods_product->goods_category->metrics as $metric)
+                                @include('goods.metrics.metric_input', $metric)
+                                @endforeach
+
+                                @endif
+                                @endif
+                            </div>
 
                         </fieldset>
-                        @endif
+
                         <div id="cur-goods-inputs"></div>
                         <div class="small-12 cell tabs-margin-top text-center">
                             <div class="item-error" id="cur-goods-error">Такой артикул уже существует!<br>Измените значения!</div>
@@ -413,10 +429,79 @@
 
     // Основные настройки
     var cur_goods_id = '{{ $cur_goods->id }}';
-    var set_status = '{{ $cur_goods->goods_article->goods_product->status }}'
+    var set_status = '{{ $cur_goods->goods_article->goods_product->status }}';
+
+    var metrics_count = '{{ count($cur_goods->metrics) }}';
+    var category_id = '{{ $cur_goods->goods_article->goods_product->goods_category_id }}';
 
     // Мульти Select
     $(".chosen-select").chosen({width: "95%"});
+
+    function getGoodsProductsList (value) {
+        // Меняем группы
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '/admin/goods_products_list',
+            type: 'POST',
+            data: {goods_category_id: value, goods_product_id: $('#goods-products-list').val()},
+            success: function(html){
+                // alert(html);
+                $('#goods-products-select').html(html);
+                // $('#metrics-list').foundation();
+            }
+        });
+    };
+
+    function getCategory (value, metrics_count, set_status) {
+
+        if (metrics_count == 0) {
+
+            // Меняем метрики
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/admin/goods_category_metrics',
+                type: 'POST',
+                data: {goods_category_id: value},
+                success: function(metrics){
+                    // alert(metrics);
+                    $('#metrics-list').html(metrics);
+                    $('#metrics-list').foundation();
+                }
+            });
+
+            // Меняем состав
+            if (set_status == 'one') {
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '/admin/goods_category_compositions',
+                    type: 'POST',
+                    data: {goods_category_id: value},
+                    success: function(compositions){
+                        // alert(compositions);
+                        $('#composition-table').html(compositions);
+                        $('#composition-table').foundation();
+                    }
+                });
+            }; 
+        };
+    };
+
+    $(document).on('change', '#goods-categories-list', function(event) {
+        event.preventDefault();
+
+        var value = $(this).val();
+
+        $.when(getGoodsProductsList(value), getCategory(value, metrics_count, set_status)).then(function(){
+
+        });
+    });
 
     $(document).on('click', '#portion-change', function() {
         $('#portion-block div').toggleClass('portion-hide');

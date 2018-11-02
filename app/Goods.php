@@ -127,6 +127,15 @@ class Goods extends Model
         return $this->morphedByMany('App\GoodsArticle', 'goods_values')->withPivot('value');
     }
 
+    // public function getCompositions1Attribute() {
+
+    //     if ($this->goods_article->goods_product->status == 'one') {
+    //         return $this->morphedByMany('App\RawsArticle', 'goods_values')->withPivot('value');
+    //     } else {
+    //         return $this->morphedByMany('App\GoodsArticle', 'goods_values')->withPivot('value');
+    //     }
+    // }
+
     // public function compositions_values()
     // {
     //     return $this->belongsToMany('App\Product', 'article_values', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');

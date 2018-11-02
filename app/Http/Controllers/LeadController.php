@@ -618,7 +618,6 @@ class LeadController extends Controller
     public function edit(Request $request, $id)
     {
 
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -639,7 +638,7 @@ class LeadController extends Controller
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
-        // dd($lead);
+        // dd($lead->orders);
 
         // dd(Carbon::parse($lead->claims[0]->created_at)->format('d.m.Y'));
 

@@ -862,18 +862,37 @@ class GoodsCategoryController extends Controller
         $id = $request->id;
         // $id = 12;
 
-        $goods_list = Goods::with('goods_article')->whereHas('goods_article', function ($query) use ($id, $user) {
+        $goods_list = Goods::with('goods_article')
+        ->whereHas('goods_article', function ($query) use ($id, $user) {
             $query->whereHas('goods_product', function ($query) use ($id, $user) {
                 $query->whereHas('goods_category', function ($query) use ($id, $user) {
                     $query->where(['company_id' => $user->company_id, 'id' => $id]);
                 });
             });
         })
+        ->whereNull('draft')
+        ->whereNull('archive')
         ->get();
         // dd($goods_list);
         $entity = 'goods';
 
         return view('leads.items', compact('goods_list', 'entity'));
+
+    }
+
+    public function ajax_get_metrics(Request $request)
+    {   
+
+        $item = GoodsCategory::with('metrics.property')->findOrFail($request->goods_category_id);
+        return view('goods.metrics.metric_enter', compact('item'));  
+
+    }
+
+    public function ajax_get_compositions(Request $request)
+    {   
+
+        $item = GoodsCategory::with('compositions.raws_product.unit')->findOrFail($request->goods_category_id);
+        return view('goods.compositions.composition_enter', compact('item')); 
 
     }
 

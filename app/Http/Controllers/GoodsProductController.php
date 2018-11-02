@@ -531,7 +531,20 @@ class GoodsProductController extends Controller
             break;
 
         }
-   }
+    }
+
+    public function ajax_get_products_list(Request $request)
+    {
+
+        $goods_products_list = GoodsProduct::where('goods_category_id', $request->goods_category_id)
+        ->orWhere('id', $request->goods_product_id)
+        ->get(['id', 'name'])
+        ->pluck('name', 'id');
+
+        $goods_product_id = $request->goods_product_id;
+
+        return view('goods.goods_products_select', compact('goods_products_list', 'goods_product_id')); 
+    }
 
 
 }
