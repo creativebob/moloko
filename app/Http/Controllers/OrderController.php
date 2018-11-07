@@ -31,7 +31,7 @@ class OrderController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
 
-        $orders = Order::with('site', 'author')
+        $orders = Order::with('author')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -127,21 +127,21 @@ class OrderController extends Controller
         $company_id = $user->company_id;
 
         // Находим или создаем заказ для лида
-        // $order = Order::firstOrCreate(['lead_id' => $request->lead_id, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
-        $order = Order::firstOrCreate(['lead_id' => 9443, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
+        $order = Order::firstOrCreate(['lead_id' => $request->lead_id, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
+        // $order = Order::firstOrCreate(['lead_id' => 9443, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
 
         // Находим сущность, чтоб опрелделить модель
-        // $entity = Entity::where('alias', $request->entity)->first();
-        $entity = Entity::where('alias', 'goods')->first();
+        $entity = Entity::where('alias', $request->entity)->first();
+        // $entity = Entity::where('alias', 'goods')->first();
 
-        // $type = $request->entity;
-        $type = 'goods';
+        $type = $request->entity;
+        // $type = 'goods';
 
         // Формируем позицию заказа
         $composition = new OrderComposition;
 
-        // $composition->order_compositions_id = $request->id;
-        $composition->product_id = 1;
+        $composition->product_id = $request->item_id;
+        // $composition->order_compositions_id = 1;
         $composition->product_type = 'App\\' . $entity->model;
 
         $composition->order_id = $order->id;
@@ -149,6 +149,8 @@ class OrderController extends Controller
         $composition->author_id = $user_id;
         $composition->count = 1;
         $composition->save();
+
+        // dd($composition->product);
 
         // $composition->notes()->save($note);
 

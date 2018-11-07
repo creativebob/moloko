@@ -68,7 +68,9 @@ class GoodsController extends Controller
         ->filter($request, 'author_id')
         ->filter($request, 'goods_category_id', 'goods_article.goods_product')
         ->filter($request, 'goods_product_id', 'goods_article')
-        ->whereNull('archive')
+        ->whereHas('goods_article', function ($q) {
+            $q->whereNull('archive'); 
+        })
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
@@ -276,6 +278,7 @@ class GoodsController extends Controller
 
         $goods_article = new GoodsArticle;
         $goods_article->goods_product_id = $goods_product_id;
+        $goods_article->draft = 1;
         $goods_article->company_id = $company_id;
         $goods_article->author_id = $user_id;
         $goods_article->name = $request->name;
@@ -287,7 +290,6 @@ class GoodsController extends Controller
             $cur_goods->price = $request->price;
             $cur_goods->company_id = $company_id;
             $cur_goods->author_id = $user_id;
-            $cur_goods->draft = 1;
             $cur_goods->goods_article()->associate($goods_article);
             $cur_goods->save();
 
@@ -325,37 +327,40 @@ class GoodsController extends Controller
         $answer_goods = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $cur_goods = Goods::with([
-            'goods_article.goods_product.goods_category' => function ($query) {
-                $query->with([
-                    'metrics' => function ($q) {
-                        $q->with(['property', 'values']);
+            'goods_article' => function ($q) {
+                $q->with([
+                    'metrics',
+                    'compositions.raws_product.unit',
+                    'set_compositions.goods_product.unit',
+                    'goods_product.goods_category' => function ($query) {
+                        $query->with([
+                            'metrics' => function ($q) {
+                                $q->with(['property', 'values']);
+                            },
+                            'compositions.raws_product.unit'
+                        ]);
                     },
-                    'compositions.raws_product.unit'
                 ])
-                ->withCount('metrics', 'compositions');
-            },
+                ->withCount(['metrics', 'compositions', 'set_compositions']);
+            }, 
             'album.photos',
-            'company.manufacturers',
-            'metrics',
-            'compositions.raws_product.unit',
-            'set_compositions.goods_product.unit'
+            'company.manufacturers'
         ])
         // ->where(function ($q) {
         //     $query->when(request('filter_by') == 'likes', function ($q) {
         //         return $q->where('likes', '>', request('likes_amount', 0));
         //     });
         // })
-        ->withCount(['metrics', 'compositions', 'set_compositions'])
         ->moderatorLimit($answer_goods)
         ->findOrFail($id);
         // dd($cur_goods);
 
         // -- TODO -- Перенести в запрос --
         // Массив со значениями метрик товара
-        if (count($cur_goods->metrics)) {
+        if (count($cur_goods->goods_article->metrics)) {
             // dd($cur_goods->metrics);
             $metrics_values = [];
-            foreach ($cur_goods->metrics->groupBy('id') as $metric) {
+            foreach ($cur_goods->goods_article->metrics->groupBy('id') as $metric) {
                 // dd($metric);
                 if ((count($metric) == 1) && ($metric->first()->list_type != 'list')) {
                     $metrics_values[$metric->first()->id] = $metric->first()->pivot->value;
@@ -585,7 +590,7 @@ class GoodsController extends Controller
                 'alias' => 'goods',
                 'composition_categories' => $goods_articles,
             ];
-             // dd($composition_list);
+            // dd($composition_list);
         }
         // dd($composition_list);
 
@@ -693,7 +698,7 @@ class GoodsController extends Controller
         $page_info = pageInfo($this->entity_name);
         // dd($page_info);
 
-        if ($cur_goods->draft == 1) {
+        if ($cur_goods->goods_article->draft == 1) {
             $path = 'edit_draft';
         } else {
             $path = 'edit';
@@ -707,6 +712,16 @@ class GoodsController extends Controller
 
         // dd($request);
 
+        // Получаем из сессии необходимые данные (Функция находится в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $cur_goods = Goods::with('goods_article.goods_product')->moderatorLimit($answer)->findOrFail($id);
+        // dd($cur_goods);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $cur_goods);
+        
         // Определяем количество метрик и составов
         if (isset($request->metrics)) {
             $metrics_count = count($request->metrics);
@@ -725,93 +740,25 @@ class GoodsController extends Controller
         // Если снят флаг черновика, проверяем на совпадение артикула
         if (empty($request->draft)) {
 
-            // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
-            $goods_articles = GoodsArticle::with(['goods' => function ($query) {
-                $query->with('metrics', 'compositions');
-            }])
-            ->whereHas('goods', function($q) {
-                $q->whereNull('draft');
-            })
-            ->where('goods_product_id', $request->goods_product_id)
-            ->where(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count])
-            // ->whereNull('draft')
-            ->whereNull('archive')
-            ->get();
-            // dd($goods_articles);
+            // dd($request);
 
-            if ($goods_articles) {
-
-                // Создаем массив совпадений
-                $coincidence = [];
-                // dd($request);
-
-                // Сравниваем метрики
-                foreach ($goods_articles as $goods_article) {
-                    foreach ($goods_article->goods as $cur_goods) {
-                        // dd($cur_goods);
-
-                        // Формируем массив метрик артикула
-                        $metrics_array = [];
-                        foreach ($cur_goods->metrics as $metric) {
-                        // dd($metric);
-                            $metrics_array[$metric->id][] = $metric->pivot->value;
-                        }
-
-                        // Если значения метрик совпали, создаюм ключ метрик
-                        if ($metrics_array == $request->metrics) {
-                            $coincidence['metrics'] = 1;
-                        }
-
-                        // Формируем массив составов артикула
-                        $compositions_array = [];
-                        if ($cur_goods->goods_article->goods_product->status == 'one') {
-                            foreach ($cur_goods->compositions as $composition) {
-                                // dd($composition);
-                                $compositions_array[$composition->id] = $composition->pivot->value;
-                            }
-                        } else {
-                            foreach ($cur_goods->set_compositions as $composition) {
-                                // dd($composition);
-                                $compositions_array[$composition->id] = $composition->pivot->value;
-                            }
-                        }
-
-                        if ($compositions_array == $request->compositions_values) {
-                            // Если значения метрик совпали, создаюм ключ метрик
-                            $coincidence['compositions'] = 1;
-                        }
-                    }
-                }
-
-                // Если ключи присутствуют, даем ошибку
-                if (isset($coincidence['metrics']) && isset($coincidence['compositions'])) {
-
-                    return redirect()->back()->withInput()->withErrors('Такой артикул уже существует!');
-                    // dd('lol');
-                }
+            $check_name = $this->check_coincidence_name($request);
+            // dd($check_name);
+            if ($check_name) {
+                 return redirect()->back()->withInput()->withErrors('Такой артикул уже существует других в группах');
             }
 
-            
-            // dd($coincidence);
+            $check_article = $this->check_coincidence_article($request);
+            if ($check_article) {
+                return redirect()->back()->withInput()->withErrors('Такой артикул уже существует в группе!');
+            }
 
-            // Проверяем наличие ключей в массиве
-            // if (array_key_exists('metrics', $coincidence) && array_key_exists('ompositions', $coincidence)) {
-            //     // Если ключи присутствуют, даем ошибку
-            //     return redirect()->back()->withInput()->withErrors('Такой артикул уже существует!');
-
-            // }
+            $goods_article = GoodsArticle::where('id', $cur_goods->goods_article_id)->update(['draft' => null]);
         }
 
         // Если что то не совпало, пишем новый артикул
 
-        // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $cur_goods = Goods::with('goods_article.goods_product')->moderatorLimit($answer)->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $cur_goods);
+        
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -938,7 +885,7 @@ class GoodsController extends Controller
 
         $cur_goods->description = $request->description;
         $cur_goods->display = $request->display;
-        $cur_goods->draft = $request->draft;
+
 
         // Названия артикулов
         $cur_goods->manually = $request->manually;
@@ -956,12 +903,7 @@ class GoodsController extends Controller
 
         if ($cur_goods) {
 
-            if ($cur_goods->goods_article->name != $request->name) {
-                $goods_article = $cur_goods->goods_article;
-                $goods_article->name = $request->name;
-                $goods_article->save();
-            }
-
+            // Проверяем каталоги
             if (isset($request->catalogs)) {
 
                 $mass = [];
@@ -973,6 +915,65 @@ class GoodsController extends Controller
                 $cur_goods->catalogs()->sync($mass);
             } else {
                 $cur_goods->catalogs()->detach();
+            }
+
+            // Получаем артикул товара
+            $goods_article = $cur_goods->goods_article;
+
+            // dd($request->metrics);
+            if (isset($request->metrics)) {
+
+                $goods_article->metrics()->detach();
+
+                $metrics_insert = [];
+
+                foreach ($request->metrics as $metric_id => $values) {
+                    foreach ($values as $value) {
+                        // dd($value);
+                        $goods_article->metrics()->attach([
+                            $metric_id => [
+                                'value' => $value,
+                            ]
+                        ]);
+                    }
+                }
+                // dd($metrics_insert);
+
+                // Пишем метрики
+                // $cur_goods->metrics_values()->attach($metrics_insert);
+            } else {
+                $goods_article->metrics()->detach();
+            }
+
+            if ($goods_article->goods_product->status == 'one') {
+
+                if (isset($request->compositions_values)) {
+                    $goods_article->compositions()->detach();
+                    $compositions_insert = [];
+                    foreach ($request->compositions_values as $composition_id => $value) {
+                        $compositions_insert[$composition_id] = [
+                            'value' => $value,
+                        ];
+                    }
+                    // dd($compositions_insert);
+                    $goods_article->compositions()->attach($compositions_insert);
+                } else {
+                    $goods_article->compositions()->detach();
+                }
+            } else {
+                if (isset($request->compositions_values)) {
+                    $goods_article->set_compositions()->detach();
+                    $compositions_insert = [];
+                    foreach ($request->compositions_values as $composition_id => $value) {
+                        $compositions_insert[$composition_id] = [
+                            'value' => $value,
+                        ];
+                    }
+                // dd($compositions_insert);
+                    $goods_article->set_compositions()->attach($compositions_insert);
+                } else {
+                    $goods_article->set_compositions()->detach();
+                }
             }
 
             if ($cur_goods->draft == 1) {
@@ -991,65 +992,17 @@ class GoodsController extends Controller
                 //     }
             }
 
-            // dd($request->metrics);
-            if (isset($request->metrics)) {
-
-                $cur_goods->metrics()->detach();
-
-                $metrics_insert = [];
-
-                foreach ($request->metrics as $metric_id => $values) {
-                    foreach ($values as $value) {
-                        // dd($value);
-                        $cur_goods->metrics()->attach([
-                            $metric_id => [
-                                'value' => $value,
-                            ]
-                        ]);
-                    }
-                }
-                // dd($metrics_insert);
-
-                // Пишем метрики
-                // $cur_goods->metrics_values()->attach($metrics_insert);
-            } else {
-                $cur_goods->metrics()->detach();
+            if ($goods_article->name != $request->name) {
+                $goods_article->name = $request->name;
+                
             }
+            
+            $goods_article->manufacturer_id = $request->manufacturer_id;
+            $goods_article->metrics_count = $metrics_count;
+            $goods_article->compositions_count = $compositions_count;
+            $goods_article->save();
 
-            if ($cur_goods->goods_article->goods_product->status == 'one') {
-
-                if (isset($request->compositions_values)) {
-                    $cur_goods->compositions()->detach();
-                    $compositions_insert = [];
-                    foreach ($request->compositions_values as $composition_id => $value) {
-                        $compositions_insert[$composition_id] = [
-                            'value' => $value,
-                        ];
-                    }
-                    // dd($compositions_insert);
-                    $cur_goods->compositions()->attach($compositions_insert);
-                } else {
-                    $cur_goods->compositions()->detach();
-                }
-            } else {
-                if (isset($request->compositions_values)) {
-                    $cur_goods->set_compositions()->detach();
-                    $compositions_insert = [];
-                    foreach ($request->compositions_values as $composition_id => $value) {
-                        $compositions_insert[$composition_id] = [
-                            'value' => $value,
-                        ];
-                    }
-                // dd($compositions_insert);
-                    $cur_goods->set_compositions()->attach($compositions_insert);
-                } else {
-                    $cur_goods->set_compositions()->detach();
-                }
-            }
-
-
-
-            $goods_article = GoodsArticle::where('id', $cur_goods->goods_article_id)->update(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count]);
+            // $goods_article = GoodsArticle::where('id', $cur_goods->goods_article_id)->update(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count]);
 
             // Если ли есть 
             if ($request->cookie('backlink') != null) {
@@ -1078,7 +1031,7 @@ class GoodsController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $cur_goods = Goods::moderatorLimit($answer)->findOrFail($id);
+        $cur_goods = Goods::with('goods_article')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize('delete', $cur_goods);
@@ -1091,11 +1044,13 @@ class GoodsController extends Controller
             // Скрываем бога
             $user_id = hideGod($user);
 
-            $cur_goods->editor_id = $user_id;
-            $cur_goods->archive = 1;
-            $cur_goods->save();
+            $goods_article = $cur_goods->goods_article;
 
-            if ($cur_goods) {
+            $goods_article->editor_id = $user_id;
+            $goods_article->archive = 1;
+            $goods_article->save();
+
+            if ($goods_article) {
                 return Redirect('/admin/goods');
             } else {
                 abort(403, 'Ошибка при архивации товара');
@@ -1103,71 +1058,6 @@ class GoodsController extends Controller
         } else {
             abort(403, 'Товар не найден');
         }
-    }
-
-        // Сортировка
-    public function ajax_sort(Request $request)
-    {
-        $i = 1;
-
-        foreach ($request->goods as $item) {
-            Goods::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-        // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Goods::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-        // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Goods::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     // Отображение на сайте
@@ -1182,7 +1072,6 @@ class GoodsController extends Controller
         $ajax_error['title_link'] = "Идем в раздел категорий"; // Текст на кнопке
 
         return view('ajax_error', compact('ajax_error'));
-
     }
 
     public function get_inputs(Request $request)
@@ -1192,7 +1081,6 @@ class GoodsController extends Controller
         return view('products.cur_goods-form', compact('product'));
         // $product = Product::with('metrics.property', 'compositions.unit')->findOrFail(1);
         // dd($product);
-
     }
 
     public function add_photo(Request $request)
@@ -1349,7 +1237,135 @@ class GoodsController extends Controller
         $this->authorize(getmethod('edit'), $cur_goods);
 
         return view('goods.photos', compact('cur_goods'));
+    }
 
+
+    // -------------------------------------- Проверки на совпаденеи артикула ----------------------------------------------------
+
+    // Проверка имени по компании
+    public function check_coincidence_name($request)
+    {
+
+        // Смотрим имя артикула по системе
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_goods_articles = operator_right('goods_article', false, 'index');
+
+        $goods_articles = GoodsArticle::moderatorLimit($answer_goods_articles)
+        ->companiesLimit($answer_goods_articles)
+        ->whereNull('draft')
+        ->whereNull('archive')
+        ->whereName($request->name)
+        ->get(['name', 'goods_product_id']);
+            // dd($goods_articles);
+
+        if (count($goods_articles)) {
+
+                // Смотрим группу артикулов
+            $diff_count = $goods_articles->where('goods_product_id', '!=', $request->goods_product_id)->count();
+                // dd($diff_count);
+            if ($diff_count > 0) {
+
+                    // $lol = $goods_articles->where('goods_product_id', '!=', $request->goods_product_id);
+                    // dd($lol->implode('name', ', '));
+
+                return true;
+            }
+        }
+    }
+
+    public function check_coincidence_article($request)
+    {
+
+        // Определяем количество метрик и составов
+        if (isset($request->metrics)) {
+            $metrics_count = count($request->metrics);
+        } else {
+            $metrics_count = 0;
+        }
+        // dd($metrics_count);
+
+        if (isset($request->compositions_values)) {
+            $compositions_count = count($request->compositions_values);
+        } else {
+            $compositions_count = 0;
+        }
+        // dd($compositions_count);
+
+        // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
+        $goods_articles = GoodsArticle::with('metrics', 'compositions', 'set_compositions')
+        ->where('goods_product_id', $request->goods_product_id)
+        ->where(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count])
+        ->whereNull('draft')
+        ->whereNull('archive')
+        ->get();
+        // dd($goods_articles);
+
+        if ($goods_articles) {
+
+            // Создаем массив совпадений
+            $coincidence = [];
+            // dd($request);
+
+            if (isset($request->manufacturer_id)) {
+                $manufacturer_id = $request->manufacturer_id;
+            } else {
+                $manufacturer_id = null;
+            }
+
+            // dd($manufacturer_id);
+
+            // Сравниваем метрики
+            foreach ($goods_articles as $goods_article) {
+                // foreach ($goods_article->goods as $cur_goods) {
+                // dd($goods_articles);
+
+                // Формируем массив метрик артикула
+                $metrics_array = [];
+                foreach ($goods_article->metrics as $metric) {
+                    // dd($metric);
+                    $metrics_array[$metric->id][] = $metric->pivot->value;
+                }
+
+                // Если значения метрик совпали, создаюм ключ метрик
+                if ($metrics_array == $request->metrics) {
+                    $coincidence['metrics'] = 1;
+                }
+
+                // Формируем массив составов артикула
+                $compositions_array = [];
+                if ($goods_article->goods_product->status == 'one') {
+                    foreach ($goods_article->compositions as $composition) {
+                        // dd($composition);
+                        $compositions_array[$composition->id] = $composition->pivot->value;
+                    }
+                } else {
+                    foreach ($goods_article->set_compositions as $composition) {
+                        // dd($composition);
+                        $compositions_array[$composition->id] = $composition->pivot->value;
+                    }
+                }
+
+                if ($compositions_array == $request->compositions_values) {
+                    // Если значения метрик совпали, создаюм ключ метрик
+                    $coincidence['compositions'] = 1;
+                }
+
+                if ($goods_article->manufacturer_id == $manufacturer_id) {
+                    // Если значения метрик совпали, создаюм ключ метрик
+                    $coincidence['manufacturer'] = 1;
+                }
+                // }
+            }
+            // dd($coincidence);
+            // Если ключи присутствуют, даем ошибку
+            if (isset($coincidence['metrics']) && isset($coincidence['compositions']) && isset($coincidence['manufacturer'])) {
+
+                // dd('ошибка');
+                return true;
+                // dd('lol');
+            }
+        }
+        // dd($coincidence);
     }
 
 

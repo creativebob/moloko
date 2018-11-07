@@ -858,20 +858,21 @@ class GoodsCategoryController extends Controller
     // Для заказа
     public function ajax_get_products(Request $request)
     {
+        
         $user = $request->user();
         $id = $request->id;
         // $id = 12;
 
         $goods_list = Goods::with('goods_article')
         ->whereHas('goods_article', function ($query) use ($id, $user) {
-            $query->whereHas('goods_product', function ($query) use ($id, $user) {
+            $query->whereNull('draft')
+                ->whereNull('archive')
+                ->whereHas('goods_product', function ($query) use ($id, $user) {
                 $query->whereHas('goods_category', function ($query) use ($id, $user) {
                     $query->where(['company_id' => $user->company_id, 'id' => $id]);
                 });
             });
         })
-        ->whereNull('draft')
-        ->whereNull('archive')
         ->get();
         // dd($goods_list);
         $entity = 'goods';

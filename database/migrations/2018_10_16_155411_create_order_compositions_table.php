@@ -22,8 +22,8 @@ class CreateOrderCompositionsTable extends Migration
             $table->integer('order_id')->nullable()->unsigned()->comment('ID заказа');
             // $table->foreign('order_id')->references('id')->on('orders');
 
-            $table->integer('order_compositions_id')->nullable()->unsigned()->comment('Id сущности');
-            $table->string('order_compositions_type')->nullable()->comment('Сущность');
+            $table->integer('product_id')->nullable()->unsigned()->comment('Id сущности');
+            $table->string('product_type')->nullable()->comment('Сущность');
 
             $table->integer('cost')->nullable()->comment('Себестоимость');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим мебестоимости');

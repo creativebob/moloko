@@ -47,19 +47,21 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 // ---------------------------- Методы для парсера и одноразовые ----------------------------------------
 Route::any('/check_class', 'ClassController@check_class');
 
+Route::any('/lol', 'GoodsController@check_coincidence_name');
 
-Route::get('/lol', function () {
 
-    $leads = Lead::withCount(['choices_goods_categories', 'choices_services_categories', 'choices_raws_categories'])->get();
-    $count_goods = $leads->where('choices_goods_categories_count', '>', 1)->count();
-    dd($count_goods);
+// Route::get('/lol', function () {
 
-    $count_services = $leads->where('choices_services_categories_count', '>', 1)->count();
-    dd($count_services);
+//     $leads = Lead::withCount(['choices_goods_categories', 'choices_services_categories', 'choices_raws_categories'])->get();
+//     $count_goods = $leads->where('choices_goods_categories_count', '>', 1)->count();
+//     dd($count_goods);
 
-    $count_raws = $leads->where('choices_raws_categories_count', '>', 1)->count();
-    dd($count_raws);
-});
+//     $count_services = $leads->where('choices_services_categories_count', '>', 1)->count();
+//     dd($count_services);
+
+//     $count_raws = $leads->where('choices_raws_categories_count', '>', 1)->count();
+//     dd($count_raws);
+// });
 // Route::get('/columns', function () {
 //     $columns = Schema::getColumnListing('leads');
 //     // dd($columns);

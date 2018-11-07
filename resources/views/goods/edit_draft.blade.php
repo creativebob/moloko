@@ -137,21 +137,24 @@
                             <legend>Метрики</legend>
 
                             <div id="metrics-list">
-                                @if (count($cur_goods->goods_article->goods_product->goods_category->metrics))
+                                @if (count($cur_goods->goods_article->goods_product->goods_category->metrics) || count($cur_goods->goods_article->metrics))
 
                                 {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
-                                @if (count($cur_goods->metrics))
+                                @if (count($cur_goods->goods_article->metrics))
 
-                                @foreach ($cur_goods->metrics->unique() as $metric)
+                                @foreach ($cur_goods->goods_article->metrics->unique() as $metric)
                                 @include('goods.metrics.metric_input', $metric)
                                 @endforeach
 
                                 @else
 
+                                @if (count($cur_goods->goods_article->goods_product->goods_category->metrics))
+
                                 @foreach ($cur_goods->goods_article->goods_product->goods_category->metrics as $metric)
                                 @include('goods.metrics.metric_input', $metric)
                                 @endforeach
 
+                                @endif
                                 @endif
                                 @endif
                             </div>
@@ -168,9 +171,9 @@
                     {{-- Конец правого блока на первой вкладке --}}
 
                     {{-- Чекбокс черновика --}}
-                    @if ($cur_goods->draft == 1)
+                    @if ($cur_goods->goods_article->draft == 1)
                     <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('draft', 1, $cur_goods->draft, ['id' => 'draft']) }}
+                        {{ Form::checkbox('draft', 1, $cur_goods->goods_article->draft, ['id' => 'draft']) }}
                         <label for="draft"><span>Черновик</span></label>
                     </div>
                     @endif
@@ -287,10 +290,10 @@
                                 @if ($cur_goods->goods_article->goods_product->status == 'one')
                                 {{-- Статус товара "один" --}}
                                 
-                                @if (count($cur_goods->compositions))
+                                @if (count($cur_goods->goods_article->compositions))
                                 {{-- У товара есть значения состава, берем их --}}
 
-                                @foreach ($cur_goods->compositions as $composition)
+                                @foreach ($cur_goods->goods_article->compositions as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
                                 @endforeach
 
@@ -310,10 +313,10 @@
                                 @else
                                 {{-- Статус товара "набор" --}}
 
-                                @if (count($cur_goods->set_compositions))
+                                @if (count($cur_goods->goods_article->set_compositions))
                                 {{-- В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются --}}
 
-                                @foreach ($cur_goods->set_compositions as $composition)
+                                @foreach ($cur_goods->goods_article->set_compositions as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
                                 @endforeach
 
@@ -431,7 +434,16 @@
     var cur_goods_id = '{{ $cur_goods->id }}';
     var set_status = '{{ $cur_goods->goods_article->goods_product->status }}';
 
-    var metrics_count = '{{ count($cur_goods->metrics) }}';
+    var metrics_count = '{{ count($cur_goods->goods_article->metrics) }}';
+
+    if (set_status == 'one') {
+        var compositions_count = '{{ count($cur_goods->goods_article->compositions) }}';
+    } else {
+        var compositions_count = 0;
+    }
+
+    var compositions_count = '{{ count($cur_goods->goods_article->metrics) }}';
+
     var category_id = '{{ $cur_goods->goods_article->goods_product->goods_category_id }}';
 
     // Мульти Select
@@ -454,7 +466,7 @@
         });
     };
 
-    function getCategory (value, metrics_count, set_status) {
+    function getCategory (value, metrics_count, compositions_count, set_status) {
 
         if (metrics_count == 0) {
 
@@ -472,25 +484,25 @@
                     $('#metrics-list').foundation();
                 }
             });
-
-            // Меняем состав
-            if (set_status == 'one') {
-
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/goods_category_compositions',
-                    type: 'POST',
-                    data: {goods_category_id: value},
-                    success: function(compositions){
-                        // alert(compositions);
-                        $('#composition-table').html(compositions);
-                        $('#composition-table').foundation();
-                    }
-                });
-            }; 
         };
+
+        // Меняем состав
+        if ((set_status == 'one') && (compositions_count == 0)) {
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/admin/goods_category_compositions',
+                type: 'POST',
+                data: {goods_category_id: value},
+                success: function(compositions) {
+                    // alert(compositions);
+                    $('#composition-table').html(compositions);
+                    $('#composition-table').foundation();
+                }
+            });
+        }; 
     };
 
     $(document).on('change', '#goods-categories-list', function(event) {
@@ -498,7 +510,7 @@
 
         var value = $(this).val();
 
-        $.when(getGoodsProductsList(value), getCategory(value, metrics_count, set_status)).then(function(){
+        $.when(getGoodsProductsList(value), getCategory(value, metrics_count, compositions_count, set_status)).then(function(){
 
         });
     });
