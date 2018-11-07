@@ -66,10 +66,7 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------
 
-        $companies = Company::with('author', 'director', 'location.city', 'sector', 'suppliers', 'manufacturers', 'main_phones')
-
-        // ->suppliers($user->company_id)
-        // ->manufacturers($user->company_id)
+        $companies = Company::with('author', 'director', 'location.city', 'sector', 'we_suppliers', 'we_manufacturers', 'we_dealers', 'main_phones')
         ->moderatorLimit($answer)
         ->filter($request, 'city_id', 'location')
         ->filter($request, 'sector_id')
@@ -78,6 +75,7 @@ class CompanyController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
+        // dd($companies);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------

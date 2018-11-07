@@ -212,7 +212,18 @@ class ParserController extends Controller
 
     }
 
+    public function choice_parser()
+    {
 
+        $choices = Choice::get();
+        foreach ($choices as $choice) {
+        
+            $leads = Lead::where('id', $choice->lead_id)
+            ->update(['choice_id' => $choice->choices_id, 'choice_type' => $choice->choices_type]);
+        }
+
+        dd('Готово!!!');
+    }
 
     public function index(Request $request)
     {

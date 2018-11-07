@@ -25,6 +25,7 @@ class CreateContragentsTable extends Migration
             $table->integer('client_status')->nullable()->unsigned()->comment('Статус клиента (Null или 1)');
             $table->integer('vendor_status')->nullable()->unsigned()->comment('Статус поставщика (Null или 1)');
             $table->integer('manufacturer_status')->nullable()->unsigned()->comment('Статус производителя (Null или 1)');
+            $table->integer('dealer_status')->nullable()->unsigned()->comment('Статус дилера (Null или 1)');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

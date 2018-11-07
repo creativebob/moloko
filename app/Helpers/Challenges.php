@@ -13,7 +13,7 @@ use Carbon\Carbon;
             'author',
             'appointed',
             'finisher',
-            'subject',
+            'subject.choice',
             'challenge_type'
         )
         ->where(function($query) use ($user_id){

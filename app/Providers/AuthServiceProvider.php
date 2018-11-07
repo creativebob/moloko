@@ -7,6 +7,9 @@ use App\RightsRole;
 use App\Company;
 use App\Supplier;
 use App\Manufacturer;
+use App\Dealer;
+use App\Client;
+use App\Bank;
 
 use App\Role;
 use App\Place;
@@ -76,6 +79,9 @@ use App\Policies\RightsRolePolicy;
 use App\Policies\CompanyPolicy;
 use App\Policies\SupplierPolicy;
 use App\Policies\ManufacturerPolicy;
+use App\Policies\DealerPolicy;
+use App\Policies\ClientPolicy;
+use App\Policies\BankPolicy;
 
 use App\Policies\RolePolicy;
 use App\Policies\PlacePolicy;
@@ -160,6 +166,9 @@ class AuthServiceProvider extends ServiceProvider
         Company::class => CompanyPolicy::class, 
         Supplier::class => SupplierPolicy::class, 
         Manufacturer::class => ManufacturerPolicy::class, 
+        Dealer::class => DealerPolicy::class, 
+        Client::class => ClientPolicy::class,
+        Bank::class => BankPolicy::class,
         Right::class => RightPolicy::class, 
         Entity::class => EntityPolicy::class, 
         Role::class => RolePolicy::class,

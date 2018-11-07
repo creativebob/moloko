@@ -45,7 +45,8 @@
 													<li><span class="task-data">Клиент: </span>{{ $challenge->subject->name or '' }}</li>
 													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->subject->phone) }}</li> --}}
 													<li><span class="task-data">Чек: </span>{{ $challenge->subject ? num_format($challenge->subject->badget, 0) : 0 }}</li>
-													<li><span class="task-data">Товар: </span>
+
+													<li><span class="task-data">Товар: </span>{{ $challenge->subject->choice->name or ''}}</li>
 
 												</ul>
 
