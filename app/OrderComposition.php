@@ -46,7 +46,12 @@ class OrderComposition extends Model
 
 	protected $dates = ['deleted_at'];
 	protected $fillable = [
-
+		'order_compositions_id',
+        'order_compositions_type',
+        'order_id',
+        'count',
+        'company_id',
+        'author_id'
 	];
 
 	public function order()

@@ -103,29 +103,38 @@ class Goods extends Model
         return $this->morphToMany('App\Catalog', 'catalog_products');
     }
 
-    // Метрики
-    public function metrics()
-    {
-        return $this->morphedByMany('App\Metric', 'goods_values')->withPivot('value');
-    }
-
-    // Состав
-    // public function compositions_values()
+    // // Метрики
+    // public function metrics()
     // {
-    //     return $this->belongsToMany('App\Article', 'article_values', 'article_id', 'entity_id')->where('entity', 'articles')->withPivot('entity', 'value');
+    //     return $this->morphedByMany('App\Metric', 'goods_values')->withPivot('value');
     // }
 
-    // Состав (сырье)
-    public function compositions()
-    {
-        return $this->morphedByMany('App\RawsArticle', 'goods_values')->withPivot('value');
-    }
+    // // Состав
+    // // public function compositions_values()
+    // // {
+    // //     return $this->belongsToMany('App\Article', 'article_values', 'article_id', 'entity_id')->where('entity', 'articles')->withPivot('entity', 'value');
+    // // }
 
-    // Состав (набор)
-    public function set_compositions()
-    {
-        return $this->morphedByMany('App\GoodsArticle', 'goods_values')->withPivot('value');
-    }
+    // // Состав (сырье)
+    // public function compositions()
+    // {
+    //     return $this->morphedByMany('App\RawsArticle', 'goods_values')->withPivot('value');
+    // }
+
+    // // Состав (набор)
+    // public function set_compositions()
+    // {
+    //     return $this->morphedByMany('App\GoodsArticle', 'goods_values')->withPivot('value');
+    // }
+
+    // public function getCompositions1Attribute() {
+
+    //     if ($this->goods_article->goods_product->status == 'one') {
+    //         return $this->morphedByMany('App\RawsArticle', 'goods_values')->withPivot('value');
+    //     } else {
+    //         return $this->morphedByMany('App\GoodsArticle', 'goods_values')->withPivot('value');
+    //     }
+    // }
 
     // public function compositions_values()
     // {

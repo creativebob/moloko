@@ -136,4 +136,23 @@ class GoodsArticle extends Model
     {
         return $this->belongsTo('App\Photo');
     }
+
+
+    // Метрики
+    public function metrics()
+    {
+        return $this->morphedByMany('App\Metric', 'goods_articles_values')->withPivot('value');
+    }
+
+    // Состав (сырье)
+    public function compositions()
+    {
+        return $this->morphedByMany('App\RawsArticle', 'goods_articles_values')->withPivot('value');
+    }
+
+    // Состав (набор)
+    public function set_compositions()
+    {
+        return $this->morphedByMany('App\GoodsArticle', 'goods_articles_values')->withPivot('value');
+    }
 }

@@ -219,7 +219,6 @@ $disabled_leadbot = '';
 		});
 	});
 
-
 	$(document).on('click', '#change-lead-type', function(event) {
 		event.preventDefault();
 
@@ -256,7 +255,6 @@ $disabled_leadbot = '';
 		});
 	});
 
-
 	$(document).on('click', '.get-products', function(event) {
 		event.preventDefault();
 
@@ -277,7 +275,6 @@ $disabled_leadbot = '';
 			}
 		});
 	});
-
 
 	$(document).on('click', '.add-to-order', function(event) {
 		event.preventDefault();
