@@ -4,14 +4,14 @@
 @case('numeric')
 <label>
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
-	{{ Form::number('metrics['.$metric->id.'][]', $metrics_values[$metric->id] ? $metrics_values[$metric->id] : null) }}
+	{{ Form::number('metrics['.$metric->id.'][]', $metrics_values[$metric->id] ? $metrics_values[$metric->id] : null, ['required']) }}
 </label>
 @break
 
 @case('percent')
 <label>
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span> ({{ $metric->unit->abbreviation }})
-	{{ Form::number('metrics['.$metric->id.'][]', $metrics_values[$metric->id] ? $metrics_values[$metric->id] : null) }}
+	{{ Form::number('metrics['.$metric->id.'][]', $metrics_values[$metric->id] ? $metrics_values[$metric->id] : null, ['required']) }}
 </label>
 @break
 
@@ -56,7 +56,7 @@ if ($metrics_values[$metric->id]) {
 	$list = $metric->values->pluck('value', 'id');
 	@endphp
 
-	{{ Form::select('metrics['.$metric->id.'][]', $list, $metrics_values[$metric->id] ? $metrics_values[$metric->id] : null) }}
+	{{ Form::select('metrics['.$metric->id.'][]', $list, $metrics_values[$metric->id] ? $metrics_values[$metric->id] : null, ['required']) }}
 
 </ul>
 </label>

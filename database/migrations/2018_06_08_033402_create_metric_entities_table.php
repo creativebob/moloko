@@ -22,6 +22,8 @@ class CreateMetricEntitiesTable extends Migration
             $table->integer('metric_entity_id')->nullable()->unsigned()->comment('Id сущности связанной с метрикой');
             $table->string('metric_entity_type')->comment('Сущность обьекта');
 
+            $table->enum('set_status', ['one', 'set'])->comment('Статус набора (Один/набор)');
+
             $table->timestamps();
         });
     }

@@ -437,7 +437,7 @@ Route::any('/goods_category_compositions', 'GoodsCategoryController@ajax_get_com
 Route::resource('/goods_products', 'GoodsProductController')->middleware('auth');
 
 Route::any('/ajax_goods_count', 'GoodsProductController@ajax_count')->middleware('auth');
-Route::any('/ajax_goods_modes', 'GoodsProductController@ajax_modes')->middleware('auth');
+Route::any('/goods_products_create_mode', 'GoodsProductController@ajax_change_create_mode')->middleware('auth');
 
 Route::any('/goods_products_list', 'GoodsProductController@ajax_get_products_list')->middleware('auth');
 

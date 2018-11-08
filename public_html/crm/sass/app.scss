@@ -216,11 +216,17 @@ $dropdown-width: 14rem;
 .up-input-button {
     font-size: 0.8rem;
     display: block;
-    position: absolute;
-    right: 0px;
+    // position: absolute;
+    // right: 0px;
+    // z-index: 9000;
     color: #999;
     width: auto;
-    z-index: 9000;
+    margin-bottom: 0.8rem;
+    
+}
+
+.set-status {
+    margin-top: 0.8rem;
 }
 
 
@@ -3862,7 +3868,7 @@ a:hover {
     }
 }
 
-#unit-change {
+.unit-change {
     color: #1779ba;
 
     &:hover {

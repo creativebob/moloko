@@ -24,7 +24,7 @@ class CreateGoodsProductsTable extends Migration
             $table->string('photo_id')->index()->nullable()->comment('Обложка товара');
             // $table->foreign('photo_id')->references('id')->on('photos');
 
-            $table->enum('status', ['one', 'set'])->comment('Статус набора (Один/набор)');
+            $table->enum('set_status', ['one', 'set'])->comment('Статус набора (Один/набор)');
 
             $table->text('description')->nullable()->comment('Описание товара');
 

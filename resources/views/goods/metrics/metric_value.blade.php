@@ -1,5 +1,4 @@
-<table>
-	<tbody>
+
 		@switch($metric->property->type)
 
 		@case('numeric')
@@ -39,5 +38,3 @@
 		@break
 
 		@endswitch
-	</tbody>
-</table>

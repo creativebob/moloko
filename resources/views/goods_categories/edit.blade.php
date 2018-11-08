@@ -27,6 +27,7 @@
             <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
             <li class="tabs-title"><a data-tabs-target="site" href="#site">Сайт</a></li>
             <li class="tabs-title"><a data-tabs-target="properties" href="#properties">Свойства</a></li>
+            <li class="tabs-title"><a data-tabs-target="set-properties" href="#set-properties">Свойства (Набор)</a></li>
             <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
             <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
         </ul>
@@ -146,7 +147,7 @@
                             </thead>
                             <tbody id="metrics-table">
                                 {{-- Таблица метрик товара --}}
-                                @if (!empty($goods_category->metrics))
+                                @if (count($goods_category->metrics))
                                 @each('goods_categories.metrics.metric', $goods_category->metrics, 'metric')
                                 @endif
                             </tbody>
@@ -155,18 +156,69 @@
                     <div class="small-12 medium-4 cell">
                         {{ Form::open(['url' => '/add_goods_category_metric', 'id' => 'properties-form', 'data-abide', 'novalidate']) }}
                         <fieldset>
-                            <legend><a data-toggle="properties-dropdown">Добавить метрику</a></legend>
+                            <legend><a data-toggle="one-properties-dropdown">Добавить метрику</a></legend>
 
                             <div class="grid-x grid-padding-x" id="property-form"></div>
 
                         </fieldset>
+                        {{ Form::hidden('set_status', 'one') }}
                         {{ Form::hidden('entity_id', $goods_category->id) }}
                         {{ Form::close() }}
                         {{-- Список свойств с метриками --}}
-                        <div class="dropdown-pane" id="properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
-                            @include('goods_categories.metrics.properties-list', $properties)
+                        <div class="dropdown-pane" id="one-properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
+                            {{ Form::model($goods_category, []) }}
+                            @include('goods_categories.metrics.properties_list', ['properties' => $properties, 'set_status' => 'one'])
+                            {{  Form::close() }}
                         </div>
 
+                    </div>
+                </div>
+            </div>
+
+            <!-- Свойства для набора -->
+            <div class="tabs-panel" id="set-properties">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-8 cell">
+                        <table>
+                            <thead>
+                                <tr> 
+                                    <th>Название</th>
+                                    <th>Минимум</th>
+                                    <th>Максимум</th>
+                                    <th>Подтверждение</th>
+                                    <th>Отрицание</th>
+                                    <th>Цвет</th>
+                                    <th>Список</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="set-metrics-table">
+                                {{-- Таблица метрик товара --}}
+                                @if (count($goods_category->set_metrics))
+                                @each('goods_categories.metrics.metric', $goods_category->set_metrics, 'metric')
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="small-12 medium-4 cell">
+
+                        {{ Form::open(['url' => '/add_goods_category_metric', 'id' => 'properties-form', 'data-abide', 'novalidate']) }}
+                        <fieldset>
+                            <legend><a data-toggle="set-properties-dropdown">Добавить метрику</a></legend>
+                            <div class="grid-x grid-padding-x" id="property-form"></div>
+                        </fieldset>
+                        {{ Form::hidden('set_status', 'set') }}
+                        {{ Form::hidden('entity_id', $goods_category->id) }}
+                        {{ Form::close() }}
+
+                        {{-- Список свойств с метриками --}}
+                        <div class="dropdown-pane" id="set-properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
+
+                            {{ Form::model($goods_category, []) }}
+                            @include('goods_categories.metrics.properties_list', ['properties' => $properties, 'set_status' => 'set'])
+                            {{ Form::close() }}
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -381,8 +433,8 @@ $settings = config()->get('settings');
     // При клике на чекбокс метрики отображаем ее на странице
     $(document).on('click', '.add-metric', function() {
 
-        // alert($(this).val());
         var id = $(this).val();
+        var set_status = $(this).data('set-status');
 
         // Если нужно добавить метрику
         if ($(this).prop('checked') == true) {
@@ -392,12 +444,18 @@ $settings = config()->get('settings');
                 },
                 url: '/admin/ajax_add_relation_metric',
                 type: 'POST',
-                data: {id: $(this).val(), entity: 'goods_categories', entity_id: goods_category_id},
+                data: {id: $(this).val(), entity: 'goods_categories', entity_id: goods_category_id, set_status: set_status},
                 success: function(html){
 
+                    if (set_status == 'one') {
+                        $('#metrics-table').append(html);
+                        $('#property-form').html(''); 
+                    } else {
+                        $('#set-metrics-table').append(html);
+                        $('#property-form').html(''); 
+                    }
                     // alert(html);
-                    $('#metrics-table').append(html);
-                    $('#property-form').html('');
+                    
                 }
             })
         } else {

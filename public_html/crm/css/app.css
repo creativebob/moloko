@@ -127,11 +127,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 .up-input-button {
   font-size: 0.8rem;
   display: block;
-  position: absolute;
-  right: 0px;
   color: #999;
   width: auto;
-  z-index: 9000;
+  margin-bottom: 0.8rem;
+}
+
+.set-status {
+  margin-top: 0.8rem;
 }
 
 fieldset {
@@ -2866,10 +2868,10 @@ a#task-toggle {
   display: none;
 }
 
-#unit-change {
+.unit-change {
   color: #1779ba;
 }
-#unit-change:hover {
+.unit-change:hover {
   color: #1468a0;
   cursor: pointer;
 }
