@@ -25,7 +25,10 @@ use App\Note;
 use App\Challenge;
 use App\Staff;
 use App\Phone;
+
 use App\GoodsCategory;
+use App\ServicesCategory;
+use App\RawsCategory;
 
 // use App\Challenge_type;
 
@@ -91,7 +94,7 @@ class LeadController extends Controller
             // 'location.city', 
             // 'choices_goods_categories', 
             // 'choices_services_categories', 
-            // 'choices_raws_categories', 
+            'choice',
             'lead_type',
             'lead_method',
             'stage',
@@ -130,7 +133,7 @@ class LeadController extends Controller
         // ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // dd($leads->first());
+        // dd($leads[2]);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -183,9 +186,7 @@ class LeadController extends Controller
         // Запрос с выбором лидов по дате задачи == сегодняшней дате или меньше, не получается отсортировать по дате задачи, т.к. задач может быть много на одном лиде
         $leads = Lead::with(
             'location.city', 
-            'choices_goods_categories', 
-            'choices_services_categories', 
-            'choices_raws_categories', 
+            'choice', 
             'manager',
             'stage',
             'challenges.challenge_type'
@@ -623,7 +624,7 @@ class LeadController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
 
-        $lead = Lead::with(['location.city', 'main_phones', 'extra_phones', 'medium', 'campaign', 'source', 'site', 'claims' => function ($query) {
+        $lead = Lead::with(['location.city', 'main_phones', 'extra_phones', 'medium', 'campaign', 'source', 'site', 'claims', 'choice' => function ($query) {
             $query->orderBy('created_at', 'asc');
         }, 'notes' => function ($query) {
             $query->orderBy('created_at', 'desc');
@@ -648,6 +649,26 @@ class LeadController extends Controller
         // $this->authorize(getmethod(__FUNCTION__), $lead);
 
         $lead_methods_list = LeadMethod::whereIn('mode', [1, 2, 3])->get()->pluck('name', 'id');
+
+
+        // // $all_categories_list = null;
+        $goods_categories_list = GoodsCategory::where('category_status', 1)->get()->mapWithKeys(function ($item) {
+            return ['goods-' . $item->id => $item->name];
+        })->toArray();
+
+        $services_categories_list = ServicesCategory::where('category_status', 1)->get()->mapWithKeys(function ($item) {
+            return ['service-' . $item->id => $item->name];
+        })->toArray();
+
+        $raws_categories_list = RawsCategory::where('category_status', 1)->get()->mapWithKeys(function ($item) {
+            return ['raw-' . $item->id => $item->name];
+        })->toArray();
+
+        $choices = [
+            'Товары' => $goods_categories_list,
+            'Услуги' => $services_categories_list,
+            'Сырье' => $raws_categories_list,
+        ];
 
         // Получаем список этапов
         $answer_stages = operator_right('stages', false, 'index');
@@ -686,7 +707,7 @@ class LeadController extends Controller
 
         $entity = 'goods_categories';
 
-        return view('leads.edit', compact('lead', 'page_info', 'stages_list', 'entity', 'list_challenges', 'lead_methods_list', 'group_goods_categories', 'entity'));
+        return view('leads.edit', compact('lead', 'page_info', 'stages_list', 'entity', 'list_challenges', 'lead_methods_list', 'group_goods_categories', 'entity', 'choices'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
@@ -747,9 +768,14 @@ class LeadController extends Controller
 
         $lead->stage_id = $request->stage_id;
         $lead->badget = $request->badget;
+        $lead->lead_method_id = $request->lead_method;
         $lead->draft = NULL;
 
         $lead->editor_id = $user->id;
+
+        $choiceFromTag = getChoiceFromTag($request->choice_tag);
+        $lead->choice_type = $choiceFromTag['type'];
+        $lead->choice_id = $choiceFromTag['id'];
 
         // $lead->first_name = $request->first_name;
         // $lead->second_name = $request->second_name;

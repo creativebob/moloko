@@ -8,6 +8,7 @@
 
 @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, isset($lead->case_number) ? $lead->case_number : 'нет номера'))
 
+{{--
 @section('title-content')
 <div class="top-bar head-content">
 	<div class="top-bar-left">
@@ -17,6 +18,7 @@
 	</div>
 </div>
 @endsection
+--}}
 
 @section('content')
 

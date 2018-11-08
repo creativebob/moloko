@@ -123,6 +123,9 @@ class DatabaseSeeder extends Seeder
         $this->call(ChallengesTypesTableSeeder::class);
         $this->call(PrioritiesTableSeeder::class);
 
+        // Работа с клиентом
+        $this->call(LoyaltiesTableSeeder::class);
+
         $this->call(StagesTableSeeder::class);
         $this->call(MessengersTableSeeder::class);
 

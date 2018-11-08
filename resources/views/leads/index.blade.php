@@ -110,11 +110,7 @@
             @if($lead->email)<br><span class="tiny-text">{{ $lead->email or '' }}</span>@endif
           </td>
           <td class="td-choice">
-            {{-- $lead->choices_goods_categories->implode('name', ',') }}
-            <br>
-            {{ $lead->choices_services_categories->implode('name', ',') }}
-            <br>
-            {{ $lead->choices_raws_categories->implode('name', ',') --}}
+            {{ $lead->choice->name or '' }}
           </td>
 
           <td class="td-badget">{{ num_format($lead->badget, 0) }}</td>

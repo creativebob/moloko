@@ -146,7 +146,8 @@ Route::get('/entity_page', 'ParserController@entity_page')->middleware('auth');
 // Route::get('/lead_type', 'ParserController@lead_type')->middleware('auth');
 // Route::get('/old_claims', 'ParserController@old_claims')->middleware('auth');
 // Route::get('/phone_parser', 'ParserController@phone_parser')->middleware('auth');
-Route::get('/cac_parser', 'ParserController@challenges_active_count')->middleware('auth');
+// Route::get('/cac_parser', 'ParserController@challenges_active_count')->middleware('auth');
+Route::get('/choice_parser', 'ParserController@choice_parser')->middleware('auth');
 
 Route::get('/map', function() {
 
@@ -647,6 +648,24 @@ Route::resource('/suppliers', 'SupplierController')->middleware('auth');
 
 // Основные методы
 Route::resource('/manufacturers', 'ManufacturerController')->middleware('auth');
+
+
+// ------------------------------------ Дилеры ----- ----------------------------------------------------
+
+// Основные методы
+Route::resource('/dealers', 'DealerController')->middleware('auth');
+
+
+// ------------------------------------ Клиенты ----------------------------------------------------------
+
+// Основные методы
+Route::resource('/clients', 'ClientController')->middleware('auth');
+
+
+// ------------------------------------ Банки ----------------------------------------------------------
+
+// Основные методы
+Route::resource('banks', 'BankController')->middleware('auth');
 
 
 // ------------------------------------- Правила доступа ----------------------------------------------------

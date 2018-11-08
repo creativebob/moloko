@@ -1,11 +1,11 @@
 
 
 <div class="grid-x tabs-wrap inputs">
-    <div class="small-12 medium-5 large-6 cell">
+    <div class="small-12 medium-5 large-7 cell">
 
         <!-- Персональная информация -->
         <div class="grid-x">
-            <div class="small-12 medium-12 large-8 cell">
+            <div class="small-12 medium-12 large-8 cell margin-left-15">
 
                 <div class="grid-x grid-padding-x">
                     <div class="small-6 medium-6 cell">
@@ -24,14 +24,17 @@
                     </div>
                     <div id="port-autofind" class="small-12 cell">
                     </div>
+
                     <div class="small-6 medium-6 large-6 cell">
                         <label class="input-icon">Введите город
                             @php
                             $city_name = null;
                             $city_id = null;
                             if(isset($lead->location->city->name)) {
-                                $city_name = $lead->location->city->name;
-                                $city_id = $lead->location->city->id;
+
+                            $city_name = $lead->location->city->name;
+                            $city_id = $lead->location->city->id;
+
                             }
                             @endphp
                             @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
@@ -42,7 +45,10 @@
                             @php
                             $address = null;
                             if (isset($lead->location->address)) {
-                                $address = $lead->location->address;
+
+                            $address = $lead->location->address;
+
+
                             }
                             @endphp
                             @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
@@ -50,72 +56,36 @@
                     </div>
                 </div>
 
-                <!-- Пустой блок -->
-                <div class="grid-x grid-padding-x">
-                    <div class="small-6 medium-6 large-6 cell">
-                        <label>Бюджет
-                            @include('includes.inputs.digit', ['name'=>'badget', 'value'=>$lead->badget, 'required'=>''])
-                        </label>
-                    </div>
-                    <div class="small-6 medium-6 large-6 cell">
-                        <label>Этап
-                            {{ Form::select('stage_id', $stages_list, $lead->stage_id) }}
-                        </label>
-                    </div>
-<!--             <div class="small-6 medium-6 large-6 cell">
-                <label>Менеджер
-                    @include('includes.inputs.string', ['name'=>'manager', 'value'=>$lead->manager->name, 'required'=>''])
-                </label>
-            </div> -->
-        </div>
+
+
 
     </div>
 
     <div class="small-12 medium-12 large-4 cell">
+        <!-- Пустой блок -->
         <div class="grid-x grid-padding-x">
-            {{-- <div class="small-12 medium-12 large-12 cell">
-                <label>Страна
-                    @php
-                    $country_id = null;
-                    if (isset($lead->location->country_id)) {
-                    $country_id = $lead->location->country_id;
-                }
-                @endphp
-                {{ Form::select('country_id', $countries_list, $country_id)}}
-            </label>
-        </div> --}}
-
-        {{-- <div class="small-12 cell">
-            <label>Компания
-                <div class="switch tiny">
-                  <input class="switch-input" id="tinySwitch" type="checkbox" name="exampleSwitch">
-                  <label class="switch-paddle" for="tinySwitch">
-                    <span class="show-for-sr">Tiny Sandwiches Enabled</span>
+            <div class="small-12 cell">
+                <label>Бюджет
+                    @include('includes.inputs.digit', ['name'=>'badget', 'value'=>$lead->badget, 'required'=>''])
                 </label>
             </div>
-        </label> 
-    </div> --}}
-    <div class="small-12 medium-12 cell">
-        <label>Почта
-            @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email', 'required'=>''])
-        </label> 
+            <div class="small-12 cell">
+                <label>Этап
+                    {{ Form::select('stage_id', $stages_list, $lead->stage_id) }}
+                </label>
+            </div>
+
+        </div>
     </div>
-    <div class="small-12 cell">
-        <label>Компания
-            @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$lead->company_name, 'required'=>''])
-        </label>
-    </div>
-</div>
-</div>
 
 </div>
 
 <!-- ЗАКАЗ -->
 <div class="grid-x grid-padding-x">
-    <div class="small-12 medium-12 large-12 cell">
+    <div class="small-12 medium-12 large-12 cell margin-left-15">
         <ul class="tabs-list" data-tabs id="tabs-extra-leads">
-            <li class="tabs-title is-active" id="tab-order"><a href="#content-panel-order" aria-selected="true">Заказ</a></li>
-            {{-- <li class="tabs-title" id="tab-client"><a href="#content-panel-client" aria-selected="true">Клиент</a></li> --}}
+            <li class="tabs-title is-active" id="tab-order"><a href="#content-panel-order" aria-selected="true">Состав заказа</a></li>
+            <li class="tabs-title" id="tab-client"><a href="#content-panel-client" aria-selected="true">Карточка клиента</a></li>
             <li class="tabs-title" id="tab-history"><a href="#content-panel-history" aria-selected="true">История</a></li>
         </ul>
 
@@ -160,13 +130,35 @@
             </div>
 
             {{-- КЛИЕНТ --}}
-            {{-- <div class="tabs-panel" id="content-panel-client">
+            <div class="tabs-panel" id="content-panel-client">
                 <div class="grid-x grid-padding-x">
-                    @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
-                    <a id="lead-free" class="button">Освободить лида</a>
-                    @endif
+
+
+                        {{-- <div class="small-12 medium-12 large-12 cell">
+                            <label>Страна
+                                @php
+                                $country_id = null;
+                                if (isset($lead->location->country_id)) {
+                                $country_id = $lead->location->country_id;
+                            }
+                            @endphp
+                            {{ Form::select('country_id', $countries_list, $country_id)}}
+                        </label>
+                    </div> --}}
+
+
+                    <div class="small-12 medium-6 cell">
+                        <label>Почта
+                            @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email', 'required'=>''])
+                        </label> 
+                    </div>
+                    <div class="small-12 medium-6 cell">
+                        <label>Компания
+                            @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$lead->company_name, 'required'=>''])
+                        </label>
+                    </div>
                 </div>
-            </div> --}}
+            </div>
 
             {{-- ИСТОРИЯ --}}
             <div class="tabs-panel" id="content-panel-history">
@@ -186,7 +178,7 @@
 </div>
 
 <!-- Правый блок -->
-<div class="small-12 medium-7 large-6 cell">
+<div class="small-12 medium-7 large-5 cell">
     <div class="grid-x tabs-right">
         <div class="small-12 cell">
             <ul class="tabs-list" data-tabs id="tabs-leads">
@@ -325,61 +317,51 @@
 
                                     @php 
                                     if($lead->lead_method->mode != 1){
-                                        $disabled_method_list = 'disabled';} else {
-                                            $disabled_method_list = '';};
-                                            @endphp
 
-                                            {{ Form::select('lead_method', $lead_methods_list, $lead->lead_method_id, [$disabled_method_list]) }}
+                                    $disabled_method_list = 'disabled';} else {
+                                    $disabled_method_list = '';};
+                                    @endphp
 
-                                        </td><td></td>
-                                    </tr>
-                                    <td>Интерес: </td>
-                                    <td>
-                                        @if(!empty($lead->choices_goods_categories->implode('name', ',')))
-                                        {{ $lead->choices_goods_categories->implode('name', ',') }}<br>
-                                        @endif
+                                    {{ Form::select('lead_method', $lead_methods_list, $lead->lead_method_id, [$disabled_method_list]) }}
 
-                                        @if(!empty($lead->choices_services_categories->implode('name', ',')))
-                                        {{ $lead->choices_services_categories->implode('name', ',') }}<br>
-                                        @endif
-
-                                        @if(!empty($lead->choices_raws_categories->implode('name', ',')))
-                                        {{ $lead->choices_raws_categories->implode('name', ',') }}<br>
-                                        @endif
-                                    </td><td></td>     
-                                </tr>
-                                <tr>
-                                    <td>Источник: </td><td>{{ $lead->source->name or ''}}</td><td></td>
-                                </tr>
-                                <tr>
-                                    <td>Сайт: </td><td>{{ $lead->site->name or ''}}</td><td></td>
-                                </tr>
-                                <tr>
-                                    <td>Тип трафика: </td><td>{{ $lead->medium->name or ''}}</td><td></td>
-                                </tr>
-                                <tr>
-                                    <td>Рекламная кампания: </td><td>{{ $lead->campaign_id or ''}}</td><td></td>
-                                </tr>
-                                <tr>
-                                    <td>Объявление: </td><td>{{ $lead->utm_content or ''}}</td><td></td>
-                                </tr>
-                                <tr>
-                                    <td>Ключевая фраза: </td><td>{{ $lead->utm_term or ''}}</td><td></td>
-                                </tr>
-                                <tr>
-                                    <td>Менеджер: </td><td>{{ $lead->manager->name }}</td>
-                                    <td>
-                                        @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
-                                        <a id="lead-free" class="button tiny">Освободить</a>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Активных задач: </td><td>{{ $lead->challenges_active_count or ''}}</td><td></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
+                                </td><td></td>
+                            </tr>
+                            <td>Интерес: </td>
+                            <td>
+                            @php if($lead->lead_method_id == 2){$choice_disabled = 'disabled';} else {$choice_disabled = '';}   @endphp
+                            {{ Form::select('choice_tag', $choices, genChoiceTag($lead), [$choice_disabled]) }}</td>
+                            <td></td>     
+                        </tr>
+                        <tr>
+                            <td>Источник: </td><td>{{ $lead->source->name or ''}}</td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Сайт: </td><td>{{ $lead->site->name or ''}}</td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Тип трафика: </td><td>{{ $lead->medium->name or ''}}</td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Рекламная кампания: </td><td>{{ $lead->campaign_id or ''}}</td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Объявление: </td><td>{{ $lead->utm_content or ''}}</td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Ключевая фраза: </td><td>{{ $lead->utm_term or ''}}</td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Менеджер: </td><td>{{ $lead->manager->name }}</td>
+                            <td>
+                                @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
+                                <a id="lead-free" class="button tiny">Освободить</a>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Активных задач: </td><td>{{ $lead->challenges_active_count or ''}}</td><td></td>
+                        </tr>
+                    </table>
 
                 </div>
 

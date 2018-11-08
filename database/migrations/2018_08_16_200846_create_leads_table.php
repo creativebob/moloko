@@ -71,6 +71,9 @@ class CreateLeadsTable extends Migration
 
             $table->integer('chellenges_active_count')->default(0)->unsigned()->comment('Кол-во активных задач');
 
+            $table->integer('choice_id')->nullable()->unsigned()->default(null)->comment('ID сущности которая интересует');
+            $table->string('choice_type')->nullable()->comment('Модель сущности');
+
             // Старый id из другой базы
             $table->integer('old_lead_id')->nullable()->unsigned()->comment('ID из другой базы');
 

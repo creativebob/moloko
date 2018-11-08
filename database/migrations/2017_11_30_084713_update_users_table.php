@@ -31,7 +31,7 @@ class UpdateUsersTable extends Migration
             $table->bigInteger('extra_phone')->nullable()->comment('Дополнительный телефон')->after('phone');
             $table->bigInteger('telegram_id')->unsigned()->unique()->nullable()->comment('ID Telegram')->after('extra_phone');
 
-            $table->integer('location_id')->nullable()->unsigned()->comment('Адрес пользователя')->after('telegram_id');;
+            $table->integer('location_id')->nullable()->unsigned()->comment('Адрес пользователя')->after('telegram_id');
 
             $table->string('photo')->nullable()->comment('Фото')->after('location_id');
              $table->integer('photo_id')->nullable()->unsigned()->comment('Id аватарки')->after('photo');

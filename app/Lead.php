@@ -132,22 +132,28 @@ class Lead extends Model
     }
 
     // Получаем тип обращения
-    public function choices_goods_categories()
+    public function choice()
     {
-        return $this->morphedByMany('App\GoodsCategory', 'choices');
+        return $this->morphTo();
     }
 
-    // Получаем тип обращения
-    public function choices_services_categories()
-    {
-        return $this->morphedByMany('App\ServicesCategory', 'choices');
-    }
+    // // Получаем тип обращения
+    // public function choices_goods_categories()
+    // {
+    //     return $this->morphedByMany('App\GoodsCategory', 'choices');
+    // }
 
-    // Получаем тип обращения
-    public function choices_raws_categories()
-    {
-        return $this->morphedByMany('App\RawsCategory', 'choices');
-    }
+    // // Получаем тип обращения
+    // public function choices_services_categories()
+    // {
+    //     return $this->morphedByMany('App\ServicesCategory', 'choices');
+    // }
+
+    // // Получаем тип обращения
+    // public function choices_raws_categories()
+    // {
+    //     return $this->morphedByMany('App\RawsCategory', 'choices');
+    // }
 
     // Получаем менеджера
     public function manager()
