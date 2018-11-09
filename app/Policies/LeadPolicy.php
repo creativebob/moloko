@@ -12,7 +12,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class LeadPolicy
 {
-    
+
     use HandlesAuthorization;
     use PoliticTrait;
 
@@ -63,18 +63,11 @@ class LeadPolicy
     {
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
 
-        // // Проверяем на наличие связей
-        // $suppliers = Supplier::where('company_id', $model->id);
-
-        // // Проверяем на наличие связей
-        // $companies = Supplier::where('contragent_id', $model->id);
-
-        // // Если есть связи - запрещаем удаление
-        // if(($suppliers->count() > 0)||($companies->count() > 0)){
-        //     return false;
-        // };
-
-        return $result;
+        if (($model->challenges_count > 0) || ($model->claims_count > 0)) {
+            return false;
+        } else {
+            return $result;
+        }
     }
 
     public function moderator(User $user, Lead $model)
@@ -106,5 +99,5 @@ class LeadPolicy
     {
         if(Auth::user()->god){return true;} else {return false;};
     }
-      
+
 }

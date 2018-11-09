@@ -68,6 +68,12 @@ class RawsCategory extends Model
         return $this->belongsTo('App\RawsMode');
     }
 
+    // Артикул
+    public function raws_articles()
+    {
+        return $this->hasManyThrough('App\RawsArticle', 'App\RawsProduct');
+    }
+
     public function photo()
     {
         return $this->belongsTo('App\Photo');

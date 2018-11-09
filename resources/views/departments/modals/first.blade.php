@@ -12,16 +12,7 @@
     <div class="tabs-panel is-active" id="department">
       <div class="grid-x grid-padding-x align-center modal-content inputs">
         <div class="small-10 cell">
-          <label class="input-icon">Введите город
-            @php
-            $city_name = null;
-            $city_id = null;
-            if (isset($department->location->city->name)) {
-            $city_name = $department->location->city->name;
-            $city_id = $department->location->city->id;
-          }
-          @endphp
-          @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
+          @include('includes.inputs.city_search', ['city' => isset($department->location->city->name) ? $department->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
         </label>
         <label>Название филиала
           @include('includes.inputs.name', ['value'=>$department->name, 'name'=>'name', 'required'=>'required'])
@@ -37,7 +28,7 @@
         @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
       </label>
       <label>Телефон филиала
-        @include('includes.inputs.phone', ['value'=>isset($department->main_phone->phone) ? $department->main_phone->phone : null, 'name'=>'main_phone', 'required'=>'required'])
+        @include('includes.inputs.phone', ['value'=>isset($department->main_phone->phone) ? $department->main_phone->phone : null, 'name'=>'main_phone', 'required'=>''])
       </label>
       {{ Form::hidden('department_id', $department->id, ['id' => 'department-id']) }}
       {{ Form::hidden('first_item', 0, ['class' => 'first-item']) }}
@@ -51,7 +42,7 @@
 <div class="tabs-panel" id="worktimes">
   <div class="grid-x grid-padding-x align-center">
     <div class="small-8 cell">
-      @include('includes.inputs.schedule', ['value'=>$worktime]) 
+      @include('includes.inputs.schedule', ['value'=>$worktime])
     </div>
   </div>
 </div>

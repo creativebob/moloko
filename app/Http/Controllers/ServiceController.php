@@ -86,6 +86,7 @@ class ServiceController extends Controller
         ]);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
+
         $page_info = pageInfo($this->entity_name);
 
         return view('services.index', compact('services', 'page_info', 'filter'));
@@ -287,10 +288,10 @@ class ServiceController extends Controller
                 event(new TestEvent($service));
 
                 // Пишем сессию
-                $mass = [
-                    'services_category' => $services_category_id,
-                ];
-                Cookie::queue('conditions', $mass, 1440);
+                // $mass = [
+                //     'services_category' => $services_category_id,
+                // ];
+                // Cookie::queue('conditions', $mass, 1440);
 
                 if ($request->quickly == 1) {
                     return redirect('/admin/services');

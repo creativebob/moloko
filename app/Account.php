@@ -53,40 +53,10 @@ class Account extends Model
         'appends',
     ];
 
-    // Получаем страницы.
-    public function pages()
-    {
-        return $this->hasMany('App\Page');
-    }
-
-    // Получаем пункты меню.
-    public function menus()
-    {
-        return $this->belongsToMany('App\Menu');
-    }
-
-    // Получаем навигации.
-    public function navigations()
-    {
-        return $this->hasMany('App\Navigation');
-    }
-
     // Получаем компанию.
     public function company()
     {
         return $this->belongsTo('App\Company');
-    }
-
-    // Получаем новости.
-    public function news()
-    {
-        return $this->hasMany('App\News');
-    }
-
-    // Получаем каталоги.
-    public function catalogs()
-    {
-        return $this->hasMany('App\Catalog');
     }
 
     // Получаем автора
@@ -95,10 +65,10 @@ class Account extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
-    // Получаем отделы
-    public function departments()
+    // Получаем источник (сервис)
+    public function source()
     {
-        return $this->belongsToMany('App\Department');
+        return $this->belongsTo('App\Source', 'source_id');
     }
 
 }

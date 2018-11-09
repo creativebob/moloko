@@ -1,3 +1,5 @@
+
+@include('includes.scripts.class.city_search')
 <div class="reveal" id="first-edit" data-reveal data-close-on-click="false">
   <div class="grid-x">
     <div class="small-12 cell modal-title">
@@ -9,7 +11,7 @@
     @include('departments.modals.first', ['submitButtonText' => 'Редактировать филиал', 'class' => 'submit-edit'])
 
   {{ Form::close() }}
-  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+  <div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
 
 @include('includes.scripts.inputs-mask')

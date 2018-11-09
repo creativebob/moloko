@@ -615,10 +615,29 @@
 
             $filter[$name_filter]['title'] = 'Тип помещения:';                              // Назавние фильтра
             $column = 'places_type_id';                                                     // Имя переменной в request
-            $filter[$name_filter]['list_select']['item_list'] = getFilterPlacesTypeList();   // Функция с запросом
+            $filter[$name_filter]['list_select']['item_list'] = getFilterPlacesTypeList();  // Функция с запросом
         }
         // ----------------------------------------------------------------------------
 
+
+        // ФИЛЬТР ПО СЕКТОРУ (НАПРАВЛЕНИЮ ДЕЯТЕЛЬНОСТИ) -------------------------------
+        if($name_filter == 'sector'){
+
+            $filter[$name_filter]['title'] = 'Сектор:';                                     // Назавние фильтра
+            $column = 'sector_id';                                                          // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterSectorList();      // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО СТАТУСУ ЗАДАЧИ ---------------------------------------------------
+        if($name_filter == 'challenge_status'){
+
+            $filter[$name_filter]['title'] = 'Статус задачи:';                                  // Назавние фильтра
+            $column = 'challenge_status';                                                       // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = ['Выполнена', 'Не выполнена'];  // Генерируем список 
+        }
+        // ----------------------------------------------------------------------------
 
 
         // ОБЩИЕ ДЛЯ ФИЛЬТРА НАСТРОЙКИ ====================================================
@@ -629,7 +648,6 @@
             // Если ЕСТЬ фильтующая переменная в url
             // Подсчитываем количество элементов в массиве
             $filter[$name_filter]['count_mass'] = count($request->$column);
-
             // Общий счетчик фильтров увеличиваем
             $filter['count'] = $filter['count'] + 1;
 
@@ -646,6 +664,7 @@
         $filter[$name_filter]['column'] = $column;
 
         return $filter;
+
     }
 
 
@@ -679,7 +698,11 @@
 
     function getFilterManagerList(){
 
-        $managers = App\Lead::with('manager')->orderBy('name', 'asc')->get()->pluck('manager.nameReverse', 'manager.id')->toArray();
+        $leads = App\Lead::whereNull('draft')->pluck('manager_id');
+        $managers_id = $leads->unique()->toArray();
+
+        $managers = App\User::whereIn('id', $managers_id)->get()->sortByDesc('name_reverse')->pluck('nameReverse', 'id')->toArray();
+
         if(isset($managers)){asort($managers);}
         return $managers;
 
@@ -752,7 +775,7 @@
         if(isset($appointeds)){asort($appointeds);}
         return $appointeds;
 
-        
+
         return $appointeds;
     }
 
@@ -766,6 +789,13 @@
 
         $departments = App\Department::orderBy('name', 'asc')->get()->pluck('name', 'id')->toArray();
         return $departments;
+    }
+
+
+    function getFilterSectorList(){
+
+        $sectors = App\Sector::orderBy('name', 'asc')->get()->pluck('name', 'id')->toArray();
+        return $sectors;
     }
 
     function getFilterPlacesTypeList(){

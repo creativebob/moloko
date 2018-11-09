@@ -6,7 +6,8 @@ use App\Policies\Traits\PoliticTrait;
 use App\User;
 use App\Company;
 use App\Supplier;
-
+use App\Dealer;
+use App\Manufacturer;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -55,15 +56,16 @@ class CompanyPolicy
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
 
         // Проверяем на наличие связей
-        $suppliers = Supplier::where('company_id', $model->id);
+        if(($model->we_suppliers->count() > 0)||($model->we_manufacturers->count() > 0)||($model->we_dealers->count() > 0)){$result = false;};
 
-        // Проверяем на наличие связей
-        $companies = Supplier::where('contragent_id', $model->id);
+        // $suppliers = Supplier::where('company_id', $model->id)->orWhere('contragent_id', $model->id);
+        // $dealers = Dealer::where('company_id', $model->id)->orWhere('contragent_id', $model->id);
+        // $manufacturers = Manufacturer::where('company_id', $model->id)->orWhere('contragent_id', $model->id);
 
-        // Если есть связи - запрещаем удаление
-        if(($suppliers->count() > 0)||($companies->count() > 0)){
-            return false;
-        };
+        // // Если есть связи - запрещаем удаление
+        // if(($suppliers->count() > 0)||($dealers->count() > 0)||($manufacturers->count() > 0)){
+        //     return false;
+        // };
 
         return $result;
     }

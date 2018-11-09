@@ -17,18 +17,22 @@ function add_note($item, $body){
 }
 
 // Отправляем сообщение в телеграмм
-function send_message($telegram_destinations, $message) {
+function send_message($destinations, $message) {
 
-    // Отправляем на каждый telegram
-	foreach ($telegram_destinations as $destination) {
+	if (isset($destinations)) {
 
-		if (isset($destination->telegram_id)) {
-			$response = Telegram::sendMessage([
-				'chat_id' => $destination->telegram_id, 
-				'text' => $message
-			]);
+		// Отправляем на каждый telegram
+		foreach ($destinations as $destination) {
+
+			if (isset($destination->telegram_id)) {
+				$response = Telegram::sendMessage([
+					'chat_id' => $destination->telegram_id, 
+					'text' => $message
+				]);
+			}
 		}
 	}
+
 
 }
 

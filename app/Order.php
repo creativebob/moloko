@@ -48,7 +48,7 @@ class Order extends Model
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'lead_id',
-        'user_id',
+        'client_id',
         'company_id',
         'author_id',
         'draft'
@@ -69,13 +69,13 @@ class Order extends Model
     // Лид
     public function lead()
     {
-        return $this->belongsTo('App\Lead');
+        return $this->belongsTo('App\Lead', 'lead_id');
     }
 
     // Пользователь
-    public function user()
+    public function client()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Client', 'client_id');
     }
 
     // Состав

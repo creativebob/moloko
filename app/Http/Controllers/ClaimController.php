@@ -42,6 +42,7 @@ class ClaimController extends Controller
         // Получаем авторизованного пользователя
         $user = $request->user();
 
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -56,21 +57,19 @@ class ClaimController extends Controller
         ->orderBy('created_at', 'desc')
         ->paginate(30);
 
-        // ------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА -------------------------------------------------------------------------------
-        // ------------------------------------------------------------------------------------------------------------
 
-        $filter_query = Claim::with('lead', 'manager')->moderatorLimit($answer)->get();
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        // Создаем контейнер фильтра
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        $filter['inputs'] = $request->input();
+        $filter = setFilter($this->entity_name, $request, [
+            // 'author',               // Автор записи
+            // 'sector',               // Направление деятельности
+            'booklist'              // Списки пользователя
+        ]);
 
-        // $filter = addFilter($filter, $filter_query, $request, 'Тип помещения:', 'places_types', 'places_type_id', 'places_types', 'external-id-many');
+        // Окончание фильтра -----------------------------------------------------------------------------------------
 
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

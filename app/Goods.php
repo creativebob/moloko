@@ -48,6 +48,27 @@ class Goods extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
+    protected $fillable = [
+        'company_id',
+        'goods_article_id',
+        'description',
+        'manually',
+        'external',
+        'manufacturer_id',
+        'cost',
+        'price',
+        'album_id',
+        'photo_id',
+
+        'portion_status',
+        'portion_name',
+        'portion_abbreviation',
+        'portion_count',
+
+        'author_id',
+        'editor_id',
+    ];
+
     public function goods_article()
     {
         return $this->belongsTo('App\GoodsArticle');
@@ -82,22 +103,38 @@ class Goods extends Model
         return $this->morphToMany('App\Catalog', 'catalog_products');
     }
 
-    // Метрики
-    public function metrics_values()
-    {
-        return $this->morphedByMany('App\Metric', 'goods_values')->withPivot('value');
-    }
-
-    // Состав
-    // public function compositions_values()
+    // // Метрики
+    // public function metrics()
     // {
-    //     return $this->belongsToMany('App\Article', 'article_values', 'article_id', 'entity_id')->where('entity', 'articles')->withPivot('entity', 'value');
+    //     return $this->morphedByMany('App\Metric', 'goods_values')->withPivot('value');
     // }
 
-    public function raws_compositions_values()
-    {
-        return $this->morphedByMany('App\RawsArticle', 'goods_values')->withPivot('value');
-    }
+    // // Состав
+    // // public function compositions_values()
+    // // {
+    // //     return $this->belongsToMany('App\Article', 'article_values', 'article_id', 'entity_id')->where('entity', 'articles')->withPivot('entity', 'value');
+    // // }
+
+    // // Состав (сырье)
+    // public function compositions()
+    // {
+    //     return $this->morphedByMany('App\RawsArticle', 'goods_values')->withPivot('value');
+    // }
+
+    // // Состав (набор)
+    // public function set_compositions()
+    // {
+    //     return $this->morphedByMany('App\GoodsArticle', 'goods_values')->withPivot('value');
+    // }
+
+    // public function getCompositions1Attribute() {
+
+    //     if ($this->goods_article->goods_product->status == 'one') {
+    //         return $this->morphedByMany('App\RawsArticle', 'goods_values')->withPivot('value');
+    //     } else {
+    //         return $this->morphedByMany('App\GoodsArticle', 'goods_values')->withPivot('value');
+    //     }
+    // }
 
     // public function compositions_values()
     // {

@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\ValueFilter;
 
 class Lead extends Model
 {
@@ -38,7 +39,7 @@ class Lead extends Model
     use Cachable;
 
     use Notifiable;
-    use SoftDeletes;
+    // use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -56,6 +57,7 @@ class Lead extends Model
     use Filter;
     use BooklistFilter;
     use DateIntervalFilter;
+    use ValueFilter;
 
     // public $timestamps = false;
 
@@ -130,22 +132,28 @@ class Lead extends Model
     }
 
     // Получаем тип обращения
-    public function choices_goods_categories()
+    public function choice()
     {
-        return $this->morphedByMany('App\GoodsCategory', 'choices');
+        return $this->morphTo();
     }
 
-    // Получаем тип обращения
-    public function choices_services_categories()
-    {
-        return $this->morphedByMany('App\ServicesCategory', 'choices');
-    }
+    // // Получаем тип обращения
+    // public function choices_goods_categories()
+    // {
+    //     return $this->morphedByMany('App\GoodsCategory', 'choices');
+    // }
 
-    // Получаем тип обращения
-    public function choices_raws_categories()
-    {
-        return $this->morphedByMany('App\RawsCategory', 'choices');
-    }
+    // // Получаем тип обращения
+    // public function choices_services_categories()
+    // {
+    //     return $this->morphedByMany('App\ServicesCategory', 'choices');
+    // }
+
+    // // Получаем тип обращения
+    // public function choices_raws_categories()
+    // {
+    //     return $this->morphedByMany('App\RawsCategory', 'choices');
+    // }
 
     // Получаем менеджера
     public function manager()
@@ -174,8 +182,15 @@ class Lead extends Model
     // Получаем задачи
     public function challenges()
     {
-        return $this->morphMany('App\Challenge', 'challenges');
+        return $this->morphMany('App\Challenge', 'subject');
     }
+
+    // Получаем активные задачи
+    public function challenges_active()
+    {
+        return $this->morphMany('App\Challenge', 'subject')->whereNull('status');
+    }
+    
 
     public function getFirstChallengeAttribute() {
         if(!empty($this->challenges->where('status', null)->sortByDesc('deadline_date')->first()))
@@ -203,7 +218,7 @@ class Lead extends Model
     {
         // return $this->morphMany('App\Challenge', 'challenges')->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'));
 
-        return $this->morphOne('App\Challenge', 'challenges')->where('challenges_type_id', 2)->whereNull('status')->oldest('deadline_date');
+        return $this->morphOne('App\Challenge', 'subject')->where('challenges_type_id', 2)->whereNull('status')->oldest('deadline_date');
     }
 
 

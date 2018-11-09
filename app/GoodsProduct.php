@@ -48,6 +48,20 @@ class GoodsProduct extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
+    protected $fillable = [
+        'company_id',
+        'name',
+        'photo_id',
+        'stauts',
+        'description',
+        'unit_id',
+        'rule_id',
+        'goods_category_id',
+        'album_id',
+        'author_id',
+        'editor_id',
+    ];
+
 
     // Получаем категорию
     public function goods_category()
@@ -64,7 +78,7 @@ class GoodsProduct extends Model
     // Получаем категорию
     public function goods()
     {
-        return $this->hasMany('App\Goods');
+        return $this->hasManyThrough('App\Goods', 'App\GoodsArticle');
     }
 
     public function photo()

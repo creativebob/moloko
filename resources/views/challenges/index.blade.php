@@ -50,7 +50,7 @@
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="" id="check-{{ $challenge->id }}"><label class="label-check" for="check-{{ $challenge->id }}"></label>
           </td>
-          <td class="td-type">{{ $challenge->challenge_type->name }} по обращению: <a href="/admin/leads/{{ $challenge->challenges->id }}/edit">{{ $challenge->challenges->case_number }}</a></td>
+          <td class="td-type">{{ $challenge->challenge_type->name }} по обращению: <a href="/admin/leads/{{ $challenge->subject_id }}/edit">{{ $challenge->subject->case_number }}</a></td>
           <td class="td-description">{{ $challenge->description }}</td>
           <td class="td-appointed">{{ $challenge->appointed->first_name . ' ' . $challenge->appointed->second_name }}</td>
           <td class="td-deadline-date">{{ isset($challenge->deadline_date) ? $challenge->deadline_date->format('d.m.Y H:i') : 'Не указана' }}</td>
@@ -58,9 +58,9 @@
 
           <td class="td-status">
             @if ($challenge->status == 1)
-              Не выполнена
-            @else
               Выполнена
+            @else
+              Не выполнена
             @endif
           </td>
 

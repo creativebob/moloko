@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\OldLead;
+use App\OldLocation;
 use App\Lead;
 use App\Note;
 use App\Choice;
@@ -14,6 +15,11 @@ use App\Company;
 use App\Department;
 use App\User;
 use App\Phone;
+
+use App\Page;
+use App\Entity;
+use App\EntityPage;
+
 
 use App\Location;
 
@@ -28,6 +34,202 @@ class ParserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+    public function entity_page(Request $request)
+    {
+
+        $entities = Entity::get(['id', 'alias']);
+        $pages = Page::where('site_id', 1)->get(['id', 'alias']);
+
+        $count = 0;
+        foreach ($entities as $entity) {
+            foreach ($pages as $page) {
+                if ($entity->alias == $page->alias) {
+
+                    $entity_page = EntityPage::firstOrCreate(['entity_id' => $entity->id, 'page_id' => $page->id]);
+
+                    $delete = EntityPage::where('id', '!=', $entity_page->id)->where('entity_id', $entity->id)->delete();
+
+                    $count++;
+                }
+            }
+        }
+
+
+        dd('Гатова, всего: '.$count);
+
+    }
+
+    public function locations(Request $request)
+    {
+
+        $old_leads = OldLead::where('address_company', '')->update(['address_company' => null]);
+
+        $locations = Location::where('address', '')->update(['address' => null]);
+
+        $users = User::with('location')->get();
+
+        foreach ($users as $user) {
+
+            $location_old = $user->location;
+            // dd($location_old);
+
+            $location = Location::firstOrCreate(['address' => $location_old->address, 'city_id' => $location_old->city_id, 'country_id' => $location_old->country_id, 'author_id' => $location_old->author_id]);
+                // dd($location);
+
+            if ($location->id != $user->location_id) {
+                $user->location()->forceDelete();
+
+                $user->location_id = $location->id;
+                $user->save();
+            }
+        }
+
+
+        $leads = Lead::with('location')->whereNotNull('old_lead_id')->get();
+        // dd($leads);
+
+        foreach ($leads as $lead) {
+
+            $old_lead = OldLead::with('city')->findOrFail($lead->old_lead_id);
+
+            // dd($lead->location);
+            if (isset($lead->location->address)) {
+                $address = ($lead->location->address != $old_lead->address_company) ? $lead->location->address : $old_lead->address_company;
+            } else {
+                $address = $old_lead->address_company;
+            }
+            
+            $location = Location::firstOrCreate(['address' => $address, 'city_id' => $old_lead->city->new_city_id], ['country_id' => 1, 'author_id' => 1]);
+
+            if ($location->id != $lead->location_id) {
+                $lead->location()->forceDelete();
+
+                $lead->location_id = $location->id;
+                $lead->save();
+            }
+        }
+
+        $locations = Location::whereNull('country_id')->update(['country_id' => 1]);
+
+        dd('Гатова');
+
+    }
+
+    // public function city(Request $request)
+    // {
+    //     $leads = Lead::whereHas('location', function ($q) {
+    //         $q->whereNull('address');
+    //     })
+    //     ->get();
+
+    //     foreach ($leads as $lead) {
+    //         $location = Location::firstOrCreate(['address' => $lead->location->address, 'city_id' => $lead->location->city_id, 'country_id' => 1], ['author_id' => 1]);
+
+    //         if ($location->id != $lead->location_id) {
+    //             $lead->location()->forceDelete();
+
+    //             $lead->location_id = $location->id;
+    //             $lead->save();
+    //         }
+    //     }
+    //     dd('Гатова');
+
+    // }
+
+    public function geoposition_locations(Request $request)
+    {
+        $locations = Location::with('city')->whereNull('answer_count')->get();
+
+        $count = 0;
+
+        foreach ($locations as $location) {
+
+            // Формируем запрос в Яндекс Карты
+            $request_params = [
+                'geocode' => $location->city->name . ', ' .$location->address,
+                'format' => 'json',
+            ];
+            // Преобразуем его в GET строку
+            $params = http_build_query($request_params);
+            // dd($get_params);
+            // Отправляем
+            $result = (file_get_contents('https://geocode-maps.yandex.ru/1.x/?' . $params));
+            // dd($get_params);
+
+            $res = json_decode($result);
+            if (count($res->response->GeoObjectCollection->featureMember) == 1) {
+
+                $string = $res->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
+                $coords = explode(' ', $string);
+                $update_location = Location::whereId($location->id)->update(['longitude' => $coords[0], 'latitude' => $coords[1], 'parse_count' => 1, 'answer_count' => 1]);
+            } else {
+                $update_location = Location::whereId($location->id)->update(['answer_count' => count($res->response->GeoObjectCollection->featureMember)]);
+            }
+
+            $count++;
+            echo 'Есть - ' . $count . "\r\n";
+        }
+
+        dd('Гатова - ' . $count);
+
+    }
+
+    public function geoposition_locations_parse(Request $request)
+    {
+
+        $locations = OldLocation::get();
+
+        foreach ($locations as $location) {
+            
+            $update = Location::where('id', $location->id)->update(['latitude' => $location->latitude, 'longitude' => $location->longitude, 'parse_count' => $location->parse_count, 'answer_count' => $location->answer_count]);
+        }
+
+        dd('Гатова');
+
+    }
+
+
+    public function challenges_active_count()
+    {
+
+
+    $leads = Lead::with('challenges_active')->get();
+
+        foreach ($leads as $lead) {
+            
+            if($lead->challenges_active->count() > 0){
+                $leads = Lead::where('id', $lead->id)
+                ->update(['challenges_active_count' => $lead->challenges_active->count()]);
+            } else {
+                $leads = Lead::where('id', $lead->id)
+                ->update(['challenges_active_count' => 0]);
+            };
+        }
+
+        dd('Готово!!!');
+
+    }
+
+    public function choice_parser()
+    {
+
+        $choices = Choice::get();
+        foreach ($choices as $choice) {
+        
+
+            if(isset($choice->lead_id)){
+                $leads = Lead::where('id', $choice->lead_id)
+                ->update(['choice_id' => $choice->choices_id, 'choice_type' => $choice->choices_type]);                
+            }
+
+        }
+
+
+        dd('Готово!!!');
+    }
+
     public function index(Request $request)
     {
 

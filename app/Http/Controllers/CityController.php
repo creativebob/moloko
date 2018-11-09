@@ -17,7 +17,7 @@ use App\Policies\CityPolicy;
 use App\Policies\AreaPolicy;
 use App\Policies\RegionPolicy;
 
-// Специфические классы 
+// Специфические классы
 use Transliterate;
 
 // На удаление
@@ -68,7 +68,7 @@ class CityController extends Controller
             return view('cities.cities-list', ['regions' => $regions, 'id' => $request->id]);
         }
 
-        return view('cities.index', compact('regions', 'page_info')); 
+        return view('cities.index', compact('regions', 'page_info'));
     }
 
     public function create()
@@ -189,7 +189,7 @@ class CityController extends Controller
                             'error_status' => 1,
                             'error_message' => 'Ошибка при записи района!'
                         ];
-                    } 
+                    }
                 }
             } else {
                 $area_id = 0;
@@ -251,7 +251,7 @@ class CityController extends Controller
     }
 
     public function destroy(Request $request, $id)
-    { 
+    {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -290,7 +290,7 @@ class CityController extends Controller
                 return redirect()->action('CityController@index', ['id' => $parent]);
             } else {
                 abort(403, 'Ошибка при удалении!');
-            }   
+            }
         } else {
             abort(403, 'Населенный пункт не найден в базе данных!');
         }
@@ -387,7 +387,7 @@ class CityController extends Controller
 
     // Получаем список городов из нашей базы
     public function cities_list(Request $request)
-    {   
+    {
 
         // Подключение политики
         $this->authorize('index', City::class);
@@ -396,41 +396,44 @@ class CityController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
         // Проверка города в нашей базе данных
-        $city_name = $request->city_name;
+        $cities = City::moderatorLimit($answer)->where('name', 'like', $request->city_name.'%')->get();
+        // dd($cities);
 
-        $cities = City::moderatorLimit($answer)->where('name', 'like', $city_name.'%')->get();
-        $count = $cities->count();
+        return view('includes.cities.cities_table', compact('cities'));
 
-        if ($count > 0) {
-            $objRes = (object) [];
-            foreach ($cities as $city) {
-                $city_id = $city->id;
-                $city_name = $city->name;
-                
-                if ($city->area_id == null) {
-                    $area_name = '';
-                    $region_name = $city->region->name;
-                } else {
-                    $area_name = $city->area->name;
-                    $region_name = $city->area->region->name;
-                }
-                $objRes->city_id[] = $city_id;
-                $objRes->city_name[] = $city_name;
-                $objRes->area_name[] = $area_name;
-                $objRes->region_name[] = $region_name;
-            }
-            $result = [
-                'error_status' => 0,
-                'cities' => $objRes,
-                'count' => $count
-            ];
-        } else {
-            $result = [
-                'error_message' => 'Населенный пункт не существует в нашей базе данных, добавьте его!',
-                'error_status' => 1
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+
+        // $count = $cities->count();
+
+        // if ($count > 0) {
+        //     $objRes = (object) [];
+        //     foreach ($cities as $city) {
+        //         $city_id = $city->id;
+        //         $city_name = $city->name;
+
+        //         if ($city->area_id == null) {
+        //             $area_name = '';
+        //             $region_name = $city->region->name;
+        //         } else {
+        //             $area_name = $city->area->name;
+        //             $region_name = $city->area->region->name;
+        //         }
+        //         $objRes->city_id[] = $city_id;
+        //         $objRes->city_name[] = $city_name;
+        //         $objRes->area_name[] = $area_name;
+        //         $objRes->region_name[] = $region_name;
+        //     }
+        //     $result = [
+        //         'error_status' => 0,
+        //         'cities' => $objRes,
+        //         'count' => $count
+        //     ];
+        // } else {
+        //     $result = [
+        //         'error_message' => 'Населенный пункт не существует в нашей базе данных, добавьте его!',
+        //         'error_status' => 1
+        //     ];
+        // }
+        // echo json_encode($result, JSON_UNESCAPED_UNICODE);
         // echo $request->city_name;
     }
 
@@ -502,72 +505,6 @@ class CityController extends Controller
                     'error_status' => 0
                 ];
             }
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-        
-        $i = 1;
-
-        foreach ($request->cities as $item) {
-            City::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = City::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = City::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
         }
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }

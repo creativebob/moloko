@@ -6,9 +6,10 @@
   "type": "project",
   "require": {
     "php": ">=7.0.0",
+    "appstract/laravel-opcache": "^2.0",
     "barryvdh/laravel-debugbar": "^3.1",
     "davejamesmiller/laravel-breadcrumbs": "^4.2",
-    "doctrine/dbal": "^2.5",
+    "doctrine/dbal": "^2.8",
     "elforastero/transliterate": "^1.1",
     "fideloper/proxy": "~3.3",
     "genealabs/laravel-model-caching": "^0.2.63",

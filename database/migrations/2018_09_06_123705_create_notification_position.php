@@ -21,8 +21,6 @@ class CreateNotificationPosition extends Migration
 
             $table->integer('position_id')->nullable()->unsigned()->comment('ID должности');
             $table->foreign('position_id')->references('id')->on('positions');
-
-            $table->timestamps();
         });
     }
 

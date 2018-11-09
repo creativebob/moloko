@@ -218,7 +218,9 @@ class MetricController extends Controller
 
         $entity = $request->entity;
         // Связываем сущность с метрикой
-        $metric->$entity()->attach($request->entity_id);
+        $metric->$entity()->attach([$request->entity_id => [
+            'set_status' => $request->set_status
+        ]]);
 
         // switch ($request->entity) {
         //     case 'goods_categories':
@@ -258,11 +260,10 @@ class MetricController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-     public function add_metric_value(Request $request)
+    public function add_metric_value(Request $request)
     {   
         // Переадресовываем на получение метрики
         return view($request->entity.'.metrics.value', ['value' => $request->value]);
-
     }
 
 }

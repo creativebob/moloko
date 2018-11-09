@@ -8,7 +8,11 @@ use App\GoodsMode;
 use App\GoodsProduct;
 use App\GoodsCategory;
 use App\Property;
+
 use App\RawsCategory;
+use App\RawsProduct;
+use App\RawsArticle;
+
 use App\EntitySetting;
 
 // use App\Company;
@@ -230,7 +234,11 @@ class GoodsCategoryController extends Controller
         $answer_goods_categories = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $goods_category = GoodsCategory::with(['goods_mode', 'metrics.unit', 'metrics.values', 'compositions.raws_product.unit'])
+        $goods_category = GoodsCategory::with(['goods_mode', 'metrics' => function ($q) {
+            $q->with('unit', 'values');
+        }, 'set_metrics' => function ($q) {
+            $q->with('unit', 'values');
+        }, 'compositions.raws_product.unit', 'compositions'])
         ->withCount('metrics', 'compositions')
         ->moderatorLimit($answer_goods_categories)
         ->findOrFail($id);
@@ -311,40 +319,71 @@ class GoodsCategoryController extends Controller
 
         $answer_raws = operator_right('raws', false, 'index');
 
-        $raws_categories = RawsCategory::with(['raws_products' => function ($query) use ($answer_raws_products, $answer_raws) {
-            $query->with(['raws_articles' => function ($query) use ($answer_raws) {
-                $query->whereHas('raws', function ($query) {
-                   $query->whereNull('draft'); 
-               });
-            // ->moderatorLimit($answer_raws)
-            // ->companiesLimit($answer_raws)
-            // ->authors($answer_raws)
-            // ->systemItem($answer_raws) // Фильтр по системным записям 
-
-            }])
-            ->withCount('raws_articles');
-            // ->moderatorLimit($answer_raws_products)
-            // ->companiesLimit($answer_raws_products)
-            // ->authors($answer_raws_products)
-            // ->systemItem($answer_raws_products); // Фильтр по системным записям 
+        $raws_articles = RawsArticle::with(['raws_product' => function ($q) {
+            $q->with(['raws_category' => function ($q) {
+                $q->select('id', 'name');
+            }])->select('id', 'name', 'raws_category_id');
         }])
-        ->withCount('raws_products')
-        ->moderatorLimit($answer_raws_categories)
-        ->companiesLimit($answer_raws_categories)
-        ->authors($answer_raws_categories)
-        ->systemItem($answer_raws_categories) // Фильтр по системным записям 
+        ->select('id', 'name', 'raws_product_id')
+        ->whereHas('raws', function ($query) {
+            $query->whereNull('draft'); 
+        })
+        
+        // ->withCount('raws_products')
+        // ->moderatorLimit($answer_raws_categories)
+        // ->companiesLimit($answer_raws_categories)
+        // ->authors($answer_raws_categories)
+        // ->systemItem($answer_raws_categories) // Фильтр по системным записям 
         ->get()
         ->keyBy('id')
-        ->toArray();
+        ->groupBy('raws_product.raws_category.name');
+        // ->toArray();
+        // dd($raws_articles);
+
+        // $raws_categories = RawsCategory::with(['raws_products' => function ($q) {
+        //     $q->with(['raws_articles' => function ($q) {
+        //         $q->with(['raws' => function ($q) {
+        //             $q->select('id');
+        //         }])->select('id', 'name', 'raws_product_id');
+        //     }])->select('id', 'name', 'raws_category_id');
+        // }])
+        // ->select('id', 'name')
+        // ->whereHas('raws_products', function ($q) {
+        //     $q->whereHas('raws_articles', function ($query) {
+        //         $query->whereHas('raws', function ($query) {
+        //             $query->whereNull('draft'); 
+        //         });
+        //     // ->moderatorLimit($answer_raws)
+        //     // ->companiesLimit($answer_raws)
+        //     // ->authors($answer_raws)
+        //     // ->systemItem($answer_raws) // Фильтр по системным записям 
+        //     // ->moderatorLimit($answer_raws_products)
+        //     // ->companiesLimit($answer_raws_products)
+        //     // ->authors($answer_raws_products)
+        //     // ->systemItem($answer_raws_products); // Фильтр по системным записям 
+        //     });
+        // })
+        
+        // // ->withCount('raws_products')
+        // ->moderatorLimit($answer_raws_categories)
+        // ->companiesLimit($answer_raws_categories)
+        // ->authors($answer_raws_categories)
+        // ->systemItem($answer_raws_categories) // Фильтр по системным записям 
+        // ->get()
+        // ->keyBy('id')
+        // ->toArray();
+
+        // dd($raws_categories);
+
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $composition_categories_list = get_parents_tree($raws_categories, null, null, null);
+        // $composition_categories_list = get_parents_tree($raws_categories, null, null, null);
         // dd($composition_categories_list);
 
         $composition_list = [
             'name' => 'Сырье',
             'alias' => 'raws',
-            'composition_categories' => $composition_categories_list,
+            'composition_categories' => $raws_articles,
         ];
         // dd($composition_list);
         // dd($goods_modes_list);
@@ -823,12 +862,16 @@ class GoodsCategoryController extends Controller
     // Для заказа
     public function ajax_get_products(Request $request)
     {
+        
         $user = $request->user();
         $id = $request->id;
         // $id = 12;
 
-        $goods_list = Goods::with('goods_article')->whereHas('goods_article', function ($query) use ($id, $user) {
-            $query->whereHas('goods_product', function ($query) use ($id, $user) {
+        $goods_list = Goods::with('goods_article')
+        ->whereHas('goods_article', function ($query) use ($id, $user) {
+            $query->whereNull('draft')
+                ->whereNull('archive')
+                ->whereHas('goods_product', function ($query) use ($id, $user) {
                 $query->whereHas('goods_category', function ($query) use ($id, $user) {
                     $query->where(['company_id' => $user->company_id, 'id' => $id]);
                 });
@@ -839,6 +882,22 @@ class GoodsCategoryController extends Controller
         $entity = 'goods';
 
         return view('leads.items', compact('goods_list', 'entity'));
+
+    }
+
+    public function ajax_get_metrics(Request $request)
+    {   
+
+        $item = GoodsCategory::with('metrics.property')->findOrFail($request->goods_category_id);
+        return view('goods.metrics.metric_enter', compact('item'));  
+
+    }
+
+    public function ajax_get_compositions(Request $request)
+    {   
+
+        $item = GoodsCategory::with('compositions.raws_product.unit')->findOrFail($request->goods_category_id);
+        return view('goods.compositions.composition_enter', compact('item')); 
 
     }
 

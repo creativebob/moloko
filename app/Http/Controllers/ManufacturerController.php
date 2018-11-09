@@ -17,6 +17,7 @@ use App\Location;
 use App\ScheduleEntity;
 use App\Country;
 use App\ServicesType;
+use App\Phone;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -68,13 +69,18 @@ class ManufacturerController extends Controller
         ->paginate(30);
 
 
-        $filter_query = Manufacturer::moderatorLimit($answer)->get();
-        $filter['status'] = null;
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        // $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
+        $filter = setFilter($this->entity_name, $request, [
+            'city',                 // Город
+            'sector',               // Направление деятельности
+            'booklist'              // Списки пользователя
+        ]);
 
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        // Окончание фильтра -----------------------------------------------------------------------------------------
+
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -83,7 +89,7 @@ class ManufacturerController extends Controller
     }
 
     public function create(Request $request)
-        {
+    {
 
         //Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Manufacturer::class);
@@ -144,7 +150,7 @@ class ManufacturerController extends Controller
         $worktime = [];
         for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
 
-        return view('manufacturers.create', compact('company', 'manufacturer', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
+            return view('manufacturers.create', compact('company', 'manufacturer', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
     }
 
     public function store(CompanyRequest $request)
@@ -180,32 +186,14 @@ class ManufacturerController extends Controller
         // Записываем в базу все расписание.
         DB::table('worktimes')->insert($mass_time);
 
-        // Пишем локацию
-        $location = new Location;
-        $location->country_id = $request->country_id;
-        $location->city_id = $request->city_id;
-        $location->address = $request->address;
-        $location->author_id = $user_id;
-        $location->save();
-
-        if ($location) {
-            $location_id = $location->id;
-        } else {
-            abort(403, 'Ошибка записи адреса');
-        }
-
         $company = new Company;
         $company->name = $request->name;
         $company->alias = $request->alias;
 
-        $company->phone = cleanPhone($request->phone);
         $company->email = $request->email;
 
-        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            $company->extra_phone = cleanPhone($request->extra_phone);
-        } else {$company->extra_phone = NULL;};
-
-        $company->location_id = $location_id;
+        // Добавляем локацию
+        $company->location_id = create_location($request);
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
@@ -223,9 +211,12 @@ class ManufacturerController extends Controller
         // Если запись удачна - будем записывать связи
         if($company){
 
+            // Телефон
+            $phones = add_phones($request, $company);
+
             // Записываем связи: id-шники в таблицу Rooms
             if(isset($request->services_types_id)){
-                
+
                 $result = $company->services_types()->sync($request->services_types_id);               
             } else {
                 $result = $company->services_types()->detach(); 
@@ -419,23 +410,8 @@ class ManufacturerController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-        // Пишем локацию
-        $location = $company->location;
-        if($location->city_id != $request->city_id) {
-            $location->city_id = $request->city_id;
-            $location->editor_id = $user_id;
-            $location->save();
-        }
-        if($location->address != $request->address) {
-            $location->address = $request->address;
-            $location->editor_id = $user_id;
-            $location->save();
-        }
-        if($location->country_id != $request->country_id) {
-            $location->country_id = $request->country_id;
-            $location->editor_id = $user_id;
-            $location->save();
-        }
+        // Обновляем локацию
+        $company = update_location($request, $company);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $company);
@@ -448,12 +424,10 @@ class ManufacturerController extends Controller
         // Переименовываем папку в файловой системе
         // Storage::move($old_link_for_folder, $new_link_for_folder);
 
-        $company->phone = cleanPhone($request->phone);
+        // Телефон
+        $phones = add_phones($request, $company);
+        
         $company->email = $request->email;
-
-        if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            $company->extra_phone = cleanPhone($request->extra_phone);
-        } else {$company->extra_phone = NULL;};
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
@@ -554,60 +528,6 @@ class ManufacturerController extends Controller
         }
     }
 
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Manufacturer::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Manufacturer::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
     public function checkcompany(Request $request)
     {
         $company = Company::where('inn', $request->inn)->first();
@@ -616,6 +536,6 @@ class ManufacturerController extends Controller
             return 0;
         } else {
             return $company->name;};
-    }
+        }
 
-}
+    }

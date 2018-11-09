@@ -769,7 +769,6 @@ class MenusTableSeeder extends Seeder
             'sort' => null,
         ],
 
-
         // 52
         [
             'name' => 'Посты',
@@ -790,8 +789,8 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Аккаунты',
             'icon' => null,
-            'alias' => 'admin/accouts',
-            'tag' => 'accouts',
+            'alias' => 'admin/accounts',
+            'tag' => 'accounts',
             'parent_id' => 48,
             'page_id' => 45,
             'navigation_id' => 2,
@@ -833,6 +832,71 @@ class MenusTableSeeder extends Seeder
             'display' => 1,
             'sort' => null,
         ],
+
+        // 56
+        [
+            'name' => 'Рекламации',
+            'icon' => null,
+            'alias' => 'admin/claims',
+            'tag' => 'claims',
+            'parent_id' => 35,
+            'page_id' => 48,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
+        // 57
+        [
+            'name' => 'Процессы',
+            'icon' => 'icon-process',
+            'alias' => null,
+            'tag' => 'challenges',
+            'parent_id' => null,
+            'page_id' => null,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
+        // 58
+        [
+            'name' => 'Задачи',
+            'icon' => null,
+            'alias' => 'admin/challenges',
+            'tag' => 'challenges',
+            'parent_id' => 57,
+            'page_id' => 49,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
+        // 59
+        [
+            'name' => 'Склад (Запасы продукции)',
+            'icon' => null,
+            'alias' => 'admin/stocks',
+            'tag' => 'stocks',
+            'parent_id' => 35,
+            'page_id' => 50,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
 
 
     ]);

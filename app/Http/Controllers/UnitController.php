@@ -91,7 +91,7 @@ class UnitController extends Controller
 
         if ($units) {
 
-            return view($request->entity.'.units-list', ['get_units_list' => $units]);
+            return view($request->entity.'.units_list', ['units' => $units]);
         } else {
             $result = [
                 'error_status' => 1,

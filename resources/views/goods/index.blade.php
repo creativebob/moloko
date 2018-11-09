@@ -14,6 +14,13 @@
 @include('includes.title-exel', ['entity' => $page_info->alias])
 @endsection
 
+@section('content-count')
+{{-- Количество элементов --}}
+  @if(!empty($goods))
+    {{ num_format($goods->total(), 0) }}
+  @endif
+@endsection
+
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Goods::class, 'type' => 'menu'])
@@ -71,7 +78,7 @@
                             <img src="{{ isset($cur_goods->photo_id) ? '/storage/'.$cur_goods->company_id.'/media/goods/'.$cur_goods->id.'/img/small/'.$cur_goods->photo->name : '/crm/img/plug/goods_small_default_color.jpg' }}" alt="{{ isset($cur_goods->photo_id) ? $cur_goods->name : 'Нет фото' }}">
                         </a>
                     </td>
-                    <td class="td-name"><a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->goods_article->name }}</a></td>
+                    <td class="td-name"><a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->goods_article->name }} @if ($cur_goods->goods_article->goods_product->set_status == 'set') (Набор) @endif</a></td>
                     <td class="td-goods_category">
                         <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->goods_article->goods_product->goods_category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->goods_article->goods_product->goods_category->name }}</a>
                         <br>
@@ -264,6 +271,10 @@
     $(document).on('click', '.close-modal', function() {
         // alert('lol');
         $('.reveal-overlay').remove();
+    });
+
+    $(document).on('click', '.submit-product-add', function() {
+        $(this).prop('disabled', true);
     });
 </script>
 

@@ -25,7 +25,10 @@ use App\Note;
 use App\Challenge;
 use App\Staff;
 use App\Phone;
+
 use App\GoodsCategory;
+use App\ServicesCategory;
+use App\RawsCategory;
 
 // use App\Challenge_type;
 
@@ -67,8 +70,8 @@ class LeadController extends Controller
     public function index(Request $request)
     {
 
-
         $result = extra_right('lead-service');
+        $lead_all_managers = extra_right('lead-all-managers');
 
         // Включение контроля активного фильтра 
         $filter_url = autoFilter($request, $this->entity_name);
@@ -88,23 +91,31 @@ class LeadController extends Controller
         // --------------------------------------------------------------------------------------------------------
 
         $leads = Lead::with(
-            'location.city', 
-            'choices_goods_categories', 
-            'choices_services_categories', 
-            'choices_raws_categories', 
-            'manager',
+            // 'location.city', 
+            'choice',
             'lead_type',
             'lead_method',
             'stage',
-            'challenges.challenge_type',
-            'challenges.appointed',
+            // 'challenges.challenge_type',
+            // 'challenges.appointed',
             'main_phones'
         )
+
+        ->when($lead_all_managers, function($q){
+            return $q->with(['manager' => function($query){
+                $query->select('id', 'first_name', 'second_name');
+            }]);
+        })
+            
+        ->withCount(['challenges' => function ($query) {
+            $query->whereNull('status');
+        }])
+        // ->withCount('claims')
+        ->manager($user)
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         // ->authors($answer)
-        ->manager($user)
         ->whereNull('draft')
         ->systemItem($answer) // Фильтр по системным записям
         ->filter($request, 'city_id', 'location')
@@ -112,12 +123,15 @@ class LeadController extends Controller
         ->filter($request, 'manager_id')
         ->filter($request, 'lead_type_id')
         ->filter($request, 'lead_method_id')
+        ->valueFilter($request, 'challenges_active_count')
         ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
         ->orderBy('created_at', 'desc')
         // ->orderBy('moderation', 'desc')
         // ->orderBy('sort', 'asc')
         ->paginate(30);
+
+        // dd($leads[2]);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -141,7 +155,7 @@ class LeadController extends Controller
 
         // Задачи пользователя
         $list_challenges = challenges($request);
-        return view('leads.index', compact('leads', 'page_info', 'user', 'filter', 'list_challenges'));
+        return view('leads.index', compact('leads', 'page_info', 'user', 'filter', 'list_challenges', 'lead_all_managers'));
     }
 
     public function leads_calls(Request $request)
@@ -170,9 +184,7 @@ class LeadController extends Controller
         // Запрос с выбором лидов по дате задачи == сегодняшней дате или меньше, не получается отсортировать по дате задачи, т.к. задач может быть много на одном лиде
         $leads = Lead::with(
             'location.city', 
-            'choices_goods_categories', 
-            'choices_services_categories', 
-            'choices_raws_categories', 
+            'choice', 
             'manager',
             'stage',
             'challenges.challenge_type'
@@ -289,9 +301,7 @@ class LeadController extends Controller
 
             $result_search = Lead::with(
                 'location.city', 
-                'choices_goods_categories', 
-                'choices_services_categories', 
-                'choices_raws_categories', 
+                'choice', 
                 'manager',
                 'stage',
                 'challenges.challenge_type', 
@@ -354,25 +364,14 @@ class LeadController extends Controller
             $company_id = $user->company_id;
             $filial_id = $user->filial_id;
 
-            // Пишем локацию
-            $location = new Location;
-            $location->country_id = 1; // TODO: сюда умолчания из settings!
-            $location->city_id = 1; // TODO: сюда умолчания из settings!
-            $location->address = '';
-            $location->author_id = $user->id;
-            $location->save();
-
-            if ($location) {
-                $location_id = $location->id;
-            } else {
-                abort(403, 'Ошибка записи адреса');
-            }
+            // Добавляем локацию
+            $lead->location_id = create_location($request);
 
             $lead->company_id = $company_id;
             $lead->filial_id = $filial_id;
             $lead->name = NULL;
             $lead->company_name = NULL;
-            $lead->location_id = $location_id;
+            
             
             $lead->draft = 1;
             $lead->author_id = $user->id;
@@ -441,6 +440,8 @@ class LeadController extends Controller
 
             $lead->name =   $request->name;
             $lead->company_name =   $request->company_name;
+            // $lead->private_status = $request->private_status;
+
         // $lead->sex = $request->sex;
         // $lead->birthday = $request->birthday;
 
@@ -616,13 +617,12 @@ class LeadController extends Controller
     public function edit(Request $request, $id)
     {
 
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
 
-        $lead = Lead::with(['location.city', 'main_phones', 'extra_phones', 'medium', 'campaign', 'source', 'site', 'claims' => function ($query) {
+        $lead = Lead::with(['location.city', 'main_phones', 'extra_phones', 'medium', 'campaign', 'source', 'site', 'claims', 'lead_method', 'choice' => function ($query) {
             $query->orderBy('created_at', 'asc');
         }, 'notes' => function ($query) {
             $query->orderBy('created_at', 'desc');
@@ -647,6 +647,26 @@ class LeadController extends Controller
         // $this->authorize(getmethod(__FUNCTION__), $lead);
 
         $lead_methods_list = LeadMethod::whereIn('mode', [1, 2, 3])->get()->pluck('name', 'id');
+
+
+        // // $all_categories_list = null;
+        $goods_categories_list = GoodsCategory::where('category_status', 1)->get()->mapWithKeys(function ($item) {
+            return ['goods-' . $item->id => $item->name];
+        })->toArray();
+
+        $services_categories_list = ServicesCategory::where('category_status', 1)->get()->mapWithKeys(function ($item) {
+            return ['service-' . $item->id => $item->name];
+        })->toArray();
+
+        $raws_categories_list = RawsCategory::where('category_status', 1)->get()->mapWithKeys(function ($item) {
+            return ['raw-' . $item->id => $item->name];
+        })->toArray();
+
+        $choices = [
+            'Товары' => $goods_categories_list,
+            'Услуги' => $services_categories_list,
+            'Сырье' => $raws_categories_list,
+        ];
 
         // Получаем список этапов
         $answer_stages = operator_right('stages', false, 'index');
@@ -685,7 +705,7 @@ class LeadController extends Controller
 
         $entity = 'goods_categories';
 
-        return view('leads.edit', compact('lead', 'page_info', 'stages_list', 'entity', 'list_challenges', 'lead_methods_list', 'group_goods_categories', 'entity'));
+        return view('leads.edit', compact('lead', 'page_info', 'stages_list', 'entity', 'list_challenges', 'lead_methods_list', 'group_goods_categories', 'entity', 'choices'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
@@ -715,46 +735,46 @@ class LeadController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
 
-        // Пишем локацию
-        $location = $lead->location;
+        // // Пишем локацию
+        // $location = $lead->location;
 
+        // if((!isset($location->city_id))||($location->city_id != $request->city_id)) {
 
-        if((!isset($location->city_id))||($location->city_id != $request->city_id)) {
+        //     // Пишем локацию
+        //     $location = new Location;
+        //     $location->country_id = $request->country_id;
+        //     $location->city_id = $request->city_id;
+        //     $location->address = $request->address;
+        //     $location->author_id = $user->id;
+        //     $location->save();
 
-            // Пишем локацию
-            $location = new Location;
-            $location->country_id = $request->country_id;
-            $location->city_id = $request->city_id;
-            $location->address = $request->address;
-            $location->author_id = $user->id;
-            $location->save();
+        //     if ($location) {
+        //         $location_id = $location->id;
+        //     } else {
+        //         abort(403, 'Ошибка записи адреса');
+        //     }
+        // }
 
-            if ($location) {
-                $location_id = $location->id;
-            } else {
-                abort(403, 'Ошибка записи адреса');
-            }
-
-        }
-
-        if($location->address != $request->address) {
-            $location->address = $request->address;
-            $location->editor_id = $user->id;
-            $location->save();
-        }
+        // Обновляем локацию
+        $lead = update_location($request, $lead);
 
         $lead->filial_id = $filial_id;
-        $lead->location_id = $location->id;
         $lead->email = $request->email;
 
         $lead->name = $request->name;
         $lead->company_name = $request->company_name;
+        // $lead->private_status = $request->private_status;
 
         $lead->stage_id = $request->stage_id;
         $lead->badget = $request->badget;
+        $lead->lead_method_id = $request->lead_method;
         $lead->draft = NULL;
 
         $lead->editor_id = $user->id;
+
+        $choiceFromTag = getChoiceFromTag($request->choice_tag);
+        $lead->choice_type = $choiceFromTag['type'];
+        $lead->choice_id = $choiceFromTag['id'];
 
         // $lead->first_name = $request->first_name;
         // $lead->second_name = $request->second_name;
@@ -884,7 +904,11 @@ class LeadController extends Controller
         $user = $request->user();
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $lead = Lead::moderatorLimit($answer)
+        $lead = Lead::withCount(['challenges' => function ($query) {
+            $query->whereNull('status');
+        }])
+        ->withCount('claims')
+        ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->manager($user)
@@ -896,11 +920,24 @@ class LeadController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
 
-        // Удаляем пользователя с обновлением
-        $lead = Lead::moderatorLimit($answer)->where('id', $id)->delete();
+        // Удаляем комментарии
+        $lead->notes()->delete();
+        $lead->challenges()->delete();
 
-        if($lead) {return redirect('/admin/leads');} else {abort(403,'Что-то пошло не так!');};
+        // $lead->challenges()->delete();
+
+        // Удаляем пользователя с обновлением
+        $lead->destroy($id);
+
+        if($lead) {
+            return redirect('/admin/leads');
+        } else {
+            abort(403,'Что-то пошло не так!');
+        };
     }
+
+
+    // --------------------------------------- Ajax ----------------------------------------------------------
 
     // Добавление комментария
     public function ajax_add_note(Request $request)
@@ -947,9 +984,7 @@ class LeadController extends Controller
 
         $finded_leads = Lead::with(
             'location.city', 
-            'choices_goods_categories', 
-            'choices_services_categories', 
-            'choices_raws_categories', 
+            'choice',
             'manager',
             'stage',
             'challenges.challenge_type', 

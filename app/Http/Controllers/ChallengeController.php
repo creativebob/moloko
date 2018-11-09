@@ -8,6 +8,7 @@ use App\ChallengesType;
 use App\Staffer;
 use App\Lead;
 use App\User;
+use App\Priority;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -32,6 +33,10 @@ class ChallengeController extends Controller
     public function index(Request $request)
     {
 
+        // Включение контроля активного фильтра 
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Lead::class);
 
@@ -48,7 +53,7 @@ class ChallengeController extends Controller
             'author', 
             'appointed.staff', 
             'finisher', 
-            'challenges'
+            'subject'
         )
         ->companiesLimit($answer)
         // ->whereNull('status')
@@ -59,7 +64,7 @@ class ChallengeController extends Controller
         // ->authors($answer)
         ->filter($request, 'appointed_id')
         ->filter($request, 'author_id')
-        // ->statusFilter($request, 'status')
+        ->filter($request, 'status')
         ->dateIntervalFilter($request, 'deadline_date')
         // ->booklistFilter($request)
         ->orderBy('deadline_date', 'desc')
@@ -76,6 +81,7 @@ class ChallengeController extends Controller
             'author',               // Автор
             'appointed',            // Исполнитель
             'date_interval',        // Дата обращения
+            'challenge_status',     // Статус задачи
             'booklist'              // Списки пользователя
         ]);
 
@@ -107,6 +113,9 @@ class ChallengeController extends Controller
         $answer_staff = operator_right('staff', false, 'index');
 
         // Главный запрос
+        
+        $priority_list = Priority::pluck('name', 'id');
+
         $staff = Staffer::with('user')
         ->moderatorLimit($answer_staff)
         ->companiesLimit($answer_staff)
@@ -128,7 +137,7 @@ class ChallengeController extends Controller
         $user = $request->user();
         $user_id = $user->id;
 
-        return view('includes.modals.modal-add-challenge', compact('challenge', 'challenges_types_list', 'staff_list', 'user_id'));
+        return view('includes.modals.modal-add-challenge', compact('challenge', 'challenges_types_list', 'staff_list', 'priority_list', 'user_id'));
     }
 
     public function store(Request $request)
@@ -168,6 +177,7 @@ class ChallengeController extends Controller
         $challenge->challenges_type_id = $request->challenges_type_id;
         $challenge->appointed_id = $request->appointed_id;
         $challenge->description = $request->description;
+        $challenge->priority_id = $request->priority_id;
 
         $challenge->company_id = $company_id;
         $challenge->author_id = $user_id;
@@ -179,6 +189,7 @@ class ChallengeController extends Controller
 
             // Сохранение отношения
             $item->challenges()->save($challenge);
+            $item->increment('challenges_active_count');
 
             // Оповещение в telegram, если автор не является исполнителем
             if ($challenge->appointed_id != $user_id) {
@@ -199,14 +210,12 @@ class ChallengeController extends Controller
                     $message = lead_info($message, $item);
                 }
 
-
-                $telegram_destinations = User::where('id', $challenge->appointed_id)
+                $telegram_destinations = User::has('staff')->where('id', $challenge->appointed_id)
                 ->where('telegram_id', '!=', null)
                 ->get(['telegram_id']);
 
                 send_message($telegram_destinations, $message);
             }
-
 
             $item = $request->model::with(['challenges' => function ($query) {
                 $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
@@ -253,6 +262,11 @@ class ChallengeController extends Controller
 
         if ($challenge) {
 
+            if($challenge->subject_type == 'App\Lead') {
+                $lead = Lead::findOrFail($challenge->subject_id);
+                $lead->decrement('challenges_active_count');
+            }
+
             // Оповещение в telegram, если исполнитель не является автором
             if ($challenge->finisher_id != $challenge->author_id) {
 
@@ -279,13 +293,13 @@ class ChallengeController extends Controller
                 $message .= "\r\n";
 
                 // Если задача для лида
-                if (isset($challenge->challenges->lead_method_id)) {
+                if ($challenge->subject_type == 'App\Lead') {
 
-                    $lead = Lead::findOrFail($challenge->challenges->id);
+                    $lead = Lead::findOrFail($challenge->subject_id);
                     $message = lead_info($message, $lead);
                 }
 
-                $telegram_destinations = User::where('id', $challenge->author_id)
+                $telegram_destinations = User::has('staff')->where('id', $challenge->author_id)
                 ->where('telegram_id', '!=', null)
                 ->get(['telegram_id']);
 
@@ -316,17 +330,21 @@ class ChallengeController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $challenge = Challenge::findOrFail($id);
 
+        if ($challenge->subject_type == 'App\Lead') {
+            $lead = Lead::findOrFail($challenge->subject_id);
+        }
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $challenge);
 
         // Оповещение в telegram, если исполнитель не является автором
         if ($challenge->appointed_id != $user->id) {
-            $message  = "ЗАДАЧА СНЯТА\r\n\r\n"; 
+            $message  = "ЗАДАЧА СНЯТА\r\n\r\n";
 
             $message .= "Действие: " . $challenge->challenge_type->name . "\r\n";
             $message .= "Дедлайн: " . $challenge->deadline_date->format('d.m.Y - H:i') . "\r\n";
             $message .= "Дата снятия: " . Carbon::now()->format('d.m.Y - H:i') . "\r\n";
-            $message .= "Снял: " . $user->first_name . " " . $user->second_name . "\r\n";
+            $message .= "Снял: " . $user->first_name . " " . $user->second_name . "\r\n"; 
 
             if (isset($challenge->description)) {
                 $message .= "Описание: " . $challenge->description. "\r\n";  
@@ -335,13 +353,13 @@ class ChallengeController extends Controller
             $message .= "\r\n";
 
             // Если задача для лида
-            if (isset($challenge->challenges->lead_method_id)) {
+            if ($challenge->subject_type == 'App\Lead') {
 
-                $lead = Lead::findOrFail($challenge->challenges->id);
+                $lead = Lead::findOrFail($challenge->subject_id);
                 $message = lead_info($message, $lead);
             }
 
-            $telegram_destinations = User::where('id', $challenge->appointed_id)
+            $telegram_destinations = User::has('staff')->where('id', $challenge->appointed_id)
             ->where('telegram_id', '!=', null)
             ->get(['telegram_id']);
 
@@ -349,11 +367,12 @@ class ChallengeController extends Controller
         }
 
         // Удаляем пользователя с обновлением
-        $challenge->forceDelete();
+        // $challenge->forceDelete();
+        $challenge->delete();
 
         if ($challenge) {
 
-
+            $lead->decrement('challenges_active_count');
 
             $result = [
                 'error_status' => 0,

@@ -48,10 +48,12 @@ class Location extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'city_id ', 
-        'adress', 
-        'width', 
-        'longitude', 
+        'country_id',
+        'city_id',
+        'address',
+        'author_id',
+        'latitude',
+        'longitude',
     ];
 
     // Получаем город.
@@ -67,8 +69,8 @@ class Location extends Model
     }
 
     // Получаем компании.
-    public function companies()
-    {
-        return $this->hasMany('App\Company');
-    }
+    // public function companies()
+    // {
+    //     return $this->hasMany('App\Company');
+    // }
 }

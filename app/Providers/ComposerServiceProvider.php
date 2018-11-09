@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+
+use App\Http\ViewComposers\SidebarComposer;
+
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -13,7 +17,7 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        view()->composer('layouts.sidebar', SidebarComposer::class);
     }
 
     /**

@@ -31,7 +31,7 @@
 
       <!-- Общая информация -->
       <div class="tabs-panel is-active" id="content-panel-1">
-        <div class="grid-x grid-padding-x"> 
+        <div class="grid-x grid-padding-x">
           <div class="small-12 medium-6 cell">
             <label>Название компании
               @include('includes.inputs.name', ['value'=>$company->name, 'name'=>'name', 'required'=>'required'])
@@ -48,128 +48,125 @@
           </div>
           <div class="small-12 medium-6 cell">
             <label>Телефон
-              @include('includes.inputs.phone', ['value'=>$company->phone, 'name'=>'phone', 'required'=>'required'])
+              @include('includes.inputs.phone', ['value' => isset($company->main_phone->phone) ? $company->main_phone->phone : null, 'name'=>'main_phone', 'required'=>'required'])
             </label>
           </div>
-          <div class="small-12 medium-6 cell">
-            <label>Доп. телефон
-              @include('includes.inputs.phone', ['value'=>$company->extra_phone, 'name'=>'extra_phone', 'required'=>''])
-            </label>
+          <div class="small-12 medium-6 cell" id="extra-phones">
+            @if (count($company->extra_phones) > 0)
+            @foreach ($company->extra_phones as $extra_phone)
+            @include('includes.extra-phone', ['extra_phone' => $extra_phone])
+            @endforeach
+            @else
+            @include('includes.extra-phone')
+            @endif
+
+            <!-- <span id="add-extra-phone">Добавить номер</span> -->
           </div>
 
           <div class="small-12 medium-6 cell">
             <label>Почта
               @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email', 'required'=>''])
-            </label>  
+            </label>
             <label>Страна
               @php
               $country_id = null;
               if (isset($company->location->country_id)) {
-                $country_id = $company->location->country_id;
-              }
-              @endphp
-              {{ Form::select('country_id', $countries_list, $country_id)}}
-            </label>
-          </div>
+              $country_id = $company->location->country_id;
+            }
+            @endphp
+            {{ Form::select('country_id', $countries_list, $country_id)}}
+          </label>
+        </div>
 
-          <div class="small-12 medium-6 cell">
-            <label class="input-icon">Город
-              @php
-              $city_name = null;
-              $city_id = null;
-              if (isset($company->location->city->name)) {
-              $city_name = $company->location->city->name;
-              $city_id = $company->location->city->id;
-            }
-            @endphp
-            @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
-            </label>
-            <label>Адрес
-              @php
-              $address = null;
-              if (isset($company->location->address)) {
-              $address = $company->location->address;
-            }
-            @endphp
-            @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
-            </label>
-          </div>
+        <div class="small-12 medium-6 cell">
+          @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
+        </label>
+        <label>Адрес
+          @php
+          $address = null;
+          if (isset($company->location->address)) {
+          $address = $company->location->address;
+        }
+        @endphp
+        @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+      </label>
+    </div>
           <!-- <div class="small-12 cell checkbox">
             {{ Form::checkbox('orgform_status', 1, $company->orgform_status==1, ['id'=>'orgform-status-checkbox']) }}
             <label for="orgform-status-checkbox"><span>Директор компании (Юридическое лицо)</span></label>
           </div> -->
-          </div>
         </div>
-
-        <!-- Реквизиты -->
-        <div class="tabs-panel" id="content-panel-2">
-
-          <div class="grid-x grid-padding-x"> 
-            <div class="small-12 medium-6 cell">
-              <label>ИНН
-                @include('includes.inputs.inn', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
-              </label>
-            </div>
-            <div class="small-12 medium-6 cell">
-              <label>КПП
-                @include('includes.inputs.kpp', ['value'=>$company->kpp, 'name'=>'kpp', 'required'=>''])
-              </label>
-            </div>
-            <div class="small-12 medium-12 cell">
-              <label>Банк
-                @include('includes.inputs.bank', ['value'=>$company->bank, 'name'=>'bank', 'required'=>''])
-              </label>
-            </div>
-            <div class="small-12 medium-6 cell">
-              <label>Р/С
-                @include('includes.inputs.account', ['value'=>$company->account_settlement, 'name'=>'account_settlement', 'required'=>''])
-              </label>
-            </div>
-            <div class="small-12 medium-6 cell">
-              <label>К/С
-                @include('includes.inputs.account', ['value'=>$company->account_correspondent, 'name'=>'account_correspondent', 'required'=>''])
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Настройки -->
-        <div class="tabs-panel" id="content-panel-4">
-          <div class="grid-x grid-padding-x"> 
-            <div class="small-12 medium-6 cell">
-              <label>Алиас
-                @include('includes.inputs.alias', ['value'=>$company->alias, 'name'=>'alias', 'required'=>''])
-              </label>
-            </div>
-
-            @include('includes.scripts.class.checkboxer')
-            <div class="small-12 medium-12 cell checkbox checkboxer">
-                @include('includes.inputs.checkboxer', ['name'=>'services_types', 'value'=>$services_types_checkboxer])      
-            </div>
-
-            {{-- Чекбоксы управления --}}
-    @include('includes.control.checkboxes', ['item' => $company])
-
-          </div>
-        </div>
-
-        <!-- Схема работы -->
-        <div class="tabs-panel" id="content-panel-3">
-          <div class="grid-x grid-padding-x">
-            <div class="small-12 medium-6 cell">
-              @include('includes.inputs.schedule', ['value'=>$worktime]) 
-            </div>
-          </div>
-        </div>
-
       </div>
 
-      <div class="small-12 medium-5 large-7 cell tabs-margin-top">
+      <!-- Реквизиты -->
+      <div class="tabs-panel" id="content-panel-2">
+
+        <div class="grid-x grid-padding-x">
+          <div class="small-12 medium-6 cell">
+            <label>ИНН
+              @include('includes.inputs.inn', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
+            </label>
+          </div>
+          <div class="small-12 medium-6 cell">
+            <label>КПП
+              @include('includes.inputs.kpp', ['value'=>$company->kpp, 'name'=>'kpp', 'required'=>''])
+            </label>
+          </div>
+          <div class="small-12 medium-12 cell">
+            <label>Банк
+              @include('includes.inputs.bank', ['value'=>$company->bank, 'name'=>'bank', 'required'=>''])
+            </label>
+          </div>
+          <div class="small-12 medium-6 cell">
+            <label>Р/С
+              @include('includes.inputs.account', ['value'=>$company->account_settlement, 'name'=>'account_settlement', 'required'=>''])
+            </label>
+          </div>
+          <div class="small-12 medium-6 cell">
+            <label>К/С
+              @include('includes.inputs.account', ['value'=>$company->account_correspondent, 'name'=>'account_correspondent', 'required'=>''])
+            </label>
+          </div>
+        </div>
       </div>
 
-      <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-        {{ Form::submit($submitButtonText, ['class'=>'button']) }}
+      <!-- Настройки -->
+      <div class="tabs-panel" id="content-panel-4">
+        <div class="grid-x grid-padding-x">
+          <div class="small-12 medium-6 cell">
+            <label>Алиас
+              @include('includes.inputs.alias', ['value'=>$company->alias, 'name'=>'alias', 'required'=>''])
+            </label>
+          </div>
+
+          @include('includes.scripts.class.checkboxer')
+          <div class="small-12 medium-12 cell checkbox checkboxer">
+            @include('includes.inputs.checkboxer', ['name'=>'services_types', 'value'=>$services_types_checkboxer])
+          </div>
+
+          {{-- Чекбоксы управления --}}
+          @include('includes.control.checkboxes', ['item' => $company])
+
+        </div>
       </div>
+
+      <!-- Схема работы -->
+      <div class="tabs-panel" id="content-panel-3">
+        <div class="grid-x grid-padding-x">
+          <div class="small-12 medium-6 cell">
+            @include('includes.inputs.schedule', ['value'=>$worktime])
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="small-12 medium-5 large-7 cell tabs-margin-top">
+    </div>
+
+    <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
+      {{ Form::submit($submitButtonText, ['class'=>'button']) }}
     </div>
   </div>
+</div>
 

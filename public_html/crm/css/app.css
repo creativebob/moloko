@@ -127,11 +127,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 .up-input-button {
   font-size: 0.8rem;
   display: block;
-  position: absolute;
-  right: 0px;
   color: #999;
   width: auto;
-  z-index: 9000;
+  margin-bottom: 0.8rem;
+}
+
+.set-status {
+  margin-top: 0.8rem;
 }
 
 fieldset {
@@ -142,6 +144,31 @@ fieldset {
 fieldset legend {
   font-family: "PFDinDisplayPro-Med";
   padding: 0 1rem;
+}
+
+.alt-switch .switch-paddle {
+  background: #7e9a06;
+  margin-top: 6px;
+}
+
+.alt-switch span {
+  margin-bottom: 6px;
+  color: #000 !important;
+  padding-left: 8px;
+  font-weight: normal;
+  vertical-align: super;
+}
+
+.lead-info-company, .lead-info-bank {
+  display: none;
+}
+
+.switch-on {
+  display: block;
+}
+
+.switch-off {
+  display: none;
 }
 
 .light-text {
@@ -173,6 +200,19 @@ fieldset legend {
 
 .head-content .button-group {
   margin-top: -6px;
+}
+
+.margin-left-15 {
+  margin: 0 -15px !important;
+}
+
+.callout.alert {
+  background-color: #000;
+  border-bottom: 6px solid #ff0000;
+  color: #ffffff;
+}
+.callout.alert .close-button {
+  color: #ffffff;
 }
 
 .compact {
@@ -563,6 +603,8 @@ span.wrap-label-checkboxer {
 .icon-find-no {
   background-position: -32px -80px;
   opacity: 1;
+  cursor: pointer;
+  z-index: 50;
 }
 
 .icon-list-add {
@@ -950,7 +992,7 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 }
 .inputs input:not([type="submit"]), .inputs textarea {
   margin-top: 0.25rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
   height: 28px;
   color: #000000;
   background-color: #ffffff;
@@ -1492,6 +1534,9 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   border-collapse: separate;
   width: 100%;
 }
+.table-notes select, .table-challenges select, .table-attributions select {
+  margin-bottom: 4px;
+}
 .table-notes .button, .table-challenges .button, .table-attributions .button {
   margin: 0;
 }
@@ -1771,6 +1816,14 @@ a#task-toggle {
   border-left: 6px solid #f00;
 }
 
+.priority_2 {
+  padding: 0px 8px 2px 8px;
+  color: #000;
+  background-color: #cab00a;
+  margin: 0px 5px;
+  border-radius: 2px;
+}
+
 .task-manager {
   position: fixed;
   height: 100%;
@@ -1970,7 +2023,7 @@ a#task-toggle {
   color: #ffffff;
 }
 .reveal .modal-content {
-  padding: 2rem;
+  padding: 2rem 1rem 1rem 1rem;
 }
 .reveal .modal-button {
   margin-top: 1rem;
@@ -2858,10 +2911,10 @@ a#task-toggle {
   display: none;
 }
 
-#unit-change {
+.unit-change {
   color: #1779ba;
 }
-#unit-change:hover {
+.unit-change:hover {
   color: #1468a0;
   cursor: pointer;
 }
@@ -2905,4 +2958,81 @@ table.composition-table thead {
 
 .composition-table tr:first-child td {
   background-color: #fff;
+}
+
+.widget-table th {
+  font-size: 0.8rem;
+}
+.widget-table th.common-th {
+  text-align: center;
+}
+.widget-table td {
+  font-size: 0.8rem;
+}
+.widget-table .right-border {
+  border-right: 1px dotted #ccc;
+}
+@media screen and (min-width: 640px) {
+  .widget-table tbody tr:first-child td {
+    border-top: 1px solid #000;
+  }
+}
+
+.widget-h3 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.responsive-card-table {
+  border-collapse: collapse;
+}
+.responsive-card-table.unstriped tbody {
+  background-color: transparent;
+}
+.responsive-card-table th {
+  background-color: #ffffff;
+}
+@media screen and (max-width: 640px) {
+  .responsive-card-table {
+    /* Get table cells to act like rows */
+  }
+  .responsive-card-table thead tr {
+    position: absolute;
+    top: -9999em;
+    left: -9999em;
+  }
+  .responsive-card-table tr {
+    display: block;
+  }
+  .responsive-card-table tr + tr {
+    margin-top: 1.5rem;
+  }
+  .responsive-card-table td {
+    border: none;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 50%;
+    position: relative;
+  }
+  .responsive-card-table td:before {
+    content: attr(data-label);
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1.5;
+    margin-left: -100%;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+  .responsive-card-table td:after {
+    content: '';
+    position: absolute;
+    background: #ffffff;
+    width: 45%;
+    height: 95%;
+    left: 1px;
+    top: 1px;
+    z-index: 0;
+  }
 }

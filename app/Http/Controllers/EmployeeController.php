@@ -32,7 +32,7 @@ class EmployeeController extends Controller
 {
   // Сущность над которой производит операции контроллер
   protected $entity_name = 'employees';
-  protected $entity_dependence = false;
+  protected $entity_dependence = true;
 
     public function index(Request $request)
     {
@@ -43,21 +43,41 @@ class EmployeeController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Employee::class);
-        $this->authorize(getmethod(__FUNCTION__), Position::class);
-        $this->authorize(getmethod(__FUNCTION__), Staffer::class);
+        // $this->authorize(getmethod(__FUNCTION__), Position::class);
+        // $this->authorize(getmethod(__FUNCTION__), Staffer::class);
         
+        // Смотрим сколько филиалов в компании
+        $user = $request->user();
+        $answer_company = operator_right('companies', false, 'view');
+
+        $company = Company::with(['departments' => function($query) use ($answer_company) {
+          $query->moderatorLimit($answer_company)->whereFilial_status(1);
+        }])->findOrFail($user->company_id);
+
+        $filials = count($company->departments);
+
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
         $employees = Employee::with('staffer', 'staffer.position', 'staffer.filial', 'staffer.department', 'user')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
 
+
+        // Так как сущность не филиала зависимая, но по факту 
+        // все таки зависимая через staff, то делаем нестандартную фильтрацию (прямо в запросе)
+        ->when($answer['dependence'] == true, function ($query) use ($user) {
+            return $query->whereHas('staffer', function($q) use ($user){
+                $q->where('filial_id', $user->filial_id);
+            });
+        })
+
+        // ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request)
         ->filter($request, 'position_id', 'staffer')
         ->filter($request, 'department_id', 'staffer')
@@ -78,16 +98,6 @@ class EmployeeController extends Controller
         ]);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
-
-        // Смотрим сколько филиалов в компании
-        $user = $request->user();
-        $answer_company = operator_right('companies', false, 'view');
-
-        $company = Company::with(['departments' => function($query) use ($answer_company) {
-          $query->moderatorLimit($answer_company)->whereFilial_status(1);
-        }])->findOrFail($user->company_id);
-
-        $filials = count($company->departments);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

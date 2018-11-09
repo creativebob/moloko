@@ -40,6 +40,7 @@
                     <li class="tabs-title is-active"><a href="#roles" aria-selected="true">Роли</a></li>
                     <li class="tabs-title"><a data-tabs-target="notifications" href="#notifications">Оповещения</a></li>
                     <li class="tabs-title"><a data-tabs-target="charges" href="#charges">Обязанности</a></li>
+                    <li class="tabs-title"><a data-tabs-target="widgets" href="#widgets">Виджеты</a></li>
                 </ul>
             </div>
             <div class=small-12 cell">
@@ -109,6 +110,29 @@
                                             <div class="small-12 cell checkbox">
                                                 {{ Form::checkbox('charges[]', $charge->id, null, ['id'=>'charge-'.$charge->id, 'class'=>'access-checkbox']) }}
                                                 <label for="charge-{{ $charge->id }}"><span>{{ $charge->name }}</span></label>
+                                            </div>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </fieldset> 
+                    </div>
+
+                    <!-- Виджеты -->
+                    <div class="tabs-panel" id="widgets">
+                        <fieldset class="fieldset-access">
+                            <legend>Настройка виджетов</legend>
+                            <div class="grid-x grid-padding-x"> 
+                                <div class="small-12 cell">
+
+                                    <ul>
+                                        @foreach ($widgets as $widget)
+                                        <li>
+                                            <div class="small-12 cell checkbox">
+                                                {{ Form::checkbox('widgets[]', $widget->id, null, ['id'=>'widget-'.$widget->id, 'class'=>'access-checkbox']) }}
+                                                <label for="widget-{{ $widget->id }}"><span>{{ $widget->name }}</span></label>
                                             </div>
                                         </li>
                                         @endforeach

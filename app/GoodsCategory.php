@@ -47,9 +47,17 @@ class GoodsCategory extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
+        'company_id',
         'name',
+        'description',
+        'seo_description',
+        'photo_id',
         'parent_id',
+        'goods_mode_id',
         'category_status',
+        'category_id',
+        'author_id',
+        'editor_id',
     ];
 
     // Получаем компании.
@@ -80,10 +88,15 @@ class GoodsCategory extends Model
     // }
     public function metrics()
     {
-        return $this->morphToMany('App\Metric', 'metric_entity');
+        return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'one');
     }
 
-    // Получаем состав
+    public function set_metrics()
+    {
+        return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'set');
+    }
+
+    // Состав (только сырье)
     public function compositions()
     {
         return $this->morphedByMany('App\RawsArticle', 'compositions');

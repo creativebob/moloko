@@ -137,17 +137,48 @@ class Company extends Model
         return $this->belongsTo('App\Location');
     }
 
-    // Получаем контрагентов
+    // Получаем поставщиков
     public function suppliers()
+    {
+        return $this->hasMany('App\Supplier', 'company_id');
+    }
+
+    // Получаем дилеров
+    public function dealers()
+    {
+        return $this->hasMany('App\Dealer', 'company_id');
+    }
+
+    // Получаем производителей
+    public function manufacturers()
+    {
+        return $this->hasMany('App\Manufacturer', 'company_id');
+    }
+
+    // Получаем компании, где мы поставщик
+    public function we_suppliers()
     {
         return $this->hasMany('App\Supplier', 'contragent_id');
     }
 
-    // Получаем контрагентов
-    public function manufacturers()
+    // Получаем компании, где мы дилеры
+    public function we_dealers()
     {
-        return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'contragent_id');
+        return $this->hasMany('App\Dealer', 'contragent_id');
     }
+
+    // Получаем компании, где мы производители
+    public function we_manufacturers()
+    {
+        return $this->hasMany('App\Manufacturer', 'contragent_id');
+    }
+
+
+    // Получаем контрагентов
+    // public function manufacturers()
+    // {
+    //     return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'contragent_id');
+    // }
 
     // Получаем категории продукции
     public function services_categories()

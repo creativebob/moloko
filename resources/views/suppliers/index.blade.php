@@ -74,7 +74,7 @@
           </td>
           {{-- Если пользователь бог, то показываем для него переключатель на компанию --}}
           <td class="td-address">@if(!empty($supplier->company->location->address)){{ $supplier->company->location->address }}@endif </td>
-          <td class="td-phone">{{ decorPhone($supplier->company->phone) }} </td>
+          <td class="td-phone">{{ isset($supplier->company->main_phone->phone) ? decorPhone($supplier->company->main_phone->phone) : 'Номер не указан' }}</td>
           <td class="td-user_id">{{ $supplier->company->director->first_name or ' ... ' }} {{ $supplier->company->director->second_name or ' ... ' }} </td>
 
           {{-- Элементы управления --}}

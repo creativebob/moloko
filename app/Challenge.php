@@ -31,7 +31,7 @@ class Challenge extends Model
     // Включаем кеш
     use Cachable;
 
-    use SoftDeletes;
+    // use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -84,7 +84,7 @@ class Challenge extends Model
     }
 
     // Получаем все
-    public function challenges()
+    public function subject()
     {
         return $this->morphTo();
     }

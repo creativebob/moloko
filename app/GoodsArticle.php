@@ -47,6 +47,18 @@ class GoodsArticle extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
+    protected $fillable = [
+        'company_id',
+        'goods_product_id',
+        'name',
+        'description',
+        'internal',
+        'metrics_count',
+        'compositions_count',
+        'author_id',
+        'editor_id',
+    ];
+
     // Метрики
     // public function metrics_values()
     // {
@@ -102,7 +114,7 @@ class GoodsArticle extends Model
     {
         return $this->hasMany('App\Goods');
     }
-    
+
     public function company()
     {
         return $this->belongsTo('App\Company');
@@ -123,5 +135,24 @@ class GoodsArticle extends Model
     public function photo()
     {
         return $this->belongsTo('App\Photo');
+    }
+
+
+    // Метрики
+    public function metrics()
+    {
+        return $this->morphedByMany('App\Metric', 'goods_articles_values')->withPivot('value');
+    }
+
+    // Состав (сырье)
+    public function compositions()
+    {
+        return $this->morphedByMany('App\RawsArticle', 'goods_articles_values')->withPivot('value');
+    }
+
+    // Состав (набор)
+    public function set_compositions()
+    {
+        return $this->morphedByMany('App\GoodsArticle', 'goods_articles_values')->withPivot('value');
     }
 }

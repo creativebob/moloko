@@ -21,9 +21,8 @@
                                 {{ decorPhone($lead->main_phone->phone) }}
                             </td>
                             <td>
-                                {{ $lead->choices_goods_categories->implode('name', ',') }}
-					            {{ $lead->choices_services_categories->implode('name', ',') }}
-					            {{ $lead->choices_raws_categories->implode('name', ',') }}
+                                {{ $lead->choice->name or '' }}
+
                             </td>
                             <td>
                                 {{ $lead->stage->name or ''}}<br>

@@ -28,14 +28,14 @@
 			$('.' + this.name + ' .checkboxer-clean').removeClass('hide-elem');
 			$('.' + this.name + ' .checkboxer-title').css("width", "100%");
 			$('.' + this.name + '.checkboxer-wrap').css("paddingRight", "60px");
-		}	
+		}
 
 		CheckBoxerSetWidth(){
 
 			this.width = $('.' + this.name + '.checkboxer-wrap').css("width");
 			$('.' + this.name + '.dropdown-pane.checkboxer-pane').css("width", this.width);
-			
-		}	
+
+		}
 
 		CheckBoxerAddDel(elem){
 
@@ -60,7 +60,6 @@
 
 			};
 		}
-
 	}
 
 

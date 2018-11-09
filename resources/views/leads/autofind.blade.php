@@ -17,7 +17,7 @@
                                 <span id="lead-address">{{ $lead->location->address or ''}}</span>
                             </td>
                             <td>
-                                {{ $lead->choices_goods_categories->implode('name', ', ') }}<br>
+                                {{ $lead->choice->name or '' }}<br>
                                 {{ $lead->stage->name }}
                             </td>
                             <td>

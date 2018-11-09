@@ -66,10 +66,7 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------
 
-        $companies = Company::with('author', 'director', 'location.city', 'sector', 'suppliers', 'manufacturers', 'main_phones')
-
-        // ->suppliers($user->company_id)
-        // ->manufacturers($user->company_id)
+        $companies = Company::with('author', 'director', 'location.city', 'sector', 'we_suppliers', 'we_manufacturers', 'we_dealers', 'main_phones')
         ->moderatorLimit($answer)
         ->filter($request, 'city_id', 'location')
         ->filter($request, 'sector_id')
@@ -78,20 +75,20 @@ class CompanyController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        $filter_query = Company::with('location.city', 'sector')
-        // ->suppliers($user->company_id, 'client')
-        ->moderatorLimit($answer)
-        ->get();
+        // dd($companies);
 
-        $filter['status'] = null;
-        $filter['entity_name'] = $this->entity_name;
-        $filter['inputs'] = $request->input();
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
 
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите город:', 'city', 'city_id', 'location', 'external-id-one');
-        $filter = addFilter($filter, $filter_query, $request, 'Выберите сектор:', 'sector', 'sector_id', null, 'internal-id-one');
+        $filter = setFilter($this->entity_name, $request, [
+            'author',               // Автор записи
+            'sector',               // Направление деятельности
+            'booklist'              // Списки пользователя
+        ]);
 
-        // Добавляем данные по спискам (Требуется на каждом контроллере)
-        $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
+        // Окончание фильтра -----------------------------------------------------------------------------------------
+
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -197,20 +194,6 @@ class CompanyController extends Controller
         // Записываем в базу все расписание.
         DB::table('worktimes')->insert($mass_time);
 
-        // Пишем локацию
-        $location = new Location;
-        $location->country_id = $request->country_id;
-        $location->city_id = $request->city_id;
-        $location->address = $request->address;
-        $location->author_id = $user_id;
-        $location->save();
-
-        if ($location) {
-            $location_id = $location->id;
-        } else {
-            abort(403, 'Ошибка записи адреса');
-        }
-
         $company = new Company;
         $company->name = $request->name;
         $company->alias = $request->alias;
@@ -221,7 +204,9 @@ class CompanyController extends Controller
         //     $company->extra_phone = cleanPhone($request->extra_phone);
         // } else {$company->extra_phone = NULL;};
 
-        $company->location_id = $location_id;
+        // Добавляем локацию
+        $company->location_id = create_location($request);
+        // $company->location_id = $location->id;
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
@@ -413,23 +398,8 @@ class CompanyController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-        // Пишем локацию
-        $location = $company->location;
-        if($location->city_id != $request->city_id) {
-            $location->city_id = $request->city_id;
-            $location->editor_id = $user_id;
-            $location->save();
-        }
-        if($location->address != $request->address) {
-            $location->address = $request->address;
-            $location->editor_id = $user_id;
-            $location->save();
-        }
-        if($location->country_id != $request->country_id) {
-            $location->country_id = $request->country_id;
-            $location->editor_id = $user_id;
-            $location->save();
-        }
+        // Обновляем локацию
+        $company = update_location($request, $company);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $company);
@@ -528,7 +498,7 @@ class CompanyController extends Controller
             $company->save();
 
             // Удаляем локацию
-            $company->location()->delete();
+            // $company->location()->delete();
 
             $company = Company::destroy($id);
 
@@ -546,73 +516,6 @@ class CompanyController extends Controller
     }
 
     // ------------------------------------------- Ajax ---------------------------------------------
-
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->companies as $item) {
-            Company::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Company::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Company::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
 
     public function checkcompany(Request $request)
     {

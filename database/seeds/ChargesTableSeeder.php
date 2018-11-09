@@ -60,6 +60,12 @@ class ChargesTableSeeder extends Seeder
                 'alias' => 'lead-appointment-self',
                 'author_id' => 1,
             ],
+            [
+                'name' => 'Снятие задач для лида без ограничений',
+                'description' => null,
+                'alias' => 'lead-challenge-remove',
+                'author_id' => 1,
+            ],
 
 
 

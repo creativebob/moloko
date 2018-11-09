@@ -8,7 +8,7 @@
     // C дефисом en
     $('.text-en-field').mask('zz?zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
     // Логин
-    $('.login-field').mask('llllll?llllllllllllllllllllllllllllll');
+    $('.login-field').mask('uuuuuu?uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu');
     // Алиас
     $('.alias-field').mask('ss?ssssssssssssssss');
     // Должность
@@ -29,7 +29,7 @@
     // -------------------------- Числа --------------------------------
     // Дробное число
     $('.digit-field').mask('1?999999');
-
+ 
     // Дробное число
     $('.digit-2-field').mask('1?9');
     $('.digit-3-field').mask('1?99');

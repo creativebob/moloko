@@ -36,7 +36,8 @@ class TelegramController extends Controller
     
     public function set_webhook()
     {
-        $response = Telegram::setWebhook(['url' => env('SITE_DOMAIN').'/admin/telegram_message']);       
+        $response = Telegram::setWebhook(['url' => asset('/admin/telegram_message')]);
+        // $response = Telegram::setWebhook(['url' => env('SITE_DOMAIN').'/admin/'.env('TELEGRAM_BOT_TOKEN')]);
         dd($response);
     }
 
@@ -65,13 +66,13 @@ class TelegramController extends Controller
 
         // if ($update['message']['text'] == 'го') {
         // }
-        
+
         // Если нажали inline-нопку:
         if (isset($update['callback_query'])) {
 
-            $access = User::has('staff')->where('telegram_id', $update['callback_query']['message']['chat']['id'])->first();
+            $user = User::has('staff')->where('telegram_id', $update['callback_query']['message']['chat']['id'])->first();
 
-            if ($access) {
+            if ($user) {
 
                 switch ($update['callback_query']['data']) {
                     case 'report_day':
@@ -176,8 +177,6 @@ class TelegramController extends Controller
                                 }
                             }
                             $message .= "\r\n";
-
-
                         }
 
                         // Дилерское
@@ -199,7 +198,6 @@ class TelegramController extends Controller
                         $message .= "Обращений не было ...";
                         $message .= "\r\n";
                     }
-
                 }
 
                 if (count($claims) > 0) {
@@ -240,19 +238,83 @@ class TelegramController extends Controller
                     $message .= "Задачи по активным звонкам: " . $leads_potencial_count . "\r\n";
                 }
 
-                Telegram::sendMessage([
+                $response = Telegram::sendMessage([
                     'chat_id' => $update['callback_query']['message']['chat']['id'],
                     'text' => $message, 
                 ]);
 
+                // $response = Telegram::editMessageText([
+                //     'chat_id' => $update['callback_query']['message']['chat']['id'],
+                //     'message_id' => $update['callback_query']['message']['message_id'],
+                //     'text' => $message, 
+                // ]);
+                
                 // Отправляем телеграму отчет о получении, чтоб не дублировал ответы
-                Telegram::answerCallbackQuery([
+                $response = Telegram::answerCallbackQuery([
                     'callback_query_id' => $update['callback_query']['id']
-                ]);
-            } else {
-                // $message = 'Отчеты охота? Давай ДОСВИДАНИЯ!';
+                ]);  
             }
-        }
+        } else {
+
+            // Если пришли координаты
+            if (isset($update['message']['location'])) {
+
+                $user = User::has('staff')->where('telegram_id', $update['message']['chat']['id'])->first();
+
+                if ($user) {
+                    $message = "Тебя вычислили:\r\n";
+                    $message .= "Широта: " . $update['message']['location']['latitude'] . "\r\n";
+                    $message .= "Долгота: " . $update['message']['location']['longitude'] . "\r\n";
+                    $message .= "\r\nP.S. - Воронок уже выехал...\r\n";
+
+                    $response = Telegram::sendMessage([
+                        'chat_id' => $update['message']['chat']['id'],
+                        'text' => $message, 
+                    ]);
+
+                    // $response = Telegram::sendLocation([
+                    //     'chat_id' => $update['message']['chat']['id'], 
+                    //     'latitude' => $update['message']['location']['latitude'],
+                    //     'longitude' => $update['message']['location']['longitude'],
+                    // ]);
+                    
+                    return 1;  
+                }
+            }
+
+            // Запрос фотки
+            if ($update['message']['text'] == 'Фото') {
+
+                $user = User::has('staff')->where('telegram_id', $update['message']['chat']['id'])->first();
+
+                if ($user) {
+
+                    if (isset($user->photo_id)) {
+                        $response = Telegram::sendPhoto([
+                            'chat_id' => $update['message']['chat']['id'], 
+                            'photo' => asset('storage/'. $user->company_id .'/media/users/'. $user->id .'/img/medium/'. $user->avatar->name), 
+                            'caption' => 'Приветствую, ' . $user->first_name . ' ' . $user->second_name,
+                        ]);
+                    } else {
+                        $response = Telegram::sendMessage([
+                            'chat_id' => $update['message']['chat']['id'],
+                            'text' => 'Сожалею, ' . $user->first_name . ' ' . $user->second_name . ', но у вас нет аватарки...',
+                        ]);
+                    }
+                }
+            }
+
+            // file_get_contents("https://api.telegram.org/bot".env('TELEGRAM_BOT_TOKEN')."/sendMessage?chat_id=".$update['update_id']."&text=Проврека");
+
+            // if (isset($update['callback_query'])) {
+            
+            // }
+            // else {
+            return 1;   
+            // }
+            // return 'ok';
+            // return response('ok', 200);
+        } 
     }
 
     /**

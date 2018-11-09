@@ -29,13 +29,17 @@ class CreateChallengesTable extends Migration
             $table->integer('finisher_id')->nullable()->unsigned()->comment('ID пользователя, завершил задачу');
             $table->foreign('finisher_id')->references('id')->on('users');
 
-            $table->integer('challenges_id')->nullable()->unsigned()->comment('ID сущности');
-            $table->string('challenges_type')->nullable()->comment('Сущность');
+            $table->integer('subject_id')->nullable()->unsigned()->comment('ID озадаченной сущности');
+            $table->string('subject_type')->nullable()->comment('Модель сущности');
 
             $table->integer('challenges_type_id')->nullable()->unsigned()->comment('ID типа задачи');
             $table->foreign('challenges_type_id')->references('id')->on('challenges_types');
 
             $table->integer('status')->nullable()->unsigned()->comment('Статус');
+
+            $table->integer('priority_id')->nullable()->unsigned()->comment('Приоритет');
+            $table->foreign('priority_id')->references('id')->on('priorities');
+
             $table->integer('delegate_status')->nullable()->unsigned()->comment('Статус делигирования');
 
             $table->datetime('deadline_date')->nullable()->comment('Дата дедлайна');

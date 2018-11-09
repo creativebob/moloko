@@ -148,20 +148,6 @@ class UserController extends Controller
 
         $filial_id = $request->filial_id;
 
-        // Пишем локацию
-        $location = new Location;
-        $location->country_id = $request->country_id;
-        $location->city_id = $request->city_id;
-        $location->address = $request->address;
-        $location->author_id = $user_auth->id;
-        $location->save();
-
-        if ($location) {
-            $location_id = $location->id;
-        } else {
-            abort(403, 'Ошибка записи адреса');
-        }
-
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
         $user = new User;
 
@@ -180,7 +166,9 @@ class UserController extends Controller
         $user->company_id = $company_id;
 
         $user->telegram_id = $request->telegram_id;
-        $user->location_id = $location_id;
+        
+        // Добавляем локацию
+        $user->location_id = create_location($request);
 
         $user->orgform_status = $request->orgform_status;
         $user->user_inn = $request->inn;
@@ -479,19 +467,8 @@ class UserController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
 
-        // Пишем локацию
-        $location = $user->location;
-        if($location->city_id != $request->city_id) {
-            $location->city_id = $request->city_id;
-            $location->editor_id = $user_auth_id;
-            $location->save();
-        }
-
-        if($location->address != $request->address) {
-            $location->address = $request->address;
-            $location->editor_id = $user_auth_id;
-            $location->save();
-        }
+        // Обновляем локацию
+        $user = update_location($request, $user);
 
         $user->login = $request->login;
         $user->email = $request->email;
@@ -680,75 +657,9 @@ class UserController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $user);
 
         // Удаляем пользователя с обновлением
-        $user = User::moderatorLimit($answer)->where('id', $id)->delete();
+        $user = User::destroy($id);
 
         if($user) {return redirect('/admin/users');} else {abort(403,'Что-то пошло не так!');};
-    }
-
-    // Сортировка
-    public function users_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->users as $item) {
-            User::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = User::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = User::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
 
@@ -819,7 +730,8 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar')->findOrFail($id);
+        $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'avatar', 'staff.position.notifications')->findOrFail($id);
+        // dd($user-Ю);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
@@ -873,27 +785,8 @@ class UserController extends Controller
         // Подключение политики
         // $this->authorize(getmethod(__FUNCTION__), $user);
 
-        // Пишем локацию
-        $location = $user->location;
-        if($location->city_id != $request->city_id) {
-            $location->city_id = $request->city_id;
-            $location->editor_id = $user_auth_id;
-            $location->save();
-        }
-
-        if($location->address != $request->address) {
-            $location->address = $request->address;
-            $location->editor_id = $user_auth_id;
-            $location->save();
-        }
-
-        $user->login = $request->login;
-        $user->email = $request->email;
-
-        // Если пришел не пустой пароль
-        if (isset($request->password)) {
-            $user->password = bcrypt($request->password);
-        }
+        // Обновляем локацию
+        $user = update_location($request, $user);
         
         $user->nickname = $request->nickname;
 
@@ -1005,6 +898,17 @@ class UserController extends Controller
        }
 
        $user->save();
+
+       if ($user) {
+           // Смотрим обязанности
+            if (isset($request->notifications)) {
+                $user->notifications()->sync($request->notifications);
+            } else {
+
+                // Если удалили последнюю обязанность для должности и пришел пустой массив
+                $user->notifications()->detach();
+            }
+       }
 
 
 

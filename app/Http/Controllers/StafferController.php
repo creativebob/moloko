@@ -47,6 +47,8 @@ class StafferController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+        // dd($answer);
+
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
@@ -176,6 +178,7 @@ class StafferController extends Controller
         // Список пользователей
         $answer_users = operator_right('users', true, 'index');
         $user = $request->user();
+
         $users = User::moderatorLimit($answer_users)
         ->companiesLimit($answer_users)
         ->filials($answer_users) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null

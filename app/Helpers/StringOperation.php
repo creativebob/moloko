@@ -50,8 +50,6 @@ function timeToSec($time) {
     return $sec;
 }
 
-
-
 // ====================================================================
 // Преобразует данные (Полученную на шаблоне дату) 
 // из плагина PickMeUp в формат базы данных
@@ -343,6 +341,44 @@ function get_first_letter($name){
 
     // Отдаем имя
     return $name;
+}
+
+
+
+
+// ==============================================================================================
+// ФУНКЦИИ - ИНТЕРЕСОВ ЛИДА (CHOICE)
+// ==============================================================================================
+
+
+// Получаем модель из тега 
+function getChoiceFromTag($choice_tag){
+
+    $exp_result = explode('-', $choice_tag);
+    $modelAndId['type'] = null;
+    $modelAndId['id'] = null;
+
+    switch ($exp_result[0]) {
+        case 'goods': $modelAndId['type'] = 'App\GoodsCategory'; break;
+        case 'service': $modelAndId['type'] = 'App\ServicesCategory'; break;
+        case 'raw': $modelAndId['type'] = 'App\RawsCategory'; break;
+    }
+
+    if(isset($exp_result[1])){$modelAndId['id'] = $exp_result[1];};
+    return $modelAndId;
+}
+
+
+// Генерируем значение value для списка интересов (choice)
+function genChoiceTag($item){
+
+    $choice_tag = '';
+    if($item->choice_type == 'App\GoodsCategory'){$choice_tag = "goods-" . $item->choice_id;};
+    if($item->choice_type == 'App\ServicesCategory'){$choice_tag = "service-" . $item->choice_id;};
+    if($item->choice_type == 'App\RawsCategory'){$choice_tag = "raw-" . $item->choice_id;};
+
+    // Отдаем
+    return $choice_tag;
 }
 
 

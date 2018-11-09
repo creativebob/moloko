@@ -2,12 +2,14 @@
 
 @section('inhead')
 @include('includes.scripts.pickmeup-inhead')
+@include('includes.scripts.class.city_search')
 @endsection
 
 @section('title', 'Редактировать лид')
 
 @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, isset($lead->case_number) ? $lead->case_number : 'нет номера'))
 
+{{--
 @section('title-content')
 <div class="top-bar head-content">
 	<div class="top-bar-left">
@@ -17,14 +19,15 @@
 	</div>
 </div>
 @endsection
+--}}
 
 @section('content')
 
-{{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
+{{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'id' => 'form-lead', 'files'=>'true']) }}
 
 {{ method_field('PATCH') }}
 
-@php 
+@php
 
 $readonly = '';
 $autofocus = 'autofocus';
@@ -59,13 +62,11 @@ $disabled_leadbot = '';
 <section id="modal"></section>
 {{-- Модалка удаления с ajax --}}
 @include('includes.modals.modal-delete-ajax')
-
 @include('includes.modals.modal-add-claim', ['lead' => $lead])
 @endsection
 
 @section('scripts')
 @include('leads.scripts')
-@include('includes.scripts.cities-list')
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.pickmeup-script')
 @include('includes.scripts.upload-file')
@@ -76,7 +77,7 @@ $disabled_leadbot = '';
 	var lead_type_id = '{{ $lead->lead_type_id }}';
 
 	$(document).on('dblclick', '#phone', function() {
-		
+
     	// Снятие блокировки с поля номер телефона
     	$('#phone').attr('readonly', false);
 
@@ -217,7 +218,6 @@ $disabled_leadbot = '';
 		});
 	});
 
-
 	$(document).on('click', '#change-lead-type', function(event) {
 		event.preventDefault();
 
@@ -249,11 +249,10 @@ $disabled_leadbot = '';
 			success: function(data){
 				$('#modal-change-lead-type').foundation('close');
 				$('#lead-type-name').html(data['lead_type_name']);
-				$('#show-case-number').val(data['case_number']);		
+				$('#show-case-number').val(data['case_number']);
 			}
 		});
 	});
-
 
 	$(document).on('click', '.get-products', function(event) {
 		event.preventDefault();
@@ -271,11 +270,10 @@ $disabled_leadbot = '';
 			type: "POST",
 			data: {id: id},
 			success: function(html){
-				$('#items-list').html(html);	
+				$('#items-list').html(html);
 			}
 		});
 	});
-
 
 	$(document).on('click', '.add-to-order', function(event) {
 		event.preventDefault();
@@ -307,7 +305,7 @@ $disabled_leadbot = '';
 
 @include('includes.scripts.notes', ['id' => $lead->id, 'model' => 'Lead'])
 @include('includes.scripts.challenges', ['id' => $lead->id, 'model' => 'Lead'])
-
+@include('includes.scripts.contragents', ['id' => $lead->id])
 @endsection
 
 

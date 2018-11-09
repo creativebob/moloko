@@ -8,6 +8,7 @@ use App\GoodsCategory;
 use App\Goods;
 
 use App\RawsArticle;
+use App\GoodsArticle;
 
 use Illuminate\Http\Request;
 
@@ -92,12 +93,19 @@ class CompositionController extends Controller
 
     public function ajax_add(Request $request)
     {
-
-        $composition = RawsArticle::with(['raws_product.unit'])->findOrFail($request->id);
-
-        return view($request->entity.'.compositions.composition-input', compact('composition'));
+        if ($request->set_status == 'one') {
+            $composition = RawsArticle::with(['raws_product' => function ($q) {
+                        $q->with('unit', 'raws_category');
+                    }])->findOrFail($request->id);  
+        } else {
+            $composition = GoodsArticle::with(['goods_product' => function ($q) {
+                        $q->with('unit', 'goods_category');
+                    }])->findOrFail($request->id);  
+        }
+        return view($request->entity.'.compositions.composition_input', compact('composition'));
     }
     
+    // Добавляем состав
     public function ajax_add_relation(Request $request)
     {
 
@@ -106,9 +114,10 @@ class CompositionController extends Controller
 
         $composition = RawsArticle::findOrFail($request->id);
 
-        return view($request->entity.'.compositions.composition-input', compact('composition'));
+        return view($request->entity.'.compositions.composition_tr', compact('composition'));
     }
 
+    // Удаляем состав
     public function ajax_delete_relation(Request $request)
     {
 

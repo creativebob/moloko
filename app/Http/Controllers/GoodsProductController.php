@@ -478,7 +478,6 @@ class GoodsProductController extends Controller
 
         $goods_category = GoodsCategory::withCount('goods_products')->with('goods_products')->findOrFail($id);
 
-
         if ($goods_category->goods_products_count > 0) {
 
             $goods_products_list = $goods_category->goods_products->pluck('name', 'id');
@@ -495,11 +494,11 @@ class GoodsProductController extends Controller
 
         } else {
 
-            return view('goods.mode-add');
+            return view('goods.create_modes.mode-add');
         }
     }
 
-    public function ajax_modes(Request $request)
+    public function ajax_change_create_mode(Request $request)
     {
         $mode = $request->mode;
         $goods_category_id = $request->goods_category_id;
@@ -513,25 +512,39 @@ class GoodsProductController extends Controller
             $goods_category = GoodsCategory::withCount('goods_products')->find($goods_category_id);
             $goods_products_count = $goods_category->goods_products_count;
 
-            return view('goods.mode-default', compact('goods_products_count'));
+            return view('goods.create_modes.mode_default', compact('goods_products_count'));
 
             break;
 
             case 'mode-select':
 
-            $goods_products_list = GoodsProduct::where('goods_category_id', $goods_category_id)->get()->pluck('name', 'id');
-            return view('goods.mode-select', compact('goods_products_list'));
+            $goods_products = GoodsProduct::with('unit')->where(['goods_category_id' => $goods_category_id, 'set_status' => $request->set_status])
+            ->get(['id', 'name', 'unit_id']);
+            return view('goods.create_modes.mode_select', compact('goods_products'));
 
             break;
 
             case 'mode-add':
 
-            return view('goods.mode-add');
+            return view('goods.create_modes.mode_add');
 
             break;
 
         }
-   }
+    }
+
+    public function ajax_get_products_list(Request $request)
+    {
+
+        $goods_products_list = GoodsProduct::where(['goods_category_id' => $request->goods_category_id, 'set_status' => $request->set_status])
+        ->orWhere('id', $request->goods_product_id)
+        ->get(['id', 'name'])
+        ->pluck('name', 'id');
+
+        $goods_product_id = $request->goods_product_id;
+
+        return view('goods.goods_products_select', compact('goods_products_list', 'goods_product_id')); 
+    }
 
 
 }

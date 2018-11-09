@@ -60,6 +60,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RightRoleTableSeeder::class);
         $this->call(RoleUserTableSeeder::class);
         $this->call(PositionRoleTableSeeder::class);
+        $this->call(ChargesTableSeeder::class);
 
         // Вакансии и сотрудники
         $this->call(StaffTableSeeder::class);
@@ -120,10 +121,17 @@ class DatabaseSeeder extends Seeder
         $this->call(LeadMethodsTableSeeder::class);
 
         $this->call(ChallengesTypesTableSeeder::class);
+        $this->call(PrioritiesTableSeeder::class);
+
+        // Работа с клиентом
+        $this->call(LoyaltiesTableSeeder::class);
 
         $this->call(StagesTableSeeder::class);
-
         $this->call(MessengersTableSeeder::class);
+
+        // Настройки должности
+        $this->call(WidgetsTableSeeder::class);
+        $this->call(NotificationsTableSeeder::class);
 
 
     }

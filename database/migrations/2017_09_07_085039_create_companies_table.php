@@ -18,9 +18,6 @@ class CreateCompaniesTable extends Migration
             $table->string('name')->nullable()->index()->comment('Имя компании');
             $table->string('alias', 40)->unique()->nullable()->index()->comment('Алиас компании');
 
-            $table->bigInteger('phone')->unique()->nullable()->comment('Телефон компании');
-            $table->bigInteger('extra_phone')->nullable()->comment('Дополнительный телефон');
-
             $table->string('email')->nullable()->comment('Почта');
 
             // $table->integer('city_id')->nullable()->unsigned()->comment('Id города');
@@ -29,11 +26,14 @@ class CreateCompaniesTable extends Migration
             $table->integer('location_id')->nullable()->unsigned()->comment('Адрес компании');
             $table->foreign('location_id')->references('id')->on('locations');
 
-            $table->bigInteger('inn')->nullable()->unsigned()->comment('ИНН компании');
-            $table->bigInteger('kpp')->nullable()->unsigned()->comment('КПП');
-            $table->string('account_settlement', 20)->nullable()->comment('Расчетный счет');
-            $table->string('account_correspondent', 20)->nullable()->comment('Корреспондентский счет');
-            $table->string('bank', 60)->nullable()->comment('Название банка');
+            // $table->bigInteger('inn')->nullable()->unsigned()->comment('ИНН компании');
+            // $table->bigInteger('kpp')->nullable()->unsigned()->comment('КПП');
+            // $table->string('account_settlement', 20)->nullable()->comment('Расчетный счет');
+            // $table->string('account_correspondent', 20)->nullable()->comment('Корреспондентский счет');
+
+            // $table->string('bank', 60)->nullable()->comment('Название банка');
+
+            $table->integer('bic', 9)->nullable()->unsigned()->comment('Банковский идентификационный код');
 
             $table->integer('director_user_id')->nullable()->unsigned()->comment('Директор компании');
             // $table->foreign('user_id')->references('id')->on('users');

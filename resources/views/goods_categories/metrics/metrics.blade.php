@@ -1,15 +1,13 @@
 @php
-$checked = '';
+if ($set_status == 'one') {
+	$name = 'metrics';
+} else {
+	$name = 'set_metrics';
+}
 @endphp
-
-@if (in_array($metric->id, $goods_category_metrics))
-@php
-$checked = 'checked';
-@endphp
-@endif
 
 <li class="checkbox">
-	{{ Form::checkbox('add_metric_id', $metric->id, null, ['class' => 'add-metric', 'id' => 'add-metric-'. $metric->id, $checked]) }}
-	<label for="add-metric-{{ $metric->id }}"><span>{{ $metric->name }}</span></label>
+	{{ Form::checkbox($name . '[]', $metric->id, null, ['class' => 'add-metric', 'id' => $set_status.'-add-metric-'. $metric->id, 'data-set-status' => $set_status]) }}
+	<label for="{{ $set_status }}-add-metric-{{ $metric->id }}"><span>{{ $metric->name }}</span></label>
 </li>
 
