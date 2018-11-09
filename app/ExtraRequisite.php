@@ -13,25 +13,25 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\DealersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+    
 
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class Bank extends Model
+class ExtraRequisite extends Model
 {
-
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
-    use Notifiable;
-    // use SoftDeletes;
-    // 
+    use SoftDeletes;
+
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -39,35 +39,18 @@ class Bank extends Model
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-    use DealersTraitScopes;
 
     // Фильтры
     use Filter;
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    // protected $dates = ['deleted_at'];
-    protected $fillable = [
-        'company_id', 
-        'contragent_id', 
-    ];
+    protected $dates = ['deleted_at'];
 
-    // Получаем компании которые работают с банком
+    // Получаем компанию
     public function company()
     {
-        return $this->belongsToMany('App\Company', 'company_id');
-    }
-
-    // Получаем данные банка
-    public function self_company()
-    {
-        return $this->belongsTo('App\Company', 'contragent_id');
-    }
-
-    // Получаем все зарегистрированные счета
-    public function bank_accounts()
-    {
-        return $this->hasMany('App\BankAccount', 'bank_id');
+        return $this->belongsTo('App\Company');
     }
 
     // Получаем автора

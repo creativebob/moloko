@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\User;
+use App\Lead;
 use App\Client;
 use App\Dealer;
 use App\Company;
@@ -93,69 +94,38 @@ class ClientController extends Controller
         return view('clients.index', compact('clients', 'page_info', 'filter', 'user'));
     }
 
-    public function create(Request $request)
+    public function ajax_create(Request $request)
     {
 
-        //Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Dealer::class);
-        // $this->authorize(getmethod(__FUNCTION__), Company::class);
+        // Подключение политики
+        // $this->authorize(getmethod(__FUNCTION__), Client::class);
 
-        // Создаем новый экземляр компании 
-        $dealer = new Dealer;
+        // $client = new Client;
 
-        // Создаем новый экземляр поставщика
-        $company = new Company;
+        $new_company = new Company;
+        $new_company->name = $request->company_name;
+        $new_company->email = $request->email;
+        // ГЛАВНЫЙ ЗАПРОС:
+        // 
+        $lead = Lead::findOrFail($request->lead_id);
+ 
+        $new_user = new User;
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('sectors', false, 'index');
+        $crop_name = explode(" ", $request->name);
+        if(isset($crop_name[1])){$new_user->first_name = $crop_name[1];};
+        if(isset($crop_name[0])){$new_user->second_name = $crop_name[0];};
+        if(isset($crop_name[2])){$new_user->patronymic = $crop_name[2];};
 
-        // Главный запрос
-        $sectors = Sector::moderatorLimit($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
-        ->keyBy('id')
-        ->toArray();
+        $new_user->email = $request->email;
 
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $sectors_list = get_select_tree($sectors, null, 1, null);
+        // $new_user->location = $request->name;
+        // $new_user->second_name = $request->name;
 
-        // Получаем список стран
-        $countries_list = Country::get()->pluck('name', 'id');
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+        $user_id = $user->id;
 
-        // // Получаем список стран
-        // $services_types_list = ServicesType::get()->pluck('name', 'id');
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        // Запрос для чекбокса - список типов услуг
-        $services_types_query = ServicesType::get();
-
-        // Контейнер для checkbox'а - инициируем
-        $checkboxer['status'] = null;
-        $checkboxer['entity_name'] = $this->entity_name;
-
-        // Настраиваем checkboxer
-        $services_types_checkboxer = addFilter(
-
-            $checkboxer,                // Контейнер для checkbox'а
-            $services_types_query,      // Коллекция которая будет взята
-            $request,
-            'Возможные типы услуг',     // Название чекбокса для пользователя в форме
-            'services_types',           // Имя checkboxa для системы
-            'id',                       // Поле записи которую ищем
-            'services_types', 
-            'internal-self-one',        // Режим выборки через связи
-            'checkboxer'                // Режим: checkboxer или filter
-
-        );
-
-        // Формируем пуcтой массив
-        $worktime = [];
-        for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
-
-        return view('dealers.create', compact('company', 'dealer', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
+        return view('includes.modals.modal-add-client', compact('new_user', 'user_id', 'lead', 'new_company'));
     }
 
     public function store(CompanyRequest $request)

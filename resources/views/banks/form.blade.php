@@ -34,7 +34,7 @@
         <div class="grid-x grid-padding-x"> 
           <div class="small-12 medium-6 cell">
             <label>Название компании
-              @include('includes.inputs.name', ['value'=>$company->name, 'name'=>'name', 'required'=>'required'])
+              @include('includes.inputs.name', ['value'=>$bank->self_company->name, 'name'=>'name', 'required'=>'required'])
             </label>
           </div>
           <div class="small-12 medium-6 cell">
@@ -48,12 +48,12 @@
           </div>
           <div class="small-12 medium-6 cell">
             <label>Телефон
-              @include('includes.inputs.phone', ['value' => isset($company->main_phone->phone) ? $company->main_phone->phone : null, 'name'=>'main_phone', 'required'=>'required'])
+              @include('includes.inputs.phone', ['value' => isset($bank->self_company->main_phone->phone) ? $bank->self_company->main_phone->phone : null, 'name'=>'main_phone', 'required'=>'required'])
             </label>
           </div>
           <div class="small-12 medium-6 cell" id="extra-phones">
-            @if (count($company->extra_phones) > 0)
-            @foreach ($company->extra_phones as $extra_phone)
+            @if (count($bank->self_company->extra_phones) > 0)
+            @foreach ($bank->self_company->extra_phones as $extra_phone)
             @include('includes.extra-phone', ['extra_phone' => $extra_phone])
             @endforeach
             @else
@@ -65,13 +65,13 @@
 
           <div class="small-12 medium-6 cell">
             <label>Почта
-              @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email', 'required'=>''])
+              @include('includes.inputs.email', ['value'=>$bank->self_company->email, 'name'=>'email', 'required'=>''])
             </label>  
             <label>Страна
               @php
               $country_id = null;
-              if (isset($company->location->country_id)) {
-              $country_id = $company->location->country_id;
+              if (isset($bank->self_company->location->country_id)) {
+              $country_id = $bank->self_company->location->country_id;
             }
             @endphp
             {{ Form::select('country_id', $countries_list, $country_id)}}
@@ -83,9 +83,9 @@
             @php
             $city_name = null;
             $city_id = null;
-            if (isset($company->location->city->name)) {
-            $city_name = $company->location->city->name;
-            $city_id = $company->location->city->id;
+            if (isset($bank->self_company->location->city->name)) {
+            $city_name = $bank->self_company->location->city->name;
+            $city_id = $bank->self_company->location->city->id;
           }
           @endphp
           @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
@@ -93,8 +93,8 @@
         <label>Адрес
           @php
           $address = null;
-          if (isset($company->location->address)) {
-          $address = $company->location->address;
+          if (isset($bank->self_company->location->address)) {
+          $address = $bank->self_company->location->address;
         }
         @endphp
         @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
@@ -113,32 +113,32 @@
         <div class="grid-x grid-padding-x"> 
           <div class="small-12 medium-6 cell">
             <label>ИНН
-              @include('includes.inputs.inn', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
+              @include('includes.inputs.inn', ['value'=>$self_company->inn, 'name'=>'inn', 'required'=>''])
             </label>
           </div>
           <div class="small-12 medium-6 cell">
             <label>КПП
-              @include('includes.inputs.kpp', ['value'=>$company->kpp, 'name'=>'kpp', 'required'=>''])
+              @include('includes.inputs.kpp', ['value'=>$self_company->kpp, 'name'=>'kpp', 'required'=>''])
             </label>
           </div>
           <div class="small-12 medium-12 cell">
             <label>Банк
-              @include('includes.inputs.bank', ['value'=>$company->bank, 'name'=>'bank', 'required'=>''])
+              @include('includes.inputs.bank', ['value'=>$self_company->bank, 'name'=>'bank', 'required'=>''])
             </label>
           </div>
           <div class="small-12 medium-6 cell">
             <label>Р/С
-              @include('includes.inputs.account', ['value'=>$company->account_settlement, 'name'=>'account_settlement', 'required'=>''])
+              @include('includes.inputs.account', ['value'=>$self_company->account_settlement, 'name'=>'account_settlement', 'required'=>''])
             </label>
           </div>
           <div class="small-12 medium-6 cell">
             <label>К/С
-              @include('includes.inputs.account', ['value'=>$company->account_correspondent, 'name'=>'account_correspondent', 'required'=>''])
+              @include('includes.inputs.account', ['value'=>$self_company->account_correspondent, 'name'=>'account_correspondent', 'required'=>''])
             </label>
           </div>
           <div class="small-12 medium-6 cell">
             <label>БИК
-              @include('includes.inputs.bic', ['value'=>$company->bic, 'name'=>'bic', 'required'=>''])
+              @include('includes.inputs.bic', ['value'=>$bank->bic, 'name'=>'bic', 'required'=>''])
             </label>
           </div>
         </div>
@@ -149,7 +149,7 @@
         <div class="grid-x grid-padding-x"> 
           <div class="small-12 medium-6 cell">
             <label>Алиас
-              @include('includes.inputs.alias', ['value'=>$company->alias, 'name'=>'alias', 'required'=>''])
+              @include('includes.inputs.alias', ['value'=>$bank->self_company->alias, 'name'=>'alias', 'required'=>''])
             </label>
           </div>
 
@@ -159,7 +159,7 @@
           </div>
 
           {{-- Чекбоксы управления --}}
-          @include('includes.control.checkboxes', ['item' => $company])
+          @include('includes.control.checkboxes', ['item' => $self_company])
 
         </div>
       </div>

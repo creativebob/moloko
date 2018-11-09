@@ -513,6 +513,12 @@ Route::resource('/companies', 'CompanyController')->middleware('auth');
 Route::post('/companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');
 
 
+// --------------------------- Дополнительные реквизиты компании -------------------------------------
+
+// Основные методы
+Route::resource('/extra_requisites', 'ExtraRequisiteController')->middleware('auth');
+
+
 // --------------------------------------- Лиды -----------------------------------------------
 
 // Основные методы
@@ -659,6 +665,7 @@ Route::resource('/dealers', 'DealerController')->middleware('auth');
 // ------------------------------------ Клиенты ----------------------------------------------------------
 
 // Основные методы
+Route::patch('/add_client', 'ClientController@ajax_create')->middleware('auth');
 Route::resource('/clients', 'ClientController')->middleware('auth');
 
 

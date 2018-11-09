@@ -22,7 +22,7 @@
 
 @section('content')
 
-{{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
+{{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'id' => 'form-lead', 'files'=>'true']) }}
 
 {{ method_field('PATCH') }}
 
@@ -306,7 +306,7 @@ $disabled_leadbot = '';
 
 @include('includes.scripts.notes', ['id' => $lead->id, 'model' => 'Lead'])
 @include('includes.scripts.challenges', ['id' => $lead->id, 'model' => 'Lead'])
-
+@include('includes.scripts.contragents', ['id' => $lead->id])
 @endsection
 
 

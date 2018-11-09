@@ -92,8 +92,6 @@ class LeadController extends Controller
 
         $leads = Lead::with(
             // 'location.city', 
-            // 'choices_goods_categories', 
-            // 'choices_services_categories', 
             'choice',
             'lead_type',
             'lead_method',
@@ -303,9 +301,7 @@ class LeadController extends Controller
 
             $result_search = Lead::with(
                 'location.city', 
-                'choices_goods_categories', 
-                'choices_services_categories', 
-                'choices_raws_categories', 
+                'choice', 
                 'manager',
                 'stage',
                 'challenges.challenge_type', 
@@ -444,6 +440,8 @@ class LeadController extends Controller
 
             $lead->name =   $request->name;
             $lead->company_name =   $request->company_name;
+            $lead->private_status = $request->private_status;
+
         // $lead->sex = $request->sex;
         // $lead->birthday = $request->birthday;
 
@@ -624,7 +622,7 @@ class LeadController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
 
-        $lead = Lead::with(['location.city', 'main_phones', 'extra_phones', 'medium', 'campaign', 'source', 'site', 'claims', 'choice' => function ($query) {
+        $lead = Lead::with(['location.city', 'main_phones', 'extra_phones', 'medium', 'campaign', 'source', 'site', 'claims', 'lead_method', 'choice' => function ($query) {
             $query->orderBy('created_at', 'asc');
         }, 'notes' => function ($query) {
             $query->orderBy('created_at', 'desc');
@@ -639,7 +637,7 @@ class LeadController extends Controller
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
-        // dd($lead->orders);
+        // dd($lead);
 
         // dd(Carbon::parse($lead->claims[0]->created_at)->format('d.m.Y'));
 
@@ -765,6 +763,7 @@ class LeadController extends Controller
 
         $lead->name = $request->name;
         $lead->company_name = $request->company_name;
+        $lead->private_status = $request->private_status;
 
         $lead->stage_id = $request->stage_id;
         $lead->badget = $request->badget;
@@ -985,9 +984,7 @@ class LeadController extends Controller
 
         $finded_leads = Lead::with(
             'location.city', 
-            'choices_goods_categories', 
-            'choices_services_categories', 
-            'choices_raws_categories', 
+            'choice',
             'manager',
             'stage',
             'challenges.challenge_type', 

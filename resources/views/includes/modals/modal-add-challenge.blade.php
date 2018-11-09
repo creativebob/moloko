@@ -61,23 +61,5 @@
     <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 </div>
 
-<script type="text/javascript">
-
-    // Дата
-    $('.date-field').mask('99.99.9999');
-    // Время
-    $('.time-field').mask('99:99',{placeholder:"_"});
-
-
-    // Прикручиваем календарь
-    $('.date-field').pickmeup({
-        position : "bottom",
-        hide_on_select : true
-    });
-</script>
-
-
-
-
-
-
+@include('includes.scripts.inputs-mask')
+@include('includes.scripts.pickmeup-script')

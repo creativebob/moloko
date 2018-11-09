@@ -23,11 +23,11 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class Bank extends Model
+class BankAccount extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use Notifiable;
     // use SoftDeletes;
@@ -49,25 +49,27 @@ class Bank extends Model
     // protected $dates = ['deleted_at'];
     protected $fillable = [
         'company_id', 
-        'contragent_id', 
+        'holder_id', 
+        'bank_id', 
+
     ];
 
-    // Получаем компании которые работают с банком
+    // Получаем компанию.
     public function company()
     {
-        return $this->belongsToMany('App\Company', 'company_id');
+        return $this->belongsTo('App\Company', 'company_id');
     }
 
-    // Получаем данные банка
-    public function self_company()
+    // Получаем держателья банковского счета
+    public function holder()
     {
-        return $this->belongsTo('App\Company', 'contragent_id');
+        return $this->belongsTo('App\Company', 'holder_id');
     }
 
-    // Получаем все зарегистрированные счета
-    public function bank_accounts()
+    // Получаем банк
+    public function bank()
     {
-        return $this->hasMany('App\BankAccount', 'bank_id');
+        return $this->belongsTo('App\Bank', 'bank_id');
     }
 
     // Получаем автора

@@ -144,6 +144,31 @@ fieldset legend {
   padding: 0 1rem;
 }
 
+.alt-switch .switch-paddle {
+  background: #7e9a06;
+  margin-top: 6px;
+}
+
+.alt-switch span {
+  margin-bottom: 6px;
+  color: #000 !important;
+  padding-left: 8px;
+  font-weight: normal;
+  vertical-align: super;
+}
+
+.lead-info-company, .lead-info-bank {
+  display: none;
+}
+
+.switch-on {
+  display: block;
+}
+
+.switch-off {
+  display: none;
+}
+
 .light-text {
   color: #aaa;
 }
@@ -1994,7 +2019,7 @@ a#task-toggle {
   color: #ffffff;
 }
 .reveal .modal-content {
-  padding: 2rem;
+  padding: 2rem 1rem 1rem 1rem;
 }
 .reveal .modal-button {
   margin-top: 1rem;

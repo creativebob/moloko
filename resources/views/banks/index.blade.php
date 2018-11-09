@@ -72,7 +72,7 @@
             </a> 
             @endif
           </td>
-          <td class="td-bic">{{ $bank->company->bic or ' ... ' }}</td>
+          <td class="td-bic">{{ $bank->bic or ' ... ' }}</td>
 
           <td class="td-address">@if(!empty($bank->company->location->address)){{ $bank->company->location->address }}@endif </td>
           <td class="td-phone">{{ isset($bank->company->main_phone->phone) ? decorPhone($bank->company->main_phone->phone) : 'Номер не указан' }}</td>

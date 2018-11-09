@@ -59,7 +59,7 @@ class BankController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $banks = Bank::with('author', 'company.main_phones')
+        $banks = Bank::with('author', 'self_company.main_phones')
         ->where('company_id', '!=', null)
         ->moderatorLimit($answer)
         ->filter($request, 'city_id', 'location')

@@ -218,9 +218,14 @@ class ParserController extends Controller
         $choices = Choice::get();
         foreach ($choices as $choice) {
         
-            $leads = Lead::where('id', $choice->lead_id)
-            ->update(['choice_id' => $choice->choices_id, 'choice_type' => $choice->choices_type]);
+
+            if(isset($choice->lead_id)){
+                $leads = Lead::where('id', $choice->lead_id)
+                ->update(['choice_id' => $choice->choices_id, 'choice_type' => $choice->choices_type]);                
+            }
+
         }
+
 
         dd('Готово!!!');
     }
