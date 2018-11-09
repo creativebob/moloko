@@ -20,19 +20,19 @@ $medium: 1024px;
 // PFDinDisplayPro
 @include font-face("PFDinDisplayPro-Light", font-files(
     "/crm/css/fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf"
-    ) 
+    )
 );
 @include font-face("PFDinDisplayPro-Med", font-files(
   "/crm/css/fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf"
-  ) 
+  )
 );
 @include font-face("PFDinDisplayPro-Reg", font-files(
   "/crm/css/fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf"
-  ) 
+  )
 );
 @include font-face("PFDinDisplayPro-Thin", font-files(
   "/crm/css/fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf"
-  ) 
+  )
 );
 
 $PFDDPL: "PFDinDisplayPro-Light";
@@ -43,7 +43,7 @@ $PFDDPT: "PFDinDisplayPro-Thin";
 // PFDinTextPro
 @include font-face("PFDinTextPro-Regular", font-files(
   "/crm/css/fonts/DinTextPro/PFDinTextPro-Regular.ttf"
-  ) 
+  )
 );
 
 $PFDTPR: "PFDinTextPro-Regular";
@@ -51,28 +51,28 @@ $PFDTPR: "PFDinTextPro-Regular";
 // DinTextCondensedPro
 @include font-face("PFDinTextCondPro-Regular", font-files(
   "/crm/css/fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf"
-  ) 
+  )
 );
 
 $PFDTCPR: "PFDinTextCondPro-Regular";
 
 // SegoeUI
 @include font-face("SegoeUIBold", font-files(
-  "/crm/css/fonts/SegoeUI/SegoeUIBold/SegoeUIBold.woff", 
+  "/crm/css/fonts/SegoeUI/SegoeUIBold/SegoeUIBold.woff",
   "/crm/css/fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf"
-  ), 
+  ),
 "/crm/css/fonts/SegoeUI/SegoeUIBold//SegoeUIBold.eot" /* относительный путь к .eot файлу для IE */
 );
 @include font-face("SegoeUIItalic", font-files(
-  "/crm/css/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.woff", 
+  "/crm/css/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.woff",
   "/crm/css/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf"
-  ), 
+  ),
 "/crm/css/fonts/SegoeUI/SegoeUIItalic//SegoeUIItalic.eot" /* относительный путь к .eot файлу для IE */
 );
 @include font-face("SegoeUILight", font-files(
-  "/crm/css/fonts/SegoeUI/SegoeUILight/SegoeUILight.woff", 
+  "/crm/css/fonts/SegoeUI/SegoeUILight/SegoeUILight.woff",
   "/crm/css/fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf"
-  ), 
+  ),
 "/crm/css/fonts/SegoeUI/SegoeUILight//SegoeUILight.eot" /* относительный путь к .eot файлу для IE */
 );
 @include font-face("SegoeUISemiLight", font-files(
@@ -80,15 +80,15 @@ $PFDTCPR: "PFDinTextCondPro-Regular";
   )
 );
 @include font-face("SegoeUIRegular", font-files(
-  "/crm/css/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.woff", 
+  "/crm/css/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.woff",
   "/crm/css/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf"
-  ), 
+  ),
 "/crm/css/fonts/SegoeUI/SegoeUIRegular//SegoeUIRegular.eot" /* относительный путь к .eot файлу для IE */
 );
 @include font-face("SegoeUISemiBold", font-files(
-  "/crm/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff", 
+  "/crm/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff",
   "/crm/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf"
-  ), 
+  ),
 "/crm/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot" /* относительный путь к .eot файлу для IE */
 );
 
@@ -201,7 +201,7 @@ $table-no-moderation: #ffcccc;
 $table-search-td-border-color: #dadada;
 $table-search-td-color: #5190ff;
 
-// Footer  
+// Footer
 $footer-color: #bdbdbd;
 $footer-num-color: #ffffff;
 
@@ -216,11 +216,17 @@ $dropdown-width: 14rem;
 .up-input-button {
     font-size: 0.8rem;
     display: block;
-    position: absolute;
-    right: 0px;
+    // position: absolute;
+    // right: 0px;
+    // z-index: 9000;
     color: #999;
     width: auto;
-    z-index: 9000;
+    margin-bottom: 0.8rem;
+
+}
+
+.set-status {
+    margin-top: 0.8rem;
 }
 
 
@@ -268,7 +274,7 @@ fieldset {
 .tiny-text
 {
     color: #aaa;
-    font-size: 0.8rem; 
+    font-size: 0.8rem;
 }
 
 .filter_link{
@@ -390,7 +396,7 @@ fieldset {
 
         li {
             border-bottom: 1px dotted #999;
-            padding: 0.5rem 0rem; 
+            padding: 0.5rem 0rem;
 
             &:last-child {
                 border-bottom: 0px dotted #999;
@@ -426,7 +432,7 @@ fieldset {
 
         li {
             border-bottom: 1px dotted #999;
-            padding: 0.5rem 0rem; 
+            padding: 0.5rem 0rem;
 
             &:last-child {
                 border-bottom: 0px dotted #999;
@@ -460,8 +466,8 @@ html, body {
 }
 
 a, a:focus {
-    color: none !important; 
-    outline-color: none !important; 
+    color: none !important;
+    outline-color: none !important;
 }
 
 .el, .el * {
@@ -508,7 +514,7 @@ p {
 .sidebar {
     width: 64px;
 
-    
+
 }
 
 .sidebar-open {
@@ -593,7 +599,7 @@ input[type=checkbox], input[type=radio] {
 
     input[type=checkbox]:checked + label:before {
         background-position: -32px -416px;
-    } 
+    }
 }
 :indeterminate + label:before { // Неопределенное состояние
     background-position: -64px -416px;
@@ -804,17 +810,19 @@ $sprite-32: 32;
 .icon-find-no {
     background-position: -32px -80px;
     opacity: 1;
+    cursor: pointer;
+    z-index: 50;
 }
 
 // Иконки в строке таблицы
 .icon-list-add {
-    background-position: -128px -768px; 
+    background-position: -128px -768px;
 }
 .icon-list-add:hover {
-    background-position: -96px -768px; 
+    background-position: -96px -768px;
 }
 .icon-list-edit {
-    background-position: -96px -800px; 
+    background-position: -96px -800px;
 }
 
 a.icon-list-edit {
@@ -822,10 +830,10 @@ a.icon-list-edit {
 }
 
 .icon-list-edit:hover {
-    background-position: -128px -800px; 
+    background-position: -128px -800px;
 }
 .icon-list-delete {
-    background-position: -96px -512px; 
+    background-position: -96px -512px;
 }
 .icon-list-delete:hover {
     background-position: -128px -512px;
@@ -907,10 +915,10 @@ tr:hover {
 
     .icon-display-show, .icon-system-unlock {
 
-        opacity: 0.2; 
+        opacity: 0.2;
 
         &:hover {
-            opacity: 1; 
+            opacity: 1;
         }
     }
 
@@ -1017,7 +1025,7 @@ tr:hover {
             display: none !important;
         }
 
-        .booklist li 
+        .booklist li
         {
             position: relative;
         }
@@ -1208,11 +1216,11 @@ tr:hover {
             .icon-moveup {
                 background-position: 0px -672px;
                 opacity: 0.8;
-            } 
+            }
 
             .icon-moveup:hover {
                 cursor: pointer;
-            } 
+            }
 
             .filter-close:hover .icon-moveup {
                 background-position: 0px -672px;
@@ -1236,7 +1244,7 @@ tr:hover {
           // Закрытие модалки
           .icon-close-modal {
               background-position: 0px -608px;
-          }  
+          }
           .icon-close-modal:hover {
               background-position: -32px -608px;
           }
@@ -1247,16 +1255,16 @@ tr:hover {
               cursor: -webkit-grabbing;
           }
           .icon-edit {
-              background-position: -96px -800px; 
-          }  
+              background-position: -96px -800px;
+          }
           .icon-edit:hover {
               background-position: -128px -800px;
-              cursor: pointer; 
-          } 
+              cursor: pointer;
+          }
 
           .icon-delete {
               background-position: 0px -512px;
-          }  
+          }
           .icon-delete:hover {
               background-position: -32px -512px;
               cursor: pointer;
@@ -1521,7 +1529,7 @@ tr:hover {
         }
     }
 }
-} 
+}
 // Обнуляем фондовские умолчания
 .dropdown-pane {
   width: 14rem;
@@ -1561,7 +1569,7 @@ tr:hover {
 .profile-list {
   display: block !important;
 }
-} 
+}
 }
 // ------------------------------------------- Сайдбар ----------------------------------------
 .sidebar {
@@ -1668,12 +1676,12 @@ a:hover {
     bottom: 38px;
     height: 44px;
     width: 100%;
-    
+
     #sidebar-button {
       display: block;
       height: 100%;
 
-      
+
       background-color: $sidebar-bot-menu-bg-color;
       border-top: 1px solid $sidebar-li-border-bot;
       border-bottom: 1px solid $sidebar-li-border-top;
@@ -1803,7 +1811,7 @@ scrollbar[orient="vertical"] {
 }
 scrollbar[orient="vertical"] > scrollbarbutton {
     max-height:10px !important;
-} 
+}
 thumb[orient="vertical"] {
     max-width:10px !important;
 }
@@ -1902,7 +1910,7 @@ $multilevel-accordion-separator: #41444a;
 
 
 .tabs-leads{
-    padding-top: 1rem; 
+    padding-top: 1rem;
 }
 
 
@@ -2004,7 +2012,7 @@ tr th:nth-child(1), .table-notes tr td:nth-child(1)
       padding-left: 1rem;
       padding-right: 1rem;
       border-bottom: 1px solid #eee;
-  } 
+  }
 
 }
 
@@ -2141,7 +2149,7 @@ td.body{
             border-left: 0px;
             border-right: 0px;
             padding-left: 0px;
-            padding-right: 0px;        
+            padding-right: 0px;
         }
 
         tr td {
@@ -2180,7 +2188,7 @@ td.body{
             border-left: 0px;
             border-right: 0px;
             padding-left: 0px;
-            padding-right: 0px;        
+            padding-right: 0px;
         }
 
         tr td {
@@ -2225,11 +2233,11 @@ td.body{
 }
 
 .claims td{
-    
+
 }
 
 
-// РЕКЛАМАЦИИ ОКОНЧАНИЕ ============================================================ 
+// РЕКЛАМАЦИИ ОКОНЧАНИЕ ============================================================
 
 
 // ----------------------------------------- Редактирование режима работы ---------------------
@@ -2322,7 +2330,7 @@ a#task-toggle{
 
 .task-content{
     border-radius: 5px;
-    border: 1px solid #333; 
+    border: 1px solid #333;
     background: #3a3a3a;
     padding: 5px 5px 5px 15px;
 }
@@ -2489,7 +2497,7 @@ a#task-toggle{
         color: $white;
         float: right;
         padding-left: 6px;
-    }      
+    }
 }
 .task-content {
   margin-top: 0.4rem;
@@ -2585,7 +2593,7 @@ a {
   border: 1px solid $black;
   border-radius: 0;
   background-color: $white;
-  
+
   .modal-title {
     text-align: center;
     height: 3rem;
@@ -2664,10 +2672,10 @@ tbody {
 }
 .icon-delete {
   background-position: -32px -512px;
-}  
+}
 .icon-delete:hover {
   background-position: 0px -512px;
-} 
+}
 }
 }
 .table-over {
@@ -2818,7 +2826,7 @@ tbody {
     z-index: 50;
     // width: 100%;
     transition: width 0.3s ease;
-    
+
 
     // Левая сторона
     .header-content {
@@ -2920,7 +2928,7 @@ tbody {
                 &:hover {
                     opacity: 1;
                 }
-            }  
+            }
         }
 
         .is-accordion-submenu-parent:not(.has-submenu-toggle) > a::after {
@@ -3070,19 +3078,19 @@ tbody {
                 outline: none;
             }
             .icon-list-add {
-                background-position: -128px -768px; 
+                background-position: -128px -768px;
             }
             .icon-list-add:hover {
-                background-position: -96px -768px; 
+                background-position: -96px -768px;
             }
             .icon-list-edit {
-                background-position: -96px -800px; 
+                background-position: -96px -800px;
             }
             .icon-list-edit:hover {
-                background-position: -128px -800px; 
+                background-position: -128px -800px;
             }
             .icon-list-delete {
-                background-position: -96px -512px; 
+                background-position: -96px -512px;
             }
             .icon-list-delete:hover {
                 background-position: -128px -512px;
@@ -3164,19 +3172,19 @@ tbody {
     div {
 
         .icon-list-add {
-          background-position: 0px -768px; 
+          background-position: 0px -768px;
       }
       .icon-list-add:hover {
-          background-position: -32px -768px; 
+          background-position: -32px -768px;
       }
       .icon-list-edit {
-          background-position: 0px -800px; 
+          background-position: 0px -800px;
       }
       .icon-list-edit:hover {
-          background-position: -32px -800px; 
+          background-position: -32px -800px;
       }
       .icon-list-delete {
-          background-position: 0px -512px; 
+          background-position: 0px -512px;
       }
       .icon-list-delete:hover {
           background-position: -32px -512px;
@@ -3221,7 +3229,7 @@ tbody {
       color: $list-item-li-color;
       padding: 10px 6.5rem 10px 3rem;
 
-  } 
+  }
   &:hover {
 
       .icon-list {
@@ -3235,19 +3243,19 @@ tbody {
           padding: 0;
 
           .icon-list-add {
-            background-position: 0px -768px; 
+            background-position: 0px -768px;
         }
         .icon-list-add:hover {
-            background-position: -32px -768px; 
+            background-position: -32px -768px;
         }
         .icon-list-edit {
-            background-position: 0px -800px; 
+            background-position: 0px -800px;
         }
         .icon-list-edit:hover {
-            background-position: -32px -800px; 
+            background-position: -32px -800px;
         }
         .icon-list-delete {
-            background-position: 0px -512px; 
+            background-position: 0px -512px;
         }
         .icon-list-delete:hover {
             background-position: -32px -512px;
@@ -3298,19 +3306,19 @@ tbody {
                   //   div {
 
                       //     .icon-list-add {
-                          //       background-position: 0px -768px; 
+                          //       background-position: 0px -768px;
                           //     }
                           //     .icon-list-add:hover {
-                              //       background-position: -64px -768px; 
+                              //       background-position: -64px -768px;
                               //     }
                               //     .icon-list-edit {
-                                  //       background-position: 0px -800px; 
+                                  //       background-position: 0px -800px;
                                   //     }
                                   //     .icon-list-edit:hover {
-                                      //       background-position: -32px -800px; 
+                                      //       background-position: -32px -800px;
                                       //     }
                                       //     .icon-list-delete {
-                                          //       background-position: 0px -512px; 
+                                          //       background-position: 0px -512px;
                                           //     }
                                           //     .icon-list-delete:hover {
                                               //       background-position: -32px -512px;
@@ -3339,7 +3347,7 @@ tbody {
                               }
 
                               .is-stuck {
-                                 background-color: $body-bg-color; 
+                                 background-color: $body-bg-color;
 
                                  tr {
                                   display: block;
@@ -3348,7 +3356,7 @@ tbody {
                                       //     display: block;
                                       //     float: left;
                                       //   }
-                                      //   
+                                      //
 
                                   }
                               }
@@ -3538,7 +3546,7 @@ tr:not(.tr-close) {
       border-right: 2px solid $table-active-border-color-blue;
   }
 }
-} 
+}
 // Таблица в схлопнутом состоянии
 .tr-border {
 
@@ -3547,7 +3555,7 @@ tr:not(.tr-close) {
       border-bottom: 4px solid $table-active-border-color-blue;
       a {
         .icon-search-table-close {
-          background-position: -6px -678px;  
+          background-position: -6px -678px;
       }
   }
 }
@@ -3597,7 +3605,7 @@ tr:not(.tr-close) {
 .tabs-wrap {
     .tabs-content {
       margin: 0 -15px;
-  } 
+  }
 }
 
 // Pagination
@@ -3622,7 +3630,7 @@ tr:not(.tr-close) {
     color: $table-deleted-color;
 
     .icon-deleted {
-      background-position: 0px -544px; 
+      background-position: 0px -544px;
   }
 }
 a:hover {
@@ -3690,7 +3698,7 @@ a:hover {
     span {
       font-family: $SUIR;
       font-size: 0.7rem;
-      color: $footer-num-color; 
+      color: $footer-num-color;
   }
 }
 }
@@ -3727,7 +3735,7 @@ a:hover {
           display: none;
       }
   }
-}  
+}
 }
 // -------------------------Раздвигаем мобильный сайдбар на всю ширину ------------------------
 .sidebar {
@@ -3772,7 +3780,7 @@ a:hover {
             .tabs-wrap {
 
              .tabs-content {
-              margin: 0; 
+              margin: 0;
               padding: 0 0.7rem;
           }
           .fieldset-access {
@@ -3799,7 +3807,7 @@ a:hover {
             z-index: -1;
         }
     }
-} 
+}
 }
 }
 // Активные первые элементы списка (Шапки)
@@ -3911,7 +3919,7 @@ a:hover {
     }
 }
 
-#unit-change {
+.unit-change {
     color: #1779ba;
 
     &:hover {
@@ -4060,12 +4068,12 @@ a:hover {
 
 .widget-table{
     th{
-        font-size: 0.8rem;      
+        font-size: 0.8rem;
     }
 
     th.common-th{
-        text-align: center; 
-    }   
+        text-align: center;
+    }
 
     td{
         font-size: 0.8rem;

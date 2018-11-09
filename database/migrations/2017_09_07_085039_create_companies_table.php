@@ -18,9 +18,6 @@ class CreateCompaniesTable extends Migration
             $table->string('name')->nullable()->index()->comment('Имя компании');
             $table->string('alias', 40)->unique()->nullable()->index()->comment('Алиас компании');
 
-            $table->bigInteger('phone')->unique()->nullable()->comment('Телефон компании');
-            $table->bigInteger('extra_phone')->nullable()->comment('Дополнительный телефон');
-
             $table->string('email')->nullable()->comment('Почта');
 
             // $table->integer('city_id')->nullable()->unsigned()->comment('Id города');

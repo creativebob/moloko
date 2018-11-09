@@ -234,7 +234,11 @@ class GoodsCategoryController extends Controller
         $answer_goods_categories = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $goods_category = GoodsCategory::with(['goods_mode', 'metrics.unit', 'metrics.values', 'compositions.raws_product.unit', 'compositions'])
+        $goods_category = GoodsCategory::with(['goods_mode', 'metrics' => function ($q) {
+            $q->with('unit', 'values');
+        }, 'set_metrics' => function ($q) {
+            $q->with('unit', 'values');
+        }, 'compositions.raws_product.unit', 'compositions'])
         ->withCount('metrics', 'compositions')
         ->moderatorLimit($answer_goods_categories)
         ->findOrFail($id);

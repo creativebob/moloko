@@ -88,7 +88,12 @@ class GoodsCategory extends Model
     // }
     public function metrics()
     {
-        return $this->morphToMany('App\Metric', 'metric_entity');
+        return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'one');
+    }
+
+    public function set_metrics()
+    {
+        return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'set');
     }
 
     // Состав (только сырье)

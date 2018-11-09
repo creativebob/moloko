@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('inhead')
+@include('includes.scripts.class.city_search')
+@endsection
+
 @section('title', 'Редактировать дилера')
 
 @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $dealer->company->name))

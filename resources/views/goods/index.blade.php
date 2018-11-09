@@ -78,7 +78,7 @@
                             <img src="{{ isset($cur_goods->photo_id) ? '/storage/'.$cur_goods->company_id.'/media/goods/'.$cur_goods->id.'/img/small/'.$cur_goods->photo->name : '/crm/img/plug/goods_small_default_color.jpg' }}" alt="{{ isset($cur_goods->photo_id) ? $cur_goods->name : 'Нет фото' }}">
                         </a>
                     </td>
-                    <td class="td-name"><a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->goods_article->name }}</a></td>
+                    <td class="td-name"><a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->goods_article->name }} @if ($cur_goods->goods_article->goods_product->set_status == 'set') (Набор) @endif</a></td>
                     <td class="td-goods_category">
                         <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->goods_article->goods_product->goods_category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->goods_article->goods_product->goods_category->name }}</a>
                         <br>

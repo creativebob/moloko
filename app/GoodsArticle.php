@@ -114,7 +114,7 @@ class GoodsArticle extends Model
     {
         return $this->hasMany('App\Goods');
     }
-    
+
     public function company()
     {
         return $this->belongsTo('App\Company');

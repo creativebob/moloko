@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('inhead')
+@include('includes.scripts.class.city_search')
+@endsection
+
 @section('title', 'Редактировать производителя')
 
 @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $manufacturer->company->name))
@@ -24,8 +28,7 @@
 @endsection
 
 @section('scripts')
-  @include('includes.scripts.cities-list')
-  @include('includes.scripts.inputs-mask')
+@include('includes.scripts.inputs-mask')
 @endsection
 
 

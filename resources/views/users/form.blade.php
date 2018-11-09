@@ -105,17 +105,7 @@
             </label>
           </div>
           <div class="small-12 medium-6 cell">
-            <label class="input-icon">Введите город
-              @php
-              $city_name = null;
-              $city_id = null;
-              if(isset($user->location->city->name)) {
-              $city_name = $user->location->city->name;
-              $city_id = $user->location->city->id;
-            }
-            @endphp
-            @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
-          </label>
+            @include('includes.inputs.city_search', ['city' => isset($user->location->city->name) ? $user->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
         </div>
 
 
@@ -134,7 +124,7 @@
       <div class="small-12 medium-6 cell">
         <label>Почта
           @include('includes.inputs.email', ['value'=>$user->email, 'name'=>'email', 'required'=>'required'])
-        </label> 
+        </label>
       </div>
 
       <div class="small-12 medium-6 cell">
@@ -208,14 +198,14 @@
         <label for="orgform-status-checkbox"><span>Директор компании (Юридическое лицо)</span></label>
       </div>
     </div>
-    <div class="grid-x grid-padding-x tabs-margin-top"> 
+    <div class="grid-x grid-padding-x tabs-margin-top">
       <div class="small-12 medium-6 cell">
         <label>Название компании
           {{ Form::text('company_name', $user->company_name, ['class'=>'varchar-field company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[A-Za-zА-Яа-яЁё0-9.,_-/\s()]{3,40}']) }}
         </label>
       </div>
     </div>
-    <div class="grid-x grid-padding-x"> 
+    <div class="grid-x grid-padding-x">
       <div class="small-12 medium-6 cell">
         <label>ИНН
           @include('includes.inputs.inn', ['value'=>$user->inn, 'name'=>'inn', 'required'=>''])
@@ -227,14 +217,14 @@
         </label>
       </div>
     </div>
-    <div class="grid-x grid-padding-x"> 
+    <div class="grid-x grid-padding-x">
       <div class="small-12 medium-12 cell">
         <label>Банк
           @include('includes.inputs.bank', ['value'=>$user->bank, 'name'=>'bank', 'required'=>''])
         </label>
       </div>
     </div>
-    <div class="grid-x grid-padding-x"> 
+    <div class="grid-x grid-padding-x">
       <div class="small-12 medium-6 cell">
         <label>Р/С
           @include('includes.inputs.account', ['value'=>$user->account_settlement, 'name'=>'account_settlement', 'required'=>''])
@@ -270,7 +260,7 @@
       </div>
     </div>
 
-    <div class="grid-x grid-padding-x">        
+    <div class="grid-x grid-padding-x">
       <div class="small-12 medium-12 cell">
         <label>Фраза
           @include('includes.inputs.string', ['name'=>'quote', 'value'=>$user->quote, 'required'=>''])
@@ -287,7 +277,7 @@
 <div class="small-12 medium-5 medium-offset-1 large-5 large-offset-2 cell">
   <fieldset class="fieldset-access">
     <legend>Настройка доступа</legend>
-    <div class="grid-x grid-padding-x"> 
+    <div class="grid-x grid-padding-x">
       <div class="small-12 cell">
         <label>Статус пользователя
           {{ Form::select('user_type', [ '1' => 'Пользователь системы', '2' => 'Клиент']) }}
@@ -303,7 +293,7 @@
       @endif
 
     </div>
-    <div class="grid-x grid-padding-x"> 
+    <div class="grid-x grid-padding-x">
       <div class="small-12 cell tabs-margin-top">
         <label>Логин
           {{ Form::text('login', $user->login, ['class'=>'login-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'required', 'pattern'=>'[A-Za-z0-9._-]{6,30}']) }}
@@ -354,11 +344,11 @@
         <label for="access-block-checkbox"><span>Блокировать доступ</span></label>
       </div>
     </div>
-  </fieldset> 
+  </fieldset>
 </div>
 
 {{-- Чекбоксы управления --}}
-@include('includes.control.checkboxes', ['item' => $user])  
+@include('includes.control.checkboxes', ['item' => $user])
 
 <div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
   {{ Form::submit($submitButtonText, ['class'=>'button']) }}

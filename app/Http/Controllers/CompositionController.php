@@ -94,9 +94,13 @@ class CompositionController extends Controller
     public function ajax_add(Request $request)
     {
         if ($request->set_status == 'one') {
-            $composition = RawsArticle::with(['raws_product.unit'])->findOrFail($request->id);  
+            $composition = RawsArticle::with(['raws_product' => function ($q) {
+                        $q->with('unit', 'raws_category');
+                    }])->findOrFail($request->id);  
         } else {
-            $composition = GoodsArticle::with(['goods_product.unit'])->findOrFail($request->id);  
+            $composition = GoodsArticle::with(['goods_product' => function ($q) {
+                        $q->with('unit', 'goods_category');
+                    }])->findOrFail($request->id);  
         }
         return view($request->entity.'.compositions.composition_input', compact('composition'));
     }

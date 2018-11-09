@@ -26,18 +26,16 @@
                     </div>
 
                     <div class="small-6 medium-6 large-6 cell">
-                        <label class="input-icon">Введите город
+                        <label class="input-icon">
                             @php
                                 $city_name = null;
                                 $city_id = null;
                                 if(isset($lead->location->city->name)) {
-
                                     $city_name = $lead->location->city->name;
                                     $city_id = $lead->location->city->id;
-
                                 }
                             @endphp
-                            @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
+                            @include('includes.inputs.city_search', ['city' => isset($lead->location->city->name) ? $lead->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
                         </label>
                     </div>
                     <div class="small-6 medium-6 cell">

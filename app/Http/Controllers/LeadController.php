@@ -440,7 +440,7 @@ class LeadController extends Controller
 
             $lead->name =   $request->name;
             $lead->company_name =   $request->company_name;
-            $lead->private_status = $request->private_status;
+            // $lead->private_status = $request->private_status;
 
         // $lead->sex = $request->sex;
         // $lead->birthday = $request->birthday;
@@ -763,7 +763,7 @@ class LeadController extends Controller
 
         $lead->name = $request->name;
         $lead->company_name = $request->company_name;
-        $lead->private_status = $request->private_status;
+        // $lead->private_status = $request->private_status;
 
         $lead->stage_id = $request->stage_id;
         $lead->badget = $request->badget;

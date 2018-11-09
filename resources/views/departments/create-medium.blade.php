@@ -1,3 +1,4 @@
+@include('includes.scripts.class.city_search')
 <div class="reveal" id="medium-add" data-reveal data-close-on-click="false">
     <div class="grid-x">
         <div class="small-12 cell modal-title">
@@ -32,14 +33,12 @@
                         </label>
                     </div>
                     <div class="small-4 cell">
-                        <label class="input-icon">Введите город
-                        @include('includes.inputs.city_search', ['city_value'=>null, 'city_id_value'=>null, 'required'=>'required'])
-                    </label>
+                        @include('includes.inputs.city_search', ['city' => isset($department->location->city->name) ? $department->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
                 </div>
                 <div class="small-8 cell">
                     <label>Адрес отдела
                     @include('includes.inputs.address', ['value'=>null, 'name'=>'address', 'required'=>''])
-                </label>            
+                </label>
             </div>
             <div class="small-12 cell">
                 <label>Телефон отдела

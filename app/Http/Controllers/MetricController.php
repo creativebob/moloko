@@ -218,7 +218,9 @@ class MetricController extends Controller
 
         $entity = $request->entity;
         // Связываем сущность с метрикой
-        $metric->$entity()->attach($request->entity_id);
+        $metric->$entity()->attach([$request->entity_id => [
+            'set_status' => $request->set_status
+        ]]);
 
         // switch ($request->entity) {
         //     case 'goods_categories':

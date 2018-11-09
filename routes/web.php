@@ -198,7 +198,7 @@ Route::get('/map', function() {
     // dd($mass);
     // $coords = $mass;
 
-    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE); 
+    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
 
     // dd($coords);
 
@@ -223,7 +223,7 @@ Route::get('/route', function() {
         'coords' => [(float)$lead->location->latitude, (float)$lead->location->longitude],
     ];
 
-    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE); 
+    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
 
     return view('leads.route', compact('coords'));
 })->middleware('auth');
@@ -438,7 +438,7 @@ Route::any('/goods_category_compositions', 'GoodsCategoryController@ajax_get_com
 Route::resource('/goods_products', 'GoodsProductController')->middleware('auth');
 
 Route::any('/ajax_goods_count', 'GoodsProductController@ajax_count')->middleware('auth');
-Route::any('/ajax_goods_modes', 'GoodsProductController@ajax_modes')->middleware('auth');
+Route::any('/goods_products_create_mode', 'GoodsProductController@ajax_change_create_mode')->middleware('auth');
 
 Route::any('/goods_products_list', 'GoodsProductController@ajax_get_products_list')->middleware('auth');
 
@@ -739,7 +739,7 @@ Route::resource('/cities', 'CityController')->middleware('auth');
 // Проверка на существование города
 Route::post('/city_check', 'CityController@ajax_check')->middleware('auth');
 // Таблица городов
-Route::post('/cities_list', 'CityController@cities_list')->middleware('auth');
+Route::any('/cities_list', 'CityController@cities_list')->middleware('auth');
 // Получаем города из vk
 Route::post('/city_vk', 'CityController@get_vk_city')->middleware('auth');
 

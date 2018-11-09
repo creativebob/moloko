@@ -124,7 +124,7 @@
                                 </label>
                             </div> --}}
                             <div class="small-12 medium-4 cell">
-                                <label class="input-icon">Введите город
+                                <label class="input-icon">
                                     @php
                                         $city_name = null;
                                         $city_id = null;
@@ -133,7 +133,9 @@
                                             $city_id = $new_user->location->city->id;
                                         }
                                     @endphp
-                                    @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
+
+                                    @include('includes.inputs.city_search', ['city' => isset($lead->location->city->name) ? $lead->location->city : null, 'id' => 'cityFormModalClient', 'required' => 'required'])
+
                                 </label>
                             </div>
                                 <div class="small-12 medium-8 cell">
