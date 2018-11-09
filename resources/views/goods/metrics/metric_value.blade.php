@@ -1,40 +1,39 @@
+@switch($metric->property->type)
 
-		@switch($metric->property->type)
+@case('numeric')
+<tr>
+	<td>{{ $metric->name }}</td>
+	<td>{{ $metric->pivot->value }}</td>
+</tr>
+@break
 
-		@case('numeric')
-		<tr>
-			<td>{{ $metric->name }}</td>
-			<td>{{ $metric->pivot->value }}</td>
-		</tr>
-		@break
+@case('percent')
+<tr>
+	<td>{{ $metric->name }}</td>
+	<td>{{ $metric->pivot->value }}</td>
+</tr>
+@break
 
-		@case('percent')
-		<tr>
-			<td>{{ $metric->name }}</td>
-			<td>{{ $metric->pivot->value }}</td>
-		</tr>
-		@break
+@case('list')
 
-		@case('list')
+@switch($metric->list_type)
 
-		@switch($metric->list_type)
+@case('list')
+<tr>
+	<td>Список: {{ $metric->name }}</td>
+	<td>{{ $metric->pivot->value }}</td>
+</tr>
+@break
 
-		@case('list')
-		<tr>
-			<td>Список: {{ $metric->name }}</td>
-			<td>{{ $metric->pivot->value }}</td>
-		</tr>
-		@break
+@case('select')
+<tr>
+	<td>Select: {{ $metric->name }}</td>
+	<td>{{ $metric->pivot->value }}</td>
+</tr>
+@break
 
-		@case('select')
-		<tr>
-			<td>Select: {{ $metric->name }}</td>
-			<td>{{ $metric->pivot->value }}</td>
-		</tr>
-		@break
+@endswitch
 
-		@endswitch
-		
-		@break
+@break
 
-		@endswitch
+@endswitch

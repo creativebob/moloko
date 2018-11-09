@@ -26,29 +26,16 @@
                     </div>
 
                     <div class="small-6 medium-6 large-6 cell">
-                        <label class="input-icon">Введите город
-                            @php
-                            $city_name = null;
-                            $city_id = null;
-                            if(isset($lead->location->city->name)) {
 
-                            $city_name = $lead->location->city->name;
-                            $city_id = $lead->location->city->id;
+                        @include('includes.inputs.city_search', ['city' => isset($lead->location->city->name) ? $lead->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
 
-                            }
-                            @endphp
-                            @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
-                        </label>
                     </div>
                     <div class="small-6 medium-6 cell">
                         <label>Адрес
                             @php
                             $address = null;
                             if (isset($lead->location->address)) {
-
-                            $address = $lead->location->address;
-
-
+                                $address = $lead->location->address;
                             }
                             @endphp
                             @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
@@ -59,79 +46,79 @@
 
 
 
-    </div>
-
-    <div class="small-12 medium-12 large-4 cell">
-        <!-- Пустой блок -->
-        <div class="grid-x grid-padding-x">
-            <div class="small-12 cell">
-                <label>Бюджет
-                    @include('includes.inputs.digit', ['name'=>'badget', 'value'=>$lead->badget, 'required'=>''])
-                </label>
             </div>
-            <div class="small-12 cell">
-                <label>Этап
-                    {{ Form::select('stage_id', $stages_list, $lead->stage_id) }}
-                </label>
+
+            <div class="small-12 medium-12 large-4 cell">
+                <!-- Пустой блок -->
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 cell">
+                        <label>Бюджет
+                            @include('includes.inputs.digit', ['name'=>'badget', 'value'=>$lead->badget, 'required'=>''])
+                        </label>
+                    </div>
+                    <div class="small-12 cell">
+                        <label>Этап
+                            {{ Form::select('stage_id', $stages_list, $lead->stage_id) }}
+                        </label>
+                    </div>
+
+                </div>
             </div>
 
         </div>
-    </div>
 
-</div>
-
-<!-- ЗАКАЗ -->
-<div class="grid-x grid-padding-x">
-    <div class="small-12 medium-12 large-12 cell margin-left-15">
-        <ul class="tabs-list" data-tabs id="tabs-extra-leads">
-            <li class="tabs-title is-active" id="tab-order"><a href="#content-panel-order" aria-selected="true">Состав заказа</a></li>
-            <li class="tabs-title" id="tab-client"><a href="#content-panel-client" aria-selected="true">Карточка клиента</a></li>
-            <li class="tabs-title" id="tab-history"><a href="#content-panel-history" aria-selected="true">История</a></li>
-        </ul>
+        <!-- ЗАКАЗ -->
+        <div class="grid-x grid-padding-x">
+            <div class="small-12 medium-12 large-12 cell margin-left-15">
+                <ul class="tabs-list" data-tabs id="tabs-extra-leads">
+                    <li class="tabs-title is-active" id="tab-order"><a href="#content-panel-order" aria-selected="true">Состав заказа</a></li>
+                    <li class="tabs-title" id="tab-client"><a href="#content-panel-client" aria-selected="true">Карточка клиента</a></li>
+                    <li class="tabs-title" id="tab-history"><a href="#content-panel-history" aria-selected="true">История</a></li>
+                </ul>
 
 
 
-        {{-- Контент доп таба --}}
-        <div data-tabs-content="tabs-extra-leads">
+                {{-- Контент доп таба --}}
+                <div data-tabs-content="tabs-extra-leads">
 
-            {{-- ЗАКАЗ --}}
-            <div class="tabs-panel is-active" id="content-panel-order">
+                    {{-- ЗАКАЗ --}}
+                    <div class="tabs-panel is-active" id="content-panel-order">
 
-                <div class="grid-x">
-                    <div class="small-12 medium-12 large-12 cell">
+                        <div class="grid-x">
+                            <div class="small-12 medium-12 large-12 cell">
 
 
-                        <table class="table-order" id="table-order">
-                            <thead>
-                                <tr>
-                                    <th>Наименование</th>
-                                    <th>Кол-во</th>
-                                    <th>Закуп</th>
-                                    <th>ДопРасх</th>
-                                    <th>Наценка</th>
-                                    <th>Цена</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="goods-section">
+                                <table class="table-order" id="table-order">
+                                    <thead>
+                                        <tr>
+                                            <th>Наименование</th>
+                                            <th>Кол-во</th>
+                                            <th>Закуп</th>
+                                            <th>ДопРасх</th>
+                                            <th>Наценка</th>
+                                            <th>Цена</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="goods-section">
 
-                                @if (isset($lead->order->compositions))
-                                @foreach ($lead->order->compositions as $composition)
-                                @include('leads.goods', ['composition' => $composition])
-                                @endforeach
-                                @endif
+                                        @if (isset($lead->order->compositions))
+                                        @foreach ($lead->order->compositions as $composition)
+                                        @include('leads.goods', ['composition' => $composition])
+                                        @endforeach
+                                        @endif
 
-                            </tbody>
-                        </table>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
 
                     </div>
-                </div>
 
-            </div>
-
-            {{-- КЛИЕНТ --}}
-            <div class="tabs-panel" id="content-panel-client">
-                <div class="grid-x grid-padding-x">
+                    {{-- КЛИЕНТ --}}
+                    <div class="tabs-panel" id="content-panel-client">
+                        <div class="grid-x grid-padding-x">
 
 
                         {{-- <div class="small-12 medium-12 large-12 cell">
@@ -150,7 +137,7 @@
                     <div class="small-12 medium-6 cell">
                         <label>Почта
                             @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email', 'required'=>''])
-                        </label> 
+                        </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>Компания
@@ -164,7 +151,7 @@
             <div class="tabs-panel" id="content-panel-history">
                 <div class="grid-x grid-padding-x">
                     <div id="port-history" class="small-12 cell">
-                    </div>  
+                    </div>
                 </div>
             </div>
 
@@ -231,7 +218,7 @@
             </div>
         </div>
 
-{{-- Документы 
+{{-- Документы
     <div class="tabs-panel" id="content-panel-documents">
         <div class="grid-x grid-padding-x">
             <div class="small-12 large-6 cell">
@@ -247,7 +234,7 @@
                 @can ('index', App\Claim::class)
                 <fieldset class="fieldset-challenge">
                     <legend>Рекламации:</legend>
-                    <div class="grid-x grid-padding-x"> 
+                    <div class="grid-x grid-padding-x">
                         <table class="table-challenges" id="table-challenges">
                             <thead>
                                 <tr>
@@ -284,7 +271,7 @@
         </div>
     </div>
 
-    {{-- Замеры 
+    {{-- Замеры
         <div class="tabs-panel" id="content-panel-measurements">
             <div class="grid-x grid-padding-x">
                 <div class="small-12 large-6 cell">
@@ -315,74 +302,74 @@
 
                                     {{-- Будем мутить селект в ручную --}}
 
-                                    @php 
+                                    @php
                                     if($lead->lead_method->mode != 1){
 
-                                    $disabled_method_list = 'disabled';} else {
-                                    $disabled_method_list = '';};
-                                    @endphp
+                                        $disabled_method_list = 'disabled';} else {
+                                            $disabled_method_list = '';};
+                                            @endphp
 
-                                    {{ Form::select('lead_method', $lead_methods_list, $lead->lead_method_id, [$disabled_method_list]) }}
+                                            {{ Form::select('lead_method', $lead_methods_list, $lead->lead_method_id, [$disabled_method_list]) }}
 
-                                </td><td></td>
-                            </tr>
-                            <td>Интерес: </td>
-                            <td>
-                            @php if($lead->lead_method_id == 2){$choice_disabled = 'disabled';} else {$choice_disabled = '';}   @endphp
-                            {{ Form::select('choice_tag', $choices, genChoiceTag($lead), [$choice_disabled]) }}</td>
-                            <td></td>     
-                        </tr>
-                        <tr>
-                            <td>Источник: </td><td>{{ $lead->source->name or ''}}</td><td></td>
-                        </tr>
-                        <tr>
-                            <td>Сайт: </td><td>{{ $lead->site->name or ''}}</td><td></td>
-                        </tr>
-                        <tr>
-                            <td>Тип трафика: </td><td>{{ $lead->medium->name or ''}}</td><td></td>
-                        </tr>
-                        <tr>
-                            <td>Рекламная кампания: </td><td>{{ $lead->campaign_id or ''}}</td><td></td>
-                        </tr>
-                        <tr>
-                            <td>Объявление: </td><td>{{ $lead->utm_content or ''}}</td><td></td>
-                        </tr>
-                        <tr>
-                            <td>Ключевая фраза: </td><td>{{ $lead->utm_term or ''}}</td><td></td>
-                        </tr>
-                        <tr>
-                            <td>Менеджер: </td><td>{{ $lead->manager->name }}</td>
-                            <td>
-                                @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
-                                <a id="lead-free" class="button tiny">Освободить</a>
-                                @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Активных задач: </td><td>{{ $lead->challenges_active_count or ''}}</td><td></td>
-                        </tr>
-                    </table>
+                                        </td><td></td>
+                                    </tr>
+                                    <td>Интерес: </td>
+                                    <td>
+                                        @php if($lead->lead_method_id == 2){$choice_disabled = 'disabled';} else {$choice_disabled = '';}   @endphp
+                                    {{ Form::select('choice_tag', $choices, genChoiceTag($lead), [$choice_disabled]) }}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Источник: </td><td>{{ $lead->source->name or ''}}</td><td></td>
+                                </tr>
+                                <tr>
+                                    <td>Сайт: </td><td>{{ $lead->site->name or ''}}</td><td></td>
+                                </tr>
+                                <tr>
+                                    <td>Тип трафика: </td><td>{{ $lead->medium->name or ''}}</td><td></td>
+                                </tr>
+                                <tr>
+                                    <td>Рекламная кампания: </td><td>{{ $lead->campaign_id or ''}}</td><td></td>
+                                </tr>
+                                <tr>
+                                    <td>Объявление: </td><td>{{ $lead->utm_content or ''}}</td><td></td>
+                                </tr>
+                                <tr>
+                                    <td>Ключевая фраза: </td><td>{{ $lead->utm_term or ''}}</td><td></td>
+                                </tr>
+                                <tr>
+                                    <td>Менеджер: </td><td>{{ $lead->manager->name }}</td>
+                                    <td>
+                                        @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
+                                        <a id="lead-free" class="button tiny">Освободить</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Активных задач: </td><td>{{ $lead->challenges_active_count or ''}}</td><td></td>
+                                </tr>
+                            </table>
+
+                        </div>
+
+
+
+                    </div>
+
+
+
 
                 </div>
 
-
-
-            </div>
-
-
-
-
-        </div>
-
-{{-- Чекбоксы управления 
-    @include('includes.control.checkboxes', ['item' => $lead])  
+{{-- Чекбоксы управления
+    @include('includes.control.checkboxes', ['item' => $lead])
     --}}
 
     <div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
         @can('update', $lead)
         {{ Form::submit($submitButtonText, ['class'=>'button']) }}
         @else
-        {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }} 
+        {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }}
         @endcan
     </div>
 

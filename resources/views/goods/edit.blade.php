@@ -28,10 +28,10 @@
             <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
             <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
 
-            <li class="tabs-title"><a data-tabs-target="catalogs" href="#catalogs">Каталоги</a></li> 
+            <li class="tabs-title"><a data-tabs-target="catalogs" href="#catalogs">Каталоги</a></li>
 
             <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
-            <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li> 
+            <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li>
         </ul>
     </div>
 </div>
@@ -62,7 +62,7 @@
 
                                 <label>Группа
                                     <div id="goods-products-select">
-                                        {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_article->goods_product_id, ['id' => 'goods-products-list']) }}  
+                                        {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_article->goods_product_id, ['id' => 'goods-products-list']) }}
                                     </div>
                                 </label>
 
@@ -115,7 +115,7 @@
                                     <label>Удобный (вручную)
                                         {{ Form::text('manually', null) }}
                                     </label>
-                                </div> 
+                                </div>
 
                                 <div class="small-12 medium-4 cell">
                                     <label>Внешний
@@ -137,62 +137,63 @@
                                 </label>
                             </div>
                         </div>
-                        
 
+                        @php
+                        $metric_relation = ($cur_goods->goods_article->goods_product->set_status == 'one') ? 'metrics' : 'set_metrics';
+                        @endphp
+
+                        @if (count($cur_goods->goods_article->$metric_relation) || count($cur_goods->goods_article->goods_product->goods_category->$metric_relation))
 
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
-                            @php
-                            $metrics = 'metrics';
-                            if ($cur_goods->goods_article->goods_product->set_status == 'set') {
-                                $metrics = 'set_metrics';
-                            }
-                            @endphp
+
 
                             {{-- Если черновик --}}
                             @if ($cur_goods->goods_article->draft == 1)
 
                             <div id="metrics-list">
+                                @if (count($cur_goods->goods_article->$metric_relation))
 
                                 {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
-                                @if (count($cur_goods->goods_article->$metrics))
-
-                                @foreach ($cur_goods->goods_article->$metrics->unique() as $metric)
+                                @isset ($cur_goods->goods_article->$metric_relation)
+                                @foreach ($cur_goods->goods_article->$metric_relation->unique() as $metric)
                                 @include('goods.metrics.metric_input', $metric)
                                 @endforeach
+                                @endisset
 
                                 @else
 
-                                @if (count($cur_goods->goods_article->goods_product->goods_category->$metrics))
-                                @foreach ($cur_goods->goods_article->goods_product->goods_category->$metrics as $metric)
+                                @isset ($cur_goods->goods_article->goods_product->goods_category->$metric_relation)
+                                @foreach ($cur_goods->goods_article->goods_product->goods_category->$metric_relation as $metric)
                                 @include('goods.metrics.metric_input', $metric)
                                 @endforeach
-                                @endif
+                                @endisset
 
                                 @endif
-
                             </div>
 
                             @else
 
                             {{-- Если товар --}}
-                            @if (count($cur_goods->goods_article->$metrics))
+                            @isset ($cur_goods->goods_article->$metric_relation)
 
                             <table>
                                 <tbody>
 
-                                    @foreach ($cur_goods->goods_article->$metrics as $metric)
+                                    @foreach ($cur_goods->goods_article->$metric_relation as $metric)
                                     @include('goods.metrics.metric_value', $metric)
                                     @endforeach
 
                                 </tbody>
                             </table>
-                            @endif
+
+                            @endisset
 
                             @endif
-
                         </fieldset>
+
+                        @endif
 
                         <div id="cur-goods-inputs"></div>
                         <div class="small-12 cell tabs-margin-top text-center">
@@ -212,7 +213,7 @@
                     @endif
 
                     {{-- Чекбоксы управления --}}
-                    @include('includes.control.checkboxes', ['item' => $cur_goods]) 
+                    @include('includes.control.checkboxes', ['item' => $cur_goods])
 
                     {{-- Кнопка --}}
                     <div class="small-12 cell tabs-button tabs-margin-top">
@@ -307,7 +308,7 @@
                         {{-- Состав --}}
                         <table class="composition-table">
                             <thead>
-                                <tr> 
+                                <tr>
                                     <th>Категория:</th>
                                     <th>Продукт:</th>
                                     <th>Кол-во:</th>
@@ -321,78 +322,67 @@
                             <tbody id="composition-table">
 
                                 @php
-                                $compositions = 'compositions';
-                                if ($cur_goods->goods_article->goods_product->set_status == 'set') {
-                                    $compositions = 'set_compositions';
-                                }
+                                $composition_relation = ($cur_goods->goods_article->goods_product->set_status == 'one') ? 'compositions' : 'set_compositions';
                                 @endphp
 
                                 {{-- Если черновик --}}
                                 @if ($cur_goods->goods_article->draft == 1)
-                                
+
                                 {{-- У товара есть значения состава, берем их --}}
-                                @if (count($cur_goods->goods_article->$compositions))
-                                
-                                @foreach ($cur_goods->goods_article->$compositions as $composition)
+                                @if (count($cur_goods->goods_article->$composition_relation))
+
+                                @foreach ($cur_goods->goods_article->$composition_relation as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
                                 @endforeach
 
                                 @else
-                                
-                                {{-- В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются --}}
-                                @if (($compositions != 'set_compositions') && count($cur_goods->goods_article->goods_product->goods_category->compositions))
 
+                                {{-- В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются --}}
+                                @if (($composition_relation != 'set_compositions') && count($cur_goods->goods_article->goods_product->goods_category->compositions))
                                 @foreach ($cur_goods->goods_article->goods_product->goods_category->compositions as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
                                 @endforeach
-
                                 @endif
+
                                 @endif
 
                                 @else
-                                
-                                {{-- У товара есть значения состава, берем их --}}
-                                @if (count($cur_goods->goods_article->$compositions))
 
-                                @foreach ($cur_goods->goods_article->$compositions as $composition)
+                                {{-- У товара есть значения состава, берем их --}}
+                                @isset ($cur_goods->goods_article->$composition_relation)
+                                @foreach ($cur_goods->goods_article->$composition_relation as $composition)
                                 @include ('goods.compositions.composition_value', $composition)
                                 @endforeach
-
-                                @endif
+                                @endisset
 
                                 @endif
                             </tbody>
                         </table>
                     </div>
 
-
                     <div class="small-12 medium-3 cell">
 
+                        {{-- Если статус у товара статус черновика, то показываем сырье/товары для добавления, в зависимости от статуса набора --}}
+                        @isset ($composition_list)
                         @if ($cur_goods->goods_article->draft == 1)
-
-                        @if (isset($composition_list))
 
                         @if ($cur_goods->goods_article->goods_product->set_status == 'one')
 
-                        @if (count($cur_goods->goods_article->compositions))
-
+                        @if (count($cur_goods->goods_article->$composition_relation))
                         {{ Form::model($cur_goods->goods_article, []) }}
+                        @else
+                        {{ Form::model($cur_goods->goods_article->goods_product->goods_category, []) }}
+                        @endif
 
                         @else
 
-                        {{ Form::model($cur_goods->goods_article->goods_product->goods_category, []) }}
+                        {{ Form::model($cur_goods->goods_article, []) }}
 
                         @endif
 
-                        @else 
-
-                        {{ Form::model($cur_goods->goods_article, []) }}
-
-                        @endif    
-
                         <ul class="menu vertical">
 
-                            @if (isset($composition_list['composition_categories']))
+                            @isset ($composition_list['composition_categories'])
                             <li>
                                 <a class="button" data-toggle="{{ $composition_list['alias'] }}-dropdown">{{ $composition_list['name'] }}</a>
                                 <div class="dropdown-pane" id="{{ $composition_list['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
@@ -407,18 +397,17 @@
 
                                 </div>
                             </li>
-                            @endif
+                            @endisset
                         </ul>
 
+                        {{ Form::close() }}
+
                         @endif
-                        @endif
+                        @endisset
 
                     </div>
-
                 </div>
             </div>
-
-            {{ Form::close() }}
 
             <!-- Фотографии -->
             <div class="tabs-panel" id="photos">
@@ -430,11 +419,11 @@
                         {{ Form::hidden('id', $cur_goods->id) }}
                         {{ Form::close() }}
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
+
                             @if (isset($cur_goods->album_id))
-
                             @include('goods.photos', $cur_goods)
-
                             @endif
+
                         </ul>
                     </div>
 
@@ -447,10 +436,8 @@
                         {{ Form::hidden('id', $cur_goods->id) }}
                         {{ Form::close() }}
                     </div>
-
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -569,7 +556,7 @@
 
                 } else {
                     alert(result['error_message']);
-                }; 
+                };
             }
         })
     });
@@ -660,7 +647,7 @@
 
     //             } else {
     //                 alert(result['error_message']);
-    //             }; 
+    //             };
     //         }
     //     })
     // });
@@ -854,7 +841,7 @@
                         $('#metrics-' + id).remove();
                     } else {
                         alert(result['error_message']);
-                    }; 
+                    };
                 }
             })
         }

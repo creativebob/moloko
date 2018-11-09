@@ -2,6 +2,7 @@
 
 @section('inhead')
 @include('includes.scripts.pickmeup-inhead')
+@include('includes.scripts.class.city_search')
 @endsection
 
 @section('title', 'Редактировать лид')
@@ -26,7 +27,7 @@
 
 {{ method_field('PATCH') }}
 
-@php 
+@php
 
 $readonly = '';
 $autofocus = 'autofocus';
@@ -61,13 +62,11 @@ $disabled_leadbot = '';
 <section id="modal"></section>
 {{-- Модалка удаления с ajax --}}
 @include('includes.modals.modal-delete-ajax')
-
 @include('includes.modals.modal-add-claim', ['lead' => $lead])
 @endsection
 
 @section('scripts')
 @include('leads.scripts')
-@include('includes.scripts.cities-list')
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.pickmeup-script')
 @include('includes.scripts.upload-file')
@@ -78,7 +77,7 @@ $disabled_leadbot = '';
 	var lead_type_id = '{{ $lead->lead_type_id }}';
 
 	$(document).on('dblclick', '#phone', function() {
-		
+
     	// Снятие блокировки с поля номер телефона
     	$('#phone').attr('readonly', false);
 
@@ -250,7 +249,7 @@ $disabled_leadbot = '';
 			success: function(data){
 				$('#modal-change-lead-type').foundation('close');
 				$('#lead-type-name').html(data['lead_type_name']);
-				$('#show-case-number').val(data['case_number']);		
+				$('#show-case-number').val(data['case_number']);
 			}
 		});
 	});
@@ -271,7 +270,7 @@ $disabled_leadbot = '';
 			type: "POST",
 			data: {id: id},
 			success: function(html){
-				$('#items-list').html(html);	
+				$('#items-list').html(html);
 			}
 		});
 	});

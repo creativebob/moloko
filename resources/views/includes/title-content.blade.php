@@ -8,61 +8,60 @@
 						@yield('content-count')
 					</span>
 				</h2>
-				
+
 				@can('create', $class)
-					@switch($type)
+				@switch($type)
 
-					@case('table')
+				@case('table')
 
-						{{-- Кнопки добавления для страницы ЛИДЫ --}}
-						@if($page_info->alias == 'leads')
+				{{-- Кнопки добавления для страницы ЛИДЫ --}}
+				@if($page_info->alias == 'leads')
 
-							@if(!empty(Auth::user()->staff[0]))
-								<div class="button-group">
-									@if(extra_right('lead-regular'))
-	                            		{{ link_to_route('leads.create', '+ Обычное', ['lead_type' => 1], ['class' => 'button tiny']) }}
-	                            	@endif
+				@if(!empty(Auth::user()->staff[0]))
+				<div class="button-group">
+					@if(extra_right('lead-regular'))
+					{{ link_to_route('leads.create', '+ Обычное', ['lead_type' => 1], ['class' => 'button tiny']) }}
+					@endif
 
-									@if(extra_right('lead-service'))
-	                            		{{ link_to_route('leads.create', '+ Сервис', ['lead_type' => 3], ['class' => 'button tiny']) }}
-	                            	@endif
+					@if(extra_right('lead-service'))
+					{{ link_to_route('leads.create', '+ Сервис', ['lead_type' => 3], ['class' => 'button tiny']) }}
+					@endif
 
-									@if(extra_right('lead-dealer'))
-	                            		{{ link_to_route('leads.create', '+ Дилер', ['lead_type' => 2], ['class' => 'button tiny']) }} 
-									@endif
+					@if(extra_right('lead-dealer'))
+					{{ link_to_route('leads.create', '+ Дилер', ['lead_type' => 2], ['class' => 'button tiny']) }}
+					@endif
 
-								</div>
+				</div>
 
-							@endif
+				@endif
 
-						{{-- Кнопки добавления для остальных страниц --}}
-						@else
+				{{-- Кнопки добавления для остальных страниц --}}
+				@else
 
-							@if (isset($page_alias))
-								<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
-							@else
-								<a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite"></a>
-							@endif
+				@if (isset($page_alias))
+				<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
+				@else
+				<a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite"></a>
+				@endif
 
-						@endif
+				@endif
 
+				@break
 
-					@break
+				@case('section-table')
+				<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
+				@break
 
-					@case('section-table')
-					<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
-					@break
+				@case('menu')
+				<a class="icon-add sprite" data-open="first-add"></a>
+				@break
 
-					@case('menu')
-					<a class="icon-add sprite" data-open="first-add"></a>
-					@break
+				@case('sections-menu')
+				{{-- <h2 class="header-content">{{ $page_info->title .' &laquo;'. $name .'&raquo;' }}</h2> --}}
+				<a class="icon-add sprite" data-open="first-add"></a>
+				@break
 
-					@case('sections-menu')
-					{{-- <h2 class="header-content">{{ $page_info->title .' &laquo;'. $name .'&raquo;' }}</h2> --}}
-					<a class="icon-add sprite" data-open="first-add"></a>
-					@break
-
-					@endswitch
+				@endswitch
 				@endcan
 			</div>
 			<div class="top-bar-right">
@@ -85,36 +84,36 @@
 		{{-- Блок фильтров --}}
 		@if (isset($filter))
 
-			{{-- Подключаем класс Checkboxer --}}
-			@include('includes.scripts.class.checkboxer')
+		{{-- Подключаем класс Checkboxer --}}
+		@include('includes.scripts.class.checkboxer')
 
-			<div class="grid-x">
-				<div class="small-12 cell filters fieldset-filters" id="filters">
-					<div class="grid-padding-x">
-						<div class="small-12 cell text-right">
-							{{ link_to(Request::url() . '?filter=disable', 'Сбросить', ['class' => 'small-link']) }}
-						</div>
-					</div>
-					<div class="grid-padding-x">
-						<div class="small-12 cell">
-						{{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
-
-							@include($page_info->alias.'.filters')
-
-							<div class="small-12 cell text-center">
-								{{ Form::submit('Фильтрация', ['class'=>'button']) }}
-								 <input hidden name="filter" value="active">
-							</div>
-							{{ Form::close() }}
-						</div>
-					</div>
-					<div class="grid-x">
-						<a class="small-12 cell text-center filter-close">
-							<button type="button" class="icon-moveup sprite"></button>
-						</a>
+		<div class="grid-x">
+			<div class="small-12 cell filters fieldset-filters" id="filters">
+				<div class="grid-padding-x">
+					<div class="small-12 cell text-right">
+						{{ link_to(Request::url() . '?filter=disable', 'Сбросить', ['class' => 'small-link']) }}
 					</div>
 				</div>
+				<div class="grid-padding-x">
+					<div class="small-12 cell">
+						{{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
+
+						@include($page_info->alias.'.filters')
+
+						<div class="small-12 cell text-center">
+							{{ Form::submit('Фильтрация', ['class'=>'button']) }}
+							<input hidden name="filter" value="active">
+						</div>
+						{{ Form::close() }}
+					</div>
+				</div>
+				<div class="grid-x">
+					<a class="small-12 cell text-center filter-close">
+						<button type="button" class="icon-moveup sprite"></button>
+					</a>
+				</div>
 			</div>
+		</div>
 
 		@endif
 	</div>

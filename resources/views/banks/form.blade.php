@@ -31,7 +31,7 @@
 
       <!-- Общая информация -->
       <div class="tabs-panel is-active" id="content-panel-1">
-        <div class="grid-x grid-padding-x"> 
+        <div class="grid-x grid-padding-x">
           <div class="small-12 medium-6 cell">
             <label>Название компании
               @include('includes.inputs.name', ['value'=>$company->name, 'name'=>'name', 'required'=>'required'])
@@ -66,7 +66,7 @@
           <div class="small-12 medium-6 cell">
             <label>Почта
               @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email', 'required'=>''])
-            </label>  
+            </label>
             <label>Страна
               @php
               $country_id = null;
@@ -79,16 +79,7 @@
         </div>
 
         <div class="small-12 medium-6 cell">
-          <label class="input-icon">Город
-            @php
-            $city_name = null;
-            $city_id = null;
-            if (isset($company->location->city->name)) {
-            $city_name = $company->location->city->name;
-            $city_id = $company->location->city->id;
-          }
-          @endphp
-          @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
+          @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
         </label>
         <label>Адрес
           @php
@@ -110,7 +101,7 @@
       <!-- Реквизиты -->
       <div class="tabs-panel" id="content-panel-2">
 
-        <div class="grid-x grid-padding-x"> 
+        <div class="grid-x grid-padding-x">
           <div class="small-12 medium-6 cell">
             <label>ИНН
               @include('includes.inputs.inn', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
@@ -146,7 +137,7 @@
 
       <!-- Настройки -->
       <div class="tabs-panel" id="content-panel-4">
-        <div class="grid-x grid-padding-x"> 
+        <div class="grid-x grid-padding-x">
           <div class="small-12 medium-6 cell">
             <label>Алиас
               @include('includes.inputs.alias', ['value'=>$company->alias, 'name'=>'alias', 'required'=>''])
@@ -155,7 +146,7 @@
 
           @include('includes.scripts.class.checkboxer')
           <div class="small-12 medium-12 cell checkbox checkboxer">
-            @include('includes.inputs.checkboxer', ['name'=>'services_types', 'value'=>$services_types_checkboxer])      
+            @include('includes.inputs.checkboxer', ['name'=>'services_types', 'value'=>$services_types_checkboxer])
           </div>
 
           {{-- Чекбоксы управления --}}
@@ -168,7 +159,7 @@
       <div class="tabs-panel" id="content-panel-3">
         <div class="grid-x grid-padding-x">
           <div class="small-12 medium-6 cell">
-            @include('includes.inputs.schedule', ['value'=>$worktime]) 
+            @include('includes.inputs.schedule', ['value'=>$worktime])
           </div>
         </div>
       </div>

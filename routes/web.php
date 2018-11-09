@@ -198,7 +198,7 @@ Route::get('/map', function() {
     // dd($mass);
     // $coords = $mass;
 
-    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE); 
+    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
 
     // dd($coords);
 
@@ -223,7 +223,7 @@ Route::get('/route', function() {
         'coords' => [(float)$lead->location->latitude, (float)$lead->location->longitude],
     ];
 
-    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE); 
+    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
 
     return view('leads.route', compact('coords'));
 })->middleware('auth');
@@ -732,7 +732,7 @@ Route::resource('/cities', 'CityController')->middleware('auth');
 // Проверка на существование города
 Route::post('/city_check', 'CityController@ajax_check')->middleware('auth');
 // Таблица городов
-Route::post('/cities_list', 'CityController@cities_list')->middleware('auth');
+Route::any('/cities_list', 'CityController@cities_list')->middleware('auth');
 // Получаем города из vk
 Route::post('/city_vk', 'CityController@get_vk_city')->middleware('auth');
 

@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('inhead')
+@include('includes.scripts.class.city_search')
+@endsection
+
 @section('title', 'Новый банк')
 
 @section('breadcrumbs', Breadcrumbs::render('create', $page_info))
@@ -23,9 +27,8 @@
 @endsection
 
 @section('scripts')
-  @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
-  
+
   <script type="text/javascript">
   // Проверка существования компании
   $(document).on('keyup', '.company_inn-field', function() {
@@ -43,7 +46,7 @@
           if(data == 0){
           } else {
             document.getElementById('company_inn-field').value = '';
-            alert(data);          
+            alert(data);
           };
         }
       });
