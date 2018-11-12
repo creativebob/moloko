@@ -1,4 +1,4 @@
-<tr class="item" id="metrics-{{ $metric->id }}" data-name="{{ $metric->name }}">
+<tr class="item" id="metrics-{{ $metric->id }}-{{ $set_status }}" data-name="{{ $metric->name }}">
 	<td>{{ $metric->name }}</td>
 	<td>@if (isset($metric->min)) {{ round($metric->min, 6) }} @endif</td>
 	<td>@if (isset($metric->max)) {{ round($metric->max, 6) }} @endif</td>
@@ -14,5 +14,5 @@
 	@endif</td>
 	<td class="td-delete">
 		<a class="icon-delete sprite" data-open="delete-metric"></a>
-	</td>   
+	</td>
 </tr>

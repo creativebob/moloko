@@ -1,4 +1,4 @@
-@foreach ($get_units_list as $unit)
+@foreach ($units as $unit)
 
 <option value="{{ $unit->id }}">{{ $unit->name }}</option>
 

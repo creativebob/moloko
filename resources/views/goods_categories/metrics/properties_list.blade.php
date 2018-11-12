@@ -10,7 +10,7 @@
 	<li>
 		<br>
 		<label>Создать свойство
-			{{ Form::select('property_id', $properties_list, null, ['id' => 'properties-select', 'placeholder' => 'Выберите свойство']) }}
+			{{ Form::select('property_id', $properties->pluck('name', 'id'), null, ['id' => 'properties-select', 'placeholder' => 'Выберите свойство']) }}
 		</label>
 	</li>
 </ul>

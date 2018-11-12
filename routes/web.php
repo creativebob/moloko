@@ -363,9 +363,10 @@ Route::resource('/metrics', 'MetricController')->middleware('auth');
 
 // Пишем метрику через ajax
 Route::post('/ajax_store_metric', 'MetricController@ajax_store')->middleware('auth');
+
 // Добавляем / удаляем связь сущности с метрикой
 Route::match(['get', 'post'], '/ajax_add_relation_metric', 'MetricController@ajax_add_relation')->middleware('auth');
-Route::post('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relation')->middleware('auth');
+Route::any('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relation')->middleware('auth');
 
 Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->middleware('auth');
 
@@ -379,7 +380,7 @@ Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_del
 
 Route::post('/ajax_add_page_composition', 'CompositionController@ajax_add')->middleware('auth');
 
-Route::post('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
+Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
 
 

@@ -85,7 +85,7 @@
                     {{-- Чекбокс системной записи --}}
                     @can ('god', $goods_category)
                     <div class="small-12 cell checkbox">
-                        @include('includes.inputs.system', ['value'=>$goods_category->system_item, 'name'=>'system_item']) 
+                        @include('includes.inputs.system', ['value'=>$goods_category->system_item, 'name'=>'system_item'])
                     </div>
                     @endcan
 
@@ -134,7 +134,7 @@
                     <div class="small-12 medium-8 cell">
                         <table>
                             <thead>
-                                <tr> 
+                                <tr>
                                     <th>Название</th>
                                     <th>Минимум</th>
                                     <th>Максимум</th>
@@ -148,7 +148,10 @@
                             <tbody id="metrics-table">
                                 {{-- Таблица метрик товара --}}
                                 @if (count($goods_category->metrics))
-                                @each('goods_categories.metrics.metric', $goods_category->metrics, 'metric')
+                                @foreach ($goods_category->metrics as $metric)
+                                    @include('goods_categories.metrics.metric', ['metric' => $metric, 'set_status' => 'one'])
+                                @endforeach
+                                {{-- @each('goods_categories.metrics.metric', $goods_category->metrics, 'metric') --}}
                                 @endif
                             </tbody>
                         </table>
@@ -158,7 +161,7 @@
                         <fieldset>
                             <legend><a data-toggle="one-properties-dropdown">Добавить метрику</a></legend>
 
-                            <div class="grid-x grid-padding-x" id="property-form"></div>
+                            <div class="grid-x grid-padding-x" class="property-form"></div>
 
                         </fieldset>
                         {{ Form::hidden('set_status', 'one') }}
@@ -166,9 +169,9 @@
                         {{ Form::close() }}
                         {{-- Список свойств с метриками --}}
                         <div class="dropdown-pane" id="one-properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
-                            {{ Form::model($goods_category, []) }}
-                            @include('goods_categories.metrics.properties_list', ['properties' => $properties, 'set_status' => 'one'])
-                            {{  Form::close() }}
+
+                            @include('goods_categories.metrics.properties_form', ['properties' => $properties, 'set_status' => 'one'])
+
                         </div>
 
                     </div>
@@ -181,7 +184,7 @@
                     <div class="small-12 medium-8 cell">
                         <table>
                             <thead>
-                                <tr> 
+                                <tr>
                                     <th>Название</th>
                                     <th>Минимум</th>
                                     <th>Максимум</th>
@@ -194,9 +197,10 @@
                             </thead>
                             <tbody id="set-metrics-table">
                                 {{-- Таблица метрик товара --}}
-                                @if (count($goods_category->set_metrics))
-                                @each('goods_categories.metrics.metric', $goods_category->set_metrics, 'metric')
-                                @endif
+                                @foreach ($goods_category->set_metrics as $metric)
+                                    @include('goods_categories.metrics.metric', ['metric' => $metric, 'set_status' => 'set'])
+                                @endforeach
+                                {{-- @each('goods_categories.metrics.metric', $goods_category->set_metrics, 'metric') --}}
                             </tbody>
                         </table>
                     </div>
@@ -205,7 +209,7 @@
                         {{ Form::open(['url' => '/add_goods_category_metric', 'id' => 'properties-form', 'data-abide', 'novalidate']) }}
                         <fieldset>
                             <legend><a data-toggle="set-properties-dropdown">Добавить метрику</a></legend>
-                            <div class="grid-x grid-padding-x" id="property-form"></div>
+                            <div class="grid-x grid-padding-x" class="property-form"></div>
                         </fieldset>
                         {{ Form::hidden('set_status', 'set') }}
                         {{ Form::hidden('entity_id', $goods_category->id) }}
@@ -214,9 +218,7 @@
                         {{-- Список свойств с метриками --}}
                         <div class="dropdown-pane" id="set-properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
 
-                            {{ Form::model($goods_category, []) }}
-                            @include('goods_categories.metrics.properties_list', ['properties' => $properties, 'set_status' => 'set'])
-                            {{ Form::close() }}
+                            @include('goods_categories.metrics.properties_form', ['properties' => $properties, 'set_status' => 'set'])
 
                         </div>
                     </div>
@@ -231,7 +233,7 @@
                     <div class="small-12 medium-9 cell">
                         <table class="composition-table">
                             <thead>
-                                <tr> 
+                                <tr>
                                     <th>Название</th>
                                     <th>Описание</th>
                                     <th>Ед. изм.</th>
@@ -254,7 +256,7 @@
                     <div class="small-12 medium-3 cell">
                         @if (isset($composition_list))
                         {{ Form::model($goods_category, []) }}
-                        
+
                         <ul class="menu vertical">
 
                             @if (isset($composition_list['composition_categories']))
@@ -310,7 +312,7 @@ $settings = config()->get('settings');
 
     CKEDITOR.replace('content-ckeditor');
 
-    // Конфигурация 
+    // Конфигурация
     CKEDITOR.config.toolbar = [
     ['Bold', 'Italic', 'NumberedList', 'BulletedList', 'Maximize', 'Source']
     ];
@@ -341,7 +343,7 @@ $settings = config()->get('settings');
                 $('#units-list').html(html);
                 $('#units-list').prop('disabled', false);
             }
-        }); 
+        });
     });
 
     // При смнене свойства в select
@@ -352,7 +354,7 @@ $settings = config()->get('settings');
 
         // Если вернулись на "Выберите свойство" то очищаем форму
         if (id == '') {
-            $('#property-form').html('');
+            $('.property-form').html('');
         } else {
             // alert(id);
             $('#property-id').val(id);
@@ -366,8 +368,8 @@ $settings = config()->get('settings');
                 data: {id: id, entity: 'goods_categories'},
                 success: function(html){
                     // alert(html);
-                    $('#property-form').html(html);
-                    $('#properties-dropdown').foundation('close');
+                    $('.property-form').html(html);
+                    $('#one-properties-dropdown, #set-properties-dropdown').foundation('close');
                 }
             })
         }
@@ -390,7 +392,7 @@ $settings = config()->get('settings');
 
                 // alert(html);
                 $('#metrics-table').append(html);
-                $('#property-form').html('');
+                $('.property-form').html('');
 
 
                 // В случае успеха обновляем список метрик
@@ -400,12 +402,28 @@ $settings = config()->get('settings');
                     },
                     url: '/admin/goods_categories/' + goods_category_id + '/edit',
                     type: 'POST',
+                    data: {set_status: 'one'},
                     success: function(html){
                         // alert(html);
 
-                        $('#properties-dropdown').html(html);
+                        $('#one-properties-dropdown').html(html);
                     }
-                })
+                });
+
+                // В случае успеха обновляем список метрик
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '/admin/goods_categories/' + goods_category_id + '/edit',
+                    type: 'POST',
+                    data: {set_status: 'set'},
+                    success: function(html){
+                        // alert(html);
+
+                        $('#set-properties-dropdown').html(html);
+                    }
+                });
             }
         })
     });
@@ -438,26 +456,29 @@ $settings = config()->get('settings');
 
         // Если нужно добавить метрику
         if ($(this).prop('checked') == true) {
+
+            // alert(id + ' ' + goods_category_id + ' ' + set_status);
+
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 url: '/admin/ajax_add_relation_metric',
                 type: 'POST',
-                data: {id: $(this).val(), entity: 'goods_categories', entity_id: goods_category_id, set_status: set_status},
+                data: {id: id, entity: 'goods_categories', entity_id: goods_category_id, set_status: set_status},
                 success: function(html){
+                    // alert(html);
 
                     if (set_status == 'one') {
                         $('#metrics-table').append(html);
-                        $('#property-form').html(''); 
                     } else {
                         $('#set-metrics-table').append(html);
-                        $('#property-form').html(''); 
                     }
+                    $('.property-form').html('');
                     // alert(html);
-                    
+
                 }
-            })
+            });
         } else {
 
             // Если нужно удалить метрику
@@ -467,7 +488,7 @@ $settings = config()->get('settings');
                 },
                 url: '/admin/ajax_delete_relation_metric',
                 type: 'POST',
-                data: {id: $(this).val(), entity: 'goods_categories', entity_id: goods_category_id},
+                data: {id: $(this).val(), entity: 'goods_categories', entity_id: goods_category_id, set_status: set_status},
                 success: function(date){
 
                     var result = $.parseJSON(date);
@@ -475,13 +496,13 @@ $settings = config()->get('settings');
 
                     if (result['error_status'] == 0) {
 
-                        $('#metrics-' + id).remove();
+                        $('#metrics-' + id + '-' + set_status).remove();
                     } else {
                         alert(result['error_message']);
-                    }; 
+                    };
                 }
-            })
-        }
+            });
+        };
     });
 
     // При клике на свойство отображаем или скрываем его метрики
@@ -534,7 +555,7 @@ $settings = config()->get('settings');
                         $('#compositions-' + id).remove();
                     } else {
                         alert(result['error_message']);
-                    }; 
+                    };
                 }
             })
         }

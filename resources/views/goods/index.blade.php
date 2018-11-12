@@ -46,7 +46,7 @@
 
                     {{-- <th class="td-goods">Группа</th>  --}}
 
-                    @if(Auth::user()->god == 1) 
+                    @if(Auth::user()->god == 1)
                     <th class="td-company-id">Компания</th>
                     {{-- <th class="td-sync-id">Добавить на сайт</th> --}}
                     @endif
@@ -67,7 +67,7 @@
                         {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
                         @if(!empty($filter['booklist']['booklists']['default']))
                         {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-                        @if (in_array($cur_goods->id, $filter['booklist']['booklists']['default'])) checked 
+                        @if (in_array($cur_goods->id, $filter['booklist']['booklists']['default'])) checked
                         @endif
                         @endif
                         >
@@ -92,14 +92,14 @@
                     <td class="td-catalog">
 
                         @foreach ($cur_goods->catalogs as $catalog)
-                        <a href="/admin/sites/{{ $catalog->site->alias }}/catalog_products/{{ $catalog->id }}" class="filter_link" title="Редактировать каталог">{{ $catalog->name }}</a>, 
+                        <a href="/admin/sites/{{ $catalog->site->alias }}/catalog_products/{{ $catalog->id }}" class="filter_link" title="Редактировать каталог">{{ $catalog->name }}</a>,
                         @endforeach
 
                     </td>
 
                     {{-- <td class="td-goods">{{ $cur_goods->goods_product->name }}</td> --}}
 
-                    @if(Auth::user()->god == 1) 
+                    @if(Auth::user()->god == 1)
                     <td class="td-company-id">@if(!empty($cur_goods->company->name)) {{ $cur_goods->company->name }} @else @if($cur_goods->system_item == null) Шаблон @else Системная @endif @endif</td>
                     @endif
 
@@ -116,7 +116,7 @@
                         <a class="icon-delete sprite" data-open="item-archive"></a>
                         @endcan
                         @endif
-                    </td>       
+                    </td>
                 </tr>
                 @endforeach
                 @endif
@@ -144,6 +144,8 @@
 @endsection
 
 @section('scripts')
+
+@include('includes.scripts.units-scripts')
 
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
@@ -245,7 +247,7 @@
                 $('#first-add').foundation();
                 $('#first-add').foundation('open');
             }
-        }); 
+        });
     });
 
 
@@ -262,10 +264,10 @@
     //   var db = '#form-first-add .first-item';
 
     //   // Выполняем запрос
-    //   clearTimeout(timerId);   
+    //   clearTimeout(timerId);
     //   timerId = setTimeout(function() {
     //     goodsCheck (name, submit, db)
-    //   }, time); 
+    //   }, time);
     // });
 
     $(document).on('click', '.close-modal', function() {

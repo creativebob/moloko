@@ -23,14 +23,14 @@
             },
             url: '/admin/get_units_list',
             type: "POST",
-            data: {id: id, entity: 'goods'},
+            data: {units_category_id: id, entity: 'goods'},
             success: function(html){
                 $('#units-list').html(html);
                 // $('#units-list').prop('disabled', false);
                 setUnitAbbrevation('units-list');
                 // $('#unit-change').text($('#units-list option:first').data('abbreviation'));
             }
-        }); 
+        });
     });
 
     $(document).on('change', '#units-list, #goods-products-list', function() {
@@ -53,7 +53,7 @@
                 $('#mode').html(html);
                 Foundation.reInit($('#form-cur-goods-add'));
             }
-        }); 
+        });
     });
 
     $(document).on('change', '.mode-select', function() {
@@ -72,7 +72,7 @@
                 $('#mode').html(html);
 
             }
-        }); 
+        });
     });
 
     $(document).on('click', '#set-status', function(event) {
@@ -111,7 +111,7 @@
                     Foundation.reInit($('#form-cur-goods-add'));
 
                 }
-            });  
+            });
         }
     });
 
@@ -153,7 +153,7 @@
                 Foundation.reInit($('#form-cur-goods-add'));
 
             }
-        }); 
+        });
     });
 
     $(document).on('keyup', 'input[name=goods_product_name], input[name=name]', function(event) {

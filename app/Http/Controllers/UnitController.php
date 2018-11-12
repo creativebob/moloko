@@ -85,13 +85,14 @@ class UnitController extends Controller
         //
     }
 
+    // Список едениц измерения
     public function get_units_list(Request $request)
     {
-        $units = Unit::where('units_category_id', $request->id)->get();
+
+        $units = Unit::where('units_category_id', $request->units_category_id)->get();
 
         if ($units) {
-
-            return view($request->entity.'.units_list', ['units' => $units]);
+            return view($request->entity.'.units_list', compact('units'));
         } else {
             $result = [
                 'error_status' => 1,
@@ -99,5 +100,4 @@ class UnitController extends Controller
             ];
         }
     }
-
 }
