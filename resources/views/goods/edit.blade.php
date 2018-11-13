@@ -139,25 +139,23 @@
                         </div>
 
                         @php
-                        $metric_relation = ($cur_goods->goods_article->goods_product->set_status == 'one') ? 'metrics' : 'set_metrics';
+                        $metric_relation = ($cur_goods->goods_article->goods_product->set_status == 'one') ? 'one_metrics' : 'set_metrics';
                         @endphp
 
-                        @if (count($cur_goods->goods_article->$metric_relation) || count($cur_goods->goods_article->goods_product->goods_category->$metric_relation))
+                        @if (count($cur_goods->goods_article->metrics) || count($cur_goods->goods_article->goods_product->goods_category->$metric_relation))
 
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
-
-
 
                             {{-- Если черновик --}}
                             @if ($cur_goods->goods_article->draft == 1)
 
                             <div id="metrics-list">
-                                @if (count($cur_goods->goods_article->$metric_relation))
+                                @if (count($cur_goods->goods_article->metric))
 
                                 {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
-                                @isset ($cur_goods->goods_article->$metric_relation)
-                                @foreach ($cur_goods->goods_article->$metric_relation->unique() as $metric)
+                                @isset ($cur_goods->goods_article->metrics)
+                                @foreach ($cur_goods->goods_article->metrics->unique() as $metric)
                                 @include('goods.metrics.metric_input', $metric)
                                 @endforeach
                                 @endisset
@@ -176,12 +174,12 @@
                             @else
 
                             {{-- Если товар --}}
-                            @isset ($cur_goods->goods_article->$metric_relation)
+                            @isset ($cur_goods->goods_article->metrics)
 
                             <table>
                                 <tbody>
 
-                                    @foreach ($cur_goods->goods_article->$metric_relation as $metric)
+                                    @foreach ($cur_goods->goods_article->metrics as $metric)
                                     @include('goods.metrics.metric_value', $metric)
                                     @endforeach
 

@@ -128,101 +128,22 @@
 
             {{ Form::close() }}
 
+
+            {{-- Подключаем класс дял работы с метриками --}}
+            @include('includes.scripts.class.metrics')
+
             <!-- Свойства -->
             <div class="tabs-panel" id="properties">
-                <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-8 cell">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Название</th>
-                                    <th>Минимум</th>
-                                    <th>Максимум</th>
-                                    <th>Подтверждение</th>
-                                    <th>Отрицание</th>
-                                    <th>Цвет</th>
-                                    <th>Список</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="metrics-table">
-                                {{-- Таблица метрик товара --}}
-                                @if (count($goods_category->metrics))
-                                @foreach ($goods_category->metrics as $metric)
-                                    @include('goods_categories.metrics.metric', ['metric' => $metric, 'set_status' => 'one'])
-                                @endforeach
-                                {{-- @each('goods_categories.metrics.metric', $goods_category->metrics, 'metric') --}}
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="small-12 medium-4 cell">
-                        {{ Form::open(['url' => '/add_goods_category_metric', 'id' => 'properties-form', 'data-abide', 'novalidate']) }}
-                        <fieldset>
-                            <legend><a data-toggle="one-properties-dropdown">Добавить метрику</a></legend>
 
-                            <div class="grid-x grid-padding-x" class="property-form"></div>
+                @include('goods_categories.metrics.section', ['goods_category' => $goods_category, 'properties' => $properties, 'set_status' => 'one'])
 
-                        </fieldset>
-                        {{ Form::hidden('set_status', 'one') }}
-                        {{ Form::hidden('entity_id', $goods_category->id) }}
-                        {{ Form::close() }}
-                        {{-- Список свойств с метриками --}}
-                        <div class="dropdown-pane" id="one-properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
-
-                            @include('goods_categories.metrics.properties_form', ['properties' => $properties, 'set_status' => 'one'])
-
-                        </div>
-
-                    </div>
-                </div>
             </div>
 
             <!-- Свойства для набора -->
             <div class="tabs-panel" id="set-properties">
-                <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-8 cell">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Название</th>
-                                    <th>Минимум</th>
-                                    <th>Максимум</th>
-                                    <th>Подтверждение</th>
-                                    <th>Отрицание</th>
-                                    <th>Цвет</th>
-                                    <th>Список</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="set-metrics-table">
-                                {{-- Таблица метрик товара --}}
-                                @foreach ($goods_category->set_metrics as $metric)
-                                    @include('goods_categories.metrics.metric', ['metric' => $metric, 'set_status' => 'set'])
-                                @endforeach
-                                {{-- @each('goods_categories.metrics.metric', $goods_category->set_metrics, 'metric') --}}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="small-12 medium-4 cell">
 
-                        {{ Form::open(['url' => '/add_goods_category_metric', 'id' => 'properties-form', 'data-abide', 'novalidate']) }}
-                        <fieldset>
-                            <legend><a data-toggle="set-properties-dropdown">Добавить метрику</a></legend>
-                            <div class="grid-x grid-padding-x" class="property-form"></div>
-                        </fieldset>
-                        {{ Form::hidden('set_status', 'set') }}
-                        {{ Form::hidden('entity_id', $goods_category->id) }}
-                        {{ Form::close() }}
+                @include('goods_categories.metrics.section', ['goods_category' => $goods_category, 'properties' => $properties, 'set_status' => 'set'])
 
-                        {{-- Список свойств с метриками --}}
-                        <div class="dropdown-pane" id="set-properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
-
-                            @include('goods_categories.metrics.properties_form', ['properties' => $properties, 'set_status' => 'set'])
-
-                        </div>
-                    </div>
-                </div>
             </div>
 
             {{-- Исключаем состав из сырья --}}
@@ -346,165 +267,6 @@ $settings = config()->get('settings');
         });
     });
 
-    // При смнене свойства в select
-    $(document).on('change', '#properties-select', function() {
-        // alert($(this).val());
-
-        var id = $(this).val();
-
-        // Если вернулись на "Выберите свойство" то очищаем форму
-        if (id == '') {
-            $('.property-form').html('');
-        } else {
-            // alert(id);
-            $('#property-id').val(id);
-
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_add_property',
-                type: 'POST',
-                data: {id: id, entity: 'goods_categories'},
-                success: function(html){
-                    // alert(html);
-                    $('.property-form').html(html);
-                    $('#one-properties-dropdown, #set-properties-dropdown').foundation('close');
-                }
-            })
-        }
-    });
-
-    // При клике на кнопку под Select'ом свойств
-    $(document).on('click', '#add-metric', function(event) {
-        event.preventDefault();
-
-        // alert($('#properties-form').serialize());
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/metrics',
-            type: 'POST',
-            data: $('#properties-form').serialize(),
-            success: function(html){
-
-                // alert(html);
-                $('#metrics-table').append(html);
-                $('.property-form').html('');
-
-
-                // В случае успеха обновляем список метрик
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/goods_categories/' + goods_category_id + '/edit',
-                    type: 'POST',
-                    data: {set_status: 'one'},
-                    success: function(html){
-                        // alert(html);
-
-                        $('#one-properties-dropdown').html(html);
-                    }
-                });
-
-                // В случае успеха обновляем список метрик
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/goods_categories/' + goods_category_id + '/edit',
-                    type: 'POST',
-                    data: {set_status: 'set'},
-                    success: function(html){
-                        // alert(html);
-
-                        $('#set-properties-dropdown').html(html);
-                    }
-                });
-            }
-        })
-    });
-
-    // При клике на кнопку под Select'ом свойств
-    $(document).on('click', '#add-value', function(event) {
-        event.preventDefault();
-
-        // alert($('#properties-form input[name=value]').val());
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_add_metric_value',
-            type: 'POST',
-            data: {value: $('#properties-form input[name=value]').val(), entity: 'goods_categories'},
-            success: function(html){
-                // alert(html);
-                $('#values-table').append(html);
-                $('#properties-form input[name=value]').val('');
-            }
-        })
-    });
-
-    // При клике на чекбокс метрики отображаем ее на странице
-    $(document).on('click', '.add-metric', function() {
-
-        var id = $(this).val();
-        var set_status = $(this).data('set-status');
-
-        // Если нужно добавить метрику
-        if ($(this).prop('checked') == true) {
-
-            // alert(id + ' ' + goods_category_id + ' ' + set_status);
-
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_add_relation_metric',
-                type: 'POST',
-                data: {id: id, entity: 'goods_categories', entity_id: goods_category_id, set_status: set_status},
-                success: function(html){
-                    // alert(html);
-
-                    if (set_status == 'one') {
-                        $('#metrics-table').append(html);
-                    } else {
-                        $('#set-metrics-table').append(html);
-                    }
-                    $('.property-form').html('');
-                    // alert(html);
-
-                }
-            });
-        } else {
-
-            // Если нужно удалить метрику
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_delete_relation_metric',
-                type: 'POST',
-                data: {id: $(this).val(), entity: 'goods_categories', entity_id: goods_category_id, set_status: set_status},
-                success: function(date){
-
-                    var result = $.parseJSON(date);
-                    // alert(result);
-
-                    if (result['error_status'] == 0) {
-
-                        $('#metrics-' + id + '-' + set_status).remove();
-                    } else {
-                        alert(result['error_message']);
-                    };
-                }
-            });
-        };
-    });
-
     // При клике на свойство отображаем или скрываем его метрики
     $(document).on('click', '.parent', function() {
 
@@ -549,9 +311,7 @@ $settings = config()->get('settings');
 
                     var result = $.parseJSON(date);
                     // alert(result);
-
                     if (result['error_status'] == 0) {
-
                         $('#compositions-' + id).remove();
                     } else {
                         alert(result['error_message']);

@@ -219,6 +219,7 @@ class MetricController extends Controller
         $metric = Metric::findOrFail($request->id);
 
         $entity = $request->entity;
+
         // Связываем сущность с метрикой
         $metric->$entity()->attach($request->entity_id, ['set_status' => $request->set_status]);
 
@@ -231,6 +232,7 @@ class MetricController extends Controller
         $metric = Metric::findOrFail($request->id);
 
         $entity = $request->entity;
+
         // Отвязываем сущность от метрики
         $res = $metric->$entity()->wherePivot('set_status', $request->set_status)->detach($request->entity_id);
 

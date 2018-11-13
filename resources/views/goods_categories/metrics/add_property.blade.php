@@ -41,19 +41,19 @@
 
 @case('list')
 <div class="radiobutton">Тип списка<br>
-	{{ Form::radio('list_type', 'list', true, ['id'=>'metric-list-type']) }}
-	<label for="metric-list-type"><span>Много значений</span></label>          
-	{{ Form::radio('list_type', 'select', false, ['id'=>'metric-select-type']) }}
-	<label for="metric-select-type"><span>Одно значение</span></label>
-	
+	{{ Form::radio('list_type', 'list', true, ['id' => $set_status.'-metric-list-type']) }}
+	<label for="{{ $set_status }}-metric-list-type"><span>Много значений</span></label>
+	{{ Form::radio('list_type', 'select', false, ['id' => $set_status.'-metric-select-type']) }}
+	<label for="{{ $set_status }}-metric-select-type"><span>Одно значение</span></label>
+
 </div>
 <label class="small-12 cell">Введите значение
-	{{ Form::text('value') }}
+	{{ Form::text('value', null, ['id' => $set_status.'-value']) }}
 </label>
-<a class="button small-10 cell" id="add-value">Добавить значение</a>
-<table id="values-table" class="tablesorter">
-	<tbody id="values-tbody">
-		
+<a class="button small-10 cell add-value">Добавить значение</a>
+<table id="{{ $set_status }}-values-table" class="tablesorter">
+	<tbody id="{{ $set_status }}-values-tbody">
+
 	</tbody>
 </table>
 {{ Form::hidden('type', 'list') }}
@@ -63,7 +63,7 @@
 @endswitch
 
 {{ Form::hidden('property_id', $property_id) }}
-{{ Form::hidden('entity', 'goods_categories') }}
+{{ Form::hidden('entity', $entity) }}
 
 <div class="small-12 cell text-center">
 	<a class="button" id="add-metric">Добавить метрику</a>

@@ -44,7 +44,7 @@ class GoodsController extends Controller
         // Подключение политики
         $this->authorize('index', Goods::class);
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
 
         if (($filter_url != null)&&($request->filter != 'active')) {
@@ -69,7 +69,7 @@ class GoodsController extends Controller
         ->filter($request, 'goods_category_id', 'goods_article.goods_product')
         ->filter($request, 'goods_product_id', 'goods_article')
         ->whereHas('goods_article', function ($q) {
-            $q->whereNull('archive'); 
+            $q->whereNull('archive');
         })
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
@@ -256,7 +256,7 @@ class GoodsController extends Controller
 
             $goods_product_id = $goods_product->id;
             break;
-            
+
             case 'mode-add':
             $goods_product = GoodsProduct::firstOrCreate([
                 'name' => $request->goods_product_name,
@@ -307,7 +307,7 @@ class GoodsController extends Controller
                 if ($request->quickly == 1) {
                     return redirect('/admin/goods');
                 } else {
-                    return redirect('/admin/goods/'.$cur_goods->id.'/edit'); 
+                    return redirect('/admin/goods/'.$cur_goods->id.'/edit');
                 }
             } else {
                 abort(403, 'Ошибка записи товара');
@@ -330,7 +330,7 @@ class GoodsController extends Controller
 
         // Главный запрос
         $cur_goods = Goods::moderatorLimit($answer_goods)->findOrFail($id);
-        
+
         // dd($cur_goods);
 
         // Подключение политики
@@ -349,7 +349,7 @@ class GoodsController extends Controller
                             },
                             'goods_product.goods_category' => function ($query) {
                                 $query->with([
-                                    'metrics' => function ($q) {
+                                    'one_metrics' => function ($q) {
                                         $q->with(['property', 'values']);
                                     },
                                     'compositions.raws_product.unit'
@@ -357,7 +357,7 @@ class GoodsController extends Controller
                             },
                         ])
                         ->withCount(['metrics', 'compositions']);
-                    }, 
+                    },
                     'album.photos',
                     'company.manufacturers'
                 ]);
@@ -372,7 +372,7 @@ class GoodsController extends Controller
                             'goods_product.goods_category'
                         ])
                         ->withCount(['metrics', 'compositions']);
-                    }, 
+                    },
                     'album.photos'
                 ]);
             }
@@ -387,14 +387,14 @@ class GoodsController extends Controller
                             },
                             'goods_product.goods_category' => function ($query) {
                                 $query->with([
-                                    'metrics' => function ($q) {
+                                    'set_metrics' => function ($q) {
                                         $q->with(['property', 'values']);
                                     }
                                 ]);
                             },
                         ])
                         ->withCount(['metrics', 'set_compositions']);
-                    }, 
+                    },
                     'album.photos',
                     'company.manufacturers'
                 ]);
@@ -409,7 +409,7 @@ class GoodsController extends Controller
                             'goods_product.goods_category'
                         ])
                         ->withCount(['metrics', 'set_compositions']);
-                    }, 
+                    },
                     'album.photos'
                 ]);
             }
@@ -519,7 +519,7 @@ class GoodsController extends Controller
                 $i = 1;
                 for($j = 0; $j < $i; $j++){
                     $padding .= '&nbsp;&nbsp';
-                }     
+                }
                 $i++;
 
                 $menu .= show_cats($item['children'], $padding, $parents);
@@ -558,14 +558,14 @@ class GoodsController extends Controller
                 }])
                 ->select('id', 'name', 'raws_product_id')
                 ->whereHas('raws', function ($query) {
-                    $query->whereNull('draft'); 
+                    $query->whereNull('draft');
                 })
 
                 // ->withCount('raws_products')
                 ->moderatorLimit($answer_raws_categories)
                 ->companiesLimit($answer_raws_categories)
                 ->authors($answer_raws_categories)
-                ->systemItem($answer_raws_categories) // Фильтр по системным записям 
+                ->systemItem($answer_raws_categories) // Фильтр по системным записям
                 ->get()
                 ->keyBy('id')
                 ->groupBy('raws_product.raws_category.name');
@@ -591,14 +591,14 @@ class GoodsController extends Controller
                 }])
                 ->select('id', 'name', 'goods_product_id')
                 ->whereHas('goods', function ($query) {
-                    $query->whereNull('draft'); 
+                    $query->whereNull('draft');
                 })
 
                 // ->withCount('goods_products')
                 ->moderatorLimit($answer_goods_categories)
                 ->companiesLimit($answer_goods_categories)
                 ->authors($answer_goods_categories)
-                ->systemItem($answer_goods_categories) // Фильтр по системным записям 
+                ->systemItem($answer_goods_categories) // Фильтр по системным записям
                 ->get()
                 ->keyBy('id')
                 ->groupBy('goods_product.goods_category.name');
@@ -643,7 +643,7 @@ class GoodsController extends Controller
             }
 
             if ($get_settings->img_large_height != null) {
-                $settings['img_large_height'] = $get_settings->img_large_height;  
+                $settings['img_large_height'] = $get_settings->img_large_height;
             }
 
             if ($get_settings->img_formats != null) {
@@ -655,7 +655,7 @@ class GoodsController extends Controller
             }
 
             if ($get_settings->img_min_height != null) {
-                $settings['img_min_height'] = $get_settings->img_min_height;   
+                $settings['img_min_height'] = $get_settings->img_min_height;
             }
 
             if ($get_settings->img_max_size != null) {
@@ -692,7 +692,7 @@ class GoodsController extends Controller
             }
 
             if ($get_settings->img_large_height != null) {
-                $settings_album['img_large_height'] = $get_settings->img_large_height;  
+                $settings_album['img_large_height'] = $get_settings->img_large_height;
             }
 
             if ($get_settings->img_formats != null) {
@@ -704,7 +704,7 @@ class GoodsController extends Controller
             }
 
             if ($get_settings->img_min_height != null) {
-                $settings_album['img_min_height'] = $get_settings->img_min_height;   
+                $settings_album['img_min_height'] = $get_settings->img_min_height;
             }
 
             if ($get_settings->img_max_size != null) {
@@ -828,7 +828,7 @@ class GoodsController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -840,7 +840,7 @@ class GoodsController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -862,7 +862,7 @@ class GoodsController extends Controller
             $photo = $array['photo'];
 
             $cur_goods->photo_id = $photo->id;
-        } 
+        }
 
         // $cur_goods->name = $request->name;
 
@@ -895,7 +895,7 @@ class GoodsController extends Controller
         }
 
         // А, пока изменяем без проверки
-        
+
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false) {
@@ -1032,7 +1032,7 @@ class GoodsController extends Controller
 
             // $goods_article = GoodsArticle::where('id', $cur_goods->goods_article_id)->update(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count]);
 
-            // Если ли есть 
+            // Если ли есть
             if ($request->cookie('backlink') != null) {
 
                 $backlink = Cookie::get('backlink');
@@ -1192,7 +1192,7 @@ class GoodsController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -1204,7 +1204,7 @@ class GoodsController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -1244,11 +1244,11 @@ class GoodsController extends Controller
                 return response()->json($upload_success, 200);
             } else {
                 return response()->json('error', 400);
-            } 
+            }
 
         } else {
             return response()->json('error', 400);
-        } 
+        }
     }
 
     public function photos(Request $request)

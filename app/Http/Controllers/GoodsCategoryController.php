@@ -236,7 +236,7 @@ class GoodsCategoryController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $goods_category = GoodsCategory::with([
             'goods_mode',
-            'metrics' => function ($q) {
+            'one_metrics' => function ($q) {
                 $q->with('unit', 'values');
             },
             'set_metrics' => function ($q) {
@@ -244,25 +244,13 @@ class GoodsCategoryController extends Controller
             },
             'compositions.raws_product.unit',
             'compositions'])
-        ->withCount('metrics', 'set_metrics', 'compositions')
+        ->withCount('one_metrics', 'set_metrics', 'compositions')
         ->moderatorLimit($answer_goods_categories)
         ->findOrFail($id);
         // dd($goods_category);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_category);
-
-        $goods_category_metrics = [];
-        foreach ($goods_category->metrics as $metric) {
-            $goods_category_metrics[] = $metric->id;
-        }
-        // dd($product_metrics);
-
-        $goods_category_compositions = [];
-        foreach ($goods_category->compositions as $composition) {
-            $goods_category_compositions[] = $composition->id;
-        }
-        // dd($goods_category_compositions);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -290,9 +278,7 @@ class GoodsCategoryController extends Controller
 
         $properties_list = $properties->pluck('name', 'id');
 
-        // dd($goods_category_metrics);
-
-         // Отдаем Ajax
+        // Отдаем Ajax
         if ($request->ajax()) {
             return view('goods_categories.metrics.properties_form', ['properties' => $properties,  'set_status' => $request->set_status, 'goods_category' => $goods_category]);
         }
@@ -409,7 +395,7 @@ class GoodsCategoryController extends Controller
 
             // echo $id;
             // Меняем категорию
-            return view('goods_categories.edit', compact('goods_category', 'page_info', 'properties', 'properties_list', 'goods_category_metrics', 'goods_category_compositions', 'composition_list', 'units_categories_list', 'units_list'));
+            return view('goods_categories.edit', compact('goods_category', 'page_info', 'properties', 'properties_list', 'composition_list', 'units_categories_list', 'units_list'));
         } else {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -432,7 +418,7 @@ class GoodsCategoryController extends Controller
 
             // dd($goods_category);
 
-            return view('goods_categories.edit', compact('goods_category', 'goods_categories_list', 'page_info', 'properties', 'properties_list', 'goods_category_metrics', 'goods_category_compositions', 'composition_list', 'units_categories_list', 'units_list'));
+            return view('goods_categories.edit', compact('goods_category', 'goods_categories_list', 'page_info', 'properties', 'properties_list', 'composition_list', 'units_categories_list', 'units_list'));
         }
     }
 
