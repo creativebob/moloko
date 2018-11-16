@@ -48,15 +48,12 @@ class Choice extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
-    protected $fillable = [
-
-    ];
+    protected $fillable = [];
 
     public function places_types()
     {
         return $this->belongsToMany('App\PlacesType', 'rooms', 'place_id', 'places_type_id');
     }
-
 
     public function author()
     {

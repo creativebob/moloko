@@ -49,14 +49,13 @@ class Supplier extends Model
     // protected $dates = ['deleted_at'];
     protected $fillable = [
         'company_id', 
-        'contragent_id', 
-        'manufacturer_status',
+        'supplier_id', 
     ];
 
     // Получаем компанию.
     public function company()
     {
-        return $this->belongsTo('App\Company', 'contragent_id');
+        return $this->belongsTo('App\Company', 'supplier_id');
     }
 
     // Получаем автора

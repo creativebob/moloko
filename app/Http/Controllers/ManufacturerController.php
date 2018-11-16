@@ -168,6 +168,7 @@ class ManufacturerController extends Controller
 
         // Смотрим компанию пользователя
         $company_id = $user->company_id;
+        $company = $user->company;
 
         // Скрываем бога
         $user_id = hideGod($user);
@@ -186,50 +187,48 @@ class ManufacturerController extends Controller
         // Записываем в базу все расписание.
         DB::table('worktimes')->insert($mass_time);
 
-        $company = new Company;
-        $company->name = $request->name;
-        $company->alias = $request->alias;
+        $manufacturer = new Company;
+        $manufacturer->name = $request->name;
+        $manufacturer->alias = $request->alias;
 
-        $company->email = $request->email;
+        $manufacturer->email = $request->email;
 
         // Добавляем локацию
-        $company->location_id = create_location($request);
+        $manufacturer->location_id = create_location($request);
 
-        $company->inn = $request->inn;
-        $company->kpp = $request->kpp;
-        $company->account_settlement = $request->account_settlement;
-        $company->account_correspondent = $request->account_correspondent;
+        $manufacturer->inn = $request->inn;
+        $manufacturer->kpp = $request->kpp;
+        $manufacturer->account_settlement = $request->account_settlement;
+        $manufacturer->account_correspondent = $request->account_correspondent;
 
-        $company->sector_id = $request->sector_id;
-        $company->schedule_id = $schedule->id;
+        $manufacturer->sector_id = $request->sector_id;
+        $manufacturer->schedule_id = $schedule->id;
 
         // $company->director_user_id = $user->company_id;
-        $company->author_id = $user->id;
+        $manufacturer->author_id = $user->id;
 
-        $company->save();
+        $manufacturer->save();
 
         // Если запись удачна - будем записывать связи
-        if($company){
+        if($manufacturer){
+
+            // Записываем компанию как производителя
+            $company->manufacturers()->attach($manufacturer->id);
 
             // Телефон
-            $phones = add_phones($request, $company);
+            $phones = add_phones($request, $manufacturer);
 
             // Записываем связи: id-шники в таблицу Rooms
             if(isset($request->services_types_id)){
 
-                $result = $company->services_types()->sync($request->services_types_id);               
+                $result = $manufacturer->services_types()->sync($request->services_types_id);               
             } else {
-                $result = $company->services_types()->detach(); 
+                $result = $manufacturer->services_types()->detach(); 
             };
 
         } else {
             abort(403, 'Ошибка записи компании');
         };
-
-        $manufacturer = new Manufacturer;
-        $manufacturer->company_id = $company_id;
-        $manufacturer->contragent_id = $company->id;
-        $manufacturer->save();
 
         // Создаем связь расписания с компанией
         $schedule_entity = new ScheduleEntity;

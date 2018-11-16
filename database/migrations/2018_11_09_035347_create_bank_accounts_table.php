@@ -23,8 +23,8 @@ class CreateBankAccountsTable extends Migration
 
             $table->integer('archive')->nullable()->unsigned()->comment('Статус архива');
 
-            $table->string('name')->index()->comment('Имя банковского аккаунта');
-            $table->text('description')->comment('Описание');
+            // $table->string('name')->index()->comment('Имя банковского аккаунта');
+            // $table->text('description')->comment('Описание');
 
             $table->string('account_settlement', 20)->nullable()->comment('Расчетный счет');
             $table->string('account_correspondent', 20)->nullable()->comment('Корреспондентский счет');

@@ -53,7 +53,8 @@ class Company extends Model
         'name', 
         'alias', 
         'phone', 
-        'extra_phone'
+        'extra_phone',
+        'bic'
     ];
 
     // Фильтрация по городу
@@ -82,6 +83,11 @@ class Company extends Model
     public function filials()
     {
         return $this->hasMany('App\Department')->where('filial_status', 1);
+    }
+
+    public function bank_accounts()
+    {
+        return $this->hasMany('App\BankAccount', 'holder_id');
     }
 
     public function sites()
@@ -114,6 +120,11 @@ class Company extends Model
         return $this->belongsToMany('App\Schedule', 'schedule_entity', 'entity_id', 'schedule_id')->where('entity', 'companies');
     }
 
+    // public function schedules()
+    // {
+    //     return $this->morphedByMany('App\Schedule', 'schedule_entity', 'entity_id', 'entity_type');
+    // }
+
     public function positions()
     {
         return $this->hasMany('App\Position');
@@ -138,39 +149,57 @@ class Company extends Model
     }
 
     // Получаем поставщиков
+    // public function suppliers()
+    // {
+    //     return $this->hasMany('App\Supplier', 'company_id');
+    // }
+
+    // Получаем поставщиков
     public function suppliers()
     {
-        return $this->hasMany('App\Supplier', 'company_id');
+        return $this->belongsToMany('App\Company', 'suppliers', 'company_id', 'supplier_id');
     }
 
     // Получаем дилеров
     public function dealers()
     {
-        return $this->hasMany('App\Dealer', 'company_id');
+        return $this->belongsToMany('App\Company', 'dealers', 'company_id', 'dealer_id');
     }
 
     // Получаем производителей
     public function manufacturers()
     {
-        return $this->hasMany('App\Manufacturer', 'company_id');
+        return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'manufacturer_id');
+    }
+
+    // Получаем клиентов
+    public function clients()
+    {
+        return $this->belongsToMany('App\Company', 'clients', 'company_id', 'client_id');
+    }
+
+    // Получаем банки
+    public function banks()
+    {
+        return $this->belongsToMany('App\Company', 'banks', 'company_id', 'bank_id');
     }
 
     // Получаем компании, где мы поставщик
     public function we_suppliers()
     {
-        return $this->hasMany('App\Supplier', 'contragent_id');
+        return $this->hasMany('App\Supplier', 'supplier_id');
     }
 
     // Получаем компании, где мы дилеры
     public function we_dealers()
     {
-        return $this->hasMany('App\Dealer', 'contragent_id');
+        return $this->hasMany('App\Dealer', 'dealer_id');
     }
 
     // Получаем компании, где мы производители
     public function we_manufacturers()
     {
-        return $this->hasMany('App\Manufacturer', 'contragent_id');
+        return $this->hasMany('App\Manufacturer', 'manufacturer_id');
     }
 
 

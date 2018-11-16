@@ -26,8 +26,13 @@ class CreateCompaniesTable extends Migration
             $table->integer('location_id')->nullable()->unsigned()->comment('Адрес компании');
             $table->foreign('location_id')->references('id')->on('locations');
 
-            // $table->bigInteger('inn')->nullable()->unsigned()->comment('ИНН компании');
-            // $table->bigInteger('kpp')->nullable()->unsigned()->comment('КПП');
+            $table->bigInteger('inn')->nullable()->unsigned()->comment('ИНН компании');
+            $table->bigInteger('kpp')->nullable()->unsigned()->comment('КПП');
+
+            $table->bigInteger('ogrn')->nullable()->unsigned()->comment('Основной государственный регистрационный номер');
+            $table->bigInteger('okpo')->nullable()->unsigned()->comment('Общероссийский классификатор предприятий и организаций');
+            $table->string('okved')->nullable() ->comment('Общероссийский классификатор видов экономической деятельности');
+
             // $table->string('account_settlement', 20)->nullable()->comment('Расчетный счет');
             // $table->string('account_correspondent', 20)->nullable()->comment('Корреспондентский счет');
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 // Модели
 use App\User;
 use App\Company;
+use App\Bank;
+use App\BankAccount;
 use App\Page;
 use App\Sector;
 use App\Folder;
@@ -19,6 +21,9 @@ use App\Manufacturer;
 use App\Country;
 use App\ServicesType;
 use App\Phone;
+
+// Транслитерация
+use Transliterate;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -210,6 +215,11 @@ class CompanyController extends Controller
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
+
+        $company->ogrn = $request->ogrn;
+        $company->okpo = $request->okpo;
+        $company->okved = $request->okved;
+
         $company->bank = $request->bank;
         $company->account_settlement = $request->account_settlement;
         $company->account_correspondent = $request->account_correspondent;
@@ -224,6 +234,45 @@ class CompanyController extends Controller
 
         // Если запись удачна - будем записывать связи
         if($company){
+
+            if((isset($request->bank_bic))&&(isset($request->bank_name))){
+
+                // Сохраняем в переменную наш БИК
+                $bic = $request->bank_bic;
+
+                // Проверяем существуют ли у пользователя такие счета в указанном банке
+                $cur_bank_account = BankAccount::whereNull('archive')
+                ->where('account_settlement', '=' , $request->account_settlement)
+                ->whereHas('bank', function($q) use ($bic){
+                    $q->where('bic', $bic);
+                })->count();
+
+                // Если такого счета нет, то:
+                if($cur_bank_account == 0){
+
+                    // Создаем новый банковский счёт
+                    $bank_account = new BankAccount;
+
+                    // Создаем алиас для нового банка
+                    $company_alias = Transliterate::make($request->bank_name, ['type' => 'url', 'lowercase' => true]);
+
+                    // Создаем новую компанию которая будет банком
+                    $company = Company::firstOrCreate(['bic' => $request->bank_bic], ['name' => $request->bank_name, 'alias' => $company_alias]);
+
+                    // Создаем банк, а если он уже есть - берем его ID
+                    $bank = Bank::firstOrCreate(['company_id' => $request->company_id, 'bank_id' => $company->id]);
+
+                    $bank_account->bank_id = $company->id;
+                    $bank_account->holder_id = $request->company_id;
+                    $bank_account->company_id = $company_id;
+                    $bank_account->account_settlement = $request->account_settlement;
+                    $bank_account->account_correspondent = $request->account_correspondent;
+                    $bank_account->author_id = $user->id;
+                    $bank_account->save();
+                }
+
+            }
+
 
             // Телефон
             $phones = add_phones($request, $company);
@@ -241,21 +290,12 @@ class CompanyController extends Controller
         };
 
 
-        // Указываем ее как поставщика
-
-        $supplier = new Supplier;
-        $supplier->company_id = $company_id;
-        $supplier->contragent_id = $company->id;
-        $supplier->save();
-
         // Создаем связь расписания с компанией
         $schedule_entity = new ScheduleEntity;
         $schedule_entity->schedule_id = $schedule->id;
         $schedule_entity->entity_id = $company->id;
         $schedule_entity->entity = 'companies';
         $schedule_entity->save();
-
-
 
         return redirect('/admin/companies');
         // return redirect('admin/companies');
@@ -281,10 +321,18 @@ class CompanyController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types', 'main_phones', 'extra_phones')
+        $company = Company::with(
+            'location.city', 
+            'schedules.worktimes', 
+            'sector', 
+            'services_types', 
+            'main_phones', 
+            'extra_phones', 
+            'bank_accounts.bank')
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
+        // dd($company);
         // dd($company->main_phone);
 
         $this->authorize(getmethod(__FUNCTION__), $company);
@@ -389,14 +437,17 @@ class CompanyController extends Controller
         // Получаем авторизованного пользователя
         $user = $request->user();
 
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        // Компания пользователя
+        $user_company = $user->company;
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $company = Company::with('location', 'schedules.worktimes')->moderatorLimit($answer)->findOrFail($id);
-
-        // Скрываем бога
-        $user_id = hideGod($user);
 
         // Обновляем локацию
         $company = update_location($request, $company);
@@ -409,25 +460,18 @@ class CompanyController extends Controller
         if ($company->alias != $request->alias) {
             $company->alias = $request->alias;
         }
-        
-        // $old_link_for_folder = $company->company_alias;
-        // $new_link_for_folder = 'public/companies/' . $request->company_alias;
-        // Переименовываем папку в файловой системе
-        // Storage::move($old_link_for_folder, $new_link_for_folder);
 
         // Телефон
         $phones = add_phones($request, $company);
         
-
         $company->email = $request->email;
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
-        $company->bank = $request->bank;
 
-        $company->account_settlement = $request->account_settlement;
-        $company->account_correspondent = $request->account_correspondent;
-
+        $company->ogrn = $request->ogrn;
+        $company->okpo = $request->okpo;
+        $company->okved = $request->okved;
 
         if ($company->sector_id != $request->sector_id) {
             $company->sector_id = $request->sector_id;
@@ -435,6 +479,46 @@ class CompanyController extends Controller
 
         // $company->director_user_id = Auth::user()->company_id;
         $company->save();
+        $company_id = $company->id;
+
+        if($company){
+
+                // Сохраняем в переменную наш БИК
+                $bic = $request->bank_bic;
+
+                // Проверяем существуют ли у пользователя такие счета в указанном банке
+                $cur_bank_account = BankAccount::whereNull('archive')
+                ->where('account_settlement', '=' , $request->account_settlement)
+                ->whereHas('bank', function($q) use ($bic){
+                    $q->where('bic', $bic);
+                })->count();
+
+                // Если такого счета нет, то:
+                if($cur_bank_account == 0){
+
+                    // Создаем новый банковский счёт
+                    $bank_account = new BankAccount;
+
+                    // Создаем алиас для нового банка
+                    $company_alias = Transliterate::make($request->bank_name, ['type' => 'url', 'lowercase' => true]);
+
+                    // Создаем новую компанию которая будет банком
+                    $company_bank = Company::firstOrCreate(['bic' => $request->bank_bic], ['name' => $request->bank_name, 'alias' => $company_alias]);
+
+                    // Создаем банк, а если он уже есть - берем его ID
+                    $bank = Bank::firstOrCreate(['company_id' => $request->company_id, 'bank_id' => $company_bank->id]);
+
+                    $bank_account->bank_id = $company_bank->id;
+                    $bank_account->holder_id = $company_id;
+                    $bank_account->company_id = $user_company->id;
+
+                    $bank_account->account_settlement = $request->account_settlement;
+                    $bank_account->account_correspondent = $request->account_correspondent;
+                    $bank_account->author_id = $user->id;
+                    $bank_account->save();
+                }
+
+        }
 
         // Если не существует расписания для компании - создаем его
         if($company->schedules->count() < 1){

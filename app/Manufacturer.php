@@ -49,13 +49,13 @@ class Manufacturer extends Model
     // protected $dates = ['deleted_at'];
     protected $fillable = [
         'company_id', 
-        'contragent_id', 
+        'manufacturer_id', 
     ];
 
     // Получаем компанию.
     public function company()
     {
-        return $this->belongsTo('App\Company', 'contragent_id');
+        return $this->belongsTo('App\Company', 'manufacturer_id');
     }
 
     // Получаем автора

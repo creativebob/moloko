@@ -49,14 +49,13 @@ class Dealer extends Model
     // protected $dates = ['deleted_at'];
     protected $fillable = [
         'company_id', 
-        'contragent_id', 
-        'dealer_status',
+        'dealer_id', 
     ];
 
     // Получаем компанию.
     public function company()
     {
-        return $this->belongsTo('App\Company', 'contragent_id');
+        return $this->belongsTo('App\Company', 'dealer_id');
     }
 
     // Получаем автора
