@@ -63,8 +63,9 @@ class MetricController extends Controller
         $metric->author_id = $user_id;
 
         if ($request->type == 'numeric' || $request->type == 'percent') {
-            $metric->min = $request->min;
-            $metric->max = $request->max;
+            $metric->decimal_place = $request->decimal_place;
+            $metric->min = round($request->min , $request->decimal_place, PHP_ROUND_HALF_UP);
+            $metric->max = round($request->max , $request->decimal_place, PHP_ROUND_HALF_UP);
             $metric->unit_id = $request->unit_id;
             $metric->save();
         }
@@ -230,24 +231,13 @@ class MetricController extends Controller
     {
 
         $metric = Metric::findOrFail($request->id);
-
         $entity = $request->entity;
 
         // Отвязываем сущность от метрики
         $res = $metric->$entity()->wherePivot('set_status', $request->set_status)->detach($request->entity_id);
 
-        if ($res) {
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-            $result = [
-                'error_message' => 'Не удалось удалить метрику!',
-                'error_status' => 1,
-            ];
-        }
+        return response()->json(isset($res) ?? 'Не удалось удалить метрику!');
 
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     public function add_metric_value(Request $request)

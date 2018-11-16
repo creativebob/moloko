@@ -248,106 +248,55 @@ $settings = config()->get('settings');
         $(this).closest('.item').remove();
     });
 
-    // Смена категории едениц измерения
-    $(document).on('change', '#units-categories-list', function() {
-        var id = $(this).val();
-        // alert(id);
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/get_units_list',
-            type: "POST",
-            data: {id: id, entity: 'goods_categories'},
-            success: function(html){
-                $('#units-list').html(html);
-                $('#units-list').prop('disabled', false);
-            }
-        });
-    });
-
     // При клике на свойство отображаем или скрываем его метрики
     $(document).on('click', '.parent', function() {
-
         // Скрываем все метрики
         $('.checker-nested').hide();
-
         // Показываем нужную
         $('#' +$(this).data('open')).show();
     });
 
     // При клике на чекбокс метрики отображаем ее на странице
     $(document).on('click', '.add-composition', function() {
-
         var id = $(this).val();
         // alert(goods_category_id + ' ' + id);
 
-        // Если нужно добавить состав
         if ($(this).prop('checked') == true) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_add_relation_composition',
-                type: 'POST',
-                data: {id: id, goods_category_id: goods_category_id, entity: 'goods_categories'},
-                success: function(html){
-                    // alert(html);
-                    $('#composition-table').append(html);
-                }
+            // Если нужно добавить состав
+            $.post('/admin/ajax_add_relation_composition', {id: id, goods_category_id: goods_category_id, entity: 'goods_categories'}, function(html){
+                // alert(html);
+                $('#composition-table').append(html);
             })
         } else {
-
             // Если нужно удалить состав
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_delete_relation_composition',
-                type: 'POST',
-                data: {id: id, goods_category_id: goods_category_id, entity: 'goods_categories'},
-                success: function(date){
-
-                    var result = $.parseJSON(date);
-                    // alert(result);
-                    if (result['error_status'] == 0) {
-                        $('#compositions-' + id).remove();
-                    } else {
-                        alert(result['error_message']);
-                    };
-                }
+            $.post('/admin/ajax_delete_relation_composition', {id: id, goods_category_id: goods_category_id, entity: 'goods_categories'}, function(data){
+                // alert(result);
+                if (data == true) {
+                    $('#compositions-' + id).remove();
+                } else {
+                    alert(data);
+                };
             })
-        }
+        };
     });
 
     // При клике на фотку подствляем ее значения в блок редактирования
     $(document).on('click', '#photos-list img', function(event) {
         event.preventDefault();
 
-        // Удаляем всем фоткам активынй класс
+        // Удаляем всем фоткам активный класс
         $('#photos-list img').removeClass('active');
 
         // Наваливаем его текущей
         $(this).addClass('active');
-
-        var id = $(this).data('id');
+        let id = $(this).data('id');
 
         // Получаем инфу фотки
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_get_photo',
-            type: 'POST',
-            data: {id: id, entity: 'products'},
-            success: function(html){
-
-                // alert(html);
-                $('#form-photo-edit').html(html);
-                // $('#first-add').foundation();
-                // $('#first-add').foundation('open');
-            }
+        $.post('/admin/ajax_get_photo', {id: id, entity: 'products'}, function(html){
+            // alert(html);
+            $('#form-photo-edit').html(html);
+            // $('#first-add').foundation();
+            // $('#first-add').foundation('open');
         })
     });
 

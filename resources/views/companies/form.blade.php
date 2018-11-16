@@ -25,9 +25,7 @@
                     <div class="small-12 medium-6 cell">
                         <label>Вид деятельности компании
                             <select name="sector_id" class="sectors-list">
-                                @php
-                                echo $sectors_list;
-                                @endphp
+                                {!! $sectors_list !!}
                             </select>
                         </label>
                     </div>
@@ -56,26 +54,26 @@
                             @php
                             $country_id = null;
                             if (isset($company->location->country_id)) {
-                            $country_id = $company->location->country_id;
-                        }
-                        @endphp
-                        {{ Form::select('country_id', $countries_list, $country_id)}}
-                    </label>
-                </div>
+                                $country_id = $company->location->country_id;
+                            }
+                            @endphp
+                            {{ Form::select('country_id', $countries_list, $country_id)}}
+                        </label>
+                    </div>
 
-                <div class="small-12 medium-6 cell">
-                    @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
-              </label>
-              <label>Адрес
-                  @php
-                  $address = null;
-                  if (isset($company->location->address)) {
-                  $address = $company->location->address;
-              }
-              @endphp
-              @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
-          </label>
-      </div>
+                    <div class="small-12 medium-6 cell">
+                        @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
+                    </label>
+                    <label>Адрес
+                      @php
+                      $address = null;
+                      if (isset($company->location->address)) {
+                          $address = $company->location->address;
+                      }
+                      @endphp
+                      @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+                  </label>
+              </div>
           <!-- <div class="small-12 cell checkbox">
             {{ Form::checkbox('orgform_status', 1, $company->orgform_status==1, ['id'=>'orgform-status-checkbox']) }}
             <label for="orgform-status-checkbox"><span>Директор компании (Юридическое лицо)</span></label>

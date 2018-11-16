@@ -146,7 +146,7 @@ class CompanyController extends Controller
             'Возможные типы услуг',            // Название чекбокса для пользователя в форме
             'services_types',             // Имя checkboxa для системы
             'id',                       // Поле записи которую ищем
-            'services_types', 
+            'services_types',
             'internal-self-one',        // Режим выборки через связи
             'checkboxer'                // Режим: checkboxer или filter
 
@@ -227,13 +227,13 @@ class CompanyController extends Controller
 
             // Телефон
             $phones = add_phones($request, $company);
-            
+
             // Записываем связи: id-шники в таблицу Rooms
             if(isset($request->services_types_id)){
 
-                $result = $company->services_types()->sync($request->services_types_id);               
+                $result = $company->services_types()->sync($request->services_types_id);
             } else {
-                $result = $company->services_types()->detach(); 
+                $result = $company->services_types()->detach();
             };
 
         } else {
@@ -324,7 +324,7 @@ class CompanyController extends Controller
             'Возможные типы услуг',            // Название чекбокса для пользователя в форме
             'services_types',             // Имя checkboxa для системы
             'id',                       // Поле записи которую ищем
-            'services_types', 
+            'services_types',
             'internal-self-one',        // Режим выборки через связи
             'checkboxer'                // Режим: checkboxer или filter
 
@@ -360,7 +360,7 @@ class CompanyController extends Controller
                     $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
                 } else {
 
-                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);                       
+                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);
                 };
 
                 $worktime[$x]['end'] = $str_worktime_interval;
@@ -409,7 +409,7 @@ class CompanyController extends Controller
         if ($company->alias != $request->alias) {
             $company->alias = $request->alias;
         }
-        
+
         // $old_link_for_folder = $company->company_alias;
         // $new_link_for_folder = 'public/companies/' . $request->company_alias;
         // Переименовываем папку в файловой системе
@@ -417,7 +417,7 @@ class CompanyController extends Controller
 
         // Телефон
         $phones = add_phones($request, $company);
-        
+
 
         $company->email = $request->email;
 

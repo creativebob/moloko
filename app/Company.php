@@ -50,9 +50,9 @@ class Company extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'name', 
-        'alias', 
-        'phone', 
+        'name',
+        'alias',
+        'phone',
         'extra_phone'
     ];
 
@@ -97,12 +97,12 @@ class Company extends Model
     public function roles()
     {
         return $this->hasMany('App\Role');
-    } 
+    }
 
     public function staff()
     {
         return $this->hasMany('App\Staffer');
-    } 
+    }
 
     public function author()
     {
@@ -125,7 +125,7 @@ class Company extends Model
         return $this->belongsTo('App\Sector');
     }
 
-    // Получаем 
+    // Получаем
     public function worktime()
     {
         return $this->hasMany('App\Worktime');
@@ -150,10 +150,17 @@ class Company extends Model
     }
 
     // Получаем производителей
+    // public function manufacturers()
+    // {
+    //     return $this->hasMany('App\Manufacturer', 'company_id');
+    // }
+
     public function manufacturers()
     {
-        return $this->hasMany('App\Manufacturer', 'company_id');
+        return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'contragent_id');
     }
+
+
 
     // Получаем компании, где мы поставщик
     public function we_suppliers()
@@ -185,7 +192,7 @@ class Company extends Model
     {
         return $this->hasMany('App\ServicesCategory');
     }
-    
+
     // Получаем категории продукции
     public function services_products()
     {
@@ -194,7 +201,7 @@ class Company extends Model
 
     // // Получаем клиентов
     // public function clients()
-    // {   
+    // {
     //     return $this->belongsToMany('App\Company', 'suppliers', 'company_id', 'supplier_id')->where('client_status', 1);
     // }
 
@@ -253,6 +260,6 @@ class Company extends Model
         return $this->morphMany('App\Feedback', 'feedback');
     }
 
-    
+
 
 }

@@ -31,7 +31,7 @@ class BankAccount extends Model
 
     use Notifiable;
     // use SoftDeletes;
-    // 
+    //
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -48,9 +48,9 @@ class BankAccount extends Model
 
     // protected $dates = ['deleted_at'];
     protected $fillable = [
-        'company_id', 
-        'holder_id', 
-        'bank_id', 
+        'company_id',
+        'holder_id',
+        'bank_id',
 
     ];
 

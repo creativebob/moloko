@@ -18,7 +18,7 @@
 	{{ Form::select('unit_id', $units_list, null) }}
 </label>
 <label class="small-6 cell">Знаки после запятой
-	{{ Form::select('metric_lol', ['1' => '0.0', '2' => '0.00', '3' => '0.000'], null) }}
+	{{ Form::select('decimal_place', ['0' => '0', '1' => '0,0', '2' => '0,00', '3' => '0,000'], null) }}
 </label>
 {{ Form::hidden('type', 'numeric') }}
 @break
@@ -34,7 +34,7 @@
 	{{ Form::select('unit_id', $units_list, null) }}
 </label>
 <label class="small-6 cell">Знаки после запятой
-	{{ Form::select('metric_lol', ['1' => '0.0', '2' => '0.00', '3' => '0.000'], null) }}
+	{{ Form::select('decimal_place', ['0' => '0', '1' => '0,0', '2' => '0,00', '3' => '0,000'], null) }}
 </label>
 {{ Form::hidden('type', 'percent') }}
 @break

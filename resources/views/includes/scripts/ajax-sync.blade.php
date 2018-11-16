@@ -32,4 +32,4 @@ $(document).on('click', '[data-open="item-sync"]', function(event) {
         }
     });
 });
-</script> 
+</script>

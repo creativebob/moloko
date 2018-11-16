@@ -42,8 +42,8 @@ $(document).on('click', '.modal-delete-from-page-button', function() {
 
             } else {
                 alert(result['error_message']);
-            }; 
+            };
         }
     })
 });
-</script> 
+</script>

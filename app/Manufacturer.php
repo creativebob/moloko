@@ -31,7 +31,7 @@ class Manufacturer extends Model
 
     use Notifiable;
     // use SoftDeletes;
-    // 
+    //
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -48,14 +48,19 @@ class Manufacturer extends Model
 
     // protected $dates = ['deleted_at'];
     protected $fillable = [
-        'company_id', 
-        'contragent_id', 
+        'company_id',
+        'contragent_id',
     ];
 
     // Получаем компанию.
     public function company()
     {
         return $this->belongsTo('App\Company', 'contragent_id');
+    }
+
+     public function clients()
+    {
+        return $this->hasMany('App\Company', 'company_id');
     }
 
     // Получаем автора

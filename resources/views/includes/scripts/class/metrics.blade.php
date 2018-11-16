@@ -16,41 +16,24 @@
             let set_status = this.set_status;
 
             if ($(elem).prop('checked') == true) {
-                // Если нужно добавить метрику
                 // alert(id + ' ' + this.entity + ' ' + this.entity_id + ' ' + this.set_status);
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/ajax_add_relation_metric',
-                    type: 'POST',
-                    data: {id: id, entity: this.entity, entity_id: this.entity_id, set_status: set_status},
-                    success: function(html){
-                        // alert(html);
-                        $('#' + set_status + '-metrics-table').append(html);
-                        $('#' + set_status + '-property-form').html('');
 
-                    }
+                // Если нужно добавить метрику
+                $.post('/admin/ajax_add_relation_metric', {id: id, entity: this.entity, entity_id: this.entity_id, set_status: set_status}, function(html){
+                    // alert(html);
+                    $('#' + set_status + '-metrics-table').append(html);
+                    $('#' + set_status + '-property-form').html('');
+
                 });
             } else {
 
                 // Если нужно удалить метрику
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/ajax_delete_relation_metric',
-                    type: 'POST',
-                    data: {id: id, entity: this.entity, entity_id: this.entity_id, set_status: set_status},
-                    success: function(date){
-                        var result = $.parseJSON(date);
-                        // alert(result);
-                        if (result['error_status'] == 0) {
-                            $('#' + set_status + '-table-metrics-' + id).remove();
-                        } else {
-                            alert(result['error_message']);
-                        };
-                    }
+                $.post('/admin/ajax_delete_relation_metric', {id: id, entity: this.entity, entity_id: this.entity_id, set_status: set_status}, function(data){
+                    if (data == true) {
+                        $('#' + set_status + '-table-metrics-' + id).remove();
+                    } else {
+                        alert(data);
+                    };
                 });
             };
         }
@@ -78,20 +61,12 @@
                 $('#' + set_status + '-property-form').html('');
             } else {
                 // alert(id);
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/ajax_add_property',
-                    type: 'POST',
-                    data: {id: id, entity: this.entity, set_status: set_status},
-                    success: function(html){
-                        // alert(html);
-                        $('#' + set_status + '-property-form').html(html);
-                        $('#' + set_status + '-properties-dropdown').foundation('close');
-                    }
+                $.post('/admin/ajax_add_property', {id: id, entity: this.entity, set_status: set_status}, function(html){
+                    // alert(html);
+                    $('#' + set_status + '-property-form').html(html);
+                    $('#' + set_status + '-properties-dropdown').foundation('close');
                 })
-            }
+            };
         }
 
         addMetric() {
@@ -99,46 +74,22 @@
             let entity_id = this.entity_id;
             let set_status = this.set_status;
 
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/metrics',
-                type: 'POST',
-                data: $('#' + set_status + '-properties-form').serialize(),
-                success: function(html){
+            $.post('/admin/metrics', $('#' + set_status + '-properties-form').serialize(), function(html){
+                // alert(html);
+                $('#' + set_status + '-metrics-table').append(html);
+                $('#' + set_status + '-property-form').html('');
+
+                // В случае успеха обновляем список метрик
+                $.post('/admin/goods_categories/' + goods_category_id + '/edit', {set_status: 'one'}, function(html){
                     // alert(html);
-                    $('#' + set_status + '-metrics-table').append(html);
-                    $('#' + set_status + '-property-form').html('');
+                    $('#one-properties-dropdown').html(html);
+                });
 
-                    // В случае успеха обновляем список метрик
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        url: '/admin/goods_categories/' + goods_category_id + '/edit',
-                        type: 'POST',
-                        data: {set_status: 'one'},
-                        success: function(html){
-                            // alert(html);
-                            $('#one-properties-dropdown').html(html);
-                        }
-                    });
-
-                    // В случае успеха обновляем список метрик
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        url: '/admin/goods_categories/' + goods_category_id + '/edit',
-                        type: 'POST',
-                        data: {set_status: 'set'},
-                        success: function(html){
-                            // alert(html);
-                            $('#set-properties-dropdown').html(html);
-                        }
-                    });
-                }
+                // В случае успеха обновляем список метрик
+                $.post('/admin/goods_categories/' + goods_category_id + '/edit', {set_status: 'set'}, function(html){
+                    // alert(html);
+                    $('#set-properties-dropdown').html(html);
+                });
             })
         }
 
@@ -147,18 +98,10 @@
             let set_status = this.set_status;
             let entity = this.entity;
 
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_add_metric_value',
-                type: 'POST',
-                data: {value: $('#' + set_status + '-properties-form #' + set_status + '-value').val(), entity: entity},
-                success: function(html){
-                    // alert(html);
-                    $('#' + set_status + '-values-table').append(html);
-                    $('#' + set_status + '-properties-form #' + set_status + '-value').val('');
-                }
+            $.post('/admin/ajax_add_metric_value', {value: $('#' + set_status + '-properties-form #' + set_status + '-value').val(), entity: entity}, function(html){
+                // alert(html);
+                $('#' + set_status + '-values-table').append(html);
+                $('#' + set_status + '-properties-form #' + set_status + '-value').val('');
             })
         }
     }

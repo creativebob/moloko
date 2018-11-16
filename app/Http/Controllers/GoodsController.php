@@ -7,15 +7,15 @@ use App\Goods;
 use App\GoodsCategory;
 use App\GoodsMode;
 use App\GoodsProduct;
-use App\GoodsArticle;
 use App\Album;
 use App\AlbumEntity;
 use App\Photo;
 use App\UnitsCategory;
 use App\Unit;
 use App\Catalog;
-
+use App\Metric;
 use App\RawsArticle;
+use App\GoodsArticle;
 use App\EntitySetting;
 use App\ArticleValue;
 
@@ -35,8 +35,18 @@ class GoodsController extends Controller
 {
 
     // Сущность над которой производит операции контроллер
-    protected $entity_name = 'goods';
-    protected $entity_dependence = false;
+    // protected $entity_name = 'goods';
+    // protected $entity_dependence = false;
+
+    public function __construct()
+    {
+
+        $this->middleware('auth');
+
+        // Сущность над которой производит операции контроллер
+        $this->entity_name = 'goods';
+        $this->entity_dependence = false;
+    }
 
     public function index(Request $request)
     {
@@ -330,7 +340,6 @@ class GoodsController extends Controller
 
         // Главный запрос
         $cur_goods = Goods::moderatorLimit($answer_goods)->findOrFail($id);
-
         // dd($cur_goods);
 
         // Подключение политики
@@ -543,6 +552,18 @@ class GoodsController extends Controller
             $manufacturers_list = $cur_goods->company->manufacturers->pluck('name', 'id');
             // dd($manufacturers_list);
 
+            // $manufacturers = $cur_goods->company->manufacturers;
+
+            // dd($manufacturers[0]->pivot);
+
+            // $list = [];
+            // foreach ($cur_goods->company->manufacturers as $manufacturer) {
+            //     $list[$manufacturer->id] = $manufacturer->company->name;
+            // }
+            // dd($list);
+
+            // dd($cur_goods->company->manufacturers[0]->company);
+
             // Статус товара "один"
             if ($cur_goods->goods_article->goods_product->set_status == 'one') {
 
@@ -735,64 +756,159 @@ class GoodsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
-        // Определяем количество метрик и составов
-        if (isset($request->metrics)) {
-            $metrics_count = count($request->metrics);
-        } else {
-            $metrics_count = 0;
-        }
-        // dd($metrics_count);
+        // Получаем артикул товара
+        $goods_article = $cur_goods->goods_article;
 
-        if (isset($request->compositions_values)) {
-            $compositions_count = count($request->compositions_values);
-        } else {
-            $compositions_count = 0;
-        }
-        // dd($compositions_count);
-
-        // Если снят флаг черновика, проверяем на совпадение артикула
-        if (empty($request->draft)) {
-
-            // dd($request);
-
-            $check_name = $this->check_coincidence_name($request);
-            // dd($check_name);
-            if ($check_name) {
-                return redirect()->back()->withInput()->withErrors('Такой артикул уже существует других в группах');
-            }
-
-            $check_article = $this->check_coincidence_article($request);
-            if ($check_article) {
-                return redirect()->back()->withInput()->withErrors('Такой артикул уже существует в группе!');
-            }
-
-            $goods_article = $cur_goods->goods_article;
-            $goods_article->draft = null;
-            $goods_article->save();
-            // $goods_article = GoodsArticle::where('id', $cur_goods->goods_article_id)->update(['draft' => null]);
-        }
-
-        // Если что то не совпало, пишем новый артикул
-
-
-        // если в черновике поменяли производителя
+        // Проверки только дял черновика
         if ($cur_goods->goods_article->draft == 1) {
-            if ($request->manufacturer_id != $cur_goods->goods_article->manufacturer_id) {
+
+            // Определяем количество метрик и составов
+            $metrics_count = isset($request->metrics) ? count($request->metrics) : 0;
+            // dd($metrics_count);
+
+            // Если пришли значеняи метрик
+            $metrics_values = [];
+            if (isset($request->metrics)) {
+                // dd($request->metrics);
+
+                // Получаем метрики, чтобы узнать их тип и знаки после запятой
+                $keys = array_keys($request->metrics);
+                // dd($keys);
+                $metrics = Metric::with(['property' => function ($q) {
+                    $q->select('id', 'type');
+                }])
+                ->select('id', 'decimal_place', 'property_id')
+                ->findOrFail($keys)
+                ->keyBy('id');
+                // dd($metrics);
+
+                // Приводим значения в соответкствие
+                foreach ($request->metrics as $metric_id => $values) {
+                    // dd($metrics[$metric_id]->decimal_place);
+                    if (($metrics[$metric_id]->property->type == 'numeric') || ($metrics[$metric_id]->property->type == 'percent')) {
+                        // dd(round($value[0] , $metrics[$metric_id]->decimal_place, PHP_ROUND_HALF_UP));
+                        if ($metrics[$metric_id]->decimal_place != 0) {
+                            $metrics_values[$metric_id][] = round($values[0] , $metrics[$metric_id]->decimal_place, PHP_ROUND_HALF_UP);
+                        } else {
+                            $metrics_values[$metric_id][] = (int)number_format($values[0], 0);
+                        }
+                    } else {
+                        $metrics_values[$metric_id] = $values;
+                    }
+                }
+                // dd($metrics_values);
+            }
+
+            $compositions_count = isset($request->compositions_values) ? count($request->compositions_values) : 0;
+            // dd($compositions_count);
+
+            // Если пришли значеняи метрик
+            $compositions_values = [];
+            if (isset($request->compositions_values)) {
+                // dd($request->compositions_values);
+
+                if ($cur_goods->goods_article->goods_product->set_status == 'one') {
+                    // Приводим значения в соответкствие
+                    foreach ($request->compositions_values as $composition_id => $value) {
+                        $compositions_values[$composition_id] = round($value , 2, PHP_ROUND_HALF_UP);
+                    }
+                } else {
+                    foreach ($request->compositions_values as $composition_id => $value) {
+                        $compositions_values[$composition_id] = (int)number_format($value, 0);
+                    }
+                }
+            }
+            // dd($compositions_values);
+
+            // Производитель
+            $manufacturer_id = isset($request->manufacturer_id) ? $request->manufacturer_id : null;
+
+            // если в черновике поменяли производителя
+            if ($cur_goods->goods_article->draft == 1) {
+                if ($manufacturer_id != $cur_goods->goods_article->manufacturer_id) {
+                    $goods_article = $cur_goods->goods_article;
+                    $goods_article->manufacturer_id = $manufacturer_id;
+                    $goods_article->save();
+                }
+            }
+
+            // Если снят флаг черновика, проверяем на совпадение артикула
+            if (empty($request->draft)) {
+
+                // dd($request);
+
+                $check_name = $this->check_coincidence_name($request);
+                // dd($check_name);
+                if ($check_name) {
+                    return redirect()->back()->withInput()->withErrors('Такой артикул уже существует других в группах');
+                }
+
+                $check_article = $this->check_coincidence_article($metrics_count, $metrics_values, $compositions_count, $compositions_values, $request->goods_product_id, $manufacturer_id);
+                if ($check_article) {
+                    return redirect()->back()->withInput()->withErrors('Такой артикул уже существует в группе!');
+                }
+
                 $goods_article = $cur_goods->goods_article;
-                $goods_article->manufacturer_id = $request->manufacturer_id;
+                $goods_article->draft = null;
                 $goods_article->save();
+                // $goods_article = GoodsArticle::where('id', $cur_goods->goods_article_id)->update(['draft' => null]);
+            }
+
+            if ($goods_article->name != $request->name) {
+                $goods_article->name = $request->name;
+            }
+
+            $goods_article->manufacturer_id = $request->manufacturer_id;
+            $goods_article->metrics_count = $metrics_count;
+            $goods_article->compositions_count = $compositions_count;
+            $goods_article->save();
+
+            // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+            if ($answer['automoderate'] == false) {
+                $cur_goods->moderation = 1;
             }
         }
 
+        // Если проверки пройдены, или меняем уже товар
+
+        // -------------------------------------------------------------------------------------------------
+        // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+
+        // Получаем выбранную категорию со страницы (то, что указал пользователь)
+        $goods_category_id = $request->goods_category_id;
+
+        // Смотрим: была ли она изменена
+        if ($cur_goods->goods_article->goods_product->goods_category_id != $goods_category_id) {
+
+            // Была изменена! Переназначаем категорию группе:
+            $item = GoodsProduct::where('id', $cur_goods->goods_article->goods_product_id)
+            ->update(['goods_category_id' => $goods_category_id]);
+        }
+
+        // -------------------------------------------------------------------------------------------------
+        // ПЕРЕНОС ТОВАРА В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
+        // Важно! Важно проверить, соответствеут ли группа в которую переноситься товар, метрикам самого товара
+        // Если не соответствует - дать отказ. Если соответствует - осуществить перенос
+
+        // Получаем выбранную группу со страницы (то, что указал пользователь)
+        $goods_product_id = $request->goods_product_id;
+
+        if ($cur_goods->goods_article->goods_product_id != $goods_product_id ) {
+
+            // Была изменена! Переназначаем категорию группе:
+            $item = GoodsArticle::where('id', $cur_goods->goods_article_id)
+            ->update(['goods_product_id' => $goods_product_id]);
+        }
+
+        // А, пока изменяем без проверки
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-
         // Скрываем бога
         $user_id = hideGod($user);
+
+
 
         // Если пришла фотография
         if ($request->hasFile('photo')) {
@@ -805,7 +921,7 @@ class GoodsController extends Controller
             // Смотрим общие настройки для сущности
             $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
 
-            if($get_settings){
+            if ($get_settings){
 
                 if ($get_settings->img_small_width != null) {
                     $settings['img_small_width'] = $get_settings->img_small_width;
@@ -845,75 +961,37 @@ class GoodsController extends Controller
 
                 if ($get_settings->img_max_size != null) {
                     $settings['img_max_size'] = $get_settings->img_max_size;
-
                 }
             }
 
-            $directory = $company_id.'/media/goods/'.$cur_goods->id.'/img/';
+            $directory = $user->company_id.'/media/goods/'.$cur_goods->id.'/img/';
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записанным обьектом фото, и результатом записи
             if ($cur_goods->photo_id) {
                 $array = save_photo($request, $directory, 'avatar-'.time(), null, $cur_goods->photo_id, $settings);
-
             } else {
                 $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
-
             }
-            $photo = $array['photo'];
 
+            $photo = $array['photo'];
             $cur_goods->photo_id = $photo->id;
         }
 
-        // $cur_goods->name = $request->name;
-
-        // -------------------------------------------------------------------------------------------------
-        // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-
-        // Получаем выбранную категорию со страницы (то, что указал пользователь)
-        $goods_category_id = $request->goods_category_id;
-
-        // Смотрим: была ли она изменена
-        if($cur_goods->goods_article->goods_product->goods_category_id != $goods_category_id){
-
-            // Была изменена! Переназначаем категорию группе:
-            $item = GoodsProduct::where('id', $cur_goods->goods_article->goods_product_id)->update(['goods_category_id' => $goods_category_id]);
-        }
-
-        // -------------------------------------------------------------------------------------------------
-        // ПЕРЕНОС ТОВАРА В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
-        // Важно! Важно проверить, соответствеут ли группа в которую переноситься товар, метрикам самого товара
-        // Если не соответствует - дать отказ. Если соответствует - осуществить перенос
-
-        // Получаем выбранную группу со страницы (то, что указал пользователь)
-        $goods_product_id = $request->goods_product_id;
-
-        if ($cur_goods->goods_article->goods_product_id != $goods_product_id ) {
-
-            // Была изменена! Переназначаем категорию группе:
-            $item = GoodsArticle::where('id', $cur_goods->goods_article_id)->update(['goods_product_id' => $goods_product_id]);
-
-        }
-
-        // А, пока изменяем без проверки
-
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false) {
-            $cur_goods->moderation = 1;
-        }
-
-        if ($request->portion_status == 1) {
+        // Порции
+        if (isset($request->portion_status)) {
             $cur_goods->portion_status = $request->portion_status;
             $cur_goods->portion_name = $request->portion_name;
             $cur_goods->portion_abbreviation = $request->portion_abbreviation;
             $cur_goods->portion_count = $request->portion_count;
+        } else {
+            $cur_goods->portion_status = null;
+            $cur_goods->portion_name = null;
+            $cur_goods->portion_abbreviation = null;
+            $cur_goods->portion_count = null;
         }
 
-
-
+        // Описание
         $cur_goods->description = $request->description;
-        $cur_goods->display = $request->display;
-
 
         // Названия артикулов
         $cur_goods->manually = $request->manually;
@@ -924,8 +1002,8 @@ class GoodsController extends Controller
         $cur_goods->price = $request->price;
 
         // Общие данные
+        $cur_goods->display = $request->display;
         $cur_goods->system_item = $request->system_item;
-        $cur_goods->company_id = $company_id;
         $cur_goods->editor_id = $user_id;
         $cur_goods->save();
 
@@ -934,114 +1012,71 @@ class GoodsController extends Controller
             // Проверяем каталоги
             if (isset($request->catalogs)) {
 
-                $mass = [];
+                $catalogs_insert = [];
                 foreach ($request->catalogs as $catalog) {
                     $mass[$catalog] = ['display' => 1];
                 }
-
-                // dd($mass);
-                $cur_goods->catalogs()->sync($mass);
+                // dd($catalogs_insert);
+                $cur_goods->catalogs()->sync($catalogs_insert);
             } else {
                 $cur_goods->catalogs()->detach();
             }
 
-            // Получаем артикул товара
-            $goods_article = $cur_goods->goods_article;
-
-            // dd($request->metrics);
-            if (isset($request->metrics)) {
-
-                $goods_article->metrics()->detach();
-
-                $metrics_insert = [];
-
-                foreach ($request->metrics as $metric_id => $values) {
-                    foreach ($values as $value) {
-                        // dd($value);
-                        $goods_article->metrics()->attach([
-                            $metric_id => [
-                                'value' => $value,
-                            ]
-                        ]);
-                    }
-                }
-                // dd($metrics_insert);
+            if ($cur_goods->goods_article->draft == 1) {
 
                 // Пишем метрики
-                // $cur_goods->metrics_values()->attach($metrics_insert);
-            } else {
-                $goods_article->metrics()->detach();
-            }
+                if (count($metrics_values)) {
 
-            if ($goods_article->goods_product->set_status == 'one') {
+                    $goods_article->metrics()->detach();
 
-                if (isset($request->compositions_values)) {
-                    $goods_article->compositions()->detach();
+                    $metrics_insert = [];
+                    // $metric->min = round($request->min , $request->decimal_place, PHP_ROUND_HALF_UP);
+                    foreach ($metrics_values as $metric_id => $values) {
+                        foreach ($values as $value) {
+                        // dd($value);
+                            $goods_article->metrics()->attach([
+                                $metric_id => [
+                                    'value' => $value,
+                                ]
+                            ]);
+                        }
+                    }
+                    // dd($metrics_insert);
+                } else {
+                    $goods_article->metrics()->detach();
+                }
+
+                $compositions_relation = ($goods_article->goods_product->set_status == 'one') ? 'compositions' : 'set_compositions';
+                if (count($compositions_values)) {
+
+                    $goods_article->$compositions_relation()->detach();
+
                     $compositions_insert = [];
-                    foreach ($request->compositions_values as $composition_id => $value) {
+                    foreach ($compositions_values as $composition_id => $value) {
                         $compositions_insert[$composition_id] = [
                             'value' => $value,
                         ];
                     }
                     // dd($compositions_insert);
-                    $goods_article->compositions()->attach($compositions_insert);
+                    $goods_article->$compositions_relation()->attach($compositions_insert);
                 } else {
-                    $goods_article->compositions()->detach();
+                    $goods_article->$compositions_relation()->detach();
                 }
-            } else {
-                if (isset($request->compositions_values)) {
-                    $goods_article->set_compositions()->detach();
-                    $compositions_insert = [];
-                    foreach ($request->compositions_values as $composition_id => $value) {
-                        $compositions_insert[$composition_id] = [
-                            'value' => $value,
-                        ];
-                    }
-                // dd($compositions_insert);
-                    $goods_article->set_compositions()->attach($compositions_insert);
-                } else {
-                    $goods_article->set_compositions()->detach();
-                }
-            }
-
-            if ($cur_goods->draft == 1) {
-
-                //     // dd($metrics_insert);
-                //     if (isset($request->compositions)) {
-                //         $compositions_insert = [];
-                //         foreach ($request->compositions as $composition_id => $value) {
-                //             // dd($value['value']);
-                //             $compositions_insert[$value['cur_goods']]['entity'] = 'goods';
-                //             $compositions_insert[$value['cur_goods']]['value'] = $value['count'];
-                //         }
-
-                //         // Пишем состав
-                //         $cur_goods->compositions_values()->attach($compositions_insert);
-                //     }
             }
 
             if ($goods_article->name != $request->name) {
+                // dd($request);
                 $goods_article->name = $request->name;
-
+                $goods_article->save();
             }
-
-            $goods_article->manufacturer_id = $request->manufacturer_id;
-            $goods_article->metrics_count = $metrics_count;
-            $goods_article->compositions_count = $compositions_count;
-            $goods_article->save();
-
-            // $goods_article = GoodsArticle::where('id', $cur_goods->goods_article_id)->update(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count]);
 
             // Если ли есть
             if ($request->cookie('backlink') != null) {
-
                 $backlink = Cookie::get('backlink');
                 return Redirect($backlink);
-
             }
 
             return Redirect('/admin/goods');
-
         } else {
             abort(403, 'Ошибка записи группы товаров');
         }
@@ -1100,6 +1135,16 @@ class GoodsController extends Controller
         $ajax_error['title_link'] = "Идем в раздел категорий"; // Текст на кнопке
 
         return view('ajax_error', compact('ajax_error'));
+    }
+
+    // Проверка совпадения артикула
+    public function ajax_check(Request $request)
+    {
+
+        $goods_count = Goods::where(['manually' => $request->value, 'company_id' => $request->user()->company_id])
+        ->where('id', '!=', $request->id)
+        ->count();
+        return response()->json($goods_count);
     }
 
     public function get_inputs(Request $request)
@@ -1288,40 +1333,21 @@ class GoodsController extends Controller
 
         if (count($goods_articles)) {
 
-                // Смотрим группу артикулов
+            // Смотрим группу артикулов
             $diff_count = $goods_articles->where('goods_product_id', '!=', $request->goods_product_id)->count();
-                // dd($diff_count);
+            // dd($diff_count);
             if ($diff_count > 0) {
-
-                    // $lol = $goods_articles->where('goods_product_id', '!=', $request->goods_product_id);
-                    // dd($lol->implode('name', ', '));
-
                 return true;
             }
         }
     }
 
-    public function check_coincidence_article($request)
+    public function check_coincidence_article($metrics_count, $metrics_values, $compositions_count, $compositions_values, $goods_product_id, $manufacturer_id = null)
     {
-
-        // Определяем количество метрик и составов
-        if (isset($request->metrics)) {
-            $metrics_count = count($request->metrics);
-        } else {
-            $metrics_count = 0;
-        }
-        // dd($metrics_count);
-
-        if (isset($request->compositions_values)) {
-            $compositions_count = count($request->compositions_values);
-        } else {
-            $compositions_count = 0;
-        }
-        // dd($compositions_count);
 
         // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
         $goods_articles = GoodsArticle::with('metrics', 'compositions', 'set_compositions')
-        ->where('goods_product_id', $request->goods_product_id)
+        ->where('goods_product_id', $goods_product_id)
         ->where(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count])
         ->whereNull('draft')
         ->whereNull('archive')
@@ -1333,14 +1359,6 @@ class GoodsController extends Controller
             // Создаем массив совпадений
             $coincidence = [];
             // dd($request);
-
-            if (isset($request->manufacturer_id)) {
-                $manufacturer_id = $request->manufacturer_id;
-            } else {
-                $manufacturer_id = null;
-            }
-
-            // dd($manufacturer_id);
 
             // Сравниваем метрики
             foreach ($goods_articles as $goods_article) {
@@ -1355,7 +1373,7 @@ class GoodsController extends Controller
                 }
 
                 // Если значения метрик совпали, создаюм ключ метрик
-                if ($metrics_array == $request->metrics) {
+                if ($metrics_array == $metrics_values) {
                     $coincidence['metrics'] = 1;
                 }
 
@@ -1373,7 +1391,7 @@ class GoodsController extends Controller
                     }
                 }
 
-                if ($compositions_array == $request->compositions_values) {
+                if ($compositions_array == $compositions_values) {
                     // Если значения метрик совпали, создаюм ключ метрик
                     $coincidence['compositions'] = 1;
                 }

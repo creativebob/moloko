@@ -95,7 +95,7 @@ class ManufacturerController extends Controller
         $this->authorize(getmethod(__FUNCTION__), Manufacturer::class);
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 
-        // Создаем новый экземляр компании 
+        // Создаем новый экземляр компании
         $manufacturer = new Manufacturer;
 
         // Создаем новый экземляр поставщика
@@ -140,7 +140,7 @@ class ManufacturerController extends Controller
             'Возможные типы услуг',     // Название чекбокса для пользователя в форме
             'services_types',           // Имя checkboxa для системы
             'id',                       // Поле записи которую ищем
-            'services_types', 
+            'services_types',
             'internal-self-one',        // Режим выборки через связи
             'checkboxer'                // Режим: checkboxer или filter
 
@@ -217,9 +217,9 @@ class ManufacturerController extends Controller
             // Записываем связи: id-шники в таблицу Rooms
             if(isset($request->services_types_id)){
 
-                $result = $company->services_types()->sync($request->services_types_id);               
+                $result = $company->services_types()->sync($request->services_types_id);
             } else {
-                $result = $company->services_types()->detach(); 
+                $result = $company->services_types()->detach();
             };
 
         } else {
@@ -328,7 +328,7 @@ class ManufacturerController extends Controller
             'Возможные типы услуг',     // Название чекбокса для пользователя в форме
             'services_types',           // Имя checkboxa для системы
             'id',                       // Поле записи которую ищем
-            'services_types', 
+            'services_types',
             'internal-self-one',        // Режим выборки через связи
             'checkboxer'                // Режим: checkboxer или filter
 
@@ -363,7 +363,7 @@ class ManufacturerController extends Controller
                     $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
                 } else {
 
-                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);                       
+                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);
                 };
 
                 $worktime[$x]['end'] = $str_worktime_interval;
@@ -426,7 +426,7 @@ class ManufacturerController extends Controller
 
         // Телефон
         $phones = add_phones($request, $company);
-        
+
         $company->email = $request->email;
 
         $company->inn = $request->inn;

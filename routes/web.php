@@ -277,7 +277,7 @@ Route::get('/vk', 'VkController@market')->middleware('auth');
 // Сортировка
 Route::post('/sort/{entity_alias}', 'AppController@ajax_sort')->middleware('auth');
 // Системная запись
-Route::post('/system_item', 'AppController@ajax_system_item')->middleware('auth');
+Route::any('/system_item', 'AppController@ajax_system_item')->middleware('auth');
 // Отображение на сайте
 Route::post('/display', 'AppController@ajax_display')->middleware('auth');
 
@@ -455,6 +455,8 @@ Route::post('/goods/archive/{id}', 'GoodsController@archive')->middleware('auth'
 
 // Отображение на сайте
 Route::post('/goods_sync', 'GoodsController@ajax_sync')->middleware('auth');
+
+Route::any('/goods_check', 'GoodsController@ajax_check')->middleware('auth');
 
 // Фотки
 Route::any('/goods/add_photo', 'GoodsController@add_photo')->middleware('auth');
