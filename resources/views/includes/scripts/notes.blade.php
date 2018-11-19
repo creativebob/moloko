@@ -19,13 +19,13 @@
 				$('textarea[name=add_body]').blur();
 				// alert($('input[name=add-body]').val());
 			}
-		}); 
+		});
 	};
 
 	// Функция редактирования комментария
 	function editNote (parent) {
 		// Находим описание сущности, id и название удаляемого элемента в родителе
-		
+
 		var id = parent.attr('id').split('-')[1];
 		var name = parent.data('name');
 
@@ -40,7 +40,7 @@
 				$('#notes-' + id).replaceWith(html);
 				// alert($('input[name=add-body]').val());
 			}
-		}); 
+		});
 	};
 
 	// -------------------------- Добавление ----------------------------------
@@ -84,7 +84,7 @@
 				$('#notes-' + id + ' textarea[name=edit_body]').focus();
 				// alert($('input[name=add-body]').val());
 			}
-		}); 
+		});
 	});
 
 	// Редактирование комментария
@@ -127,7 +127,7 @@
 				$('#notes-' + id).replaceWith(html);
 				// alert($('input[name=add-body]').val());
 			}
-		}); 
+		});
 	});
 
 	// -------------------------- Удаление ----------------------------------

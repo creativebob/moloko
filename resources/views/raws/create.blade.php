@@ -48,38 +48,28 @@
 
 			</div>
 
-
-
-			{{-- Чекбокс отображения на сайте
-				@can ('publisher', App\Raw::class)
-				<div class="small-12 cell checkbox">
-					{{ Form::checkbox('display', 1, null, ['id' => 'display-position']) }}
-					<label for="display-position"><span>Отображать на сайте</span></label>
-				</div>
-				@endcan --}}
-
-				<div class="small-12 cell checkbox">
-					{{ Form::checkbox('quickly', 1, null, ['id' => 'quickly-raws', 'checked']) }}
-					<label for="quickly-raws"><span>Быстрое добавление</span></label>
-				</div>
-
-				@can('god', App\Raw::class)
-				<div class="checkbox">
-					{{ Form::checkbox('system_item', 1, null, ['id' => 'system-item-position']) }}
-					<label for="system-item-position"><span>Системная запись.</span></label>
-				</div>
-				@endcan
-
+			<div class="small-12 cell checkbox">
+				{{ Form::checkbox('quickly', 1, null, ['id' => 'quickly-raws', 'checked']) }}
+				<label for="quickly-raws"><span>Быстрое добавление</span></label>
 			</div>
-		</div>
-		<div class="grid-x align-center">
-			<div class="small-6 medium-4 cell">
-				{{ Form::submit('Добавить сырье', ['data-close', 'class'=>'button modal-button']) }}
+
+			@can('god', App\Raw::class)
+			<div class="checkbox">
+				{{ Form::checkbox('system_item', 1, null, ['id' => 'system-item-position']) }}
+				<label for="system-item-position"><span>Системная запись.</span></label>
 			</div>
+			@endcan
+
 		</div>
-		{{ Form::close() }}
-		<div data-close class="icon-close-modal sprite close-modal add-item"></div> 
 	</div>
+	<div class="grid-x align-center">
+		<div class="small-6 medium-4 cell">
+			{{ Form::submit('Добавить сырье', ['data-close', 'class'=>'button modal-button']) }}
+		</div>
+	</div>
+	{{ Form::close() }}
+	<div data-close class="icon-close-modal sprite close-modal add-item"></div>
+</div>
 
 
 

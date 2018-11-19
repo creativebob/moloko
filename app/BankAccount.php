@@ -48,9 +48,9 @@ class BankAccount extends Model
 
     // protected $dates = ['deleted_at'];
     protected $fillable = [
-        'company_id', 
-        'holder_id', 
-        'bank_id', 
+        'company_id',
+        'holder_id',
+        'bank_id',
     ];
 
     // Получаем компанию.

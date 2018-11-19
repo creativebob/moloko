@@ -145,7 +145,7 @@
         $('#first-add').foundation();
         $('#first-add').foundation('open');
     }
-}); 
+});
 });
 
   // Проверка существования
@@ -157,10 +157,10 @@
     // Значение поля с разрешением
     var db = '#form-first-add .first-item';
     // Выполняем запрос
-    clearTimeout(timerId);   
+    clearTimeout(timerId);
     timerId = setTimeout(function() {
       albumsCategoryCheck (name, submit, db)
-  }, time); 
+  }, time);
 });
 
   // ----------- Изменение -------------
@@ -195,10 +195,10 @@
     // Значение поля с разрешением
     var db = '#form-first-edit .first-item';
     // Выполняем запрос
-    clearTimeout(timerId);   
+    clearTimeout(timerId);
     timerId = setTimeout(function() {
       albumsCategoryCheck (name, submit, db)
-  }, time); 
+  }, time);
 });
 
   // ------------------------------- Сектор --------------------------------------------
@@ -226,7 +226,7 @@
         $('#medium-add').foundation();
         $('#medium-add').foundation('open');
     }
-}); 
+});
 });
 
   // Проверка существования
@@ -238,10 +238,10 @@
     // Значение поля с разрешением
     var db = '#form-medium-add .medium-item';
     // Выполняем запрос
-    clearTimeout(timerId);   
+    clearTimeout(timerId);
     timerId = setTimeout(function() {
       albumsCategoryCheck (name, submit, db)
-  }, time); 
+  }, time);
 });
 
   // ----------- Изменение -------------
@@ -274,10 +274,10 @@
     // Значение поля с разрешением
     var db = '#form-medium-edit .medium-item';
     // Выполняем запрос
-    clearTimeout(timerId);   
+    clearTimeout(timerId);
     timerId = setTimeout(function() {
       albumsCategoryCheck (name, submit, db)
-  }, time); 
+  }, time);
 });
 
   // ------------------------ Кнопка добавления ---------------------------------------

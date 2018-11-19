@@ -45,6 +45,9 @@
 @endsection
 
 @section('scripts')
+
+@include('includes.scripts.units-scripts')
+
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.scripts.delete-ajax-script')
 
@@ -55,7 +58,7 @@
 @include('includes.scripts.multilevel-menu-active-scripts')
 
 {{-- Список городов --}}
-@include('includes.scripts.cities-list')
+@include('includes.scripts.class.city_search')
 
 {{-- Скрипт отображения на сайте --}}
 @include('includes.scripts.ajax-display')
@@ -134,7 +137,7 @@
                 $('#first-add').foundation();
                 $('#first-add').foundation('open');
             }
-        }); 
+        });
     });
 
     // Проверка существования
@@ -146,10 +149,10 @@
         // Значение поля с разрешением
         var db = '#form-first-add .first-item';
         // Выполняем запрос
-        clearTimeout(timerId);   
+        clearTimeout(timerId);
         timerId = setTimeout(function() {
             departmentCheck (name, submit, db, null);
-        }, time); 
+        }, time);
     });
 
     // ----------- Изменение -------------
@@ -183,10 +186,10 @@
         // Значение поля с разрешением
         var db = '#form-first-edit .first-item';
         // Выполняем запрос
-        clearTimeout(timerId);   
+        clearTimeout(timerId);
         timerId = setTimeout(function() {
             departmentCheck (name, submit, db, null);
-        }, time); 
+        }, time);
     });
 
     // ------------------------------- Отдел --------------------------------------------
@@ -212,7 +215,7 @@
                 $('#medium-add').foundation('open');
                 $('.filial-id').val(filial);
             }
-        }); 
+        });
     });
 
     // Проверка существования
@@ -226,10 +229,10 @@
         // Филиал
         var filial = $('#filial-id').val();
         // Выполняем запрос
-        clearTimeout(timerId);   
+        clearTimeout(timerId);
         timerId = setTimeout(function() {
           departmentCheck (name, submit, db, filial)
-      }, time); 
+      }, time);
     });
 
     // ----------- Изменение -------------
@@ -265,10 +268,10 @@
         // Филиал
         var filial = $('#filial-id').val();
         // Выполняем запрос
-        clearTimeout(timerId);   
+        clearTimeout(timerId);
         timerId = setTimeout(function() {
           departmentCheck (name, submit, db, filial)
-      }, time); 
+      }, time);
     });
 
   // ------------------------ Кнопка добавления ---------------------------------------

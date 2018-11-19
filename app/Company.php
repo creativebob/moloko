@@ -48,6 +48,7 @@ class Company extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
+    protected $model_name = ['company'];
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'name', 
@@ -56,6 +57,8 @@ class Company extends Model
         'extra_phone',
         'bic'
     ];
+
+
 
     // Фильтрация по городу
     public function scopeAuthorFilter($query, $request)
@@ -103,12 +106,12 @@ class Company extends Model
     public function roles()
     {
         return $this->hasMany('App\Role');
-    } 
+    }
 
     public function staff()
     {
         return $this->hasMany('App\Staffer');
-    } 
+    }
 
     public function author()
     {
@@ -120,10 +123,16 @@ class Company extends Model
         return $this->belongsToMany('App\Schedule', 'schedule_entity', 'entity_id', 'schedule_id')->where('entity', 'companies');
     }
 
-    // public function schedules()
-    // {
-    //     return $this->morphedByMany('App\Schedule', 'schedule_entity', 'entity_id', 'entity_type');
-    // }
+    public function getWorktimeAttribute($value) {
+            $worktime = $this->belongsToMany('App\Schedule', 'schedule_entity', 'entity_id', 'schedule_id')->where('entity', 'companies')->first();
+            if($worktime != null){
+                $worktime = $worktime->worktimes;
+                return worktime_to_format($worktime->keyBy('weekday'));                
+            } else {
+                return $value;
+            }
+    }
+
 
     public function positions()
     {
@@ -136,7 +145,7 @@ class Company extends Model
         return $this->belongsTo('App\Sector');
     }
 
-    // Получаем 
+    // Получаем
     public function worktime()
     {
         return $this->hasMany('App\Worktime');
@@ -147,12 +156,6 @@ class Company extends Model
     {
         return $this->belongsTo('App\Location');
     }
-
-    // Получаем поставщиков
-    // public function suppliers()
-    // {
-    //     return $this->hasMany('App\Supplier', 'company_id');
-    // }
 
     // Получаем поставщиков
     public function suppliers()
@@ -166,7 +169,6 @@ class Company extends Model
         return $this->belongsToMany('App\Company', 'dealers', 'company_id', 'dealer_id');
     }
 
-    // Получаем производителей
     public function manufacturers()
     {
         return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'manufacturer_id');
@@ -182,6 +184,7 @@ class Company extends Model
     public function banks()
     {
         return $this->belongsToMany('App\Company', 'banks', 'company_id', 'bank_id');
+
     }
 
     // Получаем компании, где мы поставщик
@@ -202,42 +205,17 @@ class Company extends Model
         return $this->hasMany('App\Manufacturer', 'manufacturer_id');
     }
 
-
-    // Получаем контрагентов
-    // public function manufacturers()
-    // {
-    //     return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'contragent_id');
-    // }
-
     // Получаем категории продукции
     public function services_categories()
     {
         return $this->hasMany('App\ServicesCategory');
     }
-    
+
     // Получаем категории продукции
     public function services_products()
     {
         return $this->hasMany('App\ServicesProduct');
     }
-
-    // // Получаем клиентов
-    // public function clients()
-    // {   
-    //     return $this->belongsToMany('App\Company', 'suppliers', 'company_id', 'supplier_id')->where('client_status', 1);
-    // }
-
-    // // Получаем поставщиков
-    // public function vendors()
-    // {
-    //     return $this->belongsToMany('App\Company', 'suppliers', 'company_id', 'supplier_id')->where('vendor_status', 1);
-    // }
-
-    // // Получаем производителей
-    // public function manufacturers()
-    // {
-    //     return $this->belongsToMany('App\Company', 'suppliers', 'company_id', 'supplier_id')->where('manufacturer_status', 1);
-    // }
 
     // Получаем типы услуг
     public function services_types()
@@ -282,6 +260,6 @@ class Company extends Model
         return $this->morphMany('App\Feedback', 'feedback');
     }
 
-    
+
 
 }

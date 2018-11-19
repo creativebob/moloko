@@ -15,7 +15,7 @@ class AppController extends Controller
     public function ajax_sort(Request $request, $entity_alias)
     {
 
-    	$entity = Entity::whereAlias($entity_alias)->first();
+    	$entity = Entity::whereAlias($entity_alias)->first(['model']);
     	$model = 'App\\'.$entity->model;
 
         $i = 1;
@@ -29,59 +29,21 @@ class AppController extends Controller
     public function ajax_system_item(Request $request)
     {
 
-    	$entity = Entity::whereAlias($request->entity_alias)->first();
+    	$entity = Entity::whereAlias($request->entity_alias)->first(['model']);
     	$model = 'App\\'.$entity->model;
+        $item = $model::where('id', $request->id)->update(['system_item' => ($request->action == 'lock') ? 1 : null]);
 
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = $model::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        return response()->json(isset($item) ?? 'Ошибка при обновлении статуса системной записи!');
     }
 
     // Отображение на сайте
     public function ajax_display(Request $request)
     {
 
-    	$entity = Entity::whereAlias($request->entity_alias)->first();
+    	$entity = Entity::whereAlias($request->entity_alias)->first(['model']);
     	$model = 'App\\'.$entity->model;
+        $item = $model::where('id', $request->id)->update(['display' => ($request->action == 'show') ? 1 : null]);
 
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = $model::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        return response()->json(isset($item) ?? 'Ошибка при обновлении отображения на сайте!');
     }
 }

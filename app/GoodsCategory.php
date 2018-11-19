@@ -86,7 +86,7 @@ class GoodsCategory extends Model
     // {
     //     return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'goods_categories');
     // }
-    public function metrics()
+    public function one_metrics()
     {
         return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'one');
     }

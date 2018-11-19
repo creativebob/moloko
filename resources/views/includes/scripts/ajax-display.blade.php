@@ -1,32 +1,19 @@
 <script type="text/javascript">
 
-// Меняем режим отображения
-$(document).on('click', '[data-open="item-display"]', function(event) {
+    // Меняем режим отображения
+    $(document).on('click', '[data-open="item-display"]', function(event) {
+        event.preventDefault();
 
-    // Блочим отправку формы
-    event.preventDefault();
-    var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
-    var id = $(this).closest('.item').attr('id').split('-')[1];
-    var item = $(this);
+        let item = $(this);
+        let id = item.closest('.item').attr('id').split('-')[1];
+        let entity_alias = item.closest('.item').attr('id').split('-')[0];
 
-    if ($(this).hasClass("icon-display-hide")) {
-        var action = 'show';
-    } else {
-        var action = 'hide';
-    }
+        action = item.hasClass("icon-display-hide") ? 'show' : 'hide';
 
-    // Ajax
-    $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/admin/display',
-        type: "POST",
-        data: {id: id, action: action, entity_alias: entity_alias},
-        success: function (date) {
-            var result = $.parseJSON(date);
+        // Ajax
+        $.post('/admin/display', {id: id, action: action, entity_alias: entity_alias}, function (display) {
             // Если нет ошибки
-            if (result.error_status == 0) {
+            if (display == true) {
                 if (action == 'show') {
                     item.removeClass('icon-display-hide');
                     item.addClass('icon-display-show')
@@ -34,12 +21,10 @@ $(document).on('click', '[data-open="item-display"]', function(event) {
                     item.removeClass('icon-display-show');
                     item.addClass('icon-display-hide')
                 }
-
             } else {
                 // Выводим ошибку на страницу
-                alert(result.error_message);
+                alert(display);
             };
-        }
+        });
     });
-});
-</script> 
+</script>

@@ -10,12 +10,12 @@
             },
             url: '/admin/get_units_list',
             type: "POST",
-            data: {id: id, entity: 'raws_categories'},
+            data: {units_category_id: id, entity: 'raws'},
             success: function(html){
                 $('#units-list').html(html);
                 $('#units-list').prop('disabled', false);
             }
-        }); 
+        });
     });
 
     $(document).on('change', '.mode-default', function() {
@@ -34,7 +34,7 @@
                 $('#mode').html(html);
                 Foundation.reInit($('#form-raw-add'));
             }
-        }); 
+        });
     });
 
     $(document).on('change', '.mode-select', function() {
@@ -53,7 +53,7 @@
                 $('#mode').html(html);
 
             }
-        }); 
+        });
     });
 
     $(document).on('click', '.modes', function(event) {
@@ -77,7 +77,7 @@
                 Foundation.reInit($('#form-raw-add'));
 
             }
-        }); 
+        });
     });
 
     $(document).on('keyup', 'input[name=raws_product_name], input[name=name]', function(event) {

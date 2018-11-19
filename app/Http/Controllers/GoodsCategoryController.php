@@ -39,7 +39,7 @@ use App\Policies\GoodsCategoryPolicy;
 // Общие классы
 use Illuminate\Support\Facades\Log;
 
-// Специфические классы 
+// Специфические классы
 
 // На удаление
 use Illuminate\Support\Facades\Auth;
@@ -192,7 +192,7 @@ class GoodsCategoryController extends Controller
         // Если категория
         if ($request->first_item == 1) {
             $goods_category->goods_mode_id = $request->goods_mode_id;
-            $goods_category->category_status = 1; 
+            $goods_category->category_status = 1;
         }
 
         // Если вложенный
@@ -234,30 +234,23 @@ class GoodsCategoryController extends Controller
         $answer_goods_categories = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $goods_category = GoodsCategory::with(['goods_mode', 'metrics' => function ($q) {
-            $q->with('unit', 'values');
-        }, 'set_metrics' => function ($q) {
-            $q->with('unit', 'values');
-        }, 'compositions.raws_product.unit', 'compositions'])
-        ->withCount('metrics', 'compositions')
+        $goods_category = GoodsCategory::with([
+            'goods_mode',
+            'one_metrics' => function ($q) {
+                $q->with('unit', 'values');
+            },
+            'set_metrics' => function ($q) {
+                $q->with('unit', 'values');
+            },
+            'compositions.raws_product.unit',
+            'compositions'])
+        ->withCount('one_metrics', 'set_metrics', 'compositions')
         ->moderatorLimit($answer_goods_categories)
         ->findOrFail($id);
         // dd($goods_category);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_category);
-
-        $goods_category_metrics = [];
-        foreach ($goods_category->metrics as $metric) {
-            $goods_category_metrics[] = $metric->id;
-        }
-        // dd($product_metrics);
-
-        $goods_category_compositions = [];
-        foreach ($goods_category->compositions as $composition) {
-            $goods_category_compositions[] = $composition->id;
-        }
-        // dd($goods_category_compositions);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -277,7 +270,7 @@ class GoodsCategoryController extends Controller
             ->moderatorLimit($answer_metrics)
             ->companiesLimit($answer_metrics)
             ->authors($answer_metrics)
-            ->systemItem($answer_metrics); // Фильтр по системным записям 
+            ->systemItem($answer_metrics); // Фильтр по системным записям
         }])
         ->withCount('metrics')
         ->orderBy('sort', 'asc')
@@ -285,9 +278,9 @@ class GoodsCategoryController extends Controller
 
         $properties_list = $properties->pluck('name', 'id');
 
-         // Отдаем Ajax
+        // Отдаем Ajax
         if ($request->ajax()) {
-            return view('goods_categories.metrics.properties-list', compact('properties', 'properties_list', 'goods_category_metrics'));
+            return view('goods_categories.metrics.properties_form', ['properties' => $properties,  'set_status' => $request->set_status, 'goods_category' => $goods_category]);
         }
 
         // dd($properties_list);
@@ -326,14 +319,14 @@ class GoodsCategoryController extends Controller
         }])
         ->select('id', 'name', 'raws_product_id')
         ->whereHas('raws', function ($query) {
-            $query->whereNull('draft'); 
+            $query->whereNull('draft');
         })
-        
+
         // ->withCount('raws_products')
         // ->moderatorLimit($answer_raws_categories)
         // ->companiesLimit($answer_raws_categories)
         // ->authors($answer_raws_categories)
-        // ->systemItem($answer_raws_categories) // Фильтр по системным записям 
+        // ->systemItem($answer_raws_categories) // Фильтр по системным записям
         ->get()
         ->keyBy('id')
         ->groupBy('raws_product.raws_category.name');
@@ -351,24 +344,24 @@ class GoodsCategoryController extends Controller
         // ->whereHas('raws_products', function ($q) {
         //     $q->whereHas('raws_articles', function ($query) {
         //         $query->whereHas('raws', function ($query) {
-        //             $query->whereNull('draft'); 
+        //             $query->whereNull('draft');
         //         });
         //     // ->moderatorLimit($answer_raws)
         //     // ->companiesLimit($answer_raws)
         //     // ->authors($answer_raws)
-        //     // ->systemItem($answer_raws) // Фильтр по системным записям 
+        //     // ->systemItem($answer_raws) // Фильтр по системным записям
         //     // ->moderatorLimit($answer_raws_products)
         //     // ->companiesLimit($answer_raws_products)
         //     // ->authors($answer_raws_products)
-        //     // ->systemItem($answer_raws_products); // Фильтр по системным записям 
+        //     // ->systemItem($answer_raws_products); // Фильтр по системным записям
         //     });
         // })
-        
+
         // // ->withCount('raws_products')
         // ->moderatorLimit($answer_raws_categories)
         // ->companiesLimit($answer_raws_categories)
         // ->authors($answer_raws_categories)
-        // ->systemItem($answer_raws_categories) // Фильтр по системным записям 
+        // ->systemItem($answer_raws_categories) // Фильтр по системным записям
         // ->get()
         // ->keyBy('id')
         // ->toArray();
@@ -402,7 +395,7 @@ class GoodsCategoryController extends Controller
 
             // echo $id;
             // Меняем категорию
-            return view('goods_categories.edit', compact('goods_category', 'page_info', 'properties', 'properties_list', 'goods_category_metrics', 'goods_category_compositions', 'composition_list', 'units_categories_list', 'units_list'));
+            return view('goods_categories.edit', compact('goods_category', 'page_info', 'properties', 'properties_list', 'composition_list', 'units_categories_list', 'units_list'));
         } else {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -425,7 +418,7 @@ class GoodsCategoryController extends Controller
 
             // dd($goods_category);
 
-            return view('goods_categories.edit', compact('goods_category', 'goods_categories_list', 'page_info', 'properties', 'properties_list', 'goods_category_metrics', 'goods_category_compositions', 'composition_list', 'units_categories_list', 'units_list'));
+            return view('goods_categories.edit', compact('goods_category', 'goods_categories_list', 'page_info', 'properties', 'properties_list', 'composition_list', 'units_categories_list', 'units_list'));
         }
     }
 
@@ -485,7 +478,7 @@ class GoodsCategoryController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -497,7 +490,7 @@ class GoodsCategoryController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -537,11 +530,11 @@ class GoodsCategoryController extends Controller
             $goods_categories = GoodsCategory::whereCategory_id($id)
             ->update(['goods_mode_id' => $request->goods_mode_id]);
         }
-        
+
         $goods_category->display = $request->display;
 
         // Делаем заглавной первую букву
-        $goods_category->name = get_first_letter($request->name); 
+        $goods_category->name = get_first_letter($request->name);
         $goods_category->save();
 
         if ($goods_category) {
@@ -692,7 +685,7 @@ class GoodsCategoryController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -719,7 +712,7 @@ class GoodsCategoryController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -750,7 +743,7 @@ class GoodsCategoryController extends Controller
         $user_id = hideGod($user);
 
         $company_id = $user->company_id;
-        
+
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
 
@@ -785,7 +778,7 @@ class GoodsCategoryController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -797,7 +790,7 @@ class GoodsCategoryController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -838,11 +831,11 @@ class GoodsCategoryController extends Controller
             ->update(['goods_type_id' => $request->goods_type_id]);
 
         }
-        
+
         $goods_category->display = $request->display;
 
         // Делаем заглавной первую букву
-        $goods_category->name = get_first_letter($request->name); 
+        $goods_category->name = get_first_letter($request->name);
 
         $goods_category->save();
 
@@ -862,7 +855,7 @@ class GoodsCategoryController extends Controller
     // Для заказа
     public function ajax_get_products(Request $request)
     {
-        
+
         $user = $request->user();
         $id = $request->id;
         // $id = 12;
@@ -870,8 +863,8 @@ class GoodsCategoryController extends Controller
         $goods_list = Goods::with('goods_article')
         ->whereHas('goods_article', function ($query) use ($id, $user) {
             $query->whereNull('draft')
-                ->whereNull('archive')
-                ->whereHas('goods_product', function ($query) use ($id, $user) {
+            ->whereNull('archive')
+            ->whereHas('goods_product', function ($query) use ($id, $user) {
                 $query->whereHas('goods_category', function ($query) use ($id, $user) {
                     $query->where(['company_id' => $user->company_id, 'id' => $id]);
                 });
@@ -886,18 +879,18 @@ class GoodsCategoryController extends Controller
     }
 
     public function ajax_get_metrics(Request $request)
-    {   
+    {
 
         $item = GoodsCategory::with('metrics.property')->findOrFail($request->goods_category_id);
-        return view('goods.metrics.metric_enter', compact('item'));  
+        return view('goods.metrics.metric_enter', compact('item'));
 
     }
 
     public function ajax_get_compositions(Request $request)
-    {   
+    {
 
         $item = GoodsCategory::with('compositions.raws_product.unit')->findOrFail($request->goods_category_id);
-        return view('goods.compositions.composition_enter', compact('item')); 
+        return view('goods.compositions.composition_enter', compact('item'));
 
     }
 

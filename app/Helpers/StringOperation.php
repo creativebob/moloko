@@ -347,6 +347,52 @@ function get_first_letter($name){
 
 
 // ==============================================================================================
+// ФУНКЦИЯ - ФОРМАТИРОВАНИЕ РЕЖИМА РАБОТЫ ДЛЯ ФОРМЫ
+// ==============================================================================================
+
+
+// Получаем модель из тега 
+function worktime_to_format($worktime_mass){
+
+        for($x = 1; $x<8; $x++){
+
+            if(isset($worktime_mass[$x]->worktime_begin)){
+
+                $worktime_begin = $worktime_mass[$x]->worktime_begin;
+                $str_worktime_begin = secToTime($worktime_begin);
+                $worktime[$x]['begin'] = $str_worktime_begin;
+
+            } else {
+
+                $worktime[$x]['begin'] = null;
+            };
+
+            if(isset($worktime_mass[$x]->worktime_interval)){
+
+                $worktime_interval = $worktime_mass[$x]->worktime_interval;
+
+                if(($worktime_begin + $worktime_interval) > 86400){
+
+                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
+                } else {
+
+                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);
+                };
+
+                $worktime[$x]['end'] = $str_worktime_interval;
+            } else {
+
+                $worktime[$x]['end'] = null;
+            }
+
+        };
+
+    return $worktime;
+};
+
+
+
+// ==============================================================================================
 // ФУНКЦИИ - ИНТЕРЕСОВ ЛИДА (CHOICE)
 // ==============================================================================================
 

@@ -67,7 +67,7 @@ return [
 
     // 'timezone' => 'UTC',
     'timezone' => 'Asia/Irkutsk',
-    
+
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'ru',
 
     /*
     |--------------------------------------------------------------------------
@@ -248,7 +248,7 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Telegram'  => Telegram\Bot\Laravel\Facades\Telegram::class,
 
-        
+
 
     ],
 

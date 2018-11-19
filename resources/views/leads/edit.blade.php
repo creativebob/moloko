@@ -297,11 +297,7 @@ $disabled_leadbot = '';
 			}
 		});
 	});
-
-
-
 </script>
-
 
 @include('includes.scripts.notes', ['id' => $lead->id, 'model' => 'Lead'])
 @include('includes.scripts.challenges', ['id' => $lead->id, 'model' => 'Lead'])

@@ -17,19 +17,16 @@
             <!-- Общая информация -->
             <div class="tabs-panel is-active" id="content-panel-1">
                 <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-6 cell">
+                    <div class="small-2 medium-2 cell">
+                        @include('includes.selects.legal_forms', ['value'=>$company->legal_form_id])
+                    </div>
+                    <div class="small-10 medium-4 cell">
                         <label>Название компании
                             @include('includes.inputs.name', ['value'=>$company->name, 'name'=>'name', 'required'=>'required'])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
-                        <label>Вид деятельности компании
-                            <select name="sector_id" class="sectors-list">
-                                @php
-                                    echo $sectors_list;
-                                @endphp
-                            </select>
-                        </label>
+                        @include('includes.selects.sectors', ['value'=>$company->sector_id])
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>Телефон
@@ -52,19 +49,12 @@
                         <label>Почта
                             @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email', 'required'=>''])
                         </label>
-                        <label>Страна
-                            @php
-                                $country_id = null;
-                                if (isset($company->location->country_id)) {
-                                    $country_id = $company->location->country_id;
-                                }
-                            @endphp
-                            {{ Form::select('country_id', $countries_list, $country_id)}}
-                        </label>
+                        @include('includes.selects.countries', ['value'=>$company->location ? $company->location->country_id : null])
                     </div>
 
                     <div class="small-12 medium-6 cell">
                         @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
+
                         <label>Адрес
                             @php
                                 $address = null;
@@ -75,6 +65,12 @@
                             @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
                         </label>
                     </div>
+
+
+                    {{-- $manufacturer->getTable() --}}
+
+
+
                 </div>
             </div>
 
@@ -104,6 +100,7 @@
                 </div>
             </div>
             <!-- Конец реквизиты -->
+
 
 
             <!-- Банковские реквизиты -->
@@ -147,7 +144,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
 
-                        @include('includes.inputs.schedule', ['value'=>$worktime])
+                        @include('includes.inputs.schedule', ['worktime'=>$company->worktime])
 
                     </div>
                 </div>

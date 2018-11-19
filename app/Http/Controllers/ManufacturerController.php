@@ -68,7 +68,6 @@ class ManufacturerController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
@@ -95,7 +94,7 @@ class ManufacturerController extends Controller
         $this->authorize(getmethod(__FUNCTION__), Manufacturer::class);
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 
-        // Создаем новый экземляр компании 
+        // Создаем новый экземляр компании
         $manufacturer = new Manufacturer;
 
         // Создаем новый экземляр поставщика
@@ -140,7 +139,7 @@ class ManufacturerController extends Controller
             'Возможные типы услуг',     // Название чекбокса для пользователя в форме
             'services_types',           // Имя checkboxa для системы
             'id',                       // Поле записи которую ищем
-            'services_types', 
+            'services_types',
             'internal-self-one',        // Режим выборки через связи
             'checkboxer'                // Режим: checkboxer или filter
 
@@ -224,6 +223,7 @@ class ManufacturerController extends Controller
                 $result = $manufacturer->services_types()->sync($request->services_types_id);               
             } else {
                 $result = $manufacturer->services_types()->detach(); 
+
             };
 
         } else {
@@ -327,7 +327,7 @@ class ManufacturerController extends Controller
             'Возможные типы услуг',     // Название чекбокса для пользователя в форме
             'services_types',           // Имя checkboxa для системы
             'id',                       // Поле записи которую ищем
-            'services_types', 
+            'services_types',
             'internal-self-one',        // Режим выборки через связи
             'checkboxer'                // Режим: checkboxer или filter
 
@@ -362,7 +362,7 @@ class ManufacturerController extends Controller
                     $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
                 } else {
 
-                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);                       
+                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);
                 };
 
                 $worktime[$x]['end'] = $str_worktime_interval;
@@ -378,7 +378,7 @@ class ManufacturerController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-        return view('manufacturers.edit', compact('company', 'manufacturer', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
+        return view('manufacturers.edit', compact('manufacturer', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
     }
 
 
@@ -425,14 +425,11 @@ class ManufacturerController extends Controller
 
         // Телефон
         $phones = add_phones($request, $company);
-        
+
         $company->email = $request->email;
 
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
-        $company->account_settlement = $request->account_settlement;
-        $company->account_correspondent = $request->account_correspondent;
-        $company->bank = $request->bank;
 
         if ($company->sector_id != $request->sector_id) {
             $company->sector_id = $request->sector_id;

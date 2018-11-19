@@ -11,7 +11,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DealerPolicy
 {
-    
+
     use HandlesAuthorization;
     use PoliticTrait;
 
@@ -43,7 +43,7 @@ class DealerPolicy
     }
 
     public function update(User $user, Dealer $model)
-    { 
+    {
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
@@ -77,10 +77,10 @@ class DealerPolicy
         $result = $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
         return $result;
     }
-    
+
     public function god(User $user)
     {
         if(Auth::user()->god){return true;} else {return false;};
     }
-      
+
 }
