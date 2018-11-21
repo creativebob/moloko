@@ -9,6 +9,7 @@ use App\Http\ViewComposers\SidebarComposer;
 use App\Http\ViewComposers\SectorsSelectComposer;
 use App\Http\ViewComposers\CountriesSelectComposer;
 use App\Http\ViewComposers\LegalFormsSelectComposer;
+use App\Http\ViewComposers\ServicesTypesCheckboxComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.sectors', SectorsSelectComposer::class);
         view()->composer('includes.selects.countries', CountriesSelectComposer::class);
         view()->composer('includes.selects.legal_forms', LegalFormsSelectComposer::class);
+        view()->composer('includes.checkboxers.checkboxer_services_types', ServicesTypesCheckboxComposer::class);
     }
 
     /**

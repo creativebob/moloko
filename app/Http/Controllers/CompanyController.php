@@ -110,32 +110,10 @@ class CompanyController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        // Запрос для чекбокса - список типов услуг
-        $services_types_query = ServicesType::get();
-
-        // Контейнер для checkbox'а - инициируем
-        $checkboxer['status'] = null;
-        $checkboxer['entity_name'] = $this->entity_name;
-
-        // Настраиваем checkboxer
-        $services_types_checkboxer = addFilter(
-
-            $checkboxer,                // Контейнер для checkbox'а
-            $services_types_query,        // Коллекция которая будет взята
-            $request,
-            'Возможные типы услуг',            // Название чекбокса для пользователя в форме
-            'services_types',             // Имя checkboxa для системы
-            'id',                       // Поле записи которую ищем
-            'services_types',
-            'internal-self-one',        // Режим выборки через связи
-            'checkboxer'                // Режим: checkboxer или filter
-
-        );
-
         // Сущность
-        $entity = $this->entity_name;
+        // $entity = $this->entity_name;
 
-        return view('companies.create', compact('company', 'page_info', 'services_types_checkboxer', 'entity'));
+        return view('companies.create', compact('company', 'page_info'));
     }
 
     public function store(CompanyRequest $request)
@@ -156,117 +134,51 @@ class CompanyController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-        $schedule = new Schedule;
-        $schedule->company_id = $company_id;
-        $schedule->name = 'График работы компании';
-        $schedule->description = null;
-        $schedule->author_id = $user_id;
-        $schedule->save();
-        $schedule_id = $schedule->id;
-
-        // Функция getWorktimes ловит все поля расписания из запроса и готовит к записи в worktimes
-        $mass_time = getWorktimes($request, $schedule_id);
-
-        // Записываем в базу все расписание.
-        DB::table('worktimes')->insert($mass_time);
-
         $company = new Company;
         $company->name = $request->name;
         $company->alias = $request->alias;
-
         $company->email = $request->email;
-
-        // if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-        //     $company->extra_phone = cleanPhone($request->extra_phone);
-        // } else {$company->extra_phone = NULL;};
-
-        // Добавляем локацию
-        $company->location_id = create_location($request);
-        // $company->location_id = $location->id;
-
+        $company->legal_form_id = $request->legal_form_id;
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
-
         $company->ogrn = $request->ogrn;
         $company->okpo = $request->okpo;
         $company->okved = $request->okved;
-
-        $company->legal_form_id = $request->legal_form_id;
+        $company->location_id = create_location($request);
         $company->sector_id = $request->sector_id;
-        $company->schedule_id = $schedule->id;
-
-        // $company->director_user_id = $user->company_id;
         $company->author_id = $user_id;
-
         $company->save();
 
         // Если запись удачна - будем записывать связи
         if($company){
 
-            if((isset($request->bank_bic))&&(isset($request->bank_name))){
-
-                // Сохраняем в переменную наш БИК
-                $bic = $request->bank_bic;
-
-                // Проверяем существуют ли у пользователя такие счета в указанном банке
-                $cur_bank_account = BankAccount::whereNull('archive')
-                ->where('account_settlement', '=' , $request->account_settlement)
-                ->whereHas('bank', function($q) use ($bic){
-                    $q->where('bic', $bic);
-                })->count();
-
-                // Если такого счета нет, то:
-                if($cur_bank_account == 0){
-
-                    // Создаем новый банковский счёт
-                    $bank_account = new BankAccount;
-
-                    // Создаем алиас для нового банка
-                    $company_alias = Transliterate::make($request->bank_name, ['type' => 'url', 'lowercase' => true]);
-
-                    // Создаем новую компанию которая будет банком
-                    $company = Company::firstOrCreate(['bic' => $request->bank_bic], ['name' => $request->bank_name, 'alias' => $company_alias]);
-
-                    // Создаем банк, а если он уже есть - берем его ID
-                    $bank = Bank::firstOrCreate(['company_id' => $request->company_id, 'bank_id' => $company->id]);
-
-                    $bank_account->bank_id = $company->id;
-                    $bank_account->holder_id = $request->company_id;
-                    $bank_account->company_id = $company_id;
-                    $bank_account->account_settlement = $request->account_settlement;
-                    $bank_account->account_correspondent = $request->account_correspondent;
-                    $bank_account->author_id = $user->id;
-                    $bank_account->save();
-                }
-
-            }
-
-
             // Телефон
             $phones = add_phones($request, $company);
 
-            // Записываем связи: id-шники в таблицу Rooms
-            if(isset($request->services_types_id)){
+            // if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
+            //     $company->extra_phone = cleanPhone($request->extra_phone);
+            // } else {$company->extra_phone = NULL;};
 
+            // Добавляем банковский аккаунт
+            addBankAccount($company, $request);
+            setSchedule($company, $request);
+
+
+            // Записываем тип услуги
+            if(isset($request->services_types_id)){
                 $result = $company->services_types()->sync($request->services_types_id);
             } else {
                 $result = $company->services_types()->detach();
             };
 
+
         } else {
+
             abort(403, 'Ошибка записи компании');
         };
 
-
-        // Создаем связь расписания с компанией
-        $schedule_entity = new ScheduleEntity;
-        $schedule_entity->schedule_id = $schedule->id;
-        $schedule_entity->entity_id = $company->id;
-        $schedule_entity->entity = 'companies';
-        $schedule_entity->save();
-
         return redirect('/admin/companies');
-        // return redirect('admin/companies');
+
     }
 
     public function show($id)
@@ -290,10 +202,6 @@ class CompanyController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $company = Company::with(
-            'location.city', 
-            'sector', 
-            'services_types', 
-            'main_phones', 
             'extra_phones', 
             'bank_accounts.bank')
         ->moderatorLimit($answer)
@@ -301,43 +209,12 @@ class CompanyController extends Controller
 
         $this->authorize(getmethod(__FUNCTION__), $company);
 
-        $services_types = [];
-        foreach ($company->services_types as $service_type){
-            $services_types[] = $service_type->id;
-        }
-
-        // Имя столбца
-        $column = 'services_types_id';
-        $request[$column] = $services_types;
-
-        // Запрос для чекбокса - список типов услуг
-        $services_types_query = ServicesType::get();
-
-        // Контейнер для checkbox'а - инициируем
-        $checkboxer['status'] = null;
-        $checkboxer['entity_name'] = $this->entity_name;
-
-        // Настраиваем checkboxer
-        $services_types_checkboxer = addFilter(
-
-            $checkboxer,                // Контейнер для checkbox'а
-            $services_types_query,      // Коллекция которая будет взята
-            $request,
-            'Возможные типы услуг',     // Название чекбокса для пользователя в форме
-            'services_types',           // Имя checkboxa для системы
-            'id',                       // Поле записи которую ищем
-            'services_types',
-            'internal-self-one',        // Режим выборки через связи
-            'checkboxer'                // Режим: checkboxer или filter
-
-        );
-
-        // Сущность
-        $entity = $this->entity_name;
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-        return view('companies.edit', compact('company', 'page_info', 'services_types_checkboxer', 'entity'));
+
+        // dd($company->main_schedule);
+
+        return view('companies.edit', compact('company', 'page_info'));
     }
 
     public function update(CompanyRequest $request, $id)
@@ -374,7 +251,6 @@ class CompanyController extends Controller
         // Телефон
         $phones = add_phones($request, $company);
         $company->email = $request->email;
-
         $company->legal_form_id = $request->legal_form_id;
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
@@ -388,81 +264,12 @@ class CompanyController extends Controller
 
         // $company->director_user_id = Auth::user()->company_id;
         $company->save();
-        $company_id = $company->id;
 
         if($company){
 
-                // Сохраняем в переменную наш БИК
-                $bic = $request->bank_bic;
-
-                // Проверяем существуют ли у пользователя такие счета в указанном банке
-                $cur_bank_account = BankAccount::whereNull('archive')
-                ->where('account_settlement', '=' , $request->account_settlement)
-                ->whereHas('bank', function($q) use ($bic){
-                    $q->where('bic', $bic);
-                })->count();
-
-                // Если такого счета нет, то:
-                if($cur_bank_account == 0){
-
-                    // Создаем новый банковский счёт
-                    $bank_account = new BankAccount;
-
-                    // Создаем алиас для нового банка
-                    $company_alias = Transliterate::make($request->bank_name, ['type' => 'url', 'lowercase' => true]);
-
-                    // Создаем новую компанию которая будет банком
-                    $company_bank = Company::firstOrCreate(['bic' => $request->bank_bic], ['name' => $request->bank_name, 'alias' => $company_alias]);
-
-                    // Создаем банк, а если он уже есть - берем его ID
-                    $bank = Bank::firstOrCreate(['company_id' => $request->company_id, 'bank_id' => $company_bank->id]);
-
-                    $bank_account->bank_id = $company_bank->id;
-                    $bank_account->holder_id = $company_id;
-                    $bank_account->company_id = $user_company->id;
-
-                    $bank_account->account_settlement = $request->account_settlement;
-                    $bank_account->account_correspondent = $request->account_correspondent;
-                    $bank_account->author_id = $user->id;
-                    $bank_account->save();
-                }
-
+            addBankAccount($company, $request);
+            setSchedule($company, $request);
         }
-
-        // Если не существует расписания для компании - создаем его
-        if($company->schedules->count() < 1){
-
-            $schedule = new Schedule;
-            $schedule->company_id = $user->company_id;
-            $schedule->name = 'График работы для ' . $company->name;
-            $schedule->description = null;
-            $schedule->save();
-
-            // Создаем связь расписания с компанией
-            $schedule_entity = new ScheduleEntity;
-            $schedule_entity->schedule_id = $schedule->id;
-            $schedule_entity->entity_id = $company->id;
-            $schedule_entity->entity = 'companies';
-            $schedule_entity->save();
-
-            $schedule_id = $schedule->id;
-
-        } else {
-
-            $schedule_id = $company->schedules->first()->id;
-        };
-
-
-        // Функция getWorktimes ловит все поля расписания из запроса и готовит к записи в worktimes
-        $mass_time = getWorktimes($request, $schedule_id);
-
-        // dd($mass_time);
-
-        // Удаляем все записи времени в worktimes для этого расписания
-        $worktimes = Worktime::where('schedule_id', $schedule_id)->forceDelete();
-
-        // Вставляем новое время в расписание
-        DB::table('worktimes')->insert($mass_time);
 
         // Записываем связи: id-шники в таблицу companies_services_types
         $result = $company->services_types()->sync($request->services_types_id);

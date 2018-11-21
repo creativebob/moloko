@@ -11,6 +11,7 @@ use App\Staffer;
 use App\StageRole;
 use App\Sector;
 use App\Entity;
+use App\City;
 
 // Валидация
 use Illuminate\Http\Request;

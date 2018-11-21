@@ -118,13 +118,25 @@ class Company extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
+    // Получаем все графики на компанию
     public function schedules()
     {
-        return $this->belongsToMany('App\Schedule', 'schedule_entity', 'entity_id', 'schedule_id')->where('entity', 'companies');
+        return $this->morphToMany('App\Schedule', 'schedule_entities')->withPivot('mode');
     }
 
+    // Получаем график компании в адаптированном под шаблон виде
+    public function getMainScheduleAttribute($value) {
+        $main_schedule = $this->morphToMany('App\Schedule', 'schedule_entities')->with('worktimes')->wherePivot('mode', 'main')->first();
+        if($main_schedule != null){
+            return $main_schedule;                
+        } else {
+            return $value;
+        }
+    }
+
+    // Получаем график компании в адаптированном под шаблон виде
     public function getWorktimeAttribute($value) {
-            $worktime = $this->belongsToMany('App\Schedule', 'schedule_entity', 'entity_id', 'schedule_id')->where('entity', 'companies')->first();
+            $worktime = $this->morphToMany('App\Schedule', 'schedule_entities')->wherePivot('mode', 'main')->first();
             if($worktime != null){
                 $worktime = $worktime->worktimes;
                 return worktime_to_format($worktime->keyBy('weekday'));                
@@ -132,7 +144,6 @@ class Company extends Model
                 return $value;
             }
     }
-
 
     public function positions()
     {

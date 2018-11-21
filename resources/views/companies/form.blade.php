@@ -129,7 +129,10 @@
                     @include('includes.scripts.class.checkboxer')
 
                     <div class="small-12 medium-12 cell checkbox checkboxer">
-                        @include('includes.inputs.checkboxer', ['name'=>'services_types', 'value'=>$services_types_checkboxer])
+
+                        @include('includes.scripts.class.checkboxer')
+                        @include('includes.checkboxers.checkboxer_services_types', ['value' => isset($company->services_types) ? $company->services_types : null])
+
                     </div>
 
                     {{-- Чекбоксы управления --}}
