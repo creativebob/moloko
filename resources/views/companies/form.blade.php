@@ -127,7 +127,7 @@
                     <div class="small-12 medium-12 cell checkbox checkboxer">
 
                         @include('includes.scripts.class.checkboxer')
-                        @include('includes.checkboxers.checkboxer_services_types', ['value' => isset($company->services_types) ? $company->services_types : null])
+                        @include('includes.inputs.checker', ['entity' => $company, 'model'=>'ServicesType', 'relation'=>'services_types', 'title'=>'Типы услуг'])
 
                     </div>
 

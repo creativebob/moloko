@@ -149,9 +149,11 @@ class PlaceController extends Controller
         $place->description = $request->description;
         $place->square = $request->square;
         
+        // dd($request);
+
         // Добавляем локацию
-        $location = create_location($request);
-        $company->location_id = $location->id;
+        $location_id = create_location($request);
+        $place->location_id = $location_id;
 
         if($user->company_id != null){
             $place->company_id = $user->company_id;
@@ -249,10 +251,12 @@ class PlaceController extends Controller
             'places_types',             // Имя checkboxa для системы
             'id',                       // Поле записи которую ищем
             'places_types', 
-            'internal-self-one',        // Режим выборки через связи
-            'checkboxer'                // Режим: checkboxer или filter
+            'internal-self-one'        // Режим выборки через связи
+            // 'checkboxer'                // Режим: checkboxer или filter
 
         );
+
+        // dd($places_types_checkboxer);
 
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');

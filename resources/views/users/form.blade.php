@@ -47,6 +47,7 @@
             <label>Отчество
               @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$user->patronymic, 'required'=>''])
             </label>
+
           </div>
           <div class="small-12 large-6 cell">
             <label>Выберите аватар

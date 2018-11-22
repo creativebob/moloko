@@ -344,9 +344,9 @@ function setSchedule($request, $company) {
 // Обновление
 function setServicesType($request, $company) {
 
-                   // Записываем тип услуги
-            if(isset($request->services_types_id)){
-                $result = $company->services_types()->sync($request->services_types_id);
+            // Записываем тип услуги
+            if(isset($request->services_types)){
+                $result = $company->services_types()->sync($request->services_types);
             } else {
                 $result = $company->services_types()->detach();
             };

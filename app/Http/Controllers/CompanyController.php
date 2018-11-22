@@ -253,12 +253,9 @@ class CompanyController extends Controller
             add_phones($request, $company);
             addBankAccount($request, $company);
             setSchedule($request, $company);
-            // setServicesType($request, $company);
+            setServicesType($request, $company);
 
         }
-
-        // Записываем связи: id-шники в таблицу companies_services_types
-        $result = $company->services_types()->sync($request->services_types_id);
 
         return redirect('/admin/companies');
     }
