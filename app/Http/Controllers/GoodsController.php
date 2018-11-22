@@ -758,15 +758,15 @@ class GoodsController extends Controller
 
         // Получаем артикул товара
         $goods_article = $cur_goods->goods_article;
-
-        // Проверки только дял черновика
+        // dd($cur_goods->goods_article->draft);
+        // Проверки только для черновика
         if ($cur_goods->goods_article->draft == 1) {
 
             // Определяем количество метрик и составов
             $metrics_count = isset($request->metrics) ? count($request->metrics) : 0;
             // dd($metrics_count);
 
-            // Если пришли значеняи метрик
+            // Если пришли значения метрик
             $metrics_values = [];
             if (isset($request->metrics)) {
                 // dd($request->metrics);
@@ -802,7 +802,7 @@ class GoodsController extends Controller
             $compositions_count = isset($request->compositions_values) ? count($request->compositions_values) : 0;
             // dd($compositions_count);
 
-            // Если пришли значеняи метрик
+            // Если пришли значения состава
             $compositions_values = [];
             if (isset($request->compositions_values)) {
                 // dd($request->compositions_values);
@@ -1022,7 +1022,6 @@ class GoodsController extends Controller
                 $cur_goods->catalogs()->detach();
             }
 
-            if ($cur_goods->goods_article->draft == 1) {
 
                 // Пишем метрики
                 if (count($metrics_values)) {
@@ -1062,7 +1061,7 @@ class GoodsController extends Controller
                 } else {
                     $goods_article->$compositions_relation()->detach();
                 }
-            }
+
 
             if ($goods_article->name != $request->name) {
                 // dd($request);
@@ -1329,7 +1328,8 @@ class GoodsController extends Controller
         ->whereNull('archive')
         ->whereName($request->name)
         ->get(['name', 'goods_product_id']);
-            // dd($goods_articles);
+        // dd($goods_articles);
+        // dd($request);
 
         if (count($goods_articles)) {
 

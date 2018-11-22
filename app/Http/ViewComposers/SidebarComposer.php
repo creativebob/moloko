@@ -13,10 +13,7 @@ class SidebarComposer
 
 		// Получаем список сущностей из сессии
 		$session = app('session')->get('access');
-		$entities_list = $session['settings']['entities_list'];
-		if (empty($entities_list)) {
-			$entities_list = [];
-		}
+		$entities_list = isset($session['settings']['entities_list']) ? $session['settings']['entities_list'] : [] ;
         // dd($entities_list);
 
         // Получаем меню (знаем что статика, поэтому указываем в таблице навигации id)

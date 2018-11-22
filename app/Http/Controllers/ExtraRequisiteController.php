@@ -37,7 +37,7 @@ class ExtraRequisiteController extends Controller
     public function index(Request $request)
     {
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
@@ -64,7 +64,7 @@ class ExtraRequisiteController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
- 
+
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
@@ -93,7 +93,7 @@ class ExtraRequisiteController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('extra_requisites.create', compact('extra_requisite', 'page_info'));  
+        return view('extra_requisites.create', compact('extra_requisite', 'page_info'));
     }
 
     public function store(ExtraRequisiteRequest $request)
@@ -249,7 +249,7 @@ class ExtraRequisiteController extends Controller
                 return redirect('/admin/stages');
             } else {
                 abort(403, 'Ошибка при удалении этапа');
-            } 
+            }
         } else {
 
             abort(403, 'Этап не найден');
@@ -284,7 +284,7 @@ class ExtraRequisiteController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -311,7 +311,7 @@ class ExtraRequisiteController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
