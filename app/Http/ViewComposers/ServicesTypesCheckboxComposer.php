@@ -16,7 +16,7 @@ class ServicesTypesCheckboxComposer
           foreach ($view->value as $service_type){
               $services_types[] = $service_type->id;
           }
-        }      
+        }
 
         // Имя столбца
         $column = 'services_types_id';

@@ -83,7 +83,7 @@ function add_phones($request, $item) {
 			], [
 				'crop' => substr(cleanPhone($request->main_phone), -4),
 			]);
-			$item->phones()->attach($phone->id, ['main' => 1]); 
+			$item->phones()->attach($phone->id, ['main' => 1]);
 		}
 	}
 }

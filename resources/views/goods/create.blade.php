@@ -41,18 +41,11 @@
 				<div class="small-12 cell">
 					<div class="grid-x grid-margin-x" id="units-block">
 						<div class="small-12 medium-6 cell">
-							<label>Категория единиц измерения
-								{{ Form::select('units_category_id', $units_categories_list, 6, ['id' => 'units-categories-list', 'required']) }}
-							</label>
+							@include('includes.selects.units_categories', ['default' => 6])
 						</div>
 
 						<div class="small-12 medium-6 cell">
-							<label>Единица измерения
-								<select name="unit_id" id="units-list" required>
-									@include('goods.units_list', $units)
-								</select>
-								{{-- Form::select('unit_id', $units_list, 26, ['id' => 'units-list', 'required']) --}}
-							</label>
+
 						</div>
 					</div>
 				</div>
@@ -86,7 +79,7 @@
 		</div>
 	</div>
 	{{ Form::close() }}
-	<div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+	<div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
 
 

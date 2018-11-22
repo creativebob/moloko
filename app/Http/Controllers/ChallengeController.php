@@ -33,7 +33,7 @@ class ChallengeController extends Controller
     public function index(Request $request)
     {
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
@@ -49,10 +49,10 @@ class ChallengeController extends Controller
         // --------------------------------------------------------------------------------------------------------
 
         $challenges = Challenge::with(
-            'challenge_type', 
-            'author', 
-            'appointed.staff', 
-            'finisher', 
+            'challenge_type',
+            'author',
+            'appointed.staff',
+            'finisher',
             'subject'
         )
         ->companiesLimit($answer)
@@ -113,7 +113,7 @@ class ChallengeController extends Controller
         $answer_staff = operator_right('staff', false, 'index');
 
         // Главный запрос
-        
+
         $priority_list = Priority::pluck('name', 'id');
 
         $staff = Staffer::with('user')
@@ -145,8 +145,8 @@ class ChallengeController extends Controller
 
         // $body = 'sfsdf432';
         // $entity_model = 'App\Lead';
-        // $id = 1;  
-        // dd($request);    
+        // $id = 1;
+        // dd($request);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Challenge::class);
@@ -199,7 +199,7 @@ class ChallengeController extends Controller
                 $message .= "Автор: " . $user->first_name . " " . $user->second_name . "\r\n";
                 $message .= "Дедлайн: " . $challenge->deadline_date->format('d.m.Y - H:i') . "\r\n";
                 if (isset($challenge->description)) {
-                    $message .= "Описание: " . $challenge->description . "\r\n";  
+                    $message .= "Описание: " . $challenge->description . "\r\n";
                 }
 
                 $message .= "\r\n";
@@ -283,11 +283,11 @@ class ChallengeController extends Controller
                 $message .= "Исполнитель: " . $user->first_name . " " . $user->second_name . "\r\n";
 
                 if (isset($challenge->description)) {
-                    $message .= "Описание: " . $challenge->description. "\r\n";  
+                    $message .= "Описание: " . $challenge->description. "\r\n";
                 }
 
                 if (isset($diff)) {
-                    $message .= "Опоздание (в часах): " . $diff . "\r\n";  
+                    $message .= "Опоздание (в часах): " . $diff . "\r\n";
                 }
 
                 $message .= "\r\n";
@@ -315,9 +315,9 @@ class ChallengeController extends Controller
                 'error_status' => 1,
                 'error_message' => 'Ошибка при выполнении задачи!',
             ];
-        }  
+        }
 
-        return json_encode($result, JSON_UNESCAPED_UNICODE); 
+        return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     public function destroy(Request $request, $id)
@@ -344,10 +344,10 @@ class ChallengeController extends Controller
             $message .= "Действие: " . $challenge->challenge_type->name . "\r\n";
             $message .= "Дедлайн: " . $challenge->deadline_date->format('d.m.Y - H:i') . "\r\n";
             $message .= "Дата снятия: " . Carbon::now()->format('d.m.Y - H:i') . "\r\n";
-            $message .= "Снял: " . $user->first_name . " " . $user->second_name . "\r\n"; 
+            $message .= "Снял: " . $user->first_name . " " . $user->second_name . "\r\n";
 
             if (isset($challenge->description)) {
-                $message .= "Описание: " . $challenge->description. "\r\n";  
+                $message .= "Описание: " . $challenge->description. "\r\n";
             }
 
             $message .= "\r\n";
@@ -376,7 +376,7 @@ class ChallengeController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
