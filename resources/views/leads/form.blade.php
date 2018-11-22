@@ -356,7 +356,7 @@
                             <tr>
                                 <td>Менеджер: </td><td>{{ $lead->manager->name }}</td>
                                 <td>
-                                    @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
+                                    @if (extra_right('lead-appointment') || (extra_right('lead-appointment-self') && ($lead->manager_id == Auth::user()->id)) || ($lead->manager_id == Auth::user()->id))
                                     <a id="lead-free" class="button tiny">Освободить</a>
                                     @endif
                                 </td>

@@ -21,7 +21,7 @@
 
             if($nolimit == true){
 
-                // Видим все записи компании 
+                // Видим все записи компании
                 $dependence = false;
 
             } else {
@@ -38,9 +38,9 @@
             $use_authors = true; // Да
 
             // ПРОВЕРЯЕМ ПРАВО НА ПРОСМОТР ЗАПИСЕЙ ДРУГИХ АВТОРОВ  ----------------------------------------------------------------------------------------
-            // Проверяем в правах (которые записаны в сессию) наличие права на просмотр чужих записей 
+            // Проверяем в правах (которые записаны в сессию) наличие права на просмотр чужих записей
             // и отсутствие такого запрета
-            
+
             $mass_right = getRight('authors', $entity_name, $session);
             $authors_status = $mass_right['result'];
             // dd($mass_right);
@@ -52,7 +52,7 @@
 
                     // Если РАЗРЕШЕНО использовать список авторов
                     // Проверяем - есть ли в сессии авторы?
-                    if(isset($session['all_rights']['authors-'.$entity_name.'-allow']['authors'])) 
+                    if(isset($session['all_rights']['authors-'.$entity_name.'-allow']['authors']))
                     {
 
                         // Берем их так как они есть
@@ -165,7 +165,7 @@
 
                     // Вычетаем из списка департаментов - департаменты для которых есть запрет
                     $departments = $departments->except($minus_departments);
-                };                
+                };
             };
 
 
@@ -261,10 +261,10 @@
             $session  = session('access');
             if(!isset($session)){abort(403, 'Нет сессии!');};
 
-            if(empty($session['user_info']['extra_rights'])){
+            if(empty($session['user_info']['extra_rights'])) {
                 $result = false;
             } else {
-                $result = $session['user_info']['extra_rights'][$alias];
+                $result = isset($session['user_info']['extra_rights'][$alias]);
             }
             return $result;
         }
