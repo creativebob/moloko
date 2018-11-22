@@ -52,17 +52,13 @@
                         @include('includes.selects.countries', ['value'=>$company->location ? $company->location->country_id : null])
                     </div>
 
+
                     <div class="small-12 medium-6 cell">
+                        {{-- Город --}}
                         @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
 
                         <label>Адрес
-                            @php
-                                $address = null;
-                                if (isset($company->location->address)) {
-                                    $address = $company->location->address;
-                                }
-                            @endphp
-                            @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+                            @include('includes.inputs.address', ['value' => isset($company->location->address) ? $company->location->address : null, 'name'=>'address', 'required'=>''])
                         </label>
                     </div>
 
@@ -110,7 +106,7 @@
 
                         {{-- Подключаем банковские аккаунты --}}
                         @include('includes.bank_accounts.fieldset', ['company' => $company])
- 
+
                     </div>
                 </div>
             </div>

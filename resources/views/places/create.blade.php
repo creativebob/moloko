@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('inhead')
+@include('includes.scripts.class.city_search')
+@endsection
+
 @section('title', 'Новое помещение')
 
 @section('breadcrumbs', Breadcrumbs::render('create', $page_info))
@@ -23,9 +27,7 @@
 @endsection
 
 @section('scripts')
-  @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
-  
 @endsection
 
 

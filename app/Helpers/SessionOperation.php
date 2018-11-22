@@ -261,7 +261,7 @@
             $session  = session('access');
             if(!isset($session)){abort(403, 'Нет сессии!');};
 
-            if(empty($session['user_info']['extra_rights'])){
+            if(empty($session['user_info']['extra_rights'])) {
                 $result = false;
             } else {
                 $result = isset($session['user_info']['extra_rights'][$alias]);
