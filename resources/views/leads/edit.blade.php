@@ -34,19 +34,19 @@ $autofocus = 'autofocus';
 
 if(isset($lead->main_phone)){
 
-if($lead->main_phone->phone != null){
-$readonly = 'readonly';
-$autofocus = '';
-} else {
-$readonly = '';
-$autofocus = 'autofocus';
-}
+	if($lead->main_phone->phone != null){
+		$readonly = 'readonly';
+		$autofocus = '';
+	} else {
+		$readonly = '';
+		$autofocus = 'autofocus';
+	}
 }
 
 if($lead->manager_id == 1){
-$disabled_leadbot = 'disabled';
+	$disabled_leadbot = 'disabled';
 } else {
-$disabled_leadbot = '';
+	$disabled_leadbot = '';
 }
 
 
@@ -75,6 +75,7 @@ $disabled_leadbot = '';
 
 	var lead_id = '{{ $lead->id }}';
 	var lead_type_id = '{{ $lead->lead_type_id }}';
+	var manager_id = '{{ $lead->manager_id }}';
 
 	$(document).on('dblclick', '#phone', function() {
 
@@ -86,56 +87,28 @@ $disabled_leadbot = '';
 	$(document).on('click', '#lead-free', function(event) {
 		event.preventDefault();
 
-		$.ajax({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
-			url: "/admin/lead_appointed_check",
-			type: "POST",
-			success: function(data){
+		$.post("/admin/lead_appointed_check", {manager_id: manager_id}, function(data){
 
-				if (data == 1) {
+			if (data == 1) {
 
-					$.ajax({
-						headers: {
-							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-						},
-						url: "/admin/lead_appointed",
-						type: "POST",
-						data: {id: lead_id},
-						success: function(html){
-							$('#modal').html(html);
-							$('#add-appointed').foundation();
-							$('#add-appointed').foundation('open');
-						}
-					});
-				} else {
+				$.post("/admin/lead_appointed", {id: lead_id}, function(html){
+					$('#modal').html(html);
+					$('#add-appointed').foundation();
+					$('#add-appointed').foundation('open');
+				});
+			} else {
 
-					$.ajax({
-						headers: {
-							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-						},
-						url: "/admin/lead_free",
-						type: "POST",
-						data: {id: lead_id},
-						success: function(date){
+				$.post("/admin/lead_free", {id: lead_id}, function(data){
+					if (data == true) {
 
-							var result = $.parseJSON(date);
-							if (result.error_status == 0) {
-
-								var url = '{{ url("admin/leads") }}';
-
-								window.location.replace(url);
-
-								// $(location).attr('href', );
-							} else {
-                				// Выводим ошибку на страницу
-                				alert(result.error_message);
-                			};
-
-                		}
-                	});
-				}
+						var url = '{{ url("admin/leads") }}';
+						window.location.replace(url);
+						// $(location).attr('href', );
+					} else {
+                		// Выводим ошибку на страницу
+                		alert(data);
+                	};
+                });
 			}
 		});
 	});

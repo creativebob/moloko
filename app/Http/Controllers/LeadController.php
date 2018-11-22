@@ -1030,19 +1030,7 @@ class LeadController extends Controller
         $lead->manager_id = 1;
         $lead->save();
 
-        if ($lead) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при освобождении лида!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        return response()->json(isset($lead) ?? 'Ошибка при освобождении лида!');
     }
 
     // Назначение лида
@@ -1050,9 +1038,9 @@ class LeadController extends Controller
     {
 
         // Получаем данные для авторизованного пользователя
-        // $user = $request->user();
+        $user = $request->user();
 
-        $user = User::with('staff.position.charges')->findOrFail($request->user()->id);
+        $user = User::with('staff.position.charges')->findOrFail($user->id);
 
         foreach ($user->staff as $staffer) {
             // $staffer = $user->staff->first();
@@ -1065,9 +1053,11 @@ class LeadController extends Controller
                     // break;
                 }
 
-                if ($charge->alias == 'lead-appointment-self') {
-                    $direction = 1;
+                if (isset($request->manager_id)) {
+                    if (($charge->alias == 'lead-appointment-self') && ($user->id == $request->manager_id)) {
+                        $direction = 1;
                     // break;
+                    }
                 }
             }
         }
@@ -1160,7 +1150,7 @@ class LeadController extends Controller
             if (isset($user->telegram_id)) {
 
                 // Если у менеджера нет телеграмма, оповещаем руководителя
-                $message = 'У ' . $manager->first_name.' '.$manager->second_name . " отсутствует Telegram ID, оповестите его другим способом!\r\n\r\n";
+                $message = 'У ' . $manager->first_name . ' ' . $manager->second_name . " отсутствует Telegram ID, оповестите его другим способом!\r\n\r\n";
                 $message = lead_info($message, $lead);
 
                 $telegram_destinations[] = $user;
