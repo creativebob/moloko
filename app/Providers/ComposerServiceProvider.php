@@ -11,6 +11,9 @@ use App\Http\ViewComposers\CountriesSelectComposer;
 use App\Http\ViewComposers\LegalFormsSelectComposer;
 use App\Http\ViewComposers\ServicesTypesCheckboxComposer;
 
+use App\Http\ViewComposers\UnitsCategoriesComposer;
+use App\Http\ViewComposers\UnitsComposer;
+
 class ComposerServiceProvider extends ServiceProvider
 {
 
@@ -21,6 +24,9 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.countries', CountriesSelectComposer::class);
         view()->composer('includes.selects.legal_forms', LegalFormsSelectComposer::class);
         view()->composer('includes.checkboxers.checkboxer_services_types', ServicesTypesCheckboxComposer::class);
+
+        view()->composer(['includes.selects.units_categories'], UnitsCategoriesComposer::class);
+        view()->composer(['includes.selects.units'], UnitsComposer::class);
     }
 
     public function register()

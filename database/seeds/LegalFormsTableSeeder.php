@@ -23,7 +23,7 @@ class LegalFormsTableSeeder extends Seeder
             [
                 'company_id' => null,
                 'name' => 'ИП',
-                'full_name' => 'Общество с ограниченной ответственностью',
+                'full_name' => 'Индивидуальный предприниматель',
                 'description' => null,
                 'sort' => 2,
                 'author_id' => 1,
