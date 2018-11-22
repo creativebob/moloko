@@ -264,7 +264,7 @@
             if(empty($session['user_info']['extra_rights'])){
                 $result = false;
             } else {
-                $result = $session['user_info']['extra_rights']->where('alias', $alias)->isNotEmpty();
+                $result = $session['user_info']['extra_rights'][$alias];
             }
             return $result;
         }
