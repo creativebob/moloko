@@ -143,6 +143,7 @@ class ClientController extends Controller
 
         // Смотрим компанию пользователя
         $company_id = $user->company_id;
+        $company = $user->company;
 
         // Скрываем бога
         $user_id = hideGod($user);
@@ -161,50 +162,49 @@ class ClientController extends Controller
         // Записываем в базу все расписание.
         DB::table('worktimes')->insert($mass_time);
 
-        $company = new Company;
-        $company->name = $request->name;
-        $company->alias = $request->alias;
+        $client = new Company;
+        $client->name = $request->name;
+        $client->alias = $request->alias;
 
-        $company->email = $request->email;
+        $client->email = $request->email;
 
         // Добавляем локацию
-        $company->location_id = create_location($request);
+        $client->location_id = create_location($request);
 
-        $company->inn = $request->inn;
-        $company->kpp = $request->kpp;
-        $company->account_settlement = $request->account_settlement;
-        $company->account_correspondent = $request->account_correspondent;
+        $client->inn = $request->inn;
+        $client->kpp = $request->kpp;
+        $client->account_settlement = $request->account_settlement;
+        $client->account_correspondent = $request->account_correspondent;
 
-        $company->sector_id = $request->sector_id;
-        $company->schedule_id = $schedule->id;
+        $client->sector_id = $request->sector_id;
+        $client->schedule_id = $schedule->id;
 
         // $company->director_user_id = $user->company_id;
-        $company->author_id = $user->id;
+        $client->author_id = $user->id;
 
-        $company->save();
+        $client->save();
 
         // Если запись удачна - будем записывать связи
-        if($company){
+        if($client){
+
+            // Записываем компанию как клиента
+            $company->clients()->attach($client->id);
 
             // Телефон
-            $phones = add_phones($request, $company);
+            $phones = add_phones($request, $client);
 
             // Записываем связи: id-шники в таблицу Rooms
             if(isset($request->services_types_id)){
                 
-                $result = $company->services_types()->sync($request->services_types_id);               
+                $result = $client->services_types()->sync($request->services_types_id);               
             } else {
-                $result = $company->services_types()->detach(); 
+                $result = $client->services_types()->detach(); 
             };
 
         } else {
             abort(403, 'Ошибка записи компании');
         };
 
-        $dealer = new Dealer;
-        $dealer->company_id = $company_id;
-        $dealer->contragent_id = $company->id;
-        $dealer->save();
 
         // Создаем связь расписания с компанией
         $schedule_entity = new ScheduleEntity;
@@ -340,7 +340,7 @@ class ClientController extends Controller
 
                 $worktime[$x]['end'] = null;
             }
-
+            
         };
 
         // Получаем список стран

@@ -460,6 +460,15 @@ if (localStorage.getItem('task') == 0) {
 renderContent ();
 });
 
+// Открываем менеджер задач
+function submitAjax (form) {
+    this.event.preventDefault();
+    $(form).foundation('validateForm');
+    var valid = $(form + ' .is-invalid-input').length;
+    return valid == 0;
+};
+
+
 function checkFilter () {
 
 	// var marginTop = '6.2em';

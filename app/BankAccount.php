@@ -31,7 +31,7 @@ class BankAccount extends Model
 
     use Notifiable;
     // use SoftDeletes;
-    //
+
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -51,7 +51,6 @@ class BankAccount extends Model
         'company_id',
         'holder_id',
         'bank_id',
-
     ];
 
     // Получаем компанию.
@@ -69,7 +68,7 @@ class BankAccount extends Model
     // Получаем банк
     public function bank()
     {
-        return $this->belongsTo('App\Bank', 'bank_id');
+        return $this->belongsTo('App\Company', 'bank_id');
     }
 
     // Получаем автора

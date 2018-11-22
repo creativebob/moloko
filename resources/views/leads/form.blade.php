@@ -12,9 +12,7 @@
                         <label>Телефон
                             {{ Form::text('main_phone', isset($lead->main_phone->phone) ? $lead->main_phone->phone : null, ['class'=>'phone-field', 'maxlength'=>'17', 'autocomplete'=>'off', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'id'=>'phone', $autofocus, $readonly]) }}
                             <span class="form-error">Укажите номер</span>
-
                         </label>
-
                     </div>
                     <div class="small-6 medium-6 large-6 cell">
                         <label>Контактное лицо

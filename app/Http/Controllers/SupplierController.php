@@ -169,6 +169,8 @@ class SupplierController extends Controller
 
         // Смотрим компанию пользователя
         $company_id = $user->company_id;
+        $company = $user->company;
+
 
         // Скрываем бога
         $user_id = hideGod($user);
@@ -187,55 +189,60 @@ class SupplierController extends Controller
         // Записываем в базу все расписание.
         DB::table('worktimes')->insert($mass_time);
 
-        $company = new Company;
-        $company->name = $request->name;
-        $company->alias = $request->alias;
+        $supplier = new Company;
+        $supplier->name = $request->name;
+        $supplier->alias = $request->alias;
 
-        $company->email = $request->email;
+        $supplier->email = $request->email;
 
         // Добавляем локацию
-        $company->location_id = create_location($request);
+        $supplier->location_id = create_location($request);
 
-        $company->inn = $request->inn;
-        $company->kpp = $request->kpp;
-        $company->account_settlement = $request->account_settlement;
-        $company->account_correspondent = $request->account_correspondent;
+        $supplier->inn = $request->inn;
+        $supplier->kpp = $request->kpp;
+        $supplier->account_settlement = $request->account_settlement;
+        $supplier->account_correspondent = $request->account_correspondent;
 
-        $company->sector_id = $request->sector_id;
-        $company->schedule_id = $schedule->id;
+        $supplier->sector_id = $request->sector_id;
+        $supplier->schedule_id = $schedule->id;
 
         // $company->director_user_id = $user->company_id;
-        $company->author_id = $user->id;
+        $supplier->author_id = $user->id;
 
-        $company->save();
+        $supplier->save();
 
         // Если запись удачна - будем записывать связи
-        if($company){
+        if($supplier){
+
+            // Записываем компанию как поставщика
+            $company->suppliers()->attach($supplier->id);
 
             // Телефон
-            $phones = add_phones($request, $company);
+            $phones = add_phones($request, $supplier);
 
             // Записываем связи: id-шники в таблицу Rooms
             if(isset($request->services_types_id)){
                 
-                $result = $company->services_types()->sync($request->services_types_id);               
+                $result = $supplier->services_types()->sync($request->services_types_id);               
             } else {
-                $result = $company->services_types()->detach(); 
+                $result = $supplier->services_types()->detach(); 
             };
 
         } else {
             abort(403, 'Ошибка записи компании');
         };
 
-        $supplier = new Supplier;
-        $supplier->company_id = $company_id;
-        $supplier->contragent_id = $company->id;
-        $supplier->save();
+
+        // $supplier = new Supplier;
+        // $supplier->company_id = $company_id;
+        // $supplier->contragent_id = $company->id;
+        // $supplier->save();
+
 
         // Создаем связь расписания с компанией
         $schedule_entity = new ScheduleEntity;
         $schedule_entity->schedule_id = $schedule->id;
-        $schedule_entity->entity_id = $company->id;
+        $schedule_entity->entity_id = $supplier->id;
         $schedule_entity->entity = 'companies';
         $schedule_entity->save();
 

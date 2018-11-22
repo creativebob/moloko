@@ -31,7 +31,7 @@ class Client extends Model
 
     use Notifiable;
     // use SoftDeletes;
-    // 
+
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -49,13 +49,13 @@ class Client extends Model
     // protected $dates = ['deleted_at'];
     protected $fillable = [
         'company_id', 
-        'contragent_id', 
+        'client_id', 
     ];
 
     // Получаем компанию.
     public function company()
     {
-        return $this->belongsTo('App\Company', 'contragent_id');
+        return $this->belongsTo('App\Company', 'client_id');
     }
 
     // Получаем автора

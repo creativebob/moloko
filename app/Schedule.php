@@ -48,7 +48,7 @@ class Schedule extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
- 	protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'created_at'];
 
     protected $fillable = [
 

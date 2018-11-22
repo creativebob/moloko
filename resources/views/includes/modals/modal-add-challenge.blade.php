@@ -22,7 +22,7 @@
 
                         <div class="small-12 medium-6 cell">
                             <label>Время
-                                @include('includes.inputs.time', ['name'=>'deadline_time', 'value'=>null, 'required'=>'', 'default' => '10:00'])
+                                @include('includes.inputs.time', ['name'=>'deadline_time', 'value'=>'10:00', 'required'=>''])
                             </label>
                         </div>
                     </div>

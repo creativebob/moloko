@@ -81,7 +81,7 @@ class DealerController extends Controller
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-
+        // dd($dealers);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -169,6 +169,7 @@ class DealerController extends Controller
 
         // Смотрим компанию пользователя
         $company_id = $user->company_id;
+        $company = $user->company;
 
         // Скрываем бога
         $user_id = hideGod($user);
@@ -187,55 +188,53 @@ class DealerController extends Controller
         // Записываем в базу все расписание.
         DB::table('worktimes')->insert($mass_time);
 
-        $company = new Company;
-        $company->name = $request->name;
-        $company->alias = $request->alias;
+        $dealer = new Company;
+        $dealer->name = $request->name;
+        $dealer->alias = $request->alias;
 
-        $company->email = $request->email;
+        $dealer->email = $request->email;
 
         // Добавляем локацию
-        $company->location_id = create_location($request);
+        $dealer->location_id = create_location($request);
 
-        $company->inn = $request->inn;
-        $company->kpp = $request->kpp;
-        $company->account_settlement = $request->account_settlement;
-        $company->account_correspondent = $request->account_correspondent;
+        $dealer->inn = $request->inn;
+        $dealer->kpp = $request->kpp;
+        $dealer->account_settlement = $request->account_settlement;
+        $dealer->account_correspondent = $request->account_correspondent;
 
-        $company->sector_id = $request->sector_id;
-        $company->schedule_id = $schedule->id;
+        $dealer->sector_id = $request->sector_id;
+        $dealer->schedule_id = $schedule->id;
 
         // $company->director_user_id = $user->company_id;
-        $company->author_id = $user->id;
+        $dealer->author_id = $user->id;
 
-        $company->save();
+        $dealer->save();
 
         // Если запись удачна - будем записывать связи
-        if($company){
+        if($dealer){
+
+            // Записываем компанию как дилера
+            $company->dealers()->attach($dealer->id);
 
             // Телефон
-            $phones = add_phones($request, $company);
+            $phones = add_phones($request, $dealer);
 
             // Записываем связи: id-шники в таблицу Rooms
             if(isset($request->services_types_id)){
                 
-                $result = $company->services_types()->sync($request->services_types_id);               
+                $result = $dealer->services_types()->sync($request->services_types_id);               
             } else {
-                $result = $company->services_types()->detach(); 
+                $result = $dealer->services_types()->detach(); 
             };
 
         } else {
             abort(403, 'Ошибка записи компании');
         };
 
-        $dealer = new Dealer;
-        $dealer->company_id = $company_id;
-        $dealer->contragent_id = $company->id;
-        $dealer->save();
-
         // Создаем связь расписания с компанией
         $schedule_entity = new ScheduleEntity;
         $schedule_entity->schedule_id = $schedule->id;
-        $schedule_entity->entity_id = $company->id;
+        $schedule_entity->entity_id = $dealer->id;
         $schedule_entity->entity = 'companies';
         $schedule_entity->save();
 

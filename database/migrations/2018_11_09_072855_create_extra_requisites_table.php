@@ -13,6 +13,9 @@ class CreateExtraRequisitesTable extends Migration
 
             $table->increments('id');
 
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании под которой сделана запись');
+            // $table->foreign('company_id')->references('id')->on('companies');
+
             $table->string('name')->nullable()->index()->comment('Название дополнительного реквизита');
             $table->text('description')->nullable()->comment('Описание');
 

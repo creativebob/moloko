@@ -1,6 +1,7 @@
 <script type="text/javascript">
 
-var entity = '{{ $entity }}';
+var entity = '{{ $page_info->alias }}';
+// alert(entity);
 
 // Меняем режим отображения
 $(document).on('click', '#add-extra-phone', function(event) {

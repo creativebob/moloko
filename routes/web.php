@@ -678,6 +678,16 @@ Route::resource('/clients', 'ClientController')->middleware('auth');
 Route::resource('banks', 'BankController')->middleware('auth');
 
 
+// ------------------------------------ Банковские аккаунты -------------------------------------------------
+
+// Основные методы
+Route::any('/create_bank_account', 'BankAccountController@ajax_create')->middleware('auth');
+Route::any('/edit_bank_account', 'BankAccountController@ajax_edit')->middleware('auth');
+Route::any('/update_bank_account', 'BankAccountController@ajax_update')->middleware('auth');
+Route::any('/store_bank_account', 'BankAccountController@ajax_store')->middleware('auth');
+Route::resource('/bank_accounts', 'BankAccountController')->middleware('auth');
+
+
 // ------------------------------------- Правила доступа ----------------------------------------------------
 
 // Основные методы

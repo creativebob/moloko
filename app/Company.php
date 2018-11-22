@@ -48,13 +48,17 @@ class Company extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
+    protected $model_name = ['company'];
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'name',
-        'alias',
-        'phone',
-        'extra_phone'
+        'name', 
+        'alias', 
+        'phone', 
+        'extra_phone',
+        'bic'
     ];
+
+
 
     // Фильтрация по городу
     public function scopeAuthorFilter($query, $request)
@@ -84,6 +88,11 @@ class Company extends Model
         return $this->hasMany('App\Department')->where('filial_status', 1);
     }
 
+    public function bank_accounts()
+    {
+        return $this->hasMany('App\BankAccount', 'holder_id');
+    }
+
     public function sites()
     {
         return $this->hasMany('App\Site');
@@ -109,9 +118,31 @@ class Company extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
+    // Получаем все графики на компанию
     public function schedules()
     {
-        return $this->belongsToMany('App\Schedule', 'schedule_entity', 'entity_id', 'schedule_id')->where('entity', 'companies');
+        return $this->morphToMany('App\Schedule', 'schedule_entities')->withPivot('mode');
+    }
+
+    // Получаем график компании в адаптированном под шаблон виде
+    public function getMainScheduleAttribute($value) {
+        $main_schedule = $this->morphToMany('App\Schedule', 'schedule_entities')->with('worktimes')->wherePivot('mode', 'main')->first();
+        if($main_schedule != null){
+            return $main_schedule;                
+        } else {
+            return $value;
+        }
+    }
+
+    // Получаем график компании в адаптированном под шаблон виде
+    public function getWorktimeAttribute($value) {
+            $worktime = $this->morphToMany('App\Schedule', 'schedule_entities')->wherePivot('mode', 'main')->first();
+            if($worktime != null){
+                $worktime = $worktime->worktimes;
+                return worktime_to_format($worktime->keyBy('weekday'));                
+            } else {
+                return $value;
+            }
     }
 
     public function positions()
@@ -140,52 +171,50 @@ class Company extends Model
     // Получаем поставщиков
     public function suppliers()
     {
-        return $this->hasMany('App\Supplier', 'company_id');
+        return $this->belongsToMany('App\Company', 'suppliers', 'company_id', 'supplier_id');
     }
 
     // Получаем дилеров
     public function dealers()
     {
-        return $this->hasMany('App\Dealer', 'company_id');
+        return $this->belongsToMany('App\Company', 'dealers', 'company_id', 'dealer_id');
     }
-
-    // Получаем производителей
-    // public function manufacturers()
-    // {
-    //     return $this->hasMany('App\Manufacturer', 'company_id');
-    // }
 
     public function manufacturers()
     {
-        return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'contragent_id');
+        return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'manufacturer_id');
     }
 
+    // Получаем клиентов
+    public function clients()
+    {
+        return $this->belongsToMany('App\Company', 'clients', 'company_id', 'client_id');
+    }
 
+    // Получаем банки
+    public function banks()
+    {
+        return $this->belongsToMany('App\Company', 'banks', 'company_id', 'bank_id');
+
+    }
 
     // Получаем компании, где мы поставщик
     public function we_suppliers()
     {
-        return $this->hasMany('App\Supplier', 'contragent_id');
+        return $this->hasMany('App\Supplier', 'supplier_id');
     }
 
     // Получаем компании, где мы дилеры
     public function we_dealers()
     {
-        return $this->hasMany('App\Dealer', 'contragent_id');
+        return $this->hasMany('App\Dealer', 'dealer_id');
     }
 
     // Получаем компании, где мы производители
     public function we_manufacturers()
     {
-        return $this->hasMany('App\Manufacturer', 'contragent_id');
+        return $this->hasMany('App\Manufacturer', 'manufacturer_id');
     }
-
-
-    // Получаем контрагентов
-    // public function manufacturers()
-    // {
-    //     return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'contragent_id');
-    // }
 
     // Получаем категории продукции
     public function services_categories()
@@ -198,24 +227,6 @@ class Company extends Model
     {
         return $this->hasMany('App\ServicesProduct');
     }
-
-    // // Получаем клиентов
-    // public function clients()
-    // {
-    //     return $this->belongsToMany('App\Company', 'suppliers', 'company_id', 'supplier_id')->where('client_status', 1);
-    // }
-
-    // // Получаем поставщиков
-    // public function vendors()
-    // {
-    //     return $this->belongsToMany('App\Company', 'suppliers', 'company_id', 'supplier_id')->where('vendor_status', 1);
-    // }
-
-    // // Получаем производителей
-    // public function manufacturers()
-    // {
-    //     return $this->belongsToMany('App\Company', 'suppliers', 'company_id', 'supplier_id')->where('manufacturer_status', 1);
-    // }
 
     // Получаем типы услуг
     public function services_types()

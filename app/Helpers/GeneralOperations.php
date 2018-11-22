@@ -3,8 +3,13 @@
 use App\Lead;
 use App\Claim;
 use Carbon\Carbon;
-
 use App\Location;
+
+use App\Bank;
+use App\BankAccount;
+use App\Company;
+use App\Schedule;
+use App\Worktime;
 
 use GuzzleHttp\Client;
 
@@ -236,5 +241,109 @@ function update_location($request, $item) {
     return $item;
 
 }
+
+
+// Обновление
+function addBankAccount($company, $request) {
+
+    // Пришли ли с запросом имя банка, его БИК и рассчетный счет клиента,
+    // которые так необходимы для создания нового аккаунта?
+    if((isset($request->bank_bic))&&(isset($request->bank_name))&&(isset($request->account_settlement))){
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // Компания пользователя
+        $user_company = $user->company;
+
+        // ID компании для которой создаеться банковский аккаунт
+        $company_id = $company->id;
+
+        // Сохраняем в переменную наш БИК
+        $bic = $request->bank_bic;
+
+        // Проверяем существуют ли у пользователя такие счета в указанном банке
+        $cur_bank_account = BankAccount::whereNull('archive')
+        ->where('account_settlement', '=' , $request->account_settlement)
+        ->whereHas('bank', function($q) use ($bic){
+            $q->where('bic', $bic);
+        })->count();
+
+        // Если такого счета нет, то:
+        if($cur_bank_account == 0){
+
+            // Создаем новый банковский счёт
+            $bank_account = new BankAccount;
+
+            // Создаем алиас для нового банка
+            $company_alias = Transliterate::make($request->bank_name, ['type' => 'url', 'lowercase' => true]);
+
+            // Создаем новую компанию которая будет банком
+            $company_bank = Company::firstOrCreate(['bic' => $request->bank_bic], ['name' => $request->bank_name, 'alias' => $company_alias]);
+
+            // Создаем банк, а если он уже есть - берем его ID
+            $bank = Bank::firstOrCreate(['company_id' => $request->company_id, 'bank_id' => $company_bank->id]);
+
+            $bank_account->bank_id = $company_bank->id;
+            $bank_account->holder_id = $company_id;
+            $bank_account->company_id = $user_company->id;
+
+            $bank_account->account_settlement = $request->account_settlement;
+            $bank_account->account_correspondent = $request->account_correspondent;
+            $bank_account->author_id = $user->id;
+            $bank_account->save();
+
+            return $bank_account ? true : false;
+
+        }
+
+    } else {
+
+        // Не достаточно данных
+        return false;
+    }
+}
+
+
+// Обновление
+function setSchedule($company, $request) {
+
+        $schedule = $company->main_schedule;
+
+        // Если не существует расписания для компании - создаем его
+        if($schedule){
+
+            $schedule_id = $schedule->id;
+
+        } else {
+
+            $schedule = new Schedule;
+            $schedule->company_id = $request->user()->company_id;
+            $schedule->name = 'График работы для ' . $company->name;
+            $schedule->description = null;
+            $schedule->save();
+
+            $company->schedules()->attach($schedule->id, ['mode'=>'main']);
+            $schedule_id = $schedule->id;
+
+        };
+
+        // Функция getWorktimes ловит все поля расписания из запроса и готовит к записи в worktimes
+        $mass_time = getWorktimes($request, $schedule_id);
+
+        // Удаляем все записи времени в worktimes для этого расписания
+        $worktimes = Worktime::where('schedule_id', $schedule_id)->forceDelete();
+
+        // Вставляем новое время в расписание
+        DB::table('worktimes')->insert($mass_time);
+
+        // Не достаточно данных
+        return true;
+
+}
+
+
+
+
 
 ?>

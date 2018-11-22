@@ -38,23 +38,40 @@
 
     // Дата
     $('.date-field').mask('99.99.9999');
+    
     // Время
     $('.time-field').mask('99:99',{placeholder:"_"});
 
     // Строка с числами
     $('.integer-field').mask('1?999999999999999');
+
     // Дата рождения
     $('.birthday-field').mask('99.99.9999');
+
     // Телефон
     $('.phone-field').mask('8 (999) 999-99-99',{placeholder:"_"});
+
     // Паспорт
     $('.passport-number-field').mask('99 99 №999999');
+
     // Телеграм id
     $('.telegram-id-field').mask('999999999?999');
+
     // ИНН
     $('.inn-field').mask('9999999999?99');
-    // Кпп
+
+    // КПП
     $('.kpp-field').mask('999?999999');
+
+    // ОГРН
+    $('.ogrn-field').mask('9999999999999');
+
+    // ОКПО
+    $('.okpo-field').mask('9999999999');
+
+    // ОКВЭД
+    $('.okved-field').mask('1?99999999');
+
     // Расчетные счета
     $('.account-field').mask('99999999999999999999');
   });
