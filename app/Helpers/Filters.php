@@ -304,6 +304,7 @@
         }
 
         $filter_entity_name = $filter['entity_name'];
+
         return $filter;
 
     }

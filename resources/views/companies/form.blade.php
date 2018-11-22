@@ -30,7 +30,7 @@
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>Телефон
-                            @include('includes.inputs.phone', ['value' => isset($company->main_phone->phone) ? $company->main_phone->phone : null, 'name'=>'main_phone', 'required'=>'required'])
+                            @include('includes.inputs.phone', ['value' => isset($company->main_phone->phone) ? $company->main_phone->phone : null, 'name'=>'main_phone', 'required'=>''])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell" id="extra-phones">

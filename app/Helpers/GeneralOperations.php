@@ -4,7 +4,7 @@ use App\Lead;
 use App\Claim;
 use Carbon\Carbon;
 use App\Location;
-
+use App\ServicesType;
 use App\Bank;
 use App\BankAccount;
 use App\Company;
@@ -244,7 +244,7 @@ function update_location($request, $item) {
 
 
 // Обновление
-function addBankAccount($company, $request) {
+function addBankAccount($request, $company) {
 
     // Пришли ли с запросом имя банка, его БИК и рассчетный счет клиента,
     // которые так необходимы для создания нового аккаунта?
@@ -304,9 +304,8 @@ function addBankAccount($company, $request) {
     }
 }
 
-
 // Обновление
-function setSchedule($company, $request) {
+function setSchedule($request, $company) {
 
         $schedule = $company->main_schedule;
 
@@ -339,10 +338,21 @@ function setSchedule($company, $request) {
 
         // Не достаточно данных
         return true;
-
 }
 
 
+// Обновление
+function setServicesType($request, $company) {
+
+                   // Записываем тип услуги
+            if(isset($request->services_types_id)){
+                $result = $company->services_types()->sync($request->services_types_id);
+            } else {
+                $result = $company->services_types()->detach();
+            };
+
+        return true;
+}
 
 
 

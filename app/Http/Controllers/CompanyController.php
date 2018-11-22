@@ -67,9 +67,9 @@ class CompanyController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // -----------------------------------------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
-        // -----------------------------------------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------
 
         $companies = Company::with('author', 'director', 'location.city', 'sector', 'we_suppliers', 'we_manufacturers', 'we_dealers', 'main_phones')
         ->moderatorLimit($answer)
@@ -110,9 +110,6 @@ class CompanyController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        // Сущность
-        // $entity = $this->entity_name;
-
         return view('companies.create', compact('company', 'page_info'));
     }
 
@@ -128,11 +125,11 @@ class CompanyController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-
         // Скрываем бога
         $user_id = hideGod($user);
+
+        // Смотрим компанию пользователя
+        $company_id = $user->company_id;
 
         $company = new Company;
         $company->name = $request->name;
@@ -152,25 +149,17 @@ class CompanyController extends Controller
         // Если запись удачна - будем записывать связи
         if($company){
 
-            // Телефон
-            $phones = add_phones($request, $company);
-
-            // if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            //     $company->extra_phone = cleanPhone($request->extra_phone);
-            // } else {$company->extra_phone = NULL;};
+            // Добавляем телефон
+            add_phones($request, $company);
 
             // Добавляем банковский аккаунт
             addBankAccount($company, $request);
+
+            // Добавляем расписание
             setSchedule($company, $request);
 
-
-            // Записываем тип услуги
-            if(isset($request->services_types_id)){
-                $result = $company->services_types()->sync($request->services_types_id);
-            } else {
-                $result = $company->services_types()->detach();
-            };
-
+            // Добавляем типы услуг
+            setServicesType();
 
         } else {
 
@@ -178,7 +167,6 @@ class CompanyController extends Controller
         };
 
         return redirect('/admin/companies');
-
     }
 
     public function show($id)
@@ -192,6 +180,7 @@ class CompanyController extends Controller
 
         // Подключение политики
         $this->authorize('view', $company);
+
         return view('companies.show', compact('company'));
     }
 
@@ -211,8 +200,6 @@ class CompanyController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-
-        // dd($company->main_schedule);
 
         return view('companies.edit', compact('company', 'page_info'));
     }
@@ -247,9 +234,6 @@ class CompanyController extends Controller
             $company->alias = $request->alias;
         }
 
-
-        // Телефон
-        $phones = add_phones($request, $company);
         $company->email = $request->email;
         $company->legal_form_id = $request->legal_form_id;
         $company->inn = $request->inn;
@@ -262,13 +246,15 @@ class CompanyController extends Controller
             $company->sector_id = $request->sector_id;
         }
 
-        // $company->director_user_id = Auth::user()->company_id;
         $company->save();
 
         if($company){
 
-            addBankAccount($company, $request);
-            setSchedule($company, $request);
+            add_phones($request, $company);
+            addBankAccount($request, $company);
+            setSchedule($request, $company);
+            // setServicesType($request, $company);
+
         }
 
         // Записываем связи: id-шники в таблицу companies_services_types
@@ -290,14 +276,13 @@ class CompanyController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $company);
 
-
-
         if ($company) {
 
             $user = $request->user();
 
             // Скрываем бога
             $user_id = hideGod($user);
+
             $company->editor_id = $user_id;
             $company->save();
 
@@ -308,6 +293,7 @@ class CompanyController extends Controller
 
             // Удаляем компанию с обновлением
             if($company) {
+
                 return redirect('/admin/companies');
 
             } else {
@@ -330,5 +316,4 @@ class CompanyController extends Controller
         } else {
             return $company->name;};
         }
-
     }

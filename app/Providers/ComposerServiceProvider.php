@@ -13,11 +13,7 @@ use App\Http\ViewComposers\ServicesTypesCheckboxComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     *
-     * @return void
-     */
+
     public function boot()
     {
         view()->composer('layouts.sidebar', SidebarComposer::class);
@@ -27,11 +23,6 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.checkboxers.checkboxer_services_types', ServicesTypesCheckboxComposer::class);
     }
 
-    /**
-     * Register the application services.
-     *
-     * @return void
-     */
     public function register()
     {
         //
