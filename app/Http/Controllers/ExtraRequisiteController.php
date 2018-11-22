@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Schema;
 // На удаление
 use Illuminate\Support\Facades\Auth;
 
-class StageController extends Controller
+class ExtraRequisiteController extends Controller
 {
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'extra_requisites';
@@ -36,7 +36,7 @@ class StageController extends Controller
     public function index(Request $request)
     {
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
@@ -63,7 +63,7 @@ class StageController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
- 
+
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
@@ -97,7 +97,7 @@ class StageController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('stages.create', compact('stage', 'page_info', 'entities_list', 'fields_list'));  
+        return view('stages.create', compact('stage', 'page_info', 'entities_list', 'fields_list'));
     }
 
     public function store(StageRequest $request)
@@ -253,7 +253,7 @@ class StageController extends Controller
                 return redirect('/admin/stages');
             } else {
                 abort(403, 'Ошибка при удалении этапа');
-            } 
+            }
         } else {
 
             abort(403, 'Этап не найден');
@@ -288,7 +288,7 @@ class StageController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -315,7 +315,7 @@ class StageController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [

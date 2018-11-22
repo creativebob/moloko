@@ -533,12 +533,7 @@
     $(document).on('click', '#portion', function() {
         $('#portion-block div').toggle();
         // $('#portion-fieldset').toggleClass('portion-fieldset');
-
-        if ($(this).prop('checked') == true) {
-            $('#unit').text('порцию');
-        } else {
-            $('#unit').text(unit);
-        }
+        $('#unit').text( $(this).prop('checked') ? 'порцию' : unit );
     });
 
     // При клике на удаление состава со страницы
@@ -565,7 +560,7 @@
         // Убираем отмеченный чекбокс в списке метрик
         $('#add-composition-' + id).prop('checked', false);
 
-        Foundation.reInit($('#cur-goods-form'));
+        // Foundation.reInit($('#cur-goods-form'));
     });
 
     // При клике на удаление состава со страницы
@@ -602,11 +597,11 @@
     //     })
     // });
 
-    $(document).on('change', '#cur-goods-form input', function() {
-        // alert('lol');
-        $('#add-cur-goods').prop('disabled', false);
-        $('#cur-goods-error').hide();
-    });
+    // $(document).on('change', '#cur-goods-form input', function() {
+    //     // alert('lol');
+    //     $('#add-cur-goods').prop('disabled', false);
+    //     $('#cur-goods-error').hide();
+    // });
 
     // При смнене свойства в select
     $(document).on('change', '#properties-select', function() {
@@ -721,7 +716,7 @@
         $('.checker-nested').hide();
 
         // Показываем нужную
-        $('#' +$(this).data('open')).show();
+        $('#' + $(this).data('open')).show();
     });
 
     // При клике на чекбокс метрики отображаем ее на странице
@@ -750,6 +745,38 @@
 
             // Если нужно удалить состав
             $('#compositions-' + id).remove();
+        }
+    });
+
+    $(document).ready(function($) {
+        $('.checkboxer-title .form-error').hide();
+    });
+
+    // Валидация группы чекбоксов
+    // $(document).on('click', '.checkbox-group input:checkbox', function() {
+    //     let id = $(this).closest('.dropdown-pane').attr('id');
+    //     if ($(this).closest('.checkbox-group').find("input:checkbox:checked").length == 0) {
+    //         $('div[data-toggle=' + id + ']').find('.form-error').show();
+    //         $('#add-cur-goods').prop('disabled', true);
+    //     } else {
+    //         $('div[data-toggle=' + id + ']').find('.form-error').hide();
+    //         $('#add-cur-goods').prop('disabled', false);
+    //     };
+    // });
+
+    // Валидация при клике на кнопку
+    $(document).on('click', '#add-cur-goods', function(event) {
+        let error = 0;
+        $(".checkbox-group").each(function(i) {
+            if ($(this).find("input:checkbox:checked").length == 0) {
+                let id = $(this).closest('.dropdown-pane').attr('id');
+                $('div[data-toggle=' + id + ']').find('.form-error').show();
+                error = error + 1;
+            };
+        });
+        $('#cur-goods-form').foundation('validateForm');
+        if (error > 0) {
+            event.preventDefault();
         }
     });
 
