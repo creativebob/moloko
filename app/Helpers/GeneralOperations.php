@@ -10,6 +10,7 @@ use App\BankAccount;
 use App\Company;
 use App\Schedule;
 use App\Worktime;
+use App\Sector;
 
 use GuzzleHttp\Client;
 
@@ -189,24 +190,26 @@ function yandex_geocoder ($location) {
 }
 
 // Добавление
-function create_location($request) {
+function create_location($request, $country_id = null, $city_id = null, $address = null) {
 
-    // TODO: сюда умолчания из settings!
-    $country_id = isset($request->country_id) ? $request->country_id : 1;
-    $city_id = isset($request->city_id) ? $request->city_id : 1;
+        // Значения по умолчанию
+        $country_id_default = 1; // Страна: Россия
+        $city_id_default = 1; // Город: Иркутск
+        $address_default = null; // Адрес: не указываем
 
-    $address = isset($request->address) ? $request->address : null;
+        $country_id = $country_id ?? $request->country_id ?? $country_id_default;
+        $city_id = $city_id ?? $request->city_id ??  $city_id_default;
+        $address = $address ?? $request->address ?? $address_default;
 
-    // Скрываем бога
-    $user_id = hideGod($request->user());
+        // Скрываем бога
+        $user_id = hideGod($request->user());
 
-    // Ищем или создаем локацию
-    $location = Location::with('city')->firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
+        // Ищем или создаем локацию
+        $location = Location::with('city')->firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
 
-    yandex_geocoder($location);
+        yandex_geocoder($location);
 
-    return $location->id;
-
+        return $location->id;
 }
 
 // Обновление
@@ -250,17 +253,12 @@ function addBankAccount($request, $company) {
     // которые так необходимы для создания нового аккаунта?
     if((isset($request->bank_bic))&&(isset($request->bank_name))&&(isset($request->account_settlement))){
 
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        // Компания пользователя
-        $user_company = $user->company;
-
-        // ID компании для которой создаеться банковский аккаунт
-        $company_id = $company->id;
-
         // Сохраняем в переменную наш БИК
         $bic = $request->bank_bic;
+        $country_id = 3;
+        $city_id = 2;
+        $address = 'Партизанская, 8';
+        $legal_form_id = 4; // ПАО
 
         // Проверяем существуют ли у пользователя такие счета в указанном банке
         $cur_bank_account = BankAccount::whereNull('archive')
@@ -278,19 +276,22 @@ function addBankAccount($request, $company) {
             // Создаем алиас для нового банка
             $company_alias = Transliterate::make($request->bank_name, ['type' => 'url', 'lowercase' => true]);
 
+            $sector_bank_id = Sector::where('tag', 'bank')->firstOrFail()->id;
+            $location_bank_id = create_location($request, $country_id, $city_id, $address);
+
             // Создаем новую компанию которая будет банком
-            $company_bank = Company::firstOrCreate(['bic' => $request->bank_bic], ['name' => $request->bank_name, 'alias' => $company_alias]);
+            $company_bank = Company::firstOrCreate(['bic' => $request->bank_bic], ['name' => $request->bank_name, 'alias' => $company_alias, 'sector_id' => $sector_bank_id, 'location_id' => $location_bank_id, 'legal_form_id'=> $legal_form_id]);
 
             // Создаем банк, а если он уже есть - берем его ID
             $bank = Bank::firstOrCreate(['company_id' => $request->company_id, 'bank_id' => $company_bank->id]);
 
             $bank_account->bank_id = $company_bank->id;
-            $bank_account->holder_id = $company_id;
-            $bank_account->company_id = $user_company->id;
+            $bank_account->holder_id = $company->id;
+            $bank_account->company_id = $request->user()->company->id;
 
             $bank_account->account_settlement = $request->account_settlement;
             $bank_account->account_correspondent = $request->account_correspondent;
-            $bank_account->author_id = $user->id;
+            $bank_account->author_id = $request->user()->id;
             $bank_account->save();
 
             return $bank_account ? true : false;
@@ -317,7 +318,7 @@ function setSchedule($request, $company) {
         } else {
 
             $schedule = new Schedule;
-            $schedule->company_id = $request->user()->company_id;
+            $schedule->company_id = $request->user()->company->id;
             $schedule->name = 'График работы для ' . $company->name;
             $schedule->description = null;
             $schedule->save();

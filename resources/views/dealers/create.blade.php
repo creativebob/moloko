@@ -21,7 +21,7 @@
 @section('content')
 
   {{ Form::open(['url' => '/admin/dealers', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
-    @include('dealers.form', ['submitButtonText' => 'Добавить дилера', 'param' => ''])
+    @include('companies.form', ['submitButtonText' => 'Добавить дилера', 'param' => ''])
   {{ Form::close() }}
 
 @endsection

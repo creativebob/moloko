@@ -26,7 +26,7 @@
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
-                        @include('includes.selects.sectors', ['value'=>$company->sector_id])
+                        @include('includes.selects.sectors', ['value'=>$company->sector_id, 'required'=>'required'])
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>Телефон
@@ -125,7 +125,7 @@
                     @include('includes.scripts.class.checkboxer')
 
                     <div class="small-12 medium-12 cell checkbox checkboxer">
-
+                       
                         @include('includes.scripts.class.checkboxer')
                         @include('includes.inputs.checker', ['entity' => $company, 'model'=>'ServicesType', 'relation'=>'services_types', 'title'=>'Типы услуг'])
 

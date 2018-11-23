@@ -16,7 +16,9 @@ class SectorsSelectComposer
 
         // Главный запрос
         $sectors = Sector::moderatorLimit($answer)
-        ->systemItem($answer) // Фильтр по системным записям
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer) // Выводим шаблоны в список
         ->orderBy('sort', 'asc')
         ->get(['id','name','category_status','parent_id'])
         ->pluck('name', 'id');

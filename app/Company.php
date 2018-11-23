@@ -55,9 +55,11 @@ class Company extends Model
         'alias', 
         'phone', 
         'extra_phone',
-        'bic'
+        'bic',
+        'location_id',
+        'sector_id',
+        'legal_form_id'
     ];
-
 
 
     // Фильтрация по городу
