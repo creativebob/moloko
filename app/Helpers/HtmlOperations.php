@@ -3,6 +3,19 @@
 // Необходимые расширения
 use Carbon\Carbon;
 
+function buildTree($items)
+{
+    $grouped = $items->groupBy('parent_id');
+
+    foreach ($items as $item) {
+        if ($grouped->has($item->id)) {
+            $item->childrens = $grouped[$item->id];
+        }
+    }
+
+    return $items->where('parent_id', null);
+}
+
 // Рекурсивно считываем наш шаблон
 function show_cat($items, $padding, $parent, $disable, $exception){
     $string = '';
@@ -19,7 +32,7 @@ function show_cat($items, $padding, $parent, $disable, $exception){
 function tpl_menu($item, $padding, $parent, $disable, $exception) {
 
     // dd($exception);
-    // Убираем из списка пришедший пункт меню 
+    // Убираем из списка пришедший пункт меню
     if ($item['id'] != $exception) {
 
 
@@ -49,7 +62,7 @@ function tpl_menu($item, $padding, $parent, $disable, $exception) {
             $i = 1;
             for($j = 0; $j < $i; $j++){
                 $padding .= '&nbsp;&nbsp';
-            }     
+            }
             $i++;
 
             $menu .= show_cat($item['children'], $padding, $parent, $disable, $exception);
@@ -90,12 +103,12 @@ function get_index_tree_with_rights ($items, $user) {
     // Функция построения дерева из массива от Tommy Lacroix
     $items_tree = [];
 
-    foreach ($items_id as $id => &$node) { 
+    foreach ($items_id as $id => &$node) {
 
         // Если нет вложений
         if (!$node['parent_id']){
             $items_tree[$id] = &$node;
-        } else { 
+        } else {
 
             // Если есть потомки то перебераем массив
             $items_id[$node['parent_id']]['children'][$id] = &$node;
@@ -119,12 +132,12 @@ function get_select_tree ($items, $parent = null, $disable = null, $exception = 
 
     // Формируем дерево вложенности
     $items_cat = [];
-    foreach ($items as $id => &$node) { 
+    foreach ($items as $id => &$node) {
 
         // Если нет вложений
         if (!$node['parent_id']) {
             $items_cat[$id] = &$node;
-        } else { 
+        } else {
 
             // Если есть потомки то перебераем массив
             $items[$node['parent_id']]['children'][$id] = &$node;
@@ -145,12 +158,12 @@ function get_parents_tree ($items) {
 
     // Формируем дерево вложенности
     $items_cat = [];
-    foreach ($items as $id => &$node) { 
+    foreach ($items as $id => &$node) {
 
     // Если нет вложений
         if (!$node['parent_id']) {
             $items_cat[$id] = &$node;
-        } else { 
+        } else {
 
         // Если есть потомки то перебераем массив
             $items[$node['parent_id']]['children'][$id] = &$node;
@@ -166,7 +179,7 @@ function get_parents_tree_with_item_id ($items, $item_id) {
 
     // Формируем дерево вложенности
     $items_cat = [];
-    foreach ($items as $id => &$node) { 
+    foreach ($items as $id => &$node) {
 
         // Если нет вложений
         if (!$node['parent_id']) {
@@ -174,7 +187,7 @@ function get_parents_tree_with_item_id ($items, $item_id) {
             if ($id == $item_id) {
                 $items_cat[$id]['item_id'] = $item_id;
             }
-        } else { 
+        } else {
 
             // Если есть потомки то перебераем массив
             $items[$node['parent_id']]['children'][$id] = &$node;

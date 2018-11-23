@@ -14,6 +14,9 @@ use App\Http\ViewComposers\CheckerComposer;
 use App\Http\ViewComposers\UnitsCategoriesComposer;
 use App\Http\ViewComposers\UnitsComposer;
 
+use App\Http\ViewComposers\ManufacturersComposer;
+use App\Http\ViewComposers\ViewMenuComposer;
+
 class ComposerServiceProvider extends ServiceProvider
 {
 
@@ -27,6 +30,10 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer(['includes.selects.units_categories'], UnitsCategoriesComposer::class);
         view()->composer(['includes.selects.units'], UnitsComposer::class);
+
+        view()->composer('includes.selects.manufacturers', ManufacturersComposer::class);
+
+        view()->composer('includes.menu_views.category_list', ViewMenuComposer::class);
     }
 
     public function register()

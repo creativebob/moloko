@@ -2,7 +2,7 @@
 
 namespace App\Http\ViewComposers;
 
-use App\Units;
+use App\Unit;
 
 use Illuminate\View\View;
 
@@ -15,12 +15,15 @@ class UnitsComposer
         $answer = operator_right('units', false, 'index');
 
         // Главный запрос
-        $units_categories = UnitsCategory::moderatorLimit($answer)
+        $units = Unit::moderatorLimit($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('sort', 'asc')
+        ->where('units_category_id', $view->units_category_id)
         ->get();
 
-        return $view->with('units_categories', $units_categories);
-    }
+        $units_attributes = $units->mapWithKeys(function ($item) {
+            return [$item->id => ['data-abbreviation' => $item->abbreviation]];
+        })->all();
 
+        return $view->with(compact('units', 'units_attributes'));
+    }
 }

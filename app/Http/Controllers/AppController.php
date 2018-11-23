@@ -46,4 +46,17 @@ class AppController extends Controller
 
         return response()->json(isset($item) ?? 'Ошибка при обновлении отображения на сайте!');
     }
+
+    // Сортировка
+    public function ajax_check(Request $request)
+    {
+
+        $entity = Entity::whereAlias($request->entity_alias)->first(['model']);
+        $model = 'App\\'.$entity->model;
+
+        // Проверка поля в нашей базе данных
+        $result = $model::where($request->field, $request->value)->count();
+
+        return response()->json($result);
+    }
 }

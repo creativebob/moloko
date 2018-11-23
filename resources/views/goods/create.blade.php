@@ -15,9 +15,7 @@
 					<label>Категория товаров
 						<select name="goods_category_id" id="goods-categories-list" required>
 							<!-- <option value="0">Выберите категорию</option> -->
-							@php
-							echo $goods_categories_list;
-							@endphp
+							{!! $goods_categories_list !!}
 						</select>
 					</label>
 				</div>
@@ -45,19 +43,17 @@
 						</div>
 
 						<div class="small-12 medium-6 cell">
-
+							@include('includes.selects.units', ['default' => 26, 'units_category_id' => 6])
 						</div>
 					</div>
 				</div>
 
 				<div class="small-10 medium-4 cell">
-					<label>Цена за (<span id="unit-change" class="unit-change">{{ $unit_abbreviation }}</span>)
+					<label>Цена за (<span id="unit-change" class="unit-change"></span>)
 						{{ Form::number('price') }}
 					</label>
 				</div>
-
 			</div>
-
 
 			<div class="small-12 cell checkbox">
 				{{ Form::checkbox('quickly', 1, null, ['id' => 'quickly-goods', 'checked']) }}
@@ -81,6 +77,10 @@
 	{{ Form::close() }}
 	<div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
+
+<script>
+	$('#unit-change').text($('#units-list :selected').data('abbreviation'));
+</script>
 
 
 

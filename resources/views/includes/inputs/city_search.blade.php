@@ -34,4 +34,6 @@ $city_id = isset($city) ? $city->id : null;
 		{{ $id }}.clear(this);
 	});
 
+	  console.log({{ $id }})
+
 </script>

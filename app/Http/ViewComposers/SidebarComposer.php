@@ -28,22 +28,9 @@ class SidebarComposer
 		->get();
 		// dd($menus->keyBy('name'));
 
-		$sidebar = $this->buildSidebarTree($menus);
+		$sidebar = buildTree($menus);
 
 		return $view->with('sidebar_tree', $sidebar);
 	}
 
-	public function buildSidebarTree($items)
-	{
-
-		$grouped = $items->groupBy('parent_id');
-
-		foreach ($items as $item) {
-			if ($grouped->has($item->id)) {
-				$item->childrens = $grouped[$item->id];
-			}
-		}
-
-		return $items->where('parent_id', null);
-	}
 }

@@ -197,36 +197,7 @@ class GoodsController extends Controller
         $goods_categories_list = get_select_tree($goods_categories->keyBy('id')->toArray(), $parent_id, null, null);
         // echo $goods_categories_list;
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_units_categories = operator_right('units_categories', false, 'index');
-
-        // Главный запрос
-        $units_categories_list = UnitsCategory::moderatorLimit($answer_units_categories)
-        ->companiesLimit($answer_units_categories)
-        ->authors($answer_units_categories)
-        ->systemItem($answer_units_categories) // Фильтр по системным записям
-        ->template($answer_units_categories)
-        ->orderBy('sort', 'asc')
-        ->get()
-        ->pluck('name', 'id');
-        // dd($units_categories_list);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_units = operator_right('units', false, 'index');
-
-        // Главный запрос
-        $units = Unit::where('units_category_id', 6) // Статичная категория с количеством для товаров
-        ->orderBy('sort', 'asc')
-        ->get();
-        // dd($units);
-
-        $unit_abbreviation = $units->where('id', 26)->first()->abbreviation;
-        // dd($unit_abbreviation);
-
-        // $units_list = $units->pluck('name', 'id');
-        // dd($units_list);
-
-        return view('goods.create', compact('goods_categories_list', 'goods_products_count', 'units_categories_list', 'units', 'unit_abbreviation'));
+        return view('goods.create', compact('goods_categories_list', 'goods_products_count'));
     }
 
     public function store(Request $request)
@@ -346,83 +317,83 @@ class GoodsController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
         // Главный запрос
-        if ($cur_goods->goods_article->goods_product->set_status == 'one') {
+        // if ($cur_goods->goods_article->goods_product->set_status == 'one') {
 
-            if ($cur_goods->goods_article->draft == 1) {
-                $cur_goods->load([
-                    'goods_article' => function ($q) {
-                        $q->with([
-                            'metrics',
-                            'compositions.raws_product' => function ($q) {
-                                $q->with('unit', 'raws_category');
-                            },
-                            'goods_product.goods_category' => function ($query) {
-                                $query->with([
-                                    'one_metrics' => function ($q) {
-                                        $q->with(['property', 'values']);
-                                    },
-                                    'compositions.raws_product.unit'
-                                ]);
-                            },
-                        ])
-                        ->withCount(['metrics', 'compositions']);
-                    },
-                    'album.photos',
-                    'company.manufacturers'
-                ]);
-            } else {
-                $cur_goods->load([
-                    'goods_article' => function ($q) {
-                        $q->with([
-                            'metrics',
-                            'compositions.raws_product' => function ($q) {
-                                $q->with('unit', 'raws_category');
-                            },
-                            'goods_product.goods_category'
-                        ])
-                        ->withCount(['metrics', 'compositions']);
-                    },
-                    'album.photos'
-                ]);
-            }
-        } else {
-            if ($cur_goods->goods_article->draft == 1) {
-                $cur_goods->load([
-                    'goods_article' => function ($q) {
-                        $q->with([
-                            'metrics',
-                            'set_compositions.goods_product' => function ($q) {
-                                $q->with('unit');
-                            },
-                            'goods_product.goods_category' => function ($query) {
-                                $query->with([
-                                    'set_metrics' => function ($q) {
-                                        $q->with(['property', 'values']);
-                                    }
-                                ]);
-                            },
-                        ])
-                        ->withCount(['metrics', 'set_compositions']);
-                    },
-                    'album.photos',
-                    'company.manufacturers'
-                ]);
-            } else {
-                $cur_goods->load([
-                    'goods_article' => function ($q) {
-                        $q->with([
-                            'metrics',
-                            'set_compositions.raws_product' => function ($q) {
-                                $q->with('unit', 'raws_category');
-                            },
-                            'goods_product.goods_category'
-                        ])
-                        ->withCount(['metrics', 'set_compositions']);
-                    },
-                    'album.photos'
-                ]);
-            }
-        }
+        //     if ($cur_goods->goods_article->draft == 1) {
+        //         $cur_goods->load([
+        //             'goods_article' => function ($q) {
+        //                 $q->with([
+        //                     'metrics',
+        //                     'compositions.raws_product' => function ($q) {
+        //                         $q->with('unit', 'raws_category');
+        //                     },
+        //                     'goods_product.goods_category' => function ($query) {
+        //                         $query->with([
+        //                             'one_metrics' => function ($q) {
+        //                                 $q->with(['property', 'values']);
+        //                             },
+        //                             'compositions.raws_product.unit'
+        //                         ]);
+        //                     },
+        //                 ])
+        //                 ->withCount(['metrics', 'compositions']);
+        //             },
+        //             'album.photos',
+        //             'company.manufacturers'
+        //         ]);
+        //     } else {
+        //         $cur_goods->load([
+        //             'goods_article' => function ($q) {
+        //                 $q->with([
+        //                     'metrics',
+        //                     'compositions.raws_product' => function ($q) {
+        //                         $q->with('unit', 'raws_category');
+        //                     },
+        //                     'goods_product.goods_category'
+        //                 ])
+        //                 ->withCount(['metrics', 'compositions']);
+        //             },
+        //             'album.photos'
+        //         ]);
+        //     }
+        // } else {
+        //     if ($cur_goods->goods_article->draft == 1) {
+        //         $cur_goods->load([
+        //             'goods_article' => function ($q) {
+        //                 $q->with([
+        //                     'metrics',
+        //                     'set_compositions.goods_product' => function ($q) {
+        //                         $q->with('unit');
+        //                     },
+        //                     'goods_product.goods_category' => function ($query) {
+        //                         $query->with([
+        //                             'set_metrics' => function ($q) {
+        //                                 $q->with(['property', 'values']);
+        //                             }
+        //                         ]);
+        //                     },
+        //                 ])
+        //                 ->withCount(['metrics', 'set_compositions']);
+        //             },
+        //             'album.photos',
+        //             'company.manufacturers'
+        //         ]);
+        //     } else {
+        //         $cur_goods->load([
+        //             'goods_article' => function ($q) {
+        //                 $q->with([
+        //                     'metrics',
+        //                     'set_compositions.raws_product' => function ($q) {
+        //                         $q->with('unit', 'raws_category');
+        //                     },
+        //                     'goods_product.goods_category'
+        //                 ])
+        //                 ->withCount(['metrics', 'set_compositions']);
+        //             },
+        //             'album.photos'
+        //         ]);
+        //     }
+        // }
 
         // dd($cur_goods);
 

@@ -88,16 +88,6 @@ class UnitController extends Controller
     // Список едениц измерения
     public function get_units_list(Request $request)
     {
-
-        $units = Unit::where('units_category_id', $request->units_category_id)->get();
-
-        if ($units) {
-            return view($request->entity.'.units_list', compact('units'));
-        } else {
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при формировании списка едениц измерения!',
-            ];
-        }
+        return view('includes.selects.units', ['units_category_id' => $request->units_category_id]);
     }
 }

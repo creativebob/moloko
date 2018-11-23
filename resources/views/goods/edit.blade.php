@@ -72,13 +72,7 @@
                                     </select>
                                 </label>
 
-                                <label>Производитель</label>
-
-                                @if ($cur_goods->goods_article->draft == 1)
-                                {{ Form::select('manufacturer_id', $manufacturers_list, $cur_goods->goods_article->manufacturer_id, ['placeholder' => 'Выберите производителя'])}}
-                                @else
-                                {{ $cur_goods->goods_article->manufacturer->name ?? 'Не указан' }}
-                                @endif
+                                @include('includes.selects.manufacturers', ['default' => $cur_goods->goods_article->manufacturer_id])
 
                             </div>
 

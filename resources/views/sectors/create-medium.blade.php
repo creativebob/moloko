@@ -10,7 +10,7 @@
       @include('sectors.modals.medium', ['submitButtonText' => 'Добавить сектор', 'class' => 'submit-add'])
 
   {{ Form::close() }}
-  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+  <div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
 
 @include('includes.scripts.inputs-mask')
