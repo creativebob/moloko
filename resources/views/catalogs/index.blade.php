@@ -10,6 +10,11 @@
 
 @section('breadcrumbs', Breadcrumbs::render('section', $parent_page_info, $site, $page_info))
 
+@section('content-count')
+{{-- Количество элементов --}}
+{{ (isset($catalogs) && $catalogs->isNotEmpty()) ? num_format($catalogs->count(), 0) : 0 }}
+@endsection
+
 @section('title-content')
 {{-- Меню --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Catalog::class, 'type' => 'menu'])
@@ -20,12 +25,12 @@
 <div class="grid-x">
     <div class="small-12 cell">
         <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="catalogs">
-            @if($catalogs)
 
+            @if (isset($sectors) && $sectors->isNotEmpty())
             {{-- Шаблон вывода и динамического обновления --}}
-            @include('catalogs.enter', ['grouped_items' => $catalogs, 'class' => 'App\Catalog', 'entity' => $entity, 'type' => 'edit'])
-
+            @include('includes.menu_views.category_list', ['items' => $catalogs, 'class' => App\Catalog::class, 'entity' => 'catalogs', 'type' => 'modal'])
             @endif
+
         </ul>
     </div>
 </div>
@@ -177,7 +182,7 @@
                     $('#first-add').foundation();
                     $('#first-add').foundation('open');
                 }
-            }); 
+            });
         });
 
         // Проверка существования
@@ -189,10 +194,10 @@
             // Значение поля с разрешением
             var db = '#form-first-add .first-item';
             // Выполняем запрос
-            clearTimeout(timerId);   
+            clearTimeout(timerId);
             timerId = setTimeout(function() {
                 catalogCheck (name, submit, db)
-            }, time); 
+            }, time);
         });
 
         // ------------------------------- Вложенные категории --------------------------------------------
@@ -217,7 +222,7 @@
                     $('#medium-add').foundation('open');
                     $('#category-id').val(category);
                 }
-            }); 
+            });
         });
 
         // ------------------------ Кнопка добавления ---------------------------------------

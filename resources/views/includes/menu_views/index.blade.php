@@ -12,23 +12,25 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-{{ (isset($sectors) && $sectors->isNotEmpty()) ? num_format($sectors->count(), 0) : 0 }}
+{{ (isset($items) && $items->isNotEmpty()) ? num_format($items->count(), 0) : 0 }}
 @endsection
 
 @section('title-content')
 {{-- Меню --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Sector::class, 'type' => 'menu'])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => $class, 'type' => 'menu'])
 @endsection
 
 @section('content')
 {{-- Список --}}
 <div class="grid-x">
     <div class="small-12 cell">
-        <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="sectors">
+        <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="{{ $entity }}">
 
-            @if (isset($sectors) && $sectors->isNotEmpty())
+            @if (isset($items) && $items->isNotEmpty())
+
             {{-- Шаблон вывода и динамического обновления --}}
-            @include('includes.menu_views.category_list', ['items' => $sectors, 'class' => App\Sector::class, 'entity' => 'sectors', 'type' => 'modal'])
+            @include('includes.menu_views.category_list', ['items' => $items, 'class' => $class, 'entity' => $entity, 'type' => 'modal'])
+
             @endif
 
         </ul>
@@ -63,6 +65,8 @@
 
 <script type="text/javascript">
     $(function() {
+
+        var entity = '{{ $entity }}';
 
         // Функция появления окна с ошибкой
         function showError (msg) {
@@ -117,8 +121,8 @@
             } else {
                 item.siblings('.item-error').hide();
                 $(submit).prop('disabled', item.closest('form').find($(".item-error:visible")).length > 0);
-           };
-       };
+            };
+        };
 
 
         // Проверка существования
@@ -135,21 +139,15 @@
   // ---------------------------- Индустрия -----------------------------------------------
 
   // ----------- Добавление -------------
-  // Открываем модалку
-  $(document).on('click', '[data-open="first-add"]', function() {
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/admin/sectors/create',
-    type: "GET",
-    success: function(html){
-        $('#modal').html(html);
-        $('#first-add').foundation();
-        $('#first-add').foundation('open');
-    }
-});
-});
+    // Открываем модалку
+    $(document).on('click', '[data-open="first-add"], [data-open="medium-add"]', function() {
+        let parent = $(this).closest('.first-item').hasClass('item') ? $(this).closest('.item').attr('id').split('-')[1] : null;
+
+        $.get('/admin/' + entity + '/create', {parent_id: parent}, function(html){
+            $('#modal').html(html).foundation();
+            $('#first-add').foundation('open');
+        });
+    });
 
 
 
@@ -161,20 +159,12 @@
     // Получаем данные о разделе
     var id = $(this).closest('.item').attr('id').split('-')[1];
 
-
     // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: "/admin/sectors/" + id + "/edit",
-    type: "GET",
-    success: function(html) {
+    $.get("/admin/" + entity + "/" + id + "/edit", function(html) {
         $('#modal').html(html);
         $('#first-edit').foundation();
         $('#first-edit').foundation('open');
-    }
-});
+    });
 });
 
   // Проверка существования
@@ -194,32 +184,32 @@
 
   // ------------------------------- Сектор --------------------------------------------
 
-  // ----------- Добавление -------------
-  // Модалка
-  $(document).on('click', '[data-open="medium-add"]', function() {
+    // ----------- Добавление -------------
+    // Модалка
+    $(document).on('click', '[data-open="medium-add"]', function() {
 
-    var parent;
-    if ($(this).closest('.first-item').hasClass('parent')) {
-      parent = $(this).closest('.item').attr('id').split('-')[1];
-  } else {
-      parent = $(this).closest('.item').attr('id').split('-')[1];
-  };
+        var parent;
+        if ($(this).closest('.first-item').hasClass('parent')) {
+            parent = $(this).closest('.item').attr('id').split('-')[1];
+        } else {
+            parent = $(this).closest('.item').attr('id').split('-')[1];
+        };
 
-  $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/admin/sectors/create',
-    type: "GET",
-    data: {parent_id: parent},
-    success: function(html){
-        // alert(html);
-        $('#modal').html(html);
-        $('#medium-add').foundation();
-        $('#medium-add').foundation('open');
-    }
-});
-});
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '/admin/sectors/create',
+            type: "GET",
+            data: {parent_id: parent},
+            success: function(html){
+                // alert(html);
+                $('#modal').html(html);
+                $('#medium-add').foundation();
+                $('#medium-add').foundation('open');
+            }
+        });
+    });
 
   // Проверка существования
   $(document).on('keyup', '#form-medium-add .name-field', function() {
@@ -239,23 +229,8 @@
   // ----------- Изменение -------------
   // Открываем модалку
   $(document).on('click', '[data-open="medium-edit"]', function() {
-    // Получаем данные о разделе
-    var id = $(this).closest('.item').attr('id').split('-')[1];
 
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: "/admin/sectors/" + id + "/edit",
-    type: "GET",
-    success: function(html) {
-        $('#modal').html(html);
-        $('#medium-edit').foundation();
-        $('#medium-edit').foundation('open');
-    }
-});
-});
+  });
 
   // Проверка существования
   $(document).on('keyup', '#form-medium-edit .name-field', function() {

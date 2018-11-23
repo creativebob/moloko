@@ -1,11 +1,13 @@
 <div class="grid-x grid-padding-x modal-content inputs">
     <div class="small-10 small-offset-1 cell">
 
+        @isset($parent_id)
         <label>Расположение
             <select name="parent_id">
                 {!! $sectors_list !!}
             </select>
         </label>
+        @endisset
 
         <label>Название сектора
             @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
@@ -19,8 +21,7 @@
             <div class="item-error">Такой тег индустрии уже существует!</div>
         </label>
 
-        {{ Form::hidden('sector_id', $sector->id, ['id' => 'sector-id']) }}
-        {{ Form::hidden('medium_item', 0, ['class' => 'medium-item', 'pattern' => '[0-9]{1}']) }}
+        {{ Form::hidden('id', null) }}
 
         @include('includes.control.checkboxes', ['item' => $sector])
     </div>
@@ -28,6 +29,6 @@
 
 <div class="grid-x align-center">
     <div class="small-6 medium-4 cell">
-        {{ Form::submit($submitButtonText, ['data-close', 'class'=>'button modal-button '.$class]) }}
+        {{ Form::submit($submitButtonText, ['data-close', 'class'=>'button modal-button']) }}
     </div>
 </div>

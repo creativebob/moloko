@@ -12,10 +12,9 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-  @if(!empty($albums_categories))
-    {{ num_format($albums_categories->count(), 0) }}
-  @endif
+{{ (isset($albums_categories) && $albums_categories->isNotEmpty()) ? num_format($albums_categories->count(), 0) : 0 }}
 @endsection
+
 
 @section('title-content')
 {{-- Меню --}}
@@ -27,12 +26,12 @@
 <div class="grid-x">
     <div class="small-12 cell">
         <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="albums_categories">
-            @if($albums_categories)
 
+            @if (isset($albums_categories) && $albums_categories->isNotEmpty())
             {{-- Шаблон вывода и динамического обновления --}}
-            @include('includes.menu-views.enter', ['grouped_items' => $albums_categories, 'class' => 'App\AlbumsCategory', 'entity' => $entity, 'type' => 'modal'])
-
+            @include('includes.menu_views.category_list', ['items' => $albums_categories, 'class' => App\AlbumsCategory::class, 'entity' => 'albums_categories', 'type' => 'modal'])
             @endif
+
         </ul>
     </div>
 </div>
@@ -62,132 +61,133 @@
 
 <script type="text/javascript">
     $(function() {
-    // Функция появления окна с ошибкой
-    function showError (msg) {
-        var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
-        return error;
-    };
 
-    // Обозначаем таймер для проверки
-    var timerId;
-    var time = 400;
+        // Функция появления окна с ошибкой
+        function showError (msg) {
+            var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
+            return error;
+        };
 
-  // Первая буква заглавная
-  function newParagraph (name) {
-    name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
-    return name;
-};
+        // Обозначаем таймер для проверки
+        var timerId;
+        var time = 400;
 
-  // ------------------- Проверка на совпадение имени --------------------------------------
-  function albumsCategoryCheck (name, submit, db) {
+        // Первая буква заглавная
+        function newParagraph (name) {
+            name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
+            return name;
+        };
 
-    // Блокируем аттрибут базы данных
-    $(db).val(0);
+        // ------------------- Проверка на совпадение имени --------------------------------------
+        function albumsCategoryCheck (name, submit, db) {
 
-    // Смотрим сколько символов
-    var lenname = name.length;
-
-    // Если символов больше 3 - делаем запрос
-    if (lenname > 3) {
-
-      // Первая буква сектора заглавная
-      name = newParagraph (name);
-
-      // Сам ajax запрос
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/admin/albums_category_check",
-      type: "POST",
-      data: {name: name},
-      beforeSend: function () {
-          $('.find-status').addClass('icon-load');
-      },
-      success: function(date){
-          $('.find-status').removeClass('icon-load');
-          var result = $.parseJSON(date);
-          // Если ошибка
-          if (result.error_status == 1) {
-            $(submit).prop('disabled', true);
-            $('.item-error').css('display', 'block');
+            // Блокируем аттрибут базы данных
             $(db).val(0);
-        } else {
-            // Выводим пришедшие данные на страницу
+
+            // Смотрим сколько символов
+            var lenname = name.length;
+
+            // Если символов больше 3 - делаем запрос
+            if (lenname > 3) {
+
+            // Первая буква сектора заглавная
+            name = newParagraph (name);
+
+            // Сам ajax запрос
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "/admin/albums_category_check",
+                type: "POST",
+                data: {name: name},
+                beforeSend: function () {
+                    $('.find-status').addClass('icon-load');
+                },
+                success: function(date){
+                    $('.find-status').removeClass('icon-load');
+                    var result = $.parseJSON(date);
+                    // Если ошибка
+                    if (result.error_status == 1) {
+                        $(submit).prop('disabled', true);
+                        $('.item-error').css('display', 'block');
+                        $(db).val(0);
+                    } else {
+                        // Выводим пришедшие данные на страницу
+                        $(submit).prop('disabled', false);
+                        $('.item-error').css('display', 'none');
+                        $(db).val(1);
+                    };
+                }
+            });
+        };
+
+        // Удаляем все значения, если символов меньше 3х
+        if (lenname <= 3) {
             $(submit).prop('disabled', false);
             $('.item-error').css('display', 'none');
-            $(db).val(1);
+            $(db).val(0);
         };
-    }
-});
-  };
-    // Удаляем все значения, если символов меньше 3х
-    if (lenname <= 3) {
-      $(submit).prop('disabled', false);
-      $('.item-error').css('display', 'none');
-      $(db).val(0);
-  };
-};
+    };
 
-  // ---------------------------- Категория -----------------------------------------------
+    // ---------------------------- Категория -----------------------------------------------
 
-  // ----------- Добавление -------------
-  // Открываем модалку
-  $(document).on('click', '[data-open="first-add"]', function() {
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/admin/albums_categories/create',
-    type: "GET",
-    success: function(html){
-        $('#modal').html(html);
-        $('#first-add').foundation();
-        $('#first-add').foundation('open');
-    }
-});
-});
+    // ----------- Добавление -------------
+    // Открываем модалку
+    $(document).on('click', '[data-open="first-add"]', function() {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '/admin/albums_categories/create',
+            type: "GET",
+            success: function(html){
+                $('#modal').html(html);
+                $('#first-add').foundation();
+                $('#first-add').foundation('open');
+            }
+        });
+    });
 
-  // Проверка существования
-  $(document).on('keyup', '#form-first-add .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-first-add .name-field').val();
-    // Указываем название кнопки
-    var submit = '.submit-add';
-    // Значение поля с разрешением
-    var db = '#form-first-add .first-item';
-    // Выполняем запрос
-    clearTimeout(timerId);
-    timerId = setTimeout(function() {
-      albumsCategoryCheck (name, submit, db)
-  }, time);
-});
+    // Проверка существования
+    $(document).on('keyup', '#form-first-add .name-field', function() {
+        // Получаем фрагмент текста
+        var name = $('#form-first-add .name-field').val();
+        // Указываем название кнопки
+        var submit = '.submit-add';
+        // Значение поля с разрешением
+        var db = '#form-first-add .first-item';
+        // Выполняем запрос
+        clearTimeout(timerId);
+        timerId = setTimeout(function() {
+            albumsCategoryCheck (name, submit, db)
+        }, time);
+    });
 
-  // ----------- Изменение -------------
+    // ----------- Изменение -------------
 
-  // Открываем модалку
-  $(document).on('click', '[data-open="first-edit"]', function() {
-    // Получаем данные о разделе
-    var id = $(this).closest('.item').attr('id').split('-')[1];
+    // Открываем модалку
+    $(document).on('click', '[data-open="first-edit"]', function() {
+        // Получаем данные о разделе
+        var id = $(this).closest('.item').attr('id').split('-')[1];
 
+        // Ajax запрос
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "/admin/albums_categories/" + id + "/edit",
+            type: "GET",
+            success: function(html) {
+                $('#modal').html(html);
+                $('#first-edit').foundation();
+                $('#first-edit').foundation('open');
+            }
+        });
+    });
 
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: "/admin/albums_categories/" + id + "/edit",
-    type: "GET",
-    success: function(html) {
-        $('#modal').html(html);
-        $('#first-edit').foundation();
-        $('#first-edit').foundation('open');
-    }
-});
-});
-
-  // Проверка существования
-  $(document).on('keyup', '#form-first-edit .name-field', function() {
+    // Проверка существования
+    $(document).on('keyup', '#form-first-edit .name-field', function() {
     // Получаем фрагмент текста
     var name = $('#form-first-edit .name-field').val();
     // Указываем название кнопки

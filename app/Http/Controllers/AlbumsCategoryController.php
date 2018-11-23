@@ -15,7 +15,7 @@ use App\Policies\AlbumsCategoryPolicy;
 // Общие классы
 use Illuminate\Support\Facades\Log;
 
-// Специфические классы 
+// Специфические классы
 
 // На удаление
 use Illuminate\Support\Facades\Auth;
@@ -23,9 +23,15 @@ use Illuminate\Support\Facades\Auth;
 class AlbumsCategoryController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'albums_categories';
-    protected $entity_dependence = false;
+    // Настройки сконтроллера
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->entity_name = 'albums_categories';
+        $this->entity_dependence = false;
+        $this->model = 'App\AlbumsCategory';
+        $this->type = 'modal';
+    }
 
     public function index(Request $request)
     {
@@ -40,56 +46,30 @@ class AlbumsCategoryController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------
 
-        $albums_categories = AlbumsCategory::moderatorLimit($answer)
+        $items = AlbumsCategory::moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->template($answer) // Выводим шаблоны альбомов
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
-        ->get()
-        ->groupBy('parent_id');
-
+        ->get();
         // dd($albums_categories);
 
-        // $albums_categories[3]->merge('lol');
-
-        // dd($albums_categories[3]);
-
-        // $items_cat = [];
-        // foreach ($albums_categories as $id => &$node) { 
-
-        //     // Если нет вложений
-        //     if (!$node->parent_id) {
-        //         $items_cat[$id] = $items_cat->push($node);
-        //     } else { 
-
-        //         // Если есть потомки то перебераем массив
-        //         $albums_categories[$node->parent_id]['children'][$id] = &$node;
-        //     }
-        // }
-
-        // dd($items_cat);
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Получаем массив с вложенными элементами дял отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
-        // $albums_categories_tree = get_index_tree_with_rights($albums_categories, $user);
-        // dd($albums_categories_tree);
+        $entity = $this->entity_name;
+        $class = $this->model;
+        $type = $this->type;
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('includes.menu-views.enter', ['grouped_items' => $albums_categories, 'class' => 'App\AlbumsCategory', 'entity' => $this->entity_name, 'type' => 'modal', 'id' => $request->id]);
+            return view('includes.menu_views.category_list', ['items' => $albums_categories, 'class' => App\AlbumsCategory::class, 'entity' => $this->entity_name, 'type' => 'modal', 'id' => $request->id]);
         }
 
-        $entity = $this->entity_name;
-        
         // Отдаем на шаблон
-        return view('albums_categories.index', compact('albums_categories', 'page_info', 'entity'));
+        return view('includes.menu_views.index', compact('items', 'page_info', 'entity', 'class', 'type', 'filter'));
     }
 
     public function create(Request $request)
@@ -388,7 +368,7 @@ class AlbumsCategoryController extends Controller
     {
 
         $i = 1;
-        
+
         foreach ($request->albums_categories as $item) {
             AlbumsCategory::where('id', $item)->update(['sort' => $i]);
             $i++;
@@ -411,7 +391,7 @@ class AlbumsCategoryController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -438,7 +418,7 @@ class AlbumsCategoryController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [

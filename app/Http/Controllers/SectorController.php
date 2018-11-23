@@ -15,7 +15,8 @@ use App\Policies\SectorPolicy;
 // Общие классы
 use Illuminate\Support\Facades\Log;
 
-// Специфические классы 
+// Транслитерация
+use Transliterate;
 
 // На удаление
 use Illuminate\Support\Facades\Auth;
@@ -23,15 +24,22 @@ use Illuminate\Support\Facades\Auth;
 class SectorController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'sectors';
-    protected $entity_dependence = false;
+    // Настройки сконтроллера
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->entity_name = 'sectors';
+        $this->entity_dependence = false;
+        $this->class = Sector::class;
+        $this->model = 'App\Sector';
+        $this->type = 'modal';
+    }
 
     public function index(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Sector::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -39,8 +47,7 @@ class SectorController extends Controller
         // -----------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------
-
-        $sectors = Sector::moderatorLimit($answer)
+        $items = Sector::moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
@@ -48,9 +55,9 @@ class SectorController extends Controller
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
-        ->get()
-        ->groupBy('parent_id');
-
+        ->get();
+        // ->groupBy('parent_id');
+        // dd($sectors);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -62,25 +69,21 @@ class SectorController extends Controller
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Получаем массив с вложенными элементами для отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
-        // $sectors_tree = get_index_tree_with_rights($sectors, $user);
-        // dd($sectors_tree);
+        $entity = $this->entity_name;
+        $class = $this->model;
+        $type = $this->type;
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-        
+
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('includes.menu-views.enter', ['grouped_items' => $sectors, 'class' => 'App\Sector', 'entity' => $this->entity_name, 'type' => 'modal', 'id' => $request->id]);
+            $id = $request->id;
+            return view('includes.menu_views.category_list', ['items' => $sectors, 'class' => App\Sector::class, 'entity' => $this->entity_name, 'type' => 'modal', 'id' => $id]);
         }
 
-        $entity = $this->entity_name;
-
         // Отдаем на шаблон
-        return view('sectors.index', compact('sectors', 'page_info', 'filter', 'entity'));
+        return view('includes.menu_views.index', compact('items', 'page_info', 'entity', 'class', 'type', 'filter'));
     }
 
 
@@ -88,35 +91,34 @@ class SectorController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Sector::class);
-
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
         $sector = new Sector;
+        return view('sectors.create', ['sector' => $sector, 'parent_id' => $request->parent_id]);
 
-        if (isset($request->parent_id)) {
+        // if ($request->parent_id != null) {
 
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+        //     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        //     $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
-            // Главный запрос
-            $sectors = Sector::moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
-            ->template($answer) // Выводим шаблоны альбомов
-            ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
-            ->keyBy('id')
-            ->toArray();
+        //     // Главный запрос
+        //     $sectors = Sector::moderatorLimit($answer)
+        //     ->companiesLimit($answer)
+        //     ->authors($answer)
+        //     ->systemItem($answer) // Фильтр по системным записям
+        //     ->template($answer) // Выводим шаблоны альбомов
+        //     ->orderBy('sort', 'asc')
+        //     ->get(['id','name','category_status','parent_id'])
+        //     ->keyBy('id')
+        //     ->toArray();
 
-            // dd($sectors);
+        //     // dd($sectors);
 
-            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $sectors_list = get_select_tree($sectors, $request->parent_id, null, null);
+        //     // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+        //     $sectors_list = get_select_tree($sectors, $request->parent_id, null, null);
 
-            return view('sectors.create-medium', ['sector' => $sector, 'sectors_list' => $sectors_list]);
-        } else {
-            return view('sectors.create-first', ['sector' => $sector]);
-        }
+        //     return view('sectors.create-medium', ['sectors_list' => $sectors_list]);
+        // } else {
+
     }
 
     public function store(SectorRequest $request)
@@ -143,7 +145,7 @@ class SectorController extends Controller
         $sector->system_item = $request->system_item;
 
         $sector->display = $request->display;
-        
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -151,7 +153,7 @@ class SectorController extends Controller
         if ($answer['automoderate'] == false){
             $sector->moderation = 1;
         }
-        
+
         // Смотрим что пришло
         // Если категория
         if ($request->first_item == 1) {
@@ -165,6 +167,8 @@ class SectorController extends Controller
 
         // Делаем заглавной первую буквуa
         $sector->name = get_first_letter($request->name);
+
+        $sector->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
 
         $sector->save();
 
@@ -227,7 +231,7 @@ class SectorController extends Controller
     }
 
     public function update(SectorRequest $request, $id)
-    {    
+    {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
@@ -256,6 +260,8 @@ class SectorController extends Controller
         // Делаем заглавной первую букву
         $sector->name = get_first_letter($request->name);
 
+        $sector->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
+
         $sector->save();
 
         if ($sector) {
@@ -270,7 +276,7 @@ class SectorController extends Controller
     }
 
     public function destroy(Request $request, $id)
-    { 
+    {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -370,85 +376,5 @@ class SectorController extends Controller
         // Отдаем ajax
         echo json_encode($sectors_list, JSON_UNESCAPED_UNICODE);
 
-    }
-
-  // Сортировка
-    public function ajax_sort(Request $request)
-    {
-        $result = '';
-        $i = 1;
-
-        foreach ($request->sectors as $item) {
-            Sector::where('id', $item)->update(['sort' => $i]);
-
-            // Проверка на ошибки
-            // if ($sector) {
-            //   $result = [
-            //     'error_status' => 0,
-            //   ];
-            // } else {
-            //   $result = [
-            //     'error_status' => 1,
-            //     'msg' => 'Произошла непредвиденная ошибка, попробуйте перезагрузить страницу и попробуйте еще раз'
-            //   ];
-            // }
-            // return json_encode($result, JSON_UNESCAPED_UNICODE);
-
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Sector::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Sector::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 }

@@ -277,9 +277,11 @@ Route::get('/vk', 'VkController@market')->middleware('auth');
 // Сортировка
 Route::post('/sort/{entity_alias}', 'AppController@ajax_sort')->middleware('auth');
 // Системная запись
-Route::any('/system_item', 'AppController@ajax_system_item')->middleware('auth');
+Route::post('/system_item', 'AppController@ajax_system_item')->middleware('auth');
 // Отображение на сайте
 Route::post('/display', 'AppController@ajax_display')->middleware('auth');
+// Отображение на сайте
+Route::post('/check', 'AppController@ajax_check')->middleware('auth');
 
 
 // --------------------------------------- Настройки -----------------------------------------------

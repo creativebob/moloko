@@ -12,11 +12,11 @@ class UnitsCategoriesComposer
 	{
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('units_category', false, 'index');
+        $answer_units_categories = operator_right('units_categories', false, 'index');
 
         // Главный запрос
-        $units_categories = UnitsCategory::moderatorLimit($answer)
-        ->systemItem($answer) // Фильтр по системным записям
+        $units_categories = UnitsCategory::moderatorLimit($answer_units_categories)
+        ->systemItem($answer_units_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
         ->get();
 
