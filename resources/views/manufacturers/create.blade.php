@@ -21,7 +21,7 @@
 @section('content')
 
   {{ Form::open(['url' => '/admin/manufacturers', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
-    @include('manufacturers.form', ['submitButtonText' => 'Добавить производителя', 'param' => ''])
+    @include('companies.form', ['submitButtonText' => 'Добавить производителя', 'param' => ''])
   {{ Form::close() }}
 
 @endsection

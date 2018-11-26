@@ -22,6 +22,7 @@ class CreateSectorsTable extends Migration
             $table->integer('parent_id')->nullable()->unsigned()->comment('Id отдела, в котором находится отдел');
             $table->foreign('parent_id')->references('id')->on('sectors');
             $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
+            $table->string('tag')->nullable()->comment('Ключ для поиска');
 
             // $table->integer('industry_id')->unsigned()->nullable()->comment('Id категории, в которо1 находится сектор');
             // $table->foreign('industry_id')->references('id')->on('sectors');

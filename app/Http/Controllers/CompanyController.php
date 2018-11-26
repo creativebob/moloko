@@ -45,12 +45,18 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
+// Подрубаем трейт записи и обновления компании
+use App\Http\Controllers\Traits\CompanyControllerTrait;
+
 class CompanyController extends Controller
 {
 
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'companies';
     protected $entity_dependence = false;
+
+    // Подключаем трейт записи и обновления компании
+    use CompanyControllerTrait;
 
     public function index(Request $request)
     {
@@ -73,6 +79,8 @@ class CompanyController extends Controller
 
         $companies = Company::with('author', 'director', 'location.city', 'sector', 'we_suppliers', 'we_manufacturers', 'we_dealers', 'main_phones')
         ->moderatorLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
         ->filter($request, 'city_id', 'location')
         ->filter($request, 'sector_id')
         ->booklistFilter($request)
@@ -119,52 +127,17 @@ class CompanyController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
         // Скрываем бога
         $user_id = hideGod($user);
 
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $company = new Company;
-        $company->name = $request->name;
-        $company->alias = $request->alias;
-        $company->email = $request->email;
-        $company->legal_form_id = $request->legal_form_id;
-        $company->inn = $request->inn;
-        $company->kpp = $request->kpp;
-        $company->ogrn = $request->ogrn;
-        $company->okpo = $request->okpo;
-        $company->okved = $request->okved;
-        $company->location_id = create_location($request);
-        $company->sector_id = $request->sector_id;
-        $company->author_id = $user_id;
-        $company->save();
-
-        // Если запись удачна - будем записывать связи
-        if($company){
-
-            // Добавляем телефон
-            add_phones($request, $company);
-
-            // Добавляем банковский аккаунт
-            addBankAccount($company, $request);
-
-            // Добавляем расписание
-            setSchedule($company, $request);
-
-            // Добавляем типы услуг
-            setServicesType();
-
-        } else {
-
-            abort(403, 'Ошибка записи компании');
-        };
+        // Отдаем работу по созданию новой компании трейту
+        $this->createCompany($request);
 
         return redirect('/admin/companies');
     }
@@ -176,7 +149,10 @@ class CompanyController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $company = Company::moderatorLimit($answer)->findOrFail($id);
+        $company = Company::moderatorLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize('view', $company);
@@ -194,6 +170,8 @@ class CompanyController extends Controller
             'extra_phones', 
             'bank_accounts.bank')
         ->moderatorLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
         ->findOrFail($id);
 
         $this->authorize(getmethod(__FUNCTION__), $company);
@@ -220,42 +198,17 @@ class CompanyController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $company = Company::with('location', 'schedules.worktimes')->moderatorLimit($answer)->findOrFail($id);
-
-        // Обновляем локацию
-        $company = update_location($request, $company);
+        $company = Company::with('location', 'schedules.worktimes')
+        ->moderatorLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $company);
 
-        $company->name = $request->name;
-
-        if ($company->alias != $request->alias) {
-            $company->alias = $request->alias;
-        }
-
-        $company->email = $request->email;
-        $company->legal_form_id = $request->legal_form_id;
-        $company->inn = $request->inn;
-        $company->kpp = $request->kpp;
-        $company->ogrn = $request->ogrn;
-        $company->okpo = $request->okpo;
-        $company->okved = $request->okved;
-
-        if ($company->sector_id != $request->sector_id) {
-            $company->sector_id = $request->sector_id;
-        }
-
-        $company->save();
-
-        if($company){
-
-            add_phones($request, $company);
-            addBankAccount($request, $company);
-            setSchedule($request, $company);
-            setServicesType($request, $company);
-
-        }
+        // Отдаем работу по редактировнию компании трейту
+        $this->updateCompany($request, $company);
 
         return redirect('/admin/companies');
     }
@@ -268,7 +221,10 @@ class CompanyController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $company = Company::moderatorLimit($answer)->findOrFail($id);
+        $company = Company::moderatorLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $company);
@@ -314,3 +270,4 @@ class CompanyController extends Controller
             return $company->name;};
         }
     }
+
