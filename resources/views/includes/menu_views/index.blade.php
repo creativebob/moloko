@@ -136,14 +136,12 @@
             }, time);
         });
 
-  // ---------------------------- Индустрия -----------------------------------------------
-
   // ----------- Добавление -------------
     // Открываем модалку
     $(document).on('click', '[data-open="first-add"], [data-open="medium-add"]', function() {
         let parent = $(this).closest('.first-item').hasClass('item') ? $(this).closest('.item').attr('id').split('-')[1] : null;
 
-        $.get('/admin/' + entity + '/create', {parent_id: parent}, function(html){
+        $.get('/admin/' + entity + '/create', {sector_id: parent}, function(html){
             $('#modal').html(html).foundation();
             $('#first-add').foundation('open');
         });
@@ -155,11 +153,10 @@
   // ----------- Изменение -------------
 
   // Открываем модалку
-  $(document).on('click', '[data-open="first-edit"]', function() {
+  $(document).on('click', '[data-open="first-edit"], [data-open="medium-edit"]', function() {
     // Получаем данные о разделе
     var id = $(this).closest('.item').attr('id').split('-')[1];
 
-    // Ajax запрос
     $.get("/admin/" + entity + "/" + id + "/edit", function(html) {
         $('#modal').html(html);
         $('#first-edit').foundation();

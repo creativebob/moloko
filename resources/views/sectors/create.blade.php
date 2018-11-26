@@ -6,7 +6,7 @@
   </div>
   {{ Form::open(['id'=>'form-create', 'data-abide', 'novalidate']) }}
 
-    @include('sectors.form', ['submitButtonText' => 'Добавить сектор'])
+    @include('sectors.form', ['submitButtonText' => 'Добавить сектор', 'class' => 'submit-create'])
 
   {{ Form::close() }}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div>

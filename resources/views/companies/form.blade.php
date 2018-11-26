@@ -26,7 +26,10 @@
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
-                        @include('includes.selects.sectors', ['value'=>$company->sector_id])
+                        {{-- Селект с секторами (Вид деятельности компании) --}}
+                        <label>Вид деятельности компании
+                            @include('includes.selects.sectors', ['value'=>$company->sector_id])
+                        </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>Телефон
@@ -35,11 +38,11 @@
                     </div>
                     <div class="small-12 medium-6 cell" id="extra-phones">
                         @if (count($company->extra_phones) > 0)
-                            @foreach ($company->extra_phones as $extra_phone)
-                                @include('includes.extra-phone', ['extra_phone' => $extra_phone])
-                            @endforeach
+                        @foreach ($company->extra_phones as $extra_phone)
+                        @include('includes.extra-phone', ['extra_phone' => $extra_phone])
+                        @endforeach
                         @else
-                            @include('includes.extra-phone')
+                        @include('includes.extra-phone')
                         @endif
 
                         <!-- <span id="add-extra-phone">Добавить номер</span> -->

@@ -93,32 +93,7 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
         $sector = new Sector;
-        return view('sectors.create', ['sector' => $sector, 'parent_id' => $request->parent_id]);
-
-        // if ($request->parent_id != null) {
-
-        //     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        //     $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
-
-        //     // Главный запрос
-        //     $sectors = Sector::moderatorLimit($answer)
-        //     ->companiesLimit($answer)
-        //     ->authors($answer)
-        //     ->systemItem($answer) // Фильтр по системным записям
-        //     ->template($answer) // Выводим шаблоны альбомов
-        //     ->orderBy('sort', 'asc')
-        //     ->get(['id','name','category_status','parent_id'])
-        //     ->keyBy('id')
-        //     ->toArray();
-
-        //     // dd($sectors);
-
-        //     // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        //     $sectors_list = get_select_tree($sectors, $request->parent_id, null, null);
-
-        //     return view('sectors.create-medium', ['sectors_list' => $sectors_list]);
-        // } else {
-
+        return view('sectors.create', ['sector' => $sector, 'sector_id' => $request->sector_id]);
     }
 
     public function store(SectorRequest $request)
@@ -201,33 +176,7 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
 
-        if ($sector->category_status == 1) {
-
-            // Меняем категорию
-            return view('sectors.edit-first', ['sector' => $sector]);
-        } else {
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
-
-            // Главный запрос
-            $sectors = Sector::moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
-            ->template($answer) // Выводим шаблоны альбомов
-            ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
-            ->keyBy('id')
-            ->toArray();
-
-            // dd($sectors);
-
-            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $sectors_list = get_select_tree($sectors, $sector->parent_id, null, null);
-
-            return view('sectors.edit-medium', ['sector' => $sector, 'sectors_list' => $sectors_list]);
-        }
+        return view('sectors.edit', ['sector' => $sector, 'sector_id' => $sector->parent_id]);
     }
 
     public function update(SectorRequest $request, $id)

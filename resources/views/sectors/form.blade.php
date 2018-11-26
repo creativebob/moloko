@@ -1,11 +1,9 @@
 <div class="grid-x grid-padding-x modal-content inputs">
     <div class="small-10 small-offset-1 cell">
 
-        @isset($parent_id)
+        @isset($sector_id)
         <label>Расположение
-            <select name="parent_id">
-                {!! $sectors_list !!}
-            </select>
+            @include('includes.selects.sectors', ['sector_id' => $sector_id])
         </label>
         @endisset
 
@@ -29,6 +27,6 @@
 
 <div class="grid-x align-center">
     <div class="small-6 medium-4 cell">
-        {{ Form::submit($submitButtonText, ['data-close', 'class'=>'button modal-button']) }}
+        {{ Form::submit($submitButtonText, ['data-close', 'class'=>'button modal-button '.$class]) }}
     </div>
 </div>
