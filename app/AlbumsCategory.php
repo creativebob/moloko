@@ -72,6 +72,7 @@ class AlbumsCategory extends Model
         ->authors($answer)
         ->systemItem($answer)
         ->template($answer)
+        ->withCount('albums')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();

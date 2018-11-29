@@ -8,7 +8,7 @@
         var id = item.closest('form').find('#item-id').val();
         var submit = item.closest('form').find('.button');
         field = field != null ? field : item.attr('name');
-        entity_alias = entity_alias != null ? entity_alias : $('#content').data('entity-alias');
+        entity_alias = entity_alias != null ? entity_alias : entity;
 
         // Если символов больше 3 - делаем запрос
         if (value.length > 3) {
