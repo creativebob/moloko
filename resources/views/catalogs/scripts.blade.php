@@ -112,12 +112,12 @@
         // Указываем название кнопки
         var submit = 'input[type="submit"]';
         // Значение поля с разрешением
-        var db = '#form-first-add .first-item';
+        var db = '#form-modal-create .first-item';
         // Выполняем запрос
-        clearTimeout(timerId);   
+        clearTimeout(timerId);
         timerId = setTimeout(function() {
             catalogCheck (name, submit, db)
-        }, time); 
+        }, time);
     });
 
     // Проверка существования алиаса
@@ -129,10 +129,10 @@
         // Значение поля с разрешением
         var db = '#check';
         // Выполняем запрос
-        clearTimeout(timerId);   
+        clearTimeout(timerId);
         timerId = setTimeout(function() {
             aliasCheck (alias, submit, db);
-        }, time); 
+        }, time);
     });
 
 </script>

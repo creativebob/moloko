@@ -6,11 +6,11 @@
             <div class="item-error">Такая категория уже существует!</div>
         </label>
 
-        @if(count($goods_modes_list) == 1)
+        @if(count($goods_modes->pluck('name', 'id')) == 1)
         <input type="hidden" name="goods_mode_id" value="1">
         @else
         <label>Тип
-            {{ Form::select('goods_mode_id', $goods_modes_list) }}
+            {{ Form::select('goods_mode_id', $goods_modes->pluck('name', 'id')) }}
         </label>
         @endif
 

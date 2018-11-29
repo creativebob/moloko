@@ -15,8 +15,14 @@ use App\Http\ViewComposers\UnitsCategoriesComposer;
 use App\Http\ViewComposers\UnitsComposer;
 
 use App\Http\ViewComposers\ManufacturersComposer;
+use App\Http\ViewComposers\CategoriesSelectComposer;
+use App\Http\ViewComposers\GoodsModesComposer;
+
 use App\Http\ViewComposers\ViewMenuComposer;
-use App\Http\ViewComposers\SectorsComposer;
+// use App\Http\ViewComposers\SectorsComposer;
+use App\Http\ViewComposers\GoodsCategoriesComposer;
+// use App\Http\ViewComposers\AlbumsCategoriesComposer;
+
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -34,9 +40,17 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.selects.manufacturers', ManufacturersComposer::class);
 
-        view()->composer('includes.menu_views.category_list', ViewMenuComposer::class);
+        view()->composer('includes.selects.goods_modes', GoodsModesComposer::class);
 
-        view()->composer('includes.selects.sectors', SectorsComposer::class);
+        // Select'ы категорий
+        view()->composer('includes.selects.categories_select', CategoriesSelectComposer::class);
+
+
+        // Стандартные шаблоны типа "меню"
+        view()->composer('includes.menu_views.category_list', ViewMenuComposer::class);
+        // view()->composer('includes.selects.sectors', SectorsComposer::class);
+        view()->composer('includes.selects.goods_categories', GoodsCategoriesComposer::class);
+        // view()->composer('includes.selects.albums_categories', AlbumsCategoriesComposer::class);
     }
 
     public function register()

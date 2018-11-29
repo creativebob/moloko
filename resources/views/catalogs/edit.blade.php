@@ -145,7 +145,7 @@
 
             CKEDITOR.replace('content-ckeditor');
 
-            // Конфигурация 
+            // Конфигурация
             CKEDITOR.config.toolbar = [
             ['Bold', 'Italic', 'NumberedList', 'BulletedList', 'Maximize', 'Source']
             ];
@@ -199,7 +199,7 @@
 
                         } else {
                             alert(result['error_message']);
-                        }; 
+                        };
                     }
                 })
             });
@@ -235,7 +235,7 @@
 
                         } else {
                             alert(result['error_message']);
-                        }; 
+                        };
                     }
                 })
             });
@@ -263,7 +263,7 @@
                     $('#units-list').html(html);
                     $('#units-list').prop('disabled', false);
                 }
-            }); 
+            });
         });
 
         // При смнене свойства в select
@@ -394,7 +394,7 @@
                         $('#metrics-' + id).remove();
                     } else {
                         alert(result['error_message']);
-                    }; 
+                    };
                 }
             })
         }
@@ -450,7 +450,7 @@
                     $('#compositions-' + id).remove();
                 } else {
                     alert(result['error_message']);
-                }; 
+                };
             }
         })
     }
@@ -480,8 +480,8 @@
 
                 // alert(html);
                 $('#form-photo-edit').html(html);
-                // $('#first-add').foundation();
-                // $('#first-add').foundation('open');
+                // $('#modal-create').foundation();
+                // $('#modal-create').foundation('open');
             }
         })
     });
@@ -504,8 +504,8 @@
             success: function(html){
                 // alert(html);
                 $('#form-photo-edit').html(html);
-                // $('#first-add').foundation();
-                // $('#first-add').foundation('open');
+                // $('#modal-create').foundation();
+                // $('#modal-create').foundation('open');
             }
         })
     });
@@ -553,8 +553,8 @@
                 // alert(html);
                 $('#photos-list').html(html);
 
-                // $('#first-add').foundation();
-                // $('#first-add').foundation('open');
+                // $('#modal-create').foundation();
+                // $('#modal-create').foundation('open');
             }
         })
     });

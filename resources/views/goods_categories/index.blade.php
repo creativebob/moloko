@@ -127,7 +127,7 @@
 
   // ----------- Добавление -------------
   // Открываем модалку
-  $(document).on('click', '[data-open="first-add"]', function() {
+  $(document).on('click', '[data-open="modal-create"]', function() {
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -137,25 +137,25 @@
     success: function(html){
         // alert(html);
         $('#modal').html(html);
-        $('#first-add').foundation();
-        $('#first-add').foundation('open');
+        $('#modal-create').foundation();
+        $('#modal-create').foundation('open');
     }
-}); 
+});
 });
 
   // Проверка существования
-  $(document).on('keyup', '#form-first-add .name-field', function() {
+  $(document).on('keyup', '#form-modal-create .name-field', function() {
     // Получаем фрагмент текста
-    var name = $('#form-first-add .name-field').val();
+    var name = $('#form-modal-create .name-field').val();
     // Указываем название кнопки
     var submit = '.submit-add';
     // Значение поля с разрешением
-    var db = '#form-first-add .first-item';
+    var db = '#form-modal-create .first-item';
     // Выполняем запрос
-    clearTimeout(timerId);   
+    clearTimeout(timerId);
     timerId = setTimeout(function() {
       goodsCategoryCheck (name, submit, db)
-  }, time); 
+  }, time);
 });
 
   // ------------------------------- Вложенные категории --------------------------------------------
@@ -166,7 +166,7 @@
 
     var parent = $(this).closest('.item').attr('id').split('-')[1];
     var category = $(this).closest('.first-item').attr('id').split('-')[1];
-    
+
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -180,7 +180,7 @@
         $('#medium-add').foundation('open');
         $('.category-id').val(category);
     }
-}); 
+});
 });
 
   // ------------------------ Кнопка добавления ---------------------------------------

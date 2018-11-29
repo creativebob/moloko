@@ -34,9 +34,19 @@ use Illuminate\Http\Request;
 class RawController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'raws';
-    protected $entity_dependence = false;
+    // Настройки сконтроллера
+    public function __construct(Raw $raw)
+    {
+        $this->middleware('auth');
+        $this->raw = $raw;
+
+
+        // dd($raw);
+        $this->class = Raw::class;
+        $this->model = 'App\Raw';
+        $this->entity_table = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+    }
 
     public function index(Request $request)
     {
@@ -44,15 +54,15 @@ class RawController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Raw::class);
 
-        // Включение контроля активного фильтра 
-        $filter_url = autoFilter($request, $this->entity_name);
+        // Включение контроля активного фильтра
+        $filter_url = autoFilter($request, $this->entity_table);
         if (($filter_url != null)&&($request->filter != 'active')) {
-            Cookie::queue(Cookie::forget('filter_' . $this->entity_name));
+            Cookie::queue(Cookie::forget('filter_' . $this->entity_table));
             return Redirect($filter_url);
         }
-        
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
 
         // -------------------------------------------------------------------------------------------------------------
@@ -78,7 +88,7 @@ class RawController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_table, $request, [
             'author',               // Автор записи
             'raws_category',    // Категория услуги
             'raws_product',     // Группа услуги
@@ -88,7 +98,7 @@ class RawController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_table);
 
         return view('raws.index', compact('raws', 'page_info', 'filter'));
     }
@@ -165,7 +175,7 @@ class RawController extends Controller
 
     public function store(Request $request)
     {
-        
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Raw::class);
         // dd($request);
@@ -208,7 +218,7 @@ class RawController extends Controller
                 }
             }
             break;
-            
+
             case 'mode-add':
             $raws_product_name = $request->raws_product_name;
             $raws_product = RawsProduct::where(['name' => $raws_product_name, 'raws_category_id' => $raws_category_id])->first();
@@ -274,14 +284,14 @@ class RawController extends Controller
                 if ($request->quickly == 1) {
                     return redirect('/admin/raws');
                 } else {
-                    return redirect('/admin/raws/'.$raw->id.'/edit'); 
+                    return redirect('/admin/raws/'.$raw->id.'/edit');
                 }
             } else {
                 abort(403, 'Ошибка записи сырья');
-            } 
+            }
         } else {
             abort(403, 'Ошибка записи информации сырья');
-        }  
+        }
     }
 
     public function show($id)
@@ -289,11 +299,12 @@ class RawController extends Controller
         //
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request, Raw $raw)
     {
 
+        dd($raw);
         // ГЛАВНЫЙ ЗАПРОС:
-        $answer_raws = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_raws = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $raw = Raw::with(['raws_article.raws_product.raws_category' => function ($query) {
             $query->with(['metrics.property', 'metrics.unit'])
@@ -387,7 +398,7 @@ class RawController extends Controller
                 $i = 1;
                 for($j = 0; $j < $i; $j++){
                     $padding .= '&nbsp;&nbsp';
-                }     
+                }
                 $i++;
 
                 $menu .= show_cats($item['children'], $padding, $parents);
@@ -419,7 +430,7 @@ class RawController extends Controller
             ->moderatorLimit($answer_raws_categories)
             ->companiesLimit($answer_raws_categories)
             ->authors($answer_raws_categories)
-            ->systemItem($answer_raws_categories); // Фильтр по системным записям 
+            ->systemItem($answer_raws_categories); // Фильтр по системным записям
         }])
         ->moderatorLimit($answer_raws_modes)
         ->companiesLimit($answer_raws_modes)
@@ -461,7 +472,7 @@ class RawController extends Controller
         $settings = config()->get('settings');
         // dd($settings);
 
-        $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+        $get_settings = EntitySetting::where(['entity' => $this->entity_table])->first();
 
         if($get_settings){
 
@@ -486,7 +497,7 @@ class RawController extends Controller
             }
 
             if ($get_settings->img_large_height != null) {
-                $settings['img_large_height'] = $get_settings->img_large_height;  
+                $settings['img_large_height'] = $get_settings->img_large_height;
             }
 
             if ($get_settings->img_formats != null) {
@@ -498,7 +509,7 @@ class RawController extends Controller
             }
 
             if ($get_settings->img_min_height != null) {
-                $settings['img_min_height'] = $get_settings->img_min_height;   
+                $settings['img_min_height'] = $get_settings->img_min_height;
             }
 
             if ($get_settings->img_max_size != null) {
@@ -535,7 +546,7 @@ class RawController extends Controller
             }
 
             if ($get_settings->img_large_height != null) {
-                $settings_album['img_large_height'] = $get_settings->img_large_height;  
+                $settings_album['img_large_height'] = $get_settings->img_large_height;
             }
 
             if ($get_settings->img_formats != null) {
@@ -547,7 +558,7 @@ class RawController extends Controller
             }
 
             if ($get_settings->img_min_height != null) {
-                $settings_album['img_min_height'] = $get_settings->img_min_height;   
+                $settings_album['img_min_height'] = $get_settings->img_min_height;
             }
 
             if ($get_settings->img_max_size != null) {
@@ -561,15 +572,11 @@ class RawController extends Controller
         return view('raws.edit', compact('raw', 'page_info', 'raws_categories_list', 'raws_products_list', 'manufacturers_list', 'raws_modes_list', 'raws_category_compositions', 'metrics_values', 'compositions_values', 'settings', 'settings_album', 'catalogs_list'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Raw $raw)
     {
 
-        // dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $raw = Raw::with('raws_article.raws_product')->moderatorLimit($answer)->findOrFail($id);
+        $answer = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raw);
@@ -591,7 +598,7 @@ class RawController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_table])->first();
 
             if($get_settings){
 
@@ -616,7 +623,7 @@ class RawController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -628,7 +635,7 @@ class RawController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -636,7 +643,7 @@ class RawController extends Controller
 
                 }
             }
-            
+
             $directory = $company_id.'/media/raws/'.$raw->id.'/img/';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
@@ -649,7 +656,7 @@ class RawController extends Controller
 
             $photo = $array['photo'];
             $raw->photo_id = $photo->id;
-        } 
+        }
 
         // -------------------------------------------------------------------------------------------------
         // ПЕРЕНОС ГРУППЫ УСЛУГИ В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
@@ -670,7 +677,7 @@ class RawController extends Controller
         // Важно! Важно проверить, соответствеут ли группа в которую переноситься товар, метрикам самого товара
         // Если не соответствует - дать отказ. Если соответствует - осуществить перенос
 
-        // Тут должен быть код проверки !!! 
+        // Тут должен быть код проверки !!!
 
         // А, пока изменяем без проверки
         $raw->raws_article->raws_product_id = $request->raws_product_id;
@@ -751,7 +758,7 @@ class RawController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'delete');
+        $answer = operator_right($this->entity_table, $this->entity_dependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
         $raw = Raw::moderatorLimit($answer)->findOrFail($id);
@@ -809,7 +816,7 @@ class RawController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -836,7 +843,7 @@ class RawController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -853,7 +860,7 @@ class RawController extends Controller
         $product = Product::with('metrics.property', 'compositions.unit')->withCount('metrics', 'compositions')->findOrFail($request->product_id);
         return view('products.raws-form', compact('product'));
     }
- 
+
     public function add_photo(Request $request)
     {
 
@@ -862,7 +869,7 @@ class RawController extends Controller
 
         if ($request->hasFile('photo')) {
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+            // $answer = operator_right($this->entity_table, $this->entity_dependence, getmethod('index'));
 
             // Получаем авторизованного пользователя
             $user = $request->user();
@@ -935,7 +942,7 @@ class RawController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -947,7 +954,7 @@ class RawController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -975,17 +982,17 @@ class RawController extends Controller
                 return response()->json($upload_success, 200);
             } else {
                 return response()->json('error', 400);
-            } 
+            }
         } else {
             return response()->json('error', 400);
-        } 
+        }
     }
 
     public function photos(Request $request)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+        $answer = operator_right($this->entity_table, $this->entity_dependence, getmethod('index'));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $raw = Raw::with('album.photos')->moderatorLimit($answer)->findOrFail($request->raw_id);

@@ -24,7 +24,8 @@ class CreateAlbumsCategoriesTable extends Migration
             $table->integer('parent_id')->nullable()->unsigned()->comment('Id категории альбома');
             $table->foreign('parent_id')->references('id')->on('albums_categories');
 
-            $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
+            $table->integer('category_id')->unsigned()->nullable()->comment('Id категории');
+            $table->foreign('category_id')->references('id')->on('albums_categories');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

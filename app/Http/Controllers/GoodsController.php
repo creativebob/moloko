@@ -34,18 +34,16 @@ use Illuminate\Http\Request;
 class GoodsController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    // protected $entity_name = 'goods';
-    // protected $entity_dependence = false;
-
-    public function __construct()
+    // Настройки сконтроллера
+    public function __construct(Goods $cur_goods)
     {
-
         $this->middleware('auth');
-
-        // Сущность над которой производит операции контроллер
-        $this->entity_name = 'goods';
+        $this->cur_goods = $cur_goods;
+        $this->class = Goods::class;
+        $this->model = 'App\Goods';
+        $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
+        $this->type = 'edit';
     }
 
     public function index(Request $request)
@@ -55,15 +53,15 @@ class GoodsController extends Controller
         $this->authorize('index', Goods::class);
 
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_name);
+        $filter_url = autoFilter($request, $this->entity_alias);
 
         if (($filter_url != null)&&($request->filter != 'active')) {
-            Cookie::queue(Cookie::forget('filter_' . $this->entity_name));
+            Cookie::queue(Cookie::forget('filter_' . $this->entity_alias));
             return Redirect($filter_url);
         }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // -----------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -89,7 +87,7 @@ class GoodsController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             'author',               // Автор записи
             'goods_category',       // Категория товара
             'goods_product',     // Группа продукта
@@ -100,7 +98,7 @@ class GoodsController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('goods.index', compact('goods', 'page_info', 'filter'));
     }
@@ -112,7 +110,7 @@ class GoodsController extends Controller
         $this->authorize('index', Goods::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // --------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -131,9 +129,9 @@ class GoodsController extends Controller
 
         if ($result_search->count()) {
 
-            $entity_name = $this->entity_name;
+            $entity_alias = $this->entity_alias;
 
-            return view('includes.search', compact('result_search', 'entity_name'));
+            return view('includes.search', compact('result_search', 'entity_alias'));
         } else {
 
             return view('includes.search');
@@ -197,7 +195,7 @@ class GoodsController extends Controller
         $goods_categories_list = get_select_tree($goods_categories->keyBy('id')->toArray(), $parent_id, null, null);
         // echo $goods_categories_list;
 
-        return view('goods.create', compact('goods_categories_list', 'goods_products_count'));
+        return view('goods.create', ['cur_goods' => new $this->class, 'goods_categories_list' => $goods_categories_list, 'goods_products_count' => $goods_products_count]);
     }
 
     public function store(Request $request)
@@ -307,7 +305,7 @@ class GoodsController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_goods = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Главный запрос
         $cur_goods = Goods::moderatorLimit($answer_goods)->findOrFail($id);
@@ -610,7 +608,7 @@ class GoodsController extends Controller
         $settings = config()->get('settings');
         // dd($settings);
 
-        $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+        $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
 
         if ($get_settings){
 
@@ -706,7 +704,7 @@ class GoodsController extends Controller
         // dd($settings_album);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
 
         return view('goods.edit', compact('cur_goods', 'page_info', 'goods_categories_list', 'goods_products_list', 'manufacturers_list', 'metrics_values', 'settings', 'settings_album', 'composition_list', 'catalogs_list'));
@@ -718,7 +716,7 @@ class GoodsController extends Controller
         // dd($request);
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $cur_goods = Goods::with('goods_article.goods_product')->moderatorLimit($answer)->findOrFail($id);
@@ -890,7 +888,7 @@ class GoodsController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
 
             if ($get_settings){
 
@@ -1061,7 +1059,7 @@ class GoodsController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'delete');
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
         $cur_goods = Goods::with('goods_article')->moderatorLimit($answer)->findOrFail($id);
@@ -1134,7 +1132,7 @@ class GoodsController extends Controller
 
         if ($request->hasFile('photo')) {
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+            // $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
 
             // Получаем авторизованного пользователя
             $user = $request->user();
@@ -1270,7 +1268,7 @@ class GoodsController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $cur_goods = Goods::with('album.photos')->moderatorLimit($answer)->findOrFail($request->cur_goods_id);

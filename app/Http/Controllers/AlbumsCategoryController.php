@@ -9,14 +9,6 @@ use App\AlbumsCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\AlbumsCategoryRequest;
 
-// Политика
-use App\Policies\AlbumsCategoryPolicy;
-
-// Общие классы
-use Illuminate\Support\Facades\Log;
-
-// Специфические классы
-
 // На удаление
 use Illuminate\Support\Facades\Auth;
 
@@ -24,11 +16,13 @@ class AlbumsCategoryController extends Controller
 {
 
     // Настройки сконтроллера
-    public function __construct()
+    public function __construct(AlbumsCategory $albums_category)
     {
         $this->middleware('auth');
-        $this->entity_name = 'albums_categories';
+        $this->albums_category = $albums_category;
+        $this->entity_alias = with(new AlbumsCategory)->getTable();;
         $this->entity_dependence = false;
+        $this->class = AlbumsCategory::class;
         $this->model = 'App\AlbumsCategory';
         $this->type = 'modal';
     }
@@ -37,120 +31,84 @@ class AlbumsCategoryController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), AlbumsCategory::class);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // -----------------------------------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -----------------------------------------------------------------------------------------------------------------------
-
-        $items = AlbumsCategory::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->template($answer) // Выводим шаблоны альбомов
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
-        // dd($albums_categories);
-
-        $entity = $this->entity_name;
-        $class = $this->model;
-        $type = $this->type;
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
+
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('includes.menu_views.category_list', ['items' => $albums_categories, 'class' => App\AlbumsCategory::class, 'entity' => $this->entity_name, 'type' => 'modal', 'id' => $request->id]);
+
+            $id = $request->id;
+            return view('includes.menu_views.category_list',
+                [
+                    'items' => $this->albums_category->getIndex($answer, $request),
+                    'entity' => $this->entity_alias,
+                    'class' => $this->model,
+                    'type' => $this->type,
+                    'count' => count($this->sector->getIndex($answer, $request)),
+                    'id' => $request->id
+                ]
+            );
         }
 
         // Отдаем на шаблон
-        return view('includes.menu_views.index', compact('items', 'page_info', 'entity', 'class', 'type', 'filter'));
+        return view('includes.menu_views.index',
+            [
+                'items' => $this->albums_category->getIndex($answer, $request),
+                'page_info' => $page_info,
+                'entity' => $this->entity_alias,
+                'class' => $this->model,
+                'type' => $this->type,
+            ]
+        );
     }
 
     public function create(Request $request)
     {
 
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), AlbumsCategory::class);
+       // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $albums_category = new AlbumsCategory;
-
-        // Если добавляем вложенный элемент
-        if (isset($request->parent_id)) {
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
-
-            // Главный запрос
-            $albums_categories = AlbumsCategory::moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
-            ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
-            ->keyBy('id')
-            ->toArray();
-
-            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $albums_categories_list = get_select_tree($albums_categories, $request->parent_id, null, null);
-            // echo $albums_categories_list;
-
-            return view('albums_categories.create-medium', ['albums_category' => $albums_category, 'albums_categories_list' => $albums_categories_list]);
-        } else {
-
-            return view('albums_categories.create-first', ['albums_category' => $albums_category]);
-        }
+        return view('includes.menu_views.create', [
+            'item' => new $this->class,
+            'entity' => $this->entity_alias,
+            'title' => 'Добавление категории альбомов',
+            'parent_id' => $request->parent_id,
+            'category_id' => $request->category_id
+        ]);
     }
 
     public function store(AlbumsCategoryRequest $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), AlbumsCategory::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
         // Пишем в базу
         $albums_category = new AlbumsCategory;
-        $albums_category->company_id = $company_id;
-        $albums_category->author_id = $user_id;
+        $albums_category->company_id = $user->company_id;
+        $albums_category->author_id = hideGod($user);
 
         // Модерация и системная запись
         $albums_category->system_item = $request->system_item;
+        $albums_category->display = $request->display;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
-            $navigation->moderation = 1;
+            $albums_category->moderation = 1;
         }
 
-        // Смотрим что пришло
-        // Если категория
-        if ($request->first_item == 1) {
-            $albums_category->category_status = 1;
-        }
-
-        // Если категория альбомов
-        if ($request->medium_item == 1) {
-            $albums_category->parent_id = $request->parent_id;
-        }
-
-        // Отображение на сайте
-        $albums_category->display = $request->display;
+        $albums_category->parent_id = $request->parent_id;
+        $albums_category->category_id = $request->category_id;
 
         // Делаем заглавной первую букву
         $albums_category->name = get_first_letter($request->name);
@@ -164,7 +122,7 @@ class AlbumsCategoryController extends Controller
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи сектора!'
+                'error_message' => 'Ошибка при записи категории альбомов!'
             ];
         }
     }
@@ -177,49 +135,27 @@ class AlbumsCategoryController extends Controller
     public function edit($id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $albums_category = AlbumsCategory::moderatorLimit($answer)->findOrFail($id);
+        // Получаем из сессии необходимые данные (Функция находится в Helpers)
+        $albums_category = $this->albums_category->getItem(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)), $id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);
 
-        if ($albums_category->category_status == 1) {
+        return view('includes.menu_views.edit', [
+            'item' => $albums_category,
+            'entity' => $this->entity_alias,
+            'title' => 'Редактирование категории альбомов',
+            'parent_id' => $albums_category->parent_id,
+            'category_id' => $albums_category->category_id
+        ]);
 
-            // Меняем категорию
-            return view('albums_categories.edit-first', ['albums_category' => $albums_category]);
-        } else {
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
-
-            // Главный запрос
-            $albums_categories = AlbumsCategory::moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
-            ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
-            ->keyBy('id')
-            ->toArray();
-
-            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
-            $albums_categories_list = get_select_tree($albums_categories, $albums_category->parent_id, null, $albums_category->id);
-
-            return view('albums_categories.edit-medium', ['albums_category' => $albums_category, 'albums_categories_list' => $albums_categories_list]);
-        }
     }
 
     public function update(AlbumsCategoryRequest $request, $id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $albums_category = AlbumsCategory::moderatorLimit($answer)->findOrFail($id);
+        // Получаем из сессии необходимые данные (Функция находится в Helpers)
+        $albums_category = $this->albums_category->getItem(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)), $id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);
@@ -232,13 +168,11 @@ class AlbumsCategoryController extends Controller
 
         // Модерация и системная запись
         $albums_category->system_item = $request->system_item;
+        $albums_category->display = $request->display;
         $albums_category->moderation = $request->moderation;
 
         $albums_category->parent_id = $request->parent_id;
-        $albums_category->editor_id = $user_id;
-
-        // Отображение на сайте
-        $albums_category->display = $request->display;
+        $albums_category->editor_id = hideGod($request->user());
 
         // Делаем заглавной первую букву
         $albums_category->name = get_first_letter($request->name);
@@ -260,42 +194,30 @@ class AlbumsCategoryController extends Controller
     public function destroy(Request $request, $id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $albums_category = AlbumsCategory::moderatorLimit($answer)->findOrFail($id);
+        // Получаем из сессии необходимые данные (Функция находится в Helpers)
+        $albums_category = $this->albums_category->getItem(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)), $id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);
 
         // Удаляем ajax
         // Проверяем содержит ли индустрия вложения
-        $albums_category_parent = AlbumsCategory::moderatorLimit($answer)->whereParent_id($id)->first();
-
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
+        $albums_categories_count = AlbumsCategory::moderatorLimit($answer)
+        ->whereParent_id($id)
+        ->count();
 
         // Если содержит, то даем сообщение об ошибке
-        if ($albums_category_parent) {
+        if ($albums_categories_count > 0) {
 
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Данная область содержит населенные пункты, удаление невозможно'
+                'error_message' => 'Категория содержит вложенные элементы, удаление невозможно!'
             ];
         } else {
 
-            // Если нет, мягко удаляем
-            if ($albums_category->category_status == 1) {
-                $parent = null;
-            } else {
-                $parent = $albums_category->parent_id;
-            }
+            $parent = $albums_category->parent_id;
 
-            $albums_category->editor_id = $user_id;
+            $albums_category->editor_id = hideGod($request->user());
             $albums_category->save();
 
             $albums_category = AlbumsCategory::destroy($id);
@@ -307,36 +229,10 @@ class AlbumsCategoryController extends Controller
             } else {
                 $result = [
                     'error_status' => 1,
-                    'error_message' => 'Ошибка при записи сектора!'
+                    'error_message' => 'Ошибка при удалении категории альбомов!'
                 ];
             }
         }
-    }
-
-    // Проверка наличия в базе
-    public function ajax_check(Request $request)
-    {
-
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        // Проверка отдела в нашей базе данных
-        $albums_category = AlbumsCategory::where(['name' => $request->name, 'company_id' => $user->company_id])->first();
-
-        // Если такое название есть
-        if ($albums_category) {
-            $result = [
-                'error_status' => 1,
-            ];
-
-            // Если нет
-        } else {
-            $result = [
-                'error_status' => 0
-            ];
-        }
-
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     // Список категорий альбомов
@@ -344,7 +240,7 @@ class AlbumsCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
 
         // Главный запрос
         $albums_categories = AlbumsCategory::moderatorLimit($answer)
@@ -361,71 +257,5 @@ class AlbumsCategoryController extends Controller
         // Отдаем ajax
         echo json_encode($albums_categories_list, JSON_UNESCAPED_UNICODE);
         // dd($albums_categories_list);
-    }
-
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->albums_categories as $item) {
-            AlbumsCategory::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = AlbumsCategory::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = AlbumsCategory::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 }

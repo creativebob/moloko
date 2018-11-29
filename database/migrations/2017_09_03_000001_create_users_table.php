@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
-            
+
             $table->rememberToken();
             $table->timestamps();
         });
@@ -35,4 +35,5 @@ class CreateUsersTable extends Migration
     {
         Schema::dropIfExists('users');
     }
+
 }

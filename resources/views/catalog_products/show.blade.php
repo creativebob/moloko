@@ -33,7 +33,7 @@
                         echo $catalogs_list;
                         @endphp
                     </select>
-                    
+
                 </label>
             </div>
         </div>
@@ -68,7 +68,7 @@
                     <th class="td-type">Тип продукции</th>
                     <th class="td-cost">Цена</th>
 
-                    @if(Auth::user()->god == 1) 
+                    @if(Auth::user()->god == 1)
                     <th class="td-company-id">Компания</th>
                     @endif
 
@@ -82,7 +82,7 @@
                 {{-- Подрубаем ядро контента для ajax перезагрузки --}}
                 @include('catalog_products.content-core')
             </tbody>
-            
+
         </table>
     </div>
 </div>
@@ -231,7 +231,7 @@
 
     // ----------- Добавление -------------
     // Открываем модалку
-    $(document).on('click', '[data-open="first-add"]', function() {
+    $(document).on('click', '[data-open="modal-create"]', function() {
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -240,29 +240,29 @@
             type: "GET",
             success: function(html){
                 $('#modal').html(html);
-                $('#first-add').foundation();
-                $('#first-add').foundation('open');
+                $('#modal-create').foundation();
+                $('#modal-create').foundation('open');
             }
-        }); 
+        });
     });
 
     // Проверка существования
-    // $(document).on('keyup', '#form-first-add .name-field', function() {
+    // $(document).on('keyup', '#form-modal-create .name-field', function() {
 
     //   // Получаем фрагмент текста
-    //   var name = $('#form-first-add .name-field').val();
+    //   var name = $('#form-modal-create .name-field').val();
 
     //   // Указываем название кнопки
     //   var submit = '.modal-button';
 
     //   // Значение поля с разрешением
-    //   var db = '#form-first-add .first-item';
+    //   var db = '#form-modal-create .first-item';
 
     //   // Выполняем запрос
-    //   clearTimeout(timerId);   
+    //   clearTimeout(timerId);
     //   timerId = setTimeout(function() {
     //     serviceCheck (name, submit, db)
-    //   }, time); 
+    //   }, time);
     // });
 
     $(document).on('click', '.close-modal', function() {

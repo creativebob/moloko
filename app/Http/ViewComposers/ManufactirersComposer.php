@@ -20,9 +20,9 @@ class ManufacturersComposer
         ->systemItem($answer) // Фильтр по системным записям
         ->where('company_id', Auth::user()->company_id)
         ->orderBy('sort', 'asc')
-        ->get(['manufacturer_id']);
-
-        $array = $manufacturers_array->keyBy('manufacturer_id')->toArray();
+        ->get(['manufacturer_id'])
+        ->keyBy('manufacturer_id')
+        ->toArray();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_company = operator_right('companies', false, 'index');
@@ -30,7 +30,7 @@ class ManufacturersComposer
         // Главный запрос
         $manufacturers = Company::moderatorLimit($answer_company)
         ->orderBy('sort', 'asc')
-        ->findOrFail($array);
+        ->findOrFail($manufacturers_array);
         // dd($manufacturers);
 
         // dd($view);

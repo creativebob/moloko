@@ -19,7 +19,7 @@ use App\Scopes\Traits\SuppliersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -47,6 +47,8 @@ class Raw extends Model
     use Filter;
     use BooklistFilter;
     // use DateIntervalFilter;
+
+
 
     public function raws_article()
     {
@@ -80,5 +82,10 @@ class Raw extends Model
     public function catalogs()
     {
         return $this->morphToMany('App\Catalog', 'catalog_products');
+    }
+
+    public function getRaw($answer, $id)
+    {
+        return $this->with('raws_article.raws_product')->moderatorLimit($answer)->findOrFail($id);
     }
 }

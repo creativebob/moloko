@@ -6,10 +6,10 @@
     };
 
     // При смене категории единиц измерения меняем список единиц измерения
-    $(document).on('change', '#units-categories-list', function() {
+    $(document).on('change', '#select-units_categories', function() {
         $.post('/admin/get_units_list', {units_category_id: $(this).val()}, function(html){
-            $('#units-list').html(html);
-            setUnitAbbrevation('units-list');
+            $('#select-units').html(html);
+            setUnitAbbrevation('select-units');
         });
     });
 
@@ -18,18 +18,18 @@
         $('#units-block div').toggle();
     });
 
-    $(document).on('change', '#units-list, #goods-products-list', function() {
+    $(document).on('change', '#select-units, #select-goods_products', function() {
         setUnitAbbrevation($(this).attr('id'));
     });
 
-    $(document).on('change', '#goods-categories-list', function() {
+    $(document).on('change', '#select-goods_categories', function() {
 
         // var id = $(this).val();
 
-        $.post('/admin/goods_products_create_mode', $('#form-cur-goods-add').serialize(), function(html){
+        $.post('/admin/goods_products_create_mode', $('#form-cur_goods-create').serialize(), function(html){
                 // alert(html);
                 $('#mode').html(html);
-                Foundation.reInit($('#form-cur-goods-add'));
+                Foundation.reInit($('#form-cur_goods-create'));
             });
     });
 
@@ -55,10 +55,10 @@
             // alert(set_status + ' ' + mode);
             // alert(id);
 
-            $.post('/admin/goods_products_create_mode', {mode: mode, goods_category_id: $('#goods-categories-list').val(), set_status: set_status}, function(html){
+            $.post('/admin/goods_products_create_mode', {mode: mode, goods_category_id: $('#select-goods_categories').val(), set_status: set_status}, function(html){
                 $('#mode').html(html);
-                setUnitAbbrevation('goods-products-list');
-                Foundation.reInit($('#form-cur-goods-add'));
+                setUnitAbbrevation('select-goods_products');
+                Foundation.reInit($('#form-cur_goods-create'));
             });
         }
     });
@@ -76,19 +76,19 @@
         }
         // alert(checkbox_status + ' ' + set_status);
 
-        $.post('/admin/goods_products_create_mode', {mode: mode, goods_category_id: $('#goods-categories-list').val(), set_status: set_status}, function(html){
+        $.post('/admin/goods_products_create_mode', {mode: mode, goods_category_id: $('#select-goods_categories').val(), set_status: set_status}, function(html){
             $('#mode').html(html);
             if (mode == 'mode-select') {
                 $('#unit-change').removeClass('unit-change');
                 $('#units-block div').hide();
-                setUnitAbbrevation('goods-products-list');
-                // $('#unit-change').text($('#goods-products-list').find(':selected').data('abbreviation'));
+                setUnitAbbrevation('select-goods_products');
+                // $('#unit-change').text($('#select-goods_products').find(':selected').data('abbreviation'));
             } else {
                 $('#unit-change').addClass('unit-change');
-                setUnitAbbrevation('units-list');
-                // $('#unit-change').text($('#units-list :selected').data('abbreviation'));
+                setUnitAbbrevation('select-units');
+                // $('#unit-change').text($('#select-units :selected').data('abbreviation'));
             }
-            Foundation.reInit($('#form-cur-goods-add'));
+            Foundation.reInit($('#form-cur_goods-create'));
         });
     });
 

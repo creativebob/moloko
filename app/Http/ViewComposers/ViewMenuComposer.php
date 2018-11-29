@@ -8,8 +8,6 @@ class ViewMenuComposer
 {
 	public function compose(View $view)
 	{
-
-		$categories = buildTree($view->items);
-		return $view->with(compact('categories'));
+		return $view->with('categories', buildTree($view->items));
 	}
 }

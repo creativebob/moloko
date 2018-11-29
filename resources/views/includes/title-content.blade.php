@@ -53,12 +53,12 @@
 				@break
 
 				@case('menu')
-				<a class="icon-add sprite" data-open="first-add"></a>
+				<a class="icon-add sprite" data-open="modal-create"></a>
 				@break
 
 				@case('sections-menu')
 				{{-- <h2 class="header-content">{{ $page_info->title .' &laquo;'. $name .'&raquo;' }}</h2> --}}
-				<a class="icon-add sprite" data-open="first-add"></a>
+				<a class="icon-add sprite" data-open="modal-create"></a>
 				@break
 
 				@endswitch

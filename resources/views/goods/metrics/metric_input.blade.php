@@ -4,6 +4,7 @@
 <label>
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
 	{{ Form::number('metrics['.$metric->id.'][]', $metrics_values[$metric->id] ? number_format($metrics_values[$metric->id], $metric->decimal_place) : null, ['required', 'id' => 'metric-'.$metric->id.'-field', 'min' => number_format($metric->min, $metric->decimal_place), 'max' => number_format($metric->max, $metric->decimal_place), 'step' => 'any']) }}
+	<span class="form-error">Поле обязательно для заполнения!</span>
 </label>
 <script type="text/javascript">
 
@@ -21,6 +22,7 @@
 <label>
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
 	{{ Form::number('metrics['.$metric->id.'][]', $metrics_values[$metric->id] ? number_format($metrics_values[$metric->id], $metric->decimal_place) : null, ['required', 'id' => 'metric-'.$metric->id.'-field', 'min' => number_format($metric->min, $metric->decimal_place), 'max' => number_format($metric->max, $metric->decimal_place), 'step' => 'any']) }}
+	<span class="form-error">Поле обязательно для заполнения!</span>
 </label>
 <script type="text/javascript">
 

@@ -17,14 +17,14 @@ class CreateNavigationsCategoriesTable extends Migration
             $table->increments('id');
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
-            
+
             $table->string('name')->nullable()->comment('Имя категории навигации');
             $table->string('tag')->nullable()->comment('Тег категории навигации');
 
             $table->integer('parent_id')->nullable()->unsigned()->comment('Id родителя');
             $table->foreign('parent_id')->references('id')->on('navigations_categories');
 
-            $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
+            $table->integer('category_id')->unsigned()->nullable()->comment('Id категории');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

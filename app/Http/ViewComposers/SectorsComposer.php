@@ -18,21 +18,29 @@ class SectorsComposer
         $sectors = Sector::moderatorLimit($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
-        ->keyBy('id')
-        ->toArray();
+        ->get(['id', 'name', 'parent_id']);
 
         // dd($view->sector_id);
 
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        if (isset($view->sector_id)) {
+        // $sectors_tree = buildTree($sectors);
 
-             $sectors_list = get_select_tree($sectors, $view->sector_id, 1, null);
-        }
+        // $sectors = [];
+        // foreach ($sectors_tree as $sector) {
+
+        //     dd($sector->childrens->toArray());
+        //     $sectors[] = [$sector->name => [$sector->toArray()->childrens]];
+        // }
+
+        // dd($sectors);
+        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
+        // if (isset($view->parent_id)) {
+
+        //     $sectors_list = get_select_tree($sectors, $view->parent_id, 1, null);
+        // }
 
         // dd($sectors_list);
 
-		return $view->with('sectors_list', $sectors_list);
+		return $view->with('sectors', $sectors);
 	}
 
 }

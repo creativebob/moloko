@@ -37,8 +37,6 @@ class CreateServicesCategoriesTable extends Migration
             $table->integer('services_mode_id')->nullable()->unsigned()->comment('Вид продукции');
             $table->foreign('services_mode_id')->references('id')->on('services_modes');
 
-            $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
-
             $table->integer('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
             $table->foreign('category_id')->references('id')->on('services_categories');
 

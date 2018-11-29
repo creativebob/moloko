@@ -7,7 +7,7 @@ $drop = 1;
 @endcan --}}
 
 @foreach ($categories as $category)
-@if($category->category_status == 1)
+@if($category->parent_id == null)
 {{-- Если категория --}}
 <li class="first-item item @isset($category->childrens) parent @endisset" id="{{ $entity }}-{{ $category->id }}" data-name="{{ $category->name }}">
     <a class="first-link @if($drop == 0) link-small @endif">
@@ -32,14 +32,14 @@ $drop = 1;
         <div class="actions-list">
 
             @can('create', $class)
-            <div class="icon-list-add sprite" data-open="medium-add"></div>
+            <div class="icon-list-add sprite" data-open="modal-create"></div>
             @endcan
 
             @can('update', $category)
             @switch($type)
 
             @case($type == 'modal')
-            <div class="icon-list-edit sprite" data-open="first-edit"></div>
+            <div class="icon-list-edit sprite sprite-edit" data-open="modal-edit"></div>
             @break
 
             @case($type == 'edit')
@@ -71,7 +71,7 @@ $drop = 1;
     <ul class="menu vertical medium-list" data-accordion-menu data-multi-open="false">
         @isset($category->childrens)
         @foreach ($category->childrens as $children)
-        @include('includes.menu_views.items_list', ['item' => $children, 'class' => $class, 'entity' => $entity, 'type' => $type,])
+        @include('includes.menu_views.items_list', ['item' => $children])
         @endforeach
         @else
         <li class="empty-item"></li>
@@ -128,5 +128,12 @@ $drop = 1;
             };
         });
     };
+</script>
+@endisset
+
+@isset ($count)
+<script type="text/javascript">
+    let count = '{{ $count }}';
+    $('.content-count').text(count);
 </script>
 @endisset

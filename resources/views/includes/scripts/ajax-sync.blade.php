@@ -26,8 +26,8 @@ $(document).on('click', '[data-open="item-sync"]', function(event) {
         success: function (html) {
 
         $('#modal').html(html);
-        $('#first-add').foundation();
-        $('#first-add').foundation('open');
+        $('#modal-create').foundation();
+        $('#modal-create').foundation('open');
 
         }
     });

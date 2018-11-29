@@ -3,7 +3,7 @@
     @foreach($grouped_items as $categories)
 
     @foreach ($categories as $category)
-    @if($category->category_status == 1)
+    @if($category->parent_id == null)
     {{-- Если категория --}}
     <li>
         <a class="get-products" id="{{ $entity }}-{{ $category->id }}">{{ $category->name }}</a>

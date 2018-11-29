@@ -67,29 +67,7 @@
             </label>
           </div>
 
-          {{-- Чекбокс отображения на сайте --}}
-          @can ('publisher', $services_category)
-          <div class="small-12 cell checkbox">
-            {{ Form::checkbox('display', 1, $services_category->display, ['id' => 'display']) }}
-            <label for="display"><span>Отображать на сайте</span></label>
-          </div>
-          @endcan
-
-          {{-- Чекбокс модерации --}}
-          @can ('moderator', $services_category)
-          @if ($services_category->moderation == 1)
-          <div class="small-12 cell checkbox">
-            @include('includes.inputs.moderation', ['value'=>$services_category->moderation, 'name'=>'moderation'])
-          </div>
-          @endif
-          @endcan
-
-          {{-- Чекбокс системной записи --}}
-          @can ('god', $services_category)
-          <div class="small-12 cell checkbox">
-            @include('includes.inputs.system', ['value'=>$services_category->system_item, 'name'=>'system_item']) 
-          </div>
-          @endcan
+          @include('includes.control.checkboxes', ['item' => $services_category])
 
           {{-- Кнопка --}}
           <div class="small-12 cell tabs-button tabs-margin-top">
@@ -136,7 +114,7 @@
         <div class="small-12 medium-8 cell">
           <table>
             <thead>
-              <tr> 
+              <tr>
                 <th>Название</th>
                 <th>Минимум</th>
                 <th>Максимум</th>
@@ -182,7 +160,7 @@
         <div class="small-12 medium-9 cell">
           <table class="composition-table">
             <thead>
-              <tr> 
+              <tr>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -245,7 +223,7 @@ $settings = config()->get('settings');
 
   CKEDITOR.replace('content-ckeditor');
 
-  // Конфигурация 
+  // Конфигурация
   CKEDITOR.config.toolbar = [
     ['Bold', 'Italic', 'NumberedList', 'BulletedList', 'Maximize', 'Source']
   ];
@@ -297,10 +275,10 @@ $settings = config()->get('settings');
 
             // Убираем отмеченный чекбокс в списке метрик
             $('#add-metric-' + id).prop('checked', false);
-            
+
           } else {
             alert(result['error_message']);
-          }; 
+          };
         }
       })
   });
@@ -333,10 +311,10 @@ $settings = config()->get('settings');
 
             // Убираем отмеченный чекбокс в списке метрик
             $('#add-product-' + id).prop('checked', false);
-            
+
           } else {
             alert(result['error_message']);
-          }; 
+          };
         }
       })
   });
@@ -364,7 +342,7 @@ $settings = config()->get('settings');
         $('#units-list').html(html);
         $('#units-list').prop('disabled', false);
       }
-    }); 
+    });
   });
 
   // При смнене свойства в select
@@ -458,7 +436,7 @@ $settings = config()->get('settings');
 
     // alert($(this).val());
     var id = $(this).val();
-    
+
     // Если нужно добавить метрику
     if ($(this).prop('checked') == true) {
       $.ajax({
@@ -495,7 +473,7 @@ $settings = config()->get('settings');
             $('#metrics-' + id).remove();
           } else {
             alert(result['error_message']);
-          }; 
+          };
         }
       })
     }
@@ -516,7 +494,7 @@ $settings = config()->get('settings');
 
     var id = $(this).val();
     // alert(services_category_id + ' ' + id);
-    
+
     // Если нужно добавить состав
     if ($(this).prop('checked') == true) {
       $.ajax({
@@ -551,7 +529,7 @@ $settings = config()->get('settings');
             $('#compositions-' + id).remove();
           } else {
             alert(result['error_message']);
-          }; 
+          };
         }
       })
     }
@@ -566,7 +544,7 @@ $settings = config()->get('settings');
 
     // Наваливаем его текущей
     $(this).addClass('active');
-    
+
     var id = $(this).data('id');
 
     // Получаем инфу фотки
@@ -581,8 +559,8 @@ $settings = config()->get('settings');
 
         // alert(html);
         $('#form-photo-edit').html(html);
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
+        // $('#modal-create').foundation();
+        // $('#modal-create').foundation('open');
       }
     })
   });
@@ -605,8 +583,8 @@ $settings = config()->get('settings');
       success: function(html){
         // alert(html);
         $('#form-photo-edit').html(html);
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
+        // $('#modal-create').foundation();
+        // $('#modal-create').foundation('open');
       }
     })
   });
@@ -653,9 +631,9 @@ $settings = config()->get('settings');
           success: function(html){
         // alert(html);
         $('#photos-list').html(html);
-        
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
+
+        // $('#modal-create').foundation();
+        // $('#modal-create').foundation('open');
       }
     })
       });

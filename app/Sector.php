@@ -16,7 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -46,20 +45,48 @@ class Sector extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'sector_name',
-        'sector_parent_id',
-        'sector_status',
+        'company_id',
+        'name',
+        'tag',
+        'parent_id',
+        'category_id',
     ];
 
-    // Получаем компании
+    // ------------------------------------- Отношения -----------------------------------------
+    // Компания
+    public function company()
+    {
+        return $this->belongsTo('App\Company');
+    }
+
+    // Компании
     public function companies()
     {
         return $this->hasMany('App\Company');
     }
 
-    // Получаем должности
-    public function positions()
+    // --------------------------------------- Запросы -----------------------------------------
+    public function getIndex($answer, $request)
     {
-        return $this->hasMany('App\Position');
+        return $this->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->template($answer) // Выводим шаблоны альбомов
+        ->booklistFilter($request)
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
     }
+
+    public function getItem($answer, $id)
+    {
+        return $this->moderatorLimit($answer)->findOrFail($id);
+    }
+
+
+
+
+
+
 }
