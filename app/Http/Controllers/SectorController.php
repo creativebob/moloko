@@ -65,7 +65,8 @@ class SectorController extends Controller
                     'class' => $this->model,
                     'type' => $this->type,
                     'count' => count($this->sector->getIndex($answer, $request)),
-                    'id' => $request->id
+                    'id' => $request->id,
+                    'nested' => 'companies_count',
                 ]
             );
         }
@@ -79,7 +80,8 @@ class SectorController extends Controller
                 'class' => $this->model,
                 'type' => $this->type,
                 'filter' => $filter,
-                'id' => $request->id
+                'id' => $request->id,
+                'nested' => 'companies_count',
             ]
         );
     }

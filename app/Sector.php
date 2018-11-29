@@ -74,6 +74,7 @@ class Sector extends Model
         ->systemItem($answer)
         ->template($answer)
         ->booklistFilter($request)
+        ->withCount('companies')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();

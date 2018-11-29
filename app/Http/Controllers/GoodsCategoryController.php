@@ -61,7 +61,7 @@ class GoodsCategoryController extends Controller
                     'type' => $this->type,
                     'count' => count($this->goods_category->getIndex($answer, $request)),
                     'id' => $request->id,
-                    'childrens' => 'goods_products'
+                    'nested' => 'goods_products_count',
                 ]
             );
         }
@@ -75,7 +75,7 @@ class GoodsCategoryController extends Controller
                 'class' => $this->model,
                 'type' => $this->type,
                 'id' => $request->id,
-                'childrens' => 'goods_products'
+                'nested' => 'goods_products_count',
             ]
         );
     }

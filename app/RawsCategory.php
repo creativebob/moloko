@@ -101,6 +101,7 @@ class RawsCategory extends Model
         ->authors($answer)
         ->systemItem($answer)
         ->template($answer)
+        ->withCount('raws_products')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();

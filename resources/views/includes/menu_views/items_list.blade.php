@@ -17,7 +17,7 @@
 
     <div class="icon-list">
         <div class="controls-list">
-            @include ('includes.control.menu-div', ['item' => $item, 'class' => $class, 'color' => 'black'])
+            @include ('includes.control.menu_div', ['item' => $item, 'class' => $class, 'color' => 'black', 'nested' => $nested])
         </div>
 
         <div class="actions-list">
@@ -43,7 +43,7 @@
 
             <div class="del">
                 @can('delete', $item)
-                @if(empty($item->childrens) && ($item->system_item != 1))
+                @if(empty($item->childrens) && ($item->system_item == null) && ($item->company_id != null) && ($item->$nested == 0))
                 <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
                 @endif
                 @endcan

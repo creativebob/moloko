@@ -214,8 +214,6 @@
 @include('includes.scripts.modal-metric-delete-script')
 @include('includes.scripts.modal-composition-delete-script')
 
-{{-- Проверка поля на существование --}}
-@include('includes.scripts.check')
 
 @php
 $settings = config()->get('settings');
@@ -381,4 +379,7 @@ $settings = config()->get('settings');
     };
 
 </script>
+
+{{-- Проверка поля на существование --}}
+@include('includes.scripts.check')
 @endsection

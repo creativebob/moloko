@@ -65,7 +65,8 @@ class RawsCategoryController extends Controller
                     'class' => $this->model,
                     'type' => $this->type,
                     'count' => count($this->raws_category->getIndex($answer, $request)),
-                    'id' => $request->id
+                    'id' => $request->id,
+                    'nested' => 'raws_products_count',
                 ]
             );
         }
@@ -78,7 +79,8 @@ class RawsCategoryController extends Controller
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
-                'id' => $request->id
+                'id' => $request->id,
+                'nested' => 'raws_products_count',
             ]
         );
     }

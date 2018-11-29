@@ -45,27 +45,6 @@
 @endsection
 
 @section('scripts')
-{{-- Скрипт модалки удаления ajax --}}
-@include('includes.scripts.delete-ajax-script')
-
-{{-- Маска ввода --}}
-@include('includes.scripts.inputs-mask')
-
-{{-- Скрипт подсветки многоуровневого меню --}}
-@include('includes.scripts.multilevel-menu-active-scripts')
-
-{{-- Скрипт чекбоксов --}}
-@include('includes.scripts.checkbox-control')
-
-{{-- Скрипт отображения на сайте --}}
-@include('includes.scripts.ajax-display')
-
-{{-- Скрипт системной записи --}}
-@include('includes.scripts.ajax-system')
-
-{{-- Проверка поля на существование --}}
-@include('includes.scripts.check')
-
 <script type="text/javascript">
     $(function() {
 
@@ -132,4 +111,25 @@
         });
     });
 </script>
+
+{{-- Скрипт модалки удаления ajax --}}
+@include('includes.scripts.delete-ajax-script')
+
+{{-- Маска ввода --}}
+@include('includes.scripts.inputs-mask')
+
+{{-- Скрипт подсветки многоуровневого меню --}}
+@include('includes.scripts.multilevel-menu-active-scripts')
+
+{{-- Скрипт чекбоксов --}}
+@include('includes.scripts.checkbox-control')
+
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
+
+{{-- Проверка поля на существование --}}
+@include('includes.scripts.check')
 @endsection

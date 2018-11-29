@@ -24,6 +24,10 @@ class CategoriesSelectComposer
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
         $items_list = getSelectTree($items, ($view->parent_id ?? null), ($view->disable ?? null), ($view->id ?? null));
 
+
+
+
+
         return $view->with(compact('items_list'));
     }
 
