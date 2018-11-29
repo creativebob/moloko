@@ -8,38 +8,15 @@ use App\GoodsMode;
 use App\GoodsProduct;
 use App\GoodsCategory;
 use App\Property;
-
 use App\RawsCategory;
 use App\RawsProduct;
 use App\RawsArticle;
-
 use App\EntitySetting;
-
-// use App\Company;
-// use App\Photo;
-// use App\Album;
-// use App\AlbumEntity;
-
-// use App\Metric;
-// use App\Article;
-// use App\Value;
-// use App\Booklist;
-// use App\Entity;
-// use App\List_item;
-// use App\Unit;
 use App\UnitsCategory;
 
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\GoodsCategoryRequest;
-
-// Политика
-use App\Policies\GoodsCategoryPolicy;
-
-// Общие классы
-use Illuminate\Support\Facades\Log;
-
-// Специфические классы
 
 // На удаление
 use Illuminate\Support\Facades\Auth;
@@ -47,162 +24,106 @@ use Illuminate\Support\Facades\Auth;
 class GoodsCategoryController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'goods_categories';
-    protected $entity_dependence = false;
+    // Настройки сконтроллера
+    public function __construct(GoodsCategory $goods_category)
+    {
+        $this->middleware('auth');
+        $this->goods_category = $goods_category;
+        $this->class = GoodsCategory::class;
+        $this->model = 'App\GoodsCategory';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+        $this->type = 'edit';
+    }
 
     public function index(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), GoodsCategory::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_alias);
 
-        // -----------------------------------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -----------------------------------------------------------------------------------------------------------------------
-
-        $goods_categories = GoodsCategory::with('goods_products')
-        ->withCount('goods_products')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get()
-        ->groupBy('parent_id');
-        // dd($goods_categories);
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Получаем массив с вложенными элементами для отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
-        // $goods_categories_tree = get_index_tree_with_rights($goods_categories, $user);
-        // dd($goods_categories_tree);
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('includes.menu-views.enter', ['grouped_items' => $goods_categories, 'class' => 'App\GoodsCategory', 'entity' => $this->entity_name, 'type' => 'edit', 'id' => $request->id]);
+
+            $id = $request->id;
+            return view('includes.menu_views.category_list',
+                [
+                    'items' => $this->goods_category->getIndex($answer, $request),
+                    'entity' => $this->entity_alias,
+                    'class' => $this->model,
+                    'type' => $this->type,
+                    'count' => count($this->goods_category->getIndex($answer, $request)),
+                    'id' => $request->id,
+                ]
+            );
         }
 
-        $entity = $this->entity_name;
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-        // dd($page_info);
-
-        return view('goods_categories.index', compact('goods_categories', 'page_info', 'entity'));
+        // Отдаем на шаблон
+        return view('includes.menu_views.index',
+            [
+                'items' => $this->goods_category->getIndex($answer, $request),
+                'page_info' => $page_info,
+                'entity' => $this->entity_alias,
+                'class' => $this->model,
+                'type' => $this->type,
+            ]
+        );
     }
 
     public function create(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), GoodsCategory::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $goods_category = new GoodsCategory;
-
-        $goods_modes_list = GoodsMode::get()->pluck('name', 'id');
-
-        // Если добавляем вложенный элемент
-        if (isset($request->parent_id)) {
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
-
-            // Главный запрос
-            $goods_categories = GoodsCategory::moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
-            ->where('id', $request->category_id)
-            ->orWhere('category_id', $request->category_id)
-            ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
-            ->keyBy('id')
-            ->toArray();
-
-            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $goods_categories_list = get_select_tree($goods_categories, $request->parent_id, null, null);
-            // echo $goods_categories_list;
-
-            $goods_category = GoodsCategory::with('goods_products')->findOrFail($request->parent_id);
-            $goods_list = $goods_category->goods_products->pluck('name', 'id');
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_units_categories = operator_right('units_categories', false, 'index');
-
-            // Главный запрос
-            $units_categories_list = UnitsCategory::with(['units' => function ($query) {
-                $query->pluck('name', 'id');
-            }])
-            ->moderatorLimit($answer_units_categories)
-            ->companiesLimit($answer_units_categories)
-            ->authors($answer_units_categories)
-            ->systemItem($answer_units_categories) // Фильтр по системным записям
-            ->template($answer_units_categories)
-            ->orderBy('sort', 'asc')
-            ->get()
-            ->pluck('name', 'id');
-
-            return view('goods_categories.create-medium', compact('goods_category', 'goods_categories_list', 'type', 'goods_modes_list', 'units_categories_list', 'goods_list'));
-        } else {
-
-            return view('goods_categories.create-first', compact('goods_category', 'goods_modes_list'));
-        }
+        return view('includes.menu_views.create', [
+            'item' => new $this->class,
+            'entity' => $this->entity_alias,
+            'title' => 'Добавление категории товаров',
+            'parent_id' => $request->parent_id,
+            'category_id' => $request->category_id
+        ]);
     }
 
     public function store(GoodsCategoryRequest $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), GoodsCategory::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
         // Пишем в базу
         $goods_category = new GoodsCategory;
-        $goods_category->company_id = $company_id;
-        $goods_category->author_id = $user_id;
+        $goods_category->company_id = $user->company_id;
+        $goods_category->author_id = hideGod($user);
 
         // Системная запись
         $goods_category->system_item = $request->system_item;
-
         $goods_category->display = $request->display;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
             $goods_category->moderation = 1;
         }
 
-        // Смотрим что пришло
-        // Если категория
-        if ($request->first_item == 1) {
-            $goods_category->goods_mode_id = $request->goods_mode_id;
-            $goods_category->category_status = 1;
-        }
+        $goods_category->parent_id = $request->parent_id;
+        $goods_category->category_id = $request->category_id;
 
-        // Если вложенный
-        if ($request->medium_item == 1) {
-            $goods_category->parent_id = $request->parent_id;
-            $goods_category->category_id = $request->category_id;
-
+        if (empty($request->goods_mode_id)) {
             $category = GoodsCategory::findOrFail($request->category_id);
-
             $goods_category->goods_mode_id = $category->goods_mode_id;
+        } else {
+            $goods_category->goods_mode_id = $request->goods_mode_id;
         }
 
         // Делаем заглавной первую букву
@@ -211,7 +132,6 @@ class GoodsCategoryController extends Controller
         $goods_category->save();
 
         if ($goods_category) {
-
             // Переадресовываем на index
             return redirect()->action('GoodsCategoryController@index', ['id' => $goods_category->id]);
         } else {
@@ -231,7 +151,7 @@ class GoodsCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods_categories = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_goods_categories = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $goods_category = GoodsCategory::with([
@@ -399,7 +319,7 @@ class GoodsCategoryController extends Controller
         } else {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+            $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
 
             // Главный запрос
             $goods_categories = GoodsCategory::moderatorLimit($answer)
@@ -428,7 +348,7 @@ class GoodsCategoryController extends Controller
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_alias, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $goods_category = GoodsCategory::moderatorLimit($answer)->findOrFail($id);
@@ -453,7 +373,7 @@ class GoodsCategoryController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
 
             if ($get_settings) {
 
@@ -553,7 +473,7 @@ class GoodsCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $goods_category = GoodsCategory::withCount('goods_products')->moderatorLimit($answer)->findOrFail($id);
@@ -635,7 +555,7 @@ class GoodsCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
 
         // Главный запрос
         $goods_categories = GoodsCategory::moderatorLimit($answer)
@@ -728,7 +648,7 @@ class GoodsCategoryController extends Controller
 
         // dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_name, 'update');
+        $answer = operator_right($this->entity_alias, $this->entity_alias, 'update');
 
         // ГЛАВНЫЙ ЗАПРОС:
         $goods_category = GoodsCategory::moderatorLimit($answer)->findOrFail($id);
@@ -753,7 +673,7 @@ class GoodsCategoryController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
 
             if ($get_settings) {
 

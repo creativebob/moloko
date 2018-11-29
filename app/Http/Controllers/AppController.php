@@ -55,7 +55,9 @@ class AppController extends Controller
         $model = 'App\\'.$entity->model;
 
         // Проверка поля в нашей базе данных
-        $result = $model::where($request->field, $request->value)->count();
+        $result = $model::where($request->field, $request->value)
+        ->where('id', '!=', $request->id)
+        ->count();
 
         return response()->json($result);
     }

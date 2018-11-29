@@ -19,7 +19,6 @@ use App\Scopes\Traits\ManufacturersTraitScopes;
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
@@ -27,7 +26,7 @@ use App\Scopes\Filters\BooklistFilter;
 class GoodsArticle extends Model
 {
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use Notifiable;
     use SoftDeletes;

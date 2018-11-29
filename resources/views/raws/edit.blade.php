@@ -28,9 +28,9 @@
             <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
             <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
 
-            <li class="tabs-title"><a data-tabs-target="catalogs" href="#catalogs">Каталоги</a></li> 
+            <li class="tabs-title"><a data-tabs-target="catalogs" href="#catalogs">Каталоги</a></li>
 
-            <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li> 
+            <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li>
         </ul>
     </div>
 </div>
@@ -78,7 +78,7 @@
                                         @endphp
                                     </select>
                                 </label>
-                                
+
                                 <fieldset class="fieldset">
                                     <legend class="checkbox">
                                         {{ Form::checkbox('portion', 1, null, ['id' => 'portion']) }}
@@ -147,7 +147,7 @@
                                     <label>Удобный (вручную)
                                         {{ Form::text('manually', null, [$disabled]) }}
                                     </label>
-                                </div> 
+                                </div>
                                 <div class="small-12 medium-4 cell">
                                     <label>Программный
                                         {{ Form::text('internal', null, ['required', 'disabled']) }}
@@ -211,7 +211,7 @@
                     @endif
 
                     {{-- Чекбоксы управления --}}
-                    @include('includes.control.checkboxes', ['item' => $raw])  
+                    @include('includes.control.checkboxes', ['item' => $raw])
 
                     {{-- Кнопка --}}
                     <div class="small-12 cell tabs-button tabs-margin-top">
@@ -368,7 +368,7 @@
 
                 } else {
                     alert(result['error_message']);
-                }; 
+                };
             }
         })
     });
@@ -404,7 +404,7 @@
 
                 } else {
                     alert(result['error_message']);
-                }; 
+                };
             }
         })
     });
@@ -597,7 +597,7 @@
                         $('#metrics-' + id).remove();
                     } else {
                         alert(result['error_message']);
-                    }; 
+                    };
                 }
             })
         }
@@ -665,8 +665,8 @@
 
                 // alert(html);
                 $('#form-photo-edit').html(html);
-                // $('#first-add').foundation();
-                // $('#first-add').foundation('open');
+                // $('#modal-create').foundation();
+                // $('#modal-create').foundation('open');
             }
         })
     });
@@ -689,8 +689,8 @@
             success: function(html){
                 // alert(html);
                 $('#form-photo-edit').html(html);
-                // $('#first-add').foundation();
-                // $('#first-add').foundation('open');
+                // $('#modal-create').foundation();
+                // $('#modal-create').foundation('open');
             }
         })
     });
@@ -737,8 +737,8 @@
                         // alert(html);
                         $('#photos-list').html(html);
 
-                        // $('#first-add').foundation();
-                        // $('#first-add').foundation('open');
+                        // $('#modal-create').foundation();
+                        // $('#modal-create').foundation('open');
                     }
                 })
             });

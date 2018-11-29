@@ -17,6 +17,61 @@ function buildTree($items)
 }
 
 // Рекурсивно считываем наш шаблон
+function showCat($items, $padding, $parent, $disable, $exception){
+    $string = '';
+    $padding = $padding;
+
+    // dd($items);
+    foreach($items as $item){
+        $string .= tplMenu($item, $padding, $parent, $disable, $exception);
+    }
+    return $string;
+}
+
+// Функция отрисовки option'ов
+function tplMenu($item, $padding, $parent, $disable, $exception) {
+
+    // dd($exception);
+    // Убираем из списка пришедший пункт меню
+    if ($item->id != $exception) {
+
+        // Выбираем пункт родителя
+        $selected = $item->id == $parent ? ' selected' : '';
+        $disabled = $disable == 1 ? ' disabled' : '';
+
+        // отрисовываем option's
+        if ($item->parent_id == null) {
+            $menu = '<option value="'.$item->id.'" class="first"'.$selected.''.$disabled.'>'.$item->name.'</option>';
+        } else {
+            $menu = '<option value="'.$item->id.'"'.$selected.'>'.$padding.' '.$item->name.'</option>';
+        }
+
+            // Добавляем пробелы вложенному элементу
+        if (isset($item->childrens)) {
+            $i = 1;
+            for($j = 0; $j < $i; $j++){
+                $padding .= '&nbsp;&nbsp';
+            }
+            $i++;
+
+            $menu .= showCat($item->childrens, $padding, $parent, $disable, $exception);
+        }
+        return $menu;
+    }
+}
+
+// Для отрисовки списка вложенности принимаем выбранные из базы записи, родителя, параметр блокировки категорий, запрет на отображение самого элемента в списке
+function getSelectTree($items, $parent = null, $disable = null, $exception = null, $padding = null){
+
+    $items = buildTree($items);
+
+    // Получаем HTML разметку
+    $items_list = showCat($items, '', $parent, $disable, $exception);
+
+    return $items_list;
+}
+
+// Рекурсивно считываем наш шаблон
 function show_cat($items, $padding, $parent, $disable, $exception){
     $string = '';
     $padding = $padding;
@@ -51,7 +106,7 @@ function tpl_menu($item, $padding, $parent, $disable, $exception) {
         }
 
             // отрисовываем option's
-        if ($item['category_status'] == 1) {
+        if ($item['parent_id'] == null) {
             $menu = '<option value="'.$item['id'].'" class="first"'.$selected.''.$disabled.'>'.$item['name'].'</option>';
         } else {
             $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';

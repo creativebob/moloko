@@ -15,7 +15,7 @@ class CreateGoodsCategoriesTable extends Migration
     {
         Schema::create('goods_categories', function (Blueprint $table) {
             $table->increments('id');
-            
+
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
@@ -32,12 +32,10 @@ class CreateGoodsCategoriesTable extends Migration
 
             // $table->enum('type', ['services', 'goods', 'raws'])->comment('Тип товара (Услуга/товар/сырье)');
 
-            
+
 
             $table->integer('goods_mode_id')->nullable()->unsigned()->comment('Вид продукции');
             $table->foreign('goods_mode_id')->references('id')->on('goods_modes');
-
-            $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
 
             $table->integer('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
             $table->foreign('category_id')->references('id')->on('goods_categories');

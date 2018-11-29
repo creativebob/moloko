@@ -1,18 +1,16 @@
-<div class="reveal" id="first-add" data-reveal data-close-on-click="false">
+<div class="reveal" id="modal-create" data-reveal data-close-on-click="false">
   <div class="grid-x">
     <div class="small-12 cell modal-title">
-      <h5>ДОБАВЛЕНИЕ сектора</h5>
+      <h5>{{ $title }}</h5>
     </div>
   </div>
   {{ Form::open(['id'=>'form-create', 'data-abide', 'novalidate']) }}
 
-    @include('sectors.form', ['submitButtonText' => 'Добавить сектор'])
+    @include($entity.'.form', ['submit_text' => 'Добавить', 'class' => 'submit-create'])
 
   {{ Form::close() }}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
-
-@include('includes.scripts.inputs-mask')
 
 
 

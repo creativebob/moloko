@@ -65,33 +65,11 @@
                         </label>
                     </div>
 
-                    {{-- Чекбокс отображения на сайте --}}
-                    @can ('publisher', $goods_category)
-                    <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('display', 1, $goods_category->display, ['id' => 'display']) }}
-                        <label for="display"><span>Отображать на сайте</span></label>
-                    </div>
-                    @endcan
-
-                    {{-- Чекбокс модерации --}}
-                    @can ('moderator', $goods_category)
-                    @if ($goods_category->moderation == 1)
-                    <div class="small-12 cell checkbox">
-                        @include('includes.inputs.moderation', ['value'=>$goods_category->moderation, 'name'=>'moderation'])
-                    </div>
-                    @endif
-                    @endcan
-
-                    {{-- Чекбокс системной записи --}}
-                    @can ('god', $goods_category)
-                    <div class="small-12 cell checkbox">
-                        @include('includes.inputs.system', ['value'=>$goods_category->system_item, 'name'=>'system_item'])
-                    </div>
-                    @endcan
+                    @include('includes.control.checkboxes', ['item' => $goods_category])
 
                     {{-- Кнопка --}}
                     <div class="small-12 cell tabs-button tabs-margin-top">
-                        {{ Form::submit('Редактировать услугу', ['class'=>'button']) }}
+                        {{ Form::submit('Редактировать', ['class'=>'button']) }}
                     </div>
                 </div>
             </div>
@@ -295,8 +273,8 @@ $settings = config()->get('settings');
         $.post('/admin/ajax_get_photo', {id: id, entity: 'products'}, function(html){
             // alert(html);
             $('#form-photo-edit').html(html);
-            // $('#first-add').foundation();
-            // $('#first-add').foundation('open');
+            // $('#modal-create').foundation();
+            // $('#modal-create').foundation('open');
         })
     });
 
@@ -318,8 +296,8 @@ $settings = config()->get('settings');
             success: function(html){
                 // alert(html);
                 $('#form-photo-edit').html(html);
-                // $('#first-add').foundation();
-                // $('#first-add').foundation('open');
+                // $('#modal-create').foundation();
+                // $('#modal-create').foundation('open');
             }
         })
     });
@@ -367,8 +345,8 @@ $settings = config()->get('settings');
                         // alert(html);
                         $('#photos-list').html(html);
 
-                        // $('#first-add').foundation();
-                        // $('#first-add').foundation('open');
+                        // $('#modal-create').foundation();
+                        // $('#modal-create').foundation('open');
                     }
                 })
             });

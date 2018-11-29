@@ -108,7 +108,7 @@
     name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
     return name;
   };
-  
+
   function navigationCheck (name, submit, db) {
 
     // Блокируем аттрибут базы данных
@@ -160,7 +160,7 @@
 
   // -------------------------------- Добавляем навигацию -------------------------------------
   // Открываем модалку
-  $(document).on('click', '[data-open="first-add"]', function() {
+  $(document).on('click', '[data-open="modal-create"]', function() {
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -169,29 +169,29 @@
       type: "GET",
       success: function(html){
         $('#modal').html(html);
-        $('#first-add').foundation();
-        $('#first-add').foundation('open');
+        $('#modal-create').foundation();
+        $('#modal-create').foundation('open');
       }
-    }); 
+    });
   });
 
   // Проверка существования
-  $(document).on('keyup', '#form-first-add .name-field', function() {
+  $(document).on('keyup', '#form-modal-create .name-field', function() {
     // Получаем фрагмент текста
-    var name = $('#form-first-add .name-field').val();
+    var name = $('#form-modal-create .name-field').val();
     // Указываем название кнопки
-    var submit = '#submit-first-add';
+    var submit = '#submit-modal-create';
     // Значение поля с разрешением
-    var db = '#form-first-add .first-item';
+    var db = '#form-modal-create .first-item';
     // Выполняем запрос
-    clearTimeout(timerId);   
+    clearTimeout(timerId);
     timerId = setTimeout(function() {
       navigationCheck (name, submit, db);
-    }, time); 
+    }, time);
   });
 
   // Добавляем
-  $(document).on('click', '#submit-first-add', function(event) {
+  $(document).on('click', '#submit-modal-create', function(event) {
     event.preventDefault();
 
     // Ajax запрос
@@ -201,7 +201,7 @@
       },
       url: '/admin/sites/' + siteAlias + '/navigations',
       type: "POST",
-      data: $('#form-first-add').serialize(),
+      data: $('#form-modal-create').serialize(),
       success:function(html) {
         $('#content').html(html);
         Foundation.reInit($('#content'));
@@ -239,10 +239,10 @@
     // Значение поля с разрешением
     var db = '#form-first-edit .first-item';
     // Выполняем запрос
-    clearTimeout(timerId);   
+    clearTimeout(timerId);
     timerId = setTimeout(function() {
       navigationCheck (name, submit, db);
-    }, time); 
+    }, time);
   });
 
   // Меняем данные
@@ -290,7 +290,7 @@
         $('#medium-add').foundation();
         $('#medium-add').foundation('open');
       }
-    }); 
+    });
   });
 
   // Отправляем
@@ -308,7 +308,7 @@
         $('#content').html(html);
         Foundation.reInit($('#content'));
       }
-    }); 
+    });
   });
 
   // ----------------------------------- Редактируем меню -------------------------------------
@@ -348,11 +348,11 @@
         $('#content').html(html);
         Foundation.reInit($('#content'));
       }
-    }); 
+    });
   });
 
   // ---------------------------------- Закрытие модалки -----------------------------------
-  $(document).on('click', '.icon-close-modal, #submit-first-add, #submit-first-edit, #submit-medium-add, #submit-medium-edit', function() {
+  $(document).on('click', '.icon-close-modal, #submit-modal-create, #submit-first-edit, #submit-medium-add, #submit-medium-edit', function() {
     $(this).closest('.reveal-overlay').remove();
   });
 });

@@ -1,10 +1,10 @@
-<div class="reveal" id="first-add" data-reveal data-close-on-click="false">
+<div class="reveal" id="modal-create" data-reveal data-close-on-click="false">
 	<div class="grid-x">
 		<div class="small-12 cell modal-title">
 			<h5>ДОБАВЛЕНИЕ товара</h5>
 		</div>
 	</div>
-	{{ Form::open(['url' => '/admin/goods','id'=>'form-cur-goods-add', 'data-abide', 'novalidate']) }}
+	{{ Form::open(['url' => '/admin/goods','id'=>'form-cur_goods-create', 'data-abide', 'novalidate']) }}
 	<div class="grid-x grid-padding-x align-center modal-content inputs">
 		<div class="small-10 cell">
 
@@ -13,10 +13,8 @@
 				<div class="small-12 cell">
 
 					<label>Категория товаров
-						<select name="goods_category_id" id="goods-categories-list" required>
-							<!-- <option value="0">Выберите категорию</option> -->
-							{!! $goods_categories_list !!}
-						</select>
+						@include('includes.selects.goods_categories', ['entity' => 'goods_categories'])
+
 					</label>
 				</div>
 
@@ -56,16 +54,11 @@
 			</div>
 
 			<div class="small-12 cell checkbox">
-				{{ Form::checkbox('quickly', 1, null, ['id' => 'quickly-goods', 'checked']) }}
-				<label for="quickly-goods"><span>Быстрое добавление</span></label>
+				{{ Form::checkbox('quickly', 1, null, ['id' => 'quickly', 'checked']) }}
+				<label for="quickly"><span>Быстрое добавление</span></label>
 			</div>
 
-			@can('god', App\Goods::class)
-			<div class="checkbox">
-				{{ Form::checkbox('system_item', 1, null, ['id' => 'system-item-position']) }}
-				<label for="system-item-position"><span>Системная запись.</span></label>
-			</div>
-			@endcan
+			@include('includes.control.checkboxes', ['item' => $cur_goods])
 
 		</div>
 	</div>
@@ -79,7 +72,7 @@
 </div>
 
 <script>
-	$('#unit-change').text($('#units-list :selected').data('abbreviation'));
+	$('#unit-change').text($('#select-units :selected').data('abbreviation'));
 </script>
 
 

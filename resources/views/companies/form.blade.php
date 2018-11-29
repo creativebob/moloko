@@ -48,7 +48,10 @@
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
-                        @include('includes.selects.sectors', ['value'=>$company->sector_id, 'required'=>'required'])
+                        {{-- Селект с секторами (Вид деятельности компании) --}}
+                        <label>Вид деятельности компании
+                            @include('includes.selects.sectors', ['value'=>$company->sector_id])
+                        </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>Телефон
@@ -57,11 +60,11 @@
                     </div>
                     <div class="small-12 medium-6 cell" id="extra-phones">
                         @if (count($company->extra_phones) > 0)
-                            @foreach ($company->extra_phones as $extra_phone)
-                                @include('includes.extra-phone', ['extra_phone' => $extra_phone])
-                            @endforeach
+                        @foreach ($company->extra_phones as $extra_phone)
+                        @include('includes.extra-phone', ['extra_phone' => $extra_phone])
+                        @endforeach
                         @else
-                            @include('includes.extra-phone')
+                        @include('includes.extra-phone')
                         @endif
 
                         <!-- <span id="add-extra-phone">Добавить номер</span> -->
@@ -201,6 +204,7 @@
                     @include('includes.scripts.class.checkboxer')
 
                     <div class="small-12 large-6 cell checkbox checkboxer">
+
                         @include('includes.scripts.class.checkboxer')
                         @include('includes.inputs.checker', ['entity' => $company, 'model'=>'ServicesType', 'relation'=>'services_types', 'title'=>'Типы услуг'])
                     </div>

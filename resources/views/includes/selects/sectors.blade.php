@@ -1,6 +1,5 @@
-{{-- Селект с секторами (Вид деятельности компании) --}}
-<label>Вид деятельности компании
-
-	{{ Form::select('sector_id', $sectors_list, null, [$required]) }}
-
-</label>
+{!! Form::select('parent_id', $sectors->pluck('name', 'id')) !!}
+{{--
+<select name="sector_id">
+	{!! $sectors_list !!}
+</select> --}}

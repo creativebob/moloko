@@ -1,5 +1,5 @@
 @include('includes.scripts.class.city_search')
-<div class="reveal" id="first-add" data-reveal data-close-on-click="false">
+<div class="reveal" id="modal-create" data-reveal data-close-on-click="false">
 	<div class="grid-x">
 		<div class="small-12 cell modal-title">
 			<h5>ДОБАВЛЕНИЕ филиала</h5>
@@ -7,7 +7,7 @@
 	</div>
 
 
-			{{ Form::open(['url' => '/admin/departments', 'id'=>'form-first-add', 'data-abide', 'novalidate']) }}
+			{{ Form::open(['url' => '/admin/departments', 'id'=>'form-modal-create', 'data-abide', 'novalidate']) }}
 
 			@include('departments.modals.first', ['submitButtonText' => 'Добавить филиал', 'class' => 'submit-add'])
 

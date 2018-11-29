@@ -216,7 +216,7 @@
 
     // ----------- Добавление -------------
     // Открываем модалку
-    $(document).on('click', '[data-open="first-add"]', function() {
+    $(document).on('click', '[data-open="modal-create"]', function() {
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -226,8 +226,8 @@
             success: function(html){
 
                 $('#modal').html(html);
-                $('#first-add').foundation();
-                $('#first-add').foundation('open');
+                $('#modal-create').foundation();
+                $('#modal-create').foundation('open');
             }
         });
     });

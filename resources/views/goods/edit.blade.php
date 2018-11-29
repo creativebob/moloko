@@ -62,17 +62,17 @@
 
                                 <label>Группа
                                     <div id="goods-products-select">
-                                        {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_article->goods_product_id, ['id' => 'goods-products-list']) }}
+                                        {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_article->goods_product_id, ['id' => 'select-goods_products']) }}
                                     </div>
                                 </label>
 
                                 <label>Категория
-                                    <select name="goods_category_id" id="goods-categories-list">
-                                        {!! $goods_categories_list !!}
-                                    </select>
+                                    @include('includes.selects.goods_categories', ['goods_category_id' => $cur_goods->goods_article->goods_product->goods_category_id])
                                 </label>
 
-                                @include('includes.selects.manufacturers', ['default' => $cur_goods->goods_article->manufacturer_id])
+                                @include('includes.selects.manufacturers', ['manufacturer_id' => $cur_goods->goods_article->manufacturer_id, 'draft' => $cur_goods->goods_article->draft])
+
+                                {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
                             </div>
 
@@ -87,8 +87,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                     </div>
@@ -105,7 +103,7 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-4 cell">
                                     <label id="loading">Удобный (вручную)
-                                        {{ Form::text('manually') }}
+                                        {{ Form::text('manually', null, ['class' => 'check-field']) }}
                                         <div class="sprite-input-right find-status"></div>
                                         <div class="item-error">Такой артикул уже существует!</div>
                                     </label>
@@ -442,6 +440,9 @@
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
 @include('goods.scripts')
+{{-- Проверка поля на существование --}}
+@include('includes.scripts.check')
+
 
 <script>
 
@@ -463,62 +464,27 @@
 
     var unit = '{{ $cur_goods->goods_article->goods_product->unit->abbreviation }}';
 
-    // Обозначаем таймер для проверки
-    var timerId;
-    var time = 300;
-
     // Мульти Select
     $(".chosen-select").chosen({width: "95%"});
 
-    // Првоерка на совпадение
-    function manuallyArticleCheck (value) {
+    // Проверка существования
+    $(document).on('keyup', '.check-field', function() {
+        var entity = $('#content').data('entity-alias');
+        var check = $(this);
 
-        // Если символов больше 3 - делаем запрос
-        if (value.length > 3) {
-
-            // Сам ajax запрос
-            $.ajax({
-                url: '/admin/goods_check',
-                type: "POST",
-                data: {value: value, id: cur_goods_id},
-                beforeSend: function () {
-                    $('#loading .find-status').addClass('icon-load');
-                },
-                success: function(error) {
-                    $('#loading .find-status').removeClass('icon-load');
-                    // Если существует
-                    if (error > 0) {
-                        $('#add-cur-goods').prop('disabled', true);
-                        $('#loading .item-error').show();
-                    } else {
-                        $('#add-cur-goods').prop('disabled', false);
-                        $('#loading .item-error').hide();
-                    };
-                }
-            });
-        } else {
-            // Удаляем все значения, если символов меньше 3х
-            $('#add-cur-goods').prop('disabled', false);
-            $('#loading .item-error').hide();
-        };
-    };
-    $(document).on('keyup', '#loading input', function() {
-
-        // Получаем фрагмент текста
-        let value = $(this).val();
-
-        // Выполняем запрос
+        let timerId;
         clearTimeout(timerId);
         timerId = setTimeout(function() {
-            manuallyArticleCheck(value);
-        }, time);
+            checkField(check, 'goods');
+        }, 300);
     });
 
-    $(document).on('change', '#goods-categories-list', function(event) {
+
+    $(document).on('change', '#select-goods_categories', function(event) {
         event.preventDefault();
 
         // Меняем группы
-        $.post('/admin/goods_products_list', {goods_category_id: $(this).val(), goods_product_id: $('#goods-products-list').val(), set_status: set_status}, function(list){
+        $.post('/admin/goods_products_list', {goods_category_id: $(this).val(), goods_product_id: $('#select-goods_products').val(), set_status: set_status}, function(list){
             // alert(html);
             $('#goods-products-select').html(list);
         });
@@ -640,18 +606,10 @@
         event.preventDefault();
 
         // alert($('#properties-form input[name=value]').val());
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_add_metric_value',
-            type: 'POST',
-            data: {value: $('#properties-form input[name=value]').val()},
-            success: function(html){
-                // alert(html);
-                $('#values-table').append(html);
-                $('#properties-form input[name=value]').val('');
-            }
+        $.post('/admin/ajax_add_metric_value', {value: $('#properties-form input[name=value]').val()}, function(html){
+            // alert(html);
+            $('#values-table').append(html);
+            $('#properties-form input[name=value]').val('');
         })
     });
 
@@ -663,42 +621,23 @@
 
         // Если нужно добавить метрику
         if ($(this).prop('checked') == true) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_add_relation_metric',
-                type: 'POST',
-                data: {id: $(this).val(), entity: 'goods', entity_id: cur_goods_id},
-                success: function(html){
-
-                    // alert(html);
-                    $('#metrics-table').append(html);
-                    $('#property-form').html('');
-                }
+            $.post('/admin/ajax_add_relation_metric', {id: $(this).val(), entity: 'goods', entity_id: cur_goods_id}, function(html){
+                // alert(html);
+                $('#metrics-table').append(html);
+                $('#property-form').html('');
             })
         } else {
-
             // Если нужно удалить метрику
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_delete_relation_metric',
-                type: 'POST',
-                data: {id: $(this).val(), entity: 'goods', entity_id: cur_goods_id},
-                success: function(date){
+            $.post('/admin/ajax_delete_relation_metric', {id: $(this).val(), entity: 'goods', entity_id: cur_goods_id}, function(date){
+                var result = $.parseJSON(date);
+                // alert(result);
 
-                    var result = $.parseJSON(date);
-                    // alert(result);
+                if (result['error_status'] == 0) {
 
-                    if (result['error_status'] == 0) {
-
-                        $('#metrics-' + id).remove();
-                    } else {
-                        alert(result['error_message']);
-                    };
-                }
+                    $('#metrics-' + id).remove();
+                } else {
+                    alert(result['error_message']);
+                };
             })
         }
     });
@@ -798,8 +737,8 @@
 
                 // alert(html);
                 $('#form-photo-edit').html(html);
-                // $('#first-add').foundation();
-                // $('#first-add').foundation('open');
+                // $('#modal-create').foundation();
+                // $('#modal-create').foundation('open');
             }
         })
     });
@@ -822,8 +761,8 @@
             success: function(html){
                 // alert(html);
                 $('#form-photo-edit').html(html);
-                // $('#first-add').foundation();
-                // $('#first-add').foundation('open');
+                // $('#modal-create').foundation();
+                // $('#modal-create').foundation('open');
             }
         })
     });
@@ -869,9 +808,8 @@
                     success: function(html){
                         // alert(html);
                         $('#photos-list').html(html);
-
-                        // $('#first-add').foundation();
-                        // $('#first-add').foundation('open');
+                        // $('#modal-create').foundation();
+                        // $('#modal-create').foundation('open');
                     }
                 })
             });

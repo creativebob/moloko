@@ -14,7 +14,7 @@
 {{-- Меню --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\City::class, 'type' => 'menu'])
 @endsection
- 
+
 @section('content')
 {{-- Список --}}
 <div class="grid-x">
@@ -62,12 +62,12 @@
       </div>
     </div>
   {{ Form::close() }}
-  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+  <div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
 Конец модалки добавления области --}}
 
 {{-- Модалка добавления города --}}
-<div class="reveal rev-large" id="first-add" data-reveal>
+<div class="reveal rev-large" id="modal-create" data-reveal>
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>ДОБАВЛЕНИЕ НАСЕЛЕННОГО ПУНКТА</h5>
@@ -112,7 +112,7 @@
       </div>
     </div>
   {{ Form::close() }}
-  <div data-close class="icon-close-modal sprite close-modal"></div> 
+  <div data-close class="icon-close-modal sprite close-modal"></div>
 </div>
 {{-- Конец модалки добавления города и района --}}
 
@@ -143,7 +143,7 @@ $(function() {
   var time = 400;
 
   // Функция получения городов из вк или с фильтром по нашей базе
-  function getCityVk () {  
+  function getCityVk () {
     $('.find-status').removeClass('icon-find-ok');
 
     // alert($('#search-all-checkbox').prop('checked'));
@@ -218,10 +218,10 @@ $(function() {
     // Если символов больше 2 - делаем запрос
     if(lenCity > 2) {
       // Выполняем запрос
-      clearTimeout(timerId);   
+      clearTimeout(timerId);
       timerId = setTimeout(function() {
         getCityVk ();
-      }, time); 
+      }, time);
     } else {
       // Удаляем все значения, если символов меньше 2х
       $('#tbody-city-add>tr').remove();
@@ -245,10 +245,10 @@ $(function() {
     // Если символов больше 2 - делаем запрос
     if(lenCity > 2) {
       // Выполняем запрос
-      clearTimeout(timerId);   
+      clearTimeout(timerId);
       timerId = setTimeout(function() {
         getCityVk ();
-      }, time); 
+      }, time);
     };
   });
 
@@ -263,11 +263,11 @@ $(function() {
     $('#city-name-field').val(cityName);
     $('#area-name').val(areaName);
     $('#region-name').val(regionName);
-    
+
     // alert($('#form-add').serialize());
 
     // Выполняем запрос
-    clearTimeout(timerId);   
+    clearTimeout(timerId);
     timerId = setTimeout(function() {
       if($('#city-id-field').val() != '') {
         // Ajax
@@ -287,7 +287,7 @@ $(function() {
               $('#submit-add').prop('disabled', false);
               $('.item-error').css('display', 'none');
               $('.find-status').addClass('icon-find-ok');
-              
+
             } else {
               // Город существует
               $('#submit-add').prop('disabled', true);
@@ -297,7 +297,7 @@ $(function() {
           }
         });
       };
-    }, 200); 
+    }, 200);
   });
 
   // Добавляем город
@@ -313,7 +313,7 @@ $(function() {
       data: $(this).closest('#form-add').serialize(),
       success:function(html){
         $('#content').html(html);
-        Foundation.reInit($('#content')); 
+        Foundation.reInit($('#content'));
       }
     });
   });
@@ -332,7 +332,7 @@ $(function() {
     // $('#region-id-field').val('');
     // $('#region-name-field').val('');
   });
-  
+
   // При закрытии окна с ошибкой очищаем модалку
   $(document).on('click', '.error-close', function() {
     $('.item-error').remove();
@@ -450,10 +450,10 @@ $(function() {
   //     });
   //   };
   // });
-  // // Сохраняем область в базу и отображаем на странице по ajax   
+  // // Сохраняем область в базу и отображаем на странице по ajax
   // $('#submit-region-add').click(function (event) {
   //   //чтобы не перезагружалась форма
-  //   event.preventDefault(); 
+  //   event.preventDefault();
   //   // Дергаем все данные формы
   //   var formRegion = $('#form-region-add').serialize();
   //   // var region = {region_vk_external_id: $('#region-id-field').val(), region_name:$('#region-name-field').val()};

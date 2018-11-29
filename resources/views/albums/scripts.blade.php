@@ -3,7 +3,7 @@
     // Обозначаем таймер для проверки
   var timerId;
   var time = 400;
-  
+
   // ------------------- Проверка на совпадение имени --------------------------------------
   function albumCheck (name, submit, db) {
 
@@ -59,12 +59,12 @@
     // Указываем название кнопки
     var submit = '.button';
     // Значение поля с разрешением
-    var db = '#form-first-add .first-item';
+    var db = '#form-modal-create .first-item';
     // Выполняем запрос
-    clearTimeout(timerId);   
+    clearTimeout(timerId);
     timerId = setTimeout(function() {
       albumCheck (name, submit, db)
-    }, time); 
+    }, time);
   });
 
   function readURL(input) {
