@@ -8,8 +8,10 @@ use Transliterate;
 
 trait CompanyControllerTrait
 {
-
 	public function createCompany($request){
+
+
+		// $company = Company::where('')
 
         $company = new Company;
         $last_id_company = Company::latest()->first()->id;
@@ -42,6 +44,7 @@ trait CompanyControllerTrait
 
             abort(403, 'Ошибка записи компании');
         };
+
         // dd($company);
         return $company;
     }
