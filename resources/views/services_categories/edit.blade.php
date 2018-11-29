@@ -63,7 +63,7 @@
 
           <div class="small-12 medium-6 cell">
             <label>Название категории
-              @include('includes.inputs.name', ['value'=>$services_category->name, 'name'=>'name', 'required'=>'required'])
+              @include('includes.inputs.name', ['value'=>$services_category->name, 'name'=>'name', 'required' => true])
             </label>
           </div>
 
@@ -86,7 +86,7 @@
             </label><br>
 
             <label>Description для сайта
-              @include('includes.inputs.textarea', ['value'=>$services_category->seo_description, 'name'=>'seo_description', 'required'=>''])
+              @include('includes.inputs.textarea', ['value'=>$services_category->seo_description, 'name'=>'seo_description'])
             </label>
 
           </div>

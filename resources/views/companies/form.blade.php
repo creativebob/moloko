@@ -44,18 +44,18 @@
                     </div>
                     <div class="small-10 medium-4 cell">
                         <label>Название компании
-                            @include('includes.inputs.name', ['value'=>$company->name, 'name'=>'name', 'required'=>'required'])
+                            @include('includes.inputs.name', ['value'=>$company->name, 'name'=>'name', 'required' => true])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         {{-- Селект с секторами (Вид деятельности компании) --}}
                         <label>Вид деятельности компании
-                            @include('includes.selects.sectors_select', ['sector_id'=>$company->sector_id])
+                            @include('includes.selects.sectors_select', ['sector_id' => $company->sector_id])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>Телефон
-                            @include('includes.inputs.phone', ['value' => isset($company->main_phone->phone) ? $company->main_phone->phone : null, 'name'=>'main_phone', 'required'=>''])
+                            @include('includes.inputs.phone', ['value' => isset($company->main_phone->phone) ? $company->main_phone->phone : null, 'name'=>'main_phone'])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell" id="extra-phones">
@@ -72,7 +72,7 @@
 
                     <div class="small-12 medium-6 cell">
                         <label>Почта
-                            @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email', 'required'=>''])
+                            @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email'])
                         </label>
                         @include('includes.selects.countries', ['value'=>$company->location ? $company->location->country_id : null])
                     </div>
@@ -83,7 +83,7 @@
                         @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => true])
 
                         <label>Адрес
-                            @include('includes.inputs.address', ['value' => isset($company->location->address) ? $company->location->address : null, 'name'=>'address', 'required'=>''])
+                            @include('includes.inputs.address', ['value' => isset($company->location->address) ? $company->location->address : null, 'name'=>'address'])
                         </label>
                     </div>
 
@@ -101,7 +101,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <label>Комментарий к производителю
-                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$manufacturer->description, 'required'=>''])
+                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$manufacturer->description])
                         </label>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <label>Комментарий к дилеру
-                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$dealer->description, 'required'=>''])
+                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$dealer->description])
                         </label>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <label>Комментарий к поставщику
-                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$supplier->description, 'required'=>''])
+                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$supplier->description])
                         </label>
                     </div>
                 </div>
@@ -143,7 +143,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <label>Комментарий к клиенту
-                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$client->description, 'required'=>''])
+                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$client->description])
                         </label>
                     </div>
                 </div>
@@ -157,22 +157,22 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <label>ИНН
-                            @include('includes.inputs.inn', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
+                            @include('includes.inputs.inn', ['value'=>$company->inn, 'name'=>'inn'])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>КПП
-                            @include('includes.inputs.kpp', ['value'=>$company->kpp, 'name'=>'kpp', 'required'=>''])
+                            @include('includes.inputs.kpp', ['value'=>$company->kpp, 'name'=>'kpp'])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>ОГРН
-                            @include('includes.inputs.ogrn', ['value'=>$company->ogrn, 'name'=>'ogrn', 'required'=>''])
+                            @include('includes.inputs.ogrn', ['value'=>$company->ogrn, 'name'=>'ogrn'])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>ОКПО
-                            @include('includes.inputs.okpo', ['value'=>$company->okpo, 'name'=>'okpo', 'required'=>''])
+                            @include('includes.inputs.okpo', ['value'=>$company->okpo, 'name'=>'okpo'])
                         </label>
                     </div>
 
@@ -195,7 +195,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 large-6 cell">
                         <label>Алиас
-                            @include('includes.inputs.alias', ['value'=>$company->alias, 'name'=>'alias', 'required'=>''])
+                            @include('includes.inputs.alias', ['value'=>$company->alias, 'name'=>'alias'])
                         </label>
                     </div>
                     <div class="small-12 large-6 cell">

@@ -299,10 +299,9 @@ class RawController extends Controller
         //
     }
 
-    public function edit(Request $request, Raw $raw)
+    public function edit(Request $request, $id)
     {
 
-        dd($raw);
         // ГЛАВНЫЙ ЗАПРОС:
         $answer_raws = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
 

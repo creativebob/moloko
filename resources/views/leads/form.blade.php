@@ -16,7 +16,7 @@
                     </div>
                     <div class="small-6 medium-6 large-6 cell">
                         <label>Контактное лицо
-                            @include('includes.inputs.name', ['name'=>'name', 'value'=>$lead->name, 'required'=>'required'])
+                            @include('includes.inputs.name', ['name'=>'name', 'value'=>$lead->name, 'required' => true])
                             <input type="hidden" name="lead_id" value="{{$lead->id }}" id="lead_id" data-lead-id="{{$lead->id }}">
                         </label>
                     </div>
@@ -34,7 +34,7 @@
                                     $address = $lead->location->address;
                                 }
                             @endphp
-                            @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+                            @include('includes.inputs.address', ['value'=>$address, 'name'=>'address'])
                         </label>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 cell">
                         <label>Бюджет
-                            @include('includes.inputs.digit', ['name'=>'badget', 'value'=>$lead->badget, 'required'=>''])
+                            @include('includes.inputs.digit', ['name'=>'badget', 'value'=>$lead->badget])
                         </label>
                     </div>
                     <div class="small-12 cell">
@@ -127,13 +127,13 @@
 
                                     <div class="small-12 medium-6 cell">
                                         <label>Почта
-                                            @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email', 'required'=>''])
+                                            @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email'])
                                         </label>
                                     </div>
 
                                     <div class="small-12 medium-6 cell">
                                         <label>Компания
-                                            @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$lead->company_name, 'required'=>''])
+                                            @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$lead->company_name])
                                         </label>
                                     </div>
                                 </div>

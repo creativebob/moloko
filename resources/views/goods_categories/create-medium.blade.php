@@ -30,13 +30,13 @@
 							</select>
 						</label>
 						<label>Название подкатегории
-							@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+							@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required' => true])
 							<div class="sprite-input-right find-status"></div>
 							<div class="item-error">Такой уже существует!</div>
 						</label>
 
 						@include('includes.control.checkboxes', ['item' => $goods_category])
-						
+
 					</div>
 				</div>
 
@@ -55,9 +55,9 @@
 				{{ Form::close() }}
 
 			</div>
-			
+
 		</div>
-		<div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+		<div data-close class="icon-close-modal sprite close-modal add-item"></div>
 	</div>
 
 	@include('includes.scripts.inputs-mask')

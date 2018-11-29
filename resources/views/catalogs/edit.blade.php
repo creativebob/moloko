@@ -60,13 +60,13 @@
 
                     <div class="small-12 medium-6 cell">
                         <label>Название каталога
-                            @include('includes.inputs.name', ['value'=>$catalog->name, 'name'=>'name', 'required'=>'required'])
+                            @include('includes.inputs.name', ['value'=>$catalog->name, 'name'=>'name', 'required' => true])
                             <div class="sprite-input-right find-status" id="name-check"></div>
                             <div class="item-error">Такой каталог уже существует!</div>
                         </label>
 
                         <label>Алиас каталога
-                            @include('includes.inputs.varchar', ['name'=>'alias', 'value'=>$catalog->alias, 'required'=>''])
+                            @include('includes.inputs.varchar', ['name'=>'alias', 'value'=>$catalog->alias])
                             <div class="sprite-input-right find-status" id="alias-check"></div>
                             <div class="item-error">Каталог с таким алиасом уже существует!</div>
                         </label>
@@ -92,7 +92,7 @@
                         </label><br>
 
                         <label>Description для сайта
-                            @include('includes.inputs.textarea', ['value'=>$catalog->seo_description, 'name'=>'seo_description', 'required'=>''])
+                            @include('includes.inputs.textarea', ['value'=>$catalog->seo_description, 'name'=>'seo_description'])
                         </label>
 
                     </div>

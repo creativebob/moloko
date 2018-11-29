@@ -68,16 +68,16 @@
 
                     <div class="small-12 medium-6 cell">
                         <label>Фамилия
-                            @include('includes.inputs.name', ['name'=>'second_name', 'value'=>$new_user->second_name, 'required'=>'required'])
+                            @include('includes.inputs.name', ['name'=>'second_name', 'value'=>$new_user->second_name, 'required' => true])
                         </label>
                         <label>Имя
-                            @include('includes.inputs.name', ['name'=>'first_name', 'value'=>$new_user->first_name, 'required'=>'required'])
+                            @include('includes.inputs.name', ['name'=>'first_name', 'value'=>$new_user->first_name, 'required' => true])
                         </label>
                         <label>Отчество
-                            @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$new_user->patronymic, 'required'=>'required'])
+                            @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$new_user->patronymic, 'required' => true])
                         </label>
                         <label>Почта
-                            @include('includes.inputs.email', ['value'=>$new_user->email, 'name'=>'email', 'required'=>'required'])
+                            @include('includes.inputs.email', ['value'=>$new_user->email, 'name'=>'email', 'required' => true])
                         </label>
                     </div>
 
@@ -85,18 +85,18 @@
                         <div class="grid-x grid-padding-x">
                             <div class="small-12 cell">
                                 <label>Компания
-                                    @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$new_company->company_name, 'required'=>''])
+                                    @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$new_company->company_name])
                                 </label>
                             </div>
 
                             <div class="small-12 cell">
                                 <label>ИНН
-                                    @include('includes.inputs.inn', ['value'=>$new_user->inn, 'name'=>'inn', 'required'=>''])
+                                    @include('includes.inputs.inn', ['value'=>$new_user->inn, 'name'=>'inn'])
                                 </label>
                             </div>
                             <div class="small-12 cell">
                                 <label>КПП
-                                    @include('includes.inputs.kpp', ['value'=>$new_user->kpp, 'name'=>'kpp', 'required'=>''])
+                                    @include('includes.inputs.kpp', ['value'=>$new_user->kpp, 'name'=>'kpp'])
                                 </label>
                             </div>
                         </div>
@@ -106,26 +106,26 @@
                         <div class="grid-x grid-padding-x">
                           <div class="small-12 cell">
                             <label>Паспорт (серия, номер)
-                              @include('includes.inputs.passport_number', ['name'=>'passport_number', 'value'=>$new_user->passport_number, 'required'=>'required'])
+                              @include('includes.inputs.passport_number', ['name'=>'passport_number', 'value'=>$new_user->passport_number, 'required' => true])
                             </label>
                           </div>
                           <div class="small-12 cell">
                             <label>Когда выдан
-                              @include('includes.inputs.date', ['name'=>'passport_date', 'value'=>$new_user->passport_date, 'required'=>'required'])
+                              @include('includes.inputs.date', ['name'=>'passport_date', 'value'=>$new_user->passport_date, 'required' => true])
                             </label>
                           </div>
                         </div>
                         <div class="grid-x grid-padding-x">
                           <div class="small-12 cell">
                             <label>Кем выдан
-                              {{ Form::text('passport_released', $new_user->passport_released, ['class'=>'varchar-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'required'=>'required']) }}
+                              {{ Form::text('passport_released', $new_user->passport_released, ['class'=>'varchar-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'required' => true]) }}
                             </label>
                           </div>
                         </div>
                         <div class="grid-x grid-padding-x">
                           <div class="small-12 cell">
                             <label>Адрес прописки
-                              @include('includes.inputs.address', ['value'=>$new_user->passport_address, 'name'=>'passport_address', 'required'=>''])
+                              @include('includes.inputs.address', ['value'=>$new_user->passport_address, 'name'=>'passport_address'])
                             </label>
                           </div>
                         </div>
@@ -171,7 +171,7 @@
                                             $address = $new_user->location->address;
                                         }
                                     @endphp
-                                    @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+                                    @include('includes.inputs.address', ['value'=>$address, 'name'=>'address'])
                                 </label>
                             </div>
 
@@ -188,22 +188,22 @@
 
                             <div class="small-12 medium-9 cell">
                                 <label>Банк
-                                    @include('includes.inputs.bank', ['value'=>$new_user->bank, 'name'=>'bank', 'required'=>''])
+                                    @include('includes.inputs.bank', ['value'=>$new_user->bank, 'name'=>'bank'])
                                 </label>
                             </div>
                             <div class="small-12 medium-3 cell">
                                 <label>БИК
-                                    @include('includes.inputs.bic', ['value'=>'', 'name'=>'bank', 'required'=>''])
+                                    @include('includes.inputs.bic', ['value'=>'', 'name'=>'bank'])
                                 </label>
                             </div>
                             <div class="small-12 medium-6 cell">
                                 <label>Р/С
-                                    @include('includes.inputs.account', ['value'=>$new_user->account_settlement, 'name'=>'account_settlement', 'required'=>''])
+                                    @include('includes.inputs.account', ['value'=>$new_user->account_settlement, 'name'=>'account_settlement'])
                                 </label>
                             </div>
                             <div class="small-12 medium-6 cell">
                                 <label>К/С
-                                    @include('includes.inputs.account', ['value'=>$new_user->account_correspondent, 'name'=>'account_correspondent', 'required'=>''])
+                                    @include('includes.inputs.account', ['value'=>$new_user->account_correspondent, 'name'=>'account_correspondent'])
                                 </label>
                             </div>
                         </div>

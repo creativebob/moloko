@@ -164,7 +164,7 @@
                         <div class="grid-x">
                             <div class="small-12 cell">
                                 <label>Описание сырья
-                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$raw->description, 'required'=>''])
+                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$raw->description])
                                 </label>
                             </div>
                         </div>

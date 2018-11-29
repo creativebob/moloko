@@ -5,8 +5,8 @@
 {{ Form::text(($name ?? 'name'), ($value ?? null),
 	[
 		'class' => 'varchar-field name-field' . (isset($check) ? ' check-field' : ''),
-		'maxlength'=>$max,
-		'autocomplete'=>'off',
+		'maxlength' => $max,
+		'autocomplete' => 'off',
 		'pattern'=>'[A-Za-zА-Яа-яЁё0-9\W\s]{3,'.$max.'}',
 		(isset($required) ? 'required' : ''),
 		(isset($autofocus) ? 'autofocus' : ''),

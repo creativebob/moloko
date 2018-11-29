@@ -15,25 +15,25 @@
         @endif
         <!-- Страница -->
         <label>Название новости
-            @include('includes.inputs.string', ['name'=>'name', 'value'=>$cur_news->name, 'required'=>'required'])
+            @include('includes.inputs.string', ['name'=>'name', 'value'=>$cur_news->name, 'required' => true])
         </label>
         <div class="grid-x grid-padding-x">
             <div class="small-6 cell">
                 <label>Начало публикации
-                    @include('includes.inputs.date', ['name'=>'publish_begin_date', 'value'=>$cur_news->publish_begin_date, 'required'=>'required'])
+                    @include('includes.inputs.date', ['name'=>'publish_begin_date', 'value'=>$cur_news->publish_begin_date, 'required' => true])
                 </label>
             </div>
             <div class="small-6 cell">
                 <label>Окончание публикации
-                    @include('includes.inputs.date', ['name'=>'publish_end_date', 'value'=>$cur_news->publish_end_date, 'required'=>''])
+                    @include('includes.inputs.date', ['name'=>'publish_end_date', 'value'=>$cur_news->publish_end_date])
                 </label>
             </div>
         </div>
         <label>Заголовок новости
-            @include('includes.inputs.string', ['name'=>'title', 'value'=>$cur_news->title, 'required'=>'required'])
+            @include('includes.inputs.string', ['name'=>'title', 'value'=>$cur_news->title, 'required' => true])
         </label>
         <label>Превью новости
-            @include('includes.inputs.textarea', ['name'=>'preview', 'value'=>$cur_news->preview, 'required'=>''])
+            @include('includes.inputs.textarea', ['name'=>'preview', 'value'=>$cur_news->preview])
         </label>
 
         <label>Выберите фото для превью
@@ -43,7 +43,7 @@
             <img id="photo" @if (isset($cur_news->photo_id)) src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/img/original/{{ $cur_news->photo->name }}" @endif>
         </div>
         <label>Алиас новости
-            @include('includes.inputs.varchar', ['name'=>'alias', 'value'=>$cur_news->alias, 'required'=>'required'])
+            @include('includes.inputs.varchar', ['name'=>'alias', 'value'=>$cur_news->alias, 'required' => true])
             <div class="sprite-input-right find-status" id="name-check"></div>
             <div class="item-error">Такая новость уже существует!</div>
         </label>

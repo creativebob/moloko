@@ -24,25 +24,21 @@ class GoodsCategoryRequest extends FormRequest
     public function rules()
     {
       return [
-        'name' => 'string|max:255',
-        'goods_category_id' => 'integer|nullable', 
+        'name' => 'string|max:255|required',
+        'goods_category_id' => 'integer|nullable',
         'goods_mode_id' => 'integer|nullable',
         'goods_type_id' => 'integer|nullable',
 
-        'first_item' => 'integer|max:1|nullable',
-        'medium_item' => 'integer|max:1|nullable',
-
-        'parent_id' => 'integer|nullable', 
-        'category_id' => 'integer|nullable', 
+        'parent_id' => 'integer|nullable',
+        'category_id' => 'integer|nullable',
 
         'photo_id' => 'integer|nullable',
-
         'description' => 'string|nullable',
         'seo_description' => 'string|nullable',
 
         'display' => 'integer|max:1|nullable',
         'moderation' => 'integer|max:1|nullable',
-        'system_item' => 'integer|max:1|nullable', 
+        'system_item' => 'integer|max:1|nullable',
       ];
     }
   }

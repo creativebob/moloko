@@ -24,16 +24,13 @@ class AlbumsCategoryRequest extends FormRequest
     public function rules()
     {
       return [
-        'name' => 'string|max:255',
-        'first_item' => 'integer|max:1|nullable',
-        'medium_item' => 'integer|max:1|nullable',
-        'albums_category_id' => 'integer|nullable', 
-        'parent_id' => 'integer|nullable', 
-        
-        'category_id' => 'integer|nullable', 
-
+        'name' => 'string|max:255|required',
+        'parent_id' => 'integer|nullable',
+        'category_id' => 'integer|nullable',
         'moderation' => 'integer|max:1|nullable',
-        'system_item' => 'integer|max:1|nullable', 
+        'system_item' => 'integer|max:1|nullable',
+        'display' => 'integer|max:1|nullable',
+        // 'albums_category_id' => 'integer|nullable',
       ];
     }
   }

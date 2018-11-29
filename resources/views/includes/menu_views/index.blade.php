@@ -71,18 +71,6 @@
 
         var entity = $('#content').data('entity-alias');
 
-        // Проверка существования
-        $(document).on('keyup', '.check-field', function() {
-            var entity = $('#content').data('entity-alias');
-            var check = $(this);
-
-            let timerId;
-            clearTimeout(timerId);
-            timerId = setTimeout(function() {
-                checkField(check);
-            }, 300);
-        });
-
         // ----------- Добавление -------------
         $(document).on('click', '[data-open="modal-create"]', function() {
             $.get('/admin/' + entity + '/create', {
@@ -107,7 +95,7 @@
         // ------------------------ Кнопка добавления ---------------------------------------
         $(document).on('click', '.submit-create', function(event) {
             var form = $(this).closest('form');
-            if (submitAjax('#' + form.attr('id'))) {
+            if (submitAjax(form.attr('id'))) {
                 $(this).prop('disabled', true);
                 $.post('/admin/' + entity, form.serialize(), function(html) {
                     form.closest('.reveal-overlay').remove();
@@ -120,13 +108,13 @@
         // ------------------------ Кнопка обновления ---------------------------------------
         $(document).on('click', '.submit-edit', function(event) {
             var form = $(this).closest('form');
-            if (submitAjax('#' + form.attr('id'))) {
+            if (submitAjax(form.attr('id'))) {
                 $(this).prop('disabled', true);
                 var id = form.find('input[name=id]').val();
 
                 // Ajax запрос
                 $.ajax({
-                    url: '/admin/sectors/' + id,
+                    url: '/admin/' + entity + '/' + id,
                     type: "PATCH",
                     data: form.serialize(),
                     success:function(html) {

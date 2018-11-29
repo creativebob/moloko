@@ -28,13 +28,13 @@
 
                         <div class="small-12 medium-12 cell">
                             <label>Рабочее название аккаунта
-                                @include('includes.inputs.string', ['name'=>'name', 'value'=>$account->name, 'required'=>'required'])
+                                @include('includes.inputs.string', ['name'=>'name', 'value'=>$account->name, 'required' => true])
                             </label>
                         </div>
                         <div class="small-12 medium-12 cell">
 
                             <label>Описание
-                              @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$account->description, 'required'=>''])
+                              @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$account->description])
                             </label>
 
                         </div>
@@ -46,7 +46,7 @@
                         </div>
                         <div class="small-12 medium-6 cell">
                           <label>Алиас
-                            @include('includes.inputs.alias', ['name'=>'alias', 'value'=>$account->alias, 'required'=>''])
+                            @include('includes.inputs.alias', ['name'=>'alias', 'value'=>$account->alias])
                             </label>
                         </div>
 
@@ -74,7 +74,7 @@
 
                             <div class="small-12 medium-6 cell">
                                 <label>API токен
-                                    @include('includes.inputs.string', ['name'=>'api_token', 'value'=>$account->api_token, 'required'=>''])
+                                    @include('includes.inputs.string', ['name'=>'api_token', 'value'=>$account->api_token])
                                 </label>
                             </div>
 
@@ -92,7 +92,7 @@
     </div>
 
     {{-- Чекбоксы управления --}}
-    @include('includes.control.checkboxes', ['item' => $account])   
+    @include('includes.control.checkboxes', ['item' => $account])
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
         {{ Form::submit($submitButtonText, ['class'=>'button']) }}

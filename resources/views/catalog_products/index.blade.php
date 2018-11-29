@@ -33,7 +33,7 @@
         <div class="grid-x grid-margin-x">
             <div class="small-12 medium-6 cell">
                 <label>Название каталога
-                    @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+                    @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required' => true])
                     <div class="sprite-input-right find-status" id="name-check"></div>
                     <div class="item-error">Такой каталог уже существует!</div>
                 </label>
@@ -41,7 +41,7 @@
 
             <div class="small-12 medium-6 cell">
                 <label>Алиас каталога
-                    @include('includes.inputs.varchar', ['name'=>'alias', 'value'=>null, 'required'=>''])
+                    @include('includes.inputs.varchar', ['name'=>'alias', 'value'=>null])
                     <div class="sprite-input-right find-status" id="alias-check"></div>
                     <div class="item-error">Каталог с таким алиасом уже существует!</div>
                 </label>

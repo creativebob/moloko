@@ -10,7 +10,7 @@
             </label>
 
             <label>Название товара
-              @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+              @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required' => true])
               <div class="item-error">Такой товар уже существует!</div>
             </label>
 

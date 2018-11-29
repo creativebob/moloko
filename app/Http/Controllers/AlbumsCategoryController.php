@@ -9,8 +9,8 @@ use App\AlbumsCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\AlbumsCategoryRequest;
 
-// На удаление
-use Illuminate\Support\Facades\Auth;
+// Подключаем трейт записи и обновления категорий
+use App\Http\Controllers\Traits\CategoryControllerTrait;
 
 class AlbumsCategoryController extends Controller
 {
@@ -26,6 +26,9 @@ class AlbumsCategoryController extends Controller
         $this->model = 'App\AlbumsCategory';
         $this->type = 'modal';
     }
+
+    // Используем трейт записи и обновления категорий
+    use CategoryControllerTrait;
 
     public function index(Request $request)
     {
@@ -48,7 +51,7 @@ class AlbumsCategoryController extends Controller
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => count($this->sector->getIndex($answer, $request)),
+                    'count' => count($this->albums_category->getIndex($answer, $request)),
                     'id' => $request->id
                 ]
             );
@@ -62,6 +65,7 @@ class AlbumsCategoryController extends Controller
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
+                'id' => $request->id
             ]
         );
     }
@@ -87,31 +91,8 @@ class AlbumsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Пишем в базу
-        $albums_category = new AlbumsCategory;
-        $albums_category->company_id = $user->company_id;
-        $albums_category->author_id = hideGod($user);
-
-        // Модерация и системная запись
-        $albums_category->system_item = $request->system_item;
-        $albums_category->display = $request->display;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false){
-            $albums_category->moderation = 1;
-        }
-
-        $albums_category->parent_id = $request->parent_id;
-        $albums_category->category_id = $request->category_id;
-
-        // Делаем заглавной первую букву
-        $albums_category->name = get_first_letter($request->name);
+        // Заполнение и проверка основных полей в трейте
+        $albums_category = $this->storeCategory($request);
 
         $albums_category->save();
 
@@ -148,7 +129,6 @@ class AlbumsCategoryController extends Controller
             'parent_id' => $albums_category->parent_id,
             'category_id' => $albums_category->category_id
         ]);
-
     }
 
     public function update(AlbumsCategoryRequest $request, $id)
@@ -160,22 +140,8 @@ class AlbumsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        // Модерация и системная запись
-        $albums_category->system_item = $request->system_item;
-        $albums_category->display = $request->display;
-        $albums_category->moderation = $request->moderation;
-
-        $albums_category->parent_id = $request->parent_id;
-        $albums_category->editor_id = hideGod($request->user());
-
-        // Делаем заглавной первую букву
-        $albums_category->name = get_first_letter($request->name);
+        // Заполнение и проверка основных полей в трейте
+        $albums_category = $this->updateCategory($request, $albums_category);
 
         $albums_category->save();
 
@@ -186,7 +152,7 @@ class AlbumsCategoryController extends Controller
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи сектора!'
+                'error_message' => 'Ошибка при записи категории альбомов!'
             ];
         }
     }
@@ -195,7 +161,8 @@ class AlbumsCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $albums_category = $this->albums_category->getItem(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)), $id);
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $albums_category = $this->albums_category->getItem($answer, $id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);

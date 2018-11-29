@@ -9,10 +9,10 @@
 </div>
 
 <label class="tabs-margin-top">Заголовок фото
-	@include('includes.inputs.name', ['name'=>'title', 'value'=>$photo->title, 'required'=>'required'])
+	@include('includes.inputs.name', ['name'=>'title', 'value'=>$photo->title, 'required' => true])
 </label>
 <label>Описание фото
-	@include('includes.inputs.textarea', ['name'=>'description', 'value'=>$photo->description, 'required'=>''])
+	@include('includes.inputs.textarea', ['name'=>'description', 'value'=>$photo->description])
 </label>
 
 {{-- Чекбокс отображения на сайте --}}

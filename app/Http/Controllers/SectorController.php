@@ -78,7 +78,8 @@ class SectorController extends Controller
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
-                'filter' => $filter
+                'filter' => $filter,
+                'id' => $request->id
             ]
         );
     }
@@ -177,13 +178,15 @@ class SectorController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $sector = $this->sector->getItem(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)), $id);
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $sector = $this->sector->getItem(operator_right($answer, $id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
 
         // Проверяем содержит ли сектор вложения
-        $sectors_count = $this->class::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        $sectors_count = $this->class::moderatorLimit($answer)
         ->whereParent_id($sector->id)
         ->count();
 

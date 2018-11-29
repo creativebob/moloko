@@ -3,23 +3,23 @@
 
         <div class="small-12 medium-3 cell">
             <label>БИК
-                @include('includes.inputs.bic', ['value'=>$bank_company->bic, 'name'=>'bank_bic', 'required'=>'required'])
+                @include('includes.inputs.bic', ['value'=>$bank_company->bic, 'name'=>'bank_bic', 'required' => true])
             </label>
         </div>
         <div class="small-12 medium-9 cell">
             <label>Банк
-                @include('includes.inputs.name', ['value'=>$bank_company->name, 'name'=>'bank_name', 'required'=>'required'])
+                @include('includes.inputs.name', ['value'=>$bank_company->name, 'name'=>'bank_name', 'required' => true])
             </label>
         </div>
 
         <div class="small-12 medium-6 cell">
             <label>Р/С
-                @include('includes.inputs.account', ['value'=>$bank_account->account_settlement, 'name'=>'account_settlement', 'required'=>'required'])
+                @include('includes.inputs.account', ['value'=>$bank_account->account_settlement, 'name'=>'account_settlement', 'required' => true])
             </label>
         </div>
         <div class="small-12 medium-6 cell">
             <label>К/С
-                @include('includes.inputs.account', ['value'=>$bank_account->account_correspondent, 'name'=>'account_correspondent', 'required'=>'required'])
+                @include('includes.inputs.account', ['value'=>$bank_account->account_correspondent, 'name'=>'account_correspondent', 'required' => true])
             </label>
         </div>
 

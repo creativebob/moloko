@@ -31,15 +31,15 @@
                         </div>
                         <div class="small-6 cell">
                             <label>Дата приема
-                                @php 
+                                @php
                                 $employment_date = null;
                                 @endphp
                                 @if (!empty($staffer))
                                 @foreach ($staffer->employees as $employee)
                                 @if (($employee->user_id == $staffer->user_id) && ($employee->dismissal_date == null))
                                 @php
-                                $employment_date = $employee->employment_date; 
-                                @endphp    
+                                $employment_date = $employee->employment_date;
+                                @endphp
                                 @endif
                                 @endforeach
                                 {{ Form::text('employment_date', $employment_date, ['class'=>'employment_date date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off', 'required']) }}
@@ -48,13 +48,13 @@
                         </div>
                         <div class="small-6 cell">
                             <label>Дата увольнения
-                                {{-- @include('includes.inputs.date', ['name'=>'dismissal_date', 'value'=>$user->birthday, 'required'=>'']) --}}
+                                {{-- @include('includes.inputs.date', ['name'=>'dismissal_date', 'value'=>$user->birthday]) --}}
                                 {{ Form::text('dismissal_date', null, ['class'=>'dismissal_date date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
                             </label>
                         </div>
 
                         {{-- Чекбоксы управления --}}
-                        @include('includes.control.checkboxes', ['item' => $staffer]) 
+                        @include('includes.control.checkboxes', ['item' => $staffer])
                     </div>
                 </div>
                 <div class="small-12 medium-5 large-5 cell tabs-margin-top">
@@ -63,7 +63,7 @@
                     </label>
                 </div>
                 <div class="small-0 medium-0 large-2 cell tabs-margin-top"></div>
-            </div> 
+            </div>
 
         </div>
 
@@ -72,10 +72,10 @@
 
             <div class="grid-x grid-padding-x">
                 <div class="small-12 medium-6 cell tabs-margin-top">
-                    @include('includes.inputs.schedule', ['value'=>$worktime]) 
+                    @include('includes.inputs.schedule', ['value'=>$worktime])
                 </div>
             </div>
-            
+
         </div>
 
     </div>

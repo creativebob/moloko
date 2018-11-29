@@ -2,7 +2,7 @@
     <div class="small-10 cell">
 
         <label>Название категории
-            @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+            @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required' => true])
             <div class="item-error">Такая категория уже существует!</div>
         </label>
 

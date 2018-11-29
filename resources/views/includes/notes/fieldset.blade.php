@@ -1,7 +1,7 @@
 @can ('index', App\Note::class)
 <fieldset class="fieldset-notes">
 	<legend>События:</legend>
-	<div class="grid-x grid-padding-x"> 
+	<div class="grid-x grid-padding-x">
 		<table class="table-notes" id="table-notes">
 			<thead>
 				<tr>
@@ -18,7 +18,7 @@
 					</td>
 
 					<td class="body">
-						@include('includes.inputs.textarea', ['name'=>'add_body', 'value'=>null, 'required'=>''])
+						@include('includes.inputs.textarea', ['name'=>'add_body', 'value'=>null])
 					</td>
 
 						<td class="actions">
@@ -41,5 +41,5 @@
 			</tbody>
 		</table>
 	</div>
-</fieldset> 
+</fieldset>
 @endcan

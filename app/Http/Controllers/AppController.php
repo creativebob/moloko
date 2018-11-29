@@ -57,6 +57,7 @@ class AppController extends Controller
         // Проверка поля в нашей базе данных
         $result = $model::where($request->field, $request->value)
         ->where('id', '!=', $request->id)
+        ->whereCompany_id($request->user()->company_id)
         ->count();
 
         return response()->json($result);

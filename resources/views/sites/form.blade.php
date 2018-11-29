@@ -15,10 +15,10 @@
     @endif
     <!-- Сайт -->
     <label>Название сайта
-      @include('includes.inputs.name', ['value'=>$site->name, 'name'=>'name', 'required'=>'required'])
+      @include('includes.inputs.name', ['value'=>$site->name, 'name'=>'name', 'required' => true])
     </label>
     <label>Домен сайта {{ $site->domen }}
-      @include('includes.inputs.varchar', ['value'=>$site->domain, 'name'=>'domain', 'required'=>'required'])
+      @include('includes.inputs.varchar', ['value'=>$site->domain, 'name'=>'domain', 'required' => true])
       <div class="sprite-input-right find-status" id="name-check"></div>
       <div class="item-error">Такой сайт уже существует!</div>
     </label>
@@ -29,28 +29,28 @@
       <legend>Разделы сайта</legend>
       <ul>
         @foreach ($menus as $menu)
-        <li class="checkbox"> 
+        <li class="checkbox">
           {{ Form::checkbox('menus[]', $menu->id, null, ['id'=>'menu-'.$menu->id]) }}
           <label for="menu-{{ $menu->id }}"><span>{{ $menu->name }}</span></label>
         </li>
         @endforeach
       </ul>
-    </fieldset> 
+    </fieldset>
     <fieldset class="fieldset-access">
       <legend>Филиалы</legend>
       <ul>
         @foreach ($departments as $department)
-        <li class="checkbox"> 
+        <li class="checkbox">
           {{ Form::checkbox('departments[]', $department->id, null, ['id'=>'department-'.$department->id, 'class'=>'department-checkbox']) }}
           <label for="department-{{ $department->id }}"><span>{{ $department->name }}</span></label>
         </li>
         @endforeach
       </ul>
-    </fieldset> 
+    </fieldset>
   </div>
 
     {{-- Чекбоксы управления --}}
-    @include('includes.control.checkboxes', ['item' => $site]) 
+    @include('includes.control.checkboxes', ['item' => $site])
 
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button site-button', 'disabled']) }}

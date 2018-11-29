@@ -1,5 +1,5 @@
 <label class="small-12 cell">Название
-	@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+	@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required' => true])
 </label>
 <label class="small-12 cell">Описание
 	@include('includes.inputs.textarea', ['value'=>null, 'name'=>'description'])

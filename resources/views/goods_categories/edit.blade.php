@@ -97,7 +97,7 @@
                         </label><br>
 
                         <label>Description для сайта
-                            @include('includes.inputs.textarea', ['value'=>$goods_category->seo_description, 'name'=>'seo_description', 'required'=>''])
+                            @include('includes.inputs.textarea', ['value'=>$goods_category->seo_description, 'name'=>'seo_description'])
                         </label>
 
                     </div>
@@ -127,7 +127,6 @@
             <div class="tabs-panel" id="properties">
 
                 @include('goods_categories.metrics.section', ['goods_category' => $goods_category, 'properties' => $properties, 'set_status' => 'one'])
-
             </div>
 
             <!-- Свойства для набора -->
@@ -235,17 +234,6 @@ $settings = config()->get('settings');
     // Основные настройки
     var goods_category_id = '{{ $goods_category->id }}';
     var entity ='goods_categories';
-
-    // Проверка существования
-        $(document).on('keyup', '.check-field', function() {
-            var check = $(this);
-
-            let timerId;
-            clearTimeout(timerId);
-            timerId = setTimeout(function() {
-                checkField(check);
-            }, 300);
-        });
 
     // При клике на удаление состава со страницы
     $(document).on('click', '[data-open="delete-value"]', function() {
