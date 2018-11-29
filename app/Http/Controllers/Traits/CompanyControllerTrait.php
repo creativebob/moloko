@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Traits;
 use App\Company;
 
+// Транслитерация
+use Transliterate;
+
 trait CompanyControllerTrait
 {
 
@@ -12,7 +15,7 @@ trait CompanyControllerTrait
 
         // Новые данные
         $company->name = $request->company_name ?? $request->name;
-        $company->alias = $request->alias;
+        $company->alias = $request->alias ?? Transliterate::make($company->name .'_'. $company->id, ['type' => 'url', 'lowercase' => true]);
         $company->email = $request->email;
         $company->legal_form_id = $request->legal_form_id;
         $company->inn = $request->inn;
