@@ -30,7 +30,7 @@ class ComposerServiceProvider extends ServiceProvider
     public function boot()
     {
         view()->composer('layouts.sidebar', SidebarComposer::class);
-        // view()->composer('includes.selects.sectors', SectorsSelectComposer::class);
+        view()->composer('includes.selects.sectors_select', SectorsSelectComposer::class);
         view()->composer('includes.selects.countries', CountriesSelectComposer::class);
         view()->composer('includes.selects.legal_forms', LegalFormsSelectComposer::class);
         view()->composer('includes.inputs.checker', CheckerComposer::class);

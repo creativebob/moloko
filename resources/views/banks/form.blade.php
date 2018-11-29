@@ -67,7 +67,7 @@
             <label>Почта
 <<<<<<< HEAD
               @include('includes.inputs.email', ['value'=>$bank->self_company->email, 'name'=>'email', 'required'=>''])
-            </label>  
+            </label>
 =======
               @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email', 'required'=>''])
             </label>
@@ -96,7 +96,7 @@
           @endphp
           @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
 =======
-          @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
+          @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => true])
 >>>>>>> bc0042d6951d32c1456efdc7dff33d6387619c9b
         </label>
         <label>Адрес

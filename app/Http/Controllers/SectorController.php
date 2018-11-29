@@ -9,11 +9,11 @@ use App\Sector;
 use Illuminate\Http\Request;
 use App\Http\Requests\SectorRequest;
 
+// Подключаем трейт записи и обновления категорий
+use App\Http\Controllers\Traits\CategoryControllerTrait;
+
 // Транслитерация
 use Transliterate;
-
-// На удаление
-use Illuminate\Support\Facades\Auth;
 
 class SectorController extends Controller
 {
@@ -29,6 +29,9 @@ class SectorController extends Controller
         $this->entity_dependence = false;
         $this->type = 'modal';
     }
+
+    // Используем трейт записи и обновления категорий
+    use CategoryControllerTrait;
 
     public function index(Request $request)
     {
@@ -101,32 +104,10 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+        // Заполнение и проверка основных полей в трейте
+        $sector = $this->storeCategory($request);
 
-        // Пишем в базу
-        $sector = new Sector;
-        $sector->company_id = $user->company_id;
-        $sector->author_id = hideGod($user);
-
-        // Модерация и системная запись
-        $sector->system_item = $request->system_item;
-        $sector->display = $request->display;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false){
-            $sector->moderation = 1;
-        }
-
-        $sector->parent_id = $request->parent_id;
-        $sector->category_id = $request->category_id;
-
-        // Делаем заглавной первую букву
-        $sector->name = get_first_letter($request->name);
-
+        // Тег
         $sector->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
 
         $sector->save();
@@ -174,16 +155,8 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
 
-        // Модерация и системная запись
-        $sector->system_item = $request->system_item;
-        $sector->display = $request->display;
-        $sector->moderation = $request->moderation;
-
-        $sector->parent_id = $request->parent_id;
-        $sector->editor_id = hideGod($request->user());
-
-        // Делаем заглавной первую букву
-        $sector->name = get_first_letter($request->name);
+        // Заполнение и проверка основных полей в трейте
+        $sector = $this->updateCategory($request, $sector);
 
         $sector->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
 
@@ -210,7 +183,7 @@ class SectorController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $sector);
 
         // Проверяем содержит ли сектор вложения
-        $sectors_count = Sector::moderatorLimit(operator_right($this->entity_alias, true, getmethod(__FUNCTION__)))
+        $sectors_count = $this->class::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
         ->whereParent_id($sector->id)
         ->count();
 
@@ -241,30 +214,4 @@ class SectorController extends Controller
             }
         }
     }
-
-    // Список секторов
-    // public function sectors_list(Request $request)
-    // {
-
-    //     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    //     $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
-
-    //     // Главный запрос
-    //     $sectors = Sector::moderatorLimit($answer)
-    //     ->companiesLimit($answer)
-    //     ->authors($answer)
-    //     ->systemItem($answer) // Фильтр по системным записям
-    //     ->get(['id','name','category_status','parent_id'])
-    //     ->keyBy('id')
-    //     ->toArray();
-
-    //     // dd($sectors);
-
-    //     // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-    //     $sectors_list = get_select_tree($products_categories, $request->parent, null, $request->id);
-    //     // dd($sectors_list);
-
-    //     // Отдаем ajax
-    //     echo json_encode($sectors_list, JSON_UNESCAPED_UNICODE);
-    // }
 }

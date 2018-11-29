@@ -40,7 +40,7 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            {{ Form::model($cur_goods, ['url' => ['/admin/goods/'.$cur_goods->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'cur-goods-form']) }}
+            {{ Form::model($cur_goods, ['url' => ['/admin/goods/'.$cur_goods->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'cur_goods-form']) }}
             {{ method_field('PATCH') }}
 
             {{-- Общая информация --}}
@@ -95,7 +95,7 @@
 
                     {{-- Правый блок на первой вкладке --}}
                     <div class="small-12 large-6 cell">
-                        {{ Form::open(['url' => 'goods', 'data-abide', 'novalidate', 'id' => 'cur-goods-form']) }}
+                        {{ Form::open(['url' => 'goods', 'data-abide', 'novalidate', 'id' => 'cur_goods-form']) }}
 
                         <fieldset class="fieldset-access">
                             <legend>Артикул</legend>
@@ -520,7 +520,7 @@
         // Убираем отмеченный чекбокс в списке метрик
         $('#add-composition-' + id).prop('checked', false);
 
-        // Foundation.reInit($('#cur-goods-form'));
+        // Foundation.reInit($('#cur_goods-form'));
     });
 
     // При клике на удаление состава со страницы
@@ -533,7 +533,7 @@
     // Проверяем наличие артикула в базе при клике на кнопку добавления артикула
     // $(document).on('click', '#add-cur-goods', function(event) {
     //     event.preventDefault();
-    //     // alert($('#cur-goods-form').serialize());
+    //     // alert($('#cur_goods-form').serialize());
     //     // alert(cur_goods_id);
 
     //     $.ajax({
@@ -542,7 +542,7 @@
     //         },
     //         url: '/admin/goods/' + cur_goods_id,
     //         type: 'PATCH',
-    //         data: $('#cur-goods-form').serialize(),
+    //         data: $('#cur_goods-form').serialize(),
     //         success: function(data) {
     //             var result = $.parseJSON(data);
     //             // alert(result['error_status']);
@@ -557,7 +557,7 @@
     //     })
     // });
 
-    // $(document).on('change', '#cur-goods-form input', function() {
+    // $(document).on('change', '#cur_goods-form input', function() {
     //     // alert('lol');
     //     $('#add-cur-goods').prop('disabled', false);
     //     $('#cur-goods-error').hide();
@@ -594,7 +594,7 @@
             $('#property-form').html('');
 
             // В случае успеха обновляем список метрик
-            $.get('/admin/goods/' + cur_goods_id + '/edit', $('#cur-goods-form').serialize(), function(html) {
+            $.get('/admin/goods/' + cur_goods_id + '/edit', $('#cur_goods-form').serialize(), function(html) {
                 // alert(html);
                 $('#properties-dropdown').html(html);
             })
@@ -707,7 +707,7 @@
                 error = error + 1;
             };
         });
-        $('#cur-goods-form').foundation('validateForm');
+        $('#cur_goods-form').foundation('validateForm');
         if (error > 0) {
             event.preventDefault();
         }

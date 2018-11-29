@@ -106,7 +106,7 @@
             </label>
           </div>
           <div class="small-12 medium-6 cell">
-            @include('includes.inputs.city_search', ['city' => isset($user->location->city->name) ? $user->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
+            @include('includes.inputs.city_search', ['city' => isset($user->location->city->name) ? $user->location->city : null, 'id' => 'cityForm', 'required' => true])
         </div>
 
 

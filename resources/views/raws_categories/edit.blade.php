@@ -12,145 +12,160 @@
 
 @section('title-content')
 <div class="top-bar head-content">
-  <div class="top-bar-left">
-    <h2 class="header-content">Редактирование категории сырья &laquo{{ $raws_category->name }}&raquo</h2>
-  </div>
-  <div class="top-bar-right">
-  </div>
+    <div class="top-bar-left">
+        <h2 class="header-content">Редактирование категории сырья &laquo{{ $raws_category->name }}&raquo</h2>
+    </div>
+    <div class="top-bar-right">
+    </div>
 </div>
 @endsection
 
 @section('content')
 <div class="grid-x tabs-wrap">
-  <div class="small-12 cell">
-    <ul class="tabs-list" data-tabs id="tabs">
-      <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
-      <li class="tabs-title"><a data-tabs-target="site" href="#site">Сайт</a></li>
-      <li class="tabs-title"><a data-tabs-target="properties" href="#properties">Свойства</a></li>
-      <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
-    </ul>
-  </div>
+    <div class="small-12 cell">
+        <ul class="tabs-list" data-tabs id="tabs">
+            <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
+            <li class="tabs-title"><a data-tabs-target="site" href="#site">Сайт</a></li>
+            <li class="tabs-title"><a data-tabs-target="properties" href="#properties">Свойства</a></li>
+            <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
+        </ul>
+    </div>
 </div>
 
 <div class="grid-x tabs-wrap inputs">
-  <div class="small-12 cell tabs-margin-top">
-    <div class="tabs-content" data-tabs-content="tabs">
+    <div class="small-12 cell tabs-margin-top">
+        <div class="tabs-content" data-tabs-content="tabs">
 
-      @if ($errors->any())
-      <div class="alert callout" data-closable>
-        <h5>Неправильный формат данных:</h5>
-        <ul>
-          @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-          @endforeach
-        </ul>
-        <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      @endif
+            @if ($errors->any())
+            <div class="alert callout" data-closable>
+                <h5>Неправильный формат данных:</h5>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @endif
 
-      {{ Form::model($raws_category, ['url' => '/admin/raws_categories/'.$raws_category->id, 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'products-category-form']) }}
-      {{ method_field('PATCH') }}
+            {{ Form::model($raws_category, ['url' => '/admin/raws_categories/'.$raws_category->id, 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'products-category-form']) }}
+            {{ method_field('PATCH') }}
 
-      <!-- Общая информация -->
-      <div class="tabs-panel is-active" id="options">
-        <div class="grid-x grid-padding-x">
+            <!-- Общая информация -->
+            <div class="tabs-panel is-active" id="options">
+                <div class="grid-x grid-padding-x">
 
-          <div class="small-12 medium-6 cell">
-            <label>Название категории
-              @include('includes.inputs.name', ['value'=>$raws_category->name, 'name'=>'name', 'required'=>'required'])
-            </label>
-          </div>
+                    <div class="small-12 medium-6 cell">
 
-          @include('includes.control.checkboxes', ['item' => $raws_category])
+                        <div class="grid-x grid-padding-x">
+                            @isset($raws_category->parent_id)
+                            <div class="small-12 medium-6 cell">
 
-          {{-- Кнопка --}}
-          <div class="small-12 cell tabs-button tabs-margin-top">
-            {{ Form::submit('Редактировать категорию сырья', ['class'=>'button']) }}
-          </div>
-        </div>
-      </div>
+                                <label>Расположение
+                                    @include('includes.selects.categories_select', ['entity' => 'raws_categories', 'parent_id' => $raws_category->parent_id, 'id' => $raws_category->id])
+                                </label>
 
-      <!-- Сайт -->
-      <div class="tabs-panel" id="site">
-        <div class="grid-x grid-padding-x">
-          <div class="small-12 medium-6 cell">
+                            </div>
+                            @endisset
 
-            <label>Описание:
-              {{ Form::textarea('description', $raws_category->description, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
-            </label><br>
+                            <div class="small-12 medium-6 cell">
+                                <label>Название категории
+                                    @include('includes.inputs.name', ['value'=>$raws_category->name, 'name'=>'name', 'required'=>'required'])
+                                </label>
+                            </div>
+                        </div>
+                    </div>
 
-            <label>Description для сайта
-              @include('includes.inputs.textarea', ['value'=>$raws_category->seo_description, 'name'=>'seo_description', 'required'=>''])
-            </label>
+                    @include('includes.control.checkboxes', ['item' => $raws_category])
 
-          </div>
-          <div class="small-12 medium-6 cell">
-            <label>Выберите аватар
-              {{ Form::file('photo') }}
-            </label>
-            <div class="text-center">
-             <img id="photo" @if (isset($raws_category->photo_id)) src="/storage/{{ $raws_category->company->id }}/media/raws_categories/{{ $raws_category->id }}/img/medium/{{ $raws_category->photo->name }}" @endif>
-           </div>
+                    {{-- Кнопка --}}
+                    <div class="small-12 cell tabs-button tabs-margin-top">
+                        {{ Form::submit('Редактировать', ['class'=>'button']) }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Сайт -->
+            <div class="tabs-panel" id="site">
+                <div class="grid-x grid-padding-x">
+                  <div class="small-12 medium-6 cell">
+
+                    <label>Описание:
+                      {{ Form::textarea('description', $raws_category->description, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+                  </label><br>
+
+                  <label>Description для сайта
+                      @include('includes.inputs.textarea', ['value'=>$raws_category->seo_description, 'name'=>'seo_description', 'required'=>''])
+                  </label>
+
+              </div>
+              <div class="small-12 medium-6 cell">
+                <label>Выберите аватар
+                  {{ Form::file('photo') }}
+              </label>
+              <div class="text-center">
+                 <img id="photo" @if (isset($raws_category->photo_id)) src="/storage/{{ $raws_category->company->id }}/media/raws_categories/{{ $raws_category->id }}/img/medium/{{ $raws_category->photo->name }}" @endif>
+             </div>
          </div>
 
          {{-- Кнопка --}}
          <div class="small-12 cell tabs-button tabs-margin-top">
           {{ Form::submit('Редактировать категорию услуг', ['class'=>'button']) }}
-        </div>
       </div>
-    </div>
-
-    {{ Form::close() }}
-
-    <!-- Свойства -->
-    <div class="tabs-panel" id="properties">
-      <div class="grid-x grid-padding-x">
-        <div class="small-12 medium-8 cell">
-          <table>
-            <thead>
-              <tr>
-                <th>Название</th>
-                <th>Минимум</th>
-                <th>Максимум</th>
-                <th>Подтверждение</th>
-                <th>Отрицание</th>
-                <th>Цвет</th>
-                <th>Список</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="metrics-table">
-              {{-- Таблица метрик товара --}}
-              @if (!empty($raws_category->metrics))
-              @each('raws_categories.metrics.metric', $raws_category->metrics, 'metric')
-              @endif
-            </tbody>
-          </table>
-        </div>
-        <div class="small-12 medium-4 cell">
-          {{ Form::open(['url' => '/add_raws_category_metric', 'id' => 'properties-form', 'data-abide', 'novalidate']) }}
-          <fieldset>
-            <legend><a data-toggle="properties-dropdown">Добавить метрику</a></legend>
-
-            <div class="grid-x grid-padding-x" id="property-form"></div>
-
-          </fieldset>
-          {{ Form::hidden('entity_id', $raws_category->id) }}
-          {{ Form::close() }}
-          {{-- Список свойств с метриками --}}
-          <div class="dropdown-pane" id="properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
-            @include('raws_categories.metrics.properties-list', $properties)
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    {{-- Исключаем состав из сырья --}}
-
   </div>
+</div>
+
+{{ Form::close() }}
+
+<!-- Свойства -->
+<div class="tabs-panel" id="properties">
+  <div class="grid-x grid-padding-x">
+    <div class="small-12 medium-8 cell">
+      <table>
+        <thead>
+          <tr>
+            <th>Название</th>
+            <th>Минимум</th>
+            <th>Максимум</th>
+            <th>Подтверждение</th>
+            <th>Отрицание</th>
+            <th>Цвет</th>
+            <th>Список</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="metrics-table">
+      {{-- Таблица метрик товара --}}
+      @if (!empty($raws_category->metrics))
+      @each('raws_categories.metrics.metric', $raws_category->metrics, 'metric')
+      @endif
+  </tbody>
+</table>
+</div>
+<div class="small-12 medium-4 cell">
+  {{ Form::open(['url' => '/add_raws_category_metric', 'id' => 'properties-form', 'data-abide', 'novalidate']) }}
+  <fieldset>
+    <legend><a data-toggle="properties-dropdown">Добавить метрику</a></legend>
+
+    <div class="grid-x grid-padding-x" id="property-form"></div>
+
+</fieldset>
+{{ Form::hidden('entity_id', $raws_category->id) }}
+{{ Form::close() }}
+{{-- Список свойств с метриками --}}
+<div class="dropdown-pane" id="properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
+    @include('raws_categories.metrics.properties-list', $properties)
+</div>
+
+</div>
+</div>
+</div>
+
+{{-- Исключаем состав из сырья --}}
+
+</div>
 </div>
 
 
@@ -174,7 +189,7 @@ $settings = config()->get('settings');
 
   // Конфигурация
   CKEDITOR.config.toolbar = [
-    ['Bold', 'Italic', 'NumberedList', 'BulletedList', 'Maximize', 'Source']
+  ['Bold', 'Italic', 'NumberedList', 'BulletedList', 'Maximize', 'Source']
   ];
 
 
@@ -194,11 +209,11 @@ $settings = config()->get('settings');
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/ajax_delete_relation_metric',
-      type: 'POST',
-      data: {id: id, entity: 'raws_categories', entity_id: raws_category_id},
-      success: function(date){
+    },
+    url: '/admin/ajax_delete_relation_metric',
+    type: 'POST',
+    data: {id: id, entity: 'raws_categories', entity_id: raws_category_id},
+    success: function(date){
 
         var result = $.parseJSON(date);
           // alert(result);
@@ -225,12 +240,12 @@ $settings = config()->get('settings');
             // Убираем отмеченный чекбокс в списке метрик
             $('#add-metric-' + id).prop('checked', false);
 
-          } else {
+        } else {
             alert(result['error_message']);
-          };
-        }
-      })
-  });
+        };
+    }
+})
+});
 
   // При клике на удаление состава со страницы
   $(document).on('click', '[data-open="delete-composition"]', function() {
@@ -244,11 +259,11 @@ $settings = config()->get('settings');
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/ajax_delete_relation_composition',
-      type: 'POST',
-      data: {id: id, raws_category_id: raws_category_id},
-      success: function(date){
+    },
+    url: '/admin/ajax_delete_relation_composition',
+    type: 'POST',
+    data: {id: id, raws_category_id: raws_category_id},
+    success: function(date){
 
         var result = $.parseJSON(date);
         // alert(result);
@@ -261,19 +276,19 @@ $settings = config()->get('settings');
             // Убираем отмеченный чекбокс в списке метрик
             $('#add-product-' + id).prop('checked', false);
 
-          } else {
+        } else {
             alert(result['error_message']);
-          };
-        }
-      })
-  });
+        };
+    }
+})
+});
 
   // При клике на удаление состава со страницы
   $(document).on('click', '[data-open="delete-value"]', function() {
 
     // Удаляем элемент со страницы
     $(this).closest('.item').remove();
-  });
+});
 
   // Смена категории едениц измерения
   $(document).on('change', '#units-categories-list', function() {
@@ -283,16 +298,16 @@ $settings = config()->get('settings');
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/get_units_list',
-      type: "POST",
-      data: {id: id, entity: 'raws_categories'},
-      success: function(html){
+    },
+    url: '/admin/get_units_list',
+    type: "POST",
+    data: {id: id, entity: 'raws_categories'},
+    success: function(html){
         $('#units-list').html(html);
         $('#units-list').prop('disabled', false);
-      }
-    });
-  });
+    }
+});
+});
 
   // При смнене свойства в select
   $(document).on('change', '#properties-select', function() {
@@ -303,25 +318,25 @@ $settings = config()->get('settings');
     // Если вернулись на "Выберите свойство" то очищаем форму
     if (id == '') {
       $('#property-form').html('');
-    } else {
+  } else {
       // alert(id);
       $('#property-id').val(id);
 
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/admin/ajax_add_property',
-        type: 'POST',
-        data: {id: id, entity: 'raws_categories'},
-        success: function(html){
+      },
+      url: '/admin/ajax_add_property',
+      type: 'POST',
+      data: {id: id, entity: 'raws_categories'},
+      success: function(html){
         // alert(html);
         $('#property-form').html(html);
         $('#properties-dropdown').foundation('close');
-      }
-    })
     }
-  });
+})
+  }
+});
 
   // При клике на кнопку под Select'ом свойств
   $(document).on('click', '#add-metric', function(event) {
@@ -332,11 +347,11 @@ $settings = config()->get('settings');
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/metrics',
-      type: 'POST',
-      data: $('#properties-form').serialize(),
-      success: function(html){
+    },
+    url: '/admin/metrics',
+    type: 'POST',
+    data: $('#properties-form').serialize(),
+    success: function(html){
 
         // alert(html);
         $('#metrics-table').append(html);
@@ -347,18 +362,18 @@ $settings = config()->get('settings');
         $.ajax({
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
-          url: '/admin/raws_categories/' + raws_category_id + '/edit',
-          type: 'POST',
-          success: function(html){
+        },
+        url: '/admin/raws_categories/' + raws_category_id + '/edit',
+        type: 'POST',
+        success: function(html){
             // alert(html);
 
             $('#properties-dropdown').html(html);
-          }
-        })
-      }
+        }
     })
-  });
+    }
+})
+});
 
   // При клике на кнопку под Select'ом свойств
   $(document).on('click', '#add-value', function(event) {
@@ -368,17 +383,17 @@ $settings = config()->get('settings');
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/ajax_add_metric_value',
-      type: 'POST',
-      data: {value: $('#properties-form input[name=value]').val(), entity: 'raws_categories'},
-      success: function(html){
+    },
+    url: '/admin/ajax_add_metric_value',
+    type: 'POST',
+    data: {value: $('#properties-form input[name=value]').val(), entity: 'raws_categories'},
+    success: function(html){
         // alert(html);
         $('#values-table').append(html);
         $('#properties-form input[name=value]').val('');
-      }
-    })
-  });
+    }
+})
+});
 
   // При клике на чекбокс метрики отображаем ее на странице
   $(document).on('click', '.add-metric', function() {
@@ -391,28 +406,28 @@ $settings = config()->get('settings');
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/admin/ajax_add_relation_metric',
-        type: 'POST',
-        data: {id: $(this).val(), entity: 'raws_categories', entity_id: raws_category_id},
-        success: function(html){
+      },
+      url: '/admin/ajax_add_relation_metric',
+      type: 'POST',
+      data: {id: $(this).val(), entity: 'raws_categories', entity_id: raws_category_id},
+      success: function(html){
 
           // alert(html);
           $('#metrics-table').append(html);
           $('#property-form').html('');
-        }
-      })
-    } else {
+      }
+  })
+  } else {
 
       // Если нужно удалить метрику
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/admin/ajax_delete_relation_metric',
-        type: 'POST',
-        data: {id: $(this).val(), entity: 'raws_categories', entity_id: raws_category_id},
-        success: function(date){
+      },
+      url: '/admin/ajax_delete_relation_metric',
+      type: 'POST',
+      data: {id: $(this).val(), entity: 'raws_categories', entity_id: raws_category_id},
+      success: function(date){
 
           var result = $.parseJSON(date);
           // alert(result);
@@ -420,13 +435,13 @@ $settings = config()->get('settings');
           if (result['error_status'] == 0) {
 
             $('#metrics-' + id).remove();
-          } else {
+        } else {
             alert(result['error_message']);
-          };
-        }
-      })
+        };
     }
-  });
+})
+  }
+});
 
   // При клике на свойство отображаем или скрываем его метрики
   $(document).on('click', '.parent', function() {
@@ -436,7 +451,7 @@ $settings = config()->get('settings');
 
     // Показываем нужную
     $('#' +$(this).data('open')).show();
-  });
+});
 
   // При клике на чекбокс метрики отображаем ее на странице
   $(document).on('click', '.add-composition', function() {
@@ -449,26 +464,26 @@ $settings = config()->get('settings');
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/admin/ajax_add_relation_composition',
-        type: 'POST',
-        data: {id: id, raws_category_id: raws_category_id, entity: 'raws_categories'},
-        success: function(html){
+      },
+      url: '/admin/ajax_add_relation_composition',
+      type: 'POST',
+      data: {id: id, raws_category_id: raws_category_id, entity: 'raws_categories'},
+      success: function(html){
           // alert(html);
           $('#composition-table').append(html);
-        }
-      })
-    } else {
+      }
+  })
+  } else {
 
       // Если нужно удалить состав
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/admin/ajax_delete_relation_composition',
-        type: 'POST',
-        data: {id: id, raws_category_id: raws_category_id, entity: 'raws_categories'},
-        success: function(date){
+      },
+      url: '/admin/ajax_delete_relation_composition',
+      type: 'POST',
+      data: {id: id, raws_category_id: raws_category_id, entity: 'raws_categories'},
+      success: function(date){
 
           var result = $.parseJSON(date);
           // alert(result);
@@ -476,13 +491,13 @@ $settings = config()->get('settings');
           if (result['error_status'] == 0) {
 
             $('#compositions-' + id).remove();
-          } else {
+        } else {
             alert(result['error_message']);
-          };
-        }
-      })
+        };
     }
-  });
+})
+  }
+});
 
   // При клике на фотку подствляем ее значения в блок редактирования
   $(document).on('click', '#photos-list img', function(event) {
@@ -500,19 +515,19 @@ $settings = config()->get('settings');
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/ajax_get_photo',
-      type: 'POST',
-      data: {id: id, entity: 'products'},
-      success: function(html){
+    },
+    url: '/admin/ajax_get_photo',
+    type: 'POST',
+    data: {id: id, entity: 'products'},
+    success: function(html){
 
         // alert(html);
         $('#form-photo-edit').html(html);
         // $('#modal-create').foundation();
         // $('#modal-create').foundation('open');
-      }
-    })
-  });
+    }
+})
+});
 
   // При сохранении информации фотки
   $(document).on('click', '#form-photo-edit .button', function(event) {
@@ -525,26 +540,26 @@ $settings = config()->get('settings');
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/ajax_update_photo/' + id,
-      type: 'PATCH',
-      data: $(this).closest('#form-photo-edit').serialize(),
-      success: function(html){
+    },
+    url: '/admin/ajax_update_photo/' + id,
+    type: 'PATCH',
+    data: $(this).closest('#form-photo-edit').serialize(),
+    success: function(html){
         // alert(html);
         $('#form-photo-edit').html(html);
         // $('#modal-create').foundation();
         // $('#modal-create').foundation('open');
-      }
-    })
-  });
+    }
+})
+});
 
   // Оставляем ширину у вырванного из потока элемента
   var fixHelper = function(e, ui) {
     ui.children().each(function() {
       $(this).width($(this).width());
-    });
+  });
     return ui;
-  };
+};
 
   // Включаем перетаскивание
   $("#values-table tbody").sortable({
@@ -555,8 +570,8 @@ $settings = config()->get('settings');
     update: function( event, ui ) {
 
       var entity = $(this).children('.item').attr('id').split('-')[0];
-    }
-  });
+  }
+});
 
   // Настройки dropzone
   var minImageHeight = 795;
@@ -573,32 +588,32 @@ $settings = config()->get('settings');
         $.ajax({
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
-          url: '/product/photos',
-          type: 'post',
-          data: {raws_category_id: raws_category_id},
-          success: function(html){
+        },
+        url: '/product/photos',
+        type: 'post',
+        data: {raws_category_id: raws_category_id},
+        success: function(html){
         // alert(html);
         $('#photos-list').html(html);
 
         // $('#modal-create').foundation();
         // $('#modal-create').foundation('open');
-      }
-    })
-      });
+    }
+})
+    });
       this.on("thumbnail", function(file) {
         if (file.width < {{ $settings['img_min_width'] }} || file.height < minImageHeight) {
           file.rejectDimensions();
-        } else {
+      } else {
           file.acceptDimensions();
-        }
-      });
-    },
-    accept: function(file, done) {
+      }
+  });
+  },
+  accept: function(file, done) {
       file.acceptDimensions = done;
       file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину"); };
-    }
-  };
+  }
+};
 
 </script>
 @endsection

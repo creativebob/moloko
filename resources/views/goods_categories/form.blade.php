@@ -9,7 +9,7 @@
 		@endisset
 
 		<label>Название категории
-			@include('includes.inputs.name', ['name' => 'name', 'required' => 'required', 'check' => 'check-field'])
+			@include('includes.inputs.name', ['required' => true, 'check' => true])
 			<div class="item-error">Такая категория уже существует!</div>
 		</label>
 
@@ -25,7 +25,7 @@
 
 <div class="grid-x align-center">
 	<div class="small-6 medium-4 cell">
-		{{ Form::submit('Добавить категорию', ['data-close', 'class'=>'button modal-button submit-create']) }}
+		{{ Form::submit($submit_text, ['data-close', 'class'=>'button modal-button '.$class]) }}
 	</div>
 </div>
 

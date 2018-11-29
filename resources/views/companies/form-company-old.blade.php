@@ -66,7 +66,7 @@
                     </div>
 
                     <div class="small-12 medium-6 cell">
-                        @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
+                        @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => true])
 
                         <label>Адрес
                             @php
@@ -121,7 +121,7 @@
 
                         {{-- Подключаем банковские аккаунты --}}
                         @include('includes.bank_accounts.fieldset', ['company' => $company])
- 
+
                     </div>
                 </div>
             </div>

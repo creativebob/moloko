@@ -50,7 +50,7 @@
                     <div class="small-12 medium-6 cell">
                         {{-- Селект с секторами (Вид деятельности компании) --}}
                         <label>Вид деятельности компании
-                            @include('includes.selects.sectors', ['value'=>$company->sector_id])
+                            @include('includes.selects.sectors_select', ['sector_id'=>$company->sector_id])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
@@ -80,7 +80,7 @@
 
                     <div class="small-12 medium-6 cell">
                         {{-- Город --}}
-                        @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
+                        @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => true])
 
                         <label>Адрес
                             @include('includes.inputs.address', ['value' => isset($company->location->address) ? $company->location->address : null, 'name'=>'address', 'required'=>''])
@@ -181,8 +181,8 @@
                         {{-- Подключаем банковские аккаунты --}}
                         @include('includes.bank_accounts.fieldset', ['company' => $company])
 
-                    </div>   
-                                
+                    </div>
+
                 </div>
 
 

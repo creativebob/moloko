@@ -7,7 +7,7 @@ $city_id = isset($city) ? $city->id : null;
 <label id="{{ $id }}" class="city-input-parent">Город
 
 	{{-- Город --}}
-	{{ Form::text('city_name', $city_name, ['class'=>'varchar-field city-check-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', $required]) }}
+	{{ Form::text('city_name', $city_name, ['class'=>'varchar-field city-check-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', (isset($required) ? 'required' : '')]) }}
 	<div class="sprite-input-right find-status city-check @isset ($city_name) icon-find-ok sprite-16 @endisset"></div>
 	<span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
 

@@ -106,11 +106,14 @@
 
         // ------------------------ Кнопка добавления ---------------------------------------
         $(document).on('click', '.submit-create', function(event) {
-            event.preventDefault();
-            $.post('/admin/' + entity, $(this).closest('form').serialize(), function(html) {
-                $('#content').html(html);
-                Foundation.reInit($('#content'));
-            });
+            if(submitAjax($(this).closest('form'))){
+
+                $.post('/admin/' + entity, $(this).closest('form').serialize(), function(html) {
+                    $(this).closest('.reveal-overlay').remove();
+                    $('#content').html(html);
+                    Foundation.reInit($('#content'));
+                });
+            }
         });
 
         // ------------------------ Кнопка обновления ---------------------------------------
@@ -132,7 +135,7 @@
         });
 
         // ---------------------------------- Закрытие модалки -----------------------------------
-        $(document).on('click', '.icon-close-modal, .submit-create, .submit-edit', function() {
+        $(document).on('click', '.icon-close-modal', function() {
             $(this).closest('.reveal-overlay').remove();
         });
     });

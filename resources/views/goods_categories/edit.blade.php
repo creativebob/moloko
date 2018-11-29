@@ -60,9 +60,22 @@
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-6 cell">
-                        <label>Название категории
-                            @include('includes.inputs.name', ['value'=>$goods_category->name, 'name'=>'name', 'required'=>'required'])
-                        </label>
+
+                        <div class="grid-x grid-padding-x">
+                            @isset($goods_category->parent_id)
+                            <div class="small-12 medium-6 cell">
+                                <label>Расположение
+                                    @include('includes.selects.categories_select', ['entity' => 'goods_categories', 'parent_id' => $goods_category->parent_id, 'id' => $goods_category->id])
+                                </label>
+                            </div>
+                            @endisset
+
+                            <div class="small-12 medium-6 cell">
+                                <label>Название категории
+                                    @include('includes.inputs.name', ['check' => 'check-field', 'required' => true])
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                     @include('includes.control.checkboxes', ['item' => $goods_category])
@@ -202,6 +215,9 @@
 @include('includes.scripts.modal-metric-delete-script')
 @include('includes.scripts.modal-composition-delete-script')
 
+{{-- Проверка поля на существование --}}
+@include('includes.scripts.check')
+
 @php
 $settings = config()->get('settings');
 @endphp
@@ -218,6 +234,18 @@ $settings = config()->get('settings');
 
     // Основные настройки
     var goods_category_id = '{{ $goods_category->id }}';
+    var entity ='goods_categories';
+
+    // Проверка существования
+        $(document).on('keyup', '.check-field', function() {
+            var check = $(this);
+
+            let timerId;
+            clearTimeout(timerId);
+            timerId = setTimeout(function() {
+                checkField(check);
+            }, 300);
+        });
 
     // При клике на удаление состава со страницы
     $(document).on('click', '[data-open="delete-value"]', function() {

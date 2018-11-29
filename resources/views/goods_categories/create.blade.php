@@ -9,7 +9,7 @@
 		@endisset
 
 		<label>Название категории
-			@include('includes.inputs.name', ['name' => 'name', 'required' => 'required', 'check' => 'check-field'])
+			@include('includes.inputs.name', ['name' => 'name', 'required' => true, 'check' => 'check-field'])
 			<div class="item-error">Такая категория уже существует!</div>
 		</label>
 

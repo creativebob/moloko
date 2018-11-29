@@ -3,23 +3,24 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\GoodsCategory;
+use App\Property;
+use App\RawsArticle;
+
+
 use App\Goods;
 use App\GoodsMode;
 use App\GoodsProduct;
-use App\GoodsCategory;
-use App\Property;
 use App\RawsCategory;
 use App\RawsProduct;
-use App\RawsArticle;
-use App\EntitySetting;
-use App\UnitsCategory;
+
 
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\GoodsCategoryRequest;
 
-// На удаление
-use Illuminate\Support\Facades\Auth;
+// Подключаем трейт записи и обновления категорий
+use App\Http\Controllers\Traits\CategoryControllerTrait;
 
 class GoodsCategoryController extends Controller
 {
@@ -36,6 +37,9 @@ class GoodsCategoryController extends Controller
         $this->type = 'edit';
     }
 
+    // Используем трейт записи и обновления категорий
+    use CategoryControllerTrait;
+
     public function index(Request $request)
     {
 
@@ -49,8 +53,6 @@ class GoodsCategoryController extends Controller
 
         // Отдаем Ajax
         if ($request->ajax()) {
-
-            $id = $request->id;
             return view('includes.menu_views.category_list',
                 [
                     'items' => $this->goods_category->getIndex($answer, $request),
@@ -71,6 +73,7 @@ class GoodsCategoryController extends Controller
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
+                'id' => $request->id,
             ]
         );
     }
@@ -96,38 +99,16 @@ class GoodsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+        // Заполнение и проверка основных полей в трейте
+        $goods_category = $this->storeCategory($request);
 
-        // Пишем в базу
-        $goods_category = new GoodsCategory;
-        $goods_category->company_id = $user->company_id;
-        $goods_category->author_id = hideGod($user);
-
-        // Системная запись
-        $goods_category->system_item = $request->system_item;
-        $goods_category->display = $request->display;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false){
-            $goods_category->moderation = 1;
-        }
-
-        $goods_category->parent_id = $request->parent_id;
-        $goods_category->category_id = $request->category_id;
-
+        // Режим товаров
         if (empty($request->goods_mode_id)) {
-            $category = GoodsCategory::findOrFail($request->category_id);
+            $goods_category = $this->class::findOrFail($request->category_id);
             $goods_category->goods_mode_id = $category->goods_mode_id;
         } else {
             $goods_category->goods_mode_id = $request->goods_mode_id;
         }
-
-        // Делаем заглавной первую букву
-        $goods_category->name = get_first_letter($request->name);
 
         $goods_category->save();
 
@@ -137,7 +118,7 @@ class GoodsCategoryController extends Controller
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи сектора!',
+                'error_message' => 'Ошибка при записи категории товаров!',
             ];
         }
     }
@@ -347,120 +328,29 @@ class GoodsCategoryController extends Controller
 
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_alias, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $goods_category = GoodsCategory::moderatorLimit($answer)->findOrFail($id);
+        // Получаем из сессии необходимые данные (Функция находится в Helpers)
+        $goods_category = $this->goods_category->getItem(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)), $id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_category);
 
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        $company_id = $user->company_id;
-
-        // Если прикрепили фото
-        if ($request->hasFile('photo')) {
-
-            // Вытаскиваем настройки
-            // Вытаскиваем базовые настройки сохранения фото
-            $settings = config()->get('settings');
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
-
-            if ($get_settings) {
-
-                if ($get_settings->img_small_width != null) {
-                    $settings['img_small_width'] = $get_settings->img_small_width;
-                }
-
-                if ($get_settings->img_small_height != null) {
-                    $settings['img_small_height'] = $get_settings->img_small_height;
-                }
-
-                if ($get_settings->img_medium_width != null) {
-                    $settings['img_medium_width'] = $get_settings->img_medium_width;
-                }
-
-                if ($get_settings->img_medium_height != null) {
-                    $settings['img_medium_height'] = $get_settings->img_medium_height;
-                }
-
-                if ($get_settings->img_large_width != null) {
-                    $settings['img_large_width'] = $get_settings->img_large_width;
-                }
-
-                if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;
-                }
-
-                if ($get_settings->img_formats != null) {
-                    $settings['img_formats'] = $get_settings->img_formats;
-                }
-
-                if ($get_settings->img_min_width != null) {
-                    $settings['img_min_width'] = $get_settings->img_min_width;
-                }
-
-                if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;
-                }
-
-                if ($get_settings->img_max_size != null) {
-                    $settings['img_max_size'] = $get_settings->img_max_size;
-                }
-            }
-
-            // Директория
-            $directory = $company_id.'/media/goods_categories/'.$goods_category->id.'/img/';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-            if ($goods_category->photo_id) {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, $goods_category->photo_id, $settings);
-            } else {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
-            }
-
-            $photo = $array['photo'];
-
-            $goods_category->photo_id = $photo->id;
-        }
-
-        $goods_category->description = $request->description;
-        $goods_category->seo_description = $request->seo_description;
-
-        // Модерация и системная запись
-        $goods_category->system_item = $request->system_item;
-        $goods_category->moderation = $request->moderation;
-
-        // $goods_category->parent_id = $request->parent_id;
-        $goods_category->editor_id = $user_id;
+        // Заполнение и проверка основных полей в трейте
+        $goods_category = $this->updateCategory($request, $goods_category);
 
         // Если сменили тип категории продукции, то меняем его и всем вложенным элементам
-        if (($goods_category->category_status == 1) && ($goods_category->goods_type_id != $request->goods_type_id)) {
+        if (($goods_category->parent_id == null) && ($goods_category->goods_type_id != $request->goods_type_id)) {
             $goods_category->goods_type_id = $request->goods_type_id;
 
-            $goods_categories = GoodsCategory::whereCategory_id($id)
+            $goods_categories = $this->class::whereCategory_id($id)
             ->update(['goods_mode_id' => $request->goods_mode_id]);
         }
 
-        $goods_category->display = $request->display;
-
-        // Делаем заглавной первую букву
-        $goods_category->name = get_first_letter($request->name);
         $goods_category->save();
 
         if ($goods_category) {
 
-            return Redirect('/admin/goods_categories/'.$goods_category->type)->with('goods_category_id', $goods_category->id);
-
+            // Переадресовываем на index
+            return redirect()->action('GoodsCategoryController@index', ['id' => $goods_category->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -576,73 +466,6 @@ class GoodsCategoryController extends Controller
     }
 
     // ------------------------------------------------ Ajax -------------------------------------------------
-
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->goods_categories as $item) {
-            GoodsCategory::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = GoodsCategory::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = GoodsCategory::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
     public function ajax_update(Request $request, $id)
     {
 
