@@ -30,7 +30,7 @@
 							</select>
 						</label>
 						<label>Название подкатегории
-							@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+							@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required' => true])
 							<div class="sprite-input-right find-status"></div>
 							<div class="item-error">Такой уже существует!</div>
 						</label>
@@ -51,7 +51,7 @@
 				</div>
 
 				{{ Form::close() }}
-				
+
 			</div>
 
 			<!-- Добавляем услугу -->
@@ -67,7 +67,7 @@
 							</select>
 						</label>
 						<label>Группа услуг
-							@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+							@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required' => true])
 							<div class="item-error">Такой товар уже существует!</div>
 						</label> <div class="grid-x grid-margin-x">
 							<div class="small-12 medium-6 cell">
@@ -80,7 +80,7 @@
 									<select name="unit_id" id="units-list" required disabled></select>
 								</label>
 							</div>
-						</div> 
+						</div>
 
 						{{ Form::hidden('entity', 'services_categories') }}
 
@@ -107,9 +107,9 @@
 				</div>
 				{{ Form::close() }}
 			</div> --}}
-			
+
 		</div>
-		<div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+		<div data-close class="icon-close-modal sprite close-modal add-item"></div>
 	</div>
 
 	@include('includes.scripts.inputs-mask')

@@ -8,14 +8,14 @@
       </select>
     </label>
     <label>Название каталога
-      @include('includes.inputs.name', ['value'=>$catalog->name, 'name'=>'name', 'required'=>'required'])
+      @include('includes.inputs.name', ['value'=>$catalog->name, 'name'=>'name', 'required' => true])
       <div class="sprite-input-right find-status"></div>
       <div class="item-error">Такой сектор уже существует!</div>
     </label>
     {{ Form::hidden('category_id', $catalog->id, ['id' => 'category-id']) }}
     {{ Form::hidden('site_id', $site->id) }}
     {{ Form::hidden('medium_item', 0, ['class' => 'medium-item', 'pattern' => '[0-9]{1}']) }}
-    
+
     @include('includes.control.checkboxes', ['item' => $catalog])
   </div>
 </div>

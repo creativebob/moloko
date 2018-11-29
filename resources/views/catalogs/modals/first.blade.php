@@ -2,7 +2,7 @@
   <div class="small-10 cell">
 
     <label>Название каталога
-      @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+      @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required' => true])
       <div class="item-error">Такой каталог уже существует!</div>
     </label>
 

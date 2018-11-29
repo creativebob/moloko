@@ -1,5 +1,5 @@
 <label class="small-12 cell">Название
-	@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+	@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required' => true])
 </label>
 <label class="small-12 cell">Описание
 	@include('includes.inputs.textarea', ['value'=>null, 'name'=>'description'])
@@ -42,10 +42,10 @@
 @case('list')
 <div class="radiobutton">Тип списка<br>
 	{{ Form::radio('list_type', 'list', true, ['id'=>'metric-list-type']) }}
-	<label for="metric-list-type"><span>Много значений</span></label>          
+	<label for="metric-list-type"><span>Много значений</span></label>
 	{{ Form::radio('list_type', 'select', false, ['id'=>'metric-select-type']) }}
 	<label for="metric-select-type"><span>Одно значение</span></label>
-	
+
 </div>
 <label class="small-12 cell">Введите значение
 	{{ Form::text('value') }}
@@ -53,7 +53,7 @@
 <a class="button small-10 cell" id="add-value">Добавить значение</a>
 <table id="values-table" class="tablesorter">
 	<tbody id="values-tbody">
-		
+
 	</tbody>
 </table>
 {{ Form::hidden('type', 'list') }}
