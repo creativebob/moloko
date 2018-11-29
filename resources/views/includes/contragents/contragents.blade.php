@@ -35,7 +35,7 @@
 	// При нажатии на кнопку пишем в базу и отображаем
 	$(document).on('click', '#submit-add-client', function(event) {
 
-		if(submitAjax('#form-client-add')){
+		if(submitAjax('form-client-add')){
 
 			$.ajax({
 				headers: {
@@ -74,7 +74,7 @@
  //          		if (result['error_status'] == 0) {
  //          			$('#challenges-' + id).remove();
  //          			get_challenges();
-          			
+
  //          		} else {
  //          			alert(result['error_message']);
  //          		};

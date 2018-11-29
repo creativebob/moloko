@@ -18,7 +18,7 @@
             <div class="grid-x grid-margin-x tabs-margin-top">
                 <div class="small-12 cell">
                     <label>Описание рекламации
-                        @include('includes.inputs.textarea', ['name'=>'body', 'value'=>null, 'required'=>''])
+                        @include('includes.inputs.textarea', ['name'=>'body', 'value'=>null])
                     </label>
                 </div>
 
@@ -32,7 +32,7 @@
         </div>
     </div>
     {{ Form::close() }}
-    <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+    <div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
 
 

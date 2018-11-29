@@ -1,7 +1,7 @@
 <div class="grid-x grid-padding-x align-center modal-content inputs">
   <div class="small-10 cell">
     <label class="input-icon">Введите название навигации
-      @include('includes.inputs.name', ['value'=>$navigation->name, 'name'=>'name', 'required'=>'required'])
+      @include('includes.inputs.name', ['value'=>$navigation->name, 'name'=>'name', 'required' => true])
       <div class="item-error">Такая навигация уже существует!</div>
     </label>
     <label>Категория навигации
@@ -17,7 +17,7 @@
     {{ Form::hidden('first_item', 0, ['class' => 'first-item']) }}
 
     @include('includes.control.checkboxes', ['item' => $navigation])
-    
+
   </div>
 </div>
 <div class="grid-x align-center">

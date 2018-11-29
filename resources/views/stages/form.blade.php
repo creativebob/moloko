@@ -16,11 +16,11 @@
 
                 <div class="small-12 medium-7 large-5 cell">
                     <label>Название этапа
-                        @include('includes.inputs.name', ['value'=>$stage->name, 'name'=>'name', 'required'=>'required'])
+                        @include('includes.inputs.name', ['value'=>$stage->name, 'name'=>'name', 'required' => true])
                         <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
                     </label>
                     <label>Описание этапа:
-                        @include('includes.inputs.textarea', ['value'=>$stage->description, 'name'=>'description', 'required'=>''])
+                        @include('includes.inputs.textarea', ['value'=>$stage->description, 'name'=>'description'])
                     </label>
                 </div>
 
@@ -29,7 +29,7 @@
                 </div>
 
                 {{-- Чекбоксы управления --}}
-                @include('includes.control.checkboxes', ['item' => $stage])    
+                @include('includes.control.checkboxes', ['item' => $stage])
 
                 <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
                     {{ Form::submit($submitButtonText, ['class'=>'button stage-button']) }}
@@ -60,20 +60,20 @@
 
                             {{ Form::open(['data-abide', 'novalidate']) }}
                             <div class="small-12 cell">
-                                
+
                                 <label class="inputs-rules">Имя метода (laravel)
-                                    @include('includes.inputs.varchar', ['name'=>'rule_name', 'value'=>null, 'required'=>'required'])
+                                    @include('includes.inputs.varchar', ['name'=>'rule_name', 'value'=>null, 'required' => true])
                                 </label>
                                 <label class="inputs-rules">Правило метода
-                                    @include('includes.inputs.varchar', ['name'=>'rule', 'value'=>null, 'required'=>''])
+                                    @include('includes.inputs.varchar', ['name'=>'rule', 'value'=>null])
                                 </label>
                                 <label class="inputs-rules">Описание
-                                    @include('includes.inputs.varchar', ['name'=>'rule_description', 'value'=>null, 'required'=>''])
+                                    @include('includes.inputs.varchar', ['name'=>'rule_description', 'value'=>null])
                                 </label>
                                 <label class="inputs-rules">Сообщение об ошибке
-                                    @include('includes.inputs.varchar', ['name'=>'rule_error', 'value'=>null, 'required'=>''])
+                                    @include('includes.inputs.varchar', ['name'=>'rule_error', 'value'=>null])
                                 </label>
-                                
+
                             </div>
 
                             <div class="small-12 text-center cell tabs-margin-top">
@@ -90,7 +90,7 @@
 
                     <table>
                         <thead>
-                          <tr> 
+                          <tr>
                             <th>Сущность</th>
                             <th>Поле</th>
                             <th>Правило</th>
@@ -115,6 +115,6 @@
 </div>
 
 <!-- <div class="grid-x grid-padding-x inputs">
-   
+
 </div> -->
 

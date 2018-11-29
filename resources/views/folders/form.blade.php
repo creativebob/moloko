@@ -21,15 +21,15 @@
 
       @endif
 
-          <div class="grid-x grid-padding-x"> 
+          <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Название сущности
-                @include('includes.inputs.text-ru', ['value'=>$entity->entity_name, 'name'=>'entity_name', 'required'=>'required'])
+                @include('includes.inputs.text-ru', ['value'=>$entity->entity_name, 'name'=>'entity_name', 'required' => true])
               </label>
             </div>
             <div class="small-12 medium-6 cell">
               <label>Название сущности в BD
-                @include('includes.inputs.text-en', ['value'=>$entity->entity_alias, 'name'=>'entity_alias', 'required'=>'required'])
+                @include('includes.inputs.text-en', ['value'=>$entity->entity_alias, 'name'=>'entity_alias', 'required' => true])
               </label>
             </div>
           </div>
@@ -51,9 +51,9 @@
     {{-- Чекбокс системной записи --}}
     @can ('god', $entity)
       <div class="small-12 cell checkbox">
-        @include('includes.inputs.system', ['value'=>$entity->system_item, 'name'=>'system_item']) 
+        @include('includes.inputs.system', ['value'=>$entity->system_item, 'name'=>'system_item'])
       </div>
-    @endcan  
+    @endcan
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}

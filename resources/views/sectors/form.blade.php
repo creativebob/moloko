@@ -22,7 +22,7 @@
         {{ Form::hidden('id', null, ['id' => 'item-id']) }}
         {{ Form::hidden('category_id', null, ['id' => 'category-id']) }}
 
-        @include('includes.control.checkboxes', $item)
+        @include('includes.control.checkboxes')
     </div>
 </div>
 

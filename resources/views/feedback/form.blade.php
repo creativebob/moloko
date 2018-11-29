@@ -30,18 +30,18 @@
 
                         <div class="small-12 medium-6 cell">
                             <label>Автор отзыва
-                                @include('includes.inputs.string', ['name'=>'person', 'value'=>$feedback->person, 'required'=>'required'])
+                                @include('includes.inputs.string', ['name'=>'person', 'value'=>$feedback->person, 'required' => true])
                             </label>
                         </div>
                         <div class="small-12 medium-6 cell">
                             <label>Деятельность (Профессия)
-                                @include('includes.inputs.varchar', ['name'=>'job', 'value'=>$feedback->job, 'required'=>''])
+                                @include('includes.inputs.varchar', ['name'=>'job', 'value'=>$feedback->job])
                             </label>
                         </div>
 
                         <div class="small-12 medium-6 cell">
                             <label>Дата отзыва
-                              @include('includes.inputs.date', ['name'=>'call_date', 'value'=>inPickMeUp($feedback->call_date), 'required'=>'required'])
+                              @include('includes.inputs.date', ['name'=>'call_date', 'value'=>inPickMeUp($feedback->call_date), 'required' => true])
                             </label>
                         </div>
 
@@ -68,7 +68,7 @@
 </div>
 
 {{-- Чекбоксы управления --}}
-@include('includes.control.checkboxes', ['item' => $feedback])   
+@include('includes.control.checkboxes', ['item' => $feedback])
 
 <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}

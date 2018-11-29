@@ -23,26 +23,26 @@
     <div class="grid-x">
       <div class="small-12 medium-5 cell">
         <label>Дата приема
-          @include('includes.inputs.date', ['value'=>$employee->employment_date, 'name'=>'employment_date', 'required'=>'required'])
+          @include('includes.inputs.date', ['value'=>$employee->employment_date, 'name'=>'employment_date', 'required' => true])
         </label>
       </div>
       <div class="small-12 medium-5 medium-offset-1 cell">
         <label>Дата увольнения
-          @include('includes.inputs.date', ['value'=>$employee->dismissal_date, 'name'=>'dismissal_date', 'required'=>''])
+          @include('includes.inputs.date', ['value'=>$employee->dismissal_date, 'name'=>'dismissal_date'])
         </label>
       </div>
     </div>
     <label>Причина увольнения
-      @include('includes.inputs.name', ['value'=>$employee->dismissal_description, 'name'=>'dismissal_description', 'required'=>''])
+      @include('includes.inputs.name', ['value'=>$employee->dismissal_description, 'name'=>'dismissal_description'])
     </label>
-    
+
   </div>
   <div class="small-12 medium-5 large-7 cell tabs-margin-top">
 
   </div>
 
     {{-- Чекбоксы управления --}}
-                @include('includes.control.checkboxes', ['item' => $employee]) 
+                @include('includes.control.checkboxes', ['item' => $employee])
 
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}

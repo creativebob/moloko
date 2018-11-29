@@ -39,10 +39,10 @@
                     <div class="grid-x grid-padding-x">
                         <div class="small-12 medium-6 cell">
                             <label>Название альбома
-                                @include('includes.inputs.name', ['value'=>$album->name, 'name'=>'name', 'required'=>'required'])
+                                @include('includes.inputs.name', ['value'=>$album->name, 'name'=>'name', 'required' => true])
                             </label>
                             <label class="alias">Алиас альбома
-                                @include('includes.inputs.name', ['value'=>$album->alias, 'name'=>'alias', 'required'=>'required'])
+                                @include('includes.inputs.name', ['value'=>$album->alias, 'name'=>'alias', 'required' => true])
                                 <div class="sprite-input-right find-status" id="alias-check"></div>
                                 <div class="item-error">Такой альбом уже существует!</div>
                             </label>
@@ -63,7 +63,7 @@
                         </div>
                         <div class="small-12 cell">
                             <label>Описание альбома
-                                @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$album->description, 'required'=>''])
+                                @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$album->description])
                             </label>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                 </div>
 
                 {{-- Чекбоксы управления --}}
-                @include('includes.control.checkboxes', ['item' => $album]) 
+                @include('includes.control.checkboxes', ['item' => $album])
 
                 <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
                     {{ Form::submit($submitButtonText, ['class'=>'button']) }}
@@ -95,19 +95,19 @@
                     <div class="small-12 medium-6 cell">
                         <fieldset class="fieldset-access">
                             <legend>Принимать к загрузке в следующих размерах:</legend>
-                                @php 
-                                    $album_settings_default = config()->get('settings'); 
+                                @php
+                                    $album_settings_default = config()->get('settings');
 
                                 @endphp
                                 <div class="grid-x grid-padding-x">
                                     <div class="small-12 medium-6 cell">
                                         <label>Ширина
-                                            @include('includes.inputs.digit', ['value'=>$album_settings->img_min_width, 'name'=>'img_min_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_min_width'], 'pattern' => '[0-9\W\s]{0,4}'])
+                                            @include('includes.inputs.digit', ['value'=>$album_settings->img_min_width, 'name'=>'img_min_width', 'placeholder'=>$album_settings_default['img_min_width'], 'pattern' => '[0-9\W\s]{0,4}'])
                                         </label>
                                     </div>
                                     <div class="small-12 medium-6 cell">
                                         <label>Высота
-                                            @include('includes.inputs.digit', ['value'=>$album_settings->img_min_height, 'name'=>'img_min_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_min_height'], 'pattern' => '[0-9\W\s]{0,4}'])
+                                            @include('includes.inputs.digit', ['value'=>$album_settings->img_min_height, 'name'=>'img_min_height', 'placeholder'=>$album_settings_default['img_min_height'], 'pattern' => '[0-9\W\s]{0,4}'])
                                         </label>
                                     </div>
 
@@ -130,36 +130,36 @@
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Ширина маленького
-                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_small_width, 'name'=>'img_small_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_small_width']])
+                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_small_width, 'name'=>'img_small_width', 'placeholder'=>$album_settings_default['img_small_width']])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Высота маленького
-                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_small_height, 'name'=>'img_small_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_small_height']])
+                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_small_height, 'name'=>'img_small_height', 'placeholder'=>$album_settings_default['img_small_height']])
                                     </label>
                                 </div>
                             </div>
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Ширина среднего
-                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_medium_width, 'name'=>'img_medium_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_medium_width']])
+                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_medium_width, 'name'=>'img_medium_width', 'placeholder'=>$album_settings_default['img_medium_width']])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Высота среднего
-                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_medium_height, 'name'=>'img_medium_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_medium_height']])
+                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_medium_height, 'name'=>'img_medium_height', 'placeholder'=>$album_settings_default['img_medium_height']])
                                     </label>
                                 </div>
                             </div>
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Ширина большого
-                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_large_width, 'name'=>'img_large_width', 'required'=>'', 'placeholder'=>$album_settings_default['img_large_width']])
+                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_large_width, 'name'=>'img_large_width', 'placeholder'=>$album_settings_default['img_large_width']])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Высота большого
-                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_large_height, 'name'=>'img_large_height', 'required'=>'', 'placeholder'=>$album_settings_default['img_large_height']])
+                                        @include('includes.inputs.digit', ['value'=>$album_settings->img_large_height, 'name'=>'img_large_height', 'placeholder'=>$album_settings_default['img_large_height']])
                                     </label>
                                 </div>
                             </div>

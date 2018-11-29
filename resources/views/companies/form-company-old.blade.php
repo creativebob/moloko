@@ -19,7 +19,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <label>Название компании
-                            @include('includes.inputs.name', ['value'=>$company->name, 'name'=>'name', 'required'=>'required'])
+                            @include('includes.inputs.name', ['value'=>$company->name, 'name'=>'name', 'required' => true])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
@@ -33,7 +33,7 @@
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>Телефон
-                            @include('includes.inputs.phone', ['value' => isset($company->main_phone->phone) ? $company->main_phone->phone : null, 'name'=>'main_phone', 'required'=>'required'])
+                            @include('includes.inputs.phone', ['value' => isset($company->main_phone->phone) ? $company->main_phone->phone : null, 'name'=>'main_phone', 'required' => true])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell" id="extra-phones">
@@ -50,7 +50,7 @@
 
                     <div class="small-12 medium-6 cell">
                         <label>Почта
-                            @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email', 'required'=>''])
+                            @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email'])
                         </label>
                         <label>Страна
                             @php
@@ -75,7 +75,7 @@
                                     $address = $company->location->address;
                                 }
                             @endphp
-                            @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+                            @include('includes.inputs.address', ['value'=>$address, 'name'=>'address'])
                         </label>
                     </div>
 
@@ -90,22 +90,22 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <label>ИНН
-                            @include('includes.inputs.inn', ['value'=>$company->inn, 'name'=>'inn', 'required'=>''])
+                            @include('includes.inputs.inn', ['value'=>$company->inn, 'name'=>'inn'])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>КПП
-                            @include('includes.inputs.kpp', ['value'=>$company->kpp, 'name'=>'kpp', 'required'=>''])
+                            @include('includes.inputs.kpp', ['value'=>$company->kpp, 'name'=>'kpp'])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>ОГРН
-                            @include('includes.inputs.ogrn', ['value'=>$company->ogrn, 'name'=>'ogrn', 'required'=>''])
+                            @include('includes.inputs.ogrn', ['value'=>$company->ogrn, 'name'=>'ogrn'])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>ОКПО
-                            @include('includes.inputs.okpo', ['value'=>$company->okpo, 'name'=>'okpo', 'required'=>''])
+                            @include('includes.inputs.okpo', ['value'=>$company->okpo, 'name'=>'okpo'])
                         </label>
                     </div>
                 </div>
@@ -133,7 +133,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <label>Алиас
-                            @include('includes.inputs.alias', ['value'=>$company->alias, 'name'=>'alias', 'required'=>''])
+                            @include('includes.inputs.alias', ['value'=>$company->alias, 'name'=>'alias'])
                         </label>
                     </div>
 

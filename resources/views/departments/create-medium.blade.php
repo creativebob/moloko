@@ -28,7 +28,7 @@
                             </select>
                         </label>
                         <label>Название отдела
-                            @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+                            @include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required' => true])
                             <div class="item-error">Данный отдел уже существует в этом филиале!</div>
                         </label>
                     </div>
@@ -37,12 +37,12 @@
                 </div>
                 <div class="small-8 cell">
                     <label>Адрес отдела
-                    @include('includes.inputs.address', ['value'=>null, 'name'=>'address', 'required'=>''])
+                    @include('includes.inputs.address', ['value'=>null, 'name'=>'address'])
                 </label>
             </div>
             <div class="small-12 cell">
                 <label>Телефон отдела
-                    @include('includes.inputs.phone', ['value' => isset($department->main_phone->phone) ? $department->main_phone->phone : null, 'name'=>'main_phone', 'required'=>''])
+                    @include('includes.inputs.phone', ['value' => isset($department->main_phone->phone) ? $department->main_phone->phone : null, 'name'=>'main_phone'])
                 </label>
 
                 @include('includes.control.checkboxes', ['item' => $department])

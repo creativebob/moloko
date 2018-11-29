@@ -28,12 +28,12 @@
 
                         <div class="small-12 medium-12 cell">
                             <label>Название помещения
-                                @include('includes.inputs.string', ['name'=>'name', 'value'=>$place->name, 'required'=>'required'])
+                                @include('includes.inputs.string', ['name'=>'name', 'value'=>$place->name, 'required' => true])
                             </label>
                         </div>
                         <div class="small-12 medium-12 cell">
                             <label>Описание
-                                @include('includes.inputs.varchar', ['name'=>'description', 'value'=>$place->description, 'required'=>''])
+                                @include('includes.inputs.varchar', ['name'=>'description', 'value'=>$place->description])
                             </label>
                         </div>
 
@@ -54,19 +54,19 @@
                 </div>
                 <div class="small-12 medium-12 cell">
                     <label>Адрес
-                        @include('includes.inputs.address', ['value' => isset($place->location->address) ? $place->location->address : null, 'name'=>'address', 'required'=>''])
+                        @include('includes.inputs.address', ['value' => isset($place->location->address) ? $place->location->address : null, 'name'=>'address'])
                 </label>
 
             </div>
 
             <div class="small-12 medium-6 cell">
                 <label>Площадь, м2
-                    @include('includes.inputs.digit', ['name'=>'square', 'value'=>$place->square, 'required'=>'required'])
+                    @include('includes.inputs.digit', ['name'=>'square', 'value'=>$place->square, 'required' => true])
                 </label>
             </div>
             <div class="small-12 medium-6 cell">
                 <label>Форма владения
-                    @include('includes.inputs.string', ['name'=>'rent_status', 'value'=>$place->rent_status, 'required'=>''])
+                    @include('includes.inputs.string', ['name'=>'rent_status', 'value'=>$place->rent_status])
                 </label>
             </div>
 

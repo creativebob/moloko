@@ -15,25 +15,25 @@
     @endif
     <!-- Страница -->
     <label>Название поста
-      @include('includes.inputs.varchar', ['name'=>'name', 'value'=>$post->name, 'required'=>'required'])
+      @include('includes.inputs.varchar', ['name'=>'name', 'value'=>$post->name, 'required' => true])
     </label>
     <div class="grid-x grid-padding-x">
       <div class="small-6 cell">
         <label>Начало публикации
-          @include('includes.inputs.date', ['name'=>'publish_begin_date', 'value'=>$post->publish_begin_date, 'required'=>'required'])
+          @include('includes.inputs.date', ['name'=>'publish_begin_date', 'value'=>$post->publish_begin_date, 'required' => true])
         </label>
       </div>
       <div class="small-6 cell">
         <label>Окончание публикации
-          @include('includes.inputs.date', ['name'=>'publish_end_date', 'value'=>$post->publish_end_date, 'required'=>''])
+          @include('includes.inputs.date', ['name'=>'publish_end_date', 'value'=>$post->publish_end_date])
         </label>
       </div>
     </div>
     <label>Заголовок поста
-      @include('includes.inputs.varchar', ['name'=>'title', 'value'=>$post->title, 'required'=>'required'])
+      @include('includes.inputs.varchar', ['name'=>'title', 'value'=>$post->title, 'required' => true])
     </label>
     <label>Пост коротко
-      @include('includes.inputs.textarea', ['name'=>'preview', 'value'=>$post->preview, 'required'=>''])
+      @include('includes.inputs.textarea', ['name'=>'preview', 'value'=>$post->preview])
     </label>
 
     <label>Выберите фото для превью
@@ -79,7 +79,7 @@
     </div>
 
     {{-- Чекбоксы управления --}}
-                @include('includes.control.checkboxes', ['item' => $post]) 
+                @include('includes.control.checkboxes', ['item' => $post])
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}

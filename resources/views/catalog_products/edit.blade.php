@@ -90,7 +90,7 @@
 
                                 <div class="small-12 cell">
                                     <label>Описание услуги
-                                        @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$service->description, 'required'=>''])
+                                        @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$service->description])
                                     </label>
                                 </div>
                                 <div class="grid-x grid-margin-x">

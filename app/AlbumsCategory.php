@@ -70,8 +70,8 @@ class AlbumsCategory extends Model
         return $this->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->template($answer) // Выводим шаблоны альбомов
+        ->systemItem($answer)
+        ->template($answer)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();

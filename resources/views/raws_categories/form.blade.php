@@ -1,6 +1,6 @@
 
-<div class="grid-x grid-padding-x modal-content inputs">
-	<div class="small-10 small-offset-1 cell">
+<div class="grid-x grid-padding-x align-center modal-content inputs">
+	<div class="small-10 cell">
 
 		@isset($parent_id)
 		<label>Расположение
@@ -13,7 +13,7 @@
 			<div class="item-error">Такая категория уже существует!</div>
 		</label>
 
-		@include('includes.selects.goods_modes')
+		@include('includes.selects.raws_modes')
 
 		{{ Form::hidden('id', null, ['id' => 'item-id']) }}
 		{{ Form::hidden('category_id', null, ['id' => 'category-id']) }}
@@ -25,7 +25,7 @@
 
 <div class="grid-x align-center">
 	<div class="small-6 medium-4 cell">
-		{{ Form::submit($submit_text, ['data-close', 'class'=>'button modal-button '.$class]) }}
+		{{ Form::submit($submit_text, ['class'=>'button modal-button '.$class]) }}
 	</div>
 </div>
 

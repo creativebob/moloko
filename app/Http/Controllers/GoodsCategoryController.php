@@ -61,6 +61,7 @@ class GoodsCategoryController extends Controller
                     'type' => $this->type,
                     'count' => count($this->goods_category->getIndex($answer, $request)),
                     'id' => $request->id,
+                    'childrens' => 'goods_products'
                 ]
             );
         }
@@ -74,6 +75,7 @@ class GoodsCategoryController extends Controller
                 'class' => $this->model,
                 'type' => $this->type,
                 'id' => $request->id,
+                'childrens' => 'goods_products'
             ]
         );
     }
@@ -103,12 +105,7 @@ class GoodsCategoryController extends Controller
         $goods_category = $this->storeCategory($request);
 
         // Режим товаров
-        if (empty($request->goods_mode_id)) {
-            $goods_category = $this->class::findOrFail($request->category_id);
-            $goods_category->goods_mode_id = $category->goods_mode_id;
-        } else {
-            $goods_category->goods_mode_id = $request->goods_mode_id;
-        }
+        $goods_category->goods_mode_id = $request->goods_mode_id;
 
         $goods_category->save();
 
@@ -386,16 +383,12 @@ class GoodsCategoryController extends Controller
 
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Данная область содержит населенные пункты, удаление невозможно'
+                'error_message' => 'Категория не пуста!'
             ];
         } else {
 
             // Если нет, мягко удаляем
-            if ($goods_category->category_status == 1) {
-                $parent = null;
-            } else {
-                $parent = $goods_category->parent_id;
-            }
+            $parent = $goods_category->parent_id;
 
             $goods_category->editor_id = $user_id;
             $goods_category->save();
@@ -413,56 +406,6 @@ class GoodsCategoryController extends Controller
                 ];
             }
         }
-    }
-
-    // Проверка наличия в базе
-    public function ajax_check(Request $request)
-    {
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        // Проверка отдела в нашей базе данных
-        $goods_category = GoodsCategory::where(['name' => $request->name, 'company_id' => $user->company_id])->first();
-
-        // Если такое название есть
-        if ($goods_category) {
-            $result = [
-                'error_status' => 1,
-            ];
-
-        // Если нет
-        } else {
-            $result = [
-                'error_status' => 0,
-            ];
-        }
-
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Список категорий альбомов
-    public function goods_category_list(Request $request)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
-
-        // Главный запрос
-        $goods_categories = GoodsCategory::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->get(['id','name','category_status','parent_id'])
-        ->keyBy('id')
-        ->toArray();
-        // dd($goods_categories);
-
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $goods_categories_list = get_select_tree($goods_categories, $request->parent, null, $request->id);
-        // dd($goods_categories_list);
-
-        // Отдаем ajax
-        echo json_encode($goods_categories_list, JSON_UNESCAPED_UNICODE);
     }
 
     // ------------------------------------------------ Ajax -------------------------------------------------

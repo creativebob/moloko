@@ -461,10 +461,10 @@ renderContent ();
 });
 
 // Валидируем кнопку при клике
-function submitAjax (form) {
+function submitAjax (id) {
     this.event.preventDefault();
-    $(form).foundation('validateForm');
-    var valid = $(form + ' .is-invalid-input').length;
+    $('#' + id).foundation('validateForm');
+    var valid = $('#' + id + ' .is-invalid-input').length;
     return valid == 0;
 };
 

@@ -132,7 +132,7 @@
 
                             <div class="small-12 cell">
                                 <label>Описание товара
-                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$article->description, 'required'=>''])
+                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$article->description])
                                 </label>
                             </div>
                         </div>

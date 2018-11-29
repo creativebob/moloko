@@ -27,12 +27,12 @@
 
                         <div class="small-12 medium-12 cell">
                             <label>Название реквизита
-                                @include('includes.inputs.string', ['name'=>'name', 'value'=>$extra_requisite->name, 'required'=>'required'])
+                                @include('includes.inputs.string', ['name'=>'name', 'value'=>$extra_requisite->name, 'required' => true])
                             </label>
                         </div>
                         <div class="small-12 medium-12 cell">
                             <label>Описание
-                                @include('includes.inputs.varchar', ['name'=>'description', 'value'=>$extra_requisite->description, 'required'=>''])
+                                @include('includes.inputs.varchar', ['name'=>'description', 'value'=>$extra_requisite->description])
                             </label>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
 </div>
 
 {{-- Чекбоксы управления --}}
-@include('includes.control.checkboxes', ['item' => $extra_requisite])   
+@include('includes.control.checkboxes', ['item' => $extra_requisite])
 
 <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}

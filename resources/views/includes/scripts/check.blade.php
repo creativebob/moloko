@@ -41,4 +41,15 @@
             $(submit).prop('disabled', item.closest('form').find($(".item-error:visible")).length > 0);
         };
     };
+
+    // Проверка существования
+    $(document).on('keyup', '.check-field', function() {
+        var check = $(this);
+
+        let timerId;
+        clearTimeout(timerId);
+        timerId = setTimeout(function() {
+            checkField(check);
+        }, 300);
+    });
 </script>
