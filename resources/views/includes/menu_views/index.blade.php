@@ -106,10 +106,11 @@
 
         // ------------------------ Кнопка добавления ---------------------------------------
         $(document).on('click', '.submit-create', function(event) {
-            if(submitAjax($(this).closest('form'))){
-
-                $.post('/admin/' + entity, $(this).closest('form').serialize(), function(html) {
-                    $(this).closest('.reveal-overlay').remove();
+            var form = $(this).closest('form');
+            if (submitAjax('#' + form.attr('id'))) {
+                $(this).prop('disabled', true);
+                $.post('/admin/' + entity, form.serialize(), function(html) {
+                    form.closest('.reveal-overlay').remove();
                     $('#content').html(html);
                     Foundation.reInit($('#content'));
                 });
@@ -118,20 +119,23 @@
 
         // ------------------------ Кнопка обновления ---------------------------------------
         $(document).on('click', '.submit-edit', function(event) {
-            event.preventDefault();
-            var id = $(this).closest('form').find('input[name=id]').val();
+            var form = $(this).closest('form');
+            if (submitAjax('#' + form.attr('id'))) {
+                $(this).prop('disabled', true);
+                var id = form.find('input[name=id]').val();
 
-            // Ajax запрос
-            $.ajax({
-                url: '/admin/sectors/' + id,
-                type: "PATCH",
-                data: $(this).closest('form').serialize(),
-                success:function(html) {
-                    // $(this).closest('.reveal').foundation('close');
-                    $('#content').html(html);
-                    Foundation.reInit($('#content'));
-                }
-            });
+                // Ajax запрос
+                $.ajax({
+                    url: '/admin/sectors/' + id,
+                    type: "PATCH",
+                    data: form.serialize(),
+                    success:function(html) {
+                        form.closest('.reveal-overlay').remove();
+                        $('#content').html(html);
+                        Foundation.reInit($('#content'));
+                    }
+                });
+            }
         });
 
         // ---------------------------------- Закрытие модалки -----------------------------------

@@ -3,7 +3,7 @@
 
         @isset($parent_id)
         <label>Расположение
-            @include('includes.selects.categories_select', ['parent_id' => $parent_id])
+            @include('includes.selects.categories_select', ['id' => $item->id, 'parent_id' => $parent_id])
         </label>
         @endisset
 
@@ -22,7 +22,7 @@
         {{ Form::hidden('id', null, ['id' => 'item-id']) }}
         {{ Form::hidden('category_id', null, ['id' => 'category-id']) }}
 
-        @include('includes.control.checkboxes')
+        @include('includes.control.checkboxes', $item)
     </div>
 </div>
 

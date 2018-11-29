@@ -26,7 +26,7 @@ class SectorsSelectComposer
         // ->toArray();
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $sectors_list = getSelectTree($sectors, null, 1, null);
+        $sectors_list = getSelectTree($sectors, $view->sector_id, 1, null);
         // dd($sectors_list);
 
 		return $view->with('sectors_list', $sectors_list);
