@@ -12,10 +12,12 @@ trait CompanyControllerTrait
 	public function createCompany($request){
 
         $company = new Company;
+        $last_id_company = Company::latest()->first()->id;
+        $number_id_company = $last_id_company + 1;
 
         // Новые данные
         $company->name = $request->company_name ?? $request->name;
-        $company->alias = $request->alias ?? Transliterate::make($company->name .'_'. $company->id, ['type' => 'url', 'lowercase' => true]);
+        $company->alias = $request->alias ?? Transliterate::make($company->name .'_'. $number_id_company, ['type' => 'url', 'lowercase' => true]);
         $company->email = $request->email;
         $company->legal_form_id = $request->legal_form_id;
         $company->inn = $request->inn;
