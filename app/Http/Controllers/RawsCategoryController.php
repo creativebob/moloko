@@ -23,7 +23,7 @@ class RawsCategoryController extends Controller
 {
 
     // Настройки сконтроллера
-    public function __construct(RawsCategory $raws_categories)
+    public function __construct(RawsCategory $raws_category)
     {
         $this->middleware('auth');
         $this->raws_category = $raws_category;
