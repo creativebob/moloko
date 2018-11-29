@@ -4,7 +4,7 @@
       <h5>{{ $title }}</h5>
     </div>
   </div>
-  {{ Form::model($item,['id'=>'form-first-edit', 'data-abide', 'novalidate']) }}
+  {{ Form::model($item,['id' => 'form-edit', 'data-abide', 'novalidate']) }}
 
     @include($entity.'.form', ['submit_text' => 'Редактировать', 'class' => 'submit-edit'])
 

@@ -460,7 +460,7 @@ if (localStorage.getItem('task') == 0) {
 renderContent ();
 });
 
-// Открываем менеджер задач
+// Валидируем кнопку при клике
 function submitAjax (form) {
     this.event.preventDefault();
     $(form).foundation('validateForm');

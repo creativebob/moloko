@@ -8,13 +8,13 @@
         @endisset
 
         <label>Название сектора
-            @include('includes.inputs.name', ['name' => 'name', 'required' => 'required', 'check' => 'check-field'])
+            @include('includes.inputs.name', ['required' => true, 'check' => true])
             <div class="sprite-input-right find-status"></div>
             <div class="item-error">Такой сектор уже существует!</div>
         </label>
 
         <label>Тег
-            @include('includes.inputs.text-en', ['name' => 'tag', 'check' => 'check-field'])
+            @include('includes.inputs.text-en', ['name' => 'tag', 'check' => true])
             <div class="sprite-input-right find-status"></div>
             <div class="item-error">Такой тег индустрии уже существует!</div>
         </label>
@@ -28,7 +28,7 @@
 
 <div class="grid-x align-center">
     <div class="small-6 medium-4 cell">
-        {{ Form::submit($submit_text, ['data-close', 'class'=>'button modal-button '.$class]) }}
+        {{ Form::submit($submit_text, ['class'=>'button modal-button '.$class]) }}
     </div>
 </div>
 

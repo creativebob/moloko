@@ -12,7 +12,7 @@
     <div class="tabs-panel is-active" id="department">
       <div class="grid-x grid-padding-x align-center modal-content inputs">
         <div class="small-10 cell">
-          @include('includes.inputs.city_search', ['city' => isset($department->location->city->name) ? $department->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
+          @include('includes.inputs.city_search', ['city' => isset($department->location->city->name) ? $department->location->city : null, 'id' => 'cityForm', 'required' => true])
         </label>
         <label>Название филиала
           @include('includes.inputs.name', ['value'=>$department->name, 'name'=>'name', 'required'=>'required'])

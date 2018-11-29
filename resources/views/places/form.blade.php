@@ -50,7 +50,7 @@
                     </div>
                     <div class="small-12 medium-6 cell">
                         {{-- Город --}}
-                       @include('includes.inputs.city_search', ['city' => isset($place->location->city->name) ? $place->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
+                       @include('includes.inputs.city_search', ['city' => isset($place->location->city->name) ? $place->location->city : null, 'id' => 'cityForm', 'required' => true])
                 </div>
                 <div class="small-12 medium-12 cell">
                     <label>Адрес

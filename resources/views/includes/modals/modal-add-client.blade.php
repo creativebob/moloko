@@ -21,14 +21,14 @@
 
                         <span id="title-switch-company-private">
                             @if($lead->private_status == 1)
-                                Компания 
-                            @else 
-                                Физическое лицо 
+                                Компания
+                            @else
+                                Физическое лицо
                             @endif
                         </span>
                     </div>
                 </legend>
-                
+
                 <div class="grid-x grid-padding-x" id="wrap-company-private">
 
                     <script>
@@ -45,7 +45,7 @@
                             $('[name=passport_released]').removeAttr('required');
                             // alert('На компанию');
                             // $('.passport_address').removeAttr('required');
-                            
+
                         });
 
                         $('#wrap-company-private').on('off.zf.toggler', function() {
@@ -78,7 +78,7 @@
                         </label>
                         <label>Почта
                             @include('includes.inputs.email', ['value'=>$new_user->email, 'name'=>'email', 'required'=>'required'])
-                        </label> 
+                        </label>
                     </div>
 
                     <div class="small-12 medium-6 cell lead-info-company" id="lead-info-company" data-toggler="switch-on">
@@ -159,7 +159,7 @@
                                         }
                                     @endphp
 
-                                    @include('includes.inputs.city_search', ['city' => isset($lead->location->city->name) ? $lead->location->city : null, 'id' => 'cityFormModalClient', 'required' => 'required'])
+                                    @include('includes.inputs.city_search', ['city' => isset($lead->location->city->name) ? $lead->location->city : null, 'id' => 'cityFormModalClient', 'required' => true])
 
                                 </label>
                             </div>
@@ -179,7 +179,7 @@
                     </div>
                     {{-- Конец блока адреса --}}
 
-                    
+
 
                     {{-- Начало блока банковских реквизитов --}}
                     <div class="small-12 cell lead-info-bank" id="lead-info-bank" data-toggler="switch-on">
@@ -210,7 +210,7 @@
                     </div>
 
 
-                    {{-- Конец блока банковских реквизитов --}}            
+                    {{-- Конец блока банковских реквизитов --}}
 
             </fieldset>
 
@@ -223,7 +223,7 @@
     </div>
 
     {{ Form::close() }}
-    <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+    <div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
 
 @include('includes.scripts.inputs-mask')

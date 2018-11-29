@@ -58,7 +58,7 @@
 
 					@endphp
 
-					{{ Form::checkbox($name . '_id[]', $value->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->id, $checked]) }}
+					{{ Form::checkbox($name . '_id[]', ($value ?? null)->id, $checkboxer_mass[$name]['mass_id'], ['id'=>$name.'-'.$value->id, $checked]) }}
 					<label for="{{$name}}-{{ $value->id }}">
 						<span class="rename_field_{{$value->id}} dblrename" data-booklist_id="{{$value->id}}">
 
@@ -141,7 +141,7 @@
   		var booklist_id_send = $(this).data('booklist_id_send');
   		var entity_alias = $('#content').data('entity-alias');
   		var count_elem = $(this).children('span').text();
-  		
+
   		// Делаем запрос только если элемент не равен нулю
   		if(count_elem != 0){
 
@@ -196,7 +196,7 @@
 
 	  		if($('.booklist').hasClass('is-open')){var booklist_open = true;} else {var booklist_open = false;};
 
-	  		// Проверка на наличие изменений. 
+	  		// Проверка на наличие изменений.
   			if(counter_checkbox != storage_counter_checkbox){
 
   			// Маркер изменений. Фиксируем изменения, чтоб в следующий раз не делать запрос
@@ -243,7 +243,7 @@
 
 	  		if($('.booklist').hasClass('is-open')){var booklist_open = true;} else {var booklist_open = false;};
 
-	  		// Проверка на наличие изменений. 
+	  		// Проверка на наличие изменений.
   			if(counter_checkbox != storage_counter_checkbox){
 
   			// Маркер изменений. Фиксируем изменения, чтоб в следующий раз не делать запрос
@@ -330,8 +330,8 @@
 			$('#{{$name}}-dropdown-bottom-left').foundation('_destroy');
 			$(".checkboxer-menu.{{$name}} :checkbox").off( "click");
 			$(".{{$name}} .checkboxer-toggle").off( "click");
-			$(".{{$name}} .checkboxer-clean").off( "click");		
-  	}; 	
+			$(".{{$name}} .checkboxer-clean").off( "click");
+  	};
 
 	$(document).ready(function() {
 	      $('#filter-form #new_booklist').keydown(function(event){

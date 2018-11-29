@@ -16,6 +16,9 @@ use App\UnitsCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\RawsCategoryRequest;
 
+// Подключаем трейт записи и обновления категорий
+use App\Http\Controllers\Traits\CategoryControllerTrait;
+
 // На удаление
 use Illuminate\Support\Facades\Auth;
 
@@ -23,16 +26,19 @@ class RawsCategoryController extends Controller
 {
 
     // Настройки сконтроллера
-    public function __construct(RawsCategory $raws_categories)
+    public function __construct(RawsCategory $raws_category)
     {
         $this->middleware('auth');
         $this->raws_category = $raws_category;
         $this->class = RawsCategory::class;
         $this->model = 'App\RawsCategory';
-        $this->entity_table = with(new $this->class)->getTable();
+        $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
         $this->type = 'edit';
     }
+
+    // Используем трейт записи и обновления категорий
+    use CategoryControllerTrait;
 
     public function index(Request $request)
     {
@@ -41,9 +47,9 @@ class RawsCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_table);
+        $page_info = pageInfo($this->entity_alias);
 
-        $answer = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Отдаем Ajax
         if ($request->ajax()) {
@@ -52,7 +58,7 @@ class RawsCategoryController extends Controller
             return view('includes.menu_views.category_list',
                 [
                     'items' => $this->raws_category->getIndex($answer, $request),
-                    'entity' => $this->entity_table,
+                    'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
                     'count' => count($this->raws_category->getIndex($answer, $request)),
@@ -66,7 +72,7 @@ class RawsCategoryController extends Controller
             [
                 'items' => $this->raws_category->getIndex($answer, $request),
                 'page_info' => $page_info,
-                'entity' => $this->entity_table,
+                'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
             ]
@@ -79,7 +85,13 @@ class RawsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('raws_categories.create', ['raws_categories' => new $this->class, 'parent_id' => $request->parent_id, 'category_id' => $request->category_id]);
+        return view('includes.menu_views.create', [
+            'item' => new $this->class,
+            'entity' => $this->entity_alias,
+            'title' => 'Добавление категории сырья',
+            'parent_id' => $request->parent_id,
+            'category_id' => $request->category_id
+        ]);
     }
 
     public function store(RawsCategoryRequest $request)
@@ -88,58 +100,16 @@ class RawsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), RawsCategory::class);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+        // Заполнение и проверка основных полей в трейте
+        $raws_category = $this->storeCategory($request);
 
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        // Пишем в базу
-        $raws_category = new RawsCategory;
-        $raws_category->company_id = $company_id;
-        $raws_category->author_id = $user_id;
-
-        // Системная запись
-        $raws_category->system_item = $request->system_item;
-
-        $raws_category->display = $request->display;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false){
-            $raws_category->moderation = 1;
-        }
-
-        // Смотрим что пришло
-        // Если категория
-        if ($request->first_item == 1) {
-            $raws_category->raws_mode_id = $request->raws_mode_id;
-            $raws_category->category_status = 1;
-        }
-
-        // Если вложенный
-        if ($request->medium_item == 1) {
-            $raws_category->parent_id = $request->parent_id;
-            $raws_category->category_id = $request->category_id;
-
-            $category = RawsCategory::findOrFail($request->category_id);
-
+        // Режим товаров
+        if (empty($request->raws_mode_id)) {
+            $raws_category = $this->class::findOrFail($request->category_id);
             $raws_category->raws_mode_id = $category->raws_mode_id;
-        }
-
-        if ($request->status == 'set') {
-            $raws_category->status = $request->status;
         } else {
-            $raws_category->status = 'one';
+            $raws_category->raws_mode_id = $request->raws_mode_id;
         }
-
-        // Делаем заглавной первую букву
-        $raws_category->name = get_first_letter($request->name);
 
         $raws_category->save();
 
@@ -151,7 +121,7 @@ class RawsCategoryController extends Controller
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи сектора!',
+                'error_message' => 'Ошибка при записи категории сырья!',
             ];
         }
     }
@@ -165,7 +135,7 @@ class RawsCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_raws_categories = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_raws_categories = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $raws_category = RawsCategory::with(['raws_mode', 'metrics.unit', 'metrics.values'])
@@ -272,7 +242,7 @@ class RawsCategoryController extends Controller
         } else {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_table, $this->entity_dependence, 'index');
+            $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
 
             // Главный запрос
             $raws_categories = RawsCategory::moderatorLimit($answer)
@@ -301,7 +271,7 @@ class RawsCategoryController extends Controller
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_table, $this->entity_table, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_alias, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $raws_category = RawsCategory::moderatorLimit($answer)->findOrFail($id);
@@ -326,7 +296,7 @@ class RawsCategoryController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_table])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
 
             if ($get_settings) {
 
@@ -428,7 +398,7 @@ class RawsCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $raws_category = RawsCategory::withCount('raws_products')->moderatorLimit($answer)->findOrFail($id);
@@ -510,7 +480,7 @@ class RawsCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_table, $this->entity_dependence, 'index');
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
 
         // Главный запрос
         $raws_categories = RawsCategory::moderatorLimit($answer)
@@ -604,7 +574,7 @@ class RawsCategoryController extends Controller
     {
         // dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_table, $this->entity_table, 'update');
+        $answer = operator_right($this->entity_alias, $this->entity_alias, 'update');
 
         // ГЛАВНЫЙ ЗАПРОС:
         $raws_category = RawsCategory::moderatorLimit($answer)->findOrFail($id);
@@ -629,7 +599,7 @@ class RawsCategoryController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_table])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
 
             if ($get_settings) {
 

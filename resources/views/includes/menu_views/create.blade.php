@@ -4,7 +4,7 @@
       <h5>{{ $title }}</h5>
     </div>
   </div>
-  {{ Form::open(['id'=>'form-create', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['id' => 'form-create', 'data-abide', 'novalidate']) }}
 
     @include($entity.'.form', ['submit_text' => 'Добавить', 'class' => 'submit-create'])
 

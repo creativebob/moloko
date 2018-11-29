@@ -20,7 +20,7 @@
 
 				<div class="small-9 cell">
 					<label>Название товара
-						@include('includes.inputs.string', ['value' => null, 'name' => 'name', 'required' => 'required'])
+						@include('includes.inputs.string', ['value' => null, 'name' => 'name', 'required' => true])
 						<div class="item-error">Названия товара и группы товаров не должны совпадать!</div>
 					</label>
 				</div>

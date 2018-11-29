@@ -8,7 +8,7 @@
         @endisset
 
         <label>Название категории
-            @include('includes.inputs.name', ['name' => 'name', 'required' => 'required', 'check' => 'check-field'])
+            @include('includes.inputs.name', ['name' => 'name', 'required' => true, 'check' => 'check-field'])
             <div class="sprite-input-right find-status"></div>
             <div class="item-error">Такая категория альбомов уже существует!</div>
         </label>
