@@ -16,9 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -30,6 +27,7 @@ class RawsCategory extends Model
     // Включаем кеш
     use Cachable;
 
+    use Notifiable;
     use SoftDeletes;
 
     // Включаем Scopes
