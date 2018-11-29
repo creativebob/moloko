@@ -159,24 +159,45 @@ class ClientController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-        $client = new Client;
-
         if($request->private_status == 1){
 
             $new_company = new Company;
             $new_company = $this->createCompany($request, $new_company);
             
-            $client->client_id = $new_company->id;
-            $client->client_type = 'App\Company';
+            if($request->lead_type_id == 2){
 
-            $new_user = new User;
-            $new_user = $this->createUser($request, $new_user);
+                $dealer = new Dealer;
+                $dealer->dealer_id = $new_company->id;
+                $dealer->company_id = $request->user()->company->id;
+
+                // Запись информации по дилеру:
+                // ...
+
+                $dealer->save();
+
+            } else {
+
+                $client = new Client;
+                $client->client_id = $new_company->id;
+                $client->client_type = 'App\Company';
+                $client->company_id = $request->user()->company->id;
+
+                // Запись информации по клиенту:
+                // ...
+
+                $client->save();
+
+            }
 
             $department = new Department;
             $department->name = 'Филиал';
-            $department->company_id = $new_user->company->id;
+            $department->company_id = $new_company->id;
             $department->location_id = $request->location_id;
             $department->save();
+
+            $new_user = new User;
+            $new_user = $this->createUser($request, $new_user);
+            // $new_user->update(['company_id'=>]);
 
             $staffer = new Staffer;
             $staffer->user_id = $new_user->id;
@@ -201,14 +222,9 @@ class ClientController extends Controller
 
             $client->client_id = $user->id;
             $client->client_type = 'App\User';
+            $client->company_id = $request->user()->company->id;
+            $client->save();
         }
-
-        $client->company_id = $request->user()->company->id;
-
-        // Запись информации по клиенту:
-        // ...
-
-        $client->save();
 
         return 'Ок';
     }

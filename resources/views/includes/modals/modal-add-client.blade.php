@@ -5,6 +5,8 @@
         </div>
     </div>
     {{ Form::open(['id'=>'form-client-add', 'data-abide', 'novalidate']) }}
+    <input type="hidden" name="lead_type_id" value="{{ $lead->lead_type_id }}">
+
     <div class="grid-x grid-padding-x align-center modal-content inputs">
         <div class="small-12 cell">
 
@@ -20,11 +22,7 @@
                         </label>
 
                         <span id="title-switch-company-private">
-                            @if($lead->private_status == 1)
-                                Компания
-                            @else
-                                Физическое лицо
-                            @endif
+                            @if($lead->private_status == 1) Компания @else Физическое лицо @endif
                         </span>
                     </div>
                 </legend>
