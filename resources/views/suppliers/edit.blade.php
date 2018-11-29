@@ -20,15 +20,24 @@
 
 @section('content')
 
-  {{ Form::model($supplier, ['url' => '/admin/suppliers/'.$supplier->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+  {{ Form::model($supplier->company, ['url' => '/admin/suppliers/'.$supplier->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
   {{ method_field('PATCH') }}
-    @include('suppliers.form', ['submitButtonText' => 'Редактировать поставщика', 'param'=>''])
+    @include('companies.form', ['submitButtonText' => 'Редактировать поставщика', 'param'=>'', 'company'=>$supplier->company])
   {{ Form::close() }}
 
 @endsection
 
+@section('modals')
+    <section id="modal"></section>
+    {{-- Модалка удаления с ajax --}}
+    @include('includes.modals.modal-delete-ajax')
+@endsection
+
 @section('scripts')
-  @include('includes.scripts.inputs-mask')
+    @include('includes.scripts.inputs-mask')
+    @include('includes.scripts.modal-delete-script')
+    @include('includes.scripts.extra-phone')
+    @include('includes.bank_accounts.bank-account-script', ['id' => $supplier->company->id])
 @endsection
 
 

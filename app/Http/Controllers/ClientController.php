@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\User;
+use App\Department;
+use App\Staffer;
+use App\Employee;
+
 use App\Lead;
 use App\Client;
 use App\Dealer;
@@ -38,6 +42,10 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
+// Подрубаем трейт записи и обновления компании
+use App\Http\Controllers\Traits\CompanyControllerTrait;
+use App\Http\Controllers\Traits\UserControllerTrait;
+
 class ClientController extends Controller
 {
 
@@ -45,8 +53,15 @@ class ClientController extends Controller
     protected $entity_name = 'clients';
     protected $entity_dependence = false;
 
+    // Подключаем трейт записи и обновления компании
+    use CompanyControllerTrait;
+    use UserControllerTrait;
+
     public function index(Request $request)
     {
+
+        $filter_url = autoFilter($request, $this->entity_name);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Client::class);
@@ -61,12 +76,13 @@ class ClientController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $clients = Client::with('author', 'contragent.main_phones')
-        ->withCount(['orders' => function($q) {
-            $q->whereNull('draft');
-        }])
-        ->where('company_id', '!=', null)
+        $clients = Client::with('author', 'client.main_phones')
+        // ->withCount(['orders' => function($q) {
+        //     $q->whereNull('draft');
+        // }])
         ->moderatorLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
         // ->filter($request, 'city_id', 'location')
         // ->filter($request, 'sector_id')
         ->booklistFilter($request)
@@ -97,16 +113,16 @@ class ClientController extends Controller
     public function ajax_create(Request $request)
     {
 
-        // Подключение политики
+        //Подключение политики
         // $this->authorize(getmethod(__FUNCTION__), Client::class);
-
-        // $client = new Client;
+        // $this->authorize(getmethod(__FUNCTION__), Company::class);
+        // $this->authorize(getmethod(__FUNCTION__), User::class);
 
         $new_company = new Company;
         $new_company->name = $request->company_name;
         $new_company->email = $request->email;
         // ГЛАВНЫЙ ЗАПРОС:
-        // 
+
         $lead = Lead::findOrFail($request->lead_id);
  
         $new_user = new User;
@@ -128,12 +144,82 @@ class ClientController extends Controller
         return view('includes.modals.modal-add-client', compact('new_user', 'user_id', 'lead', 'new_company'));
     }
 
+    public function ajax_store(Request $request)
+    {
+
+        // dd('Тут');
+
+        // Подключение политики
+        // $this->authorize(getmethod(__FUNCTION__), Client::class);
+        // $this->authorize(getmethod(__FUNCTION__), Company::class);
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        $client = new Client;
+
+        if($request->private_status == 1){
+
+            $new_company = new Company;
+            $new_company = $this->createCompany($request, $new_company);
+            
+            $client->client_id = $new_company->id;
+            $client->client_type = 'App\Company';
+
+            $new_user = new User;
+            $new_user = $this->createUser($request, $new_user);
+
+            $department = new Department;
+            $department->name = 'Филиал';
+            $department->company_id = $new_user->company->id;
+            $department->location_id = $request->location_id;
+            $department->save();
+
+            $staffer = new Staffer;
+            $staffer->user_id = $new_user->id;
+            $staffer->position_id = 1; // Директор
+            $staffer->department_id = $department->id;
+            $staffer->filial_id = $department->id;
+            $staffer->company_id = $new_company->id;
+            $staffer->save();
+
+            $employee = new Employee;
+            $employee->company_id = $new_company->id;
+            $employee->staffer_id = $staffer->id;
+            $employee->user_id = $new_user->id;
+            $employee->employment_date = Carbon::today()->format('Y-m-d');
+            $employee->save();
+
+
+        } else {
+
+            $new_user = new User;
+            $user = $this->createUser($request, $new_user);
+
+            $client->client_id = $user->id;
+            $client->client_type = 'App\User';
+        }
+
+        $client->company_id = $request->user()->company->id;
+
+        // Запись информации по клиенту:
+        // ...
+
+        $client->save();
+
+        return 'Ок';
+    }
+
+
     public function store(CompanyRequest $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Dealer::class);
-        // $this->authorize(getmethod(__FUNCTION__), Company::class);
+        $this->authorize(getmethod(__FUNCTION__), Client::class);
+        $this->authorize(getmethod(__FUNCTION__), Company::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -141,80 +227,29 @@ class ClientController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-        $company = $user->company;
-
         // Скрываем бога
         $user_id = hideGod($user);
 
-        $schedule = new Schedule;
-        $schedule->company_id = $company_id;
-        $schedule->name = 'График работы компании';
-        $schedule->description = null;
-        $schedule->author_id = $user_id;
-        $schedule->save();
-        $schedule_id = $schedule->id;
+        $client = new Client;
 
-        // Функция getWorktimes ловит все поля расписания из запроса и готовит к записи в worktimes
-        $mass_time = getWorktimes($request, $schedule_id);
+        $new_company = new Company;
+        // Отдаем работу по созданию новой компании трейту
+        $company = $this->createCompany($request, $new_company);
 
-        // Записываем в базу все расписание.
-        DB::table('worktimes')->insert($mass_time);
+        $new_user = new User;
+        // Отдаем работу по созданию нового юзера трейту
+        $user = $this->createUser($request, $new_user);
 
-        $client = new Company;
-        $client->name = $request->name;
-        $client->alias = $request->alias;
+        $client->company_id = $request->user()->company->id;
+        $client->client_id = $company->id;
 
-        $client->email = $request->email;
-
-        // Добавляем локацию
-        $client->location_id = create_location($request);
-
-        $client->inn = $request->inn;
-        $client->kpp = $request->kpp;
-        $client->account_settlement = $request->account_settlement;
-        $client->account_correspondent = $request->account_correspondent;
-
-        $client->sector_id = $request->sector_id;
-        $client->schedule_id = $schedule->id;
-
-        // $company->director_user_id = $user->company_id;
-        $client->author_id = $user->id;
-
-        $client->save();
-
-        // Если запись удачна - будем записывать связи
-        if($client){
-
-            // Записываем компанию как клиента
-            $company->clients()->attach($client->id);
-
-            // Телефон
-            $phones = add_phones($request, $client);
-
-            // Записываем связи: id-шники в таблицу Rooms
-            if(isset($request->services_types_id)){
-                
-                $result = $client->services_types()->sync($request->services_types_id);               
-            } else {
-                $result = $client->services_types()->detach(); 
-            };
-
-        } else {
-            abort(403, 'Ошибка записи компании');
-        };
+        // Запись информации по клиенту:
+        // ...
 
 
-        // Создаем связь расписания с компанией
-        $schedule_entity = new ScheduleEntity;
-        $schedule_entity->schedule_id = $schedule->id;
-        $schedule_entity->entity_id = $company->id;
-        $schedule_entity->entity = 'companies';
-        $schedule_entity->save();
+        $manufacturer->save();
 
-        return redirect('/admin/dealers');
-        // return redirect('admin/companies');
+        return redirect('/admin/manufacturers');
     }
 
 

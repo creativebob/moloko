@@ -56,7 +56,7 @@ class CompanyPolicy
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
 
         // Проверяем на наличие связей
-        if(($model->we_suppliers->count() > 0)||($model->we_manufacturers->count() > 0)||($model->we_dealers->count() > 0)){$result = false;};
+        if(($model->we_suppliers->count() > 0)||($model->we_manufacturers->count() > 0)||($model->we_dealers->count() > 0)||($model->we_clients->count() > 0)){$result = false;};
 
         // $suppliers = Supplier::where('company_id', $model->id)->orWhere('contragent_id', $model->id);
         // $dealers = Dealer::where('company_id', $model->id)->orWhere('contragent_id', $model->id);

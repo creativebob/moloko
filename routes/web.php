@@ -670,7 +670,9 @@ Route::resource('/dealers', 'DealerController')->middleware('auth');
 // ------------------------------------ Клиенты ----------------------------------------------------------
 
 // Основные методы
-Route::patch('/add_client', 'ClientController@ajax_create')->middleware('auth');
+Route::patch('/create_client', 'ClientController@ajax_create')->middleware('auth');
+Route::any('/store_client', 'ClientController@ajax_store')->middleware('auth');
+
 Route::resource('/clients', 'ClientController')->middleware('auth');
 
 

@@ -19,8 +19,8 @@ class CreateClientsTable extends Migration
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
             // $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('contragent_id')->nullable()->unsigned()->comment('Id сущности: как правило users или company');
-            $table->string('contragent_type')->nullable()->comment('Сущность');
+            $table->integer('client_id')->nullable()->unsigned()->comment('Id сущности: как правило users или company');
+            $table->string('client_type')->nullable()->comment('Сущность');
 
             $table->integer('loyalty_id')->nullable()->unsigned()->default(4)->comment('Id лояльности');
             $table->foreign('loyalty_id')->references('id')->on('loyalties');
@@ -35,6 +35,7 @@ class CreateClientsTable extends Migration
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->timestamps();
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
+            $table->softDeletes();
         });
     }
 

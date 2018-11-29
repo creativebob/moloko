@@ -52,24 +52,24 @@ class Employee extends Model
         'dismissal_date',
     ];
 
-    public function setEmploymentDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('.', $value);
-            $this->attributes['employment_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
-        };
-    }
+    // public function setEmploymentDateAttribute($value) {
+    //     if($value == Null){
+    //         return $value;
+    //     } else {
+    //         $date_parts = explode('.', $value);
+    //         $this->attributes['employment_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+    //     };
+    // }
 
-    public function getEmploymentDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('-', $value);
-            $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
-            return $value;
-        };
-    }
+    // public function getEmploymentDateAttribute($value) {
+    //     if($value == Null){
+    //         return $value;
+    //     } else {
+    //         $date_parts = explode('-', $value);
+    //         $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
+    //         return $value;
+    //     };
+    // }
 
     public function setDismissalDateAttribute($value) {
         if($value == Null){

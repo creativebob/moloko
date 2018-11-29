@@ -2,8 +2,30 @@
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active"><a aria-selected="true" href="#content-panel-1">Общая информация</a></li>
+
+            {{-- Подключаемые специфические разделы --}}
+            @if(!empty($manufacturer))
+                <li class="tabs-title">
+                    <a data-tabs-target="content-panel-manufacturer" href="#content-panel-manufacturer">Рабочая информация</a>
+                </li>
+            @endif
+            @if(!empty($dealer))
+                <li class="tabs-title">
+                    <a data-tabs-target="content-panel-dealer" href="#content-panel-dealer">Рабочая информация</a>
+                </li>
+            @endif
+            @if(!empty($supplier))
+                <li class="tabs-title">
+                    <a data-tabs-target="content-panel-supplier" href="#content-panel-supplier">Рабочая информация</a>
+                </li>
+            @endif
+            @if(!empty($client))
+                <li class="tabs-title">
+                    <a data-tabs-target="content-panel-client" href="#content-panel-client">Рабочая информация</a>
+                </li>
+            @endif
+
             <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Реквизиты</a></li>
-            <li class="tabs-title"><a data-tabs-target="content-panel-3" href="#content-panel-3">Банковские реквизиты</a></li>
             <li class="tabs-title"><a data-tabs-target="content-panel-4" href="#content-panel-4">График работы</a></li>
             <li class="tabs-title"><a data-tabs-target="content-panel-5" href="#content-panel-5">Настройка</a></li>
         </ul>
@@ -70,6 +92,63 @@
                 </div>
             </div>
 
+            @if(!empty($manufacturer))
+            <!-- Блок производителя -->
+            <div class="tabs-panel" id="content-panel-manufacturer">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-6 cell">
+                        <label>Комментарий к производителю
+                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$manufacturer->description, 'required'=>''])
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- Конец блока производителя -->
+            @endif
+
+            @if(!empty($dealer))
+            <!-- Блок дилера -->
+            <div class="tabs-panel" id="content-panel-dealer">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-6 cell">
+                        <label>Комментарий к дилеру
+                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$dealer->description, 'required'=>''])
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- Конец блока дилера -->
+            @endif
+
+            @if(!empty($supplier))
+            <!-- Блок поставщика -->
+            <div class="tabs-panel" id="content-panel-supplier">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-6 cell">
+                        <label>Комментарий к поставщику
+                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$supplier->description, 'required'=>''])
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- Конец блока поставщика -->
+            @endif
+
+            @if(!empty($client))
+            <!-- Блок клиента -->
+            <div class="tabs-panel" id="content-panel-client">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-6 cell">
+                        <label>Комментарий к клиенту
+                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$client->description, 'required'=>''])
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- Конец блока клиента -->
+            @endif
+
+
             <!-- Реквизиты -->
             <div class="tabs-panel" id="content-panel-2">
                 <div class="grid-x grid-padding-x">
@@ -93,42 +172,37 @@
                             @include('includes.inputs.okpo', ['value'=>$company->okpo, 'name'=>'okpo', 'required'=>''])
                         </label>
                     </div>
-                </div>
-            </div>
-            <!-- Конец реквизиты -->
 
-
-
-            <!-- Банковские реквизиты -->
-            <div class="tabs-panel" id="content-panel-3">
-                <div class="grid-x grid-padding-x">
-                    <div class="small-12 cell" id="bank-accounts-list">
+                     <div class="small-12 cell" id="bank-accounts-list">
 
                         {{-- Подключаем банковские аккаунты --}}
                         @include('includes.bank_accounts.fieldset', ['company' => $company])
 
-                    </div>
+                    </div>   
+                                
                 </div>
-            </div>
-            <!-- Конец банковские реквизиты -->
 
+
+
+            </div>
+            <!-- Конец реквизиты -->
 
             <!-- Настройки -->
             <div class="tabs-panel" id="content-panel-5">
                 <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-6 cell">
+                    <div class="small-12 large-6 cell">
                         <label>Алиас
                             @include('includes.inputs.alias', ['value'=>$company->alias, 'name'=>'alias', 'required'=>''])
                         </label>
                     </div>
+                    <div class="small-12 large-6 cell">
+                    </div>
 
                     @include('includes.scripts.class.checkboxer')
 
-                    <div class="small-12 medium-12 cell checkbox checkboxer">
-                       
+                    <div class="small-12 large-6 cell checkbox checkboxer">
                         @include('includes.scripts.class.checkboxer')
                         @include('includes.inputs.checker', ['entity' => $company, 'model'=>'ServicesType', 'relation'=>'services_types', 'title'=>'Типы услуг'])
-
                     </div>
 
                     {{-- Чекбоксы управления --}}
@@ -159,5 +233,21 @@
             {{ Form::submit($submitButtonText, ['class'=>'button']) }}
         </div>
     </div>
+
+    <div class="small-12 medium-5 large-7 cell text-left tabs-margin-top">
+        <div class="grid-x grid-padding-x">
+
+            @if(!empty($dealer))
+            <!-- Блок дилера -->
+            <div class="small-12 medium-6 cell">
+
+            </div>
+            <!-- Конец блока дилера -->
+            @endif
+
+        </div>
+    </div>
+
+
 </div>
 

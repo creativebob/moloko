@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Traits;
+use App\Company;
 
 trait CompanyControllerTrait
 {
@@ -10,7 +11,7 @@ trait CompanyControllerTrait
         $company = new Company;
 
         // Новые данные
-        $company->name = $request->name;
+        $company->name = $request->company_name ?? $request->name;
         $company->alias = $request->alias;
         $company->email = $request->email;
         $company->legal_form_id = $request->legal_form_id;

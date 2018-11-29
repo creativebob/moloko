@@ -16,7 +16,7 @@
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
-			url: '/admin/add_client',
+			url: '/admin/create_client',
 			type: 'PATCH',
 			// data: {lead_id: lead_id},
 			data: $('#form-lead').serialize(),
@@ -32,24 +32,26 @@
 	});
 
 
-	// // При нажатии на кнопку пишем в базу и отображаем
-	// $(document).on('click', '#submit-add-challenge', function(event) {
-	// 	event.preventDefault();
+	// При нажатии на кнопку пишем в базу и отображаем
+	$(document).on('click', '#submit-add-client', function(event) {
 
-	// 	$.ajax({
-	// 		headers: {
-	// 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-	// 		},
-	// 		url: '/admin/challenges',
-	// 		type: "POST",
-	// 		data: $('#form-challenge-add').serialize(),
-	// 		success: function(html){
-	// 			$('.reveal-overlay').remove();
-	// 			$('#challenges-list').html(html);
-	// 			get_challenges();
-	// 		}
-	// 	});
-	// });
+		if(submitAjax('#form-client-add')){
+
+			$.ajax({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				},
+				url: '/admin/store_client',
+				type: "POST",
+				data: $('#form-client-add').serialize(),
+				success: function(html){
+					alert(html);
+					// $('#challenges-list').html(html);
+					// get_challenges();
+				}
+			});
+		}
+	});
 
 	// // Выполнение задачи
 	// $(document).on('click', '.finish-challenge', function(event) {

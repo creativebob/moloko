@@ -214,7 +214,7 @@ class CompanyController extends Controller
     }
 
 
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -229,18 +229,13 @@ class CompanyController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $company);
 
-        if ($company) {
+        if($company) {
 
             $user = $request->user();
-
-            // Скрываем бога
             $user_id = hideGod($user);
 
             $company->editor_id = $user_id;
             $company->save();
-
-            // Удаляем локацию
-            // $company->location()->delete();
 
             $company = Company::destroy($id);
 
@@ -267,7 +262,9 @@ class CompanyController extends Controller
         if(!isset($company)) {
             return 0;
         } else {
-            return $company->name;};
+            return $company->name;
         }
     }
+
+}
 

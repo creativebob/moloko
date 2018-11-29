@@ -97,9 +97,10 @@ class Staffer extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
+    // Получаем все графики на сотрудника
     public function schedules()
     {
-        return $this->belongsToMany('App\Schedule', 'schedule_entity', 'entity_id', 'schedule_id')->where('entity', 'staff');
+        return $this->morphToMany('App\Schedule', 'schedule_entities')->withPivot('mode');
     }
 
 }

@@ -139,6 +139,11 @@ class ManufacturerController extends Controller
 
         $manufacturer->company_id = $request->user()->company->id;
         $manufacturer->manufacturer_id = $company->id;
+
+        // Запись информации по производителю:
+        // ...
+
+
         $manufacturer->save();
 
         return redirect('/admin/manufacturers');
@@ -167,7 +172,10 @@ class ManufacturerController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $manufacturer = Manufacturer::moderatorLimit($answer)->findOrFail($id);
+        $manufacturer = Manufacturer::moderatorLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $manufacturer);
@@ -179,7 +187,9 @@ class ManufacturerController extends Controller
         $answer_company = operator_right('company', false, getmethod(__FUNCTION__));
 
         $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
-        ->moderatorLimit($answer_company)
+        ->moderatorLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
         ->findOrFail($company_id);
 
         $this->authorize(getmethod(__FUNCTION__), $company);
@@ -198,7 +208,10 @@ class ManufacturerController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $manufacturer = Manufacturer::moderatorLimit($answer)->findOrFail($id);
+        $manufacturer = Manufacturer::moderatorLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $manufacturer);
@@ -216,6 +229,12 @@ class ManufacturerController extends Controller
 
         // Отдаем работу по редактировнию компании трейту
         $this->updateCompany($request, $manufacturer->company);
+
+        // Обновление информации по производителю:
+        // ...
+        
+        
+        $manufacturer->save();
 
         return redirect('/admin/manufacturers');
     }

@@ -274,7 +274,7 @@ if($lead->manager_id == 1){
 
 @include('includes.scripts.notes', ['id' => $lead->id, 'model' => 'Lead'])
 @include('includes.scripts.challenges', ['id' => $lead->id, 'model' => 'Lead'])
-@include('includes.scripts.contragents', ['id' => $lead->id])
+@include('includes.contragents.contragents', ['id' => $lead->id])
 @endsection
 
 

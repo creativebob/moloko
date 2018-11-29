@@ -11,9 +11,9 @@
             <fieldset>
                 <legend>
                     <div class="switch alt-switch tiny">
-                        {{ Form::checkbox('private_status', 1, $lead->private_status, ['id'=>'yes-no', 'class' => 'switch-input']) }}
+                        {{ Form::checkbox('private_status', 2, $lead->private_status, ['id'=>'private_status', 'class' =>'switch-input']) }}
 
-                        <label class="switch-paddle" for="yes-no" data-toggle="lead-info-company lead-info-private lead-info-bank">
+                        <label class="switch-paddle" for="private_status" data-toggle="lead-info-company lead-info-private lead-info-bank">
                             <span class="show-for-sr">Компания?</span>
                             <span class="switch-active" aria-hidden="true" title="Физическое лицо"></span>
                             <span class="switch-inactive" aria-hidden="true" title="Юридическое лицо"></span>
@@ -34,10 +34,35 @@
                     <script>
                         $('#wrap-company-private').on('on.zf.toggler', function() {
                             $('#title-switch-company-private').text("Компания");
+                            $('#private_status').val(1);
+
+                            // Включаем обязательное заполнение
+                            $('[name=company_name]').attr('required', 'required');
+                            $('[name=inn]').attr('required', 'required');
+
+                            $('[name=passport_number]').removeAttr('required');
+                            $('[name=passport_date]').removeAttr('required');
+                            $('[name=passport_released]').removeAttr('required');
+                            // alert('На компанию');
+                            // $('.passport_address').removeAttr('required');
+                            
                         });
 
                         $('#wrap-company-private').on('off.zf.toggler', function() {
                             $('#title-switch-company-private').text("Физическое лицо");
+                            $('#private_status').val(2);
+
+                            // Включаем обязательное заполнение
+                            $('[name=passport_number]').attr('required', 'required');
+                            $('[name=passport_date]').attr('required', 'required');
+                            $('[name=passport_released]').attr('required', 'required');
+                            // $('.passport_address').attr('required', 'required');
+
+                            // Выключаем обязательное заполнение
+                            $('[name=company_name]').removeAttr('required');
+                            $('[name=inn]').removeAttr('required');
+                            // alert('На юзера');
+
                         });
                     </script>
 
@@ -49,10 +74,10 @@
                             @include('includes.inputs.name', ['name'=>'first_name', 'value'=>$new_user->first_name, 'required'=>'required'])
                         </label>
                         <label>Отчество
-                            @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$new_user->patronymic, 'required'=>''])
+                            @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$new_user->patronymic, 'required'=>'required'])
                         </label>
                         <label>Почта
-                            @include('includes.inputs.email', ['value'=>$new_user->email, 'name'=>'email', 'required'=>''])
+                            @include('includes.inputs.email', ['value'=>$new_user->email, 'name'=>'email', 'required'=>'required'])
                         </label> 
                     </div>
 
@@ -81,19 +106,19 @@
                         <div class="grid-x grid-padding-x">
                           <div class="small-12 cell">
                             <label>Паспорт (серия, номер)
-                              @include('includes.inputs.passport_number', ['name'=>'passport_number', 'value'=>$new_user->passport_number])
+                              @include('includes.inputs.passport_number', ['name'=>'passport_number', 'value'=>$new_user->passport_number, 'required'=>'required'])
                             </label>
                           </div>
                           <div class="small-12 cell">
                             <label>Когда выдан
-                              @include('includes.inputs.date', ['name'=>'passport_date', 'value'=>$new_user->passport_date, 'required'=>''])
+                              @include('includes.inputs.date', ['name'=>'passport_date', 'value'=>$new_user->passport_date, 'required'=>'required'])
                             </label>
                           </div>
                         </div>
                         <div class="grid-x grid-padding-x">
                           <div class="small-12 cell">
                             <label>Кем выдан
-                              {{ Form::text('passport_released', $new_user->passport_released, ['class'=>'varchar-field passport-released-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё -\.]{60}']) }}
+                              {{ Form::text('passport_released', $new_user->passport_released, ['class'=>'varchar-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'required'=>'required']) }}
                             </label>
                           </div>
                         </div>

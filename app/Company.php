@@ -200,6 +200,12 @@ class Company extends Model
 
     }
 
+    // Получаем компании, где мы клиент
+    public function we_clients()
+    {
+        return $this->hasMany('App\Client', 'client_id');
+    }
+
     // Получаем компании, где мы поставщик
     public function we_suppliers()
     {

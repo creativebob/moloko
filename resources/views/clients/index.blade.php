@@ -46,7 +46,7 @@
       <tbody data-tbodyId="1" class="tbody-width">
         @if(!empty($clients))
         @foreach($clients as $client)
-        <tr class="item @if($client->moderation == 1)no-moderation @endif" id="clients-{{ $client->id }}" data-name="{{ $client->contragent->name }}">
+        <tr class="item @if($client->moderation == 1)no-moderation @endif" id="clients-{{ $client->id }}" data-name="{{ $client->client->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="dealer_id" id="check-{{ $client->id }}"
@@ -63,26 +63,26 @@
 
             @if($client->contragent_type == 'App/User')
               <a href="clients/{{ $client->id }}/edit">
-                {{ $client->contragent->name }}
+                {{ $client->client->name }}
               </a>
-            @else($client->contragent_type == 'App/Company')
+            @else($client->client_type == 'App/Company')
               <a href="clients/{{ $client->id }}/edit">
-                {{ $client->contragent->name }}
+                {{ $client->client->name }}
               </a>
             @endif
 
           </td>
 
-          <td class="td-address">@if(!empty($client->contragent->location->address)){{ $client->contragent->location->address }}@endif </td>
-          <td class="td-phone">{{ isset($client->contragent->main_phone->phone) ? decorPhone($client->contragent->main_phone->phone) : 'Номер не указан' }}</td>
+          <td class="td-address">@if(!empty($client->client->location->address)){{ $client->client->location->address }}@endif </td>
+          <td class="td-phone">{{ isset($client->client->main_phone->phone) ? decorPhone($client->client->main_phone->phone) : 'Номер не указан' }}</td>
           
-          {{--
-          <td class="td-count-orders">{{ $client->orders_count or ' ... ' }} </td>
-          <td class="td-badget">{{ $client->badget_count or ' ... ' }} </td>
-          <td class="td-time-frame">{{ $client->time_frame or ' ... ' }} </td>
-          <td class="td-loyalty">{{ $client->loyalty or ' ... ' }} </td>
-          <td class="td-access">{{ $client->access or ' ... ' }} </td>
-          --}}
+
+          <td class="td-count-orders">{{-- $client->orders_count or ' ... ' --}} </td>
+          <td class="td-badget">{{-- $client->badget_count or ' ... ' --}} </td>
+          <td class="td-time-frame">{{-- $client->time_frame or ' ... ' --}} </td>
+          <td class="td-loyalty">{{-- $client->loyalty or ' ... ' --}} </td>
+          <td class="td-access">{{-- $client->access or ' ... ' --}} </td>
+
 
           {{-- Элементы управления --}}
           @include('includes.control.table-td', ['item' => $client])

@@ -170,7 +170,6 @@ class UserController extends Controller
         // Добавляем локацию
         $user->location_id = create_location($request);
 
-        $user->orgform_status = $request->orgform_status;
         $user->user_inn = $request->inn;
 
         $user->passport_address = $request->passport_address;
@@ -203,18 +202,6 @@ class UserController extends Controller
         if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
         $user->filial_id = $filial_id;
 
-        // Создаем папку в файловой системе
-        // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'avatars';
-        // Storage::makeDirectory($link_for_folder);
-
-        // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'photos';
-        // Storage::makeDirectory($link_for_folder);
-
-        // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'video';
-        // Storage::makeDirectory($link_for_folder);
-
-        // $link_for_folder = 'public/companies/' . $company_id . '/'. $filial_id . '/users/' . $user->id . 'documents';
-        // Storage::makeDirectory($link_for_folder);
 
         $user->save();
 
