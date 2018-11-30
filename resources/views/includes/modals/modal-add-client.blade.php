@@ -74,6 +74,9 @@
                         <label>Отчество
                             @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$new_user->patronymic, 'required' => true])
                         </label>
+                      <label>Телефон
+                        @include('includes.inputs.phone', ['value' => isset($new_user->main_phone->phone) ? $new_user->main_phone->phone : null, 'name'=>'main_phone', 'required' => true, 'id' => 'main-phone'])
+                      </label>
                         <label>Почта
                             @include('includes.inputs.email', ['value'=>$new_user->email, 'name'=>'email', 'required' => true])
                         </label>

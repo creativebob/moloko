@@ -45,9 +45,10 @@
 				type: "POST",
 				data: $('#form-client-add').serialize(),
 				success: function(html){
-					alert(html);
-					// $('#challenges-list').html(html);
-					// get_challenges();
+					// alert(html);
+		      		// $('#listing-bank-account').append(html);
+					$('#add-client').foundation('close');
+					$('#add-client').remove();
 				}
 			});
 		}
