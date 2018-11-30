@@ -331,7 +331,7 @@ class RawController extends Controller
         ->authors($answer_raws_categories)
         ->systemItem($answer_raws_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -357,7 +357,7 @@ class RawController extends Controller
         ->systemItem($answer_catalogs) // Фильтр по системным записям
         ->whereSite_id(2)
         // ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
         // dd($catalogs);
@@ -386,7 +386,7 @@ class RawController extends Controller
             }
 
             // Отрисовываем option's
-            if ($item['category_status'] == 1) {
+            if ($item['parent_id'] == null) {
                 $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
             } else {
                 $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
