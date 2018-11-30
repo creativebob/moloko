@@ -155,7 +155,6 @@ class GoodsCategoryController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_properties = operator_right('properties', false, 'index');
-
         $answer_metrics = operator_right('metrics', false, 'index');
 
         $properties = Property::moderatorLimit($answer_properties)
@@ -180,34 +179,11 @@ class GoodsCategoryController extends Controller
         if ($request->ajax()) {
             return view('goods_categories.metrics.properties_form', ['properties' => $properties,  'set_status' => $request->set_status, 'goods_category' => $goods_category]);
         }
-
         // dd($properties_list);
-
-        // if ($goods_category->type == 'goods') {
-        //     if ($goods_category->status == 'one') {
-        //         $type = ['raws'];
-        //     } else {
-        //         $type = ['goods'];
-        //     }
-        // }
-
-        // if ($goods_category->type == 'raws') {
-        //     $type = [];
-        // }
-
-        // if ($goods_category->type == 'goods') {
-        //     if ($goods_category->status == 'one') {
-        //         $type = ['staff'];
-        //     } else {
-        //         $type = ['goods'];
-        //     }
-        // }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_raws_categories = operator_right('raws_categories', false, 'index');
-
         $answer_raws_products = operator_right('raws_products', false, 'index');
-
         $answer_raws = operator_right('raws', false, 'index');
 
         $raws_articles = RawsArticle::with(['raws_product' => function ($q) {
@@ -231,93 +207,19 @@ class GoodsCategoryController extends Controller
         // ->toArray();
         // dd($raws_articles);
 
-        // $raws_categories = RawsCategory::with(['raws_products' => function ($q) {
-        //     $q->with(['raws_articles' => function ($q) {
-        //         $q->with(['raws' => function ($q) {
-        //             $q->select('id');
-        //         }])->select('id', 'name', 'raws_product_id');
-        //     }])->select('id', 'name', 'raws_category_id');
-        // }])
-        // ->select('id', 'name')
-        // ->whereHas('raws_products', function ($q) {
-        //     $q->whereHas('raws_articles', function ($query) {
-        //         $query->whereHas('raws', function ($query) {
-        //             $query->whereNull('draft');
-        //         });
-        //     // ->moderatorLimit($answer_raws)
-        //     // ->companiesLimit($answer_raws)
-        //     // ->authors($answer_raws)
-        //     // ->systemItem($answer_raws) // Фильтр по системным записям
-        //     // ->moderatorLimit($answer_raws_products)
-        //     // ->companiesLimit($answer_raws_products)
-        //     // ->authors($answer_raws_products)
-        //     // ->systemItem($answer_raws_products); // Фильтр по системным записям
-        //     });
-        // })
-
-        // // ->withCount('raws_products')
-        // ->moderatorLimit($answer_raws_categories)
-        // ->companiesLimit($answer_raws_categories)
-        // ->authors($answer_raws_categories)
-        // ->systemItem($answer_raws_categories) // Фильтр по системным записям
-        // ->get()
-        // ->keyBy('id')
-        // ->toArray();
-
-        // dd($raws_categories);
-
-
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        // $composition_categories_list = get_parents_tree($raws_categories, null, null, null);
-        // dd($composition_categories_list);
-
         $composition_list = [
             'name' => 'Сырье',
             'alias' => 'raws',
             'composition_categories' => $raws_articles,
         ];
         // dd($composition_list);
-        // dd($goods_modes_list);
-        // $grouped_goods_types = $goods_modes->groupBy('alias');
-        // dd($grouped_goods_types);
+
 
         // Инфо о странице
         $page_info = pageInfo('goods_categories');
 
-        if ($goods_category->category_status == 1) {
+        return view('goods_categories.edit', compact('goods_category', 'page_info', 'properties', 'properties_list', 'composition_list'));
 
-            // Выбираем все типы без проверки, так как они статичны, добавляться не будут
-            // $goods_types_list = goodsType::get()->pluck('name', 'id');
-
-            // dd($goods_category);
-
-            // echo $id;
-            // Меняем категорию
-            return view('goods_categories.edit', compact('goods_category', 'page_info', 'properties', 'properties_list', 'composition_list', 'units_categories_list', 'units_list'));
-        } else {
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
-
-            // Главный запрос
-            $goods_categories = GoodsCategory::moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
-            ->where('id', $request->category_id)
-            ->orWhere('category_id', $request->category_id)
-            ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
-            ->keyBy('id')
-            ->toArray();
-
-            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $goods_categories_list = get_select_tree($goods_categories, $goods_category->parent_id, null, $goods_category->id);
-
-            // dd($goods_category);
-
-            return view('goods_categories.edit', compact('goods_category', 'goods_categories_list', 'page_info', 'properties', 'properties_list', 'composition_list', 'units_categories_list', 'units_list'));
-        }
     }
 
     public function update(GoodsCategoryRequest $request, $id)

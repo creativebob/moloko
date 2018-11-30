@@ -650,15 +650,15 @@ class LeadController extends Controller
 
 
         // // $all_categories_list = null;
-        $goods_categories_list = GoodsCategory::where('category_status', 1)->get()->mapWithKeys(function ($item) {
+        $goods_categories_list = GoodsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
             return ['goods-' . $item->id => $item->name];
         })->toArray();
 
-        $services_categories_list = ServicesCategory::where('category_status', 1)->get()->mapWithKeys(function ($item) {
+        $services_categories_list = ServicesCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
             return ['service-' . $item->id => $item->name];
         })->toArray();
 
-        $raws_categories_list = RawsCategory::where('category_status', 1)->get()->mapWithKeys(function ($item) {
+        $raws_categories_list = RawsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
             return ['raw-' . $item->id => $item->name];
         })->toArray();
 

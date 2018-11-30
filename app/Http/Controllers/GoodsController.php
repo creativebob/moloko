@@ -427,7 +427,7 @@ class GoodsController extends Controller
         ->authors($answer_goods_categories)
         ->systemItem($answer_goods_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
         // dd($goods_categories);
@@ -457,7 +457,7 @@ class GoodsController extends Controller
         ->companiesLimit($answer_catalogs)
         ->systemItem($answer_catalogs) // Фильтр по системным записям
         ->whereSite_id(2)
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
         // dd($catalogs);
@@ -486,7 +486,7 @@ class GoodsController extends Controller
             }
 
             // отрисовываем option's
-            if ($item['category_status'] == 1) {
+            if ($item['parent_id'] == null) {
                 $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
             } else {
                 $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
