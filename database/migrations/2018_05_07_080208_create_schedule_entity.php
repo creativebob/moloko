@@ -15,11 +15,10 @@ class CreateScheduleEntity extends Migration
             $table->integer('schedule_id')->nullable()->unsigned()->comment('Id графика работ (расписания)');
             $table->foreign('schedule_id')->references('id')->on('schedules');
             
-            $table->integer('entity_id')->nullable()->unsigned()->comment('Id сущности связанной с расписанием');
-            $table->string('entity')->index()->comment('Сущность обьекта');
+            $table->integer('schedule_entities_id')->nullable()->unsigned()->comment('Id сущности связанной с расписанием');
+            $table->string('schedule_entities_type')->index()->comment('Сущность обьекта');
 
             $table->string('mode')->index()->nullable()->comment('Режим');
-
             $table->timestamps();
         });
     }

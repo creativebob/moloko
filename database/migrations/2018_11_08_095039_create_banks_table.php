@@ -15,7 +15,7 @@ class CreateBanksTable extends Migration
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
             // $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('contragent_id')->nullable()->unsigned()->comment('ID контрагента');
+            $table->integer('bank_id')->nullable()->unsigned()->comment('ID контрагента');
             // $table->foreign('contragent_id')->references('id')->on('companies');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');

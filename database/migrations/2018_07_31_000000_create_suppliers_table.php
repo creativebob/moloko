@@ -19,10 +19,8 @@ class CreateSuppliersTable extends Migration
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('contragent_id')->nullable()->unsigned()->comment('ID контрагента');
-            $table->foreign('contragent_id')->references('id')->on('companies');
-
-            $table->integer('manufacturer_status')->nullable()->unsigned()->comment('Статус производителя (Null или 1)');
+            $table->integer('supplier_id')->nullable()->unsigned()->comment('ID контрагента');
+            $table->foreign('supplier_id')->references('id')->on('companies');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
