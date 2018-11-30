@@ -97,8 +97,4 @@ class Sector extends Model
     }
 
 
-
-
-
-
 }

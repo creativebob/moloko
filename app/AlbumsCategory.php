@@ -82,4 +82,15 @@ class AlbumsCategory extends Model
     {
         return $this->moderatorLimit($answer)->findOrFail($id);
     }
+
+    public function getIndexCount($answer, $request)
+    {
+        return $this->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer)
+        ->booklistFilter($request)
+        ->count();
+    }
 }

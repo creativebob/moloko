@@ -64,7 +64,7 @@ class RawsCategoryController extends Controller
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => count($this->raws_category->getIndex($answer, $request)),
+                    'count' => $this->raws_category->getIndexCount($answer, $request),
                     'id' => $request->id,
                     'nested' => 'raws_products_count',
                 ]
