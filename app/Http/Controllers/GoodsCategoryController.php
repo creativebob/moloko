@@ -59,7 +59,7 @@ class GoodsCategoryController extends Controller
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => $this->goods_category->getIndexCount($answer, $request),
+                    'count' => count($this->goods_category->getIndex($answer, $request)),
                     'id' => $request->id,
                     'nested' => 'goods_products_count',
                 ]

@@ -133,7 +133,6 @@ $drop = 1;
 
 @isset ($count)
 <script type="text/javascript">
-    let count = '{{ $count }}';
-    $('.content-count').text(count);
+    $('.content-count').text('{{ $count }}');
 </script>
 @endisset

@@ -4,7 +4,7 @@ namespace App\Http\ViewComposers;
 
 use Illuminate\View\View;
 
-class ViewMenuComposer
+class MenuViewComposer
 {
 	public function compose(View $view)
 	{

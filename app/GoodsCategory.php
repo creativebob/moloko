@@ -120,18 +120,17 @@ class GoodsCategory extends Model
 
     public function getItem($answer, $id)
     {
-        return $this->moderatorLimit($answer)->findOrFail($id);
+        return $this->moderatorLimit($answer)->withCount('goods_products')->findOrFail($id);
     }
 
-    public function getIndexCount($answer, $request)
-    {
-        return $this->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->template($answer)
-        ->booklistFilter($request)
-        ->count();
-    }
+    // public function getIndexCount($answer, $request)
+    // {
+    //     return $this->moderatorLimit($answer)
+    //     ->companiesLimit($answer)
+    //     ->authors($answer)
+    //     ->systemItem($answer)
+    //     ->template($answer)
+    //     ->count();
+    // }
 
 }

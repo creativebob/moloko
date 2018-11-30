@@ -57,14 +57,13 @@ class RawsCategoryController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            $id = $request->id;
             return view('includes.menu_views.category_list',
                 [
                     'items' => $this->raws_category->getIndex($answer, $request),
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => $this->raws_category->getIndexCount($answer, $request),
+                    'count' => count($this->raws_category->getIndex($answer, $request)),
                     'id' => $request->id,
                     'nested' => 'raws_products_count',
                 ]
@@ -115,10 +114,8 @@ class RawsCategoryController extends Controller
         $raws_category->save();
 
         if ($raws_category) {
-
             // Переадресовываем на index
             return redirect()->action('RawsCategoryController@index', ['id' => $raws_category->id]);
-
         } else {
             $result = [
                 'error_status' => 1,
