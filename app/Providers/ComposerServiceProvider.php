@@ -19,7 +19,7 @@ use App\Http\ViewComposers\CategoriesSelectComposer;
 use App\Http\ViewComposers\GoodsModesComposer;
 use App\Http\ViewComposers\RawsModesComposer;
 
-use App\Http\ViewComposers\ViewMenuComposer;
+use App\Http\ViewComposers\MenuViewComposer;
 // use App\Http\ViewComposers\SectorsComposer;
 use App\Http\ViewComposers\GoodsCategoriesComposer;
 // use App\Http\ViewComposers\AlbumsCategoriesComposer;
@@ -49,7 +49,7 @@ class ComposerServiceProvider extends ServiceProvider
 
 
         // Стандартные шаблоны типа "меню"
-        view()->composer('includes.menu_views.category_list', ViewMenuComposer::class);
+        view()->composer('includes.menu_views.category_list', MenuViewComposer::class);
         // view()->composer('includes.selects.sectors', SectorsComposer::class);
         view()->composer('includes.selects.goods_categories', GoodsCategoriesComposer::class);
         // view()->composer('includes.selects.albums_categories', AlbumsCategoriesComposer::class);

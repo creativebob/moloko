@@ -311,11 +311,6 @@ Route::any('/catalog_products/add_product', 'CatalogProductController@add_produc
 Route::any('/albums_categories', 'AlbumsCategoryController@index')->middleware('auth');
 // Основные методы
 Route::resource('/albums_categories', 'AlbumsCategoryController')->middleware('auth');
-// Проверка на существование категории альбомов
-Route::post('/albums_category_check', 'AlbumsCategoryController@ajax_check')->middleware('auth');
-// Select категорий альбомов
-Route::post('/albums_categories_list', 'AlbumsCategoryController@albums_categories_list')->middleware('auth');
-
 
 // --------------------------------------- Альбомы -----------------------------------------------
 
@@ -392,8 +387,6 @@ Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middlew
 Route::any('/raws_categories', 'RawsCategoryController@index')->middleware('auth');
 // Основные методы
 Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth');
-// Проверка на существование категории продукции
-Route::post('/raws_category_check', 'RawsCategoryController@ajax_check')->middleware('auth');
 
 
 // --------------------------------- Продукция сырья --------------------------------------------
@@ -425,8 +418,6 @@ Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('au
 Route::match(['get', 'post'], '/goods_categories/{id}/edit', 'GoodsCategoryController@edit')->middleware('auth');
 // Основные методы
 Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('auth');
-// Проверка на существование
-Route::post('/goods_category_check', 'GoodsCategoryController@ajax_check')->middleware('auth');
 
 // Отображение на сайте
 Route::any('/goods_categories_get_products', 'GoodsCategoryController@ajax_get_products')->middleware('auth');
@@ -504,11 +495,6 @@ Route::post('/service/photos', 'ServiceController@photos')->middleware('auth');
 Route::any('/sectors', 'SectorController@index')->middleware('auth');
 // Основные методы
 Route::resource('/sectors', 'SectorController')->middleware('auth');
-// Проверка на существование сектора
-Route::post('/sector_check', 'SectorController@ajax_check')->middleware('auth');
-// Select секторов
-Route::post('/sectors_list', 'SectorController@sectors_list')->middleware('auth');
-
 
 // --------------------------------------- Компании -----------------------------------------------
 

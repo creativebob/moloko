@@ -51,7 +51,7 @@ class AlbumsCategoryController extends Controller
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => $this->albums_category->getIndexCount($answer, $request),
+                    'count' => count($this->albums_category->getIndex($answer, $request)),
                     'id' => $request->id,
                     'nested' => 'albums_count',
                 ]

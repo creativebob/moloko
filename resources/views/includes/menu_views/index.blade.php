@@ -89,11 +89,9 @@
             var form = $(this).closest('form');
             if (submitAjax(form.attr('id'))) {
                 $(this).prop('disabled', true);
-                var id = form.find('input[name=id]').val();
-
                 // Ajax запрос
                 $.ajax({
-                    url: '/admin/' + entity + '/' + id,
+                    url: '/admin/' + entity + '/' + form.find('input[name=id]').val(),
                     type: "PATCH",
                     data: form.serialize(),
                     success:function(html) {

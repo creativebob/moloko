@@ -57,14 +57,13 @@ class SectorController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            $id = $request->id;
             return view('includes.menu_views.category_list',
                 [
                     'items' => $this->sector->getIndex($answer, $request),
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => $this->sector->getIndexCount($answer, $request),
+                    'count' => count($this->sector->getIndex($answer, $request)),
                     'id' => $request->id,
                     'nested' => 'companies_count',
                 ]
@@ -182,13 +181,13 @@ class SectorController extends Controller
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $sector = $this->sector->getItem(operator_right($answer, $id));
+        $sector = $this->sector->getItem($answer, $id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
 
         // Проверяем содержит ли сектор вложения
-        $sectors_count = $this->class::moderatorLimit($answer)
+        $sectors_count = Sector::moderatorLimit($answer)
         ->whereParent_id($sector->id)
         ->count();
 
@@ -200,7 +199,7 @@ class SectorController extends Controller
             ];
         } else {
 
-            $parent = $sector->parent_id;
+            $parent_id = $sector->parent_id;
 
             // Скрываем бога
             $sector->editor_id = hideGod($request->user());
@@ -210,7 +209,7 @@ class SectorController extends Controller
 
             if ($sector) {
                 // Переадресовываем на index
-                return redirect()->action('SectorController@index', ['id' => $parent]);
+                return redirect()->action('SectorController@index', ['id' => $parent_id]);
             } else {
                 $result = [
                     'error_status' => 1,
