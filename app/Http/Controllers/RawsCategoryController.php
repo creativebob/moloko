@@ -250,16 +250,16 @@ class RawsCategoryController extends Controller
             ->where('id', $request->category_id)
             ->orWhere('category_id', $request->category_id)
             ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
+            ->get(['id', 'name', 'parent_id'])
             ->keyBy('id')
             ->toArray();
 
             // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $raws_categories_list = get_select_tree($raws_categories, $raws_category->parent_id, null, $raws_category->id);
+            // $raws_categories_list = get_select_tree($raws_categories, $raws_category->parent_id, null, $raws_category->id);
 
             // dd($raws_category);
 
-            return view('raws_categories.edit', compact('raws_category', 'raws_categories_list', 'page_info', 'properties', 'properties_list', 'raws_category_metrics', 'raws_modes_list', 'units_categories_list', 'units_list'));
+            return view('raws_categories.edit', compact('raws_category', 'page_info', 'properties', 'properties_list', 'raws_category_metrics', 'raws_modes_list', 'units_categories_list', 'units_list'));
         }
     }
 
