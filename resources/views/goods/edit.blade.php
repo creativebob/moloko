@@ -134,7 +134,7 @@
                         $metric_relation = ($cur_goods->goods_article->goods_product->set_status == 'one') ? 'one_metrics' : 'set_metrics';
                         @endphp
 
-                        @if (count($cur_goods->goods_article->metrics) || count($cur_goods->goods_article->goods_product->goods_category->$metric_relation))
+                        @if (isset($cur_goods->goods_article->metrics) || isset($cur_goods->goods_article->goods_product->goods_category->$metric_relation))
 
                         @include('includes.scripts.class.metric_validation')
 
@@ -145,7 +145,7 @@
                             @if ($cur_goods->goods_article->draft == 1)
 
                             <div id="metrics-list">
-                                @if (count($cur_goods->goods_article->metric))
+                                @if (isset($cur_goods->goods_article->metric))
 
                                 {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
                                 @isset ($cur_goods->goods_article->metrics)
@@ -317,7 +317,7 @@
                                 @if ($cur_goods->goods_article->draft == 1)
 
                                 {{-- У товара есть значения состава, берем их --}}
-                                @if (count($cur_goods->goods_article->$composition_relation))
+                                @if (isset($cur_goods->goods_article->$composition_relation))
 
                                 @foreach ($cur_goods->goods_article->$composition_relation as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
@@ -326,7 +326,7 @@
                                 @else
 
                                 {{-- В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются --}}
-                                @if (($composition_relation != 'set_compositions') && count($cur_goods->goods_article->goods_product->goods_category->compositions))
+                                @if (($composition_relation != 'set_compositions') && isset($cur_goods->goods_article->goods_product->goods_category->compositions))
                                 @foreach ($cur_goods->goods_article->goods_product->goods_category->compositions as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
                                 @endforeach
@@ -356,7 +356,7 @@
 
                         @if ($cur_goods->goods_article->goods_product->set_status == 'one')
 
-                        @if (count($cur_goods->goods_article->$composition_relation))
+                        @if (isset($cur_goods->goods_article->$composition_relation))
                         {{ Form::model($cur_goods->goods_article, []) }}
                         @else
                         {{ Form::model($cur_goods->goods_article->goods_product->goods_category, []) }}
