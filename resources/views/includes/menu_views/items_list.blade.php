@@ -3,7 +3,7 @@
     <a class="medium-link @if($drop == 0) link-small @endif">
         <div class="icon-open sprite"></div>
         <span class="medium-item-name">{{ $item->name }}</span>
-        <span class="number">{{ count($item->childrens) }}</span>
+        <span class="number">{{ isset($item->childrens) ? count($item->childrens) : 0 }}</span>
     </a>
     @else
     <a class="medium-as-last-link">
