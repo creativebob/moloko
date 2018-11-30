@@ -64,7 +64,7 @@ class SectorController extends Controller
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => count($this->sector->getIndex($answer, $request)),
+                    'count' => $this->sector->getIndexCount($answer, $request),
                     'id' => $request->id,
                     'nested' => 'companies_count',
                 ]
@@ -182,7 +182,7 @@ class SectorController extends Controller
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $sector = $this->sector->getItem(operator_right($answer, $id);
+        $sector = $this->sector->getItem(operator_right($answer, $id));
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
