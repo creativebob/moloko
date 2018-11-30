@@ -29,7 +29,7 @@
             <li class="tabs-title"><a data-tabs-target="properties" href="#properties">Свойства</a></li>
             <li class="tabs-title"><a data-tabs-target="set-properties" href="#set-properties">Свойства (Набор)</a></li>
             <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
-            <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
+            {{-- <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li> --}}
         </ul>
     </div>
 </div>
@@ -72,7 +72,8 @@
 
                             <div class="small-12 medium-6 cell">
                                 <label>Название категории
-                                    @include('includes.inputs.name', ['check' => 'check-field', 'required' => true])
+                                    @include('includes.inputs.name', ['check' => true, 'required' => true])
+                                    <div class="item-error">Такая категория уже существует!</div>
                                 </label>
                             </div>
                         </div>

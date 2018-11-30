@@ -1,4 +1,3 @@
-
 <div class="grid-x grid-padding-x align-center modal-content inputs">
 	<div class="small-10 cell">
 
@@ -28,7 +27,6 @@
 		{{ Form::submit($submit_text, ['class'=>'button modal-button '.$class]) }}
 	</div>
 </div>
-
 
 <script type="text/javascript">
 	$.getScript("/crm/js/jquery.maskedinput.js");

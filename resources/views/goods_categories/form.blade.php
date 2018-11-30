@@ -1,6 +1,5 @@
-
-<div class="grid-x grid-padding-x modal-content inputs">
-	<div class="small-10 small-offset-1 cell">
+<div class="grid-x grid-padding-x align-center modal-content inputs">
+	<div class="small-10 cell">
 
 		@isset($parent_id)
 		<label>Расположение
@@ -25,10 +24,9 @@
 
 <div class="grid-x align-center">
 	<div class="small-6 medium-4 cell">
-		{{ Form::submit($submit_text, ['data-close', 'class'=>'button modal-button '.$class]) }}
+		{{ Form::submit($submit_text, ['class'=>'button modal-button '.$class]) }}
 	</div>
 </div>
-
 
 <script type="text/javascript">
 	$.getScript("/crm/js/jquery.maskedinput.js");

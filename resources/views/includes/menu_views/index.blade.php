@@ -46,10 +46,10 @@
 
 @section('scripts')
 <script type="text/javascript">
+    // Определяем сущьность для работы
+    var entity = $('#content').data('entity-alias');
+
     $(function() {
-
-        var entity = $('#content').data('entity-alias');
-
         // ----------- Добавление -------------
         $(document).on('click', '[data-open="modal-create"]', function() {
             $.get('/admin/' + entity + '/create', {
