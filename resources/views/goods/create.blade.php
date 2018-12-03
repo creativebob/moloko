@@ -18,20 +18,15 @@
 					</label>
 				</div>
 
-				<div class="small-9 cell">
+				<div id="mode" class="small-12 cell relative">
+					@include('goods.create_modes.mode_default')
+				</div>
+
+				<div class="small-12 cell">
 					<label>Название товара
 						@include('includes.inputs.string', ['value' => null, 'name' => 'name', 'required' => true])
 						<div class="item-error">Названия товара и группы товаров не должны совпадать!</div>
 					</label>
-				</div>
-
-				<div class="small-3 cell checkbox set-status">
-					{{ Form::checkbox('set_status', 'set', null, ['id' => 'set-status']) }}
-					<label for="set-status"><span>Набор</span></label>
-				</div>
-
-				<div id="mode" class="small-12 cell relative">
-					@include('goods.create_modes.mode_default')
 				</div>
 
 				<div class="small-12 cell">
@@ -51,6 +46,11 @@
 						{{ Form::number('price') }}
 					</label>
 				</div>
+			</div>
+
+			<div class="small-12 cell checkbox set-status">
+				{{ Form::checkbox('set_status', 'set', null, ['id' => 'set-status']) }}
+				<label for="set-status"><span>Набор</span></label>
 			</div>
 
 			<div class="small-12 cell checkbox">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Goods;
+
 use App\GoodsCategory;
 use App\GoodsMode;
 use App\GoodsProduct;
@@ -19,8 +20,7 @@ use App\GoodsArticle;
 use App\EntitySetting;
 use App\ArticleValue;
 
-// Политика
-use App\Policies\GoodsPolicy;
+use App\Manufacturer;
 
 // Куки
 use Illuminate\Support\Facades\Cookie;
@@ -157,7 +157,8 @@ class GoodsController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        if($goods_categories->count() < 1){
+        // Если нет категорий товаров
+        if ($goods_categories->count() == 0){
 
             // Описание ошибки
             $ajax_error = [];
@@ -165,6 +166,27 @@ class GoodsController extends Controller
             $ajax_error['text'] = "Для начала необходимо создать категории товаров. А уже потом будем добавлять товары. Ок?";
             $ajax_error['link'] = "/admin/goods_categories"; // Ссылка на кнопке
             $ajax_error['title_link'] = "Идем в раздел категорий"; // Текст на кнопке
+
+            return view('ajax_error', compact('ajax_error'));
+        }
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('manufacturers', false, 'index');
+
+        $manufacturers_count = Manufacturer::moderatorLimit($answer)
+        ->systemItem($answer)
+        ->where('company_id', $request->user()->company_id)
+        ->count();
+
+        // Если нет производителей
+        if($manufacturers_count == 0){
+
+            // Описание ошибки
+            // $ajax_error = [];
+            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+            $ajax_error['text'] = "Для начала необходимо добавить производителей. А уже потом будем добавлять товары. Ок?";
+            $ajax_error['link'] = "/admin/manufacturers/create"; // Ссылка на кнопке
+            $ajax_error['title_link'] = "Идем в раздел производителей"; // Текст на кнопке
 
             return view('ajax_error', compact('ajax_error'));
         }
