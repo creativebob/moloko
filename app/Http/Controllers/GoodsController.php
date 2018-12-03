@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Goods;
-
 use App\GoodsCategory;
 use App\GoodsMode;
 use App\GoodsProduct;
@@ -20,7 +19,6 @@ use App\GoodsArticle;
 use App\EntitySetting;
 use App\ArticleValue;
 
-use App\Manufacturer;
 
 // Куки
 use Illuminate\Support\Facades\Cookie;
@@ -157,8 +155,7 @@ class GoodsController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        // Если нет категорий товаров
-        if ($goods_categories->count() == 0){
+        if($goods_categories->count() == 0){
 
             // Описание ошибки
             $ajax_error = [];
@@ -179,7 +176,7 @@ class GoodsController extends Controller
         ->count();
 
         // Если нет производителей
-        if($manufacturers_count == 0){
+        if ($manufacturers_count == 0){
 
             // Описание ошибки
             // $ajax_error = [];

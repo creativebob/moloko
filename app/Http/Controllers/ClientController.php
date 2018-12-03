@@ -195,7 +195,8 @@ class ClientController extends Controller
             $department->location_id = $request->location_id;
             $department->save();
 
-            $new_user = $this->createUser($request);
+            $new_user = new User;
+            $new_user = $this->createUser($request, $new_user);
             // $new_user->update(['company_id'=>]);
 
             $staffer = new Staffer;
@@ -216,10 +217,10 @@ class ClientController extends Controller
 
         } else {
 
-            $new_user = $this->createUser($request);
+            $new_user = new User;
+            $user = $this->createUser($request, $new_user);
 
-            $client = new Client;
-            $client->client_id = $new_user->id;
+            $client->client_id = $user->id;
             $client->client_type = 'App\User';
             $client->company_id = $request->user()->company->id;
             $client->save();

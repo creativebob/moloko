@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Подключаем модели
 use App\Staffer;
+
 use App\Employee;
 use App\Page;
 use App\User;
@@ -19,10 +20,6 @@ use App\Schedule;
 use App\Http\Requests\StafferRequest;
 use App\Http\Requests\EmployeeRequest;
 
-// Политика
-use App\Policies\StafferPolicy;
-use App\Policies\EmployeePolicy;
-
 // Подключаем фасады
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,49 +27,44 @@ use Illuminate\Support\Facades\DB;
 
 class StafferController extends Controller
 {
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'staff';
-    protected $entity_dependence = true;
+
+    // Настройки сконтроллера
+    public function __construct(Staffer $staffer)
+    {
+        $this->middleware('auth');
+        $this->staffer = $staffer;
+        $this->class = Staffer::class;
+        $this->model = 'App\Staffer';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = true;
+    }
+
 
     public function index(Request $request)
     {
 
-        // Включение контроля активного фильтра 
-        $filter_url = autoFilter($request, $this->entity_name);
+        // Включение контроля активного фильтра
+        $filter_url = autoFilter($request, $this->entity_alias);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Staffer::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // dd($answer);
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
-
-        $staff = Staffer::with('filial', 'department', 'user.main_phones', 'position', 'employees')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->booklistFilter($request)
-        ->filter($request, 'position_id')
-        ->filter($request, 'department_id')
-        ->dateIntervalFilter($request, 'date_employment')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->paginate(30);
-
+        $staff = $this->staffer->getIndex($answer, $request);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             'position',             // Должность
             'department',           // Отдел
             'date_interval',        // Дата
@@ -81,21 +73,12 @@ class StafferController extends Controller
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-        $user = $request->user();
-
-        // Смотрим сколько филиалов в компании
-        $company = Company::with(['departments' => function($query) {
-
-            $query->whereFilial_status(1);
-        }])->findOrFail($user->company_id);
-
-        $filials = count($company->departments);
         // dd($staff);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);    
+        $page_info = pageInfo($this->entity_alias);
 
-        return view('staff.index', compact('staff', 'page_info', 'filials', 'filter'));
+        return view('staff.index', compact('staff', 'page_info', 'filter'));
     }
 
     public function create()
@@ -107,40 +90,32 @@ class StafferController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Staffer::class);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
-        $company_id = $user->company_id;
 
-        if ($user->god == 1) {
-            $user_id = 1;
-        } else {
-            $user_id = $user->id;
-        }
+        $staffer = new $this->class;
 
-        // Пишем вакансию в бд
-        $position_id = $request->position_id;
-        $department_id = $request->department_id;
-        $filial_id = $request->filial_id;
+        $staffer->company_id = $user->company_id;
+        $staffer->author_id = hideGod($user);
 
-        $staffer = new Staffer;
-
-        // Пишем ID компании авторизованного пользователя
-        if ($company_id == null) {
-            abort(403, 'Необходимо авторизоваться под компанией');
-        }
-
+        // Системная запись
+        $staffer->system_item = $request->system_item;
         $staffer->display = $request->display;
 
-        $staffer->company_id = $company_id;
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        if ($answer['automoderate'] == false){
+            $staffer->moderation = 1;
+        }
+
         $staffer->position_id = $request->position_id;
         $staffer->department_id = $request->department_id;
         $staffer->filial_id = $request->filial_id;
-        $staffer->author_id = $user_id;
+
         $staffer->save();
 
         if ($staffer) {
@@ -160,14 +135,12 @@ class StafferController extends Controller
     public function edit(Request $request, $id)
     {
 
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $staffer = Staffer::with(['position', 'schedules.worktimes', 'employees' => function($query) {
-            $query->wheredismissal_date(null);
+            $query->whereNull('dismissal_date');
         }])
         ->moderatorLimit($answer)
         ->findOrFail($id);
@@ -219,7 +192,7 @@ class StafferController extends Controller
                     $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
                 } else {
 
-                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);                       
+                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);
                 }
 
                 $worktime[$x]['end'] = $str_worktime_interval;
@@ -231,9 +204,9 @@ class StafferController extends Controller
         }
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
-        return view('staff.edit', compact('staffer', 'users_list', 'page_info', 'worktime'));    
+        return view('staff.edit', compact('staffer', 'page_info', 'worktime'));
     }
 
     public function update(EmployeeRequest $request, $id)
@@ -246,7 +219,7 @@ class StafferController extends Controller
         $user_id = hideGod($user);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, true, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $staffer = Staffer::with('schedules.worktimes', 'position')->moderatorLimit($answer)->findOrFail($id);
@@ -354,9 +327,9 @@ class StafferController extends Controller
                         'author_id' => $user->id,
                     ];
                 }
-                DB::table('role_user')->insert($mass); 
+                DB::table('role_user')->insert($mass);
             }
-        } 
+        }
 
         $employee->save();
 
@@ -380,7 +353,7 @@ class StafferController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, true, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $staffer = Staffer::with('department')->moderatorLimit($answer)->findOrFail($id);
@@ -435,7 +408,7 @@ class StafferController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -462,7 +435,7 @@ class StafferController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [

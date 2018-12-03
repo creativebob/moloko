@@ -16,7 +16,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -124,7 +124,7 @@ class Department extends Model
     public function roles()
     {
         return $this->hasMany('App\Role');
-    } 
+    }
 
     public function users()
     {
@@ -137,9 +137,10 @@ class Department extends Model
         return $this->belongsTo('App\Location');
     }
 
-     public function schedules()
+    // Графики
+    public function schedules()
     {
-        return $this->belongsToMany('App\Schedule', 'schedule_entity', 'entity_id', 'schedule_id')->where('entity', 'departments');
+        return $this->morphToMany('App\Schedule', 'schedule_entities')->withPivot('mode');
     }
 
     // Телефоны
