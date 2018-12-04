@@ -45,21 +45,21 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($orders))
         @foreach($orders as $order)
-        <tr class="item @if(Auth::user()->entity_id == $order->id)active @endif  @if($order->moderation == 1)no-moderation @endif" id="orders-{{ $order->id }}" data-name="{{ $order->name }}">
+        <tr class="item @if($order->moderation == 1)no-moderation @endif" id="orders-{{ $order->id }}" data-name="{{ $order->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $order->id }}"><label class="label-check" for="check-{{ $order->id }}"></label></td>
           <td class="td-name">
 
           <a href="/admin/leads/{{ $order->lead_id }}/edit">
-          {{ $order->client->contragent->name }}
+          {{ $order->client->client->name }}
           <br>
           <span class="tiny-text">
-            {{ $order->client->contragent->location->city->name }}, {{ $order->client->contragent->location->address }}
+            {{ $order->client->client->location->city->name }}, {{ $order->client->client->location->address }}
           </span>
           </a> 
           <td class="td-phone">
-            {{ isset($order->client->contragent->main_phone->phone) ? decorPhone($order->client->contragent->main_phone->phone) : 'Номер не указан' }}
-            @if($order->client->contragent->email)<br><span class="tiny-text">{{ $order->client->contragent->email or '' }}</span>@endif
+            {{ isset($order->client->client->main_phone->phone) ? decorPhone($order->client->client->main_phone->phone) : 'Номер не указан' }}
+            @if($order->client->client->email)<br><span class="tiny-text">{{ $order->client->client->email or '' }}</span>@endif
           </td>
           <td class="td-number">{{ $order->number or '' }}
             <br><span class="tiny-text">{{ $order->lead->choice->name or '' }}</span> 

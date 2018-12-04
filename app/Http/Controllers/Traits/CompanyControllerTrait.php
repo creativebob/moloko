@@ -11,8 +11,8 @@ trait CompanyControllerTrait
 	public function createCompany($request){
 
 
-		$company = Company::where('inn', $request->inn)->first();
-		if(!isset($company)){
+		$company = Company::where('inn', $request->inn)->whereNotNull('inn')->first();
+		if(empty($company)){
 
 	        $company = new Company;
 	        $last_id_company = Company::latest()->first()->id;

@@ -103,10 +103,10 @@ class ManufacturerController extends Controller
         $this->authorize(getmethod(__FUNCTION__), Manufacturer::class);
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 
-        // Создаем новый экземляр компании
+        // Создаем новый экземляр производителя
         $manufacturer = new Manufacturer;
 
-        // Создаем новый экземляр поставщика
+        // Создаем новый экземляр компании
         $company = new Company;
 
         // Инфо о странице
@@ -132,13 +132,12 @@ class ManufacturerController extends Controller
         $user_id = hideGod($user);
 
         $manufacturer = new Manufacturer;
-        $new_company = new Company;
 
         // Отдаем работу по созданию новой компании трейту
-        $company = $this->createCompany($request, $new_company);
+        $new_company = $this->createCompany($request);
 
         $manufacturer->company_id = $request->user()->company->id;
-        $manufacturer->manufacturer_id = $company->id;
+        $manufacturer->manufacturer_id = $new_company->id;
 
         // Запись информации по производителю:
         // ...

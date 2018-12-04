@@ -162,12 +162,22 @@ class ClientController extends Controller
         if($request->private_status == 1){
 
             $new_company = new Company;
-            $new_company = $this->createCompany($request, $new_company);
+            $new_company = $this->createCompany($request);
             
             if($request->lead_type_id == 2){
 
+                $client = new Client;
+                $client->client_id = $new_company->id;
+                $client->client_type = 'App\Company';
+                $client->company_id = $request->user()->company->id;
+
+                // Запись информации по клиенту:
+                // ...
+
+                $client->save();
+
                 $dealer = new Dealer;
-                $dealer->dealer_id = $new_company->id;
+                $dealer->client_id = $client->id;
                 $dealer->company_id = $request->user()->company->id;
 
                 // Запись информации по дилеру:
@@ -193,10 +203,15 @@ class ClientController extends Controller
             $department->name = 'Филиал';
             $department->company_id = $new_company->id;
             $department->location_id = $request->location_id;
+            $department->filial_status = 1;
             $department->save();
 
+            // Создаем пользователя
+            // $request->access_block = 1; 
             $new_user = $this->createUser($request);
-            // $new_user->update(['company_id'=>]);
+
+            $new_user->company_id = $new_company->id;
+            $new_user->save();
 
             $staffer = new Staffer;
             $staffer->user_id = $new_user->id;

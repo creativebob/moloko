@@ -77,7 +77,7 @@ class CompanyController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // ------------------------------------------------------------------------------------------------------------
 
-        $companies = Company::with('author', 'director', 'location.city', 'sector', 'we_suppliers', 'we_manufacturers', 'we_dealers', 'main_phones')
+        $companies = Company::with('author', 'location.city', 'sector', 'we_suppliers', 'we_manufacturers', 'main_phones')
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
