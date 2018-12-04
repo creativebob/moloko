@@ -2,32 +2,28 @@
 
 namespace App\Http\ViewComposers;
 
-use App\AlbumsCategory;
+use App\Catalog;
 
 use Illuminate\View\View;
 
-class AlbumsCategoriesComposer
+class CatalogsSelectComposer
 {
 	public function compose(View $view)
 	{
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+        $answer = operator_right('catalogs', false, 'index');
 
-        // Главный запрос
-        $albums_categories = AlbumsCategory::moderatorLimit($answer)
+        $catalogs = Catalog::moderatorLimit($answer)
         ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
-        ->keyBy('id')
-        ->toArray();
+        ->systemItem($answer) // Фильтр по системным записям
+        ->whereSite_id(2)
+        ->get(['id','name','parent_id']);
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
-        // $albums_categories_list = get_select_tree($albums_categories, $albums_category->parent_id, null, $albums_category->id);
+        $catalogs_list = getSelectTree($catalogs, ($view->parent_id ?? null), ($view->disable ?? null), ($view->id ?? null));
 
-        return $view->with('albums_categories', $albums_categories);
+        return $view->with('catalogs_list', $catalogs_list);
     }
 
 }

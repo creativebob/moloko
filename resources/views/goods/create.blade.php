@@ -14,7 +14,6 @@
 
 					<label>Категория товаров
 						@include('includes.selects.goods_categories', ['entity' => 'goods_categories'])
-
 					</label>
 				</div>
 

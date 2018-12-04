@@ -27,7 +27,7 @@ use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cookie;
 
-// Специфические классы 
+// Специфические классы
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -46,7 +46,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
@@ -63,13 +63,13 @@ class UserController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------
 
-        $users = User::with('roles', 'staff', 'staff.position', 'main_phones')  
+        $users = User::with('roles', 'staff', 'staff.position', 'main_phones')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        // ->where('id', '!=', $request->user()->id) // Только для сущности USERS          
+        // ->where('id', '!=', $request->user()->id) // Только для сущности USERS
         // ->orWhere('id', $request->user()->id) // Только для сущности USERS
         ->filter($request, 'city_id', 'location')
         ->booklistFilter($request)
@@ -166,7 +166,7 @@ class UserController extends Controller
         $user->company_id = $company_id;
 
         $user->telegram_id = $request->telegram_id;
-        
+
         // Добавляем локацию
         $user->location_id = create_location($request);
 
@@ -239,7 +239,7 @@ class UserController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -251,7 +251,7 @@ class UserController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -286,7 +286,7 @@ class UserController extends Controller
             //     }
 
             //     if ($get_settings->img_large_height != null) {
-            //         $settings['img_large_height'] = $get_settings->img_large_height;  
+            //         $settings['img_large_height'] = $get_settings->img_large_height;
             //     }
 
             //     if ($get_settings->img_formats != null) {
@@ -298,7 +298,7 @@ class UserController extends Controller
             //     }
 
             //     if ($get_settings->img_min_height != null) {
-            //         $settings['img_min_height'] = $get_settings->img_min_height;   
+            //         $settings['img_min_height'] = $get_settings->img_min_height;
             //     }
 
             //     if ($get_settings->img_max_size != null) {
@@ -308,7 +308,7 @@ class UserController extends Controller
             // }
 
             // Директория
-            $directory = $user->company_id.'/media/users/'.$user->id.'/img/';
+            $directory = $user->company_id.'/media/users/'.$user->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
@@ -386,7 +386,7 @@ class UserController extends Controller
         ->companiesLimit($answer_roles)
         ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям 
+        ->systemItem($answer_roles) // Фильтр по системным записям
         ->pluck('name', 'id');
 
         return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
@@ -415,7 +415,7 @@ class UserController extends Controller
         ->companiesLimit($answer_roles)
         ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям 
+        ->systemItem($answer_roles) // Фильтр по системным записям
         ->template($answer_roles) // Выводим шаблоны в список
         ->pluck('name', 'id');
 
@@ -464,7 +464,7 @@ class UserController extends Controller
         if (isset($request->password)) {
             $user->password = bcrypt($request->password);
         }
-        
+
         $user->nickname = $request->nickname;
         $user->liter = $request->liter;
 
@@ -492,7 +492,7 @@ class UserController extends Controller
         $user->specialty = $request->specialty;
         $user->degree = $request->degree;
         $user->quote = $request->quote;
-        
+
         $user->user_type = $request->user_type;
         $user->lead_id = $request->lead_id;
         $user->employee_id = $request->employee_id;
@@ -535,7 +535,7 @@ class UserController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -547,7 +547,7 @@ class UserController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -558,7 +558,7 @@ class UserController extends Controller
 
             // dd($company_id);
             // Директория
-            $directory = $user->company_id.'/media/users/'.$user->id.'/img/';
+            $directory = $user->company_id.'/media/users/'.$user->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             if ($user->photo_id) {
@@ -675,7 +675,7 @@ class UserController extends Controller
         session(['god' => Auth::user()->id]);
 
         Auth::loginUsingId($user_id);
-        
+
         // return redirect('/getaccess');
         return redirect()->route('getaccess.set');
     }
@@ -735,7 +735,7 @@ class UserController extends Controller
         ->companiesLimit($answer_roles)
         ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям 
+        ->systemItem($answer_roles) // Фильтр по системным записям
         ->template($answer_roles) // Выводим шаблоны в список
         ->pluck('name', 'id');
 
@@ -774,7 +774,7 @@ class UserController extends Controller
 
         // Обновляем локацию
         $user = update_location($request, $user);
-        
+
         $user->nickname = $request->nickname;
 
         $user->first_name = $request->first_name;
@@ -801,7 +801,7 @@ class UserController extends Controller
         $user->specialty = $request->specialty;
         $user->degree = $request->degree;
         $user->quote = $request->quote;
-        
+
         // $user->user_type = $request->user_type;
         // $user->lead_id = $request->lead_id;
         // $user->employee_id = $request->employee_id;
@@ -844,7 +844,7 @@ class UserController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -856,7 +856,7 @@ class UserController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -864,12 +864,12 @@ class UserController extends Controller
 
                 }
             }
-            
+
 
 
             // dd($company_id);
             // Директория
-            $directory = $user->company_id.'/media/users/'.$user->id.'/img/';
+            $directory = $user->company_id.'/media/users/'.$user->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             if ($user->photo_id) {

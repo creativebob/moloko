@@ -27,6 +27,7 @@ use Carbon\Carbon;
 
 Auth::routes();
 
+
 // Вход в панель управления
 Route::get('/', function () {
     return view('layouts.enter');
@@ -46,95 +47,7 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 
 // ---------------------------- Методы для парсера и одноразовые ----------------------------------------
 Route::any('/check_class', 'ClassController@check_class');
-
 Route::any('/lol', 'GoodsController@check_coincidence_name');
-
-
-// Route::get('/lol', function () {
-
-//     $leads = Lead::withCount(['choices_goods_categories', 'choices_services_categories', 'choices_raws_categories'])->get();
-//     $count_goods = $leads->where('choices_goods_categories_count', '>', 1)->count();
-//     dd($count_goods);
-
-//     $count_services = $leads->where('choices_services_categories_count', '>', 1)->count();
-//     dd($count_services);
-
-//     $count_raws = $leads->where('choices_raws_categories_count', '>', 1)->count();
-//     dd($count_raws);
-// });
-// Route::get('/columns', function () {
-//     $columns = Schema::getColumnListing('leads');
-//     // dd($columns);
-//     $text = "<select>";
-//     foreach ($columns as $column) {
-//      $text .= "<option>" . $column . "</option>";
-//     }
-//     $text .= "</select>";
-//    echo $text;
-// });
-
-// Route::any('/lol', function () {
-
-//     $leads = Lead::with('location.city')
-//     ->whereHas('location', function ($q) {
-//         $q->whereNotNull('address')->whereNull('longitude')->whereNull('latitude');
-//     })
-//     // ->inRandomOrder()
-//     // ->first();
-//     ->get();
-//     // dd($lead);
-
-//     $count = 0;
-
-//     foreach ($leads as $lead) {
-
-//         // $client = new Client('https://geocode-maps.yandex.ru/1.x/?');
-//         // $request = $client->createRequest();
-//         // $request->getQuery()
-//         // ->set('geocode', $lead->location->city->name . ', ' .$lead->location->address)
-//         // ->set('format', 'json');
-
-//         $request_params = [
-//             'geocode' => $lead->location->city->name . ', ' .$lead->location->address,
-//             'format' => 'json',
-
-//         ];
-//         $params = http_build_query($request_params);
-
-//     // dd($get_params);
-
-//         $result = (file_get_contents('https://geocode-maps.yandex.ru/1.x/?' . $params));
-//     // dd($get_params);
-
-//          /** @var $response Response */
-//  $result = $request->send();
-
-//         $res = json_decode($result);
-//         if (count($res->response->GeoObjectCollection->featureMember) == 1) {
-
-//             // echo $request_params['geocode']. "\r\n";
-//             $string = $res->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
-//             $position = explode(' ', $string);
-
-//             $location = Location::whereId($lead->location_id)->update(['longitude' => $position[0], 'latitude' => $position[1]]);
-//             // dd($lead->id);
-//         // $date = $
-
-//             $count++;
-//         }
-//     }
-
-//     dd('Гатова - ' . $count);
-
-
-//     // $result = (file_get_contents('http://search.maps.sputnik.ru/search?'.$get_params));
-
-//     // echo $request_params['q']. "\r\n";
-
-//     // $res = json_decode($result);
-//     // dd($res->result);
-// });
-
 Route::get('/entity_page', 'ParserController@entity_page')->middleware('auth');
 // Route::get('/geoposition_locations', 'ParserController@geoposition_locations')->middleware('auth');
 // Route::get('/geoposition_locations_parse', 'ParserController@geoposition_locations_parse')->middleware('auth');
@@ -375,7 +288,7 @@ Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->midd
 Route::post('/ajax_add_relation_composition', 'CompositionController@ajax_add_relation')->middleware('auth');
 Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_delete_relation')->middleware('auth');
 
-Route::any('/ajax_add_page_composition', 'CompositionController@ajax_add')->middleware('auth');
+Route::post('/ajax_add_page_composition', 'CompositionController@ajax_add')->middleware('auth');
 
 Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
@@ -439,6 +352,10 @@ Route::any('/goods_products_list', 'GoodsProductController@ajax_get_products_lis
 
 // ---------------------------------- Товары (Артикулы) -------------------------------------------
 // Route::any('/goods/create', 'GoodsController@create')->middleware('auth');
+//
+// Фотки
+Route::any('/goods/add_photo', 'GoodsController@add_photo')->middleware('auth');
+Route::post('/goods/photos', 'GoodsController@photos')->middleware('auth');
 
 // Основные методы
 Route::resource('/goods', 'GoodsController')->middleware('auth');
@@ -451,9 +368,7 @@ Route::post('/goods_sync', 'GoodsController@ajax_sync')->middleware('auth');
 
 Route::any('/goods_check', 'GoodsController@ajax_check')->middleware('auth');
 
-// Фотки
-Route::any('/goods/add_photo', 'GoodsController@add_photo')->middleware('auth');
-Route::post('/goods/photos', 'GoodsController@photos')->middleware('auth');
+
 
 
 // -------------------------------- Категории услуг -------------------------------------------

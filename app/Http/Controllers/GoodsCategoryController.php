@@ -388,7 +388,7 @@ class GoodsCategoryController extends Controller
             }
 
             // Директория
-            $directory = $company_id.'/media/goods_categories/'.$goods_category->id.'/img/';
+            $directory = $company_id.'/media/goods_categories/'.$goods_category->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($goods_category->photo_id) {

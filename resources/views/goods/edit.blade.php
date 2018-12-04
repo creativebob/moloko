@@ -147,23 +147,18 @@ $disabled = $cur_goods->goods_article->draft == null;
 
                             <div id="metrics-list">
 
-                                @if (isset($cur_goods->goods_article->metric))
-
+                                @if (isset($cur_goods->goods_article->metrics))
                                 {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
-                                @isset ($cur_goods->goods_article->metrics)
                                 {{-- @each ('goods.metrics.metric_input', $cur_goods->goods_article->metrics->unique(), 'metric') --}}
                                 @foreach ($cur_goods->goods_article->metrics->unique() as $metric)
                                 @include('goods.metrics.metric_input', $metric)
                                 @endforeach
-                                @endisset
 
                                 @else
 
-                                @isset ($cur_goods->goods_article->goods_product->goods_category->$metric_relation)
                                 @foreach ($cur_goods->goods_article->goods_product->goods_category->$metric_relation as $metric)
                                 @include('goods.metrics.metric_input', $metric)
                                 @endforeach
-                                @endisset
 
                                 @endif
 
@@ -265,9 +260,7 @@ $disabled = $cur_goods->goods_article->draft == null;
                             <legend>Каталоги</legend>
 
                             {{-- Form::select('catalogs[]', $catalogs_list, $cur_goods->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
-                            <select name="catalogs[]" data-placeholder="Выберите каталоги..." multiple class="chosen-select">
-                                {!! $catalogs_list !!}
-                            </select>
+                            @include('includes.selects.catalogs')
 
                         </fieldset>
                     </div>
@@ -302,7 +295,7 @@ $disabled = $cur_goods->goods_article->draft == null;
                                 @if ($cur_goods->goods_article->draft == 1)
 
                                 {{-- У товара есть значения состава, берем их --}}
-                                @if (count($cur_goods->goods_article->$composition_relation))
+                                @if ($cur_goods->goods_article->$composition_relation)
 
                                 @foreach ($cur_goods->goods_article->$composition_relation as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
@@ -311,7 +304,7 @@ $disabled = $cur_goods->goods_article->draft == null;
                                 @else
 
                                 {{-- В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются --}}
-                                @if (($composition_relation != 'set_compositions') && count($cur_goods->goods_article->goods_product->goods_category->compositions))
+                                @if (($composition_relation != 'set_compositions') && $cur_goods->goods_article->goods_product->goods_category->compositions))
                                 @foreach ($cur_goods->goods_article->goods_product->goods_category->compositions as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
                                 @endforeach
@@ -339,18 +332,12 @@ $disabled = $cur_goods->goods_article->draft == null;
                         @isset ($composition_list)
                         @if ($cur_goods->goods_article->draft == 1)
 
-                        @if ($cur_goods->goods_article->goods_product->set_status == 'one')
-
-                        @if (isset($cur_goods->goods_article->$composition_relation))
+                        @if ($cur_goods->goods_article->$composition_relation)
                         {{ Form::model($cur_goods->goods_article, []) }}
                         @else
+                        @if ($cur_goods->goods_article->goods_product->set_status == 'one')
                         {{ Form::model($cur_goods->goods_article->goods_product->goods_category, []) }}
                         @endif
-
-                        @else
-
-                        {{ Form::model($cur_goods->goods_article, []) }}
-
                         @endif
 
                         <ul class="menu vertical">
@@ -386,11 +373,12 @@ $disabled = $cur_goods->goods_article->draft == null;
             <div class="tabs-panel" id="photos">
                 <div class="grid-x grid-padding-x">
 
+
                     <div class="small-12 medium-7 cell">
-                        {{ Form::open(['url' => '/admin/goods/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
-                        {{ Form::hidden('photo_name', $cur_goods->name) }}
+                        {!!  Form::open(['url' => '/admin/goods/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) !!}
+                        {{ Form::hidden('name', $cur_goods->goods_article->name) }}
                         {{ Form::hidden('id', $cur_goods->id) }}
-                        {{ Form::close() }}
+                        {!! Form::close() !!}
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
                             @isset($cur_goods->album_id)
@@ -743,31 +731,23 @@ $disabled = $cur_goods->goods_article->draft == null;
     // Настройки dropzone
     Dropzone.options.myDropzone = {
         paramName: 'photo',
-        maxFilesize: {{ $settings_album['img_max_size'] }}, // MB
+        maxFilesize: '{{ $settings['img_max_size'] }}',
         maxFiles: 20,
-        acceptedFiles: '{{ $settings_album['img_formats'] }}',
+        acceptedFiles: '{{ $settings['img_formats'] }}',
         addRemoveLinks: true,
         init: function() {
             this.on("success", function(file, responseText) {
                 file.previewTemplate.setAttribute('id',responseText[0].id);
 
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/goods/photos',
-                    type: 'POST',
-                    data: {cur_goods_id: cur_goods_id},
-                    success: function(html){
-                        // alert(html);
-                        $('#photos-list').html(html);
-                        // $('#modal-create').foundation();
-                        // $('#modal-create').foundation('open');
-                    }
+                $.post('/admin/goods/photos', {cur_goods_id: cur_goods_id}, function(html){
+                    // alert(html);
+                    $('#photos-list').html(html);
+                    // $('#modal-create').foundation();
+                    // $('#modal-create').foundation('open');
                 })
             });
             this.on("thumbnail", function(file) {
-                if (file.width < {{ $settings_album['img_min_width'] }} || file.height < {{ $settings_album['img_min_height'] }}) {
+                if (file.width < '{{ $settings['img_min_width'] }}' || file.height < '{{ $settings['img_min_height'] }}') {
                     file.rejectDimensions();
                 } else {
                     file.acceptDimensions();
@@ -776,7 +756,7 @@ $disabled = $cur_goods->goods_article->draft == null;
         },
         accept: function(file, done) {
             file.acceptDimensions = done;
-            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings_album['img_min_width'] }} px в ширину"); };
+            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину"); };
         }
     };
 

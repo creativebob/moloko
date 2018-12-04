@@ -19,6 +19,8 @@ use App\Http\ViewComposers\CategoriesSelectComposer;
 use App\Http\ViewComposers\GoodsModesComposer;
 use App\Http\ViewComposers\RawsModesComposer;
 
+use App\Http\ViewComposers\CatalogsSelectComposer;
+
 use App\Http\ViewComposers\MenuViewComposer;
 // use App\Http\ViewComposers\SectorsComposer;
 use App\Http\ViewComposers\GoodsCategoriesComposer;
@@ -48,6 +50,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.raws_modes', RawsModesComposer::class);
 
         view()->composer('includes.selects.users', UsersSelectComposer::class);
+
+        view()->composer('includes.selects.catalogs', CatalogsSelectComposer::class);
 
         // Select'ы категорий
         view()->composer('includes.selects.categories_select', CategoriesSelectComposer::class);

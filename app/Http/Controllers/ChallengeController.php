@@ -211,7 +211,7 @@ class ChallengeController extends Controller
                 }
 
                 $telegram_destinations = User::has('staff')->where('id', $challenge->appointed_id)
-                ->where('telegram_id', '!=', null)
+                ->whereNotNull('telegram_id')
                 ->get(['telegram_id']);
 
                 send_message($telegram_destinations, $message);
@@ -300,7 +300,7 @@ class ChallengeController extends Controller
                 }
 
                 $telegram_destinations = User::has('staff')->where('id', $challenge->author_id)
-                ->where('telegram_id', '!=', null)
+                ->whereNotNull('telegram_id')
                 ->get(['telegram_id']);
 
                 send_message($telegram_destinations, $message);
@@ -360,7 +360,7 @@ class ChallengeController extends Controller
             }
 
             $telegram_destinations = User::has('staff')->where('id', $challenge->appointed_id)
-            ->where('telegram_id', '!=', null)
+            ->whereNotNull('telegram_id')
             ->get(['telegram_id']);
 
             send_message($telegram_destinations, $message);

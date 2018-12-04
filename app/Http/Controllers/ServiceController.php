@@ -42,7 +42,7 @@ class ServiceController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Service::class);
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if (($filter_url != null) && ($request->filter != 'active')) {
             Cookie::queue(Cookie::forget('filter_' . $this->entity_name));
@@ -229,7 +229,7 @@ class ServiceController extends Controller
                 }
             }
             break;
-            
+
             case 'mode-add':
             $service_product_name = $request->service_product_name;
             $services_product = ServicesProduct::where(['name' => $service_product_name, 'services_category_id' => $services_category_id])->first();
@@ -296,14 +296,14 @@ class ServiceController extends Controller
                 if ($request->quickly == 1) {
                     return redirect('/admin/services');
                 } else {
-                    return redirect('/admin/services/'.$service->id.'/edit'); 
+                    return redirect('/admin/services/'.$service->id.'/edit');
                 }
             } else {
                 abort(403, 'Ошибка записи услуги');
-            } 
+            }
         } else {
             abort(403, 'Ошибка записи информации услуги');
-        }  
+        }
     }
 
     public function show($id)
@@ -405,7 +405,7 @@ class ServiceController extends Controller
                 $i = 1;
                 for($j = 0; $j < $i; $j++){
                     $padding .= '&nbsp;&nbsp';
-                }     
+                }
                 $i++;
 
                 $menu .= show_cats($item['children'], $padding, $parents);
@@ -413,7 +413,7 @@ class ServiceController extends Controller
 
              // dd('lol');
             return $menu;
-            
+
         }
 
         $parents = [];
@@ -487,7 +487,7 @@ class ServiceController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -499,7 +499,7 @@ class ServiceController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -507,7 +507,7 @@ class ServiceController extends Controller
                 }
             }
 
-            $directory = $company_id.'/media/services/'.$service->id.'/img/';
+            $directory = $company_id.'/media/services/'.$service->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($service->photo_id) {
@@ -518,7 +518,7 @@ class ServiceController extends Controller
 
             $photo = $array['photo'];
             $service->photo_id = $photo->id;
-        } 
+        }
 
         // -------------------------------------------------------------------------------------------------
         // ПЕРЕНОС ГРУППЫ УСЛУГИ В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
@@ -538,7 +538,7 @@ class ServiceController extends Controller
         // Важно! Важно проверить, соответствеут ли группа в которую переноситься товар, метрикам самого товара
         // Если не соответствует - дать отказ. Если соответствует - осуществить перенос
 
-        // Тут должен быть код проверки !!! 
+        // Тут должен быть код проверки !!!
 
         // А, пока изменяем без проверки
         $service->services_article->services_product_id = $request->services_product_id;
@@ -654,7 +654,7 @@ class ServiceController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -681,7 +681,7 @@ class ServiceController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -780,7 +780,7 @@ class ServiceController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -792,7 +792,7 @@ class ServiceController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -801,7 +801,7 @@ class ServiceController extends Controller
                 }
             }
 
-            $directory = $company_id.'/media/albums/'.$album_id.'/img/';
+            $directory = $company_id.'/media/albums/'.$album_id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             $array = save_photo($request, $directory, $alias.'-'.time(), $album_id, null, $settings);
@@ -820,11 +820,11 @@ class ServiceController extends Controller
                 return response()->json($upload_success, 200);
             } else {
                 return response()->json('error', 400);
-            } 
+            }
 
         } else {
             return response()->json('error', 400);
-        } 
+        }
     }
 
     public function photos(Request $request)

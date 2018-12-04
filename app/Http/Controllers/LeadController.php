@@ -563,7 +563,7 @@ class LeadController extends Controller
             }
 
             // Директория
-            $directory = $user->company_id.'/media/leads/'.$lead->id.'/img/';
+            $directory = $user->company_id.'/media/leads/'.$lead->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
@@ -856,7 +856,7 @@ class LeadController extends Controller
 
             // dd($company_id);
             // Директория
-            $directory = $lead->company_id.'/media/leads/'.$lead->id.'/img/';
+            $directory = $lead->company_id.'/media/leads/'.$lead->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             if ($lead->photo_id) {

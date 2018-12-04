@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use DB;
 
-// Специфические классы 
+// Специфические классы
 use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -46,7 +46,7 @@ class RawsProductController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), RawsProduct::class);
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){
 
@@ -223,7 +223,7 @@ class RawsProductController extends Controller
 
         if ($request->hasFile('photo')) {
 
-            $directory = $company_id.'/media/raws_products/'.$raws_product->id.'/img/';
+            $directory = $company_id.'/media/raws_products/'.$raws_product->id.'/img';
             $name = 'avatar-'.time();
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
@@ -232,12 +232,12 @@ class RawsProductController extends Controller
 
             } else {
                 $array = save_photo($request, $directory, $name, null, null, $this->entity_name);
-                
+
             }
             $photo = $array['photo'];
 
             $raws_product->photo_id = $photo->id;
-        } 
+        }
 
         $raws_product->name = $request->name;
         $raws_product->raws_category_id = $request->raws_category_id;
@@ -325,7 +325,7 @@ class RawsProductController extends Controller
     {
 
         $i = 1;
-        
+
         foreach ($request->raws_products as $item) {
             RawsProduct::where('id', $item)->update(['sort' => $i]);
             $i++;
