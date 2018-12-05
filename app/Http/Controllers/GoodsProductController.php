@@ -338,72 +338,6 @@ class GoodsProductController extends Controller
         return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->goods_products as $item) {
-            GoodsProduct::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = GoodsProduct::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = GoodsProduct::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
     // Добавление фоток
     public function product_photos(Request $request, $id)
     {
@@ -536,14 +470,11 @@ class GoodsProductController extends Controller
     public function ajax_get_products_list(Request $request)
     {
 
-        $goods_products_list = GoodsProduct::where(['goods_category_id' => $request->goods_category_id, 'set_status' => $request->set_status])
+        $goods_products = GoodsProduct::where(['goods_category_id' => $request->goods_category_id, 'set_status' => $request->set_status])
         ->orWhere('id', $request->goods_product_id)
-        ->get(['id', 'name'])
-        ->pluck('name', 'id');
+        ->get(['id', 'name']);
 
-        $goods_product_id = $request->goods_product_id;
-
-        return view('goods.goods_products_select', compact('goods_products_list', 'goods_product_id'));
+        return view('includes.selects.goods_products', ['goods_products' => $goods_products, 'goods_product_id' => $request->goods_product_id, 'set_status' => $request->set_status]);
     }
 
 

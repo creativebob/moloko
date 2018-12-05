@@ -65,9 +65,7 @@ $disabled = $cur_goods->goods_article->draft == null;
                                 </label>
 
                                 <label>Группа
-                                    <div id="goods-products-select">
-                                        {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_article->goods_product_id, ['id' => 'select-goods_products']) }}
-                                    </div>
+                                    @include('includes.selects.goods_products', ['goods_category_id' => $cur_goods->goods_article->goods_product->goods_category_id, 'set_status' => $cur_goods->goods_article->goods_product->set_status, 'goods_product_id' => $cur_goods->goods_article->goods_product_id])
                                 </label>
 
                                 <label>Категория
@@ -138,7 +136,7 @@ $disabled = $cur_goods->goods_article->draft == null;
                         $metric_relation = ($cur_goods->goods_article->goods_product->set_status == 'one') ? 'one_metrics' : 'set_metrics';
                         @endphp
 
-                        @if (count($cur_goods->goods_article->metrics) || count($cur_goods->goods_article->goods_product->goods_category->$metric_relation))
+                        @if ($cur_goods->goods_article->metrics->isNotEmpty() || $cur_goods->goods_article->goods_product->goods_category->$metric_relation->isNotEmpty())
 
                         @include('includes.scripts.class.metric_validation')
 
@@ -147,18 +145,19 @@ $disabled = $cur_goods->goods_article->draft == null;
 
                             <div id="metrics-list">
 
-                                @if (isset($cur_goods->goods_article->metrics))
                                 {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
-                                {{-- @each ('goods.metrics.metric_input', $cur_goods->goods_article->metrics->unique(), 'metric') --}}
+                                @if ($cur_goods->goods_article->metrics->isNotEmpty())
                                 @foreach ($cur_goods->goods_article->metrics->unique() as $metric)
                                 @include('goods.metrics.metric_input', $metric)
                                 @endforeach
 
                                 @else
 
+                                @if ($cur_goods->goods_article->goods_product->goods_category->$metric_relation->isNotEmpty())
                                 @foreach ($cur_goods->goods_article->goods_product->goods_category->$metric_relation as $metric)
                                 @include('goods.metrics.metric_input', $metric)
                                 @endforeach
+                                @endif
 
                                 @endif
 
@@ -192,7 +191,7 @@ $disabled = $cur_goods->goods_article->draft == null;
                     </div>
 
                 </div>{{-- Закрытие разделителя на блоки --}}
-            </div>{{-- Закрытите таба --}}
+            </div>
 
             {{-- Ценообразование --}}
             <div class="tabs-panel" id="price-rules">
@@ -291,11 +290,8 @@ $disabled = $cur_goods->goods_article->draft == null;
                                 $composition_relation = ($cur_goods->goods_article->goods_product->set_status == 'one') ? 'compositions' : 'set_compositions';
                                 @endphp
 
-                                {{-- Если черновик --}}
-                                @if ($cur_goods->goods_article->draft == 1)
-
                                 {{-- У товара есть значения состава, берем их --}}
-                                @if ($cur_goods->goods_article->$composition_relation)
+                                @if ($cur_goods->goods_article->$composition_relation->isNotEmpty())
 
                                 @foreach ($cur_goods->goods_article->$composition_relation as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
@@ -304,7 +300,8 @@ $disabled = $cur_goods->goods_article->draft == null;
                                 @else
 
                                 {{-- В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются --}}
-                                @if (($composition_relation != 'set_compositions') && $cur_goods->goods_article->goods_product->goods_category->compositions))
+                                @if (($composition_relation != 'set_compositions') && ($cur_goods->goods_article->goods_product->goods_category->compositions->isNotEmpty())
+                                && ($cur_goods->goods_article->draft == 1))
                                 @foreach ($cur_goods->goods_article->goods_product->goods_category->compositions as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
                                 @endforeach
@@ -312,32 +309,26 @@ $disabled = $cur_goods->goods_article->draft == null;
 
                                 @endif
 
-                                @else
 
-                                {{-- У товара есть значения состава, берем их --}}
-                                @isset ($cur_goods->goods_article->$composition_relation)
-                                @foreach ($cur_goods->goods_article->$composition_relation as $composition)
-                                @include ('goods.compositions.composition_input', $composition)
-                                @endforeach
-                                @endisset
-
-                                @endif
                             </tbody>
                         </table>
                     </div>
 
+
+
                     <div class="small-12 medium-3 cell">
 
                         {{-- Если статус у товара статус черновика, то показываем сырье/товары для добавления, в зависимости от статуса набора --}}
-                        @isset ($composition_list)
-                        @if ($cur_goods->goods_article->draft == 1)
 
-                        @if ($cur_goods->goods_article->$composition_relation)
+                        @if ($cur_goods->goods_article->draft == 1)
+                        @isset ($composition_list)
+
+                        @if ($cur_goods->goods_article->$composition_relation->isNotEmpty())
                         {{ Form::model($cur_goods->goods_article, []) }}
                         @else
                         @if ($cur_goods->goods_article->goods_product->set_status == 'one')
                         {{ Form::model($cur_goods->goods_article->goods_product->goods_category, []) }}
-                        @endif
+                        @endisset
                         @endif
 
                         <ul class="menu vertical">
@@ -369,6 +360,8 @@ $disabled = $cur_goods->goods_article->draft == null;
                 </div>
             </div>
 
+            {{ Form::close() }}
+
             {{-- Фотографии --}}
             <div class="tabs-panel" id="photos">
                 <div class="grid-x grid-padding-x">
@@ -399,6 +392,7 @@ $disabled = $cur_goods->goods_article->draft == null;
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -439,7 +433,7 @@ $disabled = $cur_goods->goods_article->draft == null;
         // Меняем группы
         $.post('/admin/goods_products_list', {goods_category_id: $(this).val(), goods_product_id: $('#select-goods_products').val(), set_status: set_status}, function(list){
             // alert(html);
-            $('#goods-products-select').html(list);
+            $('#select-goods_products').replaceWith(list);
         });
     });
 
