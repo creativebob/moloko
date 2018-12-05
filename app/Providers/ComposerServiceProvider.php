@@ -19,10 +19,16 @@ use App\Http\ViewComposers\CategoriesSelectComposer;
 use App\Http\ViewComposers\GoodsModesComposer;
 use App\Http\ViewComposers\RawsModesComposer;
 
+use App\Http\ViewComposers\CatalogsSelectComposer;
+
 use App\Http\ViewComposers\MenuViewComposer;
 // use App\Http\ViewComposers\SectorsComposer;
 use App\Http\ViewComposers\GoodsCategoriesComposer;
+use App\Http\ViewComposers\GoodsProductsComposer;
 // use App\Http\ViewComposers\AlbumsCategoriesComposer;
+
+use App\Http\ViewComposers\UsersSelectComposer;
+
 
 
 class ComposerServiceProvider extends ServiceProvider
@@ -44,6 +50,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.goods_modes', GoodsModesComposer::class);
         view()->composer('includes.selects.raws_modes', RawsModesComposer::class);
 
+        view()->composer('includes.selects.users', UsersSelectComposer::class);
+
+        view()->composer('includes.selects.catalogs', CatalogsSelectComposer::class);
+
         // Select'ы категорий
         view()->composer('includes.selects.categories_select', CategoriesSelectComposer::class);
 
@@ -52,6 +62,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.menu_views.category_list', MenuViewComposer::class);
         // view()->composer('includes.selects.sectors', SectorsComposer::class);
         view()->composer('includes.selects.goods_categories', GoodsCategoriesComposer::class);
+        view()->composer('includes.selects.goods_products', GoodsProductsComposer::class);
         // view()->composer('includes.selects.albums_categories', AlbumsCategoriesComposer::class);
     }
 

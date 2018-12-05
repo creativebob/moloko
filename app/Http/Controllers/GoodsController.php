@@ -3,24 +3,31 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\Goods;
-use App\GoodsCategory;
 use App\GoodsMode;
+use App\GoodsCategory;
 use App\GoodsProduct;
+use App\GoodsArticle;
+use App\Goods;
+
+use App\RawsArticle;
+use App\Manufacturer;
+
 use App\Album;
 use App\AlbumEntity;
+
 use App\Photo;
+
 use App\UnitsCategory;
 use App\Unit;
 use App\Catalog;
 use App\Metric;
-use App\RawsArticle;
-use App\GoodsArticle;
+
 use App\EntitySetting;
 use App\ArticleValue;
 
-// Политика
-use App\Policies\GoodsPolicy;
+// Валидация
+use Illuminate\Http\Request;
+use App\Http\Requests\GoodsRequest;
 
 // Куки
 use Illuminate\Support\Facades\Cookie;
@@ -29,7 +36,6 @@ use Illuminate\Support\Facades\Cookie;
 use Transliterate;
 
 
-use Illuminate\Http\Request;
 
 class GoodsController extends Controller
 {
@@ -157,7 +163,7 @@ class GoodsController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        if($goods_categories->count() < 1){
+        if ($goods_categories->count() == 0){
 
             // Описание ошибки
             $ajax_error = [];
@@ -165,6 +171,27 @@ class GoodsController extends Controller
             $ajax_error['text'] = "Для начала необходимо создать категории товаров. А уже потом будем добавлять товары. Ок?";
             $ajax_error['link'] = "/admin/goods_categories"; // Ссылка на кнопке
             $ajax_error['title_link'] = "Идем в раздел категорий"; // Текст на кнопке
+
+            return view('ajax_error', compact('ajax_error'));
+        }
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('manufacturers', false, 'index');
+
+        $manufacturers_count = Manufacturer::moderatorLimit($answer)
+        ->systemItem($answer)
+        ->where('company_id', $request->user()->company_id)
+        ->count();
+
+        // Если нет производителей
+        if ($manufacturers_count == 0){
+
+            // Описание ошибки
+            // $ajax_error = [];
+            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+            $ajax_error['text'] = "Для начала необходимо добавить производителей. А уже потом будем добавлять товары. Ок?";
+            $ajax_error['link'] = "/admin/manufacturers/create"; // Ссылка на кнопке
+            $ajax_error['title_link'] = "Идем в раздел производителей"; // Текст на кнопке
 
             return view('ajax_error', compact('ajax_error'));
         }
@@ -198,7 +225,7 @@ class GoodsController extends Controller
         return view('goods.create', ['cur_goods' => new $this->class, 'goods_categories_list' => $goods_categories_list, 'goods_products_count' => $goods_products_count]);
     }
 
-    public function store(Request $request)
+    public function store(GoodsRequest $request)
     {
 
         // Подключение политики
@@ -392,7 +419,6 @@ class GoodsController extends Controller
         //         ]);
         //     }
         // }
-
         // dd($cur_goods);
 
         // -- TODO -- Перенести в запрос --
@@ -415,124 +441,11 @@ class GoodsController extends Controller
             $metrics_values = null;
         }
         // dd($metrics_values);
-
-        // Список категорий товаров
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods_categories = operator_right('goods_categories', false, 'index');
-
-        // Категории
-        $goods_categories = GoodsCategory::moderatorLimit($answer_goods_categories)
-        ->companiesLimit($answer_goods_categories)
-        ->authors($answer_goods_categories)
-        ->systemItem($answer_goods_categories) // Фильтр по системным записям
-        ->orderBy('sort', 'asc')
-        ->get(['id','name','parent_id'])
-        ->keyBy('id')
-        ->toArray();
-        // dd($goods_categories);
-
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
-        $goods_categories_list = get_select_tree($goods_categories, $cur_goods->goods_article->goods_product->goods_category_id, null, null);
-        // dd($goods_categories_list);
-
-        // Список групп категории
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods_products = operator_right('goods_products', false, 'index');
-
-        // Группы товаров
-        $goods_products_list = GoodsProduct::where(['goods_category_id' => $cur_goods->goods_article->goods_product->goods_category_id, 'set_status' => $cur_goods->goods_article->goods_product->set_status])
-        ->orderBy('sort', 'asc')
-        ->get()
-        ->pluck('name', 'id');
-        // dd($goods_products_list);
-
-        // Список каталогов
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_catalogs = operator_right('catalogs', false, 'index');
-
-        $catalogs = Catalog::moderatorLimit($answer_catalogs)
-        ->companiesLimit($answer_catalogs)
-        ->systemItem($answer_catalogs) // Фильтр по системным записям
-        ->whereSite_id(2)
-        ->get(['id','name','parent_id'])
-        ->keyBy('id')
-        ->toArray();
-        // dd($catalogs);
-
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $catalogs_tree = get_parents_tree($catalogs);
-
-        // Рекурсивно считываем наш шаблон
-        function show_cats($items, $padding, $parents){
-            $string = '';
-            $padding = $padding;
-
-            foreach($items as $item){
-                $string .= tpl_menus($item, $padding, $parents);
-            }
-            return $string;
-        }
-
-        // Функция отрисовки option'ов
-        function tpl_menus($item, $padding, $parents) {
-
-            // Выбираем пункт родителя
-            $selected = '';
-            if (in_array($item['id'], $parents)) {
-                $selected = ' selected';
-            }
-
-            // отрисовываем option's
-            if ($item['parent_id'] == null) {
-                $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
-            } else {
-                $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
-            }
-
-            // Добавляем пробелы вложенному элементу
-            if (isset($item['children'])) {
-                $i = 1;
-                for($j = 0; $j < $i; $j++){
-                    $padding .= '&nbsp;&nbsp';
-                }
-                $i++;
-
-                $menu .= show_cats($item['children'], $padding, $parents);
-            }
-            return $menu;
-        }
-
-        $parents = [];
-        foreach ($cur_goods->catalogs as $catalog) {
-            $parents[] = $catalog->id;
-        }
-        // dd($parents);
-
-        // Получаем HTML разметку
-        $catalogs_list = show_cats($catalogs_tree, '', $parents);
-
+        //
         // Если товар в статусе черновика
         if ($cur_goods->goods_article->draft == 1) {
 
-            // Список производителей
-            $manufacturers_list = $cur_goods->company->manufacturers->pluck('name', 'id');
-            // dd($manufacturers_list);
-
-            // $manufacturers = $cur_goods->company->manufacturers;
-
-            // dd($manufacturers[0]->pivot);
-
-            // $list = [];
-            // foreach ($cur_goods->company->manufacturers as $manufacturer) {
-            //     $list[$manufacturer->id] = $manufacturer->company->name;
-            // }
-            // dd($list);
-
-            // dd($cur_goods->company->manufacturers[0]->company);
-
+            // Формируем списки составов
             // Статус товара "один"
             if ($cur_goods->goods_article->goods_product->set_status == 'one') {
 
@@ -550,12 +463,10 @@ class GoodsController extends Controller
                 ->whereHas('raws', function ($query) {
                     $query->whereNull('draft');
                 })
-
-                // ->withCount('raws_products')
                 ->moderatorLimit($answer_raws_categories)
                 ->companiesLimit($answer_raws_categories)
                 ->authors($answer_raws_categories)
-                ->systemItem($answer_raws_categories) // Фильтр по системным записям
+                ->systemItem($answer_raws_categories)
                 ->get()
                 ->keyBy('id')
                 ->groupBy('raws_product.raws_category.name');
@@ -568,7 +479,6 @@ class GoodsController extends Controller
             } else {
 
                 // Статус товара "набор"
-
                 // Получаем из сессии необходимые данные (Функция находиться в Helpers)
                 $answer_goods_categories = operator_right('goods_categories', false, 'index');
                 $answer_goods_products = operator_right('goods_products', false, 'index');
@@ -583,12 +493,10 @@ class GoodsController extends Controller
                 ->whereHas('goods', function ($query) {
                     $query->whereNull('draft');
                 })
-
-                // ->withCount('goods_products')
                 ->moderatorLimit($answer_goods_categories)
                 ->companiesLimit($answer_goods_categories)
                 ->authors($answer_goods_categories)
-                ->systemItem($answer_goods_categories) // Фильтр по системным записям
+                ->systemItem($answer_goods_categories)
                 ->get()
                 ->keyBy('id')
                 ->groupBy('goods_product.goods_category.name');
@@ -602,112 +510,31 @@ class GoodsController extends Controller
             // dd($composition_list);
         }
 
-        // Настройки для фоток
-
         // Получаем настройки по умолчанию
         $settings = config()->get('settings');
         // dd($settings);
 
         $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
+        // dd($get_settings);
 
         if ($get_settings){
-
-            if ($get_settings->img_small_width != null) {
-                $settings['img_small_width'] = $get_settings->img_small_width;
-            }
-
-            if ($get_settings->img_small_height != null) {
-                $settings['img_small_height'] = $get_settings->img_small_height;
-            }
-
-            if ($get_settings->img_medium_width != null) {
-                $settings['img_medium_width'] = $get_settings->img_medium_width;
-            }
-
-            if ($get_settings->img_medium_height != null) {
-                $settings['img_medium_height'] = $get_settings->img_medium_height;
-            }
-
-            if ($get_settings->img_large_width != null) {
-                $settings['img_large_width'] = $get_settings->img_large_width;
-            }
-
-            if ($get_settings->img_large_height != null) {
-                $settings['img_large_height'] = $get_settings->img_large_height;
-            }
-
-            if ($get_settings->img_formats != null) {
-                $settings['img_formats'] = $get_settings->img_formats;
-            }
-
-            if ($get_settings->img_min_width != null) {
-                $settings['img_min_width'] = $get_settings->img_min_width;
-            }
-
-            if ($get_settings->img_min_height != null) {
-                $settings['img_min_height'] = $get_settings->img_min_height;
-            }
-
-            if ($get_settings->img_max_size != null) {
-                $settings['img_max_size'] = $get_settings->img_max_size;
-            }
+            $settings = getSettings($get_settings);
+            // dd($settings);
         }
-
-        // Получаем настройки по умолчанию
-        $settings_album = config()->get('settings');
-        // dd($settings_album);
 
         $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id' => 1])->first();
+        // dd($get_settings);
 
         if ($get_settings){
-
-            if ($get_settings->img_small_width != null) {
-                $settings_album['img_small_width'] = $get_settings->img_small_width;
-            }
-
-            if ($get_settings->img_small_height != null) {
-                $settings_album['img_small_height'] = $get_settings->img_small_height;
-            }
-
-            if ($get_settings->img_medium_width != null) {
-                $settings_album['img_medium_width'] = $get_settings->img_medium_width;
-            }
-
-            if ($get_settings->img_medium_height != null) {
-                $settings_album['img_medium_height'] = $get_settings->img_medium_height;
-            }
-
-            if ($get_settings->img_large_width != null) {
-                $settings_album['img_large_width'] = $get_settings->img_large_width;
-            }
-
-            if ($get_settings->img_large_height != null) {
-                $settings_album['img_large_height'] = $get_settings->img_large_height;
-            }
-
-            if ($get_settings->img_formats != null) {
-                $settings_album['img_formats'] = $get_settings->img_formats;
-            }
-
-            if ($get_settings->img_min_width != null) {
-                $settings_album['img_min_width'] = $get_settings->img_min_width;
-            }
-
-            if ($get_settings->img_min_height != null) {
-                $settings_album['img_min_height'] = $get_settings->img_min_height;
-            }
-
-            if ($get_settings->img_max_size != null) {
-                $settings_album['img_max_size'] = $get_settings->img_max_size;
-            }
+            $settings = getSettings($get_settings);
+            // dd($settings);
         }
-        // dd($settings_album);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
 
-        return view('goods.edit', compact('cur_goods', 'page_info', 'goods_categories_list', 'goods_products_list', 'manufacturers_list', 'metrics_values', 'settings', 'settings_album', 'composition_list', 'catalogs_list'));
+        return view('goods.edit', compact('cur_goods', 'page_info',  'metrics_values', 'settings', 'composition_list'));
     }
 
     public function update(Request $request, $id)
@@ -728,6 +555,7 @@ class GoodsController extends Controller
         // Получаем артикул товара
         $goods_article = $cur_goods->goods_article;
         // dd($cur_goods->goods_article->draft);
+        //
         // Проверки только для черновика
         if ($cur_goods->goods_article->draft == 1) {
 
@@ -801,28 +629,6 @@ class GoodsController extends Controller
                 }
             }
 
-            // Если снят флаг черновика, проверяем на совпадение артикула
-            if (empty($request->draft)) {
-
-                // dd($request);
-
-                $check_name = $this->check_coincidence_name($request);
-                // dd($check_name);
-                if ($check_name) {
-                    return redirect()->back()->withInput()->withErrors('Такой артикул уже существует других в группах');
-                }
-
-                $check_article = $this->check_coincidence_article($metrics_count, $metrics_values, $compositions_count, $compositions_values, $request->goods_product_id, $manufacturer_id);
-                if ($check_article) {
-                    return redirect()->back()->withInput()->withErrors('Такой артикул уже существует в группе!');
-                }
-
-                $goods_article = $cur_goods->goods_article;
-                $goods_article->draft = null;
-                $goods_article->save();
-                // $goods_article = GoodsArticle::where('id', $cur_goods->goods_article_id)->update(['draft' => null]);
-            }
-
             if ($goods_article->name != $request->name) {
                 $goods_article->name = $request->name;
             }
@@ -836,6 +642,68 @@ class GoodsController extends Controller
             if ($answer['automoderate'] == false) {
                 $cur_goods->moderation = 1;
             }
+
+            // Метрики
+            if (count($metrics_values)) {
+
+                $goods_article->metrics()->detach();
+
+                $metrics_insert = [];
+                // $metric->min = round($request->min , $request->decimal_place, PHP_ROUND_HALF_UP);
+                foreach ($metrics_values as $metric_id => $values) {
+                    foreach ($values as $value) {
+                        // dd($value);
+                        $goods_article->metrics()->attach([
+                            $metric_id => [
+                                'value' => $value,
+                            ]
+                        ]);
+                    }
+                }
+                // dd($metrics_insert);
+            } else {
+                $goods_article->metrics()->detach();
+            }
+
+            // Состав
+            $compositions_relation = ($goods_article->goods_product->set_status == 'one') ? 'compositions' : 'set_compositions';
+            if (count($compositions_values)) {
+
+                $goods_article->$compositions_relation()->detach();
+
+                $compositions_insert = [];
+                foreach ($compositions_values as $composition_id => $value) {
+                    $compositions_insert[$composition_id] = [
+                        'value' => $value,
+                    ];
+                }
+                // dd($compositions_insert);
+                $goods_article->$compositions_relation()->attach($compositions_insert);
+            } else {
+                $goods_article->$compositions_relation()->detach();
+            }
+        }
+
+        // Если снят флаг черновика, проверяем на совпадение артикула
+        if (empty($request->draft) && $cur_goods->goods_article->draft == 1) {
+
+            // dd($request);
+
+            $check_name = $this->check_coincidence_name($request);
+            // dd($check_name);
+            if ($check_name) {
+                return redirect()->back()->withInput()->withErrors('Такой артикул уже существует других в группах');
+            }
+
+            $check_article = $this->check_coincidence_article($metrics_count, $metrics_values, $compositions_count, $compositions_values, $request->goods_product_id, $manufacturer_id);
+            if ($check_article) {
+                return redirect()->back()->withInput()->withErrors('Такой артикул уже существует в группе!');
+            }
+
+            $goods_article = $cur_goods->goods_article;
+            $goods_article->draft = null;
+            $goods_article->save();
+            // $goods_article = GoodsArticle::where('id', $cur_goods->goods_article_id)->update(['draft' => null]);
         }
 
         // Если проверки пройдены, или меняем уже товар
@@ -877,87 +745,35 @@ class GoodsController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-
-
         // Если пришла фотография
         if ($request->hasFile('photo')) {
-
-            // Вытаскиваем настройки
-            // Вытаскиваем базовые настройки сохранения фото
-            $settings = config()->get('settings');
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
             $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
 
-            if ($get_settings){
+            $settings = getSettings($get_settings);
 
-                if ($get_settings->img_small_width != null) {
-                    $settings['img_small_width'] = $get_settings->img_small_width;
-                }
-
-                if ($get_settings->img_small_height != null) {
-                    $settings['img_small_height'] = $get_settings->img_small_height;
-                }
-
-                if ($get_settings->img_medium_width != null) {
-                    $settings['img_medium_width'] = $get_settings->img_medium_width;
-                }
-
-                if ($get_settings->img_medium_height != null) {
-                    $settings['img_medium_height'] = $get_settings->img_medium_height;
-                }
-
-                if ($get_settings->img_large_width != null) {
-                    $settings['img_large_width'] = $get_settings->img_large_width;
-                }
-
-                if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;
-                }
-
-                if ($get_settings->img_formats != null) {
-                    $settings['img_formats'] = $get_settings->img_formats;
-                }
-
-                if ($get_settings->img_min_width != null) {
-                    $settings['img_min_width'] = $get_settings->img_min_width;
-                }
-
-                if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;
-                }
-
-                if ($get_settings->img_max_size != null) {
-                    $settings['img_max_size'] = $get_settings->img_max_size;
-                }
-            }
-
-            $directory = $user->company_id.'/media/goods/'.$cur_goods->id.'/img/';
+            $directory = $user->company_id.'/media/goods/'.$cur_goods->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записанным обьектом фото, и результатом записи
-            if ($cur_goods->photo_id) {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, $cur_goods->photo_id, $settings);
-            } else {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
-            }
+            $result = save_photo($request, $directory, 'avatar-'.time(), null, $cur_goods->photo_id, $settings);
 
-            $photo = $array['photo'];
-            $cur_goods->photo_id = $photo->id;
+            $cur_goods->photo_id = $result['photo']->id;
         }
 
         // Порции
-        if (isset($request->portion_status)) {
-            $cur_goods->portion_status = $request->portion_status;
-            $cur_goods->portion_name = $request->portion_name;
-            $cur_goods->portion_abbreviation = $request->portion_abbreviation;
-            $cur_goods->portion_count = $request->portion_count;
-        } else {
-            $cur_goods->portion_status = null;
-            $cur_goods->portion_name = null;
-            $cur_goods->portion_abbreviation = null;
-            $cur_goods->portion_count = null;
-        }
+        // if (isset($request->portion_status)) {
+        $cur_goods->portion_status = $request->portion_status;
+        $cur_goods->portion_name = $request->portion_name;
+        $cur_goods->portion_abbreviation = $request->portion_abbreviation;
+        $cur_goods->portion_count = $request->portion_count;
+        // } else {
+        //     $cur_goods->portion_status = null;
+        //     $cur_goods->portion_name = null;
+        //     $cur_goods->portion_abbreviation = null;
+        //     $cur_goods->portion_count = null;
+        // }
 
         // Описание
         $cur_goods->description = $request->description;
@@ -990,47 +806,6 @@ class GoodsController extends Controller
             } else {
                 $cur_goods->catalogs()->detach();
             }
-
-
-                // Пишем метрики
-                if (count($metrics_values)) {
-
-                    $goods_article->metrics()->detach();
-
-                    $metrics_insert = [];
-                    // $metric->min = round($request->min , $request->decimal_place, PHP_ROUND_HALF_UP);
-                    foreach ($metrics_values as $metric_id => $values) {
-                        foreach ($values as $value) {
-                        // dd($value);
-                            $goods_article->metrics()->attach([
-                                $metric_id => [
-                                    'value' => $value,
-                                ]
-                            ]);
-                        }
-                    }
-                    // dd($metrics_insert);
-                } else {
-                    $goods_article->metrics()->detach();
-                }
-
-                $compositions_relation = ($goods_article->goods_product->set_status == 'one') ? 'compositions' : 'set_compositions';
-                if (count($compositions_values)) {
-
-                    $goods_article->$compositions_relation()->detach();
-
-                    $compositions_insert = [];
-                    foreach ($compositions_values as $composition_id => $value) {
-                        $compositions_insert[$composition_id] = [
-                            'value' => $value,
-                        ];
-                    }
-                    // dd($compositions_insert);
-                    $goods_article->$compositions_relation()->attach($compositions_insert);
-                } else {
-                    $goods_article->$compositions_relation()->detach();
-                }
-
 
             if ($goods_article->name != $request->name) {
                 // dd($request);
@@ -1091,11 +866,11 @@ class GoodsController extends Controller
         }
     }
 
-    // Отображение на сайте
+            // Отображение на сайте
     public function ajax_sync(Request $request)
     {
 
-        // Описание ошибки
+                // Описание ошибки
         $ajax_error = [];
         $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
         $ajax_error['text'] = "Для начала необходимо создать категории товаров. А уже потом будем добавлять товары. Ок?";
@@ -1134,126 +909,40 @@ class GoodsController extends Controller
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             // $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
 
-            // Получаем авторизованного пользователя
-            $user = $request->user();
-
-            // Смотрим компанию пользователя
-            $company_id = $user->company_id;
-
-            // Скрываем бога
-            $user_id = hideGod($user);
-
-           // Иначе переводим заголовок в транслитерацию
+            // Иначе переводим заголовок в транслитерацию
             $alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
 
-            $album = Album::where(['company_id' => $company_id, 'name' => $request->name, 'albums_category_id' => 1])->first();
+            $album = Album::firstOrCreate([
+                'company_id' => $request->user()->company_id,
+                'name' => $request->name,
+                'albums_category_id' => 1,
+            ], [
+                'alias' => $alias,
+                'description' => $request->name,
+                'author_id' => hideGod($request->user()),
+            ]);
 
-            if ($album) {
-                $album_id = $album->id;
-            } else {
-                $album = new Album;
-                $album->company_id = $company_id;
-                $album->name = $request->name;
-                $album->alias = $alias;
-                $album->albums_category_id = 1;
-                $album->description = $request->name;
-                $album->author_id = $user_id;
-                $album->save();
-
-                $album_id = $album->id;
-            }
-
-            $cur_goods = Goods::findOrFail($request->id);
-
-            if ($cur_goods->album_id == null) {
-                $cur_goods->album_id = $album_id;
-                $cur_goods->save();
-
-                if (!$cur_goods) {
-                    abort(403, 'Ошибка записи альбома в продукцию');
-                }
-            }
-
-            // Вытаскиваем настройки
-            // Вытаскиваем базовые настройки сохранения фото
-            $settings = config()->get('settings');
+            Goods::where('id', $request->id)->update(['album_id' => $album->id]);
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
             $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id'=> 1])->first();
 
-            if ($get_settings) {
+            $settings = getSettings($get_settings);
 
-                if ($get_settings->img_small_width != null) {
-                    $settings['img_small_width'] = $get_settings->img_small_width;
-                }
+            $directory = $request->user()->company_id.'/media/albums/'.$album->id.'/img';
 
-                if ($get_settings->img_small_height != null) {
-                    $settings['img_small_height'] = $get_settings->img_small_height;
-                }
-
-                if ($get_settings->img_medium_width != null) {
-                    $settings['img_medium_width'] = $get_settings->img_medium_width;
-                }
-
-                if ($get_settings->img_medium_height != null) {
-                    $settings['img_medium_height'] = $get_settings->img_medium_height;
-                }
-
-                if ($get_settings->img_large_width != null) {
-                    $settings['img_large_width'] = $get_settings->img_large_width;
-                }
-
-                if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;
-                }
-
-                if ($get_settings->img_formats != null) {
-                    $settings['img_formats'] = $get_settings->img_formats;
-                }
-
-                if ($get_settings->img_min_width != null) {
-                    $settings['img_min_width'] = $get_settings->img_min_width;
-                }
-
-                if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;
-                }
-
-                if ($get_settings->img_max_size != null) {
-                    $settings['img_max_size'] = $get_settings->img_max_size;
-                }
-            }
-
-            $directory = $company_id.'/media/albums/'.$album_id.'/img/';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-            $array = save_photo($request, $directory,  $alias.'-'.time(), $album_id, null, $settings);
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            $array = save_photo($request, $directory,  $alias.'-'.time(), $album->id, null, $settings);
 
             $photo = $array['photo'];
             $upload_success = $array['upload_success'];
 
-            $media = new AlbumEntity;
-            $media->album_id = $album_id;
-            $media->entity_id = $photo->id;
-            $media->entity = 'photos';
-            $media->save();
+            $album->photos()->attach($photo->id);
 
-            // $check_media = AlbumEntity::where(['album_id' => $album_id, 'entity_id' => $request->id, 'entity' => 'product'])->first();
-
-            // if ($check_media == false) {
-            //     $media = new AlbumEntity;
-            //     $media->album_id = $album_id;
-            //     $media->entity_id = $request->id;
-            //     $media->entity = 'product';
-            //     $media->save();
-            // }
+            // $upload_success = true;
 
             if ($upload_success) {
-
-                // Переадресовываем на index
-                // return redirect()->route('/products/'.$product->id.'/edit', ['photo' => $photo, 'upload_success' => $upload_success]);
-
                 return response()->json($upload_success, 200);
             } else {
                 return response()->json('error', 400);

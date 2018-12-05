@@ -9,6 +9,7 @@ trait UserControllerTrait
 	public function createUser($request){
 
         $user = new User;
+
         $user_number = User::count();
 
         if(!isset($request->login)){

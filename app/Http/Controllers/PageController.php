@@ -25,7 +25,7 @@ class PageController extends Controller
     protected $entity_dependence = false;
 
     public function index(Request $request, $alias)
-    { 
+    {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Page::class);
@@ -53,7 +53,7 @@ class PageController extends Controller
         ->paginate(30);
 
         // dd($answer);
-        
+
 
         // $pages = Page::with(['author', 'site' => function($query) use ($site_alias) {
         //                 $query->whereSite_alias($site_alias);
@@ -96,7 +96,7 @@ class PageController extends Controller
         // Так как сущность имеет определенного родителя
         $parent_page_info = pageInfo('sites');
 
-        return view('pages.create', compact('page', 'site', 'alias', 'page_info', 'parent_page_info'));  
+        return view('pages.create', compact('page', 'site', 'alias', 'page_info', 'parent_page_info'));
     }
 
     public function store(PageRequest $request, $alias)
@@ -174,7 +174,7 @@ class PageController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -186,7 +186,7 @@ class PageController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -196,7 +196,7 @@ class PageController extends Controller
             }
 
             // Директория
-            $directory = $company_id.'/media/pages/'.$page->id.'/img/';
+            $directory = $company_id.'/media/pages/'.$page->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
@@ -309,7 +309,7 @@ class PageController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -321,7 +321,7 @@ class PageController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -331,7 +331,7 @@ class PageController extends Controller
             }
 
             // Директория
-            $directory = $company_id.'/media/pages/'.$page->id.'/img/';
+            $directory = $company_id.'/media/pages/'.$page->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($page->photo_id) {
@@ -452,7 +452,7 @@ class PageController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -479,7 +479,7 @@ class PageController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -505,7 +505,7 @@ class PageController extends Controller
             // });
         } else {
             return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
-        }  
+        }
 
         return null;
     }

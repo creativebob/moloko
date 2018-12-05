@@ -16,7 +16,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -44,51 +44,17 @@ class Employee extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at',
+        'employment_date',
+        'dismissal_date'
+    ];
     protected $fillable = [
         'vacancy_id',
         'user_id',
         'employment_date',
         'dismissal_date',
     ];
-
-    // public function setEmploymentDateAttribute($value) {
-    //     if($value == Null){
-    //         return $value;
-    //     } else {
-    //         $date_parts = explode('.', $value);
-    //         $this->attributes['employment_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
-    //     };
-    // }
-
-    // public function getEmploymentDateAttribute($value) {
-    //     if($value == Null){
-    //         return $value;
-    //     } else {
-    //         $date_parts = explode('-', $value);
-    //         $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
-    //         return $value;
-    //     };
-    // }
-
-    public function setDismissalDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('.', $value);
-            $this->attributes['dismissal_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
-        };
-    }
-
-    public function getDismissalDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('-', $value);
-            $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
-            return $value;
-        };
-    }
 
     // Получаем вакансию для сотрудников.
     public function staffer()

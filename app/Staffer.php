@@ -18,7 +18,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-    
+
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -101,6 +101,24 @@ class Staffer extends Model
     public function schedules()
     {
         return $this->morphToMany('App\Schedule', 'schedule_entities')->withPivot('mode');
+    }
+
+    // --------------------------------------- Запросы -----------------------------------------
+    public function getIndex($answer, $request)
+    {
+        return $this->with('filial', 'department', 'user.main_phones', 'position', 'employees', 'company.filials')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->booklistFilter($request)
+        ->filter($request, 'position_id')
+        ->filter($request, 'department_id')
+        ->dateIntervalFilter($request, 'date_employment')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->paginate(30);
     }
 
 }

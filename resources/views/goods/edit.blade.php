@@ -21,6 +21,10 @@
 </div>
 @endsection
 
+@php
+$disabled = $cur_goods->goods_article->draft == null;
+@endphp
+
 @section('content')
 <div class="grid-x tabs-wrap">
     <div class="small-12 cell">
@@ -61,9 +65,7 @@
                                 </label>
 
                                 <label>Группа
-                                    <div id="goods-products-select">
-                                        {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_article->goods_product_id, ['id' => 'select-goods_products']) }}
-                                    </div>
+                                    @include('includes.selects.goods_products', ['goods_category_id' => $cur_goods->goods_article->goods_product->goods_category_id, 'set_status' => $cur_goods->goods_article->goods_product->set_status, 'goods_product_id' => $cur_goods->goods_article->goods_product_id])
                                 </label>
 
                                 <label>Категория
@@ -134,55 +136,32 @@
                         $metric_relation = ($cur_goods->goods_article->goods_product->set_status == 'one') ? 'one_metrics' : 'set_metrics';
                         @endphp
 
-                        @if (isset($cur_goods->goods_article->metrics) || isset($cur_goods->goods_article->goods_product->goods_category->$metric_relation))
+                        @if ($cur_goods->goods_article->metrics->isNotEmpty() || $cur_goods->goods_article->goods_product->goods_category->$metric_relation->isNotEmpty())
 
                         @include('includes.scripts.class.metric_validation')
 
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
-                            {{-- Если черновик --}}
-                            @if ($cur_goods->goods_article->draft == 1)
-
                             <div id="metrics-list">
-                                @if (isset($cur_goods->goods_article->metric))
 
                                 {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
-                                @isset ($cur_goods->goods_article->metrics)
-                                {{-- @each ('goods.metrics.metric_input', $cur_goods->goods_article->metrics->unique(), 'metric') --}}
+                                @if ($cur_goods->goods_article->metrics->isNotEmpty())
                                 @foreach ($cur_goods->goods_article->metrics->unique() as $metric)
                                 @include('goods.metrics.metric_input', $metric)
                                 @endforeach
-                                @endisset
 
                                 @else
 
-                                @isset ($cur_goods->goods_article->goods_product->goods_category->$metric_relation)
+                                @if ($cur_goods->goods_article->goods_product->goods_category->$metric_relation->isNotEmpty())
                                 @foreach ($cur_goods->goods_article->goods_product->goods_category->$metric_relation as $metric)
                                 @include('goods.metrics.metric_input', $metric)
                                 @endforeach
-                                @endisset
+                                @endif
 
                                 @endif
 
-
-                                {!! Form::open() !!}
                             </div>
-
-                            @else
-
-                            {{-- Если товар --}}
-                            @isset ($cur_goods->goods_article->metrics)
-
-                            <table>
-                                <tbody>
-                                    @each ('goods.metrics.metric_value', $cur_goods->goods_article->metrics, 'metric')
-                                </tbody>
-                            </table>
-
-                            @endisset
-
-                            @endif
                         </fieldset>
 
                         @endif
@@ -212,7 +191,7 @@
                     </div>
 
                 </div>{{-- Закрытие разделителя на блоки --}}
-            </div>{{-- Закрытите таба --}}
+            </div>
 
             {{-- Ценообразование --}}
             <div class="tabs-panel" id="price-rules">
@@ -238,7 +217,7 @@
 
                         <fieldset class="fieldset portion-fieldset" id="portion-fieldset">
                             <legend class="checkbox">
-                                {{ Form::checkbox('portion_status', 1, $cur_goods->portion_status, ['id' => 'portion']) }}
+                                {{ Form::checkbox('portion_status', 1, $cur_goods->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) }}
                                 <label for="portion">
                                     <span id="portion-change">Принимать порциями</span>
                                 </label>
@@ -248,18 +227,18 @@
                             <div class="grid-x grid-margin-x" id="portion-block">
                                 <div class="small-12 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
                                     <label>Имя&nbsp;порции
-                                        {{ Form::text('portion_name', $cur_goods->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
+                                        {{ Form::text('portion_name', $cur_goods->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                     </label>
                                 </div>
                                 <div class="small-6 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
                                     <label>Сокр.&nbsp;имя
-                                        {{ Form::text('portion_abbreviation',  $cur_goods->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
+                                        {{ Form::text('portion_abbreviation',  $cur_goods->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                     </label>
                                 </div>
                                 <div class="small-6 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
                                     <label>Кол-во,&nbsp;{{ $cur_goods->goods_article->goods_product->unit->abbreviation }}
                                         {{-- Количество чего-либо --}}
-                                        {{ Form::text('portion_count', $cur_goods->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
+                                        {{ Form::text('portion_count', $cur_goods->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                         <div class="sprite-input-right find-status" id="name-check"></div>
                                         <span class="form-error">Введите количество</span>
                                     </label>
@@ -280,9 +259,7 @@
                             <legend>Каталоги</legend>
 
                             {{-- Form::select('catalogs[]', $catalogs_list, $cur_goods->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
-                            <select name="catalogs[]" data-placeholder="Выберите каталоги..." multiple class="chosen-select">
-                                {!! $catalogs_list !!}
-                            </select>
+                            @include('includes.selects.catalogs')
 
                         </fieldset>
                     </div>
@@ -313,11 +290,8 @@
                                 $composition_relation = ($cur_goods->goods_article->goods_product->set_status == 'one') ? 'compositions' : 'set_compositions';
                                 @endphp
 
-                                {{-- Если черновик --}}
-                                @if ($cur_goods->goods_article->draft == 1)
-
                                 {{-- У товара есть значения состава, берем их --}}
-                                @if (isset($cur_goods->goods_article->$composition_relation))
+                                @if ($cur_goods->goods_article->$composition_relation->isNotEmpty())
 
                                 @foreach ($cur_goods->goods_article->$composition_relation as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
@@ -326,7 +300,8 @@
                                 @else
 
                                 {{-- В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются --}}
-                                @if (($composition_relation != 'set_compositions') && isset($cur_goods->goods_article->goods_product->goods_category->compositions))
+                                @if (($composition_relation != 'set_compositions') && ($cur_goods->goods_article->goods_product->goods_category->compositions->isNotEmpty())
+                                && ($cur_goods->goods_article->draft == 1))
                                 @foreach ($cur_goods->goods_article->goods_product->goods_category->compositions as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
                                 @endforeach
@@ -334,38 +309,26 @@
 
                                 @endif
 
-                                @else
 
-                                {{-- У товара есть значения состава, берем их --}}
-                                @isset ($cur_goods->goods_article->$composition_relation)
-                                @foreach ($cur_goods->goods_article->$composition_relation as $composition)
-                                @include ('goods.compositions.composition_value', $composition)
-                                @endforeach
-                                @endisset
-
-                                @endif
                             </tbody>
                         </table>
                     </div>
 
+
+
                     <div class="small-12 medium-3 cell">
 
                         {{-- Если статус у товара статус черновика, то показываем сырье/товары для добавления, в зависимости от статуса набора --}}
-                        @isset ($composition_list)
+
                         @if ($cur_goods->goods_article->draft == 1)
+                        @isset ($composition_list)
 
+                        @if ($cur_goods->goods_article->$composition_relation->isNotEmpty())
+                        {{ Form::model($cur_goods->goods_article, []) }}
+                        @else
                         @if ($cur_goods->goods_article->goods_product->set_status == 'one')
-
-                        @if (isset($cur_goods->goods_article->$composition_relation))
-                        {{ Form::model($cur_goods->goods_article, []) }}
-                        @else
                         {{ Form::model($cur_goods->goods_article->goods_product->goods_category, []) }}
-                        @endif
-
-                        @else
-
-                        {{ Form::model($cur_goods->goods_article, []) }}
-
+                        @endisset
                         @endif
 
                         <ul class="menu vertical">
@@ -397,15 +360,18 @@
                 </div>
             </div>
 
+            {{ Form::close() }}
+
             {{-- Фотографии --}}
             <div class="tabs-panel" id="photos">
                 <div class="grid-x grid-padding-x">
 
+
                     <div class="small-12 medium-7 cell">
-                        {{ Form::open(['url' => '/admin/goods/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
-                        {{ Form::hidden('photo_name', $cur_goods->name) }}
+                        {!!  Form::open(['url' => '/admin/goods/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) !!}
+                        {{ Form::hidden('name', $cur_goods->goods_article->name) }}
                         {{ Form::hidden('id', $cur_goods->id) }}
-                        {{ Form::close() }}
+                        {!! Form::close() !!}
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
                             @isset($cur_goods->album_id)
@@ -426,6 +392,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -436,19 +403,12 @@
 @endsection
 
 @section('scripts')
-
-@include('includes.scripts.inputs-mask')
-@include('includes.scripts.upload-file')
-@include('goods.scripts')
-{{-- Проверка поля на существование --}}
-@include('includes.scripts.check')
-
-
 <script>
 
     // Основные настройки
     var cur_goods_id = '{{ $cur_goods->id }}';
     var set_status = '{{ $cur_goods->goods_article->goods_product->set_status }}';
+    var entity = 'goods';
 
     var metrics_count = '{{ count($cur_goods->goods_article->metrics) }}';
 
@@ -467,26 +427,13 @@
     // Мульти Select
     $(".chosen-select").chosen({width: "95%"});
 
-    // Проверка существования
-    $(document).on('keyup', '.check-field', function() {
-        var entity = $('#content').data('entity-alias');
-        var check = $(this);
-
-        let timerId;
-        clearTimeout(timerId);
-        timerId = setTimeout(function() {
-            checkField(check, 'goods');
-        }, 300);
-    });
-
-
     $(document).on('change', '#select-goods_categories', function(event) {
         event.preventDefault();
 
         // Меняем группы
         $.post('/admin/goods_products_list', {goods_category_id: $(this).val(), goods_product_id: $('#select-goods_products').val(), set_status: set_status}, function(list){
             // alert(html);
-            $('#goods-products-select').html(list);
+            $('#select-goods_products').replaceWith(list);
         });
     });
 
@@ -654,28 +601,16 @@
 
     // При клике на чекбокс метрики отображаем ее на странице
     $(document).on('click', '.add-composition', function() {
-
-        // alert(set_status);
         // alert($(this).val());
-        var id = $(this).val();
+        let id = $(this).val();
 
         // Если нужно добавить состав
-        if ($(this).prop('checked') == true) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_add_page_composition',
-                type: 'POST',
-                data: {id: $(this).val(), entity: 'goods', cur_goods_id: cur_goods_id, set_status: set_status},
-                success: function(html){
-
-                    // alert(html);
-                    $('#composition-table').append(html);
-                }
+        if ($(this).prop('checked')) {
+            $.post('/admin/ajax_add_page_composition', {id: $(this).val(), entity: entity, set_status: set_status}, function(html){
+                // alert(html);
+                $('#composition-table').append(html);
             })
         } else {
-
             // Если нужно удалить состав
             $('#compositions-' + id).remove();
         }
@@ -790,31 +725,23 @@
     // Настройки dropzone
     Dropzone.options.myDropzone = {
         paramName: 'photo',
-        maxFilesize: {{ $settings_album['img_max_size'] }}, // MB
+        maxFilesize: '{{ $settings['img_max_size'] }}',
         maxFiles: 20,
-        acceptedFiles: '{{ $settings_album['img_formats'] }}',
+        acceptedFiles: '{{ $settings['img_formats'] }}',
         addRemoveLinks: true,
         init: function() {
             this.on("success", function(file, responseText) {
                 file.previewTemplate.setAttribute('id',responseText[0].id);
 
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/goods/photos',
-                    type: 'POST',
-                    data: {cur_goods_id: cur_goods_id},
-                    success: function(html){
-                        // alert(html);
-                        $('#photos-list').html(html);
-                        // $('#modal-create').foundation();
-                        // $('#modal-create').foundation('open');
-                    }
+                $.post('/admin/goods/photos', {cur_goods_id: cur_goods_id}, function(html){
+                    // alert(html);
+                    $('#photos-list').html(html);
+                    // $('#modal-create').foundation();
+                    // $('#modal-create').foundation('open');
                 })
             });
             this.on("thumbnail", function(file) {
-                if (file.width < {{ $settings_album['img_min_width'] }} || file.height < {{ $settings_album['img_min_height'] }}) {
+                if (file.width < '{{ $settings['img_min_width'] }}' || file.height < '{{ $settings['img_min_height'] }}') {
                     file.rejectDimensions();
                 } else {
                     file.acceptDimensions();
@@ -823,9 +750,15 @@
         },
         accept: function(file, done) {
             file.acceptDimensions = done;
-            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings_album['img_min_width'] }} px в ширину"); };
+            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину"); };
         }
     };
 
 </script>
+
+@include('includes.scripts.inputs-mask')
+@include('includes.scripts.upload-file')
+@include('goods.scripts')
+{{-- Проверка поля на существование --}}
+@include('includes.scripts.check')
 @endsection

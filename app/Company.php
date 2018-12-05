@@ -51,9 +51,9 @@ class Company extends Model
     protected $model_name = ['company'];
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'name', 
-        'alias', 
-        'phone', 
+        'name',
+        'alias',
+        'phone',
         'extra_phone',
         'bic',
         'location_id',
@@ -80,7 +80,7 @@ class Company extends Model
 
     public function filials()
     {
-        return $this->hasMany('App\Department')->where('filial_status', 1);
+        return $this->hasMany('App\Department')->whereNull('parent_id');
     }
 
     public function director()
@@ -127,7 +127,7 @@ class Company extends Model
     public function getMainScheduleAttribute($value) {
         $main_schedule = $this->morphToMany('App\Schedule', 'schedule_entities')->with('worktimes')->wherePivot('mode', 'main')->first();
         if($main_schedule != null){
-            return $main_schedule;                
+            return $main_schedule;
         } else {
             return $value;
         }
@@ -138,7 +138,7 @@ class Company extends Model
             $worktime = $this->morphToMany('App\Schedule', 'schedule_entities')->wherePivot('mode', 'main')->first();
             if($worktime != null){
                 $worktime = $worktime->worktimes;
-                return worktime_to_format($worktime->keyBy('weekday'));                
+                return worktime_to_format($worktime->keyBy('weekday'));
             } else {
                 return $value;
             }

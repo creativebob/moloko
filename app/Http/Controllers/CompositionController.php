@@ -95,12 +95,12 @@ class CompositionController extends Controller
     {
         if ($request->set_status == 'one') {
             $composition = RawsArticle::with(['raws_product' => function ($q) {
-                        $q->with('unit', 'raws_category');
-                    }])->findOrFail($request->id);
+                $q->with('unit', 'raws_category');
+            }])->findOrFail($request->id);
         } else {
             $composition = GoodsArticle::with(['goods_product' => function ($q) {
-                        $q->with('unit', 'goods_category');
-                    }])->findOrFail($request->id);
+                $q->with('unit', 'goods_category');
+            }])->findOrFail($request->id);
         }
         return view($request->entity.'.compositions.composition_input', compact('composition'));
     }

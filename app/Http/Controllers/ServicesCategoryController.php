@@ -400,7 +400,7 @@ class ServicesCategoryController extends Controller
             }
 
             // Директория
-            $directory = $company_id.'/media/services_categories/'.$services_category->id.'/img/';
+            $directory = $company_id.'/media/services_categories/'.$services_category->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($services_category->photo_id) {
@@ -708,7 +708,7 @@ class ServicesCategoryController extends Controller
             }
 
             // Директория
-            $directory = $company_id.'/media/services_categories/'.$services_category->id.'/img/';
+            $directory = $company_id.'/media/services_categories/'.$services_category->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($services_category->photo_id) {

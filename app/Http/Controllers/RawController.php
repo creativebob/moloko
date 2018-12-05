@@ -643,7 +643,7 @@ class RawController extends Controller
                 }
             }
 
-            $directory = $company_id.'/media/raws/'.$raw->id.'/img/';
+            $directory = $company_id.'/media/raws/'.$raw->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($raw->photo_id) {
@@ -961,7 +961,7 @@ class RawController extends Controller
                 }
             }
 
-            $directory = $company_id.'/media/albums/'.$album_id.'/img/';
+            $directory = $company_id.'/media/albums/'.$album_id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             $array = save_photo($request, $directory,  $alias.'-'.time(), $album_id, null, $settings);

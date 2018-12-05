@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\ViewComposers;
+
+use App\User;
+
+use Illuminate\View\View;
+
+class UsersSelectComposer
+{
+	public function compose(View $view)
+	{
+
+        // Список пользователей
+        $answer = operator_right('users', true, 'index');
+
+        $users = User::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->orderBy('second_name')
+        ->get();
+
+        return $view->with('users', $users);
+    }
+
+}

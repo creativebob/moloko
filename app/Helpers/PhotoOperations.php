@@ -1,14 +1,12 @@
 <?php
 use App\Photo;
-use App\EntitySetting;
 
 use Illuminate\Support\Facades\Storage;
+
 use Intervention\Image\ImageManagerStatic as Image;
 
-   // Сохраняем фотографию
+// Сохраняем фотографию
 function save_photo($request, $directory, $name, $album_id = null, $id = null, $settings){
-
-    // dd($settings['img_max_size'] * 1024);
 
     $user = $request->user();
 
@@ -47,26 +45,21 @@ function save_photo($request, $directory, $name, $album_id = null, $id = null, $
         $photo = Photo::findOrFail($id);
 
         if ($photo) {
-            $small = Storage::disk('public')->delete($directory.'small/'.$photo->name);
-            $medium = Storage::disk('public')->delete($directory.'medium/'.$photo->name);
-            $large = Storage::disk('public')->delete($directory.'large/'.$photo->name);
-            $original = Storage::disk('public')->delete($directory.'original/'.$photo->name);
+            foreach (['small', 'medium', 'large', 'original'] as $value) {
+                Storage::disk('public')->delete($directory.'/'.$value.'/'.$photo->name);
+            }
+            // $original = Storage::disk('public')->delete($directory.'original/'.$photo->name);
         }
     } else {
         $photo = new Photo;
     }
-    
-   
 
-    
     $photo->extension = $extension;
     $image_name = $name.'.'.$extension;
 
-    
     $photo->width = $params[0];
     $photo->height = $params[1];
 
-    
     $photo->size = number_format($size, 2, '.', '');
 
     $photo->album_id = $album_id;
@@ -74,43 +67,44 @@ function save_photo($request, $directory, $name, $album_id = null, $id = null, $
     $photo->company_id = $company_id;
     $photo->author_id = $user_id;
     $photo->save();
-
     // dd('Функция маслает!');
 
     // Сохранияем оригинал
-    $upload_success = $image->storeAs($directory.'original', $image_name, 'public');
+    $upload_success = $image->storeAs($directory.'/original', $image_name, 'public');
 
     // Сохраняем small, medium и large
-    // $small = Image::make($request->photo)->grab(150, 99);
-    $small = Image::make($request->photo)->widen($settings['img_small_width']);
-    $save_path = storage_path('app/public/'.$directory.'small');
-    if (!file_exists($save_path)) {
-        mkdir($save_path, 0755);
+    $array = [];
+    foreach (['small', 'medium', 'large'] as $value) {
+       // $item = Image::make($request->photo)->grab(1200, 795);
+        $item = Image::make($request->photo)->widen($settings['img_'.$value.'_width']);
+        $save_path = storage_path('app/public/'.$directory.'/'.$value);
+        if (!file_exists($save_path)) {
+            mkdir($save_path, 0755);
+        }
+        $item->save(storage_path('app/public/'.$directory.'/'.$value.'/'.$image_name));
     }
-    $small->save(storage_path('app/public/'.$directory.'small/'.$image_name));
 
-    // $medium = Image::make($request->photo)->grab(900, 596);
-    $medium = Image::make($request->photo)->widen($settings['img_medium_width']);
-    $save_path = storage_path('app/public/'.$directory.'medium');
-    if (!file_exists($save_path)) {
-        mkdir($save_path, 0755);
-    }
-    $medium->save(storage_path('app/public/'.$directory.'medium/'.$image_name));
-
-    // $large = Image::make($request->photo)->grab(1200, 795);
-    $large = Image::make($request->photo)->widen($settings['img_large_width']);
-    $save_path = storage_path('app/public/'.$directory.'large');
-    if (!file_exists($save_path)) {
-        mkdir($save_path, 0755);
-    }
-    $large->save(storage_path('app/public/'.$directory.'large/'.$image_name));
-
-    $array = [
+    $result = [
         'photo' => $photo,
         'upload_success' => $upload_success,
     ];
 
-    return $array;
+    return $result;
+}
+
+// Настройки для фоток
+function getSettings($get_settings) {
+    // Вытаскиваем настройки из конфига
+    $settings = config()->get('settings');
+    // dd($settings);
+    // dd($get_settings);
+    foreach ($settings as $key => $value) {
+        // Если есть ключ в пришедших настройках, то переписываем значение
+        if(isset($get_settings->$key)) {
+            $settings[$key] = $get_settings->$key;
+        }
+    }
+    return $settings;
 }
 
 ?>

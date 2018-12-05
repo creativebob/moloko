@@ -115,7 +115,7 @@ trait CategoryControllerTrait
                 }
 
                 // Директория
-                $directory = $request->user()->company_id.'/media/'.$this->entity_alias.'/'.$category->id.'/img/';
+                $directory = $request->user()->company_id.'/media/'.$this->entity_alias.'/'.$category->id.'/img';
 
                 // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
                 $photo_array = save_photo($request, $directory, 'avatar-'.time(), null, $category->photo_id, $settings);

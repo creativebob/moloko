@@ -196,7 +196,7 @@ class ArticleController extends Controller
             return redirect('/admin/articles/'.$article->id.'/edit');
         } else {
             abort(403, 'Ошибка записи артикула');
-        }  
+        }
     }
 
     public function show($id)
@@ -305,7 +305,7 @@ class ArticleController extends Controller
             ->moderatorLimit($answer_products_categories)
             ->companiesLimit($answer_products_categories)
             ->authors($answer_products_categories)
-            ->systemItem($answer_products_categories); // Фильтр по системным записям 
+            ->systemItem($answer_products_categories); // Фильтр по системным записям
         }])
         ->moderatorLimit($answer_products_modes)
         ->companiesLimit($answer_products_modes)
@@ -493,7 +493,7 @@ class ArticleController extends Controller
                     // Пишем метрики
                     $article->metrics_values()->attach($metrics_insert);
                 }
-                
+
                 // dd($metrics_insert);
                 if (isset($request->compositions)) {
                     $compositions_insert = [];
@@ -584,7 +584,7 @@ class ArticleController extends Controller
                 }
             }
 
-            $directory = $company_id.'/media/albums/'.$album_id.'/img/';
+            $directory = $company_id.'/media/albums/'.$album_id.'/img';
             $array = save_photo($request, $user_id, $company_id, $directory,  $alias.'-'.time(), $album_id);
 
             $photo = $array['photo'];
@@ -614,11 +614,11 @@ class ArticleController extends Controller
                 return response()->json($upload_success, 200);
             } else {
                 return response()->json('error', 400);
-            } 
+            }
 
         } else {
             return response()->json('error', 400);
-        } 
+        }
     }
 
     public function photos(Request $request)
@@ -656,7 +656,7 @@ class ArticleController extends Controller
 
           $result = [
             'error_status' => 0,
-        ];  
+        ];
     } else {
 
       $result = [

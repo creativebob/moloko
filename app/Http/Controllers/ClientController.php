@@ -124,7 +124,7 @@ class ClientController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
 
         $lead = Lead::findOrFail($request->lead_id);
- 
+
         $new_user = new User;
 
         $crop_name = explode(" ", $request->name);
@@ -163,7 +163,7 @@ class ClientController extends Controller
 
             $new_company = new Company;
             $new_company = $this->createCompany($request);
-            
+
             if($request->lead_type_id == 2){
 
                 $client = new Client;
@@ -207,7 +207,7 @@ class ClientController extends Controller
             $department->save();
 
             // Создаем пользователя
-            // $request->access_block = 1; 
+            // $request->access_block = 1;
             $new_user = $this->createUser($request);
 
             $new_user->company_id = $new_company->id;
@@ -231,10 +231,10 @@ class ClientController extends Controller
 
         } else {
 
-            $new_user = $this->createUser($request);
+            $new_user = new User;
+            $user = $this->createUser($request, $new_user);
 
-            $client = new Client;
-            $client->client_id = $new_user->id;
+            $client->client_id = $user->id;
             $client->client_type = 'App\User';
             $client->company_id = $request->user()->company->id;
             $client->save();
@@ -362,7 +362,7 @@ class ClientController extends Controller
             'Возможные типы услуг',     // Название чекбокса для пользователя в форме
             'services_types',           // Имя checkboxa для системы
             'id',                       // Поле записи которую ищем
-            'services_types', 
+            'services_types',
             'internal-self-one',        // Режим выборки через связи
             'checkboxer'                // Режим: checkboxer или filter
 
@@ -397,7 +397,7 @@ class ClientController extends Controller
                     $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
                 } else {
 
-                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);                       
+                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);
                 };
 
                 $worktime[$x]['end'] = $str_worktime_interval;
@@ -405,7 +405,7 @@ class ClientController extends Controller
 
                 $worktime[$x]['end'] = null;
             }
-            
+
         };
 
         // Получаем список стран

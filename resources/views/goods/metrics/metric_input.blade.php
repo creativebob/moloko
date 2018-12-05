@@ -2,8 +2,8 @@
 
 @case('numeric')
 <label>
-	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
-	{{ Form::number('metrics['.$metric->id.'][]', $metrics_values[$metric->id] ? number_format($metrics_values[$metric->id], $metric->decimal_place) : null, ['required', 'id' => 'metric-'.$metric->id.'-field', 'min' => number_format($metric->min, $metric->decimal_place), 'max' => number_format($metric->max, $metric->decimal_place), 'step' => 'any']) }}
+	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name . ', (' . $metric->unit->abbreviation . ')' }}</span>
+	{{ Form::number('metrics['.$metric->id.'][]', $metrics_values[$metric->id] ? number_format($metrics_values[$metric->id], $metric->decimal_place) : null, ['required', 'id' => 'metric-'.$metric->id.'-field', 'min' => number_format($metric->min, $metric->decimal_place), 'max' => number_format($metric->max, $metric->decimal_place), 'step' => 'any', $disabled ? 'disabled' : '']) }}
 	<span class="form-error">Поле обязательно для заполнения!</span>
 </label>
 <script type="text/javascript">
@@ -21,7 +21,7 @@
 @case('percent')
 <label>
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
-	{{ Form::number('metrics['.$metric->id.'][]', $metrics_values[$metric->id] ? number_format($metrics_values[$metric->id], $metric->decimal_place) : null, ['required', 'id' => 'metric-'.$metric->id.'-field', 'min' => number_format($metric->min, $metric->decimal_place), 'max' => number_format($metric->max, $metric->decimal_place), 'step' => 'any']) }}
+	{{ Form::number('metrics['.$metric->id.'][]', $metrics_values[$metric->id] ? number_format($metrics_values[$metric->id], $metric->decimal_place) : null, ['required', 'id' => 'metric-'.$metric->id.'-field', 'min' => number_format($metric->min, $metric->decimal_place), 'max' => number_format($metric->max, $metric->decimal_place), 'step' => 'any', $disabled ? 'disabled' : '']) }}
 	<span class="form-error">Поле обязательно для заполнения!</span>
 </label>
 <script type="text/javascript">
@@ -70,7 +70,7 @@
 		@endphp
 
 		<li>
-			{{ Form::checkbox('metrics['.$metric->id.'][]', $value->id, $checked, ['id' => 'add-metric-value-'. $value->id]) }}
+			{{ Form::checkbox('metrics['.$metric->id.'][]', $value->id, $checked, ['id' => 'add-metric-value-'. $value->id, $disabled ? 'disabled' : '']) }}
 			<label for="add-metric-value-{{ $value->id }}"><span>{{ $value->value }}</span></label>
 		</li>
 		@endforeach
@@ -91,7 +91,7 @@
 @case('select')
 <label>
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
-	{{ Form::select('metrics['.$metric->id.'][]', $metric->values->pluck('value', 'id'), $metrics_values[$metric->id] ? $metrics_values[$metric->id] : null, ['required']) }}
+	{{ Form::select('metrics['.$metric->id.'][]', $metric->values->pluck('value', 'id'), $metrics_values[$metric->id] ? $metrics_values[$metric->id] : null, ['required', $disabled ? 'disabled' : '']) }}
 </label>
 @break
 

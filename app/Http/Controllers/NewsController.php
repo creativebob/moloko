@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
-// Специфические классы 
+// Специфические классы
 // Фотографии
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -45,7 +45,7 @@ class NewsController extends Controller
     protected $entity_dependence = false;
 
     public function index(Request $request, $alias)
-    { 
+    {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), News::class);
@@ -150,7 +150,7 @@ class NewsController extends Controller
         // Так как сущность имеет определенного родителя
         $parent_page_info = pageInfo('sites');
 
-        return view('news.create', compact('cur_news', 'site', 'alias', 'page_info', 'parent_page_info', 'albums_categories_list', 'filials'));  
+        return view('news.create', compact('cur_news', 'site', 'alias', 'page_info', 'parent_page_info', 'albums_categories_list', 'filials'));
     }
 
     public function store(NewsRequest $request, $alias)
@@ -239,7 +239,7 @@ class NewsController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -251,7 +251,7 @@ class NewsController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -261,7 +261,7 @@ class NewsController extends Controller
             }
 
             // Директория
-            $directory = $company_id.'/media/news/'.$cur_news->id.'/img/';
+            $directory = $company_id.'/media/news/'.$cur_news->id.'/img';
 
             // Отправляем на хелпер request (в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             $array = save_photo($request, $directory, 'preview-'.time(), null, null, $settings);
@@ -419,7 +419,7 @@ class NewsController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -431,7 +431,7 @@ class NewsController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -443,7 +443,7 @@ class NewsController extends Controller
 
 
             // Директория
-            $directory = $company_id.'/media/news/'.$cur_news->id.'/img/';
+            $directory = $company_id.'/media/news/'.$cur_news->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($cur_news->photo_id) {
@@ -451,7 +451,7 @@ class NewsController extends Controller
 
             } else {
                 $array = save_photo($request, $directory, 'preview-'.time(), null, null, $settings);
-                
+
             }
             $photo = $array['photo'];
 
@@ -662,7 +662,7 @@ class NewsController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -689,7 +689,7 @@ class NewsController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -740,7 +740,7 @@ class NewsController extends Controller
             // });
         } else {
             return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
-        }  
+        }
     }
 
     // Показываем новость на сайте
