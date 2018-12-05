@@ -685,7 +685,7 @@ class GoodsController extends Controller
         }
 
         // Если снят флаг черновика, проверяем на совпадение артикула
-        if (empty($request->draft)) {
+        if (empty($request->draft) && $cur_goods->goods_article->draft == 1) {
 
             // dd($request);
 
