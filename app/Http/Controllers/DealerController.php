@@ -53,6 +53,9 @@ class DealerController extends Controller
     public function index(Request $request)
     {
 
+        // $legal_form_id = cleanNameLegalForm('ПАО Шкура');
+        // dd($legal_form_id['name']);
+
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
@@ -278,7 +281,7 @@ class DealerController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $dealer);
 
-        if ($dealer) {
+        if($dealer) {
 
             $user = $request->user();
 
@@ -298,6 +301,7 @@ class DealerController extends Controller
             }
 
         } else {
+
             abort(403, 'Поставщик не найдена');
         }
     }

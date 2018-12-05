@@ -70,7 +70,7 @@
             @if($edit == 1)
             <a href="companies/{{ $company->id }}/edit">
               @endif
-              {{ $company->name }}
+              {{ $company->name }} ({{ $company->legal_form->name or '' }})
               @if($edit == 1)
             </a> 
             @endif
