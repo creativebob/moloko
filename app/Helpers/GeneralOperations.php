@@ -287,7 +287,7 @@ function addBankAccount($request, $company) {
 
             $bank_account->bank_id = $company_bank->id;
             $bank_account->holder_id = $company->id;
-            $bank_account->company_id = $request->user()->company->id;
+            $bank_account->company_id = $request->user()->company ? $request->user()->company->id : $company->id;
 
             $bank_account->account_settlement = $request->account_settlement;
             $bank_account->account_correspondent = $request->account_correspondent;

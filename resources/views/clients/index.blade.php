@@ -61,13 +61,13 @@
           </td>
           <td class="td-name">
 
-            @if($client->contragent_type == 'App/User')
+            @if($client->client_type == 'App\User')
               <a href="clients/{{ $client->id }}/edit">
                 {{ $client->client->name }}
               </a>
-            @else($client->client_type == 'App/Company')
+            @else
               <a href="clients/{{ $client->id }}/edit">
-                {{ $client->client->name }}
+                {{ $client->client->name }} ({{ $client->client->legal_form->name or '' }})
               </a>
             @endif
 

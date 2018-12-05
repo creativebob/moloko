@@ -32,7 +32,7 @@
 						<legend>Банковские счета:</legend>
 						<div class="grid-x grid-padding-x" id="listing-bank-account">
 
-								@can ('create', App\BankAccount::class)
+								@can ('index', App\BankAccount::class)
 							        @foreach($company->bank_accounts as $bank_account)
 
 							        		@include('includes.bank_accounts.item', ['bank_account' => $bank_account])

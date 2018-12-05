@@ -448,30 +448,6 @@ function cleanNameLegalForm($string){
 
     }
 
-    // if (preg_match("/(^|\s)" . "ООО" . "\s/i", $string, $matches)) {
-    //     $result['name'] = str_replace($matches[0], "", $string);
-    //     $result['legal_form_id'] = 1;
-    //     return $result;
-    // };
-    
-    // if (preg_match("/(^|\s)ИП\s/i", $string, $matches)) {
-    //     $result['name'] = str_replace($matches[0], "", $string);
-    //     $result['legal_form_id'] = 2;
-    //     return $result;
-    // };
-
-    // if (preg_match("/(^|\s)ОАО\s/i", $string, $matches)) {
-    //     $result['name'] = str_replace($matches[0], "", $string);
-    //     $result['legal_form_id'] = 3;
-    //     return $result;
-    // };
-
-    // if (preg_match("/(^|\s)ПАО\s/i", $string, $matches)) {
-    //     $result['name'] = str_replace($matches[0], "", $string);
-    //     $result['legal_form_id'] = 4;
-    //     return $result;
-    // };
-
     return false;
 
 }

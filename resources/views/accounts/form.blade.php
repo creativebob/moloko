@@ -76,8 +76,10 @@
                                 <label>API токен
                                     @include('includes.inputs.string', ['name'=>'api_token', 'value'=>$account->api_token])
                                 </label>
+                                <label>Секрет
+                                    @include('includes.inputs.text-en', ['name'=>'secret', 'value'=>$account->secret])
+                                </label>
                             </div>
-
                     </div>
                 </div>
 

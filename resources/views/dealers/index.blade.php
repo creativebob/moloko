@@ -80,7 +80,7 @@
           <td class="td-phone">{{ isset($dealer->client->client->main_phone->phone) ? decorPhone($dealer->client->client->main_phone->phone) : 'Номер не указан' }}</td>
 
           <td class="td-description">@if(!empty($dealer->description)){{ $dealer->description }}@endif </td>
-          <td class="td-description">@if(!empty($dealer->discount)){{ $dealer->discount }} %@endif </td>
+          <td class="td-discount">@if(!empty($dealer->discount)){{ $dealer->discount }} %@endif </td>
           <td class="td-order-counts">@if(!empty($dealer->client->orders)){{ $dealer->client->orders->count() }} @endif </td>
 
           <td class="td-user_id">{{ $dealer->client->client->director->user->name or ' ... ' }} </td>

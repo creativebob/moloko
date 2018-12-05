@@ -7,4 +7,4 @@
 		'pattern'=>'[A-Za-z\s-]{3,60}',
 		(isset($required) ? 'required' : '')
 		]) }}
-		<span class="form-error">Слишком коротко!</span>
+		<span class="form-error">На английском!</span>

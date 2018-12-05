@@ -121,6 +121,7 @@ class AccountController extends Controller
         $account->login = $request->login;
         $account->password = bcrypt($request->password);
         $account->api_token = $request->api_token;
+        $account->secret = $request->secret;
 
         if($user->company_id != null){
             $account->company_id = $user->company_id;
@@ -221,6 +222,7 @@ class AccountController extends Controller
         }
 
         $account->api_token = $request->api_token;
+        $account->secret = $request->secret;
 
         $account->save();
 

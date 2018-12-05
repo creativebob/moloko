@@ -4,14 +4,14 @@
     @include('includes.scripts.class.city_search')
 @endsection
 
-@section('title', 'Редактировать дилера')
+@section('title', 'Редактировать клиента')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $client->company->name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $client->client->name))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ ДИЛЕРА</h2>
+        <h2 class="header-content">РЕДАКТИРОВАТЬ КЛИЕНТА</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -19,9 +19,9 @@
 @endsection
 
 @section('content')
-    {{ Form::model($client->company, ['url' => '/admin/dealers/'.$client->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+    {{ Form::model($client->client, ['url' => '/admin/clients/'.$client->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
     {{ method_field('PATCH') }}
-        @include('companies.form', ['submitButtonText' => 'Редактировать клиента', 'param'=>'', 'company'=>$client->company])
+        @include('companies.form', ['submitButtonText' => 'Редактировать', 'param'=>'', 'company'=>$client->client])
     {{ Form::close() }}
 @endsection
 
@@ -35,7 +35,7 @@
     @include('includes.scripts.inputs-mask')
     @include('includes.scripts.modal-delete-script')
     @include('includes.scripts.extra-phone')
-    @include('includes.bank_accounts.bank-account-script', ['id' => $client->company->id])
+    @include('includes.bank_accounts.bank-account-script', ['id' => $client->client->id])
 @endsection
 
 
