@@ -61,7 +61,6 @@ class Company extends Model
         'legal_form_id'
     ];
 
-
     // Фильтрация по городу
     public function scopeAuthorFilter($query, $request)
     {
@@ -166,6 +165,13 @@ class Company extends Model
     public function location()
     {
         return $this->belongsTo('App\Location');
+    }
+
+
+    // Получаем правовую форму
+    public function legal_form()
+    {
+        return $this->belongsTo('App\LegalForm', 'legal_form_id');
     }
 
     // Получаем поставщиков

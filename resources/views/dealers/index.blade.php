@@ -45,7 +45,7 @@
       <tbody data-tbodyId="1" class="tbody-width">
         @if(!empty($dealers))
         @foreach($dealers as $dealer)
-        <tr class="item @if($dealer->moderation == 1)no-moderation @endif" id="dealers-{{ $dealer->client->id }}" data-name="{{ $dealer->client->client->name }}">
+        <tr class="item @if($dealer->moderation == 1)no-moderation @endif" id="dealers-{{ $dealer->id }}" data-name="{{ $dealer->client->client->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="dealer_id" id="check-{{ $dealer->id }}"
@@ -70,7 +70,7 @@
             @if($edit == 1)
             <a href="dealers/{{ $dealer->id }}/edit">
               @endif
-              {{ $dealer->client->client->name }}
+              {{ $dealer->client->client->name or '' }} ({{ $dealer->client->client->legal_form->name or '' }})
               @if($edit == 1)
             </a>
             @endif

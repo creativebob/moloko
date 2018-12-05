@@ -19,10 +19,18 @@ trait CompanyControllerTrait
 	        $number_id_company = $last_id_company + 1;
 
 	        // Новые данные
-	        $company->name = $request->company_name ?? $request->name;
+	        $company_name = $request->company_name ?? $request->name;
+
+	        // Чистка имени компаниии от правовой формы и определения ID такой формы в базе
+	        // Отдает массив с двумя переменными name и legal_form_id
+	        $result = cleanNameLegalForm($company_name);
+
+	        // Если использовалась функция чистка имени - подставляем данные с нее
+	        $company->name = $result ? $result['name'] : $company_name;
+	        $company->legal_form_id = $result ? $result['legal_form_id'] : $request->legal_form_id;
+
 	        $company->alias = $request->alias ?? Transliterate::make($company->name .'_'. $number_id_company, ['type' => 'url', 'lowercase' => true]);
 	        $company->email = $request->email;
-	        $company->legal_form_id = $request->legal_form_id;
 	        $company->inn = $request->inn;
 	        $company->kpp = $request->kpp;
 	        $company->ogrn = $request->ogrn;
@@ -55,15 +63,22 @@ trait CompanyControllerTrait
 
 	public function updateCompany($request, $company){
 
-       // Данные на обновление
-       $company->name = $request->name;
+        // Новые данные
+        $company_name = $request->company_name ?? $request->name;
+
+        // Чистка имени компаниии от правовой формы и определения ID такой формы в базе
+        // Отдает массив с двумя переменными name и legal_form_id
+        $result = cleanNameLegalForm($company_name);
+
+        // Если использовалась функция чистка имени - подставляем данные с нее
+        $company->name = $result ? $result['name'] : $company_name;
+        $company->legal_form_id = $result ? $result['legal_form_id'] : $request->legal_form_id;
 
         if ($company->alias != $request->alias) {
             $company->alias = $request->alias;
         }
 
         $company->email = $request->email;
-        $company->legal_form_id = $request->legal_form_id;
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;
         $company->ogrn = $request->ogrn;

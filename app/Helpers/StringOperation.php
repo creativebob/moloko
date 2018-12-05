@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use App\LegalForm;
 
 function num_format($number, $value) {
 
@@ -427,6 +428,53 @@ function genChoiceTag($item){
     return $choice_tag;
 }
 
+// Чистит имена компаний от организационных форм, и отдает id такой формы (legal_form_id)
+// если форма присутствовала в имени
+function cleanNameLegalForm($string){
+
+    $legal_form_list = LegalForm::get();
+    $legal_form_name = $legal_form_list->pluck('name', 'id');
+    $legal_form_full_name = $legal_form_list->pluck('full_name', 'id');
+
+    $result = false;
+
+    foreach($legal_form_name as $key => $value){
+
+        if (preg_match("/(^|\s)" . $value . "\s/i", $string, $matches)) {
+            $result['name'] = str_replace($matches[0], "", $string);
+            $result['legal_form_id'] = $key;
+            return $result;
+        };
+
+    }
+
+    // if (preg_match("/(^|\s)" . "ООО" . "\s/i", $string, $matches)) {
+    //     $result['name'] = str_replace($matches[0], "", $string);
+    //     $result['legal_form_id'] = 1;
+    //     return $result;
+    // };
+    
+    // if (preg_match("/(^|\s)ИП\s/i", $string, $matches)) {
+    //     $result['name'] = str_replace($matches[0], "", $string);
+    //     $result['legal_form_id'] = 2;
+    //     return $result;
+    // };
+
+    // if (preg_match("/(^|\s)ОАО\s/i", $string, $matches)) {
+    //     $result['name'] = str_replace($matches[0], "", $string);
+    //     $result['legal_form_id'] = 3;
+    //     return $result;
+    // };
+
+    // if (preg_match("/(^|\s)ПАО\s/i", $string, $matches)) {
+    //     $result['name'] = str_replace($matches[0], "", $string);
+    //     $result['legal_form_id'] = 4;
+    //     return $result;
+    // };
+
+    return false;
+
+}
 
 
 ?>
