@@ -148,7 +148,7 @@ class GoodsController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Goods::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_goods_categories = operator_right('goods_categories', false, 'index');
