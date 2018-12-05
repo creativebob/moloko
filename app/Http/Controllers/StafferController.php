@@ -60,6 +60,8 @@ class StafferController extends Controller
         // -------------------------------------------------------------------------------------------
         $staff = $this->staffer->getIndex($answer, $request);
 
+        // dd($staff);
+
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
@@ -212,6 +214,7 @@ class StafferController extends Controller
     public function update(EmployeeRequest $request, $id)
     {
 
+        // dd($request);
         // Получаем авторизованного пользователя
         $user = $request->user();
 
@@ -222,114 +225,61 @@ class StafferController extends Controller
         $answer = operator_right($this->entity_alias, true, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $staffer = Staffer::with('schedules.worktimes', 'position')->moderatorLimit($answer)->findOrFail($id);
+        $staffer = Staffer::with('schedules.worktimes', 'position', 'employee')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $staffer);
 
-        // Если не существует расписания для компании - создаем его
-        if ($staffer->schedules->count() < 1) {
+        // dd(empty($request->user_id));
+        // dd(isset($staffer->employee));
 
-            $schedule = new Schedule;
-            $schedule->company_id = $user->company_id;
-            $schedule->name = 'График работы для должности: ' . $staffer->position->name;
-            $schedule->description = null;
-            $schedule->author_id = $user_id;
-            $schedule->save();
-
-            // Создаем связь расписания с компанией
-            $schedule_entity = new ScheduleEntity;
-            $schedule_entity->schedule_id = $schedule->id;
-            $schedule_entity->entity_id = $staffer->id;
-            $schedule_entity->entity = 'staff';
-            $schedule_entity->save();
-
-            $schedule_id = $schedule->id;
+        if (isset($staffer->employee) || empty($request->user_id)) {
+            $employee = $staffer->employee;
         } else {
-
-            $schedule_id = $staffer->schedules->first()->id;
+            $staffer->employee()->create([
+                'company_id' => $user->company_id,
+                'user_id' => $request->user_id,
+                'dismissal_date' => null,
+                'author_id' => $user_id
+            ]);
+            $employee = $staffer->employee;
         }
 
-        // Функция getWorktimes ловит все поля расписания из запроса и готовит к записи в worktimes
-        $mass_time = getWorktimes($request, $schedule_id);
+        // Заполняем дату
+        $employee->employment_date = outPickMeUp($request->employment_date);
 
-        // Удаляем все записи времени в worktimes для этого расписания
-        $worktimes = Worktime::where('schedule_id', $schedule_id)->forceDelete();
-
-        // Вставляем новое время в расписание
-        DB::table('worktimes')->insert($mass_time);
-
-        // Если не пустая дата увольнения пришла
+        // Если пришла дата увольнения, то снимаем с должности в штате и удаляем роли
         if (isset($request->dismissal_date)) {
 
-            // Ищем в сотрудниках по id должности и где пустая дата увольнения
-            $employee = Employee::where(['staffer_id' => $id, 'dismissal_date' => null])->first();
-
-            // Заполняем дату
-            $employee->employment_date = $request->employment_date;
-            $employee->dismissal_date = $request->dismissal_date;
+            $staffer->user_id = null;
+            $employee->dismissal_date = outPickMeUp($request->dismissal_date);
             $employee->dismissal_description = $request->dismissal_description;
-            $employee->editor_id = $user->id;
+
+            $staffer->editor_id = $user_id;
 
             // Удаляем должность и права данного юзера
             $delete = RoleUser::where(['position_id' => $staffer->position_id, 'user_id' => $staffer->user_id])->delete();
-            // dd($staffer->user_id);
+        } else if (empty($staffer->employee) || isset($request->user_id)) {
 
-            // Снимаем с должности в штате
-            $staffer->user_id = null;
-            $staffer->editor_id = $user->id;
+            $staffer->user_id = $request->user_id;
+            // Создать связь сотрудника, филиала и ролей должности
+            $mass = [];
 
-        } else {
-
-            // Если даты увольнения нет
-            $user_id = $staffer->user_id;
-            $employee = Employee::where(['staffer_id' => $id, 'user_id' => $user_id, 'dismissal_date' => null])->first();
-
-            if ($employee) {
-
-                $employment_date_db = $employee->employment_date;
-
-                // Смотрим отличатеся ли пришедшая дата устройства
-                if ($employment_date_db != $request->employment_date) {
-
-                    $employee->employment_date = $request->employment_date;
-                    $employee->save();
-
-                    if ($employee) {
-
-                        return Redirect('/admin/staff');
-                    } else {
-                        abort(403, 'Ошибка при записи даты приема на должность!');
-                    }
-                }
-            } else {
-
-                // Назначаем пользователя
-                $staffer->user_id = $request->user_id;
-
-                // Создаем новую запись в сотрудниках
-                $employee = new Employee;
-                $employee->company_id = $user->company_id;
-                $employee->staffer_id = $id;
-                $employee->user_id = $request->user_id;
-                $employee->employment_date = $request->employment_date;
-                $employee->author_id = $user->id;
-
-                // Создать связь сотрудника, филиала и ролей должности
-                $mass = [];
-
-                foreach ($staffer->position->roles as $role) {
-                    $mass[] = [
-                        'user_id' => $request->user_id,
-                        'role_id' => $role->id,
-                        'department_id' => $staffer->filial_id,
-                        'position_id' => $staffer->position_id,
-                        'author_id' => $user->id,
-                    ];
-                }
-                DB::table('role_user')->insert($mass);
+            foreach ($staffer->position->roles as $role) {
+                $mass[] = [
+                    'user_id' => $request->user_id,
+                    'role_id' => $role->id,
+                    'department_id' => $staffer->filial_id,
+                    'position_id' => $staffer->position_id,
+                    'author_id' => $user->id,
+                ];
             }
+            DB::table('role_user')->insert($mass);
+
         }
+
+         // Расписание для штата
+        setSchedule($request, $staffer);
 
         $employee->save();
 

@@ -15,7 +15,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -43,6 +43,9 @@ class Region extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+
+    // protected $connection = 'general';
+
     protected $fillable = [
         'region_name',
         'region_code',

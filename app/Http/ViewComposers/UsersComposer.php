@@ -6,7 +6,7 @@ use App\User;
 
 use Illuminate\View\View;
 
-class UsersSelectComposer
+class UsersComposer
 {
 	public function compose(View $view)
 	{
@@ -19,6 +19,7 @@ class UsersSelectComposer
         ->filials($answer)
         ->authors($answer)
         ->systemItem($answer)
+        ->whereNull('god')
         ->orderBy('second_name')
         ->get();
 

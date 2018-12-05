@@ -85,6 +85,12 @@ class Staffer extends Model
         return $this->hasMany('App\Employee');
     }
 
+    // Текущая запись должности
+    public function employee()
+    {
+        return $this->hasOne('App\Employee')->whereNull('dismissal_date');
+    }
+
     // Получаем компанию
     public function company()
     {
@@ -106,7 +112,7 @@ class Staffer extends Model
     // --------------------------------------- Запросы -----------------------------------------
     public function getIndex($answer, $request)
     {
-        return $this->with('filial', 'department', 'user.main_phones', 'position', 'employees', 'company.filials')
+        return $this->with('filial', 'department', 'user.main_phones', 'position', 'employee', 'company.filials')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer)
