@@ -12,6 +12,8 @@ use App\RawsArticle;
 
 use Carbon\Carbon;
 
+use Fomvasss\Dadata\Facades\DadataSuggest;
+
 // use GuzzleHttp\Client;
 
 /*
@@ -61,6 +63,12 @@ Route::get('/entity_page', 'ParserController@entity_page')->middleware('auth');
 // Route::get('/phone_parser', 'ParserController@phone_parser')->middleware('auth');
 // Route::get('/cac_parser', 'ParserController@challenges_active_count')->middleware('auth');
 Route::get('/choice_parser', 'ParserController@choice_parser')->middleware('auth');
+
+Route::get('/dadata', function() {
+$result = DadataSuggest::suggest("party", ["query"=>"солтысяк"]);
+dd($result);
+})->middleware('auth');
+
 
 Route::get('/map', function() {
 
