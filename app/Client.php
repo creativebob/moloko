@@ -52,12 +52,6 @@ class Client extends Model
         'client_id', 
     ];
 
-    // Получаем компанию.
-    public function company()
-    {
-        return $this->belongsTo('App\Company', 'client_id');
-    }
-
     // Получаем автора
     public function author()
     {
@@ -82,7 +76,13 @@ class Client extends Model
         return $this->morphTo();
     }
 
-    // Получаем компанию.
+    // // Получаем компанию
+    // public function company()
+    // {
+    //     return $this->belongsTo('App\Company', 'company_id');
+    // }
+
+    // Получаем заказы
     public function orders()
     {
         return $this->hasMany('App\Order', 'client_id');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\User;
+use App\Client;
 use App\Dealer;
 use App\Company;
 use App\Page;
@@ -68,10 +69,18 @@ class DealerController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $dealers = Dealer::with('author', 'company.main_phones')
+        $dealers = Dealer::with('client.client.main_phones', 'client.client.director', 'client.orders', 'client.client.location')
+        ->companiesLimit($answer)
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
+
+        // Ограничение: выбираем только клиентов-компании.
+        // В случае, если дилером может быть физлицо - необходимо убрать это ограничение.
+        ->whereHas('client', function($q){
+            return $q->where('client_type', 'App\Company');
+        })
+
         ->filter($request, 'city_id', 'location')
         ->filter($request, 'sector_id')
         ->booklistFilter($request)
@@ -135,17 +144,28 @@ class DealerController extends Controller
         $user_id = hideGod($user);
 
         $dealer = new Dealer;
-        $new_company = new Company;
 
         // Отдаем работу по созданию новой компании трейту
-        $company = $this->createCompany($request, $new_company);
+        $new_company = $this->createCompany($request);
 
         $dealer->company_id = $request->user()->company->id;
-        $dealer->dealer_id = $company->id;
 
-        // Запись информации по дилеру:
+        $client = new Client;
+        $client->client_id = $new_company->id;
+        $client->client_type = 'App\Company';
+        $client->company_id = $request->user()->company->id;
+
+        // Запись информации по клиенту:
         // ...
 
+        $client->save();
+
+        $dealer->client_id = $client->id;
+
+        // Запись информации по дилеру:
+        $dealer->discount = $request->discount;
+        $dealer->description = $request->description;
+        // ...
 
         $dealer->save();
 
@@ -184,7 +204,8 @@ class DealerController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $dealer);
 
         // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
-        $company_id = $dealer->company->id;
+        $company_id = $dealer->client->client->id;
+        // dd($company_id);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_company = operator_right('company', false, getmethod(__FUNCTION__));
@@ -219,7 +240,7 @@ class DealerController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $dealer);
 
-        $company_id = $dealer->company->id;
+        $company_id = $dealer->client->client->id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
@@ -231,9 +252,11 @@ class DealerController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $company);
 
         // Отдаем работу по редактировнию компании трейту
-        $this->updateCompany($request, $dealer->company);
+        $this->updateCompany($request, $dealer->client->client);
 
-        // Обновление информации по производителю:
+        // Обновление информации по дилеру:
+        $dealer->discount = $request->discount;
+        $dealer->description = $request->description;
         // ...
         
         

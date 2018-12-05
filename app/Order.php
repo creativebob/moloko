@@ -72,7 +72,7 @@ class Order extends Model
         return $this->belongsTo('App\Lead', 'lead_id');
     }
 
-    // Пользователь
+    // Получаем клиента
     public function client()
     {
         return $this->belongsTo('App\Client', 'client_id');

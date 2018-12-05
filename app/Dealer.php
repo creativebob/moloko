@@ -52,10 +52,10 @@ class Dealer extends Model
         'dealer_id', 
     ];
 
-    // Получаем компанию.
-    public function company()
+    // Получаем клиента
+    public function client()
     {
-        return $this->belongsTo('App\Company', 'dealer_id');
+        return $this->belongsTo('App\Client', 'client_id');
     }
 
     // Получаем автора

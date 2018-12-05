@@ -74,12 +74,6 @@ class Company extends Model
         return $query;
     }
 
-    // Связываем компанию с информацией о ее директоре
-    public function director()
-    {
-        return $this->BelongsTo('App\User', 'director_user_id');
-    }
-
     public function departments()
     {
         return $this->hasMany('App\Department');
@@ -90,6 +84,15 @@ class Company extends Model
         return $this->hasMany('App\Department')->whereNull('parent_id');
     }
 
+    public function director()
+    {
+        return $this->hasOne('App\Staffer')->whereHas('department', function($q){
+            $q->whereNull('parent_id');
+        })->whereHas('position', function($q){
+            $q->where('direction_status', 1);
+        });
+    }
+
     public function bank_accounts()
     {
         return $this->hasMany('App\BankAccount', 'holder_id');
@@ -98,11 +101,6 @@ class Company extends Model
     public function sites()
     {
         return $this->hasMany('App\Site');
-    }
-
-    public function users()
-    {
-        return $this->hasMany('App\User');
     }
 
     public function roles()
@@ -179,7 +177,7 @@ class Company extends Model
     // Получаем дилеров
     public function dealers()
     {
-        return $this->belongsToMany('App\Company', 'dealers', 'company_id', 'dealer_id');
+        return $this->hasManyTrough('App\Dealer', 'App\Client', 'company_id');
     }
 
     public function manufacturers()
@@ -213,10 +211,10 @@ class Company extends Model
     }
 
     // Получаем компании, где мы дилеры
-    public function we_dealers()
-    {
-        return $this->hasMany('App\Dealer', 'dealer_id');
-    }
+    // public function we_dealers()
+    // {
+    //     return $this->hasMany('App\Dealer', 'dealer_id');
+    // }
 
     // Получаем компании, где мы производители
     public function we_manufacturers()

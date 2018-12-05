@@ -118,6 +118,11 @@
                             @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$dealer->description])
                         </label>
                     </div>
+                    <div class="small-6 medium-3 cell">
+                        <label>Скидка
+                            @include('includes.inputs.digit', ['name'=>'discount', 'value'=>$dealer->discount])
+                        </label>
+                    </div>
                 </div>
             </div>
             <!-- Конец блока дилера -->

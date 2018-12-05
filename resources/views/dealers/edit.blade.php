@@ -6,7 +6,7 @@
 
 @section('title', 'Редактировать дилера')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $dealer->company->name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $dealer->client->client->name))
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -19,9 +19,9 @@
 @endsection
 
 @section('content')
-    {{ Form::model($dealer->company, ['url' => '/admin/dealers/'.$dealer->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+    {{ Form::model($dealer->client->client, ['url' => '/admin/dealers/'.$dealer->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
     {{ method_field('PATCH') }}
-        @include('companies.form', ['submitButtonText' => 'Редактировать дилера', 'param'=>'', 'company'=>$dealer->company])
+        @include('companies.form', ['submitButtonText' => 'Редактировать дилера', 'param'=>'', 'company'=>$dealer->client->client])
     {{ Form::close() }}
 @endsection
 
@@ -35,7 +35,7 @@
     @include('includes.scripts.inputs-mask')
     @include('includes.scripts.modal-delete-script')
     @include('includes.scripts.extra-phone')
-    @include('includes.bank_accounts.bank-account-script', ['id' => $dealer->company->id])
+    @include('includes.bank_accounts.bank-account-script', ['id' => $dealer->client->client->id])
 @endsection
 
 
