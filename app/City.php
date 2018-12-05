@@ -44,9 +44,9 @@ class City extends Model
 
     protected $dates = ['deleted_at'];
 
-    // protected $table = 'cities';
+    protected $table = 'cities';
 
-    protected $connection = 'general';
+    // protected $connection = 'general';
     protected $fillable = [
         'city_name',
         'region_id',
