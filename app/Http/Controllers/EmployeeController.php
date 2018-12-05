@@ -37,7 +37,7 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
@@ -45,21 +45,14 @@ class EmployeeController extends Controller
         $this->authorize(getmethod(__FUNCTION__), Employee::class);
         // $this->authorize(getmethod(__FUNCTION__), Position::class);
         // $this->authorize(getmethod(__FUNCTION__), Staffer::class);
-        
-        // Смотрим сколько филиалов в компании
-        $user = $request->user();
-        $answer_company = operator_right('companies', false, 'view');
 
-        $company = Company::with(['departments' => function($query) use ($answer_company) {
-          $query->moderatorLimit($answer_company)->whereFilial_status(1);
-        }])->findOrFail($user->company_id);
-
-        $filials = count($company->departments);
 
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+        // Смотрим сколько филиалов в компании
+        $user = $request->user();
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
@@ -67,8 +60,7 @@ class EmployeeController extends Controller
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
 
-
-        // Так как сущность не филиала зависимая, но по факту 
+        // Так как сущность не филиала зависимая, но по факту
         // все таки зависимая через staff, то делаем нестандартную фильтрацию (прямо в запросе)
         ->when($answer['dependence'] == true, function ($query) use ($user) {
             return $query->whereHas('staffer', function($q) use ($user){
@@ -102,7 +94,7 @@ class EmployeeController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('employees.index', compact('employees', 'page_info', 'filials', 'filter'));
+        return view('employees.index', compact('employees', 'page_info', 'filter'));
     }
 
     public function create()
@@ -140,8 +132,8 @@ class EmployeeController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-      
-        return view('employees.edit', compact('employee', 'users_list', 'page_info'));    
+
+        return view('employees.edit', compact('employee', 'users_list', 'page_info'));
     }
 
 
@@ -166,7 +158,7 @@ class EmployeeController extends Controller
         $employee->dismissal_description = $request->dismissal_description;
         $employee->editor_id = $user->id;
         $employee->save();
-        
+
         // Если записалось
         if ($employee) {
           return redirect('/admin/employees');
@@ -185,7 +177,7 @@ class EmployeeController extends Controller
     {
 
       $i = 1;
-      
+
       foreach ($request->employees as $item) {
             Employee::where('id', $item)->update(['sort' => $i]);
             $i++;
@@ -208,7 +200,7 @@ class EmployeeController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -235,7 +227,7 @@ class EmployeeController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -245,5 +237,5 @@ class EmployeeController extends Controller
         }
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
-    
+
 }

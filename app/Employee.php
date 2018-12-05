@@ -65,6 +65,12 @@ class Employee extends Model
         return $this->belongsTo('App\Staffer');
     }
 
+    // Компания
+    public function company()
+    {
+        return $this->belongsTo('App\Company');
+    }
+
     // Получаем сотрудника.
     public function user()
     {
