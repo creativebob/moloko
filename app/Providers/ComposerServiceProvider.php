@@ -27,7 +27,8 @@ use App\Http\ViewComposers\GoodsCategoriesComposer;
 use App\Http\ViewComposers\GoodsProductsComposer;
 // use App\Http\ViewComposers\AlbumsCategoriesComposer;
 
-use App\Http\ViewComposers\UsersSelectComposer;
+use App\Http\ViewComposers\UsersComposer;
+use App\Http\ViewComposers\StaffComposer;
 
 
 
@@ -50,7 +51,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.goods_modes', GoodsModesComposer::class);
         view()->composer('includes.selects.raws_modes', RawsModesComposer::class);
 
-        view()->composer('includes.selects.users', UsersSelectComposer::class);
+        view()->composer('includes.selects.users', UsersComposer::class);
+        view()->composer('includes.selects.staff', StaffComposer::class);
 
         view()->composer('includes.selects.catalogs', CatalogsSelectComposer::class);
 
