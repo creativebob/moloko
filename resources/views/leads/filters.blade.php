@@ -32,14 +32,14 @@
 
                 <div class="small-5 medium-5 cell">
                     <label>Начало периода:
-                        @include('includes.inputs.date', ['name'=>'date_start', 'value' => '', 'required' => ''])
+                        @include('includes.inputs.date', ['name'=>'date_start', 'value' => ''])
                     </label>
                 </div>
                 <div class="small-2 medium-2 cell">
                 </div>
                 <div class="small-5 medium-5 cell">
                     <label>Окончание периода:
-                        @include('includes.inputs.date', ['name'=>'date_end', 'value' => '', 'required' => ''])
+                        @include('includes.inputs.date', ['name'=>'date_end', 'value' => ''])
                     </label>
                 </div>
 

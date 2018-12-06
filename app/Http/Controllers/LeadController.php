@@ -115,7 +115,7 @@ class LeadController extends Controller
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        // ->authors($answer)
+        ->authors($answer)
         ->whereNull('draft')
         ->systemItem($answer) // Фильтр по системным записям
         ->filter($request, 'city_id', 'location')
