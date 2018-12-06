@@ -69,13 +69,9 @@
             <div class="small-12 cell">
                 <div class="grid-x">
                     <div class="small-12 cell checkbox checkboxer">
-                        <select name="challenges_active_count">
-                            <option value="0">Нет активных задач</option>
-                            <option value="1">Одна задача</option>
-                            <option value="2">Две задачи</option>
-                            <option value="3">Три задачи</option>
-                            <option value="4">Четыре задачи</option>
-                        </select>
+
+                        {!! Form::select('challenges_active_count', ['2' => 'Все', '0' => 'Нет активных задач', '1' => 'Только с задачами'], null) !!}
+
                     </div>
                 </div>
             </div>

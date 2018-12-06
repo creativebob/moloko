@@ -115,7 +115,7 @@ class LeadController extends Controller
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
+        // ->authors($answer)
         ->whereNull('draft')
         ->systemItem($answer) // Фильтр по системным записям
         ->filter($request, 'city_id', 'location')
@@ -123,7 +123,7 @@ class LeadController extends Controller
         ->filter($request, 'manager_id')
         ->filter($request, 'lead_type_id')
         ->filter($request, 'lead_method_id')
-        ->valueFilter($request, 'challenges_active_count')
+        ->booleanFilter($request, 'challenges_active_count')
         ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
         ->orderBy('created_at', 'desc')

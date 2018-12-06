@@ -31,6 +31,7 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
 use App\Scopes\Filters\ValueFilter;
+use App\Scopes\Filters\BooleanFilter;
 
 class Lead extends Model
 {
@@ -58,6 +59,7 @@ class Lead extends Model
     use BooklistFilter;
     use DateIntervalFilter;
     use ValueFilter;
+    use BooleanFilter;
 
     // public $timestamps = false;
 
