@@ -61,6 +61,7 @@ class ManufacturerController extends Controller
         // -------------------------------------------------------------------------------------------------------------
 
         $manufacturers = Manufacturer::with('author', 'company')
+        ->companiesLimit($answer)
         ->where('company_id', '!=', null)
         ->moderatorLimit($answer)
         ->booklistFilter($request)
