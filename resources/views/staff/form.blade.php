@@ -42,7 +42,7 @@
             </div>
             <div class="small-12 medium-5 large-5 cell tabs-margin-top">
                 <label>Причина увольнения
-                    {{ Form::textarea('dismissal_desc', null, ['class'=>'varchar-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+                    {{ Form::textarea('dismissal_description', null, ['class'=>'varchar-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
                 </label>
             </div>
             <div class="small-0 medium-0 large-2 cell tabs-margin-top"></div>

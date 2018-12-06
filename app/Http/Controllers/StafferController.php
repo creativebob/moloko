@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 // Подключаем модели
 use App\Staffer;
-
 use App\Employee;
-use App\Page;
 use App\User;
+
+use App\Page;
 use App\Site;
 use App\Company;
 use App\Department;
@@ -58,7 +58,7 @@ class StafferController extends Controller
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
-        $staff = $this->staffer->getIndex($answer, $request);
+        $staff = $this->staffer->getIndex($request, $answer);
 
         // dd($staff);
 
@@ -141,32 +141,12 @@ class StafferController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $staffer = Staffer::with(['position', 'schedules.worktimes', 'employees' => function($query) {
-            $query->whereNull('dismissal_date');
-        }])
+        $staffer = Staffer::with(['position', 'schedules.worktimes', 'employee'])
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $staffer);
-
-        // Список пользователей
-        $answer_users = operator_right('users', true, 'index');
-        $user = $request->user();
-
-        $users = User::moderatorLimit($answer_users)
-        ->companiesLimit($answer_users)
-        ->filials($answer_users) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_users)
-        ->systemItem($answer_users) // Фильтр по системным записям
-        ->orderBy('second_name')
-        ->get();
-
-        $users_list = [];
-        foreach ($users as $user) {
-            $users_list[$user->id] = $user->second_name.' '.$user->first_name;
-        }
-        // dd($users_list);
 
         if (isset($staffer->schedules->first()->worktimes)) {
             $worktime_mass = $staffer->schedules->first()->worktimes->keyBy('weekday');
@@ -202,7 +182,6 @@ class StafferController extends Controller
 
                 $worktime[$x]['end'] = null;
             }
-
         }
 
         // Инфо о странице
@@ -214,7 +193,6 @@ class StafferController extends Controller
     public function update(EmployeeRequest $request, $id)
     {
 
-        // dd($request);
         // Получаем авторизованного пользователя
         $user = $request->user();
 
@@ -230,72 +208,77 @@ class StafferController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $staffer);
 
-        // dd(empty($request->user_id));
-        // dd(isset($staffer->employee));
+        // Если на должность назначен сотрудник
+        if (isset($staffer->employee)) {
 
-        if (isset($staffer->employee) || empty($request->user_id)) {
             $employee = $staffer->employee;
+            $employment_date = outPickMeUp($request->employment_date);
+
+            if ($employee->employment_date != $employment_date) {
+                $employee->employment_date = $employment_date;
+                $employee->editor_id = $user_id;
+                $employee->save();
+            }
+
         } else {
-            $staffer->employee()->create([
+
+            $staffer->employees()->create([
                 'company_id' => $user->company_id,
                 'user_id' => $request->user_id,
+                'employment_date' => outPickMeUp($request->employment_date),
                 'dismissal_date' => null,
-                'author_id' => $user_id
+                'author_id' => $user_id,
             ]);
-            $employee = $staffer->employee;
-        }
 
-        // Заполняем дату
-        $employee->employment_date = outPickMeUp($request->employment_date);
+            $employee = $staffer->load('employee');
+            $employee = $staffer->employee;
+
+            $staffer->user_id = $request->user_id;
+
+            $roles = [];
+            foreach ($staffer->position->roles as $role) {
+                $roles[$role->id] = [
+                    'department_id' => $staffer->filial_id,
+                    'position_id' => $staffer->position_id,
+                    'author_id' => $user_id,
+                ];
+            }
+
+            User::findOrFail($request->user_id)->roles()->attach($roles);
+
+        }
+        // dd($employee);
+        // dd($staffer);
 
         // Если пришла дата увольнения, то снимаем с должности в штате и удаляем роли
         if (isset($request->dismissal_date)) {
 
-            $staffer->user_id = null;
             $employee->dismissal_date = outPickMeUp($request->dismissal_date);
             $employee->dismissal_description = $request->dismissal_description;
-
-            $staffer->editor_id = $user_id;
+            $employee->editor_id = $user_id;
+            $employee->save();
 
             // Удаляем должность и права данного юзера
-            $delete = RoleUser::where(['position_id' => $staffer->position_id, 'user_id' => $staffer->user_id])->delete();
-        } else if (empty($staffer->employee) || isset($request->user_id)) {
+            // 05.12.18 - решали что при увольнении сносить все права (включая спецправа), т.к. должность одна пока что
+            User::findOrFail($staffer->user_id)->roles()->detach();
 
-            $staffer->user_id = $request->user_id;
-            // Создать связь сотрудника, филиала и ролей должности
-            $mass = [];
-
-            foreach ($staffer->position->roles as $role) {
-                $mass[] = [
-                    'user_id' => $request->user_id,
-                    'role_id' => $role->id,
-                    'department_id' => $staffer->filial_id,
-                    'position_id' => $staffer->position_id,
-                    'author_id' => $user->id,
-                ];
-            }
-            DB::table('role_user')->insert($mass);
+            // Освобождаем штат
+            $staffer->user_id = null;
+            $staffer->editor_id = $user_id;
 
         }
 
-         // Расписание для штата
+        // Расписание для штата
         setSchedule($request, $staffer);
 
-        $employee->save();
+        $staffer->display = $request->display;
+        $staffer->editor_id = $user_id;
+        $staffer->save();
 
-        if ($employee) {
-            $staffer->display = $request->display;
-
-            $staffer->editor_id = $user_id;
-            $staffer->save();
-
-            if ($staffer) {
-                return Redirect('/admin/staff');
-            } else {
-                abort(403, 'Ошибка при обновлении штата!');
-            }
+        if ($staffer) {
+            return Redirect('/admin/staff');
         } else {
-            abort(403, 'Ошибка при обновлении сотрудника!');
+            abort(403, 'Ошибка при обновлении штата!');
         }
     }
 
@@ -314,9 +297,7 @@ class StafferController extends Controller
 
         // Удаляем должность из отдела с обновлением
         // Находим филиал и отдел
-        $user = $request->user();
-
-        $staffer->editor_id = $user->id;
+        $staffer->editor_id = $request->user()->id;
         $staffer->save();
         $staffer = Staffer::destroy($id);
 
@@ -324,110 +305,6 @@ class StafferController extends Controller
             return redirect()->action('DepartmentController@index', ['id' => $department_id, 'item' => 'department']);
         } else {
             abort(403, 'Ошибка при удалении штата');
-        }
-    }
-
-
-    // ---------------------------------------------- Ajax -----------------------------------------------------------
-
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->staff as $item) {
-            Staffer::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Staffer::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Staffer::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // ---------------------------------------------- API --------------------------------------------------
-
-    // Получаем вакансии по api
-    public function api_index_vacancies (Request $request)
-    {
-
-        $site = Site::with(['company.staff.position', 'company.staff' => function ($query) {
-            $query->whereNull('user_id');
-        }])->where('api_token', $request->token)->first();
-        if ($site) {
-            // return Cache::remember('staff', 1, function() use ($domen) {
-            return $site->company->staff;
-            // });
-        } else {
-            return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
-        }
-    }
-
-    // Получаем команду по api
-    public function api_index_team (Request $request)
-    {
-
-        $site = Site::with(['company.staff.position', 'company.staff.user', 'company.staff' => function ($query) {
-            $query->whereNotNull('user_id');
-        }])->where('api_token', $request->token)->first();
-        if ($site) {
-
-            // return Cache::remember('staff', 1, function() use ($domen) {
-            return $site->company->staff;
-            // });
-        } else {
-            return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
         }
     }
 }

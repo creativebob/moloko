@@ -16,6 +16,19 @@ function buildTree($items)
     return $items->where('parent_id', null);
 }
 
+function buildSidebarTree($items)
+{
+    $grouped = $items->groupBy('parent_id');
+
+    foreach ($items as $item) {
+        if ($grouped->has($item->id)) {
+            $item->childrens = $grouped[$item->id];
+        }
+    }
+
+    return $items->where('parent_id', null);
+}
+
 // Рекурсивно считываем наш шаблон
 function showCat($items, $padding, $parent, $disable, $exception){
     $string = '';
