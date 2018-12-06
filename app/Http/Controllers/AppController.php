@@ -9,6 +9,11 @@ use App\Entity;
 class AppController extends Controller
 {
 
+    // Вход в приложение
+    public function enter() {
+        return view('layouts.enter');
+    }
+
     // ------------------------------------------------ Ajax -------------------------------------------------
 
     // Сортировка

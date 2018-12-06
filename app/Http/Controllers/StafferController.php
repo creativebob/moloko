@@ -122,7 +122,7 @@ class StafferController extends Controller
         if ($staffer) {
 
         // Переадресовываем на index
-            return redirect()->action('DepartmentController@index', ['id' => $staffer->id, 'item' => 'staff']);
+            return redirect()->route('departments.index', ['id' => $staffer->id, 'item' => 'staff']);
         } else {
             abort(403, 'Ошибка при записи штата!');
         }
@@ -147,46 +147,10 @@ class StafferController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $staffer);
 
-        if (isset($staffer->schedules->first()->worktimes)) {
-            $worktime_mass = $staffer->schedules->first()->worktimes->keyBy('weekday');
-        }
-
-        for($x = 1; $x<8; $x++){
-
-            if(isset($worktime_mass[$x]->worktime_begin)){
-
-                $worktime_begin = $worktime_mass[$x]->worktime_begin;
-                $str_worktime_begin = secToTime($worktime_begin);
-                $worktime[$x]['begin'] = $str_worktime_begin;
-
-            } else {
-
-                $worktime[$x]['begin'] = null;
-            }
-
-            if(isset($worktime_mass[$x]->worktime_interval)){
-
-                $worktime_interval = $worktime_mass[$x]->worktime_interval;
-
-                if(($worktime_begin + $worktime_interval) > 86400){
-
-                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
-                } else {
-
-                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);
-                }
-
-                $worktime[$x]['end'] = $str_worktime_interval;
-            } else {
-
-                $worktime[$x]['end'] = null;
-            }
-        }
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('staff.edit', compact('staffer', 'page_info', 'worktime'));
+        return view('staff.edit', compact('staffer', 'page_info'));
     }
 
     public function update(EmployeeRequest $request, $id)
@@ -275,7 +239,7 @@ class StafferController extends Controller
         $staffer->save();
 
         if ($staffer) {
-            return Redirect('/admin/staff');
+            return redirect()->route('staff.index');
         } else {
             abort(403, 'Ошибка при обновлении штата!');
         }
@@ -301,7 +265,7 @@ class StafferController extends Controller
         $staffer = Staffer::destroy($id);
 
         if ($staffer) {
-            return redirect()->action('DepartmentController@index', ['id' => $department_id, 'item' => 'department']);
+            return redirect()->route('departments.index', ['id' => $department_id, 'item' => 'department']);
         } else {
             abort(403, 'Ошибка при удалении штата');
         }

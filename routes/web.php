@@ -31,9 +31,7 @@ Auth::routes();
 
 
 // Вход в панель управления
-Route::get('/', function () {
-    return view('layouts.enter');
-});
+Route::get('/', 'AppController@enter');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
@@ -64,107 +62,107 @@ Route::get('/entity_page', 'ParserController@entity_page')->middleware('auth');
 // Route::get('/cac_parser', 'ParserController@challenges_active_count')->middleware('auth');
 Route::get('/choice_parser', 'ParserController@choice_parser')->middleware('auth');
 
-Route::get('/dadata', function() {
-$result = DadataSuggest::suggest("party", ["query"=>"солтысяк"]);
-dd($result);
-})->middleware('auth');
+// Route::get('/dadata', function() {
+//     $result = DadataSuggest::suggest("party", ["query"=>"солтысяк"]);
+//     dd($result);
+// })->middleware('auth');
 
 
-Route::get('/map', function() {
+// Route::get('/map', function() {
 
-    // $lead = Lead::with('location')
-    // ->whereHas('location', function ($q) {
-    //     $q->whereNotNull('latitude');
-    // })
-    // // ->inRandomOrder()
-    // // ->first();
+//     // $lead = Lead::with('location')
+//     // ->whereHas('location', function ($q) {
+//     //     $q->whereNotNull('latitude');
+//     // })
+//     // // ->inRandomOrder()
+//     // // ->first();
 
-    $leads = Lead::with(['location.city', 'main_phones', 'stage', 'claims' => function ($q) {
-        $q->whereStatus(1);
-    }])
-    ->whereHas('location', function ($q) {
-        $q->whereNotNull('longitude')->whereNotNull('latitude');
-    })
-    ->where('stage_id', '!=', 13)
-    ->where('lead_type_id', '!=', 3)
-    ->get();
-    // dd($leads);
+//     $leads = Lead::with(['location.city', 'main_phones', 'stage', 'claims' => function ($q) {
+//         $q->whereStatus(1);
+//     }])
+//     ->whereHas('location', function ($q) {
+//         $q->whereNotNull('longitude')->whereNotNull('latitude');
+//     })
+//     ->where('stage_id', '!=', 13)
+//     ->where('lead_type_id', '!=', 3)
+//     ->get();
+//     // dd($leads);
 
-    $lead = $leads->first();
-    // dd($lead);
+//     $lead = $leads->first();
+//     // dd($lead);
 
-    $mass = [];
-    foreach ($leads as $lead) {
+//     $mass = [];
+//     foreach ($leads as $lead) {
 
-        $claims_count = count($lead->claims) > 0 ? count($lead->claims) : 0;
+//         $claims_count = count($lead->claims) > 0 ? count($lead->claims) : 0;
 
-        $mass[] = [
-            'coords' => [(float)$lead->location->latitude, (float)$lead->location->longitude],
-            'info' => [
-                'name' => "<a href=" . asset('admin/leads/' . $lead->id .'/edit') . " target=_blank>" . $lead->name . "</a>",
-                'order' => $lead->case_number,
-                'phone' => decorPhone($lead->main_phone->phone),
-                'address' => 'г. ' . $lead->location->city->name . ', ' . $lead->location->address,
-                'stage' => [
-                    'id' => $lead->stage_id,
-                    'name' => $lead->stage->name,
-                ],
-                'claims_count' => $claims_count,
-            ]
-        ];
-    };
+//         $mass[] = [
+//             'coords' => [(float)$lead->location->latitude, (float)$lead->location->longitude],
+//             'info' => [
+//                 'name' => "<a href=" . asset('admin/leads/' . $lead->id .'/edit') . " target=_blank>" . $lead->name . "</a>",
+//                 'order' => $lead->case_number,
+//                 'phone' => decorPhone($lead->main_phone->phone),
+//                 'address' => 'г. ' . $lead->location->city->name . ', ' . $lead->location->address,
+//                 'stage' => [
+//                     'id' => $lead->stage_id,
+//                     'name' => $lead->stage->name,
+//                 ],
+//                 'claims_count' => $claims_count,
+//             ]
+//         ];
+//     };
 
-    // $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
+//     // $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
 
-    // dd($mass);
-    // $coords = $mass;
+//     // dd($mass);
+//     // $coords = $mass;
 
-    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
+//     $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
 
-    // dd($coords);
+//     // dd($coords);
 
-    // dd($lead);
+//     // dd($lead);
 
-    return view('leads.map', compact('lead', 'coords'));
-})->middleware('auth');
+//     return view('leads.map', compact('lead', 'coords'));
+// })->middleware('auth');
 
-Route::get('/route', function() {
+// Route::get('/route', function() {
 
-    $lead = Lead::with(['location'])
-    ->whereHas('location', function ($q) {
-        $q->whereNotNull('longitude')->whereNotNull('latitude');
-    })
-    ->where('stage_id', '!=', 13)
-    ->where('lead_type_id', '!=', 3)
-    ->inRandomOrder()
-    ->first();
-
-
-    $mass = [
-        'coords' => [(float)$lead->location->latitude, (float)$lead->location->longitude],
-    ];
-
-    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
-
-    return view('leads.route', compact('coords'));
-})->middleware('auth');
-
-Route::get('/mounth', function() {
+//     $lead = Lead::with(['location'])
+//     ->whereHas('location', function ($q) {
+//         $q->whereNotNull('longitude')->whereNotNull('latitude');
+//     })
+//     ->where('stage_id', '!=', 13)
+//     ->where('lead_type_id', '!=', 3)
+//     ->inRandomOrder()
+//     ->first();
 
 
-    $start = new Carbon('first day of last month');
-    $start->startOfMonth();
-    $end = new Carbon('last day of last month');
-    $end->endOfMonth();
+//     $mass = [
+//         'coords' => [(float)$lead->location->latitude, (float)$lead->location->longitude],
+//     ];
 
-    // dd($end);
+//     $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
 
-    $leads = Lead::where('created_at', '>=', $start)->where('created_at', '<=', $end)->whereNull('draft')->get();
-    // dd($leads);
-    $telegram_message = "Отчет за сентябрь: \r\n\r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\Заявок с сайта: ".count($leads->where('lead_type_id', 2))."\r\n\r\nВсего: ".count($leads);
+//     return view('leads.route', compact('coords'));
+// })->middleware('auth');
 
-    dd($telegram_message);
-})->middleware('auth');
+// Route::get('/mounth', function() {
+
+
+//     $start = new Carbon('first day of last month');
+//     $start->startOfMonth();
+//     $end = new Carbon('last day of last month');
+//     $end->endOfMonth();
+
+//     // dd($end);
+
+//     $leads = Lead::where('created_at', '>=', $start)->where('created_at', '<=', $end)->whereNull('draft')->get();
+//     // dd($leads);
+//     $telegram_message = "Отчет за сентябрь: \r\n\r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\Заявок с сайта: ".count($leads->where('lead_type_id', 2))."\r\n\r\nВсего: ".count($leads);
+
+//     dd($telegram_message);
+// })->middleware('auth');
 
 // ------------------------------------ Telegram ----------------------------------------
 
@@ -269,7 +267,7 @@ Route::patch('/ajax_update_photo/{id}', 'PhotoController@update_photo')->middlew
 Route::resource('/places', 'PlaceController')->middleware('auth');
 
 // --------------------------------------- Склады -----------------------------------------------
-Route::resource('stocks', 'StockController')->middleware('auth');
+// Route::resource('stocks', 'StockController')->middleware('auth');
 
 // --------------------------------------- Свойства -----------------------------------------------
 Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware('auth');
@@ -531,7 +529,7 @@ Route::post('/accounts_check', 'AccountController@ajax_check')->middleware('auth
 // --------------------------------------- Рекламные кампании -----------------------------------------------
 
 // Основные методы
-Route::resource('/campaigns', 'CampaignController')->middleware('auth');
+// Route::resource('/campaigns', 'CampaignController')->middleware('auth');
 
 
 // --------------------------------------- Отзывы -----------------------------------------------
@@ -543,19 +541,19 @@ Route::resource('/feedback', 'FeedbackController')->middleware('auth');
 // --------------------------------------- Расходы -----------------------------------------------
 
 // Основные методы
-Route::resource('/expenses', 'ExpenseController')->middleware('auth');
+// Route::resource('/expenses', 'ExpenseController')->middleware('auth');
 
 
 // --------------------------------------- Зарплаты -----------------------------------------------
 
 // Основные методы
-Route::resource('/salaries', 'SalaryController')->middleware('auth');
+// Route::resource('/salaries', 'SalaryController')->middleware('auth');
 
 
 // --------------------------------------- Социальные сети -----------------------------------------------
 
 // Основные методы
-Route::resource('social_networks', 'SocialNetworkController')->middleware('auth');
+// Route::resource('social_networks', 'SocialNetworkController')->middleware('auth');
 
 
 // -------------------------------------- Поставщики -----------------------------------------------

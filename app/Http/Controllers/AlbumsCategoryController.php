@@ -101,7 +101,7 @@ class AlbumsCategoryController extends Controller
         if ($albums_category) {
 
             // Переадресовываем на index
-            return redirect()->action('AlbumsCategoryController@index', ['id' => $albums_category->id]);
+            return redirect()->route('albums_categories.index', ['id' => $albums_category->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -150,7 +150,7 @@ class AlbumsCategoryController extends Controller
         if ($albums_category) {
 
             // Переадресовываем на index
-            return redirect()->action('AlbumsCategoryController@index', ['id' => $albums_category->id]);
+            return redirect()->route('albums_categories.index', ['id' => $albums_category->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -194,7 +194,7 @@ class AlbumsCategoryController extends Controller
             if ($albums_category) {
 
                 // Переадресовываем на index
-                return redirect()->action('AlbumsCategoryController@index', ['id' => $parent]);
+                return redirect()->route('albums_categories.index', ['id' => $parent]);
             } else {
                 $result = [
                     'error_status' => 1,
