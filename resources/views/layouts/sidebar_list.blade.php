@@ -12,8 +12,9 @@
 
 @else
 
-@isset($item->alias)
 {{-- Если конечный пункт --}}
+@isset($item->alias)
+
 <li>
 	<a href="/{{ $item->alias }}" data-link="{{ $item->id }}">{{ $item->name }}</a>
 </li>
