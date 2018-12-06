@@ -134,7 +134,7 @@ class SectorController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $sector = $this->sector->getItem(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)), $id);
+        $sector = $this->sector->getItem($id, operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)));
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
@@ -152,7 +152,7 @@ class SectorController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $sector = $this->sector->getItem(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)), $id);
+        $sector = $this->sector->getItem($id, operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)));
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);

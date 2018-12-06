@@ -119,7 +119,7 @@ class AlbumsCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $albums_category = $this->albums_category->getItem(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)), $id);
+        $albums_category = $this->albums_category->getItem($id, operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)));
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);
@@ -137,7 +137,7 @@ class AlbumsCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $albums_category = $this->albums_category->getItem(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)), $id);
+        $albums_category = $this->albums_category->getItem($id, operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)));
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);

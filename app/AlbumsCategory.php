@@ -78,7 +78,7 @@ class AlbumsCategory extends Model
         ->get();
     }
 
-    public function getItem($answer, $id)
+    public function getItem($id, $answer)
     {
         return $this->moderatorLimit($answer)->findOrFail($id);
     }
