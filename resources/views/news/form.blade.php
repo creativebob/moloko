@@ -48,7 +48,7 @@
             <div class="item-error">Такая новость уже существует!</div>
         </label>
         @isset($cur_news->alias)
-        <a class="button" href="http://{{ $cur_news->site->alias }}/news/{{ $cur_news->alias }}" target="_blank">Просмотр новости</a>
+        <a class="button" href="https://{{ $cur_news->site->domain }}/news/{{ $cur_news->alias }}" target="_blank">Просмотр новости</a>
         @endisset
         {{ Form::hidden('check', 0, ['id'=>'check']) }}
         {{ Form::hidden('site_id', $site->id) }}

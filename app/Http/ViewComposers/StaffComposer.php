@@ -43,6 +43,14 @@ class StaffComposer
                 break;
 
                 default:
+                $staff = User::moderatorLimit($answer)
+                ->companiesLimit($answer)
+                ->filials($answer)
+                ->authors($answer)
+                ->systemItem($answer)
+                ->whereNull('god')
+                ->orderBy('second_name')
+                ->get();
 
                 break;
             }

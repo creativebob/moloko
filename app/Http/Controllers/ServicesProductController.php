@@ -112,7 +112,7 @@ class ServicesProductController extends Controller
         ->authors($answer_services_categories)
         ->systemItem($answer_services_categories)
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -190,7 +190,7 @@ class ServicesProductController extends Controller
         ->authors($answer_services_categories)
         ->systemItem($answer_services_categories)
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 

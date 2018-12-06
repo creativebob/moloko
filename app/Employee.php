@@ -84,23 +84,33 @@ class Employee extends Model
     }
 
     // --------------------------------------- Запросы -----------------------------------------
-    public function getIndex($request, $answer)
-    {
-        return $this->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->template($answer)
-        ->booklistFilter($request)
-        ->withCount('companies')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
-    }
+    // public function getIndex($request, $answer, $user)
+    // {
+    //     return $this->moderatorLimit($answer)
+    //     ->companiesLimit($answer)
 
-    public function getItem($id, $answer)
-    {
-        return $this->moderatorLimit($answer)->findOrFail($id);
-    }
+    //     // Так как сущность не филиала зависимая, но по факту
+    //     // все таки зависимая через staff, то делаем нестандартную фильтрацию (прямо в запросе)
+    //     ->when($answer['dependence'] == true, function ($query) use ($user) {
+    //         return $query->whereHas('staffer', function($q) use ($user){
+    //             $q->where('filial_id', $user->filial_id);
+    //         });
+    //     })
+
+    //     // ->authors($answer)
+    //     ->systemItem($answer) // Фильтр по системным записям
+    //     ->booklistFilter($request)
+    //     ->filter($request, 'position_id', 'staffer')
+    //     ->filter($request, 'department_id', 'staffer')
+    //     ->dateIntervalFilter($request, 'date_employment')
+    //     ->orderBy('moderation', 'desc')
+    //     ->orderBy('sort', 'asc')
+    //     ->paginate(30);
+    // }
+
+    // public function getItem($id, $answer)
+    // {
+    //     return $this->moderatorLimit($answer)->findOrFail($id);
+    // }
 
 }

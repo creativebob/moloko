@@ -115,7 +115,7 @@ class RawsCategoryController extends Controller
 
         if ($raws_category) {
             // Переадресовываем на index
-            return redirect()->action('RawsCategoryController@index', ['id' => $raws_category->id]);
+            return redirect()->route('raws_categories.index', ['id' => $raws_category->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -290,7 +290,7 @@ class RawsCategoryController extends Controller
         if ($raws_category) {
 
            // Переадресовываем на index
-            return redirect()->action('RawsCategoryController@index', ['id' => $raws_category->id]);
+            return redirect()->route('raws_categories.index', ['id' => $raws_category->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -341,7 +341,7 @@ class RawsCategoryController extends Controller
             if ($raws_category) {
 
                 // Переадресовываем на index
-                return redirect()->action('RawsCategoryController@index', ['id' => $parent]);
+                return redirect()->route('raws_categories.index', ['id' => $parent]);
             } else {
                 $result = [
                     'error_status' => 1,
@@ -350,131 +350,4 @@ class RawsCategoryController extends Controller
             }
         }
     }
-
-    // ------------------------------------------------ Ajax -------------------------------------------------
-    // public function ajax_update(Request $request, $id)
-    // {
-    //     // dd($request);
-    //     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    //     $answer = operator_right($this->entity_alias, $this->entity_alias, 'update');
-
-    //     // ГЛАВНЫЙ ЗАПРОС:
-    //     $raws_category = RawsCategory::moderatorLimit($answer)->findOrFail($id);
-
-    //     // Подключение политики
-    //     $this->authorize(getmethod('update'), $raws_category);
-
-    //     // Получаем авторизованного пользователя
-    //     $user = $request->user();
-
-    //     // Скрываем бога
-    //     $user_id = hideGod($user);
-
-    //     $company_id = $user->company_id;
-
-    //     // Если прикрепили фото
-    //     if ($request->hasFile('photo')) {
-
-    //         // Вытаскиваем настройки
-    //         // Вытаскиваем базовые настройки сохранения фото
-    //         $settings = config()->get('settings');
-
-    //         // Начинаем проверку настроек, от компании до альбома
-    //         // Смотрим общие настройки для сущности
-    //         $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
-
-    //         if ($get_settings) {
-
-    //             if ($get_settings->img_small_width != null) {
-    //                 $settings['img_small_width'] = $get_settings->img_small_width;
-    //             }
-
-    //             if ($get_settings->img_small_height != null) {
-    //                 $settings['img_small_height'] = $get_settings->img_small_height;
-    //             }
-
-    //             if ($get_settings->img_medium_width != null) {
-    //                 $settings['img_medium_width'] = $get_settings->img_medium_width;
-    //             }
-
-    //             if ($get_settings->img_medium_height != null) {
-    //                 $settings['img_medium_height'] = $get_settings->img_medium_height;
-    //             }
-
-    //             if ($get_settings->img_large_width != null) {
-    //                 $settings['img_large_width'] = $get_settings->img_large_width;
-    //             }
-
-    //             if ($get_settings->img_large_height != null) {
-    //                 $settings['img_large_height'] = $get_settings->img_large_height;
-    //             }
-
-    //             if ($get_settings->img_formats != null) {
-    //                 $settings['img_formats'] = $get_settings->img_formats;
-    //             }
-
-    //             if ($get_settings->img_min_width != null) {
-    //                 $settings['img_min_width'] = $get_settings->img_min_width;
-    //             }
-
-    //             if ($get_settings->img_min_height != null) {
-    //                 $settings['img_min_height'] = $get_settings->img_min_height;
-    //             }
-
-    //             if ($get_settings->img_max_size != null) {
-    //                 $settings['img_max_size'] = $get_settings->img_max_size;
-    //             }
-    //         }
-
-    //         // Директория
-    //         $directory = $company_id.'/media/raws_categories/'.$raws_category->id.'/img';
-
-    //         // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-    //         if ($raws_category->photo_id) {
-    //             $array = save_photo($request, $directory, 'avatar-'.time(), null, $raws_category->photo_id, $settings);
-    //         } else {
-    //             $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
-    //         }
-    //         $photo = $array['photo'];
-
-    //         $raws_category->photo_id = $photo->id;
-    //     }
-
-    //     $raws_category->description = $request->description;
-    //     $raws_category->seo_description = $request->seo_description;
-
-    //     // Модерация и системная запись
-    //     $raws_category->system_item = $request->system_item;
-    //     $raws_category->moderation = $request->moderation;
-
-    //     $raws_category->parent_id = $request->parent_id;
-    //     $raws_category->editor_id = $user_id;
-
-    //     // Если сменили тип категории продукции, то меняем его и всем вложенным элементам
-    //     if (($raws_category->category_status == 1) && ($raws_category->raws_type_id != $request->raws_type_id)) {
-    //         $raws_category->raws_type_id = $request->raws_type_id;
-
-    //         $raws_categories = RawsCategory::whereCategory_id($id)
-    //         ->update(['raws_type_id' => $request->raws_type_id]);
-    //     }
-
-    //     $raws_category->display = $request->display;
-
-    //     // Делаем заглавной первую букву
-    //     $raws_category->name = get_first_letter($request->name);
-
-    //     $raws_category->save();
-
-    //     if ($raws_category) {
-
-    //         // Переадресовываем на index
-    //         return redirect()->action('RawsCategoryController@index', ['id' => $raws_category->id]);
-    //     } else {
-    //         $result = [
-    //             'error_status' => 1,
-    //             'error_message' => 'Ошибка при записи категории продукции!'
-    //         ];
-    //     }
-    // }
-
 }

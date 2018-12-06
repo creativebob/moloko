@@ -116,7 +116,7 @@ class SectorController extends Controller
 
         if ($sector) {
             // Переадресовываем на index
-            return redirect()->action('SectorController@index', ['id' => $sector->id]);
+            return redirect()->route('sectors.index', ['id' => $sector->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -166,7 +166,7 @@ class SectorController extends Controller
 
         if ($sector) {
             // Переадресовываем на index
-            return redirect()->action('SectorController@index', ['id' => $sector->id]);
+            return redirect()->route('sectors.index', ['id' => $sector->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -209,7 +209,7 @@ class SectorController extends Controller
 
             if ($sector) {
                 // Переадресовываем на index
-                return redirect()->action('SectorController@index', ['id' => $parent_id]);
+                return redirect()->route('sectors.index', ['id' => $parent_id]);
             } else {
                 $result = [
                     'error_status' => 1,

@@ -16,9 +16,9 @@
 // Route::resource('/lolkek', 'Project\ServicesProjectController')->middleware('auth');
 
 // Кабинет
-Route::get('/', function() {
-	return 'Сайт';
-});
+// Route::get('/', function() {
+// 	return 'Сайт';
+// });
 
 
 // Контакты

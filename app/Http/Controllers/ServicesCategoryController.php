@@ -309,7 +309,7 @@ class ServicesCategoryController extends Controller
             ->where('id', $request->category_id)
             ->orWhere('category_id', $request->category_id)
             ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
+            ->get(['id','name','parent_id'])
             ->keyBy('id')
             ->toArray();
 
@@ -547,7 +547,7 @@ class ServicesCategoryController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 

@@ -109,7 +109,7 @@ class PostController extends Controller
         ->authors($answer_albums_categories)
         ->systemItem($answer_albums_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -277,7 +277,7 @@ class PostController extends Controller
         ->authors($answer_albums_categories)
         ->systemItem($answer_albums_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 

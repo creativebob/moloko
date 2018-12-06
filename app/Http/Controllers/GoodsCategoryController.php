@@ -111,7 +111,7 @@ class GoodsCategoryController extends Controller
 
         if ($goods_category) {
             // Переадресовываем на index
-            return redirect()->action('GoodsCategoryController@index', ['id' => $goods_category->id]);
+            return redirect()->route('goods_categories.index', ['id' => $goods_category->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -249,7 +249,7 @@ class GoodsCategoryController extends Controller
         if ($goods_category) {
 
             // Переадресовываем на index
-            return redirect()->action('GoodsCategoryController@index', ['id' => $goods_category->id]);
+            return redirect()->route('goods_categories.index', ['id' => $goods_category->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -300,7 +300,7 @@ class GoodsCategoryController extends Controller
             if ($goods_category) {
 
                 // Переадресовываем на index
-                return redirect()->action('GoodsCategoryController@index', ['id' => $parent]);
+                return redirect()->route('goods_categories.index', ['id' => $parent]);
             } else {
                 $result = [
                     'error_status' => 1,
@@ -430,7 +430,7 @@ class GoodsCategoryController extends Controller
         if ($goods_category) {
 
             // Переадресовываем на index
-            return redirect()->action('GoodsCategoryController@index', ['id' => $goods_category->id]);
+            return redirect()->route('goods_categories.index', ['id' => $goods_category->id]);
         } else {
             $result = [
                 'error_status' => 1,

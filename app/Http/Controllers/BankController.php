@@ -111,7 +111,7 @@ class BankController extends Controller
         $sectors = Sector::moderatorLimit($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -297,7 +297,7 @@ class BankController extends Controller
         // Главный запрос
         $sectors = Sector::moderatorLimit($answer)
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
