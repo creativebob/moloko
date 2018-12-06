@@ -13,7 +13,7 @@ class SocialNetworkPolicy
     use HandlesAuthorization;
     use PoliticTrait;
 
-    protected $entity_name = 'social_network';
+    protected $entity_name = 'social_networks';
     protected $entity_dependence = false;
 
     public function index(User $user)
