@@ -59,11 +59,11 @@ class RawsCategoryController extends Controller
 
             return view('includes.menu_views.category_list',
                 [
-                    'items' => $this->raws_category->getIndex($answer, $request),
+                    'items' => $this->raws_category->getIndex($request, $answer),
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => count($this->raws_category->getIndex($answer, $request)),
+                    'count' => count($this->raws_category->getIndex($request, $answer)),
                     'id' => $request->id,
                     'nested' => 'raws_products_count',
                 ]
@@ -73,7 +73,7 @@ class RawsCategoryController extends Controller
         // Отдаем на шаблон
         return view('includes.menu_views.index',
             [
-                'items' => $this->raws_category->getIndex($answer, $request),
+                'items' => $this->raws_category->getIndex($request, $answer),
                 'page_info' => $page_info,
                 'entity' => $this->entity_alias,
                 'class' => $this->model,

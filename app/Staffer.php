@@ -16,9 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -55,49 +52,49 @@ class Staffer extends Model
         'filial_id'
     ];
 
-    // Получаем отдел данной должности.
+    // Отдел должности.
     public function department()
     {
         return $this->belongsTo('App\Department');
     }
 
-    // Получаем Филиал данной должности.
+    // Филиал должности.
     public function filial()
     {
         return $this->belongsTo('App\Department', 'filial_id');
     }
 
-    // Получаем должность
+    // Должность
     public function position()
     {
         return $this->belongsTo('App\Position');
     }
 
-    // Получаем пользователя
+    // Пользователь
     public function user()
     {
         return $this->belongsTo('App\User');
     }
 
-    // Получаем сотрудников
+    // Сотрудники
     public function employees()
     {
         return $this->hasMany('App\Employee');
     }
 
-    // Текущая запись должности
+    // Текущий сотрудник
     public function employee()
     {
         return $this->hasOne('App\Employee')->whereNull('dismissal_date');
     }
 
-    // Получаем компанию
+    // Компания
     public function company()
     {
         return $this->belongsTo('App\Company');
     }
 
-    // Получаем автора
+    // Автор
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');
@@ -110,7 +107,7 @@ class Staffer extends Model
     }
 
     // --------------------------------------- Запросы -----------------------------------------
-    public function getIndex($answer, $request)
+    public function getIndex($request, $answer)
     {
         return $this->with('filial', 'department', 'user.main_phones', 'position', 'employee', 'company.filials')
         ->moderatorLimit($answer)

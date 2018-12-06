@@ -28,9 +28,10 @@ class SidebarComposer
 		->get();
 		// dd($menus->keyBy('name'));
 
-		$sidebar = buildTree($menus);
+		$sidebar = buildSidebarTree($menus);
+		// dd($sidebar);
 
-		return $view->with('sidebar_tree', $sidebar);
+		return $view->with('sidebar', $sidebar);
 	}
 
 }

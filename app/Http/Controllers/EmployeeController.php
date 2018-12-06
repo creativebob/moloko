@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Vacancy;
 use App\Employee;
 use App\Position;
 use App\Staffer;
@@ -12,44 +11,39 @@ use App\Page;
 use App\Company;
 
 // Валидация
+use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRequest;
-
-// Политика
-use App\Policies\EmployeePolicy;
-use App\Policies\StafferPolicy;
-use App\Policies\PositionPolicy;
-use App\Policies\DepartmentPolicy;
 
 // Общие классы
 use Illuminate\Support\Facades\Cookie;
 
-// Подключаем фасады
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-
 class EmployeeController extends Controller
 {
-  // Сущность над которой производит операции контроллер
-  protected $entity_name = 'employees';
-  protected $entity_dependence = true;
+
+    // Настройки сконтроллера
+    public function __construct(Employee $employee)
+    {
+        $this->middleware('auth');
+        $this->employee = $employee;
+        $this->class = Employee::class;
+        $this->model = 'App\Employee';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = true;
+        $this->type = 'modal';
+    }
 
     public function index(Request $request)
     {
 
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
+
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_name);
+        $filter_url = autoFilter($request, $this->entity_alias);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Employee::class);
-        // $this->authorize(getmethod(__FUNCTION__), Position::class);
-        // $this->authorize(getmethod(__FUNCTION__), Staffer::class);
-
-
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Смотрим сколько филиалов в компании
         $user = $request->user();
@@ -82,7 +76,7 @@ class EmployeeController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             'position',             // Должность
             'department',           // Отдел
             'date_interval',        // Дата
@@ -92,7 +86,7 @@ class EmployeeController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('employees.index', compact('employees', 'page_info', 'filter'));
     }
@@ -119,7 +113,7 @@ class EmployeeController extends Controller
         $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name,  $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias,  $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $employee = Employee::with('user')->moderatorLimit($answer)->findOrFail($id);
@@ -131,7 +125,7 @@ class EmployeeController extends Controller
         $users_list = $employee->user->pluck('second_name', 'id');
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('employees.edit', compact('employee', 'users_list', 'page_info'));
     }
@@ -144,7 +138,7 @@ class EmployeeController extends Controller
         $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name,  $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias,  $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $employee = Employee::moderatorLimit($answer)->findOrFail($id);

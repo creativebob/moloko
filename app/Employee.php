@@ -83,4 +83,24 @@ class Employee extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
+    // --------------------------------------- Запросы -----------------------------------------
+    public function getIndex($request, $answer)
+    {
+        return $this->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer)
+        ->booklistFilter($request)
+        ->withCount('companies')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
+    }
+
+    public function getItem($answer, $id)
+    {
+        return $this->moderatorLimit($answer)->findOrFail($id);
+    }
+
 }

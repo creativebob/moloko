@@ -94,7 +94,7 @@ class RawsCategory extends Model
     // }
 
     // --------------------------------------- Запросы -----------------------------------------
-    public function getIndex($answer, $request)
+    public function getIndex($request, $answer)
     {
         return $this->moderatorLimit($answer)
         ->companiesLimit($answer)

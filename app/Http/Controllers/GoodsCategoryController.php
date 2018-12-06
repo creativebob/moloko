@@ -55,11 +55,11 @@ class GoodsCategoryController extends Controller
         if ($request->ajax()) {
             return view('includes.menu_views.category_list',
                 [
-                    'items' => $this->goods_category->getIndex($answer, $request),
+                    'items' => $this->goods_category->getIndex($request, $answer),
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => count($this->goods_category->getIndex($answer, $request)),
+                    'count' => count($this->goods_category->getIndex($request, $answer)),
                     'id' => $request->id,
                     'nested' => 'goods_products_count',
                 ]
@@ -69,7 +69,7 @@ class GoodsCategoryController extends Controller
         // Отдаем на шаблон
         return view('includes.menu_views.index',
             [
-                'items' => $this->goods_category->getIndex($answer, $request),
+                'items' => $this->goods_category->getIndex($request, $answer),
                 'page_info' => $page_info,
                 'entity' => $this->entity_alias,
                 'class' => $this->model,

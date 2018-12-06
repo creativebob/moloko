@@ -58,7 +58,7 @@ class StafferController extends Controller
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
-        $staff = $this->staffer->getIndex($answer, $request);
+        $staff = $this->staffer->getIndex($request, $answer);
 
         // dd($staff);
 

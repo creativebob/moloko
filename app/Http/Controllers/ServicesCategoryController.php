@@ -51,11 +51,11 @@ class ServicesCategoryController extends Controller
             $id = $request->id;
             return view('includes.menu_views.category_list',
                 [
-                    'items' => $this->services_category->getIndex($answer, $request),
+                    'items' => $this->services_category->getIndex($request, $answer),
                     'entity' => $this->entity_table,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => count($this->services_category->getIndex($answer, $request)),
+                    'count' => count($this->services_category->getIndex($request, $answer)),
                     'id' => $request->id
                 ]
             );
@@ -64,7 +64,7 @@ class ServicesCategoryController extends Controller
         // Отдаем на шаблон
         return view('includes.menu_views.index',
             [
-                'items' => $this->services_category->getIndex($answer, $request),
+                'items' => $this->services_category->getIndex($request, $answer),
                 'page_info' => $page_info,
                 'entity' => $this->entity_table,
                 'class' => $this->model,

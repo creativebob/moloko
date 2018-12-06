@@ -47,11 +47,11 @@ class AlbumsCategoryController extends Controller
             $id = $request->id;
             return view('includes.menu_views.category_list',
                 [
-                    'items' => $this->albums_category->getIndex($answer, $request),
+                    'items' => $this->albums_category->getIndex($request, $answer),
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => count($this->albums_category->getIndex($answer, $request)),
+                    'count' => count($this->albums_category->getIndex($request, $answer)),
                     'id' => $request->id,
                     'nested' => 'albums_count',
                 ]
@@ -61,7 +61,7 @@ class AlbumsCategoryController extends Controller
         // Отдаем на шаблон
         return view('includes.menu_views.index',
             [
-                'items' => $this->albums_category->getIndex($answer, $request),
+                'items' => $this->albums_category->getIndex($request, $answer),
                 'page_info' => $page_info,
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
