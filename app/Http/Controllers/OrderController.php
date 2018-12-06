@@ -163,7 +163,7 @@ class OrderController extends Controller
 
     public function ajax_destroy_composition(Request $request, $id)
     {
-        
+
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -189,7 +189,7 @@ class OrderController extends Controller
                 'error_status' => 1,
                 'error_message' => 'Ошибка при удалении состава заказа!',
             ];
-        }   
+        }
 
         return json_encode($result, JSON_UNESCAPED_UNICODE);
     }

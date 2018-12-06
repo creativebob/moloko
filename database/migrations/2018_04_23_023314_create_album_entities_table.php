@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAlbumEntityTable extends Migration
+class CreateAlbumEntitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateAlbumEntityTable extends Migration
      */
     public function up()
     {
-        Schema::create('album_entity', function (Blueprint $table) {
+        Schema::create('album_entities', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('album_id')->nullable()->unsigned()->comment('Id альбома');
             $table->foreign('album_id')->references('id')->on('albums');
-            
-            $table->integer('entity_id')->nullable()->unsigned()->comment('Id сущности связанной с альбомом');
-            $table->string('entity')->index()->comment('Сущность обьекта');
+
+            $table->morphs('album_entity');
 
             $table->timestamps();
         });
@@ -33,6 +32,6 @@ class CreateAlbumEntityTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('album_entity');
+        Schema::dropIfExists('album_entities');
     }
 }
